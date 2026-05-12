@@ -1,0 +1,12 @@
+##gff-version 3
+##sequence-region chr1 1 1200
+chr1	synth	CDS	1	120	.	+	0	ID=g1;locus_tag=TAG_001;product=synthetic gyrase A
+chr1	synth	CDS	121	240	.	+	0	ID=g2;locus_tag=TAG_002;product=synthetic topoisomerase
+chr1	synth	CDS	241	360	.	-	0	ID=g3;locus_tag=TAG_003;product=synthetic regulator
+chr1	synth	CDS	361	480	.	+	0	ID=g4;locus_tag=TAG_004;product=hypothetical protein
+chr1	synth	CDS	481	600	.	+	0	ID=g5;locus_tag=TAG_005;product=hypothetical protein
+chr1	synth	CDS	601	720	.	-	0	ID=g6;locus_tag=TAG_006;product=hypothetical protein
+chr1	synth	CDS	721	840	.	+	0	ID=g7;locus_tag=TAG_007;product=hypothetical protein
+chr1	synth	CDS	841	960	.	+	0	ID=g8;locus_tag=TAG_008;product=hypothetical protein
+chr1	synth	CDS	961	1080	.	+	0	ID=g9;locus_tag=TAG_009;product=hypothetical protein
+chr1	synth	CDS	1081	1200	.	-	0	ID=g10;locus_tag=TAG_010;product=hypothetical protein
