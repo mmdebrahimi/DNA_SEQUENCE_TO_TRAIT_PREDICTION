@@ -187,38 +187,86 @@ class EmbeddingCache:
                     )
         return out
 
-    # ---- end-to-end population ----
+    # ---- end-to-end population (plan contract signature) ----
 
     def populate(
         self,
-        model,  # FoundationModel (avoid hard import to keep dep light)
-        strain_sequences: dict[str, dict[str, str]],
+        model,  # FoundationModel from Step 7 (avoid hard import)
+        strain_genomes: dict[str, "Path"] | None = None,
+        annotations: dict[str, "pd.DataFrame"] | None = None,
+        strain_sequences: dict[str, dict[str, str]] | None = None,
         skip_existing: bool = True,
         progress_callback=None,
     ) -> dict[str, int]:
         """Compute + cache embeddings for every (strain, gene) sequence pair.
 
+        Wave 2.5 hardening C6 — restored plan contract: takes either
+        `strain_genomes` + `annotations` (preferred, runs Step 3 CDS extraction
+        internally) OR `strain_sequences` (pre-extracted, back-compat). Opens
+        the HDF5 file ONCE for the entire batch — was 4.5M opens per Phase 1
+        run before, now 1 open per populate() call.
+
         Args:
             model: FoundationModel instance from Step 7.
-            strain_sequences: mapping strain_id -> { gene_id -> sequence }.
-            skip_existing: if True, skip pairs already in the cache (idempotent).
-            progress_callback: optional callable(strain_id, n_done, n_total).
+            strain_genomes: mapping strain_id -> FASTA path. When provided,
+                `annotations` must also be provided. Calls
+                `dna_decode.data.annotations.extract_cds_sequences` per strain.
+            annotations: mapping strain_id -> AnnotationTable (from Step 3
+                `parse_gff3` / `parse_genbank`).
+            strain_sequences: legacy entry — mapping strain_id -> { gene_id -> sequence }.
+                Mutually exclusive with `strain_genomes`.
+            skip_existing: if True, skip pairs already cached (idempotent).
+            progress_callback: optional callable(strain_id, n_written, n_total).
 
         Returns:
             Per-strain dict of how many new entries were written.
         """
+        if strain_genomes is not None and strain_sequences is not None:
+            raise EmbeddingCacheError(
+                "populate(): pass either strain_genomes+annotations OR strain_sequences, not both"
+            )
+        if strain_genomes is None and strain_sequences is None:
+            raise EmbeddingCacheError(
+                "populate(): must provide strain_genomes+annotations OR strain_sequences"
+            )
+
+        if strain_genomes is not None:
+            # Plan-contract path: extract CDS sequences from FASTA + annotations
+            if annotations is None:
+                raise EmbeddingCacheError(
+                    "populate(): strain_genomes requires matching annotations dict"
+                )
+            from dna_decode.data.annotations import extract_cds_sequences
+
+            strain_sequences = {}
+            for strain_id, genome_path in strain_genomes.items():
+                ann = annotations.get(strain_id)
+                if ann is None:
+                    raise EmbeddingCacheError(
+                        f"populate(): no annotation for strain {strain_id!r}"
+                    )
+                strain_sequences[strain_id] = extract_cds_sequences(genome_path, ann)
+
+        # Open HDF5 ONCE for the full populate() batch (Wave 2.5 C6 fix)
         written_per_strain: dict[str, int] = {}
-        for strain_id, gene_map in strain_sequences.items():
-            count = 0
-            for gene_id, sequence in gene_map.items():
-                if skip_existing and self.has(strain_id, gene_id):
-                    continue
-                # embed_batch returns (len(sequences), embedding_dim); we want
-                # the single-row mean-pooled embedding
-                emb = model.embed_batch([sequence])[0]
-                self.put(strain_id, gene_id, emb)
-                count += 1
-            written_per_strain[strain_id] = count
-            if progress_callback:
-                progress_callback(strain_id, count, len(gene_map))
+        with self._h5py.File(self.path, "a") as f:
+            for strain_id, gene_map in strain_sequences.items():
+                count = 0
+                for gene_id, sequence in gene_map.items():
+                    ds_path = self._dataset_path(strain_id, gene_id)
+                    if skip_existing and ds_path in f:
+                        continue
+                    emb = model.embed_batch([sequence])[0]
+                    if emb.ndim != 1 or emb.shape[0] != self.embedding_dim:
+                        raise EmbeddingCacheError(
+                            f"embedding shape {emb.shape} mismatch with cache "
+                            f"embedding_dim={self.embedding_dim}"
+                        )
+                    if ds_path in f:
+                        del f[ds_path]
+                    f.create_dataset(ds_path, data=emb.astype(np.float32))
+                    count += 1
+                written_per_strain[strain_id] = count
+                if progress_callback:
+                    progress_callback(strain_id, count, len(gene_map))
         return written_per_strain

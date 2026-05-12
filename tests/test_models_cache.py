@@ -171,7 +171,7 @@ def test_populate_writes_per_gene_per_strain(tmp_path: Path):
         "s001": {"gyrA": "ATGCATGC", "parC": "GGGGAAAA"},
         "s002": {"gyrA": "TTTTCCCC"},
     }
-    written = cache.populate(model, strain_sequences)
+    written = cache.populate(model, strain_sequences=strain_sequences)
     assert written == {"s001": 2, "s002": 1}
     assert cache.has("s001", "gyrA")
     assert cache.has("s001", "parC")
@@ -185,8 +185,8 @@ def test_populate_idempotent_skip_existing(tmp_path: Path):
     cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
     seqs = {"s001": {"gyrA": "ATGC"}}
 
-    first_pass = cache.populate(model, seqs)
-    second_pass = cache.populate(model, seqs)
+    first_pass = cache.populate(model, strain_sequences=seqs)
+    second_pass = cache.populate(model, strain_sequences=seqs)
     assert first_pass["s001"] == 1
     assert second_pass["s001"] == 0  # skipped existing
 
@@ -199,7 +199,102 @@ def test_populate_progress_callback_fires_per_strain(tmp_path: Path):
     seqs = {"s001": {"g": "ATGC"}, "s002": {"g": "GGGG"}}
 
     calls: list[tuple[str, int, int]] = []
-    cache.populate(model, seqs, progress_callback=lambda sid, done, total: calls.append((sid, done, total)))
+    cache.populate(
+        model,
+        strain_sequences=seqs,
+        progress_callback=lambda sid, done, total: calls.append((sid, done, total)),
+    )
     assert len(calls) == 2
     assert ("s001", 1, 1) in calls
     assert ("s002", 1, 1) in calls
+
+
+# ---- Wave 2.5 hardening C6: plan-contract signature + open-once HDF5 ----
+
+
+def test_populate_plan_signature_extracts_cds_via_annotations(tmp_path: Path):
+    """populate(strain_genomes, annotations) calls extract_cds_sequences internally."""
+    import pandas as pd
+
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+
+    # Build a tiny FASTA + matching annotation table
+    fasta = tmp_path / "s001.fna"
+    fasta.write_text(">chr1\n" + "ATGC" * 25 + "\n", encoding="utf-8")
+
+    annotations = pd.DataFrame(
+        {
+            "seqid": ["chr1"],
+            "source": ["test"],
+            "type": ["CDS"],
+            "start": [1],
+            "end": [12],
+            "strand": ["+"],
+            "gene_id": ["gene_A"],
+            "locus_tag": [""],
+            "product": [""],
+        }
+    )
+
+    written = cache.populate(
+        model,
+        strain_genomes={"s001": fasta},
+        annotations={"s001": annotations},
+    )
+    assert written["s001"] == 1
+    assert cache.has("s001", "gene_A")
+
+
+def test_populate_rejects_both_paths_provided(tmp_path: Path):
+    """Cannot pass both strain_genomes AND strain_sequences."""
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    with pytest.raises(EmbeddingCacheError, match="not both"):
+        cache.populate(
+            model,
+            strain_genomes={"s001": tmp_path / "x.fna"},
+            strain_sequences={"s001": {"g": "ATGC"}},
+        )
+
+
+def test_populate_rejects_neither_path_provided(tmp_path: Path):
+    """Must pass strain_genomes+annotations OR strain_sequences."""
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    with pytest.raises(EmbeddingCacheError, match="must provide"):
+        cache.populate(model)
+
+
+def test_populate_genomes_without_annotations_raises(tmp_path: Path):
+    """strain_genomes requires matching annotations dict."""
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    with pytest.raises(EmbeddingCacheError, match="annotations"):
+        cache.populate(model, strain_genomes={"s001": tmp_path / "x.fna"})
+
+
+def test_populate_genomes_missing_annotation_for_strain_raises(tmp_path: Path):
+    """annotations dict must include every strain in strain_genomes."""
+    import pandas as pd
+
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    fasta = tmp_path / "s001.fna"
+    fasta.write_text(">chr1\nATGC\n", encoding="utf-8")
+    with pytest.raises(EmbeddingCacheError, match="no annotation"):
+        cache.populate(
+            model,
+            strain_genomes={"s001": fasta},
+            annotations={"s002": pd.DataFrame()},  # wrong strain
+        )

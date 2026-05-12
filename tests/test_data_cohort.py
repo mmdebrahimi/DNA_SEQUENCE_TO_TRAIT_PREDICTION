@@ -14,6 +14,8 @@ from dna_decode.data.cohort import (
     _filter_by_assembly_quality,
     _mlst_balanced_selection,
     build_cohort,
+    candidates_from_bvbrc_ast,
+    load_cohort,
     save_cohort,
 )
 
@@ -215,6 +217,7 @@ def test_save_cohort_writes_parquet_with_per_drug_columns(tmp_path: Path):
     candidates = [
         CandidateStrain(
             strain_id="s001",
+            assembly_accession="GCF_X",
             mlst="ST10",
             country="USA",
             year=2024,
@@ -233,9 +236,189 @@ def test_save_cohort_writes_parquet_with_per_drug_columns(tmp_path: Path):
     assert out.exists()
     df = pd.read_parquet(out)
     assert list(df["strain_id"]) == ["s001"]
+    assert df["assembly_accession"].iloc[0] == "GCF_X"
     assert "ast_ciprofloxacin" in df.columns
     assert "ast_ceftriaxone" in df.columns
+    assert "in_pool_ciprofloxacin" in df.columns
+    assert "in_three_drug_intersection" in df.columns
     assert df["plasmid_resistance_genes"].iloc[0] == "blaCTX-M-15"
+
+
+# ---- Wave 2.5 hardening: load_cohort round-trip ----
+
+
+def test_load_cohort_round_trips_save(tmp_path: Path):
+    """save_cohort → load_cohort returns equivalent StrainCohort."""
+    candidates = [
+        CandidateStrain(
+            strain_id="s001",
+            assembly_accession="GCF_X",
+            mlst="ST10",
+            contig_count=50,
+            n50=100_000,
+            ast_labels={"ciprofloxacin": 1, "ceftriaxone": 0},
+            plasmid_resistance_genes=("blaCTX-M-15", "tetA"),
+        ),
+        CandidateStrain(
+            strain_id="s002",
+            assembly_accession="GCF_Y",
+            mlst="ST131",
+            contig_count=100,
+            n50=80_000,
+            ast_labels={"ciprofloxacin": 0},
+        ),
+    ]
+    orig = StrainCohort(
+        strains=candidates,
+        per_drug_strain_ids={"ciprofloxacin": ["s001", "s002"], "ceftriaxone": ["s001"]},
+        three_drug_intersection=["s001"],
+    )
+    save_cohort(orig, tmp_path / "cohort.parquet")
+    loaded = load_cohort(tmp_path / "cohort.parquet")
+
+    assert len(loaded.strains) == 2
+    assert {s.strain_id for s in loaded.strains} == {"s001", "s002"}
+    assert loaded.per_drug_strain_ids["ciprofloxacin"] == ["s001", "s002"]
+    assert loaded.per_drug_strain_ids["ceftriaxone"] == ["s001"]
+    assert loaded.three_drug_intersection == ["s001"]
+    # Per-strain fields preserved
+    s001 = loaded.strain_by_id("s001")
+    assert s001.assembly_accession == "GCF_X"
+    assert s001.ast_labels == {"ciprofloxacin": 1, "ceftriaxone": 0}
+    assert "blaCTX-M-15" in s001.plasmid_resistance_genes
+
+
+def test_load_cohort_missing_file_raises(tmp_path: Path):
+    with pytest.raises(FileNotFoundError):
+        load_cohort(tmp_path / "missing.parquet")
+
+
+# ---- Wave 2.5 hardening: candidates_from_bvbrc_ast adapter ----
+
+
+def test_candidates_from_bvbrc_ast_groups_by_strain():
+    """Multiple AST rows per strain → one CandidateStrain with per-drug labels."""
+    ast = pd.DataFrame(
+        {
+            "strain_id": ["s001", "s001", "s002", "s002"],
+            "antibiotic": ["ciprofloxacin", "ceftriaxone", "ciprofloxacin", "tetracycline"],
+            "susceptibility_label": ["RESISTANT", "SUSCEPTIBLE", "SUSCEPTIBLE", "RESISTANT"],
+        }
+    )
+    cands = candidates_from_bvbrc_ast(ast)
+    by_id = {c.strain_id: c for c in cands}
+    assert by_id["s001"].ast_labels == {"ciprofloxacin": 1, "ceftriaxone": 0}
+    assert by_id["s002"].ast_labels == {"ciprofloxacin": 0, "tetracycline": 1}
+
+
+def test_candidates_from_bvbrc_ast_uses_assembly_metadata():
+    """assembly_metadata supplies accession + assembly QC + MLST per strain."""
+    ast = pd.DataFrame(
+        {
+            "strain_id": ["s001"],
+            "antibiotic": ["ciprofloxacin"],
+            "susceptibility_label": ["R"],
+        }
+    )
+    meta = {
+        "s001": {
+            "assembly_accession": "GCF_000005845.2",
+            "contig_count": 50,
+            "n50": 200_000,
+            "mlst": "ST10",
+            "country": "USA",
+            "year": 2023,
+            "plasmid_resistance_genes": ["blaCTX-M-15"],
+        }
+    }
+    cands = candidates_from_bvbrc_ast(ast, assembly_metadata=meta)
+    assert len(cands) == 1
+    assert cands[0].assembly_accession == "GCF_000005845.2"
+    assert cands[0].contig_count == 50
+    assert cands[0].mlst == "ST10"
+    assert cands[0].plasmid_resistance_genes == ("blaCTX-M-15",)
+
+
+def test_candidates_from_bvbrc_ast_majority_vote_on_duplicates():
+    """Multiple AST rows for same (strain, drug) → majority vote."""
+    ast = pd.DataFrame(
+        {
+            "strain_id": ["s001", "s001", "s001"],
+            "antibiotic": ["ciprofloxacin"] * 3,
+            "susceptibility_label": ["R", "R", "S"],  # 2 R + 1 S → majority R
+        }
+    )
+    cands = candidates_from_bvbrc_ast(ast)
+    assert cands[0].ast_labels["ciprofloxacin"] == 1
+
+
+def test_candidates_from_bvbrc_ast_no_metadata_falls_back_to_zero():
+    """Missing assembly_metadata → contig_count=0 etc. (will fail assembly filter)."""
+    ast = pd.DataFrame(
+        {
+            "strain_id": ["s001"],
+            "antibiotic": ["ciprofloxacin"],
+            "susceptibility_label": ["R"],
+        }
+    )
+    cands = candidates_from_bvbrc_ast(ast)
+    assert cands[0].assembly_accession == ""
+    assert cands[0].contig_count == 0
+    assert cands[0].n50 == 0
+
+
+def test_candidates_from_bvbrc_ast_missing_column_raises():
+    bad = pd.DataFrame({"foo": ["bar"]})
+    with pytest.raises(ValueError, match="strain_id"):
+        candidates_from_bvbrc_ast(bad)
+
+
+# ---- Wave 2.5 hardening: download_cohort_genomes accession routing ----
+
+
+def test_download_cohort_genomes_requires_assembly_accession():
+    """Strains without assembly_accession raise CohortConstructionError."""
+    from unittest.mock import patch
+
+    strains = [CandidateStrain(strain_id="s001", assembly_accession="")]
+    cohort = StrainCohort(
+        strains=strains,
+        per_drug_strain_ids={"ciprofloxacin": ["s001"]},
+        three_drug_intersection=[],
+    )
+
+    from dna_decode.data.cohort import download_cohort_genomes
+
+    with pytest.raises(CohortConstructionError, match="assembly_accession"):
+        download_cohort_genomes(cohort, "/tmp/cache_dir")
+
+
+def test_download_cohort_genomes_uses_assembly_accession_not_strain_id(tmp_path: Path):
+    """refseq.download_genome is called with assembly_accession, NOT strain_id."""
+    from unittest.mock import MagicMock, patch
+
+    from dna_decode.data import cohort as cohort_mod
+
+    strains = [
+        CandidateStrain(strain_id="bv_511145.12", assembly_accession="GCF_000005845.2")
+    ]
+    cohort = StrainCohort(
+        strains=strains,
+        per_drug_strain_ids={"ciprofloxacin": ["bv_511145.12"]},
+        three_drug_intersection=[],
+    )
+
+    fake_path = tmp_path / "GCF_000005845.2"
+    fake_path.mkdir()
+    mock_download = MagicMock(return_value=fake_path)
+    with patch("dna_decode.data.refseq.download_genome", mock_download):
+        out = cohort_mod.download_cohort_genomes(cohort, tmp_path)
+
+    # Called with the accession, not the BV-BRC strain_id
+    call_args = mock_download.call_args
+    assert call_args[0][0] == "GCF_000005845.2"
+    # But the output map keys by the BV-BRC strain_id (consistent ID space downstream)
+    assert "bv_511145.12" in out
 
 
 # ---- StrainCohort accessors ----
