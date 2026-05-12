@@ -1,0 +1,46 @@
+# Runtime data + caches (large, gitignored per Step 1 of technical plan)
+data/
+*.h5
+*.parquet
+*.pkl
+*.pt
+*.bin
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Build outputs
+build/
+dist/
+*.egg
+
+# Model checkpoints (large, fetched from HuggingFace)
+*.safetensors
+*.ckpt
+checkpoints/
+
+# Logs
+*.log
+logs/
