@@ -1,0 +1,200 @@
+"""Tests for Step 18 — Classical baseline benchmark."""
+from __future__ import annotations
+
+import numpy as np
+import pytest
+
+xgboost = pytest.importorskip("xgboost")
+sklearn = pytest.importorskip("sklearn")
+
+from dna_decode.models.classical_baselines import (  # noqa: E402
+    DEFAULT_KMER_K,
+    DEFAULT_KMER_TOP_N,
+    build_gene_presence_matrix,
+    build_kmer_vocabulary,
+    extract_kmer_counts,
+    kmers_to_feature_matrix,
+    train_amrfinder_baseline,
+    train_gene_presence_baseline,
+    train_kmer_baseline,
+)
+from dna_decode.models.classifiers import ClassifierTrainingError  # noqa: E402
+
+
+# ---- k-mer feature extraction ----
+
+
+def test_extract_kmer_counts_basic():
+    counts = extract_kmer_counts("ATGCATGC", k=3)
+    assert counts["ATG"] == 2
+    assert counts["TGC"] == 2
+    assert counts["GCA"] == 1
+    assert counts["CAT"] == 1
+
+
+def test_extract_kmer_counts_skips_n_containing():
+    counts = extract_kmer_counts("ATNGAT", k=3)
+    # ATN, TNG, NGA all have N → excluded. GAT remains.
+    assert counts == {"GAT": 1}
+
+
+def test_extract_kmer_counts_with_vocabulary_zero_fills_absent():
+    counts = extract_kmer_counts(
+        "ATGCATGC", k=3, vocabulary=["ATG", "TGC", "MISSING"]
+    )
+    assert counts == {"ATG": 2, "TGC": 2, "MISSING": 0}
+
+
+def test_extract_kmer_counts_uppercase_normalization():
+    """Lowercase sequence is uppercased so counts match canonical form."""
+    counts = extract_kmer_counts("atgcatgc", k=3)
+    assert counts["ATG"] == 2
+
+
+def test_extract_kmer_counts_empty_sequence():
+    assert extract_kmer_counts("", k=3) == {}
+
+
+# ---- k-mer vocabulary building ----
+
+
+def test_build_kmer_vocabulary_top_n_caps_size():
+    # 6 unique 3-mers across two sequences; cap to top-3
+    vocab = build_kmer_vocabulary(["ATGCATGC", "GGGGAAAA"], k=3, top_n=3)
+    assert len(vocab) == 3
+
+
+def test_build_kmer_vocabulary_returns_most_frequent():
+    """ATGC repeated → ATG + TGC dominate."""
+    vocab = build_kmer_vocabulary(["ATGCATGCATGC"], k=3, top_n=5)
+    assert "ATG" in vocab[:3]
+    assert "TGC" in vocab[:3]
+
+
+def test_kmers_to_feature_matrix_shape_and_counts():
+    seqs = ["ATGCATGC", "ATGCATGC"]
+    vocab = ["ATG", "TGC", "MISSING"]
+    X = kmers_to_feature_matrix(seqs, vocab, k=3)
+    assert X.shape == (2, 3)
+    assert X[0, 0] == 2  # ATG appears twice in ATGCATGC
+    assert X[0, 2] == 0  # MISSING absent
+
+
+# ---- gene presence/absence ----
+
+
+def test_build_gene_presence_matrix_union_vocab():
+    sets = [{"gyrA", "parC"}, {"gyrA", "tetA"}, {"parC"}]
+    X, vocab = build_gene_presence_matrix(sets)
+    assert sorted(vocab) == ["gyrA", "parC", "tetA"]
+    assert X.shape == (3, 3)
+    # Strain 0: gyrA + parC present, tetA absent
+    g_idx = vocab.index("gyrA")
+    p_idx = vocab.index("parC")
+    t_idx = vocab.index("tetA")
+    assert X[0, g_idx] == 1
+    assert X[0, p_idx] == 1
+    assert X[0, t_idx] == 0
+
+
+def test_build_gene_presence_matrix_with_explicit_vocab():
+    sets = [{"gyrA"}, {"parC"}]
+    X, vocab = build_gene_presence_matrix(sets, gene_vocabulary=["gyrA", "parC", "extra"])
+    assert vocab == ["gyrA", "parC", "extra"]
+    assert X[0, 0] == 1 and X[0, 1] == 0 and X[0, 2] == 0
+    assert X[1, 0] == 0 and X[1, 1] == 1 and X[1, 2] == 0
+
+
+def test_build_gene_presence_matrix_empty():
+    X, vocab = build_gene_presence_matrix([])
+    assert X.shape == (0, 0)
+    assert vocab == []
+
+
+# ---- AMRFinder baseline ----
+
+
+def _balanced_labels(strain_ids: list[str], pattern: str = "alt") -> dict[str, int]:
+    """Half resistant, half susceptible (alternating)."""
+    return {sid: i % 2 for i, sid in enumerate(strain_ids)}
+
+
+def test_train_amrfinder_baseline_round_trip():
+    strain_ids = [f"s{i:03d}" for i in range(20)]
+    strain_amr_genes = {sid: {"gyrA"} if i % 2 else {"tetA"} for i, sid in enumerate(strain_ids)}
+    labels = _balanced_labels(strain_ids)
+
+    clf, vocab, returned_ids = train_amrfinder_baseline(strain_amr_genes, labels, "cipro")
+    assert sorted(vocab) == ["gyrA", "tetA"]
+    assert returned_ids == strain_ids
+    assert clf.drug_name == "cipro"
+    assert clf.feature_dim == 2
+
+
+def test_train_amrfinder_baseline_no_overlap_raises():
+    with pytest.raises(ClassifierTrainingError, match="no strain overlap"):
+        train_amrfinder_baseline(
+            strain_amr_genes={"a": set()}, labels={"b": 1}, drug_name="cipro"
+        )
+
+
+# ---- k-mer baseline ----
+
+
+def test_train_kmer_baseline_default_logreg():
+    rng = np.random.default_rng(0)
+    bases = ["A", "C", "G", "T"]
+    strain_sequences = {
+        f"s{i:03d}": "".join(rng.choice(bases, size=200)) for i in range(30)
+    }
+    strain_ids = sorted(strain_sequences.keys())
+    labels = _balanced_labels(strain_ids)
+
+    clf, vocab, _ = train_kmer_baseline(
+        strain_sequences, labels, "cipro", k=4, top_n=50
+    )
+    assert clf.drug_name == "cipro"
+    assert len(vocab) <= 50
+    assert clf.feature_dim == len(vocab)
+
+
+def test_train_kmer_baseline_xgboost_classifier_type():
+    rng = np.random.default_rng(1)
+    bases = ["A", "C", "G", "T"]
+    strain_sequences = {
+        f"s{i:03d}": "".join(rng.choice(bases, size=200)) for i in range(30)
+    }
+    strain_ids = sorted(strain_sequences.keys())
+    labels = _balanced_labels(strain_ids)
+
+    clf, _, _ = train_kmer_baseline(
+        strain_sequences, labels, "cipro", k=4, top_n=20, classifier_type="xgboost"
+    )
+    assert clf.calibrated is True
+
+
+def test_train_kmer_baseline_unknown_classifier_raises():
+    with pytest.raises(ValueError, match="classifier_type"):
+        train_kmer_baseline(
+            {"s001": "ATGC" * 50},
+            {"s001": 1},
+            "cipro",
+            classifier_type="random_forest",
+        )
+
+
+# ---- gene-presence baseline (delegates to amrfinder) ----
+
+
+def test_train_gene_presence_baseline_round_trip():
+    strain_ids = [f"s{i:03d}" for i in range(20)]
+    # 'omp' gene present in resistant, 'rib' in susceptible
+    strain_gene_calls = {
+        sid: ({"omp", "acrA"} if i % 2 else {"rib", "lacZ"})
+        for i, sid in enumerate(strain_ids)
+    }
+    labels = _balanced_labels(strain_ids)
+
+    clf, vocab, _ = train_gene_presence_baseline(strain_gene_calls, labels, "cipro")
+    assert clf.feature_dim == len(vocab)
+    assert set(vocab) == {"omp", "acrA", "rib", "lacZ"}
