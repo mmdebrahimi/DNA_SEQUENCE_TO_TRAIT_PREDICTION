@@ -2,36 +2,24 @@
 
 Genotype-to-phenotype (G2P) inference platform — predicts phenotypic traits from genomic DNA sequences AND identifies which genomic regions are most strongly associated with those predictions. Biologically interpretable, not causal-claim-making.
 
-## Status: Phase 1 — Wave 1.5 hardened
+## Status: Phase 1 — code-complete (18/18 implementation steps + 3 hardening waves)
 
-Phase 1 scope ships in 17 implementation steps across 8 waves. **Currently shipped: Wave 0 + Wave 1 + Wave 1.5 hardening pass** (7/17 implementation steps complete; ~3700 LOC + tests; ~14 commits).
+All 18 implementation steps shipped: Wave 0 bootstrap + Wave 1 data/foundation/eval + Wave 1.5 hardening + Wave 2 cohort/cache + Wave 2.5 hardening + Wave 3 classifiers/ISM/classical-baselines + Wave 3.5 hardening + Wave 4 viz + Wave 5 CLI + Wave 6 smoke + leaderboard + Wave 6.5 quant-fidelity + Wave 7 docs.
 
-What's actually runnable today:
+See `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the contracted ship-path that drove Waves 4-7. See `plans/Ecoli_G2P_Platform_Technical_Plan.md` for the full plan with Tier 1-5 attribution-success framework + Phase 2 backlog. See `docs/ARCHITECTURE.md` for the module map.
 
-| Module | Status | Notes |
+What runs end-to-end today:
+
+| Surface | Entry point | Notes |
 |---|---|---|
-| `dna_decode/data/pilot.py` | **runnable** | `python -m scripts.pilot_gate --ast-tsv <bvbrc-ast-tsv-path>` runs the HARD-gate against a downloaded BV-BRC AST TSV |
-| `dna_decode/data/refseq.py` | **runnable** | Downloads NCBI Datasets ZIP + unpacks into `genome.fna` / `annotations.gff3` / `annotations.gbk` |
-| `dna_decode/data/annotations.py` | **runnable** | Parses GFF3 + GenBank; extracts CDS + intergenic sequences |
-| `dna_decode/data/resistance_db.py` | **runnable** | Loads CARD JSON + AMRFinder TSV |
-| `dna_decode/data/ast_data.py` | **runnable** | Loads BV-BRC AST TSV with broth-microdilution + organism filters |
-| `dna_decode/models/foundation.py` | **scaffolded** | Wrappers for Evo + DNABERT-2 + Nucleotide Transformer + GENA-LM (lazy-load; needs HuggingFace download + GPU at first `embed()` call). MockFoundationModel works without weights/GPU. |
-| `dna_decode/eval/` | **runnable** | LOSO + LOMO + leave-one-Mash-clade-out CV, metrics (AUROC/AUPRC/Brier/ECE/attribution-precision), Mash phylogeny clustering, clade-only baseline classifier |
+| **Pilot gate (HARD)** | `python -m scripts.pilot_gate --ast-tsv <path>` | Validates per-drug strain counts before ingestion fires. Exit 0=GO, 1=NO-GO, 2=PilotGateError, 3=no source. |
+| **Full pipeline** | `python -m scripts.pipeline {ingest, train, predict, attribute}` | Single CLI with 4 subcommands; shared config-driven path resolution. |
+| **Smoke regression** | `python scripts/smoke_pipeline.py` | <60s synthetic-fixture end-to-end via MockFoundationModel; asserts AUROC ≥0.85 + top-1 attribution = seeded gene. |
+| **Leaderboard fan-out** | `python scripts/leaderboard.py --drugs ... --models evo,dnabert2` | Loops pipeline.py train per (model × drug); writes `data/processed/leaderboard.md`. |
+| **Quant-fidelity check** | `python scripts/quantize_fidelity_check.py --full-precision-attributions <manifest.json> --quantized-attributions <manifest.json>` | One-time 4-bit vs full-precision ISM concordance check; gates whether Phase 1 attribution numbers are quantization-conditional. |
+| **Viz** | `dna_decode.viz.browser.render_attribution_plot` + `export_attribution_tsv` | matplotlib PNG + TSV export; pygenometracks deferred to Phase 2. |
 
-What's NOT yet implemented (waves 2-7):
-
-- Step 6 Strain/AST cohort catalog (drug-first; depends on Step 0.5 + 2 + 4 + 5)
-- Step 8 HDF5 embedding cache
-- Step 9 Baseline classifiers (XGBoost on frozen foundation embeddings)
-- Step 11 In-silico mutagenesis (gene-level + saturation)
-- Step 13 Genome-browser visualization (pygenometracks)
-- Step 14 CLI entry points (ingest / train / predict / attribute)
-- Step 15 Smoke pipeline + fixtures (the synthetic-data end-to-end smoke test referenced earlier was Wave 6 work; not yet shipped)
-- Step 17 Leaderboard (foundation models + classical baselines on same cohort + CV protocol)
-- Step 18 Classical baseline benchmark (AMRFinder + k-mer + gene-presence)
-- Step 16 Documentation finalization
-
-See `plans/Ecoli_G2P_Platform_Technical_Plan.md` for the full plan with Files + Depends on metadata.
+Module map: `dna_decode/data/` (ingestion) + `dna_decode/models/` (foundation wrappers + cache + classifiers + classical baselines) + `dna_decode/interp/` (ISM + Tier 1-5 attribution) + `dna_decode/eval/` (CV + metrics + phylogeny + clade-only baseline) + `dna_decode/viz/` (browser).
 
 ## Phase 1 scope
 
@@ -72,25 +60,69 @@ uv sync --extra dev
 uv sync --extra quantize
 ```
 
-## Running the pilot gate (Step 0.5 HARD gate)
+## Phase 1 quickstart
 
-The pilot gate validates that you have enough labeled isolates per drug BEFORE downstream ingestion fires.
+End-to-end Phase 1 run (assumes `uv sync` + BV-BRC AST TSV downloaded + Mash CLI installed):
 
 ```bash
-# Download a BV-BRC AST TSV from ftp.bvbrc.org first, then:
+# 1. HARD gate: confirm you have enough labeled strains per drug
 uv run python -m scripts.pilot_gate \
   --drugs ciprofloxacin,ceftriaxone,tetracycline \
   --target-per-drug 150 \
   --ast-tsv path/to/bvbrc_ast.tsv
 
-# Exit codes:
-#   0 = GO (all per-drug counts >= target AND 3-drug intersection >= target)
-#   1 = NO-GO (some count below target; see failure_reasons in the report)
-#   2 = PilotGateError (config or filesystem issue)
-#   3 = NotImplementedError (no AST source provided + live API path is deferred)
+# 2. Smoke test: <60s end-to-end on synthetic fixtures (sanity check before real run)
+uv run python scripts/smoke_pipeline.py
+
+# 3. Ingest: build cohort + download cohort genomes
+uv run python -m scripts.pipeline ingest \
+  --drugs ciprofloxacin,ceftriaxone,tetracycline \
+  --ast-tsv path/to/bvbrc_ast.tsv \
+  --download-genomes
+
+# 4. Populate the embedding cache (deferred — see ARCHITECTURE.md for the wiring;
+#    embedding cache populate is invoked from a Phase 2 helper script that hasn't
+#    shipped yet; Phase 1 callers populate the cache externally via cache.populate()).
+
+# 5. Train per-drug classifier + run CV + emit clade-only baseline + validation gate
+uv run python -m scripts.pipeline train \
+  --drug ciprofloxacin --model evo --include-clade-baseline
+
+# 6. Run ISM attribution + Tier 1-5 classification for one strain
+uv run python -m scripts.pipeline attribute \
+  --strain-id <bvbrc-strain-id> \
+  --drug ciprofloxacin \
+  --card-path path/to/card.json \
+  --amrfinder-path path/to/amrfinder.tsv \
+  --output data/processed/attribution_report.json
+
+# 7. Build leaderboard across foundation models + classical baselines
+uv run python scripts/leaderboard.py \
+  --drugs ciprofloxacin,ceftriaxone,tetracycline \
+  --models evo,dnabert2
+
+# 8. (Optional) Validate that 4-bit Evo attribution matches full-precision
+uv run python scripts/quantize_fidelity_check.py \
+  --full-precision-attributions full_manifest.json \
+  --quantized-attributions quantized_manifest.json \
+  --drug ciprofloxacin
 ```
 
-Alternative ways to provide the BV-BRC TSV:
+## Phase 1 success criteria
+
+Phase 1 ships when:
+
+- Smoke pipeline passes (`scripts/smoke_pipeline.py` returns exit 0)
+- LOMO-clade-out CV AUROC ≥0.80 SLO / ≥0.85 target per drug
+- Embedding model AUROC ≥0.10 above clade-only baseline on ≥75% of held-out clades
+- Top-K=20 attribution-tier distribution: cipro ≥40% Tier 1-3 hits; ceftriaxone ≥25%; tet ≥30%; all ≤20% Fail
+- Best foundation model beats best classical baseline by ≥3pp AUROC on ≥2 of 3 drugs
+- Quantization-fidelity check returns GO (mean Spearman ≥0.7, intersection ≥0.6)
+
+Phase 2 redesign trigger: classical baselines win on ≥2 drugs. The Step 18 classical-baselines control wires this empirically — see `plans/Ecoli_G2P_Platform_Technical_Plan.md` validation-gate section.
+
+## Pilot gate alternate inputs
+
 - `BVBRC_AST_TSV=path/to/ast.tsv` env var
 - `bvbrc_ast.local_tsv_path: path/to/ast.tsv` in `config/datasources.yaml`
 
