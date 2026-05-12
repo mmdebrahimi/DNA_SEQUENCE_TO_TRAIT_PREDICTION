@@ -152,7 +152,24 @@ def _train_baseline_logreg(
         )
 
     base = LogisticRegression(max_iter=1000, solver="liblinear", random_state=42)
-    cv_folds = min(3, max(2, (y == 1).sum(), (y == 0).sum()))
+    # Wave 3.5 C7 fix: CV folds bounded by MINORITY class count
+    minority_count = int(min((y == 1).sum(), (y == 0).sum()))
+    if minority_count < 2:
+        import warnings as _warnings
+        _warnings.warn(
+            f"Drug {drug_name!r}: minority class has {minority_count} sample(s); "
+            f"skipping sigmoid calibration. Returning uncalibrated logistic regression.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        base.fit(X, y)
+        return TrainedClassifier(
+            model=base,
+            drug_name=drug_name,
+            feature_dim=X.shape[1],
+            calibrated=False,
+        )
+    cv_folds = max(2, min(3, minority_count))
     model = CalibratedClassifierCV(base, cv=cv_folds, method="sigmoid")
     model.fit(X, y)
 
@@ -203,25 +220,35 @@ def train_amrfinder_baseline(
 
 
 def train_kmer_baseline(
-    strain_sequences: dict[str, str],
+    strain_sequences: dict[str, "str | list[str]"],
     labels: dict[str, int],
     drug_name: str,
     k: int = DEFAULT_KMER_K,
     top_n: int = DEFAULT_KMER_TOP_N,
     classifier_type: str = "logreg",
     vocabulary: list[str] | None = None,
+    contig_separator: str = "N" * 100,
 ) -> tuple[TrainedClassifier, list[str], list[str]]:
-    """Train k-mer baseline on concatenated strain sequences.
+    """Train k-mer baseline on per-strain sequences.
+
+    Wave 3.5 M5 fix: accepts EITHER a single concatenated string OR a list of
+    contigs per strain (chromosome + plasmids). When a list is supplied, the
+    function joins contigs with a separator of N's (default 100 N's) so k-mers
+    don't span contig boundaries — k-mer extraction skips N-containing windows.
+
+    Without this, plasmid-borne β-lactamase signal was silently lost when
+    callers passed only the chromosomal sequence.
 
     Args:
-        strain_sequences: strain_id -> a single concatenated nucleotide string
-            for that strain (e.g., concatenated CDS sequences).
+        strain_sequences: strain_id -> str OR list[str]. Either format works.
         labels: strain_id -> binary R/S label.
         drug_name: for reporting.
         k: k-mer size (default 8).
         top_n: vocabulary cap (default 10K most-frequent k-mers).
         classifier_type: 'logreg' (default) or 'xgboost'.
         vocabulary: pre-computed k-mer vocabulary (for held-out test sets).
+        contig_separator: N-run inserted between contigs in list mode; long
+            enough that no real k-mer (k≤32) can span it.
 
     Returns:
         (TrainedClassifier, kmer_vocabulary, strain_id_order).
@@ -231,7 +258,14 @@ def train_kmer_baseline(
         raise ClassifierTrainingError(
             f"k-mer baseline for {drug_name!r}: no strain overlap"
         )
-    sequences = [strain_sequences[sid] for sid in strain_ids]
+
+    def _coerce(seq_or_list: "str | list[str]") -> str:
+        if isinstance(seq_or_list, str):
+            return seq_or_list
+        # List of contigs → N-separated concatenation (k-mer N-skip handles boundaries)
+        return contig_separator.join(seq_or_list)
+
+    sequences = [_coerce(strain_sequences[sid]) for sid in strain_ids]
     if vocabulary is None:
         vocabulary = build_kmer_vocabulary(sequences, k=k, top_n=top_n)
     X = kmers_to_feature_matrix(sequences, vocabulary, k=k)

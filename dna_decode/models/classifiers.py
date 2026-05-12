@@ -139,8 +139,9 @@ def train_xgboost_classifier(
         eval_metric=params.eval_metric,
         random_state=params.random_state,
         verbosity=0,
-        use_label_encoder=False,
     )
+    # Wave 3.5 cleanup: removed `use_label_encoder=False` — xgboost>=2.0 silently
+    # ignores it; stale kwarg left over from xgboost 1.x.
 
     if calibrate:
         try:
@@ -149,8 +150,28 @@ def train_xgboost_classifier(
             raise ClassifierTrainingError(
                 "scikit-learn not installed; run `uv sync`"
             ) from e
-        # 3-fold internal CV for calibration; falls back gracefully if n is small
-        cv_folds = min(3, max(2, (y == 1).sum(), (y == 0).sum()))
+        # Wave 3.5 C7 fix: CV folds must be bounded by the MINORITY class count,
+        # not the majority. CalibratedClassifierCV's internal StratifiedKFold
+        # requires ≥ cv samples per class. Previously `max(positives, negatives)`
+        # produced cv=3 on a 19-S / 1-R split → sklearn raised during fit.
+        minority_count = int(min((y == 1).sum(), (y == 0).sum()))
+        if minority_count < 2:
+            import warnings as _warnings
+            _warnings.warn(
+                f"Drug {drug_name!r}: minority class has {minority_count} sample(s); "
+                f"skipping sigmoid calibration. Returning uncalibrated XGBClassifier.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            base.fit(X, y)
+            return TrainedClassifier(
+                model=base,
+                drug_name=drug_name,
+                feature_dim=X.shape[1],
+                calibrated=False,
+                params=params,
+            )
+        cv_folds = max(2, min(3, minority_count))
         model = CalibratedClassifierCV(base, cv=cv_folds, method="sigmoid")
         model.fit(X, y)
     else:

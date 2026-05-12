@@ -275,6 +275,45 @@ def tier_classify(
     )
 
 
+def _best_tier_across_candidates(
+    resistance_catalog,
+    drug: str,
+    *candidates: str,
+    annotations: pd.DataFrame | None = None,
+) -> tuple[str, AttributionTier]:
+    """Try multiple locus identifiers; keep the best-tier match.
+
+    Wave 3.5 C8 fix: Bakta-annotated genomes have `gene_id` and `locus_tag`
+    in different identifier spaces (e.g., `g1` vs `TAG_001`). Catalog entries
+    are gene symbols (e.g., `gyrA`). Trying ONLY locus_tag, as the prior
+    implementation did, never matched the catalog — every Phase 1 attribution
+    hit was undercounted.
+
+    Returns the (chosen_locus, tier) pair with the lowest positive tier
+    across all candidates. Tier scale: 1 (best) → 5 (weak) → -1 (Fail).
+    """
+    best_locus = ""
+    best_tier: AttributionTier | None = None
+    for cand in candidates:
+        if not cand:
+            continue
+        tier = tier_classify(cand, drug, resistance_catalog, annotations=annotations)
+        # First non-empty candidate becomes default chosen locus
+        if best_tier is None:
+            best_locus, best_tier = cand, tier
+            continue
+        # Prefer lower positive tier (Tier 1 beats Tier 4); any positive beats Fail
+        if best_tier.tier == -1 and tier.tier != -1:
+            best_locus, best_tier = cand, tier
+        elif tier.tier != -1 and tier.tier < best_tier.tier:
+            best_locus, best_tier = cand, tier
+
+    if best_tier is None:
+        # No non-empty candidates supplied; return Fail with empty locus
+        return "", AttributionTier(tier=-1, rationale="no locus identifier supplied")
+    return best_locus, best_tier
+
+
 def build_attribution_report(
     gene_effects: GeneEffectTable,
     drug: str,
@@ -282,19 +321,30 @@ def build_attribution_report(
     top_k: int = 20,
     annotations: pd.DataFrame | None = None,
 ) -> AttributionReport:
-    """Build Tier 1-5 report for the top-K gene-level hits."""
+    """Build Tier 1-5 report for the top-K gene-level hits.
+
+    Wave 3.5 C8: walks BOTH `gene_id` and `locus_tag` for each row via
+    `_best_tier_across_candidates`. Previously only `locus_tag`-then-`gene_id`
+    was tried; locus tags never match gene-symbol catalog entries.
+    """
     report = AttributionReport(drug=drug, top_k=top_k)
     top_rows = gene_effects.head(top_k)
     for _, row in top_rows.iterrows():
-        locus = row.get("locus_tag") or row.get("gene_id") or ""
-        if not locus:
+        gene_id = str(row.get("gene_id", "") or "")
+        locus_tag = str(row.get("locus_tag", "") or "")
+        if not gene_id and not locus_tag:
             continue
-        tier = tier_classify(locus, drug, resistance_catalog, annotations=annotations)
-        report.hits.append((locus, tier))
+        chosen, tier = _best_tier_across_candidates(
+            resistance_catalog, drug, gene_id, locus_tag, annotations=annotations
+        )
+        report.hits.append((chosen, tier))
     return report
 
 
 # ---- Motif recovery against RegulonDB / JASPAR ----
+
+
+_MOTIF_RECOVERY_WARNED = False
 
 
 def motif_recovery(
@@ -302,18 +352,45 @@ def motif_recovery(
     known_motifs: dict[str, str],
     delta_threshold: float = 0.1,
 ) -> dict[str, list[int]]:
-    """Find high-impact saturation-mutagenesis windows that overlap known motifs.
+    """PLACEHOLDER: returns high-impact positions, NOT motif-aligned recovery.
+
+    Wave 3.5 M4 caveat — this function does NOT do sequence-level motif
+    matching. It groups by position, keeps positions with |prediction_delta|
+    ≥ threshold, and returns the SAME position list for EVERY motif name in
+    `known_motifs`. The function name is misleading; kept as-is to preserve
+    Phase 1 API stability + plan references.
+
+    Phase 2 will implement real motif recovery via sequence alignment to
+    motif consensus (RegulonDB / JASPAR-style). Until then, callers should
+    treat this output as "high-impact positions" and correlate with motifs
+    externally via the position column + Step 3 annotations.
+
+    Emits `UserWarning` on first call so silent reliance is loud.
 
     Args:
         saturation_table: PositionEffectTable from saturation_mutagenesis.
-        known_motifs: motif_name -> consensus sequence (e.g., from RegulonDB).
+        known_motifs: motif_name -> consensus sequence (currently unused
+            beyond key extraction).
         delta_threshold: minimum |prediction_delta| for a position to count
             as 'high-impact'.
 
     Returns:
-        motif_name → list of saturation-table positions where the motif was
-        recovered. Empty list = motif not recovered for that gene.
+        motif_name → list of high-impact-position integers. SAME list for every
+        motif key.
     """
+    global _MOTIF_RECOVERY_WARNED
+    if not _MOTIF_RECOVERY_WARNED:
+        import warnings as _warnings
+        _warnings.warn(
+            "motif_recovery is a Phase 1 placeholder — returns the same "
+            "high-impact-position list for every motif name; does NOT do "
+            "sequence-level motif matching. Phase 2 will implement real "
+            "alignment-based recovery.",
+            UserWarning,
+            stacklevel=2,
+        )
+        _MOTIF_RECOVERY_WARNED = True
+
     if len(saturation_table) == 0:
         return {name: [] for name in known_motifs}
 
@@ -327,8 +404,4 @@ def motif_recovery(
         by_position["prediction_delta"] >= delta_threshold
     ]["position"].tolist()
 
-    # For Phase 1, we don't have the gene sequence here — just position list.
-    # Phase 2 will add sequence alignment to motif consensus. For now, this
-    # function returns the high-impact positions; caller correlates with
-    # genomic coordinates via Step 3 annotations.
     return {name: high_impact_positions for name in known_motifs}

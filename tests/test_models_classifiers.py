@@ -177,3 +177,28 @@ def test_feature_importance_first_feature_dominant_in_separable_data():
     # Feature 0 should be among the top-3 by importance
     top3 = np.argsort(imp)[::-1][:3]
     assert 0 in top3.tolist()
+
+
+# ---- Wave 3.5 C7: minority-class CV folds ----
+
+
+def test_train_with_extreme_imbalance_skips_calibration_warns():
+    """1 minority sample → skip calibration + emit RuntimeWarning; return uncalibrated."""
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((20, 4))
+    y = np.zeros(20, dtype=int)
+    y[0] = 1  # only 1 resistant
+    with pytest.warns(RuntimeWarning, match="minority class"):
+        clf = train_xgboost_classifier(X, y, drug_name="rare", calibrate=True)
+    assert clf.calibrated is False  # fell back to uncalibrated
+
+
+def test_train_with_moderate_imbalance_uses_minority_count_for_cv():
+    """3 minority + 17 majority → cv_folds = min(3, 3) = 3 (was previously cv=3
+    based on majority of 17; both succeed but old logic could crash on rarer cases)."""
+    rng = np.random.default_rng(1)
+    X = rng.standard_normal((20, 4))
+    y = np.array([1, 1, 1] + [0] * 17, dtype=int)
+    # Should NOT raise — minority_count=3 → cv_folds=3
+    clf = train_xgboost_classifier(X, y, drug_name="moderate", calibrate=True)
+    assert clf.calibrated is True

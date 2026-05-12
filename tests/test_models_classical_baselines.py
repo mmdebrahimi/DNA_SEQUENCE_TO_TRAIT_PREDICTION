@@ -183,6 +183,49 @@ def test_train_kmer_baseline_unknown_classifier_raises():
         )
 
 
+# ---- Wave 3.5 M5: train_kmer_baseline accepts list[str] per strain ----
+
+
+def test_train_kmer_baseline_accepts_list_of_contigs():
+    """Multi-contig strain (chromosome + plasmids) joined internally with N-separator
+    so k-mers don't span contig boundaries. Verifies the API broadening."""
+    rng = np.random.default_rng(2)
+    bases = ["A", "C", "G", "T"]
+    # Mix str + list within the SAME dict — both should work
+    strain_sequences: dict[str, "str | list[str]"] = {}
+    for i in range(20):
+        seqs = [
+            "".join(rng.choice(bases, size=100)),
+            "".join(rng.choice(bases, size=80)),
+        ]
+        strain_sequences[f"s_list_{i:03d}"] = seqs  # list of 2 contigs
+    for i in range(20):
+        strain_sequences[f"s_str_{i:03d}"] = "".join(rng.choice(bases, size=200))  # plain string
+
+    labels = {sid: i % 2 for i, sid in enumerate(sorted(strain_sequences.keys()))}
+    clf, vocab, _ = train_kmer_baseline(
+        strain_sequences, labels, "cipro", k=4, top_n=30
+    )
+    # Should produce a trained classifier without raising; both input shapes accepted
+    assert clf.drug_name == "cipro"
+    assert clf.feature_dim == len(vocab)
+
+
+def test_train_kmer_baseline_n_separator_prevents_cross_contig_kmers():
+    """N-run between contigs should prevent k-mers that span the join."""
+    from dna_decode.models.classical_baselines import extract_kmer_counts
+
+    contigs = ["ATGCATGC", "GGGGAAAA"]
+    joined = ("N" * 100).join(contigs)
+    counts = extract_kmer_counts(joined, k=3)
+    # k=3 kmers entirely inside each contig are present
+    assert "ATG" in counts
+    assert "GGG" in counts
+    # No k-mer should contain N
+    for kmer in counts:
+        assert "N" not in kmer
+
+
 # ---- gene-presence baseline (delegates to amrfinder) ----
 
 

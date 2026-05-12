@@ -246,6 +246,71 @@ def test_build_attribution_report_walks_top_k():
     assert matched and matched[0][1] == 3
 
 
+# ---- Wave 3.5 C8: build_attribution_report tries both gene_id and locus_tag ----
+
+
+def test_attribution_report_matches_via_locus_tag_when_gene_id_is_not_symbol():
+    """Bakta-style row: gene_id='g3' + locus_tag='gyrA'. Catalog has 'gyrA'.
+    Old behavior preferred locus_tag → would match; the fix preserves this."""
+    from dna_decode.interp.mutagenesis import _best_tier_across_candidates
+
+    cat = ResistanceCatalog()
+    cat.add(ResistanceEntry("gyrA", "f", "fluoroquinolone", "alt", "CARD", "X"))
+    chosen, tier = _best_tier_across_candidates(cat, "fluoroquinolone", "g3", "gyrA")
+    assert tier.tier == 3
+    assert chosen == "gyrA"
+
+
+def test_attribution_report_matches_via_gene_id_when_annotation_set_it_to_symbol():
+    """RefSeq-style row: gene_id='gyrA' + locus_tag='b2231'. Old behavior tried
+    locus_tag first → would fail (b2231 not in catalog). C8 fix tries gene_id too."""
+    from dna_decode.interp.mutagenesis import _best_tier_across_candidates
+
+    cat = ResistanceCatalog()
+    cat.add(ResistanceEntry("gyrA", "f", "fluoroquinolone", "alt", "CARD", "X"))
+    chosen, tier = _best_tier_across_candidates(cat, "fluoroquinolone", "gyrA", "b2231")
+    assert tier.tier == 3
+    assert chosen == "gyrA"
+
+
+def test_attribution_report_picks_better_tier_when_one_candidate_better():
+    """When both candidates match catalog at different tiers, pick the lower tier."""
+    from dna_decode.interp.mutagenesis import _best_tier_across_candidates
+
+    cat = ResistanceCatalog()
+    cat.add(ResistanceEntry("gyrA", "fluoroquinolone-resistance", "fluoroquinolone", "alt", "CARD", "X"))
+    # 'gyrA' → Tier 3 (direct match); 'fluoroquinolone-resistance-gene' → Tier 4 (family)
+    chosen, tier = _best_tier_across_candidates(
+        cat, "fluoroquinolone", "gyrA", "fluoroquinolone-resistance-gene"
+    )
+    assert tier.tier == 3
+    assert chosen == "gyrA"
+
+
+def test_attribution_report_no_candidates_returns_fail():
+    """Empty candidates → Fail tier with informative rationale."""
+    from dna_decode.interp.mutagenesis import _best_tier_across_candidates
+
+    cat = ResistanceCatalog()
+    chosen, tier = _best_tier_across_candidates(cat, "cipro", "", "")
+    assert tier.tier == -1
+    assert chosen == ""
+
+
+# ---- Wave 3.5 M4: motif_recovery emits UserWarning ----
+
+
+def test_motif_recovery_emits_user_warning_on_call():
+    """motif_recovery is a placeholder; first call must warn so silent reliance is loud."""
+    # Reset the module-level flag to test fresh-call behavior
+    import dna_decode.interp.mutagenesis as mod
+    mod._MOTIF_RECOVERY_WARNED = False
+
+    empty = pd.DataFrame(columns=list(POSITION_EFFECT_COLUMNS))
+    with pytest.warns(UserWarning, match="placeholder"):
+        motif_recovery(empty, {"motifA": "ACGT"})
+
+
 # ---- motif_recovery ----
 
 
