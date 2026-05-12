@@ -1,5 +1,6 @@
 # Runtime data + caches (large, gitignored per Step 1 of technical plan)
-data/
+# Anchored to repo root — doesn't match dna_decode/data/ subpackage
+/data/
 *.h5
 *.parquet
 *.pkl
