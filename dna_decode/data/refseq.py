@@ -3,10 +3,15 @@
 Fetches FASTA + GFF3 + GenBank for an accession and caches under
 `<cache_dir>/<accession>/`. Idempotent: short-circuits on existing cache
 unless `force=True`. Atomic via `.complete` sentinel.
+
+Wave 1.5 hardening: after downloading the NCBI Datasets ZIP, unpacks it
+into `genome.fna`, `annotations.gff3`, `annotations.gbk` so the path
+helpers point at real consumable files (not just the raw archive).
 """
 from __future__ import annotations
 
 import shutil
+import zipfile
 from pathlib import Path
 from typing import Iterable
 
@@ -124,9 +129,10 @@ def download_genome(
 ) -> Path:
     """Download FASTA + GFF3 + GenBank for an accession; cache idempotently.
 
-    Returns the per-accession cache directory. Subsequent calls short-circuit
-    unless `force=True` or the cache lacks a `.complete` sentinel (interpreted
-    as partial cache → re-download).
+    Writes the raw NCBI Datasets ZIP to `package.zip`, then unpacks the
+    expected genomic files into `genome.fna`, `annotations.gff3`, and
+    `annotations.gbk`. Subsequent calls short-circuit unless `force=True` or
+    the cache lacks a `.complete` sentinel (treated as partial → re-download).
     """
     cache_path = cache_dir_for(accession, Path(cache_root))
 
@@ -141,17 +147,72 @@ def download_genome(
     url = _build_dataset_url(accession)
     resp = _http_get_with_retry(url, timeout_seconds=timeout_seconds, max_retries=max_retries)
 
-    # NCBI returns a ZIP archive containing fna/gff/gbff. For the v1 scaffold we
-    # write the raw response body and defer the unzip to the consumer
-    # (annotations.py in Step 3 will handle GFF parsing; refseq stores raw files).
-    # Real implementation hook: real ingestion writes 3 separate files from the ZIP.
     archive_path = cache_path / "package.zip"
     _write_atomic(archive_path, resp.content)
+
+    # Wave 1.5: unpack the ZIP into the 3 canonical files
+    _unpack_ncbi_datasets_zip(archive_path, cache_path)
 
     # Sentinel last → marks atomicity-complete
     _write_atomic(cache_path / ".complete", "")
 
     return cache_path
+
+
+def _unpack_ncbi_datasets_zip(archive_path: Path, cache_path: Path) -> None:
+    """Extract genome FASTA + GFF + GBFF from an NCBI Datasets ZIP archive.
+
+    NCBI Datasets ZIPs follow a known structure:
+        ncbi_dataset/data/<accession>/<accession>_genomic.fna
+        ncbi_dataset/data/<accession>/genomic.gff
+        ncbi_dataset/data/<accession>/genomic.gbff
+    (plus a `README.md`, `dataset_catalog.json`, and other metadata.)
+
+    Writes to:
+        cache_path/genome.fna
+        cache_path/annotations.gff3
+        cache_path/annotations.gbk
+
+    Missing-file behavior: each target file is best-effort. The annotation
+    parser (Step 3) will fail gracefully if a specific format is absent — for
+    instance, some assemblies ship without GBFF.
+    """
+    if not zipfile.is_zipfile(archive_path):
+        raise RefSeqDownloadError(
+            f"Downloaded archive at {archive_path} is not a valid ZIP. "
+            "NCBI may have returned an error page or partial file."
+        )
+
+    target_paths = {
+        ".fna": cache_path / "genome.fna",
+        ".gff": cache_path / "annotations.gff3",
+        ".gbff": cache_path / "annotations.gbk",
+    }
+    extracted: dict[str, bool] = {".fna": False, ".gff": False, ".gbff": False}
+
+    with zipfile.ZipFile(archive_path) as zf:
+        for member in zf.namelist():
+            lower = member.lower()
+            for suffix, target in target_paths.items():
+                # Match the first occurrence per suffix; NCBI sometimes ships
+                # both protein.faa and genomic.fna — we want genomic only.
+                if extracted[suffix]:
+                    continue
+                if not lower.endswith(suffix):
+                    continue
+                if suffix == ".fna" and "protein" in lower:
+                    # Skip protein FASTA; we want the nucleotide genome
+                    continue
+                with zf.open(member) as src:
+                    content = src.read()
+                target.write_bytes(content)
+                extracted[suffix] = True
+
+    if not extracted[".fna"]:
+        # No FASTA at all → the cache is unusable downstream
+        raise RefSeqDownloadError(
+            f"NCBI archive at {archive_path} contained no genomic .fna file"
+        )
 
 
 def fasta_path(accession: str, cache_root: Path | str) -> Path:

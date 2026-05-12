@@ -1,11 +1,17 @@
 """CLI for Step 0.5 — Real-data pilot gate (HARD).
 
 Usage:
-    python -m scripts.pilot_gate [--drugs cipro,ceftriaxone,tetracycline] [--target-per-drug 150]
+    python -m scripts.pilot_gate \
+        [--drugs cipro,ceftriaxone,tetracycline] \
+        [--target-per-drug 150] \
+        [--ast-tsv <local-bvbrc-ast-tsv-path>]
 
 HARD-gate exit semantics:
-    exit 0 if all per-drug counts >= target AND 3-drug intersection >= target.
-    exit non-zero otherwise. /execute-plan halts here on non-zero.
+    0 = GO; 1 = NO-GO; 2 = PilotGateError; 3 = NotImplementedError (no AST source).
+
+Provide a BV-BRC AST TSV via --ast-tsv (or BVBRC_AST_TSV env var, or
+config.bvbrc_ast.local_tsv_path). Without one, the live-API path raises
+NotImplementedError → exit 3. Download an AST TSV from ftp.bvbrc.org.
 
 Writes report to data/processed/pilot_report.md.
 """
@@ -55,6 +61,13 @@ def main(argv: list[str] | None = None) -> int:
         default="data/processed/pilot_report.md",
         help="Output report path (default: data/processed/pilot_report.md).",
     )
+    parser.add_argument(
+        "--ast-tsv",
+        default=None,
+        help="Path to a local BV-BRC AST TSV. If omitted, falls back to "
+        "BVBRC_AST_TSV env var or config.bvbrc_ast.local_tsv_path. If neither "
+        "is set, the live-API path raises NotImplementedError (exit 3).",
+    )
     args = parser.parse_args(argv)
 
     drugs = tuple(d.strip() for d in args.drugs.split(","))
@@ -64,7 +77,12 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     try:
-        report = run_pilot_gate(drugs=drugs, criteria=criteria, config_path=args.config)
+        report = run_pilot_gate(
+            drugs=drugs,
+            criteria=criteria,
+            config_path=args.config,
+            ast_tsv_path=args.ast_tsv,
+        )
     except PilotGateError as e:
         print(f"PILOT GATE FAILED (cannot run): {e}", file=sys.stderr)
         return 2

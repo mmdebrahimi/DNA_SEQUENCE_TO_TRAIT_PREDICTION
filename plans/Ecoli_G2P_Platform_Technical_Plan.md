@@ -487,3 +487,97 @@ After all 16 steps (Step 0.5 + Steps 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 
 12. Visual: render ISM-attribution browser PNGs for each of the 3 drugs on the reference genome; eyeball that high-attribution regions overlap with known resistance-gene neighborhoods.
 
 **Phase 1 ships** when verifications 1, 2, 3, 4, 5, 6, 9 pass. Verifications 7, 8, 10, 11, 12 are nice-to-have for the Phase 1 launch artifact; gaps are documented in Phase 2 backlog. Verification 6's clade-only-baseline gap is the **mechanistic-signal validation gate** — failing this means the model is learning phylogeny, not resistance biology.
+
+### Attribution-success tiers (added 2026-05-11 per /probe + ChatGPT exchange)
+
+Binary "≥0.6 top-K precision" criterion is too coarse for attribution validation. Replace with tiered success rubric. For each attribution hit per drug:
+
+| Tier | Definition | Example (cipro) | Counts toward |
+|---|---|---|---|
+| **Tier 1** | Exact known resistance variant (codon-level + amino-acid-level match) | `gyrA S83L` predicted as top-K | "high-confidence biological signal" |
+| **Tier 2** | Same codon or amino-acid region as a known variant | `gyrA` codon 80-90 predicted | "high-confidence biological signal" |
+| **Tier 3** | Same gene as a known resistance locus | `gyrA` anywhere in the gene | "biologically plausible signal" |
+| **Tier 4** | Same operon, pathway, or known resistance-mechanism class | `acrAB-tolC` efflux-pump-adjacent | "plausibility-grade signal" |
+| **Tier 5** | Plausible region by literature / database lookup but unvalidated for THIS drug | novel gene with weak literature link | "candidate for follow-up" |
+| **Fail** | Clade-only marker, intergenic with no functional annotation, or known-irrelevant region | strain-distinguishing SNP in `rpoB` | "model artifact / clade leakage" |
+
+**Phase 1 success-criteria update:** instead of "top-K=20 attribution-precision ≥0.6", Phase 1 ships when:
+- ≥40% of top-K=20 hits are Tier 1-3 for ciprofloxacin (where canonical mutations are well-characterized)
+- ≥25% of top-K=20 hits are Tier 1-3 for ceftriaxone (more distributed signal)
+- ≥30% of top-K=20 hits are Tier 1-3 for tetracycline
+- ≤20% of top-K=20 hits are Fail-tier (clade leakage proxy)
+
+Implementation: Step 11's `motif_recovery` extends to a `tier_classify(predicted_locus, drug)` helper that walks the resistance-catalog + annotation tables to assign tiers. Reuses Step 4's `ResistanceCatalog` + Step 3's `AnnotationTable`. ~50 LOC addition to Step 11 OR a new Step 11.5.
+
+## Phase 2 backlog (deferred from Phase 1)
+
+These are explicit follow-ups for Phase 2, captured here so Phase 1 ships honest about what it doesn't cover.
+
+### Attribution Refinement Engine (Phase 2)
+
+Phase 1's Step 11 (ISM) is "coarse localization" only. Phase 2 adds the local-refinement pipeline:
+
+| Stage | Method | Phase | Notes |
+|---|---|---|---|
+| Coarse localization | Pooled-embedding ISM | ✓ Phase 1 (Step 11) | Gene-level + saturation on top-K |
+| Local re-scanning | Sliding-window occlusion at sub-gene resolution | Phase 2 | Refines from gene-level to ~10bp window |
+| Codon-aware mutagenesis | Translate window, score synonymous vs non-synonymous mutations | Phase 2 | Tier 1/2 attribution requires this |
+| Annotation overlap | Map candidate region to gene + codon + protein product + AMR-DB entry | Partial ✓ (Step 11 motif_recovery) | Phase 2 extends with RegulonDB + KEGG + EcoCyc |
+| Cohort variant association | Allele-frequency + Fisher exact + odds-ratio in resistant vs susceptible strains | Phase 2 | Variant Association Module |
+| Clade-controlled regression | Logistic regression with clade fixed effect | Phase 2 | Reduces lineage confounding beyond LOMO CV |
+| Bidirectional counterfactual editing | Susceptible → introduce candidate → predict; resistant → revert → predict | Phase 2 | Counterfactual Edit Engine |
+| Multi-model attribution agreement | Score candidates by Evo + DNABERT-2 + classical-baseline + AMRFinder concordance | Phase 2 | Multi-Model Attribution Agreement |
+
+### Differentiable MLP head + Captum IG (Phase 2)
+
+Per post-tech-plan brainstorm C1, Phase 1's XGBoost classifier is non-differentiable so Captum IG was removed. Phase 2 adds an alternate 2-layer MLP head trained on the same frozen embeddings + Captum IG attribution path. Crosscheck against ISM on the same top-K genes; systematic disagreement = model exposing different signal under different probes.
+
+### Haplotype Disambiguation Module (Phase 2)
+
+When SNP A + SNP B always travel together in resistant strains, both get high ISM/IG attribution but only one may be causal. Phase 2 adds:
+- Linkage-disequilibrium detection
+- Conditional regression (resistance ~ SNP_A + SNP_B → SNP_A significant after SNP_B fixed?)
+- Haplotype-stratified tests
+- Natural-recombination-event search to find strains where the variants separate
+
+### MIC regression head (Phase 2)
+
+Phase 1 is binary R/S only. Phase 2 adds MIC continuous regression head sharing the foundation-model embedding cache. Requires solving BV-BRC MIC sparsity + CLSI-vs-EUCAST breakpoint reconciliation noted in failure-mode #4.
+
+### Pan-genome graph layer (Phase 2)
+
+Step 6's cohort catalog is drug-first selection. Phase 2 adds Panaroo/Roary pan-genome clustering → gene-family presence/absence matrix → PyTorch Geometric GNN over (gene-family nodes, co-occurrence/synteny edges). Captures epistasis + plasmid-context that the per-strain embedding loses.
+
+### Multi-task learning shared encoder (Phase 2 / 3)
+
+Currently each drug gets its own XGBoost classifier on frozen embeddings. Phase 2/3 shifts to a shared sequence encoder with multiple task heads:
+- AMR-prediction head (per drug)
+- MIC-regression head (per drug)
+- AMR-gene-detection head (auxiliary supervision from AMRFinder)
+- Mutation-effect head (supervised on known resistance variants)
+- Plasmid-marker head (auxiliary)
+- Calibration / OOD head
+
+Curriculum training: start with simple drugs + known markers; progressively add multi-drug + clade-aware generalization + counterfactual edits.
+
+### AlphaFold-inspired architecture (Phase 3+ horizon)
+
+Not Phase 2. Aspirational long-term shape:
+- Sequence encoder (already exists as foundation-model wrapper)
+- Pan-genome / evolutionary representation (Phase 2 graph layer)
+- Pairwise interaction module (gene-gene + plasmid-gene + regulator-effector) — transformer over genes, GNN, or pair representation tensor
+- Multi-task trait heads
+- Confidence estimation (probability calibration + ensemble agreement + OOD distance + clade-only-baseline gap + attribution stability + AMRFinder concordance)
+- Iterative attribution refinement (coarse → local mutagenesis → annotation map → cohort association → counterfactual → reranking)
+
+**Caveat:** AlphaFold-style pair representation + iterative refinement does NOT fit on a single RTX 4090. Phase 3+ requires either A100+ on rented compute OR a smaller-scale architectural compromise. Avoid premature adoption.
+
+### Sequence-design search / RL (Phase 4+ horizon)
+
+Once Phase 3 has a calibrated predictor, an "action-taking" agent can propose minimal sequence edits that flip predicted phenotype. Methods, in increasing complexity:
+- Beam search over candidate edits
+- Bayesian optimization over genotype space
+- Genetic algorithms / evolutionary search
+- RL (only if simpler methods bottleneck on search-space size)
+
+RL is Phase 4+, NOT Phase 1 as the user initially intuited.

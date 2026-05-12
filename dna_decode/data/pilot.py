@@ -1,21 +1,31 @@
 """Step 0.5 — Real-data pilot gate (HARD).
 
-Metadata-only HTTP calls to BV-BRC + NCBI to estimate per-drug labeled-isolate
-counts after filters. No genome downloads. No embedding compute. Cheap (~1hr).
+Estimates per-drug labeled-isolate counts after filters. Two paths:
+
+1. **Local-TSV path (runnable today; Wave 1.5 hardening)**: reads a pre-downloaded
+   BV-BRC AST TSV from a path supplied via `--ast-tsv <path>`, `config.bvbrc_ast.
+   local_tsv_path`, or the `BVBRC_AST_TSV` env var. Reuses `load_bvbrc_ast` from
+   Step 5 for parsing.
+
+2. **Live-API path (deferred; NotImplementedError)**: real BV-BRC REST endpoint
+   selection deferred until first real-data run. The local-TSV path is the
+   preferred Phase 1 mode because it operates on a downloadable artifact.
 
 HARD-gate semantics: returns exit-code 0 only when every Phase 1 drug has
->= target_per_drug strains after all filters. Per the post-tech-plan
-brainstorm C1 resolution, the pilot script's non-zero exit halts /execute-plan
-at Step 6 (cohort) before downstream ingestion + embedding fires.
+>= target_per_drug strains after all filters AND the 3-drug intersection
+target is met. Non-zero exit halts /execute-plan at Step 6 (cohort).
 """
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+from dna_decode.data.ast_data import DEFAULT_ORGANISM, load_bvbrc_ast
 
 DEFAULT_CONFIG_PATH = Path("config/datasources.yaml")
 
@@ -91,20 +101,57 @@ def _load_config(config_path: Path) -> dict[str, Any]:
     return cfg
 
 
-def fetch_bvbrc_drug_counts(drugs: tuple[str, ...], cfg: dict[str, Any]) -> dict[str, int]:
-    """Fetch raw + method-filtered drug-labeled isolate counts from BV-BRC.
+def fetch_bvbrc_drug_counts(
+    drugs: tuple[str, ...],
+    cfg: dict[str, Any],
+    ast_tsv_path: Path | str | None = None,
+) -> dict[str, int]:
+    """Return raw drug-labeled isolate counts per drug.
 
-    Metadata-only HTTP. Returns mapping drug -> count.
+    Resolution order:
+    1. Explicit `ast_tsv_path` parameter (CLI --ast-tsv flag).
+    2. `BVBRC_AST_TSV` environment variable.
+    3. `cfg["bvbrc_ast"]["local_tsv_path"]` from datasources.yaml.
+    4. Live BV-BRC API → NotImplementedError (deferred until first real-data run).
 
-    Note: real BV-BRC API integration is scaffolded here; concrete endpoint
-    selection (data.bv-brc.org REST vs ftp.bvbrc.org TSV head) is deferred
-    until first real-data run. Tests inject mocked counts via this function's
-    return value.
+    Reuses `load_bvbrc_ast` from Step 5 — same broth-microdilution + organism
+    filters apply, so the pilot's per-drug counts match what the downstream
+    Step 5 ingestion will see.
     """
-    raise NotImplementedError(
-        "BV-BRC drug count fetch is scaffolded; implement at first real-data run. "
-        "Tests must monkeypatch this function with mocked counts."
+    resolved_path: Path | None = None
+
+    if ast_tsv_path:
+        resolved_path = Path(ast_tsv_path)
+    elif env_path := os.environ.get("BVBRC_AST_TSV"):
+        resolved_path = Path(env_path)
+    elif (bvbrc_cfg := cfg.get("bvbrc_ast", {})) and bvbrc_cfg.get("local_tsv_path"):
+        resolved_path = Path(bvbrc_cfg["local_tsv_path"])
+
+    if resolved_path is None:
+        raise NotImplementedError(
+            "Live BV-BRC API integration deferred. Provide a pre-downloaded "
+            "BV-BRC AST TSV via --ast-tsv <path>, BVBRC_AST_TSV env var, or "
+            "config.bvbrc_ast.local_tsv_path. Download from ftp.bvbrc.org."
+        )
+
+    if not resolved_path.exists():
+        raise PilotGateError(f"BV-BRC AST TSV not found at {resolved_path}")
+
+    organism = cfg.get("bvbrc_ast", {}).get("default_filters", {}).get(
+        "organism", DEFAULT_ORGANISM
     )
+    method_filter_list = cfg.get("bvbrc_ast", {}).get("default_filters", {}).get(
+        "measurement_method", ["broth_microdilution"]
+    )
+    method_filter = tuple(method_filter_list)
+
+    ast = load_bvbrc_ast(resolved_path, organism=organism, method_filter=method_filter)
+
+    counts: dict[str, int] = {}
+    for drug in drugs:
+        drug_lower = drug.lower()
+        counts[drug] = int((ast["antibiotic"] == drug_lower).sum())
+    return counts
 
 
 def fetch_ncbi_assembly_quality(strain_ids: list[str]) -> dict[str, dict[str, int]]:
@@ -121,14 +168,16 @@ def fetch_ncbi_assembly_quality(strain_ids: list[str]) -> dict[str, dict[str, in
 
 
 def apply_method_filter(
-    raw_counts: dict[str, int], method_filter_factor: float = 0.6
+    raw_counts: dict[str, int], method_filter_factor: float = 1.0
 ) -> dict[str, int]:
-    """Estimate post-method-filter counts.
+    """Pass-through when fetch_bvbrc_drug_counts already applied the filter.
 
-    Real implementation: filter BV-BRC AST rows where measurement_method in
-    criteria.measurement_method_filter. For the pilot gate, we use an empirical
-    survival factor (typically ~0.6 for broth_microdilution as the dominant
-    method) and let real-data ingestion (Step 5) compute exact counts.
+    Default `method_filter_factor=1.0` means no further reduction. The local-TSV
+    path applies broth-microdilution filtering inside `load_bvbrc_ast`, so counts
+    coming out of `fetch_bvbrc_drug_counts` are already post-method-filter.
+
+    A smaller factor (<1.0) is meaningful only for the not-yet-implemented live
+    API path where the raw count would not yet be filtered.
     """
     return {drug: int(count * method_filter_factor) for drug, count in raw_counts.items()}
 
@@ -174,19 +223,21 @@ def run_pilot_gate(
     drugs: tuple[str, ...] | None = None,
     criteria: CohortSelectionCriteria | None = None,
     config_path: Path | str = DEFAULT_CONFIG_PATH,
+    ast_tsv_path: Path | str | None = None,
 ) -> PilotReport:
-    """Run the metadata-only pilot gate.
+    """Run the pilot gate.
 
     Returns a PilotReport with per-drug counts at each filter stage + GO/NO-GO
-    verdict. Tests monkeypatch fetch_bvbrc_drug_counts to inject deterministic
-    counts.
+    verdict. The local-TSV path (preferred) is triggered when `ast_tsv_path`,
+    `BVBRC_AST_TSV` env var, or `config.bvbrc_ast.local_tsv_path` is set.
+    Otherwise raises NotImplementedError (live API deferred).
     """
     cfg = _load_config(Path(config_path))
     criteria = criteria or CohortSelectionCriteria()
     if drugs is None:
         drugs = tuple(d["name"] for d in cfg["phase1_drugs"])
 
-    raw_counts = fetch_bvbrc_drug_counts(drugs, cfg)
+    raw_counts = fetch_bvbrc_drug_counts(drugs, cfg, ast_tsv_path=ast_tsv_path)
     method_filtered = apply_method_filter(raw_counts)
     assembly_filtered = apply_assembly_filter(method_filtered)
     intersection = estimate_three_drug_intersection(assembly_filtered)
