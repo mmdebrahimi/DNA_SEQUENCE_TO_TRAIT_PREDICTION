@@ -350,6 +350,31 @@ Depends on: Step 14
 - Smoke: full pipeline runs in <60s on CPU; AUROC ≥0.85 on synthetic signal; attribution top-1 locus = synth_gyrA
 - This is the canonical regression test for any future change
 
+### Step 18: Classical baseline benchmark
+Files: dna_decode/models/classical_baselines.py, tests/test_models_classical_baselines.py
+Depends on: Step 4, Step 5, Step 6, Step 10
+
+**Added 2026-05-11 per post-tech-plan critique** (load-bearing per ChatGPT's strongest agreement with the Codex brainstorm): foundation-model embeddings must beat classical baselines to justify the foundation-model premise. Without this step, every Phase 1 result is vulnerable to "would a simple k-mer baseline perform equally well?"
+
+**What changes:**
+- `dna_decode/models/classical_baselines.py`:
+  - `train_amrfinder_baseline(cohort: StrainCohort, drug: str) -> TrainedClassifier` — features are AMRFinder gene-call presence/absence vector per strain (uses Step 4's resistance catalog + Step 5's AST labels); classifier is XGBoost binary per drug.
+  - `train_kmer_baseline(cohort: StrainCohort, drug: str, k: int = 8) -> TrainedClassifier` — features are k=8 nucleotide-k-mer count vectors per strain (top-N most frequent, e.g., N=10000); classifier is logistic regression + XGBoost (both run, both reported).
+  - `train_gene_presence_baseline(cohort: StrainCohort, drug: str) -> TrainedClassifier` — features are gene-family presence/absence from Bakta annotations (Step 3 + Step 6); classifier is XGBoost binary per drug.
+- `tests/test_models_classical_baselines.py` — synthetic feature matrices + labels; verifies each baseline produces a trained model with expected metric shape; verifies CV integration with Step 10's harness.
+
+**Key details:**
+- Each baseline reuses Step 10's `leave_one_clade_out_cv` for fair comparison against foundation-model classifiers (Step 9).
+- All three baselines are cheap (~minutes on CPU); no GPU required.
+- Output: per-drug, per-baseline `TrainedClassifier` instances with CV results in the same `CVResult` shape as Step 9.
+- Step 17 leaderboard is extended to include `classical_amrfinder`, `classical_kmer_logreg`, `classical_kmer_xgb`, `classical_gene_presence` alongside the 4 foundation models — total 7-8 entries on the Phase 1 leaderboard.
+- **Validation gate strengthens:** Phase 1 ships when (a) foundation-model embeddings beat clade-only baseline (existing gate from Step 10), AND (b) foundation-model embeddings beat the best classical baseline by ≥3pp AUROC on ≥2 of 3 drugs. If (b) fails, the foundation-model premise is empirically rejected for this task and Phase 2 must redesign.
+
+**Test strategy:**
+- Unit: synthetic 100-sample feature matrices for each baseline; verify training + prediction + per-fold metrics.
+- Edge cases: zero-feature input (raise), single-class labels (raise), feature-count > sample-count (XGBoost handles gracefully; logreg warns + regularizes).
+- Integration: in Step 15 smoke pipeline, run all 3 baselines + 1 foundation model on synthetic-fixture data; verify all 4 produce comparable output shapes.
+
 ### Step 16: Documentation
 Files: docs/ARCHITECTURE.md, docs/HOW_TO_ADD_ORGANISM.md, docs/HOW_TO_RUN.md, README.md
 Depends on: Step 15
@@ -370,7 +395,7 @@ Depends on: Step 15
 
 ### Step 17: Comparative model benchmarking leaderboard
 Files: scripts/leaderboard.py, dna_decode/eval/leaderboard.py, tests/test_leaderboard.py
-Depends on: Step 7, Step 8, Step 9, Step 10, Step 14
+Depends on: Step 7, Step 8, Step 9, Step 10, Step 14, Step 18
 
 **Added per Adjustment C — scope-limited per Codex's partial-agree pushback.** NOT an open-ended model bakeoff; a fixed leaderboard against the SAME cohort + cache + CV protocol.
 
@@ -402,18 +427,21 @@ Wave 1 (7 parallel): Step 0.5 — Real-data pilot gate
                        Step 10 — Evaluation harness
 Wave 2 (2 parallel): Step 6 — Strain/AST cohort catalog (drug-first)
                        Step 8 — Embedding cache
-Wave 3 (2 parallel): Step 9 — Baseline classifiers
+Wave 3 (3 parallel): Step 9 — Baseline classifiers (foundation-model frozen embeddings)
                        Step 11 — In-silico mutagenesis (gene-level + saturation)
+                       Step 18 — Classical baseline benchmark
 Wave 4 (1 step):     Step 13 — Genome-browser visualization
 Wave 5 (1 step):     Step 14 — CLI entry points
 Wave 6 (2 parallel): Step 15 — Smoke pipeline + fixtures
-                       Step 17 — Comparative model benchmarking leaderboard
+                       Step 17 — Comparative model benchmarking leaderboard (now includes classical baselines)
 Wave 7 (1 step):     Step 16 — Documentation
 ```
 
 Step 12 (Captum attribution wrapper) **removed from Phase 1** per post-tech-plan brainstorm C1 — deferred to Phase 2 with a dedicated differentiable MLP head. ISM (Step 11) is Phase 1's sole attribution mechanism.
 
-Critical path: Step 1 → Step 7 → Step 8 → Step 9 → Step 14 → Step 15/17 → Step 16 (7 waves)
+Step 18 added 2026-05-11 per `/probe` recommendation: classical baselines (AMRFinder + k-mer + gene-presence) must run alongside foundation-model classifiers to validate the foundation-model premise empirically.
+
+Critical path: Step 1 → Step 7 → Step 8 → Step 9 → Step 14 → Step 15/17 → Step 16 (still 7 waves; Step 18 fits Wave 3 in parallel)
 Max parallelism: 7 agents (Wave 1)
 
 Note: dna_decode is a fresh project — parallel execution requires `git init` + a configured remote. If not set up, /execute-plan falls back to sequential mode.
