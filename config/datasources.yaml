@@ -1,0 +1,78 @@
+# Declarative config for external data sources.
+# Used by Steps 2-6 to avoid hardcoding URLs across ingestion modules.
+# Sibling pattern from Athena_Development config-driven data-source registry.
+
+# NCBI RefSeq E. coli K-12 reference (MG1655 substr.)
+refseq:
+  default_accession: "GCF_000005845.2"
+  api_base: "https://api.ncbi.nlm.nih.gov/datasets/v2"
+  ftp_base: "https://ftp.ncbi.nlm.nih.gov/genomes/all"
+  cache_dir: "data/cache/refseq"
+  timeout_seconds: 30
+  max_retries: 3
+
+# Resistance gene catalogs
+card:
+  data_url: "https://card.mcmaster.ca/latest/data"
+  cache_dir: "data/cache/card"
+  refresh_days: 30
+  license: "CC-BY-NC-SA"
+
+amrfinder:
+  ftp_base: "https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus"
+  cache_dir: "data/cache/amrfinder"
+  refresh_days: 30
+
+# Phenotype labels
+bvbrc_ast:
+  ftp_host: "ftp.bvbrc.org"
+  cache_dir: "data/cache/bvbrc"
+  refresh_days: 90
+  default_filters:
+    measurement_method: ["broth_microdilution"]
+    organism: "Escherichia coli"
+
+# Pan-genome strain catalog
+enterobase:
+  api_base: "https://enterobase.warwick.ac.uk/api/v2.0"
+  cache_dir: "data/cache/enterobase"
+
+# Phase 1 target phenotypes (drug-first cohort construction reads this)
+phase1_drugs:
+  - name: "ciprofloxacin"
+    class: "fluoroquinolone"
+    known_loci: ["gyrA", "gyrB", "parC", "parE", "qnrA", "qnrB", "qnrS", "aac(6')-Ib-cr"]
+    attribution_precision_target: 0.6
+  - name: "ceftriaxone"
+    class: "third_generation_cephalosporin"
+    known_loci: ["blaCTX-M", "blaSHV", "blaTEM", "ampC", "ompC", "ompF"]
+    attribution_precision_target: 0.4
+  - name: "tetracycline"
+    class: "tetracycline"
+    known_loci: ["tetA", "tetB", "tetM", "tetW", "tetD", "tetG"]
+    attribution_precision_target: 0.5
+
+# Compute defaults
+compute:
+  device: "cuda"  # set to "cpu" via env DNA_DECODE_DEVICE for non-GPU runs
+  quantize_4bit: true  # bitsandbytes 4-bit for Evo on RTX 4090
+  embed_batch_size: 8
+
+# Foundation models leaderboard (Step 17)
+foundation_models:
+  evo:
+    huggingface_id: "togethercomputer/evo-1-131k-base"
+    embedding_dim: 4096
+    max_context: 131072
+  dnabert2:
+    huggingface_id: "zhihan1996/DNABERT-2-117M"
+    embedding_dim: 768
+    max_context: 512
+  nucleotide_transformer:
+    huggingface_id: "InstaDeepAI/nucleotide-transformer-v2-100m-multi-species"
+    embedding_dim: 512
+    max_context: 12288
+  gena_lm:
+    huggingface_id: "AIRI-Institute/gena-lm-bert-base-t2t"
+    embedding_dim: 768
+    max_context: 4096

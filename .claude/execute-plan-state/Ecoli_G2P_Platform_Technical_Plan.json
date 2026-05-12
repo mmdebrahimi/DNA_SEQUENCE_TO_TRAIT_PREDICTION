@@ -1,0 +1,30 @@
+{
+  "plan_file": "plans/Ecoli_G2P_Platform_Technical_Plan.md",
+  "execution_mode": "parallel",
+  "gh_available": true,
+  "started_at": "2026-05-11T22:50:00Z",
+  "updated_at": "2026-05-11T22:50:00Z",
+  "test_baseline": null,
+  "test_baseline_note": "skipped — greenfield project, no tests exist before Step 1 creates the test harness",
+  "auto_merge_between_waves": true,
+  "disk_space_note": "39GB free at start; sufficient for code-gen; insufficient for full multi-model runtime",
+  "steps": {
+    "1": {"status": "in_progress", "wave": 0, "title": "Project bootstrap", "branch": null, "worktree_path": null, "pr_number": null},
+    "0.5": {"status": "pending", "wave": 1, "title": "Real-data pilot gate (HARD)", "branch": null, "worktree_path": null, "pr_number": null},
+    "2": {"status": "pending", "wave": 1, "title": "NCBI RefSeq downloader", "branch": null, "worktree_path": null, "pr_number": null},
+    "3": {"status": "pending", "wave": 1, "title": "Genome annotation parser", "branch": null, "worktree_path": null, "pr_number": null},
+    "4": {"status": "pending", "wave": 1, "title": "Resistance database loaders", "branch": null, "worktree_path": null, "pr_number": null},
+    "5": {"status": "pending", "wave": 1, "title": "AST phenotype data loader", "branch": null, "worktree_path": null, "pr_number": null},
+    "7": {"status": "pending", "wave": 1, "title": "Foundation model wrappers", "branch": null, "worktree_path": null, "pr_number": null},
+    "10": {"status": "pending", "wave": 1, "title": "Evaluation harness (LOSO+LOMO+Mash+clade-only)", "branch": null, "worktree_path": null, "pr_number": null},
+    "6": {"status": "pending", "wave": 2, "title": "Strain/AST cohort catalog (drug-first)", "branch": null, "worktree_path": null, "pr_number": null},
+    "8": {"status": "pending", "wave": 2, "title": "Embedding cache (HDF5)", "branch": null, "worktree_path": null, "pr_number": null},
+    "9": {"status": "pending", "wave": 3, "title": "Baseline classifiers", "branch": null, "worktree_path": null, "pr_number": null},
+    "11": {"status": "pending", "wave": 3, "title": "In-silico mutagenesis (gene+saturation)", "branch": null, "worktree_path": null, "pr_number": null},
+    "13": {"status": "pending", "wave": 4, "title": "Genome-browser visualization", "branch": null, "worktree_path": null, "pr_number": null},
+    "14": {"status": "pending", "wave": 5, "title": "CLI entry points", "branch": null, "worktree_path": null, "pr_number": null},
+    "15": {"status": "pending", "wave": 6, "title": "Smoke pipeline + fixtures", "branch": null, "worktree_path": null, "pr_number": null},
+    "17": {"status": "pending", "wave": 6, "title": "Comparative model benchmarking leaderboard", "branch": null, "worktree_path": null, "pr_number": null},
+    "16": {"status": "pending", "wave": 7, "title": "Documentation", "branch": null, "worktree_path": null, "pr_number": null}
+  }
+}
