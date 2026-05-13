@@ -191,9 +191,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     total = sum(written_per_strain.values())
+    # Plain ASCII for Windows cp1252 console compatibility.
     print(
         f"[populate_cache] DONE: {total} new embeddings across "
-        f"{len(written_per_strain)} strains → {args.cache}"
+        f"{len(written_per_strain)} strains -> {args.cache}"
     )
     return 0
 
