@@ -20,8 +20,8 @@ def test_smoke_pipeline_runs_to_completion(tmp_path: Path, project_root: Path):
     )
 
     # The seeded resistance signal in g1 should produce > random AUROC on
-    # this synthetic 10-strain setup; we use a conservative 0.6 threshold
-    # (LOSO on N=10 is noisy)
+    # this synthetic 12-strain setup; we use a conservative 0.6 threshold
+    # (LOSO on small N is noisy)
     assert results["auroc"] is not None
     assert results["auroc"] >= 0.6, f"AUROC {results['auroc']} too low on seeded signal"
 
