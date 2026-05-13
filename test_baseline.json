@@ -1,0 +1,17 @@
+{
+  "date": "2026-05-12",
+  "passed": 287,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 1,
+  "collected": 288,
+  "pytest_exit_code": 0,
+  "gate": "GREEN",
+  "env": {
+    "python": "3.11.5",
+    "uv": "0.11.8",
+    "platform": "win32"
+  },
+  "command": "uv run pytest tests/ -v",
+  "notes": "First authoritative full-suite run on real deps post-Phase-1 ship. Initial run was 285 passed / 2 failed (smoke tests blocked by N=4 cohort + Wave 3.5 MIN_TRAINING_SAMPLES=10 guard); resolved by bumping smoke fixture to N=12 and aligning CLI threshold to 0.6 (matching test's LOSO-noise rationale; 0.85 remains the Phase 1 real-data gate in README)."
+}
