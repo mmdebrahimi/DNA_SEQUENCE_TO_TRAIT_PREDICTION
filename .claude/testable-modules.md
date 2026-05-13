@@ -1,6 +1,7 @@
 # Testable Modules
 <!-- Auto-maintained by /test-epilogue — do not edit manually -->
 
+- scripts/build_mini_cohort.py — Gate B mini-cohort selector; picks N highest-assembly-quality strains per R/S class from a source cohort parquet (sort: contig_count asc, n50 desc); argparse + ValueError surface for missing class
 - scripts/leaderboard.py — formatting, markdown grouping, bundle-reading helpers (subprocess paths mocked)
 - scripts/pipeline.py — CLI dispatcher with ingest/train/predict/attribute subcommands; argparse validation + exit codes
 - scripts/populate_cache.py — Phase 2 standalone embedding-cache driver; strain_id ↔ assembly_accession mapping; --allow-mock gate; end-to-end mock populate

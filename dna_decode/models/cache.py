@@ -7,12 +7,21 @@ sequences.
 
 HDF5 layout:
     /                              file-level attrs: model_name, model_version,
-                                                     embedding_dim, created_at
+                                                     embedding_dim, created_at,
+                                                     pooling_strategy
     /strains/<strain_id>/<gene_id> dataset: 1-D float32 array (embedding_dim,)
 
 Version-mismatch refusal: opening a cache with a model_version different from
 the wrapping handle's expected version raises EmbeddingCacheVersionMismatch
 rather than silently overwriting. v0.2 may add a migration path.
+
+`pooling_strategy` (added 2026-05-13 per /brainstorm D-2): captures HOW the
+foundation model reduces token-level outputs to a per-window embedding. Today
+the single-sequence inference path uses "single_seq_mean" (mean over every
+token in the tokenizer output, including special tokens). A future batched
+implementation must use mask-aware mean pooling and tag itself "mask_aware_mean"
+to prevent hybrid caches (some genes embedded under strategy_A, others under
+strategy_B, with no way to tell which). Strict-match on reopen.
 """
 from __future__ import annotations
 
@@ -32,6 +41,14 @@ class EmbeddingCacheVersionMismatch(EmbeddingCacheError):
     """Cache exists with a different model_version than expected."""
 
 
+DEFAULT_POOLING_STRATEGY = "single_seq_mean"
+"""Tag for the current foundation-model embedding path: tokenize one sequence at
+a time + mean over every output token position (incl. special tokens). All
+Phase 1 + early Phase 2 callers inherit this default. Future batched / mask-
+aware pooling must use a different tag (e.g., "mask_aware_mean") so the cache's
+strict-match validation prevents hybrid embeddings on rebuilt caches."""
+
+
 @dataclass(frozen=True)
 class CacheMetadata:
     """File-level metadata stored as HDF5 root attributes."""
@@ -40,6 +57,7 @@ class CacheMetadata:
     model_version: str
     embedding_dim: int
     created_at: str  # ISO-8601 string
+    pooling_strategy: str = DEFAULT_POOLING_STRATEGY
 
 
 class EmbeddingCache:
@@ -56,6 +74,7 @@ class EmbeddingCache:
         model_name: str,
         model_version: str,
         embedding_dim: int,
+        pooling_strategy: str = DEFAULT_POOLING_STRATEGY,
     ):
         # Import h5py lazily so this module imports cleanly without h5py installed
         # (full pytest run + actual cache use requires `uv sync`).
@@ -71,6 +90,7 @@ class EmbeddingCache:
         self.model_name = model_name
         self.model_version = model_version
         self.embedding_dim = embedding_dim
+        self.pooling_strategy = pooling_strategy
 
         if self.path.exists():
             self._validate_existing_metadata()
@@ -86,6 +106,7 @@ class EmbeddingCache:
             f.attrs["model_version"] = self.model_version
             f.attrs["embedding_dim"] = self.embedding_dim
             f.attrs["created_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+            f.attrs["pooling_strategy"] = self.pooling_strategy
             f.create_group("strains")
 
     def _validate_existing_metadata(self) -> None:
@@ -93,16 +114,24 @@ class EmbeddingCache:
             existing_name = f.attrs.get("model_name", "")
             existing_version = f.attrs.get("model_version", "")
             existing_dim = int(f.attrs.get("embedding_dim", -1))
+            # Legacy caches written before 2026-05-13 lack this attr; default
+            # to the historical "single_seq_mean" value rather than raising.
+            existing_pooling = str(
+                f.attrs.get("pooling_strategy", DEFAULT_POOLING_STRATEGY)
+            )
             if (
                 existing_name != self.model_name
                 or existing_version != self.model_version
                 or existing_dim != self.embedding_dim
+                or existing_pooling != self.pooling_strategy
             ):
                 raise EmbeddingCacheVersionMismatch(
                     f"Cache at {self.path} has model_name={existing_name!r}, "
-                    f"model_version={existing_version!r}, embedding_dim={existing_dim}; "
+                    f"model_version={existing_version!r}, embedding_dim={existing_dim}, "
+                    f"pooling_strategy={existing_pooling!r}; "
                     f"expected name={self.model_name!r}, "
-                    f"version={self.model_version!r}, dim={self.embedding_dim}. "
+                    f"version={self.model_version!r}, dim={self.embedding_dim}, "
+                    f"pooling={self.pooling_strategy!r}. "
                     f"Delete the cache + re-populate, OR use a migration tool."
                 )
 
@@ -113,6 +142,9 @@ class EmbeddingCache:
                 model_version=str(f.attrs.get("model_version", "")),
                 embedding_dim=int(f.attrs.get("embedding_dim", -1)),
                 created_at=str(f.attrs.get("created_at", "")),
+                pooling_strategy=str(
+                    f.attrs.get("pooling_strategy", DEFAULT_POOLING_STRATEGY)
+                ),
             )
 
     # ---- per-entry operations ----

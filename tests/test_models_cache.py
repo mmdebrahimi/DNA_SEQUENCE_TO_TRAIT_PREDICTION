@@ -58,6 +58,53 @@ def test_cache_dim_mismatch_raises(tmp_path: Path):
         EmbeddingCache(cache_path, "mock", "v1", 16)
 
 
+# ---- pooling_strategy (Phase 2.5 hardening) ----
+
+
+def test_cache_records_default_pooling_strategy(tmp_path: Path):
+    """New caches default to 'single_seq_mean' for backward compat."""
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", 8)
+    assert cache.metadata().pooling_strategy == "single_seq_mean"
+
+
+def test_cache_records_custom_pooling_strategy(tmp_path: Path):
+    cache = EmbeddingCache(
+        tmp_path / "cache.h5",
+        "mock",
+        "v1",
+        8,
+        pooling_strategy="mask_aware_mean",
+    )
+    assert cache.metadata().pooling_strategy == "mask_aware_mean"
+
+
+def test_cache_pooling_mismatch_raises(tmp_path: Path):
+    """Reopening with different pooling_strategy → mismatch (prevents hybrid cache)."""
+    cache_path = tmp_path / "cache.h5"
+    EmbeddingCache(cache_path, "mock", "v1", 8, pooling_strategy="single_seq_mean")
+    with pytest.raises(EmbeddingCacheVersionMismatch, match="pooling"):
+        EmbeddingCache(cache_path, "mock", "v1", 8, pooling_strategy="mask_aware_mean")
+
+
+def test_cache_legacy_file_without_pooling_attr_accepts_default(tmp_path: Path):
+    """Caches written pre-2026-05-13 lack the pooling attr; default-match should pass."""
+    import h5py
+    cache_path = tmp_path / "legacy.h5"
+    # Hand-craft an old-shape cache: attrs match defaults except no pooling_strategy
+    with h5py.File(cache_path, "w") as f:
+        f.attrs["model_name"] = "mock"
+        f.attrs["model_version"] = "v1"
+        f.attrs["embedding_dim"] = 8
+        f.attrs["created_at"] = "2026-01-01T00:00:00"
+        f.create_group("strains")
+        # NOTE: no pooling_strategy attribute
+
+    # Default constructor (pooling_strategy="single_seq_mean") should match a legacy
+    # file without the attr — the reader defaults to "single_seq_mean".
+    reopened = EmbeddingCache(cache_path, "mock", "v1", 8)
+    assert reopened.metadata().pooling_strategy == "single_seq_mean"
+
+
 # ---- put / get round-trip ----
 
 
