@@ -1,6 +1,28 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: Audit_Calibration_NT_AutoModel_Ship_Path_Plan.md] 2026-05-13
+**Summary:** Scope-reduced delta from `Audit_Calibration_NT_AutoModel_Plan.md` after `/review` synthesis — 5 steps / 4 waves → 2 commits, 2 waves. Drops dual-verdict columns (institutionalization risk), drops wiki update (no text to replace), splits NT refactor into a separate gated commit (equivalence test required).
+**Key decisions:**
+- Asymmetric warning banner replaces dual-verdict columns (D1)
+- Drop wiki/GATE_B_REPORT.md update entirely (D2)
+- Split NT refactor into a separate, gated commit (D3)
+- Keep default-semantics test as the regression lock (D4)
+- thresholds_block(rules) helper, not inline string list (D5)
+
+---
+
+## [plan_file: Audit_Calibration_NT_AutoModel_Plan.md] 2026-05-13
+**Summary:** Fix a credibility bug in the just-shipped audit cohort generator (`scripts/audit_cohort.py`) — the "GO" verdict was emitted under silently-relaxed thresholds; defaults produce "WARN" — AND simultaneously replace `NucleotideTransformerModel`'s `AutoModelForMaskedLM` with `AutoModel` to eliminate the `output_hidden_states=True` workaround.
+**Key decisions:**
+- Audit report header MUST surface threshold values (D1)
+- Two verdict columns — Phase 1 production + Gate B infra-only (D2)
+- Pin default semantics in tests (D3)
+- NT switches to `AutoModel`, not `AutoModelForMaskedLM` (D4)
+- Pooling-strategy tag stays "single_seq_mean" (D5)
+
+---
+
 ## [plan_file: BVBRC_Genome_Metadata_Adapter_Plan.md] 2026-05-12
 **Summary:** Wire `BVBRC_genome.csv` (BV-BRC Genomes-tab export) into the cohort path as a new adapter module, bypassing the wrong-contract `pilot.fetch_ncbi_assembly_quality` scaffold and feeding the existing `--assembly-metadata` wire that `cohort.candidates_from_bvbrc_ast` already accepts.
 **Key decisions:**
