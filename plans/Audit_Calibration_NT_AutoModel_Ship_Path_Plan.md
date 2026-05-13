@@ -1,5 +1,7 @@
 # Audit Calibration + NT AutoModel — Ship Path Plan
 
+> **Status:** Commit 1 shipped 2026-05-13 at `473b8eb`. Commit 2 (NT AutoModel refactor) **deferred indefinitely** 2026-05-13 — equivalence gate failed: `AutoModel.from_pretrained` cannot load the NT v2 100M checkpoint (state_dict shape mismatch on `Linear[4096, 512]` vs `Linear[512, 2048]` in InstaDeep's trust_remote_code modeling code). Per D3 gating rule, Commit 2 ships only after the equivalence test passes locally. See `TODOS.md` "Phase 2.5 perf hardening" for the deferral context.
+
 > Scope-reduced delta from `Audit_Calibration_NT_AutoModel_Plan.md` after `/review` synthesis (2026-05-13). Reduces 5 steps / 4 waves → 2 commits, 2 waves. Drops dual-verdict columns (institutionalization risk) and the wiki update (no text to replace). Splits the bundled NT refactor into a separate, gated commit.
 
 ---
