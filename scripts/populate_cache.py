@@ -175,8 +175,20 @@ def main(argv: list[str] | None = None) -> int:
         embedding_dim=model.metadata.embedding_dim,
     )
 
+    # Stderr-flushed progress so it survives long runs + buffered stdout. Critical
+    # when populating against external storage that may disconnect mid-run — the
+    # log gives a recovery checkpoint even if the HDF5 cache is lost.
+    import time as _time
+    _t0 = _time.time()
+
     def progress(strain_id: str, n_written: int, n_total: int) -> None:
-        print(f"[populate_cache]   {strain_id}: wrote {n_written} / {n_total} embeddings")
+        elapsed = _time.time() - _t0
+        msg = (
+            f"[populate_cache] {strain_id}: wrote {n_written} / {n_total} embeddings "
+            f"(elapsed {elapsed:.0f}s)"
+        )
+        print(msg, file=sys.stderr, flush=True)
+        print(msg, flush=True)
 
     try:
         written_per_strain = cache.populate(
