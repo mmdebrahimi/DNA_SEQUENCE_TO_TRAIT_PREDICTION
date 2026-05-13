@@ -118,8 +118,8 @@ def test_load_missing_genome_id_column_raises(tmp_path: Path):
 
 def test_load_blank_numeric_fields_default_to_zero(tmp_path: Path):
     csv = (
-        "Genome ID,Genome Name,Species,Contigs,Contig N50,Collection Year\n"
-        '"562.X","Escherichia coli X","Escherichia coli","","","N/A"\n'
+        "Genome ID,Genome Name,Species,Assembly Accession,Contigs,Contig N50,Collection Year\n"
+        '"562.X","Escherichia coli X","Escherichia coli","GCF_X.1","","","N/A"\n'
     )
     p = tmp_path / "blank.csv"
     p.write_text(csv, encoding="utf-8")
@@ -133,8 +133,8 @@ def test_load_blank_numeric_fields_default_to_zero(tmp_path: Path):
 def test_load_handles_float_str_in_int_field(tmp_path: Path):
     """BV-BRC sometimes emits '200000.0' for integer fields."""
     csv = (
-        "Genome ID,Genome Name,Species,Contigs,Contig N50,Collection Year\n"
-        '"562.Y","Escherichia coli Y","Escherichia coli","10","200000.0","2018"\n'
+        "Genome ID,Genome Name,Species,Assembly Accession,Contigs,Contig N50,Collection Year\n"
+        '"562.Y","Escherichia coli Y","Escherichia coli","GCF_Y.1","10","200000.0","2018"\n'
     )
     p = tmp_path / "float_str.csv"
     p.write_text(csv, encoding="utf-8")
@@ -161,11 +161,29 @@ def test_load_empty_after_filter_returns_empty_dict(tmp_path: Path):
     assert meta == {}
 
 
+def test_load_drops_rows_without_assembly_accession(tmp_path: Path):
+    """Rows lacking assembly_accession are dropped (cannot download via NCBI)."""
+    csv = (
+        "Genome ID,Genome Name,Species,Assembly Accession,Contigs,Contig N50,Collection Year\n"
+        '"562.A","Escherichia coli A","Escherichia coli","GCF_AAA.1","10","200000","2020"\n'
+        '"562.B","Escherichia coli B","Escherichia coli","","20","150000","2020"\n'
+        '"562.C","Escherichia coli C","Escherichia coli","GCF_CCC.1","30","180000","2020"\n'
+    )
+    p = tmp_path / "mixed_acc.csv"
+    p.write_text(csv, encoding="utf-8")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        meta = load_bvbrc_genome_metadata(p)
+        assert any("dropped 1" in str(w.message) and "assembly_accession" in str(w.message) for w in caught)
+    assert set(meta.keys()) == {"562.A", "562.C"}
+    assert "562.B" not in meta
+
+
 def test_load_duplicate_genome_id_emits_warning(tmp_path: Path):
     csv = (
-        "Genome ID,Genome Name,Species,Contigs,Contig N50,Collection Year\n"
-        '"562.Z","Escherichia coli Z","Escherichia coli","10","200000","2018"\n'
-        '"562.Z","Escherichia coli Z again","Escherichia coli","20","100000","2020"\n'
+        "Genome ID,Genome Name,Species,Assembly Accession,Contigs,Contig N50,Collection Year\n"
+        '"562.Z","Escherichia coli Z","Escherichia coli","GCF_Z.1","10","200000","2018"\n'
+        '"562.Z","Escherichia coli Z again","Escherichia coli","GCF_Z.2","20","100000","2020"\n'
     )
     p = tmp_path / "dupe.csv"
     p.write_text(csv, encoding="utf-8")

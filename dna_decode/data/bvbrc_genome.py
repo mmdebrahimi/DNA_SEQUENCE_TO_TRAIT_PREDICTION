@@ -124,21 +124,39 @@ def load_bvbrc_genome_metadata(
 
     out: dict[str, dict[str, object]] = {}
     duplicate_count = 0
+    skipped_no_acc = 0
     for _, row in renamed.iterrows():
         sid = str(row.get("strain_id", "")).strip()
         if not sid:
+            continue
+        accession = str(row.get("assembly_accession", "") or "").strip()
+        if not accession:
+            # Drop rows without assembly_accession: `download_cohort_genomes`
+            # requires it for NCBI Datasets API lookup, and `build_cohort` can't
+            # QC-filter on contig_count/n50 if they're 0. ~42% of E. coli rows
+            # in BV-BRC's genome export lack a registered NCBI accession (May 2026).
+            skipped_no_acc += 1
             continue
         if sid in out:
             duplicate_count += 1
             # Last-write-wins; consistent with `dict` semantics.
         out[sid] = {
-            "assembly_accession": str(row.get("assembly_accession", "") or ""),
+            "assembly_accession": accession,
             "mlst": str(row.get("mlst", "") or ""),
             "country": str(row.get("country", "") or ""),
             "year": _safe_int(row.get("year", "") or ""),
             "contig_count": _safe_int(row.get("contig_count", "") or ""),
             "n50": _safe_int(row.get("n50", "") or ""),
         }
+
+    if skipped_no_acc:
+        import warnings as _warnings
+        _warnings.warn(
+            f"BV-BRC genome CSV: dropped {skipped_no_acc} rows lacking assembly_accession "
+            f"(undownloadable via NCBI Datasets API). Retained {len(out)} usable rows.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
 
     if duplicate_count:
         import warnings as _warnings

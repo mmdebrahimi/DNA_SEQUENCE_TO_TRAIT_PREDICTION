@@ -14,7 +14,18 @@ dependencies = [
 
     # ML core
     "torch>=2.2",
-    "transformers>=4.40",
+    # Pinned to 4.x: DNABERT-2 / Nucleotide Transformer / GENA-LM ship
+    # trust_remote_code modeling files written against transformers 4.x APIs.
+    # Transformers 5.x removed `find_pruneable_heads_and_indices` and changed
+    # `BertConfig.pad_token_id`, breaking those remote files. Re-evaluate when
+    # model authors publish 5.x-compatible code.
+    "transformers>=4.40,<5",
+    "einops>=0.7",          # DNABERT-2 modeling_bert.py imports einops at load time
+    # DNABERT-2's flash-attention path imports `triton`. Linux ships triton via
+    # pip; Windows uses the community `triton-windows` shim (registers as
+    # `triton` on import). NT / GENA-LM don't need it.
+    "triton>=2; platform_system != 'Windows'",
+    "triton-windows>=3.0; platform_system == 'Windows'",
     "xgboost>=2.0",
     "scikit-learn>=1.4",
     "numpy>=1.26",
@@ -69,3 +80,16 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B"]
 ignore = ["E501"]  # line-too-long handled by formatter
+
+# CUDA 11.8 torch wheel index for the local Windows + GTX 860M (Maxwell, compute
+# cap 5.0). Maxwell is deprecated in CUDA 12.x; cu118 is the supported path.
+# Without this, `uv sync` resolves torch+cpu and CUDA inference falls back to
+# CPU. The `explicit = true` keeps the cu118 index from being used for any
+# other package (only consulted when a [tool.uv.sources] entry routes here).
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu118" }

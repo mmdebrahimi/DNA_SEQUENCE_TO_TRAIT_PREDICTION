@@ -3,11 +3,13 @@
 # Sibling pattern from Athena_Development config-driven data-source registry.
 
 # NCBI RefSeq E. coli K-12 reference (MG1655 substr.)
+# cache_dir routes to F: drive (4.5 TB free; C: is chronically constrained).
+# Override per-machine via DNA_DECODE_CACHE_ROOT env var would be cleaner — Phase 3 work.
 refseq:
   default_accession: "GCF_000005845.2"
   api_base: "https://api.ncbi.nlm.nih.gov/datasets/v2"
   ftp_base: "https://ftp.ncbi.nlm.nih.gov/genomes/all"
-  cache_dir: "data/cache/refseq"
+  cache_dir: "F:/dna_decode_cache/refseq"
   timeout_seconds: 30
   max_retries: 3
 
