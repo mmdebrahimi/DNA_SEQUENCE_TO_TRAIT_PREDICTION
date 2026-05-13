@@ -1,6 +1,16 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: BVBRC_Genome_Metadata_Adapter_Plan.md] 2026-05-12
+**Summary:** Wire `BVBRC_genome.csv` (BV-BRC Genomes-tab export) into the cohort path as a new adapter module, bypassing the wrong-contract `pilot.fetch_ncbi_assembly_quality` scaffold and feeding the existing `--assembly-metadata` wire that `cohort.candidates_from_bvbrc_ast` already accepts.
+**Key decisions:**
+- Bypass the scaffold instead of implementing it (D1)
+- New CLI flag rather than overloading existing `--assembly-metadata` (D2)
+- Coverage-log line surfaces ID-namespace mismatches early (D3)
+- `fetch_ncbi_assembly_quality` stays scaffolded (D4)
+
+---
+
 ## [plan_file: Ecoli_G2P_Phase1_Closeout_Plan.md] 2026-05-12
 **Summary:** Wrap up the stalled `/execute-plan` epilogue for `Ecoli_G2P_Phase1_Ship_Path_Plan.md` — toolchain restore, doc reconciliation, first authoritative test pass, archive, state cleanup, push, final report.
 **Key decisions:**
