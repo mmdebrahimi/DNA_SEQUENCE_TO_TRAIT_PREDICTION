@@ -87,13 +87,67 @@ def cmd_ingest(args: argparse.Namespace, cfg: dict) -> int:
     ast = load_bvbrc_ast(args.ast_tsv)
     print(f"[ingest] loaded {len(ast)} AST rows after broth-microdilution filter")
 
-    # Build candidates (assembly metadata optional)
-    assembly_meta_path = args.assembly_metadata
-    assembly_meta = None
-    if assembly_meta_path:
-        with open(assembly_meta_path) as f:
+    # Build candidates (assembly metadata optional). Two sources, mutually exclusive:
+    # 1. --assembly-metadata <yaml> — legacy / hand-authored fixtures
+    # 2. --assembly-metadata-csv <csv> — BV-BRC Genomes-tab export (Phase 2 wire)
+    assembly_meta: dict[str, dict[str, object]] | None = None
+    assembly_meta_source: str = ""
+    if getattr(args, "assembly_metadata_csv", None):
+        from dna_decode.data.bvbrc_genome import (
+            BvBrcGenomeError,
+            load_bvbrc_genome_metadata,
+        )
+
+        csv_path = Path(args.assembly_metadata_csv)
+        if not csv_path.exists():
+            print(
+                f"[ingest] --assembly-metadata-csv file not found: {csv_path}",
+                file=sys.stderr,
+            )
+            return 2
+        organism = (
+            cfg.get("bvbrc_genomes", {})
+            .get("default_filters", {})
+            .get("organism", "Escherichia coli")
+        )
+        try:
+            assembly_meta = load_bvbrc_genome_metadata(csv_path, organism=organism)
+        except BvBrcGenomeError as e:
+            print(f"[ingest] {e}", file=sys.stderr)
+            return 2
+        assembly_meta_source = f"CSV ({csv_path.name})"
+        print(
+            f"[ingest] loaded assembly metadata for {len(assembly_meta)} strains "
+            f"from {assembly_meta_source}"
+        )
+    elif args.assembly_metadata:
+        with open(args.assembly_metadata) as f:
             assembly_meta = yaml.safe_load(f)
-        print(f"[ingest] loaded assembly metadata for {len(assembly_meta or {})} strains")
+        assembly_meta_source = f"YAML ({args.assembly_metadata})"
+        print(
+            f"[ingest] loaded assembly metadata for {len(assembly_meta or {})} strains "
+            f"from {assembly_meta_source}"
+        )
+
+    # Coverage-log line: surfaces ID-namespace mismatches between AST and genome
+    # metadata at the first ingest. If coverage is 0% the join is silently broken.
+    if assembly_meta is not None:
+        ast_strain_ids = set(str(s) for s in ast["strain_id"].astype(str).unique())
+        meta_ids = set(str(k) for k in assembly_meta.keys())
+        covered = len(ast_strain_ids & meta_ids)
+        total = len(ast_strain_ids)
+        pct = (100.0 * covered / total) if total else 0.0
+        failing_qc = sum(
+            1
+            for v in assembly_meta.values()
+            if int(v.get("contig_count", 0) or 0) > 500
+            or int(v.get("n50", 0) or 0) < 50_000
+        )
+        print(
+            f"[ingest] assembly_meta covers {covered} / {total} AST strain_ids "
+            f"({pct:.1f}%); {failing_qc} loaded strains fail QC filter "
+            f"(contig_count>500 OR n50<50000)"
+        )
 
     candidates = candidates_from_bvbrc_ast(ast, assembly_metadata=assembly_meta)
     print(f"[ingest] built {len(candidates)} CandidateStrain records")
@@ -445,10 +499,21 @@ def build_parser() -> argparse.ArgumentParser:
     p_ingest = sub.add_parser("ingest", help="Build cohort + optionally download genomes.")
     p_ingest.add_argument("--drugs", required=True, help="Comma-separated drug list.")
     p_ingest.add_argument("--ast-tsv", required=True, help="Path to BV-BRC AST TSV.")
-    p_ingest.add_argument(
+    # Mutually exclusive: pick one assembly-metadata source.
+    meta_group = p_ingest.add_mutually_exclusive_group()
+    meta_group.add_argument(
         "--assembly-metadata",
         default=None,
-        help="Optional YAML with per-strain assembly metadata.",
+        help="Optional YAML with per-strain assembly metadata (legacy / fixtures).",
+    )
+    meta_group.add_argument(
+        "--assembly-metadata-csv",
+        default=None,
+        help=(
+            "Optional BV-BRC Genomes-tab CSV with per-strain assembly metadata "
+            "(Phase 2 wire; reads contig_count + n50 + MLST + accession from "
+            "real BV-BRC export)."
+        ),
     )
     p_ingest.add_argument("--target-per-drug", type=int, default=150)
     p_ingest.add_argument("--intersection-target", type=int, default=75)

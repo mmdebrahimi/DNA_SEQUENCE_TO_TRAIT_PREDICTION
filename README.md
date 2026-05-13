@@ -75,9 +75,15 @@ uv run python -m scripts.pilot_gate \
 uv run python scripts/smoke_pipeline.py
 
 # 3. Ingest: build cohort + download cohort genomes
+#    For real-data runs, pass --assembly-metadata-csv pointing at the BV-BRC
+#    Genomes-tab export (CSV). The adapter at dna_decode/data/bvbrc_genome.py
+#    feeds contig_count + N50 + MLST + assembly_accession into
+#    candidates_from_bvbrc_ast. Both --assembly-metadata (legacy YAML) and
+#    --assembly-metadata-csv are mutually exclusive.
 uv run python -m scripts.pipeline ingest \
   --drugs ciprofloxacin,ceftriaxone,tetracycline \
-  --ast-tsv path/to/bvbrc_ast.tsv \
+  --ast-tsv path/to/BVBRC_genome_amr.csv \
+  --assembly-metadata-csv path/to/BVBRC_genome.csv \
   --download-genomes
 
 # 4. Populate the embedding cache (deferred — see ARCHITECTURE.md for the wiring;

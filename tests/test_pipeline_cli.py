@@ -98,3 +98,106 @@ def test_attribute_missing_model_exits_2(tmp_path: Path, project_root: Path, mon
         ]
     )
     assert exit_code == 2
+
+
+# ---- Option B (Phase 2): --assembly-metadata-csv ----
+
+
+def _write_tiny_ast(tmp_path: Path) -> Path:
+    """Write a 2-strain AST CSV that exercises the load_bvbrc_ast loader."""
+    ast = (
+        "Genome ID,Genome Name,Antibiotic,Resistant Phenotype,Measurement,"
+        "Measurement Unit,Laboratory Typing Method,Testing Standard\n"
+        "562.1,Escherichia coli A,ciprofloxacin,Resistant,8,mg/L,Broth dilution,CLSI\n"
+        "562.2,Escherichia coli B,ciprofloxacin,Susceptible,0.06,mg/L,Broth dilution,EUCAST\n"
+    )
+    p = tmp_path / "ast.csv"
+    p.write_text(ast, encoding="utf-8")
+    return p
+
+
+def _write_tiny_genome_csv(tmp_path: Path) -> Path:
+    """Write a 1-strain genome CSV that covers half the AST cohort."""
+    g = (
+        "Genome ID,Genome Name,Species,MLST,Assembly Accession,Contigs,"
+        "Contig N50,Collection Year,Isolation Country\n"
+        "562.1,Escherichia coli A,Escherichia coli,ST1,GCF_A.1,10,200000,2020,USA\n"
+    )
+    p = tmp_path / "genome.csv"
+    p.write_text(g, encoding="utf-8")
+    return p
+
+
+def test_ingest_accepts_assembly_metadata_csv_flag(
+    tmp_path: Path, project_root: Path, monkeypatch, capsys
+):
+    """Happy path: --assembly-metadata-csv loads + emits coverage-log line."""
+    monkeypatch.chdir(project_root)
+    from scripts.pipeline import main
+
+    ast_path = _write_tiny_ast(tmp_path)
+    genome_csv = _write_tiny_genome_csv(tmp_path)
+
+    exit_code = main(
+        [
+            "ingest",
+            "--drugs", "ciprofloxacin",
+            "--ast-tsv", str(ast_path),
+            "--assembly-metadata-csv", str(genome_csv),
+            "--target-per-drug", "1",
+            "--intersection-target", "0",
+            "--cohort-out", str(tmp_path / "cohort.parquet"),
+        ]
+    )
+    # Cohort construction may fail (not enough strains for Phase 1 defaults) but
+    # the assembly-metadata wire should run cleanly to coverage-log emission.
+    out = capsys.readouterr().out
+    assert "loaded assembly metadata for 1 strains" in out
+    assert "from CSV" in out
+    assert "assembly_meta covers 1 / 2 AST strain_ids (50.0%)" in out
+    # exit code is whatever build_cohort returns; the wire validation is in stdout
+
+
+def test_ingest_rejects_both_metadata_flags_simultaneously(
+    tmp_path: Path, project_root: Path, monkeypatch
+):
+    """argparse mutex group: passing both flags exits 2."""
+    monkeypatch.chdir(project_root)
+    from scripts.pipeline import main
+
+    ast_path = _write_tiny_ast(tmp_path)
+    yaml_path = tmp_path / "meta.yaml"
+    yaml_path.write_text("{}", encoding="utf-8")
+    csv_path = _write_tiny_genome_csv(tmp_path)
+
+    with pytest.raises(SystemExit) as exc_info:
+        main(
+            [
+                "ingest",
+                "--drugs", "ciprofloxacin",
+                "--ast-tsv", str(ast_path),
+                "--assembly-metadata", str(yaml_path),
+                "--assembly-metadata-csv", str(csv_path),
+            ]
+        )
+    assert exc_info.value.code == 2
+
+
+def test_ingest_assembly_metadata_csv_missing_exits_2(
+    tmp_path: Path, project_root: Path, monkeypatch
+):
+    """File-not-found on --assembly-metadata-csv → clean exit 2."""
+    monkeypatch.chdir(project_root)
+    from scripts.pipeline import main
+
+    ast_path = _write_tiny_ast(tmp_path)
+
+    exit_code = main(
+        [
+            "ingest",
+            "--drugs", "ciprofloxacin",
+            "--ast-tsv", str(ast_path),
+            "--assembly-metadata-csv", str(tmp_path / "missing.csv"),
+        ]
+    )
+    assert exit_code == 2

@@ -35,6 +35,6 @@ datasets download genome accession GCF_000005845.2
 
 ## Pre-existing known limitations (not bugs)
 
-- **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV from `ftp.bvbrc.org`.
-- **`fetch_ncbi_assembly_quality`** in `pilot.py` similarly scaffolded; resolved at first real-data run.
+- **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.
+- **`fetch_ncbi_assembly_quality`** in `pilot.py` stays scaffolded intentionally. Phase 2 ships a separate CSV adapter (`dna_decode/data/bvbrc_genome.py`) that bypasses it via `pipeline ingest --assembly-metadata-csv`. Live NCBI Datasets REST integration is Phase 3 work.
 - **Annotation source variance**: `parse_gff3` collapses `ID=` / `Name=` / `gene=` into one `gene_id` column. Annotation-source-aware extraction (gene_symbol as separate column) is Phase 2 cleanup work.

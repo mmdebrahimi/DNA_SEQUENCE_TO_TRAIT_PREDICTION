@@ -32,6 +32,16 @@ bvbrc_ast:
     measurement_method: ["broth_microdilution"]
     organism: "Escherichia coli"
 
+# BV-BRC Genomes-tab export (assembly metadata: contig_count, N50, MLST, country,
+# year, assembly_accession). Read by dna_decode/data/bvbrc_genome.py to feed
+# cohort.candidates_from_bvbrc_ast(...)'s assembly_metadata param. Bypasses the
+# scaffolded pilot.fetch_ncbi_assembly_quality (Phase 3 live-API path).
+bvbrc_genomes:
+  default_csv_path: ""  # set by user: path to BVBRC_genome.csv
+  default_filters:
+    organism: "Escherichia coli"
+  cache_dir: "data/cache/bvbrc_genomes"
+
 # Pan-genome strain catalog
 enterobase:
   api_base: "https://enterobase.warwick.ac.uk/api/v2.0"
