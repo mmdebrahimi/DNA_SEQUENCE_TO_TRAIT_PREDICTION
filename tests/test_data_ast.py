@@ -124,6 +124,24 @@ def test_load_bvbrc_ast_empty_file_returns_empty_table(tmp_path: Path):
     assert list(df.columns) == list(AST_COLUMNS)
 
 
+def test_load_bvbrc_ast_accepts_csv_format(tmp_path: Path):
+    """BV-BRC defaults to CSV export; loader auto-detects separator (Phase 2 fix)."""
+    csv_text = (
+        "genome_id,genome_name,antibiotic,resistant_phenotype,measurement,measurement_unit,"
+        "laboratory_typing_method,testing_standard\n"
+        "strain001,Escherichia coli K-12,ciprofloxacin,Resistant,8,mg/L,Broth microdilution,CLSI\n"
+        "strain002,Escherichia coli ST131,ciprofloxacin,Susceptible,0.06,mg/L,Broth microdilution,EUCAST\n"
+    )
+    p = tmp_path / "ast.csv"
+    p.write_text(csv_text, encoding="utf-8")
+
+    df = load_bvbrc_ast(p)
+    assert list(df.columns) == list(AST_COLUMNS)
+    assert "strain001" in df["strain_id"].values
+    assert "strain002" in df["strain_id"].values
+    assert set(df["measurement_method"]) == {"broth_microdilution"}
+
+
 # ---- get_drug_list ----
 
 

@@ -58,15 +58,21 @@ def test_phase1_drugs_have_known_loci(project_root: Path):
 
 
 def test_foundation_models_complete(project_root: Path):
-    """All 4 leaderboard foundation models are declared with required fields."""
+    """All 4 leaderboard foundation models are declared with required fields.
+
+    Phase 2 added `mock` for plumbing-only smoke runs — it must be a subset of
+    `foundation_models` but is NOT a leaderboard contender.
+    """
     cfg_path = project_root / "config" / "datasources.yaml"
     with open(cfg_path) as f:
         cfg = yaml.safe_load(f)
 
     models = cfg["foundation_models"]
-    expected = {"evo", "dnabert2", "nucleotide_transformer", "gena_lm"}
-    assert set(models.keys()) == expected, f"Expected {expected}, got {set(models.keys())}"
-
+    leaderboard = {"evo", "dnabert2", "nucleotide_transformer", "gena_lm"}
+    assert leaderboard.issubset(set(models.keys())), (
+        f"Expected leaderboard models {leaderboard}, got {set(models.keys())}"
+    )
+    # Extra entries (e.g., `mock`) are permitted but must satisfy the same schema.
     for name, meta in models.items():
         assert "huggingface_id" in meta
         assert "embedding_dim" in meta and meta["embedding_dim"] > 0

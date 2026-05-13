@@ -93,7 +93,9 @@ def load_bvbrc_ast(
     if not path.exists():
         raise FileNotFoundError(f"BV-BRC AST TSV not found at {path}")
 
-    raw = pd.read_csv(path, sep="\t", dtype=str, keep_default_na=False)
+    # Auto-detect separator: BV-BRC exports CSV by default; older docs reference TSV.
+    # `sep=None` + `engine="python"` sniffs comma/tab from the first line.
+    raw = pd.read_csv(path, sep=None, engine="python", dtype=str, keep_default_na=False)
 
     # Tolerant column mapping — BV-BRC field names vary by release
     column_map = {

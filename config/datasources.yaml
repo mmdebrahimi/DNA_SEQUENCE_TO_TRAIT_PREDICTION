@@ -60,6 +60,12 @@ compute:
 
 # Foundation models leaderboard (Step 17)
 foundation_models:
+  # Mock — deterministic hash embedding; for plumbing-only smoke runs (no biology).
+  # populate_cache.py / pipeline.py use this when --model mock + --allow-mock.
+  mock:
+    huggingface_id: "mock://mock"
+    embedding_dim: 128
+    max_context: 512
   evo:
     huggingface_id: "togethercomputer/evo-1-131k-base"
     embedding_dim: 4096
