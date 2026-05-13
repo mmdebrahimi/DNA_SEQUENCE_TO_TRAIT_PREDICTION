@@ -97,7 +97,18 @@ def load_bvbrc_ast(
     # `sep=None` + `engine="python"` sniffs comma/tab from the first line.
     raw = pd.read_csv(path, sep=None, engine="python", dtype=str, keep_default_na=False)
 
-    # Tolerant column mapping — BV-BRC field names vary by release
+    # Normalize headers to lowercase+underscore so the column_map's literal-match rename
+    # works against real BV-BRC exports (which use Title Case + spaces:
+    # "Genome ID", "Resistant Phenotype", "Laboratory Typing Method"). Idempotent on
+    # already-normalized headers — keeps existing TSV tests passing.
+    raw.columns = [str(c).strip().lower().replace(" ", "_") for c in raw.columns]
+
+    # Tolerant column mapping — BV-BRC field names vary by release.
+    # Note: `measurement` and `measurement_value` MUST NOT both map to `mic_raw`
+    # in the same rename (duplicate target → pd.rename produces collision and
+    # `row.get(target)` returns a Series). Real BV-BRC exports have BOTH columns;
+    # prefer `measurement_value` (numeric-only) when present, fall back to
+    # `measurement` (operator-prefixed, e.g., "<=0.12") otherwise.
     column_map = {
         "genome_name": "organism",
         "organism_name": "organism",
@@ -107,12 +118,16 @@ def load_bvbrc_ast(
         "drug": "antibiotic",
         "resistant_phenotype": "susceptibility_label",
         "phenotype": "susceptibility_label",
-        "measurement": "mic_raw",
-        "measurement_value": "mic_raw",
         "measurement_unit": "mic_units",
         "laboratory_typing_method": "measurement_method",
         "testing_standard": "source",
     }
+    # Pick the MIC source column: prefer `measurement_value` (numeric-only),
+    # fall back to `measurement` (operator-prefixed). Only one is renamed to `mic_raw`.
+    if "measurement_value" in raw.columns:
+        column_map["measurement_value"] = "mic_raw"
+    elif "measurement" in raw.columns:
+        column_map["measurement"] = "mic_raw"
 
     renamed = raw.rename(columns={k: v for k, v in column_map.items() if k in raw.columns})
 

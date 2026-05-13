@@ -142,6 +142,35 @@ def test_load_bvbrc_ast_accepts_csv_format(tmp_path: Path):
     assert set(df["measurement_method"]) == {"broth_microdilution"}
 
 
+def test_load_bvbrc_ast_accepts_real_bvbrc_title_case_headers(tmp_path: Path):
+    """Real BV-BRC AMR export uses Title Case + spaces in headers.
+
+    Regression for the Phase 2 entry bug where lowercase-underscore mock fixtures
+    masked a column-rename mismatch against the real BV-BRC CSV. Real export
+    columns: 'Taxon ID', 'Genome ID', 'Genome Name', 'Antibiotic',
+    'Resistant Phenotype', 'Measurement', 'Laboratory Typing Method', etc.
+    """
+    csv_text = (
+        "Taxon ID,Genome ID,Genome Name,Antibiotic,Resistant Phenotype,"
+        "Measurement,Measurement Unit,Laboratory Typing Method,Testing Standard\n"
+        "562,562.5691,Escherichia coli CVM N36113PS,ciprofloxacin,Resistant,8,mg/L,Broth dilution,CLSI\n"
+        "562,562.144245,Escherichia coli ERR7221502,meropenem,Susceptible,0.5,mg/L,Broth dilution,EUCAST\n"
+        "562,562.1001,Escherichia coli foo,ceftriaxone,Resistant,>32,mg/L,Broth dilution,CLSI\n"
+        "1280,1280.1,Staphylococcus aureus NRS100,ciprofloxacin,Resistant,8,mg/L,Broth dilution,CLSI\n"
+    )
+    p = tmp_path / "BVBRC_genome_amr.csv"
+    p.write_text(csv_text, encoding="utf-8")
+
+    df = load_bvbrc_ast(p)
+    # 3 E. coli rows retained (Staph filtered out); all use Broth dilution -> broth_microdilution
+    assert len(df) == 3
+    assert "562.5691" in df["strain_id"].values
+    assert "562.144245" in df["strain_id"].values
+    assert "1280.1" not in df["strain_id"].values  # Staph excluded by organism filter
+    assert set(df["measurement_method"]) == {"broth_microdilution"}
+    assert set(df["antibiotic"]) == {"ciprofloxacin", "meropenem", "ceftriaxone"}
+
+
 # ---- get_drug_list ----
 
 
