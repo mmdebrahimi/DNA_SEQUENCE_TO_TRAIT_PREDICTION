@@ -33,6 +33,12 @@ datasets download genome accession GCF_000005845.2
 
 - [ ] Phase 2 real model-quality test needs **within-lineage** susceptible+resistant pairs (or clade-stratified cohort), NOT the cross-lineage trio above. Use the trio for infrastructure smoke only.
 
+## Phase 2.5 perf hardening (deferred from Gate B prep)
+
+- [ ] **`load_bvbrc_ast` is slow on real BV-BRC AMR exports** — Python pandas engine (sep=None) + iterrows() over 50K+ rows takes minutes. Audit cohort generator skips --ast on real data because of this. Fix: peek at first line to detect separator → use C engine; replace iterrows with vectorized ops. Surfaced 2026-05-13 during audit_cohort.py run.
+- [ ] **Embedding cache populate is per-sequence on GPU** — `cache.populate()` calls `model.embed_batch([sequence])[0]` per gene; `FoundationModel.embed_batch` is a Python loop over `_embed_window` (single forward pass per sequence). Refactor to batch N sequences with mask-aware mean pooling. Estimated 5-10× speedup on GPU. See `/brainstorm Option B` decision log + `dna_decode/models/cache.py:259` + `foundation.py:103-116`.
+- [ ] **NT model: drop `output_hidden_states=True`** (foundation.py:259) — low-risk speedup; current code requests all hidden states then takes only the last. Use `outputs.last_hidden_state` if available.
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.

@@ -48,3 +48,6 @@ logs/
 
 # Claude execute-plan scaffolding — recreated by /execute-plan runs
 .claude/execute-plan-state/
+
+# Generated audit / analysis reports (re-runnable via scripts/audit_cohort.py etc.)
+/reports/
