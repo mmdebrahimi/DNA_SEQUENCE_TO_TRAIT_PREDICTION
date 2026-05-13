@@ -7,11 +7,16 @@ import pytest
 
 from dna_decode.data.cohort import CandidateStrain, StrainCohort, save_cohort
 from scripts.audit_cohort import (
+    PHASE1_DEFAULT_RULES,
     VerdictRules,
     build_parser,
     build_report,
     evaluate_verdict,
     main,
+    non_default_threshold_fields,
+    relaxed_flags_warning,
+    stdout_warning_lines,
+    thresholds_block,
 )
 
 
@@ -256,6 +261,202 @@ def test_main_writes_report_to_disk(tmp_path: Path):
     content = output_path.read_text(encoding="utf-8")
     assert "# Cohort Audit Report" in content
     assert "ciprofloxacin" in content
+
+
+# ---- Phase 2.5 calibration discipline (post-/brainstorm patches D6+D7+D4) ----
+
+
+def test_default_thresholds_warn_on_undersized_cohort():
+    """Regression lock: a 50R/50S cohort under Phase 1 defaults must yield WARN.
+
+    Origin: commit b646fc9 shipped a misleading 'GO' on the 67-strain Gate B cohort
+    because no test exercised default semantics — only custom-threshold cases.
+    This test pins the documented Phase 1 thresholds so silent drift fires."""
+    strains = []
+    for i in range(50):
+        strains.append(_make_strain(
+            f"R{i}", 3, 200_000, f"ST{i}", {"ciprofloxacin": 1}
+        ))
+    for i in range(50):
+        strains.append(_make_strain(
+            f"S{i}", 3, 200_000, f"ST{i+100}", {"ciprofloxacin": 0}
+        ))
+    cohort = _build_cohort(strains)
+    res = evaluate_verdict(cohort, ["ciprofloxacin"], None, VerdictRules())
+    assert res.verdict == "WARN"
+    # Specifically: strain count warns because 50 < 150
+    assert any(
+        "strain count" in name and outcome == "WARN" and "150" in detail
+        for name, outcome, detail in res.rules
+    )
+
+
+def test_thresholds_block_renders_all_six_fields(tmp_path: Path):
+    block = thresholds_block(VerdictRules())
+    rendered = "\n".join(block)
+    assert "**Thresholds applied:**" in rendered
+    for field_name in (
+        "target_per_drug: 150",
+        "min_minority_class: 30",
+        "max_pct_missing_metadata: 20.0",
+        "min_pct_broth_microdilution: 80.0",
+        "n50_min: 50000",
+        "contig_count_max: 500",
+    ):
+        assert field_name in rendered
+
+
+def test_thresholds_block_reflects_overrides(tmp_path: Path):
+    custom = VerdictRules(target_per_drug=12, min_minority_class=6)
+    rendered = "\n".join(thresholds_block(custom))
+    assert "target_per_drug: 12" in rendered
+    assert "min_minority_class: 6" in rendered
+
+
+def test_non_default_threshold_fields_empty_for_defaults():
+    assert non_default_threshold_fields(VerdictRules()) == []
+
+
+def test_non_default_threshold_fields_detects_target_per_drug_relax():
+    relaxed = VerdictRules(target_per_drug=50)
+    fields = non_default_threshold_fields(relaxed)
+    names = {f[0] for f in fields}
+    assert "target_per_drug" in names
+    # Direction = "lower" (50 < 150)
+    assert any(f[3] == "lower" for f in fields if f[0] == "target_per_drug")
+
+
+def test_non_default_threshold_fields_detects_all_six_directions():
+    """Cover all six knobs in their permissive direction."""
+    permissive = VerdictRules(
+        target_per_drug=10,           # lower
+        min_minority_class=2,         # lower
+        max_pct_missing_metadata=50,  # higher
+        min_pct_broth_microdilution=10,  # lower
+        n50_min=1000,                 # lower
+        contig_count_max=10000,       # higher
+    )
+    fields = non_default_threshold_fields(permissive)
+    names = {f[0] for f in fields}
+    assert names == {
+        "target_per_drug",
+        "min_minority_class",
+        "max_pct_missing_metadata",
+        "min_pct_broth_microdilution",
+        "n50_min",
+        "contig_count_max",
+    }
+
+
+def test_non_default_threshold_fields_ignores_tightened_thresholds():
+    """Only permissive deviations trigger the warning. Tighter is fine."""
+    tightened = VerdictRules(target_per_drug=200, min_minority_class=50)
+    assert non_default_threshold_fields(tightened) == []
+
+
+def test_relaxed_flags_warning_empty_on_defaults():
+    assert relaxed_flags_warning(VerdictRules()) == []
+
+
+def test_relaxed_flags_warning_lists_deviated_fields():
+    relaxed = VerdictRules(target_per_drug=50, max_pct_missing_metadata=40.0)
+    banner = "\n".join(relaxed_flags_warning(relaxed))
+    assert "WARNING" in banner
+    assert "NOT COMPARABLE TO PHASE 1 GATE" in banner
+    assert "target_per_drug" in banner and "50" in banner
+    assert "max_pct_missing_metadata" in banner and "40" in banner
+
+
+def test_stdout_warning_lines_match_banner_coverage():
+    """stdout warning fires on the same conditions as the report banner."""
+    relaxed = VerdictRules(target_per_drug=50)
+    lines = stdout_warning_lines(relaxed)
+    assert any("WARNING: relaxed thresholds" in line for line in lines)
+    assert any("target_per_drug=50" in line for line in lines)
+    # Defaults → no stdout warning
+    assert stdout_warning_lines(VerdictRules()) == []
+
+
+def test_build_report_includes_thresholds_block(tmp_path: Path):
+    strains = [
+        _make_strain("R1", 2, 5_000_000, "ST131", {"ciprofloxacin": 1}),
+        _make_strain("S1", 2, 4_500_000, "ST10", {"ciprofloxacin": 0}),
+    ]
+    cohort = _build_cohort(strains)
+    report = build_report(cohort, None, ["ciprofloxacin"], VerdictRules(), tmp_path / "x.parquet")
+    assert "**Thresholds applied:**" in report
+    assert "target_per_drug: 150" in report
+    assert "min_minority_class: 30" in report
+
+
+def test_build_report_omits_warning_banner_on_defaults(tmp_path: Path):
+    strains = [_make_strain("R1", 2, 5_000_000, "ST131", {"ciprofloxacin": 1})]
+    cohort = _build_cohort(strains)
+    report = build_report(cohort, None, ["ciprofloxacin"], VerdictRules(), tmp_path / "x.parquet")
+    assert "WARNING: NON-DEFAULT THRESHOLDS" not in report
+
+
+def test_build_report_includes_warning_banner_on_relaxed_thresholds(tmp_path: Path):
+    strains = [_make_strain("R1", 2, 5_000_000, "ST131", {"ciprofloxacin": 1})]
+    cohort = _build_cohort(strains)
+    relaxed = VerdictRules(target_per_drug=50, min_minority_class=10)
+    report = build_report(cohort, None, ["ciprofloxacin"], relaxed, tmp_path / "x.parquet")
+    assert "WARNING: NON-DEFAULT THRESHOLDS" in report
+    assert "target_per_drug" in report and "50" in report
+    assert "min_minority_class" in report and "10" in report
+
+
+def test_main_stdout_includes_warning_on_relaxed_flags(tmp_path: Path, capsys):
+    strains = [
+        _make_strain("R1", 2, 5_000_000, "ST131", {"ciprofloxacin": 1}),
+        _make_strain("S1", 2, 4_500_000, "ST10", {"ciprofloxacin": 0}),
+    ]
+    cohort = _build_cohort(strains)
+    cohort_path = tmp_path / "cohort.parquet"
+    save_cohort(cohort, cohort_path)
+
+    exit_code = main(
+        [
+            "--cohort", str(cohort_path),
+            "--output", str(tmp_path / "audit.md"),
+            "--drugs", "ciprofloxacin",
+            "--target-per-drug", "1",
+            "--min-minority-class", "1",
+        ]
+    )
+    assert exit_code == 0
+    out = capsys.readouterr().out
+    assert "WARNING: relaxed thresholds" in out
+    # Verdict echo also present
+    assert "[audit_cohort] verdict:" in out
+
+
+def test_main_stdout_no_warning_on_defaults(tmp_path: Path, capsys):
+    """Default flags → no WARNING stdout line."""
+    # Build a 50R/50S cohort so verdict is WARN under defaults but the cohort itself
+    # has enough strains that the CLI runs without --target-per-drug overrides
+    strains = []
+    for i in range(50):
+        strains.append(_make_strain(f"R{i}", 3, 200_000, f"ST{i}", {"ciprofloxacin": 1}))
+    for i in range(50):
+        strains.append(_make_strain(f"S{i}", 3, 200_000, f"ST{i+100}", {"ciprofloxacin": 0}))
+    cohort = _build_cohort(strains)
+    cohort_path = tmp_path / "cohort.parquet"
+    save_cohort(cohort, cohort_path)
+
+    exit_code = main(
+        [
+            "--cohort", str(cohort_path),
+            "--output", str(tmp_path / "audit.md"),
+            "--drugs", "ciprofloxacin",
+            # No --target-per-drug etc. → defaults apply
+        ]
+    )
+    assert exit_code == 0
+    out = capsys.readouterr().out
+    assert "WARNING: relaxed thresholds" not in out
+    # Verdict still WARN (50 < 150), but no relaxed-threshold warning
+    assert "verdict: WARN" in out
 
 
 def test_main_ast_missing_exits_2(tmp_path: Path):

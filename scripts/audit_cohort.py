@@ -55,6 +55,40 @@ class VerdictRules:
     contig_count_max: int = CONTIG_MAX_DEFAULT
 
 
+PHASE1_DEFAULT_RULES = VerdictRules()
+"""Canonical Phase 1 ship thresholds (150 strains/drug, 30 minority, 20% max missing
+metadata, 80% min broth-microdilution, N50 ≥ 50K, contig_count ≤ 500). Any caller
+deviating from these triggers the non-default warning banner — prevents the
+calibration miscarriage of commit b646fc9 where relaxed CLI flags produced a
+context-free 'GO' on the 67-strain cohort."""
+
+
+def non_default_threshold_fields(
+    rules: VerdictRules, default: VerdictRules = PHASE1_DEFAULT_RULES
+) -> list[tuple[str, object, object, str]]:
+    """Return fields where `rules` is more permissive than `default`.
+
+    Returns a list of (field_name, current_value, default_value, direction) tuples.
+    `direction` is "lower" or "higher" describing how `rules` deviates. "Permissive"
+    means: lower target_per_drug / lower min_minority_class / higher max_pct_missing_metadata
+    / lower min_pct_broth_microdilution / lower n50_min / higher contig_count_max.
+    """
+    deviations: list[tuple[str, object, object, str]] = []
+    # Lower-is-permissive fields
+    for fname in ("target_per_drug", "min_minority_class", "min_pct_broth_microdilution", "n50_min"):
+        cur = getattr(rules, fname)
+        dflt = getattr(default, fname)
+        if cur < dflt:
+            deviations.append((fname, cur, dflt, "lower"))
+    # Higher-is-permissive fields
+    for fname in ("max_pct_missing_metadata", "contig_count_max"):
+        cur = getattr(rules, fname)
+        dflt = getattr(default, fname)
+        if cur > dflt:
+            deviations.append((fname, cur, dflt, "higher"))
+    return deviations
+
+
 @dataclass
 class VerdictResult:
     """Verdict + rule-by-rule outcome."""
@@ -395,6 +429,68 @@ def evaluate_verdict(
     return VerdictResult(verdict=verdict, rules=results)
 
 
+def thresholds_block(rules: VerdictRules) -> list[str]:
+    """Render the 'Thresholds applied' block for the report header.
+
+    Lists all six VerdictRules knobs with their current values. Pattern mirrors
+    the other `*_section()` helpers — returns a list of markdown lines (no trailing
+    join). Empty trailing line gives section separation.
+    """
+    return [
+        "**Thresholds applied:**",
+        f"- target_per_drug: {rules.target_per_drug}",
+        f"- min_minority_class: {rules.min_minority_class}",
+        f"- max_pct_missing_metadata: {rules.max_pct_missing_metadata}",
+        f"- min_pct_broth_microdilution: {rules.min_pct_broth_microdilution}",
+        f"- n50_min: {rules.n50_min}",
+        f"- contig_count_max: {rules.contig_count_max}",
+        "",
+    ]
+
+
+def relaxed_flags_warning(rules: VerdictRules) -> list[str]:
+    """Top-of-report banner when ANY VerdictRules field is more permissive than Phase 1 default.
+
+    Empty list when rules match defaults (no banner needed). When deviations exist,
+    returns a multi-line warning that names each deviated field + its current value
+    + the canonical default. Goes before the timestamp/header lines so it's the
+    first thing a reader sees.
+
+    Per /brainstorm patches D6 + D7: covers all six VerdictRules fields, not just
+    target_per_drug and min_minority_class.
+    """
+    deviations = non_default_threshold_fields(rules)
+    if not deviations:
+        return []
+    lines = [
+        "> :warning: **WARNING: NON-DEFAULT THRESHOLDS APPLIED — VERDICT NOT COMPARABLE TO PHASE 1 GATE.**",
+        ">",
+        "> The following thresholds deviate from canonical Phase 1 defaults:",
+        ">",
+    ]
+    for fname, cur, dflt, direction in deviations:
+        lines.append(f"> - `{fname}` = {cur} ({direction} than default {dflt})")
+    lines.append("")
+    return lines
+
+
+def stdout_warning_lines(rules: VerdictRules) -> list[str]:
+    """Stdout-side equivalent of relaxed_flags_warning (covers the CLI escape hatch).
+
+    Per /brainstorm patch D6: report-side banner alone left a stdout escape hatch
+    where CI/pipeline consumers received a context-free `verdict: GO`. This helper
+    returns the per-line strings to emit BEFORE the verdict echo on any deviation.
+    """
+    deviations = non_default_threshold_fields(rules)
+    if not deviations:
+        return []
+    summary = ", ".join(f"{name}={cur}" for name, cur, _, _ in deviations)
+    return [
+        f"[audit_cohort] WARNING: relaxed thresholds ({summary}) — "
+        f"verdict not comparable to Phase 1 gate"
+    ]
+
+
 def verdict_section(result: VerdictResult) -> list[str]:
     lines = [f"## Pre-Gate-B verdict: **{result.verdict}**", ""]
     if not result.rules:
@@ -422,10 +518,16 @@ def build_report(
     lines = [
         "# Cohort Audit Report",
         "",
+    ]
+    # Banner BEFORE source/timestamp so it's the first thing a reader sees on a
+    # relaxed-thresholds run (per /brainstorm patch D6 + D7).
+    lines += relaxed_flags_warning(rules)
+    lines += [
         f"**Source cohort:** `{cohort_path}`",
         f"**Generated:** {_dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
         "",
     ]
+    lines += thresholds_block(rules)
     lines += overview_section(cohort, drug_list)
     lines += clade_section(cohort, drug_list)
     lines += metadata_section(cohort)
@@ -495,8 +597,12 @@ def main(argv: list[str] | None = None) -> int:
     args.output.write_text(report, encoding="utf-8")
     print(f"[audit_cohort] wrote report: {args.output} ({len(report)} chars)")
 
-    # Echo the verdict line to stdout for CI / pipeline integration
+    # Echo the verdict line to stdout for CI / pipeline integration.
+    # Per /brainstorm patch D6: prepend a WARNING line if any threshold deviates
+    # from Phase 1 default — stdout-side coverage of the calibration discipline.
     verdict = evaluate_verdict(cohort, drugs, ast_df, rules)
+    for warning_line in stdout_warning_lines(rules):
+        print(warning_line)
     print(f"[audit_cohort] verdict: {verdict.verdict}")
     return 0
 
