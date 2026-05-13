@@ -1,6 +1,27 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: NT_Deferral_Docs_Cleanup_Ship_Path_Plan.md] 2026-05-13
+**Summary:** Scope-tightened delta from `NT_Deferral_Docs_Cleanup_Plan.md` after `/review` synthesis — drops D1's `/save-plan` hedge (already disproven on disk), trims the over-prose `[BLOCKED]` bullet, sharpens the deferral annotation, attempts cheap NT revision retrieval before recording the gap, and adds an explicit untracked-file staging note.
+**Key decisions:**
+- Drop the `/save-plan` hedge — direct manual edit only (D1)
+- Trim `[BLOCKED]` bullet to ≤3 sentences + separate Environment line (D2)
+- Attempt NT revision retrieval before recording the gap (D3)
+- Sharpen "gate failed" → "equivalence test failed at model load" (D4)
+- Step 3 explicit `git add` reminder for untracked plan file (D5)
+
+---
+
+## [plan_file: NT_Deferral_Docs_Cleanup_Plan.md] 2026-05-13
+**Summary:** Docs-only follow-up to commit `d4a4652` — apply the three issues surfaced by `/brainstorm` against the just-shipped NT AutoModel refactor deferral: stale plans-index, conflated TODOS scope, missing reproducibility metadata.
+**Key decisions:**
+- Re-run `/save-plan` before manual index edit (D1)
+- Split the TODOS entry into specific (BLOCKED) + general (OPEN) (D2)
+- Lean reproducibility metadata, one line (D3)
+- Diagnostic spike deferred, NOT killed (D4)
+
+---
+
 ## [plan_file: Audit_Calibration_NT_AutoModel_Ship_Path_Plan.md] 2026-05-13
 **Summary:** Scope-reduced delta from `Audit_Calibration_NT_AutoModel_Plan.md` after `/review` synthesis — 5 steps / 4 waves → 2 commits, 2 waves. Drops dual-verdict columns (institutionalization risk), drops wiki update (no text to replace), splits NT refactor into a separate gated commit (equivalence test required).
 **Key decisions:**
@@ -9,6 +30,7 @@
 - Split NT refactor into a separate, gated commit (D3)
 - Keep default-semantics test as the regression lock (D4)
 - thresholds_block(rules) helper, not inline string list (D5)
+**Status:** Commit 1 shipped (473b8eb); Commit 2 deferred 2026-05-13 — equivalence test failed at model load (AutoModel.from_pretrained state_dict mismatch on NT v2 100M trust_remote_code checkpoint). See plans/NT_Deferral_Docs_Cleanup_Plan.md and TODOS.md [BLOCKED] NT AutoModel swap.
 
 ---
 
@@ -20,6 +42,7 @@
 - Pin default semantics in tests (D3)
 - NT switches to `AutoModel`, not `AutoModelForMaskedLM` (D4)
 - Pooling-strategy tag stays "single_seq_mean" (D5)
+**Status:** Commit 1 shipped (473b8eb); Commit 2 deferred 2026-05-13 — equivalence test failed at model load (AutoModel.from_pretrained state_dict mismatch on NT v2 100M trust_remote_code checkpoint). See plans/NT_Deferral_Docs_Cleanup_Plan.md and TODOS.md [BLOCKED] NT AutoModel swap.
 
 ---
 
