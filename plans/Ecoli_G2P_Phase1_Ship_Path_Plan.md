@@ -1,5 +1,7 @@
 # E. coli G2P — Phase 1 Ship-Path Plan
 
+> **Status:** archived 2026-05-12 — Phase 1 shipped (all ship-path steps committed; full test suite green 287/0/1; `phase-1-shipped` tag created on the closeout commit).
+
 > Contracted path to ship Phase 1 of `Ecoli_G2P_Platform_Technical_Plan.md`. Captures the `/review` synthesis verdict (HOLD scope + selective contraction within remaining steps) plus the deferred Wave 3.5 hardening fixes from the post-Wave-3 `/brainstorm`. Estimated remaining work: ~700 LOC across 5 implementation steps + 4 hardening edits.
 
 ---
