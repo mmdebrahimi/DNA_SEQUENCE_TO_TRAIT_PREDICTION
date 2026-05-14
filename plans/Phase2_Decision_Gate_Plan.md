@@ -107,11 +107,10 @@ The reframe: 12-strain run as **smoke/falsification gate** (does NT show ANY sig
 
 **Cohort:** existing `data/processed/gate_b_mini_cohort.parquet` (12 strains, 6R/6S cipro).
 
-Variants to run (**4 total** — clade-only dropped per B-B lock 2026-05-14):
-- AMRFinder (existing in `classical_baselines.py`)
-- k-mer + XGBoost (existing)
+Variants to run (**3 total** — clade-only dropped per B-B lock 2026-05-14; AMRFinder deferred 2026-05-14 — cohort's persisted `plasmid_resistance_genes + chromosome_resistance_genes` fields are empty for the 12-strain mini cohort, and no per-strain AMRFinderPlus CLI infrastructure exists yet; defer to Stage 1 N=50 prep when AMRFinder driver lands as a separate TODO):
+- k-mer + XGBoost (existing in `classical_baselines.py`)
 - gene-presence + XGBoost (existing)
-- NT-XGBoost (existing; uses `mini_cipro_nt_cache.h5` from the in-progress populate)
+- NT-XGBoost (existing; uses `mini_cipro_nt_cache.h5`)
 
 Capture result packet per variant:
 - LOSO AUROC, AUPRC
