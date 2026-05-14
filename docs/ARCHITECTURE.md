@@ -29,11 +29,13 @@ Phase 1 E. coli G2P platform. One-page module map + data-flow overview.
    │                             │ │  (Step 9)        │  │  ani                 │
    │                             │ │  XGBoost +       │  │ clade_baseline.py    │
    │                             │ │  sigmoid calib   │  │  + validation_gate   │
-   │                             │ │ classical_       │  └──────────────────────┘
-   │                             │ │  baselines.py    │
-   │                             │ │  (Step 18)       │
-   │                             │ │  AMRFinder/k-mer │
-   │                             │ │  /gene-presence  │
+   │                             │ │ classical_       │  │ loso_kmer.py         │
+   │                             │ │  baselines.py    │  │  order-explicit      │
+   │                             │ │  (Step 18)       │  │  k-mer + fusion      │
+   │                             │ │  AMRFinder/k-mer │  │  LOSO; shared by     │
+   │                             │ │  /gene-presence  │  │  smoke gate +        │
+   │                             │ │  CONTIG_SEPARATOR│  │  Stage 1 runner      │
+   │                             │ │  module constant │  └──────────────────────┘
    └─────────────────────────────┘ └──────────────────┘
                                             │
                                             │   gene-level
@@ -129,6 +131,10 @@ scripts/
 | Calibration CV folds bounded by MINORITY class | `classifiers.py` + `classical_baselines.py` | Rare-resistance drugs (low minority class count) crashed before Wave 3.5 C7 fix. |
 | `motif_recovery` is a Phase 2 placeholder + warns on call | `mutagenesis.py` | Phase 1 attribution uses Tier 1-5 rubric, not motif recovery. |
 | 6 HDF5 end markers in cohort parquet | `cohort.py` save/load round-trip | Wave 3 reads cohort.parquet directly; recomputing build_cohort on every load would be wasteful. |
+| `CVResult.strain_ids` is the alignment contract for paired comparisons | `eval/cv.py` | Stage 1 runner's `compute_gate_outcome` validates NT-vs-k-mer strain_ids alignment before computing the gap; mismatch raises (gate-bearing). Fusion strain_ids mismatch suppresses the fusion-outperforms note (diagnostic-only, gate proceeds). |
+| `loso_kmer.run_kmer_xgboost_loso` / `run_fusion_loso` respect caller-supplied `strain_ids` verbatim — no internal sort/filter | `eval/loso_kmer.py` | Smoke gate + Stage 1 runner both pass through; preventing alignment drift was the /brainstorm Round 1 finding. Re-raises `ClassifierTrainingError` rather than silent mean-fallback. |
+| `CONTIG_SEPARATOR = "N" * 100` module constant in `classical_baselines.py` | `models/classical_baselines.py` | Replaces three magic-string copies; both `loso_kmer` runners import + concatenate via this constant. |
+| `_train_baseline_logreg(..., calibrate=False)` returns raw `LogisticRegression` without `CalibratedClassifierCV` | `models/classical_baselines.py` | Calibration at LOSO N≤20 over-corrects to anti-predictive output. Stage 1 + smoke gate pass `calibrate=False` at every gate-bearing call site (pinned by test). |
 
 ## Phase 1 success criteria
 

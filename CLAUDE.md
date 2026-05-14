@@ -57,6 +57,37 @@ uv run python -m scripts.pilot_gate \
 uv run python -m scripts.pipeline ingest --drugs ciprofloxacin,ceftriaxone,tetracycline
 uv run python -m scripts.pipeline train --drug ciprofloxacin --model evo --include-clade-baseline
 uv run python -m scripts.pipeline attribute --strain-id <accession> --drug ciprofloxacin
+
+# Phase 2 smoke gate (12-strain cipro mini-cohort; 3 variants: NT-XGBoost + k-mer + gene-presence)
+# Uses data/processed/mini_cipro_nt_cache.h5 + gate_b_mini_cohort.parquet.
+# AMRFinder deferred to Stage 1 prep (cohort's persisted resistance-gene fields are empty for the mini).
+# IMPORTANT: NT path uses calibrate=False — CalibratedClassifierCV overcorrects at N≤20 and inverts predictions.
+uv run python scripts/smoke_gate_12strain_cipro.py
+# Writes wiki/smoke_gate_12strain_cipro_<date>.md result packet. Exit 0=PASS, 1=FAIL.
+
+# Phase 2 Stage 1 engineering screen (N=40 cipro; 4 variants: NT-XGBoost gate + NT-logreg sanity + k-mer-XGB classical + NT+k-mer-fusion-logreg diagnostic)
+# Uses D:/dna_decode_cache/embeddings/nt_n40_cipro.h5 (populate first) + gate_b_n40_cipro_cohort.parquet.
+# Refactored 2026-05-14: thin orchestration over `dna_decode/eval/cv.py` (NT variants via `leave_one_strain_out_cv`)
+# + `dna_decode/eval/loso_kmer.py` (k-mer + fusion runners shared with the smoke gate).
+# Gate formula: max(NT-XGBoost, NT-logreg) AUROC − k-mer-XGB AUROC ≥ 3 pp under LOSO.
+# Verdict bucket (frozen pure function of point gap): ≥5 pp CLEAN PASS / 3-5 pp NOISY PASS / <3 pp FAIL.
+# Stage 2 action (decision-layer, separate field): BURST_STAGE_2 / HOLD_STAGE_2_CI_DEGENERATE /
+# ALTERNATIVE_POOLING_RERUN / PIVOT_TO_BAKTA — computed from (verdict, ci_lo, fusion behavior) per the
+# plan's Verdict-Time Pre-Commitments table.
+# All variants run with calibrate=False (pinned by test at all 3 gate-bearing call sites);
+# paired bootstrap CI (B=1000) on the gap surfaces clean-vs-noisy.
+# `compute_gate_outcome` validates NT-vs-k-mer strain_ids alignment (raises on mismatch).
+# Fusion variant is DIAGNOSTIC ONLY — does NOT count for gate.
+HF_HOME=D:/hf_cache uv run python scripts/stage1_n40_cipro.py
+# Writes wiki/stage1_n40_cipro_<date>.md result packet. Exit 0 ONLY when stage2_action == BURST_STAGE_2; exit 1 otherwise.
+
+# Populate NT cache for the N=40 cohort (long-running on GTX 860M; ~5-7 hr wallclock)
+HF_HOME=D:/hf_cache uv run python scripts/populate_cache.py \
+  --cohort data/processed/gate_b_n40_cipro_cohort.parquet \
+  --model nucleotide_transformer \
+  --cache D:/dna_decode_cache/embeddings/nt_n40_cipro.h5 \
+  --refseq-cache D:/dna_decode_cache/refseq \
+  --device cuda
 ```
 
 ## Phase 1 success criteria (per technical plan + Tier 1-5 rubric)
@@ -81,7 +112,7 @@ Phase 2 redesign trigger: classical baselines win on ≥2 drugs. The plan's Step
 - **`pilot.fetch_bvbrc_drug_counts` raises NotImplementedError without a local TSV / env var / config entry.** Live API integration is deferred until first real-data run. Workaround: download BV-BRC AST TSV from `ftp.bvbrc.org` + pass via `--ast-tsv`.
 - **`pilot.fetch_ncbi_assembly_quality` stays scaffolded INTENTIONALLY.** Phase 2 introduced a separate CSV adapter (`dna_decode/data/bvbrc_genome.py`) that bypasses it via `pipeline ingest --assembly-metadata-csv path/to/BVBRC_genome.csv`. The scaffold's 2-key return (contig_count + n50) is wrong-shaped for the real CSV's 7+ richer fields; do not "implement the NotImplementedError." Live NCBI Datasets REST integration is Phase 3 work and will replace `fetch_ncbi_assembly_quality` then.
 - **`motif_recovery` is a placeholder** — returns the same high-impact position list for every motif name. Phase 2 work; not a Phase 1 ship gate.
-- **GFF3 annotation source variance.** `parse_gff3` collapses `ID=` / `Name=` / `gene=` attributes into one `gene_id` column. Bakta emits `ID=g1` + `locus_tag=TAG_001`; RefSeq emits `gene=gyrA`. Downstream code matching against a gene-symbol catalog needs to try both `gene_id` + `locus_tag`.
+- **GFF3 annotation source variance — `gene_id` vs `gene_symbol`.** As of 2026-05-14, `parse_gff3` populates THREE separate columns: `gene_id` (from GFF3 `ID=` / `Name=` — strain-unique by construction, e.g., `gene-b0001`; this is the embedding-cache key in `extract_cds_sequences`), `gene_symbol` (from GFF3 `gene=` — cross-strain, e.g., `gyrA`; populated for only ~11% of CDSs in typical RefSeq GFF3), and `locus_tag` (also strain-unique). For gene-family / presence-absence features that need to generalize across strains, use `gene_symbol` first. Do NOT use `gene_id` as a cross-strain identifier — it WILL cause 0% LOSO vocab overlap and AUROC=0.000 (mechanism: held-out rows all-zero → XGBoost predicts training class prior → prior inverts against held-out label on balanced LOSO). See `plans/Gene_Presence_AUROC_Bug_Fix_Plan.md`. `parse_genbank` populates `gene_id` + `gene_symbol` to the same value (the qualifier `gene`) — known asymmetry; downstream consumers should still prefer `gene_symbol`. The smoke runner gates on median per-fold vocab overlap (`min_median_vocab_overlap=0.20`) and reports `INDETERMINATE_IDENTIFIER_OOV` rather than a misleading AUROC when degenerate.
 - **`.gitignore`'s `/data/` is anchored** (leading slash = repo root only). Bare `data/` would also match `dna_decode/data/` subpackage source.
 
 ## Project workflow
