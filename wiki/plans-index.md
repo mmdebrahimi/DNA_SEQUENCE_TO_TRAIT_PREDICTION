@@ -127,3 +127,44 @@
 - Add quantization-fidelity micro-step (selective addition) (D8)
 
 ---
+
+## [plan_file: Gene_Presence_AUROC_Bug_Fix_Plan.md] 2026-05-14
+**Summary:** Strengthen the diagnostic, confirm the strain-unique-identifier-domination hypothesis on real data, then add a `gene_symbol` column to `AnnotationTable` so the gene-presence smoke variant returns a non-degenerate AUROC at N=12.
+**Key decisions:**
+- Add `gene_symbol` column to AnnotationTable; do NOT rewrite `gene_id` (preserves embedding cache key + fixes parse_gff3/parse_genbank asymmetry) (D1)
+- Strengthen diagnostic before mounting F: drive (absolute counts + per-prefix namespace breakdown + side-by-side dual-extractor AUROC) (D2)
+- Strengthen synthetic falsifier with strain-unique-blocks + shared-core LOSO + all-zero held-out row case (D3)
+- Add `INDETERMINATE_IDENTIFIER_OOV` smoke verdict as defense-in-depth guardrail (D4)
+
+---
+
+## [plan_file: Stage1_N40_Cipro_Engineering_Screen_Plan.md] 2026-05-14
+**Summary:** Run a 4-experiment matrix (NT-XGBoost gate + NT-logreg sanity + k-mer-XGB classical + NT+k-mer-fusion-logreg diagnostic) under LOSO on the N=40 cipro cohort (effective N=38) with paired bootstrap CI, MLST diagnostic appendix, and a 3-bucket verdict to decide whether to spend Stage 2 N=150 Databricks burst budget.
+**Key decisions:**
+- Restore NT-XGBoost as primary gate-bearing head; add NT-logreg as sanity-check baseline; fusion is diagnostic-only NOT gate-bearing (D1)
+- All variants run with `calibrate=False` for primary AUROC (uniform calibration discipline matching smoke-gate; calibration is small-N footgun) (D2)
+- Add diagnostic appendix: MLST distribution + per-strain LOSO predictions + paired bootstrap CI (B=1000) + 3-bucket verdict (≥5 pp CLEAN / 3-5 pp NOISY / <3 pp FAIL) (D3)
+- Gene-presence + AMRFinderPlus POINT* baselines explicitly out of scope; result packet notes 'best classical' is bounded (D4)
+
+---
+
+## [plan_file: Stage1_Refactor_And_Test_Hardening_Plan.md] 2026-05-14
+**Summary:** Convert the /review synthesis into a 3-step refactor: pre-commit decision rules in the Stage 1 plan, reduce `scripts/stage1_n40_cipro.py` to thin orchestration over existing infrastructure, and pin the two critical untested behaviors (fusion-exclusion from gate + `calibrate=False` discipline).
+**Key decisions:**
+- Treat Stage 2 burst as atomic; pre-commit deterministic per-bucket actions (CI-lower-bound rule converts borderline NOISY PASS → FAIL) (D1)
+- Refactor runner to reuse existing infrastructure: `leave_one_strain_out_cv` for NT variants, factored `dna_decode/eval/loso_kmer.py` for k-mer + fusion, `_train_baseline_logreg(calibrate=False)` for logreg path (D2)
+- Replace silent mean-fallback on `ClassifierTrainingError` with re-raise; eliminate the failure-masking pattern (D3)
+- Add fusion-exclusion + `calibrate=False` discipline regression tests; pin /brainstorm-flagged failure modes (D4)
+- Loud MLST handling (raise on None instead of "unknown" fallback) + bootstrap-skip-count reporting (D5, D6)
+
+---
+
+## [plan_file: Stage2_N150_Prep_Plan.md] 2026-05-14
+**Summary:** Resolve the three deferred Stage 2 decisions (annotation source, AMRFinderPlus integration, Databricks vs local) and ship the infrastructure needed for a Stage 2 N=150 cipro decision-gate run, so the gate runs cleanly once Stage 1 PASSes.
+**Key decisions:**
+- Annotation source = Bakta re-annotation for cross-strain stable gene symbols (defer Roary; accept-degenerate rejected) (D1)
+- AMRFinderPlus POINT* SNP-table baseline IS in scope for Stage 2 (gyrA/parC/parE textbook signal; load-bearing comparator) (D2)
+- Compute = Databricks burst for N=150 NT populate (~3-5 hr A100); local CPU for everything else (Bakta + AMRFinder + analysis) (D3)
+- Stage 2 cohort = N=150 expanded from gate_b_cohort.parquet (67 strains) via audit-cohort pipeline with relaxed assembly-quality thresholds (D4)
+
+---
