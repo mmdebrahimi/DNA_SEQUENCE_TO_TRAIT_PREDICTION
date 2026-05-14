@@ -51,6 +51,11 @@ class CVResult:
             return np.array([])
         return np.concatenate([f.y_score for f in self.folds])
 
+    @property
+    def strain_ids(self) -> list[str]:
+        """Held-out IDs in fold order — alignment contract for downstream paired comparisons."""
+        return [f.held_out_id for f in self.folds]
+
 
 def _validate_inputs(
     features: np.ndarray, labels: np.ndarray, strain_ids: list[str]

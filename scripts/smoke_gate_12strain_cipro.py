@@ -24,12 +24,12 @@ from dna_decode.data.annotations import parse_gff3
 from dna_decode.data.cohort import load_cohort
 from dna_decode.data.refseq import fasta_path, gff_path
 from dna_decode.eval.cv import leave_one_strain_out_cv
+from dna_decode.eval.loso_kmer import run_kmer_xgboost_loso
 from dna_decode.eval.metrics import compute_metrics
 from dna_decode.models.cache import EmbeddingCache
 from dna_decode.models.classical_baselines import (
+    CONTIG_SEPARATOR,
     build_gene_presence_matrix,
-    build_kmer_vocabulary,
-    kmers_to_feature_matrix,
 )
 from dna_decode.models.classifiers import (
     ClassifierTrainingError,
@@ -47,11 +47,18 @@ def _load_fasta_contigs(fasta_p: Path) -> list[str]:
 
 
 def _extract_gene_ids(annotations_table) -> set[str]:
-    """Extract unique gene IDs from a parsed GFF3 table (CDS rows only)."""
+    """Extract unique gene-family identifiers from a parsed GFF3 table (CDS rows only).
+
+    Prefers `gene_symbol` (e.g., `gyrA`, `thrL`) so the vocabulary is shared across
+    strains. Falls back to `gene_id` (GFF3 `ID=` attribute, typically strain-unique
+    like `gene-b0001`) and `locus_tag` (also strain-unique) only when no gene
+    symbol is annotated. The fallback chain is documented as a known limitation —
+    if symbol coverage is low for a strain, cross-strain vocab overlap stays low.
+    """
     cds = annotations_table[annotations_table["type"] == "CDS"]
     gene_ids: set[str] = set()
     for _, row in cds.iterrows():
-        gid = row.get("gene_id") or row.get("locus_tag")
+        gid = row.get("gene_symbol") or row.get("gene_id") or row.get("locus_tag")
         if gid:
             gene_ids.add(str(gid))
     return gene_ids
@@ -107,45 +114,33 @@ def run_nt_xgboost(cohort, cache_path: Path, drug: str) -> dict:
 
 
 def run_kmer_xgboost(cohort, refseq_root: Path, drug: str, k: int = 8, top_n: int = 10000) -> dict:
-    """k-mer + XGBoost LOSO with within-fold vocabulary rebuild."""
+    """k-mer + XGBoost LOSO via the factored `dna_decode.eval.loso_kmer` module.
+
+    Wraps the order-explicit shared API: builds `seqs_by_strain` / `labels_by_strain`
+    / `strain_ids = sorted(...)` from the cohort, then delegates to
+    `run_kmer_xgboost_loso`. Smoke's broader subset (all drug-labeled FASTAs)
+    is preserved; only the inner LOSO loop is shared with Stage 1.
+
+    Note: `ClassifierTrainingError` now propagates up (loud-fail discipline per
+    Stage 1 refactor); smoke's `main` already wraps each variant in try/except
+    and surfaces failures in the result packet, so no behavioral regression.
+    """
     drug_lower = drug.lower()
     strain_contigs: dict[str, list[str]] = {}
-    labels_dict: dict[str, int] = {}
+    labels_by_strain: dict[str, int] = {}
     for s in cohort.strains:
         if drug_lower not in s.ast_labels:
             continue
         fp = fasta_path(s.assembly_accession, refseq_root)
         strain_contigs[s.strain_id] = _load_fasta_contigs(fp)
-        labels_dict[s.strain_id] = s.ast_labels[drug_lower]
+        labels_by_strain[s.strain_id] = int(s.ast_labels[drug_lower])
 
-    strain_order = sorted(strain_contigs.keys())
-    sep = "N" * 100
-    concatenated = [sep.join(strain_contigs[sid]) for sid in strain_order]
-    y = np.array([labels_dict[sid] for sid in strain_order], dtype=int)
+    strain_ids = sorted(strain_contigs.keys())
+    seqs_by_strain = {sid: CONTIG_SEPARATOR.join(strain_contigs[sid]) for sid in strain_ids}
+    y = np.array([labels_by_strain[sid] for sid in strain_ids], dtype=int)
 
-    n = len(strain_order)
-    all_y_true: list[int] = []
-    all_y_score: list[float] = []
-    for i in range(n):
-        train_seqs = [concatenated[j] for j in range(n) if j != i]
-        train_y = np.array([y[j] for j in range(n) if j != i], dtype=int)
-        test_seq = concatenated[i]
-        test_y = int(y[i])
-
-        vocab = build_kmer_vocabulary(train_seqs, k=k, top_n=top_n)
-        X_train = kmers_to_feature_matrix(train_seqs, vocab, k=k)
-        X_test = kmers_to_feature_matrix([test_seq], vocab, k=k)
-
-        try:
-            clf = train_xgboost_classifier(X_train, train_y, drug_name=drug, calibrate=False)
-            y_score = float(predict_proba(clf, X_test)[0])
-        except ClassifierTrainingError:
-            y_score = float(train_y.mean())
-
-        all_y_true.append(test_y)
-        all_y_score.append(y_score)
-
-    m = compute_metrics(np.array(all_y_true), np.array(all_y_score))
+    cv = run_kmer_xgboost_loso(seqs_by_strain, labels_by_strain, strain_ids, drug=drug, k=k, top_n=top_n)
+    m = compute_metrics(cv.all_y_true, cv.all_y_score)
     return {
         "variant": f"k-mer (k={k}) + XGBoost",
         "auroc": float(m.auroc),
@@ -155,8 +150,18 @@ def run_kmer_xgboost(cohort, refseq_root: Path, drug: str, k: int = 8, top_n: in
     }
 
 
-def run_gene_presence_xgboost(cohort, refseq_root: Path, drug: str) -> dict:
-    """Gene-presence + XGBoost LOSO with within-fold vocabulary rebuild."""
+def run_gene_presence_xgboost(
+    cohort, refseq_root: Path, drug: str, min_median_vocab_overlap: float = 0.20
+) -> dict:
+    """Gene-presence + XGBoost LOSO with within-fold vocabulary rebuild.
+
+    Defense-in-depth: if median per-fold test-vocab-overlap is below
+    `min_median_vocab_overlap`, returns verdict `INDETERMINATE_IDENTIFIER_OOV`
+    instead of an AUROC value. This guards against silently reporting a
+    perfectly-anti-predictive AUROC when the gene-presence vocabulary is
+    dominated by strain-unique identifiers (e.g., RefSeq `ID=gene-b0001`)
+    that don't generalize across strains. See `plans/Gene_Presence_AUROC_Bug_Fix_Plan.md`.
+    """
     drug_lower = drug.lower()
     strain_genes: dict[str, set[str]] = {}
     labels_dict: dict[str, int] = {}
@@ -174,6 +179,7 @@ def run_gene_presence_xgboost(cohort, refseq_root: Path, drug: str) -> dict:
     n = len(strain_order)
     all_y_true: list[int] = []
     all_y_score: list[float] = []
+    per_fold_overlap: list[float] = []
     for i in range(n):
         train_gene_sets = [strain_genes[strain_order[j]] for j in range(n) if j != i]
         train_y = np.array([y[j] for j in range(n) if j != i], dtype=int)
@@ -182,6 +188,11 @@ def run_gene_presence_xgboost(cohort, refseq_root: Path, drug: str) -> dict:
 
         X_train, vocab = build_gene_presence_matrix(train_gene_sets, gene_vocabulary=None)
         X_test, _ = build_gene_presence_matrix([test_gene_set], gene_vocabulary=vocab)
+        vocab_set = set(vocab)
+        overlap = (
+            sum(1 for g in test_gene_set if g in vocab_set) / max(1, len(test_gene_set))
+        )
+        per_fold_overlap.append(overlap)
 
         try:
             clf = train_xgboost_classifier(X_train, train_y, drug_name=drug, calibrate=False)
@@ -192,6 +203,24 @@ def run_gene_presence_xgboost(cohort, refseq_root: Path, drug: str) -> dict:
         all_y_true.append(test_y)
         all_y_score.append(y_score)
 
+    median_overlap = float(np.median(per_fold_overlap))
+    if median_overlap < min_median_vocab_overlap:
+        return {
+            "variant": "Gene-presence + XGBoost",
+            "auroc": None,
+            "auprc": None,
+            "n_samples": n,
+            "label_balance": f"{int((y == 1).sum())}R / {int((y == 0).sum())}S",
+            "verdict": "INDETERMINATE_IDENTIFIER_OOV",
+            "median_vocab_overlap": median_overlap,
+            "note": (
+                f"median per-fold test-vocab overlap = {median_overlap:.2%} < "
+                f"{min_median_vocab_overlap:.0%} threshold; held-out rows are mostly "
+                f"empty, so XGBoost predictions collapse to the training class prior "
+                f"(LOSO-anti-predictive). Result not interpretable as a biological signal."
+            ),
+        }
+
     m = compute_metrics(np.array(all_y_true), np.array(all_y_score))
     return {
         "variant": "Gene-presence + XGBoost",
@@ -199,6 +228,7 @@ def run_gene_presence_xgboost(cohort, refseq_root: Path, drug: str) -> dict:
         "auprc": float(m.auprc),
         "n_samples": int(m.n_samples),
         "label_balance": f"{int((y == 1).sum())}R / {int((y == 0).sum())}S",
+        "median_vocab_overlap": median_overlap,
     }
 
 
@@ -211,7 +241,14 @@ def write_packet(
 ) -> dict:
     """Write the smoke result packet + compute acceptance verdict."""
     nt = next((r for r in results if r["variant"].startswith("NT-")), None)
-    classical = [r for r in results if not r["variant"].startswith("NT-")]
+    classical = [
+        r for r in results
+        if not r["variant"].startswith("NT-") and r.get("auroc") is not None
+    ]
+    indeterminate = [
+        r for r in results
+        if not r["variant"].startswith("NT-") and r.get("auroc") is None
+    ]
     best_classical = max(classical, key=lambda r: r["auroc"]) if classical else None
 
     if nt and best_classical:
@@ -243,9 +280,21 @@ def write_packet(
         "|---|---:|---:|---:|---|",
     ]
     for r in results:
-        lines.append(
-            f"| {r['variant']} | {r['auroc']:.3f} | {r['auprc']:.3f} | {r['n_samples']} | {r['label_balance']} |"
-        )
+        if r.get("auroc") is None:
+            tag = r.get("verdict", "INDETERMINATE")
+            lines.append(
+                f"| {r['variant']} | {tag} | — | {r['n_samples']} | {r['label_balance']} |"
+            )
+        else:
+            lines.append(
+                f"| {r['variant']} | {r['auroc']:.3f} | {r['auprc']:.3f} | {r['n_samples']} | {r['label_balance']} |"
+            )
+
+    if indeterminate:
+        lines.extend(["", "## Indeterminate variants", ""])
+        for r in indeterminate:
+            note = r.get("note") or "(no diagnostic note attached)"
+            lines.append(f"- **{r['variant']}** → `{r.get('verdict', 'INDETERMINATE')}`: {note}")
 
     lines.extend(["", "## Gap analysis", ""])
     if nt and best_classical:
@@ -283,7 +332,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="12-strain cipro smoke gate runner (3-variant)")
     parser.add_argument("--cohort", type=Path, default=Path("data/processed/gate_b_mini_cohort.parquet"))
     parser.add_argument("--nt-cache", type=Path, default=Path("data/processed/mini_cipro_nt_cache.h5"))
-    parser.add_argument("--refseq-cache", type=Path, default=Path("F:/dna_decode_cache/refseq"))
+    parser.add_argument("--refseq-cache", type=Path, default=Path("D:/dna_decode_cache/refseq"))
     parser.add_argument("--drug", default="ciprofloxacin")
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args(argv)
@@ -316,7 +365,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         r = run_gene_presence_xgboost(cohort, args.refseq_cache, args.drug)
         results.append(r)
-        print(f"  AUROC={r['auroc']:.3f} AUPRC={r['auprc']:.3f}")
+        if r.get("auroc") is None:
+            print(f"  {r.get('verdict', 'INDETERMINATE')}: {r.get('note', '')}")
+        else:
+            print(f"  AUROC={r['auroc']:.3f} AUPRC={r['auprc']:.3f}")
     except Exception as e:
         print(f"  FAILED: {type(e).__name__}: {e}", file=sys.stderr)
 

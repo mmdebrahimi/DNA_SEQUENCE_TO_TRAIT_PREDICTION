@@ -31,6 +31,13 @@ from dna_decode.models.classifiers import (
 DEFAULT_KMER_K = 8
 DEFAULT_KMER_TOP_N = 10_000  # top-N most frequent k-mers
 
+# Canonical N-run separator for contig concatenation. 100 N's is longer than any
+# realistic k-mer (k<=32), so extract_kmer_counts skipping N-containing windows
+# correctly prevents cross-contig k-mers. Promoted to module constant 2026-05-14
+# (Stage1_Refactor_And_Test_Hardening_Plan Step 2.9) so loso_kmer + Stage 1 runner
+# share one source of truth instead of three magic "N" * 100 strings.
+CONTIG_SEPARATOR: str = "N" * 100
+
 
 # ---- k-mer feature extraction ----
 
@@ -131,9 +138,16 @@ def _train_baseline_xgboost(
 
 
 def _train_baseline_logreg(
-    X: np.ndarray, y: np.ndarray, drug_name: str
+    X: np.ndarray, y: np.ndarray, drug_name: str, *, calibrate: bool = True
 ) -> TrainedClassifier:
-    """Train a logistic-regression classifier (for k-mer baseline)."""
+    """Train a logistic-regression classifier (for k-mer baseline).
+
+    When `calibrate=False`, returns the raw `LogisticRegression` without
+    `CalibratedClassifierCV` wrapping — used by Stage 1 to keep AUROC measurement
+    a function of representation quality rather than calibration-wrapper behavior.
+    Per `plans/Stage1_Refactor_And_Test_Hardening_Plan.md` Step 2.3. Calibration
+    is a small-N footgun (see LESSONS_LEARNED 2026-05-14 calibration overcorrection).
+    """
     try:
         from sklearn.linear_model import LogisticRegression
         from sklearn.calibration import CalibratedClassifierCV
@@ -152,6 +166,17 @@ def _train_baseline_logreg(
         )
 
     base = LogisticRegression(max_iter=1000, solver="liblinear", random_state=42)
+
+    if not calibrate:
+        # Raw logreg path — skip CalibratedClassifierCV entirely.
+        base.fit(X, y)
+        return TrainedClassifier(
+            model=base,
+            drug_name=drug_name,
+            feature_dim=X.shape[1],
+            calibrated=False,
+        )
+
     # Wave 3.5 C7 fix: CV folds bounded by MINORITY class count
     minority_count = int(min((y == 1).sum(), (y == 0).sum()))
     if minority_count < 2:
@@ -227,7 +252,7 @@ def train_kmer_baseline(
     top_n: int = DEFAULT_KMER_TOP_N,
     classifier_type: str = "logreg",
     vocabulary: list[str] | None = None,
-    contig_separator: str = "N" * 100,
+    contig_separator: str = CONTIG_SEPARATOR,
 ) -> tuple[TrainedClassifier, list[str], list[str]]:
     """Train k-mer baseline on per-strain sequences.
 
