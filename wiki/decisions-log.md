@@ -1,0 +1,15 @@
+# Decisions Log
+<!-- Auto-maintained by /retrospective. Do not edit manually. -->
+
+## [plan_file: Sidework_Sequence_Ship_Path_Plan.md] Executed 2026-05-14
+**Mode:** sequential | **Result:** All 6 steps completed
+**PRs:** N/A (direct commits to main: 66dfde2, 2ca1799, 9538ef8)
+**Salience:** HIGH
+**Modules:** dna_decode/models/{foundation,cache}.py, dna_decode/data/, tests/, pyproject.toml, scripts/, docs/, wiki/, plans/, research_outputs/, TODOS.md, CLAUDE.md, README.md, LESSONS_LEARNED.md, FUTURE_FEATURES.md, ~/.claude/.../user_environment.md
+**Notable:** Three execution-time surprises required mid-step pivots: (1) TODOS.md hunk discipline broke — three logically separate change classes lived in a single git hunk, so `git add -p` was insufficient; recovery used revert + edit-tool-based progressive restoration across A/C/E. (2) Step M's premise ("replace RTX 4090 in auto-memory") was wrong — user_environment.md never had RTX 4090; pivoted to adding a positive GPU-reality entry instead. (3) ARCHITECTURE.md per-line judgment confirmed 2 `4-bit` references at lines 79/118 are workflow descriptions (not current-feasibility claims) and were left as-is. Final test count 359 passed / 1 skipped / 0 failed / 0 warnings; `slow`-marker warning eliminated via pyproject.toml registration. N=40 cipro cohort (20R/20S, 5-strain margin) built cleanly; D12's margin choice paid off vs. D's original exact-25 plan.
+**Corrections:** none (user-driven), but multiple plan premises required runtime correction (see Notable + Discoveries)
+**Reversals:** TODOS.md staging strategy shifted from `git add -p` (planned) to revert + progressive edit-tool restoration (executed) once the single-hunk reality was confirmed. Step M pivoted from replacement to addition once auto-memory grep showed no RTX 4090 entry to replace.
+**Discoveries:** (a) TODOS.md had no pre-existing line 17 modification — plan's D3 already caught half of this (edit-then-stage), but the deeper finding was that A/C/E hunks were not separable via `git add -p`; (b) user_environment.md had no RTX 4090 claim — the auto-memory edit was additive only; (c) Cross-engine convergence (Codex CLI + ChatGPT) on the B-B + deterministic CRC32 hashing decisions was load-bearing as a confidence multiplier — neither engine alone would have surfaced both the singleton-MLST degeneracy AND the PYTHONHASHSEED reproducibility trap.
+**Lesson:** Before scheduling a "replace X with Y in file F" step, verify F currently contains X. Plans framed as cleanup/correction frequently encode a premise that the stale content exists; grep the target before committing the step to a wave, or the step pivots from "replace" to "add" mid-execution and the wave-graph time estimate misfires. Additionally: when staging touches a multi-class file (TODOS.md, ARCHITECTURE.md, README.md), assume hunks are NOT separable by `git add -p` until `git diff <file>` proves otherwise — single-hunk reality forces revert + progressive edit restoration, which is slower than the plan's `add -p` line implies.
+
+---
