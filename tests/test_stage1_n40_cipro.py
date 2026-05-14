@@ -405,3 +405,34 @@ class TestStrainIdAlignment:
         assert outcome["fusion_alignment_valid"] is False
         assert "mismatch" in outcome["fusion_note"].lower()
         assert outcome["fusion_outperforms_primary"] is False  # suppressed
+
+
+class TestVariantResultLengthInvariant:
+    """Defensive contract guard per /brainstorm 2026-05-14 follow-up.
+
+    A malformed VariantResult with matching strain_ids but unequal len(scores) or
+    len(true) could pass the alignment check and contaminate the fusion-outperforms
+    diagnostic OR error obscurely in the bootstrap. The invariant raises ValueError
+    BEFORE any downstream computation trusts the arrays.
+    """
+
+    def test_compute_gate_outcome_raises_on_scores_length_mismatch(self):
+        strain_ids = ["s0", "s1", "s2", "s3"]
+        y = [1, 1, 0, 0]
+        # Build a 'bad' variant with scores length 5 but strain_ids length 4
+        bad = _make_variant("NT-XGBoost", 0.7, [0.9, 0.8, 0.3, 0.2], y, strain_ids, True)
+        bad.per_strain_scores = np.array([0.9, 0.8, 0.3, 0.2, 0.5], dtype=np.float32)  # extra score
+        good = _make_variant("NT-logreg", 0.6, [0.8, 0.7, 0.3, 0.2], y, strain_ids, True)
+        good_kmer = _make_variant("k-mer-XGB", 0.5, [0.5, 0.5, 0.5, 0.5], y, strain_ids, True)
+        with pytest.raises(ValueError, match="internal length mismatch"):
+            compute_gate_outcome([bad, good, good_kmer])
+
+    def test_compute_gate_outcome_raises_on_true_length_mismatch(self):
+        strain_ids = ["s0", "s1", "s2", "s3"]
+        y = [1, 1, 0, 0]
+        bad = _make_variant("NT-XGBoost", 0.7, [0.9, 0.8, 0.3, 0.2], y, strain_ids, True)
+        bad.per_strain_true = np.array([1, 1, 0], dtype=int)  # one short
+        good = _make_variant("NT-logreg", 0.6, [0.8, 0.7, 0.3, 0.2], y, strain_ids, True)
+        good_kmer = _make_variant("k-mer-XGB", 0.5, [0.5, 0.5, 0.5, 0.5], y, strain_ids, True)
+        with pytest.raises(ValueError, match="internal length mismatch"):
+            compute_gate_outcome([bad, good, good_kmer])

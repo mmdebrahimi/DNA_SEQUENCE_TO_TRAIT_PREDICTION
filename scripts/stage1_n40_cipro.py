@@ -260,10 +260,24 @@ def compute_gate_outcome(results: list[VariantResult]) -> dict:
     Raises:
         ValueError: if NT-best and k-mer-XGB variants have mismatched strain_ids.
             Gate-bearing; must fail loudly so misaligned comparison can't be hidden.
+        ValueError: if any VariantResult has internal length inconsistency
+            (len(strain_ids) != len(per_strain_scores) != len(per_strain_true)).
+            Defensive guard per /brainstorm 2026-05-14 follow-up; can't trigger
+            from current code paths but pins the contract before any downstream
+            AUROC / bootstrap computation trusts the arrays.
 
     Fusion alignment mismatch: NOT a raise -- the fusion variant is diagnostic only,
     so a mismatch suppresses the fusion-outperforms note but lets the gate proceed.
     """
+    # Per-variant length-consistency invariant. Cheap; pins the VariantResult contract.
+    for r in results:
+        if not (len(r.strain_ids) == len(r.per_strain_scores) == len(r.per_strain_true)):
+            raise ValueError(
+                f"VariantResult {r.name!r} internal length mismatch: "
+                f"strain_ids={len(r.strain_ids)}, scores={len(r.per_strain_scores)}, "
+                f"true={len(r.per_strain_true)}"
+            )
+
     def find(name: str) -> VariantResult | None:
         return next((r for r in results if r.name == name), None)
 
