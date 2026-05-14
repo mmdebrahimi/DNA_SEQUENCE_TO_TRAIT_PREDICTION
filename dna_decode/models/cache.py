@@ -279,25 +279,40 @@ class EmbeddingCache:
                     )
                 strain_sequences[strain_id] = extract_cds_sequences(genome_path, ann)
 
-        # Open HDF5 ONCE for the full populate() batch (Wave 2.5 C6 fix)
+        # Open HDF5 ONCE for the full populate() batch (Wave 2.5 C6 fix).
+        # Phase 2.5: batch gene sequences per chunk so the model can do one
+        # batched forward pass instead of one-per-gene. Batch size tuned for
+        # 4 GiB VRAM (GTX 860M); larger GPUs can raise this to 32+ for more
+        # speedup. NT v2 100M + activations for batch=4 short genes fits with
+        # margin; batch=32 OOMs at ~1 GiB allocation.
+        EMBED_BATCH_SIZE = 4
         written_per_strain: dict[str, int] = {}
         with self._h5py.File(self.path, "a") as f:
             for strain_id, gene_map in strain_sequences.items():
-                count = 0
+                # Collect non-skipped (gene_id, sequence) pairs first.
+                pending: list[tuple[str, str]] = []
                 for gene_id, sequence in gene_map.items():
                     ds_path = self._dataset_path(strain_id, gene_id)
                     if skip_existing and ds_path in f:
                         continue
-                    emb = model.embed_batch([sequence])[0]
-                    if emb.ndim != 1 or emb.shape[0] != self.embedding_dim:
+                    pending.append((gene_id, sequence))
+
+                count = 0
+                for i in range(0, len(pending), EMBED_BATCH_SIZE):
+                    chunk = pending[i : i + EMBED_BATCH_SIZE]
+                    sequences = [s for _, s in chunk]
+                    embs = model.embed_batch(sequences)  # (B, D)
+                    if embs.ndim != 2 or embs.shape[1] != self.embedding_dim:
                         raise EmbeddingCacheError(
-                            f"embedding shape {emb.shape} mismatch with cache "
+                            f"embedding batch shape {embs.shape} mismatch with cache "
                             f"embedding_dim={self.embedding_dim}"
                         )
-                    if ds_path in f:
-                        del f[ds_path]
-                    f.create_dataset(ds_path, data=emb.astype(np.float32))
-                    count += 1
+                    for (gene_id, _), emb in zip(chunk, embs):
+                        ds_path = self._dataset_path(strain_id, gene_id)
+                        if ds_path in f:
+                            del f[ds_path]
+                        f.create_dataset(ds_path, data=emb.astype(np.float32))
+                        count += 1
                 written_per_strain[strain_id] = count
                 if progress_callback:
                     progress_callback(strain_id, count, len(gene_map))

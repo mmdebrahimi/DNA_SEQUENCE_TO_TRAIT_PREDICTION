@@ -176,3 +176,92 @@ def test_mock_does_not_eagerly_load_weights():
     assert not m._loaded
     m.embed("ATGC")
     assert m._loaded
+
+
+# ---- Phase 2.5 batching fix: numerical equivalence ----
+
+
+def test_mock_embed_window_batch_matches_per_sequence():
+    """Default _embed_window_batch impl must match per-sequence loop exactly.
+
+    Regression guard for Phase 2.5 cache.populate batching refactor. The
+    default fallback in FoundationModel.base just stacks per-sequence calls,
+    so output must be bit-exact equal.
+    """
+    m = MockFoundationModel()
+    m._ensure_loaded()  # mock has no real weights but flips state
+    seqs = ["ATCG" * 25, "GGAA" * 30, "TTTT" * 20, "ACGT" * 10]
+    batched = m._embed_window_batch(seqs)
+    per_seq = np.stack([m._embed_window(s) for s in seqs])
+    np.testing.assert_array_equal(batched, per_seq)
+
+
+def test_embed_batch_fast_path_used_for_single_window_seqs():
+    """When all sequences fit in single window, embed_batch must route
+    through _embed_window_batch (the fast batched path), not the
+    per-sequence loop.
+    """
+    m = MockFoundationModel()
+    seqs = ["ATCG" * 25, "GGAA" * 30]  # both < max_context=512
+    # Spy on _embed_window_batch
+    calls = {"batch": 0, "single": 0}
+    real_batch = m._embed_window_batch
+    real_single = m._embed_window
+
+    def spy_batch(s):
+        calls["batch"] += 1
+        return real_batch(s)
+
+    def spy_single(s):
+        calls["single"] += 1
+        return real_single(s)
+
+    m._embed_window_batch = spy_batch
+    m._embed_window = spy_single
+    m.embed_batch(seqs)
+    assert calls["batch"] == 1
+    # Per-sequence path may still call _embed_window inside the batch fallback,
+    # but the spy shows the fast path was invoked exactly once.
+
+
+def _cuda_available() -> bool:
+    try:
+        import torch
+
+        return torch.cuda.is_available()
+    except ImportError:
+        return False
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(not _cuda_available(), reason="GPU + storage required")
+def test_nt_embed_window_batch_matches_per_sequence():
+    """NT batched forward must produce numerically-equivalent embeddings to
+    per-sequence calls.
+
+    Loads NT v2 100M once, embeds 5 fixed sequences both ways, asserts
+    np.allclose(rtol=1e-4). Guards the Phase 2.5 batching refactor against
+    silent numerical drift that would invalidate caches.
+    """
+    from dna_decode.models.foundation import model_factory
+
+    m = model_factory("nucleotide_transformer", device="cuda")
+    m._ensure_loaded()  # subclass methods don't auto-load; embed() does
+    sequences = [
+        "ACGT" * 50,  # 200 bp
+        "GGGAAACCCTTT" * 15,  # 180 bp
+        "ATATCGCGATAT" * 10,  # 120 bp
+        "TTTGGGCCCAAA" * 25,  # 300 bp
+        "AAACCCGGGTTTAAACCCGGGTTT" * 10,  # 240 bp
+    ]
+    batched = m._embed_window_batch(sequences)
+    per_seq = np.stack([m._embed_window(s) for s in sequences])
+
+    assert batched.shape == per_seq.shape, (
+        f"shape mismatch: batched={batched.shape}, per_seq={per_seq.shape}"
+    )
+    max_diff = np.abs(batched - per_seq).max()
+    assert np.allclose(batched, per_seq, rtol=1e-4, atol=1e-5), (
+        f"NT batched vs per-sequence outputs diverge beyond tolerance "
+        f"(max abs diff: {max_diff})"
+    )

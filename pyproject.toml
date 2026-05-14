@@ -72,6 +72,9 @@ packages = ["dna_decode"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 addopts = "-v"
+markers = [
+    "slow: tests that require GPU + large model downloads (excluded by default in CI)",
+]
 
 [tool.ruff]
 target-version = "py311"

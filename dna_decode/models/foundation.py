@@ -100,15 +100,35 @@ class FoundationModel(ABC):
         per_window = np.stack([self._embed_window(w) for w in windows])
         return per_window  # caller can mean-pool or per-window as needed
 
+    def _embed_window_batch(self, sequences: list[str]) -> np.ndarray:
+        """Embed a batch of sequences that each fit inside max_context.
+
+        Default impl: per-sequence loop over `_embed_window`. Subclasses
+        with batchable forward passes (NT, DNABERT-2) override this for
+        true GPU batching.
+
+        Returns shape (len(sequences), embedding_dim).
+        """
+        if not sequences:
+            return np.empty((0, self.embedding_dim), dtype=np.float32)
+        return np.stack([self._embed_window(s) for s in sequences])
+
     def embed_batch(self, sequences: list[str]) -> np.ndarray:
         """Embed a batch of sequences. Returns shape (len(sequences), embedding_dim).
 
-        Long sequences are mean-pooled across windows before stacking.
+        Fast path (all sequences ≤ max_context): single batched forward pass
+        via `_embed_window_batch`. Slow path (some sequences need windowing):
+        per-sequence loop with mean-pool across windows.
         """
         if not sequences:
             return np.empty((0, self.embedding_dim), dtype=np.float32)
 
         self._ensure_loaded()
+        # Fast path: every sequence fits in one window → batched forward pass.
+        if all(len(s) <= self.max_context for s in sequences):
+            return self._embed_window_batch(sequences)
+
+        # Slow path: some sequences need windowing → per-sequence loop.
         out = np.empty((len(sequences), self.embedding_dim), dtype=np.float32)
         for i, seq in enumerate(sequences):
             per_window = self.embed(seq)
@@ -259,6 +279,28 @@ class NucleotideTransformerModel(FoundationModel):
             outputs = self._model(**inputs, output_hidden_states=True)
         hidden = outputs.hidden_states[-1].squeeze(0).mean(dim=0)
         return hidden.cpu().float().numpy()
+
+    def _embed_window_batch(self, sequences: list[str]) -> np.ndarray:
+        """Batched forward pass for NT with mask-aware mean pooling.
+
+        Pads sequences to longest-in-batch via tokenizer padding=True, then
+        mean-pools final hidden states using attention_mask so padding tokens
+        do not contribute. Numerically equivalent to per-sequence calls for
+        single-sequence input (mask is all-ones).
+        """
+        import torch
+
+        if not sequences:
+            return np.empty((0, self.embedding_dim), dtype=np.float32)
+        inputs = self._tokenizer(
+            sequences, return_tensors="pt", padding=True, truncation=True
+        ).to(self._device)
+        with torch.no_grad():
+            outputs = self._model(**inputs, output_hidden_states=True)
+        hidden = outputs.hidden_states[-1]  # (B, T, D)
+        mask = inputs["attention_mask"].unsqueeze(-1).float()  # (B, T, 1)
+        pooled = (hidden * mask).sum(dim=1) / mask.sum(dim=1).clamp(min=1)  # (B, D)
+        return pooled.cpu().float().numpy()
 
 
 class GenaLMModel(FoundationModel):
