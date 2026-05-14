@@ -81,7 +81,7 @@ The prior session had already reconciled doc content but never committed. Closeo
 - **Multi-strain leaderboard performance.** `scripts/leaderboard.py` runs the shell-loop fan-out, but no real Evo / DNABERT-2 / Nucleotide Transformer / GENA-LM weights have been downloaded or compared.
 - **Live BV-BRC AST + NCBI Datasets API integration.** `pilot.fetch_bvbrc_drug_counts` + `fetch_ncbi_assembly_quality` raise `NotImplementedError` without a local TSV / env var / config entry. Live REST resolution is deferred.
 - **Mash CLI phylogeny clustering.** External binary dependency; Linux/WSL needs `apt install mash`, Windows needs manual binary install. Untested on this machine.
-- **4-bit Evo quantization.** `bitsandbytes` is Linux/CUDA only; Windows users need WSL2. Untested.
+- **4-bit Evo quantization.** `bitsandbytes` requires CC ≥ 7.0 GPU; project's actual GPU is GTX 860M (CC=5.0), so 4-bit Evo is structurally unavailable here. Untested at ship time; later confirmed unreachable on this hardware (2026-05-14 discovery).
 - **`motif_recovery` is a Phase 2 placeholder** — currently returns the same high-impact position list for every motif name and warns on call.
 
 ## Phase 2 entry criteria

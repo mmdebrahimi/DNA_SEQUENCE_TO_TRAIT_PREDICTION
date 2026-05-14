@@ -67,7 +67,7 @@ phase1_drugs:
 # Compute defaults
 compute:
   device: "cuda"  # set to "cpu" via env DNA_DECODE_DEVICE for non-GPU runs
-  quantize_4bit: true  # bitsandbytes 4-bit for Evo on RTX 4090
+  quantize_4bit: true  # bitsandbytes 4-bit for Evo — requires CC ≥ 7.0 GPU; unavailable on GTX 860M (project's actual hardware). Flag honored only when loading on Ampere+ GPUs.
   embed_batch_size: 8
 
 # Foundation models leaderboard (Step 17)

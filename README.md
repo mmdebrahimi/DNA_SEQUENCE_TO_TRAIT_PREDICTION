@@ -34,7 +34,7 @@ Module map: `dna_decode/data/` (ingestion) + `dna_decode/models/` (foundation wr
 | CV | Leave-one-Mash-clade-out + clade-only baseline + per-clade reporting |
 | Target | AUROC ≥0.80 SLO / ≥0.85 stretch; clade-baseline-gap ≥0.10 on ≥75% of held-out clades; ≥3pp gap vs best classical baseline on ≥2 of 3 drugs |
 | Horizon | 3 months Phase 1; 12 months Phase 1+2+3 |
-| Compute | Single RTX 4090 with 4-bit Evo (Linux/WSL); A100 fallback |
+| Compute | Local GTX 860M (4 GiB Maxwell, NT v2 only — verified 2026-05-13) + Databricks burst for larger cohorts. 4-bit Evo unavailable (bitsandbytes requires CC ≥ 7.0). Original target was RTX 4090 + 4-bit Evo; never materialized. |
 
 ## Long-term vision
 
@@ -56,7 +56,9 @@ uv run pytest tests/ -v
 # 4. Optional: install dev tooling (ruff + pytest-cov)
 uv sync --extra dev
 
-# 5. Optional: install bitsandbytes for 4-bit Evo quantization (Linux/WSL only)
+# 5. (Advanced, gated on hardware) install bitsandbytes for 4-bit Evo quantization
+#    Requires CC ≥ 7.0 GPU (Ampere / Ada / Hopper). NOT compatible with the project's
+#    actual GTX 860M (CC=5.0). Skip unless running on A100+ or similar.
 uv sync --extra quantize
 ```
 
@@ -107,7 +109,7 @@ uv run python scripts/leaderboard.py \
   --drugs ciprofloxacin,ceftriaxone,tetracycline \
   --models evo,dnabert2
 
-# 8. (Optional) Validate that 4-bit Evo attribution matches full-precision
+# 8. (Optional, gated on CC ≥ 7.0 GPU) Validate that 4-bit Evo attribution matches full-precision
 uv run python scripts/quantize_fidelity_check.py \
   --full-precision-attributions full_manifest.json \
   --quantized-attributions quantized_manifest.json \

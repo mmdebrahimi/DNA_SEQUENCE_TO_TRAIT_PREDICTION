@@ -51,9 +51,11 @@ dev = [
     "ruff>=0.4",
 ]
 
-# Heavy ML deps that fail on some platforms (Phase 1 default is 4-bit Evo
-# quantization on RTX 4090; bitsandbytes wheel is Linux/CUDA only — Windows
-# users either run via WSL2 or skip 4-bit and run Evo in 16-bit on A100).
+# Heavy ML deps that fail on some platforms (Phase 1 plan assumed 4-bit Evo
+# on RTX 4090; project's actual GPU is GTX 860M CC=5.0 so bitsandbytes is
+# structurally unavailable — requires CC ≥ 7.0. NT v2 100M is the working
+# foundation model. bitsandbytes wheel is Linux/CUDA only — Windows users
+# either run via WSL2 or skip 4-bit and run Evo in 16-bit on A100).
 # Captum intentionally NOT in Phase 1 deps — deferred to Phase 2 per
 # post-tech-plan brainstorm C1 (XGBoost is non-differentiable; Captum IG
 # requires differentiable MLP head not built until Phase 2).

@@ -39,7 +39,7 @@ Replace the local-TSV + scaffolded `NotImplementedError` paths in `pilot.py` wit
 ## Low priority (Phase 3-4 horizon)
 
 ### AlphaFold-inspired architecture — 12/05/2026
-Long-term architectural shape: sequence encoder (existing) + pan-genome/evolutionary representation (Phase 2 graph) + pairwise interaction module (gene-gene + plasmid-gene + regulator-effector) + multi-task trait heads + confidence estimation + iterative refinement. **Caveat:** does NOT fit on a single RTX 4090; requires A100+ on rented compute. Source: `/probe` exchange — useful as architectural inspiration, not literal replication.
+Long-term architectural shape: sequence encoder (existing) + pan-genome/evolutionary representation (Phase 2 graph) + pairwise interaction module (gene-gene + plasmid-gene + regulator-effector) + multi-task trait heads + confidence estimation + iterative refinement. **Caveat:** does NOT fit on consumer GPUs (project's actual GTX 860M 4 GiB is far too small; even a hypothetical RTX 4090 24 GiB would be tight); requires A100+ on rented compute. Source: `/probe` exchange — useful as architectural inspiration, not literal replication.
 
 ### Confidence estimation layer — 12/05/2026
 Output prediction + confidence + reason, not just class label. Signals: probability calibration + ensemble agreement + OOD distance + clade-only-baseline gap + attribution stability + AMRFinder concordance.

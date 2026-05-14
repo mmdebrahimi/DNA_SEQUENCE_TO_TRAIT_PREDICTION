@@ -214,7 +214,7 @@ def estimate_download_volume_gb(strain_count: int, avg_genome_mb: float = 5.0) -
 
 
 def estimate_embedding_minutes(strain_count: int, gene_per_strain: int = 5000, minutes_per_million_seq: float = 30.0) -> float:
-    """Rough embedding-compute estimate on RTX 4090 with 4-bit Evo + batching."""
+    """Rough embedding-compute estimate; original target was RTX 4090 + 4-bit Evo (still the formula's baseline). Actual hardware is GTX 860M (CC=5.0) → 4-bit Evo unreachable; NT v2 100M is the working model and runs ~30× slower than this estimate suggests. Treat output as optimistic upper bound on possible compute, not predicted wallclock."""
     total_sequences = strain_count * gene_per_strain
     return (total_sequences / 1_000_000) * minutes_per_million_seq
 
@@ -287,7 +287,8 @@ def write_pilot_report(report: PilotReport, output_path: Path | str) -> Path:
     lines.append(f"## 3-drug intersection: {report.three_drug_intersection}\n")
     lines.append(f"## Estimated download volume: {report.estimated_download_gb:.1f} GB\n")
     lines.append(
-        f"## Estimated embedding compute (RTX 4090, 4-bit Evo): "
+        f"## Estimated embedding compute (formula baseline: RTX 4090 + 4-bit Evo; "
+        f"actual hardware is GTX 860M + NT v2 100M, expect ~30× slower): "
         f"{report.estimated_embedding_minutes_rtx4090:.0f} min\n"
     )
     if report.failure_reasons:

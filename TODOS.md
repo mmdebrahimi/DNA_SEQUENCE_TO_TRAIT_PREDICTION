@@ -14,7 +14,7 @@ See also: `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the contracted ship-pat
 - [ ] Real-data pilot gate against a downloaded BV-BRC AST TSV — confirm ≥150 strains per drug for cipro / ceftriaxone / tet after broth-microdilution + assembly-quality filters.
 - [ ] End-to-end `pipeline.py ingest → train → attribute` on the pilot-validated cohort; record CV AUROC + Tier 1-3 fractions per drug.
 - [ ] Mash CLI install on the target machine (Linux/WSL2 via `apt install mash`, OR `pyani` Python fallback if Mash unavailable on Windows).
-- [ ] GPU sanity check: confirm RTX 4090 has ≥24GB VRAM for 4-bit Evo + bitsandbytes installs cleanly (Linux/WSL2 only — Windows skips quantize extras).
+- [x] GPU constraint observed 2026-05-14: actual hardware is GTX 860M (4 GiB Maxwell, CC=5.0, 2014). 4-bit Evo via bitsandbytes requires CC ≥ 7.0 — structurally unavailable. DNABERT-2 blocked by Triton 3.x state_dict incompat. NT v2 100M works locally (slow, ~9 min/strain). Larger-cohort runs (≥150 strains) gated on Databricks burst.
 
 ## Phase 2 — Starter genome set (infrastructure smoke; NOT a model-quality test)
 

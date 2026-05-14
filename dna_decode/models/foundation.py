@@ -186,7 +186,10 @@ class EvoModel(FoundationModel):
     """Evo (Together AI / Stanford) wrapper — microbial DNA LM, 7B params, 131K context.
 
     HuggingFace ID: togethercomputer/evo-1-131k-base. Real load is gated on
-    transformers + bitsandbytes for 4-bit quantization (Phase 1 RTX 4090 default).
+    transformers + bitsandbytes for 4-bit quantization (originally planned for
+    Phase 1 on RTX 4090; project's actual hardware is GTX 860M CC=5.0 so the
+    4-bit Evo path is unreachable here — bitsandbytes requires CC ≥ 7.0).
+    Wrapper kept as scaffolding for future compute-upgrade scenarios.
     """
 
     def _load_weights(self) -> None:

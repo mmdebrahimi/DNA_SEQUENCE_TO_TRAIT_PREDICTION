@@ -1,9 +1,12 @@
 """Step 11.5 — Quantization-fidelity check (selective Phase 1 addition).
 
-Phase 1 default is 4-bit Evo quantization via bitsandbytes on RTX 4090. If
-quantization distorts attribution maps materially, every Phase 1
-attribution-precision number is quantization-conditional and the headline
-results become unreliable.
+Phase 1 plan assumed 4-bit Evo quantization via bitsandbytes on RTX 4090.
+Actual hardware is GTX 860M (CC=5.0) → bitsandbytes structurally unavailable
+(requires CC ≥ 7.0), so this fidelity check is unreachable on the project's
+real machine. Kept as scaffolding for future compute-upgrade scenarios. If
+quantization were available + distorted attribution maps materially, every
+Phase 1 attribution-precision number would be quantization-conditional and
+the headline results would become unreliable.
 
 This script runs gene-level ISM on a small subset (5-10 strains) at BOTH
 4-bit and full-precision; computes concordance via top-K=20 set

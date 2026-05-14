@@ -52,7 +52,7 @@ Action: set `HF_HOME` and `DNA_DECODE_CACHE_ROOT` to non-`C:` paths before downl
 | `xgboost` | ✅ 3.2.0 | classifier head ready |
 | `biopython` | ✅ 1.87 | annotation parsing ready |
 | `h5py` | ✅ 3.16.0 | embedding cache backend ready |
-| GPU / CUDA | ❌ not detected on Windows | needed only for 4-bit Evo via WSL2 + bitsandbytes |
+| GPU / CUDA | ✅ GTX 860M, CUDA 11.8 (4 GiB VRAM, Maxwell, CC=5.0) | NT v2 100M works; 4-bit Evo via bitsandbytes requires CC ≥ 7.0 → unavailable on this GPU |
 | WSL2 | ✅ installed (Docker Desktop distros visible) | available if Evo path becomes a Phase 2 priority |
 | `bitsandbytes` | n/a Windows | Linux/CUDA only; install inside WSL2 if needed |
 | Mash CLI | ❌ not on PATH | needed for `phylogeny.py` clustering (Step 10); install via `apt install mash` in WSL2 or manual binary on Windows |
