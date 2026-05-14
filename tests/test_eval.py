@@ -75,6 +75,29 @@ def test_leave_one_clade_out_produces_one_fold_per_clade():
     assert result.n_folds == 5
 
 
+def test_cvresult_strain_ids_property_preserves_fold_order():
+    """`CVResult.strain_ids` returns held_out_id list in fold order.
+
+    Alignment contract for downstream paired comparisons (Stage1 gate, fusion
+    overlay). If LOSO is run with a specific input order, the property must
+    return that exact order — NOT a sorted/deduped variant.
+    """
+    X, y, ids = _synthetic_data(15)
+    # Shuffle ids so input order != lexicographic order — pins the no-sort guarantee
+    shuffled_ids = [ids[i] for i in [7, 2, 11, 0, 14, 3, 8, 1, 9, 4, 13, 5, 12, 6, 10]]
+    perm = [ids.index(s) for s in shuffled_ids]
+    X_sh = X[perm]
+    y_sh = y[perm]
+    result = leave_one_strain_out_cv(X_sh, y_sh, shuffled_ids, _simple_train, _simple_predict)
+    assert result.strain_ids == shuffled_ids
+
+
+def test_cvresult_strain_ids_empty_when_no_folds():
+    """Empty `CVResult` (no folds appended) returns an empty list."""
+    result = CVResult(strategy="loso", drug="cipro")
+    assert result.strain_ids == []
+
+
 def test_cv_handles_single_class_fold_with_nan():
     """When all train labels are one class, the fold records NaN scores."""
     X = np.random.RandomState(0).randn(4, 3)

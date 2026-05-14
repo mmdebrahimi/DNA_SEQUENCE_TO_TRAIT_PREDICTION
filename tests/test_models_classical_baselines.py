@@ -8,8 +8,10 @@ xgboost = pytest.importorskip("xgboost")
 sklearn = pytest.importorskip("sklearn")
 
 from dna_decode.models.classical_baselines import (  # noqa: E402
+    CONTIG_SEPARATOR,
     DEFAULT_KMER_K,
     DEFAULT_KMER_TOP_N,
+    _train_baseline_logreg,
     build_gene_presence_matrix,
     build_kmer_vocabulary,
     extract_kmer_counts,
@@ -241,3 +243,60 @@ def test_train_gene_presence_baseline_round_trip():
     clf, vocab, _ = train_gene_presence_baseline(strain_gene_calls, labels, "cipro")
     assert clf.feature_dim == len(vocab)
     assert set(vocab) == {"omp", "acrA", "rib", "lacZ"}
+
+
+# ---- Stage 1 Refactor: _train_baseline_logreg(calibrate=False) branch ----
+
+
+def test_train_baseline_logreg_calibrate_false_returns_raw_logreg():
+    """`_train_baseline_logreg(calibrate=False)` returns the bare `LogisticRegression`.
+
+    Pins the Stage1 contract (Step 2.3): the NT-logreg call site disables
+    CalibratedClassifierCV wrapping so AUROC measures representation quality
+    rather than calibration-wrapper behavior. Regression guard against someone
+    reintroducing the wrapper or flipping the default.
+    """
+    from sklearn.calibration import CalibratedClassifierCV
+    from sklearn.linear_model import LogisticRegression
+
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((20, 6)).astype(np.float32)
+    y = np.array([0] * 10 + [1] * 10)
+
+    clf = _train_baseline_logreg(X, y, drug_name="cipro", calibrate=False)
+    assert clf.calibrated is False
+    assert isinstance(clf.model, LogisticRegression)
+    assert not isinstance(clf.model, CalibratedClassifierCV)
+    assert clf.feature_dim == 6
+    # Fitted LogisticRegression exposes coef_ attribute; pin that the fit ran
+    assert hasattr(clf.model, "coef_")
+    assert clf.model.coef_.shape == (1, 6)
+
+
+def test_train_baseline_logreg_calibrate_true_wraps_calibrated_classifier_cv():
+    """Default `calibrate=True` (balanced labels, minority>=2) wraps in `CalibratedClassifierCV`.
+
+    Sanity counterpart to the calibrate=False test — confirms the new branch
+    didn't accidentally short-circuit the default path.
+    """
+    from sklearn.calibration import CalibratedClassifierCV
+
+    rng = np.random.default_rng(1)
+    X = rng.standard_normal((20, 6)).astype(np.float32)
+    y = np.array([0] * 10 + [1] * 10)  # minority count = 10, well above the cv threshold
+
+    clf = _train_baseline_logreg(X, y, drug_name="cipro", calibrate=True)
+    assert clf.calibrated is True
+    assert isinstance(clf.model, CalibratedClassifierCV)
+
+
+def test_contig_separator_is_100_n_run():
+    """Module constant `CONTIG_SEPARATOR` is 100 N's.
+
+    Stage1 Step 2.9: promoted to a module-level constant so loso_kmer + Stage 1
+    runner share one source of truth. Pins both the symbol and the value to
+    prevent a silent shortening that could let k-mers (k<=32) span contig joins.
+    """
+    assert CONTIG_SEPARATOR == "N" * 100
+    assert len(CONTIG_SEPARATOR) == 100
+    assert set(CONTIG_SEPARATOR) == {"N"}
