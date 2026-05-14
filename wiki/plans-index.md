@@ -1,6 +1,49 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: Sidework_Sequence_Ship_Path_Plan.md] 2026-05-13 (decisions locked 2026-05-14)
+**Summary:** Delta from `Sidework_Sequence_Plan.md` after `/review` (2026-05-13) + post-save `/brainstorm` (2026-05-14). Resolves the load-bearing B-scope problem (B-B locked: drop clade-only from smoke; 12 unique MLST → singleton clades make clade-only degenerate). Fixes deterministic-hashing reproducibility bug. Narrows ARCHITECTURE.md to per-line judgment. Locks --per-class=20. Excludes wiki/GATE_A_REPORT.md from C scope.
+**Key decisions (all locked 2026-05-14):**
+- B-resolution = B-B (drop clade-only from smoke; 4 variants) (D1)
+- Step C scope = 13 files (11 originals + LESSONS_LEARNED + docs/ARCHITECTURE.md with per-line judgment); wiki/GATE_A_REPORT.md NOT in scope (D2)
+- Step C is edit-then-stage, not stage-only (D3)
+- `mlst_to_clade_id` helper lives in `dna_decode/data/cohort.py` (D4)
+- Test scope = 1 parametrized in tests/test_data_cohort.py + 1 integration in tests/test_pipeline_cli.py (both files exist; extend) (D5)
+- Drop `fallback_counter: dict`; use deterministic hashing (D6)
+- Multi-scheme MLST + scheme-collision: scheme-aware tuple hash via `zlib.crc32` (NOT Python `hash()` — process-salted) (D7)
+- Step M demoted out of wave graph (D8)
+- Time-box C to 30 min (D9)
+- B commit message includes numerical before/after of clade-only AUROC (D10)
+- Post-populate slow tests gate the smoke gate (D11)
+- Step D `--per-class 20` locked (N=40 with 5R margin) (D12)
+- Register `slow` pytest marker (D13)
+
+---
+
+## [plan_file: Sidework_Sequence_Plan.md] 2026-05-13
+**Summary:** Ordered work to do while NT v2 100M populate runs in background (~45 min remaining). Brainstorm-revised after Codex critique surfaced under-scoped C, mixed-scope TODOS hunks, and B's deeper-than-15-min reality.
+**Key decisions:**
+- Sequence A → C → E → B; D optional last (D1)
+- C scope = current-state files only; skip archived plans + project_state snapshots (D2)
+- TODOS.md hunk staging via `git add -p` across A, C, E (D3)
+- B = narrow scope (helper extraction + unit test); defer per_clade_baseline strain-keying (D4)
+- pytest discipline during populate = CPU-only target tests via `-m "not slow"` (D5)
+- Auto-memory user_environment.md update is separate from C (D6)
+
+---
+
+## [plan_file: Phase2_Decision_Gate_Plan.md] 2026-05-13 (Step 1/2 updated 2026-05-14 for B-B lock)
+**Summary:** Split the originally-conflated "12-strain decision gate" into a 12-strain smoke/falsification gate (4 variants, clade-only dropped per B-B lock 2026-05-14) + a tiered N=50 → N=150 staged decision gate (local screen → Databricks burst). Stage 2 acceptance: NT ≥ best classical + 5 pp AUROC AND top-10 NT attribution includes gyrA / parC / parE (biological-plausibility check).
+**Key decisions:**
+- 12-strain = smoke gate, tiered N=50 → N=150 = staged decision gate (D1)
+- Fix clade-only `hash(mlst) % 10` placeholder BEFORE running smoke gate (D2)
+- Keep 12-strain smoke at existing 5 variants — no RF/TabPFN/SNP-table additions yet (D3)
+- Document the smoke result as smoke, not decision (D4)
+- Tiered Option-C threshold: N=50 local screen "any positive lift" → N=150 Databricks "5 pp + biology check" (D5)
+- TODOS additions for 4 deferred /research items; SNP-table scope corrected to "parse AMRFinderPlus POINT* rows" per Codex 2026-05-13 (D6)
+
+---
+
 ## [plan_file: NT_Deferral_Docs_Cleanup_Ship_Path_Plan.md] 2026-05-13
 **Summary:** Scope-tightened delta from `NT_Deferral_Docs_Cleanup_Plan.md` after `/review` synthesis — drops D1's `/save-plan` hedge (already disproven on disk), trims the over-prose `[BLOCKED]` bullet, sharpens the deferral annotation, attempts cheap NT revision retrieval before recording the gap, and adds an explicit untracked-file staging note.
 **Key decisions:**

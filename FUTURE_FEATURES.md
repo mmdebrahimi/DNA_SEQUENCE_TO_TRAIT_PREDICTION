@@ -30,6 +30,9 @@ When SNP A + SNP B always travel together in resistant strains, both get high IS
 ### Annotation gene_symbol column — 12/05/2026
 Root-cause cleanup for the Wave 3.5 C8 fix. Extend `parse_gff3` to extract the GFF3 `gene=` attribute as a separate `gene_symbol` column. Phase 1 workaround at the `build_attribution_report` layer is sufficient; Phase 2 cleans up upstream.
 
+### Persisted MLST → clade_id mapping in cohort metadata — 14/05/2026
+Replace runtime hash-based clade ID derivation (currently `zlib.crc32(scheme.st)` per `Sidework_Sequence_Ship_Path_Plan.md` D7) with an explicit `{mlst_string: int}` mapping serialized into cohort parquet metadata at cohort-build time. Eliminates ANY hashing concern (collisions, library upgrades, platform drift). Makes clade IDs auditable + greppable. "Cleanest scientific approach" per ChatGPT cross-engine review 2026-05-14. Trigger: when the deferred per_clade_baseline fix lands at Stage 1 and the coarser-binning decision (scheme-level vs Mash) is made — at that point, persist the mapping. Adds: schema field in cohort parquet, build-time numbering pass, serialization roundtrip test.
+
 ### Method-aware AST reweighting — 12/05/2026
 Phase 1 filters BV-BRC AST to broth-microdilution only. Phase 2 adds method-aware label reweighting (handles disk-diffusion + E-test rows with appropriate uncertainty) + CLSI-vs-EUCAST breakpoint reconciliation. Source: failure-mode #4 from post-tech-plan brainstorm.
 
