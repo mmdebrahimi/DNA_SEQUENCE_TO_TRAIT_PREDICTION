@@ -345,3 +345,127 @@ def test_populate_genomes_missing_annotation_for_strain_raises(tmp_path: Path):
             strain_genomes={"s001": fasta},
             annotations={"s002": pd.DataFrame()},  # wrong strain
         )
+
+
+# ---- Phase 2.5 batching refactor (EMBED_BATCH_SIZE=4 chunking) ----
+
+
+def test_populate_chunks_in_groups_of_four(tmp_path: Path):
+    """populate() must chunk pending sequences in groups of EMBED_BATCH_SIZE=4.
+
+    Guards the `for i in range(0, len(pending), EMBED_BATCH_SIZE)` loop:
+    10 pending genes → embed_batch called 3 times with sizes [4, 4, 2].
+    """
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+
+    # Spy on embed_batch
+    real_embed_batch = model.embed_batch
+    observed_batch_sizes: list[int] = []
+
+    def spy(seqs):
+        observed_batch_sizes.append(len(seqs))
+        return real_embed_batch(seqs)
+
+    model.embed_batch = spy
+
+    strain_sequences = {
+        "s001": {f"g{i:02d}": f"ATGC{i:04d}" for i in range(10)},
+    }
+    written = cache.populate(model, strain_sequences=strain_sequences)
+    assert written == {"s001": 10}
+    assert observed_batch_sizes == [4, 4, 2]
+    # All 10 datasets present
+    assert len(cache.list_genes("s001")) == 10
+
+
+def test_populate_skip_existing_only_embeds_pending(tmp_path: Path):
+    """skip_existing=True must filter the pending list BEFORE batching, so
+    already-cached genes are not re-embedded.
+    """
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    # Pre-populate 2 genes
+    cache.put("s001", "g00", np.zeros(8, dtype=np.float32))
+    cache.put("s001", "g01", np.zeros(8, dtype=np.float32))
+
+    observed_sequences: list[list[str]] = []
+    real_embed_batch = model.embed_batch
+
+    def spy(seqs):
+        observed_sequences.append(list(seqs))
+        return real_embed_batch(seqs)
+
+    model.embed_batch = spy
+
+    strain_sequences = {
+        "s001": {f"g{i:02d}": f"ATGC{i:04d}" for i in range(5)},  # 5 genes; first 2 cached
+    }
+    written = cache.populate(model, strain_sequences=strain_sequences, skip_existing=True)
+    assert written == {"s001": 3}  # only g02, g03, g04
+    # One chunk of 3 (all under EMBED_BATCH_SIZE=4)
+    assert len(observed_sequences) == 1
+    assert len(observed_sequences[0]) == 3
+
+
+def test_populate_rejects_bad_batch_shape(tmp_path: Path):
+    """populate() must validate the model's embed_batch return shape is (B, D);
+    a stale 1-D return (regression to pre-batching contract) must raise.
+    """
+
+    class BadBatchModel(MockFoundationModel):
+        def embed_batch(self, sequences):
+            # Wrong shape: returns 1-D instead of (B, D)
+            return np.zeros(self.embedding_dim, dtype=np.float32)
+
+    model = BadBatchModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    with pytest.raises(EmbeddingCacheError, match="embedding batch shape"):
+        cache.populate(model, strain_sequences={"s001": {"g0": "ATGC"}})
+
+
+def test_populate_rejects_wrong_embedding_dim_in_batch(tmp_path: Path):
+    """populate() must reject batch outputs whose dim axis disagrees with the cache."""
+
+    class WrongDimModel(MockFoundationModel):
+        def embed_batch(self, sequences):
+            # Right rank (2-D), wrong inner dim
+            return np.zeros((len(sequences), 16), dtype=np.float32)
+
+    model = WrongDimModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+    with pytest.raises(EmbeddingCacheError, match="embedding batch shape"):
+        cache.populate(model, strain_sequences={"s001": {"g0": "ATGC"}})
+
+
+def test_populate_preserves_gene_to_embedding_correspondence(tmp_path: Path):
+    """The (gene_id, embedding) zip after batching must preserve order — each
+    gene must be stored against the embedding produced from its OWN sequence,
+    not a neighbor's. Regression guard: if the zip ever drifted (e.g., from a
+    shuffled batch), gene_X would silently get gene_Y's embedding.
+    """
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=8)
+
+    # 6 genes spans 2 chunks (4 + 2) — exercises both the full-chunk and
+    # short-final-chunk paths.
+    gene_to_seq = {f"g{i:02d}": f"GENE{i:04d}AAAA" for i in range(6)}
+    cache.populate(model, strain_sequences={"s001": gene_to_seq})
+
+    # For the mock, the per-sequence embedding is deterministic from the
+    # sequence bytes alone — assert each cached embedding matches what the
+    # mock produces for that gene's sequence.
+    for gene_id, seq in gene_to_seq.items():
+        cached = cache.get("s001", gene_id)
+        expected = model._embed_window(seq)
+        np.testing.assert_array_equal(cached, expected)

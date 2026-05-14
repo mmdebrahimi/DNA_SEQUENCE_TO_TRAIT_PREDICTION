@@ -224,6 +224,79 @@ def test_embed_batch_fast_path_used_for_single_window_seqs():
     # but the spy shows the fast path was invoked exactly once.
 
 
+def test_embed_window_batch_empty_returns_zero_rows():
+    """Default _embed_window_batch must short-circuit on empty input.
+
+    Guards the `if not sequences: return np.empty((0, D))` early return —
+    the np.stack fallback would raise on an empty list.
+    """
+    m = MockFoundationModel()
+    out = m._embed_window_batch([])
+    assert out.shape == (0, m.embedding_dim)
+    assert out.dtype == np.float32
+
+
+def test_embed_batch_slow_path_dispatches_when_any_seq_exceeds_max_context():
+    """When any sequence > max_context, embed_batch must take the slow path
+    (per-sequence loop with mean-pool), NOT the batched fast path.
+
+    Guards the `all(len(s) <= max_context for s in sequences)` branch in
+    embed_batch — a regression that always took the fast path would silently
+    truncate long sequences via the subclass tokenizer's `truncation=True`.
+    """
+    m = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    calls = {"batch": 0}
+    real_batch = m._embed_window_batch
+
+    def spy_batch(s):
+        calls["batch"] += 1
+        return real_batch(s)
+
+    m._embed_window_batch = spy_batch
+    # One short (fits) + one long (needs windowing) → must NOT use fast path.
+    m.embed_batch(["A" * 50, "G" * 250])
+    assert calls["batch"] == 0
+
+
+def test_embed_batch_boundary_seq_equal_to_max_context_uses_fast_path():
+    """Sequences whose length exactly equals max_context fit in one window
+    and should be routed through the batched fast path (the predicate is
+    `len(s) <= max_context`, inclusive).
+    """
+    m = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=8, max_context=100)
+    )
+    calls = {"batch": 0}
+    real_batch = m._embed_window_batch
+
+    def spy_batch(s):
+        calls["batch"] += 1
+        return real_batch(s)
+
+    m._embed_window_batch = spy_batch
+    m.embed_batch(["A" * 100, "G" * 99])  # both <= 100
+    assert calls["batch"] == 1
+
+
+def test_embed_batch_slow_path_matches_per_sequence_mean_pool():
+    """Slow-path output must equal per-sequence embed-then-mean-pool.
+
+    Numerical-correctness guard for the windowed path: for a long sequence,
+    embed_batch's slow path computes per-window embeddings then mean-pools
+    over the window axis. This must equal calling embed() once and reducing.
+    """
+    m = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=16, max_context=100)
+    )
+    sequences = ["A" * 250, "G" * 50, "C" * 320]
+    batched = m.embed_batch(sequences)
+    expected = np.stack([m.embed(s).mean(axis=0) for s in sequences])
+    np.testing.assert_array_equal(batched, expected)
+    assert batched.shape == (3, 16)
+
+
 def _cuda_available() -> bool:
     try:
         import torch
