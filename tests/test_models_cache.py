@@ -256,6 +256,39 @@ def test_populate_progress_callback_fires_per_strain(tmp_path: Path):
     assert ("s002", 1, 1) in calls
 
 
+def test_populate_flushes_hdf5_per_strain_for_usb_hiccup_resilience(tmp_path: Path, monkeypatch):
+    """Per-strain f.flush() pins the HDF5 superblock + EOA forward to disk so a
+    USB hiccup (Seagate Portable D: drive observed 2026-05-14) costs at most
+    one strain's recompute, not the whole populate. Regression guard against
+    silent EOA-truncation when __exit__ flush never runs.
+
+    Strategy: monkeypatch h5py.File so we can record `flush()` invocations.
+    Expect one flush per strain, in strain order.
+    """
+    import h5py
+    model = MockFoundationModel(
+        ModelMetadata(name="mock", huggingface_id="x", embedding_dim=4, max_context=100)
+    )
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=4)
+
+    # Wrap h5py.File to record per-flush calls
+    flush_count = {"n": 0}
+    original_file_class = h5py.File
+
+    class _FlushSpyingFile(original_file_class):
+        def flush(self):
+            flush_count["n"] += 1
+            return super().flush()
+
+    monkeypatch.setattr(cache, "_h5py", type("M", (), {"File": _FlushSpyingFile}))
+
+    seqs = {"s001": {"g": "ATGC"}, "s002": {"g": "GGGG"}, "s003": {"g": "AAAA"}}
+    cache.populate(model, strain_sequences=seqs)
+    # 3 strains -> at least 3 flushes (one per strain). >=3 because the with-block
+    # exit on the h5py File context manager may also implicitly flush.
+    assert flush_count["n"] >= 3, f"Expected >=3 per-strain flushes, got {flush_count['n']}"
+
+
 # ---- Wave 2.5 hardening C6: plan-contract signature + open-once HDF5 ----
 
 

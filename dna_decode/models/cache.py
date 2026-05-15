@@ -314,6 +314,14 @@ class EmbeddingCache:
                         f.create_dataset(ds_path, data=emb.astype(np.float32))
                         count += 1
                 written_per_strain[strain_id] = count
+                # Per-strain flush: pushes HDF5 superblock + EOA forward to disk
+                # so a process / drive hiccup costs ~last-strain recompute, not
+                # the entire populate. Without this, an external-drive USB
+                # hiccup (Seagate Portable D:, observed 2026-05-14 ~16:03)
+                # left 132 MB of orphaned embeddings + EOA marker at 6,472 bytes
+                # because Python's normal __exit__ flush never ran. See
+                # `LESSONS_LEARNED.md` 2026-05-14 entry for the full traceback.
+                f.flush()
                 if progress_callback:
                     progress_callback(strain_id, count, len(gene_map))
         return written_per_strain
