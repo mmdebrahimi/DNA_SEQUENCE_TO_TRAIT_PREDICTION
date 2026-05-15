@@ -52,7 +52,20 @@ This plan resolves all three and lays out the infrastructure steps so that when 
 
 ## Implementation Plan
 
+**Revision 2026-05-14 PM (post-/brainstorm Round 1):** 3 critical issues incorporated:
+- Phase A.0 added (cohort builder script — `audit_cohort.py` only audits, doesn't build; `pipeline ingest` CLI doesn't expose N50/contig thresholds)
+- Phase A.4 added (Bakta CDS-row `gene_symbol` validation before overnight scale-out — Bakta typically puts `gene=` on parent `gene` rows; CDS rows may lack it; would re-enter `INDETERMINATE_IDENTIFIER_OOV` despite re-annotation)
+- Phase A.5 added (Mash preflight + threshold reconciliation — existing default is 0.02 / ~98% identity, plan originally said 99%; conformed to default)
+- Threshold-relaxation direction corrected (repo defaults are N50≥50K + contig_count≤500; the plan's values were stricter, not looser)
+
 ### Phase A (parallel with populate; CPU-only, no D: drive write contention)
+
+0. **Write `scripts/build_stage2_n150_cohort.py` (NEW; cohort builder).**
+   - Calls `dna_decode.data.cohort.candidates_from_bvbrc_ast(...)` + `build_cohort(...)` + `save_cohort(...)` directly.
+   - CLI flags: `--ast-tsv`, `--assembly-metadata-csv`, `--drug ciprofloxacin`, `--target-total 150`, `--per-class 75`, `--n50-min 50000`, `--contig-count-max 500` (repo defaults; loosen only if N=150 isn't achievable).
+   - Hard-fail if balance imbalanced beyond ±10 (e.g., 70R/80S OK, 60R/90S NOT).
+   - Hard-fail if any strain lacks MLST (matches Stage 1 invariant).
+   - Output: `data/processed/stage2_n150_cipro_cohort.parquet`.
 
 1. **Install Bakta locally.**
    - `pip install bakta` OR `conda install -c bioconda bakta` if conda is preferred.
@@ -66,11 +79,24 @@ This plan resolves all three and lays out the infrastructure steps so that when 
    - Download AMR database: `amrfinder --update`.
    - Smoke-test: `amrfinder -n data/cache/refseq/GCF_000005845.2/genome.fna --organism Escherichia --mutation_all`. Expect TSV output with POINT-method rows.
 
-3. **Expand cohort to N=150.**
-   - Run `scripts/audit_cohort.py` with relaxed assembly-quality filters (N50 ≥ 100 K, contig_count ≤ 50) against the BV-BRC AST TSV.
-   - Target: 75R / 75S cipro. If under-target after filters, document the actual achievable balance.
-   - Save as `data/processed/stage2_n150_cipro_cohort.parquet`.
-   - Pre-flight checks: confirm all strains have MLST (loud-fail per Stage 1 invariant); confirm no GCA strains are missing GFF3 (or accept a fallback to GenBank-only).
+3. **Run the cohort builder from A.0.**
+   - `uv run python scripts/build_stage2_n150_cohort.py --drug ciprofloxacin --target-total 150 --per-class 75 ...`
+   - Verifies all strains have MLST (loud-fail per Stage 1 invariant).
+   - Outputs `data/processed/stage2_n150_cipro_cohort.parquet`.
+   - If balance can't hit 75R/75S ±10 from broth-microdilution-filtered BV-BRC pool: report the achievable balance + escalate to user (do not silently accept worse imbalance).
+
+4. **Bakta CDS-row `gene_symbol` validation (BEFORE overnight scale-out).**
+   - Run Bakta on 2-3 strains: K-12 MG1655 (`GCF_000005845.2`), one ST131 representative, one ST10 representative.
+   - Parse outputs with `dna_decode.data.annotations.parse_gff3`.
+   - Assert: fraction of CDS rows with non-empty `gene_symbol` ≥ 50% per strain. (Bakta with `--prodigal-tf` etc. should hit 60-80%.)
+   - **If <50% CDS-row gene_symbol coverage:** Bakta puts `gene=` on parent `gene` rows, not CDS rows. Ship `parse_gff3` extension first — for CDS rows with empty `gene_symbol` but populated `Parent=` attribute, look up the parent gene row and inherit its `gene_symbol`. Then re-run validation. Only proceed to overnight Bakta scale-out after validation passes.
+
+5. **Mash preflight (cohort clade structure).**
+   - Run `dna_decode.eval.phylogeny.compute_mash_distances` + `cluster_at_threshold` against the N=150 cohort genomes (FASTAs only; no annotations needed).
+   - Use the repo default threshold = 0.02 (~98% identity). This matches existing code; the plan's original "ANI ≥ 99%" was inconsistent with the default.
+   - Output: `data/processed/stage2_n150_clades.parquet` with strain_id → clade_id mapping.
+   - Report: total fold count, largest-fold strain count, distribution of folds with pure-R / pure-S / mixed labels. Loud-fail any strain that ends up `__unassigned__` (current `leave_one_clade_out_cv` silently buckets these — need to either patch the CV helper to raise OR pre-validate every strain has a clade).
+   - **Gate:** if fold count < 8 OR any fold is pure-R/pure-S (degenerate AUROC), escalate to user before Phase B kickoff — Stage 2 CV may need threshold loosening or cohort tweaking.
 
 ### Phase B (after Stage 1 PASSes; only if `stage2_action == BURST_STAGE_2`)
 
@@ -107,10 +133,7 @@ This plan resolves all three and lays out the infrastructure steps so that when 
    - **Attribution:** run `scripts/pipeline.py attribute` per strain (Tier 1-5 ISM); aggregate top-K across the cohort; check gyrA/parC/parE presence.
    - **Result packet:** `wiki/stage2_n150_cipro_<date>.md` with all 5 variant AUROCs, gate analysis, per-clade table, paired bootstrap CI, attribution table, Option-C verdict.
 
-8. **Pre-flight Mash distance computation for clade-out CV.**
-   - Run `dna_decode.eval.phylogeny` over the N=150 cohort to build a Mash distance matrix.
-   - Cluster at ANI ≥ 99% (standard for E. coli sub-species clades).
-   - Confirm cohort has ≥10 distinct clades (target for meaningful leave-one-clade-out CV). If <10, escalate to user — may need to expand cohort or relax ANI threshold.
+8. **(Mash preflight already done in Phase A.5.)** Reuse `data/processed/stage2_n150_clades.parquet` produced earlier. Pass `clade_assignments` dict directly to `leave_one_clade_out_cv`.
 
 9. **Execute Stage 2 runner.**
    - `HF_HOME=D:/hf_cache uv run python scripts/stage2_n150_cipro.py`.
