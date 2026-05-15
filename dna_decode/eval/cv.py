@@ -124,11 +124,39 @@ def _leave_one_group_out_cv(
     predict_fn: Callable[[object, np.ndarray], np.ndarray],
     strategy_name: str,
     drug: str = "",
+    *,
+    allow_unassigned: bool = False,
 ) -> CVResult:
-    """Generic leave-one-group-out CV. Used by LOMO + leave-one-clade-out."""
+    """Generic leave-one-group-out CV. Used by LOMO + leave-one-clade-out.
+
+    Per `plans/Stage2_N150_Prep_Plan.md` Phase A.5 defensive fix: missing-
+    strain assignments raise `ValueError` by default. The `__unassigned__`
+    bucket was a silent failure mode -- Stage 2's Mash-clade-out CV depends
+    on every strain having a clade label, and silent bucketing would warp
+    fold structure (one giant fold for all unassigned strains).
+
+    Pass `allow_unassigned=True` to recover the original silent-bucket
+    behavior; this is for the rare cases where the caller has explicitly
+    audited the unassigned set.
+
+    Raises:
+        ValueError: if `allow_unassigned=False` and any strain_id is missing
+            from `group_assignments`, with the count + sample of missing IDs.
+    """
     _validate_inputs(features, labels, strain_ids)
 
     # Map each strain to its group; one fold per unique group
+    if not allow_unassigned:
+        missing = [s for s in strain_ids if s not in group_assignments]
+        if missing:
+            sample = missing[:5]
+            raise ValueError(
+                f"_leave_one_group_out_cv ({strategy_name}): {len(missing)} strain_ids "
+                f"missing from group_assignments. Sample: {sample}. "
+                f"Pass `allow_unassigned=True` to bucket them into '__unassigned__' instead "
+                f"(silent failure mode -- not recommended for Stage 2)."
+            )
+
     groups = [group_assignments.get(s, "__unassigned__") for s in strain_ids]
     unique_groups = sorted(set(groups))
 
@@ -175,10 +203,17 @@ def leave_one_mlst_out_cv(
     train_fn: Callable[[np.ndarray, np.ndarray], object],
     predict_fn: Callable[[object, np.ndarray], np.ndarray],
     drug: str = "",
+    *,
+    allow_unassigned: bool = False,
 ) -> CVResult:
-    """LOMO: holds out entire MLST sequence-types."""
+    """LOMO: holds out entire MLST sequence-types.
+
+    Raises ValueError if any strain_id lacks an MLST assignment (set
+    `allow_unassigned=True` for the legacy silent-bucket behavior).
+    """
     return _leave_one_group_out_cv(
-        features, labels, strain_ids, mlst_assignments, train_fn, predict_fn, "lomo", drug
+        features, labels, strain_ids, mlst_assignments, train_fn, predict_fn, "lomo", drug,
+        allow_unassigned=allow_unassigned,
     )
 
 
@@ -190,11 +225,16 @@ def leave_one_clade_out_cv(
     train_fn: Callable[[np.ndarray, np.ndarray], object],
     predict_fn: Callable[[object, np.ndarray], np.ndarray],
     drug: str = "",
+    *,
+    allow_unassigned: bool = False,
 ) -> CVResult:
     """Phase 1 primary CV: holds out entire Mash/ANI-distance clades.
 
     Stricter than LOMO. Catches lineage memorization that low-resolution MLST
     misses (per post-tech-plan brainstorm M2).
+
+    Raises ValueError if any strain_id lacks a clade assignment (set
+    `allow_unassigned=True` for the legacy silent-bucket behavior).
     """
     str_clades = {s: str(c) for s, c in clade_assignments.items()}
     return _leave_one_group_out_cv(
@@ -206,4 +246,5 @@ def leave_one_clade_out_cv(
         predict_fn,
         "leave_one_clade_out",
         drug,
+        allow_unassigned=allow_unassigned,
     )

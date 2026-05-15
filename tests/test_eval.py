@@ -75,6 +75,42 @@ def test_leave_one_clade_out_produces_one_fold_per_clade():
     assert result.n_folds == 5
 
 
+def test_leave_one_clade_out_cv_raises_on_unassigned_strain():
+    """Stage 2 prep defensive fix: missing strain in clade_assignments raises by default."""
+    X, y, strain_ids = _synthetic_data(n=12)
+    # Assign clades for only 10 of the 12 strains
+    partial_clades = {sid: i % 3 for i, sid in enumerate(strain_ids[:10])}
+
+    def _fit(Xt, yt):
+        from sklearn.linear_model import LogisticRegression
+        return LogisticRegression(max_iter=200).fit(Xt, yt)
+
+    def _predict(clf, Xt):
+        return clf.predict_proba(Xt)[:, 1]
+
+    with pytest.raises(ValueError, match="missing from group_assignments"):
+        leave_one_clade_out_cv(X, y, strain_ids, partial_clades, _fit, _predict)
+
+
+def test_leave_one_clade_out_cv_allow_unassigned_recovers_legacy_bucketing():
+    """allow_unassigned=True restores silent __unassigned__ bucketing for back-compat."""
+    X, y, strain_ids = _synthetic_data(n=12)
+    partial_clades = {sid: i % 3 for i, sid in enumerate(strain_ids[:10])}
+
+    def _fit(Xt, yt):
+        from sklearn.linear_model import LogisticRegression
+        return LogisticRegression(max_iter=200).fit(Xt, yt)
+
+    def _predict(clf, Xt):
+        return clf.predict_proba(Xt)[:, 1]
+
+    # Should NOT raise; unassigned strains go to '__unassigned__' fold
+    result = leave_one_clade_out_cv(
+        X, y, strain_ids, partial_clades, _fit, _predict, allow_unassigned=True
+    )
+    assert any("__unassigned__" in f.held_out_id for f in result.folds)
+
+
 def test_cvresult_strain_ids_property_preserves_fold_order():
     """`CVResult.strain_ids` returns held_out_id list in fold order.
 
