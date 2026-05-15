@@ -58,6 +58,14 @@ This plan resolves all three and lays out the infrastructure steps so that when 
 - Phase A.5 added (Mash preflight + threshold reconciliation — existing default is 0.02 / ~98% identity, plan originally said 99%; conformed to default)
 - Threshold-relaxation direction corrected (repo defaults are N50≥50K + contig_count≤500; the plan's values were stricter, not looser)
 
+**Revision 2026-05-14 PM (post-A.0 execution):** N=150 target revised to N=147 actual:
+- Phase A.0 executed: cohort builder shipped + ran. After all filters (broth-microdilution + MLST + N50/contig + assembly_accession): R-ceiling is 72 strains. Took ALL 72 R + 75 S (MLST-balanced within each class) = **N=147 actual, 72R/75S, balance ±3 of target 75/75**.
+- Diagnostic (`scripts/diagnose_bvbrc_mlst_gaps.py`) revealed the bottleneck: 35,790 of 85,114 BV-BRC genome rows lack `assembly_accession` (un-downloadable from NCBI Datasets). Among cipro AST: 491 R lack accession, 77 retain it. Of those 77, 72 pass assembly-quality + MLST filters.
+- LABEL-STRATIFIED MLST-balanced selection was load-bearing: the default `build_cohort` algorithm prioritized MLST diversity without R/S stratification, leaving available R strains on the table (49R/101S ceiling with default algo vs 72R/75S with label-stratified). The builder script reuses `_mlst_balanced_selection` per-class.
+- N=147 vs target N=150 is a 2% shortfall — well within engineering-screen tolerance. Stage 2 ≥5 pp Option-C threshold remains unchanged.
+
+**Crash event 2026-05-14 (~16:03):** First N=40 NT populate (Stage 1 prerequisite, running since 12:30) crashed at ~8 hr wallclock with HDF5 file corruption (errno=13 Permission denied; superblock EOA truncated to 6472 bytes despite 132 MB of on-disk data). Root cause likely Seagate Portable USB hiccup (known failure mode per `GATE_B_REPORT.md` 2026-05-13). H5 file unrecoverable; populate restarted from scratch as of 2026-05-14 PM. Stage 1 verdict deferred by ~10 hr.
+
 ### Phase A (parallel with populate; CPU-only, no D: drive write contention)
 
 0. **Write `scripts/build_stage2_n150_cohort.py` (NEW; cohort builder).**
