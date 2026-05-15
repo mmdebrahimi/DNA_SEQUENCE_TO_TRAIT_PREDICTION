@@ -168,3 +168,15 @@
 - Stage 2 cohort = N=150 expanded from gate_b_cohort.parquet (67 strains) via audit-cohort pipeline with relaxed assembly-quality thresholds (D4)
 
 ---
+
+## [plan_file: Stage2_Docker_Tools_Install_Plan.md] 2026-05-14
+**Summary:** After user starts Docker Desktop, install Mash + Bakta + AMRFinderPlus via pinned Docker images, write a single tools/docker_runner.py Python orchestration module (NOT .sh wrappers), and smoke-validate on K-12 + one cipro-R strain. Resolves the Phase A.1 / A.2 / A.5 install steps from Stage2_N150_Prep_Plan.md.
+**Key decisions:**
+- Docker (containers) — NOT WSL2 Ubuntu (D1)
+- One Python tools/docker_runner.py module — NOT three .sh wrappers (D2)
+- Pin Docker image tags — NOT :latest (D3)
+- Correct AMRFinderPlus invocation: amrfinder_update for DB, --database (not --database_path), --mutation_all <file> takes a path (D4)
+- Stage Bakta DB on C: drive if room; verify before flagging install complete; record versions+SHA digests (D5)
+- Smoke-test on TWO strains: K-12 (binary works) + one cipro-R (POINT-row parsing actually exercised) (D6)
+
+---

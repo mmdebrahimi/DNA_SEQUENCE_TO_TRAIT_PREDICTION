@@ -17,7 +17,11 @@
 |---|---:|---:|---:|---|
 | NT-XGBoost (nucleotide_transformer) | 0.750 | 0.692 | 12 | 6R / 6S |
 | k-mer (k=8) + XGBoost | 0.694 | 0.663 | 12 | 6R / 6S |
-| Gene-presence + XGBoost | 0.000 | 0.394 | 12 | 6R / 6S |
+| Gene-presence + XGBoost | INDETERMINATE_IDENTIFIER_OOV | — | 12 | 6R / 6S |
+
+## Indeterminate variants
+
+- **Gene-presence + XGBoost** → `INDETERMINATE_IDENTIFIER_OOV`: median per-fold test-vocab overlap = 10.84% < 20% threshold; held-out rows are mostly empty, so XGBoost predictions collapse to the training class prior (LOSO-anti-predictive). Result not interpretable as a biological signal.
 
 ## Gap analysis
 

@@ -19,7 +19,7 @@ What runs end-to-end today:
 | **Quant-fidelity check** | `python scripts/quantize_fidelity_check.py --full-precision-attributions <manifest.json> --quantized-attributions <manifest.json>` | One-time 4-bit vs full-precision ISM concordance check; gates whether Phase 1 attribution numbers are quantization-conditional. |
 | **Viz** | `dna_decode.viz.browser.render_attribution_plot` + `export_attribution_tsv` | matplotlib PNG + TSV export; pygenometracks deferred to Phase 2. |
 
-Module map: `dna_decode/data/` (ingestion) + `dna_decode/models/` (foundation wrappers + cache + classifiers + classical baselines) + `dna_decode/interp/` (ISM + Tier 1-5 attribution) + `dna_decode/eval/` (CV + metrics + phylogeny + clade-only baseline) + `dna_decode/viz/` (browser).
+Module map: `dna_decode/data/` (ingestion) + `dna_decode/models/` (foundation wrappers + cache + classifiers + classical baselines; `cache.verify_complete` integrity gate added 2026-05-15) + `dna_decode/interp/` (ISM + Tier 1-5 attribution) + `dna_decode/eval/` (CV + metrics + batched-call phylogeny + clade-only baseline) + `dna_decode/viz/` (browser) + `tools/` (Stage 2 bioinformatics-tool runner via Docker Desktop — Mash + AMRFinderPlus + Bakta).
 
 ## Phase 1 scope
 
@@ -154,4 +154,4 @@ Built using a personal Claude Code skill ladder for project planning:
 - Execution state tracked in `.claude/execute-plan-state/Ecoli_G2P_Platform_Technical_Plan.json`
 - All planning artifacts captured as audit trail
 
-See `project_state/dna-decode-2026-05-11.md` for full decision history (11 hypotheses, 4 decisions made, 14 action-log entries).
+See `project_state/dna-decode-2026-05-11.md` for full decision history (17 hypotheses, 12 decisions made, 37+ action-log entries as of 2026-05-15; "Phase 1 / 2 / 3" labels retrospective-only — new work tracked as Evidence Packets per the 2026-05-15 framing reset).

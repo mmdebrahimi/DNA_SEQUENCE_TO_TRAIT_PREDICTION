@@ -80,12 +80,18 @@ scripts/
 │                              for (model × drug); writes leaderboard.md
 ├── quantize_fidelity_check.py  Step 11.5 — 4-bit vs full-precision ISM
 │                              concordance (one-time validation)
-├── smoke_gate_12strain_cipro.py  Phase 2 entry HARD gate (12-strain mini cohort;
+├── smoke_gate_12strain_cipro.py  EP-framework smoke gate (12-strain mini cohort;
 │                              3 variants: NT-XGBoost + k-mer + gene-presence
-│                              with INDETERMINATE_IDENTIFIER_OOV guardrail)
+│                              with INDETERMINATE_IDENTIFIER_OOV guardrail).
+│                              EP2 generalization (rename + drug-templated output)
+│                              tracked in plans/EP2_Cef_Tet_Smoke_Design_Plan.md.
 ├── stage1_n40_cipro.py      Phase 2 Stage 1 engineering screen (N=40 cipro; 4
 │                              variants gated by max(NT-XGBoost, NT-logreg) − k-mer
 │                              ≥ 3 pp; emits verdict + stage2_action separately)
+├── probe_nt_cache.py        Cache integrity gate (added 2026-05-15). Thin CLI
+│                              wrapper over EmbeddingCache.verify_complete. Run
+│                              BEFORE any Stage 1 / EP1 invocation on a populate
+│                              that may have been interrupted. Exit 0 = ALL_COMPLETE.
 ├── build_stage2_n150_cohort.py  Phase 2 Stage 2 cohort builder. Label-stratified
 │                              MLST-balanced selection (per-class R/S). Hard-fails
 │                              on imbalance + missing MLST. Builds 147-strain cohort
@@ -98,6 +104,16 @@ scripts/
 │                              AUROC=0.000 LOSO-base-rate-inversion hypothesis.
 └── plot_nt_embeddings_pca_umap.py  Diagnostic 2D projection of NT embeddings;
                               MLST overlay for lineage-confounding inspection.
+
+tools/
+└── docker_runner.py         Stage 2 bioinformatics-tool runner via Docker Desktop
+                              (added 2026-05-15). Single generic run(image, args,
+                              mounts, env, capture_output, check, timeout) →
+                              CompletedProcess; wraps FileNotFoundError +
+                              TimeoutExpired as DockerRunnerError. Replaces
+                              .sh wrappers that don't work with Python subprocess
+                              on Windows. Routes Mash + AMRFinderPlus + Bakta.
+                              9 unit tests at tests/test_docker_runner.py.
 ```
 
 ## End-to-end data flow
@@ -157,6 +173,9 @@ scripts/
 | `leave_one_*_out_cv` raises on unassigned strain_ids by default | `eval/cv.py` | The legacy silent `__unassigned__` bucketing would warp Stage 2's Mash-clade-out CV (one giant fold for all unassigned). Pass `allow_unassigned=True` only after explicit audit. |
 | `build_stage2_n150_cohort` uses per-class label-stratified MLST-balanced selection | `scripts/build_stage2_n150_cohort.py` | Default `build_cohort` selects diversity-only across the merged R+S pool, leaving available R strains on the table at small ceilings (49R/101S → 72R/75S after per-class selection on the same input). |
 | BV-BRC cohort R-ceiling bottleneck is `assembly_accession`, NOT MLST | `data/bvbrc_genome.py` + `scripts/diagnose_bvbrc_mlst_gaps.py` | 35,790 of 85,114 raw BV-BRC genome rows lack downloadable NCBI accession. When a cohort comes up short on a class, profile the join layers BEFORE relaxing filters — relaxing MLST would not have helped. |
+| `EmbeddingCache.verify_complete` is the consumer-side integrity gate; mean-pool consumers MUST bail unless `report.all_complete` is True | `models/cache.py` + `scripts/probe_nt_cache.py` | `populate(skip_existing=True)` skips at gene-dataset level, not strain level. Stage 1's `cache.list_genes()` + mean-pool admits a strain on ≥1 cached gene → half-flushed strain at crash time becomes a silent landmine. 8 regression tests pin the 4 status buckets (complete / partial / absent / corrupt) + the `all_complete=False` rule. |
+| `compute_mash_distances` issues exactly 2 mash invocations (1 sketch + 1 dist), NOT N*(N-1)/2 | `eval/phylogeny.py` | Batched-call discipline (2026-05-15 refactor). At N=147 the prior nested-loop pattern would issue 10,731 invocations; the batched pattern issues 2. Pinned by a call-count regression test in `tests/test_eval_phylogeny.py`. New `use_docker=True` kwarg routes through `tools/docker_runner.run`. |
+| `tools/docker_runner.run` wraps `subprocess.run([docker, run, ...])` in argv form; never shell strings | `tools/docker_runner.py` | Avoids Git Bash MSYS path-conversion bug that silently breaks `-v <host>:/<container>` mounts. Python subprocess bypasses shell path-munging by construction. Wraps `FileNotFoundError` (docker not on PATH) + `TimeoutExpired` as `DockerRunnerError`. |
 
 ## Phase 1 success criteria
 

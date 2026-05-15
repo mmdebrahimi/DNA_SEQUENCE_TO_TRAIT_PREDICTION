@@ -5,7 +5,7 @@
 **Cohort:** 12 strains (6 cipro-R + 6 cipro-S), all 12 distinct MLST clades, all assemblies pass Phase 1 QC (contig_count ≤ 5, N50 ≥ 324 K for one strain — others ≥ 4.6 Mbp).
 **Embedding model:** Nucleotide Transformer v2 100M multi-species (`InstaDeepAI/nucleotide-transformer-v2-100m-multi-species`, 512-dim).
 **GPU:** NVIDIA GeForce GTX 860M (4 GB VRAM, compute capability 5.0, Maxwell), CUDA 11.8 via torch 2.7.1+cu118.
-**Storage:** `F:\dna_decode_cache\` (external 4 TB drive — see Reliability Notes below).
+**Storage:** `D:\dna_decode_cache\` (external 4 TB drive — see Reliability Notes below).
 **Gate B scope:** infrastructure dry-run — can the real-data pipeline run ingest → embed → train → predict → attribute end-to-end without crashing? Not a model-quality test.
 
 ---
@@ -31,14 +31,14 @@ Notable: ST131 (resistant) is the globally dominant fluoroquinolone-resistant E.
 
 ---
 
-## Execution plan (post-F:-reconnect)
+## Execution plan (post-D:-reconnect)
 
 ```bash
-# Pre-requisite: F: drive remounted; F:\dna_decode_cache\refseq\ may need re-download
+# Pre-requisite: D: drive remounted; D:\dna_decode_cache\refseq\ may need re-download
 # of the 12 mini-cohort genomes.
 
 cd C:/Users/Farshad/PythonProjects/dna_decode
-export HF_HOME=F:/hf_cache
+export HF_HOME=D:/hf_cache
 export PATH=~/.local/bin:$PATH
 
 # 1. Re-ingest (no AST processing — just genome downloads for the 12 strains).
@@ -57,8 +57,8 @@ uv run python -m scripts.pipeline ingest \
 # 2. Populate cache with NT on GPU (~30 min expected).
 uv run python scripts/populate_cache.py \
   --cohort data/processed/gate_b_mini_cohort.parquet \
-  --cache F:/dna_decode_cache/embeddings/nt_mini.h5 \
-  --refseq-cache F:/dna_decode_cache/refseq \
+  --cache D:/dna_decode_cache/embeddings/nt_mini.h5 \
+  --refseq-cache D:/dna_decode_cache/refseq \
   --model nucleotide_transformer \
   --device cuda
 
@@ -67,7 +67,7 @@ uv run python -m scripts.pipeline train \
   --drug ciprofloxacin \
   --model nucleotide_transformer \
   --cohort data/processed/gate_b_mini_cohort.parquet \
-  --cache F:/dna_decode_cache/embeddings/nt_mini.h5 \
+  --cache D:/dna_decode_cache/embeddings/nt_mini.h5 \
   --include-clade-baseline \
   --min-auroc 0.5
 
@@ -75,14 +75,14 @@ uv run python -m scripts.pipeline train \
 uv run python -m scripts.pipeline predict \
   --model-path data/processed/models/ciprofloxacin_nucleotide_transformer.pkl \
   --strain-id 1328433.3 \
-  --cache F:/dna_decode_cache/embeddings/nt_mini.h5
+  --cache D:/dna_decode_cache/embeddings/nt_mini.h5
 
 # 5. Attribute (ISM + Tier 1-5) on the same strain.
 uv run python -m scripts.pipeline attribute \
   --model-path data/processed/models/ciprofloxacin_nucleotide_transformer.pkl \
   --strain-id 1328433.3 \
-  --cache F:/dna_decode_cache/embeddings/nt_mini.h5 \
-  --annotations F:/dna_decode_cache/refseq/<accession>/annotations.gff3 \
+  --cache D:/dna_decode_cache/embeddings/nt_mini.h5 \
+  --annotations D:/dna_decode_cache/refseq/<accession>/annotations.gff3 \
   --output data/processed/gate_b_attribution.json
 ```
 
@@ -93,7 +93,7 @@ uv run python -m scripts.pipeline attribute \
 ### Step 1 — Genome download
 - Wallclock: TBD
 - Strains downloaded: TBD / 12
-- Disk: TBD MB on F:
+- Disk: TBD MB on D:
 
 ### Step 2 — Embedding cache populate
 - Wallclock: TBD
@@ -137,11 +137,11 @@ uv run python -m scripts.pipeline attribute \
 
 ## Reliability notes
 
-**External storage F: disconnected during first attempt (2026-05-13):**
-- Full 67-strain NT populate ran for ~2 hr wallclock before F: drive vanished
+**External storage D: disconnected during first attempt (2026-05-13):**
+- Full 67-strain NT populate ran for ~2 hr wallclock before D: drive vanished
 - HDF5 write failures cascaded; cache file lost
-- ~430 MB of downloaded genomes also on F: — also lost when drive disconnected
-- HF model weights (1.5 GB) on F: — also lost (will redownload)
+- ~430 MB of downloaded genomes also on D: — also lost when drive disconnected
+- HF model weights (1.5 GB) on D: — also lost (will redownload)
 
 **Mitigations applied:**
 - `scripts/populate_cache.py` now emits stderr-flushed progress per strain (visible recovery checkpoint even on stdout buffering / disconnect)
