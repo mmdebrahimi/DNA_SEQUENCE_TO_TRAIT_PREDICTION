@@ -82,12 +82,27 @@ HF_HOME=D:/hf_cache uv run python scripts/stage1_n40_cipro.py
 # Writes wiki/stage1_n40_cipro_<date>.md result packet. Exit 0 ONLY when stage2_action == BURST_STAGE_2; exit 1 otherwise.
 
 # Populate NT cache for the N=40 cohort (long-running on GTX 860M; ~5-7 hr wallclock)
+# WARNING: external Seagate Portable D: drive USB hiccups have crashed populates mid-run
+# with HDF5 EOA-truncation (errno=13, unrecoverable). For N=150 use Databricks burst.
 HF_HOME=D:/hf_cache uv run python scripts/populate_cache.py \
   --cohort data/processed/gate_b_n40_cipro_cohort.parquet \
   --model nucleotide_transformer \
   --cache D:/dna_decode_cache/embeddings/nt_n40_cipro.h5 \
   --refseq-cache D:/dna_decode_cache/refseq \
   --device cuda
+
+# Stage 2 cohort builder (N=150 target; effective ~147 after BV-BRC ceilings).
+# Label-stratified MLST-balanced selection (per-class R/S separately); raises on
+# missing MLST or imbalance outside slack. Hardcoded for cipro; pass --drug to change.
+uv run python scripts/build_stage2_n150_cohort.py \
+  --ast-tsv "C:/Users/Farshad/Downloads/BVBRC_genome_amr.csv" \
+  --assembly-metadata-csv "C:/Users/Farshad/Downloads/BVBRC_genome (1).csv" \
+  --drug ciprofloxacin --target-total 150 --per-class 75 --balance-slack 15
+
+# BV-BRC MLST-gap diagnostic. Layer-by-layer inspection of why cohort R-counts
+# come up short. Surfaces whether the bottleneck is MLST, assembly_accession,
+# AST coverage, or assembly-quality filters.
+uv run python scripts/diagnose_bvbrc_mlst_gaps.py
 ```
 
 ## Phase 1 success criteria (per technical plan + Tier 1-5 rubric)
@@ -113,6 +128,10 @@ Phase 2 redesign trigger: classical baselines win on ≥2 drugs. The plan's Step
 - **`pilot.fetch_ncbi_assembly_quality` stays scaffolded INTENTIONALLY.** Phase 2 introduced a separate CSV adapter (`dna_decode/data/bvbrc_genome.py`) that bypasses it via `pipeline ingest --assembly-metadata-csv path/to/BVBRC_genome.csv`. The scaffold's 2-key return (contig_count + n50) is wrong-shaped for the real CSV's 7+ richer fields; do not "implement the NotImplementedError." Live NCBI Datasets REST integration is Phase 3 work and will replace `fetch_ncbi_assembly_quality` then.
 - **`motif_recovery` is a placeholder** — returns the same high-impact position list for every motif name. Phase 2 work; not a Phase 1 ship gate.
 - **GFF3 annotation source variance — `gene_id` vs `gene_symbol`.** As of 2026-05-14, `parse_gff3` populates THREE separate columns: `gene_id` (from GFF3 `ID=` / `Name=` — strain-unique by construction, e.g., `gene-b0001`; this is the embedding-cache key in `extract_cds_sequences`), `gene_symbol` (from GFF3 `gene=` — cross-strain, e.g., `gyrA`; populated for only ~11% of CDSs in typical RefSeq GFF3), and `locus_tag` (also strain-unique). For gene-family / presence-absence features that need to generalize across strains, use `gene_symbol` first. Do NOT use `gene_id` as a cross-strain identifier — it WILL cause 0% LOSO vocab overlap and AUROC=0.000 (mechanism: held-out rows all-zero → XGBoost predicts training class prior → prior inverts against held-out label on balanced LOSO). See `plans/Gene_Presence_AUROC_Bug_Fix_Plan.md`. `parse_genbank` populates `gene_id` + `gene_symbol` to the same value (the qualifier `gene`) — known asymmetry; downstream consumers should still prefer `gene_symbol`. The smoke runner gates on median per-fold vocab overlap (`min_median_vocab_overlap=0.20`) and reports `INDETERMINATE_IDENTIFIER_OOV` rather than a misleading AUROC when degenerate.
+- **`parse_gff3` has TWO-PASS parent→CDS gene_symbol propagation** (added 2026-05-14 PM for Bakta compatibility). Bakta-style GFF3 puts `gene=gyrA` on the parent `gene` row; CDS rows link via `Parent=` attribute. Pass 1 builds `parent_id → gene_symbol` map from gene-type rows; Pass 2 inherits onto CDS rows lacking their own `gene=`. Same-row `gene=` always wins (RefSeq-style unaffected). If you find yourself adding a Roary / Bakta / orthogroup pipeline, this is the parser layer that already knows how to handle parent-linked annotations.
+- **`leave_one_*_out_cv` raises on unassigned strain_ids by default** (`dna_decode/eval/cv.py`, 2026-05-14 PM defensive fix). The old silent `__unassigned__` bucketing was a Stage 2 risk — silent bucketing warps fold structure (one giant fold for all unassigned). Pass `allow_unassigned=True` for the legacy silent-bucket behavior; only do this if you've explicitly audited the unassigned set.
+- **BV-BRC's real cohort bottleneck is `assembly_accession`, NOT MLST.** Raw BVBRC_genome.csv has 96% MLST coverage. The parser drops 35,790 of 85,114 rows that lack `assembly_accession` (NCBI Datasets API can't fetch them). For cipro: 568 R total in AST, but only 77 R have downloadable accessions, and 72 of those pass quality+MLST filters. If a cohort comes up short on R strains, the lever is NOT to chase MLST — it's to find R strains with NCBI-downloadable assemblies (or change source databases). See `scripts/diagnose_bvbrc_mlst_gaps.py` for the layer-by-layer diagnostic.
+- **`build_cohort`'s default MLST-balanced selection does NOT stratify by label.** Stage 2 cohort builder (`scripts/build_stage2_n150_cohort.py`) uses per-class `_mlst_balanced_selection` for R + S separately. The naive single-pool call left ~28 available R strains on the table at small cohorts (49R/101S vs achievable 72R/75S). Always per-class for binary-classification cohorts.
 - **`.gitignore`'s `/data/` is anchored** (leading slash = repo root only). Bare `data/` would also match `dna_decode/data/` subpackage source.
 
 ## Project workflow

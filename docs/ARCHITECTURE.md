@@ -78,8 +78,26 @@ scripts/
 │                              {ingest, train, predict, attribute}
 ├── leaderboard.py           Step 17 — shell-loop over pipeline.py train
 │                              for (model × drug); writes leaderboard.md
-└── quantize_fidelity_check.py  Step 11.5 — 4-bit vs full-precision ISM
-                              concordance (one-time validation)
+├── quantize_fidelity_check.py  Step 11.5 — 4-bit vs full-precision ISM
+│                              concordance (one-time validation)
+├── smoke_gate_12strain_cipro.py  Phase 2 entry HARD gate (12-strain mini cohort;
+│                              3 variants: NT-XGBoost + k-mer + gene-presence
+│                              with INDETERMINATE_IDENTIFIER_OOV guardrail)
+├── stage1_n40_cipro.py      Phase 2 Stage 1 engineering screen (N=40 cipro; 4
+│                              variants gated by max(NT-XGBoost, NT-logreg) − k-mer
+│                              ≥ 3 pp; emits verdict + stage2_action separately)
+├── build_stage2_n150_cohort.py  Phase 2 Stage 2 cohort builder. Label-stratified
+│                              MLST-balanced selection (per-class R/S). Hard-fails
+│                              on imbalance + missing MLST. Builds 147-strain cohort
+│                              from BV-BRC AST + genome metadata CSV.
+├── diagnose_bvbrc_mlst_gaps.py  Layer-by-layer cohort-shortfall diagnostic. Surfaces
+│                              whether the bottleneck is MLST, assembly_accession,
+│                              AST coverage, or assembly-quality filters.
+├── diagnose_gene_presence_auroc.py  AUROC=0.000 root-cause diagnostic (one-time).
+├── diagnose_gene_presence_synthetic.py  Synthetic falsifier for the gene-presence
+│                              AUROC=0.000 LOSO-base-rate-inversion hypothesis.
+└── plot_nt_embeddings_pca_umap.py  Diagnostic 2D projection of NT embeddings;
+                              MLST overlay for lineage-confounding inspection.
 ```
 
 ## End-to-end data flow
@@ -135,6 +153,10 @@ scripts/
 | `loso_kmer.run_kmer_xgboost_loso` / `run_fusion_loso` respect caller-supplied `strain_ids` verbatim — no internal sort/filter | `eval/loso_kmer.py` | Smoke gate + Stage 1 runner both pass through; preventing alignment drift was the /brainstorm Round 1 finding. Re-raises `ClassifierTrainingError` rather than silent mean-fallback. |
 | `CONTIG_SEPARATOR = "N" * 100` module constant in `classical_baselines.py` | `models/classical_baselines.py` | Replaces three magic-string copies; both `loso_kmer` runners import + concatenate via this constant. |
 | `_train_baseline_logreg(..., calibrate=False)` returns raw `LogisticRegression` without `CalibratedClassifierCV` | `models/classical_baselines.py` | Calibration at LOSO N≤20 over-corrects to anti-predictive output. Stage 1 + smoke gate pass `calibrate=False` at every gate-bearing call site (pinned by test). |
+| `parse_gff3` two-pass parent→CDS gene_symbol propagation | `data/annotations.py` | Bakta-style GFF3 puts `gene=` on parent gene rows; CDS rows link via `Parent=`. Without propagation, gene-presence comparator re-enters INDETERMINATE_IDENTIFIER_OOV after Bakta re-annotation. Same-row `gene=` always wins to preserve RefSeq behavior. |
+| `leave_one_*_out_cv` raises on unassigned strain_ids by default | `eval/cv.py` | The legacy silent `__unassigned__` bucketing would warp Stage 2's Mash-clade-out CV (one giant fold for all unassigned). Pass `allow_unassigned=True` only after explicit audit. |
+| `build_stage2_n150_cohort` uses per-class label-stratified MLST-balanced selection | `scripts/build_stage2_n150_cohort.py` | Default `build_cohort` selects diversity-only across the merged R+S pool, leaving available R strains on the table at small ceilings (49R/101S → 72R/75S after per-class selection on the same input). |
+| BV-BRC cohort R-ceiling bottleneck is `assembly_accession`, NOT MLST | `data/bvbrc_genome.py` + `scripts/diagnose_bvbrc_mlst_gaps.py` | 35,790 of 85,114 raw BV-BRC genome rows lack downloadable NCBI accession. When a cohort comes up short on a class, profile the join layers BEFORE relaxing filters — relaxing MLST would not have helped. |
 
 ## Phase 1 success criteria
 
