@@ -300,3 +300,60 @@ def test_contig_separator_is_100_n_run():
     assert CONTIG_SEPARATOR == "N" * 100
     assert len(CONTIG_SEPARATOR) == 100
     assert set(CONTIG_SEPARATOR) == {"N"}
+
+
+# ---- H13 fix: scale_features=True wraps LR in StandardScaler pipeline ----
+
+
+def test_train_baseline_logreg_scale_features_wraps_pipeline():
+    """`scale_features=True` returns Pipeline(StandardScaler, LR) — H13 fix.
+
+    Stage 1 N=38 NT-logreg returned AUROC 0.100 (anti-predictive) without
+    feature scaling. NT embeddings are 512-dim dense floats with arbitrary
+    per-dim scale; unscaled LR with default L2 regularization is biased
+    toward dimensions with larger magnitudes + heavily overfits at
+    sample_dim << feature_dim. Pipeline applies StandardScaler before LR
+    on both fit + predict paths.
+    """
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import Pipeline
+    from sklearn.preprocessing import StandardScaler
+
+    rng = np.random.default_rng(0)
+    # Mimic NT embeddings: per-dim scale heterogeneity
+    X_base = rng.standard_normal((20, 6)).astype(np.float32)
+    X = X_base * np.array([1.0, 100.0, 0.01, 50.0, 1.0, 200.0], dtype=np.float32)
+    y = np.array([0] * 10 + [1] * 10)
+
+    clf = _train_baseline_logreg(
+        X, y, drug_name="nt_test", calibrate=False, scale_features=True
+    )
+    assert clf.calibrated is False
+    assert isinstance(clf.model, Pipeline)
+    # Pipeline steps preserve declared structure
+    assert clf.model.steps[0][0] == "scaler"
+    assert isinstance(clf.model.steps[0][1], StandardScaler)
+    assert clf.model.steps[1][0] == "lr"
+    assert isinstance(clf.model.steps[1][1], LogisticRegression)
+    # predict_proba works via the pipeline
+    proba = clf.model.predict_proba(X)
+    assert proba.shape == (20, 2)
+
+
+def test_train_baseline_logreg_scale_features_false_unchanged():
+    """`scale_features=False` (default) preserves prior unwrapped behavior.
+
+    K-mer + gene-presence baselines use binary 0/1 features; scaling those
+    explodes magnitudes for rare-feature dimensions. Default must stay
+    `scale_features=False` to avoid regressing those call sites.
+    """
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.pipeline import Pipeline
+
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((20, 6)).astype(np.float32)
+    y = np.array([0] * 10 + [1] * 10)
+
+    clf = _train_baseline_logreg(X, y, drug_name="kmer_test", calibrate=False)
+    assert isinstance(clf.model, LogisticRegression)
+    assert not isinstance(clf.model, Pipeline)

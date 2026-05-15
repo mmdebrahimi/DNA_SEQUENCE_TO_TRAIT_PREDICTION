@@ -138,7 +138,8 @@ def _train_baseline_xgboost(
 
 
 def _train_baseline_logreg(
-    X: np.ndarray, y: np.ndarray, drug_name: str, *, calibrate: bool = True
+    X: np.ndarray, y: np.ndarray, drug_name: str, *, calibrate: bool = True,
+    scale_features: bool = False,
 ) -> TrainedClassifier:
     """Train a logistic-regression classifier (for k-mer baseline).
 
@@ -147,10 +148,21 @@ def _train_baseline_logreg(
     a function of representation quality rather than calibration-wrapper behavior.
     Per `plans/Stage1_Refactor_And_Test_Hardening_Plan.md` Step 2.3. Calibration
     is a small-N footgun (see LESSONS_LEARNED 2026-05-14 calibration overcorrection).
+
+    When `scale_features=True`, wraps the LR in a sklearn Pipeline with a
+    StandardScaler step BEFORE LR. Required for NT-logreg path: NT embeddings
+    are 512-dim dense floats with arbitrary per-dim scale, and unscaled LR with
+    default L2 regularization is heavily biased by feature magnitudes. The
+    Stage 1 N=38 verdict packet shows NT-logreg AUROC 0.100 (anti-predictive)
+    without scaling — H13 root cause confirmed 2026-05-15. K-mer + gene-presence
+    baselines use binary 0/1 features and should NOT scale (scaling would
+    explode magnitudes for rare-feature dimensions).
     """
     try:
         from sklearn.linear_model import LogisticRegression
         from sklearn.calibration import CalibratedClassifierCV
+        from sklearn.pipeline import Pipeline
+        from sklearn.preprocessing import StandardScaler
     except ImportError as e:
         raise ClassifierTrainingError(
             "scikit-learn not installed; run `uv sync` to install Phase 1 deps"
@@ -165,7 +177,11 @@ def _train_baseline_logreg(
             f"Drug {drug_name!r}: training labels are single-class"
         )
 
-    base = LogisticRegression(max_iter=1000, solver="liblinear", random_state=42)
+    lr = LogisticRegression(max_iter=1000, solver="liblinear", random_state=42)
+    if scale_features:
+        base = Pipeline([("scaler", StandardScaler()), ("lr", lr)])
+    else:
+        base = lr
 
     if not calibrate:
         # Raw logreg path — skip CalibratedClassifierCV entirely.

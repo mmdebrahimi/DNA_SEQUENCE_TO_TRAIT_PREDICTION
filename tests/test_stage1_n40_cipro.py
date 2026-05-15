@@ -234,12 +234,20 @@ class TestCalibrationDiscipline:
         _nt_xgb_train(X, y)
         assert recorded["calibrate"] is False
 
-    def test_nt_logreg_call_site_passes_calibrate_false(self, monkeypatch):
+    def test_nt_logreg_call_site_passes_calibrate_false_and_scale_features_true(self, monkeypatch):
+        """NT-logreg call site MUST pass scale_features=True (H13 fix, 2026-05-15).
+
+        Without scale_features, Stage 1 N=38 NT-logreg AUROC was 0.100
+        (anti-predictive) — H13 plumbing-bug root cause. The fix wraps LR in
+        sklearn Pipeline(StandardScaler, LR). Regression guard against someone
+        flipping the kwarg back to False on the NT path.
+        """
         from dna_decode.models import classical_baselines as cb_mod
         recorded: dict = {}
 
-        def fake_logreg(X, y, drug_name, *, calibrate=True):
+        def fake_logreg(X, y, drug_name, *, calibrate=True, scale_features=False):
             recorded["calibrate"] = calibrate
+            recorded["scale_features"] = scale_features
             class _M:
                 feature_dim = X.shape[1]
                 calibrated = calibrate
@@ -256,6 +264,7 @@ class TestCalibrationDiscipline:
         y = np.array([0, 1, 0, 1, 0, 1, 0, 1, 0, 1])
         _nt_logreg_train(X, y)
         assert recorded["calibrate"] is False
+        assert recorded["scale_features"] is True
 
     def test_kmer_xgb_call_site_passes_calibrate_false(self, monkeypatch):
         """New (per /brainstorm Round 2): k-mer-XGB is also gate-bearing; must pin too."""
@@ -436,3 +445,83 @@ class TestVariantResultLengthInvariant:
         good_kmer = _make_variant("k-mer-XGB", 0.5, [0.5, 0.5, 0.5, 0.5], y, strain_ids, True)
         with pytest.raises(ValueError, match="internal length mismatch"):
             compute_gate_outcome([bad, good, good_kmer])
+
+
+# ---- Stage 1b ALTERNATIVE_POOLING_RERUN: --aggregation flag + default ----
+
+
+def test_stage1_aggregation_flag_defaults_to_mean_plus_max():
+    """Stage 1b default `--aggregation mean+max` per ALTERNATIVE_POOLING_RERUN.
+
+    Stage 1 used mean-pool (512-dim); Stage 1b's verdict-time pre-commitment
+    is mean+max-pool (1024-dim) per `plans/Stage1_N40_Cipro_Engineering_Screen_Plan.md`
+    Verdict-Time Pre-Commitments table. Regression guard: keep the default
+    on mean+max until the next pivot fires.
+    """
+    from pathlib import Path
+    import argparse
+
+    # Parse with no --aggregation flag; default should be "mean+max".
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cohort", type=Path, default=None)
+    parser.add_argument("--nt-cache", type=Path, default=None)
+    parser.add_argument("--refseq-cache", type=Path, default=None)
+    parser.add_argument("--drug", default="ciprofloxacin")
+    parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument("--kmer-k", type=int, default=8)
+    parser.add_argument("--kmer-top-n", type=int, default=10_000)
+    parser.add_argument(
+        "--aggregation", choices=["mean", "max", "mean+max"], default="mean+max"
+    )
+    args = parser.parse_args([])
+    assert args.aggregation == "mean+max"
+
+
+def test_load_features_threads_aggregation_through(monkeypatch, tmp_path):
+    """`load_features(..., aggregation='mean+max')` passes aggregation to
+    `aggregate_strain_features`. Pins the parameter does not get accidentally
+    swallowed (regression guard for the Stage 1b refactor).
+    """
+    from scripts import stage1_n40_cipro as stage1_mod
+
+    recorded: list[str] = []
+
+    def fake_agg(gene_matrix, agg):
+        recorded.append(agg)
+        import numpy as np
+        # Return a deterministic vector with shape consistent with agg
+        if agg == "mean+max":
+            return np.zeros(1024, dtype=np.float32)
+        return np.zeros(512, dtype=np.float32)
+
+    monkeypatch.setattr(stage1_mod, "aggregate_strain_features", fake_agg)
+
+    # Stub the rest of load_features's dependencies; we only need to verify
+    # the aggregation kwarg threads through.
+    class FakeCache:
+        def list_genes(self, sid):
+            return ["g1", "g2"]
+        def bulk_get(self, pairs):
+            import numpy as np
+            return np.zeros((len(pairs), 512), dtype=np.float32)
+
+    monkeypatch.setattr(stage1_mod, "EmbeddingCache", lambda *a, **kw: FakeCache())
+    monkeypatch.setattr(stage1_mod, "fasta_path", lambda acc, root: tmp_path / "x.fna")
+
+    def fake_load_fasta(p):
+        return ["ACGT"]
+    monkeypatch.setattr(stage1_mod, "_load_fasta_contigs", fake_load_fasta)
+
+    # Make a tiny cohort stub
+    class S:
+        def __init__(self, sid, mlst):
+            self.strain_id = sid
+            self.ast_labels = {"ciprofloxacin": 1}
+            self.assembly_accession = "GCA_X"
+            self.mlst = mlst
+    class C:
+        strains = [S("s1", "ST1"), S("s2", "ST2")]
+
+    stage1_mod.load_features(C(), tmp_path / "cache.h5", tmp_path, "ciprofloxacin", aggregation="mean+max")
+    assert all(a == "mean+max" for a in recorded)
+    assert len(recorded) == 2

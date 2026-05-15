@@ -102,7 +102,13 @@ def _nt_xgb_predict(clf, X: np.ndarray) -> np.ndarray:
 
 
 def _nt_logreg_train(X: np.ndarray, y: np.ndarray):
-    return _train_baseline_logreg(X, y, drug_name="cipro_stage1_nt_logreg", calibrate=False)
+    # scale_features=True wraps LR in sklearn Pipeline(StandardScaler, LR). NT
+    # embeddings are 512-dim (mean) or 1024-dim (mean+max) dense floats with
+    # arbitrary per-dim scale; unscaled LR with default L2 went anti-predictive
+    # at Stage 1 N=38 (AUROC 0.100 — H13 root cause confirmed 2026-05-15).
+    return _train_baseline_logreg(
+        X, y, drug_name="cipro_stage1_nt_logreg", calibrate=False, scale_features=True
+    )
 
 
 def _nt_logreg_predict(clf, X: np.ndarray) -> np.ndarray:
@@ -116,8 +122,15 @@ def load_features(
     nt_cache: Path,
     refseq_root: Path,
     drug: str,
+    aggregation: str = "mean+max",
 ) -> tuple[np.ndarray, dict[str, str], dict[str, int], list[str], list[str]]:
     """Load per-strain NT embeddings + N-concatenated genome strings.
+
+    Args:
+        aggregation: pooling strategy passed to `aggregate_strain_features`.
+            Stage 1b default is `"mean+max"` (1024-dim concatenated) per the
+            ALTERNATIVE_POOLING_RERUN escalation in the verdict-time
+            pre-commitments table; Stage 1 used `"mean"` (512-dim).
 
     Returns:
         (X_nt, seqs_by_strain, labels_by_strain, strain_ids, mlsts)
@@ -148,7 +161,7 @@ def load_features(
         if not gene_ids:
             continue
         gene_matrix = cache.bulk_get([(s.strain_id, g) for g in gene_ids])
-        nt_rows.append(aggregate_strain_features(gene_matrix, "mean"))
+        nt_rows.append(aggregate_strain_features(gene_matrix, aggregation))
         fp = fasta_path(s.assembly_accession, refseq_root)
         seqs_by_strain[s.strain_id] = CONTIG_SEPARATOR.join(_load_fasta_contigs(fp))
         labels_by_strain[s.strain_id] = int(s.ast_labels[drug_lower])
@@ -505,16 +518,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--kmer-k", type=int, default=8)
     parser.add_argument("--kmer-top-n", type=int, default=10_000)
+    parser.add_argument(
+        "--aggregation",
+        choices=["mean", "max", "mean+max"],
+        default="mean+max",
+        help="NT-embedding pooling. Stage 1 used 'mean'; Stage 1b ALTERNATIVE_POOLING_RERUN default 'mean+max'.",
+    )
     args = parser.parse_args(argv)
 
     if args.output is None:
-        args.output = Path(f"wiki/stage1_n40_cipro_{date.today().isoformat()}.md")
+        # Stage 1b artifact path explicitly tagged with aggregation to avoid clobbering
+        # Stage 1's verdict packet on same-day re-run.
+        suffix = "" if args.aggregation == "mean" else f"_{args.aggregation.replace('+','-plus-')}"
+        args.output = Path(f"wiki/stage1_n40_cipro{suffix}_{date.today().isoformat()}.md")
 
     cohort = load_cohort(args.cohort)
-    print(f"[stage1] cohort: {len(cohort.strains)} strains; drug={args.drug}")
+    print(f"[stage1] cohort: {len(cohort.strains)} strains; drug={args.drug}; aggregation={args.aggregation}")
 
     X_nt, seqs_by_strain, labels_by_strain, strain_ids, mlsts = load_features(
-        cohort, args.nt_cache, args.refseq_cache, args.drug
+        cohort, args.nt_cache, args.refseq_cache, args.drug, aggregation=args.aggregation,
     )
     y = np.array([labels_by_strain[s] for s in strain_ids], dtype=int)
     print(f"[stage1] effective N={len(y)}; balance {int((y==1).sum())}R/{int((y==0).sum())}S; NT shape={X_nt.shape}")
