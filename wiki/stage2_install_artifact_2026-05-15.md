@@ -29,7 +29,7 @@ Both images remain in local Docker cache (~3.4 GB combined dead weight). Keep un
 | DB | Path | Size | Version |
 |---|---|---|---|
 | AMRFinderPlus | `C:/Users/Farshad/dna_decode_stage2/amrfinder_db/latest/` | 240 MB | `2026-03-24.1` |
-| Bakta light | (not installed — see Blocker B1) | — | — |
+| Bakta light | `C:/Users/Farshad/dna_decode_stage2/bakta_db/db-light/` | 4.0 GB (extracted from 1.34 GB tar.xz) | `6.0` (Zenodo DOI 10.5281/zenodo.14916843) |
 
 ## Smoke-test results
 
@@ -52,25 +52,18 @@ Both images remain in local Docker cache (~3.4 GB combined dead weight). Keep un
   - (Note: ST131 commonly carries `parC_S80I`; this strain has `E84V` — still a QRDR mutation.)
 - Closes Codex H14 SNP-baseline concern: AMRFinder POINT-row extraction works end-to-end on a known cipro-R substrate.
 
-### Bakta — BLOCKED
-- Tested both `v1.11.4` and `v1.12.0`. Both fail `bakta_db download` with:
-  ```
-  dependency not found! tool=AMRFinderPlus
-  ERROR: AMRFinderPlus not found or not executable! Please make sure AMRFinderPlus is installed and executable
-  ```
-- Verified `amrfinder --version` returns `4.0.23` inside the v1.11.4 container (so the binary IS present); the dep check in `bakta_db` must be doing more than `which amrfinder`.
-- Deferred. Bakta's consumer (gene-presence comparator) is itself blocked on Pending Decisions row 4 (RefSeq vs Bakta vs Roary annotation source decision); not a Stage 1 verdict blocker.
+### Bakta — PASS (after conda-init workaround)
+- Initial attempts at `--entrypoint /opt/conda/bin/bakta_db download ...` failed with `dependency not found! tool=AMRFinderPlus` on both v1.11.4 and v1.12.0.
+- Root cause: bypassing the image's default shell init left the conda env un-activated; `bakta_db`'s dep check (more than `which amrfinder`) found AMRFinder's PATH entry but failed something deeper.
+- **Workaround:** invoke via `--entrypoint /bin/bash -c "bakta_db download --output /db --type light"`. The bash login-shell init activates conda properly. v1.11.4 then downloads + extracts the v6 light DB (Zenodo DOI 10.5281/zenodo.14916843) cleanly: 1.34 GB tar.xz → 4.0 GB extracted at `/db/db-light` + MD5 verified.
+- Bakta annotation smoke (Step 4 plan §4) NOT yet run — annotation is CPU-heavy and would contend with the in-flight Stage 1 N=40 background job. Run post-Stage-1.
 
-## Open blockers
+## Resolved blockers
 
-### B1: Bakta `bakta_db download` AMRFinderPlus dep-check regression
-Both v1.11.4 and v1.12.0 reject `bakta_db download` arguing AMRFinderPlus is unavailable, despite `/opt/conda/bin/amrfinder --version` returning a valid version string inside the same container. Root cause unknown — likely a brittle PATH check / version-format mismatch / `--threads` discovery. Workaround paths:
-- (a) Direct Zenodo download of the v6 light DB tar.gz, skipping `bakta_db download`.
-- (b) Try Bakta v1.10.x (before the AMRFinder dep was added).
-- (c) Build a custom Docker image that satisfies the dep check.
-- (d) Defer Bakta entirely until Pending Decisions row 4 picks an annotation source other than Bakta (Roary / Panaroo / Prokka alternatives exist for gene-presence comparator work).
+### B1 RESOLVED: Bakta `bakta_db download` AMRFinderPlus dep-check (conda-init workaround)
+Direct `--entrypoint /opt/conda/bin/bakta_db` invocation skips the image's default bash shell init → conda env un-activated → `bakta_db`'s AMRFinder dep check fails despite the binary being on PATH. Fix: wrap in `--entrypoint /bin/bash -c "..."`. Validated on v1.11.4. Same wrapper expected to work on v1.12.0; not re-tested since v1.11.4 + DB v6 is sufficient for Stage 2.
 
-Not a Stage 1 verdict blocker.
+Wrapper pattern for `tools/docker_runner.py` callers: pass `image="oschwengers/bakta:v1.11.4"`, `args=["-c", "bakta_db download --output /db --type light"]`, and either expose an `entrypoint=` kwarg or use the existing API with a per-tool helper that prepends `/bin/bash -c`.
 
 ### B2: Direct `docker run` from Git Bash needs `MSYS_NO_PATHCONV=1`
 Bind mounts via Git Bash silently fail to bind without `MSYS_NO_PATHCONV=1` (the `/db` container path gets munged to `C:/Program Files/Git/db`). Docker daemon doesn't error — it just creates an unbound ephemeral mount, downloads succeed inside the container, then disappear on `--rm`. Symptom: `du -sh <db_path>` returns 0 bytes after a "successful" download.
@@ -81,8 +74,9 @@ Mitigation: Python `subprocess.run` bypasses shell path-munging. `tools/docker_r
 - Phase B of `plans/Stage2_N150_Prep_Plan.md` — AMRFinderPlus POINT* extraction on the N=147 cohort.
 - H14 SNP-baseline (Codex's "tighten classical comparator" concern from the 2026-05-15 brainstorm).
 - Mash preflight at Stage 2 (leave-one-Mash-clade-out CV).
+- Bakta gene-presence comparator path (DB ready; annotation smoke deferred until post-Stage-1 to avoid CPU contention with the in-flight N=40 background job).
+- Mash O(N²) refactor of `dna_decode/eval/phylogeny.py` — 2 mash invocations across all strains instead of N*(N-1)/2 (10,731 calls at N=147 → 2). Routed through `tools/docker_runner.run` via the new `use_docker=True` kwarg.
 
 ## Deferred from plan scope
-- Step 6 (`phylogeny.py` Mash O(N²) refactor): separate commit, not part of this artifact.
-- Bakta light DB download: blocked on B1.
-- K-12 MG1655 (`GCF_000005845.2`) wild-type smoke: K-12 not in local refseq cache (cache populated from BV-BRC GCA accessions, not RefSeq GCF). Substituted with two existing N=40 cipro-R strains for Mash smoke; AMRFinder smoke run on the textbook-QRDR substrate (higher-value verification than wild-type).
+- Bakta annotation smoke on K-12 + cipro-R strain (Step 4 plan §4 partial): CPU-heavy, deferred to post-Stage-1 to avoid contention.
+- K-12 MG1655 (`GCF_000005845.2`) wild-type substrate: not in local refseq cache (cache populated from BV-BRC GCA accessions, not RefSeq GCF). Mash smoke substituted with two N=40 cipro-R strains; AMRFinder smoke run on the textbook-QRDR substrate (higher-value verification than wild-type).

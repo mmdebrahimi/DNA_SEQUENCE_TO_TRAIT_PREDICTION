@@ -173,10 +173,13 @@ Record image SHA digests in the Stage 2 install artifact at `wiki/stage2_install
 - AMRFinderPlus smoke (Step 5) — pinned cipro-R substrate = `1328433.3` / `GCA_000522345.1` (ST131, 5 contigs, N50=5.08 Mbp; D6-spec strain). `mutations.tsv` = 668 rows. **Textbook QRDR confirmed:** `gyrA_S83L` + `gyrA_D87N` + `parC_E84V` all QUINOLONE-class POINT rows. PASS. Closes the H14 SNP-baseline-extraction readiness question (separate from H14's analytical test, which fires at Stage 2 N=150).
 - Install artifact (Step 7) — `wiki/stage2_install_artifact_2026-05-15.md`.
 
+### Landed in follow-up (2026-05-15 same day, ~15 min after A-prime)
+- **Bakta v1.11.4 DB install — RESOLVED.** Direct `--entrypoint /opt/conda/bin/bakta_db` skipped conda env activation, causing the AMRFinder dep check to fail even though the binary was on PATH. Workaround = `--entrypoint /bin/bash -c "bakta_db download --output /db --type light"`. DB v6.0 light extracted to `C:/Users/Farshad/dna_decode_stage2/bakta_db/db-light/` (4.0 GB; Zenodo DOI 10.5281/zenodo.14916843; MD5 verified). Annotation smoke deferred to post-Stage-1 (CPU-heavy).
+- **Step 6: Mash O(N²) refactor — LANDED.** `dna_decode/eval/phylogeny.py:compute_mash_distances` now issues 1 `mash sketch -o sketch.msh <all-fastas>` + 1 `mash dist sketch.msh sketch.msh` (vs prior N*(N-1)/2 pairwise calls — 10,731 at N=147 → 2). New `use_docker=True` kwarg routes through `tools/docker_runner.run` using pinned image `quay.io/biocontainers/mash:2.3--hb105d93_10`. 19 regression tests (was 13) including: batched-call-count pin (proves N→2 regardless of cohort size), 3-strain symmetric matrix, unknown-strain defensive raise, Docker-path call-count.
+
 ### What did NOT land
-- **Bakta install (Step 3 partial)** — blocker B1: `bakta_db download` fails AMRFinderPlus dep-check in BOTH `oschwengers/bakta:v1.11.4` AND `v1.12.0`. `which amrfinder` returns `/opt/conda/bin/amrfinder` and `amrfinder --version` returns `4.0.23` inside the v1.11.4 container — the dep check in `bakta_db` does more than `which`. Root cause unknown. Workarounds enumerated in artifact §B1. Deferred — not a Stage 1 verdict blocker; Bakta's consumer is the gene-presence comparator (Pending Decisions row 4) which is itself deferred.
 - **K-12 wild-type smoke** — substituted with the textbook-QRDR-positive ST131 cipro-R strain. Higher-value verification (a wild-type self-test would silently pass while a QRDR-detection failure would mean the install is unfit for purpose).
-- **Step 6: Mash O(N²) refactor of `dna_decode/eval/phylogeny.py`** — algorithm-touching change; deserves its own commit + targeted regression tests. Deferred to follow-up.
+- **Bakta annotation smoke** (Step 4 §4 partial): CPU-heavy ~5-30 min per genome; deferred to post-Stage-1 to avoid contention with the running N=40 job.
 
 ### Operational deviations vs plan
 - Plan §D5 specified Bakta DB at `C:/bakta_db` if ≥10 GB free. Actual install path: `C:/Users/Farshad/dna_decode_stage2/{bakta_db,amrfinder_db}` — `C:/<root>` requires admin; `C:/Users/Farshad/` is user-owned.
@@ -185,9 +188,10 @@ Record image SHA digests in the Stage 2 install artifact at `wiki/stage2_install
 ### Verification scorecard
 | Plan §10 success criterion | Status |
 |---|---|
-| Mash + Bakta + AMRFinder return `--version` via `tools/docker_runner.py` | PARTIAL: Mash + AMRFinder ✓; Bakta blocked |
-| Bakta K-12 smoke: `gene_symbol` coverage ≥50% | BLOCKED on B1 |
-| AMRFinderPlus cipro-R smoke: gyrA/parC/parE POINT rows present | ✓ PASS |
-| Mash refactored phylogeny.py matches nested-loop reference | DEFERRED to follow-up commit |
+| Mash + Bakta + AMRFinder return `--version` via `tools/docker_runner.py` | ✓ PASS (all 3) |
+| Bakta DB installed (v6.0 light, 4.0 GB) | ✓ PASS after conda-init workaround |
+| Bakta K-12 smoke: `gene_symbol` coverage ≥50% | DEFERRED (CPU contention with Stage 1) |
+| AMRFinderPlus cipro-R smoke: gyrA/parC/parE POINT rows present | ✓ PASS (S83L + D87N + E84V) |
+| Mash refactored phylogeny.py matches nested-loop reference | ✓ PASS (19 tests; batched-call-count pinned) |
 | `wiki/stage2_install_artifact_<date>.md` exists with versions + SHAs + verdicts | ✓ PASS |
-| All existing tests still pass (≥421 + new) | UNCHECKED in this session — Stage 1 background job holds the working tree; full suite run deferred to post-verdict |
+| All existing tests still pass (≥421 + new) | PARTIAL: 70/70 across touched modules (cache + docker_runner + phylogeny); full suite deferred to post-Stage-1 |
