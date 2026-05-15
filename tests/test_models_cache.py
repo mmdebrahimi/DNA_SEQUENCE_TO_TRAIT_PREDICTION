@@ -12,6 +12,7 @@ h5py = pytest.importorskip("h5py")
 
 from dna_decode.models.cache import (  # noqa: E402
     CacheMetadata,
+    CompletenessReport,
     EmbeddingCache,
     EmbeddingCacheError,
     EmbeddingCacheVersionMismatch,
@@ -502,3 +503,93 @@ def test_populate_preserves_gene_to_embedding_correspondence(tmp_path: Path):
         cached = cache.get("s001", gene_id)
         expected = model._embed_window(seq)
         np.testing.assert_array_equal(cached, expected)
+
+
+# ---- verify_complete (crash-truncated-strain integrity gate) ----
+
+
+def _seed_cache(tmp_path: Path, payload: dict[str, dict[str, np.ndarray]]) -> EmbeddingCache:
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=4)
+    for sid, genes in payload.items():
+        for gid, arr in genes.items():
+            cache.put(sid, gid, arr.astype(np.float32))
+    return cache
+
+
+def test_verify_complete_all_present(tmp_path: Path):
+    cache = _seed_cache(
+        tmp_path,
+        {"s1": {"g1": np.ones(4), "g2": np.full(4, 2.0)}},
+    )
+    report = cache.verify_complete({"s1": {"g1", "g2"}})
+    assert report.status == {"s1": "complete"}
+    assert report.all_complete is True
+    assert report.counts == {"complete": 1}
+    assert report.missing_genes["s1"] == []
+    assert report.corrupt_details["s1"] == []
+
+
+def test_verify_complete_partial_strain_flagged(tmp_path: Path):
+    # Half-flushed strain: 1 of 3 expected genes cached.
+    cache = _seed_cache(tmp_path, {"s1": {"g1": np.ones(4)}})
+    report = cache.verify_complete({"s1": {"g1", "g2", "g3"}})
+    assert report.status == {"s1": "partial"}
+    assert report.all_complete is False
+    assert sorted(report.missing_genes["s1"]) == ["g2", "g3"]
+    assert report.cached_n["s1"] == 1
+    assert report.expected_n["s1"] == 3
+
+
+def test_verify_complete_absent_strain(tmp_path: Path):
+    # Strain expected by cohort but never written to cache.
+    cache = _seed_cache(tmp_path, {"s1": {"g1": np.ones(4)}})
+    report = cache.verify_complete({"s1": {"g1"}, "s2": {"gA", "gB"}})
+    assert report.status["s1"] == "complete"
+    assert report.status["s2"] == "absent"
+    assert report.all_complete is False
+    assert sorted(report.missing_genes["s2"]) == ["gA", "gB"]
+    assert report.cached_n["s2"] == 0
+
+
+def test_verify_complete_corrupt_non_finite_values(tmp_path: Path):
+    nan_emb = np.array([1.0, np.nan, 3.0, 4.0])
+    cache = _seed_cache(tmp_path, {"s1": {"g1": nan_emb, "g2": np.ones(4)}})
+    report = cache.verify_complete({"s1": {"g1", "g2"}})
+    assert report.status == {"s1": "corrupt"}
+    assert report.all_complete is False
+    assert any("non-finite" in d for d in report.corrupt_details["s1"])
+
+
+def test_verify_complete_corrupt_wrong_shape(tmp_path: Path):
+    # Bypass cache.put (which validates shape) to seed a corrupt dataset
+    # directly via h5py — simulates a half-written embedding row.
+    cache = EmbeddingCache(tmp_path / "cache.h5", "mock", "v1", embedding_dim=4)
+    cache.put("s1", "g1", np.ones(4, dtype=np.float32))
+    with h5py.File(cache.path, "a") as f:
+        f.create_dataset("strains/s1/g2", data=np.ones(2, dtype=np.float32))
+    report = cache.verify_complete({"s1": {"g1", "g2"}})
+    assert report.status == {"s1": "corrupt"}
+    assert any("shape=" in d for d in report.corrupt_details["s1"])
+
+
+def test_verify_complete_stage1_consumer_must_refuse_on_partial(tmp_path: Path):
+    # Regression pin for the half-flushed-strain landmine: Stage 1's loader
+    # admits a strain on >=1 cached gene + mean-pools whatever's there. The
+    # `all_complete` property is the consumer-side refuse signal.
+    cache = _seed_cache(tmp_path, {"s1": {"g1": np.ones(4)}})
+    report = cache.verify_complete({"s1": {"g1", "g2"}})
+    assert report.all_complete is False  # consumer MUST bail
+
+
+def test_verify_complete_empty_input_is_not_complete(tmp_path: Path):
+    # Defensive: empty expected-genes dict shouldn't trick all_complete into True.
+    cache = _seed_cache(tmp_path, {"s1": {"g1": np.ones(4)}})
+    report = cache.verify_complete({})
+    assert report.all_complete is False
+    assert report.counts == {}
+
+
+def test_verify_complete_returns_completeness_report_dataclass(tmp_path: Path):
+    cache = _seed_cache(tmp_path, {"s1": {"g1": np.ones(4)}})
+    report = cache.verify_complete({"s1": {"g1"}})
+    assert isinstance(report, CompletenessReport)

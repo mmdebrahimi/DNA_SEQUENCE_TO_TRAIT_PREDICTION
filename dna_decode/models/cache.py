@@ -60,6 +60,42 @@ class CacheMetadata:
     pooling_strategy: str = DEFAULT_POOLING_STRATEGY
 
 
+@dataclass(frozen=True)
+class CompletenessReport:
+    """Per-strain completeness audit of an embedding cache.
+
+    Produced by `EmbeddingCache.verify_complete`. The `status` value per strain:
+        - "complete": every expected gene is cached AND every cached embedding
+                      passes shape/dtype/finite validation
+        - "partial":  some expected genes missing; cached genes are all valid
+        - "absent":   strain has no group in the cache
+        - "corrupt":  at least one cached embedding fails shape or finite check
+
+    Consumers MUST refuse to proceed unless `all_complete` is True. Stage 1's
+    mean-pooling consumer aggregates whatever cached genes exist via
+    `list_genes` + `bulk_get`, so a strain with status != "complete" is a
+    silent landmine — a half-flushed strain would feed a partial-gene mean into
+    the classifier and the verdict would never know.
+    """
+
+    status: dict[str, str]
+    expected_n: dict[str, int]
+    cached_n: dict[str, int]
+    missing_genes: dict[str, list[str]]
+    corrupt_details: dict[str, list[str]]
+
+    @property
+    def all_complete(self) -> bool:
+        return bool(self.status) and all(s == "complete" for s in self.status.values())
+
+    @property
+    def counts(self) -> dict[str, int]:
+        out: dict[str, int] = {}
+        for s in self.status.values():
+            out[s] = out.get(s, 0) + 1
+        return out
+
+
 class EmbeddingCache:
     """HDF5 wrapper for (strain, gene) -> embedding lookups.
 
@@ -193,6 +229,77 @@ class EmbeddingCache:
             if grp_path not in f:
                 return []
             return sorted(f[grp_path].keys())
+
+    def verify_complete(
+        self,
+        expected_genes_by_strain: dict[str, set[str]] | dict[str, list[str]],
+    ) -> CompletenessReport:
+        """Audit cache completeness per strain. Read-only.
+
+        For each strain in `expected_genes_by_strain`, compares expected gene IDs
+        against what's actually cached and validates each cached embedding's
+        shape == (embedding_dim,) + dtype is float-compatible + all values are
+        finite. Opens the HDF5 file ONCE for the entire audit.
+
+        Stage 1 (and any future consumer that mean-pools whatever cached genes
+        exist) MUST call this and bail unless `report.all_complete` is True.
+        The crash-truncated-strain failure mode (cache.populate's gene-level
+        skip + Stage 1's gene-list-then-mean aggregation) silently feeds a
+        partial mean into the classifier otherwise.
+        """
+        status: dict[str, str] = {}
+        expected_n: dict[str, int] = {}
+        cached_n: dict[str, int] = {}
+        missing_genes: dict[str, list[str]] = {}
+        corrupt_details: dict[str, list[str]] = {}
+
+        with self._h5py.File(self.path, "r") as f:
+            for strain_id, expected_iter in expected_genes_by_strain.items():
+                expected = set(expected_iter)
+                expected_n[strain_id] = len(expected)
+                grp_path = f"strains/{strain_id}"
+                if grp_path not in f:
+                    status[strain_id] = "absent"
+                    cached_n[strain_id] = 0
+                    missing_genes[strain_id] = sorted(expected)
+                    corrupt_details[strain_id] = []
+                    continue
+                cached = set(f[grp_path].keys())
+                cached_n[strain_id] = len(cached)
+                missing = sorted(expected - cached)
+                missing_genes[strain_id] = missing
+
+                corrupt: list[str] = []
+                for g in cached:
+                    try:
+                        arr = f[f"{grp_path}/{g}"][()]
+                    except Exception as e:  # h5py read failures
+                        corrupt.append(f"{g}: read failed ({type(e).__name__})")
+                        continue
+                    if arr.shape != (self.embedding_dim,):
+                        corrupt.append(f"{g}: shape={arr.shape}")
+                        continue
+                    if not np.issubdtype(arr.dtype, np.floating):
+                        corrupt.append(f"{g}: dtype={arr.dtype}")
+                        continue
+                    if not np.isfinite(arr).all():
+                        corrupt.append(f"{g}: non-finite values")
+                corrupt_details[strain_id] = corrupt
+
+                if corrupt:
+                    status[strain_id] = "corrupt"
+                elif missing:
+                    status[strain_id] = "partial"
+                else:
+                    status[strain_id] = "complete"
+
+        return CompletenessReport(
+            status=status,
+            expected_n=expected_n,
+            cached_n=cached_n,
+            missing_genes=missing_genes,
+            corrupt_details=corrupt_details,
+        )
 
     # ---- bulk operations ----
 
