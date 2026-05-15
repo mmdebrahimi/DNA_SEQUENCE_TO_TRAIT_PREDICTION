@@ -74,6 +74,81 @@ def test_parse_gff3_extracts_gene_id_and_locus_tag(gff3_file: Path):
     assert "TAG_001" in cds["locus_tag"].values
 
 
+def test_parse_gff3_populates_gene_symbol_from_gene_attribute(gff3_file: Path):
+    # The 'gene' row in SAMPLE_GFF3 has gene=gyrA; CDS rows have no gene= attribute
+    # so gene_symbol must be empty for those.
+    df = ann.parse_gff3(gff3_file)
+    gene_rows = df[df["type"] == "gene"]
+    assert "gyrA" in gene_rows["gene_symbol"].values
+    cds_rows = df[df["type"] == "CDS"]
+    assert set(cds_rows["gene_symbol"].values) == {""}  # no gene= attribute → empty
+
+
+def test_parse_gff3_gene_id_not_overwritten_by_symbol(gff3_file: Path):
+    # gene_id must remain the GFF3 ID= attribute, NOT collapse to gene symbol.
+    # This preserves the embedding-cache key contract in extract_cds_sequences.
+    df = ann.parse_gff3(gff3_file)
+    gene_rows = df[df["type"] == "gene"]
+    assert "gene1" in gene_rows["gene_id"].values  # from ID=gene1
+    assert "gyrA" not in gene_rows["gene_id"].values  # symbol stayed out of gene_id
+
+
+# Bakta-style GFF3: gene symbol lives on the parent `gene` row;
+# CDS rows reference it via Parent= attribute. The parent->CDS propagation
+# (added 2026-05-14 per Stage 2 prep) lets gene-presence comparator generalize
+# without re-entering INDETERMINATE_IDENTIFIER_OOV after Bakta re-annotation.
+
+BAKTA_STYLE_GFF3 = """\
+##gff-version 3
+seq1\tBakta\tgene\t1\t1500\t.\t+\t.\tID=gene-bakta-001;gene=gyrA;locus_tag=BAKTA_001
+seq1\tBakta\tCDS\t1\t1500\t.\t+\t0\tID=cds-bakta-001;Parent=gene-bakta-001;locus_tag=BAKTA_001;product=DNA gyrase subunit A
+seq1\tBakta\tgene\t2000\t3500\t.\t-\t.\tID=gene-bakta-002;gene=parC;locus_tag=BAKTA_002
+seq1\tBakta\tCDS\t2000\t3500\t.\t-\t0\tID=cds-bakta-002;Parent=gene-bakta-002;locus_tag=BAKTA_002;product=topoisomerase IV subunit A
+seq1\tBakta\tCDS\t5000\t5500\t.\t+\t0\tID=cds-bakta-003;locus_tag=BAKTA_003;product=hypothetical protein
+"""
+
+
+@pytest.fixture
+def bakta_gff3_file(tmp_path: Path) -> Path:
+    p = tmp_path / "bakta.gff3"
+    p.write_text(BAKTA_STYLE_GFF3, encoding="utf-8")
+    return p
+
+
+def test_parse_gff3_propagates_gene_symbol_from_parent_gene_to_cds(bakta_gff3_file: Path):
+    df = ann.parse_gff3(bakta_gff3_file)
+    cds_rows = df[df["type"] == "CDS"].copy().reset_index(drop=True)
+    # First CDS has Parent=gene-bakta-001 -> should inherit gene_symbol "gyrA"
+    assert cds_rows.iloc[0]["gene_symbol"] == "gyrA"
+    # Second CDS has Parent=gene-bakta-002 -> should inherit "parC"
+    assert cds_rows.iloc[1]["gene_symbol"] == "parC"
+    # Third CDS has no Parent and no own gene= -> stays empty (not all CDSs have gene names)
+    assert cds_rows.iloc[2]["gene_symbol"] == ""
+
+
+def test_parse_gff3_same_row_gene_attribute_wins_over_parent(tmp_path: Path):
+    """If a CDS row has its own gene= attribute, it must NOT be overwritten by parent propagation."""
+    gff3 = """\
+##gff-version 3
+seq1\tBakta\tgene\t1\t100\t.\t+\t.\tID=gene-1;gene=parent_symbol
+seq1\tBakta\tCDS\t1\t100\t.\t+\t0\tID=cds-1;Parent=gene-1;gene=cds_own_symbol
+"""
+    p = tmp_path / "conflict.gff3"
+    p.write_text(gff3, encoding="utf-8")
+    df = ann.parse_gff3(p)
+    cds_row = df[df["type"] == "CDS"].iloc[0]
+    assert cds_row["gene_symbol"] == "cds_own_symbol"  # CDS's own attribute wins
+
+
+def test_parse_gff3_refseq_style_unaffected_by_propagation(gff3_file: Path):
+    """RefSeq-style GFF3 (gene= only on CDS rows, no parent gene rows) must work as before."""
+    df = ann.parse_gff3(gff3_file)
+    # The original SAMPLE_GFF3 fixture has gene=gyrA on a `gene` row, no Parent= on CDS rows
+    # CDS rows should remain empty gene_symbol (no propagation since CDS rows have no Parent=)
+    cds_rows = df[df["type"] == "CDS"]
+    assert set(cds_rows["gene_symbol"].values) == {""}  # same as before the patch
+
+
 def test_parse_gff3_preserves_strand(gff3_file: Path):
     df = ann.parse_gff3(gff3_file)
     strands = set(df[df["type"] == "CDS"]["strand"])

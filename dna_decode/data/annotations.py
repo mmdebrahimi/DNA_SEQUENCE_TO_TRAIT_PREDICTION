@@ -22,6 +22,7 @@ ANNOTATION_COLUMNS = (
     "end",
     "strand",
     "gene_id",
+    "gene_symbol",
     "locus_tag",
     "product",
 )
@@ -62,9 +63,23 @@ def _gff3_lines(path: Path) -> Iterator[str]:
 def parse_gff3(path: Path | str) -> AnnotationTable:
     """Parse a GFF3 file into the stable AnnotationTable schema.
 
+    Two-pass parent->CDS gene_symbol propagation (added 2026-05-14 per
+    `plans/Stage2_N150_Prep_Plan.md` Phase A.4 defensive fix). Bakta-style
+    GFF3 typically places `gene=gyrA` only on the parent `gene` row; CDS
+    rows linked by `Parent=` lack the attribute. Without propagation,
+    the gene-presence comparator would re-enter INDETERMINATE_IDENTIFIER_OOV
+    after Bakta re-annotation despite the annotation upgrade.
+
+    Pass 1: collect all rows + build parent_id -> gene_symbol map from
+    rows whose type == "gene" and have a non-empty `gene=` attribute.
+    Pass 2: for rows with empty gene_symbol but populated Parent= attribute,
+    inherit gene_symbol from the parent. Same-row `gene=` always wins over
+    parent inheritance (preserves existing RefSeq behavior).
+
     Raises AnnotationParseError on malformed lines (with line-number context).
     """
-    rows: list[dict[str, object]] = []
+    parsed_rows: list[tuple[dict[str, object], dict[str, str]]] = []
+    parent_id_to_gene_symbol: dict[str, str] = {}
     path = Path(path)
     for lineno, line in enumerate(_gff3_lines(path), start=1):
         fields = line.split("\t")
@@ -81,21 +96,35 @@ def parse_gff3(path: Path | str) -> AnnotationTable:
                 f"GFF3 line {lineno}: non-integer start/end ({start}/{end})"
             ) from e
         attr_map = _parse_gff3_attrs(attrs)
-        rows.append(
-            {
-                "seqid": seqid,
-                "source": source,
-                "type": type_,
-                "start": start_i,
-                "end": end_i,
-                "strand": strand,
-                "gene_id": attr_map.get("ID", attr_map.get("Name", "")),
-                "locus_tag": attr_map.get("locus_tag", ""),
-                "product": attr_map.get("product", ""),
-            }
-        )
+        row = {
+            "seqid": seqid,
+            "source": source,
+            "type": type_,
+            "start": start_i,
+            "end": end_i,
+            "strand": strand,
+            "gene_id": attr_map.get("ID", attr_map.get("Name", "")),
+            "gene_symbol": attr_map.get("gene", ""),
+            "locus_tag": attr_map.get("locus_tag", ""),
+            "product": attr_map.get("product", ""),
+        }
+        # Build the parent-id -> gene_symbol lookup from gene-type rows that
+        # carry an own gene= attribute. Used in pass 2 below for Bakta-style
+        # GFF3 where CDS rows lack gene= but reference a parent gene row.
+        if type_ == "gene" and row["gene_symbol"] and row["gene_id"]:
+            parent_id_to_gene_symbol[str(row["gene_id"])] = str(row["gene_symbol"])
+        parsed_rows.append((row, attr_map))
 
-    return pd.DataFrame(rows, columns=list(ANNOTATION_COLUMNS))
+    # Pass 2: propagate parent gene_symbol to CDS/RNA rows that lack their own
+    if parent_id_to_gene_symbol:
+        for row, attr_map in parsed_rows:
+            if row["gene_symbol"]:
+                continue  # same-row gene= wins
+            parent = attr_map.get("Parent", "")
+            if parent and parent in parent_id_to_gene_symbol:
+                row["gene_symbol"] = parent_id_to_gene_symbol[parent]
+
+    return pd.DataFrame([row for row, _ in parsed_rows], columns=list(ANNOTATION_COLUMNS))
 
 
 def parse_genbank(path: Path | str) -> AnnotationTable:
@@ -122,6 +151,7 @@ def parse_genbank(path: Path | str) -> AnnotationTable:
                     "end": end,
                     "strand": strand,
                     "gene_id": quals.get("gene", [""])[0],
+                    "gene_symbol": quals.get("gene", [""])[0],
                     "locus_tag": quals.get("locus_tag", [""])[0],
                     "product": quals.get("product", [""])[0],
                 }
