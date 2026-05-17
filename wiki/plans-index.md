@@ -1,6 +1,32 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: Cipro_Decision_Bundle_Technical_Plan.md] 2026-05-17
+**Summary:** Implementation blueprint for the post-SUSPEND_CONDITION_4 decision bundle, scoped down per /review reductions: collapse Tier 0 Steps 1-2 into one script, drop Bakta + circular variants, defer mean+max preflight v3.
+**Key decisions:**
+- 12 steps across 5 waves: Wave 0 (3 parallel foundation refactors) → Wave 1 (5 parallel test+consumer) → Wave 2 (2 parallel tests) → Wave 3 (manual census+manifest run) → Wave 4 (conditional label-sensitivity LOSO)
+- Critical path: Step 1 → Step 7 → Step 9 → Step 11 → Step 12 (5 waves; 3 code + 2 runtime); max parallelism = 5 agents (Wave 1)
+- /review reductions absorbed: collapse census + manifest into one script (Step 7), drop Bakta smoke + mechanism completeness + 3 of 5 manifest variants + --ignore-gate flag, defer mean+max preflight v3 to a conditional follow-up
+- Pre-conditions PC1 (D9 framing lock) + PC2 (D4 numeric threshold) are user-locked BEFORE Wave 3 runs (not enforced by code)
+- Source plan drift flagged: `plans/Cipro_Decision_Bundle_Plan.md` still contains un-reduced spec; should be edited in-place before /execute-plan per 2026-05-14 HIGH-salience lesson
+
+---
+
+## [plan_file: Cipro_Decision_Bundle_Plan.md] 2026-05-17
+**Summary:** Tier-0 cheap decision bundle on N=38 + BV-BRC MIC census, fired BEFORE any Databricks burst or per-gene NT diagnostic. Replaces the rejected binary Path A vs Path B framing after SUSPEND_CONDITION_4 verdict landed 2026-05-17.
+**Key decisions:**
+- D1: Replace binary A/B with 4-tier decision bundle (Tier 0 cheap → Tier 3 large spend gated)
+- D2: BV-BRC census must cover multiple phenotype policies (HIGH_R/HIGH_S + CLSI-strict + EUCAST-strict)
+- D3: Frozen label-policy manifest before any relabeling experiment (single source of truth, no hand-coded overrides)
+- D4: Primary estimand for relabeling = per-strain error concentration + rank-order stability, NOT max AUROC
+- D5: Mean+max attribution preflight v3 is a closeout falsifier (Tier 1), not a fork-decider
+- D6: Curated baseline informational run needs 3rd verdict field `given_suspended_gate: INFORMATIONAL_ONLY`
+- D7: Bakta 4-strain smoke selection requires a negative-control strain (borderline_S no-mech)
+- D8: Mechanism completeness — AMRFinder differential test first, manual blastn only on discordant rows
+- D9 (open tradeoff): Phase 1 EP1 deliverable framing ("publish" vs "ship working classifier") affects Tier 2/3 weights — user must lock before Tier 3 fires
+
+---
+
 ## [plan_file: Return_Decision_Tree_Patch_Plan.md] 2026-05-16
 **Summary:** Apply the /review synthesis's 3 surgical correctness fixes + structural restructure to `wiki/return_decision_tree_2026-05-16.md`, plus the one-line `-u` flag fix to `run_stage1b_detached.bat`. Implementation-ready under 4 steps; max parallelism 2 (doc + bat are independent).
 **Key decisions:**
