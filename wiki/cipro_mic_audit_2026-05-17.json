@@ -1,0 +1,1311 @@
+{
+  "cohort_path": "data\\processed\\gate_b_n40_cipro_cohort.parquet",
+  "ast_csv": "C:\\Users\\Farshad\\Downloads\\BVBRC_genome_amr.csv",
+  "drug": "ciprofloxacin",
+  "breakpoints": {
+    "clsi_r": 2.0,
+    "clsi_s": 0.5,
+    "eucast_r": 1.0,
+    "eucast_s": 0.25
+  },
+  "n_cohort": 40,
+  "r_tier_counts": {
+    "HIGH_R": 7,
+    "BORDERLINE": 3,
+    "NO_MIC": 9,
+    "CONFLICT": 1
+  },
+  "s_tier_counts": {
+    "DECISIVE": 1,
+    "AMBIGUOUS": 3,
+    "BORDERLINE": 12,
+    "NO_MIC": 4
+  },
+  "decisive_R_ids": [
+    "1328433.3",
+    "562.12960",
+    "562.17621",
+    "562.17721",
+    "562.28805",
+    "562.30362",
+    "562.50250"
+  ],
+  "decisive_S_ids": [],
+  "verdict": "NOISY",
+  "per_strain": [
+    {
+      "strain_id": "1045010.61",
+      "accession": "GCA_008727135.1",
+      "mlst": "MLST.ecoli_achtman_4.11",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 3,
+      "n_mic_rows": 2,
+      "tier": "DECISIVE",
+      "detail": {
+        "median_mic": 0.1325,
+        "min_mic": 0.015,
+        "max_mic": 0.25,
+        "n_mic_rows": 2,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.06625,
+        "distance_to_clsi_s": 0.265
+      },
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.015,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "1328432.3",
+      "accession": "GCA_000492655.1",
+      "mlst": "MLST.ecoli_achtman_4.2569",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "AMBIGUOUS",
+      "detail": {
+        "median_mic": 0.5,
+        "min_mic": 0.5,
+        "max_mic": 0.5,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "I",
+        "distance_to_clsi_r": 0.25,
+        "distance_to_clsi_s": 1.0
+      },
+      "rows": [
+        {
+          "mic_value": 0.5,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "1328433.3",
+      "accession": "GCA_000522345.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 8.0,
+        "min_mic": 8.0,
+        "max_mic": 8.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 4.0,
+        "distance_to_clsi_s": 16.0
+      },
+      "rows": [
+        {
+          "mic_value": 8.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "1328434.3",
+      "accession": "GCA_000522325.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 4.0,
+        "min_mic": 4.0,
+        "max_mic": 4.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 2.0,
+        "distance_to_clsi_s": 8.0
+      },
+      "rows": [
+        {
+          "mic_value": 4.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.12960",
+      "accession": "GCF_001874845.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 16.0,
+        "min_mic": 16.0,
+        "max_mic": 16.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 8.0,
+        "distance_to_clsi_s": 32.0
+      },
+      "rows": [
+        {
+          "mic_value": 16.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.13502",
+      "accession": "GCF_001747365.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.16325",
+      "accession": "GCA_002056065.1",
+      "mlst": "MLST.ecoli_achtman_4.1408",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 2,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 2,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.16326",
+      "accession": "GCA_002056145.1",
+      "mlst": "MLST.ecoli_achtman_4.1809",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 2,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 2,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.17621",
+      "accession": "GCA_002192295.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 16.0,
+        "min_mic": 16.0,
+        "max_mic": 16.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 8.0,
+        "distance_to_clsi_s": 32.0
+      },
+      "rows": [
+        {
+          "mic_value": 16.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.17721",
+      "accession": "GCA_002201835.1",
+      "mlst": "MLST.ecoli_achtman_4.1284",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 3,
+      "n_mic_rows": 2,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 12.0,
+        "min_mic": 8.0,
+        "max_mic": 16.0,
+        "n_mic_rows": 2,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 6.0,
+        "distance_to_clsi_s": 24.0
+      },
+      "rows": [
+        {
+          "mic_value": 16.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        },
+        {
+          "mic_value": 8.0,
+          "mic_sign": ">",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.22426",
+      "accession": "GCA_002180135.1",
+      "mlst": "MLST.Escherichia_coli_1.167,MLST.Escherichia_coli_2.2",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.28389",
+      "accession": "GCA_002948655.1",
+      "mlst": "MLST.ecoli_achtman_4.1276",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.28563",
+      "accession": "GCA_002999075.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.28565",
+      "accession": "GCA_003000595.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.28805",
+      "accession": "GCA_003073955.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 8.0,
+        "min_mic": 8.0,
+        "max_mic": 8.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 4.0,
+        "distance_to_clsi_s": 16.0
+      },
+      "rows": [
+        {
+          "mic_value": 8.0,
+          "mic_sign": ">",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.30362",
+      "accession": "GCA_003204155.1",
+      "mlst": "MLST.ecoli_achtman_4.4",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 16.0,
+        "min_mic": 16.0,
+        "max_mic": 16.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 8.0,
+        "distance_to_clsi_s": 32.0
+      },
+      "rows": [
+        {
+          "mic_value": 16.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.45848",
+      "accession": "GCA_004567065.1",
+      "mlst": "MLST.ecoli_achtman_4.349",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.45851",
+      "accession": "GCA_004567345.1",
+      "mlst": "MLST.ecoli_achtman_4.372",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "CONFLICT",
+      "detail": {
+        "distinct_calls": [
+          "RESISTANT",
+          "SUSCEPTIBLE"
+        ]
+      },
+      "rows": [
+        {
+          "mic_value": 4.0,
+          "mic_sign": ">=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Resistant",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.45853",
+      "accession": "GCA_004567665.1",
+      "mlst": "MLST.ecoli_achtman_4.315",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 1,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.50237",
+      "accession": "GCA_004566685.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.50245",
+      "accession": "GCA_004566865.1",
+      "mlst": "MLST.ecoli_achtman_4.1431",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.50250",
+      "accession": "GCA_004566955.1",
+      "mlst": "MLST.ecoli_achtman_4.44",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "HIGH_R",
+      "detail": {
+        "median_mic": 8.0,
+        "min_mic": 8.0,
+        "max_mic": 8.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 4.0,
+        "distance_to_clsi_s": 16.0
+      },
+      "rows": [
+        {
+          "mic_value": 8.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.50252",
+      "accession": "GCA_004566985.1",
+      "mlst": "MLST.ecoli_achtman_4.393",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.50287",
+      "accession": "GCA_004567805.1",
+      "mlst": "MLST.ecoli_achtman_4.442",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.50295",
+      "accession": "GCA_004568615.1",
+      "mlst": "MLST.Escherichia_coli_1.131",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 2,
+      "tier": "AMBIGUOUS",
+      "detail": {
+        "median_mic": 1.0,
+        "min_mic": 1.0,
+        "max_mic": 1.0,
+        "n_mic_rows": 2,
+        "clsi_call": "I",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 0.5,
+        "distance_to_clsi_s": 2.0
+      },
+      "rows": [
+        {
+          "mic_value": 1.0,
+          "mic_sign": "=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "CLSI",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 1.0,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.50301",
+      "accession": "GCA_004569855.1",
+      "mlst": "MLST.ecoli_achtman_4.1317",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 1,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.50304",
+      "accession": "GCA_004569995.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 1,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.52722",
+      "accession": "GCA_009650035.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.59220",
+      "accession": "GCA_902807115.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 0,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": []
+    },
+    {
+      "strain_id": "562.7572",
+      "accession": "GCA_001277535.1",
+      "mlst": "MLST.ecoli_achtman_4.301",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 3,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 4.0,
+        "min_mic": 4.0,
+        "max_mic": 4.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 2.0,
+        "distance_to_clsi_s": 8.0
+      },
+      "rows": [
+        {
+          "mic_value": 4.0,
+          "mic_sign": ">=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Resistant",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Resistant",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7575",
+      "accession": "GCA_001277595.1",
+      "mlst": "MLST.ecoli_achtman_4.337",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7627",
+      "accession": "GCA_001283345.2",
+      "mlst": "MLST.Escherichia_coli_1.4554",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 2,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 2,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7641",
+      "accession": "GCA_001283625.2",
+      "mlst": "MLST.Escherichia_coli_1.5543",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 1,
+      "n_mic_rows": 0,
+      "tier": "NO_MIC",
+      "detail": {},
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7690",
+      "accession": "GCA_001284605.1",
+      "mlst": "MLST.ecoli_achtman_4.2144",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 3,
+      "n_mic_rows": 2,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 2,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7695",
+      "accession": "GCA_001284705.1",
+      "mlst": "MLST.ecoli_achtman_4.2089",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7699",
+      "accession": "GCA_001284785.1",
+      "mlst": "MLST.ecoli_achtman_4.335",
+      "cohort_binary_label": 1,
+      "cohort_binary_R_or_S": "R",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 4.0,
+        "min_mic": 4.0,
+        "max_mic": 4.0,
+        "n_mic_rows": 1,
+        "clsi_call": "R",
+        "eucast_call": "R",
+        "distance_to_clsi_r": 2.0,
+        "distance_to_clsi_s": 8.0
+      },
+      "rows": [
+        {
+          "mic_value": 4.0,
+          "mic_sign": ">=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Resistant",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Resistant",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7710",
+      "accession": "GCA_001285005.1",
+      "mlst": "MLST.ecoli_achtman_4.3",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 3,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7717",
+      "accession": "GCA_001285145.1",
+      "mlst": "MLST.ecoli_achtman_4.2346",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 1,
+      "n_mic_rows": 1,
+      "tier": "AMBIGUOUS",
+      "detail": {
+        "median_mic": 0.5,
+        "min_mic": 0.5,
+        "max_mic": 0.5,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "I",
+        "distance_to_clsi_r": 0.25,
+        "distance_to_clsi_s": 1.0
+      },
+      "rows": [
+        {
+          "mic_value": 0.5,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7784",
+      "accession": "GCA_001286485.1",
+      "mlst": "MLST.ecoli_achtman_4.2678",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 3,
+      "n_mic_rows": 2,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 2,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": 0.25,
+          "mic_sign": "<=",
+          "mic_unit": "mg/L",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "Broth dilution",
+          "testing_standard": "EUCAST",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    },
+    {
+      "strain_id": "562.7789",
+      "accession": "GCA_001286605.1",
+      "mlst": "MLST.ecoli_achtman_4.123",
+      "cohort_binary_label": 0,
+      "cohort_binary_R_or_S": "S",
+      "n_ast_rows": 2,
+      "n_mic_rows": 1,
+      "tier": "BORDERLINE",
+      "detail": {
+        "median_mic": 0.25,
+        "min_mic": 0.25,
+        "max_mic": 0.25,
+        "n_mic_rows": 1,
+        "clsi_call": "S",
+        "eucast_call": "S",
+        "distance_to_clsi_r": 0.125,
+        "distance_to_clsi_s": 0.5
+      },
+      "rows": [
+        {
+          "mic_value": 0.25,
+          "mic_sign": "",
+          "mic_unit": "mg/L",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "",
+          "source": ""
+        },
+        {
+          "mic_value": null,
+          "mic_sign": "",
+          "mic_unit": "",
+          "method": "",
+          "testing_standard": "",
+          "phenotype": "Susceptible",
+          "source": ""
+        }
+      ]
+    }
+  ]
+}

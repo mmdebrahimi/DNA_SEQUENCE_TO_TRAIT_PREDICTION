@@ -51,3 +51,6 @@ logs/
 
 # Generated audit / analysis reports (re-runnable via scripts/audit_cohort.py etc.)
 /reports/
+
+# AMRFinder runs (generated artifacts; tens of MB per strain)
+/data/amrfinder_runs/
