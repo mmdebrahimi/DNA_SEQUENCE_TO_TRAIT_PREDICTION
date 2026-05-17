@@ -24,36 +24,69 @@ from datetime import date as _date
 from pathlib import Path
 
 
-def _classify_noise(row: dict) -> str:
-    """Single-row noise classification."""
+PRIMARY_CIPRO_MECHANISMS = {"QRDR_target_alteration", "plasmid_protect_modify"}
+CO_RESISTANCE_MECHANISMS = {"efflux", "regulatory", "porin_loss"}
+
+
+def _classify_noise(row: dict) -> tuple[str, bool, list[str]]:
+    """Per-row noise classification + opacity flag + co-resistance modifiers.
+
+    Returns (noise_class, mechanism_opacity_flag, co_resistance_modifiers).
+
+    - **Primary cipro mechanism** = QRDR target alteration OR plasmid quinolone
+      protection/modification (qnr / aac6-Ib-cr). These are the textbook
+      cipro-conferring mechanisms.
+    - **Co-resistance modifiers** = efflux / regulatory / porin_loss. Real
+      biology, but does NOT confer cipro-R on their own at clinically-meaningful
+      MIC levels. Reported as a separate column; does NOT drive the noise class.
+    - **Mechanism opacity flag** = True when AMRFinder mechanism status is
+      MISSING or NO_MECHANISM despite a HIGH-tier MIC (i.e., the biology may be
+      real but outside AMRFinder's catalog). Distinguishes "labels noisy" from
+      "tool incomplete" — Codex round-2 critique 2026-05-17.
+    """
     label = row.get("cohort_binary_label")
     tier = row.get("mic_tier", "?")
-    mechs = row.get("mechanisms_present", [])
+    mechs = set(row.get("mechanisms_present", []))
+    primary_present = bool(mechs & PRIMARY_CIPRO_MECHANISMS)
+    co_resistance = sorted(mechs & CO_RESISTANCE_MECHANISMS)
+    mechanism_status = row.get("mechanism_status", "MISSING")
+    opacity_flag = False
 
     if label == 1:
-        if tier == "HIGH_R" and "QRDR_target_alteration" in mechs:
-            return "CLEAN_R_QRDR"
-        if tier == "HIGH_R" and mechs:
-            return "CLEAN_R_nonQRDR"
-        if tier == "HIGH_R" and not mechs:
-            return "SUSPECT_R_no_mechanism"  # high MIC but AMRFinder finds nothing
-        if tier in {"BORDERLINE", "AMBIGUOUS", "CONFLICT"}:
-            return "NOISY_R_borderline"
-        if tier == "NO_MIC":
-            return "NOISY_R_no_mic"
-        return "OTHER_R"
+        if tier == "HIGH_R" and primary_present:
+            noise = "CLEAN_R_primary_mechanism"
+        elif tier == "HIGH_R" and not primary_present and mechs:
+            # Co-resistance only — AMRFinder finds something but not a primary
+            # cipro mechanism. Possibly a non-catalog primary OR a tool miss.
+            noise = "OPAQUE_R_co_resistance_only"
+            opacity_flag = True
+        elif tier == "HIGH_R" and not mechs:
+            # High MIC + nothing in AMRFinder catalog = tool/parser opacity
+            noise = "OPAQUE_R_no_mechanism"
+            opacity_flag = True
+        elif tier in {"BORDERLINE", "AMBIGUOUS", "CONFLICT"}:
+            noise = "NOISY_R_borderline"
+        elif tier == "NO_MIC":
+            noise = "NOISY_R_no_mic"
+        else:
+            noise = "OTHER_R"
     else:
-        if tier == "HIGH_S" and not mechs:
-            return "CLEAN_S_no_mechanism"
-        if tier == "HIGH_S" and mechs:
-            return "SUSPECT_S_silent_mechanism"
-        if mechs and tier != "HIGH_S":
-            return "SUSPECT_S_borderline_mechanism"  # S with mechanism + borderline MIC = likely mislabeled
-        if tier in {"BORDERLINE", "AMBIGUOUS", "CONFLICT"}:
-            return "NOISY_S_borderline"
-        if tier == "NO_MIC":
-            return "NOISY_S_no_mic"
-        return "OTHER_S"
+        if tier == "HIGH_S" and not primary_present:
+            noise = "CLEAN_S_no_primary_mechanism"
+        elif tier == "HIGH_S" and primary_present:
+            noise = "SUSPECT_S_silent_primary_mechanism"
+        elif primary_present and tier != "HIGH_S":
+            # Primary mechanism present + S label that isn't decisively-S
+            # is the strongest mislabeling signal.
+            noise = "SUSPECT_S_borderline_primary_mechanism"
+        elif tier in {"BORDERLINE", "AMBIGUOUS", "CONFLICT"}:
+            noise = "NOISY_S_borderline"
+        elif tier == "NO_MIC":
+            noise = "NOISY_S_no_mic"
+        else:
+            noise = "OTHER_S"
+
+    return noise, opacity_flag, co_resistance
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -103,7 +136,11 @@ def main(argv: list[str] | None = None) -> int:
             "mech_hits": mech_r.get("mech_hits", {}),
             "n_mech_hits": mech_r.get("n_hits", 0),
         }
-        row["noise_class"] = _classify_noise(row)
+        noise, opacity, co_res = _classify_noise(row)
+        row["noise_class"] = noise
+        row["mechanism_opacity_flag"] = opacity
+        row["co_resistance_modifiers"] = co_res
+        row["has_primary_cipro_mechanism"] = bool(set(row.get("mechanisms_present", [])) & PRIMARY_CIPRO_MECHANISMS)
         merged.append(row)
 
     # Aggregates
@@ -117,10 +154,13 @@ def main(argv: list[str] | None = None) -> int:
     clean_s = sum(1 for r in s_strains if r["noise_class"].startswith("CLEAN_S"))
     suspect_r = sum(1 for r in r_strains if r["noise_class"].startswith("SUSPECT_R"))
     suspect_s = sum(1 for r in s_strains if r["noise_class"].startswith("SUSPECT_S"))
+    opaque_r = sum(1 for r in r_strains if r["noise_class"].startswith("OPAQUE_R"))
     noisy_r = sum(1 for r in r_strains if r["noise_class"].startswith("NOISY_R"))
     noisy_s = sum(1 for r in s_strains if r["noise_class"].startswith("NOISY_S"))
+    opacity_count = sum(1 for r in merged if r.get("mechanism_opacity_flag"))
+    clean_count = clean_r + clean_s
 
-    cohort_signal_quality = (clean_r + clean_s) / max(1, len(merged))
+    cohort_signal_quality = clean_count / max(1, len(merged))
 
     verdict = (
         "SIGNAL_DOMINATES" if cohort_signal_quality >= 0.7 else
@@ -128,15 +168,48 @@ def main(argv: list[str] | None = None) -> int:
         "NOISE_DOMINATES"
     )
 
+    # Pre-curated-baseline gate (Patch 4): clean_count drives the next-experiment
+    # recommendation. Codex round-2 critique noted that clean_count=0 may be a
+    # MECHANISM_OPACITY problem (AMRFinder gap) rather than a label problem —
+    # so opacity_count is reported separately and acts as a tie-breaker.
+    if clean_count >= 20:
+        gate = "RUN_CURATED_BASELINE_FULL_AND_CLEAN"
+        next_step = "Run cipro_curated_baseline.py at full N=38 + on clean-subset filter. Verdict is load-bearing."
+    elif clean_count >= 10:
+        gate = "RUN_CURATED_BASELINE_FULL_ONLY"
+        next_step = "Run cipro_curated_baseline.py at full N=38 only. Verdict is descriptive — clearly note label noise upper bound."
+    elif opacity_count >= 5:
+        # High clean_count failure but high opacity = AMRFinder may be wrong,
+        # not labels. Debug AMRFinder before declaring labels unusable.
+        gate = "MECHANISM_DEBUG_BRANCH"
+        next_step = (
+            f"clean_count={clean_count} is low BUT opacity_count={opacity_count} is high — "
+            "AMRFinder may be missing mechanisms, not labels being unusable. "
+            "Run scripts/cipro_curated_baseline.py with --skip-gate flag for an INFORMATIONAL run; "
+            "separately run mechanism debug (manual gyrA/parC inspection on HIGH_R opacity strains)."
+        )
+    else:
+        gate = "SUSPEND_CONDITION_4"
+        next_step = (
+            f"clean_count={clean_count} too low AND opacity_count={opacity_count} not the bottleneck — "
+            "the N=38 cohort is structurally unusable for PIVOT TRIGGER condition 4. "
+            "Next experiments: (a) cohort expansion to N=150 with strict MIC filter, OR "
+            "(b) per-gene NT windows on the small clean set as a diagnostic."
+        )
+
     print(f"[merge] N={len(merged)} merged rows")
     print(f"\n=== Noise class distribution ===")
     for cls, n in sorted(noise_counts.items(), key=lambda x: -x[1]):
-        print(f"  {cls:30s} {n}")
-    print(f"\nClean (R+S): {clean_r}R + {clean_s}S = {clean_r + clean_s}")
+        print(f"  {cls:38s} {n}")
+    print(f"\nClean (R+S): {clean_r}R + {clean_s}S = {clean_count}")
     print(f"Suspect (R+S): {suspect_r}R + {suspect_s}S = {suspect_r + suspect_s}")
+    print(f"Opaque-R (mechanism missing): {opaque_r}")
+    print(f"Mechanism opacity flag count: {opacity_count}")
     print(f"Noisy (R+S):  {noisy_r}R + {noisy_s}S = {noisy_r + noisy_s}")
     print(f"Cohort signal quality: {cohort_signal_quality:.2f}")
     print(f"Verdict: {verdict}")
+    print(f"\nPre-curated-baseline gate: {gate}")
+    print(f"Recommended next step: {next_step}")
 
     # JSON sidecar
     json_path = args.output.with_suffix(".json")
@@ -146,11 +219,19 @@ def main(argv: list[str] | None = None) -> int:
         "mic_audit": str(args.mic_audit),
         "n_merged": len(merged),
         "noise_class_counts": dict(noise_counts),
-        "clean_count": clean_r + clean_s,
+        "clean_count": clean_count,
+        "clean_r": clean_r,
+        "clean_s": clean_s,
         "suspect_count": suspect_r + suspect_s,
+        "opaque_r": opaque_r,
+        "opacity_count": opacity_count,
         "noisy_count": noisy_r + noisy_s,
         "cohort_signal_quality": cohort_signal_quality,
         "verdict": verdict,
+        "pre_curated_gate": gate,
+        "recommended_next_step": next_step,
+        "primary_cipro_mechanisms_definition": sorted(PRIMARY_CIPRO_MECHANISMS),
+        "co_resistance_mechanisms_definition": sorted(CO_RESISTANCE_MECHANISMS),
         "per_strain": merged,
     }
     json_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
@@ -164,50 +245,61 @@ def main(argv: list[str] | None = None) -> int:
         "",
         f"## Verdict: **{verdict}**",
         f"- Cohort signal quality (CLEAN / total): **{cohort_signal_quality:.2f}**",
-        f"- Clean strains: {clean_r}R + {clean_s}S = **{clean_r + clean_s}**",
+        f"- Clean strains: {clean_r}R + {clean_s}S = **{clean_count}**",
         f"- Suspect strains: {suspect_r}R + {suspect_s}S = **{suspect_r + suspect_s}** (likely mislabeled or atypical biology)",
+        f"- Opaque-R strains (HIGH_R + no primary mechanism): **{opaque_r}** — tool/parser miss vs novel biology",
+        f"- Total opacity flagged: **{opacity_count}** (informs whether to suspect labels OR AMRFinder)",
         f"- Noisy strains: {noisy_r}R + {noisy_s}S = **{noisy_r + noisy_s}** (label is structurally unreliable)",
+        "",
+        f"## Pre-curated-baseline gate: **{gate}**",
+        f"- {next_step}",
+        "",
+        "Definitions:",
+        f"- **Primary cipro mechanism** = QRDR target alteration (gyrA/parC/parE) OR plasmid quinolone protection/modification (qnr* / aac6-Ib-cr). Textbook cipro-conferring.",
+        f"- **Co-resistance modifiers** = efflux + regulatory + porin_loss. Real biology but do not confer cipro-R alone; reported separately, do not drive noise classification.",
+        f"- **Mechanism opacity flag** = HIGH_R + no primary mechanism. AMRFinder may have a catalog gap; distinct from label noise.",
         "",
         "## Noise class distribution",
         "",
         "| class | count | meaning |",
         "|---|---:|---|",
-        f"| CLEAN_R_QRDR | {sum(1 for r in r_strains if r['noise_class']=='CLEAN_R_QRDR')} | HIGH_R MIC + textbook gyrA/parC/parE mutations |",
-        f"| CLEAN_R_nonQRDR | {sum(1 for r in r_strains if r['noise_class']=='CLEAN_R_nonQRDR')} | HIGH_R MIC + plasmid/efflux/regulatory mechanism |",
-        f"| SUSPECT_R_no_mechanism | {sum(1 for r in r_strains if r['noise_class']=='SUSPECT_R_no_mechanism')} | HIGH_R MIC but no AMRFinder hits — novel mechanism or AMRFinder gap |",
+        f"| CLEAN_R_primary_mechanism | {sum(1 for r in r_strains if r['noise_class']=='CLEAN_R_primary_mechanism')} | HIGH_R MIC + QRDR or qnr/aac present |",
+        f"| OPAQUE_R_co_resistance_only | {sum(1 for r in r_strains if r['noise_class']=='OPAQUE_R_co_resistance_only')} | HIGH_R + only efflux/regulatory/porin found — tool gap likely |",
+        f"| OPAQUE_R_no_mechanism | {sum(1 for r in r_strains if r['noise_class']=='OPAQUE_R_no_mechanism')} | HIGH_R but no AMRFinder hits at all |",
         f"| NOISY_R_borderline | {sum(1 for r in r_strains if r['noise_class']=='NOISY_R_borderline')} | borderline/ambiguous MIC — label may be wrong |",
         f"| NOISY_R_no_mic | {sum(1 for r in r_strains if r['noise_class']=='NOISY_R_no_mic')} | no MIC in BV-BRC — label is opaque |",
-        f"| CLEAN_S_no_mechanism | {sum(1 for r in s_strains if r['noise_class']=='CLEAN_S_no_mechanism')} | HIGH_S MIC + no cipro mechanism — clean susceptible |",
-        f"| SUSPECT_S_silent_mechanism | {sum(1 for r in s_strains if r['noise_class']=='SUSPECT_S_silent_mechanism')} | HIGH_S MIC but mechanism present — silent / non-functional |",
-        f"| SUSPECT_S_borderline_mechanism | {sum(1 for r in s_strains if r['noise_class']=='SUSPECT_S_borderline_mechanism')} | borderline MIC + mechanism — likely mislabeled to S |",
-        f"| NOISY_S_borderline | {sum(1 for r in s_strains if r['noise_class']=='NOISY_S_borderline')} | borderline MIC with no mechanism — label opaque |",
+        f"| CLEAN_S_no_primary_mechanism | {sum(1 for r in s_strains if r['noise_class']=='CLEAN_S_no_primary_mechanism')} | HIGH_S MIC + no QRDR / no qnr — clean susceptible |",
+        f"| SUSPECT_S_silent_primary_mechanism | {sum(1 for r in s_strains if r['noise_class']=='SUSPECT_S_silent_primary_mechanism')} | HIGH_S MIC but primary mechanism present — silent / non-functional |",
+        f"| SUSPECT_S_borderline_primary_mechanism | {sum(1 for r in s_strains if r['noise_class']=='SUSPECT_S_borderline_primary_mechanism')} | borderline MIC + primary mech — likely mislabeled to S |",
+        f"| NOISY_S_borderline | {sum(1 for r in s_strains if r['noise_class']=='NOISY_S_borderline')} | borderline MIC with no primary mech — label opaque |",
         f"| NOISY_S_no_mic | {sum(1 for r in s_strains if r['noise_class']=='NOISY_S_no_mic')} | no MIC in BV-BRC — label opaque |",
         "",
         "## Per-strain merged table",
         "",
-        "| strain_id | accession | label | mic_tier | med MIC | primary mech | mechs | noise_class | mlst |",
-        "|---|---|---|---|---:|---|---|---|---|",
+        "| strain_id | accession | label | mic_tier | med MIC | primary? | mechs | co-res | noise_class | opacity | mlst |",
+        "|---|---|---|---|---:|---|---|---|---|---|---|",
     ]
     for r in sorted(merged, key=lambda x: (x["cohort_binary_label"], x["noise_class"], x["strain_id"])):
         med_str = f"{r['median_mic']:.3f}" if r['median_mic'] is not None else "-"
         mechs_str = ",".join(r["mechanisms_present"]) if r["mechanisms_present"] else "-"
+        co_res_str = ",".join(r.get("co_resistance_modifiers", []) or []) or "-"
+        primary_str = "yes" if r.get("has_primary_cipro_mechanism") else "no"
+        opacity_str = "!" if r.get("mechanism_opacity_flag") else " "
         lines.append(
             f"| {r['strain_id']} | {r['accession']} | {r['cohort_binary_RS']} | {r['mic_tier']} | "
-            f"{med_str} | {r['primary_mechanism']} | {mechs_str} | {r['noise_class']} | {r['mlst']} |"
+            f"{med_str} | {primary_str} | {mechs_str} | {co_res_str} | {r['noise_class']} | {opacity_str} | {r['mlst']} |"
         )
     lines.extend([
         "",
-        "## How to use",
+        "## How to use (gated)",
         "",
-        "- **SIGNAL_DOMINATES (>=0.70 clean):** the cohort is clean enough that NT's FAIL on cipro is a genuine model issue, not label noise. Pivot to curated baseline / Bakta / per-gene NT.",
-        "- **MIXED (0.40-0.70 clean):** label noise is a real confounder. Re-run Stage 1 + curated baseline on the CLEAN subset only; if AUROC improves substantially, label noise was a meaningful contributor.",
-        "- **NOISE_DOMINATES (<0.40 clean):** the cohort is structurally too noisy for ANY N=38 classifier. The next leverage is either (a) curate labels manually, (b) expand cohort to N=150 with strict MIC filters, or (c) switch to a different ground-truth source than BV-BRC.",
+        f"Pre-curated-baseline gate fired: **{gate}**.",
+        f"- {next_step}",
         "",
-        "## Recommended next experiments",
-        "",
-        "1. Run **curated AMR baseline** (`scripts/cipro_curated_baseline.py`) on full N=38 first to establish a ceiling.",
-        "2. Re-run on `--restrict-to-decisive` subset to test whether label noise was the limiter.",
-        "3. If both fail and PIVOT TRIGGER condition 4 is NOT met, the next experiment is **per-gene NT windows** on the CLEAN_R_QRDR + CLEAN_S_no_mechanism strains.",
+        "Verdict-level interpretation:",
+        "- **SIGNAL_DOMINATES (>=0.70 clean):** the cohort is clean enough that NT's FAIL on cipro is a genuine model issue, not label noise. Curated baseline verdict is load-bearing.",
+        "- **MIXED (0.40-0.70 clean):** label noise is a real confounder. Curated baseline at full N is descriptive; consider a clean-subset rerun if `clean_count >= 20`.",
+        "- **NOISE_DOMINATES (<0.40 clean):** the N=38 cohort is structurally noisy. Two branches: if `opacity_count >= 5` -> AMRFinder may be missing mechanisms, debug before declaring labels unusable; otherwise -> N=150 expansion or per-gene NT diagnostic.",
         "",
         f"_JSON sidecar: `{json_path}`_",
     ])

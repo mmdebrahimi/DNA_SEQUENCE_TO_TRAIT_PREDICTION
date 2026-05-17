@@ -1,0 +1,5626 @@
+{
+  "cohort_path": "data\\processed\\gate_b_n40_cipro_cohort.parquet",
+  "refseq_cache": "D:\\dna_decode_cache\\refseq",
+  "drug": "ciprofloxacin",
+  "amrfinder_image": "ncbi/amr:4.2.7-2026-03-24.1",
+  "amrfinder_db_path": "C:/Users/Farshad/dna_decode_stage2/amrfinder_db",
+  "n_processed": 40,
+  "r_mech_counts": {
+    "QRDR_target_alteration": 18,
+    "regulatory": 8,
+    "plasmid_protect_modify": 7
+  },
+  "s_mech_counts": {
+    "plasmid_protect_modify": 2,
+    "QRDR_target_alteration": 4,
+    "regulatory": 2
+  },
+  "r_no_known_mechanism": 2,
+  "s_silent_mechanism_hits": 7,
+  "qrdr_in_R_count": 18,
+  "plasmid_in_R_count": 7,
+  "verdict": "QRDR_DOMINANT",
+  "elapsed_sec": 3.775832176208496,
+  "per_strain": [
+    {
+      "strain_id": "1045010.61",
+      "accession": "GCA_008727135.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.11",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 1,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "1328432.3",
+      "accession": "GCA_000492655.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2569",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "1328433.3",
+      "accession": "GCA_000522345.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_S30HfsTer59",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "marR_V84WfsTer14",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.60",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_E84V",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.20",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.20",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_I529L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.52",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaKPC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 16,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_S30HfsTer59",
+          "marR_V84WfsTer14"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84V",
+          "parC_S80I",
+          "parE_I529L"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "1328434.3",
+      "accession": "GCA_000522325.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "floR",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL/FLORFENICOL",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.75",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.75",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 17,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.12960",
+      "accession": "GCF_001874845.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_T5N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_E460D",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA29",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catA1",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib3",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "rmtC",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMINOGLYCOSIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3')-Ia",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "KANAMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "ble",
+          "class": "BLEOMYCIN",
+          "subclass": "BLEOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA2",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA12",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA4",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 31,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_T5N"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_E460D"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.13502",
+      "accession": "GCF_001747365.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "mcr-1.1",
+          "class": "COLISTIN",
+          "subclass": "COLISTIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.09",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sat2",
+          "class": "STREPTOTHRICIN",
+          "subclass": "STREPTOTHRICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mcr-1.1",
+          "class": "COLISTIN",
+          "subclass": "COLISTIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.16325",
+      "accession": "GCA_002056065.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.1408",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib'",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaKPC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA14",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.75",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul3",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA2",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA12",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 16,
+      "mechanisms_present": [
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "aac(6')-Ib'"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "plasmid_protect_modify"
+    },
+    {
+      "strain_id": "562.16326",
+      "accession": "GCA_002056145.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.1809",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "ble",
+          "class": "BLEOMYCIN",
+          "subclass": "BLEOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib3",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.27",
+          "coverage": "98.20",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA8",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 13,
+      "mechanisms_present": [
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "plasmid_protect_modify"
+    },
+    {
+      "strain_id": "562.17621",
+      "accession": "GCA_002192295.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_V29YfsTer44",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "ble",
+          "class": "BLEOMYCIN",
+          "subclass": "BLEOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-5",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-42",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 16,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "regulatory": [
+          "acrR_V29YfsTer44"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.17721",
+      "accession": "GCA_002201835.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1284",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib-cr5",
+          "class": "AMINOGLYCOSIDE/QUINOLONE",
+          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catB3",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "PARTIALX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "70.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(3)-IIe",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3')-VI",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "ble",
+          "class": "BLEOMYCIN",
+          "subclass": "BLEOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-42",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 26,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib",
+          "aac(6')-Ib-cr5",
+          "qnrS1"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.22426",
+      "accession": "GCA_002180135.1",
+      "cohort_label": 1,
+      "mlst": "MLST.Escherichia_coli_1.167,MLST.Escherichia_coli_2.2",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "PARTIAL_CONTIG_ENDX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "67.48",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.63",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "ble",
+          "class": "BLEOMYCIN",
+          "subclass": "BLEOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-7",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_V29YfsTer44",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "erm(B)",
+          "class": "LINCOSAMIDE/MACROLIDE/STREPTOGRAMIN",
+          "subclass": "CLINDAMYCIN/ERYTHROMYCIN/STREPTOGRAMIN B",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 18,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "regulatory": [
+          "acrR_V29YfsTer44"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.28389",
+      "accession": "GCA_002948655.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.1276",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.28563",
+      "accession": "GCA_002999075.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catA1",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib4",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catB3",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "soxS_A12S",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_E84G",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catA1",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib4",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catB3",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 21,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "aac(6')-Ib4"
+        ],
+        "regulatory": [
+          "soxS_A12S"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84G",
+          "parC_S80I"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.28565",
+      "accession": "GCA_003000595.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA8",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.28805",
+      "accession": "GCA_003073955.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA4",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.61",
+          "coverage": "97.72",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(3)-IId",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaVEB-5",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "PARTIALX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.15",
+          "coverage": "88.97",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib3",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        }
+      ],
+      "n_hits": 14,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.30362",
+      "accession": "GCA_003204155.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.4",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sat2",
+          "class": "STREPTOTHRICIN",
+          "subclass": "STREPTOTHRICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_E84G",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_E91KfsTer6",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "floR",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL/FLORFENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "PARTIALX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "50.72",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 16,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84G",
+          "parC_S80I"
+        ],
+        "regulatory": [
+          "acrR_E91KfsTer6"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.45848",
+      "accession": "GCA_004567065.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.349",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.45851",
+      "accession": "GCA_004567345.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.372",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sat2",
+          "class": "STREPTOTHRICIN",
+          "subclass": "STREPTOTHRICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 4,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.45853",
+      "accession": "GCA_004567665.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.315",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 1,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.50237",
+      "accession": "GCA_004566685.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaSHV-12",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaSHV-12",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 24,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50245",
+      "accession": "GCA_004566865.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1431",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 18,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50250",
+      "accession": "GCA_004566955.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.44",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-55",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-55",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458T"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50252",
+      "accession": "GCA_004566985.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.393",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.60",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S57T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_L416F",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "erm(B)",
+          "class": "LINCOSAMIDE/MACROLIDE/STREPTOGRAMIN",
+          "subclass": "CLINDAMYCIN/ERYTHROMYCIN/STREPTOGRAMIN B",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "98.37",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-27",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-27",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 19,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S57T",
+          "parC_S80I",
+          "parE_L416F"
+        ],
+        "regulatory": [
+          "acrR_W63Ter"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50287",
+      "accession": "GCA_004567805.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.442",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 1,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.50295",
+      "accession": "GCA_004568615.1",
+      "cohort_label": 0,
+      "mlst": "MLST.Escherichia_coli_1.131",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_A108T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 7,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L",
+          "parC_A108T",
+          "parC_S80I"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50301",
+      "accession": "GCA_004569855.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.1317",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 8,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50304",
+      "accession": "GCA_004569995.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(3)-IId",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_L416F",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.52",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mph(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "mrx(A)",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/ERYTHROMYCIN/SPIRAMYCIN/TELITHROMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(3)-IId",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 30,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_L416F"
+        ],
+        "regulatory": [
+          "marR_S3N"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.52722",
+      "accession": "GCA_009650035.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.59220",
+      "accession": "GCA_902807115.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_E84G",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_I355T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.37",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(3)-IId",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3')-Ia",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "KANAMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84G",
+          "parC_S80I",
+          "parE_I355T"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.7572",
+      "accession": "GCA_001277535.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.301",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA1",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sat2",
+          "class": "STREPTOTHRICIN",
+          "subclass": "STREPTOTHRICIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catA1",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.7575",
+      "accession": "GCA_001277595.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.337",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.64",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA14",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "PARTIALX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "65.92",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.7627",
+      "accession": "GCA_001283345.2",
+      "cohort_label": 0,
+      "mlst": "MLST.Escherichia_coli_1.4554",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "PARTIALX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "65.92",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA14",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "marR_S3N"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "regulatory"
+    },
+    {
+      "strain_id": "562.7641",
+      "accession": "GCA_001283625.2",
+      "cohort_label": 0,
+      "mlst": "MLST.Escherichia_coli_1.5543",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA8",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.7690",
+      "accession": "GCA_001284605.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2144",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.7695",
+      "accession": "GCA_001284705.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2089",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.09",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catA1",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.62",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.7699",
+      "accession": "GCA_001284785.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.335",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "parC_A108T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA19",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catB3",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "ant(2'')-Ia",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "GENTAMICIN/KANAMYCIN/TOBRAMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "catA1",
+          "class": "PHENICOL",
+          "subclass": "CHLORAMPHENICOL",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 12,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_A108T",
+          "parC_S80I"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.7710",
+      "accession": "GCA_001285005.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.3",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.7717",
+      "accession": "GCA_001285145.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2346",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(B)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "BLASTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.75",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "PARTIALX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "88.85",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA8",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 8,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ],
+        "regulatory": [
+          "marR_S3N"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.7784",
+      "accession": "GCA_001286485.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2678",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.7789",
+      "accession": "GCA_001286605.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.123",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    }
+  ]
+}

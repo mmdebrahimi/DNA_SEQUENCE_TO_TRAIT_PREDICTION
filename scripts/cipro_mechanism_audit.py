@@ -46,9 +46,15 @@ CIPRO_LOCI_BY_MECHANISM: dict[str, set[str]] = {
     },
     "efflux": {"acrA", "acrB", "tolC", "oqxA", "oqxB", "mdfA", "mdtK"},
     "porin_loss": {"ompC", "ompF"},
-    "regulatory": {"marR", "marA", "marB", "soxR", "soxS"},
+    "regulatory": {"marR", "marA", "marB", "soxR", "soxS", "acrR"},
 }
 QUINOLONE_CLASSES = {"QUINOLONE", "FLUOROQUINOLONE"}
+# Classes that AMRFinder uses for cipro-affecting regulatory / efflux / porin
+# mutations. MULTIDRUG covers marR / acrR / soxR frameshifts that disable
+# negative regulators (real biology). NOT including BETA-LACTAM / TETRACYCLINE /
+# MACROLIDE — those classifications mean AMRFinder thinks the variant affects
+# a different drug class.
+CIPRO_RELEVANT_AMR_CLASSES = QUINOLONE_CLASSES | {"MULTIDRUG"}
 
 
 def _classify_symbol(sym: str) -> str:
@@ -113,20 +119,41 @@ def _run_amrfinder(fasta: Path, out_dir: Path, timeout_sec: float = 600) -> tupl
 
 
 def _parse_amrfinder_outputs(main_tsv: Path, mut_tsv: Path) -> dict:
-    """Parse main + mutations TSVs into a structured per-strain summary."""
+    """Parse main + mutations TSVs into a structured per-strain summary.
+
+    AMRFinder's main.tsv contains BOTH acquired-gene hits (Method=ALLELEX /
+    PARTIALX / etc.) AND POINT mutation hits (Method=POINTX), the latter
+    duplicated in mutations.tsv with --mutation_all. We bucket main.tsv POINTX
+    rows as kind=mutation and dedupe by (symbol, kind=mutation) so POINT
+    mutations are not double-counted.
+    """
     hits: list[dict] = []
+    seen_mutations: set[str] = set()  # symbols already bucketed as kind=mutation
     if main_tsv.exists() and main_tsv.stat().st_size > 0:
         try:
             main_df = pd.read_csv(main_tsv, sep="\t", dtype=str, keep_default_na=False)
             for _, row in main_df.iterrows():
                 sym = row.get("Gene symbol", "") or row.get("Element symbol", "")
                 cls = row.get("Class", "")
+                method = row.get("Method", "") or ""
+                # POINTX (and HMM-equivalents) are POINT mutations; route them
+                # to kind=mutation so they merge cleanly with mutations.tsv.
+                is_point = "POINT" in method.upper()
+                kind = "mutation" if is_point else "acquired"
+                if kind == "mutation":
+                    if _is_synonymous_point(sym):
+                        continue
+                    if cls.upper() not in CIPRO_RELEVANT_AMR_CLASSES:
+                        continue
+                    if not _classify_symbol(sym):
+                        continue
+                    seen_mutations.add(sym)
                 hits.append({
-                    "kind": "acquired",
+                    "kind": kind,
                     "symbol": sym,
                     "class": cls,
                     "subclass": row.get("Subclass", ""),
-                    "method": row.get("Method", ""),
+                    "method": method,
                     "scope": row.get("Scope", ""),
                     "type": row.get("Element type", ""),
                     "identity": row.get("% Identity to reference sequence", "") or row.get("% Identity to reference", ""),
@@ -141,15 +168,19 @@ def _parse_amrfinder_outputs(main_tsv: Path, mut_tsv: Path) -> dict:
             for _, row in mut_df.iterrows():
                 sym = row.get("Gene symbol", "") or row.get("Element symbol", "")
                 cls = row.get("Class", "")
-                # mutations.tsv reports EVERY position vs reference (including
-                # synonymous + non-cipro classes). Filter to cipro-relevant only.
+                # mutations.tsv reports EVERY position vs reference. Filter to
+                # cipro-relevant AMR class (QUINOLONE for QRDR, MULTIDRUG for
+                # regulatory frameshifts) AND symbol mapping to our locus catalog.
                 if _is_synonymous_point(sym):
                     continue
-                if cls.upper() not in QUINOLONE_CLASSES:
+                if cls.upper() not in CIPRO_RELEVANT_AMR_CLASSES:
                     continue
                 mech = _classify_symbol(sym)
                 if not mech:
                     continue
+                if sym in seen_mutations:
+                    continue  # already bucketed from main.tsv POINTX row
+                seen_mutations.add(sym)
                 hits.append({
                     "kind": "mutation",
                     "symbol": sym,

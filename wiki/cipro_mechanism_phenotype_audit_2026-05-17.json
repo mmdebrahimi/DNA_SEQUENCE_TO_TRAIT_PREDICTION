@@ -1,0 +1,1208 @@
+{
+  "mech_audit": "wiki\\cipro_mechanism_audit_2026-05-17.json",
+  "mic_audit": "wiki\\cipro_mic_audit_2026-05-17.json",
+  "n_merged": 40,
+  "noise_class_counts": {
+    "OTHER_S": 1,
+    "NOISY_S_borderline": 10,
+    "CLEAN_R_primary_mechanism": 7,
+    "NOISY_R_borderline": 4,
+    "NOISY_R_no_mic": 9,
+    "SUSPECT_S_borderline_primary_mechanism": 6,
+    "NOISY_S_no_mic": 3
+  },
+  "clean_count": 7,
+  "clean_r": 7,
+  "clean_s": 0,
+  "suspect_count": 6,
+  "opaque_r": 0,
+  "opacity_count": 0,
+  "noisy_count": 26,
+  "cohort_signal_quality": 0.175,
+  "verdict": "NOISE_DOMINATES",
+  "pre_curated_gate": "SUSPEND_CONDITION_4",
+  "recommended_next_step": "clean_count=7 too low AND opacity_count=0 not the bottleneck \u2014 the N=38 cohort is structurally unusable for PIVOT TRIGGER condition 4. Next experiments: (a) cohort expansion to N=150 with strict MIC filter, OR (b) per-gene NT windows on the small clean set as a diagnostic.",
+  "primary_cipro_mechanisms_definition": [
+    "QRDR_target_alteration",
+    "plasmid_protect_modify"
+  ],
+  "co_resistance_mechanisms_definition": [
+    "efflux",
+    "porin_loss",
+    "regulatory"
+  ],
+  "per_strain": [
+    {
+      "strain_id": "1045010.61",
+      "accession": "GCA_008727135.1",
+      "mlst": "MLST.ecoli_achtman_4.11",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "DECISIVE",
+      "median_mic": 0.1325,
+      "n_mic_rows": 2,
+      "n_ast_rows": 3,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 1,
+      "noise_class": "OTHER_S",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "1328432.3",
+      "accession": "GCA_000492655.1",
+      "mlst": "MLST.ecoli_achtman_4.2569",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "AMBIGUOUS",
+      "median_mic": 0.5,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "S",
+      "eucast_call": "I",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "1328433.3",
+      "accession": "GCA_000522345.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 8.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_S30HfsTer59",
+          "marR_V84WfsTer14"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84V",
+          "parC_S80I",
+          "parE_I529L"
+        ]
+      },
+      "n_mech_hits": 16,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "1328434.3",
+      "accession": "GCA_000522325.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 4.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "n_mech_hits": 17,
+      "noise_class": "NOISY_R_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.12960",
+      "accession": "GCF_001874845.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 16.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_T5N"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_E460D"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "n_mech_hits": 31,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.13502",
+      "accession": "GCF_001747365.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 1,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "n_mech_hits": 9,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.16325",
+      "accession": "GCA_002056065.1",
+      "mlst": "MLST.ecoli_achtman_4.1408",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 2,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "plasmid_protect_modify",
+      "mechanisms_present": [
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "aac(6')-Ib'"
+        ]
+      },
+      "n_mech_hits": 16,
+      "noise_class": "SUSPECT_S_borderline_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.16326",
+      "accession": "GCA_002056145.1",
+      "mlst": "MLST.ecoli_achtman_4.1809",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 2,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "plasmid_protect_modify",
+      "mechanisms_present": [
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "n_mech_hits": 13,
+      "noise_class": "SUSPECT_S_borderline_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.17621",
+      "accession": "GCA_002192295.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 16.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "regulatory": [
+          "acrR_V29YfsTer44"
+        ]
+      },
+      "n_mech_hits": 16,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.17721",
+      "accession": "GCA_002201835.1",
+      "mlst": "MLST.ecoli_achtman_4.1284",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 12.0,
+      "n_mic_rows": 2,
+      "n_ast_rows": 3,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib",
+          "aac(6')-Ib-cr5",
+          "qnrS1"
+        ]
+      },
+      "n_mech_hits": 26,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.22426",
+      "accession": "GCA_002180135.1",
+      "mlst": "MLST.Escherichia_coli_1.167,MLST.Escherichia_coli_2.2",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "regulatory": [
+          "acrR_V29YfsTer44"
+        ]
+      },
+      "n_mech_hits": 18,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.28389",
+      "accession": "GCA_002948655.1",
+      "mlst": "MLST.ecoli_achtman_4.1276",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.28563",
+      "accession": "GCA_002999075.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "aac(6')-Ib4"
+        ],
+        "regulatory": [
+          "soxS_A12S"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84G",
+          "parC_S80I"
+        ]
+      },
+      "n_mech_hits": 21,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.28565",
+      "accession": "GCA_003000595.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 5,
+      "noise_class": "NOISY_S_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.28805",
+      "accession": "GCA_003073955.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 8.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "n_mech_hits": 14,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.30362",
+      "accession": "GCA_003204155.1",
+      "mlst": "MLST.ecoli_achtman_4.4",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 16.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84G",
+          "parC_S80I"
+        ],
+        "regulatory": [
+          "acrR_E91KfsTer6"
+        ]
+      },
+      "n_mech_hits": 16,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.45848",
+      "accession": "GCA_004567065.1",
+      "mlst": "MLST.ecoli_achtman_4.349",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.45851",
+      "accession": "GCA_004567345.1",
+      "mlst": "MLST.ecoli_achtman_4.372",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "CONFLICT",
+      "median_mic": null,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 4,
+      "noise_class": "NOISY_R_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.45853",
+      "accession": "GCA_004567665.1",
+      "mlst": "MLST.ecoli_achtman_4.315",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 1,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 1,
+      "noise_class": "NOISY_S_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.50237",
+      "accession": "GCA_004566685.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "n_mech_hits": 24,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.50245",
+      "accession": "GCA_004566865.1",
+      "mlst": "MLST.ecoli_achtman_4.1431",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "n_mech_hits": 18,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.50250",
+      "accession": "GCA_004566955.1",
+      "mlst": "MLST.ecoli_achtman_4.44",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "HIGH_R",
+      "median_mic": 8.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458T"
+        ]
+      },
+      "n_mech_hits": 6,
+      "noise_class": "CLEAN_R_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.50252",
+      "accession": "GCA_004566985.1",
+      "mlst": "MLST.ecoli_achtman_4.393",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 1,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S57T",
+          "parC_S80I",
+          "parE_L416F"
+        ],
+        "regulatory": [
+          "acrR_W63Ter"
+        ]
+      },
+      "n_mech_hits": 19,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.50287",
+      "accession": "GCA_004567805.1",
+      "mlst": "MLST.ecoli_achtman_4.442",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 1,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.50295",
+      "accession": "GCA_004568615.1",
+      "mlst": "MLST.Escherichia_coli_1.131",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "AMBIGUOUS",
+      "median_mic": 1.0,
+      "n_mic_rows": 2,
+      "n_ast_rows": 2,
+      "clsi_call": "I",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L",
+          "parC_A108T",
+          "parC_S80I"
+        ]
+      },
+      "n_mech_hits": 7,
+      "noise_class": "SUSPECT_S_borderline_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.50301",
+      "accession": "GCA_004569855.1",
+      "mlst": "MLST.ecoli_achtman_4.1317",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 1,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "n_mech_hits": 8,
+      "noise_class": "SUSPECT_S_borderline_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.50304",
+      "accession": "GCA_004569995.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 1,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_L416F"
+        ],
+        "regulatory": [
+          "marR_S3N"
+        ]
+      },
+      "n_mech_hits": 30,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.52722",
+      "accession": "GCA_009650035.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.59220",
+      "accession": "GCA_902807115.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 0,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84G",
+          "parC_S80I",
+          "parE_I355T"
+        ]
+      },
+      "n_mech_hits": 9,
+      "noise_class": "NOISY_R_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.7572",
+      "accession": "GCA_001277535.1",
+      "mlst": "MLST.ecoli_achtman_4.301",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 4.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 3,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I"
+        ]
+      },
+      "n_mech_hits": 9,
+      "noise_class": "NOISY_R_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.7575",
+      "accession": "GCA_001277595.1",
+      "mlst": "MLST.ecoli_achtman_4.337",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 6,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.7627",
+      "accession": "GCA_001283345.2",
+      "mlst": "MLST.Escherichia_coli_1.4554",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 2,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "regulatory",
+      "mechanisms_present": [
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "marR_S3N"
+        ]
+      },
+      "n_mech_hits": 5,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.7641",
+      "accession": "GCA_001283625.2",
+      "mlst": "MLST.Escherichia_coli_1.5543",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "NO_MIC",
+      "median_mic": null,
+      "n_mic_rows": 0,
+      "n_ast_rows": 1,
+      "clsi_call": null,
+      "eucast_call": null,
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 6,
+      "noise_class": "NOISY_S_no_mic",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.7690",
+      "accession": "GCA_001284605.1",
+      "mlst": "MLST.ecoli_achtman_4.2144",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 2,
+      "n_ast_rows": 3,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.7695",
+      "accession": "GCA_001284705.1",
+      "mlst": "MLST.ecoli_achtman_4.2089",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "n_mech_hits": 6,
+      "noise_class": "SUSPECT_S_borderline_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.7699",
+      "accession": "GCA_001284785.1",
+      "mlst": "MLST.ecoli_achtman_4.335",
+      "cohort_binary_label": 1,
+      "cohort_binary_RS": "R",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 4.0,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "R",
+      "eucast_call": "R",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_A108T",
+          "parC_S80I"
+        ]
+      },
+      "n_mech_hits": 12,
+      "noise_class": "NOISY_R_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.7710",
+      "accession": "GCA_001285005.1",
+      "mlst": "MLST.ecoli_achtman_4.3",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 3,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.7717",
+      "accession": "GCA_001285145.1",
+      "mlst": "MLST.ecoli_achtman_4.2346",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "AMBIGUOUS",
+      "median_mic": 0.5,
+      "n_mic_rows": 1,
+      "n_ast_rows": 1,
+      "clsi_call": "S",
+      "eucast_call": "I",
+      "mechanism_status": "OK",
+      "primary_mechanism": "QRDR_target_alteration",
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ],
+        "regulatory": [
+          "marR_S3N"
+        ]
+      },
+      "n_mech_hits": 8,
+      "noise_class": "SUSPECT_S_borderline_primary_mechanism",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [
+        "regulatory"
+      ],
+      "has_primary_cipro_mechanism": true
+    },
+    {
+      "strain_id": "562.7784",
+      "accession": "GCA_001286485.1",
+      "mlst": "MLST.ecoli_achtman_4.2678",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 2,
+      "n_ast_rows": 3,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    },
+    {
+      "strain_id": "562.7789",
+      "accession": "GCA_001286605.1",
+      "mlst": "MLST.ecoli_achtman_4.123",
+      "cohort_binary_label": 0,
+      "cohort_binary_RS": "S",
+      "mic_tier": "BORDERLINE",
+      "median_mic": 0.25,
+      "n_mic_rows": 1,
+      "n_ast_rows": 2,
+      "clsi_call": "S",
+      "eucast_call": "S",
+      "mechanism_status": "OK",
+      "primary_mechanism": "NO_MECHANISM",
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "n_mech_hits": 0,
+      "noise_class": "NOISY_S_borderline",
+      "mechanism_opacity_flag": false,
+      "co_resistance_modifiers": [],
+      "has_primary_cipro_mechanism": false
+    }
+  ]
+}

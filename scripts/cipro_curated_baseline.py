@@ -65,6 +65,28 @@ STAGE1B_NT_LR_AUROC = 0.673
 STAGE1B_NT_XGB_AUROC = 0.615
 STAGE1B_KMER_XGB_AUROC = 0.648
 
+# Amended PIVOT TRIGGER condition 4 gates (post-Experiment-2 NOISY verdict +
+# Codex round-2 critique 2026-05-17): the all-feature gate is structurally
+# circular because POINT mutations are essentially labels-in-genome-form;
+# the load-bearing gate is no-POINT (which isolates non-textbook signal)
+# OR mechanism-only at the absolute threshold (which proves AMRFinder's
+# curated mechanism panel alone matches Stage 2 burst threshold).
+AMENDED_NO_POINT_GATE_AUROC = max(0.75, STAGE1B_NT_LR_AUROC + 0.10)  # >= 0.773
+AMENDED_MECHANISM_ONLY_GATE_AUROC = BASELINE_ABSOLUTE_GATE_AUROC  # 0.80
+
+
+# Multi-block feature-set names. Each value is the tuple of blocks passed
+# to run_loso. Used by the ablation panel.
+ABLATION_FEATURE_SETS: dict[str, tuple[str, ...]] = {
+    "all": ("point", "acquired", "kmer", "mlst"),
+    "no_POINT": ("acquired", "kmer", "mlst"),
+    "mechanism_only": ("point", "acquired"),
+    "POINT_only": ("point",),
+    "kmer_only": ("kmer",),
+    "MLST_only": ("mlst",),
+    "kmer_MLST_only": ("kmer", "mlst"),
+}
+
 
 @dataclass
 class FeatureBundle:
@@ -246,8 +268,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--restrict-to-decisive", action="store_true",
                         help="Restrict LOSO to HIGH_R + HIGH_S strains from MIC audit")
-    parser.add_argument("--ablate", action="store_true",
-                        help="Also run feature-block ablations to isolate which block drives the signal")
+    # Ablation panel always runs (load-bearing for amended condition 4); no flag needed.
     args = parser.parse_args(argv)
 
     if args.output is None:
@@ -278,45 +299,73 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[curated] FAIL insufficient class balance for LOSO")
         return 3
 
-    # Primary head: full feature stack on LR + XGB
+    # Run full ablation panel (named multi-block feature sets) under XGB.
+    # Always run — single-block-only ablation is insufficient to gate the
+    # amended PIVOT TRIGGER condition 4 (Codex round-2 critique 2026-05-17).
+    print(f"[curated] running ablation panel (XGB) over {len(ABLATION_FEATURE_SETS)} feature sets...")
+    ablation_results: dict[str, float] = {}
+    ablation_cvs: dict[str, CVResult] = {}
+    for name, blocks in ABLATION_FEATURE_SETS.items():
+        print(f"  {name:18s} blocks={list(blocks)}")
+        cv = run_loso(bundle, head="xgb", drug=args.drug, feature_blocks=blocks)
+        m = compute_metrics(cv.all_y_true, cv.all_y_score)
+        ablation_results[name] = m.auroc
+        ablation_cvs[name] = cv
+        print(f"  {name:18s} XGB AUROC={m.auroc:.4f}")
+
+    # LR head over the full feature stack (sanity reference)
     print(f"[curated] running LR head (all features)...")
     cv_lr_full = run_loso(bundle, head="logreg", drug=args.drug)
-    print(f"[curated] running XGB head (all features)...")
-    cv_xgb_full = run_loso(bundle, head="xgb", drug=args.drug)
-
     m_lr = compute_metrics(cv_lr_full.all_y_true, cv_lr_full.all_y_score)
-    m_xgb = compute_metrics(cv_xgb_full.all_y_true, cv_xgb_full.all_y_score)
-    print(f"[curated] LR  AUROC={m_lr.auroc:.4f} AUPRC={m_lr.auprc:.4f}")
-    print(f"[curated] XGB AUROC={m_xgb.auroc:.4f} AUPRC={m_xgb.auprc:.4f}")
+    cv_xgb_full = ablation_cvs["all"]
+    m_xgb_auroc_full = ablation_results["all"]
+    print(f"[curated] LR  (all) AUROC={m_lr.auroc:.4f} AUPRC={m_lr.auprc:.4f}")
+    print(f"[curated] XGB (all) AUROC={m_xgb_auroc_full:.4f}")
 
-    # Feature-block ablations (XGB only — LR can be unstable on tiny blocks)
-    ablation_results: dict[str, float] = {}
-    if args.ablate:
-        for block in ("point", "acquired", "kmer", "mlst"):
-            print(f"[curated] ablating: {block} only...")
-            cv = run_loso(bundle, head="xgb", drug=args.drug, feature_blocks=(block,))
-            m = compute_metrics(cv.all_y_true, cv.all_y_score)
-            ablation_results[block] = m.auroc
-            print(f"  {block:10s} XGB AUROC={m.auroc:.4f}")
-
-    # Verdict
-    best_curated = max(m_lr.auroc, m_xgb.auroc)
+    # Two-layer verdict:
+    #   original_condition_4: frozen rule from return_decision_tree_2026-05-16.md
+    #     (>= 0.80 absolute OR beats NT by >= 10pp) using all-feature best AUROC.
+    #     Structurally circular when POINT mutations dominate; reported for
+    #     audit-trail discipline only.
+    #   amended_condition_4: load-bearing rule per Codex round-2 critique.
+    #     Requires no_POINT >= 0.773 OR mechanism_only >= 0.80. Isolates
+    #     non-textbook genomic signal vs label-shaped tautology.
+    best_curated_full = max(m_lr.auroc, m_xgb_auroc_full)
     best_nt = max(STAGE1B_NT_LR_AUROC, STAGE1B_NT_XGB_AUROC)
-    gap_pp = (best_curated - best_nt) * 100
+    gap_pp = (best_curated_full - best_nt) * 100
+    no_point_auroc = ablation_results["no_POINT"]
+    mech_only_auroc = ablation_results["mechanism_only"]
 
-    if best_curated >= BASELINE_ABSOLUTE_GATE_AUROC:
-        verdict = "ABSOLUTE_PASS"
-        rationale = f"best curated AUROC {best_curated:.3f} >= {BASELINE_ABSOLUTE_GATE_AUROC}"
+    # Original (frozen) verdict
+    if best_curated_full >= BASELINE_ABSOLUTE_GATE_AUROC:
+        original_verdict = "ABSOLUTE_PASS"
+        original_rationale = f"best all-feature AUROC {best_curated_full:.3f} >= {BASELINE_ABSOLUTE_GATE_AUROC}"
     elif gap_pp >= BASELINE_COMPARATIVE_GATE_PP:
-        verdict = "COMPARATIVE_PASS"
-        rationale = f"best curated beats best NT by {gap_pp:.1f}pp (>= {BASELINE_COMPARATIVE_GATE_PP}pp gate)"
+        original_verdict = "COMPARATIVE_PASS"
+        original_rationale = f"best all-feature beats best NT by {gap_pp:.1f}pp (>= {BASELINE_COMPARATIVE_GATE_PP}pp)"
     else:
-        verdict = "FAIL"
-        rationale = f"best curated AUROC {best_curated:.3f} (NT was {best_nt:.3f}, gap {gap_pp:+.1f}pp; neither absolute nor comparative gate met)"
+        original_verdict = "FAIL"
+        original_rationale = f"best all-feature {best_curated_full:.3f} vs best NT {best_nt:.3f}; gap {gap_pp:+.1f}pp"
 
-    print(f"\nVerdict: {verdict}")
-    print(f"  {rationale}")
-    print(f"  PIVOT TRIGGER condition 4: {'MET' if verdict != 'FAIL' else 'NOT MET'}")
+    # Amended (load-bearing) verdict
+    if no_point_auroc >= AMENDED_NO_POINT_GATE_AUROC:
+        amended_verdict = "NO_POINT_PASS"
+        amended_rationale = f"no_POINT AUROC {no_point_auroc:.3f} >= {AMENDED_NO_POINT_GATE_AUROC:.3f} — non-textbook signal exists"
+    elif mech_only_auroc >= AMENDED_MECHANISM_ONLY_GATE_AUROC:
+        amended_verdict = "MECHANISM_ONLY_PASS"
+        amended_rationale = f"mechanism_only AUROC {mech_only_auroc:.3f} >= {AMENDED_MECHANISM_ONLY_GATE_AUROC} — AMRFinder panel matches absolute target"
+    else:
+        amended_verdict = "FAIL"
+        amended_rationale = (
+            f"no_POINT {no_point_auroc:.3f} (gate {AMENDED_NO_POINT_GATE_AUROC:.3f}) and "
+            f"mechanism_only {mech_only_auroc:.3f} (gate {AMENDED_MECHANISM_ONLY_GATE_AUROC}) both below load-bearing thresholds"
+        )
+
+    print(f"\nOriginal (frozen) verdict: {original_verdict}")
+    print(f"  {original_rationale}")
+    print(f"Amended (load-bearing) verdict: {amended_verdict}")
+    print(f"  {amended_rationale}")
+    print(f"  PIVOT TRIGGER condition 4 (amended, load-bearing): {'MET' if amended_verdict != 'FAIL' else 'NOT MET'}")
 
     # JSON sidecar
     json_path = args.output.with_suffix(".json")
@@ -338,22 +387,28 @@ def main(argv: list[str] | None = None) -> int:
         "acquired_gene_vocab": bundle.acquired_gene_vocab,
         "mlst_vocab": bundle.mlst_vocab,
         "lr_auroc": m_lr.auroc, "lr_auprc": m_lr.auprc,
-        "xgb_auroc": m_xgb.auroc, "xgb_auprc": m_xgb.auprc,
-        "best_curated_auroc": best_curated,
+        "xgb_all_auroc": m_xgb_auroc_full,
+        "best_curated_all_auroc": best_curated_full,
         "stage1b_baselines": {
             "nt_lr_auroc": STAGE1B_NT_LR_AUROC,
             "nt_xgb_auroc": STAGE1B_NT_XGB_AUROC,
             "kmer_xgb_auroc": STAGE1B_KMER_XGB_AUROC,
         },
-        "ablations_xgb_only": ablation_results,
-        "verdict": verdict,
-        "rationale": rationale,
-        "pivot_trigger_condition_4": verdict != "FAIL",
+        "ablations_xgb": ablation_results,
+        "amended_gates": {
+            "no_point_threshold": AMENDED_NO_POINT_GATE_AUROC,
+            "mechanism_only_threshold": AMENDED_MECHANISM_ONLY_GATE_AUROC,
+        },
+        "original_condition_4_verdict": original_verdict,
+        "original_condition_4_rationale": original_rationale,
+        "amended_condition_4_verdict": amended_verdict,
+        "amended_condition_4_rationale": amended_rationale,
+        "pivot_trigger_condition_4_load_bearing": amended_verdict != "FAIL",
         "per_strain_lr": [
             {"strain_id": f.held_out_id, "y_true": int(f.y_true[0]), "y_score": float(f.y_score[0])}
             for f in cv_lr_full.folds
         ],
-        "per_strain_xgb": [
+        "per_strain_xgb_all": [
             {"strain_id": f.held_out_id, "y_true": int(f.y_true[0]), "y_score": float(f.y_score[0])}
             for f in cv_xgb_full.folds
         ],
@@ -372,21 +427,28 @@ def main(argv: list[str] | None = None) -> int:
         f"**Inputs:** AMRFinder mechanism audit JSON (`{args.mech_audit}`).",
         f"**CV:** LOSO over {len(bundle.strain_ids)} strains.",
         "",
-        f"## Verdict: **{verdict}**",
-        f"- Rationale: {rationale}",
-        f"- PIVOT TRIGGER condition 4 ({'AUROC>=0.80' if verdict == 'ABSOLUTE_PASS' else 'curated-vs-NT-gap>=10pp'}): **{'MET' if verdict != 'FAIL' else 'NOT MET'}**",
+        f"## Verdicts (2-layer)",
+        "",
+        f"### Original (frozen pre-Experiment-2 rule): **{original_verdict}**",
+        f"- Rationale: {original_rationale}",
+        "",
+        f"### Amended (load-bearing post-Codex-round-2): **{amended_verdict}**",
+        f"- Rationale: {amended_rationale}",
+        f"- PIVOT TRIGGER condition 4 (load-bearing): **{'MET' if amended_verdict != 'FAIL' else 'NOT MET'}**",
+        "",
+        "Original verdict uses the all-feature AUROC and is structurally circular when POINT mutations dominate (POINT mutations like gyrA-S83L are essentially labels-in-genome-form). Amended verdict gates on no-POINT (acquired+kmer+MLST) or mechanism-only (POINT+acquired) — isolating non-textbook genomic signal vs textbook tautology.",
         "",
         "## Head comparison",
         "",
         "| head | AUROC | AUPRC | reference |",
         "|---|---:|---:|---|",
-        f"| **curated LR** | **{m_lr.auroc:.3f}** | {m_lr.auprc:.3f} | scaled LR over all 4 blocks |",
-        f"| **curated XGB** | **{m_xgb.auroc:.3f}** | {m_xgb.auprc:.3f} | XGBoost over all 4 blocks |",
+        f"| **curated LR (all)** | **{m_lr.auroc:.3f}** | {m_lr.auprc:.3f} | scaled LR over all 4 blocks |",
+        f"| **curated XGB (all)** | **{m_xgb_auroc_full:.3f}** | - | XGBoost over all 4 blocks |",
         f"| Stage 1b NT-LR | {STAGE1B_NT_LR_AUROC:.3f} | - | mean+max pool + scaled LR |",
         f"| Stage 1b NT-XGB | {STAGE1B_NT_XGB_AUROC:.3f} | - | mean+max pool + XGBoost |",
         f"| Stage 1b k-mer-XGB | {STAGE1B_KMER_XGB_AUROC:.3f} | - | k=8 top-10000 |",
         "",
-        f"Gap (best_curated - best_NT): **{gap_pp:+.1f}pp**.",
+        f"Gap (best_curated_all - best_NT): **{gap_pp:+.1f}pp**.",
         "",
         "## Feature dimensions",
         "",
@@ -395,24 +457,26 @@ def main(argv: list[str] | None = None) -> int:
         f"- MLST one-hot: **{len(bundle.mlst_vocab)}** features",
         f"- k-mer top-N: **10000** features (k=8, within-fold vocab rebuild)",
         "",
-    ]
-    if ablation_results:
-        lines.extend([
-            "## Feature-block ablation (XGB only)",
-            "",
-            "Each row is XGB trained on ONLY the named block under LOSO. Reveals which block drives the curated baseline's signal.",
-            "",
-            "| block | AUROC | delta vs full |",
-            "|---|---:|---:|",
-        ])
-        for block, auroc in sorted(ablation_results.items(), key=lambda x: -x[1]):
-            delta = (auroc - m_xgb.auroc) * 100
-            lines.append(f"| {block} | {auroc:.3f} | {delta:+.1f}pp |")
-        lines.append("")
-    lines.extend([
-        "## Per-strain predictions (curated LR)",
+        f"## Ablation panel (XGB; load-bearing for amended verdict)",
         "",
-        "| strain_id | y_true | y_score (LR) | y_score (XGB) |",
+        f"Each row is XGB trained on the named feature set under LOSO. Amended-verdict gates: **no_POINT >= {AMENDED_NO_POINT_GATE_AUROC:.3f}** OR **mechanism_only >= {AMENDED_MECHANISM_ONLY_GATE_AUROC}**.",
+        "",
+        "| feature_set | blocks | AUROC | gate? |",
+        "|---|---|---:|---|",
+    ]
+    for name, blocks in ABLATION_FEATURE_SETS.items():
+        auroc = ablation_results[name]
+        gate = ""
+        if name == "no_POINT":
+            gate = f"PASS (>= {AMENDED_NO_POINT_GATE_AUROC:.3f})" if auroc >= AMENDED_NO_POINT_GATE_AUROC else f"FAIL (< {AMENDED_NO_POINT_GATE_AUROC:.3f})"
+        elif name == "mechanism_only":
+            gate = f"PASS (>= {AMENDED_MECHANISM_ONLY_GATE_AUROC})" if auroc >= AMENDED_MECHANISM_ONLY_GATE_AUROC else f"FAIL (< {AMENDED_MECHANISM_ONLY_GATE_AUROC})"
+        lines.append(f"| {name} | {','.join(blocks)} | {auroc:.3f} | {gate} |")
+    lines.extend([
+        "",
+        "## Per-strain predictions (all-feature LR)",
+        "",
+        "| strain_id | y_true | y_score (LR-all) | y_score (XGB-all) |",
         "|---|---:|---:|---:|",
     ])
     xgb_by_strain = {f.held_out_id: float(f.y_score[0]) for f in cv_xgb_full.folds}
@@ -423,9 +487,10 @@ def main(argv: list[str] | None = None) -> int:
         "",
         "## How to interpret",
         "",
-        "- **ABSOLUTE_PASS (>=0.80):** classical features alone hit the absolute target. Frozen-NT pooling is falsified for cipro; the right next move is investing in curated feature engineering, NOT more NT pooling variants.",
-        "- **COMPARATIVE_PASS (>= NT + 10pp):** curated dominates NT by a wide margin even if neither is great. Same falsification verdict; absolute gate is still pending.",
-        "- **FAIL:** curated AMR didn't outperform NT either. Two possibilities: (a) cohort is too noisy for ANY model to do well (cross-check with cipro_mic_audit verdict), or (b) the right features aren't in this stack — Bakta annotation + per-gene NT windows still untested.",
+        "- **Amended NO_POINT_PASS:** classical features WITHOUT POINT mutations reach the load-bearing threshold. Non-textbook genomic signal exists; frozen-NT pooling is falsified. Next: invest in curated feature engineering + per-gene NT windows.",
+        "- **Amended MECHANISM_ONLY_PASS:** AMRFinder POINT + acquired alone reaches the absolute target. NT pooling adds nothing over the curated mechanism panel. Same falsification; the right Phase 1 product is curated baselines.",
+        "- **Amended FAIL:** neither non-textbook ablation passes. Two possibilities: (a) the N=38 label noise (Experiment 2 NOISY verdict) is the bottleneck — try cohort expansion to N=150 with strict MIC filters; or (b) the right features aren't in this stack — try Bakta annotation + per-gene NT windows on the CLEAN subset.",
+        "- **Original verdict** is retained for audit-trail discipline only. PASS on original with FAIL on amended = signal is circular (POINT-dominated).",
         "",
         f"_JSON sidecar: `{json_path}`_",
     ])
