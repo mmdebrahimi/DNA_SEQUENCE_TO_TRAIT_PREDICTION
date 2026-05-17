@@ -1,95 +1,102 @@
-# Return Decision Tree — 2026-05-16 (post-departure setup)
+# Return Decision Tree — 2026-05-16
 
-Quick reference when you return: which artifacts to check, in what order, and what to do with each combined outcome. Written 2026-05-16 14:50 before user departed.
+> 30-second triage card for what to do when you return. Detail in appendix below.
 
-## What was launched
+## TL;DR (read this first)
 
-| job | mechanism | expected output | ETA from launch (14:43) |
-|---|---|---|---|
-| Stage 1b (mean+max + scaled NT-logreg) | detached via `run_stage1b_detached.bat` (PID 4736 at launch) | `wiki/stage1_n40_cipro_mean-plus-max_<date>.md` + `stage1b_detached.log` | ~5 hr (verdict packet only written at end) |
-| Preflight v2 (cipro attribution) | Bash bg job `bx13oua9k` | `wiki/cipro_attribution_preflight_<date>.md` + `.per_strain.json` sidecar | ~5-10 min |
-| Heartbeat sidecar (Stage 1b monitor) | `heartbeat_stage1b.bat 4736` (broken sleep — loops fast, ~2 lines/sec; harmless but noisy) | `stage1b_heartbeat.log` (timestamped ALIVE/DEAD lines) | self-terminates when Stage 1b dies OR verdict lands |
-
-## Step 1 — Triage what survived
+**Two jobs ran while you were out.** Both write verdict packets at known paths; packets are atomic file-writes (independent of stdout buffering). **Packet presence/absence is the authoritative signal.**
 
 ```bash
-# Check Stage 1b liveness
-tasklist | grep python.exe         # is PID 4736 (or any heavy python.exe) still alive?
-ls -la wiki/stage1_n40_cipro_mean-plus-max_*.md   # verdict packet present?
-tail -20 stage1b_heartbeat.log     # last line: ALIVE / DEAD / VERDICT_LANDED
-
-# Check preflight v2
-ls -la wiki/cipro_attribution_preflight_*.md      # verdict packet present?
-ls -la wiki/cipro_attribution_preflight_*.per_strain.json
+# triage block — paste this; reports a 4-letter state code
+cd C:/Users/Farshad/PythonProjects/dna_decode
+S1=$(ls wiki/stage1_n40_cipro_mean-plus-max_*.md 2>/dev/null | wc -l)
+PF=$(ls wiki/cipro_attribution_preflight_*.md 2>/dev/null | wc -l)
+[ $S1 -gt 0 ] && S1S="S1+" || S1S="S1-"
+[ $PF -gt 0 ] && PFS="PF+" || PFS="PF-"
+echo "STATE: $S1S$PFS"
 ```
 
-## Step 2 — Decision tree by combined state
+**Timestamp gate:** Stage 1b launched 2026-05-16 14:43 EDT. Expected verdict packet: ~19:43 EDT.
+- Returning **>7 hr** after launch → packet present OR process dead (no third state).
+- Returning **3-7 hr** after launch → packet may not exist yet. Check `tasklist | grep python.exe` — alive = wait; dead = packet should exist (if not, recovery).
 
-### A. Both verdict packets exist
-- Read preflight verdict first (cipro_attribution_preflight_*.md):
-  - **STRONG_POSITIVE** = NT has biology; Stage 1's FAIL was likely a head/pooling/LOSO-noise issue
-  - **WEAK_POSITIVE** = suggestive but not load-bearing
-  - **INCONCLUSIVE_MISS** = NOT damning; mean-pool dilution + symbol coverage may be confounders
-  - **DAMNING_MISS** = requires v2 + mean+max preflight both miss (not run yet)
-- Then read Stage 1b verdict packet:
-  - **`stage2_action == BURST_STAGE_2`** → CLEAN PASS; Stage 2 N=150 cipro is unblocked
-  - **`stage2_action == HOLD_STAGE_2_CI_DEGENERATE`** → NOISY PASS; hold burst budget
-  - **`stage2_action == ALTERNATIVE_POOLING_RERUN`** → still FAIL under mean+max + scaling fix; escalate to PIVOT_TO_BAKTA
-  - **`stage2_action == PIVOT_TO_BAKTA`** → architecture mismatch; Bakta re-annotation + gene-presence comparator pathway
-- Combined call:
-  - `BURST_STAGE_2` + STRONG/WEAK positive → fire Stage 2 Databricks setup (resolve Pending Decisions row 6); EP2 cef/tet smoke as parallel falsification probe
-  - `BURST_STAGE_2` + INCONCLUSIVE_MISS → fire Stage 2 BUT note the attribution gap; require gyrA/parC/parE attribution at Stage 2 verdict
-  - `HOLD_STAGE_2_CI_DEGENERATE` → AMRFinderPlus POINT* parser as classical comparator tightener (Pending Decisions row 7) before re-running
-  - `ALTERNATIVE_POOLING_RERUN` outcome → PIVOT_TO_BAKTA: Bakta re-annotate N=38 cohort, rebuild gene-presence variant, re-run Stage 1c
-  - `PIVOT_TO_BAKTA` outcome → end-of-line for NT-XGBoost cipro architecture; demote NT track or pivot to PATRIC-style curated-feature head
+| state | preflight | stage1b | next action |
+|---|---|---|---|
+| `S1+PF+` | landed | landed | Read both packets. Apply PIVOT TRIGGER (below). |
+| `S1+PF-` | missing | landed | Stage 1b verdict alone is decisive. Apply trigger w/o attribution evidence. |
+| `S1-PF+` | landed | missing | Stage 1b still running OR crashed. Check `tasklist`. Don't act on preflight alone — preflight already landed INCONCLUSIVE_MISS today; see appendix. |
+| `S1-PF-` | missing | missing | Worst case. See appendix §D recovery. |
+
+## 2×2 verdict matrix (when both packets exist)
+
+Cross-reference Stage 1b `stage2_action` (in verdict packet) × preflight verdict (today's was **INCONCLUSIVE_MISS**):
+
+| Stage 1b → ↓ Preflight | `BURST_STAGE_2` (CLEAN) | `HOLD_STAGE_2_CI_DEGENERATE` (NOISY) | `ALTERNATIVE_POOLING_RERUN` (FAIL) | `PIVOT_TO_BAKTA` |
+|---|---|---|---|---|
+| **STRONG_POSITIVE** | Stage 2 burst justified | Hold burst; tighten classical (AMRFinder POINT*) | apply PIVOT TRIGGER | Bakta pathway |
+| **WEAK_POSITIVE** | Stage 2 burst w/ caveat | Hold burst; rerun w/ tighter comparator | apply PIVOT TRIGGER | Bakta pathway |
+| **INCONCLUSIVE_MISS** (today) | Stage 2 burst BUT require attribution at N=150 verdict. **Sleep on it before firing burst — $$$ commit.** | Hold burst. Build curated AMR baseline FIRST per PIVOT TRIGGER. | apply PIVOT TRIGGER | Bakta pathway |
+
+## PIVOT TRIGGER (post-sunk-cost-check 2026-05-16)
+
+Declare frozen NT whole-genome pooling **falsified** for Phase 1 if ALL FOUR hold:
+
+1. NT mean+max AUROC does NOT exceed k-mer by ≥0.05 absolute, AND CI includes ≤0 lift.
+2. NT remains below 0.70 AUROC on cipro.
+3. Attribution still fails to recover ANY cipro mechanism locus (already true for mean-pool; mean+max requires `gene_level_mutagenesis` refactor — defer).
+4. Curated AMR baseline (AMRFinderPlus POINT + Bakta gene presence + k-mer + MLST features) reaches ≥0.80 AUROC at N=38 OR beats NT by ≥0.10.
+
+If all 4 → stop running more pooling variants. Curated baseline + targeted-NT (per-gene window) are the next experiments.
+
+If Stage 1b passes only under random/LOO BUT fails under MLST/phylogeny-aware splits → **lineage signal, not scientific validation.** Validation gate is phylogeny-aware.
+
+## Cleanup ledger ops (after deciding next action)
+
+```
+/project-state dna-decode-2026-05-11 --append-action --class run-tests --description "Stage 1b N=38 cipro outcome (mean+max + scaled NT-logreg)" --outcome "<verdict text: stage2_action + gap_pp + CI + per-variant AUROCs>"
+
+/project-state dna-decode-2026-05-11 --refresh-frame --current-state "<post-Stage-1b one-line state>"
+```
+
+Then ledger commit batch + push. **Expected untracked-but-OK in `git status`:** `heartbeat_stage1b.bat`, `stage1b_heartbeat.log`, `project_state/dna-decode-2026-05-11-scratch.md`, `wiki/smoke_gate_12strain_cipro_2026-05-15.md`. Anything else surprising → inspect before staging.
+
+---
+
+## Appendix — Recovery procedures (read only if needed)
+
+### What was launched
+| job | mechanism | output | ETA from 14:43 launch |
+|---|---|---|---|
+| Stage 1b | detached via `run_stage1b_detached.bat` (PID 4736) | `wiki/stage1_n40_cipro_mean-plus-max_<date>.md` + `stage1b_detached.log` | ~5 hr (verdict packet written at end only) |
+| Preflight v2 | Bash bg job `bx13oua9k` | `wiki/cipro_attribution_preflight_<date>.md` + `.per_strain.json` sidecar | ~5-10 min (✓ COMPLETED 15:26 EDT — verdict INCONCLUSIVE_MISS) |
+| Heartbeat sidecar | `heartbeat_stage1b.bat 4736` (broken sleep — loops fast, ~2 lines/sec; harmless but noisy) | `stage1b_heartbeat.log` | self-terminates on verdict-packet landing OR PID 4736 death |
+
+**Heartbeat is NOT load-bearing for any decision branch** — kept as informational aliveness signal only.
+
+### Preflight v2 verdict (already landed 2026-05-16 15:26)
+INCONCLUSIVE_MISS. No QRDR + no expanded-set cipro loci recovered. Per packet's own rubric: NOT damning. Mean-pool dilution (1/N_genes per knockout, N≈5000) + RefSeq symbol coverage (~11% CDSs carry `gene=`) are unaddressed confounders. Next escalation per rubric: refactor `gene_level_mutagenesis` to accept aggregation kwarg + retest mean+max preflight matching Stage 1b's pooling. Damning-MISS verdict requires BOTH mean-pool AND mean+max preflights to miss.
 
 ### B. Stage 1b packet missing, preflight verdict exists
-- Check heartbeat: last ALIVE timestamp vs current time
-  - heartbeat says ALIVE within last ~5 min → Stage 1b still running; wait
-  - heartbeat says DEAD or stale > 30 min → Stage 1b crashed silently
-    - inspect `stage1b_detached.log` for partial output (may need to flush by killing process explicitly with `taskkill /F /PID <pid>`)
-    - relaunch with `python -u` + heartbeat wrapper (the prior wrapper is broken; rewrite with PowerShell `Start-Sleep`)
-- Apply preflight verdict for partial direction:
-  - STRONG_POSITIVE → architecture has signal; Stage 1b worth retrying
-  - INCONCLUSIVE_MISS → ambiguous; await Stage 1b retry
+- Check `tasklist | grep python.exe` (or `MSYS_NO_PATHCONV=1 tasklist /FI "PID eq 4736"` for PID-specific filter — MSYS otherwise mangles the quoted arg per CLAUDE.md gotcha).
+- If process alive past 7 hr from launch → suspect hang; consider killing + relaunching.
+- If process dead but no verdict packet:
+  - `taskkill /F` does **NOT** flush Python stdio buffers — it's `TerminateProcess` (Windows SIGKILL); partial stdout is DISCARDED, not recovered. If python.exe was launched WITHOUT `-u` / `PYTHONUNBUFFERED=1`, the `stage1b_detached.log` is unrecoverable. Verdict packet (atomic file write via `write_text`) is the only authoritative signal.
+  - Relaunch via `run_stage1b_detached.bat` (now has `-u` flag after Step 3 patch); rewrite heartbeat with PowerShell `Start-Sleep` for reliable cadence.
 
 ### C. Preflight packet missing, Stage 1b packet exists
-- Preflight likely crashed; check `C:/Users/Farshad/AppData/Local/Temp/preflight_v2.log` for traceback
-- Re-run: `uv run python scripts/cipro_attribution_preflight.py 2>&1 | tee preflight_v2_retry.log`
-- Apply Stage 1b verdict alone:
-  - `BURST_STAGE_2` → Stage 2 burst is gate-supported; preflight is informational not load-bearing
-  - Anything else → escalate per Section A's Stage 1b table
+- Preflight likely crashed silently; check `C:/Users/Farshad/AppData/Local/Temp/preflight_v2.log` for traceback.
+- Re-run: `uv run python -u scripts/cipro_attribution_preflight.py` (foreground, no `| tail` pipe).
+- Apply Stage 1b verdict alone via 2×2 matrix (preflight column unknown → assume INCONCLUSIVE_MISS row pending re-run).
 
 ### D. Both packets missing
-- This is the worst-case Codex flagged. Inspect:
+- Worst case. Inspect:
   - `tasklist | grep python.exe` — anything alive?
-  - `stage1b_heartbeat.log` last line — when did Stage 1b stop?
-  - `stage1b_detached.log` + `C:/Users/Farshad/AppData/Local/Temp/preflight_v2.log` — partial output? traceback?
+  - `stage1b_detached.log` + `preflight_v2.log` — partial output? traceback?
 - Recovery: relaunch BOTH with observability:
-  - Stage 1b: `set PYTHONUNBUFFERED=1` + .bat wrapper + heartbeat with PowerShell sleep
-  - Preflight: foreground, NOT bg, NOT piped through `| tail`
+  - Stage 1b: patched `.bat` (already has `-u`); add PowerShell-sleep heartbeat for monitoring.
+  - Preflight: foreground, NOT bg, NOT piped through `| tail`.
 
-## Step 3 — Cleanup / ledger updates regardless of outcome
-
-1. `git status --short` — capture untracked artifacts produced by the runs (heartbeat log, smoke output, etc.)
-2. `/project-state --append-action --class run-tests` with the Stage 1b outcome row (e.g., `Stage 1b verdict packet at wiki/stage1_n40_cipro_mean-plus-max_<date>.md: <verdict>; stage2_action <action>; aggregation mean+max; LR scaled`).
-3. `/project-state --update-hypothesis H17 --status <falsified|confirmed|under-investigation> --note "<H17 evidence per EP2 status>"` ONLY if EP2 cef + tet smoke was run (it wasn't pre-departure; defer until EP2 fires).
-4. `/project-state --refresh-frame --current-state "<post-Stage-1b state>"` once verdicts land.
-5. Ledger commit batch (per session pattern).
-6. Push.
-
-## Step 4 — If user wants to fire EP2 cef + tet smoke next
-
-Pre-requisite per `plans/EP2_Cef_Tet_Smoke_Design_Plan.md` Step 2: rename + generalize `scripts/smoke_gate_12strain_cipro.py` → `scripts/smoke_gate_12strain.py` (output paths cipro-hardcoded at lines 264, 272, 333-341). Cef + tet mini-cohorts already built at `data/processed/gate_b_mini_{cef,tet}_cohort.parquet`. EP2 smoke per drug uses existing NT cache only if cef/tet strains overlap cipro N=12 mini cohort cache — likely they DON'T fully overlap, so cef/tet NT populates would need to fire first (~2 hr each on GTX 860M).
-
-## Quick reference — branch state at departure
-
-- main: 31 commits ahead of origin pre-push, **0 ahead post-push** (push completed 14:50 just before departure)
-- Last commit: `37af5f6 chore: detached-launch helper for long-running Stage 1 jobs`
-- Untracked: `heartbeat_stage1b.bat` (new, runaway), `project_state/dna-decode-2026-05-11-scratch.md` (durable scratch), `wiki/smoke_gate_12strain_cipro_2026-05-15.md` (provenance unclear)
-
-## Open questions surfacing on return
-
-1. Did `start /B` detachment actually survive past 10 min? (heartbeat will tell — if log shows ALIVE lines after 15:00 EDT, yes)
-2. Stage 1b verdict packet exit-code semantics — was the bug fixed or is it still "exit 0 ≠ BURST_STAGE_2" (filed in TODOS)
-3. Whether the cef + tet mini-cohorts have downloadable assemblies (the prior cipro N=40 had a 38/40 GFF3-availability bottleneck; cef/tet may have different gaps)
+### Open questions surfacing on return (from sunk-cost brainstorm)
+1. **Are the 19 R strains' resistance mechanisms actually CHECKED?** Confirmed for ST131 (`1328433.3 / GCA_000522345.1`) via install smoke (gyrA-S83L/D87N + parC-E84V detected). The other 18 R strains: unknown. If many are R via non-QRDR mechanisms (qnr-plasmid / efflux / regulatory), the preflight's miss may partly reflect TRUE biology — NT shouldn't rank gyrA if gyrA isn't the mechanism in those strains. **Worth running AMRFinder against all 19 R strains as a cheap diagnostic before Stage 2 spend.**
+2. **AST noise near MIC breakpoints** — how many cipro labels are right at the R/S cutoff?
+3. **What specifically justifies Databricks burst spend?** NT > k-mer ≥5 pp? OR NT > curated AMR baseline? The curated baseline experiment has not been run; running it is the load-bearing PIVOT TRIGGER pre-req.

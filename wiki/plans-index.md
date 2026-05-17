@@ -1,6 +1,16 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: Return_Decision_Tree_Patch_Plan.md] 2026-05-16
+**Summary:** Apply the /review synthesis's 3 surgical correctness fixes + structural restructure to `wiki/return_decision_tree_2026-05-16.md`, plus the one-line `-u` flag fix to `run_stage1b_detached.bat`. Implementation-ready under 4 steps; max parallelism 2 (doc + bat are independent).
+**Key decisions:**
+- D1: Eng correctness patches come FIRST, restructure SECOND (sequenced Step 1 → Step 2 because both modify the same doc file)
+- D2: `-u` flag (not `PYTHONUNBUFFERED=1` env var) for the .bat fix — explicit + tighter blast radius
+- D3: Merge enumerated 8 sub-steps into 4 actual steps; adjacent same-file ops serialize anyway
+- D4: Don't touch the running Stage 1b process; Step 3 affects FUTURE relaunches only
+
+---
+
 ## [plan_file: Sidework_Sequence_Ship_Path_Plan.md] 2026-05-13 (decisions locked 2026-05-14)
 **Summary:** Delta from `Sidework_Sequence_Plan.md` after `/review` (2026-05-13) + post-save `/brainstorm` (2026-05-14). Resolves the load-bearing B-scope problem (B-B locked: drop clade-only from smoke; 12 unique MLST → singleton clades make clade-only degenerate). Fixes deterministic-hashing reproducibility bug. Narrows ARCHITECTURE.md to per-line judgment. Locks --per-class=20. Excludes wiki/GATE_A_REPORT.md from C scope.
 **Key decisions (all locked 2026-05-14):**
