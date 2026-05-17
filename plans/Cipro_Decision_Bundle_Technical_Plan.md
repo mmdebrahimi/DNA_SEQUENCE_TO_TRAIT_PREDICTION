@@ -33,7 +33,7 @@ Verified findings from research:
 Two user decisions per the /review synthesis MUST be locked before Wave 3 runs. They are NOT code-implementation steps but they gate the runtime interpretation:
 
 - **PC1: D9 framing lock.** "Publish defensible negative/indeterminate" vs "ship working classifier." Affects whether Tier 3 cohort build is on the table.
-- **PC2: D4 estimand numeric threshold.** E.g., "≥60% of NT-LR errors on (SUSPECT_S ∪ NO_MIC ∪ BORDERLINE) = label-noise bottleneck; <40% = uniform-error architecture bottleneck; 40-60% = AMBIGUOUS." Pre-declare before Step 11.
+- **PC2: D4 estimand — stored statistical context, NOT a bare fraction** (updated 2026-05-17 per /brainstorm Round 2). Use a Fisher exact label-stratified enrichment test with α=0.10 + enrichment ratio ≥ 1.25; report BOTH `strict_NOISY_only` AND `include_SUSPECT_S` noise-class definitions separately. The originally-proposed bare 60% threshold was BELOW the uniform-error null baseline (K/N = 26/38 = 68.4%) and would have biased the decision toward "label noise" regardless of evidence. See `wiki/cipro_decision_bundle_pre_conditions_2026-05-17.md` for the locked PC2 schema.
 
 Steps 1-10 are not blocked on PC1/PC2; Step 11 + Step 12 are.
 
@@ -277,23 +277,42 @@ Depends on: Step 8, Step 10
 
 **What changes:**
 - NEW file `scripts/cipro_error_audit.py`.
-- Inputs (CLI): `--predictions-json <path>` (Step 8's per-strain JSON sidecar), `--manifest <path>` (Step 7's manifest), `--pc2-threshold <float>` (per the user-locked PC2 numeric threshold).
-- Logic: load the predictions JSON; for each strain, compute `error = abs(y_true - nt_lr_score >= 0.5)` (binary error). Cross-tab against manifest's `noise_class`. Compute `error_cluster_fraction = sum(errors on SUSPECT_S ∪ NO_MIC ∪ BORDERLINE) / total_errors`.
+- Inputs (CLI): `--predictions-json <path>` (Step 8's per-strain JSON sidecar), `--manifest <path>` (Step 7's manifest), `--pre-conditions-md <path>` (the user-locked PC1/PC2 markdown).
+- Logic: load the predictions JSON; for each strain, compute `error = abs(y_true - nt_lr_score >= 0.5)` (binary error). For each PC2 noise-class definition (`strict_NOISY_only`, `include_SUSPECT_S`), run a label-stratified Fisher exact (or Freeman-Halton) test conditional on the observed true-label distribution; compute observed_fraction, null_fraction, p_value, enrichment_ratio.
 - Output: `wiki/cipro_per_strain_error_audit_<date>.{md,json}`. JSON schema:
-  ```
+  ```json
   {
     "predictions_path": str,
     "manifest_path": str,
-    "pc2_threshold": float,
+    "pre_conditions_artifact_path": str,
+    "pc2_test": "fisher_exact_label_stratified",
+    "pc2_alpha": float,
+    "pc2_enrichment_ratio_min": float,
     "total_errors": int,
-    "error_cluster_fraction": float,
-    "error_cluster_bucket": "above_threshold" | "below_threshold" | "ambiguous_in_band",
+    "results_by_definition": {
+      "strict_NOISY_only": {
+        "observed_fraction": float,
+        "null_fraction": float,
+        "p_value": float,
+        "enrichment_ratio": float,
+        "label_noise_concentration_established": bool
+      },
+      "include_SUSPECT_S": {
+        "observed_fraction": float,
+        "null_fraction": float,
+        "p_value": float,
+        "enrichment_ratio": float,
+        "label_noise_concentration_established": bool
+      }
+    },
+    "error_cluster_bucket": "established_under_at_least_one_definition" | "not_established",
     "per_strain": [
       {"strain_id": str, "error": bool, "noise_class": str}
     ]
   }
   ```
-- `ambiguous_in_band` covers the 40-60% middle band; PC2 should specify whether this band exists (e.g., "≥0.60 = above, <0.40 = below, [0.40, 0.60) = ambiguous").
+- Decision rule: `label_noise_concentration_established == True` iff (p_value < pc2_alpha) AND (enrichment_ratio >= pc2_enrichment_ratio_min). `error_cluster_bucket = "established_under_at_least_one_definition"` iff any definition's flag is True.
+- Refuses to run if `--pre-conditions-md` file is missing (structural enforcement of PC1/PC2 lock).
 
 **Test strategy:**
 - Covered by Step 10.6 (new test file).
@@ -305,10 +324,11 @@ Depends on: Step 10.5
 **What changes:**
 - NEW file `tests/test_cipro_error_audit.py`.
 - Tests:
-  - `test_error_cluster_fraction_above_threshold_bucket` — synthesize predictions with 80% errors on noisy strains; assert bucket = `above_threshold`.
-  - `test_error_cluster_fraction_below_threshold_bucket` — 20% errors on noisy strains; assert `below_threshold`.
-  - `test_error_cluster_fraction_ambiguous_in_band` — 50% errors on noisy strains with PC2 ambiguous band [0.40, 0.60]; assert `ambiguous_in_band`.
-  - `test_zero_total_errors_handled` — predictions all correct; assert no division-by-zero crash; emit `total_errors: 0` + `error_cluster_fraction: 0.0` + `below_threshold` bucket.
+  - `test_fisher_exact_rejects_when_enrichment_clear` — synthesize predictions with high concentration on noisy strains (e.g., 14/15 strict-NOISY errors out of 25 noisy strains in N=38); assert p_value < 0.10 AND enrichment_ratio >= 1.25 AND `label_noise_concentration_established == True`.
+  - `test_fisher_exact_fails_to_reject_at_null_baseline` — synthesize predictions with uniform errors (matching K/N null); assert `label_noise_concentration_established == False`.
+  - `test_both_noise_class_definitions_reported_separately` — assert output JSON has both `strict_NOISY_only` AND `include_SUSPECT_S` keys with independent results.
+  - `test_zero_total_errors_handled` — predictions all correct; assert no division-by-zero crash; emit `total_errors: 0` + appropriate null-result handling.
+  - `test_refuses_without_pre_conditions_artifact` — missing pre-conditions file → RuntimeError with substring "PC1/PC2 pre-conditions".
 
 ### Step 10.7: NEW `scripts/cipro_decision_cell.py` (gate-bearing wrapper)
 Files: scripts/cipro_decision_cell.py
@@ -316,32 +336,33 @@ Depends on: Step 10.5
 
 **What changes:**
 - NEW file `scripts/cipro_decision_cell.py`.
-- Inputs (CLI): `--census-json <path>`, `--error-audit-json <path>`, `--pc1-framing <publish|ship>`, `--pc2-threshold <float>`, `--pre-conditions-md <path>`.
+- Inputs (CLI): `--census-json <path>`, `--error-audit-json <path>`, `--pc1-framing <internal_closeout|publish|ship>`, `--pre-conditions-md <path>`. (Note: `--pc2-threshold` arg DROPPED — PC2 is now a structured statistical context, not a single float; the error-audit JSON already encodes the per-definition decision flags per the locked PC2 schema.)
 - Logic:
   1. Verify `--pre-conditions-md` file exists. If absent, raise `RuntimeError("PC1/PC2 pre-conditions artifact not found at <path>; declare PC1 + PC2 in wiki/cipro_decision_bundle_pre_conditions_<date>.md before running this script.")`. Structural enforcement of PC1/PC2.
   2. Load `census-json` → extract `pass_path_a_gate: bool`.
-  3. Load `error-audit-json` → extract `error_cluster_bucket: str`.
-  4. Derive `decision_cell` from the 2x2 (3x2 if ambiguous_in_band exists):
-     - `(True, above_threshold)` → `"True_high_threshold"`
-     - `(True, below_threshold)` → `"True_low_threshold"`
-     - `(False, above_threshold)` → `"False_high_threshold"`
-     - `(False, below_threshold)` → `"False_low_threshold"`
-     - `*_ambiguous_in_band` → `"AMBIGUOUS_<cell>"` (suspends Step 12 until PC2 is re-locked).
-  5. Compute `recommended_next_step` from the 4-cell decision matrix + PC1 framing.
+  3. Load `error-audit-json` → extract `error_cluster_bucket: str` (= `"established_under_at_least_one_definition"` or `"not_established"`).
+  4. Derive `decision_cell` from the 2x2 (census × error-audit-bucket):
+     - `(True, established)` → `"True_high_threshold"`
+     - `(True, not_established)` → `"True_low_threshold"`
+     - `(False, established)` → `"False_high_threshold"`
+     - `(False, not_established)` → `"False_low_threshold"`
+  5. Compute `recommended_next_step` from the decision matrix conditioned on PC1 framing. Under `pc1_framing=internal_closeout`, no cell unlocks Databricks burst; the matrix only influences narrative tone for the closeout packet.
 - Output: `wiki/cipro_decision_bundle_runtime_<date>.json` with schema:
-  ```
+  ```json
   {
-    "pc1_framing": "publish" | "ship",
-    "pc2_threshold": float,
+    "pc1_framing": "internal_closeout" | "publish" | "ship",
+    "pc2_test": "fisher_exact_label_stratified",
+    "pc2_alpha": float,
+    "pc2_enrichment_ratio_min": float,
     "pre_conditions_artifact_path": str,
     "census_pass_path_a_gate": bool,
-    "error_cluster_fraction": float,
+    "error_audit_results_by_definition": {...},
     "error_cluster_bucket": str,
     "decision_cell": str,
     "recommended_next_step": str
   }
   ```
-- **Step 12 reads BOTH `decision_cell` AND `pc1_framing`** (per /review C5). `decision_cell` does NOT encode PC1; Step 12 explicitly gates on both.
+- **Step 12 reads BOTH `decision_cell` AND `pc1_framing`** (per /review C5). `decision_cell` does NOT encode PC1; Step 12 explicitly gates on both. Under `pc1_framing=internal_closeout`, Step 12 is a no-op (no relabel-LOSO authorized).
 
 **Test strategy:**
 - Covered by Step 10.8 (new test file).
