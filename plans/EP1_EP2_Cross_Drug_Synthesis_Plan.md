@@ -28,9 +28,9 @@ This plan writes the synthesis. Single deliverable. Listed residual uncertainty 
 
 ### D3: Stopping rule defined
 
-**Decision:** This synthesis closes Phase 1 evidence collection. No further audits + no additional mechanism work + no per-gene NT diagnostics + no Stage 1 N=40 escalations on cipro/cef/tet UNLESS the synthesis surfaces a specific contradiction or open hypothesis worth investigating.
+**Decision:** This synthesis closes Phase 1 evidence collection. **Reopen trigger (per brainstorm M2 — narrowed):** Phase 1 evidence collection reopens **ONLY** for (a) an internal contradiction that invalidates the current EP1/EP2 verdict, OR (b) a factual/source mismatch in the evidence chain. **New questions go to Phase 2 candidates, NOT Phase 1 reopening.** No further audits + no additional mechanism work + no per-gene NT diagnostics + no Stage 1 N=40 escalations on cipro/cef/tet otherwise.
 
-**Rationale:** /brainstorm round 3 surfaced "without a stopping rule, every corroborating audit can spawn another audit." The synthesis is the stopping point. Phase 2 work (other drugs, larger cohorts, multimodal, etc.) is a separate strategic decision that requires its own /idea-anchor + /project-init cycle.
+**Rationale:** /brainstorm round 3 surfaced "without a stopping rule, every corroborating audit can spawn another audit." The synthesis is the stopping point. Round 4 (sanity-check pass) narrowed the trigger further: the original "open hypothesis" clause was leaky because D4 already lists several open hypotheses; the narrowed trigger requires either contradiction or factual mismatch, not just curiosity. Phase 2 work (other drugs, larger cohorts, multimodal, etc.) is a separate strategic decision that requires its own /idea-anchor + /project-init cycle.
 
 ### D4: Residual uncertainty explicitly listed
 
@@ -60,7 +60,7 @@ Depends on: none
 **What changes:**
 - NEW file `wiki/ep1_ep2_cross_drug_architectural_finding_<date>.md`.
 - Sections:
-  1. **Executive summary (1 paragraph).** The cross-drug architectural finding in one sentence: "Frozen-NT-whole-genome-pooling localizes concentrated-signal AMR mechanisms (QRDR point mutations + plasmid acquired-gene β-lactamases) at smoke fidelity but fails on distributed mobile-element mechanisms (tet efflux + ribosomal protection). The architecture's failure mode is data-shape-dependent, not drug-or-cohort-dependent in isolation."
+  1. **Executive summary (1 paragraph).** The cross-drug architectural finding in conservative framing (per brainstorm M1 — preserves D5 by not committing to a localization claim that would require the cef cross-tab to ground): "At 12-strain smoke fidelity, frozen-NT-whole-genome-pooling **PASSES on concentrated-signal AMR mechanisms** (cipro QRDR point mutations: AUROC 0.750; cef plasmid acquired-gene β-lactamases: AUROC 0.833) AND **FAILS on distributed mobile-element mechanisms** (tet efflux + ribosomal protection: AUROC 0.400, anti-predictive). The cef PASS is **consistent with concentrated β-lactamase-associated signal**, but **whether NT is genuinely localizing β-lactamase loci vs lineage-tracking on a 12-strain mini-cohort remains unresolved** (residual uncertainty). The architecture's failure mode appears data-shape-dependent (mechanism-class-bounded), not drug-or-cohort-dependent in isolation."
   2. **Evidence chain table.** 3-experiment summary:
      | Drug | Cohort | NT-XGBoost AUROC | Mechanism class | Verdict |
      |---|---|---:|---|---|
