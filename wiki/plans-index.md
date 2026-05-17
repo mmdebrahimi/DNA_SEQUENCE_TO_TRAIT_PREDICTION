@@ -1,17 +1,26 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
-## [plan_file: Cef_Mechanism_Audit_Plan.md] 2026-05-17 (revised post-brainstorm round 2)
-**Summary:** Determines whether NT-XGBoost's cef AUROC 0.833 is genuine β-lactamase attribution vs lineage-tracking. Revised in-place after /brainstorm round 2 caught 9 grounded issues including inverted gate, brittle verdict bands, cohort-biology vs model-behavior conflation, missing cross-tab diagnostic, and missing Mash-clade lineage baseline.
+## [plan_file: EP1_EP2_Cross_Drug_Synthesis_Plan.md] 2026-05-17
+**Summary:** Single-deliverable plan to write the cross-drug architectural-finding synthesis from EP1 (cipro) + EP2 (cef + tet). Closes Phase 1 evidence collection internally. External publication deferred per EP1 closeout discipline.
 **Key decisions:**
-- D1-D2: Drop rejected 11-step EP2-Step-3 plan; cut Bakta entirely
-- D3: Port cipro mechanism audit emitting EVIDENCE OBJECT (exact counts + Wilson CI + posterior Pr(p≥0.70|data) under beta(1,1)), NOT a single verdict label — bands are unreachable at n=6
-- D4: Combined smoke-runner bug fix + per-strain JSON sidecar in one commit (predictions needed for cross-tab diagnostic)
-- D5: Attribution preflight NON-OPTIONAL (was optional/gated; gate was inverted); adds per-prediction join layer (NT-XGB score × AMRFinder hit × mutagenesis delta)
-- D6: External publication still deferred per EP1 closeout
-- D7 (NEW): Cohort-provenance scope — conclusions limited to reused mini-cohort unless PC1_cef = publication_facing, which triggers BV-BRC rebuild
-- D8 (NEW): Pre-conditions discipline — PC1_cef (scope lock) + PC2_cef (4-estimand list) locked BEFORE runtime steps; analogous to cipro PC1/PC2
-- 6-wave structure: 8 implementation steps (0/1/2/2a/2b/3/4/5) including new cross-tab + Mash-clade lineage baseline + combined interpretation packet
+- D1: One deliverable (`wiki/ep1_ep2_cross_drug_architectural_finding_*.md`); no new code
+- D2: Internal scope only (PC1=`internal_closeout` unchanged)
+- D3: Defined stopping rule — synthesis closes Phase 1 evidence collection
+- D4: Residual uncertainty explicitly listed (cef mechanism question, tet failure-mode disambiguation, Stage 1 architectural verdict, BV-BRC cef feasibility, per-gene NT windows, Bakta annotation, mean+max preflight v3)
+- D5: Cef cross-tab from `Cef_Mechanism_Audit_Plan.md` cited as corroborating evidence ONLY; synthesis stands without it
+
+---
+
+## [plan_file: Cef_Mechanism_Audit_Plan.md] 2026-05-17 (revised post-brainstorm round 3 — reduced to 3 steps)
+**Summary:** Smoke-runner bug fix + per-strain JSON sidecar + cheap cef NT-vs-mechanism cross-tab diagnostic. Reduced 2026-05-17 from 8 steps to 3 after /brainstorm round-3 framing critique caught scope re-inflation, threshold substitution, Mash-clade-at-N=12 degeneracy, and "rigor theater" evidence-object pattern. The cef audit is now appendix-tier corroborating diagnostic, NOT a decision-bearing framework — the cross-drug architectural finding is captured in EP1+EP2 verdicts; primary deliverable moved to `plans/EP1_EP2_Cross_Drug_Synthesis_Plan.md`.
+**Key decisions:**
+- D1: Cef audit is appendix-tier, NOT decision-bearing (round-3 reframing)
+- D2: Smoke-runner bug fix + JSON sidecar is the only load-bearing step (serves future EPs beyond cef)
+- D3: Dropped framework discipline disproportionate to N=12 — PC pre-conditions, Mash-clade baseline, evidence-object schema, attribution preflight, 4-cell decision matrix all DROPPED
+- D4: External publication still deferred per EP1 closeout
+- 3-step structure: Step 1 (bug fix + JSON sidecar) → Step 2 (re-fire cef smoke) → Step 3 (NT-vs-mechanism cross-tab; appendix-tier interpretation only)
+- Plan revision history: v1 (rejected 11 steps) → v2 (3 steps) → v3 (re-inflated 8 steps after round-2 detail accumulation) → v4 (this revision, 3 steps after round-3 framing critique)
 
 ---
 
