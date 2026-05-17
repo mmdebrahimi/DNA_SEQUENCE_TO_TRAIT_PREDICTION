@@ -1,6 +1,20 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: Cef_Mechanism_Audit_Plan.md] 2026-05-17 (revised post-brainstorm round 2)
+**Summary:** Determines whether NT-XGBoost's cef AUROC 0.833 is genuine β-lactamase attribution vs lineage-tracking. Revised in-place after /brainstorm round 2 caught 9 grounded issues including inverted gate, brittle verdict bands, cohort-biology vs model-behavior conflation, missing cross-tab diagnostic, and missing Mash-clade lineage baseline.
+**Key decisions:**
+- D1-D2: Drop rejected 11-step EP2-Step-3 plan; cut Bakta entirely
+- D3: Port cipro mechanism audit emitting EVIDENCE OBJECT (exact counts + Wilson CI + posterior Pr(p≥0.70|data) under beta(1,1)), NOT a single verdict label — bands are unreachable at n=6
+- D4: Combined smoke-runner bug fix + per-strain JSON sidecar in one commit (predictions needed for cross-tab diagnostic)
+- D5: Attribution preflight NON-OPTIONAL (was optional/gated; gate was inverted); adds per-prediction join layer (NT-XGB score × AMRFinder hit × mutagenesis delta)
+- D6: External publication still deferred per EP1 closeout
+- D7 (NEW): Cohort-provenance scope — conclusions limited to reused mini-cohort unless PC1_cef = publication_facing, which triggers BV-BRC rebuild
+- D8 (NEW): Pre-conditions discipline — PC1_cef (scope lock) + PC2_cef (4-estimand list) locked BEFORE runtime steps; analogous to cipro PC1/PC2
+- 6-wave structure: 8 implementation steps (0/1/2/2a/2b/3/4/5) including new cross-tab + Mash-clade lineage baseline + combined interpretation packet
+
+---
+
 ## [plan_file: Cipro_Decision_Bundle_Technical_Plan.md] 2026-05-17
 **Summary:** Implementation blueprint for the post-SUSPEND_CONDITION_4 decision bundle, scoped down per /review reductions: collapse Tier 0 Steps 1-2 into one script, drop Bakta + circular variants, defer mean+max preflight v3.
 **Key decisions:**
