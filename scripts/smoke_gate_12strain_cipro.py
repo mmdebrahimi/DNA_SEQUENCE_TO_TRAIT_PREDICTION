@@ -73,7 +73,15 @@ def run_nt_xgboost(cohort, cache_path: Path, drug: str) -> dict:
         embedding_dim=512,
     )
     drug_lower = drug.lower()
-    drug_strain_ids = cohort.per_drug_strain_ids[drug_lower]
+    # Fall back to iterating cohort.strains by ast_labels when the cohort's
+    # per_drug_strain_ids doesn't have the drug — matches the pattern in
+    # run_kmer_xgboost (lines 128-136). Lets mini-cohorts built outside the
+    # canonical build_cohort() pipeline (e.g., post-hoc per-drug filters)
+    # still drive the NT-XGBoost smoke.
+    if drug_lower in cohort.per_drug_strain_ids:
+        drug_strain_ids = cohort.per_drug_strain_ids[drug_lower]
+    else:
+        drug_strain_ids = [s.strain_id for s in cohort.strains if drug_lower in s.ast_labels]
     X_rows = []
     labels = []
     strain_order = []
@@ -261,7 +269,7 @@ def write_packet(
 
     today = date.today().isoformat()
     lines = [
-        f"# Smoke Gate — 12-strain cipro cohort ({today})",
+        f"# Smoke Gate — 12-strain {drug} cohort ({today})",
         "",
         "> **This is an engineering smoke / falsification gate, NOT a powered classifier comparison.**",
         "> At N=12 with balanced LOSO the per-strain noise floor is ±8.3% and 95% AUROC CI width is ~±0.19.",
@@ -269,7 +277,7 @@ def write_packet(
         "> NOT statistically powered ranking. Multiple-comparison statistical power at N=12 forbids classifier ranking.",
         "> Real decision gate scheduled at Stage 1 N=50 (local engineering screen) → Stage 2 N=150 (Databricks).",
         "",
-        f"**Cohort:** `{cohort_path}` (12 strains, 6R/6S cipro)",
+        f"**Cohort:** `{cohort_path}` (12 strains, 6R/6S {drug})",
         f"**Drug:** {drug}",
         f"**Gap threshold:** ≥{gap_threshold_pp:.0f} pp (NT-XGBoost AUROC ≥ best-classical AUROC − {gap_threshold_pp:.0f} pp)",
         f"**Verdict:** {verdict}",
@@ -338,7 +346,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.output is None:
-        args.output = Path(f"wiki/smoke_gate_12strain_cipro_{date.today().isoformat()}.md")
+        drug_slug = args.drug.lower().replace("/", "_").replace(" ", "_")
+        args.output = Path(f"wiki/smoke_gate_12strain_{drug_slug}_{date.today().isoformat()}.md")
 
     cohort = load_cohort(args.cohort)
     print(f"[smoke] cohort: {len(cohort.strains)} strains; drug={args.drug}")
