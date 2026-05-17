@@ -25,12 +25,16 @@ Phase 1 EP1 cipro additionally produced a 4-tier adversarial audit infrastructur
 
 ## 3. Architectural pattern (the load-bearing finding)
 
-Across the 3 drugs, NT-frozen-whole-genome-pooling's behavior partitions by **mechanism-class-bounded data shape**, not by drug identity or cohort size:
+Across the 3 drugs tested, NT-frozen-whole-genome-pooling's behavior **appears to partition by mechanism-class-bounded data shape**, largely independent of drug identity at the smoke fidelity tested (N=12 mini-cohorts). The partition is a 3-mechanism-class observation, not yet a validated hypothesis:
 
-- **Concentrated-signal mechanisms** — biologic resistance localized to a small set of CDS contexts that contribute to whole-genome pool dilution as roughly 1/N_genes (N≈5000). For cipro this is QRDR mutations (gyrA/parC/parE point variants). For cef this is plasmid acquired-gene β-lactamases (blaCTX-M/SHV/TEM/OXA family) — distinct biology but similar data shape (localized CDS, presence/absence signal). NT-XGBoost passes smoke for both.
+- **Concentrated-signal mechanisms** — biologic resistance localized to a small set of CDS contexts. **Candidate dilution mechanism** (proposed explanation, not measured): whole-genome mean-pool contributes ~1/N_genes (N≈5000) per gene; localized signal survives this dilution because the predictive feature is confined to a small index set. For cipro this is QRDR mutations (gyrA/parC/parE point variants). For cef this is plasmid acquired-gene β-lactamases (blaCTX-M/SHV/TEM/OXA family) — distinct biology but similar data shape (localized CDS, presence/absence signal). NT-XGBoost passes smoke for both.
 - **Distributed mobile-element mechanisms** — biologic resistance spread across multiple mobile elements (tet-family efflux pumps: tetA/B/C/D/K/L/M; ribosomal-protection proteins: tetO/W/Q/S), with significant plasmid-borne content + partial chromosomal integration. Whole-genome mean-pool averages these signals into noise. NT-XGBoost fails smoke (anti-predictive 0.400).
 
 The N=38 cipro FAIL (Stage 1) is consistent with this pattern compounded by the EP1 cohort label-noise bottleneck — labels were noisy AND the architecture was operating outside its strong regime even on QRDR strains at the larger cohort size.
+
+**§3 falsification trigger** (symmetric with EP2 D5(b) for H17):
+
+The partition hypothesis is falsified if a future experiment finds EITHER (a) a concentrated-signal mechanism that FAILs smoke + Stage 1 under the same NT-frozen-pooling architecture, OR (b) a distributed mobile-element mechanism that PASSes smoke + Stage 1 under the same architecture. (a) would prove the partition is not signal-localization-dependent; (b) would prove distributed-signal cohorts can be handled by mean-pooling after all. Either outcome invalidates §3 and triggers Phase 2 re-investigation of the underlying mechanism. A 4th-mechanism-class test (e.g., colistin via mcr-family plasmids, aminoglycoside via aac/aph/aad acetyltransferases) would be the cheapest discriminating experiment.
 
 ## 4. EP1 cipro closeout — audit infrastructure findings
 
