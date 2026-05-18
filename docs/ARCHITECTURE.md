@@ -102,8 +102,79 @@ scripts/
 ├── diagnose_gene_presence_auroc.py  AUROC=0.000 root-cause diagnostic (one-time).
 ├── diagnose_gene_presence_synthetic.py  Synthetic falsifier for the gene-presence
 │                              AUROC=0.000 LOSO-base-rate-inversion hypothesis.
-└── plot_nt_embeddings_pca_umap.py  Diagnostic 2D projection of NT embeddings;
-                              MLST overlay for lineage-confounding inspection.
+├── plot_nt_embeddings_pca_umap.py  Diagnostic 2D projection of NT embeddings;
+│                              MLST overlay for lineage-confounding inspection.
+├── cipro_attribution_preflight.py  Cipro gene-level ISM attribution audit on
+│                              the N=38 NT cache (v1 mean-pool 2026-05-15; v2
+│                              expanded loci + signed-positive-delta + frequency
+│                              aggregation 2026-05-16). Verdict: STRONG_POSITIVE /
+│                              WEAK_POSITIVE / INCONCLUSIVE_MISS. Both v1 and v2
+│                              returned INCONCLUSIVE_MISS on cipro mean-pool.
+│                              Mean+max preflight v3 refactor deferred (per
+│                              plans/Cipro_Decision_Bundle_Technical_Plan.md
+│                              Step 2 + Step 4 — closeout falsifier, not
+│                              Phase 2 entry-grade).
+├── cipro_mic_audit.py        Cipro raw BV-BRC AST/MIC rejoin audit (shipped
+│                              2026-05-17). Tiers each strain under CLSI 2024
+│                              + EUCAST 14.0 breakpoints; classifies HIGH_R /
+│                              HIGH_S / DECISIVE / BORDERLINE / AMBIGUOUS /
+│                              CONFLICT / NO_MIC. Output: per-strain mechanism-
+│                              class table + cohort signal-quality verdict.
+│                              N=38 cipro cohort verdict 2026-05-17: NOISY
+│                              (7 HIGH_R / 0 HIGH_S of 40; 9 R have no MIC;
+│                              12 S borderline).
+├── cipro_mechanism_audit.py  Cipro AMRFinderPlus mechanism audit (shipped
+│                              2026-05-17). Per-strain QRDR / plasmid /
+│                              regulatory / efflux / porin hit detection
+│                              across all R + S strains. Class filter:
+│                              CIPRO_RELEVANT_AMR_CLASSES = QUINOLONE_CLASSES |
+│                              {MULTIDRUG} — keeps regulatory frameshifts
+│                              (marR_V84WfsTer, acrR_S30HfsTer) that come
+│                              through with AMRFinder Class=MULTIDRUG. Pinned
+│                              synonymous-SNP filter + main.tsv/mutations.tsv
+│                              dedupe. N=38 cipro verdict 2026-05-17:
+│                              QRDR_DOMINANT (18/20 R have QRDR; 7/20 plasmid;
+│                              7/20 S strains carry silent primary mechanism).
+├── cipro_mechanism_phenotype_merge.py  Cipro mechanism × MIC merge (shipped
+│                              2026-05-17). Joins mechanism audit + MIC audit
+│                              into per-strain noise_class table. Strict primary
+│                              cipro mechanism = QRDR_target_alteration OR
+│                              plasmid_protect_modify only; efflux/regulatory/
+│                              porin reported as separate co_resistance_modifiers
+│                              column (don't drive noise classification).
+│                              mechanism_opacity_flag = True iff HIGH_R + no
+│                              primary mechanism (distinguishes tool-incomplete
+│                              from labels-noisy). Pre-curated-baseline gate:
+│                              RUN_FULL_AND_CLEAN (clean_count >= 20) /
+│                              RUN_FULL_ONLY (>= 10) / MECHANISM_DEBUG_BRANCH
+│                              (low clean + high opacity) / SUSPEND_CONDITION_4
+│                              (low clean + low opacity). N=38 cipro 2026-05-17:
+│                              SUSPEND_CONDITION_4 (signal quality 0.17,
+│                              opacity_count = 0).
+├── cipro_curated_baseline.py  Cipro curated AMR baseline (shipped 2026-05-17;
+│                              PIVOT TRIGGER condition 4 test). LR + XGB over
+│                              named multi-block feature sets: all / no_POINT /
+│                              mechanism_only / POINT_only / kmer_only /
+│                              MLST_only / kmer_MLST_only. LOSO. 2-layer verdict:
+│                              original_condition_4 (frozen pre-Experiment-2
+│                              rule, all-feature AUROC) + amended_condition_4
+│                              (load-bearing: no_POINT >= 0.773 OR
+│                              mechanism_only >= 0.80). The amended rule isolates
+│                              non-textbook genomic signal vs labels-in-genome-
+│                              form tautology. Refuses to fire when merge gate's
+│                              clean_count < 10. given_suspended_gate field added
+│                              for downstream readers.
+├── cipro_error_audit.py      Cipro per-strain error audit (placeholder per
+│                              Cipro_Decision_Bundle_Technical_Plan Step 10.5;
+│                              deferred). Loads Stage 1b NT-LR per-strain
+│                              predictions JSON sidecar (when Step 8 ships it);
+│                              joins to manifest's noise_class; Fisher exact
+│                              label-stratified enrichment test. Pre-conditions
+│                              artifact PC1+PC2 required before runtime.
+└── run_mechanism_audit_detached.bat  Windows detached batch wrapper for the
+                              ~1-hour mechanism audit. Avoids Bash 10-min hard
+                              timeout cap. Pattern reusable for any long-running
+                              detached job (cf. run_stage1b_detached.bat).
 
 tools/
 └── docker_runner.py         Stage 2 bioinformatics-tool runner via Docker Desktop
@@ -176,6 +247,10 @@ tools/
 | `EmbeddingCache.verify_complete` is the consumer-side integrity gate; mean-pool consumers MUST bail unless `report.all_complete` is True | `models/cache.py` + `scripts/probe_nt_cache.py` | `populate(skip_existing=True)` skips at gene-dataset level, not strain level. Stage 1's `cache.list_genes()` + mean-pool admits a strain on ≥1 cached gene → half-flushed strain at crash time becomes a silent landmine. 8 regression tests pin the 4 status buckets (complete / partial / absent / corrupt) + the `all_complete=False` rule. |
 | `compute_mash_distances` issues exactly 2 mash invocations (1 sketch + 1 dist), NOT N*(N-1)/2 | `eval/phylogeny.py` | Batched-call discipline (2026-05-15 refactor). At N=147 the prior nested-loop pattern would issue 10,731 invocations; the batched pattern issues 2. Pinned by a call-count regression test in `tests/test_eval_phylogeny.py`. New `use_docker=True` kwarg routes through `tools/docker_runner.run`. |
 | `tools/docker_runner.run` wraps `subprocess.run([docker, run, ...])` in argv form; never shell strings | `tools/docker_runner.py` | Avoids Git Bash MSYS path-conversion bug that silently breaks `-v <host>:/<container>` mounts. Python subprocess bypasses shell path-munging by construction. Wraps `FileNotFoundError` (docker not on PATH) + `TimeoutExpired` as `DockerRunnerError`. |
+| `cipro_mechanism_audit.py` AMRFinder Class filter keeps MULTIDRUG, not just QUINOLONE | `scripts/cipro_mechanism_audit.py` | Regulatory mutations like `marR_V84WfsTer` + `acrR_S30HfsTer` come through with AMRFinder Class=MULTIDRUG (NOT QUINOLONE). Filtering on QUINOLONE-only would silently drop real cipro-affecting regulatory frameshifts. Same discipline applies to any future cef / tet mechanism audit (cef-relevant: BETA-LACTAM + CARBAPENEM + CEPHALOSPORIN + MULTIDRUG; tet-relevant: TETRACYCLINE + MULTIDRUG). |
+| `cipro_mechanism_phenotype_merge.py` strict primary cipro mechanism = QRDR_target_alteration OR plasmid_protect_modify ONLY | `scripts/cipro_mechanism_phenotype_merge.py` | Efflux + regulatory + porin_loss are co-resistance modifiers, not standalone cipro-conferring mechanisms. The merge's `noise_class` is driven by strict primary; co-resistance reported separately. mechanism_opacity_flag separates "AMRFinder is incomplete" from "label is noisy" — both can be true at once, and conflating them loses the remediation signal. |
+| `cipro_curated_baseline.py` 2-layer verdict: original_condition_4 (frozen all-feature) + amended_condition_4 (no_POINT >= 0.773 OR mechanism_only >= 0.80) | `scripts/cipro_curated_baseline.py` | The all-feature curated baseline is structurally circular when POINT mutations (gyrA_S83L etc.) dominate — they're essentially labels-in-genome-form. The amended verdict isolates non-textbook genomic signal vs textbook-tautology by gating on the no-POINT and mechanism-only ablation runs. Original verdict preserved for audit-trail discipline only. AMENDED_NO_POINT_GATE_AUROC = max(0.75, STAGE1B_NT_LR_AUROC + 0.10) = 0.773 (consistent with "beat NT by 10pp" framing). |
+| Smoke runner output strings templated on `--drug` (2026-05-17) | `scripts/smoke_gate_12strain_cipro.py` | `# Smoke Gate — 12-strain <drug> cohort` heading + `wiki/smoke_gate_12strain_<drug_slug>_<date>.md` output path. Cef + tet smokes 2026-05-17 used this. Script filename rename (smoke_gate_12strain_cipro.py → smoke_gate_12strain.py) deferred as cosmetic tech debt. NT-XGBoost runner falls back to `ast_labels` iteration when `cohort.per_drug_strain_ids[drug]` missing — lets mini cohorts built outside `build_cohort()` (e.g., post-hoc per-drug filters from the cipro N=38 cohort) drive the smoke runner without re-populate. |
 
 ## Phase 1 success criteria
 

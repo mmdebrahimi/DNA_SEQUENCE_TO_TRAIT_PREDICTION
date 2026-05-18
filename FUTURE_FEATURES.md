@@ -4,6 +4,9 @@ Capability ideas for Phase 2+. Captured from the technical plan's Phase 2 Backlo
 
 ## High priority (Phase 2 — direct follow-ons)
 
+### 4th-mechanism-class smoke test (partition-hypothesis falsifier) — 17/05/2026
+Symmetric with EP2 D5(b) for H17. The Phase 1 cross-drug architectural finding partitions NT-frozen-pooling behavior by mechanism-class data shape (concentrated PASS vs distributed-mobile-element FAIL). Validating the partition requires a 4th mechanism class. Cheapest discriminating experiments (per synthesis §3 falsification trigger + `/brainstorm` 2026-05-17): (a) **colistin via mcr-family plasmids** — concentrated plasmid acquired-gene signal; expected to PASS per the partition; (b) **aminoglycoside via aac / aph / aad acetyltransferases** — mostly plasmid-borne but more distributed than β-lactamases; partition predicts PASS but at lower margin. The partition is falsified if EITHER a concentrated-signal mechanism FAILS smoke + Stage 1 OR a distributed mobile-element mechanism PASSES smoke + Stage 1. Reuses the existing 12-strain mini-cohort smoke runner pattern with `--drug colistin` (or aminoglycoside-of-choice) + a freshly-built mini-cohort from BV-BRC AST. Gated on a BV-BRC strict-MIC feasibility census producing ≥6R/6S strains for the chosen 4th drug.
+
 ### Attribution Refinement Engine — 12/05/2026
 Multi-stage local-refinement pipeline on top of Phase 1's gene-level ISM. Stages: sliding-window occlusion at sub-gene resolution, codon-aware mutagenesis (synonymous vs non-synonymous scoring), annotation overlap with RegulonDB / KEGG / EcoCyc, cohort variant association (Fisher exact / odds ratio), clade-controlled regression, bidirectional counterfactual editing (susceptible → introduce candidate → predict; resistant → revert → predict), multi-model attribution agreement scoring. Source: `/probe` + ChatGPT exchange 2026-05-12.
 

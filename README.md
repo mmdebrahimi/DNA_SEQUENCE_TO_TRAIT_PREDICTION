@@ -2,11 +2,17 @@
 
 Genotype-to-phenotype (G2P) inference platform — predicts phenotypic traits from genomic DNA sequences AND identifies which genomic regions are most strongly associated with those predictions. Biologically interpretable, not causal-claim-making.
 
-## Status: Phase 1 — code-complete (18/18 implementation steps + 3 hardening waves)
+## Status: Phase 1 — CLOSED 2026-05-17 (infrastructure + cross-drug architectural finding)
 
-All 18 implementation steps shipped: Wave 0 bootstrap + Wave 1 data/foundation/eval + Wave 1.5 hardening + Wave 2 cohort/cache + Wave 2.5 hardening + Wave 3 classifiers/ISM/classical-baselines + Wave 3.5 hardening + Wave 4 viz + Wave 5 CLI + Wave 6 smoke + leaderboard + Wave 6.5 quant-fidelity + Wave 7 docs.
+Phase 1 evidence collection closed 2026-05-17. Cross-drug architectural finding synthesis at `wiki/ep1_ep2_cross_drug_architectural_finding_2026-05-17.md`:
 
-See `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the contracted ship-path that drove Waves 4-7. See `plans/Ecoli_G2P_Platform_Technical_Plan.md` for the full plan with Tier 1-5 attribution-success framework + Phase 2 backlog. See `docs/ARCHITECTURE.md` for the module map.
+> At 12-strain smoke fidelity, frozen-NT-whole-genome-pooling PASSES on concentrated-signal AMR mechanisms (cipro QRDR point mutations: AUROC 0.750; cef plasmid acquired-gene β-lactamases: AUROC 0.833) AND FAILS on distributed mobile-element mechanisms (tet tet-family efflux + ribosomal protection: AUROC 0.400, anti-predictive). The architecture's failure mode appears mechanism-class-bounded, largely independent of drug identity at smoke fidelity.
+
+EP1 cipro closed internally (`wiki/cipro_ep1_closeout_2026-05-17.md`) with a 4-tier adversarial audit infrastructure (mechanism × MIC × opacity merge with structurally-enforced SUSPEND gate). EP2 cef + tet smoke fired (cef PASS, tet FAIL, H17 falsified). No Databricks burst spent. External publication deferred per PC1=`internal_closeout`.
+
+Phase 1 code: all 18 implementation steps shipped Wave 0-7 (2026-05-11 → 2026-05-12) + 3 hardening waves; cross-drug Evidence Packet evidence collection completed 2026-05-17 per the Evidence Packets framing reset 2026-05-15. **Phase 2 entry:** BV-BRC strict-MIC 3-drug feasibility census (per `project_state/dna-decode-2026-05-11.md` Candidate-next-actions row 1) — deferred to a fresh session; open via `/idea-anchor` + `/project-init` first per the synthesis's narrow reopen rule.
+
+See `plans/EP1_EP2_Cross_Drug_Synthesis_Plan.md` for the synthesis plan; `plans/Cipro_Decision_Bundle_Plan.md` + `plans/Cipro_Decision_Bundle_Technical_Plan.md` for the EP1 closeout planning chain; `plans/EP2_Cef_Tet_Smoke_Design_Plan.md` for the EP2 design. See `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the original Phase 1 contracted ship-path. See `plans/Ecoli_G2P_Platform_Technical_Plan.md` for the full Phase 1 plan with Tier 1-5 attribution-success framework. See `docs/ARCHITECTURE.md` for the module map.
 
 What runs end-to-end today:
 
@@ -154,4 +160,4 @@ Built using a personal Claude Code skill ladder for project planning:
 - Execution state tracked in `.claude/execute-plan-state/Ecoli_G2P_Platform_Technical_Plan.json`
 - All planning artifacts captured as audit trail
 
-See `project_state/dna-decode-2026-05-11.md` for full decision history (17 hypotheses, 12 decisions made, 37+ action-log entries as of 2026-05-15; "Phase 1 / 2 / 3" labels retrospective-only — new work tracked as Evidence Packets per the 2026-05-15 framing reset).
+See `project_state/dna-decode-2026-05-11.md` for full decision history (17 hypotheses, 12+ decisions made, 54+ action-log entries as of 2026-05-17; "Phase 1 / 2 / 3" labels retrospective-only — new work tracked as Evidence Packets per the 2026-05-15 framing reset; Phase 1 evidence collection CLOSED 2026-05-17 with the cross-drug architectural finding synthesis).

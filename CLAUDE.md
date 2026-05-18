@@ -123,6 +123,58 @@ MSYS_NO_PATHCONV=1 docker run --rm \
   -v C:/Users/Farshad/AppData/Local/Temp/mash_smoke:/data \
   quay.io/biocontainers/mash:2.3--hb105d93_10 \
   mash sketch -o /data/sketch /data/*.fna
+
+# EP1 cipro audit infrastructure (shipped 2026-05-17 as part of Phase 1 closeout).
+# All 4 scripts emit both .md (narrative) + .json (machine-readable) sidecars.
+# Cohort-provenance caveat: cohort uses the N=38 cipro cohort; for cef/tet adapt
+# the cohort path (mini cohorts at data/processed/gate_b_mini_{cef,tet}_cohort.parquet).
+
+# Cipro raw BV-BRC MIC rejoin audit (label-noise diagnostic; ~5 min).
+# Tiers each strain under CLSI + EUCAST breakpoints; classifies HIGH_R / HIGH_S /
+# DECISIVE / BORDERLINE / AMBIGUOUS / CONFLICT / NO_MIC.
+uv run python scripts/cipro_mic_audit.py \
+  --cohort data/processed/gate_b_n40_cipro_cohort.parquet \
+  --ast-csv "C:/Users/Farshad/Downloads/BVBRC_genome_amr.csv"
+
+# Cipro AMRFinderPlus mechanism audit (per-strain QRDR/plasmid/efflux/regulatory hit
+# detection across all R + S strains). ~95s/strain × 38 ≈ ~1 hour first run; cached.
+# Runs AMRFinder via tools.docker_runner.run; AMRFINDER_DB at dna_decode_stage2.
+# Filter: CIPRO_RELEVANT_AMR_CLASSES = {QUINOLONE, FLUOROQUINOLONE, MULTIDRUG}.
+# Synonymous-SNP filter + main.tsv/mutations.tsv dedup pinned.
+uv run python scripts/cipro_mechanism_audit.py
+# (Detached batch wrapper at run_mechanism_audit_detached.bat for ~1 hr CPU.)
+
+# Cipro mechanism × MIC merge (joins the audit outputs above into a single
+# noise_class table per strain). Emits structurally-enforced SUSPEND_CONDITION_4
+# gate verdict + recommended_next_step.
+uv run python scripts/cipro_mechanism_phenotype_merge.py
+# Verdict thresholds: SIGNAL_DOMINATES (>=0.70 clean) / MIXED (0.40-0.70) /
+# NOISE_DOMINATES (<0.40 clean). Today's verdict 2026-05-17: NOISE_DOMINATES
+# (signal quality 0.17, opacity_count=0 — AMRFinder is NOT the bottleneck).
+
+# Cipro curated AMR baseline (2-layer verdict; load-bearing for PIVOT TRIGGER
+# condition 4). LR + XGB over (AMRFinder POINT + acquired + k-mer + MLST) LOSO.
+# Emits original_condition_4 (frozen) + amended_condition_4 (no_POINT >= 0.773
+# OR mechanism_only >= 0.80) + given_suspended_gate=INFORMATIONAL_ONLY field.
+# Refuses to fire when the merge gate's clean_count < 10 (SUSPEND_CONDITION_4).
+uv run python scripts/cipro_curated_baseline.py
+# Today (2026-05-17): gate fires SUSPEND_CONDITION_4; script honored gate + did
+# not produce a misleading AUROC verdict on uninterpretable labels.
+```
+
+```bash
+# EP2 cef + tet smoke gate (fired 2026-05-17). Uses cipro mini-cohort smoke
+# infrastructure with --drug arg + new mini cohorts. Today's verdicts:
+#   cef: NT-XGBoost 0.833 = k-mer 0.833 (PASS); H17 partially preserved on cef.
+#   tet: NT-XGBoost 0.400 anti-predictive vs k-mer 0.722 (FAIL); H17 falsified.
+# Re-fire the smoke (e.g., after smoke-runner bug fix) with:
+HF_HOME=D:/hf_cache uv run python scripts/smoke_gate_12strain_cipro.py \
+  --cohort data/processed/gate_b_mini_cef_cohort.parquet \
+  --nt-cache D:/dna_decode_cache/embeddings/nt_n40_cipro.h5 \
+  --refseq-cache D:/dna_decode_cache/refseq \
+  --drug ceftriaxone
+# Replace --drug ceftriaxone with --drug tetracycline + mini_tet_cohort.parquet
+# for tet. Output strings now templated on --drug (output filename auto-named).
 ```
 
 ## Phase 1 success criteria (per technical plan + Tier 1-5 rubric)
@@ -156,7 +208,11 @@ Phase 2 redesign trigger: classical baselines win on ≥2 drugs. The plan's Step
 - **`EmbeddingCache.populate(skip_existing=True)` skips at GENE-DATASET path level, NOT strain level** (`cache.py:296`). Stage 1's loader admits a strain on ≥1 cached gene + mean-pools whatever's there. A mid-flush crash leaves a partial gene set that LOOKS like a complete strain to Stage 1. f9ed79f flush patch bounds loss to ~1 strain on crash but doesn't eliminate. **Consumer-side defense:** every mean-pool consumer MUST call `cache.verify_complete(expected_genes_by_strain) → CompletenessReport` and bail unless `report.all_complete` is True. Standalone audit CLI at `scripts/probe_nt_cache.py`. 8 unit tests at `tests/test_models_cache.py` pin the 4 status buckets + the `all_complete=False` rule on partial.
 - **Git Bash silently breaks Docker `-v <host>:/<container>` volume mounts via MSYS path conversion** (`/db` → `C:/Program Files/Git/db`, silent unbound ephemeral mount). For direct `docker run` from Git Bash: prefix every invocation with `MSYS_NO_PATHCONV=1`. Symptom on failure: command exits 0, downloads succeed inside the container, host directory is 0 bytes after `--rm`. Python `subprocess.run` (e.g., `tools/docker_runner.run`) is unaffected — no shell to munge the path.
 - **Bakta `bakta_db download` AMRFinder dep-check fails when `--entrypoint /opt/conda/bin/bakta_db` skips the image's bash shell init**. Conda env stays un-activated; `bakta_db`'s deeper-than-`which-amrfinder` dep check then fails despite the binary being on PATH (v1.11.4 + v1.12.0 both affected). **Workaround:** invoke via `--entrypoint /bin/bash -c "bakta_db download --output /db --type light"`. DB v6.0 light at `C:/Users/Farshad/dna_decode_stage2/bakta_db/db-light/` (4.0 GB; Zenodo DOI 10.5281/zenodo.14916843). See `wiki/stage2_install_artifact_2026-05-15.md` §B1.
-- **Project framing: Phase 1 / 2 / 3 labels are now retrospective-only** (2026-05-15 framing reset per `project_state/dna-decode-2026-05-11.md` Pending Decisions row 8). New work is tracked as Evidence Packets (EP1 cipro Stage 2 / EP2 cef + tet smoke / EP3 attribution audit / EP4 clade-shift / EP5 cef + tet Stage 2) in the Mid-term table. Parked horizon tracks: 2nd-organism portability, MIC continuous head, pan-genome graph, multimodal DNA+image. The "Phase 1 shipped" label in historical artifacts means infrastructure-complete only — scientific ship criteria gate at Stage 2 N=150 evaluation per `wiki/phase1_ship_report.md:77-80`.
+- **Project framing: Phase 1 / 2 / 3 labels are now retrospective-only** (2026-05-15 framing reset per `project_state/dna-decode-2026-05-11.md` Pending Decisions row 8). New work is tracked as Evidence Packets (EP1 cipro / EP2 cef + tet smoke / EP3 attribution audit / EP4 clade-shift / EP5 cef + tet Stage 2) in the Mid-term table. Parked horizon tracks: 2nd-organism portability, MIC continuous head, pan-genome graph, multimodal DNA+image. **Phase 1 evidence collection CLOSED 2026-05-17** with cross-drug architectural finding synthesis at `wiki/ep1_ep2_cross_drug_architectural_finding_2026-05-17.md`: NT-frozen-whole-genome-pooling PASSES on concentrated-signal mechanisms (cipro QRDR 0.750 + cef plasmid β-lactamases 0.833) and FAILS on distributed mobile-element mechanisms (tet 0.400 anti-predictive). EP1 cipro closed internally (`wiki/cipro_ep1_closeout_2026-05-17.md`; no Databricks burst). EP2 H17 falsified. External publication deferred per PC1=`internal_closeout`. Phase 2 entry: BV-BRC strict-MIC 3-drug feasibility census (`project_state/dna-decode-2026-05-11.md` Candidate-next-actions row 1) — deferred to a fresh session per the synthesis's narrow reopen rule (reopen ONLY for internal contradiction or factual mismatch).
+- **Anti-predictive AUROC at N=12 with `calibrate=False` is data-shape divergence, NOT a plumbing bug** (extends 2026-05-14 LESSON on calibration overcorrection). The 2026-05-14 LESSON applies specifically to `CalibratedClassifierCV` with isotonic regression at N=11 training (symmetric two-value output around 0.5). NT-XGBoost on the tet 12-strain smoke 2026-05-17 returned 0.400 vs k-mer 0.722 with `calibrate=False` already set — that's genuine architectural mismatch on distributed mobile-element resistance, not a calibration bug. The two failure-mode patterns are distinct: (a) calibrate=True at N≤20 → AUROC ≈ 0 with symmetric two-value scores (calibration bug); (b) calibrate=False + distributed-mechanism resistance → AUROC 0.3-0.45 with non-degenerate score distribution (data-shape divergence). Diagnose by checking the calibrate flag + score-distribution shape BEFORE attributing to either.
+- **Cef + tet mini cohorts filtered from the cipro N=38 cohort, not built BV-BRC-wide.** `data/processed/gate_b_mini_cef_cohort.parquet` + `gate_b_mini_tet_cohort.parquet` were built 2026-05-17 via inline pandas filter on the existing N=38 cipro cohort (6R/6S each, 12 unique MLSTs, full assembly availability). This reuses the populated NT cache at `D:/dna_decode_cache/embeddings/nt_n40_cipro.h5` without re-populate. **Provenance caveat:** mechanism distribution may reflect cipro-cohort selection artifacts, not cef/tet biology — any conclusions are scoped to "within this reused mini-cohort" unless a BV-BRC-wide cef/tet cohort is built (deferred). For Stage 2 + publication-facing claims, build the cohort from raw BV-BRC AST directly.
+- **Smoke runner had a silent-variant-drop bug** (fixed in `plans/Cef_Mechanism_Audit_Plan.md` Step 1; reduced plan post-/brainstorm round 3). `scripts/smoke_gate_12strain_cipro.py:374-382` had `try/except Exception` that swallowed any variant runner's exception silently. Today's cef + tet 2026-05-17 smoke reports both show only 2 variants (NT-XGBoost + k-mer) — gene-presence raised `FileNotFoundError` (missing GFF3 on one strain) and got silently dropped. Fix is queued in the cef plan: re-raise on unexpected errors; render `INDETERMINATE_<reason>` rows when known exception types fire. Same script may have hidden other variant failures in earlier runs — review existing smoke artifacts if you find a 2-variant table where 3+ were expected.
+- **AMRFinder cipro-relevant Class filter:** keep MULTIDRUG, not just QUINOLONE / FLUOROQUINOLONE. `scripts/cipro_mechanism_audit.py` filters mutations.tsv to `CIPRO_RELEVANT_AMR_CLASSES = QUINOLONE_CLASSES | {"MULTIDRUG"}` — regulatory mutations like `marR_V84WfsTer` + `acrR_S30HfsTer` come through with AMRFinder Class=MULTIDRUG (not QUINOLONE). Filtering on QUINOLONE-only would drop real cipro-affecting regulatory frameshifts. The same discipline applies to any future cef / tet mechanism audit (cef-relevant: BETA-LACTAM + CARBAPENEM + CEPHALOSPORIN + MULTIDRUG; tet-relevant: TETRACYCLINE + MULTIDRUG).
 
 ## Project workflow
 
