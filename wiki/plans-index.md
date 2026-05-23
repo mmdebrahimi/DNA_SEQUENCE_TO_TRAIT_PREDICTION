@@ -1,6 +1,42 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: wiki/cipro_bounded_falsifier_coordination_plan_2026-05-22.md] 2026-05-22
+**Summary:** Comprehensive coordination plan for the cipro bounded-falsifier experiment between Claude (GTX 860M laptop) + Codex CLI (Precision 7780, RTX 3500 Ada). Codex executes the falsifier; Claude owns subset selection + leakage check + scope-limit doc template. 12 sections covering roles, naming convention, 12-strain subset (4 ERS control / 4 ELX-family failure / 4 all-negative-Δ), parallel leakage check (<5s), diagnostic exports spec (saturation_flag via baseline_proba_R + max_abs_delta), Mash-cluster gating, v0 ship-or-document-scope-limit fork, verdict matrix.
+**Key decisions:**
+- D1: 12-strain subset = 3 buckets × 4 strains, each testing a distinct failure mode (control / failure / negative-delta)
+- D2: Leakage check on `GCA_025200635.1` runs BEFORE/PARALLEL to falsifier, blocks interpretation if LOSO same-genome leakage present
+- D3: Diagnostic exports add logit deltas + max-abs-Δ across all genes — disambiguates saturation from lineage confound (the gap /brainstorm caught)
+- D4: Mash-cluster work GATED on PASS verdict only — saturation diagnosis supersedes
+- D5: FAIL path ships v0 WITH documented `attribution_scope_confidence` field — symmetric success outcome per north star
+- D6: Codex owns runner mechanics; Claude owns subset + leakage check + v0 scope-limit doc; disagreements default to Codex's spec on runner, Claude's plan on subset
+
+---
+
+
+## [plan_file: Phase2_Framing_Brainstorm_Technical_Plan.md] 2026-05-17
+**Summary:** Apply 5 /review edits to `plans/Phase2_Framing_Brainstorm_Plan.md` to convert it from "framing brainstorm with implicit preference" → "framing brainstorm with explicit 3-candidate slate + decision gates." User-confirmed scope: add classifier-tier Candidate 3; Candidate 1 merge sentence permits Months-including-Databricks budget. 2 steps, documentation-only.
+**Key decisions:**
+- D1: Documentation-only plan — no code changes; downstream code work after /idea-anchor + /project-init in separate session
+- D2: Third candidate is classifier-tier (post-feasibility-census A1), not exit-tier — user-confirmed via AskUserQuestion
+- D3: Candidate 1 merge sentence permits full-budget scope (Months including Databricks) — user-confirmed
+- D4: Strip `(preferred)` label; framing brainstorm exposes choice, doesn't pre-rank
+- D5: Open Questions Q1-Q3 promoted to gate (heading + intro paragraph)
+- D6: Honest Read on User Intent reframed as hypothesis-to-confirm, not premise
+
+---
+
+## [plan_file: Phase2_Framing_Brainstorm_Plan.md] 2026-05-17
+**Summary:** Pre-/idea-anchor ideation pass capturing the Phase 2 anchor search space, axis critique (A1-D3), missing anchors, and 2 candidate /idea-anchor sentences after Phase 1 closeout 2026-05-17.
+**Key decisions:**
+- D1: Axis menu structured by tier (Product / Research / Horizon / Meta), not by topic — makes timeframe + artifact + success-metric trade-offs visible
+- D2: Generative-ideation v2.1 payload pattern — output is critique + generation in one round (axis critique + missing anchors + cross-domain analogs + sub-problem decomposition + 2 candidate anchors + user-intent read)
+- D3: Stopping discipline preserved — brainstorm produces framing options NOT commitments; no Phase 2 experiment fires; fresh /idea-anchor + /project-init required before action
+- Preferred candidate: audit-first AMR evidence-packet system absorbing A2 (audit-as-product) + B2 (4th-mechanism falsifier) + label-quality cartography
+- Honest user-intent read: epistemic infrastructure (knowing when evidence is valid), not AUROC chasing
+
+---
+
 ## [plan_file: EP1_EP2_Cross_Drug_Synthesis_Plan.md] 2026-05-17
 **Summary:** Single-deliverable plan to write the cross-drug architectural-finding synthesis from EP1 (cipro) + EP2 (cef + tet). Closes Phase 1 evidence collection internally. External publication deferred per EP1 closeout discipline.
 **Key decisions:**
