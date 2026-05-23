@@ -151,6 +151,7 @@ def build_cohort(
     candidates: list[CandidateStrain],
     drugs: tuple[str, ...],
     criteria: CohortSelectionCriteria | None = None,
+    allow_duplicate_accessions: bool = False,
 ) -> StrainCohort:
     """Drug-first cohort construction.
 
@@ -163,11 +164,30 @@ def build_cohort(
          below intersection target.
       5. Materialize the union of all per-drug pools as the cohort's strain
          list.
+      6. Assert assembly_accession uniqueness (LOSO same-genome leakage
+         guard; 2026-05-22 LESSON). Override via `allow_duplicate_accessions`.
 
     Returns:
         StrainCohort with per_drug pools + intersection + metadata.
     """
     criteria = criteria or CohortSelectionCriteria()
+
+    # Pre-filter duplicate-accession check on input candidates -- catches the
+    # bug class before filter steps drop one of the pair.
+    if not allow_duplicate_accessions:
+        accession_to_strain_ids: dict[str, list[str]] = {}
+        for c in candidates:
+            if c.assembly_accession:
+                accession_to_strain_ids.setdefault(c.assembly_accession, []).append(c.strain_id)
+        dups = {acc: sids for acc, sids in accession_to_strain_ids.items() if len(sids) > 1}
+        if dups:
+            sample = next(iter(dups.items()))
+            raise CohortConstructionError(
+                f"Duplicate assembly_accession in candidate set: {len(dups)} accession(s) "
+                f"shared by multiple strain_ids (sample: {sample[0]} -> {sample[1]}). "
+                f"Same-genome LOSO leakage would result. Dedup at source OR pass "
+                f"allow_duplicate_accessions=True if intentional."
+            )
 
     qualified = _filter_by_assembly_quality(candidates, criteria)
     if not qualified:
