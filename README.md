@@ -10,7 +10,9 @@ Phase 1 evidence collection closed 2026-05-17. Cross-drug architectural finding 
 
 EP1 cipro closed internally (`wiki/cipro_ep1_closeout_2026-05-17.md`) with a 4-tier adversarial audit infrastructure (mechanism × MIC × opacity merge with structurally-enforced SUSPEND gate). EP2 cef + tet smoke fired (cef PASS, tet FAIL, H17 falsified). No Databricks burst spent. External publication deferred per PC1=`internal_closeout`.
 
-Phase 1 code: all 18 implementation steps shipped Wave 0-7 (2026-05-11 → 2026-05-12) + 3 hardening waves; cross-drug Evidence Packet evidence collection completed 2026-05-17 per the Evidence Packets framing reset 2026-05-15. **Phase 2 entry:** BV-BRC strict-MIC 3-drug feasibility census (per `project_state/dna-decode-2026-05-11.md` Candidate-next-actions row 1) — deferred to a fresh session; open via `/idea-anchor` + `/project-init` first per the synthesis's narrow reopen rule.
+Phase 1 code: all 18 implementation steps shipped Wave 0-7 (2026-05-11 → 2026-05-12) + 3 hardening waves; cross-drug Evidence Packet evidence collection completed 2026-05-17 per the Evidence Packets framing reset 2026-05-15. **Phase 2 entry fired 2026-05-18**: BV-BRC strict-MIC 4-drug feasibility census ran (`scripts/bvbrc_strict_mic_4drug_census.py` + `wiki/bvbrc_strict_mic_4drug_census_2026-05-18.{md,json}`) — NO drug clears N=150 per-class at either strict-MIC or relaxed-MIC bars; structural bottleneck is `assembly_accession`. North star clarified: AI DNA decoder tool, not papers. v0 UX + success criteria LOCKED at `wiki/decoder_v0_ux_and_success_criterion.md` (CLI via `pipeline.py predict`, LOSO AUROC ≥ 0.70, cipro v0 / cef v0.1, JSON + markdown sidecar). 3 of 5 v0 criteria green via 24 new tests; 2 gated on Databricks N=147 cipro cache landing.
+
+**Phase 2 in-flight (2026-05-22 → ongoing)**: cipro interpretability audit completed on Precision 7780 (RTX 3500 Ada) by parallel Codex CLI session (`wiki/current_cipro_interpretability_audit_2026-05-21.{json,md}`). Bounded-falsifier coordination plan committed (`wiki/cipro_bounded_falsifier_coordination_plan_2026-05-22.md`) — Codex executes 12-strain bounded falsifier (4 ERS control / 4 ELX-family failure / 4 all-negative-Δ) with parallel `scripts/leakage_check_dup_accession.py` gate. Post-falsifier ship-path technical plan covers all 4 verdict branches × 3 gate states (`plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md`). `attribution_scope_confidence` field added to `pipeline.py predict` (defaults to INDETERMINATE pre-falsifier). Cohort-build accession-uniqueness assertion landed in `dna_decode/data/cohort.py::build_cohort` to prevent future LOSO same-genome leakage by construction. 664 tests green (+295 vs Phase 2 entry).
 
 See `plans/EP1_EP2_Cross_Drug_Synthesis_Plan.md` for the synthesis plan; `plans/Cipro_Decision_Bundle_Plan.md` + `plans/Cipro_Decision_Bundle_Technical_Plan.md` for the EP1 closeout planning chain; `plans/EP2_Cef_Tet_Smoke_Design_Plan.md` for the EP2 design. See `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the original Phase 1 contracted ship-path. See `plans/Ecoli_G2P_Platform_Technical_Plan.md` for the full Phase 1 plan with Tier 1-5 attribution-success framework. See `docs/ARCHITECTURE.md` for the module map.
 
@@ -24,6 +26,8 @@ What runs end-to-end today:
 | **Leaderboard fan-out** | `python scripts/leaderboard.py --drugs ... --models evo,dnabert2` | Loops pipeline.py train per (model × drug); writes `data/processed/leaderboard.md`. |
 | **Quant-fidelity check** | `python scripts/quantize_fidelity_check.py --full-precision-attributions <manifest.json> --quantized-attributions <manifest.json>` | One-time 4-bit vs full-precision ISM concordance check; gates whether Phase 1 attribution numbers are quantization-conditional. |
 | **Viz** | `dna_decode.viz.browser.render_attribution_plot` + `export_attribution_tsv` | matplotlib PNG + TSV export; pygenometracks deferred to Phase 2. |
+| **BV-BRC strict-MIC 4-drug feasibility census** | `python -m scripts.bvbrc_strict_mic_4drug_census` | Phase 2 entry (2026-05-18). Per-drug feasibility at strict + relaxed bars for cipro/cef/tet/gent. Writes `wiki/bvbrc_strict_mic_4drug_census_<date>.{md,json}`. Imports from `dna_decode/data/mic_tiers.py` (shared per-drug catalogs). |
+| **v0 decoder predict** | `python -m scripts.pipeline predict --strain-id X --model-path M.pkl --cache C.h5 --annotations G.gff3 --audit-merge-json A.json --output Y.json` | v0 schema per `wiki/decoder_v0_ux_and_success_criterion.md` (2026-05-18 LOCKED). Emits JSON + markdown sidecar with prediction + calibrated_probability + confidence_tier + top_k_attribution + audit_verdict (SUSPEND propagation) + provenance. |
 
 Module map: `dna_decode/data/` (ingestion) + `dna_decode/models/` (foundation wrappers + cache + classifiers + classical baselines; `cache.verify_complete` integrity gate added 2026-05-15) + `dna_decode/interp/` (ISM + Tier 1-5 attribution) + `dna_decode/eval/` (CV + metrics + batched-call phylogeny + clade-only baseline) + `dna_decode/viz/` (browser) + `tools/` (Stage 2 bioinformatics-tool runner via Docker Desktop — Mash + AMRFinderPlus + Bakta).
 
@@ -121,6 +125,30 @@ uv run python scripts/quantize_fidelity_check.py \
   --quantized-attributions quantized_manifest.json \
   --drug ciprofloxacin
 ```
+
+## Decoder v0 quickstart (Phase 2 in-flight)
+
+The v0 AI DNA decoder operates on **cached strains** — a strain whose NT embeddings already live in the HDF5 cache (built by `pipeline ingest` + the Databricks N=147 cipro populate). UX + success criteria locked in `wiki/decoder_v0_ux_and_success_criterion.md`.
+
+```bash
+# Predict cipro R/S for a cached strain, with top-K attribution + audit-verdict propagation.
+uv run python -m scripts.pipeline predict \
+  --model-path data/processed/models/ciprofloxacin_nucleotide_transformer.pkl \
+  --strain-id 562.12345 \
+  --cache D:/dna_decode_cache/embeddings/nt_n147_cipro.h5 \
+  --annotations D:/dna_decode_cache/refseq/GCF_xxx.x/annotations.gff3 \
+  --audit-merge-json wiki/cipro_mechanism_phenotype_merge_2026-05-17.json \
+  --output result.json
+```
+
+Writes `result.json` + `result.md` (markdown sidecar) per the v0 schema:
+
+- `prediction` (R/S) + `calibrated_probability` + `confidence_tier` (HIGH/MEDIUM/LOW)
+- `top_k_attribution` — gene-level ISM hits with resistance-catalog tier labels (Tier 1–5)
+- `audit_verdict` — propagated from the merge gate; explicit `suspend_gate_fired` flag + verdict explanation when training cohort had `SUSPEND_CONDITION_4`
+- `provenance` — model, training cohort, LOSO AUROC, trained-on date
+
+**Not a clinical decision support tool.** Audit verdict + provenance must accompany any downstream interpretation. See `wiki/decoder_v0_ux_and_success_criterion.md` for full v0 schema + success criteria.
 
 ## Phase 1 success criteria
 
