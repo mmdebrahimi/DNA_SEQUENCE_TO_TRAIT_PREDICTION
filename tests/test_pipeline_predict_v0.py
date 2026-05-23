@@ -212,3 +212,108 @@ def test_markdown_disclaimer_present():
     from scripts.pipeline import _render_predict_markdown
     md = _render_predict_markdown(_sample_result())
     assert "Not a clinical decision support tool" in md
+
+
+# ---- _locus_tag_prefix ----
+
+
+def test_locus_tag_prefix_extracts_alpha_prefix():
+    from scripts.pipeline import _locus_tag_prefix
+    assert _locus_tag_prefix("ELX_001") == "ELX"
+    assert _locus_tag_prefix("ERS123456_00010") == "ERS"
+    assert _locus_tag_prefix("b2231") == "B"  # E. coli K12-style: alpha prefix only
+    assert _locus_tag_prefix("OLZ10_24785") == "OLZ"
+
+
+def test_locus_tag_prefix_handles_edge_cases():
+    from scripts.pipeline import _locus_tag_prefix
+    assert _locus_tag_prefix("") == ""
+    assert _locus_tag_prefix("123_no_alpha_first") == ""
+    assert _locus_tag_prefix(None) == ""  # tolerant
+
+
+# ---- _classify_attribution_scope ----
+
+
+def test_attribution_scope_indeterminate_pre_falsifier():
+    """Pre-falsifier (verdict=None) always returns INDETERMINATE."""
+    from scripts.pipeline import _classify_attribution_scope
+    assert _classify_attribution_scope("ERS", falsifier_verdict=None) == "INDETERMINATE"
+    assert _classify_attribution_scope("ELX", falsifier_verdict=None) == "INDETERMINATE"
+    assert _classify_attribution_scope("", falsifier_verdict=None) == "INDETERMINATE"
+
+
+def test_attribution_scope_indeterminate_when_saturated():
+    """Saturated classifier -> INDETERMINATE regardless of locus-tag prefix."""
+    from scripts.pipeline import _classify_attribution_scope
+    assert _classify_attribution_scope("ERS", saturated=True, falsifier_verdict="PASS") == "INDETERMINATE"
+    assert _classify_attribution_scope("ELX", saturated=True, falsifier_verdict="PASS") == "INDETERMINATE"
+
+
+def test_attribution_scope_indeterminate_when_all_negative_delta():
+    """Bucket C falsifier pattern -> INDETERMINATE."""
+    from scripts.pipeline import _classify_attribution_scope
+    result = _classify_attribution_scope(
+        "OLZ", all_negative_delta=True, falsifier_verdict="PASS"
+    )
+    assert result == "INDETERMINATE"
+
+
+def test_attribution_scope_high_for_ers_post_pass():
+    """ERS-prefix strain after PASS verdict -> HIGH."""
+    from scripts.pipeline import _classify_attribution_scope
+    assert _classify_attribution_scope("ERS", falsifier_verdict="PASS") == "HIGH"
+    assert _classify_attribution_scope("ers", falsifier_verdict="PASS") == "HIGH"  # case insensitive
+
+
+def test_attribution_scope_partial_for_elx_family_post_pass():
+    """ELX-family strains -> PARTIAL even on PASS (batch-clade failure case)."""
+    from scripts.pipeline import _classify_attribution_scope
+    for prefix in ("ELX", "ELY", "ELV", "ELU", "ELT"):
+        assert _classify_attribution_scope(prefix, falsifier_verdict="PASS") == "PARTIAL"
+
+
+def test_attribution_scope_partial_fallback_for_unknown_prefix_post_pass():
+    """Unknown prefix on PASS -> PARTIAL (no falsifier evidence)."""
+    from scripts.pipeline import _classify_attribution_scope
+    assert _classify_attribution_scope("XYZ", falsifier_verdict="PASS") == "PARTIAL"
+    assert _classify_attribution_scope("", falsifier_verdict="PASS") == "PARTIAL"
+
+
+def test_attribution_scope_partial_for_ers_post_fail():
+    """ERS on FAIL -> PARTIAL (ERS-control passed but cohort-wide method failed)."""
+    from scripts.pipeline import _classify_attribution_scope
+    assert _classify_attribution_scope("ERS", falsifier_verdict="FAIL") == "PARTIAL"
+
+
+def test_attribution_scope_high_via_cohort_wide_override():
+    """Explicit cohort-wide HIGH flag -> HIGH for any non-INDETERMINATE strain."""
+    from scripts.pipeline import _classify_attribution_scope
+    assert _classify_attribution_scope(
+        "XYZ", falsifier_verdict="PASS", falsifier_pass_passes_high=True
+    ) == "HIGH"
+    # But saturation/negative-delta still wins
+    assert _classify_attribution_scope(
+        "XYZ", saturated=True, falsifier_verdict="PASS", falsifier_pass_passes_high=True
+    ) == "INDETERMINATE"
+
+
+# ---- attribution scope confidence rendering ----
+
+
+def test_markdown_includes_attribution_scope_confidence():
+    """Field shows up in markdown sidecar."""
+    from scripts.pipeline import _render_predict_markdown
+    r = _sample_result()
+    r["attribution_scope_confidence"] = "PARTIAL"
+    md = _render_predict_markdown(r)
+    assert "**Attribution scope confidence:** PARTIAL" in md
+
+
+def test_markdown_defaults_attribution_scope_to_indeterminate_when_missing():
+    """Backward-compat: result dict without the field renders as INDETERMINATE."""
+    from scripts.pipeline import _render_predict_markdown
+    r = _sample_result()
+    r.pop("attribution_scope_confidence", None)
+    md = _render_predict_markdown(r)
+    assert "**Attribution scope confidence:** INDETERMINATE" in md

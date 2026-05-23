@@ -301,7 +301,8 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
         gate = validation_gate(per_clade_foundation, per_clade_baseline)
         print(f"[train] validation_gate: {gate.get('passed')} ({gate.get('fraction_passing')})")
 
-    # Save trained model
+    # Save trained model + provenance fields for v0 predict output
+    from datetime import date as _train_date
     full_clf = _train_fn(X, y)
     model_dir = _resolve_model_dir(cfg, args.models_dir)
     model_dir.mkdir(parents=True, exist_ok=True)
@@ -314,7 +315,11 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
                 "model_name": args.model,
                 "feature_dim": X.shape[1],
                 "auroc_loso": float(metrics.auroc) if not np.isnan(metrics.auroc) else None,
+                "auroc_lomo_clade_out": None,  # v1+ — LOMO-clade-out gated on more cohorts
                 "strain_id_order": strain_id_order,
+                "n_strains": len(strain_id_order),
+                "training_cohort": cohort_path.stem,
+                "trained_on": _train_date.today().isoformat(),
             },
             f,
         )
@@ -332,8 +337,255 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
 # ---- predict subcommand ----
 
 
+def _confidence_tier(proba: float) -> str:
+    """Map calibrated probability to HIGH / MEDIUM / LOW confidence tier.
+
+    HIGH:   proba >= 0.9 or <= 0.1 (clear call, large margin from threshold)
+    MEDIUM: proba in [0.7, 0.9) or (0.1, 0.3] (clear-ish but smaller margin)
+    LOW:    proba in (0.3, 0.7) (near decision threshold)
+
+    Compares against proba directly (not abs(proba - 0.5)) to avoid the
+    floating-point precision bug at 0.7 / 0.3 boundaries.
+    """
+    if proba >= 0.9 or proba <= 0.1:
+        return "HIGH"
+    if proba >= 0.7 or proba <= 0.3:
+        return "MEDIUM"
+    return "LOW"
+
+
+# Locus-tag prefix families learned from the 2026-05-21 cipro interpretability
+# audit (wiki/current_cipro_interpretability_audit_2026-05-21.json). ERS strains
+# are the working-attribution control; ELX/ELY/ELV/ELU/ELT/OLZ/AM strains are
+# the batch-clade failure cases where gene-level ISM rank-collapses on QRDR.
+# Constants refined post-falsifier; see plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md.
+_ATTRIBUTION_ERS_CONTROL_PREFIXES: frozenset[str] = frozenset({"ERS"})
+_ATTRIBUTION_ELX_FAMILY_PREFIXES: frozenset[str] = frozenset({"ELX", "ELY", "ELV", "ELU", "ELT"})
+_ATTRIBUTION_NEGATIVE_DELTA_PREFIXES: frozenset[str] = frozenset({"OLZ", "AM"})
+
+
+def _locus_tag_prefix(locus_tag: str) -> str:
+    """Extract the leading alphabetic-only prefix of a locus_tag (e.g., 'ELX_001' -> 'ELX')."""
+    import re as _re
+    if not locus_tag:
+        return ""
+    m = _re.match(r"([A-Za-z]+)", str(locus_tag))
+    return m.group(1).upper() if m else ""
+
+
+def _classify_attribution_scope(
+    locus_tag_prefix: str,
+    saturated: bool = False,
+    all_negative_delta: bool = False,
+    falsifier_verdict: str | None = None,
+    falsifier_pass_passes_high: bool = False,
+) -> str:
+    """Classify per-strain attribution-scope confidence as HIGH / PARTIAL / INDETERMINATE.
+
+    Pre-falsifier (`falsifier_verdict is None`): always returns INDETERMINATE -
+    no certified scope yet.
+
+    Post-falsifier:
+      - INDETERMINATE if classifier saturated OR all known-locus deltas are
+        non-positive (Bucket C falsifier pattern).
+      - HIGH if locus-tag prefix is in the ERS control set AND verdict is PASS,
+        OR `falsifier_pass_passes_high=True` (user-confirmed cohort-wide HIGH).
+      - HIGH if locus-tag prefix is in the negative-delta-source set
+        (OLZ/AM strains) ONLY if not flagged saturated/all-negative.
+        Defaults to PARTIAL otherwise.
+      - PARTIAL if locus-tag prefix is in the ELX family (batch-clade failure
+        case at falsifier-tested fidelity).
+      - PARTIAL fallback for any other prefix (no falsifier evidence either way).
+
+    Locus-tag-prefix proxy is a heuristic - lower fidelity than Mash-clade-
+    based classification. Documented in the v0 spec under 'Honest output.'
+    See plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md Step F sub-step 2.
+    """
+    if falsifier_verdict is None:
+        return "INDETERMINATE"
+    if saturated or all_negative_delta:
+        return "INDETERMINATE"
+    if falsifier_verdict == "PASS" and falsifier_pass_passes_high:
+        return "HIGH"
+    prefix = (locus_tag_prefix or "").upper()
+    if prefix in _ATTRIBUTION_ERS_CONTROL_PREFIXES and falsifier_verdict == "PASS":
+        return "HIGH"
+    if prefix in _ATTRIBUTION_ELX_FAMILY_PREFIXES:
+        return "PARTIAL"
+    return "PARTIAL"
+
+
+def _load_audit_verdict(merge_json_path: Path | None, strain_id: str) -> dict | None:
+    """Read the merge-gate JSON sidecar; extract this strain's audit verdict.
+
+    Returns None if path not provided, file missing, or strain not in the audit.
+    Wires the v0 success criterion #4 ("audit-aware honest output"): if the
+    training cohort had `SUSPEND_CONDITION_4`, the prediction inherits that
+    framing instead of silently overclaiming.
+    """
+    if not merge_json_path:
+        return None
+    p = Path(merge_json_path)
+    if not p.exists():
+        return None
+    import json as _json
+    with open(p, encoding="utf-8") as f:
+        merge = _json.load(f)
+    # Cohort-level verdict + per-strain row
+    cohort_gate = merge.get("gate_verdict") or merge.get("recommended_next_step")
+    for row in merge.get("per_strain", []):
+        if str(row.get("strain_id")) == str(strain_id):
+            verdict: dict = {
+                "noise_class": row.get("noise_class"),
+                "mechanism_opacity_flag": row.get("mechanism_opacity_flag"),
+                "mic_tier": row.get("mic_tier"),
+                "primary_mechanisms": row.get("primary_mechanisms", []),
+                "co_resistance_modifiers": row.get("co_resistance_modifiers", []),
+                "cohort_gate_verdict": cohort_gate,
+            }
+            # Surface SUSPEND warning explicitly
+            if cohort_gate and "SUSPEND" in str(cohort_gate).upper():
+                verdict["suspend_gate_fired"] = True
+                verdict["verdict_explanation"] = (
+                    f"Training cohort fired {cohort_gate}; categorical labels carry noise. "
+                    "Prediction is informational only; do not deploy as clinical decision support."
+                )
+            else:
+                verdict["suspend_gate_fired"] = False
+            return verdict
+    return None  # strain not found in audit (e.g., held-out new strain)
+
+
+def _extract_top_k_attribution(
+    classifier,
+    strain_gene_embeddings: dict,
+    annotations,
+    drug: str,
+    catalog,
+    top_k: int,
+) -> list[dict]:
+    """Run gene-level ISM + tier the top-K via the resistance catalog.
+
+    Falls back to ISM-only (no tier labels) when catalog is None. Wires the
+    v0 success criterion #3 ("top-K attribution includes >=1 known-mechanism gene").
+    """
+    from dna_decode.interp.mutagenesis import (
+        build_attribution_report,
+        gene_level_mutagenesis,
+    )
+
+    gene_effects = gene_level_mutagenesis(classifier, strain_gene_embeddings, annotations)
+    top_rows = gene_effects.head(top_k)
+
+    if catalog is None:
+        return [
+            {
+                "gene_id": str(row.get("gene_id", "")),
+                "locus_tag": str(row.get("locus_tag", "")),
+                "score": float(row.get("prediction_delta", 0.0)),
+                "tier": "Tier ? (no resistance catalog provided)",
+            }
+            for _, row in top_rows.iterrows()
+        ]
+
+    report = build_attribution_report(gene_effects, drug, catalog, top_k=top_k, annotations=annotations)
+    tier_by_locus = {locus: tier for locus, tier in report.hits}
+    out: list[dict] = []
+    for _, row in top_rows.iterrows():
+        locus = str(row.get("locus_tag", "") or row.get("gene_id", ""))
+        tier_obj = tier_by_locus.get(locus)
+        out.append({
+            "gene_id": str(row.get("gene_id", "")),
+            "locus_tag": str(row.get("locus_tag", "")),
+            "score": float(row.get("prediction_delta", 0.0)),
+            "tier": f"Tier {tier_obj.tier} ({tier_obj.rationale})" if tier_obj else "Tier 5 (no catalog match)",
+        })
+    return out
+
+
+def _render_predict_markdown(result: dict) -> str:
+    """Format the v0 prediction as a human-readable markdown report."""
+    lines = [
+        f"# Decode result — strain `{result['strain_id']}` / drug `{result['drug']}`",
+        "",
+        f"**Prediction:** {result['prediction']}",
+        f"**Calibrated probability (R):** {result['calibrated_probability']:.3f}",
+        f"**Confidence tier:** {result['confidence_tier']}",
+        f"**Attribution scope confidence:** {result.get('attribution_scope_confidence', 'INDETERMINATE')}",
+        "",
+        "## Top-K gene attribution",
+        "",
+    ]
+    if not result.get("top_k_attribution"):
+        lines.extend(["(no attribution run — pass `--annotations` to enable)", ""])
+    else:
+        lines.extend([
+            "| Rank | Gene | Locus | Score | Tier |",
+            "|---:|---|---|---:|---|",
+        ])
+        for i, hit in enumerate(result["top_k_attribution"], start=1):
+            lines.append(
+                f"| {i} | {hit['gene_id']} | {hit['locus_tag']} | "
+                f"{hit['score']:+.4f} | {hit['tier']} |"
+            )
+        lines.append("")
+
+    av = result.get("audit_verdict")
+    lines.extend(["## Audit verdict", ""])
+    if av is None:
+        lines.extend([
+            "(no audit data — pass `--audit-merge-json` to surface training-cohort noise framing)",
+            "",
+        ])
+    else:
+        if av.get("suspend_gate_fired"):
+            lines.extend([
+                f"**SUSPEND gate fired on training cohort.** {av.get('verdict_explanation', '')}",
+                "",
+            ])
+        lines.extend([
+            f"- Cohort gate verdict: `{av.get('cohort_gate_verdict')}`",
+            f"- Strain noise class: `{av.get('noise_class')}`",
+            f"- MIC tier: `{av.get('mic_tier')}`",
+            f"- Mechanism opacity flag: `{av.get('mechanism_opacity_flag')}`",
+            f"- Primary mechanisms: {av.get('primary_mechanisms') or 'none'}",
+            f"- Co-resistance modifiers: {av.get('co_resistance_modifiers') or 'none'}",
+            "",
+        ])
+
+    prov = result.get("provenance", {})
+    lines.extend([
+        "## Provenance",
+        "",
+        f"- Model: {prov.get('model', 'unknown')}",
+        f"- Training cohort: {prov.get('training_cohort', 'unknown')}",
+        f"- LOSO AUROC: {prov.get('loso_auroc')}",
+        f"- Trained on: {prov.get('trained_on', 'unknown')}",
+        "",
+        "---",
+        "",
+        "Not a clinical decision support tool. Audit verdict + provenance block must accompany any downstream interpretation.",
+    ])
+    return "\n".join(lines)
+
+
 def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
-    """Predict resistance for a single FASTA via a trained classifier."""
+    """Predict resistance for a cached strain — v0 schema (JSON + markdown).
+
+    Inputs (the strain must already have cache entries; run `ingest` first
+    if not, or use the Stage 2 cipro cohort that the Databricks job populates):
+      --model-path        trained classifier pickle (output of `train`)
+      --strain-id         BV-BRC strain ID (required; FASTA path is v0.1+)
+      --cache             HDF5 embedding cache path
+      --annotations       GFF3 file for attribution (optional but recommended)
+      --card-path         CARD JSON for tier labels (optional)
+      --amrfinder-path    AMRFinder TSV for tier labels (optional)
+      --audit-merge-json  merge-gate JSON sidecar (for SUSPEND verdict propagation)
+      --top-k             top-K genes to attribute (default 10)
+      --output            JSON output path (markdown sidecar auto-generated alongside)
+      --output-md         explicit markdown output path (defaults to <output>.md)
+      --no-attribution    skip ISM attribution (faster prediction)
+    """
     import json
 
     model_path = Path(args.model_path)
@@ -342,30 +594,30 @@ def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
         return 2
     with open(model_path, "rb") as f:
         bundle = pickle.load(f)
-    print(f"[predict] loaded {bundle['drug']} classifier ({bundle['model_name']})")
+    drug = bundle["drug"]
+    model_name = bundle["model_name"]
+    print(f"[predict] loaded {drug} classifier ({model_name})")
 
-    # For Phase 1, predict from a pre-computed cache entry (full FASTA →
-    # embedding requires foundation model + GPU; deferred via the same
-    # pattern as Step 7 lazy load)
-    print(
-        "[predict] real-FASTA inference path requires running ingest + cache "
-        "populate first. Phase 1 predict subcommand operates on cached strains."
-    )
     if not args.strain_id:
-        print("[predict] --strain-id required (FASTA inference path deferred)", file=sys.stderr)
+        print(
+            "[predict] --strain-id required. v0 operates on cached strains; "
+            "real-FASTA inference path is v0.1+.",
+            file=sys.stderr,
+        )
         return 2
 
+    from dna_decode.data.annotations import parse_gff3
     from dna_decode.models.cache import EmbeddingCache
     from dna_decode.models.classifiers import aggregate_strain_features, predict_proba
 
-    foundation_cfg = cfg.get("foundation_models", {}).get(bundle["model_name"])
+    foundation_cfg = cfg.get("foundation_models", {}).get(model_name)
     if foundation_cfg is None:
-        print(f"[predict] foundation model {bundle['model_name']!r} not in config", file=sys.stderr)
+        print(f"[predict] foundation model {model_name!r} not in config", file=sys.stderr)
         return 2
-    cache_path = _resolve_cache_path(cfg, args.cache, bundle["model_name"])
+    cache_path = _resolve_cache_path(cfg, args.cache, model_name)
     cache = EmbeddingCache(
         cache_path,
-        model_name=bundle["model_name"],
+        model_name=model_name,
         model_version=foundation_cfg["huggingface_id"],
         embedding_dim=foundation_cfg["embedding_dim"],
     )
@@ -373,20 +625,87 @@ def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
     if not gene_ids:
         print(f"[predict] no cached embeddings for strain {args.strain_id!r}", file=sys.stderr)
         return 2
+
+    # Mean-pool features for classifier
     gene_matrix = cache.bulk_get([(args.strain_id, g) for g in gene_ids])
     X = aggregate_strain_features(gene_matrix, "mean").reshape(1, -1)
     proba = float(predict_proba(bundle["classifier"], X)[0])
-    out = {
-        "strain_id": args.strain_id,
-        "drug": bundle["drug"],
-        "model_name": bundle["model_name"],
-        "probability_resistant": proba,
-        "binary_prediction": int(proba >= 0.5),
+    prediction = "R" if proba >= 0.5 else "S"
+    confidence = _confidence_tier(proba)
+    print(f"[predict] strain={args.strain_id}: {prediction} (p={proba:.3f}, conf={confidence})")
+
+    # Optional attribution
+    top_k_attr: list[dict] = []
+    if args.no_attribution:
+        print("[predict] attribution skipped (--no-attribution)")
+    else:
+        annotations = None
+        if args.annotations:
+            annotations = parse_gff3(args.annotations)
+        catalog = None
+        if args.card_path and args.amrfinder_path:
+            from dna_decode.data.resistance_db import load_amrfinder, load_card, merge_catalogs
+            catalog = merge_catalogs(load_card(args.card_path), load_amrfinder(args.amrfinder_path))
+        strain_gene_embeddings = {g: cache.get(args.strain_id, g) for g in gene_ids}
+        top_k_attr = _extract_top_k_attribution(
+            bundle["classifier"], strain_gene_embeddings, annotations, drug, catalog, args.top_k
+        )
+        print(f"[predict] top-{args.top_k} attribution computed ({len(top_k_attr)} hits)")
+
+    # Audit verdict from merge-gate JSON if provided
+    audit = _load_audit_verdict(
+        Path(args.audit_merge_json) if args.audit_merge_json else None,
+        args.strain_id,
+    )
+
+    # Attribution-scope confidence (per plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md
+    # Step F sub-step 2). Pre-falsifier: always INDETERMINATE. Post-falsifier:
+    # locus-tag-prefix proxy from top-1 attribution hit (or empty if no attribution).
+    top_locus_prefix = (
+        _locus_tag_prefix(top_k_attr[0]["locus_tag"]) if top_k_attr else ""
+    )
+    saturated = proba >= 0.95
+    attribution_scope_confidence = _classify_attribution_scope(
+        locus_tag_prefix=top_locus_prefix,
+        saturated=saturated,
+        all_negative_delta=False,  # post-falsifier wires this from results JSON
+        falsifier_verdict=None,    # pre-falsifier default; updated when verdict lands
+    )
+
+    # Provenance block from the training-pickle bundle
+    provenance = {
+        "model": f"{model_name} + XGBoost (frozen)",
+        "training_cohort": bundle.get("training_cohort", "unknown"),
+        "loso_auroc": bundle.get("auroc_loso"),
+        "lomo_clade_out_auroc": bundle.get("auroc_lomo_clade_out"),
+        "trained_on": bundle.get("trained_on", "unknown"),
     }
+
+    result = {
+        "strain_id": args.strain_id,
+        "drug": drug,
+        "prediction": prediction,
+        "calibrated_probability": proba,
+        "confidence_tier": confidence,
+        "attribution_scope_confidence": attribution_scope_confidence,
+        "top_k_attribution": top_k_attr,
+        "audit_verdict": audit,
+        "provenance": provenance,
+    }
+
+    # Write JSON + markdown sidecar
     if args.output:
-        Path(args.output).write_text(json.dumps(out, indent=2), encoding="utf-8")
-        print(f"[predict] result written: {args.output}")
-    print(json.dumps(out, indent=2))
+        out_json_path = Path(args.output)
+        out_json_path.parent.mkdir(parents=True, exist_ok=True)
+        out_json_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        print(f"[predict] JSON written: {out_json_path}")
+
+        out_md_path = Path(args.output_md) if args.output_md else out_json_path.with_suffix(".md")
+        out_md_path.write_text(_render_predict_markdown(result), encoding="utf-8")
+        print(f"[predict] markdown written: {out_md_path}")
+    else:
+        # Console-only mode
+        print(json.dumps(result, indent=2))
     return 0
 
 
@@ -532,14 +851,27 @@ def build_parser() -> argparse.ArgumentParser:
     p_train.add_argument("--include-clade-baseline", action="store_true")
     p_train.add_argument("--min-auroc", type=float, default=0.80)
 
-    # predict
+    # predict (v0 — emits the schema in wiki/decoder_v0_ux_and_success_criterion.md)
     p_predict = sub.add_parser(
         "predict", help="Predict resistance from a cached strain + trained model."
     )
     p_predict.add_argument("--model-path", required=True)
     p_predict.add_argument("--strain-id", default=None)
     p_predict.add_argument("--cache", default=None)
-    p_predict.add_argument("--output", default=None)
+    p_predict.add_argument("--annotations", default=None, help="GFF3 file (enables attribution).")
+    p_predict.add_argument("--card-path", default=None, help="CARD JSON for tier labels.")
+    p_predict.add_argument("--amrfinder-path", default=None, help="AMRFinder TSV for tier labels.")
+    p_predict.add_argument(
+        "--audit-merge-json",
+        default=None,
+        help="Merge-gate JSON sidecar from `cipro_mechanism_phenotype_merge.py` (propagates SUSPEND verdict + per-strain noise class).",
+    )
+    p_predict.add_argument("--top-k", type=int, default=10)
+    p_predict.add_argument("--output", default=None, help="JSON output path. Markdown sidecar auto-generated as <output>.md.")
+    p_predict.add_argument("--output-md", default=None, help="Explicit markdown output path (overrides default).")
+    p_predict.add_argument(
+        "--no-attribution", action="store_true", help="Skip ISM attribution (faster).",
+    )
 
     # attribute
     p_attr = sub.add_parser("attribute", help="Run ISM + Tier 1-5 attribution.")
