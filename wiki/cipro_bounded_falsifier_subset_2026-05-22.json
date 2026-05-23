@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "date": "2026-05-22",
+    "source_audit": "current_cipro_interpretability_audit_2026-05-21.json",
+    "selection_logic": "3 buckets x 4 strains: ERS control / ELX-family failure / all-negative-delta. Falsifier passes only if Bucket A holds, Bucket B improves (median >=100x rank shift, >=2 of 4 into top-10), Bucket C either recovers or is explicitly flagged INDETERMINATE_ALL_NEGATIVE_DELTA with saturation diagnostic.",
+    "owner": "Claude (GTX 860M laptop) -> Codex (Precision 7780) executes"
+  },
+  "bucket_A_control_ERS": [
+    {"strain_id": "562.7693", "accession": "GCA_001284665.1", "locus_tag_prefix": "ERS", "best_qrdr_rank_baseline": 12,   "max_pos_delta_baseline": 0.1520},
+    {"strain_id": "562.7775", "accession": "GCA_001286305.1", "locus_tag_prefix": "ERS", "best_qrdr_rank_baseline": 31,   "max_pos_delta_baseline": 0.1289},
+    {"strain_id": "562.7660", "accession": "GCA_001284005.1", "locus_tag_prefix": "ERS", "best_qrdr_rank_baseline": 32,   "max_pos_delta_baseline": 0.0077},
+    {"strain_id": "562.7572", "accession": "GCA_001277535.1", "locus_tag_prefix": "ERS", "best_qrdr_rank_baseline": 41,   "max_pos_delta_baseline": 0.2021}
+  ],
+  "bucket_B_ELX_failure": [
+    {"strain_id": "562.45910", "accession": "GCA_004569165.1", "locus_tag_prefix": "ELT", "best_qrdr_rank_baseline": 1727, "max_pos_delta_baseline": 0.0001},
+    {"strain_id": "562.45849", "accession": "GCA_004567165.1", "locus_tag_prefix": "ELX", "best_qrdr_rank_baseline": 3178, "max_pos_delta_baseline": 0.0017},
+    {"strain_id": "562.50247", "accession": "GCA_004566895.1", "locus_tag_prefix": "ELX", "best_qrdr_rank_baseline": 2644, "max_pos_delta_baseline": 0.0009},
+    {"strain_id": "562.50233", "accession": "GCA_004566595.1", "locus_tag_prefix": "ELY", "best_qrdr_rank_baseline": 1110, "max_pos_delta_baseline": 0.0010}
+  ],
+  "bucket_C_all_negative_delta": [
+    {"strain_id": "562.115106", "accession": "GCA_026420925.1", "locus_tag_prefix": "OLZ", "best_known_locus_rank_baseline": null, "n_known_hits_baseline": 5, "note": "all known-locus deltas <= 0"},
+    {"strain_id": "562.17620",  "accession": "GCA_002192275.1", "locus_tag_prefix": "AM",  "best_known_locus_rank_baseline": null, "n_known_hits_baseline": 4, "note": "all known-locus deltas <= 0"},
+    {"strain_id": "562.19632",  "accession": "GCA_002180195.1", "locus_tag_prefix": "AM",  "best_known_locus_rank_baseline": null, "n_known_hits_baseline": 4, "note": "all known-locus deltas <= 0"},
+    {"strain_id": "562.34085",  "accession": "GCA_003571665.1", "locus_tag_prefix": "AM",  "best_known_locus_rank_baseline": null, "n_known_hits_baseline": 4, "note": "all known-locus deltas <= 0"}
+  ],
+  "pass_criteria": {
+    "bucket_A": ">= 3 of 4 still rank a QRDR locus in top-10 under positive-only delta ranking",
+    "bucket_B": ">= 2 of 4 move into top-10 AND median rank shift >= 100-fold improvement (e.g., 1727 -> <= 17)",
+    "bucket_C": "either recover >= 1 hit into top-50 OR emit INDETERMINATE_ALL_NEGATIVE_DELTA + report baseline_proba_R + max_abs_delta_all_genes for saturation discrimination"
+  },
+  "verdict_matrix": {
+    "PASS":             {"bucket_A": "pass", "bucket_B": "pass", "bucket_C": "pass_or_saturated", "action": "continue method refinement on N=67 + Mash-cluster + ship v0 standard"},
+    "FAIL":             {"bucket_A": "pass", "bucket_B": "fail", "bucket_C": "any",               "action": "ship v0 with scope-limit doc; ranking is not the bottleneck"},
+    "RUNNER_REGRESSION":{"bucket_A": "fail", "bucket_B": "any",  "bucket_C": "any",               "action": "halt; debug runner against audit baseline"},
+    "REVERT":           {"bucket_A": "any",  "bucket_B": "any",  "bucket_C": "any",               "trigger": "method change breaks working strains (positive Δ vanishes)", "action": "revert method change; ship v0 with current attribution"}
+  },
+  "diagnostic_export_required_when": "any path except RUNNER_REGRESSION",
+  "leakage_check_first": {
+    "duplicate_accession": "GCA_025200635.1",
+    "strain_ids": ["562.109860", "562.111036"],
+    "blocking": true,
+    "snippet_path": "scripts/leakage_check_dup_accession.py"
+  }
+}
