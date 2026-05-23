@@ -190,7 +190,20 @@ def _logit(p: float) -> float:
 
 
 def _ranked_by(deltas: list[float], descending: bool = True) -> list[int]:
-    """Return rank assignments (1-indexed) for the given deltas. Larger = better when descending."""
+    """Return rank assignments (1-indexed) for the given deltas. Larger = better when descending.
+
+    Contract:
+      - Returns a list of the same length as `deltas`.
+      - Each rank is in [1, len(deltas)]; no ties handled (numpy argsort is stable
+        so equal values get adjacent ranks in insertion order).
+      - When ranking positive-only data with non-positives mapped to 0.0
+        (see `pos_replaced` in run_strain), the ranks of the 0.0 entries are
+        ARBITRARY but contiguous-from-the-bottom. Consumers MUST gate on
+        `delta > 0` before reading the rank to avoid exposing arbitrary
+        ranks externally. The `per_known` dict's `rank_pos_delta` field +
+        `best_known_locus_rank_pos_delta` field both apply this gate; the
+        `top10_pos` list only iterates positive indices.
+    """
     order = np.argsort(-np.array(deltas) if descending else np.array(deltas))
     ranks = np.empty_like(order)
     for rank, idx in enumerate(order, start=1):
