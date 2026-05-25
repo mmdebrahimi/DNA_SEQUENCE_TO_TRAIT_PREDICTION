@@ -434,6 +434,16 @@ Best-case path: Step 0 → Step P (PASS) → tag v0. Total ~1-1.5 hr wallclock d
 
 ---
 
+## Post-execution status (2026-05-24)
+
+**Outcome:** Codex on Precision 7780 ran the falsifier; verdict = **FAIL** (Bucket A passed, Bucket B did not improve under positive-only Δ ranking). Per Step F, v0 shipped with documented scope-limit as `reports/cipro_v0_scope_limit_decision_2026-05-23.md`. Release packet at `reports/dna_decoder_v0_release_candidate_2026-05-24.md`. The v0 spec was RELOCKED at `wiki/decoder_v0_ux_and_success_criterion.md` to match the implemented cached-strain predictor (not the original genome-input decoder concept).
+
+Codex also caught the duplicate-accession leakage independently + retrained with `leave_one_accession_out` CV (matches this plan's Step L); leakage-safe CV AUROC = 0.8697.
+
+**Step P (PASS branch) did NOT fire** — Mash-cluster N=147 didn't run as part of the post-falsifier dispatch. HOWEVER, `scripts/mash_cluster_n147.py` is now reclassified as **v0.1 infrastructure** (useful for either v0.1 path: real-genome-input needs phylogenetic context for new strains; cef-cached expansion needs clade-balanced cohort). See `plans/v0.1_Ingestion_Contract_Plan.md`.
+
+**Status of cross-machine sync as of 2026-05-24:** Codex's pipeline.py changes + relocked spec + release packet + reports/ artifacts are on Precision 7780 only — NOT pushed to origin. Diagnostic tool at `scripts/cross_machine_sync_check.py` reports the drift. Next step: get Codex to push, OR transfer the divergent files manually.
+
 ## Coordination protocol with Codex (carries forward from coordination plan)
 
 - Codex transfers `cipro_bounded_falsifier_results_<DATE>.{md,json}` + `cipro_leakage_check_dup_accession_<DATE>.{md,json}` into `Downloads/`.
