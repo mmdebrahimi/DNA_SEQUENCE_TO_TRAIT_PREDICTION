@@ -1,6 +1,41 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: plans/v1_Horizon_Framing_Plan.md] 2026-05-24
+**Summary:** Drafts the "AI DNA decoder tool at maturity" framing as input for a future `/idea-anchor` + `/project-init` cycle. Resolves the long-overdue Pending Decisions row from 2026-05-17 ("/idea-anchor + /project-init proper entry"). NOT auto-invoking those skills; producing the candidate sentences + scoping doc the user can run them against. 3 candidate framings (1=Honest AMR predictor, 2=Bacterial G2P platform, 3=Multimodal decoder) + 7 open questions + ready-to-paste /idea-anchor invocation.
+**Key decisions:**
+- D1: 3 framings cover narrow / medium / broad scope; user picks one before /idea-anchor fires
+- D2: Recommended Framing 1 (Honest AMR resistance predictor) — tightest alignment with v0 + v0.1 paths, honest-output discipline as moat
+- D3: v1 success criteria (6 hard gates) + v1 explicit non-goals + v2+ horizon candidates
+- D4: Pending answers from user on framing / timeline / compute / honest-output gate / ship vehicle / license / co-authorship
+
+---
+
+## [plan_file: plans/v0.1_Ingestion_Contract_Plan.md] 2026-05-24
+**Summary:** v0.1 ingestion contract covering BOTH candidate paths (Path G = real-genome-input cipro decode; Path C = cef-cached expansion). Planning-only. 7 design decisions + 5 risk flags + 5-wave sequencing.
+**Key decisions:**
+- D1: Both paths share the v0 JSON output schema (additive, not breaking)
+- D2: leave_one_accession_out CV mandatory for any new training
+- D3: Top-K=10 mechanism recovery is target, NOT hard gate (matches v0 relock)
+- D4: Path G compute defaults to Precision 7780 (GTX 860M can't fit NT v2 100M)
+- D5: Path C gated on BV-BRC cef categorical-MIC feasibility check
+- D6: --audit-merge-json required for canonical reporting (carries from v0)
+- D7: Per-genome scoring; batch mode is v0.2+
+
+---
+
+## [plan_file: plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md] 2026-05-22 (EXECUTED 2026-05-23)
+**Summary:** Verdict-conditional ship-path plan locked the response to all 4 falsifier outcomes BEFORE results landed. Codex on Precision 7780 ran the falsifier 2026-05-23 — verdict FAIL. Step F (FAIL branch) fired: v0 shipped 2026-05-24 with documented scope-limit. v0 spec RELOCKED to match the cached-strain implementation. Pre-commitment discipline (verdict-vs-budget LESSON 2026-05-14) prevented motivated-reasoning around the FAIL result.
+**Key decisions (executed):**
+- D1: Pre-commit verdict-conditional response before results land
+- D2: PASS + FAIL both ship v0 — only attribution_scope_confidence default differs (FAIL fired)
+- D3: Saturation gate + lineage-confound are co-causes, not either/or
+- D4: Mash-cluster gated on PASS — DID NOT FIRE (verdict was FAIL)
+- D5: Pre-written commit-message templates per branch
+- D6: Schema lock between Codex's runner + Claude's consumer
+
+---
+
 ## [plan_file: wiki/cipro_bounded_falsifier_coordination_plan_2026-05-22.md] 2026-05-22
 **Summary:** Comprehensive coordination plan for the cipro bounded-falsifier experiment between Claude (GTX 860M laptop) + Codex CLI (Precision 7780, RTX 3500 Ada). Codex executes the falsifier; Claude owns subset selection + leakage check + scope-limit doc template. 12 sections covering roles, naming convention, 12-strain subset (4 ERS control / 4 ELX-family failure / 4 all-negative-Δ), parallel leakage check (<5s), diagnostic exports spec (saturation_flag via baseline_proba_R + max_abs_delta), Mash-cluster gating, v0 ship-or-document-scope-limit fork, verdict matrix.
 **Key decisions:**
