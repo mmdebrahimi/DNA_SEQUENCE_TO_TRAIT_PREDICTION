@@ -1,6 +1,17 @@
 # Decisions Log
 <!-- Auto-maintained by /retrospective. Do not edit manually. -->
 
+## [decision: Post-v0 EP ladder LOCKED + framing correction to tool-not-commercial] 2026-05-25
+**Salience:** HIGH
+**Session:** freeform
+**Modules:** plans/Post_V0_EP_Ladder_Plan.md (new), project_state/dna-decode-2026-05-11.md (Bellman frame + Action Log refresh), LESSONS_LEARNED.md (+4 entries), wiki/plans-index.md (+1 entry).
+**Corrections:** Long-running brainstorm chain (3 /brainstorm + 1 /probe + 1 /review in this session) successively over-weighted "sell to a large company" as the primary long-term framing. User corrected mid-session: "I did NOT reframe to DNA decoder resell — the long-term goal is the original 2026-05-11 DNA input → phenotype/trait identification framing; cipro v0 is step 0 toward that. Commercial outcome is downstream IF the tool works." Drafted "Commercial Discovery Prerequisites" technical plan was abandoned (NOT saved) per the corrected framing.
+**Reversals:** Earlier in session: "AI DNA decoder" was framed as a buyer-side commercial category (Codex's /probe critique caught the framing collision). User's correction RE-asserts the original tool-building primary frame; commercial framing is removed from forward plans (D7: "Commercialize" removed from EP ladder entirely).
+**Discoveries:** (a) EP-style labels are the repo convention since 2026-05-15 framing reset; forward planning that uses "Phase" labels collides with retrospective-only convention. (b) Architectural finding from 2026-05-17 (mean-pool fails on distributed mobile-element mechanisms) MUST gate multi-drug expansion — deferring it while adding drugs is a known-broken pattern. EP-1.5 architecture decision now sits between EP-1A (genome input) and EP-2 (multi-drug). (c) v1+ horizon framing draft (plans/v1_Horizon_Framing_Plan.md Framing 1 Honest AMR predictor) was recommended pre-correction; under the corrected framing, Framing 1 is too narrow (locks the project into AMR). The corrected destination is broader — "DNA → phenotype tool" — but bounded per-EP by terminal claims (D2). (d) Convergent recommendation across all prior rounds: EP-0 close (Codex push 5 outstanding artifacts) is non-negotiable + blocks everything downstream.
+**Lesson:** When a multi-clause user statement combines a primary goal with a downstream outcome (here: "first user = self; long-term = sell to large company"), treat the first clause as the framing and the second as the outcome unless the user is explicit. When a brainstorm chain produces 3+ rounds of convergent recommendations without action, that's a signal to STOP brainstorming + return to the original `/project-init` artifacts. Long-running brainstorm chains drift framing if not anchored back to the original goal. Corollary: analysis-fatigue is a real failure mode in solo LLM collaboration — once convergence is detected across 2 rounds, write the plan + commit + stop; subsequent rounds are refinement of the same answer, not new information.
+
+---
+
 ## [decision: v0 closeout FAIL-branch ship + RELOCKED spec + cross-machine sync infrastructure] 2026-05-24
 **Salience:** HIGH
 **Session:** freeform

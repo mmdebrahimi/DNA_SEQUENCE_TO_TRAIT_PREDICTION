@@ -1,6 +1,19 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: plans/Post_V0_EP_Ladder_Plan.md] 2026-05-25
+**Summary:** LOCKED EP ladder from cipro v0 (step 0) toward the long-term goal "DNA input → phenotype/trait identification at gene level." Convergent recommendation across 3 /brainstorm + 1 /probe + 1 /review rounds. Supersedes the misframed "Commercial Discovery Prerequisites" draft from earlier this session (NOT saved).
+**Key decisions:**
+- D1: Use Evidence Packet labels (EP-0, EP-1A/B/C, EP-1.5, EP-2, EP-2.5, EP-3) per the 2026-05-15 framing reset; "Phase" labels stay retrospective-only.
+- D2: Each EP has an explicit terminal claim to bound scope (resolves the 2026-05-11 unbounded "decode any DNA" problem per-EP).
+- D3: EP-2 (multi-drug) forks by mechanism class — cef (concentrated) reuses v0 arch; tet (distributed) requires EP-1.5 architecture decision first.
+- D4: EP-1C honest-output framework generalization is its own EP, not background.
+- D5: EP-1B external benchmark is its own EP (10 public AST-labeled E. coli genomes vs AMRFinderPlus + RGI).
+- D6: EP-4+ (non-AMR / eukaryotic / multimodal) = separate `/idea-anchor + /project-init` cycles per paired dataset; NOT roadmap commitments.
+- D7: "Commercialize" REMOVED from ladder — it's a downstream outcome, not a development phase.
+
+---
+
 ## [plan_file: plans/v1_Horizon_Framing_Plan.md] 2026-05-24
 **Summary:** Drafts the "AI DNA decoder tool at maturity" framing as input for a future `/idea-anchor` + `/project-init` cycle. Resolves the long-overdue Pending Decisions row from 2026-05-17 ("/idea-anchor + /project-init proper entry"). NOT auto-invoking those skills; producing the candidate sentences + scoping doc the user can run them against. 3 candidate framings (1=Honest AMR predictor, 2=Bacterial G2P platform, 3=Multimodal decoder) + 7 open questions + ready-to-paste /idea-anchor invocation.
 **Key decisions:**
