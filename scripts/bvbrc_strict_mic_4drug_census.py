@@ -369,6 +369,110 @@ def render_json(results: list[dict], output_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
+def build_cohort_from_census(
+    census_result: dict,
+    metadata: dict,
+    label_quality: str,
+    target_per_class: int,
+    balance_slack: int,
+    output_path: Path,
+) -> dict:
+    """Build a cohort parquet from a census_drug result.
+
+    Args:
+      census_result: output of census_drug() for ONE drug.
+      metadata: same metadata dict passed to census_drug (for MLST + accession lookup).
+      label_quality: "strict" (HIGH_R + HIGH_S only) or "relaxed" (HIGH + DECISIVE).
+      target_per_class: target R + S count separately.
+      balance_slack: acceptable per-class deviation.
+      output_path: cohort parquet output.
+
+    Returns dict with selected R/S counts + saved path. Raises ValueError if
+    feasibility doesn't permit the target.
+    """
+    # Local imports to avoid pulling cohort/StrainCohort into the census module
+    # by default (keeps the feasibility-only mode lightweight).
+    from dna_decode.data.cohort import (
+        CandidateStrain,
+        StrainCohort,
+        _mlst_balanced_selection,
+        save_cohort,
+    )
+
+    drug = census_result["drug"]
+    feasible = census_result["feasible_strain_ids"]
+
+    if label_quality == "strict":
+        r_ids = list(feasible["strict_r"])
+        s_ids = list(feasible["strict_s"])
+    elif label_quality == "relaxed":
+        r_ids = list(feasible["strict_r"]) + list(feasible["decisive_r"])
+        s_ids = list(feasible["strict_s"]) + list(feasible["decisive_s"])
+    else:
+        raise ValueError(f"unknown label_quality: {label_quality!r}")
+
+    # Hydrate strain_ids -> CandidateStrain objects via metadata (for MLST + accession)
+    def _make_candidate(sid: str, label: int) -> CandidateStrain | None:
+        meta = metadata.get(sid, {})
+        acc = str(meta.get("assembly_accession", "")).strip()
+        mlst = str(meta.get("mlst", "") or "").strip()
+        if not acc or not mlst or mlst.lower() in ("none", "nan"):
+            return None
+        try:
+            contigs = int(meta.get("contig_count", 0) or 0)
+            n50 = int(meta.get("n50", 0) or 0)
+        except (TypeError, ValueError):
+            return None
+        return CandidateStrain(
+            strain_id=sid,
+            assembly_accession=acc,
+            mlst=mlst,
+            country=str(meta.get("country", "") or ""),
+            year=str(meta.get("year", "") or ""),
+            contig_count=contigs,
+            n50=n50,
+            ast_labels={drug: label},
+        )
+
+    r_candidates = [c for c in (_make_candidate(s, 1) for s in r_ids) if c is not None]
+    s_candidates = [c for c in (_make_candidate(s, 0) for s in s_ids) if c is not None]
+
+    if len(r_candidates) < target_per_class - balance_slack:
+        raise ValueError(
+            f"{drug} R pool size {len(r_candidates)} is below target_per_class - balance_slack "
+            f"({target_per_class - balance_slack}); cannot build cohort at this tier"
+        )
+    if len(s_candidates) < target_per_class - balance_slack:
+        raise ValueError(
+            f"{drug} S pool size {len(s_candidates)} is below target_per_class - balance_slack "
+            f"({target_per_class - balance_slack}); cannot build cohort at this tier"
+        )
+
+    # Per-class MLST-balanced selection (matches build_stage2_n150_cohort.py pattern)
+    selected_r = _mlst_balanced_selection(r_candidates, target_per_class)
+    selected_s = _mlst_balanced_selection(s_candidates, target_per_class)
+
+    selected_strains = selected_r + selected_s
+    strain_ids_list = [c.strain_id for c in selected_strains]
+    cohort = StrainCohort(
+        strains=selected_strains,
+        per_drug_strain_ids={drug: strain_ids_list},
+        three_drug_intersection=[],
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    save_cohort(cohort, output_path)
+
+    return {
+        "drug": drug,
+        "label_quality": label_quality,
+        "r_count": len(selected_r),
+        "s_count": len(selected_s),
+        "output_path": str(output_path),
+        "pool_sizes": {"r_pool": len(r_candidates), "s_pool": len(s_candidates)},
+    }
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument(
@@ -407,6 +511,42 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--qc-min-n50", type=int, default=DEFAULT_QC_MIN_N50,
         help=f"Assembly QC min N50 (default: {DEFAULT_QC_MIN_N50})",
+    )
+    # EP-2.5 (2026-05-25): cohort-build mode extension. Lets ONE invocation
+    # do feasibility + cohort-build in one step. Satisfies the EP-2.5
+    # terminal claim from plans/Post_V0_EP_Ladder_Plan.md.
+    p.add_argument(
+        "--build",
+        default=None,
+        help="If set, build a cohort parquet for this drug AFTER running feasibility. "
+             "Must be one of the drugs in --drugs.",
+    )
+    p.add_argument(
+        "--label-quality",
+        choices=["strict", "relaxed"],
+        default="strict",
+        help="When --build is set: which label-quality tier to pick from. "
+             "strict = HIGH_R + HIGH_S only (4x safety margin). "
+             "relaxed = HIGH + DECISIVE in both directions. Default: strict.",
+    )
+    p.add_argument(
+        "--target-per-class",
+        type=int,
+        default=75,
+        help="When --build is set: target R-count + S-count separately (default 75).",
+    )
+    p.add_argument(
+        "--balance-slack",
+        type=int,
+        default=15,
+        help="When --build is set: acceptable per-class deviation (default +/-15).",
+    )
+    p.add_argument(
+        "--cohort-output",
+        type=Path,
+        default=None,
+        help="When --build is set: cohort parquet output path "
+             "(default: data/processed/<drug>_<label_quality>_cohort_<date>.parquet).",
     )
     return p
 
@@ -477,6 +617,45 @@ def main(argv: list[str] | None = None) -> int:
     for r in results:
         v = _verdict_string(r["feasibility_relaxed"], r["relaxed"]["high_or_decisive_r"], r["relaxed"]["high_or_decisive_s"], "")
         print(f"  {r['drug']:>16s}: {v.lstrip('*').strip()}")
+
+    # EP-2.5 (2026-05-25): cohort-build mode. Runs AFTER feasibility so the
+    # report is always emitted, even if cohort-build fails.
+    if args.build:
+        build_drug = args.build.lower()
+        target_result = next((r for r in results if r["drug"] == build_drug), None)
+        if target_result is None:
+            print(
+                f"\n[build] ERROR: --build drug {args.build!r} was not in --drugs list; "
+                f"add it to --drugs and re-run.",
+                file=sys.stderr,
+            )
+            return 2
+        if args.cohort_output is None:
+            args.cohort_output = Path(
+                f"data/processed/{build_drug}_{args.label_quality}_cohort_{today}.parquet"
+            )
+        print(
+            f"\n[build] building cohort for {build_drug} @ label_quality={args.label_quality}, "
+            f"target_per_class={args.target_per_class}, slack=+/-{args.balance_slack}"
+        )
+        try:
+            build_result = build_cohort_from_census(
+                target_result,
+                metadata,
+                label_quality=args.label_quality,
+                target_per_class=args.target_per_class,
+                balance_slack=args.balance_slack,
+                output_path=args.cohort_output,
+            )
+        except ValueError as e:
+            print(f"[build] ERROR: {e}", file=sys.stderr)
+            return 3
+        print(
+            f"[build] cohort: {build_result['r_count']}R + {build_result['s_count']}S "
+            f"(from pools R={build_result['pool_sizes']['r_pool']} / "
+            f"S={build_result['pool_sizes']['s_pool']})"
+        )
+        print(f"[build] saved: {build_result['output_path']}")
 
     return 0
 
