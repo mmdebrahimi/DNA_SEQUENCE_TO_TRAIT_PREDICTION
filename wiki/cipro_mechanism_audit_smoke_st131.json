@@ -1,0 +1,342 @@
+{
+  "cohort_path": "data\\processed\\gate_b_n40_cipro_cohort.parquet",
+  "refseq_cache": "D:\\dna_decode_cache\\refseq",
+  "drug": "ciprofloxacin",
+  "amrfinder_image": "ncbi/amr:4.2.7-2026-03-24.1",
+  "amrfinder_db_path": "C:/Users/Farshad/dna_decode_stage2/amrfinder_db",
+  "n_processed": 1,
+  "r_mech_counts": {
+    "QRDR_target_alteration": 1,
+    "efflux": 1,
+    "regulatory": 1
+  },
+  "s_mech_counts": {},
+  "r_no_known_mechanism": 0,
+  "s_silent_mechanism_hits": 0,
+  "qrdr_in_R_count": 1,
+  "plasmid_in_R_count": 0,
+  "verdict": "QRDR_DOMINANT",
+  "elapsed_sec": 87.06108117103577,
+  "per_strain": [
+    {
+      "strain_id": "1328433.3",
+      "accession": "GCA_000522345.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "acrB_R717L",
+          "class": "MACROLIDE",
+          "subclass": "AZITHROMYCIN/CLARITHROMYCIN/ERYTHROMYCIN",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.62",
+          "coverage": "100.00",
+          "mechanism": "efflux"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "acrR_S30HfsTer59",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "marR_V84WfsTer14",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.60",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "ptsI_V25I",
+          "class": "FOSFOMYCIN",
+          "subclass": "FOSFOMYCIN",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.65",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "parC_E84V",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.20",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.20",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "parE_I529L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.52",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "uhpT_E350Q",
+          "class": "FOSFOMYCIN",
+          "subclass": "FOSFOMYCIN",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.78",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul1",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qacEdelta1",
+          "class": "QUATERNARY AMMONIUM",
+          "subclass": "QUATERNARY AMMONIUM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "dfrA17",
+          "class": "TRIMETHOPRIM",
+          "subclass": "TRIMETHOPRIM",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "sul2",
+          "class": "SULFONAMIDE",
+          "subclass": "SULFONAMIDE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaKPC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "acquired",
+          "symbol": "tet(A)",
+          "class": "TETRACYCLINE",
+          "subclass": "TETRACYCLINE",
+          "method": "EXACTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_E84V",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.20",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.20",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_I529L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.52",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        }
+      ],
+      "n_hits": 24,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "efflux",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "efflux": [
+          "acrB_R717L"
+        ],
+        "regulatory": [
+          "marR_V84WfsTer14"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_E84V",
+          "parC_S80I",
+          "parE_I529L"
+        ]
+      },
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "QRDR_target_alteration"
+    }
+  ]
+}

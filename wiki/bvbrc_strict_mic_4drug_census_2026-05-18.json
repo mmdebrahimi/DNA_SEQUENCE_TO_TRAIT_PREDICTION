@@ -1,0 +1,196 @@
+{
+  "generated": "2026-05-18",
+  "qc_max_contigs": 500,
+  "qc_min_n50": 50000,
+  "drugs": [
+    {
+      "drug": "ciprofloxacin",
+      "breakpoints": {
+        "clsi_r": 2.0,
+        "clsi_s": 0.5,
+        "eucast_r": 1.0,
+        "eucast_s": 0.25
+      },
+      "stages": {
+        "1_total_ast_rows": 1793,
+        "2_distinct_genomes": 1750,
+        "3_with_mic_value": 1287,
+        "4_strict_mic_pass": 513,
+        "4_relaxed_mic_pass": 518,
+        "5_strict_with_assembly_accession": 21,
+        "5_relaxed_with_assembly_accession": 21,
+        "6_strict_passing_assembly_qc": 21,
+        "6_relaxed_passing_assembly_qc": 21
+      },
+      "tier_buckets": {
+        "BORDERLINE": 717,
+        "HIGH_S": 396,
+        "HIGH_R": 117,
+        "NO_MIC": 463,
+        "AMBIGUOUS": 52,
+        "DECISIVE_S": 5
+      },
+      "strict": {
+        "high_r": 17,
+        "high_s": 4,
+        "total": 21
+      },
+      "relaxed": {
+        "high_or_decisive_r": 17,
+        "high_or_decisive_s": 4,
+        "total": 21
+      },
+      "feasibility_strict": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      },
+      "feasibility_relaxed": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      }
+    },
+    {
+      "drug": "ceftriaxone",
+      "breakpoints": {
+        "clsi_r": 4.0,
+        "clsi_s": 1.0,
+        "eucast_r": 2.0,
+        "eucast_s": 1.0
+      },
+      "stages": {
+        "1_total_ast_rows": 383,
+        "2_distinct_genomes": 354,
+        "3_with_mic_value": 264,
+        "4_strict_mic_pass": 164,
+        "4_relaxed_mic_pass": 164,
+        "5_strict_with_assembly_accession": 69,
+        "5_relaxed_with_assembly_accession": 69,
+        "6_strict_passing_assembly_qc": 68,
+        "6_relaxed_passing_assembly_qc": 68
+      },
+      "tier_buckets": {
+        "BORDERLINE": 97,
+        "HIGH_R": 161,
+        "NO_MIC": 90,
+        "AMBIGUOUS": 3,
+        "HIGH_S": 3
+      },
+      "strict": {
+        "high_r": 66,
+        "high_s": 2,
+        "total": 68
+      },
+      "relaxed": {
+        "high_or_decisive_r": 66,
+        "high_or_decisive_s": 2,
+        "total": 68
+      },
+      "feasibility_strict": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      },
+      "feasibility_relaxed": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      }
+    },
+    {
+      "drug": "tetracycline",
+      "breakpoints": {
+        "clsi_r": 16.0,
+        "clsi_s": 4.0,
+        "eucast_r": null,
+        "eucast_s": null
+      },
+      "stages": {
+        "1_total_ast_rows": 357,
+        "2_distinct_genomes": 322,
+        "3_with_mic_value": 154,
+        "4_strict_mic_pass": 31,
+        "4_relaxed_mic_pass": 31,
+        "5_strict_with_assembly_accession": 2,
+        "5_relaxed_with_assembly_accession": 2,
+        "6_strict_passing_assembly_qc": 1,
+        "6_relaxed_passing_assembly_qc": 1
+      },
+      "tier_buckets": {
+        "BORDERLINE": 123,
+        "HIGH_S": 17,
+        "NO_MIC": 168,
+        "HIGH_R": 14
+      },
+      "strict": {
+        "high_r": 1,
+        "high_s": 0,
+        "total": 1
+      },
+      "relaxed": {
+        "high_or_decisive_r": 1,
+        "high_or_decisive_s": 0,
+        "total": 1
+      },
+      "feasibility_strict": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      },
+      "feasibility_relaxed": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      }
+    },
+    {
+      "drug": "gentamicin",
+      "breakpoints": {
+        "clsi_r": 16.0,
+        "clsi_s": 4.0,
+        "eucast_r": 4.0,
+        "eucast_s": 2.0
+      },
+      "stages": {
+        "1_total_ast_rows": 1394,
+        "2_distinct_genomes": 1363,
+        "3_with_mic_value": 806,
+        "4_strict_mic_pass": 647,
+        "4_relaxed_mic_pass": 649,
+        "5_strict_with_assembly_accession": 136,
+        "5_relaxed_with_assembly_accession": 136,
+        "6_strict_passing_assembly_qc": 134,
+        "6_relaxed_passing_assembly_qc": 134
+      },
+      "tier_buckets": {
+        "HIGH_S": 629,
+        "NO_MIC": 557,
+        "BORDERLINE": 146,
+        "DECISIVE_S": 2,
+        "HIGH_R": 18,
+        "AMBIGUOUS": 11
+      },
+      "strict": {
+        "high_r": 2,
+        "high_s": 132,
+        "total": 134
+      },
+      "relaxed": {
+        "high_or_decisive_r": 2,
+        "high_or_decisive_s": 132,
+        "total": 134
+      },
+      "feasibility_strict": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      },
+      "feasibility_relaxed": {
+        "n150_per_class": false,
+        "n100_per_class": false,
+        "n60_smoke": false
+      }
+    }
+  ]
+}

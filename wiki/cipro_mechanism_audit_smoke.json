@@ -1,0 +1,57 @@
+{
+  "cohort_path": "data\\processed\\gate_b_n40_cipro_cohort.parquet",
+  "refseq_cache": "D:\\dna_decode_cache\\refseq",
+  "drug": "ciprofloxacin",
+  "amrfinder_image": "ncbi/amr:4.2.7-2026-03-24.1",
+  "amrfinder_db_path": "C:/Users/Farshad/dna_decode_stage2/amrfinder_db",
+  "n_processed": 2,
+  "r_mech_counts": {},
+  "s_mech_counts": {},
+  "r_no_known_mechanism": 0,
+  "s_silent_mechanism_hits": 0,
+  "qrdr_in_R_count": 0,
+  "plasmid_in_R_count": 0,
+  "verdict": "MOSTLY_UNKNOWN",
+  "elapsed_sec": 0.22657179832458496,
+  "per_strain": [
+    {
+      "strain_id": "1045010.61",
+      "accession": "GCA_008727135.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.11",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        }
+      ],
+      "n_hits": 1,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "1328432.3",
+      "accession": "GCA_000492655.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2569",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "quinolone_class_hits": [],
+      "primary_mechanism_class": "NO_MECHANISM"
+    }
+  ]
+}
