@@ -25,6 +25,15 @@ Phase 1 E. coli G2P platform. One-page module map + data-flow overview.
    │  + candidates_from_bvbrc_ast│ │  HDF5 cache;     │  │  ECE + attribution   │
    │  + save_cohort/load_cohort  │ │  populate() opens│  │  precision           │
    │  + assembly_accession field │ │  HDF5 once       │  │ phylogeny.py         │
+   │ mic_tiers.py (2026-05-18)   │ │                  │  │                      │
+   │  shared per-drug catalogs:  │ │                  │  │                      │
+   │  CLSI/EUCAST breakpoints,   │ │                  │  │                      │
+   │  AMRFinder Class filter,    │ │                  │  │                      │
+   │  loci_by_mechanism,         │ │                  │  │                      │
+   │  classify_tier (HIGH_R/...) │ │                  │  │                      │
+   │  classify_gene_symbol +     │ │                  │  │                      │
+   │  tolerant prefix match.     │ │                  │  │                      │
+   │  Drugs: cipro/cef/tet/gent. │ │                  │  │                      │
    │                             │ │ classifiers.py   │  │  Mash + cluster_by_  │
    │                             │ │  (Step 9)        │  │  ani                 │
    │                             │ │  XGBoost +       │  │ clade_baseline.py    │
@@ -171,6 +180,18 @@ scripts/
 │                              joins to manifest's noise_class; Fisher exact
 │                              label-stratified enrichment test. Pre-conditions
 │                              artifact PC1+PC2 required before runtime.
+├── bvbrc_strict_mic_4drug_census.py  BV-BRC strict-MIC 4-drug feasibility
+│                              census (shipped 2026-05-18; Phase 2 entry).
+│                              6-stage pipeline (AST rows -> distinct genomes
+│                              -> with MIC -> classification pass -> with
+│                              assembly_accession -> passing QC) at TWO label-
+│                              quality bars: strict-MIC (HIGH only, 4x safety
+│                              margin) + relaxed-MIC (HIGH + DECISIVE). Drugs:
+│                              cipro/cef/tet/gent. Imports from mic_tiers.
+│                              Headline 2026-05-18: NO drug clears N=150
+│                              per-class at either bar; assembly_accession is
+│                              the structural bottleneck. Output: wiki/
+│                              bvbrc_strict_mic_4drug_census_<date>.{md,json}.
 └── run_mechanism_audit_detached.bat  Windows detached batch wrapper for the
                               ~1-hour mechanism audit. Avoids Bash 10-min hard
                               timeout cap. Pattern reusable for any long-running
@@ -251,6 +272,8 @@ tools/
 | `cipro_mechanism_phenotype_merge.py` strict primary cipro mechanism = QRDR_target_alteration OR plasmid_protect_modify ONLY | `scripts/cipro_mechanism_phenotype_merge.py` | Efflux + regulatory + porin_loss are co-resistance modifiers, not standalone cipro-conferring mechanisms. The merge's `noise_class` is driven by strict primary; co-resistance reported separately. mechanism_opacity_flag separates "AMRFinder is incomplete" from "label is noisy" — both can be true at once, and conflating them loses the remediation signal. |
 | `cipro_curated_baseline.py` 2-layer verdict: original_condition_4 (frozen all-feature) + amended_condition_4 (no_POINT >= 0.773 OR mechanism_only >= 0.80) | `scripts/cipro_curated_baseline.py` | The all-feature curated baseline is structurally circular when POINT mutations (gyrA_S83L etc.) dominate — they're essentially labels-in-genome-form. The amended verdict isolates non-textbook genomic signal vs textbook-tautology by gating on the no-POINT and mechanism-only ablation runs. Original verdict preserved for audit-trail discipline only. AMENDED_NO_POINT_GATE_AUROC = max(0.75, STAGE1B_NT_LR_AUROC + 0.10) = 0.773 (consistent with "beat NT by 10pp" framing). |
 | Smoke runner output strings templated on `--drug` (2026-05-17) | `scripts/smoke_gate_12strain_cipro.py` | `# Smoke Gate — 12-strain <drug> cohort` heading + `wiki/smoke_gate_12strain_<drug_slug>_<date>.md` output path. Cef + tet smokes 2026-05-17 used this. Script filename rename (smoke_gate_12strain_cipro.py → smoke_gate_12strain.py) deferred as cosmetic tech debt. NT-XGBoost runner falls back to `ast_labels` iteration when `cohort.per_drug_strain_ids[drug]` missing — lets mini cohorts built outside `build_cohort()` (e.g., post-hoc per-drug filters from the cipro N=38 cohort) drive the smoke runner without re-populate. |
+| `dna_decode/data/mic_tiers.py` is the single source of truth for per-drug breakpoints + mechanism catalogs; new drug audits MUST use it (not re-hardcode) | `dna_decode/data/mic_tiers.py` + callers | Added 2026-05-18 to prevent drift between `cipro_mic_audit.py` and the 4-drug census. Per-drug data: `DRUG_BREAKPOINTS` (CLSI 2024 + EUCAST 14.0 cipro/cef/tet/gent), `DRUG_AMRFINDER_CLASSES`, `DRUG_LOCI_BY_MECHANISM`, `DRUG_PRIMARY_MECHANISMS`. Helpers: `breakpoints_for(drug)`, `classify_tier(mics, distinct_calls, breakpoints)`, `amrfinder_classes_for(drug)`, `classify_gene_symbol(drug, symbol)` with tolerant prefix-match. `bvbrc_strict_mic_4drug_census.py` uses it; cipro_*.py scripts left as cipro-specific by design. Future drug audits (cef_mechanism_audit, tet_mechanism_audit, gent_mechanism_audit) MUST import from mic_tiers. 76 unit tests at `tests/test_mic_tiers.py`. |
+| `pipeline.py predict` emits the v0 JSON + markdown sidecar schema; honest-output discipline (audit_verdict propagates SUSPEND framing, no overclaiming) is a HARD criterion | `scripts/pipeline.py` + `wiki/decoder_v0_ux_and_success_criterion.md` | v0 schema (LOCKED 2026-05-18): `prediction` + `calibrated_probability` + `confidence_tier` (HIGH/MEDIUM/LOW via direct probability compare, not `abs(p-0.5)` — float-precision bug at 0.7/0.3 boundaries) + `top_k_attribution` (gene-level ISM + Tier 1-5 catalog) + `audit_verdict` (cohort_gate_verdict + per-strain noise_class + suspend_gate_fired + verdict_explanation) + `provenance` (model, training_cohort, loso_auroc, trained_on). Train pickle enriched with `training_cohort`, `trained_on`, `n_strains`, `auroc_lomo_clade_out` (2026-05-18). 16 unit tests + 6 E2E integration tests with synthetic fixtures. |
 
 ## Phase 1 success criteria
 
