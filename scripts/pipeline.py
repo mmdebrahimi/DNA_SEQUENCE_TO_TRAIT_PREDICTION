@@ -559,7 +559,19 @@ def _render_predict_markdown(result: dict) -> str:
         "",
         f"- Model: {prov.get('model', 'unknown')}",
         f"- Training cohort: {prov.get('training_cohort', 'unknown')}",
-        f"- LOSO AUROC: {prov.get('loso_auroc')}",
+    ])
+    cv_strategy = prov.get("cv_strategy")
+    cv_auroc = prov.get("cv_auroc")
+    if cv_strategy or cv_auroc is not None:
+        lines.append(f"- CV strategy: {cv_strategy or 'unspecified'}")
+        lines.append(f"- CV AUROC: {cv_auroc}")
+    loso = prov.get("loso_auroc")
+    if loso is not None:
+        lines.append(f"- LOSO AUROC (legacy field): {loso}")
+    reporting_mode = prov.get("reporting_mode")
+    if reporting_mode:
+        lines.append(f"- Reporting mode: {reporting_mode}")
+    lines.extend([
         f"- Trained on: {prov.get('trained_on', 'unknown')}",
         "",
         "---",
@@ -672,13 +684,22 @@ def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
         falsifier_verdict=None,    # pre-falsifier default; updated when verdict lands
     )
 
-    # Provenance block from the training-pickle bundle
+    # Provenance block from the training-pickle bundle.
+    # As of 2026-05-23, Codex's leakage-safe retrain on the Precision 7780
+    # stores `cv_strategy` + `cv_auroc` (accession-grouped CV). Older bundles
+    # store `auroc_loso`. Emit BOTH additively so the schema is backward-
+    # compatible + the RELOCKED v0 spec's canonical fields are surfaced when
+    # available. `reporting_mode` toggles canonical vs debug per
+    # wiki/decoder_v0_ux_and_success_criterion.md (RELOCKED 2026-05-23).
     provenance = {
         "model": f"{model_name} + XGBoost (frozen)",
         "training_cohort": bundle.get("training_cohort", "unknown"),
-        "loso_auroc": bundle.get("auroc_loso"),
+        "cv_strategy": bundle.get("cv_strategy"),  # e.g., "leave_one_accession_out"
+        "cv_auroc": bundle.get("cv_auroc"),         # primary CV AUROC for the strategy above
+        "loso_auroc": bundle.get("auroc_loso"),     # legacy field; preserved for older bundles
         "lomo_clade_out_auroc": bundle.get("auroc_lomo_clade_out"),
         "trained_on": bundle.get("trained_on", "unknown"),
+        "reporting_mode": "canonical_audit_aware" if audit is not None else "debug_internal",
     }
 
     result = {

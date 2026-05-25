@@ -317,3 +317,58 @@ def test_markdown_defaults_attribution_scope_to_indeterminate_when_missing():
     r.pop("attribution_scope_confidence", None)
     md = _render_predict_markdown(r)
     assert "**Attribution scope confidence:** INDETERMINATE" in md
+
+
+# ---- RELOCKED 2026-05-23 v0 spec provenance fields ----
+
+
+def test_markdown_renders_cv_strategy_and_auroc_when_present():
+    """RELOCKED spec adds cv_strategy + cv_auroc to provenance; both surface in markdown."""
+    from scripts.pipeline import _render_predict_markdown
+    r = _sample_result()
+    r["provenance"] = {
+        "model": "nucleotide_transformer + XGBoost",
+        "training_cohort": "stage2_n150_cipro_cohort",
+        "cv_strategy": "leave_one_accession_out",
+        "cv_auroc": 0.8697,
+        "reporting_mode": "canonical_audit_aware",
+        "trained_on": "2026-05-22",
+    }
+    md = _render_predict_markdown(r)
+    assert "CV strategy: leave_one_accession_out" in md
+    assert "CV AUROC: 0.8697" in md
+    assert "Reporting mode: canonical_audit_aware" in md
+
+
+def test_markdown_backward_compat_loso_auroc_only():
+    """Older bundles only have loso_auroc; markdown still renders cleanly."""
+    from scripts.pipeline import _render_predict_markdown
+    r = _sample_result()
+    r["provenance"] = {
+        "model": "nucleotide_transformer + XGBoost (frozen)",
+        "training_cohort": "stage2_n150_cipro_cohort",
+        "loso_auroc": 0.78,
+        "trained_on": "2026-05-18",
+    }
+    md = _render_predict_markdown(r)
+    assert "LOSO AUROC (legacy field): 0.78" in md
+    # No phantom cv_strategy line when fields are absent
+    assert "CV strategy:" not in md
+
+
+def test_markdown_renders_both_cv_and_legacy_loso_when_present():
+    """Backward-compat: bundles may carry BOTH cv_auroc (canonical) AND loso_auroc (legacy)."""
+    from scripts.pipeline import _render_predict_markdown
+    r = _sample_result()
+    r["provenance"] = {
+        "model": "nucleotide_transformer + XGBoost",
+        "training_cohort": "stage2_n150_cipro_cohort",
+        "cv_strategy": "leave_one_accession_out",
+        "cv_auroc": 0.87,
+        "loso_auroc": 0.78,
+        "trained_on": "2026-05-22",
+    }
+    md = _render_predict_markdown(r)
+    assert "CV strategy: leave_one_accession_out" in md
+    assert "CV AUROC: 0.87" in md
+    assert "LOSO AUROC (legacy field): 0.78" in md
