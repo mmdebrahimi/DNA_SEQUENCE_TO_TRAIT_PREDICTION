@@ -1,6 +1,51 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: plans/Cef_Audit_Aware_Packet_Design.md] 2026-05-26
+**Status:** active (IN FLIGHT on Precision 7780 per Codex 2026-05-26 ask)
+**Summary:** Smallest-credible design for the cef audit-aware closeout that matches cipro release discipline without reopening broader scope. 5 artifacts; ~3.5-4 hr Precision 7780 compute; zero MODEL architecture change + one new drug-agnostic merge component (~150-300 LOC).
+**Key decisions (post-/brainstorm revision 2026-05-26):**
+- D1: `signal_quality = clean_count / len(merged)` (matches cipro; not heuristic clean/(clean+opacity+suspect))
+- D2: SUSPEND threshold LOCKED at 0.40 (matches cipro 2026-05-17 calibrated value; supersedes heuristic 0.50)
+- D3: 4 canonical example strains: R + S + 562.28389 (FP miss) + 562.7695 (FN miss) — both misses surfaced for release honesty
+- D4: Pre-committed release-wording branches per verdict (RUN_FULL_AND_CLEAN / MIXED / SUSPEND_CONDITION_4)
+- D5: JSON schema contract pinned to `pipeline._load_audit_verdict`'s expectations: top-level `gate_verdict` + per-strain `noise_class` + `mic_tier` + `primary_mechanisms` (plural list) + `co_resistance_modifiers`
+- D6: After this ships → EP-4 pathotype prediction is the next jump per the trait-decoding roadmap
+
+---
+
+## [plan_file: plans/Trait_Decoding_Roadmap.md] 2026-05-26
+**Status:** candidate (long-horizon spine; doesn't fire as a single execution)
+**Summary:** Connective tissue between current v0/v0.1 ship state and original 2026-05-11 goal ("DNA input → phenotype/trait identification at gene level"). 7 phases with per-phase terminal claims + dataset prerequisites + architecture-transferability bets + phase-transition gates.
+**Key decisions:**
+- Phase 0 (cipro cached) ✓ → Phase 1 (cipro genome-input) ✓ → Phase 2 (multi-drug E. coli; cef in flight) → Phase 3 (multi-organism Klebsiella) → Phase 4 (non-AMR bacterial phenotypes; pathotype prediction recommended) → Phase 5 (multimodal DNA + image/RNA) → Phase 6 (eukaryotic; fungal → plant → human GWAS)
+- Each phase requires `/idea-anchor + /project-init` when it fires
+- Phase ∞ (decode arbitrary trait from DNA) is aspirational; not a literal target
+
+---
+
+## [plan_file: plans/EP_4_Non_AMR_Phenotype_Candidates.md] 2026-05-26
+**Status:** candidate (gated on cef audit-aware closeout)
+**Summary:** First conceptual jump out of AMR per the trait-decoding roadmap Phase 4. Surveys 6 candidate bacterial non-AMR phenotypes (growth rate / pathotype / biofilm / plasmid stability / lactose / metabolic auxotrophy) + ranks.
+**Key decisions:**
+- Rank 1: **pathotype prediction** (EnteroBase substrate; multiclass EPEC/EHEC/ETEC/UPEC/EAEC/commensal) — concentrated mechanism + huge public dataset + clinical relevance + minimal architectural change
+- Rank 2: biofilm formation (mixed mechanism; defer until EP-1.5 architecture decision)
+- Rank 3-6: skipped — too AMR-adjacent OR too easy OR no buyer signal
+
+---
+
+## [plan_file: plans/Cef_V0_1_Promotion_Slice_Plan.md] 2026-05-26
+**Status:** partially superseded (by plans/Cef_Audit_Aware_Packet_Design.md Steps 2-5)
+**Summary:** Pre-execution cef promotion plan. PARTIALLY superseded by Codex's overnight ship (Codex went bigger than mini N=12 reuse — built fresh 67-strain cohort) + the higher-fidelity Cef_Audit_Aware_Packet_Design.md.
+
+---
+
+## [plan_file: plans/DNA_Decoder_v0_1_Genome_Input_Cipro_Plan.md] 2026-05-25
+**Status:** executed (Codex on Precision 7780; cross-path concordance 4/4)
+**Summary:** Codex's authoring of the v0.1 cipro genome-input slice 1 plan; shipped 2026-05-25 with full validation.
+
+---
+
 ## [plan_file: plans/Post_V0_EP_Ladder_Plan.md] 2026-05-25
 **Summary:** LOCKED EP ladder from cipro v0 (step 0) toward the long-term goal "DNA input → phenotype/trait identification at gene level." Convergent recommendation across 3 /brainstorm + 1 /probe + 1 /review rounds. Supersedes the misframed "Commercial Discovery Prerequisites" draft from earlier this session (NOT saved).
 **Key decisions:**
