@@ -1,6 +1,31 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: plans/Two_Machine_Operating_Contract.md] 2026-05-26
+**Status:** active (in force; first production test = cef audit-aware closeout integration)
+**Summary:** Durable operating contract between Codex (Precision 7780) + Claude (GTX 860M). Ratifies Codex's 2026-05-26 division-of-labor proposal + 5 amendments from same-day /brainstorm round.
+**Key decisions:**
+- 2 lanes: Codex = execution; Claude = discovery + planning + contract-lock conversion
+- Handoff gate = workflow STATE (not a permanent 3rd lane) with 5 mandatory checks (push status / pull / sync check / locked-parameter coverage / contract tests run)
+- `Contract Locks` section mandatory in every locked-design memo; each parameter MUST point to a regression test OR `KNOWN_DIVERGENCE_TARGETS` marker; empty target = unacceptable
+- Single-commit rule: lock + enforcement target land in the SAME commit (historical splits grandfathered)
+- Source-of-truth artifact ownership (NOT author): Claude owns planning contracts; Codex owns execution artifacts; cross-lane proposals land as `provisional`
+- 5 falsification triggers in §6 (the contract's own falsification test)
+- Pinned by 8 self-tests at `tests/test_two_machine_operating_contract.py`
+
+---
+
+## [plan_file: plans/EP_4_Pathotype_Idea_Anchor_Draft.md] 2026-05-26
+**Status:** candidate (pre-staged; trigger = cef audit-aware closeout pushes to origin)
+**Summary:** Ready-to-paste `/idea-anchor` candidate sentence for E. coli pathotype prediction (Rank 1 EP-4 entry per `plans/EP_4_Non_AMR_Phenotype_Candidates.md`). Bridges the scoping memo to the actual planning-chain invocation.
+**Key decisions:**
+- Sentence shape mirrors v1 "Honest AMR resistance predictor" framing: genome FASTA → multiclass pathotype call (EPEC/EHEC/ETEC/UPEC/EAEC/commensal) + audit-grade provenance + CGE VirulenceFinder side-by-side comparison
+- CGE VirulenceFinder benchmark choice is the direct analog of AMRFinderPlus comparison for AMR
+- Concentrated mechanism (pathotype = acquired-gene clusters) → reuses NT mean-pool + XGBoost architecture per 2026-05-17 cross-drug finding
+- 3 pre-emptive risks named: label inconsistency on EnteroBase, multiclass audit-framework extension, external-benchmark-discipline-lift decision
+
+---
+
 ## [plan_file: plans/Cef_Audit_Aware_Packet_Design.md] 2026-05-26
 **Status:** active (IN FLIGHT on Precision 7780 per Codex 2026-05-26 ask)
 **Summary:** Smallest-credible design for the cef audit-aware closeout that matches cipro release discipline without reopening broader scope. 5 artifacts; ~3.5-4 hr Precision 7780 compute; zero MODEL architecture change + one new drug-agnostic merge component (~150-300 LOC).
