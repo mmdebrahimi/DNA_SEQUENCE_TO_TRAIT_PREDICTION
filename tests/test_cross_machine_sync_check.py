@@ -91,9 +91,13 @@ def test_known_divergence_targets_pinned():
     """Pin the list so accidental edits show up in reviews."""
     from scripts.cross_machine_sync_check import KNOWN_DIVERGENCE_TARGETS
     expected = {
+        # 2026-05-23 v0 closeout RELOCK markers
         ("wiki/decoder_v0_ux_and_success_criterion.md", "RELOCKED"),
         ("scripts/pipeline.py", "cv_strategy"),
         ("scripts/pipeline.py", "leave_one_accession_out"),
+        # 2026-05-25 v0.1 slice 1 (genome-input cipro) markers
+        ("scripts/pipeline.py", "--genome-fasta"),
+        ("scripts/pipeline.py", "--allow-missing-audit"),
     }
     assert set(KNOWN_DIVERGENCE_TARGETS) == expected
 

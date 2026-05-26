@@ -39,11 +39,17 @@ from datetime import date as _date
 from pathlib import Path
 
 
-# Known cross-machine artifacts that historically diverge.
+# Known cross-machine artifacts that historically diverge. Each tuple is
+# (file_path, marker_string) — the marker must be present in the file on
+# the side that has the latest Codex push. Missing marker = drift.
 KNOWN_DIVERGENCE_TARGETS: tuple[tuple[str, str], ...] = (
-    ("wiki/decoder_v0_ux_and_success_criterion.md", "RELOCKED"),  # Codex relocked 2026-05-23
+    # 2026-05-23 Codex v0 closeout RELOCK
+    ("wiki/decoder_v0_ux_and_success_criterion.md", "RELOCKED"),
     ("scripts/pipeline.py", "cv_strategy"),                       # Codex added cv_strategy field
     ("scripts/pipeline.py", "leave_one_accession_out"),           # Codex's leakage-safe CV
+    # 2026-05-25 Codex v0.1 slice 1 (genome-input cipro decode)
+    ("scripts/pipeline.py", "--genome-fasta"),                    # v0.1 CLI flag
+    ("scripts/pipeline.py", "--allow-missing-audit"),             # v0.1 audit fallback flag
 )
 
 
