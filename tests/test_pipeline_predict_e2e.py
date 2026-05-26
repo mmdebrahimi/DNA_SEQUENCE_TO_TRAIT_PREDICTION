@@ -182,15 +182,17 @@ def test_predict_e2e_emits_markdown_sidecar(synthetic_fixtures, tmp_path: Path):
         synthetic_fixtures["config_path"], tmp_path
     )
 
-    main([
+    exit_code = main([
         "--config", str(cfg_path),
         "predict",
         "--model-path", str(synthetic_fixtures["model_path"]),
         "--strain-id", synthetic_fixtures["strain_id"],
         "--cache", str(synthetic_fixtures["cache_path"]),
         "--annotations", str(synthetic_fixtures["gff_path"]),
+        "--audit-merge-json", str(synthetic_fixtures["merge_json_path"]),
         "--output", str(synthetic_fixtures["out_json_path"]),
     ])
+    assert exit_code == 0
 
     # Markdown sidecar = <output>.md
     md_path = synthetic_fixtures["out_json_path"].with_suffix(".md")
@@ -234,8 +236,8 @@ def test_predict_e2e_propagates_suspend_verdict(synthetic_fixtures, tmp_path: Pa
     assert "SUSPEND gate fired" in md
 
 
-def test_predict_e2e_works_without_audit_merge_json(synthetic_fixtures, tmp_path: Path):
-    """When --audit-merge-json is not provided, audit_verdict is null but predict still succeeds."""
+def test_predict_e2e_requires_audit_merge_json_by_default(synthetic_fixtures, tmp_path: Path):
+    """Canonical predict should fail closed when audit framing is omitted."""
     from scripts.pipeline import main
 
     cfg_path = _synthetic_config_with_mock_nt(
@@ -251,10 +253,35 @@ def test_predict_e2e_works_without_audit_merge_json(synthetic_fixtures, tmp_path
         "--annotations", str(synthetic_fixtures["gff_path"]),
         "--output", str(synthetic_fixtures["out_json_path"]),
     ])
+    assert exit_code == 2
+    assert not synthetic_fixtures["out_json_path"].exists()
+
+
+def test_predict_e2e_allows_missing_audit_in_debug_mode(synthetic_fixtures, tmp_path: Path):
+    """Non-canonical internal/debug mode can still emit audit-free output explicitly."""
+    from scripts.pipeline import main
+
+    cfg_path = _synthetic_config_with_mock_nt(
+        synthetic_fixtures["config_path"], tmp_path
+    )
+
+    exit_code = main([
+        "--config", str(cfg_path),
+        "predict",
+        "--model-path", str(synthetic_fixtures["model_path"]),
+        "--strain-id", synthetic_fixtures["strain_id"],
+        "--cache", str(synthetic_fixtures["cache_path"]),
+        "--annotations", str(synthetic_fixtures["gff_path"]),
+        "--allow-missing-audit",
+        "--output", str(synthetic_fixtures["out_json_path"]),
+    ])
     assert exit_code == 0
 
     result = json.loads(synthetic_fixtures["out_json_path"].read_text(encoding="utf-8"))
     assert result["audit_verdict"] is None
+    assert result["provenance"]["reporting_mode"] == "non_canonical_missing_audit"
+    md = synthetic_fixtures["out_json_path"].with_suffix(".md").read_text(encoding="utf-8")
+    assert "Non-canonical internal/debug run." in md
 
 
 def test_predict_e2e_no_attribution_skips_top_k(synthetic_fixtures, tmp_path: Path):
@@ -271,6 +298,7 @@ def test_predict_e2e_no_attribution_skips_top_k(synthetic_fixtures, tmp_path: Pa
         "--model-path", str(synthetic_fixtures["model_path"]),
         "--strain-id", synthetic_fixtures["strain_id"],
         "--cache", str(synthetic_fixtures["cache_path"]),
+        "--audit-merge-json", str(synthetic_fixtures["merge_json_path"]),
         "--no-attribution",
         "--output", str(synthetic_fixtures["out_json_path"]),
     ])
@@ -293,12 +321,14 @@ def test_predict_e2e_provenance_block_populated(synthetic_fixtures, tmp_path: Pa
         "--model-path", str(synthetic_fixtures["model_path"]),
         "--strain-id", synthetic_fixtures["strain_id"],
         "--cache", str(synthetic_fixtures["cache_path"]),
+        "--audit-merge-json", str(synthetic_fixtures["merge_json_path"]),
         "--output", str(synthetic_fixtures["out_json_path"]),
         "--no-attribution",
     ])
 
     prov = json.loads(synthetic_fixtures["out_json_path"].read_text(encoding="utf-8"))["provenance"]
     assert prov["training_cohort"] == "synthetic_test_cohort"
+    assert prov["reporting_mode"] == "canonical_audit_aware"
     assert prov["loso_auroc"] == 0.78
     assert prov["trained_on"]  # date string from pickle
     assert "XGBoost" in prov["model"]

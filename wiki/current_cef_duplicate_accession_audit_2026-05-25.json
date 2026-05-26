@@ -1,0 +1,23 @@
+{
+  "cohort_path": "data\\processed\\gate_b_cohort.parquet",
+  "drug": "ceftriaxone",
+  "n_pool_strains": 50,
+  "n_duplicate_accessions": 0,
+  "n_duplicate_strains": 0,
+  "loso_leakage_present": false,
+  "model_bundle_is_accession_safe": false,
+  "duplicates": [],
+  "model_bundle": {
+    "model_path": "data\\processed\\models\\ceftriaxone_nucleotide_transformer.pkl",
+    "drug": "ceftriaxone",
+    "model_name": "nucleotide_transformer",
+    "cv_strategy": "loso",
+    "cv_grouping": "strain_id",
+    "training_cohort": "gate_b_cohort",
+    "trained_on": "2026-05-26",
+    "auroc_cv_primary": 0.895,
+    "auroc_loso": 0.895,
+    "n_strains": 49
+  },
+  "verdict": "PASS: no duplicated non-empty assembly_accession values found in the cipro pool."
+}

@@ -195,6 +195,43 @@ def _leave_one_group_out_cv(
     return result
 
 
+def leave_one_accession_out_cv(
+    features: np.ndarray,
+    labels: np.ndarray,
+    strain_ids: list[str],
+    accession_assignments: dict[str, str],
+    train_fn: Callable[[np.ndarray, np.ndarray], object],
+    predict_fn: Callable[[object, np.ndarray], np.ndarray],
+    drug: str = "",
+    *,
+    allow_unassigned: bool = False,
+) -> CVResult:
+    """Leave-one-accession-out CV — leakage-safe when duplicate assembly_accession
+    values exist (e.g., the cipro N=147 cohort had GCA_025200635.1 registered as
+    two strain_ids; leave_one_strain_out_cv would leak the same genome across
+    train + held-out folds).
+
+    Per `LESSONS_LEARNED.md` 2026-05-22 "duplicate accession in LOSO cohort =
+    same-genome train/test leakage by construction": every cohort builder now
+    asserts uniqueness, but legacy cohorts + cross-machine pulls may still
+    surface duplicates. Use this CV strategy whenever `find_duplicate_accessions`
+    on the cohort returns non-empty.
+
+    Returns CVResult.strategy = "leave_one_accession_out".
+    """
+    return _leave_one_group_out_cv(
+        features=features,
+        labels=labels,
+        strain_ids=strain_ids,
+        group_assignments=accession_assignments,
+        train_fn=train_fn,
+        predict_fn=predict_fn,
+        strategy_name="leave_one_accession_out",
+        drug=drug,
+        allow_unassigned=allow_unassigned,
+    )
+
+
 def leave_one_mlst_out_cv(
     features: np.ndarray,
     labels: np.ndarray,

@@ -177,6 +177,39 @@ def test_parse_gff3_empty_file(tmp_path: Path):
     assert list(df.columns) == list(ann.ANNOTATION_COLUMNS)
 
 
+def test_load_annotation_table_dispatches_gff3(gff3_file: Path):
+    df = ann.load_annotation_table(gff3_file)
+    assert len(df) == 3
+    assert list(df.columns) == list(ann.ANNOTATION_COLUMNS)
+
+
+def test_load_annotation_table_dispatches_genbank(tmp_path: Path):
+    gbk = tmp_path / "sample.gbk"
+    gbk.write_text(
+        """LOCUS       TESTSEQ                 12 bp    DNA     linear   BCT 01-JAN-2000
+FEATURES             Location/Qualifiers
+     CDS             1..12
+                     /gene="gyrA"
+                     /locus_tag="TAG_001"
+                     /product="DNA gyrase subunit A"
+ORIGIN
+        1 atgcgtatgcgt
+//
+""",
+        encoding="utf-8",
+    )
+    df = ann.load_annotation_table(gbk)
+    assert len(df) == 1
+    assert df.iloc[0]["gene_symbol"] == "gyrA"
+
+
+def test_load_annotation_table_rejects_unsupported_suffix(tmp_path: Path):
+    bad = tmp_path / "sample.txt"
+    bad.write_text("not an annotation", encoding="utf-8")
+    with pytest.raises(ann.AnnotationParseError, match="Unsupported annotation format"):
+        ann.load_annotation_table(bad)
+
+
 # ---- revcomp ----
 
 

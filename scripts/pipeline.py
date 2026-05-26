@@ -187,13 +187,13 @@ def cmd_ingest(args: argparse.Namespace, cfg: dict) -> int:
 
 def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
     """Train per-drug classifier + LOMO-clade CV + optional clade-only baseline."""
-    from dna_decode.data.cohort import load_cohort
+    from dna_decode.data.cohort import find_duplicate_accessions, load_cohort
     from dna_decode.eval.clade_baseline import (
         predict_clade_only,
         train_clade_only_classifier,
         validation_gate,
     )
-    from dna_decode.eval.cv import leave_one_strain_out_cv
+    from dna_decode.eval.cv import leave_one_accession_out_cv, leave_one_strain_out_cv
     from dna_decode.eval.metrics import compute_metrics, compute_per_clade_metrics
     from dna_decode.models.cache import EmbeddingCache, EmbeddingCacheError
     from dna_decode.models.classifiers import (
@@ -226,6 +226,26 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
     drug_strain_ids = cohort.per_drug_strain_ids[drug_lower]
     print(f"[train] drug={args.drug}, model={args.model}, n_strains={len(drug_strain_ids)}")
 
+    duplicate_accessions = find_duplicate_accessions(
+        cohort, restrict_to_strain_ids=drug_strain_ids
+    )
+    cv_grouping = args.cv_grouping
+    if cv_grouping == "auto":
+        cv_grouping = "assembly_accession" if duplicate_accessions else "strain_id"
+    if cv_grouping == "strain_id" and duplicate_accessions:
+        sample_pairs = ", ".join(
+            f"{accession}: {strain_ids}"
+            for accession, strain_ids in sorted(duplicate_accessions.items())[:3]
+        )
+        print(
+            "[train] duplicate assembly_accession values detected inside this drug pool. "
+            "LOSO by strain_id would leak the same assembly across train and held-out folds. "
+            "Use --cv-grouping assembly_accession or auto. "
+            f"Sample duplicates: {sample_pairs}",
+            file=sys.stderr,
+        )
+        return 2
+
     # Resolve foundation model metadata for cache dim
     foundation_cfg = cfg.get("foundation_models", {}).get(args.model)
     if foundation_cfg is None:
@@ -247,6 +267,7 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
     X_rows = []
     labels = []
     strain_id_order = []
+    accession_assignments: dict[str, str] = {}
     for sid in drug_strain_ids:
         strain_obj = cohort.strain_by_id(sid)
         if strain_obj is None or drug_lower not in strain_obj.ast_labels:
@@ -258,12 +279,15 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
         X_rows.append(aggregate_strain_features(gene_matrix, "mean"))
         labels.append(strain_obj.ast_labels[drug_lower])
         strain_id_order.append(sid)
+        accession = (strain_obj.assembly_accession or "").strip()
+        accession_assignments[sid] = accession if accession else sid
     if not X_rows:
         print(f"[train] no strains in cohort have cached embeddings", file=sys.stderr)
         return 2
     X = np.stack(X_rows)
     y = np.array(labels, dtype=int)
     print(f"[train] feature matrix: {X.shape}, label balance: {(y==1).sum()}R / {(y==0).sum()}S")
+    print(f"[train] CV grouping: {cv_grouping}")
 
     def _train_fn(X_train, y_train):
         return train_xgboost_classifier(
@@ -273,11 +297,25 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
     def _predict_fn(model, X_test):
         return predict_proba(model, X_test)
 
-    cv_result = leave_one_strain_out_cv(
-        X, y, strain_id_order, _train_fn, _predict_fn, drug=args.drug
-    )
+    if cv_grouping == "assembly_accession":
+        cv_result = leave_one_accession_out_cv(
+            X,
+            y,
+            strain_id_order,
+            accession_assignments,
+            _train_fn,
+            _predict_fn,
+            drug=args.drug,
+        )
+    else:
+        cv_result = leave_one_strain_out_cv(
+            X, y, strain_id_order, _train_fn, _predict_fn, drug=args.drug
+        )
     metrics = compute_metrics(cv_result.all_y_true, cv_result.all_y_score)
-    print(f"[train] LOSO AUROC={metrics.auroc:.3f} AUPRC={metrics.auprc:.3f} (n={metrics.n_samples})")
+    print(
+        f"[train] {cv_result.strategy} AUROC={metrics.auroc:.3f} "
+        f"AUPRC={metrics.auprc:.3f} (n={metrics.n_samples})"
+    )
 
     # Optional clade-only baseline + validation gate
     if args.include_clade_baseline:
@@ -314,7 +352,10 @@ def cmd_train(args: argparse.Namespace, cfg: dict) -> int:
                 "drug": args.drug,
                 "model_name": args.model,
                 "feature_dim": X.shape[1],
+                "cv_strategy": cv_result.strategy,
+                "cv_grouping": cv_grouping,
                 "auroc_loso": float(metrics.auroc) if not np.isnan(metrics.auroc) else None,
+                "auroc_cv_primary": float(metrics.auroc) if not np.isnan(metrics.auroc) else None,
                 "auroc_lomo_clade_out": None,  # v1+ — LOMO-clade-out gated on more cohorts
                 "strain_id_order": strain_id_order,
                 "n_strains": len(strain_id_order),
@@ -354,68 +395,11 @@ def _confidence_tier(proba: float) -> str:
     return "LOW"
 
 
-# Locus-tag prefix families learned from the 2026-05-21 cipro interpretability
-# audit (wiki/current_cipro_interpretability_audit_2026-05-21.json). ERS strains
-# are the working-attribution control; ELX/ELY/ELV/ELU/ELT/OLZ/AM strains are
-# the batch-clade failure cases where gene-level ISM rank-collapses on QRDR.
-# Constants refined post-falsifier; see plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md.
-_ATTRIBUTION_ERS_CONTROL_PREFIXES: frozenset[str] = frozenset({"ERS"})
-_ATTRIBUTION_ELX_FAMILY_PREFIXES: frozenset[str] = frozenset({"ELX", "ELY", "ELV", "ELU", "ELT"})
-_ATTRIBUTION_NEGATIVE_DELTA_PREFIXES: frozenset[str] = frozenset({"OLZ", "AM"})
-
-
-def _locus_tag_prefix(locus_tag: str) -> str:
-    """Extract the leading alphabetic-only prefix of a locus_tag (e.g., 'ELX_001' -> 'ELX')."""
-    import re as _re
-    if not locus_tag:
-        return ""
-    m = _re.match(r"([A-Za-z]+)", str(locus_tag))
-    return m.group(1).upper() if m else ""
-
-
-def _classify_attribution_scope(
-    locus_tag_prefix: str,
-    saturated: bool = False,
-    all_negative_delta: bool = False,
-    falsifier_verdict: str | None = None,
-    falsifier_pass_passes_high: bool = False,
-) -> str:
-    """Classify per-strain attribution-scope confidence as HIGH / PARTIAL / INDETERMINATE.
-
-    Pre-falsifier (`falsifier_verdict is None`): always returns INDETERMINATE -
-    no certified scope yet.
-
-    Post-falsifier:
-      - INDETERMINATE if classifier saturated OR all known-locus deltas are
-        non-positive (Bucket C falsifier pattern).
-      - HIGH if locus-tag prefix is in the ERS control set AND verdict is PASS,
-        OR `falsifier_pass_passes_high=True` (user-confirmed cohort-wide HIGH).
-      - HIGH if locus-tag prefix is in the negative-delta-source set
-        (OLZ/AM strains) ONLY if not flagged saturated/all-negative.
-        Defaults to PARTIAL otherwise.
-      - PARTIAL if locus-tag prefix is in the ELX family (batch-clade failure
-        case at falsifier-tested fidelity).
-      - PARTIAL fallback for any other prefix (no falsifier evidence either way).
-
-    Locus-tag-prefix proxy is a heuristic - lower fidelity than Mash-clade-
-    based classification. Documented in the v0 spec under 'Honest output.'
-    See plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md Step F sub-step 2.
-    """
-    if falsifier_verdict is None:
-        return "INDETERMINATE"
-    if saturated or all_negative_delta:
-        return "INDETERMINATE"
-    if falsifier_verdict == "PASS" and falsifier_pass_passes_high:
-        return "HIGH"
-    prefix = (locus_tag_prefix or "").upper()
-    if prefix in _ATTRIBUTION_ERS_CONTROL_PREFIXES and falsifier_verdict == "PASS":
-        return "HIGH"
-    if prefix in _ATTRIBUTION_ELX_FAMILY_PREFIXES:
-        return "PARTIAL"
-    return "PARTIAL"
-
-
-def _load_audit_verdict(merge_json_path: Path | None, strain_id: str) -> dict | None:
+def _load_audit_verdict(
+    merge_json_path: Path | None,
+    strain_id: str,
+    fallback_to_cohort_gate: bool = False,
+) -> dict | None:
     """Read the merge-gate JSON sidecar; extract this strain's audit verdict.
 
     Returns None if path not provided, file missing, or strain not in the audit.
@@ -432,7 +416,11 @@ def _load_audit_verdict(merge_json_path: Path | None, strain_id: str) -> dict | 
     with open(p, encoding="utf-8") as f:
         merge = _json.load(f)
     # Cohort-level verdict + per-strain row
-    cohort_gate = merge.get("gate_verdict") or merge.get("recommended_next_step")
+    cohort_gate = (
+        merge.get("gate_verdict")
+        or merge.get("pre_curated_gate")
+        or merge.get("recommended_next_step")
+    )
     for row in merge.get("per_strain", []):
         if str(row.get("strain_id")) == str(strain_id):
             verdict: dict = {
@@ -453,7 +441,66 @@ def _load_audit_verdict(merge_json_path: Path | None, strain_id: str) -> dict | 
             else:
                 verdict["suspend_gate_fired"] = False
             return verdict
-    return None  # strain not found in audit (e.g., held-out new strain)
+    if not fallback_to_cohort_gate or cohort_gate is None:
+        return None  # strain not found in audit (e.g., held-out new strain)
+
+    verdict = {
+        "noise_class": None,
+        "mechanism_opacity_flag": None,
+        "mic_tier": None,
+        "primary_mechanisms": [],
+        "co_resistance_modifiers": [],
+        "cohort_gate_verdict": cohort_gate,
+    }
+    if "SUSPEND" in str(cohort_gate).upper():
+        verdict["suspend_gate_fired"] = True
+        verdict["verdict_explanation"] = (
+            f"Training cohort fired {cohort_gate}; this external genome is not present in the "
+            "audit cohort, so only cohort-level noise framing is available. Prediction is "
+            "informational only; do not deploy as clinical decision support."
+        )
+    else:
+        verdict["suspend_gate_fired"] = False
+    return verdict
+
+
+def _resolve_predict_sample_id(
+    strain_id: str | None,
+    sample_id: str | None,
+    genome_fasta: str | None,
+) -> str | None:
+    """Resolve the output label for predict."""
+    if strain_id:
+        return strain_id
+    if sample_id:
+        return sample_id
+    if genome_fasta:
+        return Path(genome_fasta).stem
+    return None
+
+
+def _embed_live_gene_sequences(
+    model_name: str,
+    config_path: Path,
+    gene_sequences: dict[str, str],
+) -> dict[str, np.ndarray]:
+    """Embed CDS sequences in memory using the trained foundation model."""
+    from dna_decode.models.foundation import model_factory
+
+    gene_ids = list(gene_sequences.keys())
+    if not gene_ids:
+        return {}
+    model = model_factory(model_name, config_path=config_path)
+    batch_size = 4
+    out: dict[str, np.ndarray] = {}
+    for i in range(0, len(gene_ids), batch_size):
+        chunk_gene_ids = gene_ids[i : i + batch_size]
+        chunk_embeddings = model.embed_batch(
+            [gene_sequences[gene_id] for gene_id in chunk_gene_ids]
+        )
+        for j, gene_id in enumerate(chunk_gene_ids):
+            out[gene_id] = chunk_embeddings[j].astype(np.float32)
+    return out
 
 
 def _extract_top_k_attribution(
@@ -511,7 +558,6 @@ def _render_predict_markdown(result: dict) -> str:
         f"**Prediction:** {result['prediction']}",
         f"**Calibrated probability (R):** {result['calibrated_probability']:.3f}",
         f"**Confidence tier:** {result['confidence_tier']}",
-        f"**Attribution scope confidence:** {result.get('attribution_scope_confidence', 'INDETERMINATE')}",
         "",
         "## Top-K gene attribution",
         "",
@@ -553,25 +599,21 @@ def _render_predict_markdown(result: dict) -> str:
             "",
         ])
 
+    if av is None:
+        lines[-2] = (
+            "**Non-canonical internal/debug run.** No audit data was supplied, so "
+            "training-cohort noise framing is missing."
+        )
+
     prov = result.get("provenance", {})
     lines.extend([
         "## Provenance",
         "",
         f"- Model: {prov.get('model', 'unknown')}",
         f"- Training cohort: {prov.get('training_cohort', 'unknown')}",
-    ])
-    cv_strategy = prov.get("cv_strategy")
-    cv_auroc = prov.get("cv_auroc")
-    if cv_strategy or cv_auroc is not None:
-        lines.append(f"- CV strategy: {cv_strategy or 'unspecified'}")
-        lines.append(f"- CV AUROC: {cv_auroc}")
-    loso = prov.get("loso_auroc")
-    if loso is not None:
-        lines.append(f"- LOSO AUROC (legacy field): {loso}")
-    reporting_mode = prov.get("reporting_mode")
-    if reporting_mode:
-        lines.append(f"- Reporting mode: {reporting_mode}")
-    lines.extend([
+        f"- Reporting mode: {prov.get('reporting_mode', 'unknown')}",
+        f"- CV strategy: {prov.get('cv_strategy', 'loso')}",
+        f"- Primary CV AUROC: {prov.get('cv_auroc', prov.get('loso_auroc'))}",
         f"- Trained on: {prov.get('trained_on', 'unknown')}",
         "",
         "---",
@@ -584,21 +626,45 @@ def _render_predict_markdown(result: dict) -> str:
 def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
     """Predict resistance for a cached strain — v0 schema (JSON + markdown).
 
-    Inputs (the strain must already have cache entries; run `ingest` first
-    if not, or use the Stage 2 cipro cohort that the Databricks job populates):
+    Inputs:
       --model-path        trained classifier pickle (output of `train`)
-      --strain-id         BV-BRC strain ID (required; FASTA path is v0.1+)
-      --cache             HDF5 embedding cache path
-      --annotations       GFF3 file for attribution (optional but recommended)
+      --strain-id         BV-BRC strain ID for cached-strain v0 mode
+      --genome-fasta      genome FASTA for v0.1 genome-input mode
+      --sample-id         optional output label for genome-input mode
+      --cache             HDF5 embedding cache path (cached-strain mode only)
+      --annotations       GFF3 / GenBank file (required for genome-input mode; optional but recommended for cached attribution)
       --card-path         CARD JSON for tier labels (optional)
       --amrfinder-path    AMRFinder TSV for tier labels (optional)
-      --audit-merge-json  merge-gate JSON sidecar (for SUSPEND verdict propagation)
+      --audit-merge-json  merge-gate JSON sidecar (required for canonical reporting)
+      --allow-missing-audit  permit non-canonical internal/debug output without audit
       --top-k             top-K genes to attribute (default 10)
       --output            JSON output path (markdown sidecar auto-generated alongside)
       --output-md         explicit markdown output path (defaults to <output>.md)
       --no-attribution    skip ISM attribution (faster prediction)
     """
     import json
+
+    if bool(args.strain_id) == bool(args.genome_fasta):
+        print(
+            "[predict] supply exactly one input mode: --strain-id for cached prediction "
+            "or --genome-fasta for v0.1 genome-input prediction.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.genome_fasta and not args.annotations:
+        print(
+            "[predict] --annotations required with --genome-fasta "
+            "(supported: GFF3 or GenBank).",
+            file=sys.stderr,
+        )
+        return 2
+    if not args.audit_merge_json and not args.allow_missing_audit:
+        print(
+            "[predict] --audit-merge-json required for canonical v0 reporting. "
+            "Use --allow-missing-audit only for non-canonical internal/debug runs.",
+            file=sys.stderr,
+        )
+        return 2
 
     model_path = Path(args.model_path)
     if not model_path.exists():
@@ -610,55 +676,77 @@ def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
     model_name = bundle["model_name"]
     print(f"[predict] loaded {drug} classifier ({model_name})")
 
-    if not args.strain_id:
+    from dna_decode.data.annotations import extract_cds_sequences, load_annotation_table
+    from dna_decode.models.classifiers import aggregate_strain_features, predict_proba
+
+    sample_id = _resolve_predict_sample_id(args.strain_id, args.sample_id, args.genome_fasta)
+    if sample_id is None:
+        print("[predict] unable to resolve sample identifier", file=sys.stderr)
+        return 2
+
+    if args.strain_id:
+        foundation_cfg = cfg.get("foundation_models", {}).get(model_name)
+        if foundation_cfg is None:
+            print(f"[predict] foundation model {model_name!r} not in config", file=sys.stderr)
+            return 2
+        from dna_decode.models.cache import EmbeddingCache
+
+        cache_path = _resolve_cache_path(cfg, args.cache, model_name)
+        cache = EmbeddingCache(
+            cache_path,
+            model_name=model_name,
+            model_version=foundation_cfg["huggingface_id"],
+            embedding_dim=foundation_cfg["embedding_dim"],
+        )
+        gene_ids = cache.list_genes(args.strain_id)
+        if not gene_ids:
+            print(f"[predict] no cached embeddings for strain {args.strain_id!r}", file=sys.stderr)
+            return 2
+        gene_matrix = cache.bulk_get([(args.strain_id, g) for g in gene_ids])
+        strain_gene_embeddings = {g: cache.get(args.strain_id, g) for g in gene_ids}
+        annotations = load_annotation_table(args.annotations) if args.annotations else None
+        print(f"[predict] mode=cached-strain sample={sample_id} genes={len(gene_ids)}")
+    else:
+        annotation_table = load_annotation_table(args.annotations)
+        gene_sequences = extract_cds_sequences(args.genome_fasta, annotation_table)
+        if not gene_sequences:
+            print(
+                "[predict] no CDS sequences extracted from genome input; cannot score sample",
+                file=sys.stderr,
+            )
+            return 2
+        strain_gene_embeddings = _embed_live_gene_sequences(
+            model_name=model_name,
+            config_path=Path(args.config),
+            gene_sequences=gene_sequences,
+        )
+        gene_ids = list(strain_gene_embeddings.keys())
+        gene_matrix = np.stack([strain_gene_embeddings[g] for g in gene_ids])
+        annotations = annotation_table
+        print(f"[predict] mode=genome-input sample={sample_id} genes={len(gene_ids)}")
+
+    X = aggregate_strain_features(gene_matrix, "mean").reshape(1, -1)
+    if X.shape[1] != bundle["classifier"].feature_dim:
         print(
-            "[predict] --strain-id required. v0 operates on cached strains; "
-            "real-FASTA inference path is v0.1+.",
+            f"[predict] feature_dim mismatch: live path produced {X.shape[1]}, "
+            f"trained classifier expects {bundle['classifier'].feature_dim}",
             file=sys.stderr,
         )
         return 2
-
-    from dna_decode.data.annotations import parse_gff3
-    from dna_decode.models.cache import EmbeddingCache
-    from dna_decode.models.classifiers import aggregate_strain_features, predict_proba
-
-    foundation_cfg = cfg.get("foundation_models", {}).get(model_name)
-    if foundation_cfg is None:
-        print(f"[predict] foundation model {model_name!r} not in config", file=sys.stderr)
-        return 2
-    cache_path = _resolve_cache_path(cfg, args.cache, model_name)
-    cache = EmbeddingCache(
-        cache_path,
-        model_name=model_name,
-        model_version=foundation_cfg["huggingface_id"],
-        embedding_dim=foundation_cfg["embedding_dim"],
-    )
-    gene_ids = cache.list_genes(args.strain_id)
-    if not gene_ids:
-        print(f"[predict] no cached embeddings for strain {args.strain_id!r}", file=sys.stderr)
-        return 2
-
-    # Mean-pool features for classifier
-    gene_matrix = cache.bulk_get([(args.strain_id, g) for g in gene_ids])
-    X = aggregate_strain_features(gene_matrix, "mean").reshape(1, -1)
     proba = float(predict_proba(bundle["classifier"], X)[0])
     prediction = "R" if proba >= 0.5 else "S"
     confidence = _confidence_tier(proba)
-    print(f"[predict] strain={args.strain_id}: {prediction} (p={proba:.3f}, conf={confidence})")
+    print(f"[predict] sample={sample_id}: {prediction} (p={proba:.3f}, conf={confidence})")
 
     # Optional attribution
     top_k_attr: list[dict] = []
     if args.no_attribution:
         print("[predict] attribution skipped (--no-attribution)")
     else:
-        annotations = None
-        if args.annotations:
-            annotations = parse_gff3(args.annotations)
         catalog = None
         if args.card_path and args.amrfinder_path:
             from dna_decode.data.resistance_db import load_amrfinder, load_card, merge_catalogs
             catalog = merge_catalogs(load_card(args.card_path), load_amrfinder(args.amrfinder_path))
-        strain_gene_embeddings = {g: cache.get(args.strain_id, g) for g in gene_ids}
         top_k_attr = _extract_top_k_attribution(
             bundle["classifier"], strain_gene_embeddings, annotations, drug, catalog, args.top_k
         )
@@ -667,48 +755,31 @@ def cmd_predict(args: argparse.Namespace, cfg: dict) -> int:
     # Audit verdict from merge-gate JSON if provided
     audit = _load_audit_verdict(
         Path(args.audit_merge_json) if args.audit_merge_json else None,
-        args.strain_id,
+        sample_id,
+        fallback_to_cohort_gate=bool(args.audit_merge_json),
     )
 
-    # Attribution-scope confidence (per plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md
-    # Step F sub-step 2). Pre-falsifier: always INDETERMINATE. Post-falsifier:
-    # locus-tag-prefix proxy from top-1 attribution hit (or empty if no attribution).
-    top_locus_prefix = (
-        _locus_tag_prefix(top_k_attr[0]["locus_tag"]) if top_k_attr else ""
-    )
-    saturated = proba >= 0.95
-    attribution_scope_confidence = _classify_attribution_scope(
-        locus_tag_prefix=top_locus_prefix,
-        saturated=saturated,
-        all_negative_delta=False,  # post-falsifier wires this from results JSON
-        falsifier_verdict=None,    # pre-falsifier default; updated when verdict lands
-    )
-
-    # Provenance block from the training-pickle bundle.
-    # As of 2026-05-23, Codex's leakage-safe retrain on the Precision 7780
-    # stores `cv_strategy` + `cv_auroc` (accession-grouped CV). Older bundles
-    # store `auroc_loso`. Emit BOTH additively so the schema is backward-
-    # compatible + the RELOCKED v0 spec's canonical fields are surfaced when
-    # available. `reporting_mode` toggles canonical vs debug per
-    # wiki/decoder_v0_ux_and_success_criterion.md (RELOCKED 2026-05-23).
+    # Provenance block from the training-pickle bundle
     provenance = {
         "model": f"{model_name} + XGBoost (frozen)",
         "training_cohort": bundle.get("training_cohort", "unknown"),
-        "cv_strategy": bundle.get("cv_strategy"),  # e.g., "leave_one_accession_out"
-        "cv_auroc": bundle.get("cv_auroc"),         # primary CV AUROC for the strategy above
-        "loso_auroc": bundle.get("auroc_loso"),     # legacy field; preserved for older bundles
+        "cv_strategy": bundle.get("cv_strategy", "loso"),
+        "cv_auroc": bundle.get("auroc_cv_primary", bundle.get("auroc_loso")),
+        "loso_auroc": bundle.get("auroc_loso"),
         "lomo_clade_out_auroc": bundle.get("auroc_lomo_clade_out"),
         "trained_on": bundle.get("trained_on", "unknown"),
-        "reporting_mode": "canonical_audit_aware" if audit is not None else "debug_internal",
+        "input_mode": "genome_input" if args.genome_fasta else "cached_strain",
+        "reporting_mode": (
+            "canonical_audit_aware" if audit is not None else "non_canonical_missing_audit"
+        ),
     }
 
     result = {
-        "strain_id": args.strain_id,
+        "strain_id": sample_id,
         "drug": drug,
         "prediction": prediction,
         "calibrated_probability": proba,
         "confidence_tier": confidence,
-        "attribution_scope_confidence": attribution_scope_confidence,
         "top_k_attribution": top_k_attr,
         "audit_verdict": audit,
         "provenance": provenance,
@@ -869,23 +940,49 @@ def build_parser() -> argparse.ArgumentParser:
     p_train.add_argument("--cohort", default=None)
     p_train.add_argument("--cache", default=None)
     p_train.add_argument("--models-dir", default=None)
+    p_train.add_argument(
+        "--cv-grouping",
+        choices=("auto", "strain_id", "assembly_accession"),
+        default="auto",
+        help=(
+            "Primary CV grouping. auto=use assembly_accession when duplicates exist, "
+            "otherwise strain_id."
+        ),
+    )
     p_train.add_argument("--include-clade-baseline", action="store_true")
     p_train.add_argument("--min-auroc", type=float, default=0.80)
 
     # predict (v0 — emits the schema in wiki/decoder_v0_ux_and_success_criterion.md)
     p_predict = sub.add_parser(
-        "predict", help="Predict resistance from a cached strain + trained model."
+        "predict", help="Predict resistance from a cached strain or genome input."
     )
     p_predict.add_argument("--model-path", required=True)
     p_predict.add_argument("--strain-id", default=None)
+    p_predict.add_argument("--genome-fasta", default=None, help="Genome FASTA for v0.1 genome-input mode.")
+    p_predict.add_argument("--sample-id", default=None, help="Optional output label for genome-input mode.")
     p_predict.add_argument("--cache", default=None)
-    p_predict.add_argument("--annotations", default=None, help="GFF3 file (enables attribution).")
+    p_predict.add_argument(
+        "--annotations",
+        default=None,
+        help="GFF3 or GenBank file. Required with --genome-fasta; enables attribution in cached mode.",
+    )
     p_predict.add_argument("--card-path", default=None, help="CARD JSON for tier labels.")
     p_predict.add_argument("--amrfinder-path", default=None, help="AMRFinder TSV for tier labels.")
     p_predict.add_argument(
         "--audit-merge-json",
         default=None,
-        help="Merge-gate JSON sidecar from `cipro_mechanism_phenotype_merge.py` (propagates SUSPEND verdict + per-strain noise class).",
+        help=(
+            "Merge-gate JSON sidecar from `cipro_mechanism_phenotype_merge.py` "
+            "(required for canonical reporting; propagates SUSPEND verdict + per-strain noise class)."
+        ),
+    )
+    p_predict.add_argument(
+        "--allow-missing-audit",
+        action="store_true",
+        help=(
+            "Permit non-canonical internal/debug prediction without --audit-merge-json. "
+            "Result will carry audit_verdict=null."
+        ),
     )
     p_predict.add_argument("--top-k", type=int, default=10)
     p_predict.add_argument("--output", default=None, help="JSON output path. Markdown sidecar auto-generated as <output>.md.")

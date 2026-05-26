@@ -235,6 +235,45 @@ def build_cohort(
     )
 
 
+def find_duplicate_accessions(
+    cohort: StrainCohort,
+    restrict_to_strain_ids: list[str] | None = None,
+) -> dict[str, list[str]]:
+    """Find assembly_accessions shared by ≥ 2 strain_ids in a cohort.
+
+    Used by `cmd_train` to decide between strain-id CV (safe when no
+    duplicates) vs accession CV (required when duplicates exist; matches the
+    2026-05-22 LESSON on duplicate-accession LOSO leakage). The cohort
+    builder asserts uniqueness at build time (see `build_cohort`'s
+    accession-uniqueness assertion), but a pre-existing parquet built before
+    that assertion landed may still contain duplicates.
+
+    Args:
+        cohort: StrainCohort to scan.
+        restrict_to_strain_ids: optional filter. If provided, only strains
+            whose strain_id is in this list contribute to the scan. Useful
+            for per-drug duplicate detection (e.g., `cmd_train` passes the
+            drug-specific strain list to ignore duplicates that don't
+            participate in the drug pool).
+
+    Returns:
+        Mapping `accession -> [strain_ids]` for accessions shared by ≥ 2
+        strain_ids. Empty assembly_accession values are excluded (they
+        represent legit-missing accessions). Returns empty dict if no
+        duplicates exist.
+    """
+    restrict_set = set(restrict_to_strain_ids) if restrict_to_strain_ids is not None else None
+    accession_to_strain_ids: dict[str, list[str]] = {}
+    for s in cohort.strains:
+        if restrict_set is not None and s.strain_id not in restrict_set:
+            continue
+        acc = (s.assembly_accession or "").strip()
+        if not acc:
+            continue
+        accession_to_strain_ids.setdefault(acc, []).append(s.strain_id)
+    return {acc: sorted(sids) for acc, sids in accession_to_strain_ids.items() if len(sids) > 1}
+
+
 def save_cohort(cohort: StrainCohort, parquet_path: Path | str) -> Path:
     """Persist cohort metadata as a parquet file.
 

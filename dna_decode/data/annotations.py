@@ -160,6 +160,24 @@ def parse_genbank(path: Path | str) -> AnnotationTable:
     return pd.DataFrame(rows, columns=list(ANNOTATION_COLUMNS))
 
 
+def load_annotation_table(path: Path | str) -> AnnotationTable:
+    """Load a supported annotation file into the stable AnnotationTable schema.
+
+    Supported suffixes:
+        - .gff / .gff3
+        - .gbk / .gbff / .genbank
+    """
+    path = Path(path)
+    suffix = path.suffix.lower()
+    if suffix in {".gff", ".gff3"}:
+        return parse_gff3(path)
+    if suffix in {".gbk", ".gbff", ".genbank"}:
+        return parse_genbank(path)
+    raise AnnotationParseError(
+        f"Unsupported annotation format for {path.name}: expected .gff/.gff3 or .gbk/.gbff/.genbank"
+    )
+
+
 def _revcomp(seq: str) -> str:
     """Reverse complement a DNA sequence (uppercase or mixed)."""
     table = str.maketrans("ACGTacgtNn", "TGCAtgcaNn")

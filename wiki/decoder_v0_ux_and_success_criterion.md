@@ -135,4 +135,8 @@ Canonical release/handoff packet for the current v0 surface:
 - `reports/dna_decoder_v0_release_candidate_2026-05-24.md`
 - `reports/dna_decoder_v0_closeout_handoff_2026-05-24.md`
 
+Current v0.1 genome-input follow-on packet:
+
+- `reports/dna_decoder_v0_1_genome_input_release_candidate_2026-05-25.md`
+
 Without this relock, code, tests, and docs continue to justify incompatible claims about what v0 is.
