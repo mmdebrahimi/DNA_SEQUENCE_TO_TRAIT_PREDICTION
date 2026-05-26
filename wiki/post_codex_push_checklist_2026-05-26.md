@@ -6,6 +6,26 @@
 
 ---
 
+## ⚡ FAST PATH (post-2026-05-26 — use the handoff gate runner)
+
+The `plans/Two_Machine_Operating_Contract.md` §2.1 spec is now implemented as
+`scripts/handoff_gate.py`. For the cef audit-aware closeout + every future
+Codex push, the new fast path is:
+
+```bash
+cd C:/Users/Farshad/PythonProjects/dna_decode
+git pull --ff-only origin main
+uv run python -m scripts.handoff_gate
+```
+
+Verdict interpretation:
+- **ACCEPTED** (exit 0): all 5 contract checks PASS. Handoff is integrated. Proceed to bundle-content-specific verification (which is what the rest of THIS file covers — Steps 3-9 are still relevant for the v0.1 cipro context they were drafted for).
+- **PROVISIONAL** (exit 1): ≥1 check FAIL. Per contract §2.1, work depending on this artifact is provisional. Read the rendered `reports/handoff_gate_<DATE>.md` for per-check suggested actions.
+
+The fast path subsumes steps 1-2 + 6 of the longer checklist below. Steps 3-5 + 7-9 (bundle-content verification + tagging + plans-index update + cef kickoff) remain manual per-handoff work.
+
+---
+
 ## 0. Trigger
 
 Codex on Precision 7780 reports `git push origin main` succeeded. Or user receives some signal (Slack, email, calendar nudge, etc.) that the push happened.
