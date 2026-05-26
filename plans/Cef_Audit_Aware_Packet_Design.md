@@ -78,25 +78,52 @@ uv run python -m scripts.drug_mechanism_audit \
 
 **How:** Write NEW `scripts/drug_mechanism_phenotype_merge.py` parallel to `scripts/cipro_mechanism_phenotype_merge.py` (per CLAUDE.md gotcha). Drug-parameterized; uses `mic_tiers.classify_gene_symbol(drug, ...)` + `mic_tiers.primary_mechanisms_for(drug)`.
 
-**Cef-specific SUSPEND threshold (calibrated below):**
-- `clean_count` = strains with HIGH_R MIC + primary mechanism (CTX-M / CMY / SHV / etc.) present
-- `opacity_count` = strains with HIGH_R MIC but NO primary mechanism (tool failed to detect biology that should be there)
-- `signal_quality` = clean_count / (clean_count + opacity_count + suspect_count)
-- **Cef SUSPEND threshold:** `signal_quality < 0.50` → SUSPEND_CONDITION_4. (Cipro used 0.40; cef can be tighter because plasmid β-lactamases are easier to detect than QRDR point mutations.)
+**Cef SUSPEND gate (formula LOCKED to match cipro):**
+- `clean_count` = strains with HIGH_R MIC + primary mechanism present (CTX-M / CMY / SHV / etc.)
+- `opacity_count` = strains with HIGH_R MIC but NO primary mechanism (tool may have missed biology)
+- **`signal_quality = clean_count / len(merged)`** — exactly mirrors `scripts/cipro_mechanism_phenotype_merge.py`'s `cohort_signal_quality`. NOT `clean / (clean + opacity + suspect)` (different statistic; would over-inflate by excluding BORDERLINE / AMBIGUOUS / NO_MIC).
+- **Cef SUSPEND threshold:** `signal_quality < 0.40` — matches the cipro 2026-05-17 calibration. The earlier "cef can be tighter at 0.50" framing was heuristic + not calibrated against the null baseline. Cipro's 0.40 was itself a /brainstorm-round-1 catch on the 60% null-baseline trap (PC2); cef can re-use it until cef has its own calibration evidence.
+- **Decisive coverage (informational; NOT a gate at v0.1):** `decisive_coverage = decisive_evaluable / len(merged)`. Report alongside signal_quality. Low decisive coverage indicates cohort MIC sparsity (the 2026-05-18 cef census risk); surface in the release packet but don't gate on it for this slice.
 
-**Output:** `wiki/cef_mechanism_phenotype_merge_2026-05-26.{md,json}` with:
-- Per-strain `noise_class` (CLEAN_R_primary / OPAQUE_R_no_mechanism / SUSPECT_S_silent_mechanism / etc.)
-- Per-strain `mechanism_opacity_flag` (True if HIGH_R + no primary mechanism)
-- Per-strain `primary_mechanisms` list
-- Per-strain `co_resistance_modifiers` (porin_loss, efflux)
-- Cohort-level `gate_verdict` (RUN_FULL_AND_CLEAN / MIXED / SUSPEND_CONDITION_4)
-- Cohort-level `signal_quality` numeric
+**Output `wiki/cef_mechanism_phenotype_merge_2026-05-26.{md,json}` JSON contract — pinned against `pipeline._load_audit_verdict`'s expectations:**
+
+Top-level fields (the merge JSON top-level reads):
+- `gate_verdict` (string; one of: `"RUN_FULL_AND_CLEAN"` / `"MIXED"` / `"SUSPEND_CONDITION_4"`) — top-level, NOT nested under `cohort_signal_quality`. The existing `pipeline._load_audit_verdict` reads `merge.get("gate_verdict") or merge.get("recommended_next_step")`.
+- `cohort_signal_quality` (float; numeric)
+- `decisive_coverage` (float; numeric; informational)
+- `n_merged` (int)
+- `clean_count` (int)
+- `opacity_count` (int)
+
+Per-strain fields (each row in `per_strain` list):
+- `strain_id` (string)
+- `noise_class` (string; e.g., `"CLEAN_R_primary_mechanism"` / `"OPAQUE_R_no_mechanism"` / `"SUSPECT_S_silent_mechanism"` / etc.)
+- `mechanism_opacity_flag` (bool; True if HIGH_R MIC + no primary mechanism)
+- `mic_tier` (string; one of HIGH_R / HIGH_S / DECISIVE_R / DECISIVE_S / BORDERLINE / AMBIGUOUS / CONFLICT / NO_MIC per `mic_tiers.classify_tier`)
+- `primary_mechanisms` (list[string]; e.g., `["ESBL_extended_spectrum"]`)
+- `co_resistance_modifiers` (list[string]; e.g., `["porin_loss"]`)
+
+**Schema-contract tests required in Artifact 3** (3 small tests against synthetic merge JSON):
+1. `gate_verdict` is top-level + readable by `_load_audit_verdict(merge_json, strain_id)`
+2. Per-strain `primary_mechanisms` is plural list (not singular `primary_mechanism` string per cipro's older shape)
+3. SUSPEND propagation works: `gate_verdict == "SUSPEND_CONDITION_4"` AND strain in per_strain → `_load_audit_verdict` returns `suspend_gate_fired = True`
 
 **Cost:** ~30 min (code new + run).
 
 ### Artifact 4 — Re-run cef predict examples in canonical_audit_aware mode
 
-**What:** Run `pipeline.py predict` on the same 2 strains Codex used overnight (562.12960 R + 562.7572 S) AND a third strain that exposes the merge gate's behavior — recommended `562.28389` (a shared model miss: S labeled, but predicted R; expected to surface `OPAQUE_R_no_mechanism` IF the model is calling R without mechanism support; informative for the scope-limit doc).
+**What:** Run `pipeline.py predict` on FOUR strains spanning the success + both failure modes. Surfaces both shared model misses for release-discipline honesty.
+
+The 4 canonical strains:
+
+| Strain | Expected | Predicted | p(R) | Purpose |
+|---|---|---|---|---|
+| `562.12960` | R | R | 0.753 | Clean R example (true positive) |
+| `562.7572` | S | S | 0.204 | Clean S example (true negative) |
+| `562.28389` | S | R | 0.524-0.587 | FP edge case (S labeled, R predicted; diagnostic for `OPAQUE_R_no_mechanism` if model calls R without primary mechanism support) |
+| `562.7695` | R | S | 0.486 | FN edge case (R labeled, S predicted; diagnostic for the symmetric failure mode) |
+
+Including BOTH misses (562.28389 + 562.7695) makes the release packet's "known limitations" section honest — single-miss surfacing biases the reader's failure-mode model.
 
 **How:** Drop `--allow-missing-audit` + `--no-attribution`; supply the new cef merge JSON:
 
@@ -109,10 +136,10 @@ uv run python -m scripts.pipeline predict \
   --annotations <refseq-cache>/<acc>.gff3 \
   --audit-merge-json wiki/cef_mechanism_phenotype_merge_2026-05-26.json \
   --output reports/dna_decoder_v0_1_cef_canonical_example_R_2026-05-26.json
-# Same for 562.7572 (S) and 562.28389 (S labeled, R predicted -- diagnostic)
+# Same for 562.7572 (S), 562.28389 (FP diagnostic), 562.7695 (FN diagnostic)
 ```
 
-**Cost:** ~30 min.
+**Cost:** ~40 min (4 strains × ~10 min each on Precision 7780).
 
 **Verify outputs include:**
 - `audit_verdict.noise_class` populated
@@ -124,24 +151,39 @@ uv run python -m scripts.pipeline predict \
 
 ### Artifact 5 — Updated cef release candidate (audit-aware)
 
-**What:** Replace `reports/dna_decoder_v0_1_cef_cached_release_candidate_2026-05-26.md` (or write a new dated version) that:
-- Updates the "Important caveat" section: cef is NOW canonical_audit_aware (not debug-mode).
-- Includes the 3 canonical example outputs from Artifact 4.
-- Adds an "Audit framework" section explaining the cef merge gate.
-- Names the cohort-level `gate_verdict` (likely RUN_FULL_AND_CLEAN given the 47/49 label alignment + AUROC 0.895; cef's signal quality should be HIGH).
+**What:** Write `wiki/dna_decoder_v0_1_cef_cached_release_candidate_2026-05-26_v2.md` (the existing 2026-05-26 release candidate is at `wiki/`, NOT `reports/` post-bundle-integration; new dated version preferred over in-place rewrite to preserve the v1 audit trail). The new version:
+- Updates the "Important caveat" section per the verdict-branch wording matrix below.
+- Includes ALL 4 canonical example outputs from Artifact 4.
+- Adds an "Audit framework" section explaining the cef merge gate + signal_quality formula + decisive_coverage.
+- Names the cohort-level `gate_verdict` from Artifact 3 (NOT pre-guessed from model accuracy — Codex's prior 47/49 label alignment is NOT a substitute for the mechanism × MIC signal quality measurement; the gate runs in Artifact 3 + this artifact reports its actual output).
 
-**Cost:** ~30 min.
+**Pre-committed release-wording branch (Codex picks the matching wording from Artifact 3's verdict):**
+
+- **If `gate_verdict == "RUN_FULL_AND_CLEAN"`** (cef signal_quality ≥ 0.40):
+  - Release-state: `candidate`
+  - Reporting posture: `canonical_audit_aware`
+  - Caveat wording: "Cef cached-strain prediction is now product-viable AND audit-aware. The cohort's mechanism × MIC merge cleared the signal-quality gate (≥ 0.40). Interpretability remains exploratory per v0 spec."
+- **If `gate_verdict == "MIXED"`** (cef signal_quality between 0.40 and 0.60 OR clean_R but no clean_S):
+  - Release-state: `candidate (MIXED-signal cohort)`
+  - Reporting posture: `canonical_audit_aware (mixed cohort)`
+  - Caveat wording: "Cef cached-strain prediction is product-viable AND audit-aware, BUT the training cohort's mechanism × MIC merge surfaced mixed signal quality (cohort_signal_quality = X.XX). Predictions ship with audit_verdict propagation that flags this mixed regime. Downstream consumers should treat individual predictions accordingly."
+- **If `gate_verdict == "SUSPEND_CONDITION_4"`** (cef signal_quality < 0.40):
+  - Release-state: `candidate-informational-only`
+  - Reporting posture: `canonical_audit_aware_SUSPEND`
+  - Caveat wording: "Cef cached-strain prediction has predictive performance (AUROC 0.895 on N=49) BUT the training cohort fired SUSPEND_CONDITION_4 on the mechanism × MIC merge gate (signal_quality = X.XX, below 0.40 threshold). Per the cipro 2026-05-17 SUSPEND pattern, this cef release is INFORMATIONAL ONLY; do not deploy as clinical decision support. The audit_verdict on every prediction carries this SUSPEND framing explicitly."
+
+**Cost:** ~30 min (the writing — Codex selects branch + fills X.XX from Artifact 3's actual signal_quality + decisive_coverage numbers).
 
 ---
 
 ## Total effort
 
-~3.5 hr Codex compute on Precision 7780:
+~3.5-4 hr Codex compute on Precision 7780:
 - Artifact 1 (AMRFinder audit): ~80 min Docker
 - Artifact 2 (MIC audit): ~15 min CPU
-- Artifact 3 (merge + new script): ~30 min code + run
-- Artifact 4 (canonical examples): ~30 min compute
-- Artifact 5 (release packet update): ~30 min writing
+- Artifact 3 (merge + new script + 3 schema-contract tests): ~45 min code + run + tests
+- Artifact 4 (4 canonical examples; was 3): ~40 min compute
+- Artifact 5 (release packet update with verdict-branch wording): ~30 min writing
 
 ---
 
@@ -151,7 +193,7 @@ uv run python -m scripts.pipeline predict \
 2. `wiki/ceftriaxone_mic_audit_2026-05-26.{md,json}` exists with per-strain MIC tier.
 3. `wiki/cef_mechanism_phenotype_merge_2026-05-26.{md,json}` exists with per-strain `noise_class` + cohort-level `gate_verdict`.
 4. 3 cef predict examples in `reports/dna_decoder_v0_1_cef_canonical_example_*.json` with `provenance.reporting_mode = canonical_audit_aware` + populated `audit_verdict`.
-5. Updated `reports/dna_decoder_v0_1_cef_cached_release_candidate_<date>.md` references the audit artifacts + drops the "debug-mode only" caveat.
+5. Updated release candidate at `wiki/dna_decoder_v0_1_cef_cached_release_candidate_2026-05-26_v2.md` (note: `wiki/`, NOT `reports/` — v1 lives at `wiki/...` post-bundle-integration) references the audit artifacts + applies the verdict-branch wording from Artifact 5's pre-committed matrix.
 6. Pushed to origin.
 
 ---
@@ -178,7 +220,7 @@ uv run python -m scripts.pipeline predict \
 
 ## Risk flags
 
-- **R1 (LOW):** Cef SUSPEND threshold (0.50) is calibrated heuristically; if cohort signal quality is near 0.50, it'll be borderline. Mitigation: report the raw `signal_quality` numeric; threshold is a guideline, not a hard ship gate.
+- **R1 (LOW, addressed in revision):** Cef SUSPEND threshold is now LOCKED at 0.40 (matches cipro's calibrated value; supersedes the earlier heuristic 0.50). If signal_quality lands near 0.40, Artifact 5's MIXED verdict branch handles the borderline case. Report `signal_quality` + `decisive_coverage` as raw numerics in the release packet regardless of verdict.
 - **R2 (LOW):** Cef MIC tier audit needs raw BV-BRC cef AST CSV; if not on Precision 7780, needs to be downloaded. Mitigation: probably already present (Codex used it for the 4-drug census 2026-05-18).
 - **R3 (MEDIUM):** Writing `scripts/drug_mechanism_phenotype_merge.py` is new code (~1 hr). Should match the cipro version's API + per-strain JSON shape so the existing `_load_audit_verdict` helper in `pipeline.py` works unchanged. Mitigation: reference `scripts/cipro_mechanism_phenotype_merge.py` (already in repo).
 - **R4 (LOW):** 2 shared model misses (562.28389, 562.7695) — could be label noise OR architectural failure. Mitigation: surface in the release packet's "known limitations" section; defer investigation to post-ship.
@@ -209,4 +251,6 @@ Concretely: invoke `/idea-anchor` with the EP-4 recommended candidate from `plan
 
 ## Bottom line
 
-5 artifacts; ~3.5 hr Codex compute; zero new architecture. Closes the last "debug-mode" gap in the cef release surface + matches the cipro discipline that v0 + v0.1-cipro already have. After this ships, non-AMR phenotype scoping (Phase 4) is the cleanest next jump per the roadmap.
+5 artifacts; ~3.5 hr Codex compute on Precision 7780. **Zero MODEL architecture change** (same NT mean-pool + XGBoost; same predict CLI; same v0 JSON schema). **One new drug-agnostic audit-merge component (~150-300 LOC)** at `scripts/drug_mechanism_phenotype_merge.py`, parallel to the existing cipro version per the CLAUDE.md gotcha. Closes the last "debug-mode" gap in the cef release surface + matches the cipro discipline that v0 + v0.1-cipro already have.
+
+After this ships, non-AMR phenotype scoping (Phase 4) is the cleanest next jump per the roadmap.
