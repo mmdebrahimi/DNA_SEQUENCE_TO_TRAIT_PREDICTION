@@ -98,6 +98,12 @@ def test_known_divergence_targets_pinned():
         # 2026-05-25 v0.1 slice 1 (genome-input cipro) markers
         ("scripts/pipeline.py", "--genome-fasta"),
         ("scripts/pipeline.py", "--allow-missing-audit"),
+        # 2026-05-26 cef audit-aware packet markers
+        ("scripts/drug_mechanism_phenotype_merge.py", "default=0.40"),
+        ("scripts/drug_mechanism_phenotype_merge.py", "clean_count / max(1, len(merged))"),
+        ("wiki/ceftriaxone_mechanism_audit_2026-05-26.json", "PRIMARY_DOMINANT"),
+        ("wiki/ceftriaxone_mic_audit_2026-05-26.json", "tier"),
+        ("wiki/cef_mechanism_phenotype_merge_2026-05-26.json", "gate_verdict"),
     }
     assert set(KNOWN_DIVERGENCE_TARGETS) == expected
 

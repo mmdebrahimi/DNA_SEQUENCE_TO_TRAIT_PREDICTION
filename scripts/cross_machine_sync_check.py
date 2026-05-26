@@ -50,6 +50,12 @@ KNOWN_DIVERGENCE_TARGETS: tuple[tuple[str, str], ...] = (
     # 2026-05-25 Codex v0.1 slice 1 (genome-input cipro decode)
     ("scripts/pipeline.py", "--genome-fasta"),                    # v0.1 CLI flag
     ("scripts/pipeline.py", "--allow-missing-audit"),             # v0.1 audit fallback flag
+    # 2026-05-26 cef audit-aware packet (Codex Artifacts 1-5)
+    ("scripts/drug_mechanism_phenotype_merge.py", "default=0.40"),                            # SUSPEND threshold lock
+    ("scripts/drug_mechanism_phenotype_merge.py", "clean_count / max(1, len(merged))"),       # signal_quality formula lock
+    ("wiki/ceftriaxone_mechanism_audit_2026-05-26.json", "PRIMARY_DOMINANT"),                 # Artifact 1 (already on origin)
+    ("wiki/ceftriaxone_mic_audit_2026-05-26.json", "tier"),                                   # Artifact 2 (pending Codex push)
+    ("wiki/cef_mechanism_phenotype_merge_2026-05-26.json", "gate_verdict"),                   # Artifact 3 (pending Codex push)
 )
 
 
