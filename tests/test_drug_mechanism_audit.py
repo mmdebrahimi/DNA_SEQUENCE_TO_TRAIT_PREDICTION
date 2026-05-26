@@ -9,6 +9,8 @@ from pathlib import Path
 
 import pytest
 
+from dna_decode.data.cohort import CandidateStrain, StrainCohort
+
 
 # ---- _is_synonymous_point ----
 
@@ -221,3 +223,38 @@ def test_parse_amrfinder_recovers_cef_beta_lactamase(tmp_path: Path):
     parsed = parse_amrfinder_outputs_for_drug(main_tsv, mut_tsv, drug="ceftriaxone")
     assert parsed["n_hits"] >= 1
     assert parsed["mechanisms_present"]  # non-empty
+
+
+def test_target_strains_prefers_saved_pool_ids():
+    from scripts.drug_mechanism_audit import _target_strains_for_drug
+
+    cohort = StrainCohort(
+        strains=[
+            CandidateStrain("a", ast_labels={"ceftriaxone": 1}),
+            CandidateStrain("b", ast_labels={"ceftriaxone": 0}),
+            CandidateStrain("c", ast_labels={"ceftriaxone": 1}),
+        ],
+        per_drug_strain_ids={"ceftriaxone": ["a", "c"]},
+        three_drug_intersection=[],
+    )
+
+    strains, scope = _target_strains_for_drug(cohort, "ceftriaxone")
+    assert scope == "pool"
+    assert [s.strain_id for s in strains] == ["a", "c"]
+
+
+def test_target_strains_can_force_all_labeled():
+    from scripts.drug_mechanism_audit import _target_strains_for_drug
+
+    cohort = StrainCohort(
+        strains=[
+            CandidateStrain("a", ast_labels={"ceftriaxone": 1}),
+            CandidateStrain("b", ast_labels={"ceftriaxone": 0}),
+        ],
+        per_drug_strain_ids={"ceftriaxone": ["a"]},
+        three_drug_intersection=[],
+    )
+
+    strains, scope = _target_strains_for_drug(cohort, "ceftriaxone", all_labeled=True)
+    assert scope == "labeled"
+    assert [s.strain_id for s in strains] == ["a", "b"]

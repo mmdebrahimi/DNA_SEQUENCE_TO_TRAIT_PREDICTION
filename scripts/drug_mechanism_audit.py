@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from collections import defaultdict
@@ -45,7 +46,14 @@ from tools.docker_runner import DockerRunnerError, run as docker_run
 
 # Hardcoded image + DB path matching cipro_mechanism_audit.py CLAUDE.md pin.
 AMRFINDER_IMAGE = "ncbi/amr:4.2.7-2026-03-24.1"
-AMRFINDER_DB = "C:/Users/Farshad/dna_decode_stage2/amrfinder_db"
+AMRFINDER_DB = str(
+    Path(
+        os.environ.get(
+            "DNA_DECODE_AMRFINDER_DB",
+            "C:/Users/b0652085/dna_decode_stage2/amrfinder_db",
+        )
+    )
+)
 
 
 # TODO(consolidation): duplicated from scripts/cipro_mechanism_audit.py.
@@ -250,7 +258,19 @@ def compute_verdict(
     return "MOSTLY_UNKNOWN", breakdown
 
 
+def _target_strains_for_drug(cohort, drug: str, *, all_labeled: bool = False):
+    drug_lower = drug.lower()
+    if all_labeled:
+        return [s for s in cohort.strains if drug_lower in s.ast_labels], "labeled"
+    pool_ids = cohort.per_drug_strain_ids.get(drug_lower, [])
+    if pool_ids:
+        pool_set = set(pool_ids)
+        return [s for s in cohort.strains if s.strain_id in pool_set], "pool"
+    return [s for s in cohort.strains if drug_lower in s.ast_labels], "labeled"
+
+
 def main(argv: list[str] | None = None) -> int:
+    global AMRFINDER_DB, AMRFINDER_IMAGE
     parser = argparse.ArgumentParser(description="Drug-agnostic AMRFinderPlus mechanism audit.")
     parser.add_argument("--drug", required=True, choices=supported_drugs(),
                         help="Drug to audit (per mic_tiers.supported_drugs())")
@@ -266,18 +286,37 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--end-index", type=int, default=None)
     parser.add_argument("--per-strain-timeout", type=float, default=600.0)
     parser.add_argument("--skip-existing", action="store_true", default=True)
+    parser.add_argument(
+        "--all-labeled",
+        action="store_true",
+        help="Process all labeled strains instead of the saved per-drug in_pool_<drug> subset.",
+    )
+    parser.add_argument(
+        "--amrfinder-db",
+        type=Path,
+        default=Path(AMRFINDER_DB),
+        help="Local AMRFinderPlus DB root; container will read /db/latest.",
+    )
+    parser.add_argument(
+        "--amrfinder-image",
+        default=AMRFINDER_IMAGE,
+        help="Pinned AMRFinderPlus Docker image tag.",
+    )
     args = parser.parse_args(argv)
 
     drug_lower = args.drug.lower()
     if args.output is None:
         args.output = Path(f"wiki/{drug_lower}_mechanism_audit_{_date.today().isoformat()}.md")
 
+    AMRFINDER_DB = str(args.amrfinder_db)
+    AMRFINDER_IMAGE = args.amrfinder_image
+
     cohort = load_cohort(args.cohort)
-    strains = [s for s in cohort.strains if drug_lower in s.ast_labels]
+    strains, cohort_scope = _target_strains_for_drug(cohort, args.drug, all_labeled=args.all_labeled)
     strains.sort(key=lambda s: s.strain_id)
     end = args.end_index if args.end_index is not None else len(strains)
     target = strains[args.start_index:end]
-    print(f"[drug_mech_audit] drug={args.drug} cohort: {len(strains)} labeled strains; "
+    print(f"[drug_mech_audit] drug={args.drug} cohort: {len(strains)} {cohort_scope} strains; "
           f"processing indices [{args.start_index}:{end}) = {len(target)} strains")
 
     args.out_root.mkdir(parents=True, exist_ok=True)
@@ -389,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
         "",
         f"**Drug:** {args.drug}",
         f"**Tool:** AMRFinderPlus `{AMRFINDER_IMAGE}` on `Escherichia` organism mode + `--mutation_all`.",
-        f"**Cohort:** `{args.cohort}` ({len(strains)} {args.drug}-labeled strains).",
+        f"**Cohort:** `{args.cohort}` ({len(strains)} {cohort_scope} strains for {args.drug}).",
         f"**Per-drug catalogs:** sourced from `dna_decode/data/mic_tiers.py`.",
         "",
         f"## Verdict: **{verdict}**",

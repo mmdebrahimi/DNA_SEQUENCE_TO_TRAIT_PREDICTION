@@ -1,0 +1,5476 @@
+{
+  "cohort_path": "data\\processed\\gate_b_cohort.parquet",
+  "refseq_cache": "C:\\Users\\b0652085\\OneDrive - Bombardier\\Apps\\Stress-DNA Project\\dna_decode_cache\\refseq",
+  "drug": "ceftriaxone",
+  "amrfinder_image": "ncbi/amr:4.2.7-2026-03-24.1",
+  "amrfinder_db_path": "C:\\Users\\b0652085\\dna_decode_stage2\\amrfinder_db",
+  "n_processed": 50,
+  "r_mech_counts": {
+    "acquired_beta_lactamase": 24,
+    "ampC_hyperproduction": 26,
+    "regulatory": 9,
+    "porin_loss": 2
+  },
+  "s_mech_counts": {
+    "ampC_hyperproduction": 23,
+    "acquired_beta_lactamase": 13,
+    "regulatory": 2
+  },
+  "r_no_known_mechanism": 0,
+  "s_silent_mechanism_hits": 23,
+  "verdict": "PRIMARY_DOMINANT",
+  "verdict_breakdown": {
+    "n_R_strains": 26,
+    "n_R_with_primary_mechanism": 26,
+    "n_R_with_any_mechanism": 26
+  },
+  "elapsed_sec": 1.2509799003601074,
+  "per_strain": [
+    {
+      "strain_id": "1045010.61",
+      "accession": "GCA_008727135.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.11",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.12959",
+      "accession": "GCF_001874785.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_S30HfsTer59",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaKPC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 8,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_S30HfsTer59"
+        ],
+        "acquired_beta_lactamase": [
+          "blaKPC-3",
+          "blaOXA-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.12960",
+      "accession": "GCF_001874845.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_T5N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ompF_D34RfsTer1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.44",
+          "coverage": "100.00",
+          "mechanism": "porin_loss"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.55",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "blaTEMp_C32T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.83",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.55",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.55",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.55",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.55",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 16,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "porin_loss",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_T5N"
+        ],
+        "porin_loss": [
+          "ompF_D34RfsTer1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42T",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ],
+        "acquired_beta_lactamase": [
+          "blaCMY-6",
+          "blaCTX-M-15",
+          "blaNDM-1",
+          "blaOXA-2",
+          "blaTEM-1",
+          "blaTEMp_C32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.16325",
+      "accession": "GCA_002056065.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1408",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaKPC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaKPC-3",
+          "blaOXA-9",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.16326",
+      "accession": "GCA_002056145.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1809",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-6",
+          "blaNDM-1",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.17621",
+      "accession": "GCA_002192295.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_V29YfsTer44",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-5",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-42",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_V29YfsTer44"
+        ],
+        "acquired_beta_lactamase": [
+          "blaCMY-42",
+          "blaNDM-5",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.17721",
+      "accession": "GCA_002201835.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1284",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-42",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 12,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-42",
+          "blaCTX-M-15",
+          "blaNDM-6",
+          "blaOXA-1",
+          "blaOXA-9",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.22426",
+      "accession": "GCA_002180135.1",
+      "cohort_label": 1,
+      "mlst": "MLST.Escherichia_coli_1.167,MLST.Escherichia_coli_2.2",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "PARTIAL_CONTIG_ENDX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "67.48",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaNDM-7",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_V29YfsTer44",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 10,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-15",
+          "blaNDM-7",
+          "blaTEM",
+          "blaTEM-1"
+        ],
+        "regulatory": [
+          "acrR_V29YfsTer44"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.28389",
+      "accession": "GCA_002948655.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.1276",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.28434",
+      "accession": "GCA_002968735.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_K80NfsTer9",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-15",
+          "blaOXA-1"
+        ],
+        "regulatory": [
+          "acrR_K80NfsTer9"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.28563",
+      "accession": "GCA_002999075.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "soxS_A12S",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2",
+          "blaTEM-1"
+        ],
+        "regulatory": [
+          "soxS_A12S"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.28565",
+      "accession": "GCA_003000595.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.28805",
+      "accession": "GCA_003073955.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaVEB-5",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": ""
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.30362",
+      "accession": "GCA_003204155.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.4",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_E91KfsTer6",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ompF_Q88Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.45",
+          "coverage": "100.00",
+          "mechanism": "porin_loss"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 8,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "porin_loss",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_E91KfsTer6"
+        ],
+        "porin_loss": [
+          "ompF_Q88Ter"
+        ],
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.45847",
+      "accession": "GCA_004566575.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-55",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-55"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.45848",
+      "accession": "GCA_004567065.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.349",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.45851",
+      "accession": "GCA_004567345.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.372",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.45852",
+      "accession": "GCA_004567475.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.45853",
+      "accession": "GCA_004567665.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.315",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50237",
+      "accession": "GCA_004566685.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaSHV-12",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaSHV-12",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaSHV-12",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50245",
+      "accession": "GCA_004566865.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1431",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-15",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50250",
+      "accession": "GCA_004566955.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.44",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-55",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-55",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 7,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-55"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50252",
+      "accession": "GCA_004566985.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.393",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.60",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-27",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-27",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.14",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 8,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_W63Ter"
+        ],
+        "acquired_beta_lactamase": [
+          "blaCTX-M-27"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50287",
+      "accession": "GCA_004567805.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.442",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50295",
+      "accession": "GCA_004568615.1",
+      "cohort_label": 1,
+      "mlst": "MLST.Escherichia_coli_1.131",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-15",
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50301",
+      "accession": "GCA_004569855.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1317",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.59",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCMY-2"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.50304",
+      "accession": "GCA_004569995.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 9,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-15",
+          "blaTEM-1"
+        ],
+        "regulatory": [
+          "marR_S3N"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7570",
+      "accession": "GCA_001277495.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.40",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7572",
+      "accession": "GCA_001277535.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.301",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaOXA-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7573",
+      "accession": "GCA_001277555.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.443",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7575",
+      "accession": "GCA_001277595.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.337",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7578",
+      "accession": "GCA_001277655.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.382",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7580",
+      "accession": "GCA_001277695.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.4424",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "92.13",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "92.13",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "92.13",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "92.13",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "92.13",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7581",
+      "accession": "GCA_001277715.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.121",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7619",
+      "accession": "GCA_001283185.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7623",
+      "accession": "GCA_001283265.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.328",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7625",
+      "accession": "GCA_001283305.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.378",
+      "status": "OK",
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "primary_mechanism_class": "NO_MECHANISM"
+    },
+    {
+      "strain_id": "562.7627",
+      "accession": "GCA_001283345.2",
+      "cohort_label": 0,
+      "mlst": "MLST.Escherichia_coli_1.4554",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "marR_S3N"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7641",
+      "accession": "GCA_001283625.2",
+      "cohort_label": 0,
+      "mlst": "MLST.Escherichia_coli_1.5543",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7645",
+      "accession": "GCA_001283705.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.34",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7684",
+      "accession": "GCA_001284485.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.17",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7686",
+      "accession": "GCA_001284525.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.381",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7687",
+      "accession": "GCA_001284545.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.302",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7690",
+      "accession": "GCA_001284605.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2144",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7695",
+      "accession": "GCA_001284705.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.2089",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.37",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 7,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaCTX-M-15",
+          "blaOXA-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7699",
+      "accession": "GCA_001284785.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.335",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "99.18",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "acquired_beta_lactamase": [
+          "blaOXA-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7710",
+      "accession": "GCA_001285005.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.3",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "97.96",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7717",
+      "accession": "GCA_001285145.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2346",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "acquired_beta_lactamase"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 7,
+      "mechanisms_present": [
+        "acquired_beta_lactamase",
+        "ampC_hyperproduction",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "marR_S3N"
+        ],
+        "acquired_beta_lactamase": [
+          "blaTEM-1"
+        ],
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "acquired_beta_lactamase"
+    },
+    {
+      "strain_id": "562.7784",
+      "accession": "GCA_001286485.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.2678",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    },
+    {
+      "strain_id": "562.7789",
+      "accession": "GCA_001286605.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.123",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-11C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_C-42C",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_G-15G",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-14T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "ampC_T-32T",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "method": "POINTN",
+          "scope": "core",
+          "type": "",
+          "identity": "98.78",
+          "coverage": "100.00",
+          "mechanism": "ampC_hyperproduction"
+        }
+      ],
+      "n_hits": 5,
+      "mechanisms_present": [
+        "ampC_hyperproduction"
+      ],
+      "mech_hits": {
+        "ampC_hyperproduction": [
+          "ampC_C-11C",
+          "ampC_C-42C",
+          "ampC_G-15G",
+          "ampC_T-14T",
+          "ampC_T-32T"
+        ]
+      },
+      "primary_mechanism_class": "ampC_hyperproduction"
+    }
+  ]
+}
