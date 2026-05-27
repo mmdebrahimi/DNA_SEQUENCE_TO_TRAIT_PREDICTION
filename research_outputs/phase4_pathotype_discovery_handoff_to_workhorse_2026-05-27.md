@@ -12,6 +12,8 @@ Closes the loop on the handoff your machine sent at `dna_decoder_phase4_handoff_
 
 E. coli pathotype prediction IS the right first non-AMR phenotype to promote — with one important scoping discipline: **do NOT commit 3 months of execution time on the v0 architecture without two cheap pre-build gates passing first**. The substrate is real and accessible; the deterministic-resolver architecture is shippable on top of pinned VirulenceFinder + ETECFinder; the wedge is narrow but defensible.
 
+**Read-order safety note for the workhorse:** Section 4 names the first heavy execution task (Horesh cohort build) but that task is **gated** on Section 5's Gate A + Gate B both passing. If you skim top-down and miss Section 5, you will start building a 100-200 GB cohort that may be wasted work if the gates fail. Read Section 5 before acting on Section 4.
+
 ## 1. Dataset access feasibility — VALIDATED with caveats
 
 | Source | Accessibility | Per-record label-provenance status | H1 (≥70% independent) verdict | Tier |
@@ -77,13 +79,15 @@ Drop to 7-class on Tier-1a-only: `ExPEC_COMPATIBLE / EPEC_COMPATIBLE / ETEC_COMP
 - STEC must be ST-diversified via Tier-1b (Horesh STEC is 90% single-ST = severe leakage risk without DECA supplement).
 - Within-fold class balance allowed to vary; across-fold marginal pathotype distribution must match overall cohort.
 
-## 4. First heavy execution task for the workhorse
+## 4. First heavy execution task for the workhorse — RUNS ONLY AFTER GATE A PASSES (see §5)
+
+> **PRECONDITION (load-bearing):** **DO NOT START THIS TASK UNTIL GATE A IN §5 PASSES.** Gate A is a ~4-day no-code sanity check (manual VF 3.2.0 + ETECFinder on 5 known-pathotype strains; hand-write the 11-class decision-table verdict). If Gate A fails — VF/ETECFinder install friction, DB schema drift, decision table not computable from raw outputs, or Horesh per-strain labels not usable — **the heavy lift below is wasted work** and the project needs scope re-evaluation, not cohort assembly. Gate B (cold-email user-pain validation, §5) runs in parallel with Gate A. Heavy lift fires only when BOTH gates PASS.
 
 > **Build the Horesh 2021 H1-passing cohort substrate.** Download FASTA assemblies for the 2,077 independent-label records from Horesh File F1 using the `Assembly_name` column (NCBI Datasets API). Run pinned VirulenceFinder 3.2.0 + ETECFinder DB calls on each. Materialize per-strain cluster profile + provenance JSON in the v0 schema drafted in the project ledger. Output: `data/processed/pathotype_horesh_h1_cohort/` directory with N≤2,077 genomes + annotations + VF/ETECFinder outputs + provenance JSONs.
 
 **Estimated effort:** 1-2 days at workhorse bandwidth/storage. **Disk budget:** ~100-200 GB (assembled E. coli genomes average 5 MB compressed; FASTA + Bakta annotations + VF outputs roughly 30-50 MB per strain).
 
-**Why this first:** unblocks every downstream falsifier (H2 / H3 / H4 / H5). Without the cohort built + characterized, no decision-table tuning, no abstention-rule calibration, no clade-balanced validation, no VF-concordance check. This is the single biggest workhorse-shaped task.
+**Why this first AMONG post-gate tasks:** unblocks every downstream falsifier (H2 / H3 / H4 / H5). Without the cohort built + characterized, no decision-table tuning, no abstention-rule calibration, no clade-balanced validation, no VF-concordance check. This is the single biggest workhorse-shaped task — but it is NOT the first thing to do; Gate A is.
 
 ## 5. Two pre-build gates (RUN BEFORE COMMITTING TO HEAVY LIFT)
 
