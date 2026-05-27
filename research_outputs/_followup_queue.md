@@ -1,18 +1,18 @@
 # Research Follow-up Queue (V1.5 invocation)
 <!-- queue-schema: 0.1 -->
 
-> Last updated 2026-05-23 (Phase 2b L1 harness-discoverability validation run — AoU PRS topic). Stale-days threshold: 30. Source memos scanned: 3.
+> Last updated 2026-05-27 (ecoli-pathotype labeled-genome substrate survey added; Phase 4 EP candidate). Stale-days threshold: 30. Source memos scanned: 4.
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
 
 ## Summary
 
-- Source memos scanned: 3
+- Source memos scanned: 4
 - Schema-drift memos (skipped): 0
-- Total raw candidate rows extracted: 15
-- Unique candidates after dedup: 15
-- Active candidates (≤ 30 days old): 15
+- Total raw candidate rows extracted: 20
+- Unique candidates after dedup: 20
+- Active candidates (≤ 30 days old): 20
 - Stale candidates (> 30 days old): 0
 - Cross-flavor candidates (public + internal): 0
 
@@ -20,6 +20,11 @@
 
 | Claim | Numeric value | Units | Locator(s) | Candidate use / Verification needed | Confidence | Sources | Problem-anchor(s) | Notes |
 |---|---:|---|---|---|---|---|---|---|
+| EnteroBase pathotype labels are derived from BlastFrost gene-presence calls (same markers v0 deterministic resolver would track) | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC9393565/ | **Candidate use:** treat EnteroBase pathotype labels as STRUCTURALLY circular with the v0 deterministic resolver; do NOT use EnteroBase pathotype field as the primary independent-label substrate for H1. EnteroBase remains usable for cohort assembly + MLST clonal-lineage context, but the pathotype label itself fails the independence test. **Verification needed:** confirm with EnteroBase maintainers (Mark Achtman group, Warwick) whether a parallel "manually annotated pathotype" field exists alongside the BlastFrost-derived field, and what fraction of records carry it. | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI (gates architecture-fork lock for the deterministic multilabel cluster resolver + abstention v0 CLI) | Load-bearing for H1 (label-independence) on the dna_decode pathotype project |
+| Horesh 2021 curated 10,146-genome collection: pathotype assignment uses HYBRID (ariba + VirulenceFinder DB + isolation source refinement) — NOT purely independent | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC8208696/ | **Candidate use:** Horesh 2021 is the largest publication-extracted-metadata candidate substrate (~5,000+ usable strains across DEC pathotypes); the "isolation source refinement" step adds an independent component that pure EnteroBase BlastFrost labels lack. **Verification needed:** open the Horesh 2021 supplementary metadata file (File F1) and audit per-record whether each pathotype label has a documented isolation-source basis vs gene-rule-only basis. Estimate the independent-label fraction; target H1 floor ≥70%. | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI | Largest curated paired-WGS+publication-metadata source identified |
+| Horesh 2021 pathotype representation: EPEC ≈ 3% + ETEC ≈ 2% of 10,146 genomes ≈ 304 EPEC + 203 ETEC strains | 3,2 | percent (EPEC,ETEC) | https://pmc.ncbi.nlm.nih.gov/articles/PMC8208696/ | **Candidate use:** confirms H2 cohort floor (N≥50 each pathotype) is achievable for EPEC + ETEC from Horesh 2021 alone. UPEC/ExPEC counts likely much higher given ST131 + ST73 + ST95 dominance. **Verification needed:** retrieve explicit EAEC + EHEC/STEC + UPEC + ExPEC + commensal per-class counts from Horesh 2021 supplementary; verify EAEC count meets N≥50 floor (the EP-2 distributed-mechanism warning shot applies to EAEC). | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI | H2 per-class floor feasibility check |
+| Whittam STEC Center + DECA Collection: 16,000-strain repository + 15 representative diarrheagenic clones (MLST clonal-lineage labeled, INDEPENDENT of v0 marker rules) | 15 | clones (DECA) | https://pubmed.ncbi.nlm.nih.gov/22582382/ | **Candidate use:** DECA is the strongest H1-passing-likely substrate (clonal-lineage labels from MLST predate the modern VirulenceFinder DB and are independent of v0 marker rules). Best-fit role: high-confidence "bedrock" subset for the cohort (~100-200 strains), with Horesh 2021 layered on top. **Verification needed:** direct-contact Whittam STEC Center (stec@cvm.msu.edu) to retrieve per-strain pathotype assignment metadata + per-pathotype counts (not publicly documented). Confirm MTA + non-export restrictions are acceptable. | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI | Best H1-passing-likely substrate; access requires direct contact (MTA + non-export) |
+| Horesh 2021 lineage concentration: six STs (11, 131, 73, 10, 95, 21) account for 50% of 10,146 isolates | 50 | percent (top-6 STs share) | https://pmc.ncbi.nlm.nih.gov/articles/PMC8208696/ | **Candidate use:** H3 (clade-balanced validation) requires Mash/MLST-stratified folds; heavy concentration in 6 STs means cohort assembly must EXPLICITLY balance per-pathotype across STs to avoid lineage leakage (e.g., O157:H7 / ST11 dominating EHEC fold). **Verification needed:** compute per-pathotype × per-ST distribution in Horesh 2021 + verify ≥5 clade folds can be constructed without any fold missing more than 2 target pathotypes. | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI | H3 lineage-leakage risk for clade-balanced validation |
 | AF PRS European OR/SD ceiling vs African ancestry floor (AoU validation) | 1.89 → 1.39 | OR per SD | https://pmc.ncbi.nlm.nih.gov/articles/PMC12622184/ | **Candidate use:** quantifies the ancestry-stratified PRS-performance gap on AoU-cohort validation — concrete numbers for product-positioning claims about ancestry-aware vs ancestry-blind PRS. **Verification needed:** paper is preprint (Research Square); confirm gap persists in peer-reviewed revision before lifting into any product-tier evidence claim. | high | all-of-us-prs-ancestry-stratified-accuracy-2025-2026-05-23 | All of Us research program polygenic risk score ancestry-stratified accuracy 2025 | Phase 2b harness-discoverability validation source |
 | Prostate cancer PRS cross-ancestry effect-size range (AoU validation) | 1.61 → 2.19 | OR | https://www.medrxiv.org/content/10.1101/2025.10.01.25337107v1 | **Candidate use:** demonstrates non-monotonic ancestry effect (American highest, not European) — counters simple "EUR-PRS performs best" narrative used in DNA-decoder marketing claims. **Verification needed:** confirm via direct medRxiv source-text (current extraction is from search-result rendering); also check sample sizes per ancestry to weight the comparison. | medium | all-of-us-prs-ancestry-stratified-accuracy-2025-2026-05-23 | All of Us research program polygenic risk score ancestry-stratified accuracy 2025 | provenance: websearch-summary (downgraded high → medium per source-text identity advisory) |
 | AoU diversity ratio vs prior PRS-training datasets | ~3x non-EUR + ~8x multi-population | x more | https://www.genome.gov/news/news-release/researchers-optimize-genetic-tests-for-diverse-populations-to-tackle-health-disparities | **Candidate use:** sharp quantitative anchor for "AoU is the largest non-European-inclusive PRS-training cohort to date" positioning. **Verification needed:** NHGRI release is institutional summary; trace back to the primary consortium paper (Comm Med, publisher-blocked at fetch — recovery via Unpaywall OA-mirror or PMC alternate ID is the discipline). | high | all-of-us-prs-ancestry-stratified-accuracy-2025-2026-05-23 | All of Us research program polygenic risk score ancestry-stratified accuracy 2025 | Phase 2b harness-discoverability validation source |
@@ -38,7 +43,7 @@
 
 ## Stale Candidates
 
-(None — all 3 source memos captured within the 30-day window.)
+(None — all 4 source memos captured within the 30-day window.)
 
 ## Schema-drift Memos
 
