@@ -393,3 +393,15 @@
 - Smoke-test on TWO strains: K-12 (binary works) + one cipro-R (POINT-row parsing actually exercised) (D6)
 
 ---
+
+## [plan_file: EP_4_Pathotype_Discovery_Closeout_Memos_Plan.md] 2026-05-27
+**Status:** executed (2026-05-27; commits 272e90d + bdc4c1e on origin/main)
+**Summary:** Two-step sequential execution of the remaining discovery-machine actions for the EP-4 pathotype project: NCBI Pathogen Detection `host_disease` facet audit + EP-1 SUSPEND-gate reuse feasibility memo. User overrode the prior "deferred until Gate A signal" recommendation.
+**Outcome:** Step 1 → HONEST-GAP (programmatic facet access blocked; 3 manual paths documented at `research_outputs/ncbi-pathogen-detection-host-disease-facet-2026-05-27.md`). Step 2 → ADAPTED_REUSE (falsifier not triggered; 7/7 noise-class symbols have direct pathotype analogs; workhorse-side reuse recommendation at `research_outputs/ep1-suspend-gate-pathotype-reuse-feasibility-2026-05-27.md`). Step 4 conditional ledger update fired the Step 2 side (Decisions Made +1, Action 5 retired); Step 1 Pending Decision NOT retired (HONEST-GAP path).
+**Key decisions:**
+- D1: Override the "deferred until Gate A" recommendation — execute now; accept the risk that if Gate A fails, the memos become reference docs rather than direct inputs
+- D2: Discovery memos are feasibility-grade (1-page verdict + analogy table), NOT implementation specs — the v0 contract belongs on the workhorse per the handoff doc
+- D3: Single commit covering both memos — narrow blast radius
+- D4: Conditional project-ledger update only if either memo produces a clean go/no-go verdict that retires a Pending Decision or updates a Hypothesis status
+
+---
