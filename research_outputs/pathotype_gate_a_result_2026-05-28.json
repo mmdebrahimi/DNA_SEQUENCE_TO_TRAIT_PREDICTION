@@ -1,0 +1,9 @@
+{
+  "date": "2026-05-28",
+  "caller_runtime_ok": true,
+  "raw_outputs_usable": true,
+  "decision_table_computable": true,
+  "gate_a_verdict": "PASS",
+  "missing_manual_sample_ids": [],
+  "failed_samples": []
+}
