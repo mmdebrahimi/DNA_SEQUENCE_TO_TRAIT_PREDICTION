@@ -22,14 +22,20 @@ ETEC reference labels are **toxin-typed** (LT / ST), and the resolver keys on th
 
 Implication: report ETEC under the resolver-conformance column primarily; do NOT claim strong external-validity prediction skill for ETEC. ExPEC remains the cleanest external-validity arm. This keeps the bounded slice honest.
 
-## Remaining lookup (1 step; workhorse or a later web pass)
+## Remaining lookup — NARROWED 2026-05-30 (Soraya run 1135-ep4-etec-gca, PARTIAL)
 
-Per-strain GCA assembly accessions did not enumerate cleanly via ENA portal (`result=assembly` empty) or the NCBI BioProject page (shows SRA reads, not assemblies) — the complete genomes are likely registered as individual NCBI GCA records. Resolution recipe:
-- `datasets summary genome taxon "Escherichia coli" --assembly-source genbank` filtered to the 8 strain names, OR
-- search NCBI Assembly for each strain alias (E925 etc.) + "von Mentzer", OR
-- ENA `result=sample&query=study_accession="PRJEB33365"` → map the 8 sample aliases → linked assembly.
+Three web passes (Nature [auth-gated], PMC8085198, ENA/NCBI portal) did NOT enumerate the 8 per-strain chromosome accessions — they live in the paper's **supplementary Additional File 4/5** (binary/Excel; not HTML-indexed). What IS now pinned:
 
-This is the only un-resolved piece; the substrate decision (use von Mentzer for ETEC) stands regardless.
+- Deposition: **EMBL/ENA, study ERP116152** (= BioProject PRJEB33365), submission ERA2030910.
+- Records are **ENA sequence accessions in the `LR88xxxx` range**, NOT GCA assemblies. Plasmids are `LR883051`+ (paper Table 2); the 8 chromosomes are adjacent LR accessions in the same submission.
+- Once the 8 chromosome LR accessions are known, FASTA fetch is direct: `https://www.ebi.ac.uk/ena/browser/api/fasta/<LRxxxxxx>`.
+
+**Exact remaining step (money-free; pick one):**
+1. Download Additional File 4 or 5 from PMC8085198 (supplementary) → read the per-strain chromosome accession column.
+2. OR `datasets summary genome taxon "Escherichia coli"` + grep the 8 strain aliases (E925 …) — if NCBI mirrored them as GCA.
+3. OR ENA: enumerate all sequence records under study ERP116152 and match the 8 strain aliases.
+
+The substrate DECISION (use von Mentzer for ETEC) stands regardless; only the literal accession list is pending. Do NOT guess the LR numbers — confirm from a source.
 
 ## Net effect on the bounded slice
 
