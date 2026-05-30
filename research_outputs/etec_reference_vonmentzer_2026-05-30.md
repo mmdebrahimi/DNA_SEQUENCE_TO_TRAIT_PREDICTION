@@ -22,20 +22,24 @@ ETEC reference labels are **toxin-typed** (LT / ST), and the resolver keys on th
 
 Implication: report ETEC under the resolver-conformance column primarily; do NOT claim strong external-validity prediction skill for ETEC. ExPEC remains the cleanest external-validity arm. This keeps the bounded slice honest.
 
-## Remaining lookup — NARROWED 2026-05-30 (Soraya run 1135-ep4-etec-gca, PARTIAL)
+## RESOLVED 2026-05-30 (Soraya run 1807-ep4-etec-gca2) — accessions enumerated from supplementary
 
-Three web passes (Nature [auth-gated], PMC8085198, ENA/NCBI portal) did NOT enumerate the 8 per-strain chromosome accessions — they live in the paper's **supplementary Additional File 4/5** (binary/Excel; not HTML-indexed). What IS now pinned:
+Downloaded the paper's supplementary XLSX (Springer CDN; PMC `/bin/` 403s curl) and parsed (openpyxl):
 
-- Deposition: **EMBL/ENA, study ERP116152** (= BioProject PRJEB33365), submission ERA2030910.
-- Records are **ENA sequence accessions in the `LR88xxxx` range**, NOT GCA assemblies. Plasmids are `LR883051`+ (paper Table 2); the 8 chromosomes are adjacent LR accessions in the same submission.
-- Once the 8 chromosome LR accessions are known, FASTA fetch is direct: `https://www.ebi.ac.uk/ena/browser/api/fasta/<LRxxxxxx>`.
+**(a) 8 reference chromosome accessions** (MOESM5 "Additional file 3") — now in `etec_reference_vonmentzer_strains_2026-05-30.csv` `chromosome_accession` column:
 
-**Exact remaining step (money-free; pick one):**
-1. Download Additional File 4 or 5 from PMC8085198 (supplementary) → read the per-strain chromosome accession column.
-2. OR `datasets summary genome taxon "Escherichia coli"` + grep the 8 strain aliases (E925 …) — if NCBI mirrored them as GCA.
-3. OR ENA: enumerate all sequence records under study ERP116152 and match the 8 strain aliases.
+| strain | lineage | chromosome (ENA) | strain | lineage | chromosome |
+|---|---|---|---|---|---|
+| E925 | L1 | LR883050 | E1779 | L5 | LR883006 |
+| E1649 | L2 | LR882973 | E562 | L6 | LR883000 |
+| E36 | L3 | LR882997 | E1373 | L7 | LR882990 |
+| E2980 | L3 | LR882978 | E1441 | L4 | LR883012 |
 
-The substrate DECISION (use von Mentzer for ETEC) stands regardless; only the literal accession list is pending. Do NOT guess the LR numbers — confirm from a source.
+FASTA fetch is direct: `https://www.ebi.ac.uk/ena/browser/api/fasta/<LRxxxxxx>`.
+
+**(b) BONUS — a 558-genome by-accession ETEC collection** (MOESM4 "Additional_file_2_new_phylo") → `etec_vonmentzer_collection_gca_2026-05-30.csv` (558 rows: `strain_id, gca_accession, lineage, pathotype, toxin_profile, country`). All carry **GCA_ accessions** (NCBI), pathotype=ETEC, lineage-typed (L1–L7), well-distributed. This is far more than the 8 references — it makes ETEC the **best-resourced arm** of the slice, fully by-accession, no re-assembly.
+
+**Net:** the bounded slice is now ExPEC 135 + EPEC 125 + ETEC (8 complete refs OR up to 558 GCA) — all by-accession. The toxin-label-circularity caveat (ETEC = near-conformance, not strong external validity) still applies and governs how ETEC results are reported.
 
 ## Net effect on the bounded slice
 
