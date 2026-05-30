@@ -54,3 +54,6 @@ logs/
 
 # AMRFinder runs (generated artifacts; tens of MB per strain)
 /data/amrfinder_runs/
+
+# Project-state scratch/working copies (stale duplicates of the live ledger; not history)
+/project_state/*-scratch.md
