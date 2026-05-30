@@ -1,0 +1,261 @@
+sample_id,wgs_accession,pathotype_class,source_study,ST,isolation,country
+horesh_JSIS00000000,JSIS00000000,ExPEC,Salipante et al. 2014,5357,Urine,United States
+horesh_JSMY00000000,JSMY00000000,ExPEC,Salipante et al. 2014,58,Urine,United States
+horesh_JSNF00000000,JSNF00000000,ExPEC,Salipante et al. 2014,69,Urine,United States
+horesh_JSNG00000000,JSNG00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSNH00000000,JSNH00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_AIEY00000000,AIEY00000000,EPEC,Hazen et al. 2013,293,Feces,Egypt
+horesh_AIEX00000000,AIEX00000000,EPEC,Hazen et al. 2013,19,Feces,Germany
+horesh_JSLK00000000,JSLK00000000,ExPEC,Salipante et al. 2014,12,Urine,United States
+horesh_JSLG00000000,JSLG00000000,ExPEC,Salipante et al. 2014,224,Urine,United States
+horesh_JSPD00000000,JSPD00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSPG00000000,JSPG00000000,ExPEC,Salipante et al. 2014,10,Blood,United States
+horesh_JSPK00000000,JSPK00000000,ExPEC,Salipante et al. 2014,101,Blood,United States
+horesh_JSHR00000000,JSHR00000000,ExPEC,Salipante et al. 2014,404,Urine,United States
+horesh_JSPZ00000000,JSPZ00000000,ExPEC,Salipante et al. 2014,80,Blood,United States
+horesh_JSKR00000000,JSKR00000000,ExPEC,Salipante et al. 2014,38,Urine,United States
+horesh_JSKU00000000,JSKU00000000,ExPEC,Salipante et al. 2014,91,Urine,United States
+horesh_JSGG00000000,JSGG00000000,ExPEC,Salipante et al. 2014,10,Urine,United States
+horesh_JSGA00000000,JSGA00000000,ExPEC,Salipante et al. 2014,1159,Urine,United States
+horesh_JSLT00000000,JSLT00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_AIHE00000000,AIHE00000000,EPEC,Hazen et al. 2013,3,Feces,Kenya
+horesh_JSKE00000000,JSKE00000000,ExPEC,Salipante et al. 2014,421,Urine,United States
+horesh_JSKB00000000,JSKB00000000,ExPEC,Salipante et al. 2014,1249,Urine,United States
+horesh_JSKA00000000,JSKA00000000,ExPEC,Salipante et al. 2014,372,Urine,United States
+horesh_JSJZ00000000,JSJZ00000000,ExPEC,Salipante et al. 2014,2967,Urine,United States
+horesh_JSPO00000000,JSPO00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JHSA00000000,JHSA00000000,EPEC,Hazen et al. 2016,2346,Feces,Mozambique
+horesh_AIAL00000000,AIAL00000000,EPEC,Hazen et al. 2013,10,Feces,Denmark
+horesh_AIAV00000000,AIAV00000000,EPEC,Hazen et al. 2013,2538,Feces,Denmark
+horesh_JHQY00000000,JHQY00000000,EPEC,Hazen et al. 2016,4750~,Feces,The Gambia
+horesh_JHSB00000000,JHSB00000000,EPEC,Hazen et al. 2016,5342,Feces,Mozambique
+horesh_JHTL00000000,JHTL00000000,EPEC,Hazen et al. 2016,4074~,Feces,Pakistan
+horesh_JHRR00000000,JHRR00000000,EPEC,Hazen et al. 2016,2346,Feces,Pakistan
+horesh_AAJW00000000,AAJW00000000,EPEC,Hazen et al. 2013,381,Feces,Finland
+horesh_JHRH00000000,JHRH00000000,EPEC,Hazen et al. 2016,5342,Feces,Mozambique
+horesh_AICD00000000,AICD00000000,EPEC,Hazen et al. 2013,4554,Feces,Denmark
+horesh_JHTB00000000,JHTB00000000,EPEC,Hazen et al. 2016,4750~,Feces,Mozambique
+horesh_JHRT00000000,JHRT00000000,EPEC,Hazen et al. 2016,34,Feces,The Gambia
+horesh_JHRC00000000,JHRC00000000,EPEC,Hazen et al. 2016,5342,Feces,Mozambique
+horesh_AIBD00000000,AIBD00000000,EPEC,Hazen et al. 2013,328,Feces,Denmark
+horesh_JHSM00000000,JHSM00000000,EPEC,Hazen et al. 2016,5342,Feces,Kenya
+horesh_JHSO00000000,JHSO00000000,EPEC,Hazen et al. 2016,6292,Feces,Pakistan
+horesh_JHSL00000000,JHSL00000000,EPEC,Hazen et al. 2016,5342~,Feces,Kenya
+horesh_APNX00000000,APNX00000000,ExPEC,Subashchandrabos et al. 2013,141,Urine,United States
+horesh_JHSX00000000,JHSX00000000,EPEC,Hazen et al. 2016,2346,Feces,Mozambique
+horesh_AIBQ00000000,AIBQ00000000,EPEC,Hazen et al. 2013,28,Feces,Slovenia
+horesh_JHRV00000000,JHRV00000000,EPEC,Hazen et al. 2016,28,Feces,The Gambia
+horesh_JHSZ00000000,JHSZ00000000,EPEC,Hazen et al. 2016,803,Feces,Mozambique
+horesh_AIBS00000000,AIBS00000000,EPEC,Hazen et al. 2013,2346,Feces,Denmark
+horesh_AIBE00000000,AIBE00000000,EPEC,Hazen et al. 2013,28,Feces,Africa
+horesh_JHRM00000000,JHRM00000000,EPEC,Hazen et al. 2016,1788,Feces,Kenya
+horesh_JHSD00000000,JHSD00000000,EPEC,Hazen et al. 2016,28,Feces,Mozambique
+horesh_AIAI00000000,AIAI00000000,EPEC,Hazen et al. 2013,32,Feces,Denmark
+horesh_JHQW00000000,JHQW00000000,EPEC,Hazen et al. 2016,328,Feces,The Gambia
+horesh_JHRZ00000000,JHRZ00000000,EPEC,Hazen et al. 2016,328,Feces,Mali
+horesh_AICA00000000,AICA00000000,EPEC,Hazen et al. 2013,327,Feces,Denmark
+horesh_JHSI00000000,JHSI00000000,EPEC,Hazen et al. 2016,328~,Feces,Kenya
+horesh_JHSF00000000,JHSF00000000,EPEC,Hazen et al. 2016,3053,Feces,Mozambique
+horesh_JHSH00000000,JHSH00000000,EPEC,Hazen et al. 2016,28,Feces,Kenya
+horesh_AIBC00000000,AIBC00000000,EPEC,Hazen et al. 2013,20,Feces,Denmark
+horesh_AIBL00000000,AIBL00000000,EPEC,Hazen et al. 2013,590,Feces,Germany
+horesh_AIBU00000000,AIBU00000000,EPEC,Hazen et al. 2013,590,Feces,Slovenia
+horesh_JHRO00000000,JHRO00000000,EPEC,Hazen et al. 2016,5342,Feces,Kenya
+horesh_AIAX00000000,AIAX00000000,EPEC,Hazen et al. 2013,342,Feces,Denmark
+horesh_AIBP00000000,AIBP00000000,EPEC,Hazen et al. 2013,582,Feces,Belgium
+horesh_AIAZ00000000,AIAZ00000000,EPEC,Hazen et al. 2013,40,Feces,Denmark
+horesh_AIBV00000000,AIBV00000000,EPEC,Hazen et al. 2013,327,Feces,Denmark
+horesh_JHSC00000000,JHSC00000000,EPEC,Hazen et al. 2016,28,Feces,Mozambique
+horesh_AICE00000000,AICE00000000,EPEC,Hazen et al. 2013,2356,Feces,United Kingdom
+horesh_JHRA00000000,JHRA00000000,EPEC,Hazen et al. 2016,328,Feces,The Gambia
+horesh_AIBH00000000,AIBH00000000,EPEC,Hazen et al. 2013,725,Feces,Denmark
+horesh_AIAT00000000,AIAT00000000,EPEC,Hazen et al. 2013,154,Feces,Denmark
+horesh_JHSS00000000,JHSS00000000,EPEC,Hazen et al. 2016,137,Feces,The Gambia
+horesh_JHQZ00000000,JHQZ00000000,EPEC,Hazen et al. 2016,562~,Feces,The Gambia
+horesh_JHSP00000000,JHSP00000000,EPEC,Hazen et al. 2016,3,Feces,Pakistan
+horesh_JHTA00000000,JHTA00000000,EPEC,Hazen et al. 2016,589,Feces,Mozambique
+horesh_AIAJ00000000,AIAJ00000000,EPEC,Hazen et al. 2013,20,Feces,Denmark
+horesh_JHRY00000000,JHRY00000000,EPEC,Hazen et al. 2016,3,Feces,The Gambia
+horesh_AAJV00000000,AAJV00000000,EPEC,Hazen et al. 2013,20,Feces,Unknown
+horesh_AIAY00000000,AIAY00000000,EPEC,Hazen et al. 2013,583,Feces,Italy
+horesh_APNW00000000,APNW00000000,ExPEC,Subashchandrabos et al. 2013,963,Urine,United States
+horesh_JHSE00000000,JHSE00000000,EPEC,Hazen et al. 2016,328~,Feces,Mozambique
+horesh_JHSV00000000,JHSV00000000,EPEC,Hazen et al. 2016,4750,Feces,The Gambia
+horesh_JHSR00000000,JHSR00000000,EPEC,Hazen et al. 2016,517,Feces,The Gambia
+horesh_AIBA00000000,AIBA00000000,EPEC,Hazen et al. 2013,20,Feces,Denmark
+horesh_AIAP00000000,AIAP00000000,EPEC,Hazen et al. 2013,589,Feces,Denmark
+horesh_JHTF00000000,JHTF00000000,EPEC,Hazen et al. 2016,15,Feces,Kenya
+horesh_AIBO00000000,AIBO00000000,EPEC,Hazen et al. 2013,206,Feces,Austria
+horesh_JHTJ00000000,JHTJ00000000,EPEC,Hazen et al. 2016,15,Feces,Kenya
+horesh_JHRJ00000000,JHRJ00000000,EPEC,Hazen et al. 2016,1283~,Feces,Mozambique
+horesh_AIBI00000000,AIBI00000000,EPEC,Hazen et al. 2013,517,Feces,Denmark
+horesh_JHSK00000000,JHSK00000000,EPEC,Hazen et al. 2016,5342,Feces,Kenya
+horesh_JHRD00000000,JHRD00000000,EPEC,Hazen et al. 2016,5342~,Feces,Mozambique
+horesh_JHRB00000000,JHRB00000000,EPEC,Hazen et al. 2016,28,Feces,Mali
+horesh_JHRQ00000000,JHRQ00000000,EPEC,Hazen et al. 2016,328~,Feces,Kenya
+horesh_JHQV00000000,JHQV00000000,EPEC,Hazen et al. 2016,1283,Feces,The Gambia
+horesh_AAJU00000000,AAJU00000000,ExPEC,Hazen et al. 2013,127,Feces,United States
+horesh_AICC00000000,AICC00000000,EPEC,Hazen et al. 2013,17,Feces,Guinea-bissau
+horesh_JHSW00000000,JHSW00000000,EPEC,Hazen et al. 2016,299,Feces,Mali
+horesh_AIAR00000000,AIAR00000000,EPEC,Hazen et al. 2013,5394,Feces,Denmark
+horesh_AIAS00000000,AIAS00000000,EPEC,Hazen et al. 2013,20,Feces,Denmark
+horesh_APNY00000000,APNY00000000,ExPEC,Subashchandrabos et al. 2013,349,Urine,United States
+horesh_JHRP00000000,JHRP00000000,EPEC,Hazen et al. 2016,3,Feces,Kenya
+horesh_JHRU00000000,JHRU00000000,EPEC,Hazen et al. 2016,10~,Feces,The Gambia
+horesh_JHTH00000000,JHTH00000000,EPEC,Hazen et al. 2016,1907,Feces,Kenya
+horesh_JHSU00000000,JHSU00000000,EPEC,Hazen et al. 2016,206~,Feces,The Gambia
+horesh_JHST00000000,JHST00000000,EPEC,Hazen et al. 2016,5342~,Feces,The Gambia
+horesh_AIAQ00000000,AIAQ00000000,EPEC,Hazen et al. 2013,342,Feces,Slovenia
+horesh_AIBG00000000,AIBG00000000,EPEC,Hazen et al. 2013,28,Feces,Africa
+horesh_JHSN00000000,JHSN00000000,EPEC,Hazen et al. 2016,3~,Feces,Kenya
+horesh_JHQX00000000,JHQX00000000,EPEC,Hazen et al. 2016,121~,Feces,The Gambia
+horesh_JHRN00000000,JHRN00000000,EPEC,Hazen et al. 2016,328~,Feces,Kenya
+horesh_JHSY00000000,JHSY00000000,EPEC,Hazen et al. 2016,2346,Feces,Mozambique
+horesh_JHTD00000000,JHTD00000000,EPEC,Hazen et al. 2016,328,Feces,Mozambique
+horesh_JHRL00000000,JHRL00000000,EPEC,Hazen et al. 2016,15,Feces,Kenya
+horesh_JHRX00000000,JHRX00000000,EPEC,Hazen et al. 2016,381,Feces,The Gambia
+horesh_JHTG00000000,JHTG00000000,EPEC,Hazen et al. 2016,3053,Feces,Kenya
+horesh_JHRG00000000,JHRG00000000,EPEC,Hazen et al. 2016,2346,Feces,Mozambique
+horesh_APNU00000000,APNU00000000,ExPEC,Subashchandrabos et al. 2013,12,Urine,United States
+horesh_JHTE00000000,JHTE00000000,EPEC,Hazen et al. 2016,1283,Feces,Kenya
+horesh_AIBB00000000,AIBB00000000,EPEC,Hazen et al. 2013,10,Feces,Denmark
+horesh_AIAN00000000,AIAN00000000,EPEC,Hazen et al. 2013,343,Feces,Germany
+horesh_JHTI00000000,JHTI00000000,EPEC,Hazen et al. 2016,28,Feces,Kenya
+horesh_JHSQ00000000,JHSQ00000000,EPEC,Hazen et al. 2016,137,Feces,The Gambia
+horesh_JHRW00000000,JHRW00000000,EPEC,Hazen et al. 2016,1283,Feces,The Gambia
+horesh_AIBW00000000,AIBW00000000,EPEC,Hazen et al. 2013,20,Feces,Denmark
+horesh_JHRI00000000,JHRI00000000,EPEC,Hazen et al. 2016,328~,Feces,Mozambique
+horesh_JHRK00000000,JHRK00000000,EPEC,Hazen et al. 2016,328~,Feces,Kenya
+horesh_AIBN00000000,AIBN00000000,EPEC,Hazen et al. 2013,517,Feces,Austria
+horesh_JHTK00000000,JHTK00000000,EPEC,Hazen et al. 2016,328,Feces,Kenya
+horesh_AIBM00000000,AIBM00000000,EPEC,Hazen et al. 2013,206,Feces,Israel
+horesh_JHTM00000000,JHTM00000000,EPEC,Hazen et al. 2016,3,Feces,Pakistan
+horesh_JHTC00000000,JHTC00000000,EPEC,Hazen et al. 2016,589,Feces,Mozambique
+horesh_AIBF00000000,AIBF00000000,EPEC,Hazen et al. 2013,526,Feces,Denmark
+horesh_AICB00000000,AICB00000000,EPEC,Hazen et al. 2013,121,Feces,Denmark
+horesh_AIAM00000000,AIAM00000000,EPEC,Hazen et al. 2013,28,Feces,Denmark
+horesh_JHRS00000000,JHRS00000000,EPEC,Hazen et al. 2016,3,Feces,Pakistan
+horesh_JHRE00000000,JHRE00000000,EPEC,Hazen et al. 2016,3,Feces,Mozambique
+horesh_JHRF00000000,JHRF00000000,EPEC,Hazen et al. 2016,1283~,Feces,Mozambique
+horesh_JHSG00000000,JHSG00000000,EPEC,Hazen et al. 2016,2346,Feces,Mozambique
+horesh_JSJJ00000000,JSJJ00000000,ExPEC,Salipante et al. 2014,404,Urine,United States
+horesh_JSJL00000000,JSJL00000000,ExPEC,Salipante et al. 2014,69,Urine,United States
+horesh_JSIH00000000,JSIH00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_AOQV00000000,AOQV00000000,ExPEC,Chen et al. 2013,73,Urine,United States
+horesh_AIGV00000000,AIGV00000000,EPEC,Hazen et al. 2013,20,Feces,United States
+horesh_JSPU00000000,JSPU00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSPV00000000,JSPV00000000,ExPEC,Salipante et al. 2014,73,Blood,United States
+horesh_JSPP00000000,JSPP00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSPS00000000,JSPS00000000,ExPEC,Salipante et al. 2014,38,Blood,United States
+horesh_JSIB00000000,JSIB00000000,ExPEC,Salipante et al. 2014,906,Urine,United States
+horesh_JSMC00000000,JSMC00000000,ExPEC,Salipante et al. 2014,929,Urine,United States
+horesh_JSIR00000000,JSIR00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSIT00000000,JSIT00000000,ExPEC,Salipante et al. 2014,3672,Urine,United States
+horesh_JSQK00000000,JSQK00000000,ExPEC,Salipante et al. 2014,69,Blood,United States
+horesh_JSGU00000000,JSGU00000000,ExPEC,Salipante et al. 2014,1159,Urine,United States
+horesh_JSGV00000000,JSGV00000000,ExPEC,Salipante et al. 2014,5422,Urine,United States
+horesh_JSIK00000000,JSIK00000000,ExPEC,Salipante et al. 2014,62,Urine,United States
+horesh_JSHL00000000,JSHL00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSRZ00000000,JSRZ00000000,ExPEC,Salipante et al. 2014,393,Blood,United States
+horesh_JSRY00000000,JSRY00000000,ExPEC,Salipante et al. 2014,393,Blood,United States
+horesh_JSHJ00000000,JSHJ00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_JSKZ00000000,JSKZ00000000,ExPEC,Salipante et al. 2014,3752,Urine,United States
+horesh_JSFZ00000000,JSFZ00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_JSSP00000000,JSSP00000000,ExPEC,Salipante et al. 2014,95,Blood,United States
+horesh_JSSQ00000000,JSSQ00000000,ExPEC,Salipante et al. 2014,73,Blood,United States
+horesh_JSSR00000000,JSSR00000000,ExPEC,Salipante et al. 2014,73,Blood,United States
+horesh_JSRL00000000,JSRL00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_AIBZ00000000,AIBZ00000000,EPEC,Hazen et al. 2013,725,Feces,Japan
+horesh_JSQH00000000,JSQH00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSQM00000000,JSQM00000000,ExPEC,Salipante et al. 2014,69,Blood,United States
+horesh_JSQP00000000,JSQP00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSQO00000000,JSQO00000000,ExPEC,Salipante et al. 2014,405,Blood,United States
+horesh_JSMF00000000,JSMF00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_JSMK00000000,JSMK00000000,ExPEC,Salipante et al. 2014,5642,Urine,United States
+horesh_JSMD00000000,JSMD00000000,ExPEC,Salipante et al. 2014,144,Urine,United States
+horesh_JSOJ00000000,JSOJ00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_JSRF00000000,JSRF00000000,ExPEC,Salipante et al. 2014,212,Blood,United States
+horesh_JSRI00000000,JSRI00000000,ExPEC,Salipante et al. 2014,5612,Blood,United States
+horesh_JSRJ00000000,JSRJ00000000,ExPEC,Salipante et al. 2014,5612,Blood,United States
+horesh_JSRK00000000,JSRK00000000,ExPEC,Salipante et al. 2014,617,Blood,United States
+horesh_JSRB00000000,JSRB00000000,ExPEC,Salipante et al. 2014,393,Blood,United States
+horesh_JSRC00000000,JSRC00000000,ExPEC,Salipante et al. 2014,167,Blood,United States
+horesh_JSNO00000000,JSNO00000000,ExPEC,Salipante et al. 2014,354,Urine,United States
+horesh_JSNR00000000,JSNR00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_JSNN00000000,JSNN00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSNM00000000,JSNM00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_AIEZ00000000,AIEZ00000000,EPEC,Hazen et al. 2013,19,Feces,Mexico
+horesh_JSGM00000000,JSGM00000000,ExPEC,Salipante et al. 2014,3693,Urine,United States
+horesh_JSNW00000000,JSNW00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSMT00000000,JSMT00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSMS00000000,JSMS00000000,ExPEC,Salipante et al. 2014,12,Urine,United States
+horesh_JSSO00000000,JSSO00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_AIEV00000000,AIEV00000000,EPEC,Hazen et al. 2013,19,Feces,United States
+horesh_JSOT00000000,JSOT00000000,ExPEC,Salipante et al. 2014,636,Urine,United States
+horesh_JSLP00000000,JSLP00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSKJ00000000,JSKJ00000000,ExPEC,Salipante et al. 2014,5442,Urine,United States
+horesh_JSQS00000000,JSQS00000000,ExPEC,Salipante et al. 2014,101,Blood,United States
+horesh_JSOV00000000,JSOV00000000,ExPEC,Salipante et al. 2014,70,Urine,United States
+horesh_JSOU00000000,JSOU00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSOZ00000000,JSOZ00000000,ExPEC,Salipante et al. 2014,420,Urine,United States
+horesh_JSFY00000000,JSFY00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_AIFC00000000,AIFC00000000,EPEC,Hazen et al. 2013,19,Feces,France
+horesh_JSLD00000000,JSLD00000000,ExPEC,Salipante et al. 2014,420,Urine,United States
+horesh_JSLA00000000,JSLA00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_JSFQ00000000,JSFQ00000000,ExPEC,Salipante et al. 2014,617,Urine,United States
+horesh_JSFX00000000,JSFX00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSKG00000000,JSKG00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_JSKI00000000,JSKI00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_JSKO00000000,JSKO00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSKN00000000,JSKN00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSSE00000000,JSSE00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_AIFD00000000,AIFD00000000,EPEC,Hazen et al. 2013,19~,Feces,United States
+horesh_JSJT00000000,JSJT00000000,ExPEC,Salipante et al. 2014,131~,Urine,United States
+horesh_JSJQ00000000,JSJQ00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_AIGZ00000000,AIGZ00000000,EPEC,Hazen et al. 2013,3,Feces,Brazil
+horesh_AIGY00000000,AIGY00000000,EPEC,Hazen et al. 2013,3,Feces,United Kingdom
+horesh_JSHW00000000,JSHW00000000,ExPEC,Salipante et al. 2014,555,Urine,United States
+horesh_JSHT00000000,JSHT00000000,ExPEC,Salipante et al. 2014,12,Urine,United States
+horesh_JSQC00000000,JSQC00000000,ExPEC,Salipante et al. 2014,73,Blood,United States
+horesh_JSQB00000000,JSQB00000000,ExPEC,Salipante et al. 2014,1249,Blood,United States
+horesh_JSQD00000000,JSQD00000000,ExPEC,Salipante et al. 2014,73,Blood,United States
+horesh_JSHF00000000,JSHF00000000,ExPEC,Salipante et al. 2014,83,Urine,United States
+horesh_JSHB00000000,JSHB00000000,ExPEC,Salipante et al. 2014,421,Urine,United States
+horesh_AIGW00000000,AIGW00000000,EPEC,Hazen et al. 2013,20,Feces,United States
+horesh_JSIL00000000,JSIL00000000,ExPEC,Salipante et al. 2014,12,Urine,United States
+horesh_JSIJ00000000,JSIJ00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_AIHD00000000,AIHD00000000,EPEC,Hazen et al. 2013,3,Feces,Peru
+horesh_JSGI00000000,JSGI00000000,ExPEC,Salipante et al. 2014,453,Urine,United States
+horesh_JSGK00000000,JSGK00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSGO00000000,JSGO00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSHE00000000,JSHE00000000,ExPEC,Salipante et al. 2014,569,Urine,United States
+horesh_JSHD00000000,JSHD00000000,ExPEC,Salipante et al. 2014,5457,Urine,United States
+horesh_JSSJ00000000,JSSJ00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSQX00000000,JSQX00000000,ExPEC,Salipante et al. 2014,69,Blood,United States
+horesh_JSRA00000000,JSRA00000000,ExPEC,Salipante et al. 2014,10,Blood,United States
+horesh_JSJI00000000,JSJI00000000,ExPEC,Salipante et al. 2014,131,Urine,United States
+horesh_JSJO00000000,JSJO00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_JSJN00000000,JSJN00000000,ExPEC,Salipante et al. 2014,69,Urine,United States
+horesh_JSJK00000000,JSJK00000000,ExPEC,Salipante et al. 2014,1193,Urine,United States
+horesh_JSNZ00000000,JSNZ00000000,ExPEC,Salipante et al. 2014,70,Urine,United States
+horesh_ADUS00000000,ADUS00000000,EPEC,Hazen et al. 2013,725,Feces,Brazil
+horesh_ADUO00000000,ADUO00000000,EPEC,Hazen et al. 2013,3,Feces,Bangladesh
+horesh_JSRU00000000,JSRU00000000,ExPEC,Salipante et al. 2014,62,Blood,United States
+horesh_JSRT00000000,JSRT00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSRR00000000,JSRR00000000,ExPEC,Salipante et al. 2014,131,Blood,United States
+horesh_JSRQ00000000,JSRQ00000000,ExPEC,Salipante et al. 2014,538,Blood,United States
+horesh_JSRM00000000,JSRM00000000,ExPEC,Salipante et al. 2014,405,Blood,United States
+horesh_JSMO00000000,JSMO00000000,ExPEC,Salipante et al. 2014,12,Urine,United States
+horesh_JSMQ00000000,JSMQ00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSMN00000000,JSMN00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_AFDY00000000,AFDY00000000,EPEC,Hazen et al. 2013,20,Feces,Unknown
+horesh_JSHC00000000,JSHC00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSNU00000000,JSNU00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSNV00000000,JSNV00000000,ExPEC,Salipante et al. 2014,101,Urine,United States
+horesh_JSNS00000000,JSNS00000000,ExPEC,Salipante et al. 2014,38,Urine,United States
+horesh_JSSA00000000,JSSA00000000,ExPEC,Salipante et al. 2014,393,Blood,United States
+horesh_JSRW00000000,JSRW00000000,ExPEC,Salipante et al. 2014,62,Blood,United States
+horesh_JSMB00000000,JSMB00000000,ExPEC,Salipante et al. 2014,73,Urine,United States
+horesh_JSLY00000000,JSLY00000000,ExPEC,Salipante et al. 2014,95,Urine,United States
+horesh_JSLX00000000,JSLX00000000,ExPEC,Salipante et al. 2014,127,Urine,United States
+horesh_JSLV00000000,JSLV00000000,ExPEC,Salipante et al. 2014,491,Urine,United States

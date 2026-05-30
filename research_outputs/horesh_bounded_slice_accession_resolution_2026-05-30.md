@@ -4,7 +4,7 @@
 
 ## Candidate manifest
 
-`data/external/horesh_bounded_slice_wgs_accession_candidates_2026-05-30.csv` — **260 rows**, columns: `sample_id, wgs_accession, pathotype_class, source_study, ST, isolation, country`. The workhorse materializer can fetch every row by `wgs_accession` from NCBI/ENA directly; no read re-assembly.
+`research_outputs/horesh_bounded_slice_wgs_accession_candidates_2026-05-30.csv` — **260 rows**, columns: `sample_id, wgs_accession, pathotype_class, source_study, ST, isolation, country`. The workhorse materializer can fetch every row by `wgs_accession` from NCBI/ENA directly; no read re-assembly. (Tracked in `research_outputs/` — NOT `data/`, which is gitignored — so it syncs to the workhorse via `git pull`, not a relay bundle.)
 
 ## Findings (clean, supported-class rows by locator type)
 
