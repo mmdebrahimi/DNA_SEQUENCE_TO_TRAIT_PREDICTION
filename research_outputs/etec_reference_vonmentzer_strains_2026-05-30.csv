@@ -1,0 +1,9 @@
+strain,lineage,O_antigen,CF,toxin,year,location,bioproject,label_provenance
+E925,L1,O6,CS1+CS3+CS21,LT+STh,2003,Guatemala,PRJEB33365,toxin-typed clinical reference
+E1649,L2,O6,CS2+CS3+CS21,LT+STh,1997,Indonesia,PRJEB33365,toxin-typed clinical reference
+E36,L3,O78,CFA/I+CS21,LT+STh,1980,Bangladesh,PRJEB33365,toxin-typed clinical reference
+E2980,L3,O114,CS7,LT,2010,Bangladesh,PRJEB33365,toxin-typed clinical reference
+E1441,L4,O25,CS6+CS21,LT,1997,Kenya,PRJEB33365,toxin-typed clinical reference
+E1779,L5,O115,CS5+CS6,LT+STh,2005,Bangladesh,PRJEB33365,toxin-typed clinical reference
+E562,L6,ON3,CFA/I+CS21,STh,2000,Mexico,PRJEB33365,toxin-typed clinical reference
+E1373,L7,O169,CS6,STp,1996,Indonesia,PRJEB33365,toxin-typed clinical reference
