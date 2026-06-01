@@ -1,0 +1,63 @@
+{
+  "cohort": "C:/Users/Farshad/PythonProjects/dna_decode/research_outputs/pathotype_smoke_lt_vs_st_cohort_2026-05-31.csv",
+  "n_strains": 8,
+  "n_pos": 4,
+  "n_neg": 4,
+  "max_genes_per_strain": 200,
+  "embedding_dim": 512,
+  "cv": "leave_one_strain_out",
+  "loso_auroc": 0.0,
+  "model": "nucleotide_transformer_v2_100m",
+  "device": "cuda",
+  "per_strain": [
+    {
+      "acc": "GCA_000356365.2",
+      "y": 0,
+      "n_cds": 5095,
+      "held_out_proba": 0.5605683326721191
+    },
+    {
+      "acc": "GCA_000356305.2",
+      "y": 0,
+      "n_cds": 5077,
+      "held_out_proba": 0.5605683326721191
+    },
+    {
+      "acc": "GCA_000354835.2",
+      "y": 0,
+      "n_cds": 5146,
+      "held_out_proba": 0.5605683326721191
+    },
+    {
+      "acc": "GCA_000354895.2",
+      "y": 0,
+      "n_cds": 5342,
+      "held_out_proba": 0.5605683326721191
+    },
+    {
+      "acc": "GCA_003984445.1",
+      "y": 1,
+      "n_cds": 5147,
+      "held_out_proba": 0.41838350892066956
+    },
+    {
+      "acc": "GCA_003984405.1",
+      "y": 1,
+      "n_cds": 5098,
+      "held_out_proba": 0.41838350892066956
+    },
+    {
+      "acc": "GCA_004001145.1",
+      "y": 1,
+      "n_cds": 5103,
+      "held_out_proba": 0.41838350892066956
+    },
+    {
+      "acc": "GCA_003984395.1",
+      "y": 1,
+      "n_cds": 5222,
+      "held_out_proba": 0.41838350892066956
+    }
+  ],
+  "caveat": "Pipeline-validation smoke if max_genes>0 (subsampled mean-pool). Toxin-label (LT/ST) contrast is partly circular for ETEC -> resolver-conformance-adjacent, not strong external validity."
+}
