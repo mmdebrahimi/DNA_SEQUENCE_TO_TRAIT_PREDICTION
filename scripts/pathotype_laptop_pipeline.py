@@ -76,10 +76,35 @@ def parse_bakta_gff3(gff: Path):
     return ann.parse_gff3(str(tmp))
 
 
-def strain_embedding(model, genome_fasta: Path, ann_table, max_genes: int,
+def read_ffn(ffn_path: Path) -> dict[str, str]:
+    """Parse Bakta's .ffn (CDS nucleotide FASTA) -> {locus_tag: sequence}.
+
+    Use Bakta's own CDS output, NOT extract_cds_sequences against the original
+    NCBI genome.fna: Bakta RENAMES contigs in its GFF3/fna (contig_1, ...), so
+    the GFF3 seqid no longer matches the NCBI FASTA headers and extraction
+    silently yields zero CDS. The .ffn sidesteps that entirely.
+    """
+    seqs: dict[str, str] = {}
+    name = None
+    buf: list[str] = []
+    with open(ffn_path, encoding="utf-8") as f:
+        for line in f:
+            if line.startswith(">"):
+                if name:
+                    seqs[name] = "".join(buf)
+                name = line[1:].split()[0]
+                buf = []
+            else:
+                buf.append(line.strip())
+    if name:
+        seqs[name] = "".join(buf)
+    return seqs
+
+
+def strain_embedding(model, ffn_path: Path, max_genes: int,
                      rng: np.random.Generator) -> np.ndarray | None:
-    """Mean-pool NT embeddings over (a subsample of) the strain's CDS."""
-    cds = ann.extract_cds_sequences(str(genome_fasta), ann_table)
+    """Mean-pool NT embeddings over (a subsample of) the strain's CDS (.ffn)."""
+    cds = read_ffn(ffn_path)
     keys = [k for k, s in cds.items() if 60 <= len(s) <= 12000]
     if not keys:
         return None
@@ -139,16 +164,16 @@ def main(argv=None) -> int:
         print(f"[pipeline] {acc} (y={label}) download...", flush=True)
         download_genome(acc, args.refseq_cache)
         print(f"[pipeline] {acc} bakta annotate...", flush=True)
-        gff = bakta_annotate(acc, args.refseq_cache, args.bakta_db, args.bakta_out)
-        atab = parse_bakta_gff3(gff)
-        gfna = Path(args.refseq_cache) / acc / "genome.fna"
-        print(f"[pipeline] {acc} NT embed...", flush=True)
-        vec = strain_embedding(model, gfna, atab, args.max_genes, rng)
+        bakta_annotate(acc, args.refseq_cache, args.bakta_db, args.bakta_out)
+        ffn = Path(args.bakta_out) / f"{acc}.ffn"
+        n_cds = sum(1 for ln in open(ffn, encoding="utf-8") if ln.startswith(">"))
+        print(f"[pipeline] {acc} NT embed ({n_cds} CDS in .ffn)...", flush=True)
+        vec = strain_embedding(model, ffn, args.max_genes, rng)
         if vec is None:
             print(f"[pipeline] WARN {acc}: no usable CDS, skipped")
             continue
         X.append(vec); y.append(label); ids.append(acc)
-        per.append({"acc": acc, "y": label, "n_cds": int((atab["type"] == "CDS").sum())})
+        per.append({"acc": acc, "y": label, "n_cds": n_cds})
 
     X = np.stack(X); y = np.array(y)
     print(f"[pipeline] embedded {len(y)} strains; X={X.shape}; running LOSO...")
