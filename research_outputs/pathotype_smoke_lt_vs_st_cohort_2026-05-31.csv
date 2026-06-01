@@ -1,0 +1,9 @@
+sample_id,gca_accession,binary_label,y,lineage,toxin_profile,country
+,GCA_000356365.2,LT,0,L3,LT,Bangladesh
+,GCA_000356305.2,LT,0,L3,LT,Bangladesh
+,GCA_000354835.2,LT,0,,LT,Bangladesh
+,GCA_000354895.2,LT,0,L4,LT,Bangladesh
+,GCA_003984445.1,ST,1,L6,STh,Gambia
+,GCA_003984405.1,ST,1,L5,STh,Gambia
+,GCA_004001145.1,ST,1,L5,STh,Gambia
+,GCA_003984395.1,ST,1,L5,STh,Gambia
