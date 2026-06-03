@@ -1,0 +1,54 @@
+{
+  "contrast": "ExPEC(Salipante) vs EPEC(Hazen)",
+  "n": 24,
+  "n_expec": 12,
+  "n_epec": 12,
+  "k": 8,
+  "cv": "loso",
+  "distinct_8mers_observed": 69708,
+  "full_kmer_space": 65536,
+  "baseline_top10k_auroc": 0.5138888888888888,
+  "arms": {
+    "fullspectrum_counts": {
+      "auroc": 0.6041666666666666,
+      "distinct_scores": 24,
+      "degenerate": false,
+      "delta_vs_top10k": 0.09027777777777779
+    },
+    "fullspectrum_presence": {
+      "auroc": 0.7291666666666665,
+      "distinct_scores": 24,
+      "degenerate": false,
+      "delta_vs_top10k": 0.21527777777777768
+    }
+  },
+  "best_auroc": 0.7291666666666665,
+  "verdict": "ACCESSORY_SIGNAL: full-spectrum recovers signal -> top10k was under-powered -> run NT arm (absolute >=0.65 bar)",
+  "confound": "study-confounded (ExPEC=Salipante, EPEC=Hazen); 0.514 top10k already ruled out trivial batch separability",
+  "ids": [
+    "JSIS00000000|JSIS01",
+    "JSMY00000000|JSMY01",
+    "JSNF00000000|JSNF01",
+    "JSNG00000000|JSNG01",
+    "JSNH00000000|JSNH01",
+    "JSLK00000000|JSLK01",
+    "JSLG00000000|JSLG01",
+    "JSPD00000000|JSPD01",
+    "JSPG00000000|JSPG01",
+    "JSPK00000000|JSPK01",
+    "JSHR00000000|JSHR01",
+    "JSPZ00000000|JSPZ01",
+    "AIEY00000000|AIEY01",
+    "AIEX00000000|AIEX01",
+    "AIHE00000000|AIHE01",
+    "JHSA00000000|JHSA01",
+    "AIAL00000000|AIAL01",
+    "AIAV00000000|AIAV01",
+    "JHQY00000000|JHQY01",
+    "JHSB00000000|JHSB01",
+    "JHTL00000000|JHTL01",
+    "JHRR00000000|JHRR01",
+    "AAJW00000000|AAJW01",
+    "JHRH00000000|JHRH01"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "contrast": "ExPEC(Salipante) vs EPEC(Hazen)",
+  "n": 24,
+  "n_expec": 12,
+  "n_epec": 12,
+  "model": "nucleotide_transformer_v2_100m",
+  "representation": "whole_genome_windowed",
+  "window_bp": 6144,
+  "stride_bp": 6144,
+  "cv": "loso",
+  "best_classical_bar": 0.7291666666666665,
+  "fm_bar_3pp": 0.76,
+  "arms": {
+    "mean_pool": {
+      "auroc": 0.38194444444444453,
+      "delta_vs_best_classical": -0.347222222222222,
+      "clears_fm_bar": false
+    },
+    "max_pool": {
+      "auroc": 0.375,
+      "delta_vs_best_classical": -0.3541666666666665,
+      "clears_fm_bar": false
+    }
+  },
+  "best_auroc": 0.38194444444444453,
+  "verdict": "FM_FAILS: NT below best classical (0.729) -> pooled NT dilutes the localized signal (tet precedent confirmed); pivot to gene-targeted detection",
+  "dilution_prediction_max_gt_mean": false,
+  "caveat": "N=24, study-confounded; contig-concat 100-N separators; non-overlapping tiles; >50%-N windows skipped",
+  "ids": [
+    "JSIS00000000|JSIS01",
+    "JSMY00000000|JSMY01",
+    "JSNF00000000|JSNF01",
+    "JSNG00000000|JSNG01",
+    "JSNH00000000|JSNH01",
+    "JSLK00000000|JSLK01",
+    "JSLG00000000|JSLG01",
+    "JSPD00000000|JSPD01",
+    "JSPG00000000|JSPG01",
+    "JSPK00000000|JSPK01",
+    "JSHR00000000|JSHR01",
+    "JSPZ00000000|JSPZ01",
+    "AIEY00000000|AIEY01",
+    "AIEX00000000|AIEX01",
+    "AIHE00000000|AIHE01",
+    "JHSA00000000|JHSA01",
+    "AIAL00000000|AIAL01",
+    "AIAV00000000|AIAV01",
+    "JHQY00000000|JHQY01",
+    "JHSB00000000|JHSB01",
+    "JHTL00000000|JHTL01",
+    "JHRR00000000|JHRR01",
+    "AAJW00000000|AAJW01",
+    "JHRH00000000|JHRH01"
+  ]
+}
