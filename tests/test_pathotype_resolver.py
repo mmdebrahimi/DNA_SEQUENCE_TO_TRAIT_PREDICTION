@@ -55,8 +55,20 @@ def test_upec():
 
 
 def test_upec_needs_two_strong():
-    # single strong ExPEC marker -> AMBIGUOUS, not UPEC
+    # single strong ExPEC marker, no support -> AMBIGUOUS, not UPEC
     assert resolve_call(p("P_FIMBRIAE"))["primary"] == "AMBIGUOUS"
+
+
+def test_expec_compatible_low_confidence():
+    # H4 calibration: 1 strong adhesin + 2 support modules -> ExPEC_COMPATIBLE (LOW)
+    r = resolve_call(p("P_FIMBRIAE", "SIDEROPHORES", "CAPSULE_SERUM"))
+    assert r["primary"] == "ExPEC_COMPATIBLE" and r["confidence_tier"] == "LOW_CONFIDENCE"
+    assert r["external_validity"] == "supported"
+
+
+def test_one_strong_one_support_still_ambiguous():
+    # 1 strong + only 1 support -> below the ExPEC_COMPATIBLE bar -> AMBIGUOUS
+    assert resolve_call(p("P_FIMBRIAE", "SIDEROPHORES"))["primary"] == "AMBIGUOUS"
 
 
 def test_hybrid_two_dec_modules():

@@ -57,7 +57,7 @@ EXPEC_SUPPORT = ["SIDEROPHORES", "CAPSULE_SERUM"]
 
 # Supported (externally-valid) v0 surface vs documented scope-limit (abstain-leaning).
 SUPPORTED_CLASSES = {"tEPEC_COMPATIBLE", "aEPEC_COMPATIBLE", "ETEC_COMPATIBLE",
-                     "UPEC_COMPATIBLE"}  # ExPEC=UPEC-compatible; EPEC; ETEC
+                     "UPEC_COMPATIBLE", "ExPEC_COMPATIBLE"}  # ExPEC/UPEC-compatible; EPEC; ETEC
 SCOPE_LIMITED_CLASSES = {"EHEC_COMPATIBLE", "STEC_NON_LEE", "EAEC_COMPATIBLE",
                          "COMMENSAL_LOW_MARKER_BURDEN"}
 

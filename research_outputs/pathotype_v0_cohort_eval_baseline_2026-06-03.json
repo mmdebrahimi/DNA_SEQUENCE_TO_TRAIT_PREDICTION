@@ -1,0 +1,311 @@
+{
+  "contrast": "ExPEC(Salipante) vs EPEC(Hazen)",
+  "resolver_version": "see markers.RULES_VERSION",
+  "metrics": {
+    "n_expec": 12,
+    "n_epec": 12,
+    "expec_recall": 0.25,
+    "epec_recall": 1.0,
+    "expec_abstain_rate": 0.5833333333333334,
+    "epec_abstain_rate": 0.0,
+    "expec_call_dist": {
+      "AMBIGUOUS": 7,
+      "COMMENSAL_LOW_MARKER_BURDEN": 2,
+      "UPEC_COMPATIBLE": 3
+    },
+    "epec_call_dist": {
+      "tEPEC_COMPATIBLE": 3,
+      "aEPEC_COMPATIBLE": 9
+    },
+    "confident_supported_precision": 1.0,
+    "n_confident_supported": 15
+  },
+  "per_genome": [
+    {
+      "id": "JSIS00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSMY00000000",
+      "y": 0,
+      "call": "COMMENSAL_LOW_MARKER_BURDEN",
+      "tier": "CONFIDENT",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSNF00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSNG00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSNH00000000",
+      "y": 0,
+      "call": "UPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "AFA_DRA",
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSLK00000000",
+      "y": 0,
+      "call": "UPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "CNF1",
+        "HEMOLYSIN",
+        "P_FIMBRIAE",
+        "SIDEROPHORES",
+        "S_FIMBRIAE"
+      ]
+    },
+    {
+      "id": "JSLG00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "P_FIMBRIAE"
+      ]
+    },
+    {
+      "id": "JSPD00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSPG00000000",
+      "y": 0,
+      "call": "COMMENSAL_LOW_MARKER_BURDEN",
+      "tier": "CONFIDENT",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM"
+      ]
+    },
+    {
+      "id": "JSPK00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSHR00000000",
+      "y": 0,
+      "call": "AMBIGUOUS",
+      "tier": "AMBIGUOUS",
+      "validity": "scope_limited",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JSPZ00000000",
+      "y": 0,
+      "call": "UPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "P_FIMBRIAE",
+        "SIDEROPHORES",
+        "S_FIMBRIAE"
+      ]
+    },
+    {
+      "id": "AIEY00000000",
+      "y": 1,
+      "call": "tEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "BFP_EAF",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "AIEX00000000",
+      "y": 1,
+      "call": "tEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "BFP_EAF",
+        "CAPSULE_SERUM",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "AIHE00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "LEE"
+      ]
+    },
+    {
+      "id": "JHSA00000000",
+      "y": 1,
+      "call": "tEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "BFP_EAF",
+        "CAPSULE_SERUM",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "AIAL00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "LEE"
+      ]
+    },
+    {
+      "id": "AIAV00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JHQY00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "LEE"
+      ]
+    },
+    {
+      "id": "JHSB00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JHTL00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JHRR00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "AAJW00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "HEMOLYSIN",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    },
+    {
+      "id": "JHRH00000000",
+      "y": 1,
+      "call": "aEPEC_COMPATIBLE",
+      "tier": "CONFIDENT",
+      "validity": "supported",
+      "clusters": [
+        "CAPSULE_SERUM",
+        "LEE",
+        "SIDEROPHORES"
+      ]
+    }
+  ]
+}

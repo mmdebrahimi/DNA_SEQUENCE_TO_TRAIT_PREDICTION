@@ -107,6 +107,18 @@ def resolve_call(profile: dict[str, bool], *,
                      f"extraintestinal-compatible (definitive UPEC needs clinical metadata)",
                      partial_clusters)
 
+    # Calibration (2026-06-03, ledger H4): 1 strong adhesin + both support modules
+    # (siderophore + capsule/serum) is a real extraintestinal signature, but below the
+    # >=2-strong UPEC bar. Emit ExPEC_COMPATIBLE at LOW_CONFIDENCE instead of abstaining.
+    # Lifts ExPEC recall 0.25 -> 0.75 on the cohort while keeping confident-precision 1.0
+    # (this call is NOT CONFIDENT) and abstention ->0.08. Does NOT fire for 0-strong
+    # (commensal-like) or 1-strong-no-support (too weak) cases.
+    if expec_strong == 1 and expec_support >= 2:
+        return _call("ExPEC_COMPATIBLE", [], "LOW_CONFIDENCE", "RULE_EXPEC_001",
+                     "1 strong ExPEC adhesin + iron-acquisition + capsule/serum support; "
+                     "extraintestinal-compatible at low confidence (below >=2-strong UPEC bar)",
+                     partial_clusters)
+
     # ambiguous: partial EAEC, single strong ExPEC, or partial primary hits
     if eaec_partial or expec_strong == 1 or (partial_clusters & _primary_clusters()):
         bits = []

@@ -1,6 +1,6 @@
 {
   "sample_id": "JSIS01_ExPEC",
-  "analysis_date": "2026-06-02",
+  "analysis_date": "2026-06-03",
   "schema": "pathotype-provenance-v0",
   "assembly": {
     "path": "data/ena_wgs/JSIS01.fna",
@@ -74,13 +74,13 @@
     "CAPSULE_SERUM": true
   },
   "derived_call": {
-    "primary": "AMBIGUOUS",
+    "primary": "ExPEC_COMPATIBLE",
     "secondary": [],
-    "confidence_tier": "AMBIGUOUS",
-    "rule_id": "RULE_AMB_001",
+    "confidence_tier": "LOW_CONFIDENCE",
+    "rule_id": "RULE_EXPEC_001",
     "rule_version": "pathotype-rules-v0.1.0",
-    "reason": "single strong ExPEC marker (UPEC needs >=2)",
-    "external_validity": "scope_limited",
+    "reason": "1 strong ExPEC adhesin + iron-acquisition + capsule/serum support; extraintestinal-compatible at low confidence (below >=2-strong UPEC bar)",
+    "external_validity": "supported",
     "partial_clusters": []
   }
 }
