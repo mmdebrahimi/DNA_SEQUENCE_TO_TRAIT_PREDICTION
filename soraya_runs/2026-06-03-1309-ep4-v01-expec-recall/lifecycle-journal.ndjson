@@ -1,0 +1,2 @@
+{"attempt_id": "improve-expec-recall:0", "debit": true, "family_id": "fam-per-gene-expec-scoring", "gap_id": "improve-expec-recall", "type": "manifest"}
+{"attempt_id": "improve-expec-recall:0", "frm": null, "receipt_digest": null, "to": "generated", "type": "transition"}

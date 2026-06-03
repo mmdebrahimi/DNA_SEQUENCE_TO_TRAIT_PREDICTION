@@ -55,10 +55,22 @@ PRIMARY_DEC_MODULES = ["STX1", "STX2", "LEE", "BFP_EAF", "LT", "ST",
 EXPEC_STRONG = ["P_FIMBRIAE", "S_FIMBRIAE", "AFA_DRA", "HEMOLYSIN", "CNF1"]
 EXPEC_SUPPORT = ["SIDEROPHORES", "CAPSULE_SERUM"]
 
+# Per-gene ExPEC support scoring (EP-4 v0.1 ExPEC-recall hardening, 2026-06-03). The coarse
+# SIDEROPHORES / CAPSULE_SERUM cluster booleans (present iff ANY member gene >=0.80) hide
+# multi-gene extraintestinal burden, so a 0-strong-adhesin genome with several iron-acquisition /
+# serum-resistance genes is mis-called COMMENSAL. EXPEC_SUPPORT_GENE_PREFIXES enumerates the
+# per-gene members of the two support clusters; a genome with >= EXPEC_SUPPORT_GENE_K distinct
+# support genes (each >=0.80 coverage) earns an ExPEC_COMPATIBLE LOW_CONFIDENCE call (never
+# CONFIDENT — so confident-supported precision is invariant). K=1 chosen on the 24-genome H4 cohort
+# (rescues JSMY=6-gene + JSPG=traT-only); calls stay below the >=2-strong UPEC CONFIDENT bar.
+# Scope-limit: K=1 is in-sample on N=24 (no external holdout); LOW tier + DEC-module gate bound risk.
+EXPEC_SUPPORT_GENE_PREFIXES = list(CLUSTER_MARKERS["SIDEROPHORES"]) + list(CLUSTER_MARKERS["CAPSULE_SERUM"])
+EXPEC_SUPPORT_GENE_K = 1
+
 # Supported (externally-valid) v0 surface vs documented scope-limit (abstain-leaning).
 SUPPORTED_CLASSES = {"tEPEC_COMPATIBLE", "aEPEC_COMPATIBLE", "ETEC_COMPATIBLE",
                      "UPEC_COMPATIBLE", "ExPEC_COMPATIBLE"}  # ExPEC/UPEC-compatible; EPEC; ETEC
 SCOPE_LIMITED_CLASSES = {"EHEC_COMPATIBLE", "STEC_NON_LEE", "EAEC_COMPATIBLE",
                          "COMMENSAL_LOW_MARKER_BURDEN"}
 
-RULES_VERSION = "pathotype-rules-v0.1.0"
+RULES_VERSION = "pathotype-rules-v0.2.0"

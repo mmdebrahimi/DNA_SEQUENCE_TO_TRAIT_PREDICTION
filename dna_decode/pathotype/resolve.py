@@ -12,7 +12,7 @@ marked scope-limited.
 from __future__ import annotations
 
 from dna_decode.pathotype.markers import (
-    EXPEC_STRONG, EXPEC_SUPPORT, SUPPORTED_CLASSES, RULES_VERSION,
+    EXPEC_STRONG, EXPEC_SUPPORT, EXPEC_SUPPORT_GENE_K, SUPPORTED_CLASSES, RULES_VERSION,
 )
 
 AAF_CLUSTERS = ["AAF_I", "AAF_II", "AAF_III", "AAF_IV", "AAF_V"]
@@ -20,7 +20,9 @@ AAF_CLUSTERS = ["AAF_I", "AAF_II", "AAF_III", "AAF_IV", "AAF_V"]
 
 def resolve_call(profile: dict[str, bool], *,
                  partial_clusters: frozenset[str] = frozenset(),
-                 qc_pass: bool = True) -> dict:
+                 qc_pass: bool = True,
+                 support_gene_count: int = 0,
+                 cross_axis_support: bool = False) -> dict:
     """Resolve a cluster presence profile to a derived pathotype call.
 
     Args:
@@ -28,6 +30,11 @@ def resolve_call(profile: dict[str, bool], *,
         partial_clusters: clusters with sub-threshold (PARTIAL) hits -> trigger
             AMBIGUOUS when they are the only evidence for a primary call.
         qc_pass: assembly QC verdict. False -> AMBIGUOUS_LOW_QC (never commensal).
+        support_gene_count: number of distinct ExPEC support GENES (per-gene members of
+            SIDEROPHORES + CAPSULE_SERUM) confidently present. 0 when only the coarse cluster
+            profile is available (no per-gene evidence -> no per-gene rescue). When
+            >= EXPEC_SUPPORT_GENE_K and no DEC module / not UPEC, emits ExPEC_COMPATIBLE at
+            LOW_CONFIDENCE (EP-4 v0.1 recall hardening; never CONFIDENT -> precision invariant).
 
     Returns:
         derived_call dict (primary, secondary, confidence_tier, rule_id, reason,
@@ -117,6 +124,22 @@ def resolve_call(profile: dict[str, bool], *,
         return _call("ExPEC_COMPATIBLE", [], "LOW_CONFIDENCE", "RULE_EXPEC_001",
                      "1 strong ExPEC adhesin + iron-acquisition + capsule/serum support; "
                      "extraintestinal-compatible at low confidence (below >=2-strong UPEC bar)",
+                     partial_clusters)
+
+    # Cross-axis per-gene support (2026-06-03, EP-4 v0.1 H4 recall hardening, RULE_EXPEC_002;
+    # user round-2 commitment): BOTH extraintestinal axes present (>=1 iron-acquisition gene AND
+    # >=1 capsule/serum gene), even with 0 strong adhesins, is a real extraintestinal signature the
+    # coarse cluster booleans miss. Emit ExPEC_COMPATIBLE at LOW_CONFIDENCE (NEVER CONFIDENT ->
+    # confident-supported precision invariant; the >=2-strong UPEC CONFIDENT bar above is untouched).
+    # Reached only after the DEC-module gate, so an LEE/STX/ETEC/EAEC genome never gets here
+    # (epec_recall preserved by control flow). Cross-axis (vs flat K=1) structurally excludes
+    # capsule-only genomes (lone-traT) — the documented STOP that caps cohort recall at 0.833 rather
+    # than over-rescuing to an in-sample 0.917.
+    if cross_axis_support:
+        return _call("ExPEC_COMPATIBLE", [], "LOW_CONFIDENCE", "RULE_EXPEC_002",
+                     f"both ExPEC support axes present (>=1 iron-acquisition AND >=1 capsule/serum "
+                     f"gene; {support_gene_count} total support genes); extraintestinal-compatible at "
+                     f"low confidence via cross-axis per-gene support (below >=2-strong UPEC bar)",
                      partial_clusters)
 
     # ambiguous: partial EAEC, single strong ExPEC, or partial primary hits

@@ -1,0 +1,9 @@
+{
+  "kind": "interrogation",
+  "target_id": "fam-per-gene-expec-scoring",
+  "issuer": "user",
+  "run_id": "2026-06-03-1309-ep4-v01-expec-recall",
+  "sequence": 1,
+  "timestamp": "2026-06-03",
+  "note": "round1: tier-ceiling=LOW_CONFIDENCE-only (revised); rule=weighted/pooled per-gene; overfit=in-sample+documented"
+}

@@ -1,0 +1,9 @@
+{
+  "kind": "interrogation",
+  "target_id": "fam-per-gene-expec-scoring",
+  "issuer": "user",
+  "run_id": "2026-06-03-1309-ep4-v01-expec-recall",
+  "sequence": 2,
+  "timestamp": "2026-06-03",
+  "note": "round2: rescue-scope=all-3(incl JSPG); threshold=pooled count K; FP-guard=DEC-module-gate-stays-above + regression test"
+}
