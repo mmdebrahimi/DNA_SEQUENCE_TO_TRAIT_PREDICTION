@@ -1,0 +1,115 @@
+{
+  "contrast": "ExPEC(Salipante) vs EPEC(Hazen)",
+  "n": 24,
+  "representation": "kmer_k8_presence_absence_full_spectrum",
+  "study_equals_class": true,
+  "class_x_study_cells": {
+    "0|Salipante": 12,
+    "1|Hazen": 12
+  },
+  "confound_note": "study == class on this subset -> biology and batch are the SAME partition; the 0.729 cannot be attributed to biology here. Need within-study OR lineage/ST-matched genomes to resolve.",
+  "full_pa_loso_auroc": 0.736111111111111,
+  "nonzero_importance_kmers": 43,
+  "importance_concentration": {
+    "kmers_to_50pct": 9,
+    "kmers_to_80pct": 16,
+    "kmers_to_95pct": 27
+  },
+  "within_fold_topk_auroc": {
+    "10": 0.8055555555555556,
+    "25": 0.7708333333333334,
+    "50": 0.7569444444444445,
+    "100": 0.75,
+    "250": 0.7291666666666666
+  },
+  "top10_kmers": [
+    {
+      "kmer": "TCTAGGCA",
+      "importance": 0.10579945892095566,
+      "in_expec_n": 12,
+      "in_epec_n": 6
+    },
+    {
+      "kmer": "CCTAGGCA",
+      "importance": 0.07036446034908295,
+      "in_expec_n": 2,
+      "in_epec_n": 6
+    },
+    {
+      "kmer": "GGGTCTAG",
+      "importance": 0.06462173908948898,
+      "in_expec_n": 11,
+      "in_epec_n": 7
+    },
+    {
+      "kmer": "TCTAGGAC",
+      "importance": 0.05421365424990654,
+      "in_expec_n": 12,
+      "in_epec_n": 6
+    },
+    {
+      "kmer": "GATCTAGA",
+      "importance": 0.05198865756392479,
+      "in_expec_n": 10,
+      "in_epec_n": 6
+    },
+    {
+      "kmer": "CTTCTAGG",
+      "importance": 0.051761429756879807,
+      "in_expec_n": 11,
+      "in_epec_n": 6
+    },
+    {
+      "kmer": "CCTAGACG",
+      "importance": 0.04741990938782692,
+      "in_expec_n": 9,
+      "in_epec_n": 6
+    },
+    {
+      "kmer": "CTTCTAGA",
+      "importance": 0.04671500250697136,
+      "in_expec_n": 12,
+      "in_epec_n": 7
+    },
+    {
+      "kmer": "TACCTAGA",
+      "importance": 0.04584710672497749,
+      "in_expec_n": 8,
+      "in_epec_n": 11
+    },
+    {
+      "kmer": "CCTAGGAC",
+      "importance": 0.04568140208721161,
+      "in_expec_n": 2,
+      "in_epec_n": 5
+    }
+  ],
+  "signal_shape_verdict": "SPARSE: <=50 k-mers recover the full signal -> a few accessory loci drive it (gene-presence-like; v0-resolver-friendly, hopeful)",
+  "next_action": "Obtain ExPEC+EPEC from a SINGLE study (or ST/lineage-matched cross-study pairs) to break study==class; only then is an AUROC interpretable as pathotype biology. In parallel, the v0 deterministic virulence-gene-cluster resolver (ledger-locked) is the interpretable path that does not depend on this confounded learned signal.",
+  "ids": [
+    "JSIS00000000|JSIS01",
+    "JSMY00000000|JSMY01",
+    "JSNF00000000|JSNF01",
+    "JSNG00000000|JSNG01",
+    "JSNH00000000|JSNH01",
+    "JSLK00000000|JSLK01",
+    "JSLG00000000|JSLG01",
+    "JSPD00000000|JSPD01",
+    "JSPG00000000|JSPG01",
+    "JSPK00000000|JSPK01",
+    "JSHR00000000|JSHR01",
+    "JSPZ00000000|JSPZ01",
+    "AIEY00000000|AIEY01",
+    "AIEX00000000|AIEX01",
+    "AIHE00000000|AIHE01",
+    "JHSA00000000|JHSA01",
+    "AIAL00000000|AIAL01",
+    "AIAV00000000|AIAV01",
+    "JHQY00000000|JHQY01",
+    "JHSB00000000|JHSB01",
+    "JHTL00000000|JHTL01",
+    "JHRR00000000|JHRR01",
+    "AAJW00000000|AAJW01",
+    "JHRH00000000|JHRH01"
+  ]
+}
