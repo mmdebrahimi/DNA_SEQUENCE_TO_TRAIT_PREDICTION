@@ -1,0 +1,86 @@
+{
+  "sample_id": "JSIS01_ExPEC",
+  "analysis_date": "2026-06-02",
+  "schema": "pathotype-provenance-v0",
+  "assembly": {
+    "path": "data/ena_wgs/JSIS01.fna",
+    "n_contigs": 133,
+    "total_bp": 5213731,
+    "n50": 189344,
+    "qc_verdict": "PASS",
+    "gff3": null
+  },
+  "caller": {
+    "name": "dna_decode-kmer-seed-v0",
+    "software_version": "pathotype-rules-v0.1.0",
+    "db_name": "virulencefinder_ecoli",
+    "db_version": "bitbucket-HEAD",
+    "db_commit_or_checksum": "sha256:e94e6c6d4dae1ca6",
+    "parameters": {
+      "k": 15,
+      "confident_coverage": 0.8,
+      "partial_coverage": 0.65
+    },
+    "method": "kmer_seed_coverage_v0",
+    "caller_is_independent_baseline": false
+  },
+  "marker_hits": [
+    {
+      "cluster": "P_FIMBRIAE",
+      "gene": "papC",
+      "allele": null,
+      "source_db": "virulencefinder_ecoli",
+      "percent_identity": null,
+      "percent_coverage": 100.0,
+      "method": "kmer_seed_coverage_v0",
+      "contig": "ENA|JSIS01000110|JSIS01000110.1",
+      "start": 20827,
+      "end": 23347,
+      "strand": "+",
+      "hit_status": "CONFIDENT"
+    },
+    {
+      "cluster": "SIDEROPHORES",
+      "gene": "ireA",
+      "allele": null,
+      "source_db": "virulencefinder_ecoli",
+      "percent_identity": null,
+      "percent_coverage": 100.0,
+      "method": "kmer_seed_coverage_v0",
+      "contig": "ENA|JSIS01000003|JSIS01000003.1",
+      "start": 2644,
+      "end": 4693,
+      "strand": "-",
+      "hit_status": "CONFIDENT"
+    },
+    {
+      "cluster": "CAPSULE_SERUM",
+      "gene": "iss",
+      "allele": null,
+      "source_db": "virulencefinder_ecoli",
+      "percent_identity": null,
+      "percent_coverage": 100.0,
+      "method": "kmer_seed_coverage_v0",
+      "contig": "ENA|JSIS01000058|JSIS01000058.1",
+      "start": 815,
+      "end": 1124,
+      "strand": "+",
+      "hit_status": "CONFIDENT"
+    }
+  ],
+  "cluster_profile": {
+    "P_FIMBRIAE": true,
+    "SIDEROPHORES": true,
+    "CAPSULE_SERUM": true
+  },
+  "derived_call": {
+    "primary": "AMBIGUOUS",
+    "secondary": [],
+    "confidence_tier": "AMBIGUOUS",
+    "rule_id": "RULE_AMB_001",
+    "rule_version": "pathotype-rules-v0.1.0",
+    "reason": "single strong ExPEC marker (UPEC needs >=2)",
+    "external_validity": "scope_limited",
+    "partial_clusters": []
+  }
+}

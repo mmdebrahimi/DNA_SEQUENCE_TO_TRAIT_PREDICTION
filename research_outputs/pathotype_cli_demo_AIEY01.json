@@ -1,0 +1,86 @@
+{
+  "sample_id": "AIEY01_EPEC",
+  "analysis_date": "2026-06-02",
+  "schema": "pathotype-provenance-v0",
+  "assembly": {
+    "path": "data/ena_wgs/AIEY01.fna",
+    "n_contigs": 66,
+    "total_bp": 5159414,
+    "n50": 165055,
+    "qc_verdict": "PASS",
+    "gff3": null
+  },
+  "caller": {
+    "name": "dna_decode-kmer-seed-v0",
+    "software_version": "pathotype-rules-v0.1.0",
+    "db_name": "virulencefinder_ecoli",
+    "db_version": "bitbucket-HEAD",
+    "db_commit_or_checksum": "sha256:e94e6c6d4dae1ca6",
+    "parameters": {
+      "k": 15,
+      "confident_coverage": 0.8,
+      "partial_coverage": 0.65
+    },
+    "method": "kmer_seed_coverage_v0",
+    "caller_is_independent_baseline": false
+  },
+  "marker_hits": [
+    {
+      "cluster": "LEE",
+      "gene": "eae-a01-alpha_1",
+      "allele": null,
+      "source_db": "virulencefinder_ecoli",
+      "percent_identity": null,
+      "percent_coverage": 98.9,
+      "method": "kmer_seed_coverage_v0",
+      "contig": "ENA|AIEY01000062|AIEY01000062.1",
+      "start": 10052,
+      "end": 12872,
+      "strand": "-",
+      "hit_status": "CONFIDENT"
+    },
+    {
+      "cluster": "BFP_EAF",
+      "gene": "bfpA",
+      "allele": null,
+      "source_db": "virulencefinder_ecoli",
+      "percent_identity": null,
+      "percent_coverage": 100.0,
+      "method": "kmer_seed_coverage_v0",
+      "contig": "ENA|AIEY01000014|AIEY01000014.1",
+      "start": 30205,
+      "end": 30787,
+      "strand": "-",
+      "hit_status": "CONFIDENT"
+    },
+    {
+      "cluster": "SIDEROPHORES",
+      "gene": "chuA",
+      "allele": null,
+      "source_db": "virulencefinder_ecoli",
+      "percent_identity": null,
+      "percent_coverage": 100.0,
+      "method": "kmer_seed_coverage_v0",
+      "contig": "ENA|AIEY01000058|AIEY01000058.1",
+      "start": 205522,
+      "end": 207505,
+      "strand": "-",
+      "hit_status": "CONFIDENT"
+    }
+  ],
+  "cluster_profile": {
+    "LEE": true,
+    "BFP_EAF": true,
+    "SIDEROPHORES": true
+  },
+  "derived_call": {
+    "primary": "tEPEC_COMPATIBLE",
+    "secondary": [],
+    "confidence_tier": "CONFIDENT",
+    "rule_id": "RULE_tEPEC_001",
+    "rule_version": "pathotype-rules-v0.1.0",
+    "reason": "LEE + BFP/EAF, no STX (typical EPEC)",
+    "external_validity": "supported",
+    "partial_clusters": []
+  }
+}
