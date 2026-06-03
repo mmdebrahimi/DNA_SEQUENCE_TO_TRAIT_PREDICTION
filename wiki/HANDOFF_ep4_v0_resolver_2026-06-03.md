@@ -21,7 +21,7 @@
 ## Recommended next (ranked)
 1. VF side-by-side diff (after BLAST+/KMA install) — last v0 ledger item.
 2. Per-gene ExPEC scoring (v0.1) — split SIDEROPHORES/CAPSULE clusters into per-gene presence; push ExPEC recall past 0.75 (cheap with the coverage cache).
-3. Add ETEC genomes (von Mentzer, `research_outputs/etec_vonmentzer_collection_gca_2026-05-30.csv`) → exercise the ETEC arm + 3-class supported-surface metrics.
+3. Add ETEC genomes → exercise the ETEC arm + 3-class supported-surface metrics. **CAVEAT discovered 2026-06-03:** ETEC LT/ST toxins are PLASMID-encoded; the von Mentzer `etec_reference_vonmentzer_strains_2026-05-30.csv` gives only `chromosome_accession` (LR…). A chromosome-only ENA fetch would MISS the toxins → false-negative ETEC calls (looks like a resolver bug, is a missing-plasmid artifact). Fetch FULL assemblies (GCA, chromosome+plasmids) via the GCA collection CSV, not the chromosome LR. Also: ETEC labels are toxin-typed → this is a detection-CONFORMANCE check (does our k-mer detector find the LT/ST genes the typing used), NOT independent external validity.
 4. Break study==class (within-study / ST-matched genomes) before any learned-vs-classical claim.
 
 ## EMIT — pending user-only `/project-state` calls (Soraya can't self-invoke)
