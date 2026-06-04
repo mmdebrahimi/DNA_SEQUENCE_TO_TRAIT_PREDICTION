@@ -1,8 +1,28 @@
 # HANDOFF — AMR Phase 2 embedding-validation frontier (workhorse-gated) — 2026-06-04
 
-> Written from the GTX 860M laptop. The embedding core (NT cache populate + train) needs the **Precision
-> 7780 GPU** — the 860M orphans on multi-minute GPU jobs. Per the two-machine rule, this is a genuine
-> hand-off, not laptop work. This doc is the workhorse-executable next epoch.
+> Written from the GTX 860M laptop. REVISED 2026-06-04 to the **GPU-only** workhorse model (user
+> directive: the workhorse is for its GPU, nothing else — no personal repo, no git, no dev there).
+> The ONLY workhorse job is producing the NT embedding cache from PUBLIC data; **the falsifier + all
+> repo/ledger/analysis work runs on the laptop.**
+>
+> ## ⚠ Division of machines (GPU-only)
+> ```
+> PUBLIC DATA (NCBI genomes + HuggingFace NT model)
+>     │  workhorse fetches these itself — public, NOT the personal repo
+>     ▼
+> WORKHORSE (GPU only): run populate_cache.py -> ONE output file: the NT embedding cache (.h5)
+>     │  ← the only artifact that crosses back (numeric embeddings of PUBLIC genomes; low DLP profile)
+>     ▼
+> LAPTOP (project home): git/ledgers + the falsifier (NT-XGBoost on cached embeddings vs k-mer vs
+>                        AMRFinder — all CPU) + classical baselines (BLAST+/Docker already here)
+> ```
+> This keeps the personal repo OFF the corporate machine (Zscaler/Sentinel DLP), and prevents the
+> bundle-drift that already hit `cv.py` (no dev inside the workhorse bundle).
+>
+> **For cef specifically the GPU work is likely already DONE** — the cef cached-strain result (AUROC
+> 0.895) means the cef NT embeddings already exist on the workhorse (`nt_gate_b_cohort_67.h5`). So the
+> only ask to the workhorse is: **return that one .h5 cache file.** Then the entire cef falsifier runs
+> on the laptop (script staged at `scripts/cef_falsifier.py`).
 
 ## Why this is the next epoch (the strategic pivot, evidence-backed)
 
@@ -40,19 +60,30 @@ under leakage-safe CV — OR a documented mechanism-class scope-limit (EP-1.5 fi
 NT-mean-pool advantage is absent even on a concentrated mechanism at clean labels → re-evaluate the
 embedding architecture before any further drug.
 
-## Sequenced next steps (workhorse)
-1. **Finish the cef audit-aware packet** (`plans/Cef_Audit_Aware_Packet_Design.md`): run
-   `scripts/drug_mechanism_phenotype_merge.py` for cef; flip cef out of DEBUG-MODE (audit verdict +
-   attribution in the v0 packet). Laptop-doable PARTS: the merge + audit (no GPU) — but cef cohort/cache
-   live on the workhorse, so co-locate.
-2. **Embedding-vs-classical falsifier on cef** under `leave_one_accession_out` + Mash-clade-out CV:
-   NT-XGBoost vs k-mer-XGB vs AMRFinder-gene-presence. Reuse `dna_decode/eval/cv.py` +
-   `dna_decode/eval/loso_kmer.py`. Record the ≥3 pp gap (or scope-limit).
-3. **Update both ledgers** (AC9): AMR ledger `dna-decode-2026-05-11` + the roadmap Phase 2 row.
+## Sequenced next steps (GPU-only split)
+
+### Workhorse — ONE job (GPU only)
+- **Return the cef NT embedding cache** `nt_gate_b_cohort_67.h5` to the laptop (it already exists from the
+  cef cached-strain run). If for some reason it must be regenerated: `scripts/populate_cache.py` on the
+  cef cohort (`data/processed/gate_b_cohort.parquet`, 60 cef-labelled strains) — pulling genomes from
+  public NCBI + the public NT model. No git, no repo, no ledger work on the workhorse.
+- (Workhorse housekeeping, your call: commit its stranded `reports/dna_decoder_dual_machine_handoff_2026-06-04.md` to main, or just relay it — but per the GPU-only model, ideally nothing on that machine touches git.)
+
+### Laptop — everything else (CPU; no GPU)
+1. Drop the returned cef cache at `data/processed/embeddings/nt_gate_b_cohort_67.h5` (or pass `--nt-cache`).
+   Fetch the cef genome FASTAs from public NCBI for the k-mer baseline (the script prints the command if missing).
+2. **Run the falsifier:** `uv run python scripts/cef_falsifier.py` — NT-XGBoost + NT-logreg + k-mer-XGB
+   under `leave_one_accession_out` CV (cef has no duplicate accessions, so this equals strain-out; canonical
+   + future-proof). Optional second pass under Mash-clade-out via `scripts/mash_cluster_n147.py` (Docker).
+   Gate: max(NT) − k-mer-XGB ≥ 3 pp → embeddings beat classical on a concentrated β-lactamase mechanism.
+3. **Cef audit-aware packet** (`plans/Cef_Audit_Aware_Packet_Design.md`; `scripts/drug_mechanism_phenotype_merge.py`):
+   CPU-only — runs here. NOTE: the workhorse reports the packet design is NO LONGER the blocker; audit it
+   for stale DEBUG-MODE drift rather than rebuilding.
+4. **Update both ledgers** (AC9) here: AMR `dna-decode-2026-05-11` + roadmap Phase 2 row.
 
 ## What stays on the laptop (no GPU)
-- Cohort/label de-risk + audit analysis (like the cipro de-risk above), the merge/audit scripts, ledger
-  ops, doc reconcile. NOT the NT populate/train.
+- The falsifier (`scripts/cef_falsifier.py`), the k-mer + AMRFinder baselines, the audit/merge scripts,
+  all ledger ops, all git, all doc reconcile. The workhorse does NOT touch any of it.
 
 ## Provenance
 De-risk numbers: `data/processed/stage2_n150_cipro_cohort.parquet` (R/S × MLST overlap, inline pandas).
