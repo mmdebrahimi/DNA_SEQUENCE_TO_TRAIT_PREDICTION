@@ -1,0 +1,9 @@
+{
+  "kind": "interrogation",
+  "target_id": "ep4-v01-vf-diff",
+  "issuer": "user-ratified-via-AskUserQuestion",
+  "run_id": "2026-06-04-0008-ep4-v01-vf-diff",
+  "sequence": 2,
+  "timestamp": "2026-06-04",
+  "note": "Q2 honesty bar: per-gene concordance + caller_is_independent_baseline=false + same-DB caveat (ratified)"
+}

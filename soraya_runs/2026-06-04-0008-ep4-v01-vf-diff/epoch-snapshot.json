@@ -1,0 +1,17 @@
+{
+  "run_id": "2026-06-04-0008-ep4-v01-vf-diff",
+  "epoch_id": "ep4-v01-vf-diff",
+  "frontier": [
+    "ep4-v01-vf-diff"
+  ],
+  "retired_projects": [],
+  "no_path_projects": [],
+  "gaps": {
+    "ship-vf-side-by-side-diff": {
+      "remaining": 2,
+      "retired": false,
+      "no_path": false
+    }
+  },
+  "consumed": []
+}

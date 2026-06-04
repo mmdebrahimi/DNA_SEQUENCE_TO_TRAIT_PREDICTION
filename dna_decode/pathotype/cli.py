@@ -21,12 +21,13 @@ from dna_decode.pathotype.detect import (
 )
 from dna_decode.pathotype.markers import RULES_VERSION
 from dna_decode.pathotype.resolve import resolve_call
+from dna_decode.pathotype.vf_runner import build_vf_diff, run_canonical_vf
 
 DEFAULT_DB = "data/virulencefinder_db/virulence_ecoli.fsa"
 
 
 def analyze(fasta: str, db: str, sample_id: str | None, gff3: str | None = None,
-            analysis_date: str | None = None) -> dict:
+            analysis_date: str | None = None, vf_diff: bool = True) -> dict:
     contigs = parse_fasta(fasta)
     qc = assembly_qc(contigs)
     vf_index = build_vf_index(db)
@@ -35,6 +36,13 @@ def analyze(fasta: str, db: str, sample_id: str | None, gff3: str | None = None,
                         partial_clusters=det["partial_clusters"],
                         qc_pass=(qc["qc_verdict"] != "FAIL"))
     db_sha = hashlib.sha256(Path(db).read_bytes()).hexdigest()[:16]
+    if vf_diff:
+        canonical = run_canonical_vf(fasta, db)
+        diff_section = build_vf_diff(det["cluster_profile"], canonical,
+                                     resolver_marker_hits=det["marker_hits"])
+    else:
+        diff_section = {"status": "skipped", "reason": "--no-vf-diff",
+                        "caller_is_independent_baseline": False}
     return {
         "sample_id": sample_id or Path(fasta).stem,
         "analysis_date": analysis_date or datetime.date.today().isoformat(),
@@ -54,6 +62,7 @@ def analyze(fasta: str, db: str, sample_id: str | None, gff3: str | None = None,
         "marker_hits": det["marker_hits"],
         "cluster_profile": {c: v for c, v in det["cluster_profile"].items() if v},
         "derived_call": call,
+        "vf_diff": diff_section,
     }
 
 
@@ -74,6 +83,17 @@ def _summary(rec: dict) -> str:
               f"  driven by: " + "; ".join(
                   f"{h['cluster']}/{h['gene']} ({h['percent_coverage']}% cov, {h['hit_status']}, "
                   f"{h['contig']}:{h['start']})" for h in rec["marker_hits"] if h["hit_status"] == "CONFIDENT") or "  driven by: (no confident hits)"]
+    diff = rec.get("vf_diff", {})
+    if diff.get("status") == "ok":
+        co = diff["concordance"]
+        lines += [
+            f"  VF diff (canonical blastn vs k-mer-seed, SAME DB — audit not independent):",
+            f"    per-cluster concordance {co['per_cluster_concordance']} "
+            f"({co['both_present']} both+, {co['both_absent']} both-, {co['disagree']} disagree)",
+            f"    {diff['caveat']}",
+        ]
+    elif diff.get("status") in ("unavailable", "skipped"):
+        lines.append(f"  VF diff: {diff['status']} ({diff.get('reason', '')})")
     return "\n".join(lines)
 
 
@@ -86,6 +106,8 @@ def main(argv=None) -> int:
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--out", default=None, help="write provenance JSON here (default: alongside summary on stdout)")
     ap.add_argument("--json-only", action="store_true", help="print only the JSON")
+    ap.add_argument("--no-vf-diff", action="store_true",
+                    help="skip the canonical-blastn VirulenceFinder side-by-side diff")
     args = ap.parse_args(argv)
 
     if not Path(args.db).exists():
@@ -94,7 +116,7 @@ def main(argv=None) -> int:
               f"https://bitbucket.org/genomicepidemiology/virulencefinder_db/raw/HEAD/virulence_ecoli.fsa",
               file=sys.stderr)
         return 2
-    rec = analyze(args.fasta, args.db, args.sample_id, args.gff3)
+    rec = analyze(args.fasta, args.db, args.sample_id, args.gff3, vf_diff=not args.no_vf_diff)
     if args.out:
         Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
     if args.json_only:
