@@ -160,6 +160,39 @@ Writes `result.json` + `result.md` (markdown sidecar) per the v0 schema:
 
 **Not a clinical decision support tool.** Audit verdict + provenance must accompany any downstream interpretation. See `wiki/decoder_v0_ux_and_success_criterion.md` for full v0 schema + success criteria.
 
+## Pathotype resolver (E. coli) — v0 tool (SHIPPED 2026-06-04, tag `pathotype-v0`)
+
+A self-contained, **pure-stdlib** CLI that takes an E. coli genome assembly (FASTA) and emits an
+auditable **pathotype-compatibility** call with virulence-cluster provenance + a side-by-side diff
+against canonical VirulenceFinder. Honest framing: it is a marker-based **compatibility resolver with
+abstention, NOT a clinical predictor**. Supported (externally-valid) classes = ExPEC / EPEC / ETEC;
+EAEC / commensal / clean-EHEC are a documented scope-limit (the resolver reports their modules but
+flags low external validity).
+
+```bash
+# After `uv sync` (or `pip install -e .`), the `dna-pathotype` command is available:
+uv run dna-pathotype path/to/assembly.fna --sample-id MY_STRAIN --out result.json
+# or equivalently:  uv run python -m dna_decode.pathotype path/to/assembly.fna ...
+```
+
+Emits provenance JSON + a human summary:
+- `derived_call` — 11-class honest surface (EHEC/STEC/tEPEC/aEPEC/ETEC/EAEC/UPEC/HYBRID/AMBIGUOUS/
+  UNCLASSIFIED/COMMENSAL) with `confidence_tier` + `external_validity` + abstention rules. `--legacy-6class`
+  preserves the original 6-class promise.
+- `cluster_profile` + `marker_hits` — which virulence clusters drove the call (k=15 k-mer-seed coverage
+  over the VirulenceFinder E. coli allele DB; ≥0.80 = confident).
+- `vf_diff` — **canonical VirulenceFinder side-by-side** via real `blastn` over the SAME VF DB: per-gene +
+  per-cluster concordance. **HONESTY:** both callers use the same DB, so `caller_is_independent_baseline:
+  false` + a same-DB caveat ship in every diff — it is an AUDIT of the fast caller, not independent
+  validation. Degrades to `status: unavailable` (never dropped) when `blastn` is absent. Use `--no-vf-diff`
+  to skip.
+
+**BLAST+ for the diff:** install NCBI BLAST+ (`blastn` + `makeblastdb`) and either put it on PATH or set
+`$BLASTN_BIN`. Without it, the resolver still runs fully; only the canonical diff degrades to `unavailable`.
+
+**Marker DB:** `data/virulencefinder_db/virulence_ecoli.fsa` (fetch from the VirulenceFinder Bitbucket DB;
+the CLI prints the exact `curl` command if it's missing). DB checksum is pinned in every provenance record.
+
 ## Phase 1 success criteria
 
 Phase 1 ships when:

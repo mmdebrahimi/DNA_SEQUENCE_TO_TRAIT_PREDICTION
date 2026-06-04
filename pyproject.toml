@@ -1,6 +1,6 @@
 [project]
 name = "dna_decode"
-version = "0.0.1"
+version = "0.1.0"
 description = "Genotype-to-phenotype inference platform — predicts phenotypic traits from genomic DNA sequences with biological interpretability. Phase 1: E. coli antibiotic resistance."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -43,6 +43,11 @@ dependencies = [
     # which silently broke the documented `uv run pytest` flow).
     "pytest>=8",
 ]
+
+# Console entry points. The pathotype v0 resolver is pure-stdlib (no torch/transformers
+# needed at runtime); `dna-pathotype` exposes it as a command after `pip install -e .`.
+[project.scripts]
+dna-pathotype = "dna_decode.pathotype.cli:main"
 
 [project.optional-dependencies]
 # Dev tooling (lint + coverage) not needed for basic test runs
