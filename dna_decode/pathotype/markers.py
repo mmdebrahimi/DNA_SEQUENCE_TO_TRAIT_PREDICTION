@@ -63,7 +63,12 @@ EXPEC_SUPPORT = ["SIDEROPHORES", "CAPSULE_SERUM"]
 # support genes (each >=0.80 coverage) earns an ExPEC_COMPATIBLE LOW_CONFIDENCE call (never
 # CONFIDENT — so confident-supported precision is invariant). K=1 chosen on the 24-genome H4 cohort
 # (rescues JSMY=6-gene + JSPG=traT-only); calls stay below the >=2-strong UPEC CONFIDENT bar.
-# Scope-limit: K=1 is in-sample on N=24 (no external holdout); LOW tier + DEC-module gate bound risk.
+# Scope-limit (UPDATED 2026-06-04 with external validity — research_outputs/expec_rule_external_validity_2026-06-04.md):
+# the LIVE rule is CROSS-AXIS (>=1 iron AND >=1 capsule gene; expec_score.meets_cross_axis_support), NOT flat K=1.
+# Out-of-cohort on N=1,209 independent (isolation-source) Horesh ExPEC: recall ~0.53 (LOWER bound, detection-limited)
+# vs in-sample 0.917; specificity ~0.99 vs intestinal EPEC/ETEC. Conservative (high specificity, modest recall) =
+# right shape for a compatibility resolver + abstention. Deliberately NOT re-tuned on Horesh (detection-limited calls
+# + the refused-overfit discipline). LOW tier + DEC-module gate bound the residual risk.
 EXPEC_SUPPORT_GENE_PREFIXES = list(CLUSTER_MARKERS["SIDEROPHORES"]) + list(CLUSTER_MARKERS["CAPSULE_SERUM"])
 EXPEC_SUPPORT_GENE_K = 1
 
