@@ -68,7 +68,8 @@ Each phase has:
 - **Architecture:** Likely same NT mean-pool + classifier (or regression head if phenotype is continuous). v0 schema extends with `phenotype` field replacing `drug`.
 - **Dataset prerequisite:** Paired DNA + phenotype dataset; ≥50 strains for binary classification, ≥100 for regression.
 - **Falsifier:** AUROC / R² < phenotype-specific threshold → the chosen phenotype isn't captured by NT-frozen mean-pool; architecture needs rework OR the chosen phenotype is genuinely not gene-encoded at the resolution the tool can detect.
-- **Status:** NOT STARTED. T2 memo (this session) scopes candidates.
+- **Status:** **PARTIALLY SHIPPED 2026-06-04.** Pathotype (the T2 top candidate) shipped as a **deterministic VF-marker compatibility resolver v0** (tag `pathotype-v0`; CLI `dna-pathotype`; abstention + provenance + canonical-VF diff), NOT the planned multiclass NT classifier. **The classifier/embedding track is CLOSED for pathotype** — H1 falsified (`research_outputs/horesh-f1-label-provenance-audit-2026-06-04.md`): the only independent labels are isolation-source categories that are intrinsically sampling-confounded (label == sampling context), so no de-confounded discrimination cohort is buildable and any AUROC measures batch, not biology. The deterministic resolver is the honest tool for this phenotype.
+- **REVISED falsifier insight (2026-06-04):** the binding failure mode for Phase 4-style categorical phenotypes is NOT model capability — it is **label provenance**. A phenotype *operationally defined by sampling context* (clinical site / disease presentation) cannot be validated against an embedding classifier, because the label and the batch variable are the same axis. The embedding-upgrade frontier must target phenotypes with **sampling-independent lab-measurement labels** (AMR MIC; quantitative assays), NOT sampling-defined categories.
 
 ### Phase 5 — Multimodal phenotype (DNA + image / DNA + transcriptomics)
 - **Terminal claim:** Decoder takes DNA + one paired phenotype modality (image OR transcriptomics) + produces a paired prediction. v0 schema extends to multi-input.
@@ -167,7 +168,7 @@ Future `/idea-anchor + /project-init` cycles for Phases 4-6 can anchor on the co
 | 1 | Codex pushes outstanding artifacts; tag v0.0-cipro + v0.1-cipro local-only | Awaiting Codex push |
 | 2 | Cef promotion via `plans/Cef_V0_1_Promotion_Slice_Plan.md`; tet/gent gated on EP-1.5 | Cef in flight |
 | 3 | Klebsiella substrate exploration (T3 from this session, NOT executed) | Pre-staging deferred |
-| 4 | Non-AMR bacterial phenotype scoping (T2 from this session, EXECUTING NOW) | T2 memo writing |
+| 4 | Pathotype v0 resolver SHIPPED (tag `pathotype-v0`); classifier track CLOSED (H1 falsified — intrinsic sampling confound). Next non-AMR candidate must have sampling-INDEPENDENT labels. | Resolver shipped 2026-06-04 |
 | 5 | Multimodal dataset survey (T4 from this session, NOT executed) | Pre-staging deferred |
 | 6 | Eukaryotic entry-point scoping (T5 from this session, NOT executed) | Pre-staging deferred |
 
