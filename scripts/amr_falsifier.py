@@ -61,6 +61,9 @@ def main(argv=None) -> int:
     ap.add_argument("--aggregation", choices=["mean", "max", "mean+max"], default="mean")
     ap.add_argument("--kmer-k", type=int, default=8)
     ap.add_argument("--kmer-top-n", type=int, default=10_000)
+    ap.add_argument("--amrfinder-runs", type=Path, default=None,
+                    help="AMRFinder cache root (data/amrfinder_runs) → adds the QRDR/plasmid POINT "
+                         "knowledge baseline (the 'best classical' comparator). Requires all strains cached.")
     ap.add_argument("--output", type=Path, default=None)
     ap.add_argument("--allow-confounded", action="store_true",
                     help="override the de-confound gate (emits a non-promotable diagnostic only)")
@@ -140,8 +143,29 @@ def main(argv=None) -> int:
                                  _ordered(cvk), y.copy(), list(strain_ids), True))
     print(f"[falsifier] k-mer-XGB AUROC={mk.auroc:.3f}")
 
+    # POINT knowledge baseline (the load-bearing 'best classical' for QRDR/plasmid drugs). Only when
+    # --amrfinder-runs is supplied AND every strain has an AMRFinder cache (else the comparison is on
+    # a different N → not a fair paired baseline; we skip with a note rather than mislead).
+    if args.amrfinder_runs:
+        from dna_decode.eval.point_baseline import build_point_matrix
+        accs_in_order = [acc[s] for s in strain_ids]
+        Xp, vocab, present = build_point_matrix(args.amrfinder_runs, accs_in_order, args.drug)
+        if not present.all():
+            print(f"[falsifier] POINT baseline SKIPPED: only {int(present.sum())}/{n} strains have an "
+                  f"AMRFinder cache (run scripts/drug_mechanism_audit.py to completion first).")
+        elif Xp.shape[1] == 0:
+            print("[falsifier] POINT baseline SKIPPED: no QRDR/plasmid features extracted.")
+        else:
+            cvp = leave_one_accession_out_cv(Xp, y, strain_ids, acc, _nt_xgb_train, _nt_xgb_predict, drug=args.drug)
+            mp = compute_metrics(cvp.all_y_true, cvp.all_y_score)
+            results.append(VariantResult("POINT-XGB", float(mp.auroc), float(mp.auprc),
+                                         _ordered(cvp), y.copy(), list(strain_ids), True))
+            print(f"[falsifier] POINT-XGB AUROC={mp.auroc:.3f} ({Xp.shape[1]} QRDR/plasmid features)")
+
     nt_best = max((r for r in results if r.name.startswith("NT")), key=lambda r: r.auroc)
-    kmer = next(r for r in results if r.name == "k-mer-XGB")
+    # 'best classical' = the strongest non-NT comparator present (k-mer and/or POINT).
+    classical = [r for r in results if r.name in ("k-mer-XGB", "POINT-XGB")]
+    kmer = max(classical, key=lambda r: r.auroc)   # the comparator NT must beat
     gap = (nt_best.auroc - kmer.auroc) * 100.0
     # All variants are now in the SAME canonical strain order (via _ordered). Pair element-wise on
     # the strains both variants actually scored (drop NaN from either) — no key-set mismatch.
@@ -194,11 +218,12 @@ def main(argv=None) -> int:
         "## Notes",
         "- De-confound gate is a PRECONDITION (CONFOUNDED cohort → blocked, no verdict).",
         "- CI-aware verdict: point gap >= 3pp AND bootstrap CI lower bound > 0 for a PASS (else NOISY).",
-        "- SCOPE: comparator = k-mer-XGB (bag-of-k-mers) ONLY. A PASS here means 'NT beats the sequence",
-        "  baseline', NOT 'beats best classical / architecture validated'. For cipro the KNOWLEDGE baseline",
-        "  is AMRFinderPlus QRDR POINT (gyrA/parC/parE) mutation features (gene-PRESENCE is near-useless —",
-        "  R+S both carry gyrA); that comparator is a pending ~hrs AMRFinder run. Do not promote the",
-        "  architecture-class claim on this single drug+cohort until POINT + within-lineage diagnostic land.",
+        f"- 'best classical' comparator = **{kmer.name}** ({kmer.auroc:.3f}); "
+        + ("POINT-XGB present = QRDR/plasmid KNOWLEDGE baseline included (the real bar)."
+           if any(r.name == "POINT-XGB" for r in results)
+           else "k-mer (sequence) ONLY — POINT knowledge baseline NOT included; a PASS here is "
+                "'beats bag-of-k-mers', NOT 'beats best classical'. Run with --amrfinder-runs."),
+        "- Single drug + single cohort ⇒ NOT an architecture-class promotion regardless of verdict.",
         "- per-strain scores persisted to the .scores.json sidecar (crash-recovery + within-lineage diagnostics).",
         "- calibrate=False; verify_complete cache integrity = follow-up.",
     ]
