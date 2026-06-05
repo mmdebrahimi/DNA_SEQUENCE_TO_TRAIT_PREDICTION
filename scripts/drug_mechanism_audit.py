@@ -50,7 +50,10 @@ AMRFINDER_DB = str(
     Path(
         os.environ.get(
             "DNA_DECODE_AMRFINDER_DB",
-            "C:/Users/b0652085/dna_decode_stage2/amrfinder_db",
+            # machine-agnostic default: ~/dna_decode_stage2/amrfinder_db resolves on BOTH the
+            # Farshad laptop and the b0652085 workhorse (was hardcoded to the workhorse path —
+            # cross-machine drift that broke the Docker mount on the laptop, 2026-06-05).
+            str(Path.home() / "dna_decode_stage2" / "amrfinder_db"),
         )
     )
 )
