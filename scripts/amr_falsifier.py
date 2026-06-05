@@ -17,7 +17,8 @@ Run (cipro N=147 clean substrate):
   uv run python scripts/amr_falsifier.py --drug ciprofloxacin \
     --cohort data/processed/stage2_n150_cipro_cohort.parquet \
     --nt-cache data/processed/embeddings/nt_n147_cipro.h5
-Exit: 0 PASS · 1 FAIL · 2/3 missing inputs (parked) · 4 CONFOUNDED substrate (blocked) · 5 NOISY.
+Exit: 0 PASS(promotable) · 1 FAIL · 2/3 missing inputs (parked) · 4 CONFOUNDED substrate (blocked) ·
+5 NOISY · 6 NON-PROMOTABLE (WARN screen or --allow-confounded diagnostic — never a clean PASS).
 """
 from __future__ import annotations
 
@@ -84,6 +85,13 @@ def main(argv=None) -> int:
         print(f"[falsifier] BLOCKED (CONFOUNDED_SUBSTRATE) -> {out}; no verdict computed.")
         return 4
 
+    # promotability contract: ONLY a DE_CONFOUNDED screen (and no --allow-confounded override) may
+    # back a promotable PASS. WARN or --allow-confounded → diagnostic run, NON-PROMOTABLE (exit 6).
+    promotable = bool(rep.get("promotable")) and not args.allow_confounded
+    if not promotable:
+        print(f"[falsifier] NON-PROMOTABLE run (cohort screen={rep['verdict']}"
+              f"{'; --allow-confounded override' if args.allow_confounded else ''}) — diagnostic only.")
+
     # --- PRECONDITION 2: inputs present ---
     if not args.nt_cache.exists():
         print(f"PARKED: NT embedding cache not found at {args.nt_cache} (GPU-only: due from the workhorse).",
@@ -127,7 +135,11 @@ def main(argv=None) -> int:
     _, lo, hi, n_eff = paired_bootstrap_ci(kmer.per_strain_true, nt_best.per_strain_scores, kmer.per_strain_scores)
 
     # CI-aware verdict (brainstorm fix): point >= 3pp is necessary; ci_lo > 0 makes it a PASS.
-    if gap >= GATE_THRESHOLD_PP and lo * 100 > 0:
+    # A non-promotable run NEVER returns a clean PASS, regardless of the gap (exit 6).
+    if not promotable:
+        verdict, rc = (f"NON-PROMOTABLE diagnostic (cohort screen {rep['verdict']}): "
+                       f"gap {gap:+.1f}pp, CI [{lo*100:+.1f},{hi*100:+.1f}]pp — not a promotable verdict"), 6
+    elif gap >= GATE_THRESHOLD_PP and lo * 100 > 0:
         verdict, rc = f"PASS (gap {gap:+.1f}pp, CI lo {lo*100:+.1f}>0)", 0
     elif gap >= GATE_THRESHOLD_PP:
         verdict, rc = f"NOISY (gap {gap:+.1f}pp but CI lo {lo*100:+.1f}<=0 — not separable from noise)", 5

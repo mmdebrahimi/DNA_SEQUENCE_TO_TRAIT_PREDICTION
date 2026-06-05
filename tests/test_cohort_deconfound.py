@@ -1,8 +1,9 @@
-"""Tests for the cohort de-confound gate (dna_decode/eval/cohort_deconfound).
+"""Tests for the hardened cohort de-confound gate (dna_decode/eval/cohort_deconfound).
 
-Pure synthetic cases pinning the verdict thresholds, incl. regression pins reproducing the two
-real data points: cef gate_b (1 shared lineage -> CONFOUNDED) and cipro N=147 (6 shared, ~13%
-minority -> DE_CONFOUNDED). Runnable via pytest OR standalone.
+v2 (2026-06-04): within-group label CONTRAST per provenance axis + matched-support floor + 3-state
+promotability contract. Pins: BLOCK on no/thin within-lineage contrast, ADMIT only on real matched
+support with no aliasing secondary axis, WARN (non-promotable) for borderline/secondary-aliased,
+MLST-missing normalization. Runnable via pytest OR standalone.
 """
 import sys
 from pathlib import Path
@@ -13,57 +14,72 @@ from dna_decode.eval.cohort_deconfound import (
 )
 
 
-def test_confounded_disjoint_lineages():
-    # R in lineages A..D, S in E..H -> 0 shared
+def _interleave(n_lineages, r_per, s_per, prefix="L"):
+    """n_lineages each carrying r_per R + s_per S → (labels, lineages)."""
+    labels, lin = [], []
+    for i in range(n_lineages):
+        labels += [1] * r_per + [0] * s_per
+        lin += [f"{prefix}{i}"] * (r_per + s_per)
+    return labels, lin
+
+
+def test_block_disjoint_lineages():
     labels = [1, 1, 1, 1, 0, 0, 0, 0]
     lin = ["A", "B", "C", "D", "E", "F", "G", "H"]
     r = confound_report(labels, lin)
-    assert r["verdict"] == CONFOUNDED and r["shared_lineages"] == 0
+    assert r["verdict"] == CONFOUNDED and r["promotable"] is False
 
 
-def test_confounded_one_shared_like_cef():
-    # mirror cef: many distinct lineages, exactly 1 shared -> CONFOUNDED
+def test_block_one_shared_like_cef():
     labels = [1] * 13 + [0] * 17
     lin = [f"R{i}" for i in range(12)] + ["SH"] + [f"S{i}" for i in range(16)] + ["SH"]
     r = confound_report(labels, lin)
-    assert r["verdict"] == CONFOUNDED and r["shared_lineages"] == 1
+    assert r["verdict"] == CONFOUNDED and r["primary"]["shared_groups"] == 1
 
 
-def test_de_confounded_many_shared_like_cipro():
-    # 6 shared lineages, each with both R and S; minority shared fraction >= 0.10
-    shared = ["L1", "L2", "L3", "L4", "L5", "L6"]
-    labels, lin = [], []
-    for s in shared:                       # one R + one S per shared lineage
-        labels += [1, 0]; lin += [s, s]
-    labels += [1] * 6 + [0] * 40           # plus class-unique tails (keeps minority frac ~0.13)
-    lin += [f"RU{i}" for i in range(6)] + [f"SU{i}" for i in range(40)]
+def test_block_thin_matched_support():
+    # 4 shared lineages (>= min 3) but each only 1R+1S → matched_minority 4 < 5 → BLOCK.
+    labels, lin = _interleave(4, 1, 1)
     r = confound_report(labels, lin)
-    assert r["verdict"] == DE_CONFOUNDED and r["shared_lineages"] == 6
-    assert r["minority_shared_frac"] >= 0.10
+    assert r["verdict"] == CONFOUNDED and r["primary"]["matched_minority"] == 4
 
 
-def test_warn_borderline_shared():
-    # exactly 3 shared lineages with good minority fraction -> WARN (not clean, not confounded)
-    shared = ["L1", "L2", "L3"]
-    labels, lin = [], []
-    for s in shared:
-        labels += [1, 0]; lin += [s, s]
-    labels += [1, 0]; lin += ["RU", "SU"]
+def test_admit_clean():
+    # 6 shared lineages x 2R+2S → shared 6, matched 12; no secondary axis → ADMIT + promotable.
+    labels, lin = _interleave(6, 2, 2)
     r = confound_report(labels, lin)
-    assert r["verdict"] == WARN and r["shared_lineages"] == 3
+    assert r["verdict"] == DE_CONFOUNDED and r["promotable"] is True
 
 
-def test_geography_downgrades_clean_to_warn():
-    # clean lineages (6 shared) but geography perfectly separable -> WARN
-    shared = ["L1", "L2", "L3", "L4", "L5", "L6"]
-    labels, lin, reg = [], [], []
-    for s in shared:
-        labels += [1, 0]; lin += [s, s]; reg += ["USA", "Kenya"]
-    labels += [1] * 6 + [0] * 40
-    lin += [f"RU{i}" for i in range(6)] + [f"SU{i}" for i in range(40)]
-    reg += ["USA"] * 6 + ["Kenya"] * 40
-    r = confound_report(labels, lin, reg)
-    assert r["geo"]["separable"] is True and r["verdict"] == WARN
+def test_warn_secondary_axis_aliases():
+    # primary clean, but country perfectly separable (all R=USA, all S=Kenya) → WARN, non-promotable.
+    labels, lin = _interleave(6, 2, 2)
+    regions = ["USA" if y == 1 else "Kenya" for y in labels]
+    r = confound_report(labels, lin, regions)
+    assert r["verdict"] == WARN and r["promotable"] is False
+
+
+def test_warn_borderline_primary():
+    # 3 shared lineages (>= min 3 but < clean 5) with good matched support → WARN.
+    labels, lin = _interleave(3, 2, 2)
+    r = confound_report(labels, lin)
+    assert r["verdict"] == WARN and r["promotable"] is False
+
+
+def test_missing_mlst_not_credited():
+    # placeholder MLST values must NOT count as a shared lineage.
+    labels = [1, 0, 1, 0]
+    lin = ["unknown", "", None, "nan"]
+    r = confound_report(labels, lin)
+    assert r["verdict"] == CONFOUNDED and r["primary"]["shared_groups"] == 0
+
+
+def test_admit_not_downgraded_by_mixed_secondary():
+    # secondary country present AND mixed (each region has both classes) → stays ADMIT.
+    labels, lin = _interleave(6, 2, 2)
+    regions = ["USA", "Kenya", "USA", "Kenya"] * 6   # both regions carry both labels
+    r = confound_report(labels, lin, regions)
+    assert r["verdict"] == DE_CONFOUNDED and r["promotable"] is True
 
 
 def test_degenerate_single_class():
