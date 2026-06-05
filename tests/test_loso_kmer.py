@@ -157,11 +157,10 @@ class TestKmerXgboostLoSoVocabLeak:
         repeated motif `"GGGGGGGG"` that no other strain has. When LOSO holds out
         `s_unique`, the rebuilt training vocab must exclude that motif.
 
-        Intercepts the `build_kmer_vocabulary` call inside the runner to record
+        Intercepts the per-fold cached vocab builder inside the runner to record
         which vocab was actually used per fold.
         """
         import dna_decode.eval.loso_kmer as lk_mod
-        from dna_decode.models.classical_baselines import build_kmer_vocabulary as real_build
 
         # All other strains: cycled ACGT, no GGGGGGGG.
         # s_unique: starts with 50 G's so "GGGGGGGG" (k=8) shows up many times.
@@ -178,14 +177,18 @@ class TestKmerXgboostLoSoVocabLeak:
 
         captured_vocabs: list[tuple[str, list[str]]] = []
 
-        # We need a hook on build_kmer_vocabulary inside loso_kmer's namespace.
-        # The runner calls vocab = build_kmer_vocabulary(train_seqs, ...) per fold.
-        def spy_build(train_seqs, k=8, top_n=10_000):
-            vocab = real_build(train_seqs, k=k, top_n=top_n)
+        # Hook the per-fold cached vocab builder (2026-06-05 perf refactor: the runner builds
+        # the per-fold vocab via _vocab_from_cache(train_strains, counts_by_strain, top_n) —
+        # train-only, fresh per fold — instead of build_kmer_vocabulary(train_seqs). The
+        # leakage property is unchanged; we spy the new seam.
+        real_vocab_from_cache = lk_mod._vocab_from_cache
+
+        def spy_build(train_strains, counts_by_strain, top_n=10_000):
+            vocab = real_vocab_from_cache(train_strains, counts_by_strain, top_n)
             captured_vocabs.append(("vocab", list(vocab)))
             return vocab
 
-        monkeypatch.setattr(lk_mod, "build_kmer_vocabulary", spy_build)
+        monkeypatch.setattr(lk_mod, "_vocab_from_cache", spy_build)
 
         # Stub the classifier so we don't pay XGBoost cost
         def fake_train(X, y, *, drug_name="", calibrate=True, **kwargs):
@@ -228,19 +231,21 @@ class TestKmerXgboostLoSoVocabLeak:
     def test_vocab_rebuilt_per_fold_not_reused(self, monkeypatch):
         """The runner builds a fresh vocabulary per fold — not once outside the loop.
 
-        Pins that `build_kmer_vocabulary` is invoked exactly `n` times (one per
-        LOSO fold), not once globally.
+        Pins that the per-fold vocab builder is invoked exactly `n` times (one per
+        LOSO fold), not once globally. (2026-06-05: the per-fold seam is now
+        _vocab_from_cache; the per-genome COUNT cache is built once, but the
+        train-only vocab is still rebuilt fresh each fold.)
         """
         import dna_decode.eval.loso_kmer as lk_mod
-        from dna_decode.models.classical_baselines import build_kmer_vocabulary as real_build
 
+        real_vocab_from_cache = lk_mod._vocab_from_cache
         call_count = {"n": 0}
 
-        def counting_build(train_seqs, k=8, top_n=10_000):
+        def counting_build(train_strains, counts_by_strain, top_n=10_000):
             call_count["n"] += 1
-            return real_build(train_seqs, k=k, top_n=top_n)
+            return real_vocab_from_cache(train_strains, counts_by_strain, top_n)
 
-        monkeypatch.setattr(lk_mod, "build_kmer_vocabulary", counting_build)
+        monkeypatch.setattr(lk_mod, "_vocab_from_cache", counting_build)
 
         def fake_train(X, y, *, drug_name="", calibrate=True, **kwargs):
             class _M:
