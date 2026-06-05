@@ -129,10 +129,22 @@ def main(argv=None) -> int:
 
     nt_best = max((r for r in results if r.name.startswith("NT")), key=lambda r: r.auroc)
     kmer = next(r for r in results if r.name == "k-mer-XGB")
-    if nt_best.strain_ids != kmer.strain_ids:
-        raise ValueError("alignment: NT-best vs k-mer strain_ids diverge")
     gap = (nt_best.auroc - kmer.auroc) * 100.0
-    _, lo, hi, n_eff = paired_bootstrap_ci(kmer.per_strain_true, nt_best.per_strain_scores, kmer.per_strain_scores)
+    # ALIGN per-strain scores by strain_id before the paired bootstrap. NT uses
+    # leave_one_accession_out_cv (fold order = accession grouping) while k-mer uses plain LOSO
+    # (fold order = strain_ids input) — same strains, different EMISSION ORDER. AUROC is
+    # order-independent (the 0.914/0.824 stand); only the paired CI needs a common order.
+    nt_by = {s: (sc, t) for s, sc, t in zip(nt_best.strain_ids, nt_best.per_strain_scores, nt_best.per_strain_true)}
+    km_by = {s: (sc, t) for s, sc, t in zip(kmer.strain_ids, kmer.per_strain_scores, kmer.per_strain_true)}
+    common = [s for s in nt_best.strain_ids if s in km_by]
+    if set(nt_by) != set(km_by):
+        only = (set(nt_by) ^ set(km_by))
+        print(f"[falsifier] WARN: NT/k-mer strain sets differ by {len(only)} strain(s); "
+              f"pairing on the {len(common)}-strain intersection.")
+    y_al = np.array([nt_by[s][1] for s in common], dtype=int)
+    nt_al = np.array([nt_by[s][0] for s in common], dtype=np.float32)
+    km_al = np.array([km_by[s][0] for s in common], dtype=np.float32)
+    _, lo, hi, n_eff = paired_bootstrap_ci(y_al, nt_al, km_al)
 
     # CI-aware verdict (brainstorm fix): point >= 3pp is necessary; ci_lo > 0 makes it a PASS.
     # A non-promotable run NEVER returns a clean PASS, regardless of the gap (exit 6).
