@@ -60,6 +60,25 @@ under leakage-safe CV — OR a documented mechanism-class scope-limit (EP-1.5 fi
 NT-mean-pool advantage is absent even on a concentrated mechanism at clean labels → re-evaluate the
 embedding architecture before any further drug.
 
+## ⚠ UPDATE 2026-06-04 — cef cohort is CONFOUNDED; clean substrate is cipro N=147
+
+A `/brainstorm` proved `gate_b_cohort` (cef) is geography/lineage confounded (R≈USA, S≈Africa/India,
+1 shared MLST) → an NT verdict there measures batch, not biology. The cef run is BLOCKED
+(`scripts/cef_falsifier.py` now exits 4 via the new de-confound gate). The prior cef AUROC 0.895 is
+non-citable. See `plans/cef_falsifier_brainstorm.md`.
+
+**New tooling:** `dna_decode/eval/cohort_deconfound.py` (de-confound gate, a PRECONDITION) +
+`scripts/amr_falsifier.py` (drug-agnostic; gate baked in; CI-aware verdict).
+
+**The decisive clean test = cipro N=147** (6 shared R/S lineages → DE_CONFOUNDED). One-file GPU-only ask
+to the workhorse: return `nt_n147_cipro.h5`. Then on the laptop:
+```
+uv run python scripts/amr_falsifier.py --drug ciprofloxacin \
+  --cohort data/processed/stage2_n150_cipro_cohort.parquet \
+  --nt-cache data/processed/embeddings/nt_n147_cipro.h5
+```
+(cipro genomes for the k-mer baseline are public-NCBI fetchable on the laptop, same as cef.)
+
 ## Sequenced next steps (GPU-only split)
 
 ### Workhorse — ONE job (GPU only)
