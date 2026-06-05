@@ -113,38 +113,61 @@ def main(argv=None) -> int:
         return 2
 
     acc = _accession_assignments(cohort, strain_ids)
+    n = len(strain_ids)
+
+    def _ordered(cv):
+        """Scores/labels reordered to the CANONICAL strain_ids index (via held_out_indices).
+        Robust across CV strategies whose held_out_id differs (accession-out keys by accession,
+        LOSO by strain) — all FoldResult.held_out_indices index the SAME strain_ids list, so this
+        makes every variant element-aligned by construction. NaN = strain never scored."""
+        sc = np.full(n, np.nan, dtype=np.float32)
+        for f in cv.folds:
+            for idx, s in zip(f.held_out_indices, f.y_score):
+                sc[idx] = s
+        return sc
+
     results = []
     for name, tr, pr, gb in [("NT-XGBoost", _nt_xgb_train, _nt_xgb_predict, True),
                              ("NT-logreg", _nt_logreg_train, _nt_logreg_predict, True)]:
         cv = leave_one_accession_out_cv(X_nt, y, strain_ids, acc, tr, pr, drug=args.drug)
         m = compute_metrics(cv.all_y_true, cv.all_y_score)
         results.append(VariantResult(name, float(m.auroc), float(m.auprc),
-                                     cv.all_y_score, cv.all_y_true, cv.strain_ids, gb))
+                                     _ordered(cv), y.copy(), list(strain_ids), gb))
         print(f"[falsifier] {name} AUROC={m.auroc:.3f}")
     cvk = run_kmer_xgboost_loso(seqs, labels_by, strain_ids, drug=args.drug, k=args.kmer_k, top_n=args.kmer_top_n)
     mk = compute_metrics(cvk.all_y_true, cvk.all_y_score)
     results.append(VariantResult("k-mer-XGB", float(mk.auroc), float(mk.auprc),
-                                 cvk.all_y_score, cvk.all_y_true, cvk.strain_ids, True))
+                                 _ordered(cvk), y.copy(), list(strain_ids), True))
     print(f"[falsifier] k-mer-XGB AUROC={mk.auroc:.3f}")
 
     nt_best = max((r for r in results if r.name.startswith("NT")), key=lambda r: r.auroc)
     kmer = next(r for r in results if r.name == "k-mer-XGB")
     gap = (nt_best.auroc - kmer.auroc) * 100.0
-    # ALIGN per-strain scores by strain_id before the paired bootstrap. NT uses
-    # leave_one_accession_out_cv (fold order = accession grouping) while k-mer uses plain LOSO
-    # (fold order = strain_ids input) — same strains, different EMISSION ORDER. AUROC is
-    # order-independent (the 0.914/0.824 stand); only the paired CI needs a common order.
-    nt_by = {s: (sc, t) for s, sc, t in zip(nt_best.strain_ids, nt_best.per_strain_scores, nt_best.per_strain_true)}
-    km_by = {s: (sc, t) for s, sc, t in zip(kmer.strain_ids, kmer.per_strain_scores, kmer.per_strain_true)}
-    common = [s for s in nt_best.strain_ids if s in km_by]
-    if set(nt_by) != set(km_by):
-        only = (set(nt_by) ^ set(km_by))
-        print(f"[falsifier] WARN: NT/k-mer strain sets differ by {len(only)} strain(s); "
-              f"pairing on the {len(common)}-strain intersection.")
-    y_al = np.array([nt_by[s][1] for s in common], dtype=int)
-    nt_al = np.array([nt_by[s][0] for s in common], dtype=np.float32)
-    km_al = np.array([km_by[s][0] for s in common], dtype=np.float32)
+    # All variants are now in the SAME canonical strain order (via _ordered). Pair element-wise on
+    # the strains both variants actually scored (drop NaN from either) — no key-set mismatch.
+    mask = np.isfinite(nt_best.per_strain_scores) & np.isfinite(kmer.per_strain_scores)
+    n_paired = int(mask.sum())
+    if n_paired < n:
+        print(f"[falsifier] note: pairing on {n_paired}/{n} strains scored by both variants")
+    y_al = y[mask]
+    nt_al = nt_best.per_strain_scores[mask]
+    km_al = kmer.per_strain_scores[mask]
     _, lo, hi, n_eff = paired_bootstrap_ci(y_al, nt_al, km_al)
+
+    # persist per-strain scores (brainstorm: never lose a ~20-min run; enables within-lineage diagnostics)
+    scores_path = (args.output.with_suffix(".scores.json") if args.output
+                   else ROOT / f"wiki/{args.drug}_falsifier_{date.today().isoformat()}.scores.json")
+    import json as _json
+    mlst_by_strain = {s.strain_id: str(getattr(s, "mlst", None)) for s in cohort.strains}
+    scores_path.parent.mkdir(parents=True, exist_ok=True)
+    scores_path.write_text(_json.dumps({
+        "drug": args.drug, "strain_ids": list(strain_ids), "y_true": [int(v) for v in y],
+        "mlst": [mlst_by_strain.get(s) for s in strain_ids],  # aligned to strain_ids order
+        "scores": {r.name: [None if not np.isfinite(v) else float(v) for v in r.per_strain_scores]
+                   for r in results},
+        "auroc": {r.name: r.auroc for r in results},
+    }, indent=2), encoding="utf-8")
+    print(f"[falsifier] per-strain scores -> {scores_path}")
 
     # CI-aware verdict (brainstorm fix): point >= 3pp is necessary; ci_lo > 0 makes it a PASS.
     # A non-promotable run NEVER returns a clean PASS, regardless of the gap (exit 6).
@@ -164,14 +187,19 @@ def main(argv=None) -> int:
         f"**De-confound gate:** `{render_report(rep)}`",
         f"**Cohort:** `{args.cohort}` (N={len(y)}; {n_r}R/{n_s}S) · pooling {args.aggregation} · CV leave_one_accession_out",
         f"**Best NT:** {nt_best.name} {nt_best.auroc:.3f} · **k-mer-XGB:** {kmer.auroc:.3f} · **gap {gap:+.1f}pp**",
-        f"**95% bootstrap CI on gap:** [{lo*100:+.1f}, {hi*100:+.1f}]pp (eff {n_eff}/1000)",
+        f"**95% bootstrap CI on gap:** [{lo*100:+.1f}, {hi*100:+.1f}]pp (eff {n_eff}/1000; paired on {n_paired}/{n} strains)",
         f"**VERDICT:** {verdict}", "",
         "| Variant | AUROC | AUPRC |", "|---|---:|---:|",
         *[f"| {r.name} | {r.auroc:.3f} | {r.auprc:.3f} |" for r in results], "",
         "## Notes",
         "- De-confound gate is a PRECONDITION (CONFOUNDED cohort → blocked, no verdict).",
         "- CI-aware verdict: point gap >= 3pp AND bootstrap CI lower bound > 0 for a PASS (else NOISY).",
-        "- Classical comparator = k-mer-XGB; AMRFinder gene-presence baseline is a follow-up (stronger for concentrated mechanisms).",
+        "- SCOPE: comparator = k-mer-XGB (bag-of-k-mers) ONLY. A PASS here means 'NT beats the sequence",
+        "  baseline', NOT 'beats best classical / architecture validated'. For cipro the KNOWLEDGE baseline",
+        "  is AMRFinderPlus QRDR POINT (gyrA/parC/parE) mutation features (gene-PRESENCE is near-useless —",
+        "  R+S both carry gyrA); that comparator is a pending ~hrs AMRFinder run. Do not promote the",
+        "  architecture-class claim on this single drug+cohort until POINT + within-lineage diagnostic land.",
+        "- per-strain scores persisted to the .scores.json sidecar (crash-recovery + within-lineage diagnostics).",
         "- calibrate=False; verify_complete cache integrity = follow-up.",
     ]
     out.parent.mkdir(parents=True, exist_ok=True)
