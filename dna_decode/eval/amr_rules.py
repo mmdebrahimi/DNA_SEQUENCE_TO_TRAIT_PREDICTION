@@ -71,8 +71,8 @@ DRUG_RULE: dict[str, dict] = {
                       "validated": "N=60 acc 0.933/sens 0.962/spec 0.912 (extended-spectrum bla only)"},
     "tetracycline":  {"threshold": 1, "subclass_any": None,
                       "validated": "N=12 acc 0.833/sens 1.0/spec 0.667 (acquired tet genes; small N)"},
-    "gentamicin":    {"threshold": 1, "subclass_any": None,
-                      "validated": "NOT VALIDATED — no cohort yet (acquired aminoglycoside-modifying genes; threshold=1 by mechanism analogy)"},
+    "gentamicin":    {"threshold": 1, "subclass_any": frozenset({"GENTAMICIN"}),
+                      "validated": "N=128 acc 0.945/sens 0.893/spec 0.96 (GENTAMICIN-subclass only; aph/aadA streptomycin-kanamycin genes excluded)"},
 }
 
 
@@ -114,9 +114,9 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
         boundary_note = (f" {n} determinant present (below the >={resistance_threshold} threshold; "
                          f"single-determinant strains are usually low-level/susceptible but ~12% were R).")
     refine = cfg["subclass_any"]
-    refine_note = (f" ceftriaxone uses an extended-spectrum subclass refinement "
-                   f"({'/'.join(sorted(refine))}); plain BETA-LACTAM (blaTEM-1) is excluded as "
-                   f"ampicillin-R-not-ceftriaxone-R." if refine else "")
+    refine_note = (f" {drug} counts only determinants whose AMRFinder Subclass indicates "
+                   f"{'/'.join(sorted(refine))} activity (broader-class genes that don't confer "
+                   f"{drug} resistance are excluded)." if refine else "")
     return {
         "prediction": pred,
         "confidence": conf,

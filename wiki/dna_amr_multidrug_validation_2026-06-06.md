@@ -1,9 +1,9 @@
-# dna-amr multi-drug validation — cef + tet — 2026-06-06
+# dna-amr multi-drug validation — cef + tet + gent — 2026-06-06
 
 > Option-C ("double down on what works"): extend the cipro-validated deterministic AMR caller to
-> ceftriaxone + tetracycline using cached AMRFinder runs, with per-drug calibrated rules baked into
-> `dna_decode/eval/amr_rules.py::DRUG_RULE`. Mechanism features, NOT embeddings (per
-> `plans/AMR_embedding_niche_decision_2026-06-05.md`).
+> ceftriaxone + tetracycline + gentamicin using cached AMRFinder runs, with per-drug calibrated rules
+> baked into `dna_decode/eval/amr_rules.py::DRUG_RULE`. Mechanism features, NOT embeddings (per
+> `plans/AMR_embedding_niche_decision_2026-06-05.md`). **All 4 drugs now validated.**
 
 ## Result (cached BV-BRC cohorts, no Docker — `evaluate_cohort`)
 
@@ -13,6 +13,12 @@
 | **ceftriaxone** | gate_b (60: 26R/34S) | **threshold=1 + extended-spectrum subclass** | **0.933** | **0.962** | **0.912** |
 | ceftriaxone | gate_b_mini_cef (12) | same | 1.000 | 1.000 | 1.000 |
 | **tetracycline** | gate_b_mini_tet (12: 6R/6S) | threshold=1, class (acquired genes) | **0.833** | **1.000** | **0.667** |
+| **gentamicin** | pooled (128: 28R/100S) | **threshold=1 + GENTAMICIN-subclass** | **0.945** | **0.893** | **0.960** |
+
+The cef + gent results share ONE mechanism: a broad AMR class (BETA-LACTAM / AMINOGLYCOSIDE) over-calls
+because it counts genes conferring resistance to OTHER members of the class. AMRFinder's **Subclass**
+field is the drug-specific discriminator — refine to the drug's own subclass token (CEPHALOSPORIN/
+CARBAPENEM for ceftriaxone; GENTAMICIN for gentamicin). Same one-line fix, +0.4 spec each.
 
 ## The ceftriaxone fix (the load-bearing finding)
 
@@ -44,7 +50,8 @@ Fix: for ceftriaxone, count only determinants whose Subclass ∋ {CEPHALOSPORIN,
 - **ciprofloxacin** — threshold 2, no refinement (QRDR point-mutations need ≥2 hits). Unchanged.
 - **ceftriaxone** — threshold 1 + extended-spectrum subclass refinement.
 - **tetracycline** — threshold 1, no refinement (acquired tet genes; N=12, small — provisional).
-- **gentamicin** — threshold 1 by mechanism analogy, **NOT cohort-validated** (no cohort yet).
+- **gentamicin** — threshold 1 + GENTAMICIN-subclass refinement (excludes aph/aadA streptomycin-kanamycin
+  genes that don't confer gentamicin-R) — N=128 acc 0.945.
 
 `call_resistance(main_tsv, drug)` now auto-selects the per-drug threshold + refinement; pass an explicit
 `resistance_threshold` to override.

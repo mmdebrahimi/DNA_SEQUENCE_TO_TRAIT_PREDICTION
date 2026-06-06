@@ -118,6 +118,60 @@ def test_tet_single_acquired_gene_is_resistant():
     assert c["prediction"] == "R" and c["n_determinants"] == 1
 
 
+def test_gent_subclass_excludes_non_gentamicin_aminoglycoside():
+    # aph(3')-Ia (Subclass KANAMYCIN/NEOMYCIN) + aadA (STREPTOMYCIN) confer aminoglycoside-R but NOT
+    # gentamicin-R → must NOT be counted for gentamicin.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("aph(3')-Ia", "AMINOGLYCOSIDE", "KANAMYCIN/NEOMYCIN"),
+                                   ("aadA1", "AMINOGLYCOSIDE", "STREPTOMYCIN")])
+        c = call_resistance(m, "gentamicin")
+    assert c["prediction"] == "S" and c["n_determinants"] == 0
+
+
+def test_gent_subclass_counts_aac3_at_threshold_1():
+    # aac(3)-IIa (Subclass GENTAMICIN) is the gentamicin-conferring family → R at threshold 1.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("aac(3)-IIa", "AMINOGLYCOSIDE", "GENTAMICIN"),
+                                   ("aph(3')-Ia", "AMINOGLYCOSIDE", "KANAMYCIN/NEOMYCIN")])
+        c = call_resistance(m, "gentamicin")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+    assert c["determinants"][0]["symbol"] == "aac(3)-IIa"
+
+
+def _gent_cohort_pairs(root):
+    from dna_decode.data.cohort import load_cohort
+    import glob
+    runs = root / "data/amrfinder_runs"
+    pooled = {}
+    for cp in glob.glob(str(root / "data/processed/*.parquet")):
+        try:
+            c = load_cohort(cp)
+        except Exception:
+            continue
+        for s in c.strains:
+            k = [k for k in s.ast_labels if k.lower() == "gentamicin"]
+            if k and (runs / s.assembly_accession / "main.tsv").exists():
+                pooled[s.assembly_accession] = int(s.ast_labels[k[0]])
+    return list(pooled.items())
+
+
+def test_gent_cohort_opchars_regression():
+    """Pin pooled gentamicin op-chars (N=128: acc 0.945 with GENTAMICIN-subclass refinement).
+    Skips cleanly if data/ absent."""
+    root = Path(__file__).resolve().parent.parent
+    if not (root / "data/amrfinder_runs").exists():
+        print("SKIP gent cohort op-chars (data/ not present)")
+        return
+    pairs = _gent_cohort_pairs(root)
+    if len(pairs) < 100:
+        print(f"SKIP gent cohort op-chars (only {len(pairs)} cached)")
+        return
+    r = evaluate_cohort(root / "data/amrfinder_runs", pairs, "gentamicin")
+    assert r["accuracy"] >= 0.90, r        # validated 0.945
+    assert r["specificity"] >= 0.90, r     # validated 0.96 (the refinement's payoff)
+    print(f"gent cohort op-chars OK: {r}")
+
+
 def _cef_cohort_pairs(root):
     from dna_decode.data.cohort import load_cohort
     cohort_p = root / "data/processed/gate_b_cohort.parquet"

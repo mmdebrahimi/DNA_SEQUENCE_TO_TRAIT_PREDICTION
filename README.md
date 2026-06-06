@@ -169,7 +169,7 @@ genes/mutations that drove it + provenance — biologically interpretable, not e
 | Command | Trait | What it reports | Validation |
 |---|---|---|---|
 | `dna-pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) | virulence-cluster compatibility call + abstention + canonical-VirulenceFinder diff | compatibility resolver; ExPEC/EPEC/ETEC supported, rest documented scope-limit |
-| `dna-amr` | antibiotic resistance (R/S) — cipro / cef / tet (gent unvalidated) | R/S call + the curated AMRFinder resistance determinants driving it (e.g. `gyrA_S83L`, `blaCTX-M-15`) | **cipro** N=147 acc 0.939 (held-out N=29 acc 0.862, externally validated); **cef** N=60 acc 0.933 (extended-spectrum bla); **tet** N=12 acc 0.833 (small N). Per-drug rules in `amr_rules.py::DRUG_RULE`; `wiki/dna_amr_multidrug_validation_2026-06-06.md` |
+| `dna-amr` | antibiotic resistance (R/S) — cipro / cef / tet / gent | R/S call + the curated AMRFinder resistance determinants driving it (e.g. `gyrA_S83L`, `blaCTX-M-15`, `aac(3)-IIa`) | **cipro** N=147 acc 0.939 (held-out N=29 acc 0.862, externally validated); **cef** N=60 acc 0.933; **gent** N=128 acc 0.945; **tet** N=12 acc 0.833 (small N). Per-drug rules in `amr_rules.py::DRUG_RULE`; `wiki/dna_amr_multidrug_validation_2026-06-06.md` |
 
 ```bash
 uv run dna-pathotype path/to/assembly.fna --sample-id MY_STRAIN

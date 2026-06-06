@@ -10,13 +10,16 @@ to a decisive conclusion and the project committed to deterministic, interpretab
 decoders as the shipping path.
 
 ### Added
-- **Multi-drug deterministic AMR caller** (`dna-amr`). Extended from cipro-only to **ceftriaxone +
-  tetracycline**, with per-drug validated rules baked into `dna_decode/eval/amr_rules.py::DRUG_RULE`:
+- **Multi-drug deterministic AMR caller** (`dna-amr`). Extended from cipro-only to **all 4 drugs**, with
+  per-drug validated rules baked into `dna_decode/eval/amr_rules.py::DRUG_RULE`:
   - ciprofloxacin — threshold 2 (QRDR point-mutations) — N=147 acc 0.939.
   - ceftriaxone — threshold 1 + **extended-spectrum subclass refinement** (CEPHALOSPORIN/CARBAPENEM;
     excludes intrinsic blaTEM-1/blaEC that are ampicillin-R not ceftriaxone-R) — N=60 acc 0.933.
   - tetracycline — threshold 1 (acquired tet genes) — N=12 acc 0.833 (small N, provisional).
-  - gentamicin — threshold 1 by mechanism analogy, **not yet cohort-validated** (flagged in output).
+  - gentamicin — threshold 1 + **GENTAMICIN-subclass refinement** (excludes aph/aadA
+    streptomycin-kanamycin genes that don't confer gentamicin-R) — N=128 acc 0.945.
+  - General fix: a broad AMR class over-calls (cef spec 0.41, gent spec 0.39) because it counts genes for
+    OTHER class members; AMRFinder's Subclass field is the drug-specific discriminator. One-line refinement.
   - `call_resistance(tsv, drug)` now auto-selects the per-drug rule; explicit threshold still overrides.
   - Validation: `wiki/dna_amr_multidrug_validation_2026-06-06.md`.
 - **De-confound gate** (`dna_decode/eval/cohort_deconfound.py`) — within-lineage label-contrast
