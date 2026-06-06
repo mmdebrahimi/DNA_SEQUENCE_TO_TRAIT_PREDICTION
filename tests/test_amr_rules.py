@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from dna_decode.eval.amr_rules import call_resistance, evaluate_cohort
+from dna_decode.eval.amr_rules import DRUG_RULE, call_resistance, evaluate_cohort, rule_for
 
 _HEADER = ("Protein id\tContig id\tStart\tStop\tStrand\tElement symbol\tElement name\tScope\tType\t"
            "Subtype\tClass\tSubclass\tMethod\tTarget length\tReference sequence length\t"
@@ -72,6 +72,83 @@ def test_susceptible_when_no_quinolone_determinant():
 def test_indeterminate_when_main_missing():
     c = call_resistance(Path("/nonexistent/main.tsv"), "ciprofloxacin")
     assert c["prediction"] == "INDETERMINATE"
+
+
+def test_per_drug_rule_config():
+    # the validated per-drug config: cipro needs 2 (QRDR), cef/tet need 1; cef has subclass refinement.
+    assert rule_for("ciprofloxacin")["threshold"] == 2
+    assert rule_for("ceftriaxone")["threshold"] == 1
+    assert rule_for("tetracycline")["threshold"] == 1
+    assert rule_for("ceftriaxone")["subclass_any"] is not None
+    assert rule_for("ciprofloxacin")["subclass_any"] is None
+    # unconfigured drug falls back to threshold 2, no refinement
+    assert rule_for("nonexistent-drug")["threshold"] == 2
+
+
+def test_cef_extended_spectrum_excludes_narrow_beta_lactam():
+    # blaTEM-1 (Subclass BETA-LACTAM) is ampicillin-R, NOT ceftriaxone-R → must NOT be counted for cef.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaTEM-1", "BETA-LACTAM", "BETA-LACTAM")])
+        c = call_resistance(m, "ceftriaxone")
+    assert c["prediction"] == "S" and c["n_determinants"] == 0
+
+
+def test_cef_extended_spectrum_counts_esbl_at_threshold_1():
+    # blaCTX-M-15 (Subclass CEPHALOSPORIN) is a real 3rd-gen-cephalosporin ESBL → cef R at threshold 1.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN"),
+                                   ("blaTEM-1", "BETA-LACTAM", "BETA-LACTAM")])
+        c = call_resistance(m, "ceftriaxone")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+    assert c["determinants"][0]["symbol"] == "blaCTX-M-15"   # narrow blaTEM excluded from report
+
+
+def test_cef_carbapenemase_counts():
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaNDM-5", "BETA-LACTAM", "CARBAPENEM")])
+        c = call_resistance(m, "ceftriaxone")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+
+
+def test_tet_single_acquired_gene_is_resistant():
+    # tetracycline is acquired-gene (one tet(A) = R) → threshold 1 by default.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("tet(A)", "TETRACYCLINE", "TETRACYCLINE")])
+        c = call_resistance(m, "tetracycline")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+
+
+def _cef_cohort_pairs(root):
+    from dna_decode.data.cohort import load_cohort
+    cohort_p = root / "data/processed/gate_b_cohort.parquet"
+    if not cohort_p.exists():
+        return None
+    c = load_cohort(str(cohort_p))
+    return [(s.assembly_accession, int(s.ast_labels[k[0]]))
+            for s in c.strains
+            for k in [[k for k in s.ast_labels if k.lower() == "ceftriaxone"]] if k]
+
+
+def test_cef_cohort_opchars_regression():
+    """Pin the cef extended-spectrum deterministic-rule op-chars on gate_b_cohort (N=60: acc 0.933).
+    Skips cleanly if data/ is absent (gitignored)."""
+    root = Path(__file__).resolve().parent.parent
+    runs = root / "data/amrfinder_runs"
+    if not runs.exists():
+        print("SKIP cef cohort op-chars (data/ not present)")
+        return
+    pairs = _cef_cohort_pairs(root)
+    if not pairs:
+        print("SKIP cef cohort op-chars (cohort absent)")
+        return
+    r = evaluate_cohort(runs, pairs, "ceftriaxone")
+    if r["n"] < 50:
+        print(f"SKIP cef cohort op-chars (only {r['n']} cached)")
+        return
+    assert r["accuracy"] >= 0.88, r        # validated 0.933
+    assert r["sensitivity"] >= 0.90, r     # validated 0.962
+    assert r["specificity"] >= 0.85, r     # validated 0.912
+    print(f"cef cohort op-chars OK: {r}")
 
 
 def test_cohort_opchars_regression():

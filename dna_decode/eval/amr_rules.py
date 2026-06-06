@@ -20,14 +20,23 @@ from pathlib import Path
 from dna_decode.data.mic_tiers import amrfinder_classes_for
 
 
-def cipro_determinants_from_main(main_tsv: Path, drug: str) -> list[dict]:
+def cipro_determinants_from_main(main_tsv: Path, drug: str,
+                                 subclass_any: frozenset | None = None) -> list[dict]:
     """Return the curated AMRFinder determinants (main.tsv rows) relevant to `drug`.
 
     A row is drug-relevant iff any token of its Class or Subclass matches the drug's AMRFinder class set
     (mic_tiers.amrfinder_classes_for) — case-insensitive substring on the '/'-joined multi-class strings
     AMRFinder emits (e.g. 'AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN'). Each returned dict carries the
-    element symbol + name + class for transparent reporting."""
+    element symbol + name + class for transparent reporting.
+
+    `subclass_any` (drug-specific REFINEMENT, e.g. ceftriaxone): when provided, a class-matched row is
+    kept ONLY if its Subclass contains one of these tokens. This is how ceftriaxone separates EXTENDED-
+    spectrum determinants (Subclass CEPHALOSPORIN/CARBAPENEM — real 3rd-gen-cephalosporin resistance:
+    blaCTX-M, blaCMY, blaNDM…) from intrinsic/narrow-spectrum BETA-LACTAM (blaTEM-1, blaEC) that confer
+    ampicillin-R but NOT ceftriaxone-R. Validated: the broad class match gave cef spec 0.41; the
+    extended-spectrum refinement gives acc 0.933 / sens 0.962 / spec 0.912 on N=60 (see DRUG_RULE)."""
     classes = {c.upper() for c in amrfinder_classes_for(drug)}
+    refine = {t.upper() for t in subclass_any} if subclass_any else None
     out: list[dict] = []
     p = Path(main_tsv)
     if not p.exists():
@@ -35,36 +44,65 @@ def cipro_determinants_from_main(main_tsv: Path, drug: str) -> list[dict]:
     for r in csv.DictReader(p.open(encoding="utf-8"), delimiter="\t"):
         cls = (r.get("Class") or "").upper()
         sub = (r.get("Subclass") or "").upper()
-        if any(c in cls or c in sub for c in classes):
-            out.append({
-                "symbol": (r.get("Element symbol") or "").strip(),
-                "name": (r.get("Element name") or "").strip(),
-                "class": r.get("Class") or "", "subclass": r.get("Subclass") or "",
-                "pct_identity": r.get("% Identity to reference"),
-            })
+        if not any(c in cls or c in sub for c in classes):
+            continue
+        if refine is not None and not any(t in sub for t in refine):
+            continue
+        out.append({
+            "symbol": (r.get("Element symbol") or "").strip(),
+            "name": (r.get("Element name") or "").strip(),
+            "class": r.get("Class") or "", "subclass": r.get("Subclass") or "",
+            "pct_identity": r.get("% Identity to reference"),
+        })
     return out
 
 
 _DEFAULT_THRESHOLD = 2  # cipro-validated: clinical fluoroquinolone-R needs multiple QRDR hits (see below)
 
+# Per-drug deterministic-rule config (validated on cached BV-BRC cohorts, 2026-06-06). Each entry:
+#   threshold          : min #curated determinants for an R call
+#   subclass_any       : Subclass-refinement tokens (None = match on the broad drug class set)
+#   validated          : op-char provenance string
+# Drugs absent here fall back to (_DEFAULT_THRESHOLD, no refinement).
+DRUG_RULE: dict[str, dict] = {
+    "ciprofloxacin": {"threshold": 2, "subclass_any": None,
+                      "validated": "N=147 acc 0.939/sens 0.931/spec 0.947 (QRDR point-mutations: >=2 hits)"},
+    "ceftriaxone":   {"threshold": 1, "subclass_any": frozenset({"CEPHALOSPORIN", "CARBAPENEM"}),
+                      "validated": "N=60 acc 0.933/sens 0.962/spec 0.912 (extended-spectrum bla only)"},
+    "tetracycline":  {"threshold": 1, "subclass_any": None,
+                      "validated": "N=12 acc 0.833/sens 1.0/spec 0.667 (acquired tet genes; small N)"},
+    "gentamicin":    {"threshold": 1, "subclass_any": None,
+                      "validated": "NOT VALIDATED — no cohort yet (acquired aminoglycoside-modifying genes; threshold=1 by mechanism analogy)"},
+}
 
-def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int = _DEFAULT_THRESHOLD) -> dict:
+
+def rule_for(drug: str) -> dict:
+    """Return the per-drug rule config (threshold + subclass refinement + provenance)."""
+    return DRUG_RULE.get(drug.lower(), {"threshold": _DEFAULT_THRESHOLD, "subclass_any": None,
+                                        "validated": "unconfigured drug — default threshold=2, no refinement"})
+
+
+def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None = None) -> dict:
     """Deterministic, interpretable R/S call for one genome's AMRFinder main.tsv.
 
-    Rule (tiered, count-based): R iff #curated drug-relevant determinants >= `resistance_threshold`.
-    Default threshold 2 — cipro-validated (N=147: acc 0.939 / sens 0.931 / spec 0.947); clinical
-    fluoroquinolone resistance typically needs >=2 QRDR hits (e.g. gyrA + parC), so a single determinant
-    is usually low-level/susceptible (cohort: 15/17 single-determinant strains were S). The earlier
-    >=1 rule over-called (spec 0.75). NOTE: acquired-gene-dominant drugs (e.g. cef plasmid beta-lactamases,
-    where ONE blaCTX-M = resistance) should pass `resistance_threshold=1`; 2 is the QRDR/point-mutation
-    default, not universal. Confidence: HIGH if n>=threshold+1 OR n==0; MODERATE near the boundary
-    (threshold-1 <= n <= threshold). Absent main.tsv → 'INDETERMINATE'."""
+    Rule (tiered, count-based): R iff #curated drug-relevant determinants >= threshold. When
+    `resistance_threshold` is None the PER-DRUG validated config (DRUG_RULE) supplies both the threshold
+    and any Subclass refinement; pass an int to override the threshold explicitly. Per-drug op-chars:
+      - ciprofloxacin: threshold 2 (QRDR point-mutations need >=2 hits) — N=147 acc 0.939.
+      - ceftriaxone:   threshold 1 + EXTENDED-SPECTRUM subclass refinement (CEPHALOSPORIN/CARBAPENEM only;
+                       plain BETA-LACTAM like blaTEM-1 is ampicillin-R not ceftriaxone-R) — N=60 acc 0.933.
+      - tetracycline:  threshold 1 (acquired tet genes) — N=12 acc 0.833 (small N).
+      - gentamicin:    threshold 1 by mechanism analogy — NOT yet cohort-validated.
+    Confidence: HIGH if n>=threshold+1 OR n==0; MODERATE near the boundary. Absent main.tsv → INDETERMINATE."""
     p = Path(main_tsv)
     if not p.exists():
         return {"prediction": "INDETERMINATE", "confidence": None, "n_determinants": 0,
                 "determinants": [], "rule": "amrfinder_curated_determinant_v1", "caveat":
                 "AMRFinder main.tsv not found for this genome"}
-    dets = cipro_determinants_from_main(p, drug)
+    cfg = rule_for(drug)
+    if resistance_threshold is None:
+        resistance_threshold = cfg["threshold"]
+    dets = cipro_determinants_from_main(p, drug, subclass_any=cfg["subclass_any"])
     n = len(dets)
     pred = "R" if n >= resistance_threshold else "S"
     if n == 0 or n >= resistance_threshold + 1:
@@ -75,22 +113,25 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int = _DEFA
     if pred == "S" and n == resistance_threshold - 1 and n >= 1:
         boundary_note = (f" {n} determinant present (below the >={resistance_threshold} threshold; "
                          f"single-determinant strains are usually low-level/susceptible but ~12% were R).")
+    refine = cfg["subclass_any"]
+    refine_note = (f" ceftriaxone uses an extended-spectrum subclass refinement "
+                   f"({'/'.join(sorted(refine))}); plain BETA-LACTAM (blaTEM-1) is excluded as "
+                   f"ampicillin-R-not-ceftriaxone-R." if refine else "")
     return {
         "prediction": pred,
         "confidence": conf,
         "n_determinants": n,
         "determinants": dets,
         "resistance_threshold": resistance_threshold,
-        "rule": f"amrfinder_curated_determinant_v1 (R iff >={resistance_threshold} curated drug-class determinants)",
-        "caveat": ("interpretable deterministic call from AMRFinder's curated database. cipro N=147 "
-                   "op-chars at threshold=2: acc 0.939 / sens 0.931 / spec 0.947 (≈ the POINT-XGB 0.943 "
-                   "classifier, but a transparent rule). ~7% of R strains carry <2 detected determinants "
-                   "(under-call). Acquired-gene drugs may need threshold=1." + boundary_note),
+        "rule": (f"amrfinder_curated_determinant_v1 (R iff >={resistance_threshold} curated "
+                 f"{'extended-spectrum ' if refine else ''}drug-class determinants)"),
+        "caveat": ("interpretable deterministic call from AMRFinder's curated database. Per-drug validated "
+                   f"op-chars: {cfg['validated']}." + refine_note + boundary_note),
     }
 
 
 def evaluate_cohort(runs_root: Path, accession_label_pairs: list[tuple[str, int]], drug: str,
-                    resistance_threshold: int = _DEFAULT_THRESHOLD) -> dict:
+                    resistance_threshold: int | None = None) -> dict:
     """Operating characteristics of the deterministic rule over a labelled cohort.
     `accession_label_pairs` = [(assembly_accession, 0|1), ...]. Returns counts + acc/sens/spec."""
     tp = fp = tn = fn = na = 0
