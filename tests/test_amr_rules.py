@@ -28,27 +28,37 @@ def _write_main(tmp: Path, rows: list[tuple[str, str, str]]) -> Path:
     return p
 
 
-def test_resistant_on_quinolone_determinant():
+def test_single_determinant_is_susceptible_default_threshold():
+    # default threshold=2: a single quinolone determinant → S (boundary), not R (the v1 over-call fix).
     with tempfile.TemporaryDirectory() as td:
-        m = _write_main(Path(td), [("gyrA_S83L", "QUINOLONE", "QUINOLONE")])
+        m = _write_main(Path(td), [("qnrS1", "QUINOLONE", "QUINOLONE")])
         c = call_resistance(m, "ciprofloxacin")
-    assert c["prediction"] == "R" and c["n_determinants"] == 1 and c["confidence"] == "MODERATE"
+    assert c["prediction"] == "S" and c["n_determinants"] == 1 and c["confidence"] == "MODERATE"
 
 
-def test_high_confidence_on_two_determinants():
+def test_resistant_on_two_determinants():
     with tempfile.TemporaryDirectory() as td:
         m = _write_main(Path(td), [("gyrA_S83L", "QUINOLONE", "QUINOLONE"),
                                    ("parC_S80I", "QUINOLONE", "QUINOLONE")])
         c = call_resistance(m, "ciprofloxacin")
-    assert c["prediction"] == "R" and c["confidence"] == "HIGH" and c["n_determinants"] == 2
+    assert c["prediction"] == "R" and c["n_determinants"] == 2
+
+
+def test_threshold_1_for_acquired_gene_drugs():
+    # acquired-gene drugs (one determinant = resistance) override threshold=1.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("qnrS1", "QUINOLONE", "QUINOLONE")])
+        c = call_resistance(m, "ciprofloxacin", resistance_threshold=1)
+    assert c["prediction"] == "R"
 
 
 def test_multiclass_subclass_matches():
-    # AMRFinder emits '/'-joined multi-class strings; a quinolone token anywhere counts.
+    # AMRFinder emits '/'-joined multi-class strings; a quinolone token anywhere must be COUNTED as a
+    # drug-relevant determinant (matching logic, independent of the R/S threshold).
     with tempfile.TemporaryDirectory() as td:
         m = _write_main(Path(td), [("aac(6')-Ib-cr", "AMINOGLYCOSIDE", "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN")])
         c = call_resistance(m, "ciprofloxacin")
-    assert c["prediction"] == "R"
+    assert c["n_determinants"] == 1 and c["determinants"][0]["symbol"] == "aac(6')-Ib-cr"
 
 
 def test_susceptible_when_no_quinolone_determinant():
@@ -81,8 +91,10 @@ def test_cohort_opchars_regression():
     if r["n"] < 140:   # cache may be partial on some machines
         print(f"SKIP cohort op-chars (only {r['n']} cached)")
         return
-    assert r["sensitivity"] >= 0.90, r          # the rule is sensitivity-favoring
-    assert r["accuracy"] >= 0.80, r
+    # tiered rule (threshold=2): acc 0.939 / sens 0.931 / spec 0.947 on cipro N=147.
+    assert r["accuracy"] >= 0.90, r
+    assert r["sensitivity"] >= 0.88, r
+    assert r["specificity"] >= 0.90, r
     print(f"cohort op-chars OK: {r}")
 
 

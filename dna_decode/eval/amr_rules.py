@@ -45,40 +45,57 @@ def cipro_determinants_from_main(main_tsv: Path, drug: str) -> list[dict]:
     return out
 
 
-def call_resistance(main_tsv: Path, drug: str) -> dict:
-    """Deterministic R/S call for one genome's AMRFinder main.tsv.
+_DEFAULT_THRESHOLD = 2  # cipro-validated: clinical fluoroquinolone-R needs multiple QRDR hits (see below)
 
-    Returns {prediction: 'R'|'S', confidence: 'HIGH'|'MODERATE', n_determinants, determinants:[...],
-    rule, caveat}. R iff >=1 curated drug-relevant determinant. >=2 determinants → HIGH confidence
-    (clinical fluoroquinolone-R typically needs multiple QRDR hits); exactly 1 → MODERATE (the simple
-    rule's over-call risk lives here). Absent main.tsv → prediction 'INDETERMINATE'."""
+
+def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int = _DEFAULT_THRESHOLD) -> dict:
+    """Deterministic, interpretable R/S call for one genome's AMRFinder main.tsv.
+
+    Rule (tiered, count-based): R iff #curated drug-relevant determinants >= `resistance_threshold`.
+    Default threshold 2 — cipro-validated (N=147: acc 0.939 / sens 0.931 / spec 0.947); clinical
+    fluoroquinolone resistance typically needs >=2 QRDR hits (e.g. gyrA + parC), so a single determinant
+    is usually low-level/susceptible (cohort: 15/17 single-determinant strains were S). The earlier
+    >=1 rule over-called (spec 0.75). NOTE: acquired-gene-dominant drugs (e.g. cef plasmid beta-lactamases,
+    where ONE blaCTX-M = resistance) should pass `resistance_threshold=1`; 2 is the QRDR/point-mutation
+    default, not universal. Confidence: HIGH if n>=threshold+1 OR n==0; MODERATE near the boundary
+    (threshold-1 <= n <= threshold). Absent main.tsv → 'INDETERMINATE'."""
     p = Path(main_tsv)
     if not p.exists():
         return {"prediction": "INDETERMINATE", "confidence": None, "n_determinants": 0,
-                "determinants": [], "rule": "amrfinder_curated_determinant_v0",
-                "caveat": "AMRFinder main.tsv not found for this genome"}
+                "determinants": [], "rule": "amrfinder_curated_determinant_v1", "caveat":
+                "AMRFinder main.tsv not found for this genome"}
     dets = cipro_determinants_from_main(p, drug)
     n = len(dets)
-    pred = "R" if n >= 1 else "S"
-    conf = "HIGH" if n >= 2 else ("MODERATE" if n == 1 else "HIGH")  # 0 determinants → confident S
+    pred = "R" if n >= resistance_threshold else "S"
+    if n == 0 or n >= resistance_threshold + 1:
+        conf = "HIGH"
+    else:                                    # boundary zone (threshold-1 .. threshold)
+        conf = "MODERATE"
+    boundary_note = ""
+    if pred == "S" and n == resistance_threshold - 1 and n >= 1:
+        boundary_note = (f" {n} determinant present (below the >={resistance_threshold} threshold; "
+                         f"single-determinant strains are usually low-level/susceptible but ~12% were R).")
     return {
         "prediction": pred,
         "confidence": conf,
         "n_determinants": n,
         "determinants": dets,
-        "rule": "amrfinder_curated_determinant_v0 (R iff >=1 curated drug-class determinant)",
-        "caveat": ("interpretable deterministic call from AMRFinder's curated database; the simple "
-                   "'any determinant' rule favors sensitivity and may over-call single-low-level-"
-                   "determinant strains. cipro N=147 op-chars: acc 0.85 / sens 0.96 / spec 0.75."),
+        "resistance_threshold": resistance_threshold,
+        "rule": f"amrfinder_curated_determinant_v1 (R iff >={resistance_threshold} curated drug-class determinants)",
+        "caveat": ("interpretable deterministic call from AMRFinder's curated database. cipro N=147 "
+                   "op-chars at threshold=2: acc 0.939 / sens 0.931 / spec 0.947 (≈ the POINT-XGB 0.943 "
+                   "classifier, but a transparent rule). ~7% of R strains carry <2 detected determinants "
+                   "(under-call). Acquired-gene drugs may need threshold=1." + boundary_note),
     }
 
 
-def evaluate_cohort(runs_root: Path, accession_label_pairs: list[tuple[str, int]], drug: str) -> dict:
+def evaluate_cohort(runs_root: Path, accession_label_pairs: list[tuple[str, int]], drug: str,
+                    resistance_threshold: int = _DEFAULT_THRESHOLD) -> dict:
     """Operating characteristics of the deterministic rule over a labelled cohort.
     `accession_label_pairs` = [(assembly_accession, 0|1), ...]. Returns counts + acc/sens/spec."""
     tp = fp = tn = fn = na = 0
     for acc, y in accession_label_pairs:
-        c = call_resistance(Path(runs_root) / acc / "main.tsv", drug)
+        c = call_resistance(Path(runs_root) / acc / "main.tsv", drug, resistance_threshold)
         if c["prediction"] == "INDETERMINATE":
             na += 1
             continue

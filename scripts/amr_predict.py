@@ -50,6 +50,9 @@ def main(argv=None) -> int:
     ap.add_argument("--amrfinder-db", type=Path, default=Path("data/amrfinder_db"),
                     help="AMRFinder DB root (Docker-readable; default data/amrfinder_db)")
     ap.add_argument("--out-root", type=Path, default=Path("data/amrfinder_runs"))
+    ap.add_argument("--resistance-threshold", type=int, default=2,
+                    help="min #curated determinants for an R call (default 2, cipro/QRDR-validated; "
+                         "use 1 for acquired-gene-dominant drugs e.g. cef beta-lactamases)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)
@@ -69,7 +72,7 @@ def main(argv=None) -> int:
                   f"Need Docker + a Docker-readable DB at {args.amrfinder_db}.", file=sys.stderr)
             return 3
 
-    call = call_resistance(run_dir / "main.tsv", args.drug)
+    call = call_resistance(run_dir / "main.tsv", args.drug, args.resistance_threshold)
     rec = {
         "sample_id": sample_id,
         "drug": args.drug,
