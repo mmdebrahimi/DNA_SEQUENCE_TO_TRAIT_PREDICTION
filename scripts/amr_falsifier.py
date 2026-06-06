@@ -65,6 +65,10 @@ def main(argv=None) -> int:
                     help="AMRFinder cache root (data/amrfinder_runs) → adds the QRDR/plasmid POINT "
                          "knowledge baseline (the 'best classical' comparator). Requires all strains cached.")
     ap.add_argument("--output", type=Path, default=None)
+    ap.add_argument("--skip-kmer", action="store_true",
+                    help="skip the k-mer-XGB sequence baseline (the slow/RAM-heavy step). Use when the "
+                         "POINT knowledge baseline is present and is the comparator of record; the k-mer "
+                         "result is cited from a prior run. 'best classical' then = POINT only.")
     ap.add_argument("--allow-confounded", action="store_true",
                     help="override the de-confound gate (emits a non-promotable diagnostic only)")
     args = ap.parse_args(argv)
@@ -137,11 +141,14 @@ def main(argv=None) -> int:
         results.append(VariantResult(name, float(m.auroc), float(m.auprc),
                                      _ordered(cv), y.copy(), list(strain_ids), gb))
         print(f"[falsifier] {name} AUROC={m.auroc:.3f}")
-    cvk = run_kmer_xgboost_loso(seqs, labels_by, strain_ids, drug=args.drug, k=args.kmer_k, top_n=args.kmer_top_n)
-    mk = compute_metrics(cvk.all_y_true, cvk.all_y_score)
-    results.append(VariantResult("k-mer-XGB", float(mk.auroc), float(mk.auprc),
-                                 _ordered(cvk), y.copy(), list(strain_ids), True))
-    print(f"[falsifier] k-mer-XGB AUROC={mk.auroc:.3f}")
+    if args.skip_kmer:
+        print("[falsifier] k-mer-XGB SKIPPED (--skip-kmer); 'best classical' = POINT baseline only.")
+    else:
+        cvk = run_kmer_xgboost_loso(seqs, labels_by, strain_ids, drug=args.drug, k=args.kmer_k, top_n=args.kmer_top_n)
+        mk = compute_metrics(cvk.all_y_true, cvk.all_y_score)
+        results.append(VariantResult("k-mer-XGB", float(mk.auroc), float(mk.auprc),
+                                     _ordered(cvk), y.copy(), list(strain_ids), True))
+        print(f"[falsifier] k-mer-XGB AUROC={mk.auroc:.3f}")
 
     # POINT knowledge baseline (the load-bearing 'best classical' for QRDR/plasmid drugs). Only when
     # --amrfinder-runs is supplied AND every strain has an AMRFinder cache (else the comparison is on
@@ -165,6 +172,10 @@ def main(argv=None) -> int:
     nt_best = max((r for r in results if r.name.startswith("NT")), key=lambda r: r.auroc)
     # 'best classical' = the strongest non-NT comparator present (k-mer and/or POINT).
     classical = [r for r in results if r.name in ("k-mer-XGB", "POINT-XGB")]
+    if not classical:
+        print("ERROR: no classical comparator (k-mer skipped AND POINT absent). "
+              "Provide --amrfinder-runs or drop --skip-kmer.", file=sys.stderr)
+        return 2
     kmer = max(classical, key=lambda r: r.auroc)   # the comparator NT must beat
     gap = (nt_best.auroc - kmer.auroc) * 100.0
     # All variants are now in the SAME canonical strain order (via _ordered). Pair element-wise on
