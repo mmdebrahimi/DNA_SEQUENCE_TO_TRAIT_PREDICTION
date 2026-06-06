@@ -160,6 +160,29 @@ Writes `result.json` + `result.md` (markdown sidecar) per the v0 schema:
 
 **Not a clinical decision support tool.** Audit verdict + provenance must accompany any downstream interpretation. See `wiki/decoder_v0_ux_and_success_criterion.md` for full v0 schema + success criteria.
 
+## Shipped decoders (v0.2.0) — two interpretable E. coli genome→trait tools
+
+The project's delivered value is **two deterministic, interpretable decoders** (installable console
+commands after `uv sync` / `pip install -e .`). Both take a genome assembly and emit a call + the exact
+genes/mutations that drove it + provenance — biologically interpretable, not embedding black-boxes.
+
+| Command | Trait | What it reports | Validation |
+|---|---|---|---|
+| `dna-pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) | virulence-cluster compatibility call + abstention + canonical-VirulenceFinder diff | compatibility resolver; ExPEC/EPEC/ETEC supported, rest documented scope-limit |
+| `dna-amr` | antibiotic resistance (R/S) | R/S call + the curated AMRFinder resistance determinants driving it (e.g. `gyrA_S83L`, `parC_S80I`) | cipro N=147: **acc 0.939 / sens 0.931 / spec 0.947** (deterministic rule ≈ the 0.943 ML classifier) |
+
+```bash
+uv run dna-pathotype path/to/assembly.fna --sample-id MY_STRAIN
+uv run dna-amr --drug ciprofloxacin --amrfinder-run data/amrfinder_runs/GCA_xxx.x   # or --genome-fasta X.fna (needs Docker + AMRFinder DB)
+```
+
+**Why deterministic, not embeddings:** the frozen-genome-embedding (NT-mean-pool) thesis was tested to a
+decisive verdict and found to have **no E. coli AMR niche** — on the cleanest substrate (cipro) it lost
+to the QRDR-POINT knowledge baseline and within-lineage scored at chance (it learned lineage, not
+mechanism). See `plans/AMR_embedding_niche_decision_2026-06-05.md`. For AMR, mechanism features win and
+are interpretable; the embedding architecture's remaining open frontier is non-AMR phenotypes lacking a
+curated knowledge baseline (gated on a de-confounded labeled substrate; `wiki/HANDOFF_session_2026-06-05.md`).
+
 ## Pathotype resolver (E. coli) — v0 tool (SHIPPED 2026-06-04, tag `pathotype-v0`)
 
 A self-contained, **pure-stdlib** CLI that takes an E. coli genome assembly (FASTA) and emits an

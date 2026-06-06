@@ -1,6 +1,6 @@
 [project]
 name = "dna_decode"
-version = "0.1.0"
+version = "0.2.0"
 description = "Genotype-to-phenotype inference platform — predicts phenotypic traits from genomic DNA sequences with biological interpretability. Phase 1: E. coli antibiotic resistance."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -48,6 +48,7 @@ dependencies = [
 # needed at runtime); `dna-pathotype` exposes it as a command after `pip install -e .`.
 [project.scripts]
 dna-pathotype = "dna_decode.pathotype.cli:main"
+dna-amr = "dna_decode.amr.cli:main"
 
 [project.optional-dependencies]
 # Dev tooling (lint + coverage) not needed for basic test runs
