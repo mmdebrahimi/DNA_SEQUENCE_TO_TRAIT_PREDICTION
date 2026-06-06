@@ -84,6 +84,13 @@ def _run_amrfinder(fasta: Path, out_dir: Path, timeout_sec: float = 600) -> tupl
     """Invoke AMRFinderPlus on a single fasta; return (main_tsv, mutations_tsv)."""
     main_out = out_dir / "main.tsv"
     mut_out = out_dir / "mutations.tsv"
+    # Resolve the DB `latest` symlink on the HOST and mount its REAL target directly at /db/latest.
+    # A relative symlink (latest -> 2026-03-24.1) is not followed inside the Docker container when the
+    # DB lives on a non-C: drive (Windows symlink semantics don't cross into the Linux mount) — the
+    # container reports "No valid AMRFinder database is found: /db/latest". Mounting the resolved real
+    # versioned dir bypasses the symlink entirely (cross-machine + cross-drive robust, 2026-06-05).
+    db_latest = Path(AMRFINDER_DB) / "latest"
+    real_db = db_latest.resolve() if db_latest.exists() else db_latest
     docker_run(
         AMRFINDER_IMAGE,
         [
@@ -96,7 +103,7 @@ def _run_amrfinder(fasta: Path, out_dir: Path, timeout_sec: float = 600) -> tupl
         ],
         mounts={
             str(fasta.parent): "/in:ro",
-            AMRFINDER_DB: "/db:ro",
+            str(real_db): "/db/latest:ro",
             str(out_dir): "/out",
         },
         timeout=timeout_sec,
