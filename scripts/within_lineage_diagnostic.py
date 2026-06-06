@@ -106,7 +106,10 @@ def main(argv=None) -> int:
         rows.append((name, d["auroc"].get(name, float("nan")), conc, npairs, nshared, null_mean, p))
 
     nt = max((r for r in rows if r[0].startswith("NT")), key=lambda r: r[1])
-    km = next((r for r in rows if r[0] == "k-mer-XGB"), None)
+    # 'best classical' comparator for the within-lineage contrast = strongest non-NT variant present
+    # (POINT-XGB and/or k-mer-XGB). None if neither (NT-only run).
+    classical = [r for r in rows if r[0] in ("k-mer-XGB", "POINT-XGB")]
+    km = max(classical, key=lambda r: r[1]) if classical else None
     delta = (nt[2] - km[2]) if km else float("nan")
 
     today = date.today().isoformat()
@@ -123,20 +126,21 @@ def main(argv=None) -> int:
         lines.append(f"| {name} | {auroc:.3f} | {conc:.3f} | {null_mean:.3f} | {p:.3f} |")
     lines += [
         "",
-        f"**NT-best within-lineage concordance {nt[2]:.3f} vs k-mer {km[2]:.3f} → "
-        f"Δ {delta:+.3f}**" if km else "",
+        f"**NT-best within-lineage concordance {nt[2]:.3f} vs {km[0]} {km[2]:.3f} → "
+        f"Δ {delta:+.3f}**" if km else f"**NT-best within-lineage concordance {nt[2]:.3f}**",
         "",
         "## Reading",
         "- concordance ~0.5 = no within-lineage discrimination (signal was lineage, not mechanism).",
         "- concordance >>0.5 with low p = the model ranks R above S EVEN within the same lineage = mechanism.",
-        f"- NT edge persists within lineage if NT concordance > k-mer AND NT p is small. "
+        f"- NT edge persists within lineage if NT concordance > {km[0] if km else 'classical'} AND NT p is small. "
         f"(Δ {delta:+.3f}, NT p {nt[6]:.3f}).",
         "- Small n_pairs ⇒ low power; treat as directional diagnostic, not a gate.",
     ]
     out = args.output or (ROOT / f"wiki/{drug}_within_lineage_diagnostic_{today}.md")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines), encoding="utf-8")
-    print(f"[within-lineage] {drug}: NT-best conc {nt[2]:.3f} (p {nt[6]:.3f}) vs k-mer {km[2]:.3f}; "
+    km_str = f" vs {km[0]} {km[2]:.3f}" if km else ""
+    print(f"[within-lineage] {drug}: NT-best conc {nt[2]:.3f} (p {nt[6]:.3f}){km_str}; "
           f"Δ {delta:+.3f} over {nt[3]} pairs in {nt[4]} lineages -> {out}")
     return 0
 
