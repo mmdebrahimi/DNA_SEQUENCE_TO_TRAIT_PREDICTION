@@ -1,0 +1,23 @@
+{
+  "organism": "Escherichia coli",
+  "n_carbon_sources_total": 1,
+  "n_carbon_sources_assessed": 1,
+  "min_strains_floor": 100,
+  "min_minority_frac": 0.15,
+  "mlst_provided": false,
+  "n_feasible": 0,
+  "feasible_ranked": [],
+  "all_assessments": [
+    {
+      "carbon_source": "tryptophan",
+      "n_strains": 27,
+      "n_positive": 25,
+      "n_negative": 2,
+      "minority_fraction": 0.0741,
+      "n_with_accession": 0,
+      "deconfound_verdict": null,
+      "deconfound_reason": null,
+      "verdict": "INFEASIBLE_TOO_FEW"
+    }
+  ]
+}

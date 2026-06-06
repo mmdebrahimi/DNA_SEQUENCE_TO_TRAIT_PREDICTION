@@ -1,6 +1,22 @@
 # EP-6 — Carbon-Source Utilization Substrate (the embedding-frontier candidate)
 
-> **Status:** SCOPING 2026-06-06. Infrastructure scaffolded + green; awaiting a real BacDive export to fire the feasibility gate.
+> **Status:** **E. coli-INFEASIBLE 2026-06-06** (data acquired + feasibility gate fired — see VERDICT below). The E. coli-specific within-lineage design is dead; a cross-taxa pivot is possible but is a different, larger experiment (authority decision, not yet taken).
+
+---
+
+## VERDICT 2026-06-06 — E. coli substrate INFEASIBLE (data acquired, gate fired)
+
+Acquired the real Li et al. 2023 release (public OSF `jwkr7`): `bacdive_growth_data_final.csv` (4349 strains × 58 carbon sources) + `bacdive_16S.fna` (the only species label). Converter `scripts/bacdive_li2023_to_long.py` → long format; species joined from 16S headers (100% coverage).
+
+- **E. coli slice = 27 strains.** E. coli is already the single MOST abundant species in BacDive; depth is shallow everywhere (next: Kribbella 22, Pseudomonas stutzeri 15, K. pneumoniae 7).
+- Only ONE carbon source has any E. coli data (tryptophan, 25+/2−). **0 carbon sources clear the ≥100 both-class floor.** Feasibility census exit 1 (NO-GO). Artifact: `wiki/bacdive_carbon_util_feasibility_2026-06-06.{md,json}`.
+- The "4397 strains × 58 sources" headline that picked this substrate is MULTI-SPECIES. The E. coli-specific slice is 27. This is the honest-gap from the survey memo, now quantified — same shape as the 2026-05-18 BV-BRC strict-MIC census that killed tet/gent.
+
+**Third requirement learned:** the embedding-niche two-half test (sampling-independent label + no catalog) is necessary but NOT sufficient — a THIRD requirement is **organism-specific DEPTH at scale** (≥100 strains of the SAME organism with the label + genomes, de-confoundable within-lineage). Carbon-util is YES/YES on the first two halves but FAILS depth for E. coli.
+
+**Cross-taxa pivot (NOT taken — authority decision):** the FULL multi-species dataset IS deep — all 58 carbon sources have ≥100 both-class strains, 32 balanced. But pivoting there: (a) abandons the E. coli within-lineage de-confound design for a within-clade/genus one; (b) walks straight into the phylogeny-dominance trap the paper documented (the SAME within-lineage=chance failure that killed cipro NT); (c) requires fetching + NT-embedding 4349 genomes (Databricks-scale). Engineering read: most likely outcome is "NT learns phylogeny, gene-content KO matrix ties/wins" — the 0-for-3 conclusion at ~50× compute. Recommend NOT pivoting reflexively; see strategic fork in the session report.
+
+---
 > **Anchors on:** `plans/Trait_Decoding_Roadmap.md` Phase 4 (non-AMR bacterial phenotypes); `research_outputs/ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05.md` (the survey that picked this substrate); `dna_decode/eval/cohort_deconfound.py` (the de-confound precondition).
 > **Why now:** AMR + pathotype both FAILED the embedding thesis — AMR lost to mechanism features (cipro NT 0.914 < QRDR-POINT 0.943; within-lineage NT=chance); pathotype labels were sampling-confounded + unvalidatable. Carbon-utilization is the first candidate that clears BOTH failure modes.
 

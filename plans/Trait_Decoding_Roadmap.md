@@ -176,7 +176,7 @@ Future `/idea-anchor + /project-init` cycles for Phases 4-6 can anchor on the co
 | 1 | Codex pushes outstanding artifacts; tag v0.0-cipro + v0.1-cipro local-only | Awaiting Codex push |
 | 2 | Cef promotion via `plans/Cef_V0_1_Promotion_Slice_Plan.md`; tet/gent gated on EP-1.5 | Cef in flight |
 | 3 | Klebsiella substrate exploration (T3 from this session, NOT executed) | Pre-staging deferred |
-| 4 | Pathotype v0 resolver SHIPPED (tag `pathotype-v0`); classifier track CLOSED (H1 falsified). **Next candidate = carbon-utilization (EP-6, scaffolded 2026-06-06).** Acquire BacDive E. coli export → run `bacdive_carbon_util_feasibility.py` → No-Go if 0 feasible sources. | Resolver shipped 2026-06-04; EP-6 infra green |
+| 4 | Pathotype v0 resolver SHIPPED; classifier track CLOSED. Carbon-utilization (EP-6) **E. coli-INFEASIBLE 2026-06-06** — data acquired (Li et al. OSF jwkr7), E. coli slice = 27 strains, 0 carbon sources clear ≥100 (artifact `wiki/bacdive_carbon_util_feasibility_2026-06-06`). Cross-taxa pivot deep but different experiment + phylogeny trap + Databricks-scale (NOT taken — authority decision). | EP-6 E. coli-infeasible; fork open |
 | 5 | Multimodal dataset survey (T4 from this session, NOT executed) | Pre-staging deferred |
 | 6 | Eukaryotic entry-point scoping (T5 from this session, NOT executed) | Pre-staging deferred |
 
