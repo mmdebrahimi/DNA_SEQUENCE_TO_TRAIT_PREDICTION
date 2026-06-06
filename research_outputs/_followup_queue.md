@@ -1,18 +1,18 @@
 # Research Follow-up Queue (V1.5 invocation)
 <!-- queue-schema: 0.1 -->
 
-> Last updated 2026-05-27 (ecoli-pathotype labeled-genome substrate survey added; Phase 4 EP candidate). Stale-days threshold: 30. Source memos scanned: 4.
+> Last updated 2026-06-05 (ecoli bacterial-phenotype decoder-substrate-feasibility added; next-substrate ranking). Stale-days threshold: 30. Source memos scanned: 5.
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
 
 ## Summary
 
-- Source memos scanned: 4
+- Source memos scanned: 5
 - Schema-drift memos (skipped): 0
-- Total raw candidate rows extracted: 20
-- Unique candidates after dedup: 20
-- Active candidates (≤ 30 days old): 20
+- Total raw candidate rows extracted: 25
+- Unique candidates after dedup: 25
+- Active candidates (≤ 30 days old): 25
 - Stale candidates (> 30 days old): 0
 - Cross-flavor candidates (public + internal): 0
 
@@ -40,6 +40,11 @@
 | GBDT performance positively correlated with samples-to-features ratio (NN-class opposite) | qualitative | — | https://arxiv.org/abs/2305.02997 | **Candidate use:** flag in dna_decode CLAUDE.md as a known limitation — current architecture (frozen 512-dim NT embeddings + XGBoost) is in the GBDT-disfavored regime (N=12-150, D=512, samples << features). Use this as motivation for either (a) feature reduction (mean-pool to per-gene aggregate) or (b) classifier swap (RF / TabPFN / MLP). **Verification needed:** measure actual samples-to-features ratio at decision-gate time; check whether dimension reduction (PCA, learned linear projection) improves XGBoost vs leaving raw embeddings. | high | sota-bacterial-amr-prediction-small-cohorts-2026-05-13 | SOTA architectures for predicting bacterial AMR from genome sequence on small cohorts (2024-2026) | — |
 | E. coli cipro + AMRFinderPlus + k-mer + XGBoost = >90% accuracy on 256-genome cohort (5-fold CV) | >90 | % accuracy | https://pubmed.ncbi.nlm.nih.gov/39320197/ | **Candidate use:** sets the classical-baseline floor that dna_decode's NT-XGBoost approach must beat at the decision gate. Anything ≤90% on a similar-sized cohort would indicate NT is NOT adding signal beyond classical features. **Verification needed:** confirm Talamantes-Becerra cohort size + drug + CV method match dna_decode's intended comparison; the 256-genome cohort is larger than the planned 12-strain mini, so direct comparison requires running on a 150-250 strain cohort to be apples-to-apples. | high | sota-bacterial-amr-prediction-small-cohorts-2026-05-13 | SOTA architectures for predicting bacterial AMR from genome sequence on small cohorts (2024-2026) | — |
 | For ciprofloxacin in E. coli, SNP tables may outperform gene presence-absence (resistance is mutation-driven) | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC11684616/ | **Candidate use:** when dna_decode runs the classical baselines at the decision gate, prioritize a SNP-table feature variant (gyrA / parC / parE specific positions) over generic gene-presence for cipro specifically. Different drugs may want different feature types. **Verification needed:** confirm dna_decode's current `classical_baselines.py` supports SNP-table features OR add a SNP-feature variant; cross-check against AMRFinderPlus mutation-aware output schema. | high | sota-bacterial-amr-prediction-small-cohorts-2026-05-13 | SOTA architectures for predicting bacterial AMR from genome sequence on small cohorts (2024-2026) | — |
+| BacDive carbon-utilization paired genome+phenotype dataset | 4397 × 58 | strains × carbon sources | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | **Candidate use:** carbon-source utilization is the top next-substrate — lab-assay labels (sampling-INDEPENDENT), large public cohort, NO AMRFinder-style single curated catalog. **Verification needed:** how many of the 4397 are *E. coli* per carbon source (multi-species DB; an E. coli-only slice may fall below the ≥100 de-confoundable floor for some sources). | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype: bacterial phenotypes with sampling-independent lab-assay labels + buildable de-confounded cohorts, noting curated-baseline existence; ranked shortlist | TOP next-substrate candidate |
+| Carbon-util gene-content RF out-of-clade accuracy at scale | 92.2 | % | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | **Candidate use:** sets the bar an NT-embedding decoder must beat. **Verification needed:** this is already near-ceiling for *some* carbon sources — confirm there exist carbon sources where gene-content RF stays weak out-of-clade (those are where embeddings can add value, not the easy ones). | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype (ranked shortlist) | Classical-baseline bar; may be near-ceiling |
+| Phylogeny-based prediction fails for distant taxa (carbon-util) | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | **Candidate use:** confirms the lineage-vs-mechanism (de-confound / within-lineage) question is the live crux for carbon-util too — same framework we built for AMR transfers directly. **Verification needed:** whether a within-lineage co-occurrence cohort is buildable for ≥1 carbon source in E. coli. | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype (ranked shortlist) | de-confound framework transfers directly |
+| Embedding features untried for carbon-utilization | not present | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | **Candidate use:** the embedding niche is literally open here — no published DNA-LM decoder for metabolic traits. **Verification needed:** confirm via a focused lit check that no 2024-2026 preprint already did NT/Evo on BacDive metabolic traits. | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype (ranked shortlist) | open embedding niche |
+| E. coli host-association GWAS cohort is sampling-defined (EXCLUDE) | 1198 | isolates | https://pmc.ncbi.nlm.nih.gov/articles/PMC10088187/ | **Candidate use:** EXCLUDE — host/source labels reproduce the pathotype study==class confound; do not pick as substrate. **Verification needed:** none (confirmatory negative). | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype (ranked shortlist) | confirmatory negative — what to AVOID |
 
 ## Stale Candidates
 

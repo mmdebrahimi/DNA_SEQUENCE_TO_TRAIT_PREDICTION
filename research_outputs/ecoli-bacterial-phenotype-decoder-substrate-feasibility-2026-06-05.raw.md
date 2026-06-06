@@ -1,0 +1,35 @@
+# Next decoder substrate feasibility — bacterial phenotypes with sampling-independent labels (raw research, 2026-06-05)
+
+> Captured 2026-06-05. Source: Claude Code (`/research` orchestrator, v0.5). Topic: substrate-feasibility for the next genome→trait decoder beyond AMR/pathotype — phenotypes with (a) sampling-INDEPENDENT lab-assay labels, (b) ≥100-strain public paired genome+phenotype cohorts buildable de-confounded, (c) noting whether a curated knowledge baseline exists (where it does → deterministic wins; the embedding niche is sampling-independent-label + NO catalog). Slug: ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05.
+> Web search via WebSearch + WebFetch, one-pass synthesis (~6 calls). "Thorough Google" depth.
+
+## Audit table (verbatim, all candidate rows)
+
+| Claim / quantity | Numeric value | Units | Source title | Authors / org | Year | Section / table / figure | Stable URL | Access date | Quoted excerpt (≤25 words) | Extraction rationale | Source type | Confidence |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| BacDive carbon-utilization paired genome+phenotype dataset size | 4397 strains × 58 carbon sources | strains; carbon sources | Statistical prediction of microbial metabolic traits from genomes | Li et al. (PLOS Comp Biol) | 2023 | Results, "Increasing sample size" | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | 2026-06-05 | "carbon utilization information for 4397 sequenced strains and 58 carbon sources" | direct dataset-size statement | peer-reviewed | high |
+| Carbon-utilization in-clade ML (random forest, gene-content) accuracy | >90 | % accuracy | Statistical prediction of microbial metabolic traits from genomes | Li et al. | 2023 | Results, "Machine learning accurately predicts" | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | 2026-06-05 | "accuracy of over 90% in most cases" | in-clade predictive ceiling for the classical baseline | peer-reviewed | high |
+| Carbon-utilization OUT-OF-CLADE prediction (small 96-strain set) | did not beat null | qualitative | Statistical prediction of microbial metabolic traits from genomes | Li et al. | 2023 | Results, "Machine learning accurately predicts" | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | 2026-06-05 | "did not significantly outperform both null models" | the open generalization gap (small N) — the embedding-niche test | peer-reviewed | high |
+| Carbon-utilization out-of-clade at scale (tryptophan, 4397 set) | 92.2 (93.5 w/ feature selection) | % accuracy | Statistical prediction of microbial metabolic traits from genomes | Li et al. | 2023 | Results, "Increasing sample size" | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | 2026-06-05 | "mean accuracy of 92.2%" | scale rescues out-of-clade for gene-content RF — sets the bar an embedding must beat | peer-reviewed | high |
+| Phylogeny-based prediction fails for distant taxa (the de-confounding crux) | qualitative | — | Statistical prediction of microbial metabolic traits from genomes | Li et al. | 2023 | Abstract | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | 2026-06-05 | "phylogeny-based predictions fail to predict traits for taxa that are phylogenetically distant from any strains in the training set" | confirms within-lineage-vs-distant is THE question for this phenotype | peer-reviewed | high |
+| Deep-learning / embedding features for carbon-utilization | not present | — | Statistical prediction of microbial metabolic traits from genomes | Li et al. | 2023 | Methods/Results (features) | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | 2026-06-05 | gene presence/absence + KEGG ortholog (KO) features; no embeddings | embeddings UNTRIED here → open niche | peer-reviewed | high |
+| Larger BacDive ML metabolic-trait dataset | 15938 strains | sequenced strains | Predicting bacterial phenotypic traits through improved ML using high-quality curated datasets | (PMC12145430) | 2025 | Methods (dataset) | https://pmc.ncbi.nlm.nih.gov/articles/PMC12145430/ | 2026-06-05 | "selected 15,938 strains from BacDive for which genome sequences were available" | scale ceiling for the metabolic-trait substrate | peer-reviewed | medium |
+| Keio growth-rate phenotyping (isogenic deletions, NOT natural diversity) | 4227 strains | deletion strains | Genomewide phenotypic analysis of growth, cell morphogenesis... in E. coli | (PMC6018989) | 2018 | Results | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6018989/ | 2026-06-05 | imaged 4,227 Keio strains; estimated maximal growth rate (αmax) + saturating density | growth-rate is lab-assay but the big set is KNOCKOUTS, not natural GWAS | peer-reviewed | high |
+| Keio biofilm screen (isogenic deletions) | 110 of 3985 | mutants reduce biofilm | A Genome-wide Approach to Identify Genes Involved in Biofilm Formation in E. coli | (PMC2779908) | 2007 | Results | https://pmc.ncbi.nlm.nih.gov/articles/PMC2779908/ | 2026-06-05 | "Of the 3985 mutants... 110 showed a reduction in biofilm formation" | biofilm = crystal-violet lab assay, but ready-made data is knockout-library not natural-isolate GWAS | peer-reviewed | high |
+| E. coli host-association GWAS cohort (SAMPLING-DEFINED label → confounded) | 1198 WGS isolates | isolates | Genome-wide association reveals host-specific genomic traits in E. coli | (BMC Biology) | 2023 | Methods | https://pmc.ncbi.nlm.nih.gov/articles/PMC10088187/ | 2026-06-05 | "collection of 1198 whole-genome sequenced E. coli isolates" from 5 host species | host = sampling context → study==class confound (same trap as pathotype); EXCLUDE | peer-reviewed | high |
+
+## Highest-confidence rows (top 5)
+1. Row 1 — carbon-utilization BacDive 4397×58: the substrate that fits all criteria.
+2. Row 5 — phylogeny fails out-of-clade: confirms the de-confound/within-lineage question is live for this phenotype.
+3. Row 6 — embeddings untried for carbon-utilization: the niche is literally open.
+4. Row 4 — gene-content RF out-of-clade 92.2% at scale: the bar an embedding must beat (high — may already be near-ceiling).
+5. Row 10 — host-association is sampling-defined → confounded: confirms what to AVOID.
+
+## Low-confidence rows
+- Row 7 (15,938-strain set): confidence medium — count verified via search summary, not direct fetch of PMC12145430.
+
+## Honest gaps
+- No single public E. coli **natural-isolate** (not knockout) biofilm GWAS cohort ≥100 strains with crystal-violet labels surfaced cleanly — biofilm data is mostly Keio/STM knockout libraries (isogenic, wrong shape for natural-variation decoding). Biofilm is a candidate but the cohort needs assembling.
+- Growth-rate at scale is dominated by the Keio knockout collection (isogenic), not natural diversity — natural-isolate growth-rate GWAS cohorts are smaller/scattered.
+- Did not quantify how much of the BacDive 4397 is E. coli specifically (it's multi-species); an E. coli-only slice may be <100 for some carbon sources — needs a direct BacDive query before committing.
+- bacteriocin / stress-tolerance / plasmid-host-range / sporulation: not searched this pass (budget); deferred.
