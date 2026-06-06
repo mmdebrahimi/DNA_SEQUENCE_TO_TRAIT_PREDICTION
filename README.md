@@ -169,7 +169,7 @@ genes/mutations that drove it + provenance — biologically interpretable, not e
 | Command | Trait | What it reports | Validation |
 |---|---|---|---|
 | `dna-pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) | virulence-cluster compatibility call + abstention + canonical-VirulenceFinder diff | compatibility resolver; ExPEC/EPEC/ETEC supported, rest documented scope-limit |
-| `dna-amr` | antibiotic resistance (R/S) | R/S call + the curated AMRFinder resistance determinants driving it (e.g. `gyrA_S83L`, `parC_S80I`) | cipro N=147: **acc 0.939 / sens 0.931 / spec 0.947** (deterministic rule ≈ the 0.943 ML classifier) |
+| `dna-amr` | antibiotic resistance (R/S) | R/S call + the curated AMRFinder resistance determinants driving it (e.g. `gyrA_S83L`, `parC_S80I`) | cipro in-cohort N=147 acc 0.939; **held-out N=29 acc 0.862 / sens 0.882 / spec 0.833** (externally validated — `wiki/dna_amr_external_validation_2026-06-05.md`) |
 
 ```bash
 uv run dna-pathotype path/to/assembly.fna --sample-id MY_STRAIN
