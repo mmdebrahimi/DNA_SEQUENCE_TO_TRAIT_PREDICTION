@@ -64,10 +64,11 @@ Establish whether the dna_decode decoder generalizes across the eukaryotic kingd
 | 1 | C. auris S.Africa 181/188 MIC>32 had ERG11 mutations | research_outputs/eukaryotic-multimodal-substrate-feasibility-2026-06-07.md | high | 2026-06-07 |
 | 2 | Arabidopsis flowering-time GWAS: 1,003 accessions, public (AraPheno/AraGWAS) | same | high | 2026-06-07 |
 | 3 | plant DNA-FM (PlantCaduceus) needs 24-80GB GPU class | same | high | 2026-06-07 |
+| 4 | CORRECTION/refinement of row 3: 24-80GB was TRAINING cost (PlantCAD 225M = 8xH100 25d). INFERENCE/embedding fits consumer GPUs — authors target RTX 3090; 4 sizes 20M/40M/112M/225M; 225M weights ~0.5GB fp16 @ 512bp. RTX 3500 Ada 12GB holds the largest variant for frozen-embedding extraction, no quantization. Path-B local viability CONFIRMED. | pnas.org/doi/10.1073/pnas.2421738122 + github.com/kuleshov-group/PlantCaduceus | high | 2026-06-07 |
 <!-- project-state:end:evidence -->
 ### Unknowns
 - Is the C. auris WGS+MIC cohort actually downloadable at depth (accessions in supplementaries)?
-- Does a plant DNA-FM fit 12GB, or is cloud (money) required for Path B?
+- ~~Does a plant DNA-FM fit 12GB, or is cloud (money) required for Path B?~~ RETIRED 2026-06-07: PlantCAD inference fits 12GB (training-only needs 8xH100); RTX 3500 Ada sufficient. See Evidence row 4.
 - What fraction of C. auris azole-R is ERG11-only vs efflux/aneuploidy (sets fungal sensitivity ceiling)?
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
@@ -80,12 +81,14 @@ Establish whether the dna_decode decoder generalizes across the eukaryotic kingd
 |---|---|---|
 | Path C ratified (A now / B queued on compute) | 2026-06-07 | user-ratified via /soraya |
 | Two-machine split, no duplication, git-only sync | 2026-06-07 | plans/Eukaryotic_DualMachine_Coordination.md |
+| Resolved Pending Decision row 1: Workhorse = personal Precision 7780 (RTX 3500 Ada ~12GB), NOT Bombardier/DLP. Path B safety gate CLEARED; personal code may run there. | 2026-06-07 | Auto-linked by /project-state --resolve-pending-decision (v0.2). Original decision text preserved at Pending Decisions row 1 with RESOLVED prefix. |
+| Resolved Pending Decision row 2: Path B compute = local ~12GB RTX 3500 Ada; paid cloud A100 DEFERRED (leave for later). Databricks high-GPU available as the established burst pattern but treated as money-gated (not fired now). | 2026-06-07 | Auto-linked by /project-state --resolve-pending-decision (v0.2). Original decision text preserved at Pending Decisions row 2 with RESOLVED prefix. |
 <!-- project-state:end:decisions-made -->
 ### Pending Decisions
 | Decision | Proposer | Blocker | Notes |
 |---|---|---|---|
-| Workhorse identity (Precision 7780 vs Bombardier/DLP) | Soraya | user | SAFETY: Path B handoff assumes personal Precision 7780; do NOT route personal code through Bombardier |
-| Path B compute: 12GB GPU sufficient OR cloud budget | Soraya | user | money gate — no paid compute without explicit OK |
+| RESOLVED 2026-06-07: Workhorse identity (Precision 7780 vs Bombardier/DLP) | Soraya | user | SAFETY: Path B handoff assumes personal Precision 7780; do NOT route personal code through Bombardier |
+| RESOLVED 2026-06-07: Path B compute: 12GB GPU sufficient OR cloud budget | Soraya | user | money gate — no paid compute without explicit OK |
 | Pre-commit: G2-FAIL closes the embedding frontier permanently (no 5th attempt) | Soraya | user | guards against the diminishing-returns trap on a 4th embedding bet |
 <!-- project-state:end:pending-decisions -->
 
@@ -121,6 +124,9 @@ G1 (fungal AMR decoder validated on C. auris, or documented failure) AND G2 (Ara
 | 2 | 2026-06-07 | research | Path A iron-law gate: C. auris WGS+MIC cohort feasibility | PASS — 841 C. auris assemblies on NCBI (taxon 498019, downloadable via refseq path) + MIC/ERG11 labels from S.Africa(188)/India(350) supplementaries. G1 substrate viable; the cohort-extractable unknown is RETIRED. Next: build scripts/fungal_erg11_caller.py (G0). |
 | 3 | 2026-06-07 | edit-local-code | Gate G0 (MACHINERY) REACHED: fungal ERG11 BLAST caller works | scripts/fungal_erg11_caller.py: blastn(CDS-vs-genome) + gap-aware codon-translate + catalog match (tblastn absent so blastn used; C. auris ERG11 intronless = colinear). Validated against a KNOWN planted mutation via REAL makeblastdb+blastn: resistant genome (codon132 TAC->TTC) -> R, ERG11:Y132F detected; wild-type -> S with efflux/aneuploidy blind-spots; offline -> INDETERMINATE. 2 caller tests + 7 catalog tests green. G0-COMPLETION (next) = swap synthetic ref for real C. auris ERG11 allele + validate on a real resistant genome (confirms catalog numbering vs reference). Then G1 = cohort validation. |
 | 4 | 2026-06-07 | edit-local-code | Gate G0-COMPLETION reached: fungal ERG11 caller validated on REAL data | Fetched real C. auris ERG11 reference (RefSeq XM_029033208.2, 525aa) + confirmed catalog numbering matches reference (Y@132, K@143, V@125). Validated call_erg11 end-to-end (real makeblastdb+blastn) on real GenBank isolate alleles: PV630306 WT->S (efflux/aneuploidy blind spots surfaced), PV630305 Y132F->R, PV630302 K143R->R = 3/3 correct. Numbering-mismatch risk RETIRED. Committed reference + 3 public allele fixtures (data/fungal_ref/) + 3 real-data regression tests (5 caller tests green). Next: G1 = build C.auris WGS+MIC cohort + validate decoder (acc>=0.80/sens>=0.80 OR documented efflux/aneuploidy failure). |
+| 5 | 2026-06-07 | ask-user | /project-state --resolve-pending-decision | Pending Decisions row 1: Workhorse = personal Precision 7780 (RTX 3500 Ada ~12GB), NOT Bombardier/DLP. Path B safety gate CLEARED; personal code may run there. |
+| 6 | 2026-06-07 | ask-user | /project-state --resolve-pending-decision | Pending Decisions row 2: Path B compute = local ~12GB RTX 3500 Ada; paid cloud A100 DEFERRED. Databricks high-GPU available but money-gated (not fired now). |
+| 7 | 2026-06-07 | research | Path-B model-fit feasibility check (verify-before-setup) | PlantCAD inference fits 12GB decisively: 4 sizes (20M/40M/112M/225M), authors target RTX 3090, 225M weights ~0.5GB fp16 @ 512bp ctx. The survey's 24-80GB was TRAINING cost, not inference. RTX 3500 Ada 12GB sufficient for frozen-embedding extraction, no quantization. Evidence row 4. Unknown 'does a plant DNA-FM fit 12GB?' RETIRED. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
