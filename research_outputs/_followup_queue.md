@@ -1,14 +1,14 @@
 # Research Follow-up Queue (V1.5 invocation)
 <!-- queue-schema: 0.1 -->
 
-> Last updated 2026-06-05 (ecoli bacterial-phenotype decoder-substrate-feasibility added; next-substrate ranking). Stale-days threshold: 30. Source memos scanned: 5.
+> Last updated 2026-06-05 (ecoli bacterial-phenotype decoder-substrate-feasibility added; next-substrate ranking). Stale-days threshold: 30. Source memos scanned: 6.
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
 
 ## Summary
 
-- Source memos scanned: 5
+- Source memos scanned: 6
 - Schema-drift memos (skipped): 0
 - Total raw candidate rows extracted: 25
 - Unique candidates after dedup: 25
@@ -59,3 +59,13 @@
 - Verbatim values are preserved from source memos. This skill does NOT edit, rewrite, or interpret claim text.
 - Public-source rows (research-intake) and internal-source rows (athena-intake) preserve their original locator semantics. Internal doc IDs do not resolve at a public URL.
 - Promotion Gate (per memo type) remains the human-confirmation step that lifts candidates into rules/wiki. This queue does NOT bypass it.
+
+## Eukaryotic/multimodal substrate (added 2026-06-07)
+
+| Claim | Source | Candidate use / Verification needed | Confidence |
+|---|---|---|---|
+| C. auris azole-R: deep WGS+MIC, ERG11↔MIC linkage, no fungal genome-predictor | PMC10521600 | TOP eukaryotic substrate — same AMR/MIC class as proven work, determinant-based, NO foundation model/GPU/money; needs a hand-built ERG11/FKS1/TAC1b catalog + clade-de-confounded cohort | high |
+| Fungal mechanism multi-locus (ERG11+TAC1b+Cdr1+aneuploidy) | PMC8092288 | expect efflux/CNV blind spot; design undetectable_mechanisms for fungi up front | high |
+| Arabidopsis flowering-time 1003 acc, sampling-independent, no catalog | PMC4949382 | the true embedding-niche test (YES/YES/YES) — but needs plant DNA-FM on >=24GB GPU = compute/MONEY gate | high |
+| Multimodal colony-image+WGS paired set | s41597-025-06319-4 | EXCLUDE — no public paired dataset (iron-law infeasible); targeted Kaggle/Zenodo search before reconsidering | medium |
+| PlantCaduceus compute class >=24GB GPU | arxiv 2403.03234 | sizes the Arabidopsis compute gate; confirm GPU or budget before that path | high |
