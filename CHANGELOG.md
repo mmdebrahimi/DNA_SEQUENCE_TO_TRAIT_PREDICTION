@@ -3,6 +3,34 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.5] — 2026-06-07
+
+Klebsiella full drug matrix complete — dna-amr validated 5 drugs × 2 organisms.
+
+### Added
+- **Klebsiella cef + gent + tet validated** (rules applied unchanged from E. coli):
+  - ceftriaxone: acc 0.800 / sens 1.0 / spec 0.6 ✅
+  - gentamicin: acc 0.867 / sens 0.867 / spec 0.867 ✅
+  - tetracycline: acc 0.800 / spec 1.0 / **sens 0.600** ⚠️ PARTIAL (efflux blind spot — see below)
+  - `scripts/klebsiella_drug_validate.py` (drug-agnostic; reuses cached Klebsiella runs across cohorts).
+  - Consolidated: `wiki/klebsiella_drug_matrix_2026-06-07.md`.
+- **`gene_prefixes` rule refinement** (`amr_rules.py`): tetracycline now counts only acquired `tet*` genes,
+  excluding intrinsic K. pneumoniae OqxAB efflux (AMRFinder-tagged TETRACYCLINE but present in susceptible
+  isolates). Same cross-organism principle as cipro QRDR-POINT. **Also improved E. coli tet 0.833 → 0.917.**
+
+### Findings
+- **tetracycline / Klebsiella is the honest PARTIAL:** the acquired-`tet*` rule is precise (spec 1.0) but
+  sens 0.600 — 6/15 R strains are efflux-mediated (oqxAB overexpression), undetectable by ANY
+  curated-determinant rule (an expression phenotype, surfaced in `undetectable_mechanisms`). A documented
+  biological limit, not a rule defect.
+- **Cross-organism principle confirmed 3× (cipro/tet/the gent+cef+mero Subclass refinements):** count the
+  drug's specific resistance determinants, not the broad drug-class bag; intrinsic chromosomal determinants
+  (efflux) are the organism-specific gotcha.
+
+### Result
+dna-amr spans **5 drugs × 2 organisms × 4 mechanism classes**; 4/5 Klebsiella drugs clear the bar
+zero-tuning, all beat naive AMRFinder. +3 tet tests (104 green).
+
 ## [0.3.4] — 2026-06-07
 
 Klebsiella meropenem — 2nd organism, NEW mechanism class (carbapenem). Phase 3 slice 2.

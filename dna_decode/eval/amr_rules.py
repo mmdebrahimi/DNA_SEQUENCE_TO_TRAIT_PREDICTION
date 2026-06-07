@@ -115,8 +115,8 @@ DRUG_RULE: dict[str, dict] = {
                                    "(QRDR target POINT mutations gyrA/parC/parE >=2 — cross-organism-robust)"},
     "ceftriaxone":   {"threshold": 1, "subclass_any": frozenset({"CEPHALOSPORIN", "CARBAPENEM"}),
                       "validated": "N=60 acc 0.933/sens 0.962/spec 0.912 (extended-spectrum bla only)"},
-    "tetracycline":  {"threshold": 1, "subclass_any": None,
-                      "validated": "N=12 acc 0.833/sens 1.0/spec 0.667 (acquired tet genes; small N)"},
+    "tetracycline":  {"threshold": 1, "subclass_any": None, "gene_prefixes": ("tet",),
+                      "validated": "E.coli N=12 acc 0.917/sens 1.0/spec 0.833; Klebsiella N=30 acc 0.8/spec 1.0/sens 0.6 (acquired tet* genes only — excludes intrinsic oqxAB efflux; sens-limited by efflux-mediated tet-R, a curated-determinant blind spot)"},
     "gentamicin":    {"threshold": 1, "subclass_any": frozenset({"GENTAMICIN"}),
                       "validated": "N=128 acc 0.945/sens 0.893/spec 0.96 (GENTAMICIN-subclass only; aph/aadA streptomycin-kanamycin genes excluded)"},
     "meropenem":     {"threshold": 1, "subclass_any": frozenset({"CARBAPENEM"}),
@@ -158,7 +158,13 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     if cfg.get("counter") == "qrdr_point":
         dets = qrdr_point_determinants(p)
     else:
-        dets = cipro_determinants_from_main(p, drug, subclass_any=cfg["subclass_any"])
+        dets = cipro_determinants_from_main(p, drug, subclass_any=cfg.get("subclass_any"))
+        # gene_prefixes: keep only determinants whose SYMBOL starts with one of these (acquired-gene
+        # refinement) — excludes intrinsic chromosomal genes that share the drug's broad Subclass but
+        # don't confer acquired resistance (e.g. tet excludes K. pneumoniae oqxAB efflux). Cross-organism.
+        prefixes = cfg.get("gene_prefixes")
+        if prefixes:
+            dets = [d for d in dets if d["symbol"].lower().startswith(tuple(p_.lower() for p_ in prefixes))]
     n = len(dets)
     pred = "R" if n >= resistance_threshold else "S"
     if n == 0 or n >= resistance_threshold + 1:

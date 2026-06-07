@@ -230,6 +230,28 @@ def test_tet_single_acquired_gene_is_resistant():
     assert c["prediction"] == "R" and c["n_determinants"] == 1
 
 
+def test_tet_gene_prefix_excludes_intrinsic_efflux():
+    # tet gene_prefixes=('tet',): acquired tet(A) counts; intrinsic oqxAB efflux (TETRACYCLINE-subclass
+    # but not a tet* gene) is excluded — the cross-organism fix for K. pneumoniae over-call.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [
+            ("tet(A)", "TETRACYCLINE", "TETRACYCLINE"),                       # acquired → counts
+            ("oqxB", "QUINOLONE", "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE"),  # efflux → excluded
+        ])
+        c = call_resistance(m, "tetracycline")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+    assert c["determinants"][0]["symbol"] == "tet(A)"
+
+
+def test_tet_efflux_only_is_susceptible():
+    # a strain with ONLY intrinsic oqxAB (no acquired tet gene) → S (the honest efflux blind spot:
+    # efflux-mediated tet-R is undetectable by curated determinants).
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("oqxB", "QUINOLONE", "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE")])
+        c = call_resistance(m, "tetracycline")
+    assert c["prediction"] == "S" and c["n_determinants"] == 0
+
+
 def test_gent_subclass_excludes_non_gentamicin_aminoglycoside():
     # aph(3')-Ia (Subclass KANAMYCIN/NEOMYCIN) + aadA (STREPTOMYCIN) confer aminoglycoside-R but NOT
     # gentamicin-R → must NOT be counted for gentamicin.

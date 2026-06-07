@@ -1,6 +1,6 @@
 [project]
 name = "dna_decode"
-version = "0.3.4"
+version = "0.3.5"
 description = "Genotype-to-phenotype inference platform — predicts phenotypic traits from genomic DNA sequences with biological interpretability. Deterministic mechanism-feature decoders: E. coli AMR (cipro/cef/tet) + pathotype."
 readme = "README.md"
 requires-python = ">=3.11"
