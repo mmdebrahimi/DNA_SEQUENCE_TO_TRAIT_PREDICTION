@@ -3,6 +3,20 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.1] — 2026-06-06
+
+The "one coherent tool" consolidation (after the v0.3.0 build settled the embedding question).
+
+### Added
+- **Unified `dna-decode` console entry** (`dna_decode/cli.py`) — single tool that dispatches to the
+  trait decoders: `dna-decode amr …`, `dna-decode pathotype …`, `dna-decode list` (capability +
+  validation status), `dna-decode --version`. Thin pass-through (argv delegated verbatim); the
+  per-decoder entries (`dna-amr`, `dna-pathotype`) stay independently usable + unchanged. 6 dispatch tests.
+
+### Changed
+- Project ledger (`project_state/dna-decode-2026-05-11.md`) updated to record the strategic inflection:
+  embedding frontier closed (0-for-3), deterministic mechanism-feature decoders are the product.
+
 ## [0.3.0] — 2026-06-06
 
 The "deterministic decoders win" release. The frozen-genome-embedding (NT mean-pool) thesis was tested

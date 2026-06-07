@@ -172,8 +172,14 @@ genes/mutations that drove it + provenance — biologically interpretable, not e
 | `dna-amr` | antibiotic resistance (R/S) — cipro / cef / tet / gent | R/S call + the curated AMRFinder resistance determinants driving it (e.g. `gyrA_S83L`, `blaCTX-M-15`, `aac(3)-IIa`) | **cipro** N=147 acc 0.939 (held-out N=29 acc 0.862, externally validated); **cef** N=60 acc 0.933; **gent** N=128 acc 0.945; **tet** N=12 acc 0.833 (small N). Per-drug rules in `amr_rules.py::DRUG_RULE`; `wiki/dna_amr_multidrug_validation_2026-06-06.md` |
 
 ```bash
+# Unified entry (dispatches to the trait decoders):
+uv run dna-decode list                                  # what it decodes + per-trait validation status
+uv run dna-decode pathotype path/to/assembly.fna --sample-id MY_STRAIN
+uv run dna-decode amr --drug ciprofloxacin --amrfinder-run data/amrfinder_runs/GCA_xxx.x
+
+# The per-decoder entries remain independently usable:
 uv run dna-pathotype path/to/assembly.fna --sample-id MY_STRAIN
-uv run dna-amr --drug ciprofloxacin --amrfinder-run data/amrfinder_runs/GCA_xxx.x   # or --genome-fasta X.fna (needs Docker + AMRFinder DB)
+uv run dna-amr --drug ceftriaxone --genome-fasta X.fna   # genome mode needs Docker + AMRFinder DB
 ```
 
 **Why deterministic, not embeddings:** the frozen-genome-embedding (NT-mean-pool) thesis was tested to a
