@@ -28,10 +28,12 @@ documented organism-specific failure mode (efflux/aneuploidy-mediated R is the e
 ## Build steps
 1. ✅ **Determinant catalog** — `dna_decode/data/fungal_amr.py` (ERG11 Y132F/K143R/F126T/VF125AL/clade-IV +
    C. albicans hotspots; FKS1 S639; TAC1b/efflux/aneuploidy as `FUNGAL_UNDETECTABLE_MECHANISMS`). 7 tests.
-2. **BLAST caller** — `scripts/fungal_erg11_caller.py`: makeblastdb on a C. auris genome → blastn the ERG11
-   (+FKS1) reference allele → translate the aligned CDS → emit observed substitutions vs the catalog →
-   `call_from_observed_substitutions`. Reuse the pathotype `vf_runner` BLAST plumbing (`find_blastn()`).
-   Offline-safe degrade when blastn absent (mirror the vf_diff pattern).
+2. ✅ **BLAST caller (machinery, G0)** — `scripts/fungal_erg11_caller.py`: makeblastdb + blastn(CDS-vs-genome)
+   + gap-aware codon-translate + catalog match → `call_from_observed_substitutions`. tblastn absent → blastn
+   used (C. auris ERG11 intronless = colinear HSP). Offline-safe (INDETERMINATE when BLAST absent).
+   **Validated against a planted Y132F via REAL makeblastdb+blastn** (2 tests). 
+   **G0-COMPLETION (step 2b, next):** swap the synthetic reference for the real C. auris ERG11 CDS allele
+   (NCBI) + validate on a real resistant genome (Y132F/VF125AL) to confirm catalog numbering ↔ reference.
 3. **Cohort** — extract a C. auris WGS+MIC table from the S. Africa (188) + India (350) supplementaries;
    fetch assemblies by accession; build a de-confoundable cohort (within-clade fluconazole R/S contrast,
    reuse `cohort_deconfound.py`).

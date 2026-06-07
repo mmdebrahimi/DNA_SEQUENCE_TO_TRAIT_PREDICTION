@@ -119,6 +119,7 @@ G1 (fungal AMR decoder validated on C. auris, or documented failure) AND G2 (Ara
 |---|---|---|---|---|
 | 1 | 2026-06-07 | propose | /project-init invoked (eukaryotic cycle) | ledger created; 3a PASS / 3b PASS(project) / 3c PASS |
 | 2 | 2026-06-07 | research | Path A iron-law gate: C. auris WGS+MIC cohort feasibility | PASS — 841 C. auris assemblies on NCBI (taxon 498019, downloadable via refseq path) + MIC/ERG11 labels from S.Africa(188)/India(350) supplementaries. G1 substrate viable; the cohort-extractable unknown is RETIRED. Next: build scripts/fungal_erg11_caller.py (G0). |
+| 3 | 2026-06-07 | edit-local-code | Gate G0 (MACHINERY) REACHED: fungal ERG11 BLAST caller works | scripts/fungal_erg11_caller.py: blastn(CDS-vs-genome) + gap-aware codon-translate + catalog match (tblastn absent so blastn used; C. auris ERG11 intronless = colinear). Validated against a KNOWN planted mutation via REAL makeblastdb+blastn: resistant genome (codon132 TAC->TTC) -> R, ERG11:Y132F detected; wild-type -> S with efflux/aneuploidy blind-spots; offline -> INDETERMINATE. 2 caller tests + 7 catalog tests green. G0-COMPLETION (next) = swap synthetic ref for real C. auris ERG11 allele + validate on a real resistant genome (confirms catalog numbering vs reference). Then G1 = cohort validation. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
