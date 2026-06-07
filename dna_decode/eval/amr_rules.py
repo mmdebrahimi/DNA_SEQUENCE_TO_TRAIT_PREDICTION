@@ -31,6 +31,30 @@ AMRFINDER_IMAGE_PINNED = "ncbi/amr:4.2.7-2026-03-24.1"
 UNDETECTABLE_MECHANISMS = sorted(CO_RESISTANCE_MECHANISMS)  # ['efflux', 'porin_loss', 'regulatory']
 
 
+# Fluoroquinolone QRDR target-alteration genes (point mutations in these = the canonical cipro mechanism).
+# Counting ONLY these POINT mutations is the CROSS-ORGANISM-robust cipro rule: it excludes intrinsic
+# chromosomal efflux genes (e.g. K. pneumoniae oqxAB) that AMRFinder tags QUINOLONE-class but that are
+# present in susceptible isolates too — those saturate the broad-determinant count and break transfer.
+# Validated 2026-06-07: QRDR-POINT>=2 → Klebsiella cipro acc 1.000 (vs 0.577 broad) AND E. coli 0.925.
+QRDR_GENES = ("gyrA", "gyrB", "parC", "parE")
+
+
+def qrdr_point_count(main_tsv: Path) -> int:
+    """Count fluoroquinolone QRDR target-alteration POINT mutations (gyrA/gyrB/parC/parE_<mut>, AMRFinder
+    Method POINT*). The cross-organism-robust cipro signal — excludes intrinsic efflux/acquired genes that
+    inflate the broad QUINOLONE-class count. Returns 0 if main.tsv absent."""
+    p = Path(main_tsv)
+    if not p.exists():
+        return 0
+    n = 0
+    for r in csv.DictReader(p.open(encoding="utf-8"), delimiter="\t"):
+        sym = (r.get("Element symbol") or "")
+        meth = (r.get("Method") or "").upper()
+        if "POINT" in meth and any(sym == g or sym.startswith(g + "_") for g in QRDR_GENES):
+            n += 1
+    return n
+
+
 def cipro_determinants_from_main(main_tsv: Path, drug: str,
                                  subclass_any: frozenset | None = None) -> list[dict]:
     """Return the curated AMRFinder determinants (main.tsv rows) relevant to `drug`.

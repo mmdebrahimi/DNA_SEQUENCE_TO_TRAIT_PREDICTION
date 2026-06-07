@@ -10,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dna_decode.eval.amr_rules import (
     FN_UNDETECTED_MECHANISM, FP_DETERMINANT_NO_PHENOTYPE, UNDETECTABLE_MECHANISMS,
-    DRUG_RULE, call_resistance, discordance_bucket, evaluate_cohort, rule_for,
+    DRUG_RULE, call_resistance, discordance_bucket, evaluate_cohort, qrdr_point_count, rule_for,
 )
 
 _HEADER = ("Protein id\tContig id\tStart\tStop\tStrand\tElement symbol\tElement name\tScope\tType\t"
@@ -114,6 +114,43 @@ def test_evaluate_cohort_emits_discordance_breakdown():
         r = evaluate_cohort(Path(td), [("FN", 1), ("FP", 0)], "ceftriaxone")
     assert r["discordance"][FN_UNDETECTED_MECHANISM] == 1
     assert r["discordance"][FP_DETERMINANT_NO_PHENOTYPE] == 1
+
+
+def _write_main_with_method(tmp, rows):
+    """rows = [(element_symbol, class, subclass, method)]. Sets the Method column (index 12)."""
+    lines = [_HEADER]
+    for sym, cls, sub, meth in rows:
+        cells = [""] * 22
+        cells[5] = sym; cells[10] = cls; cells[11] = sub; cells[12] = meth
+        lines.append("\t".join(cells))
+    p = tmp / "main.tsv"
+    p.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return p
+
+
+def test_qrdr_point_count_counts_target_mutations_only():
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main_with_method(Path(td), [
+            ("gyrA_S83L", "QUINOLONE", "QUINOLONE", "POINTX"),       # QRDR point → counts
+            ("parC_S80I", "QUINOLONE", "QUINOLONE", "POINTX"),       # QRDR point → counts
+            ("oqxB", "QUINOLONE", "NITROFURAN/PHENICOL/QUINOLONE", "EXACTX"),  # intrinsic efflux → excluded
+            ("qnrS1", "QUINOLONE", "QUINOLONE", "EXACTX"),           # acquired gene (not POINT) → excluded
+        ])
+        assert qrdr_point_count(m) == 2   # only gyrA + parC point mutations
+
+
+def test_qrdr_point_count_excludes_intrinsic_efflux():
+    # a susceptible-shaped Klebsiella strain: intrinsic oqxAB only, no QRDR point mutation → 0.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main_with_method(Path(td), [
+            ("oqxA", "QUINOLONE", "NITROFURAN/PHENICOL/QUINOLONE", "EXACTX"),
+            ("oqxB", "QUINOLONE", "NITROFURAN/PHENICOL/QUINOLONE", "EXACTX"),
+        ])
+        assert qrdr_point_count(m) == 0
+
+
+def test_qrdr_point_count_missing_file():
+    assert qrdr_point_count(Path("/nonexistent/main.tsv")) == 0
 
 
 def test_per_drug_rule_config():
