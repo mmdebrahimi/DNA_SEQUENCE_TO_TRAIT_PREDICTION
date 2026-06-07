@@ -119,6 +119,8 @@ DRUG_RULE: dict[str, dict] = {
                       "validated": "N=12 acc 0.833/sens 1.0/spec 0.667 (acquired tet genes; small N)"},
     "gentamicin":    {"threshold": 1, "subclass_any": frozenset({"GENTAMICIN"}),
                       "validated": "N=128 acc 0.945/sens 0.893/spec 0.96 (GENTAMICIN-subclass only; aph/aadA streptomycin-kanamycin genes excluded)"},
+    "meropenem":     {"threshold": 1, "subclass_any": frozenset({"CARBAPENEM"}),
+                      "validated": "Klebsiella N=30 acc 0.867/sens 1.0/spec 0.733 (acquired carbapenemase, CARBAPENEM-subclass: blaKPC/NDM/OXA-48; vs naive 0.533). Excludes ESBL/AmpC; blind to porin-loss-mediated R (expected FN mode)."},
 }
 
 

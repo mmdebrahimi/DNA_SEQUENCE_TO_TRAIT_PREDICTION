@@ -204,6 +204,24 @@ def test_cef_carbapenemase_counts():
     assert c["prediction"] == "R" and c["n_determinants"] == 1
 
 
+def test_meropenem_carbapenemase_counts_esbl_excluded():
+    # meropenem rule: a CARBAPENEM-subclass carbapenemase (blaKPC/NDM/OXA-48) → R; ESBL (CEPHALOSPORIN)
+    # raises MIC but doesn't hydrolyze carbapenems → excluded.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaKPC-2", "BETA-LACTAM", "CARBAPENEM"),
+                                   ("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN")])
+        c = call_resistance(m, "meropenem")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+    assert c["determinants"][0]["symbol"] == "blaKPC-2"
+
+
+def test_meropenem_esbl_only_is_susceptible():
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN")])  # ESBL, no carbapenemase
+        c = call_resistance(m, "meropenem")
+    assert c["prediction"] == "S" and c["n_determinants"] == 0
+
+
 def test_tet_single_acquired_gene_is_resistant():
     # tetracycline is acquired-gene (one tet(A) = R) → threshold 1 by default.
     with tempfile.TemporaryDirectory() as td:

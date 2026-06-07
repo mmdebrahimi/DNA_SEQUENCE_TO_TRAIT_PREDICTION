@@ -3,6 +3,26 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.4] — 2026-06-07
+
+Klebsiella meropenem — 2nd organism, NEW mechanism class (carbapenem). Phase 3 slice 2.
+
+### Added
+- **meropenem decoder** (5th drug): acquired-carbapenemase rule (threshold 1 + CARBAPENEM-subclass
+  refinement — blaKPC/NDM/OXA-48). **Klebsiella N=30 acc 0.867 / sens 1.0 / spec 0.733** (vs naive
+  AMRFinder 0.533; the CARBAPENEM-subclass refinement lifts spec 0.067→0.733 by excluding ESBL/AmpC that
+  raise meropenem MIC without hydrolyzing it). `wiki/klebsiella_meropenem_validate_2026-06-07.md`.
+  Carbapenem is the defining K. pneumoniae clinical threat — a mechanism class E. coli AMR never covered.
+- meropenem added to `mic_tiers.py` (breakpoints CLSI R≥4/S≤1 + EUCAST; AMRFinder classes;
+  carbapenemase loci catalog; primary mechanism). `supported_drugs()` now returns 5.
+- `scripts/klebsiella_meropenem_validate.py` (reuses cached cipro-cohort AMRFinder runs on strain overlap).
+- +2 tests (carbapenemase counted / ESBL excluded). 102 green.
+
+### Honest scope
+The meropenem rule is blind to porin-loss-mediated carbapenem resistance (no carbapenemase gene) — the
+expected FN mode; surfaced in `undetectable_mechanisms`. 4 FP (susceptible strains carrying a carbapenemase
+gene — likely low-expression / borderline MIC).
+
 ## [0.3.3] — 2026-06-07
 
 Cross-organism: Klebsiella + the QRDR-POINT cipro rule (roadmap Phase 3, slice 1).

@@ -51,6 +51,11 @@ DRUG_BREAKPOINTS: dict[str, dict[str, Optional[float]]] = {
         "clsi_r": 16.0, "clsi_s": 4.0,
         "eucast_r": 4.0, "eucast_s": 2.0,
     },
+    "meropenem": {
+        # CLSI 2024 + EUCAST 14.0 Enterobacterales (carbapenem)
+        "clsi_r": 4.0, "clsi_s": 1.0,
+        "eucast_r": 8.0, "eucast_s": 2.0,
+    },
 }
 
 
@@ -151,6 +156,7 @@ DRUG_AMRFINDER_CLASSES: dict[str, frozenset[str]] = {
     "ceftriaxone": frozenset({"BETA-LACTAM", "CARBAPENEM", "CEPHALOSPORIN", "MULTIDRUG"}),
     "tetracycline": frozenset({"TETRACYCLINE", "MULTIDRUG"}),
     "gentamicin": frozenset({"AMINOGLYCOSIDE", "MULTIDRUG"}),
+    "meropenem": frozenset({"BETA-LACTAM", "CARBAPENEM", "MULTIDRUG"}),
 }
 
 
@@ -213,6 +219,18 @@ DRUG_LOCI_BY_MECHANISM: dict[str, dict[str, set[str]]] = {
         "porin_loss": {"ompC", "ompF"},
         "regulatory": {"marR", "marA", "tetR", "acrR"},
     },
+    "meropenem": {
+        "carbapenemase_acquired": {
+            # the carbapenemase families (AMRFinder Subclass CARBAPENEM) that hydrolyze meropenem
+            "blaKPC", "blaNDM", "blaOXA-48", "blaOXA-181", "blaOXA-232",
+            "blaVIM", "blaIMP", "blaGES", "blaSPM", "blaSME", "blaIMI",
+        },
+        # ESBL/AmpC + porin loss can raise meropenem MIC but are NOT carbapenemases — modifiers here
+        "esbl_ampc_plus_porin": {"blaCTX-M", "blaCMY", "blaSHV", "ampC"},
+        "efflux": {"acrA", "acrB", "tolC"},
+        "porin_loss": {"ompC", "ompF", "ompK35", "ompK36"},
+        "regulatory": {"marR", "marA", "soxR", "soxS", "acrR"},
+    },
     "gentamicin": {
         "aminoglycoside_modifying_enzymes": {
             # Acetyltransferases (aac), phosphotransferases (aph),
@@ -241,6 +259,7 @@ DRUG_PRIMARY_MECHANISMS: dict[str, frozenset[str]] = {
     "ceftriaxone": frozenset({"acquired_beta_lactamase", "ampC_hyperproduction"}),
     "tetracycline": frozenset({"tet_efflux", "tet_ribosomal_protection", "tet_enzymatic"}),
     "gentamicin": frozenset({"aminoglycoside_modifying_enzymes", "16S_rRNA_methyltransferase"}),
+    "meropenem": frozenset({"carbapenemase_acquired"}),
 }
 
 # Cross-drug shared co-resistance modifiers (the audit framework classifies
