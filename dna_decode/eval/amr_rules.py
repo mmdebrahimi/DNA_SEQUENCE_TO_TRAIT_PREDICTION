@@ -39,20 +39,30 @@ UNDETECTABLE_MECHANISMS = sorted(CO_RESISTANCE_MECHANISMS)  # ['efflux', 'porin_
 QRDR_GENES = ("gyrA", "gyrB", "parC", "parE")
 
 
-def qrdr_point_count(main_tsv: Path) -> int:
-    """Count fluoroquinolone QRDR target-alteration POINT mutations (gyrA/gyrB/parC/parE_<mut>, AMRFinder
-    Method POINT*). The cross-organism-robust cipro signal — excludes intrinsic efflux/acquired genes that
-    inflate the broad QUINOLONE-class count. Returns 0 if main.tsv absent."""
+def qrdr_point_determinants(main_tsv: Path) -> list[dict]:
+    """Return the fluoroquinolone QRDR target-alteration POINT mutations (gyrA/gyrB/parC/parE_<mut>,
+    AMRFinder Method POINT*) as determinant dicts for transparent reporting. The cross-organism-robust
+    cipro signal — excludes intrinsic efflux/acquired genes that inflate the broad QUINOLONE-class count."""
     p = Path(main_tsv)
+    out: list[dict] = []
     if not p.exists():
-        return 0
-    n = 0
+        return out
     for r in csv.DictReader(p.open(encoding="utf-8"), delimiter="\t"):
         sym = (r.get("Element symbol") or "")
         meth = (r.get("Method") or "").upper()
         if "POINT" in meth and any(sym == g or sym.startswith(g + "_") for g in QRDR_GENES):
-            n += 1
-    return n
+            out.append({
+                "symbol": sym.strip(),
+                "name": (r.get("Element name") or "").strip(),
+                "class": r.get("Class") or "", "subclass": r.get("Subclass") or "",
+                "pct_identity": r.get("% Identity to reference"),
+            })
+    return out
+
+
+def qrdr_point_count(main_tsv: Path) -> int:
+    """Count fluoroquinolone QRDR target-alteration POINT mutations. Returns 0 if main.tsv absent."""
+    return len(qrdr_point_determinants(main_tsv))
 
 
 def cipro_determinants_from_main(main_tsv: Path, drug: str,
@@ -100,8 +110,9 @@ _DEFAULT_THRESHOLD = 2  # cipro-validated: clinical fluoroquinolone-R needs mult
 #   validated          : op-char provenance string
 # Drugs absent here fall back to (_DEFAULT_THRESHOLD, no refinement).
 DRUG_RULE: dict[str, dict] = {
-    "ciprofloxacin": {"threshold": 2, "subclass_any": None,
-                      "validated": "N=147 acc 0.939/sens 0.931/spec 0.947 (QRDR point-mutations: >=2 hits)"},
+    "ciprofloxacin": {"threshold": 2, "subclass_any": None, "counter": "qrdr_point",
+                      "validated": "E.coli N=147 acc 0.925/sens 0.875/spec 0.973; Klebsiella N=30 acc 1.0 "
+                                   "(QRDR target POINT mutations gyrA/parC/parE >=2 — cross-organism-robust)"},
     "ceftriaxone":   {"threshold": 1, "subclass_any": frozenset({"CEPHALOSPORIN", "CARBAPENEM"}),
                       "validated": "N=60 acc 0.933/sens 0.962/spec 0.912 (extended-spectrum bla only)"},
     "tetracycline":  {"threshold": 1, "subclass_any": None,
@@ -123,7 +134,9 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     Rule (tiered, count-based): R iff #curated drug-relevant determinants >= threshold. When
     `resistance_threshold` is None the PER-DRUG validated config (DRUG_RULE) supplies both the threshold
     and any Subclass refinement; pass an int to override the threshold explicitly. Per-drug op-chars:
-      - ciprofloxacin: threshold 2 (QRDR point-mutations need >=2 hits) — N=147 acc 0.939.
+      - ciprofloxacin: threshold 2 over QRDR TARGET POINT mutations (gyrA/parC/parE; counter='qrdr_point').
+                       Cross-organism-robust — excludes intrinsic chromosomal efflux (e.g. Klebsiella OqxAB)
+                       that broad QUINOLONE-class counting sweeps in. E.coli N=147 acc 0.925; Klebsiella 1.0.
       - ceftriaxone:   threshold 1 + EXTENDED-SPECTRUM subclass refinement (CEPHALOSPORIN/CARBAPENEM only;
                        plain BETA-LACTAM like blaTEM-1 is ampicillin-R not ceftriaxone-R) — N=60 acc 0.933.
       - tetracycline:  threshold 1 (acquired tet genes) — N=12 acc 0.833 (small N).
@@ -137,7 +150,13 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     cfg = rule_for(drug)
     if resistance_threshold is None:
         resistance_threshold = cfg["threshold"]
-    dets = cipro_determinants_from_main(p, drug, subclass_any=cfg["subclass_any"])
+    # Counter selection: cipro uses the cross-organism-robust QRDR target-POINT-mutation count
+    # (excludes intrinsic efflux/acquired genes); other drugs use the broad drug-class determinant
+    # count with optional Subclass refinement.
+    if cfg.get("counter") == "qrdr_point":
+        dets = qrdr_point_determinants(p)
+    else:
+        dets = cipro_determinants_from_main(p, drug, subclass_any=cfg["subclass_any"])
     n = len(dets)
     pred = "R" if n >= resistance_threshold else "S"
     if n == 0 or n >= resistance_threshold + 1:

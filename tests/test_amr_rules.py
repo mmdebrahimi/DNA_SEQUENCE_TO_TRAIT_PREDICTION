@@ -31,37 +31,52 @@ def _write_main(tmp: Path, rows: list[tuple[str, str, str]]) -> Path:
     return p
 
 
-def test_single_determinant_is_susceptible_default_threshold():
-    # default threshold=2: a single quinolone determinant → S (boundary), not R (the v1 over-call fix).
+def test_single_qrdr_mutation_is_susceptible_default_threshold():
+    # cipro counter='qrdr_point', threshold=2: a single QRDR point mutation → S (boundary), not R.
     with tempfile.TemporaryDirectory() as td:
-        m = _write_main(Path(td), [("qnrS1", "QUINOLONE", "QUINOLONE")])
+        m = _write_main_with_method(Path(td), [("gyrA_S83L", "QUINOLONE", "QUINOLONE", "POINTX")])
         c = call_resistance(m, "ciprofloxacin")
     assert c["prediction"] == "S" and c["n_determinants"] == 1 and c["confidence"] == "MODERATE"
 
 
-def test_resistant_on_two_determinants():
+def test_resistant_on_two_qrdr_mutations():
+    # gyrA + parC point mutations (the canonical clinical FQ-R combo) → R at threshold 2.
     with tempfile.TemporaryDirectory() as td:
-        m = _write_main(Path(td), [("gyrA_S83L", "QUINOLONE", "QUINOLONE"),
-                                   ("parC_S80I", "QUINOLONE", "QUINOLONE")])
+        m = _write_main_with_method(Path(td), [("gyrA_S83L", "QUINOLONE", "QUINOLONE", "POINTX"),
+                                               ("parC_S80I", "QUINOLONE", "QUINOLONE", "POINTX")])
         c = call_resistance(m, "ciprofloxacin")
     assert c["prediction"] == "R" and c["n_determinants"] == 2
 
 
-def test_threshold_1_for_acquired_gene_drugs():
-    # acquired-gene drugs (one determinant = resistance) override threshold=1.
+def test_cipro_qrdr_excludes_intrinsic_efflux_and_acquired():
+    # the cross-organism fix: intrinsic oqxAB efflux + acquired qnr are NOT counted (only QRDR POINT).
     with tempfile.TemporaryDirectory() as td:
-        m = _write_main(Path(td), [("qnrS1", "QUINOLONE", "QUINOLONE")])
+        m = _write_main_with_method(Path(td), [
+            ("gyrA_S83L", "QUINOLONE", "QUINOLONE", "POINTX"),       # QRDR → counts
+            ("oqxB", "QUINOLONE", "NITROFURAN/PHENICOL/QUINOLONE", "EXACTX"),  # intrinsic efflux → excluded
+            ("qnrS1", "QUINOLONE", "QUINOLONE", "EXACTX"),           # acquired gene → excluded
+        ])
+        c = call_resistance(m, "ciprofloxacin")
+    # only 1 QRDR point mutation → below threshold 2 → S (broad rule would have called R on 3 determinants)
+    assert c["prediction"] == "S" and c["n_determinants"] == 1
+
+
+def test_threshold_1_override_still_works():
+    # explicit threshold override still applies (single QRDR mutation + threshold=1 → R).
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main_with_method(Path(td), [("gyrA_S83L", "QUINOLONE", "QUINOLONE", "POINTX")])
         c = call_resistance(m, "ciprofloxacin", resistance_threshold=1)
     assert c["prediction"] == "R"
 
 
-def test_multiclass_subclass_matches():
-    # AMRFinder emits '/'-joined multi-class strings; a quinolone token anywhere must be COUNTED as a
-    # drug-relevant determinant (matching logic, independent of the R/S threshold).
+def test_broad_matcher_still_multiclass(check=None):
+    # the broad determinant matcher (used by naive baseline / cross-source) still does multiclass matching;
+    # cipro's CALL path no longer uses it (qrdr_point), but the matcher itself is unchanged.
+    from dna_decode.eval.amr_rules import cipro_determinants_from_main
     with tempfile.TemporaryDirectory() as td:
         m = _write_main(Path(td), [("aac(6')-Ib-cr", "AMINOGLYCOSIDE", "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN")])
-        c = call_resistance(m, "ciprofloxacin")
-    assert c["n_determinants"] == 1 and c["determinants"][0]["symbol"] == "aac(6')-Ib-cr"
+        dets = cipro_determinants_from_main(m, "ciprofloxacin")
+    assert len(dets) == 1 and dets[0]["symbol"] == "aac(6')-Ib-cr"
 
 
 def test_susceptible_when_no_quinolone_determinant():
@@ -301,9 +316,9 @@ def test_cohort_opchars_regression():
     if r["n"] < 140:   # cache may be partial on some machines
         print(f"SKIP cohort op-chars (only {r['n']} cached)")
         return
-    # tiered rule (threshold=2): acc 0.939 / sens 0.931 / spec 0.947 on cipro N=147.
+    # QRDR-POINT rule (cross-organism, global as of 2026-06-07): E.coli N=147 acc 0.925/sens 0.875/spec 0.973.
     assert r["accuracy"] >= 0.90, r
-    assert r["sensitivity"] >= 0.88, r
+    assert r["sensitivity"] >= 0.85, r
     assert r["specificity"] >= 0.90, r
     print(f"cohort op-chars OK: {r}")
 

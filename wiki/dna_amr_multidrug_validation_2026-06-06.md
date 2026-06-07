@@ -9,7 +9,8 @@
 
 | Drug | Cohort (N) | Rule | acc | sens | spec |
 |---|---|---|---|---|---|
-| ciprofloxacin | stage2_n150 (147) | threshold=2, broad class (QRDR point-mut) | 0.939 | 0.931 | 0.947 |
+| ciprofloxacin | stage2_n150 (147) | threshold=2, broad QUINOLONE class (SUPERSEDED 2026-06-07 by QRDR-POINT) | 0.939 | 0.931 | 0.947 |
+| ciprofloxacin | stage2_n150 (147) | **threshold=2, QRDR-POINT (gyrA/parC/parE) — now deployed** | **0.925** | 0.875 | 0.973 |
 | **ceftriaxone** | gate_b (60: 26R/34S) | **threshold=1 + extended-spectrum subclass** | **0.933** | **0.962** | **0.912** |
 | ceftriaxone | gate_b_mini_cef (12) | same | 1.000 | 1.000 | 1.000 |
 | **tetracycline** | gate_b_mini_tet (12: 6R/6S) | threshold=1, class (acquired genes) | **0.833** | **1.000** | **0.667** |

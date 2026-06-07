@@ -12,7 +12,7 @@
 
 | Drug | N | dna-amr acc | sens | spec | naive acc | sens | spec | Δacc |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| ciprofloxacin | 22 | **0.955** | 1.0 | 0.917 | 0.864 | 1.0 | 0.75 | +0.091 |
+| ciprofloxacin | 22 | **1.0** | 1.0 | 1.0 | 0.864 | 1.0 | 0.75 | +0.136 |
 | ceftriaxone | 22 | **0.864** | 1.0 | 0.727 | 0.636 | 1.0 | 0.273 | +0.228 |
 | gentamicin | 22 | **1.0** | 1.0 | 1.0 | 0.591 | 1.0 | 0.25 | +0.409 |
 | tetracycline | 22 | **0.909** | 1.0 | 0.8 | 0.909 | 1.0 | 0.8 | +0.0 |
@@ -21,7 +21,7 @@
 
 | Drug | FN (R missed: efflux/porin/regulatory/low-level) | FP (called R, susceptible: label/expression/borderline) |
 |---|---:|---:|
-| ciprofloxacin | 0 | 1 |
+| ciprofloxacin | 0 | 0 |
 | ceftriaxone | 0 | 3 |
 | gentamicin | 0 | 0 |
 | tetracycline | 0 | 2 |

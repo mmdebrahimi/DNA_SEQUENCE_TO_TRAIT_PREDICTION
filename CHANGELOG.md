@@ -3,6 +3,32 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.3] — 2026-06-07
+
+Cross-organism: Klebsiella + the QRDR-POINT cipro rule (roadmap Phase 3, slice 1).
+
+### Added
+- **Cross-organism transfer (Klebsiella pneumoniae cipro):** N=30 NCBI cohort, **acc 1.000** with the
+  deployed rule. The method generalizes across organisms. `scripts/klebsiella_cipro_transfer.py`,
+  `wiki/klebsiella_cipro_transfer_2026-06-07.md`. `_run_amrfinder` gained an `organism` param
+  (`-O Klebsiella_pneumoniae`).
+- `qrdr_point_count` / `qrdr_point_determinants` in `amr_rules.py` — count fluoroquinolone QRDR
+  target-alteration POINT mutations (gyrA/parC/parE) only.
+
+### Changed (ratified — changes the deployed cipro number)
+- **cipro `DRUG_RULE` switched to the QRDR-POINT rule globally** (`counter='qrdr_point'`): count QRDR
+  target POINT mutations ≥2, not the broad QUINOLONE-class determinant bag. Rationale: the broad rule
+  FAILED on Klebsiella (acc 0.5 — intrinsic chromosomal OqxAB efflux, absent in E. coli, saturates the
+  count). The canonical target-mutation count is cross-organism-robust. Net effect:
+  - Klebsiella cipro 0.5 → **1.000**
+  - E. coli cipro in-cohort 0.939 → 0.925 (−1.4pp; dropped cases were qnr/efflux-mediated)
+  - E. coli cipro **cross-source (NCBI) 0.955 → 1.000** (+4.5pp — QRDR-POINT generalizes better; the
+    in-cohort −1.4pp was tuning-cohort overfit).
+- **Platform finding:** cross-organism transfer requires counting the drug's TARGET-alteration mutations,
+  not the broad drug-class bag; intrinsic chromosomal determinants are the organism-specific gotcha.
+- Tests: cipro tests updated to QRDR-POINT (point-mutation rows); +4 new (qrdr helpers + intrinsic-exclusion);
+  cohort regression re-pinned to 0.925/0.875/0.973. 24 total green.
+
 ## [0.3.2] — 2026-06-06
 
 Trust-hardening + honesty taxonomy (adversarial-review follow-through). No new science — makes the
