@@ -23,8 +23,8 @@ import sys
 # Per-trait capability registry: subcommand -> (delegate dotted-path main, one-line capability + validation).
 TRAITS = {
     "amr": {
-        "summary": "antibiotic resistance R/S (cipro / cef / tet / gent)",
-        "validation": "cipro 0.939 (held-out 0.862) | cef 0.933 | gent 0.945 | tet 0.833 (small N)",
+        "summary": "antibiotic resistance R/S (cipro/cef/tet/gent/meropenem) - E.coli/Klebsiella/Pseudomonas/S.aureus (--organism)",
+        "validation": "cipro 0.925 (held-out 0.862, cross-source 1.0) | cef 0.933 | gent 0.945 | tet 0.833 | mero 0.867; cross-organism (see capstone)",
     },
     "pathotype": {
         "summary": "E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention",

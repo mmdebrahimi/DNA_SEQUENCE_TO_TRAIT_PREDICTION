@@ -1,6 +1,58 @@
 # DNA_SEQUENCE_TO_TRAIT_PREDICTION
 
-Genotype-to-phenotype (G2P) inference platform — predicts phenotypic traits from genomic DNA sequences AND identifies which genomic regions are most strongly associated with those predictions. Biologically interpretable, not causal-claim-making.
+**`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a bacterial genome; it
+returns a phenotype call (antibiotic resistance R/S, or E. coli pathotype) **plus the exact genes/mutations
+that drove the call** + its own blind spots + provenance. Mechanism-feature based, not an embedding
+black-box. **Not a clinical tool.**
+
+## What it decodes (v0.4.0)
+
+| Tool | Trait | Validation |
+|---|---|---|
+| `dna-decode amr` | antibiotic R/S — **cipro / cef / tet / gent / meropenem** across **E. coli, K. pneumoniae, P. aeruginosa, S. aureus** | 6 drugs × 4 organisms, in-cohort + held-out + cross-source (NCBI) + cross-organism; every per-drug rule beats naive AMRFinder. Capstone: `wiki/amr_multiorganism_capstone_2026-06-07.md` |
+| `dna-decode pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) compatibility + abstention | VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit |
+
+847 tests green. The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
+threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
+across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
+
+## Install
+
+```bash
+uv sync          # or: pip install -e .
+# AMR genome mode also needs Docker + an AMRFinderPlus DB (see Gotchas); cached-run mode is pure-Python.
+```
+
+## Quickstart (verified output)
+
+```text
+$ uv run dna-decode list
+dna-decode 0.4.0 - deterministic genotype->phenotype decoders
+  amr        antibiotic resistance R/S (cipro/cef/tet/gent/meropenem) - E.coli/Klebsiella/Pseudomonas/S.aureus
+  pathotype  E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
+
+$ uv run dna-decode amr --drug ceftriaxone --amrfinder-run data/amrfinder_runs/GCA_008727135.1
+sample: GCA_008727135.1  drug: ceftriaxone
+CALL: R  [MODERATE | 1 determinant(s)]
+  driven by: blaCMY-2  (CEPHALOSPORIN, 100.00% id)
+```
+
+```bash
+# Pathotype on a genome assembly (pure-stdlib, no Docker):
+uv run dna-decode pathotype path/to/assembly.fna --sample-id MY_STRAIN
+
+# AMR on a novel genome (genome mode — runs AMRFinder via Docker; --organism selects the AMRFinder -O):
+uv run dna-decode amr --drug ciprofloxacin --genome-fasta X.fna --organism Klebsiella_pneumoniae
+```
+
+Full capability table + validation provenance: **[Shipped decoders](#shipped-decoders-v040--two-interpretable-e-coli-genometrait-tools)** below. The rest of this README is project history (how the tool was arrived at).
+
+---
+
+## Project history — Phase 1 → v0.4.0 (how we got here)
+
+> The sections below are the chronological research record (embedding-thesis exploration, Evidence
+> Packets, the deterministic pivot). For *using the tool*, the section above is all you need.
 
 ## Status: Phase 1 — CLOSED 2026-05-17 (infrastructure + cross-drug architectural finding)
 
@@ -22,7 +74,7 @@ Phase 1 code: all 18 implementation steps shipped Wave 0-7 (2026-05-11 → 2026-
 
 **Long-horizon roadmap drafted (2026-05-26)**: `plans/Trait_Decoding_Roadmap.md` maps Phase 0 (v0 cipro) → Phase 6 (eukaryotic organisms) with per-phase terminal claims + dataset prerequisites + falsifier triggers. EP-4 first non-AMR phenotype scoping: pathotype prediction (EnteroBase substrate; multiclass EPEC/EHEC/ETEC/UPEC/EAEC/commensal) per `plans/EP_4_Non_AMR_Phenotype_Candidates.md`.
 
-**Test count:** 708 green (+339 vs Phase 2 entry).
+**Test count:** 847 green (as of v0.4.0, 2026-06-07).
 
 See `plans/EP1_EP2_Cross_Drug_Synthesis_Plan.md` for the synthesis plan; `plans/Cipro_Decision_Bundle_Plan.md` + `plans/Cipro_Decision_Bundle_Technical_Plan.md` for the EP1 closeout planning chain; `plans/EP2_Cef_Tet_Smoke_Design_Plan.md` for the EP2 design. See `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the original Phase 1 contracted ship-path. See `plans/Ecoli_G2P_Platform_Technical_Plan.md` for the full Phase 1 plan with Tier 1-5 attribution-success framework. See `docs/ARCHITECTURE.md` for the module map.
 
@@ -160,7 +212,7 @@ Writes `result.json` + `result.md` (markdown sidecar) per the v0 schema:
 
 **Not a clinical decision support tool.** Audit verdict + provenance must accompany any downstream interpretation. See `wiki/decoder_v0_ux_and_success_criterion.md` for full v0 schema + success criteria.
 
-## Shipped decoders (v0.2.0) — two interpretable E. coli genome→trait tools
+## Shipped decoders (v0.4.0) — two interpretable E. coli genome→trait tools
 
 The project's delivered value is **two deterministic, interpretable decoders** (installable console
 commands after `uv sync` / `pip install -e .`). Both take a genome assembly and emit a call + the exact
