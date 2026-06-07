@@ -80,8 +80,13 @@ def _is_synonymous_point(sym: str) -> bool:
 
 
 # TODO(consolidation): duplicated from scripts/cipro_mechanism_audit.py.
-def _run_amrfinder(fasta: Path, out_dir: Path, timeout_sec: float = 600) -> tuple[Path, Path]:
-    """Invoke AMRFinderPlus on a single fasta; return (main_tsv, mutations_tsv)."""
+def _run_amrfinder(fasta: Path, out_dir: Path, timeout_sec: float = 600,
+                   organism: str = "Escherichia") -> tuple[Path, Path]:
+    """Invoke AMRFinderPlus on a single fasta; return (main_tsv, mutations_tsv).
+
+    `organism` selects AMRFinder's `-O` organism for organism-specific point-mutation (QRDR etc.)
+    detection. Default 'Escherichia' (back-compat). For Klebsiella pass 'Klebsiella_pneumoniae' —
+    gyrA/parC QRDR calls are organism-specific in AMRFinder's curated set, so the wrong -O misses them."""
     main_out = out_dir / "main.tsv"
     mut_out = out_dir / "mutations.tsv"
     # Resolve the DB `latest` symlink on the HOST and mount its REAL target directly at /db/latest.
@@ -96,7 +101,7 @@ def _run_amrfinder(fasta: Path, out_dir: Path, timeout_sec: float = 600) -> tupl
         [
             "amrfinder",
             "-n", f"/in/{fasta.name}",
-            "-O", "Escherichia",
+            "-O", organism,
             "--database", "/db/latest",
             "--mutation_all", "/out/mutations.tsv",
             "-o", "/out/main.tsv",
