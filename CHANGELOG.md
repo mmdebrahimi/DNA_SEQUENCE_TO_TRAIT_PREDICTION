@@ -3,6 +3,26 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.6] — 2026-06-07
+
+3rd organism (Pseudomonas) + cross-organism shipped in the CLI.
+
+### Added
+- **`dna-amr --organism <O>`** (genome mode) — passes through to AMRFinder `-O` (organism-specific QRDR
+  point-mutation detection); recorded in `provenance.amrfinder_organism`. Default Escherichia. Closes the
+  gap where cross-organism support lived only in validation scripts, not the shipped CLI. +2 CLI tests.
+- **Pseudomonas aeruginosa cipro VALIDATED** (3rd organism): N=30 acc 0.867 / sens 0.80 / spec 0.933
+  (beats naive AMRFinder 0.767). The QRDR-POINT rule transfers UNCHANGED to a *less-similar* gram-negative
+  (MexAB-OprM efflux, intrinsic AmpC — no oqxAB). 3 FN = efflux-mediated cipro-R (expected blind spot).
+  `wiki/pseudomonas_aeruginosa_ciprofloxacin_validate_2026-06-07.md`.
+- **`scripts/organism_drug_validate.py`** — generalized any-NCBI-organism × any-drug validator
+  (auto-discovers latest PDG metadata, reuses cached runs). Every future organism is now a one-command run.
+
+### Result
+dna-amr validated across **3 organisms** (E. coli, K. pneumoniae, P. aeruginosa). The "count the drug's
+specific determinants, not the broad class bag" principle holds across all three — strong evidence it is
+organism-general, not E. coli-specific.
+
 ## [0.3.5] — 2026-06-07
 
 Klebsiella full drug matrix complete — dna-amr validated 5 drugs × 2 organisms.
