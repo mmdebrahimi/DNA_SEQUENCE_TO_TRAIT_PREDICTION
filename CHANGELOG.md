@@ -3,6 +3,26 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.4.0] — 2026-06-07 — Multi-Organism AMR Decoder (capstone)
+
+Milestone release consolidating the AMR arc. No new code — a capstone over v0.3.x.
+
+`dna-amr` is a deterministic, interpretable AMR R/S decoder validated across **6 drugs × 4 organisms ×
+4 mechanism classes, spanning the gram divide** (E. coli, K. pneumoniae, P. aeruginosa, S. aureus),
+deployed as `dna-amr` / `dna-decode`. Every per-drug rule beats naive AMRFinder on independent data.
+
+- **One engineering principle** held across every organism/mechanism: count the drug's SPECIFIC
+  resistance determinants (target point-mutations / drug-specific Subclass / acquired gene-family), not
+  the broad drug-class bag — intrinsic chromosomal genes (efflux) are the cross-organism gotcha.
+- **Honest limits, named in every output:** `undetectable_mechanisms` (efflux/porin/regulatory expression
+  phenotypes) + label-quality caveats (oxacillin → use cefoxitin). The recurring binding constraint is the
+  de-confounded, reliably-labeled substrate — not the method.
+- Capstone: `wiki/amr_multiorganism_capstone_2026-06-07.md`. 108 tests green.
+
+**This is the milestone.** Further organism/drug breadth is diminishing-returns (re-confirms the same two
+findings). The genuinely-different next leaps (cross-lab validation, a non-AMR sampling-independent
+substrate, multimodal/eukaryotic) require resources beyond autonomous code work.
+
 ## [0.3.7] — 2026-06-07
 
 1st Gram-positive: S. aureus oxacillin (MRSA/mecA) — genotype transfers; honest label finding.
