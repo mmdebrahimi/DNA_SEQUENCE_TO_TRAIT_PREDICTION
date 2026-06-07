@@ -58,6 +58,30 @@ def test_caller_detects_planted_Y132F():
     assert sc.undetectable_mechanisms          # S surfaces efflux/aneuploidy blind spots
 
 
+_REF = Path(__file__).resolve().parent.parent / "data" / "fungal_ref" / "Cauris_ERG11_cds.fna"
+_REAL = [  # (committed public GenBank isolate allele, truth, expected call)
+    ("Cauris_ERG11_PV630306_WT.fna", "WT", "S"),
+    ("Cauris_ERG11_PV630305_Y132F.fna", "Y132F", "R"),
+    ("Cauris_ERG11_PV630302_K143R.fna", "K143R", "R"),
+]
+
+
+@pytest.mark.skipif(not _HAS_BLAST, reason="BLAST+ (blastn/makeblastdb) not installed")
+@pytest.mark.skipif(not _REF.exists(), reason="real C. auris ERG11 reference fixture absent")
+@pytest.mark.parametrize("fname,truth,expected", _REAL)
+def test_caller_on_real_cauris_alleles(fname, truth, expected):
+    """G0-COMPLETION: real C. auris ERG11 reference (RefSeq XM_029033208.2, numbering Y132/K143/V125
+    confirmed) vs real GenBank isolate alleles carrying DOCUMENTED Y132F / K143R. Validates that the
+    catalog numbering matches the real reference on real mutations — not just a planted synthetic one."""
+    genome = str(_REF.parent / fname)
+    c = call_erg11(genome, str(_REF), "fluconazole")
+    assert c.prediction == expected, c
+    if truth != "WT":
+        assert f"ERG11:{truth}" in c.determinants, c
+    else:
+        assert c.undetectable_mechanisms  # S surfaces efflux/aneuploidy blind spots
+
+
 def test_caller_indeterminate_without_blast(monkeypatch=None):
     # force the no-BLAST path → INDETERMINATE (offline-safe contract)
     import scripts.fungal_erg11_caller as m

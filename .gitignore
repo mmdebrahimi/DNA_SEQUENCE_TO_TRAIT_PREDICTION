@@ -1,6 +1,9 @@
 # Runtime data + caches (large, gitignored per Step 1 of technical plan)
 # Anchored to repo root — doesn't match dna_decode/data/ subpackage
 /data/
+# Exception: committed public reference alleles for the fungal-AMR real-data test (tiny GenBank CDS)
+!/data/fungal_ref/
+!/data/fungal_ref/*.fna
 *.h5
 *.parquet
 *.pkl
