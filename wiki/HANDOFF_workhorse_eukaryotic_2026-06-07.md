@@ -10,15 +10,27 @@
 - Do NOT edit Path-A ledger rows or fungal artifacts. Append only Path-B rows + Path-B result packets.
 - Do NOT start until **Gate G1 is shared** (laptop posts the fungal-AMR result packet) AND the user confirms compute — see "Preconditions".
 
+## Status (updated 2026-06-07 — laptop side)
+- ✅ **Workhorse identity CONFIRMED:** personal **Precision 7780 (RTX 3500 Ada ~12GB)**, NOT Bombardier/DLP.
+  Path B safety gate cleared; personal code may run there.
+- ✅ **VRAM-fit gate PRE-RESOLVED by the laptop (skip task 1):** PlantCAD inference fits 12GB decisively.
+  4 sizes (l20=20M / l24=40M / l28=112M / l32=225M); authors target the RTX 3090; 225M weights ~0.5GB fp16
+  @ 512bp ctx. The "24-80GB" figure was TRAINING cost (8×H100), NOT inference. **Use `PlantCaduceus_l32`
+  (225M, richest) — it fits the RTX 3500 Ada 12GB for frozen-embedding extraction with no quantization;**
+  drop to l28/l24 only if throughput is the bottleneck. HF: `kuleshov-group/PlantCaduceus_l32`.
+- ✅ **Compute greenlit:** local 12GB GPU approved; paid cloud A100 DEFERRED (Databricks high-GPU exists but
+  is money-gated — do NOT fire it without explicit user OK). Since 12GB suffices, no cloud is needed for v0.
+
 ## Preconditions (check before any GPU work)
 1. `git pull` — confirm you have `plans/EP8_Arabidopsis_Embedding_Test.md` + this handoff + the laptop's
    pre-staged AraGWAS manifest + baseline spec (laptop produces these in Phase 1 pre-stage).
-2. **VRAM-fit gate (first task):** can a plant DNA-FM (PlantCaduceus first; 512bp windows) run inference on
-   the RTX 3500 Ada (~12GB)? If YES → proceed. If NO → STOP + report; the user decides cloud budget (money gate).
-3. User has explicitly greenlit Phase 2 compute (the eukaryotic cycle's money/hardware gate).
+2. ✅ VRAM-fit — DONE (see Status above); start at task 2.
+3. ✅ Compute greenlit — local 12GB only (see Status above).
+4. **Still required:** Gate G1 shared (laptop posts the fungal-AMR result packet) before you START — per the
+   share-and-decide phase-gate design. You may `git pull` + read now, but hold GPU work until G1 lands.
 
 ## Your tasks (Path B, Phase 2 — in order)
-1. **VRAM-fit check** (above). Report pass/fail + the model that fits.
+1. ✅ **VRAM-fit check — DONE by laptop** (PlantCaduceus_l32 225M fits 12GB; see Status). Skip.
 2. **Download** AraGWAS genotype matrix (10.7M SNPs / 2029 acc) + AraPheno flowering-time phenotype
    (1,003 acc @ 10°C). Public, no access gate. (Laptop pre-stages the exact URLs/manifest.)
 3. **Baselines (no GPU):** SNP-PRS + kinship/population-structure-only regression on flowering time
