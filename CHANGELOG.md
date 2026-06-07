@@ -29,6 +29,17 @@ shipped decoders auditable + honest about their blind spots.
 - Stale gentamicin "NOT yet cohort-validated" claims (`amr_rules.py` docstring + wiki caveat) reconciled
   with the N=128 acc 0.945 validation that DRUG_RULE/README/CHANGELOG already recorded (claim-hygiene).
 
+### Validated (cross-source — closes the same-database gap)
+- **Independent NCBI Pathogen Detection validation** (`scripts/xsource_validation.py`,
+  `wiki/dna_amr_xsource_validation_2026-06-07.md`): 22 E. coli, balanced ~11R/11S per drug, **zero
+  accession overlap** with the 176 BV-BRC cohort accessions (enforced at selection). Result: cipro 0.955,
+  cef 0.864, gent 1.000, tet 0.909 — comparable to / better than in-cohort. **Answers the product
+  question:** dna-amr beats naive "any-determinant→R" AMRFinder on UN-tuned data by +0.09 (cipro) /
+  +0.23 (cef) / +0.41 (gent) / +0.0 (tet) accuracy — the per-drug threshold + Subclass refinement IS the
+  value-add, not determinant discovery. Sensitivity 1.0 on all 4 drugs (FN=0); all errors are FP
+  (determinant-present-but-susceptible). Honest scope: NCBI Pathogen Detection is a different
+  source/curation, not a controlled different-lab study.
+
 ## [0.3.1] — 2026-06-06
 
 The "one coherent tool" consolidation (after the v0.3.0 build settled the embedding question).

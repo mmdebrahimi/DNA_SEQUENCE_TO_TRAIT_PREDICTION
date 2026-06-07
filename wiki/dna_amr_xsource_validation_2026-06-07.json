@@ -1,0 +1,144 @@
+{
+  "source": "NCBI Pathogen Detection",
+  "pdg": "PDG000000004.6094",
+  "source_url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Escherichia_coli_Shigella/latest_snps/Metadata/PDG000000004.6094.metadata.tsv",
+  "amrfinder_image": "ncbi/amr:4.2.7-2026-03-24.1",
+  "date": "2026-06-07",
+  "n_strains": 22,
+  "n_with_run": 22,
+  "non_overlap_with": "all BV-BRC cohorts (176 accessions excluded at selection)",
+  "accessions": [
+    "GCA_000770275.1",
+    "GCA_000770285.1",
+    "GCA_000797575.1",
+    "GCA_000797585.1",
+    "GCA_000797595.1",
+    "GCA_000797605.1",
+    "GCA_000797655.1",
+    "GCA_000797675.1",
+    "GCA_000797695.1",
+    "GCA_000797715.1",
+    "GCA_000797815.1",
+    "GCA_000819225.1",
+    "GCA_000819305.1",
+    "GCA_004277975.1",
+    "GCA_012586495.1",
+    "GCA_012587415.1",
+    "GCA_012604195.1",
+    "GCA_012642945.1",
+    "GCA_012741095.1",
+    "GCA_012769615.1",
+    "GCA_012769655.1",
+    "GCA_012774675.1"
+  ],
+  "per_drug": {
+    "ciprofloxacin": {
+      "dna_amr": {
+        "n": 22,
+        "tp": 10,
+        "fp": 1,
+        "tn": 11,
+        "fn": 0,
+        "accuracy": 0.955,
+        "sensitivity": 1.0,
+        "specificity": 0.917
+      },
+      "naive_amrfinder": {
+        "n": 22,
+        "tp": 10,
+        "fp": 3,
+        "tn": 9,
+        "fn": 0,
+        "accuracy": 0.864,
+        "sensitivity": 1.0,
+        "specificity": 0.75
+      },
+      "discordance": {
+        "FN_undetected_mechanism": 0,
+        "FP_determinant_without_phenotype": 1
+      },
+      "na": 0
+    },
+    "ceftriaxone": {
+      "dna_amr": {
+        "n": 22,
+        "tp": 11,
+        "fp": 3,
+        "tn": 8,
+        "fn": 0,
+        "accuracy": 0.864,
+        "sensitivity": 1.0,
+        "specificity": 0.727
+      },
+      "naive_amrfinder": {
+        "n": 22,
+        "tp": 11,
+        "fp": 8,
+        "tn": 3,
+        "fn": 0,
+        "accuracy": 0.636,
+        "sensitivity": 1.0,
+        "specificity": 0.273
+      },
+      "discordance": {
+        "FN_undetected_mechanism": 0,
+        "FP_determinant_without_phenotype": 3
+      },
+      "na": 0
+    },
+    "gentamicin": {
+      "dna_amr": {
+        "n": 22,
+        "tp": 10,
+        "fp": 0,
+        "tn": 12,
+        "fn": 0,
+        "accuracy": 1.0,
+        "sensitivity": 1.0,
+        "specificity": 1.0
+      },
+      "naive_amrfinder": {
+        "n": 22,
+        "tp": 10,
+        "fp": 9,
+        "tn": 3,
+        "fn": 0,
+        "accuracy": 0.591,
+        "sensitivity": 1.0,
+        "specificity": 0.25
+      },
+      "discordance": {
+        "FN_undetected_mechanism": 0,
+        "FP_determinant_without_phenotype": 0
+      },
+      "na": 0
+    },
+    "tetracycline": {
+      "dna_amr": {
+        "n": 22,
+        "tp": 12,
+        "fp": 2,
+        "tn": 8,
+        "fn": 0,
+        "accuracy": 0.909,
+        "sensitivity": 1.0,
+        "specificity": 0.8
+      },
+      "naive_amrfinder": {
+        "n": 22,
+        "tp": 12,
+        "fp": 2,
+        "tn": 8,
+        "fn": 0,
+        "accuracy": 0.909,
+        "sensitivity": 1.0,
+        "specificity": 0.8
+      },
+      "discordance": {
+        "FN_undetected_mechanism": 0,
+        "FP_determinant_without_phenotype": 2
+      },
+      "na": 0
+    }
+  }
+}
