@@ -3,6 +3,27 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.7] — 2026-06-07
+
+1st Gram-positive: S. aureus oxacillin (MRSA/mecA) — genotype transfers; honest label finding.
+
+### Added
+- **oxacillin** (6th drug, 1st Gram-positive): mecA-based MRSA rule (threshold 1 + METHICILLIN-subclass,
+  excludes blaZ penicillinase). Added to mic_tiers (breakpoints, classes, mec loci, primary mechanism) +
+  DRUG_RULE. `supported_drugs()` now 6. +2 tests (104 → 106 → 108 green).
+- **S. aureus oxacillin validation (4th organism, 1st Gram-positive):** N=30.
+  `wiki/staphylococcus_aureus_oxacillin_validate_2026-06-07.md`.
+
+### Finding (the honest result)
+- **mecA genotype detection TRANSFERS to Gram-positive: sens 1.000** (all 15 R strains carry mecA). The
+  acquired-gene + Subclass-refinement approach works on a Gram-positive, as on the gram-negatives.
+- **spec 0.333 is oxacillin-LABEL noise, NOT a rule defect:** 10/15 "oxacillin-susceptible"-labeled strains
+  carry full-length mecA — far above genuine OS-MRSA (<5%). Oxacillin direct AST is the documented unreliable
+  comparator for mecA; CLSI/EUCAST recommend **cefoxitin** as the surrogate. The proper-label re-test is
+  **substrate-blocked** (cefoxitin = only 3R on this NCBI dataset).
+- **Terminal:** Gram-positive mecA detection generalizes; phenotype-label validation is the limit — the
+  project's recurring "substrate/label is the binding constraint" lesson, now confirmed on a Gram-positive.
+
 ## [0.3.6] — 2026-06-07
 
 3rd organism (Pseudomonas) + cross-organism shipped in the CLI.

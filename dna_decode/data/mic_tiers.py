@@ -56,6 +56,11 @@ DRUG_BREAKPOINTS: dict[str, dict[str, Optional[float]]] = {
         "clsi_r": 4.0, "clsi_s": 1.0,
         "eucast_r": 8.0, "eucast_s": 2.0,
     },
+    "oxacillin": {
+        # S. aureus oxacillin (methicillin surrogate; mecA-mediated). CLSI 2024 R>=4, S<=2.
+        "clsi_r": 4.0, "clsi_s": 2.0,
+        "eucast_r": 2.0, "eucast_s": 2.0,
+    },
 }
 
 
@@ -157,6 +162,7 @@ DRUG_AMRFINDER_CLASSES: dict[str, frozenset[str]] = {
     "tetracycline": frozenset({"TETRACYCLINE", "MULTIDRUG"}),
     "gentamicin": frozenset({"AMINOGLYCOSIDE", "MULTIDRUG"}),
     "meropenem": frozenset({"BETA-LACTAM", "CARBAPENEM", "MULTIDRUG"}),
+    "oxacillin": frozenset({"METHICILLIN", "BETA-LACTAM"}),
 }
 
 
@@ -231,6 +237,12 @@ DRUG_LOCI_BY_MECHANISM: dict[str, dict[str, set[str]]] = {
         "porin_loss": {"ompC", "ompF", "ompK35", "ompK36"},
         "regulatory": {"marR", "marA", "soxR", "soxS", "acrR"},
     },
+    "oxacillin": {
+        # methicillin/oxacillin resistance in S. aureus — acquired mec genes (PBP2a) = MRSA. The
+        # signature Gram-positive acquired-gene mechanism; AMRFinder Subclass METHICILLIN.
+        "mec_acquired": {"mecA", "mecC", "mecB"},
+        "blaZ_penicillinase": {"blaZ"},   # narrow penicillinase — NOT methicillin (excluded by refinement)
+    },
     "gentamicin": {
         "aminoglycoside_modifying_enzymes": {
             # Acetyltransferases (aac), phosphotransferases (aph),
@@ -260,6 +272,7 @@ DRUG_PRIMARY_MECHANISMS: dict[str, frozenset[str]] = {
     "tetracycline": frozenset({"tet_efflux", "tet_ribosomal_protection", "tet_enzymatic"}),
     "gentamicin": frozenset({"aminoglycoside_modifying_enzymes", "16S_rRNA_methyltransferase"}),
     "meropenem": frozenset({"carbapenemase_acquired"}),
+    "oxacillin": frozenset({"mec_acquired"}),
 }
 
 # Cross-drug shared co-resistance modifiers (the audit framework classifies

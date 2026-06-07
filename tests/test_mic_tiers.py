@@ -35,10 +35,10 @@ from dna_decode.data.mic_tiers import (
 # ---- breakpoint catalog --------------------------------------------------
 
 
-def test_supported_drugs_returns_5_drugs():
-    # meropenem added 2026-06-07 (Phase 3 slice 2 — carbapenem, 2nd-organism Klebsiella).
+def test_supported_drugs_returns_6_drugs():
+    # meropenem added 2026-06-07 (carbapenem); oxacillin added 2026-06-07 (1st Gram-positive, S. aureus mecA).
     assert set(supported_drugs()) == {"ciprofloxacin", "ceftriaxone", "tetracycline",
-                                      "gentamicin", "meropenem"}
+                                      "gentamicin", "meropenem", "oxacillin"}
 
 
 def test_breakpoints_for_unknown_drug_raises():

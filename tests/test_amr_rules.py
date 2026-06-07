@@ -215,6 +215,23 @@ def test_meropenem_carbapenemase_counts_esbl_excluded():
     assert c["determinants"][0]["symbol"] == "blaKPC-2"
 
 
+def test_oxacillin_meca_is_resistant():
+    # MRSA: mecA (Subclass METHICILLIN) → R. blaZ narrow penicillinase (BETA-LACTAM) excluded.
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("mecA", "METHICILLIN", "METHICILLIN"),
+                                   ("blaZ", "BETA-LACTAM", "BETA-LACTAM")])
+        c = call_resistance(m, "oxacillin")
+    assert c["prediction"] == "R" and c["n_determinants"] == 1
+    assert c["determinants"][0]["symbol"] == "mecA"
+
+
+def test_oxacillin_blaz_only_is_susceptible():
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaZ", "BETA-LACTAM", "BETA-LACTAM")])  # penicillinase, not mec
+        c = call_resistance(m, "oxacillin")
+    assert c["prediction"] == "S" and c["n_determinants"] == 0
+
+
 def test_meropenem_esbl_only_is_susceptible():
     with tempfile.TemporaryDirectory() as td:
         m = _write_main(Path(td), [("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN")])  # ESBL, no carbapenemase

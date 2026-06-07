@@ -121,6 +121,8 @@ DRUG_RULE: dict[str, dict] = {
                       "validated": "N=128 acc 0.945/sens 0.893/spec 0.96 (GENTAMICIN-subclass only; aph/aadA streptomycin-kanamycin genes excluded)"},
     "meropenem":     {"threshold": 1, "subclass_any": frozenset({"CARBAPENEM"}),
                       "validated": "Klebsiella N=30 acc 0.867/sens 1.0/spec 0.733 (acquired carbapenemase, CARBAPENEM-subclass: blaKPC/NDM/OXA-48; vs naive 0.533). Excludes ESBL/AmpC; blind to porin-loss-mediated R (expected FN mode)."},
+    "oxacillin":     {"threshold": 1, "subclass_any": frozenset({"METHICILLIN"}),
+                      "validated": "S. aureus N=30: mecA detection sens 1.0 (genotype TRANSFERS to Gram-positive); spec 0.333 is oxacillin-LABEL noise NOT a rule defect (10/15 oxacillin-S strains carry mecA — use cefoxitin, the CLSI mecA surrogate; cefoxitin substrate-sparse=3R). 1st Gram-positive drug. mecA/mecC METHICILLIN-subclass; excludes blaZ."},
 }
 
 
