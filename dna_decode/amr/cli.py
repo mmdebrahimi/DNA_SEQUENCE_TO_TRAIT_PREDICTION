@@ -26,8 +26,12 @@ from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
 
 
-def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path) -> Path:
-    """Genome mode: lazily import the repo's AMRFinder Docker runner (not in the wheel)."""
+def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path,
+                              organism: str = "Escherichia") -> Path:
+    """Genome mode: lazily import the repo's AMRFinder Docker runner (not in the wheel).
+
+    `organism` selects AMRFinder's `-O` (organism-specific point-mutation detection — gyrA/parC QRDR calls
+    are organism-specific, so a Klebsiella genome MUST use 'Klebsiella_pneumoniae' or its QRDR is missed)."""
     try:
         import scripts.drug_mechanism_audit as dma  # repo-only; needs Docker + DB
         from scripts.drug_mechanism_audit import _run_amrfinder
@@ -41,7 +45,7 @@ def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: P
     out_dir.mkdir(parents=True, exist_ok=True)
     if db:
         dma.AMRFINDER_DB = str(db)
-    _run_amrfinder(fasta, out_dir)
+    _run_amrfinder(fasta, out_dir, organism=organism)
     return out_dir
 
 
@@ -53,6 +57,10 @@ def main(argv=None) -> int:
     src.add_argument("--amrfinder-run", type=Path, help="existing AMRFinder run dir (contains main.tsv)")
     src.add_argument("--genome-fasta", type=Path, help="genome FASTA (runs AMRFinder via Docker)")
     ap.add_argument("--sample-id", default=None)
+    ap.add_argument("--organism", default="Escherichia",
+                    help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "
+                         "detection). E.g. Escherichia (default), Klebsiella_pneumoniae. Validated "
+                         "cross-organism for E. coli + K. pneumoniae.")
     ap.add_argument("--amrfinder-db", type=Path, default=Path("data/amrfinder_db"),
                     help="AMRFinder DB root (Docker-readable; default data/amrfinder_db)")
     ap.add_argument("--out-root", type=Path, default=Path("data/amrfinder_runs"))
@@ -72,7 +80,8 @@ def main(argv=None) -> int:
             return 2
         sample_id = args.sample_id or args.genome_fasta.stem
         try:
-            run_dir = _run_amrfinder_for_genome(args.genome_fasta, sample_id, args.out_root, args.amrfinder_db)
+            run_dir = _run_amrfinder_for_genome(args.genome_fasta, sample_id, args.out_root,
+                                                args.amrfinder_db, organism=args.organism)
         except Exception as e:
             print(f"ERROR: AMRFinder run failed ({type(e).__name__}: {e}).", file=sys.stderr)
             return 3
@@ -88,7 +97,8 @@ def main(argv=None) -> int:
         "caller": {"name": "dna_decode-amr-rules-v1", "rule": call["rule"],
                    "source": "AMRFinderPlus curated main.tsv", "caller_is_independent_baseline": False},
         "caveat": call["caveat"],
-        "provenance": {"amrfinder_run": str(run_dir), "amrfinder_image": AMRFINDER_IMAGE_PINNED},
+        "provenance": {"amrfinder_run": str(run_dir), "amrfinder_image": AMRFINDER_IMAGE_PINNED,
+                       "amrfinder_organism": args.organism},
     }
     if args.out:
         Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
