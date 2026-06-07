@@ -3,6 +3,32 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.3.2] — 2026-06-06
+
+Trust-hardening + honesty taxonomy (adversarial-review follow-through). No new science — makes the
+shipped decoders auditable + honest about their blind spots.
+
+### Added
+- **Blind-spot honesty:** every SUSCEPTIBLE `dna-amr` call now carries `undetectable_mechanisms`
+  (`efflux` / `porin_loss` / `regulatory` — expression/regulatory resistance absent from AMRFinder's
+  curated determinants) + a caveat that a negative means "no curated determinant found", not "definitely
+  susceptible". `UNDETECTABLE_MECHANISMS` in `amr_rules.py`.
+- **Discordance taxonomy:** `discordance_bucket(prediction, true_label)` + `evaluate_cohort` now emit a
+  failure-mode breakdown — `FN_undetected_mechanism` (R missed → the blind spots) vs
+  `FP_determinant_without_phenotype` (called R but susceptible → label noise / silent-or-low-expression /
+  borderline MIC). The "failure-tolerant tool" deliverable: names where it fails.
+- **Provenance pin:** output JSON `provenance.amrfinder_image` records the pinned AMRFinderPlus image
+  (`ncbi/amr:4.2.7-2026-03-24.1`; tag encodes the DB date) so an R/S verdict is reproducible against a
+  known determinant source. `AMRFINDER_IMAGE_PINNED` in `amr_rules.py`.
+- **Value-add headline** in `wiki/dna_amr_multidrug_validation_2026-06-06.md`: explicit naive-AMRFinder
+  vs dna-amr table (cef +0.28 acc/+0.50 spec; gent +0.43/+0.57) — proves the per-drug policy adds value
+  over vanilla "any determinant → R", not just re-prints AMRFinder hits.
+- 5 new tests (blind-spots on S/R calls, discordance taxonomy, cohort discordance breakdown). 20 total.
+
+### Fixed
+- Stale gentamicin "NOT yet cohort-validated" claims (`amr_rules.py` docstring + wiki caveat) reconciled
+  with the N=128 acc 0.945 validation that DRUG_RULE/README/CHANGELOG already recorded (claim-hygiene).
+
 ## [0.3.1] — 2026-06-06
 
 The "one coherent tool" consolidation (after the v0.3.0 build settled the embedding question).

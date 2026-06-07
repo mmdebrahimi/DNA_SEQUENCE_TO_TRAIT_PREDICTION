@@ -23,7 +23,7 @@ import sys
 from pathlib import Path
 
 from dna_decode.data.mic_tiers import supported_drugs
-from dna_decode.eval.amr_rules import call_resistance
+from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
 
 
 def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path) -> Path:
@@ -84,9 +84,11 @@ def main(argv=None) -> int:
         "prediction": call["prediction"], "confidence": call["confidence"],
         "n_determinants": call["n_determinants"], "determinants": call["determinants"],
         "resistance_threshold": call.get("resistance_threshold"),
+        "undetectable_mechanisms": call.get("undetectable_mechanisms", []),
         "caller": {"name": "dna_decode-amr-rules-v1", "rule": call["rule"],
                    "source": "AMRFinderPlus curated main.tsv", "caller_is_independent_baseline": False},
-        "caveat": call["caveat"], "provenance": {"amrfinder_run": str(run_dir)},
+        "caveat": call["caveat"],
+        "provenance": {"amrfinder_run": str(run_dir), "amrfinder_image": AMRFINDER_IMAGE_PINNED},
     }
     if args.out:
         Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")

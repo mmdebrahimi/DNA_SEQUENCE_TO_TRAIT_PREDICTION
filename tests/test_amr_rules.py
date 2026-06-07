@@ -8,7 +8,10 @@ import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from dna_decode.eval.amr_rules import DRUG_RULE, call_resistance, evaluate_cohort, rule_for
+from dna_decode.eval.amr_rules import (
+    FN_UNDETECTED_MECHANISM, FP_DETERMINANT_NO_PHENOTYPE, UNDETECTABLE_MECHANISMS,
+    DRUG_RULE, call_resistance, discordance_bucket, evaluate_cohort, rule_for,
+)
 
 _HEADER = ("Protein id\tContig id\tStart\tStop\tStrand\tElement symbol\tElement name\tScope\tType\t"
            "Subtype\tClass\tSubclass\tMethod\tTarget length\tReference sequence length\t"
@@ -72,6 +75,45 @@ def test_susceptible_when_no_quinolone_determinant():
 def test_indeterminate_when_main_missing():
     c = call_resistance(Path("/nonexistent/main.tsv"), "ciprofloxacin")
     assert c["prediction"] == "INDETERMINATE"
+
+
+def test_susceptible_call_carries_blind_spots():
+    # an S call must surface the mechanisms the curated-determinant rule cannot see (honest negative).
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaTEM-1", "BETA-LACTAM", "BETA-LACTAM")])  # not cef-relevant
+        c = call_resistance(m, "ceftriaxone")
+    assert c["prediction"] == "S"
+    assert c["undetectable_mechanisms"] == UNDETECTABLE_MECHANISMS  # efflux/porin_loss/regulatory
+    assert "rule out resistance" in c["caveat"]
+
+
+def test_resistant_call_has_no_blind_spot_list():
+    with tempfile.TemporaryDirectory() as td:
+        m = _write_main(Path(td), [("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN")])
+        c = call_resistance(m, "ceftriaxone")
+    assert c["prediction"] == "R" and c["undetectable_mechanisms"] == []
+
+
+def test_discordance_bucket_taxonomy():
+    assert discordance_bucket("S", 1) == FN_UNDETECTED_MECHANISM        # R phenotype missed
+    assert discordance_bucket("R", 0) == FP_DETERMINANT_NO_PHENOTYPE    # called R, susceptible
+    assert discordance_bucket("R", 1) is None                          # concordant
+    assert discordance_bucket("S", 0) is None                          # concordant
+    assert discordance_bucket("INDETERMINATE", 1) is None
+
+
+def test_evaluate_cohort_emits_discordance_breakdown():
+    with tempfile.TemporaryDirectory() as td:
+        # one true-R strain with NO cef determinant (FN) + one true-S strain WITH an ESBL (FP)
+        import os
+        fn_dir = Path(td) / "FN"; fn_dir.mkdir()
+        _write_main(fn_dir, [("blaTEM-1", "BETA-LACTAM", "BETA-LACTAM")])  # no extended-spectrum → S
+        fp_dir = Path(td) / "FP"; fp_dir.mkdir()
+        _write_main(fp_dir, [("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN")])  # ESBL → R
+        os.rename(fn_dir / "main.tsv", fn_dir / "main.tsv")  # no-op; main.tsv already there
+        r = evaluate_cohort(Path(td), [("FN", 1), ("FP", 0)], "ceftriaxone")
+    assert r["discordance"][FN_UNDETECTED_MECHANISM] == 1
+    assert r["discordance"][FP_DETERMINANT_NO_PHENOTYPE] == 1
 
 
 def test_per_drug_rule_config():

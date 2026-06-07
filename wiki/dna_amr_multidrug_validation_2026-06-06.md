@@ -20,6 +20,31 @@ because it counts genes conferring resistance to OTHER members of the class. AMR
 field is the drug-specific discriminator — refine to the drug's own subclass token (CEPHALOSPORIN/
 CARBAPENEM for ceftriaxone; GENTAMICIN for gentamicin). Same one-line fix, +0.4 spec each.
 
+## Value-add over vanilla AMRFinderPlus (the product-justification headline)
+
+`dna-amr` is a per-drug PHENOTYPE policy over AMRFinder determinants — its value is that the policy
+beats the naive "any drug-class determinant present → R" read of AMRFinder output. Demonstrated on the
+same cohorts:
+
+| Drug | naive AMRFinder (any class determinant) | dna-amr per-drug rule | Δ accuracy |
+|---|---|---|---|
+| ciprofloxacin | threshold≥1 over-calls (single QRDR hit ≠ clinical R) | threshold≥2 → **0.939** | rule beats naive ≥1 |
+| ceftriaxone | any BETA-LACTAM → acc 0.65 / spec 0.412 | extended-spectrum subclass → **0.933 / 0.912** | **+0.28 acc / +0.50 spec** |
+| gentamicin | any AMINOGLYCOSIDE → acc 0.52 / spec 0.39 | GENTAMICIN-subclass → **0.945 / 0.960** | **+0.43 acc / +0.57 spec** |
+
+So the decoder is NOT just re-printing AMRFinder hits: vanilla "AMRFinder found a determinant" would
+mis-call ~35-48% of cef/gent isolates. The per-drug threshold + Subclass refinement IS the value.
+
+## Failure-mode taxonomy (honest blind spots)
+
+The rule reads only AMRFinder's CURATED determinants, so it is structurally blind to expression/
+regulatory resistance: **efflux overexpression, porin loss, regulatory changes** (`UNDETECTABLE_MECHANISMS`
+in `amr_rules.py`). Every SUSCEPTIBLE call now carries this caveat (a negative means "no curated
+determinant found", not "definitely susceptible"). `evaluate_cohort` emits a discordance breakdown:
+`FN_undetected_mechanism` (R missed — the blind spots above) vs `FP_determinant_without_phenotype`
+(called R but susceptible — label noise / silent-or-low-expression gene / borderline MIC). This is the
+"failure-tolerant tool" deliverable: the decoder names where it fails, it doesn't hide it.
+
 ## The ceftriaxone fix (the load-bearing finding)
 
 The naive "any drug-class determinant" rule failed cef badly:
@@ -66,7 +91,7 @@ Fix: for ceftriaxone, count only determinants whose Subclass ∋ {CEPHALOSPORIN,
   re-validate before any non-internal use.
 - Same-source caveat as the cipro external validation: all cohorts are BV-BRC broth-microdilution;
   not a cross-lab check.
-- gentamicin is unvalidated — the config entry is a mechanism-analogy default, flagged as such in output.
+- gentamicin IS cohort-validated (N=128 acc 0.945, GENTAMICIN-subclass refinement); tetracycline remains the only provisional drug (N=12).
 
 ## Reproduce
 

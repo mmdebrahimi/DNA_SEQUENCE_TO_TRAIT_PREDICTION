@@ -17,7 +17,18 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from dna_decode.data.mic_tiers import amrfinder_classes_for
+from dna_decode.data.mic_tiers import CO_RESISTANCE_MECHANISMS, amrfinder_classes_for
+
+# The pinned AMRFinderPlus image (tag encodes the DB date 2026-03-24.1) that produced the curated
+# determinants this caller reads. Stamped into every call's provenance so an R/S verdict is auditable +
+# reproducible against a known determinant source. Mirror of scripts/drug_mechanism_audit.AMRFINDER_IMAGE.
+AMRFINDER_IMAGE_PINNED = "ncbi/amr:4.2.7-2026-03-24.1"
+
+# Resistance mechanisms the curated-determinant rule CANNOT see: efflux overexpression, regulatory
+# changes, and porin loss are expression/regulatory phenotypes, not acquired genes/point mutations in
+# AMRFinder's curated set. A SUSCEPTIBLE (S) call therefore cannot RULE OUT resistance via these —
+# they are the rule's structural blind spots (and the dominant cause of its false negatives).
+UNDETECTABLE_MECHANISMS = sorted(CO_RESISTANCE_MECHANISMS)  # ['efflux', 'porin_loss', 'regulatory']
 
 
 def cipro_determinants_from_main(main_tsv: Path, drug: str,
@@ -92,7 +103,7 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
       - ceftriaxone:   threshold 1 + EXTENDED-SPECTRUM subclass refinement (CEPHALOSPORIN/CARBAPENEM only;
                        plain BETA-LACTAM like blaTEM-1 is ampicillin-R not ceftriaxone-R) — N=60 acc 0.933.
       - tetracycline:  threshold 1 (acquired tet genes) — N=12 acc 0.833 (small N).
-      - gentamicin:    threshold 1 by mechanism analogy — NOT yet cohort-validated.
+      - gentamicin:    threshold 1 + GENTAMICIN-subclass refinement — N=128 acc 0.945.
     Confidence: HIGH if n>=threshold+1 OR n==0; MODERATE near the boundary. Absent main.tsv → INDETERMINATE."""
     p = Path(main_tsv)
     if not p.exists():
@@ -117,17 +128,46 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     refine_note = (f" {drug} counts only determinants whose AMRFinder Subclass indicates "
                    f"{'/'.join(sorted(refine))} activity (broader-class genes that don't confer "
                    f"{drug} resistance are excluded)." if refine else "")
+    # Blind-spot honesty: a SUSCEPTIBLE call cannot rule out resistance via mechanisms the curated-
+    # determinant rule can't see (efflux overexpression / porin loss / regulatory). Surface them so a
+    # negative is read as "no curated determinant found", NOT "definitely susceptible".
+    undetectable = UNDETECTABLE_MECHANISMS if pred == "S" else []
     return {
         "prediction": pred,
         "confidence": conf,
         "n_determinants": n,
         "determinants": dets,
         "resistance_threshold": resistance_threshold,
+        "undetectable_mechanisms": undetectable,
         "rule": (f"amrfinder_curated_determinant_v1 (R iff >={resistance_threshold} curated "
                  f"{'extended-spectrum ' if refine else ''}drug-class determinants)"),
         "caveat": ("interpretable deterministic call from AMRFinder's curated database. Per-drug validated "
-                   f"op-chars: {cfg['validated']}." + refine_note + boundary_note),
+                   f"op-chars: {cfg['validated']}." + refine_note + boundary_note
+                   + (f" An S call cannot rule out resistance via {', '.join(UNDETECTABLE_MECHANISMS)} "
+                      "(expression/regulatory mechanisms absent from AMRFinder's curated determinants)."
+                      if pred == "S" else "")),
     }
+
+
+# Genotype-vs-phenotype discordance taxonomy — the honest failure-mode buckets. Used by evaluate_cohort
+# (and any caller with a ground-truth label) to characterize WHERE the deterministic rule fails, not just
+# how often. This is the "failure-tolerant tool" deliverable: name the failure mode, don't hide it.
+FN_UNDETECTED_MECHANISM = "FN_undetected_mechanism"          # true R, called S — efflux/porin/regulatory/low-level
+FP_DETERMINANT_NO_PHENOTYPE = "FP_determinant_without_phenotype"  # true S, called R — label-noise/silent-or-low-expr/borderline-MIC
+
+
+def discordance_bucket(prediction: str, true_label: int) -> str | None:
+    """Classify a genotype-vs-phenotype mismatch into an honest failure-mode bucket.
+
+    Returns None when concordant or INDETERMINATE. FN (R phenotype missed) → the rule's structural blind
+    spots (UNDETECTABLE_MECHANISMS); FP (R called on a susceptible isolate) → determinant present but not
+    phenotypically expressed (label noise / silent or low-expression gene / MIC near the breakpoint)."""
+    if prediction == "INDETERMINATE":
+        return None
+    pred_r = prediction == "R"
+    if pred_r == bool(true_label):
+        return None
+    return FN_UNDETECTED_MECHANISM if (not pred_r and true_label == 1) else FP_DETERMINANT_NO_PHENOTYPE
 
 
 def evaluate_cohort(runs_root: Path, accession_label_pairs: list[tuple[str, int]], drug: str,
@@ -155,4 +195,9 @@ def evaluate_cohort(runs_root: Path, accession_label_pairs: list[tuple[str, int]
         "accuracy": round((tp + tn) / n, 3) if n else None,
         "sensitivity": round(tp / (tp + fn), 3) if (tp + fn) else None,
         "specificity": round(tn / (tn + fp), 3) if (tn + fp) else None,
+        # honest failure-mode breakdown (discordance taxonomy)
+        "discordance": {
+            FN_UNDETECTED_MECHANISM: fn,        # R missed — likely efflux/porin-loss/regulatory/low-level
+            FP_DETERMINANT_NO_PHENOTYPE: fp,    # called R but S — likely label-noise/low-expression/borderline-MIC
+        },
     }
