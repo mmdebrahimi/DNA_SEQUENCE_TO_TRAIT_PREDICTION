@@ -43,12 +43,12 @@
   "dna_amr": {
     "n": 30,
     "tp": 15,
-    "fp": 15,
-    "tn": 0,
+    "fp": 0,
+    "tn": 15,
     "fn": 0,
-    "accuracy": 0.5,
+    "accuracy": 1.0,
     "sensitivity": 1.0,
-    "specificity": 0.0
+    "specificity": 1.0
   },
   "naive_amrfinder": {
     "n": 30,
@@ -62,8 +62,8 @@
   },
   "discordance": {
     "FN_undetected_mechanism": 0,
-    "FP_determinant_without_phenotype": 15
+    "FP_determinant_without_phenotype": 0
   },
   "na": 0,
-  "verdict": "DOES_NOT_TRANSFER"
+  "verdict": "TRANSFERS"
 }
