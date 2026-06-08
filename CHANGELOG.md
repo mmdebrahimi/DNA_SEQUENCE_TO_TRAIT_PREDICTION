@@ -3,6 +3,31 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.5.0] — 2026-06-08 — Fungal AMR decoder (the kingdom jump)
+
+`dna-amr` now decodes **fungal** azole/echinocandin resistance, not just bacterial — the determinant-scan
+method validated across the bacteria→fungi kingdom boundary.
+
+- **New capability:** `dna-amr --drug fluconazole|voriconazole|caspofungin|micafungin` routes to a
+  BLAST-ERG11/FKS1 target-site engine (vs the AMRFinder engine for bacterial drugs — there is no
+  AMRFinder-for-fungi). Two source modes: `--genome-fasta` (BLAST the committed C. auris ERG11 reference)
+  and `--observed GENE:SUB[,...]` (pure, wheel-only, no BLAST). Emits the same `amr-mechanism-call-v1`
+  record as the bacterial path (uniform tool surface); S calls surface the efflux/aneuploidy blind spots.
+- **Validation (Gate G1, `wiki/fungal_ep7_g1_closeout_2026-06-08.md`):** on a de-confounded C. auris
+  WGS+MIC cohort (S. Africa bloodstream, PRJNA737309 + AraPheno-style Table S1 MICs), the deterministic
+  caller found the catalogued ERG11 mutation in **100% of fluconazole-MIC-R isolates across two clades**
+  (clade I Y132F, clade III F126L/VF125AL) — sensitivity 1.0. Specificity is label-limited (reduced-
+  susceptibility F126L carriers fall below the CDC tentative breakpoint), the documented "suspect the
+  label" pattern; the genotype is the trustworthy output.
+- **Infra shipped:** `dna_decode/data/fungal_amr.py` (hand-curated catalog + CDC tentative breakpoints),
+  `scripts/fungal_erg11_caller.py` (BLAST→codon-map→catalog), `scripts/build_fungal_cohort.py` (cohort
+  validation + within-clade de-confound + LABEL_LIMITED_FAILURE verdict), `scripts/assemble_sra_cohort.py`
+  (targeted ERG11 read-mapping, ~4 min/isolate vs ~45 min full assembly). Committed real C. auris reference
+  + 3 public allele fixtures (`data/fungal_ref/`).
+- **Eukaryotic Path B (Arabidopsis flowering-time embedding test, Gate G2)** pre-staged + brainstorm-revised
+  + CPU-only dry-manifest gate coded (`scripts/g2_dry_manifest.py`); GPU run deferred to the workhorse.
+- ~43 new tests (fungal catalog/caller/cohort/CLI + dry-manifest). Bacterial path unchanged.
+
 ## [0.4.0] — 2026-06-07 — Multi-Organism AMR Decoder (capstone)
 
 Milestone release consolidating the AMR arc. No new code — a capstone over v0.3.x.

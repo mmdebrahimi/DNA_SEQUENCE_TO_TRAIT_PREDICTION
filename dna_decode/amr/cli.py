@@ -68,6 +68,10 @@ def _fungal_record(call, sample_id: str, drug: str, organism: str, provenance: d
 
 def _fungal_main(args) -> int:
     """Fungal target-site decoder branch (routed when --drug is a fungal drug)."""
+    # the --organism default 'Escherichia' is the bacterial AMRFinder default; on the fungal path, relabel
+    # to the validated fungal organism unless the user explicitly set one.
+    if args.organism == "Escherichia":
+        args.organism = "Candida_auris"
     if args.observed is not None:
         obs = _parse_observed(args.observed)
         call = call_from_observed_substitutions(args.drug, obs)

@@ -1,18 +1,19 @@
 # DNA_SEQUENCE_TO_TRAIT_PREDICTION
 
-**`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a bacterial genome; it
-returns a phenotype call (antibiotic resistance R/S, or E. coli pathotype) **plus the exact genes/mutations
-that drove the call** + its own blind spots + provenance. Mechanism-feature based, not an embedding
-black-box. **Not a clinical tool.**
+**`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a bacterial **or fungal**
+genome; it returns a phenotype call (antibiotic resistance R/S, or E. coli pathotype) **plus the exact
+genes/mutations that drove the call** + its own blind spots + provenance. Mechanism-feature based, not an
+embedding black-box. **Not a clinical tool.**
 
-## What it decodes (v0.4.0)
+## What it decodes (v0.5.0)
 
 | Tool | Trait | Validation |
 |---|---|---|
-| `dna-decode amr` | antibiotic R/S — **cipro / cef / tet / gent / meropenem** across **E. coli, K. pneumoniae, P. aeruginosa, S. aureus** | 6 drugs × 4 organisms, in-cohort + held-out + cross-source (NCBI) + cross-organism; every per-drug rule beats naive AMRFinder. Capstone: `wiki/amr_multiorganism_capstone_2026-06-07.md` |
+| `dna-decode amr` (bacterial) | antibiotic R/S — **cipro / cef / tet / gent / meropenem** across **E. coli, K. pneumoniae, P. aeruginosa, S. aureus** | 6 drugs × 4 organisms, in-cohort + held-out + cross-source (NCBI) + cross-organism; every per-drug rule beats naive AMRFinder. Capstone: `wiki/amr_multiorganism_capstone_2026-06-07.md` |
+| `dna-decode amr` (**fungal**, v0.5.0) | azole / echinocandin R/S — **fluconazole / voriconazole / caspofungin / micafungin** for **Candida auris** (BLAST-ERG11/FKS1 target-site engine) | **kingdom-jump** — same determinant-scan method, validated on a de-confounded C. auris WGS+MIC cohort (Gate G1): sens 1.0 across clades (ERG11 Y132F/F126L), label-limited specificity. `wiki/fungal_ep7_g1_closeout_2026-06-08.md` |
 | `dna-decode pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) compatibility + abstention | VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit |
 
-847 tests green. The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
+890+ tests green. The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
 
@@ -27,14 +28,19 @@ uv sync          # or: pip install -e .
 
 ```text
 $ uv run dna-decode list
-dna-decode 0.4.0 - deterministic genotype->phenotype decoders
-  amr        antibiotic resistance R/S (cipro/cef/tet/gent/meropenem) - E.coli/Klebsiella/Pseudomonas/S.aureus
+dna-decode 0.5.0 - deterministic genotype->phenotype decoders
+  amr        antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem) + FUNGAL azole/echinocandin (C. auris)
   pathotype  E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
 
 $ uv run dna-decode amr --drug ceftriaxone --amrfinder-run data/amrfinder_runs/GCA_008727135.1
 sample: GCA_008727135.1  drug: ceftriaxone
 CALL: R  [MODERATE | 1 determinant(s)]
   driven by: blaCMY-2  (CEPHALOSPORIN, 100.00% id)
+
+$ uv run dna-amr --drug fluconazole --observed ERG11:Y132F --sample-id isolate1   # fungal, pure (no BLAST)
+sample: isolate1  drug: fluconazole  organism: Candida_auris
+CALL: R  [high | 1 determinant(s)]
+  driven by: ERG11:Y132F
 ```
 
 ```bash
