@@ -16,7 +16,13 @@ embedding black-box. **Not a clinical tool.**
 | `dna-decode serotype` (**new**) | E. coli **O:H serotype** (wzx/wzy/wzm/wzt O-antigen + fliC H-antigen) | deterministic SerotypeFinder-blastn caller (identity 85 / coverage 60); `O?/H?` when a locus is unresolved; offline-safe |
 | `dna-decode resfinder` (**new**) | acquired **AMR genes** (ResFinder DB) — an **independent** cross-tool check vs `amr` | deterministic ResFinder-blastn caller (identity 90 / coverage 60); `caller_is_independent_baseline: true` (acquired genes only — no point-mutations/efflux); offline-safe |
 
-910+ tests green. **5 decoders**, all sharing one curated-DB blastn engine (`dna_decode/typing/blast_caller.py`). The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
+910+ tests green. **5 decoders** (one shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`)
+**+ 2 cross-decoder analyses** that compose them:
+
+| Analysis | What | |
+|---|---|---|
+| `dna-decode concordance` | AMR cross-tool check — **AMRFinder (`amr`) vs ResFinder (`resfinder`)** acquired-gene calls, gene-family level + Jaccard agreement | the independent second-opinion `resfinder` was built for |
+| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder) on one genome → one unified report | the "tell me everything" UX; each section degrades independently | The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
 

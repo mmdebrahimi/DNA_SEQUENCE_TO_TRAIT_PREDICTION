@@ -3,6 +3,18 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — cross-decoder analyses (concordance + profile)
+
+Two ANALYSES that compose the shipped decoders (no new DB) — variety roadmap Wave 1.
+
+- **`dna-concordance`** (`dna-decode concordance`) — compares the two independent acquired-gene callers,
+  AMRFinder (`dna-amr` main.tsv) vs ResFinder (`dna-resfinder` blastn), at the gene-family level (allele
+  variant stripped; `sul1`≠`sul2`, `blaNDM-1`≈`blaNDM-19`) + Jaccard agreement. The cross-check `resfinder`
+  was built to enable.
+- **`dna-profile`** (`dna-decode profile`) — runs every assembly-FASTA decoder (pathotype + serotype +
+  plasmid + resfinder) on one genome → a single unified report; each section degrades independently.
+- Kept out of the `TRAITS` decoder registry (new `ANALYSES` dict; disjoint namespaces). 15 new tests.
+
 ## [Unreleased] — typing-decoder family (plasmid + serotype + resfinder on one shared engine)
 
 Three new deterministic curated-DB decoders — the tool grows from 2 traits to 5, all on one engine.

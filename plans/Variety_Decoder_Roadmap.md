@@ -21,7 +21,7 @@ highest-VOI AND the most feasible — they turn separate callers into integrated
 product value compounds. New-DB decoders beyond simple presence (PointFinder/MLST) are real but heavier and
 have DB-discovery friction. So the roadmap front-loads combined analyses.
 
-## Wave 1 — combined analyses (no new DB; compose the existing 5) — DO FIRST
+## Wave 1 — combined analyses (no new DB; compose the existing 5) — ✅ DONE 2026-06-08 (commit 80d90fb)
 Highest VOI/cost; zero new external dependency; each is pure logic + tests over shipped decoders.
 1. **`amr`⇄`resfinder` concordance** — run both AMR callers on a genome, report per-gene/per-drug agreement
    (both-call / amr-only / resfinder-only), surfacing the independent cross-check resfinder was built for.
