@@ -53,8 +53,9 @@ Highest VOI/cost; zero new external dependency; each is pure logic + tests over 
 8. **S. aureus typing** (spaTyper / SCCmecFinder) — repeat/region typing; heavier; defer unless requested.
 
 ## Remaining (heavier / distinct batches — not one-`--advance` increments)
-- **MLST** — DB raw-paths 404 (needs layout discovery, possibly git-lfs/PubMLST) + exact-allele matching +
-  profile→ST lookup (different semantics from presence/codon). A dedicated batch.
+- ✅ **MLST** — DONE 2026-06-08 (commit bf76c78). Unblocked via PubMLST REST (not CGE mlst_db). E. coli
+  Achtman 7-gene; exact-allele(100/100)→profile→ST on the shared engine + PubMLST profiles. Validated
+  K-12 MG1655 → ST10. `dna-mlst --fetch-db`. Other species = different PubMLST db name, same code.
 - **S. aureus typing** (spaTyper/SCCmec) — repeat/region typing logic; heavier.
 - **PointFinder other species** (Salmonella/Campylobacter/...) — cheap (`--db-dir`, same code) but
   re-confirmation, not new capability.

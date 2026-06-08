@@ -17,8 +17,9 @@ embedding black-box. **Not a clinical tool.**
 | `dna-decode resfinder` (**new**) | acquired **AMR genes** (ResFinder DB) — an **independent** cross-tool check vs `amr` | deterministic ResFinder-blastn caller (identity 90 / coverage 60); `caller_is_independent_baseline: true` (acquired genes only — no point-mutations/efflux); offline-safe |
 | `dna-decode pointfinder` (**new**) | **chromosomal AMR point mutations** (PointFinder; v0 E. coli FQ QRDR gyrA/parC/gyrB/parE) | deterministic blastn + codon-position lookup vs `resistens-overview`; `caller_is_independent_baseline: true` (independent of `amr`'s AMRFinder POINT); offline-safe |
 | `dna-decode disinfinder` (**new**) | **biocide/disinfectant resistance** genes (DisinFinder; qac/form quaternary-ammonium + formaldehyde) | deterministic DisinFinder-blastn caller (identity 90 / coverage 60); often plasmid-borne (pair with `coloc`); offline-safe |
+| `dna-decode mlst` (**new**) | **MLST sequence type** (PubMLST; v0 E. coli Achtman 7-gene) — exact-allele → profile → ST | deterministic blastn 100/100 + PubMLST profile lookup; **validated: K-12 MG1655 → ST10**; `dna-mlst --fetch-db` installs the scheme; novel/incomplete → ST not guessed; offline-safe |
 
-910+ tests green. **7 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
+915+ tests green. **8 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
 + codon-mapping `dna_decode/typing/codon_map.py`) **+ 3 cross-decoder analyses** that compose them:
 
 | Analysis | What | |

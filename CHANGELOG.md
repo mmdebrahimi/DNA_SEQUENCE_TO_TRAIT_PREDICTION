@@ -21,6 +21,16 @@ Three ANALYSES that compose the shipped decoders (no new DB) — variety roadmap
   plasmid + resfinder) on one genome → a single unified report; each section degrades independently.
 - Kept out of the `TRAITS` decoder registry (new `ANALYSES` dict; disjoint namespaces). 15 new tests.
 
+## [Unreleased] — MLST sequence-typing decoder (the blocked one, unblocked via PubMLST)
+
+- **`dna-mlst`** (`dna-decode mlst`) — 8th decoder. 7-gene MLST: exact per-locus allele (blastn 100/100 on
+  the shared engine) → profile → Sequence Type via the PubMLST profiles table. v0: E. coli Achtman
+  (adk/fumC/gyrB/icd/mdh/purA/recA, 16,242 STs). The earlier blocker was DB-discovery (CGE `mlst_db` raw
+  paths 404); resolved by using **PubMLST's REST API** (`pubmlst_ecoli_achtman_seqdef` scheme 4).
+  `dna-mlst --fetch-db` installs the scheme (DB on demand, gitignored). Novel/incomplete profiles report
+  "ST not called", never guessed. **Validated end-to-end: K-12 MG1655 → ST10** (real DB + real genome) +
+  synthetic real-BLAST e2e + pure-core tests. New shared `mlst/core.py` (profiles parse + ST lookup). 5 tests.
+
 ## [Unreleased] — DisinFinder biocide-resistance decoder (roadmap W4) + profile completion
 
 - **`dna-disinfinder`** (`dna-decode disinfinder`) — 7th decoder. Acquired biocide/disinfectant resistance
