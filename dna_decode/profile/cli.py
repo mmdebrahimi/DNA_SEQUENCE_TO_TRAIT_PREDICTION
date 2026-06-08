@@ -51,6 +51,20 @@ def _serotype(fasta, db):
             "h_antigen": r.get("h_antigen")}
 
 
+def _pointfinder(fasta, db_dir):
+    from dna_decode.pointfinder.runner import call_point_mutations, parse_overview
+    d = Path(db_dir)
+    ov = d / "resistens-overview.txt"
+    refs = {g: d / f"{g}.fsa" for g in ("gyrA", "parC", "gyrB", "parE")}
+    if not ov.exists() or not any(p.exists() for p in refs.values()):
+        return {"status": "unavailable", "reason": f"PointFinder DB not found at {db_dir}"}
+    r = call_point_mutations(fasta, {g: p for g, p in refs.items() if p.exists()}, parse_overview(ov))
+    if r["status"] != "ok":
+        return {"status": r["status"], "reason": r.get("reason")}
+    return {"status": "ok", "mutations": [m["mutation"] for m in r["mutations"]],
+            "resistances": r["resistances"]}
+
+
 def _resfinder(fasta, db_dir):
     from dna_decode.resfinder.runner import call_resistance_genes
     d = Path(db_dir)
@@ -75,6 +89,7 @@ def main(argv=None) -> int:
     ap.add_argument("--plasmid-db", default="data/plasmidfinder_db/enterobacteriales.fsa")
     ap.add_argument("--serotype-db", default="data/serotypefinder_db/serotypefinder.fsa")
     ap.add_argument("--resfinder-db-dir", default="data/resfinder_db")
+    ap.add_argument("--pointfinder-db-dir", default="data/pointfinder_db/escherichia_coli")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)
@@ -89,6 +104,7 @@ def main(argv=None) -> int:
         "serotype": _serotype(args.fasta, args.serotype_db),
         "plasmid": _plasmid(args.fasta, args.plasmid_db),
         "resfinder": _resfinder(args.fasta, args.resfinder_db_dir),
+        "pointfinder": _pointfinder(args.fasta, args.pointfinder_db_dir),
     }
     n_ok = sum(1 for d in decoders.values() if d.get("status") == "ok")
     rec = {
@@ -115,6 +131,8 @@ def main(argv=None) -> int:
         print(f"  plasmid:   {', '.join(pl.get('replicons', [])) or '(none)' if pl['status']=='ok' else '['+pl['status']+']'}")
         rf = decoders["resfinder"]
         print(f"  resfinder: {', '.join(rf.get('genes', [])) or '(none)' if rf['status']=='ok' else '['+rf['status']+']'}")
+        pf = decoders["pointfinder"]
+        print(f"  pointfinder: {', '.join(pf.get('mutations', [])) or '(none)' if pf['status']=='ok' else '['+pf['status']+']'}")
         print(f"  {rec['caveat']}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")

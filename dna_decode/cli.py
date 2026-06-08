@@ -46,6 +46,10 @@ TRAITS = {
         "summary": "chromosomal AMR point mutations (PointFinder; v0 E. coli FQ QRDR gyrA/parC/gyrB/parE) - INDEPENDENT vs amr's AMRFinder POINT",
         "validation": "deterministic blastn + codon-position lookup vs resistens-overview; caller_is_independent_baseline=True; epistasis recorded not enforced; offline-safe degrade",
     },
+    "disinfinder": {
+        "summary": "biocide/disinfectant resistance genes (DisinFinder; qac/form... quaternary-ammonium + formaldehyde) - often plasmid-borne (pair with coloc)",
+        "validation": "deterministic DisinFinder-blastn caller (identity 90 / coverage 60); faithful-to-tool; offline-safe degrade",
+    },
 }
 
 
@@ -76,6 +80,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pointfinder":
         from dna_decode.pointfinder.cli import main as pointfinder_main
         return pointfinder_main(rest)
+    if trait == "disinfinder":
+        from dna_decode.disinfinder.cli import main as disinfinder_main
+        return disinfinder_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

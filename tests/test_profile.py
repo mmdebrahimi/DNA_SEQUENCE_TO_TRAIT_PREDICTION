@@ -18,13 +18,14 @@ def test_profile_all_unavailable_still_succeeds(tmp_path):
     out = tmp_path / "p.json"
     rc = main([str(g), "--pathotype-db", str(tmp_path / "no.fsa"),
                "--plasmid-db", str(tmp_path / "no.fsa"), "--serotype-db", str(tmp_path / "no.fsa"),
-               "--resfinder-db-dir", str(tmp_path / "nodir"), "--out", str(out), "--json-only"])
+               "--resfinder-db-dir", str(tmp_path / "nodir"),
+               "--pointfinder-db-dir", str(tmp_path / "nodir"), "--out", str(out), "--json-only"])
     assert rc == 0
     rec = json.loads(out.read_text())
     assert rec["schema"] == "genome-profile-v0"
-    assert set(rec["decoders"]) == {"pathotype", "serotype", "plasmid", "resfinder"}
+    assert set(rec["decoders"]) == {"pathotype", "serotype", "plasmid", "resfinder", "pointfinder"}
     assert all(d["status"] != "ok" for d in rec["decoders"].values())   # all unavailable, none crashed
-    assert rec["decoders_ok"] == 0 and rec["decoders_total"] == 4
+    assert rec["decoders_ok"] == 0 and rec["decoders_total"] == 5
 
 
 def test_pathotype_section_self_guards_on_bad_db(tmp_path):
