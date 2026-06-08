@@ -21,6 +21,17 @@ Three ANALYSES that compose the shipped decoders (no new DB) — variety roadmap
   plasmid + resfinder) on one genome → a single unified report; each section degrades independently.
 - Kept out of the `TRAITS` decoder registry (new `ANALYSES` dict; disjoint namespaces). 15 new tests.
 
+## [Unreleased] — DisinFinder biocide-resistance decoder (roadmap W4) + profile completion
+
+- **`dna-disinfinder`** (`dna-decode disinfinder`) — 7th decoder. Acquired biocide/disinfectant resistance
+  genes (quaternary-ammonium qac* + formaldehyde formA) via the DisinFinder DB on the shared engine (reuses
+  resfinder's CGE gene parser). Hospital infection-control relevant; qac genes often share plasmids with AMR
+  → pair with `dna-coloc`. Offline-safe; DB on demand. 3 tests.
+- **`dna-profile` now also runs `pointfinder`** — the run-all covers all 5 assembly-FASTA decoders
+  (pathotype/serotype/plasmid/resfinder/pointfinder).
+- MLST (roadmap remainder) stays deferred: DB raw-paths 404 + it needs exact-allele/profile→ST semantics
+  (a distinct batch, not the presence/codon pattern).
+
 ## [Unreleased] — PointFinder chromosomal point-mutation decoder (roadmap W3)
 
 - **`dna-pointfinder`** (`dna-decode pointfinder`) — 6th decoder. Chromosomal AMR point mutations via the

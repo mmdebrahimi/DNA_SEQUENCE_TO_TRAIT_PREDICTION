@@ -48,9 +48,17 @@ Highest VOI/cost; zero new external dependency; each is pure logic + tests over 
    STILL DEFERRED — DB-discovery + profile→ST is a distinct batch (not the codon/presence pattern).
 
 ## Wave 4 — more presence-style curated-DB decoders (gated on DB discovery)
-7. **DisinFinder** (biocide/disinfectant resistance) — gene presence like resfinder; discover the real DB
-   filename first (probed name 404). ~0.5 unit once DB resolves.
+7. ✅ **DisinFinder** — DONE 2026-06-08 (commit dceed58). Biocide/disinfectant resistance (qac*/formA) via
+   the shared engine; DB layout discovered via the repo `config` (disinfectants.fsa). 7th decoder.
 8. **S. aureus typing** (spaTyper / SCCmecFinder) — repeat/region typing; heavier; defer unless requested.
+
+## Remaining (heavier / distinct batches — not one-`--advance` increments)
+- **MLST** — DB raw-paths 404 (needs layout discovery, possibly git-lfs/PubMLST) + exact-allele matching +
+  profile→ST lookup (different semantics from presence/codon). A dedicated batch.
+- **S. aureus typing** (spaTyper/SCCmec) — repeat/region typing logic; heavier.
+- **PointFinder other species** (Salmonella/Campylobacter/...) — cheap (`--db-dir`, same code) but
+  re-confirmation, not new capability.
+- The high-VOI/low-friction core (Waves 1-3 + DisinFinder) is shipped: 7 decoders + 3 analyses, one engine.
 
 ## Cross-cutting (every wave)
 - Each decoder/analysis: offline-safe degrade, uniform record schema, real-BLAST e2e test on synthetic
