@@ -4,6 +4,8 @@
 /data/*
 # Exception: committed public reference alleles for the fungal-AMR real-data test (tiny GenBank CDS)
 !/data/fungal_ref/
+# Exception: committed Arabidopsis Path-B phenotype labels (small public AraPheno CSVs)
+!/data/arabidopsis/
 *.h5
 *.parquet
 *.pkl

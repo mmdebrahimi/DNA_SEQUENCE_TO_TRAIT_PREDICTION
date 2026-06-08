@@ -10,6 +10,17 @@
 - Do NOT edit Path-A ledger rows or fungal artifacts. Append only Path-B rows + Path-B result packets.
 - Do NOT start until **Gate G1 is shared** (laptop posts the fungal-AMR result packet) AND the user confirms compute — see "Preconditions".
 
+## ▶ GO — G1 SHARED + Path B PRE-STAGED (updated 2026-06-08, laptop side)
+- ✅ **Gate G1 (Path A) is DONE + shared** — C. auris fluconazole decoder validated (method transfers,
+  sens 1.0; LABEL_LIMITED_FAILURE acc 0.79 — documented label-limitation, not a defect). The phase gate
+  that held Path B is now RELEASED. See `wiki/fungal_ep7_g1_closeout_2026-06-08.md`. Path B is GO.
+- ✅ **Path B is PRE-STAGED — execute, don't hunt.** Full executable spec (every URL pinned + verified,
+  baselines + CV + G2 PASS/FAIL frozen): **`plans/EP8_PathB_PreStage_Manifest.md`**. First command on the
+  workhorse: `uv run python scripts/fetch_arabidopsis_pathb.py` (confirms the committed phenotype labels +
+  HEAD-checks the genotype URLs), then `--download` to pull the 19.2 GB genotype VCF to D:.
+- ✅ Phenotype labels already COMMITTED at `data/arabidopsis/` (FT10 n=1162, FT16 n=1122; 1122 with both).
+- Pre-commit (ratified): a clean **G2-FAIL does NOT auto-close** the embedding frontier (KEEP-OPEN).
+
 ## Status (updated 2026-06-07 — laptop side)
 - ✅ **Workhorse identity CONFIRMED:** personal **Precision 7780 (RTX 3500 Ada ~12GB)**, NOT Bombardier/DLP.
   Path B safety gate cleared; personal code may run there.
