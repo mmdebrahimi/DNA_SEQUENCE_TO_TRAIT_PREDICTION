@@ -50,8 +50,22 @@ documented organism-specific failure mode (efflux/aneuploidy-mediated R is the e
      is paper supplementaries — exactly as this plan stated. **The one remaining G1 input = a
      `[isolate_id, assembly_accession, fluconazole_mic, clade]` TSV** from the S.Africa(188)/India(350)
      supplementaries (or any published C. auris WGS+MIC table).
-4. **Real G1 verdict (BLOCKED on the label TSV above)** — populate the TSV → run `build_fungal_cohort.py`
-   → acc/sens/spec + efflux/aneuploidy discordance. Bar: acc≥0.80/sens≥0.80 OR documented failure mode.
+4. **Real G1 verdict — EXECUTION SPEC (laptop-CPU assembly path, user-chosen 2026-06-07).**
+   Cohort grounding VERIFIED via NCBI eutils + /research (2026-06-07):
+   - **Genomes:** BioProject **PRJNA737309** (PMC8370198, S.Africa bloodstream) = **114 Illumina MiSeq WGS
+     runs**, ~434 MB each (~48 GB all / ~10 GB for a 24-isolate subset; D: has 4.4 TB free). Reads-only
+     (0 assemblies) → de-novo assembly needed (small MiSeq genomes → fast/light, not the 8×H100 class).
+   - **Join key:** SRA `LibraryName` = the isolate ID (e.g. `128_98`) → joins to the Table S1 isolate IDs.
+   - **Pipeline (to build):** for a de-confoundable subset (clade-III R + the rare clade-III S + clade-IV,
+     ~24 isolates) — `fasterq-dump` (sra-tools via `tools/docker_runner`) → reads → SPAdes (Docker) →
+     assembled FASTA → feed `build_fungal_cohort.py` (already built + tested). Targeted ERG11-locus mapping
+     (minimap2 consensus) is a lighter alternative to full SPAdes if assembly proves heavy.
+   - **THE remaining blocker (needs the user — not autonomously gettable):** per-isolate fluconazole MIC
+     lives in **Table S1** of the supplementary `aac.00517-21-s0001.pdf`, which is behind a PMC
+     **proof-of-work anti-scraping challenge** (`cloudpmc-viewer-pow`) — curl/WebFetch cannot solve it; a
+     browser downloads it transparently. **Action: user downloads that PDF (one click) → drops in Downloads.**
+     Then: parse Table S1 → `[isolate_id, fluconazole_mic]`; clade from BioSample/SNP-typing; emit the label
+     TSV; run the pipeline. Bar: acc≥0.80/sens≥0.80 OR documented efflux/aneuploidy failure mode.
 
 ## Falsifier
 If ERG11-only sensitivity is poor because azole-R is dominantly efflux/aneuploidy-mediated (the multi-locus
