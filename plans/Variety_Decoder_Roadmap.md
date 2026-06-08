@@ -39,11 +39,13 @@ Highest VOI/cost; zero new external dependency; each is pure logic + tests over 
    rather than "are both present somewhere". Uses the positions mode. ~1 unit + tests.
 
 ## Wave 3 — new-DB decoders needing more than presence (DB-discovery first)
-5. **PointFinder** — chromosomal AMR point-mutation decoder (`pointfinder_db/<species>/`), parsing
-   `resistens-overview.txt` to map codon/position changes → resistance. Complements AMRFinder's POINT calls;
-   per-species. First step: fetch + parse the overview format. ~1.5-2 units.
+5. ✅ **PointFinder** — DONE 2026-06-08 (commit 8763c33). E. coli FQ QRDR (gyrA/parC/gyrB/parE) chromosomal
+   point-mutation decoder; blastn + `typing/codon_map` codon-position lookup vs `resistens-overview.txt`.
+   Validated synthetic (S83L) + real DB. Other species (Salmonella/Campylobacter/etc.) = add `--db-dir`,
+   same code (no new logic) — cheap follow-on.
 6. **MLST** — 7-gene sequence typing: best allele per locus → profile → ST via the species `profiles` table.
    First step: discover the real `mlst_db` layout (raw path 404). New logic (profile→ST lookup). ~1.5-2 units.
+   STILL DEFERRED — DB-discovery + profile→ST is a distinct batch (not the codon/presence pattern).
 
 ## Wave 4 — more presence-style curated-DB decoders (gated on DB discovery)
 7. **DisinFinder** (biocide/disinfectant resistance) — gene presence like resfinder; discover the real DB

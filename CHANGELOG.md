@@ -21,6 +21,17 @@ Three ANALYSES that compose the shipped decoders (no new DB) — variety roadmap
   plasmid + resfinder) on one genome → a single unified report; each section degrades independently.
 - Kept out of the `TRAITS` decoder registry (new `ANALYSES` dict; disjoint namespaces). 15 new tests.
 
+## [Unreleased] — PointFinder chromosomal point-mutation decoder (roadmap W3)
+
+- **`dna-pointfinder`** (`dna-decode pointfinder`) — 6th decoder. Chromosomal AMR point mutations via the
+  PointFinder DB: blastn each reference gene CDS vs the assembly, map the subject amino acid at each
+  catalogued codon (new shared `typing/codon_map.py` — gap-aware codon→subject-AA, the proven fungal-ERG11
+  pattern, now in-package), call a mutation when the subject AA matches a `Res_codon` in
+  `resistens-overview.txt`. v0 scope: E. coli FQ QRDR (gyrA/parC/gyrB/parE). An INDEPENDENT point-mutation
+  caller (`caller_is_independent_baseline: true`) complementing `amr` (AMRFinder POINT) + `resfinder`
+  (acquired only). Epistasis (`Required_mut`) recorded, not enforced. Offline-safe; DB on demand.
+  Validated on synthetic (S83L) + the real committed E. coli DB (gyrA codon83=S/87=D). 5 tests.
+
 ## [Unreleased] — typing-decoder family (plasmid + serotype + resfinder on one shared engine)
 
 Three new deterministic curated-DB decoders — the tool grows from 2 traits to 5, all on one engine.

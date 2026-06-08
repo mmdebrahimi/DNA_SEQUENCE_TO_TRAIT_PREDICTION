@@ -15,9 +15,10 @@ embedding black-box. **Not a clinical tool.**
 | `dna-decode plasmid` (**v0.5.0**) | plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/…) — *is the resistance plasmid-borne?* | deterministic PlasmidFinder-blastn caller (identity 95 / coverage 60); faithful-to-tool (not an independent baseline); offline-safe degrade |
 | `dna-decode serotype` (**new**) | E. coli **O:H serotype** (wzx/wzy/wzm/wzt O-antigen + fliC H-antigen) | deterministic SerotypeFinder-blastn caller (identity 85 / coverage 60); `O?/H?` when a locus is unresolved; offline-safe |
 | `dna-decode resfinder` (**new**) | acquired **AMR genes** (ResFinder DB) — an **independent** cross-tool check vs `amr` | deterministic ResFinder-blastn caller (identity 90 / coverage 60); `caller_is_independent_baseline: true` (acquired genes only — no point-mutations/efflux); offline-safe |
+| `dna-decode pointfinder` (**new**) | **chromosomal AMR point mutations** (PointFinder; v0 E. coli FQ QRDR gyrA/parC/gyrB/parE) | deterministic blastn + codon-position lookup vs `resistens-overview`; `caller_is_independent_baseline: true` (independent of `amr`'s AMRFinder POINT); offline-safe |
 
-910+ tests green. **5 decoders** (one shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`)
-**+ 2 cross-decoder analyses** that compose them:
+910+ tests green. **6 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
++ codon-mapping `dna_decode/typing/codon_map.py`) **+ 3 cross-decoder analyses** that compose them:
 
 | Analysis | What | |
 |---|---|---|
