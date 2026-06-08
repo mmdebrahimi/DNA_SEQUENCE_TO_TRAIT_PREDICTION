@@ -74,6 +74,44 @@ def assemble(run: str, r1: Path, r2: Path, asm_dir: Path, out_fna: Path,
     return out_fna
 
 
+MINIMAP2_IMAGE = "quay.io/biocontainers/minimap2:2.28--he4a0461_0"
+SAMTOOLS_IMAGE = "quay.io/biocontainers/samtools:1.21--h50ea8bc_0"
+
+
+def map_erg11(run: str, r1: Path, r2: Path, work_dir: Path, out_fna: Path, erg11_ref: Path,
+              minimap2_image: str, samtools_image: str, threads: int, min_depth: int,
+              timeout: float) -> Path:
+    """TARGETED: map reads to the ERG11 CDS reference + call consensus -> out_fna (an ERG11-locus FASTA).
+
+    Far faster than whole-genome assembly when only ERG11 is needed: at high coverage only the ERG11 reads
+    align to the tiny reference, so this is seconds-minutes/isolate regardless of total depth. The consensus
+    is over the reference's coordinates (intronless C. auris ERG11 -> colinear), and `call_erg11` BLASTs the
+    same ref CDS against it to extract substitutions — identical downstream contract to an assembly.
+    """
+    work_dir.mkdir(parents=True, exist_ok=True)
+    ref_dir = erg11_ref.parent
+    mounts = {str(ref_dir): "/ref:ro", str(r1.parent): "/reads:ro", str(work_dir): "/work"}
+    docker_runner.run(
+        minimap2_image,
+        ["minimap2", "-ax", "sr", "-t", str(threads), f"/ref/{erg11_ref.name}",
+         f"/reads/{r1.name}", f"/reads/{r2.name}", "-o", "/work/aln.sam"],
+        mounts=mounts, check=True, timeout=timeout)
+    docker_runner.run(
+        samtools_image, ["samtools", "sort", "-@", str(threads), "/work/aln.sam", "-o", "/work/aln.bam"],
+        mounts=mounts, check=True, timeout=timeout)
+    docker_runner.run(
+        samtools_image,
+        ["samtools", "consensus", "-f", "fasta", "--min-depth", str(min_depth),
+         "/work/aln.bam", "-o", "/work/erg11_cons.fa"],
+        mounts=mounts, check=True, timeout=timeout)
+    cons = work_dir / "erg11_cons.fa"
+    if not cons.exists() or cons.stat().st_size == 0:
+        raise FileNotFoundError(f"samtools consensus produced nothing for {run} (no ERG11 coverage?)")
+    out_fna.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(cons, out_fna)
+    return out_fna
+
+
 def assemble_skesa(run: str, r1: Path, r2: Path, asm_dir: Path, out_fna: Path,
                    skesa_image: str, threads: int, mem_gb: int, timeout: float) -> Path:
     """SKESA (fast isolate assembler) -> contigs copied to out_fna. ~5-10x faster than SPAdes multi-K."""
@@ -100,11 +138,19 @@ def main(argv=None):
                     help="root for reads/ + asm/ + assemblies/ (needs free space)")
     ap.add_argument("--out-tsv", default=None,
                     help="augmented cohort TSV with genome_fasta column (default <cohort>.assembled.tsv)")
+    ap.add_argument("--method", choices=["map", "assemble"], default="map",
+                    help="map = targeted ERG11 read-mapping+consensus (fast, default); assemble = full WGS")
+    ap.add_argument("--erg11-ref",
+                    default="data/fungal_ref/Cauris_ERG11_cds.fna",
+                    help="ERG11 CDS reference for --method map")
+    ap.add_argument("--min-depth", type=int, default=3, help="min read depth for consensus base (map mode)")
     ap.add_argument("--assembler", choices=["skesa", "spades"], default="skesa",
-                    help="skesa = fast isolate assembler (default); spades = thorough multi-K (slow)")
+                    help="(assemble mode) skesa = fast isolate assembler (default); spades = thorough multi-K")
     ap.add_argument("--sra-image", default=SRA_IMAGE)
     ap.add_argument("--spades-image", default=SPADES_IMAGE)
     ap.add_argument("--skesa-image", default=SKESA_IMAGE)
+    ap.add_argument("--minimap2-image", default=MINIMAP2_IMAGE)
+    ap.add_argument("--samtools-image", default=SAMTOOLS_IMAGE)
     ap.add_argument("--threads", type=int, default=4, help="threads PER SPAdes job")
     ap.add_argument("--jobs", type=int, default=1, help="concurrent isolates (RAM ~3GB/job; mem-gb is per job)")
     ap.add_argument("--mem-gb", type=int, default=12, help="SPAdes RAM cap PER job (GB)")
@@ -134,8 +180,12 @@ def main(argv=None):
         try:
             print(f"{tag}: fetching reads...", flush=True)
             r1, r2 = fetch_reads(run, reads_root / run, a.sra_image, a.fetch_timeout)
-            print(f"{tag}: assembling ({a.assembler})...", flush=True)
-            if a.assembler == "skesa":
+            print(f"{tag}: {a.method} ({a.assembler if a.method=='assemble' else 'minimap2+samtools'})...",
+                  flush=True)
+            if a.method == "map":
+                map_erg11(run, r1, r2, asm_root / iso, out_fna, Path(a.erg11_ref),
+                          a.minimap2_image, a.samtools_image, a.threads, a.min_depth, a.assemble_timeout)
+            elif a.assembler == "skesa":
                 assemble_skesa(run, r1, r2, asm_root / iso, out_fna, a.skesa_image, a.threads,
                                a.mem_gb, a.assemble_timeout)
             else:
