@@ -101,6 +101,27 @@ def test_cohort_pass_verdict_all_concordant():
     assert rep.verdict() == "PASS"
 
 
+@pytest.mark.skipif(not _HAS_BLAST, reason="BLAST+ not installed")
+@pytest.mark.skipif(not _HAS_FIXTURES, reason="committed fungal_ref fixtures absent")
+def test_cohort_label_limited_failure_verdict():
+    """High sens + low spec where FP isolates CARRY the determinant at reduced-susceptibility MICs
+    (>= breakpoint/4) => LABEL_LIMITED_FAILURE (the 'suspect the label' mode), not bare FAIL."""
+    table = (
+        "isolate_id\tfluconazole_mic\tclade\tgenome_fasta\n"
+        f"tp\t64\tI\t{_K143R}\n"          # R, K143R -> TP
+        f"fp1\t16\tIII\t{_Y132F}\n"       # true S (MIC16) but carries Y132F -> FP, reduced-suscept
+        f"fp2\t16\tIII\t{_K143R}\n"       # true S (MIC16) but carries K143R -> FP, reduced-suscept
+        f"tn\t4\tIII\t{_WT}\n"            # true S, WT -> TN
+    )
+    with tempfile.TemporaryDirectory() as td:
+        tpath = Path(td) / "labels.tsv"
+        tpath.write_text(table, encoding="utf-8")
+        rep = build_cohort_report(tpath, _REF, Path(td), "fluconazole")
+    assert rep.sensitivity == 1.0 and rep.specificity is not None and rep.specificity < 0.5, vars(rep)
+    assert (rep.tp, rep.fp, rep.tn) == (1, 2, 1), vars(rep)
+    assert rep.verdict() == "LABEL_LIMITED_FAILURE", rep.verdict()
+
+
 if __name__ == "__main__":
     test_mic_to_phenotype_breakpoint()
     test_parse_mic_tolerates_inequalities()

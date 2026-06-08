@@ -1,0 +1,293 @@
+{
+  "drug": "fluconazole",
+  "verdict": "LABEL_LIMITED_FAILURE",
+  "n_total": 24,
+  "n_scored": 24,
+  "accuracy": 0.7916666666666666,
+  "sensitivity": 1.0,
+  "specificity": 0.16666666666666666,
+  "tp": 18,
+  "tn": 1,
+  "fp": 5,
+  "fn": 0,
+  "by_clade": {
+    "III": {
+      "tp": 14,
+      "tn": 1,
+      "fp": 5,
+      "fn": 0
+    },
+    "I": {
+      "tp": 4,
+      "tn": 0,
+      "fp": 0,
+      "fn": 0
+    }
+  },
+  "discordant_efflux": [],
+  "indeterminate": [],
+  "isolates": [
+    {
+      "isolate_id": "3758",
+      "clade": "III",
+      "mic": 4.0,
+      "true_pheno": "S",
+      "pred_pheno": "S",
+      "determinants": [],
+      "bucket": "TN"
+    },
+    {
+      "isolate_id": "3561_77",
+      "clade": "III",
+      "mic": 16.0,
+      "true_pheno": "S",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "FP"
+    },
+    {
+      "isolate_id": "6057",
+      "clade": "III",
+      "mic": 16.0,
+      "true_pheno": "S",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "FP"
+    },
+    {
+      "isolate_id": "2566",
+      "clade": "III",
+      "mic": 16.0,
+      "true_pheno": "S",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "FP"
+    },
+    {
+      "isolate_id": "4591",
+      "clade": "III",
+      "mic": 16.0,
+      "true_pheno": "S",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "FP"
+    },
+    {
+      "isolate_id": "5268",
+      "clade": "III",
+      "mic": 16.0,
+      "true_pheno": "S",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "FP"
+    },
+    {
+      "isolate_id": "2547_51",
+      "clade": "III",
+      "mic": 32.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "2546_62",
+      "clade": "III",
+      "mic": 32.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "4926_60",
+      "clade": "III",
+      "mic": 32.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "2859_37",
+      "clade": "III",
+      "mic": 64.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "4928_61",
+      "clade": "III",
+      "mic": 64.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5624_2",
+      "clade": "III",
+      "mic": 64.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "6241_97",
+      "clade": "III",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "3406_32",
+      "clade": "III",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "4603_48",
+      "clade": "III",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "4845_72",
+      "clade": "III",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5006_96",
+      "clade": "III",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5625_3",
+      "clade": "III",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5714",
+      "clade": "III",
+      "mic": 256.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5734_5",
+      "clade": "III",
+      "mic": 256.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:F126L"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "4934_87",
+      "clade": "I",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:Y132F"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "4000",
+      "clade": "I",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:Y132F"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5116_74",
+      "clade": "I",
+      "mic": 128.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:Y132F"
+      ],
+      "bucket": "TP"
+    },
+    {
+      "isolate_id": "5233_75",
+      "clade": "I",
+      "mic": 256.0,
+      "true_pheno": "R",
+      "pred_pheno": "R",
+      "determinants": [
+        "ERG11:Y132F"
+      ],
+      "bucket": "TP"
+    }
+  ]
+}

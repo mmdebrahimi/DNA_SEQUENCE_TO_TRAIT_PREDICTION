@@ -106,6 +106,17 @@ class CohortReport:
         # sub-0.80 sens with FN==discordance count is the documented blind spot.
         if self.fn > 0 and len(self.discordant_efflux) == self.fn:
             return "DOCUMENTED_FAILURE_MODE"
+        # LABEL-LIMITED failure (the documented "suspect the label" mode, FP-direction): high sensitivity
+        # but low specificity DRIVEN by false-positives that genuinely CARRY a catalogued determinant at
+        # REDUCED-susceptibility MICs (>= breakpoint/4) — i.e. the binary breakpoint splits a continuous
+        # genotype->MIC relationship, the genotype is the reliable signal, the dichotomized label is not.
+        # NOT a caller defect (the mutation really is there). Distinct from a true mis-call where FP isolates
+        # would be at fully-susceptible MICs (< breakpoint/4) with a determinant the catalog wrongly includes.
+        bp = float(CAURIS_TENTATIVE_R_MIC.get(self.drug.lower(), 0) or 0)
+        if sens >= 0.80 and (self.specificity is not None and self.specificity < 0.50) and self.fp > 0 and bp:
+            fp_iso = [r for r in self.isolates if r.bucket == "FP"]
+            if fp_iso and all(r.determinants and r.mic >= bp / 4 for r in fp_iso):
+                return "LABEL_LIMITED_FAILURE"
         return "FAIL"
 
 
