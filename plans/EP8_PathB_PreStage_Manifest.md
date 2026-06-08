@@ -157,17 +157,18 @@ leave-one-group-out CV. The §1b curated-locus diagnostic is reported but does N
 G2 PASS/FAIL. Push to origin + a one-line `project-state-row` (Path-B only). Then the laptop + workhorse decide
 at G2 whether to iterate or conclude (frontier stays open on a single FAIL per the pre-commit).
 
-## 8. Open design decisions for the user (surfaced by the 2026-06-08 brainstorm — decide before/at the dry-manifest)
-These change what the gate measures; pick before the §0.5 dry-manifest freezes the run:
-1. **Primary estimand** — cross-group *portability* vs structure-independent *causal signal* vs realistic-structure
-   *prediction*. They grade differently; the chosen one sets which CV/baseline contrast is decisive. (Default if
-   unspecified: structure-independent causal signal — it's the truest test of "the embedding learns biology.")
-2. **Agnostic-window selection rule (§1a)** — "all gene bodies + flanks" vs "random stratified per-chromosome"
-   vs "unsupervised top-variance". (Default: all gene bodies + flanks — interpretable + genome-representative.)
-3. **GPU-hours / window budget (§6)** — fixed windows/accession, fixed GPU-hours, or full completion. Sets the
-   subsample size. (Default: a fixed per-accession window budget sized to a sub-day local run.)
-4. **True-genome-wide full-thesis run** — only via paid cloud (money gate). Default: NOT run unless the agnostic
-   subsample is borderline AND the user approves spend.
+## 8. Design decisions — RATIFIED 2026-06-08 (user accepted the recommended defaults)
+Frozen for the run; the workhorse executes these without further decision:
+1. **Primary estimand** = ✅ **structure-independent causal signal** (truest test of "the embedding learns
+   biology"; portability-only could pass on relatedness, prediction-only tolerates structure leakage). Sets
+   the decisive contrast: embedding vs structure-only baseline under leave-one-group-out CV + the continuous
+   within-group test (§4).
+2. **Agnostic-window selection rule (§1a)** = ✅ **all gene bodies + ~1 kb flanks** (interpretable +
+   genome-representative + phenotype-blind; `g2_dry_manifest.py` default, override via `--flank`).
+3. **GPU-hours / window budget (§6)** = ✅ **fixed per-accession window budget sized to a sub-day local run**
+   (bounded + restartable; not full-completion).
+4. **True-genome-wide full-thesis run** = ✅ **NOT run** unless the agnostic subsample is borderline AND the
+   user approves spend (money gate intact).
 
 ## DO NOT (dual-machine hygiene)
 - Do NOT route personal code through the Bombardier/DLP machine — Path B is the **personal Precision 7780** only.
