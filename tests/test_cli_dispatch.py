@@ -70,7 +70,7 @@ def test_traits_registry_matches_console_entries():
     # TRAITS = the 5 deterministic DECODERS (each a console entry). ANALYSES compose them and are kept
     # OUT of TRAITS so this decoder-registry contract is stable.
     assert set(uni.TRAITS) == {"amr", "pathotype", "plasmid", "serotype", "resfinder"}
-    assert set(uni.ANALYSES) == {"concordance", "profile"}
+    assert set(uni.ANALYSES) == {"concordance", "profile", "coloc"}
     assert not (set(uni.TRAITS) & set(uni.ANALYSES))   # disjoint namespaces
 
 

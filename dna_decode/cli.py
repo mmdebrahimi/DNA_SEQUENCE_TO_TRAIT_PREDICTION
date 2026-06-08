@@ -75,6 +75,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "profile":
         from dna_decode.profile.cli import main as profile_main
         return profile_main(rest)
+    if trait == "coloc":
+        from dna_decode.colocalization.cli import main as coloc_main
+        return coloc_main(rest)
     raise ValueError(f"unknown trait: {trait}")
 
 
@@ -83,6 +86,7 @@ def _delegate(trait: str, rest: list[str]) -> int:
 ANALYSES = {
     "concordance": "AMR cross-tool concordance (AMRFinder vs ResFinder acquired-gene calls)",
     "profile": "unified genome profile - run all assembly-FASTA decoders in one report",
+    "coloc": "resistance-gene x plasmid co-localization (is this acquired AMR gene plasmid-borne?)",
 }
 
 
