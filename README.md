@@ -13,8 +13,10 @@ embedding black-box. **Not a clinical tool.**
 | `dna-decode amr` (**fungal**, v0.5.0) | azole / echinocandin R/S — **fluconazole / voriconazole / caspofungin / micafungin** for **Candida auris** (BLAST-ERG11/FKS1 target-site engine) | **kingdom-jump** — same determinant-scan method, validated on a de-confounded C. auris WGS+MIC cohort (Gate G1): sens 1.0 across clades (ERG11 Y132F/F126L), label-limited specificity. `wiki/fungal_ep7_g1_closeout_2026-06-08.md` |
 | `dna-decode pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) compatibility + abstention | VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit |
 | `dna-decode plasmid` (**v0.5.0**) | plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/…) — *is the resistance plasmid-borne?* | deterministic PlasmidFinder-blastn caller (identity 95 / coverage 60); faithful-to-tool (not an independent baseline); offline-safe degrade |
+| `dna-decode serotype` (**new**) | E. coli **O:H serotype** (wzx/wzy/wzm/wzt O-antigen + fliC H-antigen) | deterministic SerotypeFinder-blastn caller (identity 85 / coverage 60); `O?/H?` when a locus is unresolved; offline-safe |
+| `dna-decode resfinder` (**new**) | acquired **AMR genes** (ResFinder DB) — an **independent** cross-tool check vs `amr` | deterministic ResFinder-blastn caller (identity 90 / coverage 60); `caller_is_independent_baseline: true` (acquired genes only — no point-mutations/efflux); offline-safe |
 
-895+ tests green. The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
+910+ tests green. **5 decoders**, all sharing one curated-DB blastn engine (`dna_decode/typing/blast_caller.py`). The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
 

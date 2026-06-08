@@ -3,7 +3,21 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
-## [Unreleased] — plasmid replicon-typing decoder
+## [Unreleased] — typing-decoder family (plasmid + serotype + resfinder on one shared engine)
+
+Three new deterministic curated-DB decoders — the tool grows from 2 traits to 5, all on one engine.
+
+- **Shared engine** `dna_decode/typing/blast_caller.py` (`call_alleles`) — the generic best-HSP-per-allele
+  blastn core (reuses pathotype/vf_runner's resolvers). The CGE curated-DB pattern (pathotype + plasmid)
+  is now config-per-decoder, not a from-scratch build. Plasmid refactored onto it (DRY).
+- **`dna-serotype`** (`dna-decode serotype`) — E. coli O:H serotyping via SerotypeFinder allele DB
+  (best O-antigen + best H-antigen → `O25:H4`, partial → `O104:H?`). A genuinely new trait.
+- **`dna-resfinder`** (`dna-decode resfinder`) — acquired-AMR-gene detection via ResFinder allele DB,
+  per-class. Deliberately an **independent** caller vs the AMRFinder-based `dna-amr`
+  (`caller_is_independent_baseline: true`) — the cross-tool concordance check the AMR decoder lacked.
+- All offline-safe (status `unavailable`, exit 3); DBs downloaded on demand (not committed). ~16 new tests.
+
+### plasmid replicon-typing decoder (earlier in this Unreleased cycle)
 
 New deterministic trait decoder `dna-plasmid` (`dna-decode plasmid`) — the tool grows beyond AMR.
 
