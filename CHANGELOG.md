@@ -3,6 +3,20 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — plasmid replicon-typing decoder
+
+New deterministic trait decoder `dna-plasmid` (`dna-decode plasmid`) — the tool grows beyond AMR.
+
+- **New capability:** plasmid incompatibility (Inc) replicon typing from a genome assembly via the curated
+  PlasmidFinder allele DB + real blastn (identity 95 / coverage 60, PlasmidFinder defaults). Reports the Inc
+  replicons present (IncF/IncH/IncI/IncX/IncN/…) — composing with `dna-amr`: AMR says *what* resistance,
+  plasmid typing says whether it likely rides a known mobile element.
+- Sibling architecture to `dna-pathotype` (curated-DB blastn caller; reuses `pathotype/vf_runner`'s blastn
+  resolvers — DRY). Offline-safe: no blastn / no DB → `status: "unavailable"` (exit 3), never a crash.
+  `caller_is_independent_baseline: false` (faithful to PlasmidFinder's own method, not an independent check).
+- DB downloaded on demand (not committed), like the VirulenceFinder DB. 7 tests
+  (`tests/test_plasmid_decoder.py`); cli-dispatch registry contract updated to the 3-decoder set.
+
 ## [0.5.0] — 2026-06-08 — Fungal AMR decoder (the kingdom jump)
 
 `dna-amr` now decodes **fungal** azole/echinocandin resistance, not just bacterial — the determinant-scan

@@ -12,8 +12,9 @@ embedding black-box. **Not a clinical tool.**
 | `dna-decode amr` (bacterial) | antibiotic R/S — **cipro / cef / tet / gent / meropenem** across **E. coli, K. pneumoniae, P. aeruginosa, S. aureus** | 6 drugs × 4 organisms, in-cohort + held-out + cross-source (NCBI) + cross-organism; every per-drug rule beats naive AMRFinder. Capstone: `wiki/amr_multiorganism_capstone_2026-06-07.md` |
 | `dna-decode amr` (**fungal**, v0.5.0) | azole / echinocandin R/S — **fluconazole / voriconazole / caspofungin / micafungin** for **Candida auris** (BLAST-ERG11/FKS1 target-site engine) | **kingdom-jump** — same determinant-scan method, validated on a de-confounded C. auris WGS+MIC cohort (Gate G1): sens 1.0 across clades (ERG11 Y132F/F126L), label-limited specificity. `wiki/fungal_ep7_g1_closeout_2026-06-08.md` |
 | `dna-decode pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) compatibility + abstention | VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit |
+| `dna-decode plasmid` (**v0.5.0**) | plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/…) — *is the resistance plasmid-borne?* | deterministic PlasmidFinder-blastn caller (identity 95 / coverage 60); faithful-to-tool (not an independent baseline); offline-safe degrade |
 
-890+ tests green. The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
+895+ tests green. The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
 
@@ -44,6 +45,10 @@ CALL: R  [high | 1 determinant(s)]
 ```
 
 ```bash
+# Plasmid replicon typing on a genome assembly (blastn + PlasmidFinder DB; composes with amr):
+uv run dna-decode plasmid path/to/assembly.fna --sample-id MY_STRAIN
+# (downloads the DB once: curl -sSL https://bitbucket.org/genomicepidemiology/plasmidfinder_db/raw/HEAD/enterobacteriales.fsa -o data/plasmidfinder_db/enterobacteriales.fsa)
+
 # Pathotype on a genome assembly (pure-stdlib, no Docker):
 uv run dna-decode pathotype path/to/assembly.fna --sample-id MY_STRAIN
 
