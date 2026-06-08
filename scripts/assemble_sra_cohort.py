@@ -26,7 +26,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+import time  # noqa: E402
+
 from tools import docker_runner  # noqa: E402
+from tools.docker_runner import DockerRunnerError  # noqa: E402
 
 SRA_IMAGE = "quay.io/biocontainers/sra-tools:3.1.1--h4304569_2"
 SPADES_IMAGE = "quay.io/biocontainers/spades:3.15.5--h95f258a_1"
@@ -158,6 +161,8 @@ def main(argv=None):
     ap.add_argument("--assemble-timeout", type=float, default=3600.0)
     ap.add_argument("--limit", type=int, default=0, help="assemble only the first N rows (0 = all)")
     ap.add_argument("--keep-reads", action="store_true", help="don't delete FASTQs after assembly")
+    ap.add_argument("--retries", type=int, default=2,
+                    help="per-isolate retries on transient DockerRunnerError (e.g. daemon 125)")
     a = ap.parse_args(argv)
 
     work = Path(a.workdir)
@@ -177,7 +182,12 @@ def main(argv=None):
             print(f"{tag}: assembly exists, skip", flush=True)
             row["genome_fasta"] = str(out_fna)
             return ("done", row)
-        try:
+        last_err = None
+        for attempt in range(1, a.retries + 2):  # retries+1 total attempts
+          try:
+            if attempt > 1:
+                print(f"{tag}: retry {attempt-1}/{a.retries} after transient error", flush=True)
+                time.sleep(10 * attempt)  # back off (lets a hiccuping daemon recover)
             print(f"{tag}: fetching reads...", flush=True)
             r1, r2 = fetch_reads(run, reads_root / run, a.sra_image, a.fetch_timeout)
             print(f"{tag}: {a.method} ({a.assembler if a.method=='assemble' else 'minimap2+samtools'})...",
@@ -197,9 +207,15 @@ def main(argv=None):
                 shutil.rmtree(reads_root / run, ignore_errors=True)
                 shutil.rmtree(asm_root / iso, ignore_errors=True)
             return ("done", row)
-        except Exception as e:
+          except DockerRunnerError as e:
+            last_err = e  # transient (e.g. daemon 125) -> retry
+            print(f"{tag}: DockerRunnerError (attempt {attempt}): {str(e)[:120]}", flush=True)
+            continue
+          except Exception as e:
             print(f"{tag}: FAILED — {type(e).__name__}: {str(e)[:200]}", flush=True)
             return ("failed", (iso, run, str(e)[:120]))
+        print(f"{tag}: FAILED after {a.retries} retries — {str(last_err)[:160]}", flush=True)
+        return ("failed", (iso, run, f"retries exhausted: {str(last_err)[:100]}"))
 
     done, failed = [], []
     if a.jobs <= 1:
