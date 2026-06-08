@@ -15,9 +15,17 @@
   sens 1.0; LABEL_LIMITED_FAILURE acc 0.79 — documented label-limitation, not a defect). The phase gate
   that held Path B is now RELEASED. See `wiki/fungal_ep7_g1_closeout_2026-06-08.md`. Path B is GO.
 - ✅ **Path B is PRE-STAGED — execute, don't hunt.** Full executable spec (every URL pinned + verified,
-  baselines + CV + G2 PASS/FAIL frozen): **`plans/EP8_PathB_PreStage_Manifest.md`**. First command on the
-  workhorse: `uv run python scripts/fetch_arabidopsis_pathb.py` (confirms the committed phenotype labels +
-  HEAD-checks the genotype URLs), then `--download` to pull the 19.2 GB genotype VCF to D:.
+  baselines + CV + G2 PASS/FAIL frozen): **`plans/EP8_PathB_PreStage_Manifest.md`** (REVISED 2026-06-08
+  post-brainstorm — read the header + §8 open decisions first). Workhorse order:
+  1. `uv run python scripts/fetch_arabidopsis_pathb.py` (confirms committed phenotype labels + HEAD-checks
+     genotype URLs), then `--download` to pull the 19.2 GB genotype VCF to D:.
+  2. **Run the CPU-only §0.5 G2 dry-manifest FIRST — it gates all GPU work.** Do NOT embed until every
+     dry-manifest check is green (accession join, window/coord table, N-fraction QC, matched variant matrix,
+     group labels). Decide the §8 open design choices (estimand / window-selection rule / GPU budget) at this
+     point.
+  3. Only then run the §1a phenotype-agnostic embedding → baselines → leave-one-group-out CV → G2 verdict.
+  - NOTE the framing fix: the gate is the **phenotype-agnostic** embedding (not the curated FLC/FRI/FT panel —
+    that's now a secondary diagnostic only). PASS needs a paired-bootstrap CI excluding 0, not a point margin.
 - ✅ Phenotype labels already COMMITTED at `data/arabidopsis/` (FT10 n=1162, FT16 n=1122; 1122 with both).
 - Pre-commit (ratified): a clean **G2-FAIL does NOT auto-close** the embedding frontier (KEEP-OPEN).
 
