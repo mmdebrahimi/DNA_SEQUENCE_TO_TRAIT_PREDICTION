@@ -49,6 +49,14 @@ do not start §3 embedding until every check is green. Checks:
    the analysis-N accessions (the CV needs them; see §4).
 Output: `wiki/g2_dry_manifest_<date>.{md,json}`. Any red check → STOP + surface; do not burn GPU.
 
+> **BUILT (laptop, 2026-06-08):** `scripts/g2_dry_manifest.py` implements all 5 checks as pure-logic
+> functions (accession join, empirical pseudogenome-pattern resolution, agnostic gene-bodies+flanks window
+> table from a GFF, N-fraction QC, group-label presence, GREEN/RED verdict) + a CLI the workhorse runs on
+> the real downloaded pseudogenomes/VCF/GFF. 7 offline unit tests (`tests/test_g2_dry_manifest.py`, green)
+> validate the logic on synthetic fixtures — no download, no GPU. Workhorse: `uv run python
+> scripts/g2_dry_manifest.py --pseudogenome-dir <D:...> --gff <Araport11.gff3> --group-map <groups.csv>`.
+> §8 decision-2 default (all gene bodies ± ~1 kb flanks) is the script's default; override via --flank.
+
 ## 1. Sequence-input strategy for the FM (the crux — REVISED 2026-06-08 post-brainstorm)
 > **Why revised:** the original primary (hand-picked FLC/FRI/FT panel) CONTRADICTS this substrate's own
 > embedding-niche criterion (`EP8_Arabidopsis_Embedding_Test.md`: "No curated mechanism catalog"). Hand-picking
