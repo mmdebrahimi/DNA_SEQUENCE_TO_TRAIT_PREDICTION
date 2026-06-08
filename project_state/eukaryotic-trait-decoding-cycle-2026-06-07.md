@@ -125,6 +125,19 @@ G1 (fungal AMR decoder validated on C. auris, or documented failure) AND G2 (Ara
 ## Allowed Action Classes (v0.2 placeholder — not enforced in v0.1)
 - `propose` — auto · `research` — auto · `write-plan` — auto · `edit-local-code` — REQUIRES per-action human approval · `run-tests` — auto if local · `ask-user` — auto · `stop` — auto
 
+## MVP Criteria
+<!-- soraya --until-mvp bar; FROZEN + ratified 2026-06-08. Each line is a checkable predicate
+     (test-exit-0 / file-exists). Re-run `/soraya --until-mvp eukaryotic-trait-decoding-cycle-2026-06-07`
+     after the workhorse posts the G2 result to re-evaluate -> expected mvp-reached. -->
+- **G0** (fungal caller validated): `test-exit-0 uv run pytest tests/test_fungal_erg11_caller.py` — **MET 2026-06-08**
+- **G1** (fungal AMR validated OR documented failure): `file-exists wiki/fungal_ep7_g1_closeout_2026-06-08.md` — **MET 2026-06-08** (LABEL_LIMITED_FAILURE; method transfers, sens 1.0)
+- **G2** (Arabidopsis embedding PASS/FAIL resolved): `file-exists wiki/phase2_arabidopsis_result_*.md` — **UNMET** (workhorse GPU run; sole path is user-only/cross-machine)
+
+**Last `--until-mvp` verdict (2026-06-08):** `blocked:user-only` — G0+G1 MET; G2's only path is the
+workhorse Precision-7780 GPU run (pre-staged at `plans/EP8_PathB_PreStage_Manifest.md`; handoff at
+`wiki/HANDOFF_workhorse_eukaryotic_2026-06-07.md`). Laptop side of this family is complete; no autonomous
+laptop action advances G2. Re-run `--until-mvp` once `wiki/phase2_arabidopsis_result_*.md` exists.
+
 ## Action Log
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
@@ -155,6 +168,7 @@ G1 (fungal AMR decoder validated on C. auris, or documented failure) AND G2 (Ara
 | 25 | 2026-06-08 | edit-local-code | Variety roadmap Wave 3 (PointFinder) via /soraya --advance: 6th decoder | DB-probe confirmed PointFinder E.coli format clean (resistens-overview.txt + per-gene ref CDS .fsa, HTTP 200). Built dna-pointfinder (6th decoder): chromosomal AMR point mutations via blastn ref-gene-vs-genome + gap-aware codon->subject-AA lookup vs Res_codon table. Extracted typing/codon_map.py (shared codon machinery from the fungal-ERG11 pattern, now in-package DRY). v0 scope E.coli FQ QRDR (gyrA/parC/gyrB/parE). INDEPENDENT vs amr's AMRFinder POINT (caller_is_independent_baseline=True); epistasis recorded not enforced; offline-safe; DB on-demand. VALIDATED: synthetic real-BLAST S83L call (+ WT->none) AND real committed E.coli DB parses (gyrA len876 codon83=S codon87=D S83 res={W,A,V,L}). Wired TRAITS=6+_delegate+pyproject+registry. 5 new tests; 910/911 green. Tool now: 6 decoders + 3 analyses. Roadmap W3-PointFinder done; W3-MLST + W4 deferred (DB-discovery + profile->ST = distinct batch). |
 | 26 | 2026-06-08 | edit-local-code | Variety roadmap W4 (DisinFinder, 7th decoder) + profile+=pointfinder via /soraya --advance | DB-probe: MLST BLOCKED (all raw-paths 404 + needs exact-allele/profile->ST = dedicated batch); DisinFinder config resolved (disinfectants.fsa: qacA/qacB/formA, CGE shape). Built dna-disinfinder (7th decoder): acquired biocide/disinfectant resistance genes via shared engine, reuses resfinder gene_of; infection-control relevant + qac often plasmid-borne (pairs with coloc); offline-safe, DB on-demand. Also folded pointfinder into dna-profile run-all (was a gap). Wired TRAITS=7+_delegate+pyproject+registry. 6 new/updated tests; 913/914 green. Tool now: 7 decoders + 3 analyses (dna-decode list=10). Roadmap: W1-W4(DisinFinder) done; MLST + S.aureus-typing remain as heavier distinct batches; cheap-VOI core fully shipped. |
 | 27 | 2026-06-08 | edit-local-code | MLST decoder (8th) — found a way (PubMLST) for the previously-blocked item | User: 'find a way to also do MLST'. The blocker was DB-discovery (CGE mlst_db raw-paths 404). Found it: PubMLST REST (pubmlst_ecoli_achtman_seqdef scheme 4 = 7 loci + 16242-ST profiles). Built dna-mlst (8th decoder): exact per-locus allele via call_alleles@100/100 -> profile tuple -> ST lookup. mlst/core.py (pure profiles parse+lookup) + runner + cli (--fetch-db pulls scheme from PubMLST). novel/incomplete -> ST not guessed; offline-safe. VALIDATED end-to-end on REAL data: --fetch-db pulled live scheme, K-12 MG1655 -> ST10 (correct textbook ST) + synthetic e2e (->ST1/CC1) + pure-core tests. Wired TRAITS=8+_delegate+pyproject+registry. 5 new tests; 918/919 green. Tool now: 8 decoders + 3 analyses (dna-decode list=11). ALL roadmap waves complete. Lesson: PubMLST REST unblocks CGE-404'd typing DBs. |
+| 28 | 2026-06-08 | edit-local-code | /soraya --until-mvp: FROZE the MVP bar (direct-Edit + this AC9 mirror) | Ledger had no ## MVP Criteria -> proposed + user-ratified a 3-predicate bar: G0 test-exit-0 (fungal caller, MET) / G1 file-exists g1_closeout (MET) / G2 file-exists phase2_arabidopsis_result_* (UNMET, workhorse GPU). Wrote ## MVP Criteria section. --until-mvp verdict = blocked:user-only (G2 sole path = workhorse Precision-7780 GPU run; laptop side complete). Re-run --until-mvp after the G2 result packet lands -> expected mvp-reached. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
