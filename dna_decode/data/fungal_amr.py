@@ -75,6 +75,28 @@ FUNGAL_DRUG_CLASS = {
     "caspofungin": "ECHINOCANDIN", "micafungin": "ECHINOCANDIN",
 }
 
+# CDC *tentative* MIC breakpoints for C. auris resistance (ug/mL). There is NO formal CLSI/EUCAST
+# species-specific breakpoint for C. auris; CDC publishes tentative ones widely used in genomic-epi.
+# fluconazole >=32 = R is the canonical azole cutoff (e.g. the S.Africa outbreak: 181/188 isolates
+# with MIC>32 carried ERG11 mutations). Source: CDC C. auris antifungal-susceptibility guidance.
+CAURIS_TENTATIVE_R_MIC = {
+    "fluconazole": 32.0,
+    "caspofungin": 2.0,
+    "micafungin": 4.0,
+}
+
+
+def mic_to_phenotype(drug: str, mic: float) -> str | None:
+    """Map an MIC (ug/mL) to 'R'/'S' via the CDC tentative C. auris breakpoint.
+
+    Returns None when no tentative breakpoint is configured for the drug (caller treats as unlabelable).
+    R iff mic >= breakpoint (CDC uses >= for the resistant call).
+    """
+    bp = CAURIS_TENTATIVE_R_MIC.get(drug.lower())
+    if bp is None:
+        return None
+    return "R" if float(mic) >= bp else "S"
+
 
 def supported_fungal_drugs() -> list[str]:
     return sorted(FUNGAL_RESISTANCE_MUTATIONS)

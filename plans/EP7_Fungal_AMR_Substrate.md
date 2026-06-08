@@ -38,11 +38,20 @@ documented organism-specific failure mode (efflux/aneuploidy-mediated R is the e
    spots surfaced), `PV630305` **Y132F→R**, `PV630302` **K143R→R** = 3/3. Numbering-mismatch risk RETIRED.
    Reference + 3 public allele fixtures committed at `data/fungal_ref/`; 3 real-data regression tests
    (5 caller tests green total). The caller is validated against documented mutations, not just a planted one.
-3. **Cohort** — extract a C. auris WGS+MIC table from the S. Africa (188) + India (350) supplementaries;
-   fetch assemblies by accession; build a de-confoundable cohort (within-clade fluconazole R/S contrast,
-   reuse `cohort_deconfound.py`).
-4. **Validation** — run the caller over the cohort; report acc/sens/spec + the efflux/aneuploidy discordance
-   (expect FN from non-ERG11 R, the documented multi-locus mechanism). Capstone-style artifact.
+3. ✅ **Cohort-validation INFRASTRUCTURE (steps 3+4 machinery)** — `scripts/build_fungal_cohort.py`:
+   reads a per-isolate label TSV (`assembly_accession`→download OR `genome_fasta`→local), runs `call_erg11`
+   over the cohort, computes overall + **within-clade de-confounded** acc/sens/spec + the **efflux/aneuploidy
+   discordance** set (MIC-R but ERG11-S = documented non-target mechanism), emits the G1 verdict
+   (PASS / DOCUMENTED_FAILURE_MODE / FAIL) as `.md`+`.json`. CDC tentative breakpoint (fluconazole MIC≥32=R)
+   + `mic_to_phenotype` added to `fungal_amr.py`. 4 cohort tests validate the FULL pipeline on the 3 committed
+   real alleles via real blastn (16 fungal tests green). **G1 runs in ONE command once the label table lands.**
+   - **G1 label-source finding (iron-law):** fluconazole MIC is NOT in NCBI BioSample metadata (53 hits are
+     experimental-*treatment* fields, not AST) and BV-BRC has ZERO C. auris AMR rows. The ONLY label source
+     is paper supplementaries — exactly as this plan stated. **The one remaining G1 input = a
+     `[isolate_id, assembly_accession, fluconazole_mic, clade]` TSV** from the S.Africa(188)/India(350)
+     supplementaries (or any published C. auris WGS+MIC table).
+4. **Real G1 verdict (BLOCKED on the label TSV above)** — populate the TSV → run `build_fungal_cohort.py`
+   → acc/sens/spec + efflux/aneuploidy discordance. Bar: acc≥0.80/sens≥0.80 OR documented failure mode.
 
 ## Falsifier
 If ERG11-only sensitivity is poor because azole-R is dominantly efflux/aneuploidy-mediated (the multi-locus
