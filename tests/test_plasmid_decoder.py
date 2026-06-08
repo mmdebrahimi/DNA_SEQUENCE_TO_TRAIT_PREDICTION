@@ -40,9 +40,9 @@ def test_replicon_family_parses_real_plasmidfinder_headers():
 
 
 def test_call_replicons_offline_safe_no_blast(tmp_path, monkeypatch):
-    # force the no-blastn path -> unavailable, never raises
-    import dna_decode.plasmid.runner as r
-    monkeypatch.setattr(r, "find_blastn", lambda: None)
+    # force the no-blastn path -> unavailable, never raises (engine now owns the resolver)
+    import dna_decode.typing.blast_caller as bc
+    monkeypatch.setattr(bc, "find_blastn", lambda: None)
     db = tmp_path / "db.fsa"; db.write_text(">IncX3_1__JN247852\nACGT\n", encoding="utf-8")
     g = tmp_path / "g.fna"; g.write_text(">c\nACGT\n", encoding="utf-8")
     res = call_replicons(g, db)
@@ -50,8 +50,8 @@ def test_call_replicons_offline_safe_no_blast(tmp_path, monkeypatch):
 
 
 def test_cli_offline_safe_exit3(tmp_path, monkeypatch, capsys):
-    import dna_decode.plasmid.runner as r
-    monkeypatch.setattr(r, "find_blastn", lambda: None)
+    import dna_decode.typing.blast_caller as bc
+    monkeypatch.setattr(bc, "find_blastn", lambda: None)
     db = tmp_path / "db.fsa"; db.write_text(">IncX3_1__JN247852\nACGT\n", encoding="utf-8")
     g = tmp_path / "g.fna"; g.write_text(">c\nACGT\n", encoding="utf-8")
     out = tmp_path / "o.json"

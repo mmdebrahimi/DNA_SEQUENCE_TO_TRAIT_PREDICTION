@@ -51,6 +51,8 @@ dna-decode = "dna_decode.cli:main"          # unified entry — dispatches to th
 dna-pathotype = "dna_decode.pathotype.cli:main"
 dna-amr = "dna_decode.amr.cli:main"
 dna-plasmid = "dna_decode.plasmid.cli:main"
+dna-serotype = "dna_decode.serotype.cli:main"
+dna-resfinder = "dna_decode.resfinder.cli:main"
 
 [project.optional-dependencies]
 # Dev tooling (lint + coverage) not needed for basic test runs

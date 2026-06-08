@@ -34,6 +34,14 @@ TRAITS = {
         "summary": "plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/... via PlasmidFinder allele DB) - composes with amr (is the resistance plasmid-borne?)",
         "validation": "deterministic PlasmidFinder-blastn caller (identity 95 / coverage 60); faithful-to-tool, not an independent baseline; offline-safe degrade",
     },
+    "serotype": {
+        "summary": "E. coli O:H serotype (wzx/wzy/wzm/wzt O-antigen + fliC H-antigen via SerotypeFinder allele DB)",
+        "validation": "deterministic SerotypeFinder-blastn caller (identity 85 / coverage 60); faithful-to-tool; O?/H? when a locus is unresolved; offline-safe degrade",
+    },
+    "resfinder": {
+        "summary": "acquired AMR genes (ResFinder allele DB) - an INDEPENDENT cross-tool check vs amr (AMRFinder DB)",
+        "validation": "deterministic ResFinder-blastn caller (identity 90 / coverage 60); caller_is_independent_baseline=True (acquired genes only, no point-mutations/efflux); offline-safe degrade",
+    },
 }
 
 
@@ -55,6 +63,12 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "plasmid":
         from dna_decode.plasmid.cli import main as plasmid_main
         return plasmid_main(rest)
+    if trait == "serotype":
+        from dna_decode.serotype.cli import main as serotype_main
+        return serotype_main(rest)
+    if trait == "resfinder":
+        from dna_decode.resfinder.cli import main as resfinder_main
+        return resfinder_main(rest)
     raise ValueError(f"unknown trait: {trait}")
 
 
