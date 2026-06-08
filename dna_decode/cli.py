@@ -42,6 +42,10 @@ TRAITS = {
         "summary": "acquired AMR genes (ResFinder allele DB) - an INDEPENDENT cross-tool check vs amr (AMRFinder DB)",
         "validation": "deterministic ResFinder-blastn caller (identity 90 / coverage 60); caller_is_independent_baseline=True (acquired genes only, no point-mutations/efflux); offline-safe degrade",
     },
+    "pointfinder": {
+        "summary": "chromosomal AMR point mutations (PointFinder; v0 E. coli FQ QRDR gyrA/parC/gyrB/parE) - INDEPENDENT vs amr's AMRFinder POINT",
+        "validation": "deterministic blastn + codon-position lookup vs resistens-overview; caller_is_independent_baseline=True; epistasis recorded not enforced; offline-safe degrade",
+    },
 }
 
 
@@ -69,6 +73,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "resfinder":
         from dna_decode.resfinder.cli import main as resfinder_main
         return resfinder_main(rest)
+    if trait == "pointfinder":
+        from dna_decode.pointfinder.cli import main as pointfinder_main
+        return pointfinder_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
