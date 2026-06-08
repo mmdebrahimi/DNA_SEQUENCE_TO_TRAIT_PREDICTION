@@ -50,6 +50,7 @@ dependencies = [
 dna-decode = "dna_decode.cli:main"          # unified entry — dispatches to the trait decoders
 dna-pathotype = "dna_decode.pathotype.cli:main"
 dna-amr = "dna_decode.amr.cli:main"
+dna-plasmid = "dna_decode.plasmid.cli:main"
 
 [project.optional-dependencies]
 # Dev tooling (lint + coverage) not needed for basic test runs

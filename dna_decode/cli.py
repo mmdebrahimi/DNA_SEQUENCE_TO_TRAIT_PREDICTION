@@ -30,6 +30,10 @@ TRAITS = {
         "summary": "E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention",
         "validation": "VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit",
     },
+    "plasmid": {
+        "summary": "plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/... via PlasmidFinder allele DB) - composes with amr (is the resistance plasmid-borne?)",
+        "validation": "deterministic PlasmidFinder-blastn caller (identity 95 / coverage 60); faithful-to-tool, not an independent baseline; offline-safe degrade",
+    },
 }
 
 
@@ -48,6 +52,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pathotype":
         from dna_decode.pathotype.cli import main as patho_main
         return patho_main(rest)
+    if trait == "plasmid":
+        from dna_decode.plasmid.cli import main as plasmid_main
+        return plasmid_main(rest)
     raise ValueError(f"unknown trait: {trait}")
 
 

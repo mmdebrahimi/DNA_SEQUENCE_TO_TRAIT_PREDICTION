@@ -68,7 +68,8 @@ def test_pathotype_delegation_passes_argv():
 
 def test_traits_registry_matches_console_entries():
     # the dispatcher must know exactly the decoders that have console entries
-    assert set(uni.TRAITS) == {"amr", "pathotype"}
+    # (dna-amr, dna-pathotype, dna-plasmid — plasmid added v0.5.0)
+    assert set(uni.TRAITS) == {"amr", "pathotype", "plasmid"}
 
 
 if __name__ == "__main__":
