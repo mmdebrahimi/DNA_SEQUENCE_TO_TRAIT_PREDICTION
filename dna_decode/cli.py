@@ -50,6 +50,10 @@ TRAITS = {
         "summary": "biocide/disinfectant resistance genes (DisinFinder; qac/form... quaternary-ammonium + formaldehyde) - often plasmid-borne (pair with coloc)",
         "validation": "deterministic DisinFinder-blastn caller (identity 90 / coverage 60); faithful-to-tool; offline-safe degrade",
     },
+    "mlst": {
+        "summary": "MLST sequence type (PubMLST; v0 E. coli Achtman adk/fumC/gyrB/icd/mdh/purA/recA) - exact-allele -> profile -> ST",
+        "validation": "deterministic blastn 100/100 exact-allele + PubMLST profile lookup; novel/incomplete -> ST not guessed; `dna-mlst --fetch-db` to install; offline-safe degrade",
+    },
 }
 
 
@@ -83,6 +87,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "disinfinder":
         from dna_decode.disinfinder.cli import main as disinfinder_main
         return disinfinder_main(rest)
+    if trait == "mlst":
+        from dna_decode.mlst.cli import main as mlst_main
+        return mlst_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
