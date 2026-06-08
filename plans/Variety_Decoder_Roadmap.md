@@ -30,7 +30,7 @@ Highest VOI/cost; zero new external dependency; each is pure logic + tests over 
    serotype + pathotype) on an assembly and emits a unified per-genome report (the "tell me everything"
    UX). Thin orchestration over existing CLIs; offline-safe per-decoder degrade. ~1 unit.
 
-## Wave 2 — engine extension + co-localization (one small core change unlocks a high-VOI analysis)
+## Wave 2 — engine extension + co-localization — ✅ DONE 2026-06-08 (commit dc0071c)
 3. **Engine positions mode** — extend `blast_caller.call_alleles` to optionally return subject contig +
    coords (`-outfmt "6 qseqid sseqid pident length qlen sstart send"`), behind a flag so existing callers
    are unchanged. ~0.5 unit + tests.

@@ -22,7 +22,8 @@ embedding black-box. **Not a clinical tool.**
 | Analysis | What | |
 |---|---|---|
 | `dna-decode concordance` | AMR cross-tool check — **AMRFinder (`amr`) vs ResFinder (`resfinder`)** acquired-gene calls, gene-family level + Jaccard agreement | the independent second-opinion `resfinder` was built for |
-| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder) on one genome → one unified report | the "tell me everything" UX; each section degrades independently | The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
+| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder) on one genome → one unified report | the "tell me everything" UX; each section degrades independently |
+| `dna-decode coloc` | **AMR×plasmid co-localization** — is *this* acquired resistance gene on the same contig as a plasmid replicon (likely plasmid-borne)? | turns "both present" into "the gene sits on the plasmid"; same-contig is suggestive, not proof | The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
 

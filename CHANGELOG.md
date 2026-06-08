@@ -3,9 +3,15 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
-## [Unreleased] — cross-decoder analyses (concordance + profile)
+## [Unreleased] — cross-decoder analyses (concordance + profile + co-localization)
 
-Two ANALYSES that compose the shipped decoders (no new DB) — variety roadmap Wave 1.
+Three ANALYSES that compose the shipped decoders (no new DB) — variety roadmap Waves 1-2.
+
+- **`dna-coloc`** (`dna-decode coloc`, Wave 2) — links each acquired resistance gene to plasmid replicon(s)
+  on the SAME assembly contig → "is *this* AMR gene plasmid-borne?". Enabled by a new opt-in engine
+  positions-mode (`call_alleles(..., with_positions=True)` returns each hit's subject contig+coords;
+  default-off, every existing caller unchanged). Same-contig is suggestive, not proof (caveat shipped).
+  Pure core + real-BLAST e2e (blaNDM-1 on plasmid-contig → plasmid-borne; sul1 on chrom-contig → not).
 
 - **`dna-concordance`** (`dna-decode concordance`) — compares the two independent acquired-gene callers,
   AMRFinder (`dna-amr` main.tsv) vs ResFinder (`dna-resfinder` blastn), at the gene-family level (allele
