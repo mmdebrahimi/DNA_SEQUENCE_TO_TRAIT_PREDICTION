@@ -53,6 +53,8 @@ dna-amr = "dna_decode.amr.cli:main"
 dna-plasmid = "dna_decode.plasmid.cli:main"
 dna-serotype = "dna_decode.serotype.cli:main"
 dna-resfinder = "dna_decode.resfinder.cli:main"
+dna-concordance = "dna_decode.concordance.cli:main"
+dna-profile = "dna_decode.profile.cli:main"
 
 [project.optional-dependencies]
 # Dev tooling (lint + coverage) not needed for basic test runs

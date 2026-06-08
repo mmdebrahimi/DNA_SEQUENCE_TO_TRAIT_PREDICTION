@@ -69,15 +69,32 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "resfinder":
         from dna_decode.resfinder.cli import main as resfinder_main
         return resfinder_main(rest)
+    if trait == "concordance":
+        from dna_decode.concordance.cli import main as concordance_main
+        return concordance_main(rest)
+    if trait == "profile":
+        from dna_decode.profile.cli import main as profile_main
+        return profile_main(rest)
     raise ValueError(f"unknown trait: {trait}")
+
+
+# Cross-decoder ANALYSES (compose the decoders; NOT new traits/DBs — kept out of TRAITS so the
+# decoder registry contract stays the 5-decoder set).
+ANALYSES = {
+    "concordance": "AMR cross-tool concordance (AMRFinder vs ResFinder acquired-gene calls)",
+    "profile": "unified genome profile - run all assembly-FASTA decoders in one report",
+}
 
 
 def _print_list() -> int:
     print(f"dna-decode {_version()} - deterministic genotype->phenotype decoders\n")
     for name, meta in TRAITS.items():
-        print(f"  {name:10} {meta['summary']}")
-        print(f"  {'':10} validation: {meta['validation']}")
-    print("\nrun `dna-decode <trait> --help` for a decoder's options.")
+        print(f"  {name:11} {meta['summary']}")
+        print(f"  {'':11} validation: {meta['validation']}")
+    print("\nanalyses (compose the decoders):")
+    for name, summary in ANALYSES.items():
+        print(f"  {name:11} {summary}")
+    print("\nrun `dna-decode <trait|analysis> --help` for options.")
     return 0
 
 
@@ -93,6 +110,8 @@ def main(argv=None) -> int:
     # Register thin pass-through subparsers; real arg parsing happens in each decoder's main().
     for name, meta in TRAITS.items():
         sub.add_parser(name, add_help=False, help=meta["summary"])
+    for name, summary in ANALYSES.items():
+        sub.add_parser(name, add_help=False, help=summary)
     sub.add_parser("list", help="show what this tool decodes + per-trait validation status")
 
     # Split argv at the subcommand so the rest passes through verbatim (incl. --help) to the decoder.
@@ -108,8 +127,9 @@ def main(argv=None) -> int:
         return 0
     if trait == "list":
         return _print_list()
-    if trait not in TRAITS:
-        ap.error(f"unknown trait {trait!r}; choose from {', '.join(TRAITS)} (or `list`)")
+    if trait not in TRAITS and trait not in ANALYSES:
+        ap.error(f"unknown subcommand {trait!r}; traits: {', '.join(TRAITS)}; "
+                 f"analyses: {', '.join(ANALYSES)} (or `list`)")
     return _delegate(trait, argv[1:])
 
 

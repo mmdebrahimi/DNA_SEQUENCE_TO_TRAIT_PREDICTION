@@ -67,9 +67,11 @@ def test_pathotype_delegation_passes_argv():
 
 
 def test_traits_registry_matches_console_entries():
-    # the dispatcher must know exactly the decoders that have console entries
-    # (amr, pathotype, plasmid, serotype, resfinder — typing-family decoders added 2026-06-08)
+    # TRAITS = the 5 deterministic DECODERS (each a console entry). ANALYSES compose them and are kept
+    # OUT of TRAITS so this decoder-registry contract is stable.
     assert set(uni.TRAITS) == {"amr", "pathotype", "plasmid", "serotype", "resfinder"}
+    assert set(uni.ANALYSES) == {"concordance", "profile"}
+    assert not (set(uni.TRAITS) & set(uni.ANALYSES))   # disjoint namespaces
 
 
 if __name__ == "__main__":
