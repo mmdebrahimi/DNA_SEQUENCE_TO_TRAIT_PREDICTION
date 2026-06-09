@@ -1,0 +1,113 @@
+{
+  "date": "2026-06-08",
+  "results": [
+    {
+      "group": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "n": 30,
+      "nR": 15,
+      "nS": 15,
+      "n_with_runs": 30,
+      "excluded_cohort1": 30,
+      "in_sample_config": {
+        "counter": "qrdr_point",
+        "threshold": 1,
+        "intrinsic_families_excluded": [],
+        "loo_balanced_accuracy": 1.0
+      },
+      "out_of_sample_applying_in_sample_rule": {
+        "n_scored": 30,
+        "tp": 15,
+        "fp": 0,
+        "tn": 15,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "recalibrated_on_independent": {
+        "counter": "qrdr_point",
+        "threshold": 1,
+        "intrinsic_families_excluded": [],
+        "loo_balanced_accuracy": 1.0,
+        "verdict": "CALIBRATED"
+      },
+      "config_recovered": true
+    },
+    {
+      "group": "Klebsiella",
+      "drug": "ciprofloxacin",
+      "n": 30,
+      "nR": 15,
+      "nS": 15,
+      "n_with_runs": 30,
+      "excluded_cohort1": 30,
+      "in_sample_config": {
+        "counter": "qrdr_point",
+        "threshold": 2,
+        "intrinsic_families_excluded": [
+          "oqxA",
+          "oqxB"
+        ],
+        "loo_balanced_accuracy": 1.0
+      },
+      "out_of_sample_applying_in_sample_rule": {
+        "n_scored": 30,
+        "tp": 14,
+        "fp": 0,
+        "tn": 15,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.967,
+        "sens": 0.933,
+        "spec": 1.0
+      },
+      "recalibrated_on_independent": {
+        "counter": "qrdr_point",
+        "threshold": 1,
+        "intrinsic_families_excluded": [
+          "oqxA",
+          "oqxB"
+        ],
+        "loo_balanced_accuracy": 0.9333,
+        "verdict": "CALIBRATED"
+      },
+      "config_recovered": false
+    },
+    {
+      "group": "Salmonella",
+      "drug": "ciprofloxacin",
+      "n": 30,
+      "nR": 15,
+      "nS": 15,
+      "n_with_runs": 30,
+      "excluded_cohort1": 30,
+      "in_sample_config": {
+        "counter": "broad",
+        "threshold": 1,
+        "intrinsic_families_excluded": [],
+        "loo_balanced_accuracy": 1.0
+      },
+      "out_of_sample_applying_in_sample_rule": {
+        "n_scored": 30,
+        "tp": 15,
+        "fp": 0,
+        "tn": 15,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "recalibrated_on_independent": {
+        "counter": "qrdr_point",
+        "threshold": 1,
+        "intrinsic_families_excluded": [],
+        "loo_balanced_accuracy": 1.0,
+        "verdict": "CALIBRATED"
+      },
+      "config_recovered": false
+    }
+  ]
+}
