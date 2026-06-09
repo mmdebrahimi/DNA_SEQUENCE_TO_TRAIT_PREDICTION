@@ -16,7 +16,7 @@
 | Pseudomonas aeruginosa | meropenem | 0.500 | 1.000 | 0.000 | FAILS | **CONTENT (+EXPRESSION)** |
 | Campylobacter (Campylobacterota) | ciprofloxacin | 0.500 | 0.000 | 1.000 | FAILS | **TUNING** |
 | Enterobacter cloacae | ceftriaxone | 0.455 | 0.375 | 0.667 | FAILS* | **EXPRESSION** |
-| Salmonella | ciprofloxacin | (in-flight 2026-06-08) | | | | |
+| Salmonella | ciprofloxacin | 0.567 | 0.133 | 1.000 | FAILS | **TUNING + CONTENT** |
 
 \* Enterobacter N=11 (8R/3S), label-limited — directional only.
 
@@ -44,8 +44,12 @@ subclass/gene refinements. It fails in exactly three distinguishable ways:
 
 ## What this tells the tool
 
-- **Trust zone: Enterobacterales.** cipro/cef/tet/gent rules transfer across E. coli / Klebsiella /
-  (Enterobacter for acquired determinants) / (Salmonella pending). The decoder is production-trustworthy here.
+- **Trust zone is rule×organism-specific, NOT just "Enterobacterales".** cipro/cef/tet/gent transfer
+  across E. coli + Klebsiella. But Salmonella cipro FAILS under the deployed rule (qnr + single-gyrA, needs
+  a broad counter @ threshold 1) and Enterobacter cef FAILS (derepressed AmpC) — both *are* Enterobacterales.
+  Lesson: even within a family, the right counter+threshold is organism-specific. The Klebsiella-vs-Salmonella
+  cipro contrast is the proof — the SAME QRDR-point-only design choice makes Klebsiella perfect and Salmonella
+  fail. There is no family-wide rule; calibrate per organism.
 - **Carbapenems on non-fermenters (Acinetobacter, Pseudomonas) are out of trust zone** — intrinsic content
   + expression-driven R defeat presence-based calling. Honest output here = abstain / flag, not predict.
 - **CONTENT and TUNING are cheaply auto-fixable** from a ≥15R/15S cohort (both falsifiers survived). The
