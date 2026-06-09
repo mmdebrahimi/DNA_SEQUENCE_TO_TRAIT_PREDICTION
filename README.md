@@ -30,6 +30,27 @@ embedding black-box. **Not a clinical tool.**
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
 
+### Organism-aware AMR calling (`dna-amr --organism`)
+
+The per-drug `DRUG_RULE` is E. coli-tuned. Cross-organism validation (6 organisms × cipro/meropenem,
+N≈30 each, NCBI AST) found it fails to transfer in three distinct ways — a **boundary taxonomy**:
+**CONTENT** (counts intrinsic genes that don't confer R: Acinetobacter OXA-51, Pseudomonas nalC/oprD →
+over-call), **TUNING** (threshold wrong where a single mutation suffices: Campylobacter cipro), and
+**EXPRESSION** (regulation/derepression-driven R that gene-presence can't see: Enterobacter AmpC). Map +
+evidence: `wiki/wider_amr_transferability_synthesis_2026-06-08.md`.
+
+`dna_decode/eval/calibrate_organism.py` auto-selects the per-organism config (determinant **counter** ×
+**threshold** + intrinsic gene-family exclusions) from a ≥15R/15S labeled cohort by leave-one-out balanced
+accuracy, and **abstains** (`EXPRESSION_FLOOR`) when no presence-based config clears the floor (one-class/
+under-powered cohorts → `INSUFFICIENT_EVIDENCE`). Validated configs ship in the committed registry
+`dna_decode/data/calibrated_amr_rules.json` (independent-cohort out-of-sample validated:
+`wiki/calibrated_registry_independent_validation_2026-06-09.md`). Pass **`dna-amr --organism <name>`** to
+use a calibrated config when one exists (Campylobacter / Klebsiella / Salmonella cipro); an
+`EXPRESSION_FLOOR` organism (Acinetobacter / Pseudomonas carbapenem) prints **`CALL: ABSTAIN`** rather than
+over-calling. The registry is **opt-in** — the default (no `--organism`, or an organism with no entry)
+uses the unchanged `DRUG_RULE`; calibrated configs are NCBI-AST in-sample-derived and stay opt-in pending
+a different-lab cohort.
+
 ## Install
 
 ```bash
