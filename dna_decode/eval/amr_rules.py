@@ -132,7 +132,43 @@ def rule_for(drug: str) -> dict:
                                         "validated": "unconfigured drug — default threshold=2, no refinement"})
 
 
-def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None = None) -> dict:
+# ---- calibrated per-organism registry (opt-in; built by scripts/build_calibrated_registry.py) ----
+# These configs come from calibrate_organism on cached cohorts (IN-SAMPLE, N~30). They are OPT-IN: used
+# ONLY when call_resistance(..., organism=...) is passed; DRUG_RULE stays the default. CALIBRATED configs
+# still need an independent cohort before becoming a default; EXPRESSION_FLOOR abstain verdicts are
+# conservative (the rule refuses to predict an expression-driven organism×drug it can't decode).
+_CALIBRATED_REGISTRY_PATH = Path(__file__).resolve().parents[1] / "data" / "calibrated_amr_rules.json"
+_CALIBRATED_REGISTRY_CACHE: dict | None = None
+
+
+def load_calibrated_registry(path: Path | None = None) -> dict:
+    """Load the calibrated-rule registry (cached). Returns {} if absent."""
+    global _CALIBRATED_REGISTRY_CACHE
+    if path is not None:
+        import json
+        return json.loads(Path(path).read_text()) if Path(path).exists() else {"rules": {}}
+    if _CALIBRATED_REGISTRY_CACHE is None:
+        import json
+        if _CALIBRATED_REGISTRY_PATH.exists():
+            _CALIBRATED_REGISTRY_CACHE = json.loads(_CALIBRATED_REGISTRY_PATH.read_text())
+        else:
+            _CALIBRATED_REGISTRY_CACHE = {"rules": {}}
+    return _CALIBRATED_REGISTRY_CACHE
+
+
+def calibrated_rule_for(organism: str, drug: str, registry: dict | None = None) -> dict | None:
+    """Look up a calibrated config for (organism, drug). Case-insensitive on organism; None if absent."""
+    reg = registry if registry is not None else load_calibrated_registry()
+    rules = reg.get("rules", {})
+    want = f"{organism}|{drug}".lower()
+    for key, val in rules.items():
+        if key.lower() == want:
+            return val
+    return None
+
+
+def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None = None,
+                    organism: str | None = None, registry: dict | None = None) -> dict:
     """Deterministic, interpretable R/S call for one genome's AMRFinder main.tsv.
 
     Rule (tiered, count-based): R iff #curated drug-relevant determinants >= threshold. When
@@ -151,6 +187,13 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
         return {"prediction": "INDETERMINATE", "confidence": None, "n_determinants": 0,
                 "determinants": [], "rule": "amrfinder_curated_determinant_v1", "caveat":
                 "AMRFinder main.tsv not found for this genome"}
+
+    # OPT-IN calibrated per-organism path (only when organism= is passed AND a registry entry exists).
+    if organism and resistance_threshold is None:
+        cal = calibrated_rule_for(organism, drug, registry)
+        if cal is not None:
+            return _call_resistance_calibrated(p, drug, organism, cal)
+
     cfg = rule_for(drug)
     if resistance_threshold is None:
         resistance_threshold = cfg["threshold"]
@@ -198,6 +241,53 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
                    f"op-chars: {cfg['validated']}." + refine_note + boundary_note
                    + (f" An S call cannot rule out resistance via {', '.join(UNDETECTABLE_MECHANISMS)} "
                       "(expression/regulatory mechanisms absent from AMRFinder's curated determinants)."
+                      if pred == "S" else "")),
+    }
+
+
+def _call_resistance_calibrated(p: Path, drug: str, organism: str, cal: dict) -> dict:
+    """Apply a calibrated per-organism config (from the registry) to one genome's main.tsv.
+
+    EXPRESSION_FLOOR verdict -> ABSTAIN (the organism×drug is expression-driven; gene-presence cannot
+    decode it — flag, do not predict). CALIBRATED -> count determinants under the calibrated counter, strip
+    the calibrated intrinsic families, predict R/S vs the calibrated threshold."""
+    from dna_decode.eval.calibrate_organism import family_token  # lazy: avoids import cycle
+
+    prov = (f"calibrated_organism_v1 ({organism}|{drug}; IN-SAMPLE N={cal.get('n')}, "
+            f"LOO bal-acc {cal.get('loo_balanced_accuracy')}). Registry is opt-in; needs an independent "
+            f"cohort before becoming a default. See wiki/calibrate_organism_validation_2026-06-08.md.")
+
+    if cal.get("verdict") == "EXPRESSION_FLOOR":
+        return {
+            "prediction": "ABSTAIN", "confidence": None, "n_determinants": None, "determinants": [],
+            "rule": prov,
+            "caveat": (f"ABSTAIN: no gene-presence config decodes {organism} {drug} above the calibration "
+                       f"floor (expression-driven resistance — efflux overexpression / derepression / porin "
+                       f"loss). The deterministic rule refuses to predict rather than over-call. Intrinsic "
+                       f"families excluded in calibration: {cal.get('intrinsic_families_excluded')}."),
+        }
+
+    counter = cal.get("counter", "broad")
+    threshold = int(cal.get("threshold", 1))
+    excl = set(cal.get("intrinsic_families_excluded", []))
+    if counter == "qrdr_point":
+        dets = qrdr_point_determinants(p)
+    else:
+        dets = cipro_determinants_from_main(p, drug)
+    dets = [d for d in dets if family_token(d["symbol"]) not in excl]
+    n = len(dets)
+    pred = "R" if n >= threshold else "S"
+    conf = "HIGH" if (n == 0 or n >= threshold + 1) else "MODERATE"
+    undetectable = UNDETECTABLE_MECHANISMS if pred == "S" else []
+    return {
+        "prediction": pred, "confidence": conf, "n_determinants": n, "determinants": dets,
+        "resistance_threshold": threshold, "counter": counter,
+        "intrinsic_families_excluded": sorted(excl), "undetectable_mechanisms": undetectable,
+        "rule": prov,
+        "caveat": (f"{organism}-calibrated {drug} call: counter='{counter}', threshold={threshold}"
+                   + (f", intrinsic families excluded {sorted(excl)}" if excl else "")
+                   + ". IN-SAMPLE calibration (opt-in)."
+                   + (f" An S call cannot rule out resistance via {', '.join(UNDETECTABLE_MECHANISMS)}."
                       if pred == "S" else "")),
     }
 

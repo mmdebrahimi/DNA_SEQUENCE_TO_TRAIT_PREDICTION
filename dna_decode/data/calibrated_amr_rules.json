@@ -1,0 +1,62 @@
+{
+  "_provenance": "IN-SAMPLE calibration on cached NCBI/BV-BRC cohorts (N~30 each), 2026-06-08. OPT-IN: call_resistance uses these ONLY when organism= is passed; DRUG_RULE remains the default. CALIBRATED configs need an INDEPENDENT cohort before becoming a default; EXPRESSION_FLOOR abstain verdicts are conservative and safe to ship. See wiki/calibrate_organism_validation_2026-06-08.md.",
+  "_schema": "calibrated-amr-rules-v1",
+  "rules": {
+    "Campylobacter|ciprofloxacin": {
+      "verdict": "CALIBRATED",
+      "counter": "qrdr_point",
+      "threshold": 1,
+      "intrinsic_families_excluded": [],
+      "loo_balanced_accuracy": 1.0,
+      "n": 30,
+      "n_R": 15,
+      "n_S": 15
+    },
+    "Klebsiella|ciprofloxacin": {
+      "verdict": "CALIBRATED",
+      "counter": "qrdr_point",
+      "threshold": 2,
+      "intrinsic_families_excluded": [
+        "oqxA",
+        "oqxB"
+      ],
+      "loo_balanced_accuracy": 1.0,
+      "n": 30,
+      "n_R": 15,
+      "n_S": 15
+    },
+    "Salmonella|ciprofloxacin": {
+      "verdict": "CALIBRATED",
+      "counter": "broad",
+      "threshold": 1,
+      "intrinsic_families_excluded": [],
+      "loo_balanced_accuracy": 1.0,
+      "n": 30,
+      "n_R": 15,
+      "n_S": 15
+    },
+    "Acinetobacter|meropenem": {
+      "verdict": "EXPRESSION_FLOOR",
+      "counter": "broad",
+      "threshold": 3,
+      "intrinsic_families_excluded": [
+        "blaADC",
+        "blaOXA-51-family"
+      ],
+      "loo_balanced_accuracy": 0.1333,
+      "n": 30,
+      "n_R": 15,
+      "n_S": 15
+    },
+    "Pseudomonas_aeruginosa|meropenem": {
+      "verdict": "EXPRESSION_FLOOR",
+      "counter": "broad",
+      "threshold": 1,
+      "intrinsic_families_excluded": [],
+      "loo_balanced_accuracy": 0.0,
+      "n": 7,
+      "n_R": 0,
+      "n_S": 7
+    }
+  }
+}

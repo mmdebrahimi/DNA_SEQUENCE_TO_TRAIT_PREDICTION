@@ -15,7 +15,14 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   threshold, is organism-specific (the Klebsiella-vs-Salmonella cipro contrast). Validated on cached cohorts
   (`wiki/calibrate_organism_validation_2026-06-08.md`): Campylobacter→1, Klebsiella→2 (+oqxAB excluded),
   Salmonella→broad@1 (deployed 0.567→1.0) all LOO 1.0; Acinetobacter + Pseudomonas meropenem → abstain.
-  16 unit tests. Building block; not yet wired into `call_resistance`.
+  16 unit tests.
+- **Wired into `call_resistance(..., organism=...)`** (opt-in) via a committed registry
+  `dna_decode/data/calibrated_amr_rules.json` (built by `scripts/build_calibrated_registry.py`). When an
+  organism is passed AND has a registry entry: a CALIBRATED entry applies its counter/threshold/intrinsic
+  exclusions; an EXPRESSION_FLOOR entry returns **`prediction: "ABSTAIN"`** (refuses to predict an
+  expression-driven organism×drug rather than over-call). `organism=None` (or unknown organism, or an
+  explicit `resistance_threshold`) keeps the unchanged `DRUG_RULE` default — backward-compatible. Registry
+  is IN-SAMPLE (N≈30) and opt-in by design; abstain verdicts are conservative. 9 wiring tests.
 
 ## [Unreleased] — cross-decoder analyses (concordance + profile + co-localization)
 
