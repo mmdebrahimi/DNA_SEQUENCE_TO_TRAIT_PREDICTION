@@ -18,6 +18,7 @@ import json
 from pathlib import Path
 
 from dna_decode.eval.calibrate_organism import calibrate, features_from_main_tsv
+from scripts.organism_drug_validate import _run_dir
 
 # (data/raw slug, registry organism key, drug)
 COHORTS = [
@@ -35,14 +36,20 @@ def _load_cohort(slug: str, drug: str):
     sel = base / "selected.tsv"
     if not sel.exists():
         return None
+    # Resolve each accession's AMRFinder run via the SAME reuse_glob the validator uses (own dir +
+    # data/raw/<genus>_*/amrfinder_runs) — a strain's run is identical regardless of which drug cohort
+    # downloaded it, and many runs live in a sibling cohort dir. Reading only base/amrfinder_runs
+    # under-loads (the Pseudomonas degenerate-cohort bug: 7 of 30 found -> all-S -> bogus verdict).
+    reuse_glob = f"data/raw/{slug.split('_')[0]}_*/amrfinder_runs"
+    own_runs = base / "amrfinder_runs"
     strains, labels = [], []
     for ln in sel.read_text().splitlines():
         if "\t" not in ln:
             continue
         acc, lab = ln.split("\t")
-        mt = base / "amrfinder_runs" / acc / "main.tsv"
-        if mt.exists():
-            strains.append(features_from_main_tsv(mt, drug))
+        rd = _run_dir(acc, own_runs, reuse_glob)
+        if rd is not None:
+            strains.append(features_from_main_tsv(rd / "main.tsv", drug))
             labels.append(lab.strip())
     return (strains, labels) if strains else None
 

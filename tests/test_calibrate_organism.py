@@ -133,6 +133,27 @@ def test_passing_regimes_have_calibrated_verdict():
     assert calibrate(strains, labels, "ciprofloxacin").verdict == "CALIBRATED"
 
 
+# ---------- one-class / under-powered cohort -> INSUFFICIENT_EVIDENCE (not a bogus EXPRESSION_FLOOR) ----
+def test_one_class_cohort_is_insufficient_evidence():
+    # all-S cohort (the Pseudomonas degenerate-cohort lesson): cannot distinguish expression-floor from
+    # "no resistant examples loaded" -> INSUFFICIENT_EVIDENCE, loo undefined.
+    strains, labels = _cohort([([], ["blaACT"], "S")] * 7)
+    rule = calibrate(strains, labels, "meropenem")
+    assert rule.verdict == "INSUFFICIENT_EVIDENCE"
+    assert rule.loo_balanced_accuracy is None
+
+def test_underpowered_class_is_insufficient_evidence():
+    # 3R/8S -> minority class below MIN_CLASS_COUNT(5) -> INSUFFICIENT_EVIDENCE
+    strains, labels = _cohort([(["gyrA_T86I"], ["gyrA_T86I"], "R")] * 3 + [([], [], "S")] * 8)
+    assert calibrate(strains, labels, "ciprofloxacin").verdict == "INSUFFICIENT_EVIDENCE"
+
+def test_loo_balanced_accuracy_is_truly_balanced_on_imbalanced_preds():
+    # 6R/6S, perfect separation -> balanced acc 1.0 (and equals plain here, but the path is the balanced one)
+    strains, labels = _cohort([(["gyrA_T86I"], ["gyrA_T86I"], "R")] * 6 + [([], [], "S")] * 6)
+    r = calibrate(strains, labels, "ciprofloxacin")
+    assert r.loo_balanced_accuracy == 1.0 and r.verdict == "CALIBRATED"
+
+
 # ---------- predict() round-trips the calibrated config ----------
 def test_predict_applies_calibrated_rule():
     specs = [(["gyrA_T86I"], ["gyrA_T86I"], "R")] * 6 + [([], [], "S")] * 6

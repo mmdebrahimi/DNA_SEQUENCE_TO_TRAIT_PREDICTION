@@ -38,7 +38,7 @@
     "Acinetobacter|meropenem": {
       "verdict": "EXPRESSION_FLOOR",
       "counter": "broad",
-      "threshold": 3,
+      "threshold": 1,
       "intrinsic_families_excluded": [
         "blaADC",
         "blaOXA-51-family"
@@ -51,12 +51,15 @@
     "Pseudomonas_aeruginosa|meropenem": {
       "verdict": "EXPRESSION_FLOOR",
       "counter": "broad",
-      "threshold": 1,
-      "intrinsic_families_excluded": [],
-      "loo_balanced_accuracy": 0.0,
-      "n": 7,
-      "n_R": 0,
-      "n_S": 7
+      "threshold": 3,
+      "intrinsic_families_excluded": [
+        "blaOXA",
+        "blaPDC"
+      ],
+      "loo_balanced_accuracy": 0.6667,
+      "n": 30,
+      "n_R": 15,
+      "n_S": 15
     }
   }
 }

@@ -23,6 +23,15 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   expression-driven organism×drug rather than over-call). `organism=None` (or unknown organism, or an
   explicit `resistance_threshold`) keeps the unchanged `DRUG_RULE` default — backward-compatible. Registry
   is IN-SAMPLE (N≈30) and opt-in by design; abstain verdicts are conservative. 9 wiring tests.
+- **Design-review hardening (2026-06-09):** (a) `INSUFFICIENT_EVIDENCE` verdict + `MIN_CLASS_COUNT` guard —
+  a one-class/under-powered cohort no longer yields a bogus `EXPRESSION_FLOOR` (fixed a degenerate
+  Pseudomonas registry entry); (b) `loo_balanced_accuracy` now truly balanced (was plain accuracy), `None`
+  when a class is absent; (c) deployed config is the deterministic full-cohort `_select_best_config` pick
+  (removed the modal/tie-break ambiguity), LOO separately estimates the selection procedure; (d)
+  `build_calibrated_registry` resolves runs via the validator `reuse_glob` (Pseudomonas under-load fix —
+  all 5 entries now on valid 15R/15S); (e) promotion gate adds a **specificity floor** + min-10/class and
+  treats config-match as a **flag, not a gate** (non-inferior OOS perf suffices) — all 3 cipro configs
+  `promotion_eligible=True`. M2 (AMRFinder `Method`-column propagation) documented + deferred. 947 tests.
 
 ## [Unreleased] — cross-decoder analyses (concordance + profile + co-localization)
 

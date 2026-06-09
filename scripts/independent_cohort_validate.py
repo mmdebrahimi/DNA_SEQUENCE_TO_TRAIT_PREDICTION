@@ -133,18 +133,32 @@ def validate_one(group, amr_org, drug, first_slug, reg_key, registry) -> dict:
     same_config = (recal is not None and reg_cfg
                    and recal.counter == reg_cfg.get("counter")
                    and recal.threshold == reg_cfg.get("threshold"))
+    # Promotion gate (opt-in -> default eligibility). Config-MATCH is a FLAG, not a hard gate: a config
+    # that generalizes (non-inferior OOS performance) is eligible even if re-calibration's tie-break picks
+    # a different equally-good config (the Salmonella broad@1-vs-qrdr_point@1 case). The gate is OOS acc +
+    # sens + SPEC floors (spec added — a high-sens over-caller must not pass) AND a minimum scored N/class.
+    FLOOR = 0.80; MIN_PER_CLASS = 10
+    sc_R = sum(1 for _, y in applied if y == 1); sc_S = sum(1 for _, y in applied if y == 0)
+    floors_ok = all(v is not None and v >= FLOOR for v in (oos["acc"], oos["sens"], oos["spec"]))
+    powered = sc_R >= MIN_PER_CLASS and sc_S >= MIN_PER_CLASS
+    promotion_eligible = bool(floors_ok and powered)
     result = {
         "group": group, "drug": drug, "n": len(sel), "nR": nR, "nS": nS,
         "n_with_runs": len(strains), "excluded_cohort1": len(exclude),
+        "scored_R": sc_R, "scored_S": sc_S,
         "in_sample_config": {k: reg_cfg.get(k) for k in ("counter", "threshold", "intrinsic_families_excluded", "loo_balanced_accuracy")},
         "out_of_sample_applying_in_sample_rule": oos,
         "recalibrated_on_independent": (None if recal is None else {
             "counter": recal.counter, "threshold": recal.threshold,
             "intrinsic_families_excluded": recal.intrinsic_families_excluded,
             "loo_balanced_accuracy": recal.loo_balanced_accuracy, "verdict": recal.verdict}),
-        "config_recovered": bool(same_config),
+        "config_recovered_flag": bool(same_config),
+        "promotion_eligible": promotion_eligible,
+        "promotion_gate": {"floor": FLOOR, "min_per_class": MIN_PER_CLASS,
+                           "floors_ok": floors_ok, "powered": powered,
+                           "note": "config-match is a flag, not required; non-inferior OOS perf suffices"},
     }
-    print(f"  OOS (in-sample rule on indep): acc={oos['acc']} sens={oos['sens']} spec={oos['spec']} (N={oos['n_scored']})")
+    print(f"  OOS (in-sample rule on indep): acc={oos['acc']} sens={oos['sens']} spec={oos['spec']} (scored {sc_R}R/{sc_S}S) -> promotion_eligible={promotion_eligible}")
     if recal:
         print(f"  re-calibrated: {recal.counter}@{recal.threshold} (in-sample was {reg_cfg.get('counter')}@{reg_cfg.get('threshold')}) -> recovered={same_config}")
     return result
@@ -164,23 +178,25 @@ def main() -> int:
     # markdown
     md = [f"# Calibrated AMR registry — INDEPENDENT-cohort out-of-sample validation — {d}", "",
           "> The registry was calibrated IN-SAMPLE (N~30). This applies each in-sample rule to a DISJOINT",
-          "> second cohort (cohort-1 accessions excluded) + re-calibrates on it. Promotion gate: a config",
-          "> that holds out-of-sample (acc & sens >= 0.80) AND is recovered on the independent cohort is",
-          "> eligible to become a default; otherwise it stays opt-in. NCBI labels; AMRFinder pinned image.",
-          "", "| organism | drug | indep N | in-sample cfg | OOS acc | OOS sens | OOS spec | re-cal cfg | recovered |",
-          "|---|---|---:|---|---:|---:|---:|---|---|"]
+          "> second cohort (cohort-1 accessions excluded) + re-calibrates on it. PROMOTION GATE (opt-in ->",
+          "> default): OOS acc + sens + SPEC all >= 0.80 AND >= 10 scored strains per class. Config-MATCH is",
+          "> a FLAG, not required — a config that generalizes (non-inferior OOS perf) is eligible even if the",
+          "> re-calibration tie-break picks a different equally-good config. NCBI labels; AMRFinder pinned.",
+          "", "| organism | drug | scored R/S | in-sample cfg | OOS acc | OOS sens | OOS spec | re-cal cfg | cfg-match flag | PROMOTION |",
+          "|---|---|---|---|---:|---:|---:|---|---|---|"]
     for r in results:
         if "error" in r:
-            md.append(f"| {r['group']} | {r['drug']} | — | — | ERROR | {r['error']} | | | |"); continue
+            md.append(f"| {r['group']} | {r['drug']} | — | — | ERROR | {r['error']} | | | | |"); continue
         ic = r["in_sample_config"]; oos = r["out_of_sample_applying_in_sample_rule"]; rc = r["recalibrated_on_independent"]
         rcs = f"{rc['counter']}@{rc['threshold']}" if rc else "—"
-        md.append(f"| {r['group']} | {r['drug']} | {r['n_with_runs']}/{r['n']} | "
+        md.append(f"| {r['group']} | {r['drug']} | {r.get('scored_R','?')}/{r.get('scored_S','?')} | "
                   f"{ic['counter']}@{ic['threshold']} | {oos['acc']} | {oos['sens']} | {oos['spec']} | "
-                  f"{rcs} | {'YES' if r['config_recovered'] else 'no'} |")
-    md += ["", "## Reading", "- **OOS acc/sens** = the in-sample registry rule applied to strains it was NOT",
-           "  calibrated on. High => the calibrated config generalizes (promotion-eligible).",
-           "- **recovered** = re-calibrating from scratch on the independent cohort picks the SAME",
-           "  (counter, threshold). YES => the config choice is stable, not a cohort-1 artifact.",
+                  f"{rcs} | {'match' if r['config_recovered_flag'] else 'diff'} | "
+                  f"{'ELIGIBLE' if r['promotion_eligible'] else 'no'} |")
+    md += ["", "## Reading", "- **OOS acc/sens/spec** = the in-sample registry rule applied to strains it was",
+           "  NOT calibrated on. All >= 0.80 (+ >=10 scored/class) => PROMOTION-eligible.",
+           "- **cfg-match flag** = whether re-calibration picks the SAME (counter,threshold). 'diff' is NOT a",
+           "  failure — a non-inferior config that generalizes is still eligible (match is a flag, not a gate).",
            "", "## Honest scope", "Second cohort is disjoint by accession but same label source (NCBI AST).",
            "A held-out NCBI cohort is a stronger test than in-sample but still not a different-lab study.",
            "Promotion of any config from opt-in to default remains a deliberate decision on this evidence."]

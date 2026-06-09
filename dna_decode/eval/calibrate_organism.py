@@ -61,7 +61,10 @@ def is_point_mutation(symbol: str) -> bool:
 
     Point mutations are NEVER 'intrinsic genes' in the over-call sense — they are discriminative by COUNT
     (a wild-type strain simply has no such row), so they must be excluded from intrinsic-family flagging.
-    AMRFinder POINT symbols carry an underscore-separated substitution suffix."""
+    AMRFinder POINT symbols carry an underscore-separated substitution suffix (gyrA_S83L, nalC_G71E); this
+    proxy holds for every AMRFinder symbol observed (acquired genes like qnrB19/blaCTX-M-15 carry no '_').
+    DEFERRED hardening (M2): prefer the authoritative AMRFinder `Method`=POINT column over this proxy —
+    requires carrying Method through `features_from_main_tsv`, a feature-shape change tracked for follow-up."""
     return "_" in symbol
 
 
@@ -136,7 +139,16 @@ def _counts_for(strains: list[dict], counter: str, exclude: set[str]) -> list[in
 # LOO balanced-accuracy floor below which NO presence-based config is trustworthy — the organism×drug is
 # EXPRESSION-driven (derepression/efflux/porin) and calibrate_organism honestly ABSTAINS rather than ship a
 # bad rule. Implements the synthesis's "abstain, don't predict" for out-of-trust-zone organism×drugs.
+# NOTE: the floor applies ONLY once the cohort is balanced + powered (see MIN_CLASS_COUNT); weak cohorts
+# route to INSUFFICIENT_EVIDENCE instead, so EXPRESSION_FLOOR stays a mechanistic claim (not a dumping
+# ground for under-powered data). 0.70 is a documented post-hoc constant (chosen from the gap between the
+# 1.0 calibrated cohorts and the floor cohorts); revisit if a per-drug floor is ever warranted.
 CALIBRATION_FLOOR = 0.70
+
+# Minimum number of strains-with-runs per class for a calibration verdict to be meaningful. Below this
+# (or one class entirely absent) -> INSUFFICIENT_EVIDENCE. A one-class cohort cannot distinguish
+# "expression floor" from "no resistant examples loaded" (the Pseudomonas degenerate-cohort lesson).
+MIN_CLASS_COUNT = 5
 
 
 @dataclass
@@ -153,7 +165,7 @@ class CalibratedRule:
     n: int
     n_R: int
     n_S: int
-    verdict: str = "CALIBRATED"           # CALIBRATED | EXPRESSION_FLOOR (abstain)
+    verdict: str = "CALIBRATED"           # CALIBRATED | EXPRESSION_FLOOR (abstain) | INSUFFICIENT_EVIDENCE
     note: str = ""
 
     def predict(self, strain_features: dict) -> str:
@@ -188,9 +200,11 @@ def calibrate(strains: list[dict], labels: list[str], drug: str, *,
     """Auto-select (counter, threshold) + intrinsic exclusions for `drug` from a labeled cohort.
 
     `strains`: list of per-strain feature dicts {counter_name: [determinant_symbols]} (see
-    `features_from_main_tsv`). `labels`: aligned list of 'R'/'S'. Selection is by leave-one-out balanced
-    accuracy of the config-selection procedure (honest generalization estimate); the RETURNED config is the
-    modal LOO pick. Intrinsic families are computed once on the full cohort (documented in-sample)."""
+    `features_from_main_tsv`). `labels`: aligned list of 'R'/'S'. The DEPLOYED config is the deterministic
+    full-cohort `_select_best_config` pick; `loo_balanced_accuracy` separately estimates the selection
+    PROCEDURE's generalization (per-fold re-selection). Verdict: INSUFFICIENT_EVIDENCE (a class <
+    MIN_CLASS_COUNT) / CALIBRATED (LOO balanced-acc >= floor) / EXPRESSION_FLOOR (powered but sub-floor).
+    Intrinsic families computed once on the full cohort for the deployed rule (documented in-sample)."""
     if len(strains) != len(labels):
         raise ValueError(f"strains ({len(strains)}) and labels ({len(labels)}) length mismatch")
     if not strains:
@@ -211,46 +225,65 @@ def calibrate(strains: list[dict], labels: list[str], drug: str, *,
         counts = list(zip(_counts_for(strains, c, excl), labels))
         per_config[f"{c}@{t}"] = round(balanced_accuracy(counts, t), 4)
 
-    # LOO: for each held-out strain, select best config on the REST, predict held-out, tally selections
+    # DEPLOYED config = deterministic full-cohort selection (NOT a modal LOO pick — that introduced a
+    # selection-procedure-vs-deployed-rule mismatch + a Counter.most_common tie-break ambiguity). The LOO
+    # number below estimates the SELECTION PROCEDURE's generalization; the deployed rule is this.
+    mc, mt, _ = _select_best_config(strains, labels, excl, counters, thresholds)
+    full_conf = confusion(list(zip(_counts_for(strains, mc, excl), labels)), mt)
+
+    # Min-class guard: a one-class / under-powered cohort cannot yield a meaningful verdict. Short-circuit
+    # to INSUFFICIENT_EVIDENCE BEFORE the floor check so EXPRESSION_FLOOR stays a mechanistic claim.
+    if min(n_R, n_S) < MIN_CLASS_COUNT:
+        return CalibratedRule(
+            drug=drug, counter=mc, threshold=mt, intrinsic_families_excluded=sorted(excl),
+            loo_balanced_accuracy=None, full_balanced_accuracy=round(full_conf["bal_acc"], 4),
+            full_confusion=full_conf, per_config=per_config, fold_selections={},
+            n=len(strains), n_R=n_R, n_S=n_S, verdict="INSUFFICIENT_EVIDENCE",
+            note=(f"INSUFFICIENT_EVIDENCE: {n_R}R/{n_S}S — fewer than MIN_CLASS_COUNT={MIN_CLASS_COUNT} in "
+                  f"a class (or one class absent). A one-class/under-powered cohort cannot distinguish an "
+                  f"expression floor from missing examples. No verdict; load more strains-with-runs."))
+
+    # LOO: per held-out strain select best config on the REST, predict held-out; collect (pred, true) so we
+    # can compute a TRUE balanced accuracy (the field used to be plain accuracy — misnamed).
     fold_sel: Counter = Counter()
-    loo_correct = 0
+    loo_preds: list[tuple[str, str]] = []
     idx = list(range(len(strains)))
     for i in idx:
         train_s = [strains[j] for j in idx if j != i]
         train_l = [labels[j] for j in idx if j != i]
-        # intrinsic recomputed per-fold (honest LOO) on the training split — gene-presence symbols only
         tf = [({family_token(sym) for c in s for sym in s[c] if not is_point_mutation(sym)}, lab)
               for s, lab in zip(train_s, train_l)]
         fold_excl = set(intrinsic_families(tf, min_prev=intrinsic_min_prev))
         c, t, _ = _select_best_config(train_s, train_l, fold_excl, counters, thresholds)
         fold_sel[f"{c}@{t}"] += 1
         n_held = sum(1 for sym in strains[i].get(c, []) if family_token(sym) not in fold_excl)
-        pred = "R" if n_held >= t else "S"
-        if pred == labels[i]:
-            loo_correct += 1
-    loo_acc = loo_correct / len(strains)
+        loo_preds.append(("R" if n_held >= t else "S", labels[i]))
+    tp = sum(1 for p, y in loo_preds if p == "R" and y == "R")
+    fn = sum(1 for p, y in loo_preds if p == "S" and y == "R")
+    tn = sum(1 for p, y in loo_preds if p == "S" and y == "S")
+    fp = sum(1 for p, y in loo_preds if p == "R" and y == "S")
+    loo_sens = tp / (tp + fn) if (tp + fn) else None
+    loo_spec = tn / (tn + fp) if (tn + fp) else None
+    loo_ba = round(0.5 * (loo_sens + loo_spec), 4) if (loo_sens is not None and loo_spec is not None) else None
 
-    # returned config = modal LOO selection (most-selected across folds); tie -> _select_best_config order
-    modal = fold_sel.most_common(1)[0][0]
-    mc, mt = modal.split("@"); mt = int(mt)
-    full_counts = list(zip(_counts_for(strains, mc, excl), labels))
-    full_conf = confusion(full_counts, mt)
-
-    verdict = "CALIBRATED" if loo_acc >= CALIBRATION_FLOOR else "EXPRESSION_FLOOR"
-    deployed = "qrdr_point@2" if drug.lower() == "ciprofloxacin" else None
-    if verdict == "EXPRESSION_FLOOR":
-        note = (f"NO presence-based config clears the LOO floor ({loo_acc:.3f} < {CALIBRATION_FLOOR}) — "
-                f"this organism×drug is EXPRESSION-driven (derepression/efflux overexpression/porin loss) "
-                f"and gene-presence cannot decode it. ABSTAIN: flag, do not predict. Intrinsic families "
-                f"were still excluded ({sorted(excl)}) but the residual is the uncrossable floor.")
-    elif deployed and modal != deployed:
-        note = (f"calibrated config {modal} differs from the cipro default {deployed} — organism-specific "
-                f"(counter and/or threshold). LOO {loo_acc:.3f}.")
+    deployed_cfg = f"{mc}@{mt}"
+    if loo_ba is None:
+        verdict = "INSUFFICIENT_EVIDENCE"
+        note = "INSUFFICIENT_EVIDENCE: a class was absent in LOO predictions; no balanced accuracy."
+    elif loo_ba >= CALIBRATION_FLOOR:
+        verdict = "CALIBRATED"
+        cmp = "qrdr_point@2" if drug.lower() == "ciprofloxacin" else None
+        note = (f"deployed {deployed_cfg}; LOO balanced-acc {loo_ba:.3f}."
+                + (f" (differs from cipro default {cmp} — organism-specific.)" if cmp and deployed_cfg != cmp else ""))
     else:
-        note = f"config {modal}; LOO {loo_acc:.3f}."
+        verdict = "EXPRESSION_FLOOR"
+        note = (f"NO presence-based config clears the floor (LOO balanced-acc {loo_ba:.3f} < "
+                f"{CALIBRATION_FLOOR}) on a balanced+powered cohort ({n_R}R/{n_S}S) — EXPRESSION-driven "
+                f"(derepression/efflux overexpression/porin loss); gene-presence cannot decode it. ABSTAIN. "
+                f"Intrinsic families excluded ({sorted(excl)}) but the residual is the uncrossable floor.")
     return CalibratedRule(
         drug=drug, counter=mc, threshold=mt, intrinsic_families_excluded=sorted(excl),
-        loo_balanced_accuracy=round(loo_acc, 4), full_balanced_accuracy=round(full_conf["bal_acc"], 4),
+        loo_balanced_accuracy=loo_ba, full_balanced_accuracy=round(full_conf["bal_acc"], 4),
         full_confusion=full_conf, per_config=per_config, fold_selections=dict(fold_sel),
         n=len(strains), n_R=n_R, n_S=n_S, verdict=verdict, note=note)
 
