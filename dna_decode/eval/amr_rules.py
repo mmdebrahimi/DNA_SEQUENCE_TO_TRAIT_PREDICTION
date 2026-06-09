@@ -157,12 +157,22 @@ def load_calibrated_registry(path: Path | None = None) -> dict:
 
 
 def calibrated_rule_for(organism: str, drug: str, registry: dict | None = None) -> dict | None:
-    """Look up a calibrated config for (organism, drug). Case-insensitive on organism; None if absent."""
+    """Look up a calibrated config for (organism, drug). None if absent.
+
+    Matching is (1) case-insensitive exact, then (2) GENUS-prefix: an AMRFinder `-O` value like
+    'Klebsiella_pneumoniae' or 'Acinetobacter_baumannii' resolves the genus-level registry key
+    ('Klebsiella', 'Acinetobacter') — the registry is validated at genus granularity. The genus is the
+    first '_'-delimited token on both sides; 'Escherichia' (no entry) -> None -> DRUG_RULE default."""
     reg = registry if registry is not None else load_calibrated_registry()
     rules = reg.get("rules", {})
     want = f"{organism}|{drug}".lower()
     for key, val in rules.items():
         if key.lower() == want:
+            return val
+    genus = organism.split("_")[0].lower()
+    for key, val in rules.items():
+        k_org, _, k_drug = key.partition("|")
+        if k_drug.lower() == drug.lower() and k_org.split("_")[0].lower() == genus:
             return val
     return None
 

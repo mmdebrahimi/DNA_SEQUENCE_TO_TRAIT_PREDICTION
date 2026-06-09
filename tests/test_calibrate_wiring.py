@@ -119,3 +119,19 @@ def test_calibrated_rule_for_case_insensitive():
     assert calibrated_rule_for("salmonella", "ciprofloxacin", registry=_REG)["counter"] == "broad"
     assert calibrated_rule_for("SALMONELLA", "ciprofloxacin", registry=_REG) is not None
     assert calibrated_rule_for("Campylobacter", "meropenem", registry=_REG) is None
+
+
+def test_calibrated_rule_for_genus_prefix_fallback():
+    # AMRFinder -O values (species-level) resolve the genus-level registry key
+    assert calibrated_rule_for("Klebsiella_pneumoniae", "ciprofloxacin", registry=_REG)["threshold"] == 2
+    assert calibrated_rule_for("Acinetobacter_baumannii", "meropenem", registry=_REG)["verdict"] == "EXPRESSION_FLOOR"
+    # Escherichia has no entry -> None -> DRUG_RULE default (E. coli behavior unchanged)
+    assert calibrated_rule_for("Escherichia", "ciprofloxacin", registry=_REG) is None
+
+
+def test_cli_organism_value_routes_calibrated(tmp_path):
+    # the CLI passes its AMRFinder -O value (e.g. Klebsiella_pneumoniae) as organism= -> calibrated path
+    mt = tmp_path / "main.tsv"; _write_main_tsv(mt, [_gene("oqxA"), _gene("oqxB")])
+    r = call_resistance(mt, "ciprofloxacin", organism="Klebsiella_pneumoniae", registry=_REG)
+    assert r["prediction"] == "S"                      # intrinsic oqxAB excluded by the calibrated rule
+    assert "oqxA" in r["intrinsic_families_excluded"]

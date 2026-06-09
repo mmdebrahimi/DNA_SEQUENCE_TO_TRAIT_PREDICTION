@@ -193,7 +193,12 @@ def main(argv=None) -> int:
             print(f"ERROR: AMRFinder run failed ({type(e).__name__}: {e}).", file=sys.stderr)
             return 3
 
-    call = call_resistance(run_dir / "main.tsv", args.drug, args.resistance_threshold)
+    # Forward --organism so a calibrated registry entry (opt-in) is used when the organism is known. The
+    # default 'Escherichia' has no registry entry -> DRUG_RULE default (unchanged); an explicit
+    # Campylobacter/Klebsiella/Salmonella resolves its independent-cohort-validated config, and an
+    # EXPRESSION_FLOOR organism (Acinetobacter/Pseudomonas carbapenem) returns prediction 'ABSTAIN'.
+    call = call_resistance(run_dir / "main.tsv", args.drug, args.resistance_threshold,
+                           organism=args.organism)
     rec = {
         "sample_id": sample_id, "drug": args.drug,
         "analysis_date": datetime.date.today().isoformat(), "schema": "amr-mechanism-call-v1",
@@ -212,16 +217,21 @@ def main(argv=None) -> int:
     if args.json_only:
         print(json.dumps(rec, indent=2))
     else:
-        print(f"sample: {sample_id}  drug: {args.drug}")
-        print(f"CALL: {call['prediction']}  [{call['confidence']} | {call['n_determinants']} determinant(s)]")
-        for x in call["determinants"]:
-            print(f"  driven by: {x['symbol']}  ({x['subclass'] or x['class']}, {x['pct_identity']}% id)")
-        if not call["determinants"]:
-            print("  driven by: (no curated resistance determinants for this drug)")
-        print(f"  {call['caveat']}")
+        print(f"sample: {sample_id}  drug: {args.drug}  organism: {args.organism}")
+        if call["prediction"] == "ABSTAIN":
+            print("CALL: ABSTAIN  [gene-presence cannot decode this organism×drug]")
+            print(f"  {call['caveat']}")
+        else:
+            nd = call["n_determinants"]
+            print(f"CALL: {call['prediction']}  [{call['confidence']} | {nd} determinant(s)]")
+            for x in call["determinants"]:
+                print(f"  driven by: {x['symbol']}  ({x['subclass'] or x['class']}, {x['pct_identity']}% id)")
+            if not call["determinants"]:
+                print("  driven by: (no curated resistance determinants for this drug)")
+            print(f"  {call['caveat']}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
-    return 0 if call["prediction"] != "INDETERMINATE" else 4
+    return {"INDETERMINATE": 4, "ABSTAIN": 5}.get(call["prediction"], 0)
 
 
 if __name__ == "__main__":
