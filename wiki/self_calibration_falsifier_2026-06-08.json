@@ -1,0 +1,194 @@
+{
+  "falsifier_1_auto_threshold": {
+    "per_organism": {
+      "campylobacter_ciprofloxacin": {
+        "n": 30,
+        "modal_threshold": 1,
+        "selected_thresholds": {
+          "1": 30
+        },
+        "loo_acc": 1.0,
+        "fixed_acc_at_modal": 1.0,
+        "ground_truth": 1,
+        "verdict": "GT=1 -> AGREE"
+      },
+      "klebsiella_cipro": {
+        "n": 30,
+        "modal_threshold": 2,
+        "selected_thresholds": {
+          "2": 30
+        },
+        "loo_acc": 1.0,
+        "fixed_acc_at_modal": 1.0,
+        "ground_truth": 2,
+        "verdict": "GT=2 -> AGREE"
+      },
+      "pseudomonas_aeruginosa_ciprofloxacin": {
+        "n": 30,
+        "modal_threshold": 1,
+        "selected_thresholds": {
+          "1": 30
+        },
+        "loo_acc": 0.9,
+        "fixed_acc_at_modal": 0.9,
+        "ground_truth": null,
+        "verdict": ""
+      }
+    },
+    "agree": 2,
+    "disagree": 0,
+    "verdict": "SURVIVES"
+  },
+  "falsifier_2_auto_intrinsic_flag": {
+    "acinetobacter_prevalence": [
+      {
+        "symbol": "blaOXA-68",
+        "prev_R": 0.133,
+        "prev_S": 0.667,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-76",
+        "prev_R": 0.133,
+        "prev_S": 0.667,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-58",
+        "prev_R": 0.133,
+        "prev_S": 0.6,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-23",
+        "prev_R": 0.6,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaPSE",
+        "prev_R": 0.133,
+        "prev_S": 0.4,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaCARB-2",
+        "prev_R": 0.133,
+        "prev_S": 0.4,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-69",
+        "prev_R": 0.467,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC",
+        "prev_R": 0.333,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-79",
+        "prev_R": 0.133,
+        "prev_S": 0.2,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaTEM-1",
+        "prev_R": 0.133,
+        "prev_S": 0.133,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-66",
+        "prev_R": 0.133,
+        "prev_S": 0.133,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaCMY-30",
+        "prev_R": 0.0,
+        "prev_S": 0.2,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-30",
+        "prev_R": 0.067,
+        "prev_S": 0.133,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-100",
+        "prev_R": 0.0,
+        "prev_S": 0.2,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-312",
+        "prev_R": 0.133,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-191",
+        "prev_R": 0.133,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-336",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-73",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-132",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "ftsI_A515V",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-113",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaOXA-72",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaADC-162",
+        "prev_R": 0.067,
+        "prev_S": 0.0,
+        "intrinsic_flag": false
+      },
+      {
+        "symbol": "blaMCA",
+        "prev_R": 0.0,
+        "prev_S": 0.067,
+        "intrinsic_flag": false
+      }
+    ],
+    "intrinsic_flagged": [],
+    "oxa51_flagged": false,
+    "strong_acquired_falsely_flagged": [],
+    "verdict": "KILLED"
+  }
+}
