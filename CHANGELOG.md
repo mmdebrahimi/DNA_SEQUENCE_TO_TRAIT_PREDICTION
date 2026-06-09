@@ -3,6 +3,20 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — antimalarial vertical: P. falciparum K13 (the 3rd kingdom, protozoan)
+
+- **`dna_decode/data/antimalarial_amr.py`** + **`scripts/pf_kelch13_caller.py`** — extends the proven
+  deterministic target-site method (bacterial AMRFinder → fungal ERG11) to *Plasmodium falciparum*
+  artemisinin partial resistance via the WHO-validated **Pfkelch13 (K13)** propeller markers (C580Y, R561H,
+  R539T, I543T, A675V, R622I, …). Hand-curated catalog (no AMRFinder-equivalent for Plasmodium); the caller
+  REUSES the fungal caller's gene-generic `observed_substitutions` (BLAST K13-CDS-vs-genome → gap-aware
+  codon-map → catalog), so the only new surface is the catalog + a thin wrapper. Artemisinin partial
+  resistance is a clearance phenotype, not an MIC — the validated K13 marker IS the genotypic call; an S
+  call surfaces non-K13 / partner-drug blind spots. Real 3D7 K13 reference committed
+  (`data/antimalarial_ref/Pf3D7_K13_cds.fna`, NCBI XM_001350122.1, 726aa, WT Cys@580); G0-completion test
+  validates C580Y numbering on the **real** reference. Offline-safe (absent BLAST+ → INDETERMINATE).
+  6 tests. **3rd kingdom decoded** (bacteria → fungi → protozoa).
+
 ## [Unreleased] — self-calibrating AMR rule (`calibrate_organism`)
 
 - **`dna_decode/eval/calibrate_organism.py`** — auto-selects the per-organism AMR rule config from a
