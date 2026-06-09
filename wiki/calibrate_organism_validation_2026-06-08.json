@@ -1,0 +1,88 @@
+{
+  "campylobacter_ciprofloxacin": {
+    "drug": "ciprofloxacin",
+    "flavor": "TUNING",
+    "verdict": "CALIBRATED",
+    "counter": "qrdr_point",
+    "threshold": 1,
+    "intrinsic_excluded": [],
+    "loo_bal_acc": 1.0,
+    "full_acc": 1.0,
+    "sens": 1.0,
+    "spec": 1.0,
+    "n": 30,
+    "nR": 15,
+    "nS": 15,
+    "note": "calibrated config qrdr_point@1 differs from the cipro default qrdr_point@2 \u2014 organism-specific (counter and/or threshold). LOO 1.000."
+  },
+  "klebsiella_cipro": {
+    "drug": "ciprofloxacin",
+    "flavor": "CONTENT(intrinsic efflux)",
+    "verdict": "CALIBRATED",
+    "counter": "qrdr_point",
+    "threshold": 2,
+    "intrinsic_excluded": [
+      "oqxA",
+      "oqxB"
+    ],
+    "loo_bal_acc": 1.0,
+    "full_acc": 1.0,
+    "sens": 1.0,
+    "spec": 1.0,
+    "n": 30,
+    "nR": 15,
+    "nS": 15,
+    "note": "config qrdr_point@2; LOO 1.000."
+  },
+  "salmonella_ciprofloxacin": {
+    "drug": "ciprofloxacin",
+    "flavor": "CONTENT(counter/qnr)",
+    "verdict": "CALIBRATED",
+    "counter": "broad",
+    "threshold": 1,
+    "intrinsic_excluded": [],
+    "loo_bal_acc": 1.0,
+    "full_acc": 1.0,
+    "sens": 1.0,
+    "spec": 1.0,
+    "n": 30,
+    "nR": 15,
+    "nS": 15,
+    "note": "calibrated config broad@1 differs from the cipro default qrdr_point@2 \u2014 organism-specific (counter and/or threshold). LOO 1.000."
+  },
+  "acinetobacter_meropenem": {
+    "drug": "meropenem",
+    "flavor": "EXPRESSION floor",
+    "verdict": "EXPRESSION_FLOOR",
+    "counter": "broad",
+    "threshold": 3,
+    "intrinsic_excluded": [
+      "blaADC",
+      "blaOXA-51-family"
+    ],
+    "loo_bal_acc": 0.1333,
+    "full_acc": 0.433,
+    "sens": 0.267,
+    "spec": 0.6,
+    "n": 30,
+    "nR": 15,
+    "nS": 15,
+    "note": "NO presence-based config clears the LOO floor (0.133 < 0.7) \u2014 this organism\u00d7drug is EXPRESSION-driven (derepression/efflux overexpression/porin loss) and gene-presence cannot decode it. ABSTAIN: flag, do not predict. Intrinsic families were still excluded (['blaADC', 'blaOXA-51-family']) but the residual is the uncrossable floor."
+  },
+  "pseudomonas_aeruginosa_meropenem": {
+    "drug": "meropenem",
+    "flavor": "EXPRESSION/CONTENT floor",
+    "verdict": "EXPRESSION_FLOOR",
+    "counter": "broad",
+    "threshold": 1,
+    "intrinsic_excluded": [],
+    "loo_bal_acc": 0.0,
+    "full_acc": 0.0,
+    "sens": 0.0,
+    "spec": 0.0,
+    "n": 7,
+    "nR": 0,
+    "nS": 7,
+    "note": "NO presence-based config clears the LOO floor (0.000 < 0.7) \u2014 this organism\u00d7drug is EXPRESSION-driven (derepression/efflux overexpression/porin loss) and gene-presence cannot decode it. ABSTAIN: flag, do not predict. Intrinsic families were still excluded ([]) but the residual is the uncrossable floor."
+  }
+}

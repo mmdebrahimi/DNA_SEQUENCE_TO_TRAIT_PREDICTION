@@ -3,6 +3,20 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — self-calibrating AMR rule (`calibrate_organism`)
+
+- **`dna_decode/eval/calibrate_organism.py`** — auto-selects the per-organism AMR rule config from a
+  ≥~15R/15S labeled cohort: chooses the determinant COUNTER (`qrdr_point` vs broad drug-class) and the
+  count THRESHOLD by leave-one-out balanced accuracy, and auto-excludes INTRINSIC gene families (≥90% of
+  both R and S, grouped at gene-family granularity so polymorphic intrinsics like blaOXA-51-family are
+  caught). Returns a `CalibratedRule` (`.predict()` applies it); ABSTAINS with verdict `EXPRESSION_FLOOR`
+  when no presence config clears the 0.70 LOO floor (expression-driven R that gene-presence cannot decode).
+  Motivated by the wider-AMR boundary taxonomy (CONTENT/TUNING/EXPRESSION) — the counter, not just the
+  threshold, is organism-specific (the Klebsiella-vs-Salmonella cipro contrast). Validated on cached cohorts
+  (`wiki/calibrate_organism_validation_2026-06-08.md`): Campylobacter→1, Klebsiella→2 (+oqxAB excluded),
+  Salmonella→broad@1 (deployed 0.567→1.0) all LOO 1.0; Acinetobacter + Pseudomonas meropenem → abstain.
+  16 unit tests. Building block; not yet wired into `call_resistance`.
+
 ## [Unreleased] — cross-decoder analyses (concordance + profile + co-localization)
 
 Three ANALYSES that compose the shipped decoders (no new DB) — variety roadmap Waves 1-2.
