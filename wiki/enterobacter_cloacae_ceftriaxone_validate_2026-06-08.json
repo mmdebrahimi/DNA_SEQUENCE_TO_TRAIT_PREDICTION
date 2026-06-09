@@ -1,0 +1,47 @@
+{
+  "ncbi_group": "Enterobacter_cloacae",
+  "amrfinder_organism": "Enterobacter_cloacae",
+  "drug": "ceftriaxone",
+  "date": "2026-06-08",
+  "n": 11,
+  "n_run": 11,
+  "accessions": [
+    "GCA_014840875.1",
+    "GCA_031776635.2",
+    "GCA_031835335.2",
+    "GCA_032335295.2",
+    "GCA_032336445.2",
+    "GCA_032337615.2",
+    "GCA_043972705.1",
+    "GCA_043974055.1",
+    "GCA_045490365.1",
+    "GCA_045490375.1",
+    "GCA_049600895.1"
+  ],
+  "dna_amr": {
+    "n": 11,
+    "tp": 3,
+    "fp": 1,
+    "tn": 2,
+    "fn": 5,
+    "accuracy": 0.455,
+    "sensitivity": 0.375,
+    "specificity": 0.667
+  },
+  "naive_amrfinder": {
+    "n": 11,
+    "tp": 8,
+    "fp": 3,
+    "tn": 0,
+    "fn": 0,
+    "accuracy": 0.727,
+    "sensitivity": 1.0,
+    "specificity": 0.0
+  },
+  "discordance": {
+    "FN_undetected_mechanism": 5,
+    "FP_determinant_without_phenotype": 1
+  },
+  "na": 0,
+  "verdict": "FAILS_BAR"
+}
