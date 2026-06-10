@@ -405,3 +405,12 @@
 - D4: Conditional project-ledger update only if either memo produces a clean go/no-go verdict that retires a Pending Decision or updates a Hypothesis status
 
 ---
+## [plan_file: Expression_Context_Acinetobacter_Meropenem_Plan/] 2026-06-10
+**Summary:** Add a deterministic expression_context signal (ISAba1-upstream-of-blaOXA-51 junction) that crosses the Acinetobacter x meropenem EXPRESSION abstain floor (ABSTAIN->R), validated on an independent cohort before opt-in promotion.
+**Key decisions:**
+- PRIMARY detector = the EXACT frozen falsifier rule (same-contig + OXA-upstream 400bp, no ISAba1-orientation); orientation is a default-off refinement requiring re-falsification.
+- Promotion gate: s_upgrades==0 AND r_rescues>=1 AND n_S>=15 + Wilson 95% upper bound reported (guards against an inert detector).
+- Promotion is experimental OPT-IN, never default-on; default-on deferred until n_S materially larger.
+- Override ships behind explicit genome/accession input + registry enabled:false/experimental:true; cohort-infeasibility HARD kill gate de-risks Step 1 first.
+
+---

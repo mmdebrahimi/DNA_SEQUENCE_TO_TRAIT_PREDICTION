@@ -46,7 +46,15 @@
       "loo_balanced_accuracy": 0.1333,
       "n": 30,
       "n_R": 15,
-      "n_S": 15
+      "n_S": 15,
+      "expression_context": {
+        "enabled": false,
+        "experimental": true,
+        "is_ref": "data/isaba1_ref/ISAba1_ref.fna",
+        "target_ref": "data/isaba1_ref/OXA51fam_ref.fna",
+        "upstream_bp": 400,
+        "_note": "ISAba1-upstream-of-blaOXA-51 junction -> ABSTAIN->R override. Ships OFF/experimental; opt-in only after independent-cohort PROMOTE (s_upgrades==0 AND r_rescues>=1 AND n_S>=15). See plans/Expression_Context_Acinetobacter_Meropenem_Plan/."
+      }
     },
     "Pseudomonas_aeruginosa|meropenem": {
       "verdict": "EXPRESSION_FLOOR",

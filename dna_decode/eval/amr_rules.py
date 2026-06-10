@@ -178,7 +178,8 @@ def calibrated_rule_for(organism: str, drug: str, registry: dict | None = None) 
 
 
 def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None = None,
-                    organism: str | None = None, registry: dict | None = None) -> dict:
+                    organism: str | None = None, registry: dict | None = None,
+                    genome_fasta: Path | None = None) -> dict:
     """Deterministic, interpretable R/S call for one genome's AMRFinder main.tsv.
 
     Rule (tiered, count-based): R iff #curated drug-relevant determinants >= threshold. When
@@ -202,7 +203,7 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     if organism and resistance_threshold is None:
         cal = calibrated_rule_for(organism, drug, registry)
         if cal is not None:
-            return _call_resistance_calibrated(p, drug, organism, cal)
+            return _call_resistance_calibrated(p, drug, organism, cal, genome_fasta=genome_fasta)
 
     cfg = rule_for(drug)
     if resistance_threshold is None:
@@ -255,12 +256,15 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     }
 
 
-def _call_resistance_calibrated(p: Path, drug: str, organism: str, cal: dict) -> dict:
+def _call_resistance_calibrated(p: Path, drug: str, organism: str, cal: dict,
+                                genome_fasta: Path | None = None) -> dict:
     """Apply a calibrated per-organism config (from the registry) to one genome's main.tsv.
 
     EXPRESSION_FLOOR verdict -> ABSTAIN (the organism×drug is expression-driven; gene-presence cannot
-    decode it — flag, do not predict). CALIBRATED -> count determinants under the calibrated counter, strip
-    the calibrated intrinsic families, predict R/S vs the calibrated threshold."""
+    decode it — flag, do not predict), UNLESS the registry entry enables an `expression_context` signal AND
+    an explicit `genome_fasta` is supplied AND the IS-upstream-of-target junction is detected -> R override.
+    CALIBRATED -> count determinants under the calibrated counter, strip the calibrated intrinsic families,
+    predict R/S vs the calibrated threshold."""
     from dna_decode.eval.calibrate_organism import family_token  # lazy: avoids import cycle
 
     prov = (f"calibrated_organism_v1 ({organism}|{drug}; IN-SAMPLE N={cal.get('n')}, "
@@ -268,6 +272,32 @@ def _call_resistance_calibrated(p: Path, drug: str, organism: str, cal: dict) ->
             f"cohort before becoming a default. See wiki/calibrate_organism_validation_2026-06-08.md.")
 
     if cal.get("verdict") == "EXPRESSION_FLOOR":
+        # Expression-context override: cross the abstain floor when an upstream IS-element junction is found
+        # in the assembly. GATED — fires ONLY with an explicit genome_fasta AND an enabled registry block
+        # (ships enabled:false/experimental:true; opt-in only, never default-on). The genome path is an
+        # EXPLICIT input, never inferred from the main.tsv directory layout (auditability).
+        ec = cal.get("expression_context")
+        if genome_fasta is not None and isinstance(ec, dict) and ec.get("enabled"):
+            from dna_decode.eval.expression_context import detect_is_upstream_junction  # lazy
+            res = detect_is_upstream_junction(
+                genome_fasta, is_ref=ec.get("is_ref"), target_ref=ec.get("target_ref"),
+                upstream_bp=int(ec.get("upstream_bp", 400)))
+            if res.get("signal"):
+                j = res["evidence"].get("junction") or {}
+                return {
+                    "prediction": "R", "confidence": "MODERATE",
+                    "n_determinants": None, "determinants": [],
+                    "rule": (f"expression_context_v1 (ISAba1-upstream-of-{drug}-target junction; "
+                             f"{'EXPERIMENTAL opt-in' if ec.get('experimental') else 'enabled'})"),
+                    "expression_context": res["evidence"],
+                    "caveat": (f"R via expression-context override: an upstream IS-element junction "
+                               f"(contig {j.get('contig')}, ~{j.get('distance_bp')} bp upstream) was detected "
+                               f"in the assembly, the regulatory signature of overexpression-driven "
+                               f"resistance that gene-presence cannot see. {prov} Expression-context is an "
+                               f"opt-in, independently-validated signal; absence of a junction returns to "
+                               f"ABSTAIN (not S)."),
+                }
+            # no junction -> fall through to ABSTAIN (an S call would over-claim).
         return {
             "prediction": "ABSTAIN", "confidence": None, "n_determinants": None, "determinants": [],
             "rule": prov,

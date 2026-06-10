@@ -321,8 +321,10 @@ def main(argv=None) -> int:
     # default 'Escherichia' has no registry entry -> DRUG_RULE default (unchanged); an explicit
     # Campylobacter/Klebsiella/Salmonella resolves its independent-cohort-validated config, and an
     # EXPRESSION_FLOOR organism (Acinetobacter/Pseudomonas carbapenem) returns prediction 'ABSTAIN'.
+    # Pass the genome FASTA (genome mode only; None for --amrfinder-run) so the EXPRESSION_FLOOR
+    # expression-context override can read the assembly when its registry block is enabled (opt-in).
     call = call_resistance(run_dir / "main.tsv", args.drug, args.resistance_threshold,
-                           organism=args.organism)
+                           organism=args.organism, genome_fasta=args.genome_fasta)
     rec = {
         "sample_id": sample_id, "drug": args.drug,
         "analysis_date": datetime.date.today().isoformat(), "schema": "amr-mechanism-call-v1",
