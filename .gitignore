@@ -6,6 +6,9 @@
 !/data/fungal_ref/
 # Exception: committed Arabidopsis Path-B phenotype labels (small public AraPheno CSVs)
 !/data/arabidopsis/
+# Exception: committed public influenza N1 NA reference + real field alleles for the antiviral (4th-kingdom)
+# real-data test (tiny GenBank CDS). Same class as fungal_ref.
+!/data/antiviral_ref/
 *.h5
 *.parquet
 *.pkl

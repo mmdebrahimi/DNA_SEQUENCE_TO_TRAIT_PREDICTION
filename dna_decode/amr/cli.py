@@ -27,6 +27,10 @@ from dna_decode.data.antimalarial_amr import (
     gene_for_drug,
     supported_antimalarial_drugs,
 )
+from dna_decode.data.antiviral_amr import (
+    call_from_observed_substitutions as antiviral_call_from_observed,
+    supported_antiviral_drugs,
+)
 from dna_decode.data.fungal_amr import (
     call_from_observed_substitutions,
     supported_fungal_drugs,
@@ -42,6 +46,9 @@ _DEFAULT_ERG11_REF = Path(__file__).resolve().parent.parent.parent / "data" / "f
 # (protozoan). Routed by drug: artemisinin/artesunate/dihydroartemisinin -> K13 engine.
 _DEFAULT_K13_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antimalarial_ref" / "Pf3D7_K13_cds.fna"
 _DEFAULT_PFCRT_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antimalarial_ref" / "Pf3D7_pfcrt_cds.fna"
+# Antiviral target-site path (BLAST influenza NA -> CDC/WHO-recognized NAI marker catalog), the 4th kingdom
+# (viral). Routed by drug: oseltamivir/peramivir/zanamivir -> NA engine. Reference is N1 (WT His275).
+_DEFAULT_NA_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antiviral_ref" / "N1_NA_NC026434_cds.fna"
 
 
 def _parse_observed(observed: str) -> dict[str, set[str]]:
@@ -171,6 +178,40 @@ def _antimalarial_main(args) -> int:
     return _emit_target_site(rec, call, sample_id, args)
 
 
+def _antiviral_main(args) -> int:
+    """Antiviral NA target-site decoder branch (routed when --drug is an NA-inhibitor drug). 4th kingdom."""
+    if args.organism == "Escherichia":            # relabel the bacterial default on this path
+        args.organism = "Influenza_A_virus"
+    if args.observed is not None:
+        call = antiviral_call_from_observed(args.drug, _parse_observed(args.observed))
+        sample_id = args.sample_id or "observed"
+        prov = {"mode": "observed-substitutions", "observed": args.observed}
+    elif args.genome_fasta is not None:
+        if not args.genome_fasta.exists():
+            print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
+            return 2
+        if not Path(args.na_ref).exists():
+            print(f"ERROR: genome mode for {args.drug} (gene NA) needs a committed N1 NA CDS reference at "
+                  f"{args.na_ref}. Use --observed NA:SUB for a wheel-only call.", file=sys.stderr)
+            return 3
+        sample_id = args.sample_id or args.genome_fasta.stem
+        try:
+            from scripts.flu_na_caller import call_neuraminidase   # repo-only; needs BLAST+
+        except ImportError as e:
+            print(f"ERROR: antiviral genome mode needs scripts/flu_na_caller + BLAST+ ({e}). "
+                  "Use --observed NA:SUB for a wheel-only call.", file=sys.stderr)
+            return 3
+        call = call_neuraminidase(str(args.genome_fasta), str(args.na_ref), args.drug, gene="NA")
+        prov = {"mode": "blast-na", "na_ref": str(args.na_ref)}
+    else:
+        print("ERROR: antiviral drug needs --genome-fasta OR --observed NA:SUB[,...]", file=sys.stderr)
+        return 2
+    rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
+                              caller_name="dna_decode-antiviral-na-target-mutation-v0",
+                              source="hand-curated CDC/WHO-recognized influenza NA marker catalog (no AMRFinder-for-influenza)")
+    return _emit_target_site(rec, call, sample_id, args)
+
+
 def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path,
                               organism: str = "Escherichia") -> Path:
     """Genome mode: lazily import the repo's AMRFinder Docker runner (not in the wheel).
@@ -199,9 +240,10 @@ def main(argv=None) -> int:
                                  description="Deterministic AMR R/S decoder from AMRFinder curated determinants")
     ap.add_argument("--drug", required=True,
                     choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
-                                   | set(supported_antimalarial_drugs())),
-                    metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), or "
-                                         "antimalarial (BLAST-Pfkelch13 engine) drug")
+                                   | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())),
+                    metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), "
+                                         "antimalarial (BLAST-Pfkelch13 engine), or antiviral "
+                                         "(BLAST-influenza-NA engine) drug")
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--amrfinder-run", type=Path, help="[bacterial] existing AMRFinder run dir (main.tsv)")
     src.add_argument("--genome-fasta", type=Path, help="genome FASTA (bacterial: AMRFinder via Docker; "
@@ -215,6 +257,9 @@ def main(argv=None) -> int:
     ap.add_argument("--pfcrt-ref", type=Path, default=_DEFAULT_PFCRT_REF,
                     help="[antimalarial] in-frame pfcrt CDS reference FASTA (default: committed 3D7 allele; "
                          "genome mode is intron-aware so a genomic pfcrt allele works)")
+    ap.add_argument("--na-ref", type=Path, default=_DEFAULT_NA_REF,
+                    help="[antiviral] in-frame influenza N1 NA CDS reference FASTA (default: committed "
+                         "NC_026434.1 A/California/07/2009 allele, WT His275)")
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--organism", default="Escherichia",
                     help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "
@@ -244,6 +289,13 @@ def main(argv=None) -> int:
                   file=sys.stderr)
             return 2
         return _antimalarial_main(args)
+
+    if args.drug in supported_antiviral_drugs():
+        if args.amrfinder_run is not None:
+            print("ERROR: --amrfinder-run is bacterial-only; antiviral drugs use --genome-fasta or --observed",
+                  file=sys.stderr)
+            return 2
+        return _antiviral_main(args)
 
     if args.observed is not None:
         print("ERROR: --observed is fungal-only; bacterial drugs use --amrfinder-run or --genome-fasta",
