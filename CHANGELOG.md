@@ -16,8 +16,15 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   on the real (non-repetitive) 3D7 K13 CDS artificially split into exons: exon1 + deep-exon2 mutations both
   detected across the intron; a mid-codon boundary assembles to WT with no spurious call. 2 tests
   (`tests/test_intron_aware_mapping.py`). Known limit: a periodic CDS self-aligns at its period (use a real
-  non-repetitive reference — real CDSs are). pfcrt genome-mode flip still pends a committed pfcrt CDS ref
-  (the intron blocker is now removed; reference is the only remaining gate — CLI guard message updated).
+  non-repetitive reference — real CDSs are).
+- **pfcrt genome mode FLIPPED ON** (same run) — committed the 3D7 pfcrt CDS reference
+  (`data/antimalarial_ref/Pf3D7_pfcrt_cds.fna`, NCBI RefSeq XM_001348968, 424aa, WT Lys@76) so
+  `dna-amr --drug chloroquine --genome-fasta X.fna` works (`--pfcrt-ref` to override). **Validated on REAL
+  13-exon genomic pfcrt alleles** (the 2471 bp GenBank field isolates): the intron-aware mapper recovered
+  **K76T across the introns** + the full canonical CQ-R haplotype (A220S/Q271E/I356T/R371I = CVIET-type) on
+  all 6 tested; WT 3D7 → S. Genome-mode ref is picked by target gene (K13 → `--k13-ref`, pfcrt →
+  `--pfcrt-ref`); the intron guard is replaced by a ref-existence check. Real genomic fixture committed
+  (`Pf_pfcrt_MN419894_K76T.fna`). This is the first REAL multi-exon end-to-end validation of the engine.
 
 ## [Unreleased] — antimalarial vertical: P. falciparum K13 (the 3rd kingdom, protozoan)
 
@@ -40,11 +47,10 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 - **+ chloroquine (pfcrt K76T)** — extends the antimalarial vertical to the iconic chloroquine-resistance
   marker (`dna-amr --drug chloroquine --observed pfcrt:K76T` → R). `gene_for_drug` routes drug→target
   gene; K76T → CQ-R is unambiguous (pfmdr1 partner-drug markers deliberately omitted — their direction
-  flips between amodiaquine and lumefantrine). **Genome mode is guarded/deferred for pfcrt**: pfcrt is
-  intron-containing (GenBank seqs are ~2471 bp genomic), which breaks the colinear single-HSP codon-mapper,
-  so genome mode returns a clear "needs intron-aware multi-HSP mapping (deferred); use --observed" error
-  (no silent mis-call). `--observed` mode needs no reference/BLAST/alignment → unaffected by introns. 5
-  tests. Next engine task to unblock pfcrt genome mode: intron-aware multi-HSP codon mapping.
+  flips between amodiaquine and lumefantrine). Shipped first as `--observed`-only; **genome mode was then
+  flipped on** once the intron-aware mapper + committed pfcrt CDS reference landed (see the intron-aware
+  entry above) — `dna-amr --drug chloroquine --genome-fasta X.fna` now works on real 13-exon genomic pfcrt.
+  5 tests.
 
 ## [Unreleased] — self-calibrating AMR rule (`calibrate_organism`)
 

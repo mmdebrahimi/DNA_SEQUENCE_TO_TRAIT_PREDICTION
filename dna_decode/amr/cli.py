@@ -23,7 +23,6 @@ import sys
 from pathlib import Path
 
 from dna_decode.data.antimalarial_amr import (
-    INTRONLESS_GENES,
     call_from_observed_substitutions as antimalarial_call_from_observed,
     gene_for_drug,
     supported_antimalarial_drugs,
@@ -42,6 +41,7 @@ _DEFAULT_ERG11_REF = Path(__file__).resolve().parent.parent.parent / "data" / "f
 # Antimalarial target-site path (BLAST Pfkelch13 -> WHO-validated marker catalog), the 3rd kingdom
 # (protozoan). Routed by drug: artemisinin/artesunate/dihydroartemisinin -> K13 engine.
 _DEFAULT_K13_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antimalarial_ref" / "Pf3D7_K13_cds.fna"
+_DEFAULT_PFCRT_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antimalarial_ref" / "Pf3D7_pfcrt_cds.fna"
 
 
 def _parse_observed(observed: str) -> dict[str, set[str]]:
@@ -143,25 +143,25 @@ def _antimalarial_main(args) -> int:
         if not args.genome_fasta.exists():
             print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
             return 2
-        # Genome mode uses the BLAST codon-mapper (now intron-aware / multi-HSP as of 2026-06-10, so
-        # intron-containing genes like pfcrt are mechanically supported). K13 has a committed CDS reference
-        # (--k13-ref). pfcrt (chloroquine) does NOT yet have a committed CDS reference bundled, so its
-        # genome mode is still gated here — the remaining blocker is the reference, NOT the intron mapping.
+        # Genome mode uses the BLAST codon-mapper (intron-aware / multi-HSP as of 2026-06-10), so both the
+        # intronless K13 and the 13-exon pfcrt work. Pick the committed CDS reference by target gene.
         gene = gene_for_drug(args.drug)
-        if gene not in INTRONLESS_GENES:
-            print(f"ERROR: genome mode for {args.drug} (gene {gene}) needs a committed {gene} CDS reference "
-                  f"(not yet bundled). The codon-mapper is intron-aware now, so the reference is the only "
-                  f"remaining blocker. Use --observed {gene}:K76T for a wheel-only call.", file=sys.stderr)
+        ref_by_gene = {"K13": args.k13_ref, "pfcrt": args.pfcrt_ref}
+        ref = ref_by_gene.get(gene)
+        if ref is None or not Path(ref).exists():
+            print(f"ERROR: genome mode for {args.drug} (gene {gene}) needs a committed {gene} CDS reference"
+                  f"{f' at {ref}' if ref else ' (none configured)'}. Use --observed {gene}:SUB for a "
+                  f"wheel-only call.", file=sys.stderr)
             return 3
         sample_id = args.sample_id or args.genome_fasta.stem
         try:
             from scripts.pf_kelch13_caller import call_kelch13   # repo-only; needs BLAST+
         except ImportError as e:
             print(f"ERROR: antimalarial genome mode needs scripts/pf_kelch13_caller + BLAST+ ({e}). "
-                  "Use --observed K13:C580Y for a wheel-only call.", file=sys.stderr)
+                  "Use --observed GENE:SUB for a wheel-only call.", file=sys.stderr)
             return 3
-        call = call_kelch13(str(args.genome_fasta), str(args.k13_ref), args.drug, gene=gene)
-        prov = {"mode": "blast-k13", "k13_ref": str(args.k13_ref)}
+        call = call_kelch13(str(args.genome_fasta), str(ref), args.drug, gene=gene)
+        prov = {"mode": f"blast-{gene.lower()}", f"{gene.lower()}_ref": str(ref)}
     else:
         print("ERROR: antimalarial drug needs --genome-fasta OR --observed K13:SUB[,...]", file=sys.stderr)
         return 2
@@ -212,6 +212,9 @@ def main(argv=None) -> int:
                     help="[fungal] in-frame ERG11 CDS reference FASTA (default: committed C. auris allele)")
     ap.add_argument("--k13-ref", type=Path, default=_DEFAULT_K13_REF,
                     help="[antimalarial] in-frame Pfkelch13 CDS reference FASTA (default: committed 3D7 allele)")
+    ap.add_argument("--pfcrt-ref", type=Path, default=_DEFAULT_PFCRT_REF,
+                    help="[antimalarial] in-frame pfcrt CDS reference FASTA (default: committed 3D7 allele; "
+                         "genome mode is intron-aware so a genomic pfcrt allele works)")
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--organism", default="Escherichia",
                     help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "

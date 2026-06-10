@@ -57,10 +57,22 @@ def test_chloroquine_observed_resistant(tmp_path):
     assert rec["caller"]["name"] == "dna_decode-antimalarial-k13-target-mutation-v0"
 
 
-def test_chloroquine_genome_mode_deferred_intron_guard(tmp_path):
-    g = tmp_path / "g.fna"; g.write_text(">c\nACGTACGTACGT\n", encoding="utf-8")
-    rc = main(["--drug", "chloroquine", "--genome-fasta", str(g)])
-    assert rc == 3          # pfcrt is intron-containing -> genome mode deferred (no footgun)
+_PFCRT_REF = Path(__file__).resolve().parent.parent / "data" / "antimalarial_ref" / "Pf3D7_pfcrt_cds.fna"
+_PFCRT_R = Path(__file__).resolve().parent.parent / "data" / "antimalarial_ref" / "Pf_pfcrt_MN419894_K76T.fna"
+
+
+@pytest.mark.skipif(not (_HAS_BLAST and _PFCRT_R.exists()), reason="BLAST+ or pfcrt fixtures absent")
+def test_chloroquine_genome_mode_real_genomic_pfcrt(tmp_path):
+    """Genome mode on a REAL 13-exon genomic pfcrt allele (intron-aware multi-HSP mapping): K76T detected
+    across the introns -> R. WT (the 3D7 CDS as a single-exon 'genome') -> S."""
+    out = tmp_path / "r.json"
+    rc = main(["--drug", "chloroquine", "--genome-fasta", str(_PFCRT_R), "--out", str(out), "--json-only"])
+    assert rc == 0
+    rec = json.loads(out.read_text())
+    assert rec["prediction"] == "R" and any(d["symbol"] == "pfcrt" for d in rec["determinants"])
+    assert rec["provenance"]["mode"] == "blast-pfcrt"
+    rc2 = main(["--drug", "chloroquine", "--genome-fasta", str(_PFCRT_REF), "--json-only"])  # WT -> S
+    assert rc2 == 0
 
 
 @pytest.mark.skipif(not (_HAS_BLAST and _K13_REF.exists()), reason="BLAST+ or K13 reference absent")
