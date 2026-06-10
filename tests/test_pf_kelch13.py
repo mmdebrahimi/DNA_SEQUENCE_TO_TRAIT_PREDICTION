@@ -104,6 +104,30 @@ def test_real_3d7_reference_numbering_C580Y():
     assert sc.prediction == "S", sc
 
 
+# ---------- G1: REAL GenBank P. falciparum K13 alleles (skip if no BLAST/fixtures) ----------
+_REF_DIR = Path(__file__).resolve().parent.parent / "data" / "antimalarial_ref"
+_REAL = [  # (committed real GenBank allele, documented variant, expected call)
+    ("Pf_K13_OQ064537_P574L.fna", "P574L", "R"),   # voucher labelled 'C580Y' but the amplicon IS P574L
+    ("Pf_K13_PV890521_WT.fna", "WT", "S"),
+]
+
+
+@pytest.mark.skipif(not _HAS_BLAST, reason="BLAST+ (blastn/makeblastdb) not installed")
+@pytest.mark.skipif(not (_REF_DIR / "Pf_K13_OQ064537_P574L.fna").exists(), reason="real K13 allele fixtures absent")
+@pytest.mark.parametrize("fname,variant,expected", _REAL)
+def test_caller_on_real_genbank_k13_alleles(fname, variant, expected):
+    """G1: real GenBank K13 propeller alleles. OQ064537 carries P574L (a WHO-validated marker; its voucher
+    name 'C580Y' is a strain label, NOT this amplicon's variant — the caller decodes the actual sequence,
+    a 'suspect-the-label' case). pfk13A-46 is WT propeller -> S. Validates the caller on REAL resistant +
+    sensitive sequences, not just planted/synthetic ones."""
+    c = call_kelch13(str(_REF_DIR / fname), str(_REAL_REF), "artemisinin")
+    assert c.prediction == expected, c
+    if variant != "WT":
+        assert f"K13:{variant}" in c.determinants, c
+    else:
+        assert c.undetectable_mechanisms       # S surfaces non-K13/partner blind spots
+
+
 # ---------- offline-safe contract ----------
 def test_caller_indeterminate_without_blast():
     import scripts.fungal_erg11_caller as m
