@@ -1,0 +1,258 @@
+{
+  "rows": [
+    {
+      "acc": "GCA_000586635.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_000586655.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_000692095.1",
+      "label": "R",
+      "junction": true,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 22
+    },
+    {
+      "acc": "GCA_016541685.2",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 2,
+      "n_isaba1": 3
+    },
+    {
+      "acc": "GCA_001441485.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441475.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001442575.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001443265.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001444225.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001444215.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001444265.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 2
+    },
+    {
+      "acc": "GCA_001444255.1",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_016541645.2",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": true,
+      "n_oxa": 2,
+      "n_isaba1": 0
+    },
+    {
+      "acc": "GCA_016541625.2",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_016541445.2",
+      "label": "R",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_000972525.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441355.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441405.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441415.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441455.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441465.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441545.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441555.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441565.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_001441625.1",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 1,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_016541665.2",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 2
+    },
+    {
+      "acc": "GCA_016541385.2",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_016541545.2",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_016541565.2",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 1
+    },
+    {
+      "acc": "GCA_016541525.2",
+      "label": "S",
+      "junction": false,
+      "strong_acquired": false,
+      "n_oxa": 2,
+      "n_isaba1": 1
+    }
+  ],
+  "junction_R": [
+    1,
+    15
+  ],
+  "junction_S": [
+    0,
+    15
+  ],
+  "intrinsic_only_R": 5,
+  "intrinsic_only_R_junction_pos": 1,
+  "rescued": [
+    "GCA_000692095.1"
+  ],
+  "false_rescue": []
+}
