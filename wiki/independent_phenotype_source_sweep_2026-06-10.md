@@ -6,7 +6,30 @@
 > `wiki/independent_phenotype_label_census_2026-06-10.md`. Web-sourced; some CDC/assay queries were blocked
 > by a usage-policy filter (worked around via direct page fetches); per-source claims cite the page found.
 
-## THE LAW THIS SWEEP ESTABLISHES (the headline)
+## ⚠️ CORRECTION (post-/brainstorm, 2026-06-10) — read first; supersedes the overclaims below
+
+A `/brainstorm` adversarial pass caught two overclaims in this memo and one untested free move. Corrections:
+1. **"Strand closed" is WRONG.** A free, untested lever exists: **provenance-stratified NCBI-PD.** The
+   NCBI-PD metadata TSV the validator already downloads carries submitter/provenance columns —
+   **verified live**: `asm_acc`(10), `bioproject_acc`(17), `bioproject_center`(18), `isolate_identifiers`(20),
+   `collected_by`(21), `sra_center`(37), `AST_phenotypes`(57). One can filter AST to **non-BV-BRC / non-NARMS /
+   non-GenomeTrakr / non-CDC/FDA submitters** → a FREE, genome-linked, **provenance-disjoint (different-
+   submitter-lab)** subset. The validator only ever read `asm_acc`+`AST_phenotypes`; this lever was never tried.
+2. **"Anti-correlation LAW across every source" is over-generalized.** CRyPTIC (M. tuberculosis, ~15k isolates
+   with controlled-lab MIC + WGS together) falsifies the universal version. Narrowed claim: *for the surveyed
+   target substrates, no already-vetted **systematic** independent-MIC+genome source was confirmed.*
+3. **"DO NOT PAY" stands but is PROVISIONAL** — and the free provenance-stratification move DOMINATES it
+   (try free first). The paid-MIC↔public-genome join (via `isolate_identifiers`) was not tested.
+4. **Independence is TIERED** (do not conflate): provenance-disjoint (different submitter) < methodology-disjoint
+   (different assay) < fully-external. The provenance-stratified pass is a **stress-test against provenance
+   leakage**, NOT external clinical validation — most NCBI submitters still use CLSI broth microdilution.
+
+**New lead candidate action:** a Stage-1 *no-model metadata census* (counts by organism×drug×submitter after
+excluding the ecosystem submitters; R/S balance) → score the decoder ONLY if a provenance-disjoint subset is
+powered (≥~20/class balanced). See `wiki/ncbi_pd_provenance_census_2026-06-10.md`. The body below is retained
+for the source catalog but its "LAW / closed" headline is superseded by this banner.
+
+## THE LAW THIS SWEEP ESTABLISHES (the headline) — SUPERSEDED, see correction banner above
 
 **Phenotype-independence and genome-linkability are ANTI-CORRELATED across every available source.**
 - Sources with genuinely independent / different-lab phenotype (industry reference-method MIC, EUCAST,

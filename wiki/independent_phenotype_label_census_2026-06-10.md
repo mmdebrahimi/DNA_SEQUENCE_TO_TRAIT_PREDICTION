@@ -9,11 +9,23 @@
 > genome-linkable, methodology-independent + provenance-disjoint phenotype source exist for any shipped
 > decoder?**
 
-## VERDICT: NO — not on free, systematic data. The free isolate-level AST ecosystem is integrated.
+## ⚠️ CORRECTION (post-/brainstorm 2026-06-10): a free provenance-disjoint move EXISTS — verdict narrowed
+
+A `/brainstorm` pass found the verdict below over-reached. A free, untested lever exists: **filter NCBI-PD AST
+to non-BV-BRC/non-NARMS/non-GenomeTrakr/non-CDC/FDA submitters** (the metadata TSV already carries
+`bioproject_center`/`collected_by`/`sra_center` — verified) → a free, genome-linked, **provenance-disjoint
+(different-submitter-lab)** subset. That is weaker than *methodology*-independent (most submitters still use
+CLSI broth microdilution) but stronger than the same-ecosystem re-test, and it was never tried. Narrowed
+verdict: *no METHODOLOGY-independent + genome-linkable source is freely systematic — but a provenance-disjoint
+NCBI-PD subset is a free, unrun move* (gated on a Stage-1 powering census). See
+`wiki/ncbi_pd_provenance_census_2026-06-10.md`.
+
+## VERDICT (original, NARROWED by the banner above): no METHODOLOGY-independent free systematic source
 
 A truly methodology-independent, provenance-disjoint, free, genome-linkable label **does not exist as a
 systematic source** for any shipped decoder. The deepest *free* independence achievable is cross-SOURCE
-(already done via NCBI PD), **not** cross-methodology/different-lab.
+(already done via NCBI PD) — **plus** the newly-identified provenance-disjoint NCBI-PD subset (above);
+neither is *methodology*-independent.
 
 ## Evidence (census table)
 
