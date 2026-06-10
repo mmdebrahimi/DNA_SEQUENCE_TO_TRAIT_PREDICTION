@@ -424,3 +424,9 @@ decoders as the shipping path.
 
 - Phase-1 closeout: NT-frozen-pooling characterized (passes concentrated-signal mechanisms, fails
   distributed). v0 cipro decoder + pathotype v0 resolver shipped. See git history + `wiki/`.
+
+## [expression-context-v0] — 2026-06-10
+
+- `dna_decode/eval/expression_context.py` — deterministic IS-element-upstream-of-target detector (blastn ISAba1+OXA-51 vs assembly; all-hits, no truncation; same-contig + strand-aware upstream proximity; offline-safe). Reads regulatory CONTEXT, not gene presence, to cross the EXPRESSION abstain floor.
+- `amr_rules.call_resistance` gains an optional `genome_fasta` + a GATED EXPRESSION_FLOOR ABSTAIN->R override (registry `expression_context.enabled`; ships **off/experimental** — opt-in only, never default-on; default decoder behavior unchanged).
+- Independent-cohort validation (15R/15S disjoint from the cached 30): signal fired 0/30 -> **HOLD** (in-sample 1/15 rescue did not generalize). Override remains disabled. 18 new tests, 0 regressions.

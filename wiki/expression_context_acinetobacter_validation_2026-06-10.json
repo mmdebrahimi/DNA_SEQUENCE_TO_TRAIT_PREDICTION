@@ -1,0 +1,299 @@
+{
+  "_schema": "expression-context-validation-v1",
+  "date": "2026-06-10",
+  "organism": "Acinetobacter_baumannii",
+  "drug": "meropenem",
+  "detector": "expression_context primary (frozen falsifier rule; same-contig + OXA-upstream 400bp; no IS-orientation)",
+  "refs": {
+    "is_ref": "data\\isaba1_ref\\ISAba1_ref.fna",
+    "is_ref_sha256": "d20dbb69913cc72a",
+    "target_ref": "data\\isaba1_ref\\OXA51fam_ref.fna",
+    "target_ref_sha256": "c61410ec62cf68eb"
+  },
+  "n_evaluated": 30,
+  "endpoint": {
+    "n_R": 15,
+    "n_S": 15,
+    "r_rescues": 0,
+    "s_upgrades": 0,
+    "abstain_rescue_rate": 0.0,
+    "false_upgrade_rate": 0.0,
+    "false_upgrade_wilson95_upper": 0.2039,
+    "verdict": "HOLD",
+    "hold_reasons": [
+      "r_rescues=0 (detector inert \u2014 no true-R upgrade)"
+    ]
+  },
+  "per_strain": [
+    {
+      "acc": "GCA_019217325.1",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "5b444fd762eb7e61"
+    },
+    {
+      "acc": "GCA_016541425.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "45864385dcee5d5a"
+    },
+    {
+      "acc": "GCA_016541585.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "374b877aa4f6f042"
+    },
+    {
+      "acc": "GCA_016541325.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "3dbc507e8c9ab1b9"
+    },
+    {
+      "acc": "GCA_016541345.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "96a1aeb46e7e744e"
+    },
+    {
+      "acc": "GCA_016541205.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "4795833df673afde"
+    },
+    {
+      "acc": "GCA_016541005.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 0,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "4451fea00d56fb2a"
+    },
+    {
+      "acc": "GCA_016540905.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 0,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "a718b688b88f9300"
+    },
+    {
+      "acc": "GCA_016540805.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "758e102ca4488252"
+    },
+    {
+      "acc": "GCA_016540745.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "e4941e012569313b"
+    },
+    {
+      "acc": "GCA_016540785.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "29bca158c618abaf"
+    },
+    {
+      "acc": "GCA_016540705.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "7c89a23146ab46d7"
+    },
+    {
+      "acc": "GCA_016540685.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 0,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "32e1f2443607f2a8"
+    },
+    {
+      "acc": "GCA_016540655.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "38b034beb2796630"
+    },
+    {
+      "acc": "GCA_016540485.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "21b5a1aed97e24d9"
+    },
+    {
+      "acc": "GCA_016540505.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 0,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "2eddfbeee6134f68"
+    },
+    {
+      "acc": "GCA_016540525.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "ad954d4d8c3b19d1"
+    },
+    {
+      "acc": "GCA_016540395.2",
+      "label": "R",
+      "signal": false,
+      "n_is_hits": 2,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "1b26e9b22d5e0e1d"
+    },
+    {
+      "acc": "GCA_016540015.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "b3cfe679542694ea"
+    },
+    {
+      "acc": "GCA_016539665.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "af0b95c10d6ee480"
+    },
+    {
+      "acc": "GCA_016539725.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "e8738e53df49dfb7"
+    },
+    {
+      "acc": "GCA_016539275.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "f0bde6054e5cd256"
+    },
+    {
+      "acc": "GCA_016539225.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 2,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "5aeab921448cdf83"
+    },
+    {
+      "acc": "GCA_016539185.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 2,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "a49543b8a771d645"
+    },
+    {
+      "acc": "GCA_016539195.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 2,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "6b98ef340da04fae"
+    },
+    {
+      "acc": "GCA_016539245.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "16a597782e64ab7d"
+    },
+    {
+      "acc": "GCA_016539155.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 0,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "5e5257d7c4c2a45b"
+    },
+    {
+      "acc": "GCA_016539145.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 0,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "de84e1a3d4642543"
+    },
+    {
+      "acc": "GCA_016539065.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 1,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "671efea8f0dcc4ea"
+    },
+    {
+      "acc": "GCA_016539055.2",
+      "label": "S",
+      "signal": false,
+      "n_is_hits": 2,
+      "n_target_hits": 2,
+      "junction": null,
+      "fasta_sha256": "a0640fc088152241"
+    }
+  ]
+}
