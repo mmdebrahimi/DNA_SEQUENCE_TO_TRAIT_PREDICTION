@@ -45,12 +45,28 @@ powering bar comfortably; Klebsiella in particular has a large, diverse, well-ba
   (b) submitter strings are heuristic (substring match) — a Stage-2 run should pin exact `bioproject_acc`
   exclusion lists; (c) genome download + AMRFinder for the disjoint set is the Stage-2 cost (~95s/strain).
 
-## Stage-2 (the now-unblocked, free next action)
-Score the deployed decoder (`call_resistance` / `evaluate_cohort`) on the provenance-disjoint subset per
-organism×drug: download those `asm_acc` genomes, run AMRFinder (cached), compute acc/sens/spec, and report
-strictly as "provenance-disjoint NCBI-PD validation" with the tier caveat. Start with Klebsiella cipro
-(largest, best-balanced disjoint set: 404R/277S → subsample to a balanced ~50–75/class) then Campylobacter.
-This is a real, free, higher-independence validation — the genuine continuation of Anchor 3.
+## Stage-2 — DONE for Klebsiella cipro (2026-06-10): decoder HOLDS, leakage-free
+
+`scripts/provenance_disjoint_validate.py` scored the deployed `call_resistance(organism=Klebsiella,
+drug=ciprofloxacin)` on **60 FRESH provenance-disjoint strains** (30R/30S, excluding all 97 prior-cohort
+accessions — verified 0 overlap with tuning/prior-validation):
+
+| metric | value |
+|---|---|
+| n scored | 60 (TP 29 · FP 1 · TN 29 · FN 1; 0 abstain) |
+| accuracy / sensitivity / specificity | **0.967 / 0.967 / 0.967** |
+
+**The deployed Klebsiella-cipro decoder generalizes** to a different-submitter-lab cohort it never saw —
+0.967 across the board, vs the in-cohort LOO bal-acc 1.0 (the honest OOS number, 1 FP + 1 FN). Tier reminder:
+provenance-disjoint, NOT methodology-independent. Artifact:
+`wiki/provenance_disjoint_validation_klebsiella_cipro_2026-06-10.{md,json}`.
+
+**LEAKAGE GOTCHA (caught live):** a first pass "preferred cached" accessions → pulled the 30-strain
+calibration cohort into the "disjoint" set (leaked 0.967→0.983). Fix: the selector EXCLUDES every accession
+in any prior `<slug>_*` cohort. Any future organism×drug Stage-2 must keep that exclusion.
+
+Remaining Stage-2 candidates (free, same method): Campylobacter cipro (33R/130S disjoint pool). Salmonella is
+NOT powered (4R). Per-organism, not universal.
 
 ## Bottom line
 The `/brainstorm` adversarial pass paid off: the "no independent validation possible / spend nothing / closed"
