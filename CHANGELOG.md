@@ -3,6 +3,22 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — intron-aware multi-HSP codon mapping (engine)
+
+- **`observed_substitutions` (the shared target-site codon-mapper) is now INTRON-AWARE.** It stitches the
+  query(CDS-reference)-position → subject-nucleotide map across ALL HSPs on the gene's best contig (not just
+  the single best HSP). Because codon numbering is by *query* position (contiguous CDS), a codon that spans
+  an exon-exon boundary — its 3 nts in two different HSPs (exons separated by an intron in the genome) — is
+  still translated correctly. This generically improves **every** genome-mode caller (fungal ERG11, K13)
+  for multi-exon / split-across-contigs genes, and **unblocks intron-containing targets** (pfcrt has 13
+  exons; GenBank deposits are ~2471 bp genomic). Intronless genes are the single-HSP special case →
+  identical prior behavior (guarded by the existing fungal/K13 tests; 967 passed, 0 regressions). Validated
+  on the real (non-repetitive) 3D7 K13 CDS artificially split into exons: exon1 + deep-exon2 mutations both
+  detected across the intron; a mid-codon boundary assembles to WT with no spurious call. 2 tests
+  (`tests/test_intron_aware_mapping.py`). Known limit: a periodic CDS self-aligns at its period (use a real
+  non-repetitive reference — real CDSs are). pfcrt genome-mode flip still pends a committed pfcrt CDS ref
+  (the intron blocker is now removed; reference is the only remaining gate — CLI guard message updated).
+
 ## [Unreleased] — antimalarial vertical: P. falciparum K13 (the 3rd kingdom, protozoan)
 
 - **`dna_decode/data/antimalarial_amr.py`** + **`scripts/pf_kelch13_caller.py`** — extends the proven

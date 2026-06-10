@@ -143,13 +143,15 @@ def _antimalarial_main(args) -> int:
         if not args.genome_fasta.exists():
             print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
             return 2
-        # Genome mode uses the colinear single-HSP codon-mapper -> valid only for INTRONLESS targets.
-        # K13 is intronless (OK); pfcrt (chloroquine) is intron-containing -> deferred (use --observed).
+        # Genome mode uses the BLAST codon-mapper (now intron-aware / multi-HSP as of 2026-06-10, so
+        # intron-containing genes like pfcrt are mechanically supported). K13 has a committed CDS reference
+        # (--k13-ref). pfcrt (chloroquine) does NOT yet have a committed CDS reference bundled, so its
+        # genome mode is still gated here — the remaining blocker is the reference, NOT the intron mapping.
         gene = gene_for_drug(args.drug)
         if gene not in INTRONLESS_GENES:
-            print(f"ERROR: genome mode for {args.drug} (gene {gene}) is not yet supported — {gene} is "
-                  f"intron-containing and needs intron-aware multi-HSP codon mapping (deferred). "
-                  f"Use --observed {gene}:K76T for a wheel-only call.", file=sys.stderr)
+            print(f"ERROR: genome mode for {args.drug} (gene {gene}) needs a committed {gene} CDS reference "
+                  f"(not yet bundled). The codon-mapper is intron-aware now, so the reference is the only "
+                  f"remaining blocker. Use --observed {gene}:K76T for a wheel-only call.", file=sys.stderr)
             return 3
         sample_id = args.sample_id or args.genome_fasta.stem
         try:

@@ -57,6 +57,15 @@ def observed_substitutions(genome_fasta: str, erg11_cds_ref_fasta: str,
                            gene: str = "ERG11") -> dict[str, set[str]] | None:
     """BLAST the in-frame CDS reference vs the genome; return {gene: {observed substitutions}}.
 
+    INTRON-AWARE (multi-HSP): the query (CDS reference) is contiguous, so codon position P always maps to
+    CDS nt (3P-2..3P) regardless of how the SUBJECT genome splits the gene into exons. For an
+    intron-containing gene, blastn returns one HSP per exon (colinear within an exon, separated by introns
+    in the subject); we STITCH the query-position → subject-nucleotide map across all HSPs on the gene's
+    contig. A codon spanning an exon-exon boundary (its 3 nts in two different HSPs) is therefore still
+    translated correctly — the 3 coding nts are contiguous in the query though physically separated by an
+    intron in the genome. Intronless genes (ERG11, K13) are the single-HSP special case → identical to the
+    prior behavior (guarded by their existing tests).
+
     Returns None if BLAST is unavailable (caller maps that to INDETERMINATE). The reference FASTA MUST be
     the in-frame CDS (starts at ATG); protein position P ↔ CDS nt (3P-2..3P), 1-based.
     """
@@ -71,33 +80,39 @@ def observed_substitutions(genome_fasta: str, erg11_cds_ref_fasta: str,
                        check=True, capture_output=True)
         out = subprocess.run(
             [blastn, "-query", erg11_cds_ref_fasta, "-db", dbpath,
-             "-outfmt", "6 qstart qend sstart send qseq sseq bitscore", "-max_target_seqs", "1"],
+             "-outfmt", "6 sseqid qstart qend sstart send qseq sseq bitscore", "-max_target_seqs", "10"],
             check=True, capture_output=True, text=True).stdout
     if not out.strip():
         return {gene: set()}
-    # best HSP = highest bitscore
-    best = max((ln.split("\t") for ln in out.strip().splitlines()), key=lambda f: float(f[6]))
-    qstart, qend = int(best[0]), int(best[1])
-    qseq, sseq = best[4], best[5]
-    if qstart > qend:   # query (CDS) should be plus-strand; skip exotic orientations for v0
-        return {gene: set()}
-    # map query-CDS 1-based position -> subject aligned nucleotide (gap-aware)
+    rows = [ln.split("\t") for ln in out.strip().splitlines() if ln.strip()]
+    # Restrict to the single best CONTIG (highest total HSP bitscore) — the gene's genomic location —
+    # so paralog/repeat HSPs on other contigs don't pollute the map.
+    by_contig: dict[str, list] = {}
+    for r in rows:
+        by_contig.setdefault(r[0], []).append(r)
+    best_contig = max(by_contig, key=lambda c: sum(float(r[7]) for r in by_contig[c]))
+    hsps = by_contig[best_contig]
+    # Stitch query-CDS 1-based position -> subject aligned nucleotide across all HSPs (gap-aware).
+    # Highest-bitscore HSP wins on any query-position overlap (a weaker HSP never overwrites).
     qpos_to_snt: dict[int, str] = {}
-    qp = qstart
-    for qc, sc in zip(qseq, sseq):
-        if qc == "-":            # insertion in subject relative to ref CDS — advance subject only
+    for r in sorted(hsps, key=lambda r: -float(r[7])):
+        qstart, qend, qseq, sseq = int(r[1]), int(r[2]), r[5], r[6]
+        if qstart > qend:        # query (CDS) should be plus-strand; skip exotic orientations
             continue
-        qpos_to_snt[qp] = sc     # sc may be '-' (deletion); handled below
-        qp += 1
+        qp = qstart
+        for qc, sc in zip(qseq, sseq):
+            if qc == "-":        # insertion in subject relative to ref CDS — advance subject only
+                continue
+            if qp not in qpos_to_snt:
+                qpos_to_snt[qp] = sc     # sc may be '-' (deletion); handled below
+            qp += 1
     subs: set[str] = set()
     n_codons = len(ref_prot)
     for p in range(1, n_codons + 1):
-        c1, c2, c3 = 3 * p - 2, 3 * p - 1, 3 * p
-        if not (qstart <= c1 and c3 <= qend):
-            continue
-        nts = [qpos_to_snt.get(c1), qpos_to_snt.get(c2), qpos_to_snt.get(c3)]
+        # codon callable iff all 3 query positions are covered by SOME HSP (intron-spanning OK)
+        nts = [qpos_to_snt.get(3 * p - 2), qpos_to_snt.get(3 * p - 1), qpos_to_snt.get(3 * p)]
         if any(n is None or n == "-" for n in nts):
-            continue             # indel-interrupted codon → uncalled (never mis-translate)
+            continue             # uncovered or indel-interrupted codon → uncalled (never mis-translate)
         q_res = _CODON.get("".join(nts).upper(), "X")
         ref_res = ref_prot[p - 1]
         if q_res not in ("X", "*") and q_res != ref_res:
