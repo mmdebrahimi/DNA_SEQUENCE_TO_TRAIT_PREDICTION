@@ -32,9 +32,21 @@ from scripts.ncbi_pd_provenance_census import ECOSYSTEM, is_ecosystem, latest_me
 from scripts.organism_drug_validate import _run_dir, ensure_run
 
 
+# Flagship cohorts that live as PARQUET (not data/raw/*/selected.tsv) — the data/raw glob misses these, so
+# a provenance-disjoint run could silently LEAK the E. coli cipro tuning/held-out sets. Exclude them too.
+# (Caught 2026-06-10: E. coli flagship run's data/raw glob found 0 prior cohorts; overlap had to be checked
+# by hand. The script now enforces it. Harmless cross-organism — accessions don't collide across species.)
+_FLAGSHIP_PARQUET_COHORTS = [
+    "data/processed/stage2_n150_cipro_cohort.parquet",   # E. coli cipro TUNING cohort (N=147)
+    "data/processed/gate_b_cohort.parquet",              # E. coli cef/cipro held-out
+    "data/processed/gate_b_n40_cipro_cohort.parquet",    # E. coli cipro held-out N=40
+]
+
+
 def _prior_cohort_accessions(slug: str, exclude_self: str) -> set[str]:
-    """All accessions used in ANY prior <slug>_* cohort (calibration + prior validation) — these are NOT
-    provenance-disjoint from tuning/prior-validation and MUST be excluded for a clean validation."""
+    """All accessions used in ANY prior cohort (calibration + prior validation) — these are NOT
+    provenance-disjoint from tuning/prior-validation and MUST be excluded for a clean validation. Covers
+    BOTH data/raw/<slug>_*/selected.tsv AND the parquet flagship cohorts (which the glob misses)."""
     out = set()
     for sel in glob.glob(f"data/raw/{slug}_*/selected.tsv"):
         if exclude_self in sel:
@@ -42,6 +54,17 @@ def _prior_cohort_accessions(slug: str, exclude_self: str) -> set[str]:
         for ln in Path(sel).read_text().splitlines():
             if "\t" in ln:
                 out.add(ln.split("\t")[0])
+    # parquet flagship cohorts (leakage-hardening, 2026-06-10)
+    try:
+        from dna_decode.data.cohort import load_cohort
+        for pq in _FLAGSHIP_PARQUET_COHORTS:
+            if Path(pq).exists():
+                for s in load_cohort(pq).strains:
+                    acc = getattr(s, "assembly_accession", None)
+                    if acc:
+                        out.add(acc)
+    except Exception:
+        pass   # parquet/load_cohort unavailable -> data/raw exclusion still applies (offline-safe)
     return out
 
 
