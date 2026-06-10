@@ -23,7 +23,9 @@ import sys
 from pathlib import Path
 
 from dna_decode.data.antimalarial_amr import (
+    INTRONLESS_GENES,
     call_from_observed_substitutions as antimalarial_call_from_observed,
+    gene_for_drug,
     supported_antimalarial_drugs,
 )
 from dna_decode.data.fungal_amr import (
@@ -141,6 +143,14 @@ def _antimalarial_main(args) -> int:
         if not args.genome_fasta.exists():
             print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
             return 2
+        # Genome mode uses the colinear single-HSP codon-mapper -> valid only for INTRONLESS targets.
+        # K13 is intronless (OK); pfcrt (chloroquine) is intron-containing -> deferred (use --observed).
+        gene = gene_for_drug(args.drug)
+        if gene not in INTRONLESS_GENES:
+            print(f"ERROR: genome mode for {args.drug} (gene {gene}) is not yet supported — {gene} is "
+                  f"intron-containing and needs intron-aware multi-HSP codon mapping (deferred). "
+                  f"Use --observed {gene}:K76T for a wheel-only call.", file=sys.stderr)
+            return 3
         sample_id = args.sample_id or args.genome_fasta.stem
         try:
             from scripts.pf_kelch13_caller import call_kelch13   # repo-only; needs BLAST+
@@ -148,7 +158,7 @@ def _antimalarial_main(args) -> int:
             print(f"ERROR: antimalarial genome mode needs scripts/pf_kelch13_caller + BLAST+ ({e}). "
                   "Use --observed K13:C580Y for a wheel-only call.", file=sys.stderr)
             return 3
-        call = call_kelch13(str(args.genome_fasta), str(args.k13_ref), args.drug)
+        call = call_kelch13(str(args.genome_fasta), str(args.k13_ref), args.drug, gene=gene)
         prov = {"mode": "blast-k13", "k13_ref": str(args.k13_ref)}
     else:
         print("ERROR: antimalarial drug needs --genome-fasta OR --observed K13:SUB[,...]", file=sys.stderr)

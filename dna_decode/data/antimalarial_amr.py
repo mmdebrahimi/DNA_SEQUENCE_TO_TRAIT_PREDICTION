@@ -38,7 +38,24 @@ ANTIMALARIAL_RESISTANCE_MUTATIONS: dict[str, dict[str, set[str]]] = {
     "artemisinin": {"K13": set(_K13_VALIDATED)},
     "artesunate": {"K13": set(_K13_VALIDATED)},
     "dihydroartemisinin": {"K13": set(_K13_VALIDATED)},
+    # Chloroquine: pfcrt K76T is THE validated molecular marker — the necessary (near-sufficient)
+    # determinant of P. falciparum chloroquine resistance (WHO/WWARN; the CVIET/SVMNT haplotypes all carry
+    # the 76T substitution). Direction is unambiguous (K76T -> CQ-R), unlike the pfmdr1 partner-drug markers
+    # (N86Y selects OPPOSITELY for amodiaquine vs lumefantrine) — those are deliberately NOT catalogued here.
+    "chloroquine": {"pfcrt": {"K76T"}},
 }
+
+# Single target gene per drug (the catalog has one gene per drug in v0). Used to route the caller +
+# the genome-mode intron guard (pfcrt is intron-containing; K13 is intronless).
+def gene_for_drug(drug: str) -> str | None:
+    genes = ANTIMALARIAL_RESISTANCE_MUTATIONS.get(drug.lower())
+    return next(iter(genes), None) if genes else None
+
+# Genes whose genomic locus is INTRONLESS, so the colinear single-HSP BLAST codon-mapper is valid in
+# genome mode. K13 is intronless (genome mode OK); pfcrt has 13 exons (GenBank seqs are ~2471bp genomic) —
+# genome mode for pfcrt needs intron-aware multi-HSP stitching (DEFERRED), so chloroquine is --observed-only
+# for now (the catalog/--observed path needs no reference + no alignment, so it is unaffected by introns).
+INTRONLESS_GENES = {"K13"}
 
 # Mechanisms a K13-only target-site scan CANNOT see (the protozoan analogue of the bacterial efflux /
 # fungal aneuploidy blind spot). A SUSCEPTIBLE (no-K13-marker) call cannot rule these out.
@@ -52,6 +69,7 @@ ANTIMALARIAL_UNDETECTABLE_MECHANISMS = sorted({
 
 ANTIMALARIAL_DRUG_CLASS = {
     "artemisinin": "ARTEMISININ", "artesunate": "ARTEMISININ", "dihydroartemisinin": "ARTEMISININ",
+    "chloroquine": "4-AMINOQUINOLINE",
 }
 
 
@@ -101,11 +119,14 @@ def call_from_observed_substitutions(drug: str, observed: dict[str, set[str]]) -
                 hits.append(f"{gene}:{s}")
     pred = "R" if hits else "S"
     undetectable = ANTIMALARIAL_UNDETECTABLE_MECHANISMS if pred == "S" else []
-    caveat = (f"deterministic K13 target-site call ({ANTIMALARIAL_DRUG_CLASS.get(drug.lower(), '?')}). "
-              "Hand-curated WHO-validated marker catalog (no AMRFinder-equivalent for Plasmodium). "
-              "Artemisinin partial resistance is a clearance phenotype, not an MIC — the validated K13 "
-              "marker IS the genotypic call. "
-              + ("An S call cannot rule out non-K13 / partner-drug resistance "
+    gene = gene_for_drug(drug) or "target"
+    phen = ("Artemisinin partial resistance is a clearance phenotype, not an MIC — the validated K13 "
+            "marker IS the genotypic call. " if gene == "K13"
+            else f"The validated {gene} marker IS the genotypic resistance call. ")
+    caveat = (f"deterministic {gene} target-site call ({ANTIMALARIAL_DRUG_CLASS.get(drug.lower(), '?')}). "
+              "Hand-curated WHO/WWARN-validated marker catalog (no AMRFinder-equivalent for Plasmodium). "
+              + phen
+              + ("An S call cannot rule out non-target / partner-drug resistance "
                  f"({', '.join(ANTIMALARIAL_UNDETECTABLE_MECHANISMS)})." if pred == "S" else ""))
     return AntimalarialCall(pred, drug, sorted(hits), undetectable, "antimalarial_k13_target_mutation_v0",
                             caveat)

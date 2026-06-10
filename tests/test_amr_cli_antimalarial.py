@@ -48,6 +48,21 @@ def test_antimalarial_rejects_amrfinder_run(capsys):
     assert "bacterial-only" in capsys.readouterr().err
 
 
+def test_chloroquine_observed_resistant(tmp_path):
+    out = tmp_path / "cq.json"
+    rc = main(["--drug", "chloroquine", "--observed", "pfcrt:K76T", "--out", str(out), "--json-only"])
+    assert rc == 0
+    rec = json.loads(out.read_text())
+    assert rec["prediction"] == "R" and rec["determinants"][0]["symbol"] == "pfcrt"
+    assert rec["caller"]["name"] == "dna_decode-antimalarial-k13-target-mutation-v0"
+
+
+def test_chloroquine_genome_mode_deferred_intron_guard(tmp_path):
+    g = tmp_path / "g.fna"; g.write_text(">c\nACGTACGTACGT\n", encoding="utf-8")
+    rc = main(["--drug", "chloroquine", "--genome-fasta", str(g)])
+    assert rc == 3          # pfcrt is intron-containing -> genome mode deferred (no footgun)
+
+
 @pytest.mark.skipif(not (_HAS_BLAST and _K13_REF.exists()), reason="BLAST+ or K13 reference absent")
 def test_antimalarial_genome_mode_real_blast(tmp_path):
     """Real makeblastdb+blastn through the CLI: a genome = real 3D7 K13 ref with a planted C580Y -> R."""

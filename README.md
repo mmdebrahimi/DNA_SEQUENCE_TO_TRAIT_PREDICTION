@@ -64,7 +64,7 @@ uv sync          # or: pip install -e .
 ```text
 $ uv run dna-decode list
 dna-decode 0.5.0 - deterministic genotype->phenotype decoders
-  amr        antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem) + FUNGAL azole/echinocandin (C. auris) + ANTIMALARIAL artemisinin (P. falciparum K13)
+  amr        antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem) + FUNGAL azole/echinocandin (C. auris) + ANTIMALARIAL artemisinin/K13 + chloroquine/pfcrt-K76T (P. falciparum)
   pathotype  E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
 
 $ uv run dna-decode amr --drug ceftriaxone --amrfinder-run data/amrfinder_runs/GCA_008727135.1

@@ -16,7 +16,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import pytest  # noqa: E402
 
 from dna_decode.data.antimalarial_amr import (  # noqa: E402
-    call_from_observed_substitutions, is_resistance_mutation, supported_antimalarial_drugs,
+    INTRONLESS_GENES, call_from_observed_substitutions, gene_for_drug, is_resistance_mutation,
+    supported_antimalarial_drugs,
 )
 from scripts.pf_kelch13_caller import call_kelch13  # noqa: E402
 
@@ -56,8 +57,23 @@ def test_call_from_observed_R_and_S():
 
 
 def test_call_unknown_drug_indeterminate():
-    c = call_from_observed_substitutions("chloroquine", {"K13": {"C580Y"}})
+    c = call_from_observed_substitutions("levofloxacin", {"K13": {"C580Y"}})   # not an antimalarial
     assert c.prediction == "INDETERMINATE"
+
+
+# ---------- chloroquine / pfcrt K76T (observed-mode; intron-deferred genome mode) ----------
+def test_chloroquine_pfcrt_catalog():
+    assert "chloroquine" in supported_antimalarial_drugs()
+    assert gene_for_drug("chloroquine") == "pfcrt"
+    assert gene_for_drug("artemisinin") == "K13"
+    assert is_resistance_mutation("chloroquine", "pfcrt", "K76T")
+    assert "pfcrt" not in INTRONLESS_GENES and "K13" in INTRONLESS_GENES   # pfcrt genome-mode deferred
+
+def test_chloroquine_observed_R_and_S():
+    r = call_from_observed_substitutions("chloroquine", {"pfcrt": {"K76T"}})
+    assert r.prediction == "R" and "pfcrt:K76T" in r.determinants
+    s = call_from_observed_substitutions("chloroquine", {"pfcrt": {"A220S"}})   # not catalogued
+    assert s.prediction == "S" and s.undetectable_mechanisms
 
 
 # ---------- real BLAST machinery (skip if no BLAST+) ----------

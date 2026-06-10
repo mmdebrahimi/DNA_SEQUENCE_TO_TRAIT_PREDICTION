@@ -21,6 +21,14 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   productization; emits the same `amr-mechanism-call-v1` record; `--organism` default relabels to
   `Plasmodium_falciparum`. Shared `_target_site_record` + `_emit_target_site` now back both the fungal and
   antimalarial branches (extracted, not duplicated). 4 CLI tests. So `dna-amr` now spans **3 kingdoms**.
+- **+ chloroquine (pfcrt K76T)** — extends the antimalarial vertical to the iconic chloroquine-resistance
+  marker (`dna-amr --drug chloroquine --observed pfcrt:K76T` → R). `gene_for_drug` routes drug→target
+  gene; K76T → CQ-R is unambiguous (pfmdr1 partner-drug markers deliberately omitted — their direction
+  flips between amodiaquine and lumefantrine). **Genome mode is guarded/deferred for pfcrt**: pfcrt is
+  intron-containing (GenBank seqs are ~2471 bp genomic), which breaks the colinear single-HSP codon-mapper,
+  so genome mode returns a clear "needs intron-aware multi-HSP mapping (deferred); use --observed" error
+  (no silent mis-call). `--observed` mode needs no reference/BLAST/alignment → unaffected by introns. 5
+  tests. Next engine task to unblock pfcrt genome mode: intron-aware multi-HSP codon mapping.
 
 ## [Unreleased] — self-calibrating AMR rule (`calibrate_organism`)
 
