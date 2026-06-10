@@ -16,6 +16,11 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   (`data/antimalarial_ref/Pf3D7_K13_cds.fna`, NCBI XM_001350122.1, 726aa, WT Cys@580); G0-completion test
   validates C580Y numbering on the **real** reference. Offline-safe (absent BLAST+ → INDETERMINATE).
   6 tests. **3rd kingdom decoded** (bacteria → fungi → protozoa).
+- **Wired into the unified `dna-amr` CLI** (`--drug artemisinin|artesunate|dihydroartemisinin`) — routes to
+  the K13 engine (`--genome-fasta` real-BLAST, or `--observed K13:C580Y` wheel-only), mirroring the fungal
+  productization; emits the same `amr-mechanism-call-v1` record; `--organism` default relabels to
+  `Plasmodium_falciparum`. Shared `_target_site_record` + `_emit_target_site` now back both the fungal and
+  antimalarial branches (extracted, not duplicated). 4 CLI tests. So `dna-amr` now spans **3 kingdoms**.
 
 ## [Unreleased] — self-calibrating AMR rule (`calibrate_organism`)
 

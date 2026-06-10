@@ -1,5 +1,6 @@
 # DNA_SEQUENCE_TO_TRAIT_PREDICTION
 
+<!-- amr engine now spans 3 kingdoms: bacterial (AMRFinder) + fungal (BLAST-ERG11) + antimalarial/protozoan (BLAST-Pfkelch13), routed by --drug. -->
 **`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a bacterial **or fungal**
 genome; it returns a phenotype call (antibiotic resistance R/S, or E. coli pathotype) **plus the exact
 genes/mutations that drove the call** + its own blind spots + provenance. Mechanism-feature based, not an
@@ -63,7 +64,7 @@ uv sync          # or: pip install -e .
 ```text
 $ uv run dna-decode list
 dna-decode 0.5.0 - deterministic genotype->phenotype decoders
-  amr        antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem) + FUNGAL azole/echinocandin (C. auris)
+  amr        antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem) + FUNGAL azole/echinocandin (C. auris) + ANTIMALARIAL artemisinin (P. falciparum K13)
   pathotype  E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
 
 $ uv run dna-decode amr --drug ceftriaxone --amrfinder-run data/amrfinder_runs/GCA_008727135.1

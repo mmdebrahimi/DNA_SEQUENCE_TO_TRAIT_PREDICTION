@@ -22,6 +22,10 @@ import json
 import sys
 from pathlib import Path
 
+from dna_decode.data.antimalarial_amr import (
+    call_from_observed_substitutions as antimalarial_call_from_observed,
+    supported_antimalarial_drugs,
+)
 from dna_decode.data.fungal_amr import (
     call_from_observed_substitutions,
     supported_fungal_drugs,
@@ -33,6 +37,9 @@ from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
 # drug: fluconazole/voriconazole/caspofungin/micafungin -> fungal engine. G1-validated on C. auris
 # (2026-06-08, wiki/fungal_ep7_g1_closeout): method transfers, sens 1.0 across clades; label-limited spec.
 _DEFAULT_ERG11_REF = Path(__file__).resolve().parent.parent.parent / "data" / "fungal_ref" / "Cauris_ERG11_cds.fna"
+# Antimalarial target-site path (BLAST Pfkelch13 -> WHO-validated marker catalog), the 3rd kingdom
+# (protozoan). Routed by drug: artemisinin/artesunate/dihydroartemisinin -> K13 engine.
+_DEFAULT_K13_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antimalarial_ref" / "Pf3D7_K13_cds.fna"
 
 
 def _parse_observed(observed: str) -> dict[str, set[str]]:
@@ -46,8 +53,10 @@ def _parse_observed(observed: str) -> dict[str, set[str]]:
     return out
 
 
-def _fungal_record(call, sample_id: str, drug: str, organism: str, provenance: dict) -> dict:
-    """Map a FungalCall onto the uniform amr-mechanism-call-v1 record (same shape as the bacterial path)."""
+def _target_site_record(call, sample_id: str, drug: str, organism: str, provenance: dict, *,
+                        caller_name: str, source: str) -> dict:
+    """Map a target-site Call (fungal OR antimalarial — same shape) onto the uniform
+    amr-mechanism-call-v1 record (same shape as the bacterial path)."""
     dets = [{"symbol": d.split(":", 1)[0], "subclass": d.split(":", 1)[1] if ":" in d else "",
              "class": "TARGET_SITE_MUTATION", "pct_identity": None} for d in call.determinants]
     return {
@@ -58,8 +67,7 @@ def _fungal_record(call, sample_id: str, drug: str, organism: str, provenance: d
         "n_determinants": len(call.determinants), "determinants": dets,
         "resistance_threshold": 1,
         "undetectable_mechanisms": list(call.undetectable_mechanisms),
-        "caller": {"name": "dna_decode-fungal-target-mutation-v0", "rule": call.rule,
-                   "source": "hand-curated fungal catalog (no AMRFinder-for-fungi)",
+        "caller": {"name": caller_name, "rule": call.rule, "source": source,
                    "caller_is_independent_baseline": False},
         "caveat": call.caveat,
         "provenance": {**provenance, "organism": organism},
@@ -94,7 +102,14 @@ def _fungal_main(args) -> int:
         print("ERROR: fungal drug needs --genome-fasta OR --observed GENE:SUB[,...]", file=sys.stderr)
         return 2
 
-    rec = _fungal_record(call, sample_id, args.drug, args.organism, prov)
+    rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
+                              caller_name="dna_decode-fungal-target-mutation-v0",
+                              source="hand-curated fungal catalog (no AMRFinder-for-fungi)")
+    return _emit_target_site(rec, call, sample_id, args)
+
+
+def _emit_target_site(rec: dict, call, sample_id: str, args) -> int:
+    """Shared output for the fungal + antimalarial target-site branches."""
     if args.out:
         Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
     if args.json_only:
@@ -112,6 +127,36 @@ def _fungal_main(args) -> int:
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if call.prediction != "INDETERMINATE" else 4
+
+
+def _antimalarial_main(args) -> int:
+    """Antimalarial K13 target-site decoder branch (routed when --drug is an antimalarial drug)."""
+    if args.organism == "Escherichia":            # relabel the bacterial default on this path
+        args.organism = "Plasmodium_falciparum"
+    if args.observed is not None:
+        call = antimalarial_call_from_observed(args.drug, _parse_observed(args.observed))
+        sample_id = args.sample_id or "observed"
+        prov = {"mode": "observed-substitutions", "observed": args.observed}
+    elif args.genome_fasta is not None:
+        if not args.genome_fasta.exists():
+            print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
+            return 2
+        sample_id = args.sample_id or args.genome_fasta.stem
+        try:
+            from scripts.pf_kelch13_caller import call_kelch13   # repo-only; needs BLAST+
+        except ImportError as e:
+            print(f"ERROR: antimalarial genome mode needs scripts/pf_kelch13_caller + BLAST+ ({e}). "
+                  "Use --observed K13:C580Y for a wheel-only call.", file=sys.stderr)
+            return 3
+        call = call_kelch13(str(args.genome_fasta), str(args.k13_ref), args.drug)
+        prov = {"mode": "blast-k13", "k13_ref": str(args.k13_ref)}
+    else:
+        print("ERROR: antimalarial drug needs --genome-fasta OR --observed K13:SUB[,...]", file=sys.stderr)
+        return 2
+    rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
+                              caller_name="dna_decode-antimalarial-k13-target-mutation-v0",
+                              source="hand-curated WHO-validated Pfkelch13 catalog (no AMRFinder-for-Plasmodium)")
+    return _emit_target_site(rec, call, sample_id, args)
 
 
 def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path,
@@ -140,8 +185,11 @@ def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: P
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="dna-amr",
                                  description="Deterministic AMR R/S decoder from AMRFinder curated determinants")
-    ap.add_argument("--drug", required=True, choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())),
-                    metavar="DRUG", help="bacterial (AMRFinder engine) or fungal (BLAST-ERG11 engine) drug")
+    ap.add_argument("--drug", required=True,
+                    choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
+                                   | set(supported_antimalarial_drugs())),
+                    metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), or "
+                                         "antimalarial (BLAST-Pfkelch13 engine) drug")
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--amrfinder-run", type=Path, help="[bacterial] existing AMRFinder run dir (main.tsv)")
     src.add_argument("--genome-fasta", type=Path, help="genome FASTA (bacterial: AMRFinder via Docker; "
@@ -150,6 +198,8 @@ def main(argv=None) -> int:
                                                       "(e.g. ERG11:Y132F) — pure, no BLAST")
     ap.add_argument("--erg11-ref", type=Path, default=_DEFAULT_ERG11_REF,
                     help="[fungal] in-frame ERG11 CDS reference FASTA (default: committed C. auris allele)")
+    ap.add_argument("--k13-ref", type=Path, default=_DEFAULT_K13_REF,
+                    help="[antimalarial] in-frame Pfkelch13 CDS reference FASTA (default: committed 3D7 allele)")
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--organism", default="Escherichia",
                     help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "
@@ -165,13 +215,20 @@ def main(argv=None) -> int:
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)
 
-    # Route by drug: fungal drugs -> BLAST-ERG11 target-site engine; bacterial -> AMRFinder engine.
+    # Route by drug: fungal -> BLAST-ERG11; antimalarial -> BLAST-Pfkelch13; bacterial -> AMRFinder.
     if args.drug in supported_fungal_drugs():
         if args.amrfinder_run is not None:
             print("ERROR: --amrfinder-run is bacterial-only; fungal drugs use --genome-fasta or --observed",
                   file=sys.stderr)
             return 2
         return _fungal_main(args)
+
+    if args.drug in supported_antimalarial_drugs():
+        if args.amrfinder_run is not None:
+            print("ERROR: --amrfinder-run is bacterial-only; antimalarial drugs use --genome-fasta or --observed",
+                  file=sys.stderr)
+            return 2
+        return _antimalarial_main(args)
 
     if args.observed is not None:
         print("ERROR: --observed is fungal-only; bacterial drugs use --amrfinder-run or --genome-fasta",
