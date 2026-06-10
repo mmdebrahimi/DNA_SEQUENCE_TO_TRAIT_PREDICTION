@@ -14,7 +14,12 @@
 |---|---|---|---|---|
 | Campylobacter × ciprofloxacin | 3,984 | 791R / 3030S | **33R / 130S** | **YES** |
 | Klebsiella × ciprofloxacin | 816 | 109R / 26S | **404R / 277S** | **YES** |
-| Salmonella × ciprofloxacin | (streaming — pending) | — | — | — |
+| Salmonella × ciprofloxacin | 9,349 | 602R / 8656S | **4R / 87S** | **NO** (4R) |
+
+**Organism-dependent:** the move works where AST is clinical-isolate-heavy (Klebsiella, Campylobacter) and
+FAILS where it is surveillance-dominated (Salmonella — 602R/8656S are NARMS/CDC; the few non-ecosystem
+submitters are veterinary, S-skewed → only 4R). So the provenance-disjoint subset must be checked per
+organism; it is not universal. Klebsiella cipro is the clear Stage-2 lead (404R/277S, diverse clinical labs).
 
 **Top non-ecosystem (provenance-disjoint) submitters found:**
 - Campylobacter: The University of Melbourne (163).
