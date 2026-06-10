@@ -134,3 +134,37 @@ research-first (#2, #3). After `/idea-anchor`, the chain is `/probe` → `/featu
 auto-invokes the next. Anchor 1 is the recommended first pull (closes a blind spot; substrate already on
 disk). Anchor 3 is the highest-rigor but gated on a source census that may dead-end (no free label → honest
 documentation outcome).
+
+
+---
+
+## Anchor 4 — decoder-suite provenance-disjoint validation report card (added 2026-06-10)
+
+**One-line idea:** Generalize the now-proven provenance-stratified NCBI-PD validation into a STANDING,
+suite-wide capability that scores EVERY shipped deterministic decoder (per organism x drug) on a fresh,
+leakage-checked, provenance-disjoint cohort and emits one maintained report card — so "validated" has a
+reproducible, suite-wide meaning.
+
+**Relaxes assumption:** "each decoder is validated ad-hoc / in-cohort" -> a standing reproducible suite-wide
+independent-validation surface.
+
+**Why plausible, not trivial:** the method is PROVEN (Klebsiella cipro 0.967, Campylobacter cipro 1.0, E. coli
+flagship pending) and the scripts + leakage-hardening already exist (`scripts/ncbi_pd_provenance_census.py`,
+`scripts/provenance_disjoint_validate.py`). Non-trivial part: per-organism powering is variable (Salmonella has
+NO powered disjoint subset — surveillance-dominated), and the honest tiering must be preserved
+(provenance-disjoint != methodology-independent != external-clinical).
+
+**Cheapest falsifier:** run the census across all shipped organism x drugs; KILL the "suite report card" framing
+if fewer than ~half can assemble a powered (>=20/class) provenance-disjoint cohort -> then it's a per-decoder
+spot-check, not a suite capability. Data on hand: the census script + 3 validated cohorts.
+
+**What it unlocks:** a maintained, re-runnable answer to "are the shipped decoders independently-ish validated?"
+— the trust surface a TOOL needs; scales as the suite grows.
+
+**Hard constraints:** no money; free NCBI-PD only; laptop + Docker; leakage-hardened (exclude tuning/prior + parquet
+cohorts by accession); honest independence tier in every cell.
+
+**/idea-anchor command:**
+```
+/idea-anchor decoder-suite provenance-disjoint validation report card: turn the proven one-off provenance-stratified NCBI-PD validation into a STANDING capability that scores EVERY shipped deterministic AMR decoder (per organism x drug) on a fresh, leakage-checked, provenance-disjoint cohort and emits one maintained report card. Full context: plans/idea_anchor_prompts_2026-06-10.md Anchor 4.
+```
