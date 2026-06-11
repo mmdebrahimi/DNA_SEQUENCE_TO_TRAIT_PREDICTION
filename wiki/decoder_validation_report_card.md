@@ -19,8 +19,7 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ea
 
 | state | cells |
 |---|---|
-| `SCORED` | 3 |
-| `POWERED_UNSCORED` | 3 |
+| `SCORED` | 6 |
 | `UNDERPOWERED` | 1 |
 | `ABSTAINS_BY_DESIGN` | 2 |
 | `NO_FREE_PHENOTYPE_SOURCE` | 6 |
@@ -32,10 +31,10 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ea
 | acinetobacter | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@1) — rule refuses expression-driven R it cannot decode |
 | campylobacter | ciprofloxacin | `SCORED` | 1.0 | 1.0 | 1.0 | 40 | TP20 FP0 TN20 FN0 |
 | escherichia_coli_shigella | ciprofloxacin | `SCORED` | 0.817 | 0.933 | 0.7 | 60 | TP28 FP9 TN21 FN2 |
-| klebsiella | ceftriaxone | `POWERED_UNSCORED` | — | — | — | — | censused 505R/410S provenance-disjoint (>=MIN/class); not yet scored |
+| klebsiella | ceftriaxone | `SCORED` | 0.95 | 1.0 | 0.9 | 60 | TP30 FP3 TN27 FN0 |
 | klebsiella | ciprofloxacin | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | TP29 FP1 TN29 FN1 |
-| klebsiella | gentamicin | `POWERED_UNSCORED` | — | — | — | — | censused 317R/339S provenance-disjoint (>=MIN/class); not yet scored |
-| klebsiella | tetracycline | `POWERED_UNSCORED` | — | — | — | — | censused 182R/132S provenance-disjoint (>=MIN/class); not yet scored |
+| klebsiella | gentamicin | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | TP28 FP2 TN28 FN2 |
+| klebsiella | tetracycline | `SCORED` | 0.883 | 0.8 | 0.967 | 60 | TP24 FP1 TN29 FN6 |
 | pseudomonas_aeruginosa | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@3) — rule refuses expression-driven R it cannot decode |
 | salmonella | ciprofloxacin | `UNDERPOWERED` | — | — | — | — | censused 4R/87S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | candida_auris | fluconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal ERG11 BLAST target-site; no free isolate-level AST source on NCBI-PD (structural non-cell) |

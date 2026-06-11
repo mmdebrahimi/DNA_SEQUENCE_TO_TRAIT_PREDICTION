@@ -5,8 +5,7 @@
   "no_aggregate_headline": true,
   "state_counts": {
     "ABSTAINS_BY_DESIGN": 2,
-    "SCORED": 3,
-    "POWERED_UNSCORED": 3,
+    "SCORED": 6,
     "UNDERPOWERED": 1,
     "NO_FREE_PHENOTYPE_SOURCE": 6
   },
@@ -52,8 +51,18 @@
     {
       "organism": "klebsiella",
       "drug": "ceftriaxone",
-      "state": "POWERED_UNSCORED",
-      "note": "censused 505R/410S provenance-disjoint (>=MIN/class); not yet scored"
+      "state": "SCORED",
+      "acc": 0.95,
+      "sens": 1.0,
+      "spec": 0.9,
+      "n": 60,
+      "tp": 30,
+      "fp": 3,
+      "tn": 27,
+      "fn": 0,
+      "abstain": 0,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json"
     },
     {
       "organism": "klebsiella",
@@ -74,14 +83,34 @@
     {
       "organism": "klebsiella",
       "drug": "gentamicin",
-      "state": "POWERED_UNSCORED",
-      "note": "censused 317R/339S provenance-disjoint (>=MIN/class); not yet scored"
+      "state": "SCORED",
+      "acc": 0.933,
+      "sens": 0.933,
+      "spec": 0.933,
+      "n": 60,
+      "tp": 28,
+      "fp": 2,
+      "tn": 28,
+      "fn": 2,
+      "abstain": 0,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json"
     },
     {
       "organism": "klebsiella",
       "drug": "tetracycline",
-      "state": "POWERED_UNSCORED",
-      "note": "censused 182R/132S provenance-disjoint (>=MIN/class); not yet scored"
+      "state": "SCORED",
+      "acc": 0.883,
+      "sens": 0.8,
+      "spec": 0.967,
+      "n": 60,
+      "tp": 24,
+      "fp": 1,
+      "tn": 29,
+      "fn": 6,
+      "abstain": 0,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json"
     },
     {
       "organism": "pseudomonas_aeruginosa",
