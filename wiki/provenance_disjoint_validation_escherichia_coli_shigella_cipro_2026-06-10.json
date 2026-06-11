@@ -1,0 +1,34 @@
+{
+  "_schema": "provenance-disjoint-validation-v1",
+  "date": "2026-06-10",
+  "organism": "Escherichia_coli_Shigella",
+  "amrfinder_organism": "Escherichia",
+  "drug": "ciprofloxacin",
+  "registry_organism": "Escherichia_coli_Shigella",
+  "n_selected": 60,
+  "n_scored": 60,
+  "independence_tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+  "leakage_control": "all selected accessions are FRESH \u2014 excluded 175 accessions used in any prior escherichia_coli_shigella_* cohort (calibration + prior validation)",
+  "ecosystem_excluded": [
+    "narms",
+    "genometrakr",
+    "pulsenet",
+    "cdc",
+    "centers for disease",
+    "fda",
+    "food and drug",
+    "usda",
+    "national antimicrobial"
+  ],
+  "metrics": {
+    "n_scored": 60,
+    "tp": 28,
+    "fp": 9,
+    "tn": 21,
+    "fn": 2,
+    "abstain": 0,
+    "acc": 0.817,
+    "sens": 0.933,
+    "spec": 0.7
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "_schema": "decoder-validation-report-card-v0",
+  "date": "2026-06-10",
+  "honest_tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution); NOT external clinical validation",
+  "no_aggregate_headline": true,
+  "state_counts": {
+    "ABSTAINS_BY_DESIGN": 2,
+    "SCORED": 3,
+    "POWERED_UNSCORED": 3,
+    "UNDERPOWERED": 1,
+    "NO_FREE_PHENOTYPE_SOURCE": 6
+  },
+  "cells": [
+    {
+      "organism": "acinetobacter",
+      "drug": "meropenem",
+      "state": "ABSTAINS_BY_DESIGN",
+      "note": "registry verdict EXPRESSION_FLOOR (broad@1) \u2014 rule refuses expression-driven R it cannot decode"
+    },
+    {
+      "organism": "campylobacter",
+      "drug": "ciprofloxacin",
+      "state": "SCORED",
+      "acc": 1.0,
+      "sens": 1.0,
+      "spec": 1.0,
+      "n": 40,
+      "tp": 20,
+      "fp": 0,
+      "tn": 20,
+      "fn": 0,
+      "abstain": 0,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json"
+    },
+    {
+      "organism": "escherichia_coli_shigella",
+      "drug": "ciprofloxacin",
+      "state": "SCORED",
+      "acc": 0.817,
+      "sens": 0.933,
+      "spec": 0.7,
+      "n": 60,
+      "tp": 28,
+      "fp": 9,
+      "tn": 21,
+      "fn": 2,
+      "abstain": 0,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_escherichia_coli_shigella_cipro_2026-06-10.json"
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "ceftriaxone",
+      "state": "POWERED_UNSCORED",
+      "note": "censused 505R/410S provenance-disjoint (>=MIN/class); not yet scored"
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "ciprofloxacin",
+      "state": "SCORED",
+      "acc": 0.967,
+      "sens": 0.967,
+      "spec": 0.967,
+      "n": 60,
+      "tp": 29,
+      "fp": 1,
+      "tn": 29,
+      "fn": 1,
+      "abstain": 0,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_klebsiella_cipro_2026-06-10.json"
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "gentamicin",
+      "state": "POWERED_UNSCORED",
+      "note": "censused 317R/339S provenance-disjoint (>=MIN/class); not yet scored"
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "tetracycline",
+      "state": "POWERED_UNSCORED",
+      "note": "censused 182R/132S provenance-disjoint (>=MIN/class); not yet scored"
+    },
+    {
+      "organism": "pseudomonas_aeruginosa",
+      "drug": "meropenem",
+      "state": "ABSTAINS_BY_DESIGN",
+      "note": "registry verdict EXPRESSION_FLOOR (broad@3) \u2014 rule refuses expression-driven R it cannot decode"
+    },
+    {
+      "organism": "salmonella",
+      "drug": "ciprofloxacin",
+      "state": "UNDERPOWERED",
+      "note": "censused 4R/87S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
+    },
+    {
+      "organism": "candida_auris",
+      "drug": "fluconazole",
+      "state": "NO_FREE_PHENOTYPE_SOURCE",
+      "note": "fungal ERG11 BLAST target-site; no free isolate-level AST source on NCBI-PD (structural non-cell)"
+    },
+    {
+      "organism": "candida_auris",
+      "drug": "voriconazole",
+      "state": "NO_FREE_PHENOTYPE_SOURCE",
+      "note": "fungal ERG11 BLAST target-site; no free isolate-level AST source on NCBI-PD (structural non-cell)"
+    },
+    {
+      "organism": "candida_auris",
+      "drug": "caspofungin",
+      "state": "NO_FREE_PHENOTYPE_SOURCE",
+      "note": "fungal FKS1 BLAST target-site; no free isolate-level AST source on NCBI-PD (structural non-cell)"
+    },
+    {
+      "organism": "candida_auris",
+      "drug": "micafungin",
+      "state": "NO_FREE_PHENOTYPE_SOURCE",
+      "note": "fungal FKS1 BLAST target-site; no free isolate-level AST source on NCBI-PD (structural non-cell)"
+    },
+    {
+      "organism": "influenza_a",
+      "drug": "oseltamivir",
+      "state": "NO_FREE_PHENOTYPE_SOURCE",
+      "note": "influenza NA-inhibitor target-site; no free isolate-level AST source on NCBI-PD (structural non-cell)"
+    },
+    {
+      "organism": "plasmodium_falciparum",
+      "drug": "artemisinin",
+      "state": "NO_FREE_PHENOTYPE_SOURCE",
+      "note": "P. falciparum kelch13 target-site; no free isolate-level AST source on NCBI-PD (structural non-cell)"
+    }
+  ]
+}
