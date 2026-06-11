@@ -156,3 +156,16 @@
 **Lesson:** When a signal targets a SUBSET (intrinsic-only / weak-mechanism), the validation denominator MUST be that subset — score the stratum the signal addresses, not the whole label class, or an aggregate HOLD silently masks "this cohort can't test it" and reads as a false falsification. Pair the positive-support gate with a minimum target-subset N. (And: a fresh negative result deserves a /brainstorm audit before it's banked as a conclusion — the confound here was caught only on review.)
 
 ---
+
+## [plan_file: Decoder_Suite_Validation_Report_Card_Productionization_Plan] Executed 2026-06-10
+**Mode:** sequential (3 waves; parallel was available but sequential chosen so the executor could fold the pre-exec /brainstorm amendments C1/C2/M1/M2 into the literal Steps — parallel worktree agents would have read only the stale Step text and shipped the bugs) | **Result:** All 5 steps completed
+**PRs:** branches merged locally
+**Salience:** HIGH
+**Modules:** dna_decode/eval/cohort_manifest.py (new), provdisjoint validator wiring, census self-persist, shipped-surface registry + report-card rewrite (7th LABEL_CONFOUNDED state), tests + docs
+**Notable:** Plan executed sequentially specifically to reconcile a Steps-vs-amendments divergence (see Discoveries). All 5 steps green; +18 tests; 1022 passed, 0 regressions.
+**Corrections:** none (user chose "move forward" — execute the literal Steps with amendments folded in rather than re-run /technical-plan to regenerate the Steps).
+**Reversals:** none.
+**Discoveries:** (1) The saved plan's Implementation Steps were STALE relative to its own Save-time /brainstorm amendments — C1 (exact-self leakage), C2 (shipped-surface registry), M1 (census group/organism normalizer), M2 (LABEL_CONFOUNDED 7th state) lived ONLY in the amendments section. Executing the literal Steps verbatim would have shipped exactly the bugs the brainstorm caught. The executor treated Steps+amendments as one spec and folded them; parallel worktree agents could NOT have (they read only literal Step text), which is why sequential was chosen. (2) Hardcoded leakage-exclusion lists silently UNDER-cover as the suite grows: 3 of 8 parquet cohorts were hardcoded -> 744 vs ~175 accessions once made data-driven. Safe shape = an accession-manifest registry with EXACT-self identity (not substring match) + fail-closed on incomplete load. (3) The pre-exec /brainstorm on the drafted plan caught 3 grounded bugs (substring leakage reuse, shipped-surface over/under-enumeration, census group/organism schema mismatch) BEFORE any code — re-confirms the project's "brainstorm between waves" discipline.
+**Lesson:** When /save-plan stamps structural amendments onto a plan, the executable Steps and the plan's actual intent DIVERGE — either re-run /technical-plan to regenerate Steps from the amended design, or have the executor treat Steps + amendments as one spec AND say so explicitly (and never fan out to parallel worktree agents, which see only the literal Steps). Separately: any leakage/exclusion list that enumerates members by hand under-covers as the set grows — drive it from a data manifest with exact-identity matching + fail-closed loading.
+
+---

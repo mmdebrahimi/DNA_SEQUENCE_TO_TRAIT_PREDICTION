@@ -414,3 +414,14 @@
 - Override ships behind explicit genome/accession input + registry enabled:false/experimental:true; cohort-infeasibility HARD kill gate de-risks Step 1 first.
 
 ---
+
+## [plan_file: Decoder_Suite_Validation_Report_Card_Productionization_Plan/] 2026-06-10
+**Status:** executed
+**Summary:** Productionize the Anchor-4 v0 decoder-suite provenance-disjoint validation report card into a standing capability — data-driven accession-manifest leakage registry, self-persisting census powering JSON, and auto-derived shipped-decoder grid, preserving the cell-state machine + honest per-cell tier + no-aggregate-headline rule.
+**Key decisions:**
+- Accession-manifest registry (new `dna_decode/eval/cohort_manifest.py`) replaces the hardcoded 3-parquet leakage exclusion; pre-exec /brainstorm hardened it to EXACT-self identity + fail-closed INCOMPLETE_MANIFEST.
+- Checked-in shipped-decoder-surface registry replaces ad-hoc row derivation (fixes E.coli-oxacillin over-enumeration + other-kingdom under-enumeration) + coverage test vs CLI drug catalogs.
+- Census self-persists via a group->organism normalizer refusing capped/error rows; 7th LABEL_CONFOUNDED cell-state added.
+- Steps amended post-/brainstorm (audit-notes only) — re-run /technical-plan before /execute-plan to fold C1/C2/M1/M2 into the Implementation Steps.
+
+---

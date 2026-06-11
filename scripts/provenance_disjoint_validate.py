@@ -32,40 +32,13 @@ from scripts.ncbi_pd_provenance_census import ECOSYSTEM, is_ecosystem, latest_me
 from scripts.organism_drug_validate import _run_dir, ensure_run
 
 
-# Flagship cohorts that live as PARQUET (not data/raw/*/selected.tsv) — the data/raw glob misses these, so
-# a provenance-disjoint run could silently LEAK the E. coli cipro tuning/held-out sets. Exclude them too.
-# (Caught 2026-06-10: E. coli flagship run's data/raw glob found 0 prior cohorts; overlap had to be checked
-# by hand. The script now enforces it. Harmless cross-organism — accessions don't collide across species.)
-_FLAGSHIP_PARQUET_COHORTS = [
-    "data/processed/stage2_n150_cipro_cohort.parquet",   # E. coli cipro TUNING cohort (N=147)
-    "data/processed/gate_b_cohort.parquet",              # E. coli cef/cipro held-out
-    "data/processed/gate_b_n40_cipro_cohort.parquet",    # E. coli cipro held-out N=40
-]
-
-
-def _prior_cohort_accessions(slug: str, exclude_self: str) -> set[str]:
-    """All accessions used in ANY prior cohort (calibration + prior validation) — these are NOT
-    provenance-disjoint from tuning/prior-validation and MUST be excluded for a clean validation. Covers
-    BOTH data/raw/<slug>_*/selected.tsv AND the parquet flagship cohorts (which the glob misses)."""
-    out = set()
-    for sel in glob.glob(f"data/raw/{slug}_*/selected.tsv"):
-        if exclude_self in sel:
-            continue
-        for ln in Path(sel).read_text().splitlines():
-            if "\t" in ln:
-                out.add(ln.split("\t")[0])
-    # parquet flagship cohorts (leakage-hardening, 2026-06-10)
-    try:
-        from dna_decode.data.cohort import load_cohort
-        for pq in _FLAGSHIP_PARQUET_COHORTS:
-            if Path(pq).exists():
-                for s in load_cohort(pq).strains:
-                    acc = getattr(s, "assembly_accession", None)
-                    if acc:
-                        out.add(acc)
-    except Exception:
-        pass   # parquet/load_cohort unavailable -> data/raw exclusion still applies (offline-safe)
-    return out
+# Leakage exclusion is now data-driven via the accession-manifest registry (dna_decode/eval/cohort_manifest),
+# which scans EVERY data/raw/*/selected.tsv AND EVERY data/processed/*.parquet — no hardcoded cohort list to
+# drift. The manifest uses EXACT-self cohort identity (excludes only the current output cohort; every other
+# cohort, incl. a prior provdisjoint validation for the same organism×drug, is excluded -> forces fresh
+# accessions) and a fail-closed INCOMPLETE_MANIFEST signal. See cohort_manifest.py + the pre-exec /brainstorm
+# (C1) for the rationale. The old hardcoded _FLAGSHIP_PARQUET_COHORTS + substring exclude_self are removed.
+from dna_decode.eval.cohort_manifest import build_manifest, prior_accessions
 
 
 def select_disjoint(group: str, drug: str, per_class: int, reuse_glob: str, selected: Path,
@@ -122,6 +95,9 @@ def main() -> int:
     ap.add_argument("--per-class", type=int, default=30)
     ap.add_argument("--registry-organism", default=None, help="organism key for call_resistance (default=group)")
     ap.add_argument("--select-only", action="store_true", help="select cohort + report cache overlap, no AMRFinder")
+    ap.add_argument("--allow-incomplete-manifest", action="store_true",
+                    help="proceed even if the accession manifest failed to load a cohort source (DEGRADED — "
+                         "stamps degraded independence into the artifact). Default is FAIL CLOSED (C1).")
     a = ap.parse_args()
     slug = a.group.lower()
     base = Path(f"data/raw/{slug}_provdisjoint_{a.drug}")
@@ -129,7 +105,15 @@ def main() -> int:
     reuse_glob = f"data/raw/{slug}_*/amrfinder_runs"
     reg_org = a.registry_organism or a.group
 
-    exclude_prior = _prior_cohort_accessions(slug, exclude_self=f"{slug}_provdisjoint_")
+    # Data-driven leakage exclusion via the accession-manifest registry (C1: exact-self identity).
+    manifest = build_manifest()
+    if manifest.incomplete and not a.allow_incomplete_manifest:
+        print("INCOMPLETE_MANIFEST: an accession source failed to load — refusing to score (fail-closed).")
+        for w in manifest.warnings:
+            print(f"  - {w}")
+        print("Pass --allow-incomplete-manifest to proceed with DEGRADED independence stamped into the artifact.")
+        return 2
+    exclude_prior = prior_accessions(manifest, exclude_cohort=base.name)
     sel = select_disjoint(a.group, a.drug, a.per_class, reuse_glob, base / "selected.tsv", exclude_prior)
     if a.select_only:
         return 0
@@ -151,7 +135,12 @@ def main() -> int:
         "organism": a.group, "amrfinder_organism": a.amrfinder_organism, "drug": a.drug,
         "registry_organism": reg_org, "n_selected": len(sel), "n_scored": conf["n_scored"],
         "independence_tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-        "leakage_control": f"all selected accessions are FRESH — excluded {len(exclude_prior)} accessions used in any prior {slug}_* cohort (calibration + prior validation)",
+        "leakage_control": f"all selected accessions are FRESH — excluded {len(exclude_prior)} accessions from "
+                           f"{len(manifest.cohorts)} prior cohorts via the accession manifest (exact-self identity; "
+                           f"excluded every cohort EXCEPT {base.name})",
+        "manifest_complete": not manifest.incomplete,
+        "manifest_degraded": bool(manifest.incomplete),
+        "manifest_warnings": manifest.warnings if manifest.incomplete else [],
         "ecosystem_excluded": ECOSYSTEM, "metrics": conf,
     }
     out_json = Path(f"wiki/provenance_disjoint_validation_{slug}_{a.drug[:5]}_{_date.today().isoformat()}.json")

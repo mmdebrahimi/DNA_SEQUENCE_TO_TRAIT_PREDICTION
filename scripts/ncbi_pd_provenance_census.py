@@ -17,12 +17,16 @@ Usage: .venv/Scripts/python.exe scripts/ncbi_pd_provenance_census.py --group Cam
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 import urllib.request
+from datetime import date as _date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+_SIDECAR = Path(__file__).resolve().parent.parent / "wiki" / "provdisjoint_census_results.json"
 
 # Submitters that are part of the integrated public-health AST ecosystem (NOT provenance-disjoint from the
 # BV-BRC/NCBI-PD labels the decoder was tuned/cross-validated on). Case-insensitive substring match across
@@ -95,6 +99,46 @@ def census_one(group: str, drug: str, row_cap: int | None = None) -> dict:
             "top_other_centers": top_centers}
 
 
+def census_result_to_sidecar_row(result: dict, today: str, min_per_class: int) -> dict | None:
+    """Normalize a census_one() result into a sidecar row (schema provdisjoint-census-results-v1).
+
+    Maps `group` -> `organism` (census_one returns `group`; the sidecar + report-card key on `organism`).
+    Returns None for rows that MUST NOT be persisted (M1): an error row, or a row-capped run — these would
+    overwrite a prior GOOD powering verdict with degraded data. The caller skips persistence on None.
+    """
+    if not result or "error" in result or result.get("capped"):
+        return None
+    if "other_R" not in result or "other_S" not in result:
+        return None
+    return {"organism": result["group"], "drug": result["drug"],
+            "other_R": result["other_R"], "other_S": result["other_S"],
+            "powered": bool(result.get("powered")), "date": today}
+
+
+def upsert_census_result(result: dict, today: str, min_per_class: int, path: Path = _SIDECAR) -> bool:
+    """Upsert one census result into the powering sidecar, matched on (organism, drug). Idempotent: a
+    re-run for the same organism×drug REPLACES its row, never duplicates. Returns False (skipped) when the
+    row is degraded (error/capped) per `census_result_to_sidecar_row`."""
+    row = census_result_to_sidecar_row(result, today, min_per_class)
+    if row is None:
+        return False
+    if path.exists():
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        doc = {"_schema": "provdisjoint-census-results-v1",
+               "_doc": "Machine-readable powering facts from scripts/ncbi_pd_provenance_census.py "
+                       "(Stage-1, no-model). Self-persisted per census run; consumed by the report card.",
+               "min_per_class": min_per_class, "ecosystem_excluded": ECOSYSTEM, "results": []}
+    doc.setdefault("results", [])
+    key = (row["organism"].lower(), row["drug"].lower())
+    doc["results"] = [r for r in doc["results"]
+                      if (r.get("organism", "").lower(), r.get("drug", "").lower()) != key]
+    doc["results"].append(row)
+    doc["results"].sort(key=lambda r: (r.get("organism", ""), r.get("drug", "")))
+    path.write_text(json.dumps(doc, indent=2), encoding="utf-8")
+    return True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--group", help="NCBI PD organism group (e.g. Campylobacter, Salmonella, Klebsiella, Escherichia_coli_Shigella)")
@@ -116,6 +160,10 @@ def main() -> int:
         print(f"  POWERED (>= {MIN_PER_CLASS}/class both): {r['powered']}")
         if r["top_other_centers"]:
             print(f"  top non-ecosystem submitters: {r['top_other_centers']}")
+        if upsert_census_result(r, _date.today().isoformat(), MIN_PER_CLASS):
+            print(f"  persisted -> {_SIDECAR.relative_to(Path.cwd()) if _SIDECAR.is_relative_to(Path.cwd()) else _SIDECAR}")
+        else:
+            print("  NOT persisted (error/capped row — prior powering verdict preserved)")
         print()
     return 0
 

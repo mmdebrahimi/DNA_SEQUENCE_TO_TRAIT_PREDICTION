@@ -3,6 +3,29 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — Anchor-4: standing decoder-suite validation report card (2026-06-10)
+
+- **NEW `dna_decode/eval/cohort_manifest.py`** — data-driven accession-manifest registry. `build_manifest()`
+  scans EVERY `data/raw/*/selected.tsv` + EVERY `data/processed/*.parquet`; `prior_accessions(exclude_cohort
+  =name)` excludes prior accessions by **EXACT-self cohort identity (not substring)**, and `Manifest.incomplete
+  =True` on any load failure. REPLACES the hardcoded `_FLAGSHIP_PARQUET_COHORTS` list (3 cohorts) in
+  `scripts/provenance_disjoint_validate.py` — leakage exclusion now covers all 8 parquet cohorts (744
+  accessions vs ~175 before).
+- **`scripts/provenance_disjoint_validate.py` now FAILS CLOSED on an incomplete manifest** (`INCOMPLETE_MANIFEST`,
+  exit 2) unless `--allow-incomplete-manifest` is passed (which stamps degraded independence into the artifact).
+  Artifact carries `manifest_complete` / `manifest_degraded`.
+- **`scripts/ncbi_pd_provenance_census.py` now SELF-PERSISTS its powering verdict** to
+  `wiki/provdisjoint_census_results.json` (group→organism normalizer; idempotent upsert per `(organism, drug)`;
+  REFUSES to persist error/row-capped rows so a degraded run can't overwrite a good powering verdict).
+  Previously stdout-only.
+- **NEW `dna_decode/data/shipped_decoder_surface.py`** — the authoritative DEPLOYED-CLAIM surface registry
+  (organism, drug, engine, organism_scope, phenotype_source_status, census_group).
+- **`scripts/build_validation_report_card.py`** — rows now = shipped surface ∪ observed cells (a new decoder
+  can't ship invisibly); added a 7th cell-state `LABEL_CONFOUNDED` (oxacillin×S.aureus, unreliable mecA
+  surrogate); `NO_FREE_PHENOTYPE_SOURCE` is now surface-driven. Honest per-cell tier + no aggregate headline
+  preserved. Writes `wiki/decoder_validation_report_card.{md,json}`. Current card: 25 cells (6 SCORED /
+  4 NOT_CENSUSED / 1 UNDERPOWERED / 2 ABSTAINS_BY_DESIGN / 1 LABEL_CONFOUNDED / 11 NO_FREE_PHENOTYPE_SOURCE).
+
 ## [Unreleased] — intron-aware multi-HSP codon mapping (engine)
 
 - **`observed_substitutions` (the shared target-site codon-mapper) is now INTRON-AWARE.** It stitches the
