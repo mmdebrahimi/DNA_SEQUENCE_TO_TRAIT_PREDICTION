@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-06-10
+# Decoder-suite provenance-disjoint validation report card — 2026-06-11
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -20,10 +20,10 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 
 | state | cells |
 |---|---|
-| `SCORED` | 6 |
+| `SCORED` | 7 |
 | `UNDERPOWERED` | 1 |
 | `ABSTAINS_BY_DESIGN` | 2 |
-| `NOT_CENSUSED` | 4 |
+| `NOT_CENSUSED` | 3 |
 | `LABEL_CONFOUNDED` | 1 |
 | `NO_FREE_PHENOTYPE_SOURCE` | 11 |
 
@@ -47,7 +47,7 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | klebsiella | ceftriaxone | `SCORED` | 0.95 | 1.0 | 0.9 | 60 | TP30 FP3 TN27 FN0 |
 | klebsiella | ciprofloxacin | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | TP29 FP1 TN29 FN1 |
 | klebsiella | gentamicin | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | TP28 FP2 TN28 FN2 |
-| klebsiella | meropenem | `NOT_CENSUSED` | — | — | — | — | bacterial + census-able; no provenance census yet |
+| klebsiella | meropenem | `SCORED` | 0.683 | 0.467 | 0.9 | 60 | TP14 FP3 TN27 FN16 |
 | klebsiella | tetracycline | `SCORED` | 0.883 | 0.8 | 0.967 | 60 | TP24 FP1 TN29 FN6 |
 | plasmodium_falciparum | artemisinin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
 | plasmodium_falciparum | artesunate | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |

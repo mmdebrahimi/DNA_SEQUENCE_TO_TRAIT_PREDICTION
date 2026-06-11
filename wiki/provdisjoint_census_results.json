@@ -2,14 +2,88 @@
   "_schema": "provdisjoint-census-results-v1",
   "_doc": "Machine-readable powering facts from scripts/ncbi_pd_provenance_census.py (Stage-1, no-model). The census prints to stdout only; this sidecar persists its verdicts so the report card can read powering without re-streaming NCBI-PD metadata. Append/update per census run. min_per_class=20 (the Stage-2 powering bar).",
   "min_per_class": 20,
-  "ecosystem_excluded": ["narms", "genometrakr", "pulsenet", "cdc", "centers for disease", "fda", "food and drug", "usda", "national antimicrobial"],
+  "ecosystem_excluded": [
+    "narms",
+    "genometrakr",
+    "pulsenet",
+    "cdc",
+    "centers for disease",
+    "fda",
+    "food and drug",
+    "usda",
+    "national antimicrobial"
+  ],
   "results": [
-    {"organism": "Escherichia_coli_Shigella", "drug": "ciprofloxacin", "other_R": 1262, "other_S": 3486, "powered": true, "date": "2026-06-10", "source_action_row": 65},
-    {"organism": "Klebsiella", "drug": "ciprofloxacin", "other_R": 404, "other_S": 277, "powered": true, "date": "2026-06-10", "source_action_row": 60},
-    {"organism": "Klebsiella", "drug": "ceftriaxone", "other_R": 505, "other_S": 410, "powered": true, "date": "2026-06-10", "source_action_row": 66},
-    {"organism": "Klebsiella", "drug": "tetracycline", "other_R": 182, "other_S": 132, "powered": true, "date": "2026-06-10", "source_action_row": 66},
-    {"organism": "Klebsiella", "drug": "gentamicin", "other_R": 317, "other_S": 339, "powered": true, "date": "2026-06-10", "source_action_row": 66},
-    {"organism": "Campylobacter", "drug": "ciprofloxacin", "other_R": 33, "other_S": 130, "powered": true, "date": "2026-06-10", "source_action_row": 60},
-    {"organism": "Salmonella", "drug": "ciprofloxacin", "other_R": 4, "other_S": 87, "powered": false, "date": "2026-06-10", "source_action_row": 60}
+    {
+      "organism": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "other_R": 33,
+      "other_S": 130,
+      "powered": true,
+      "date": "2026-06-10",
+      "source_action_row": 60
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin",
+      "other_R": 1262,
+      "other_S": 3486,
+      "powered": true,
+      "date": "2026-06-10",
+      "source_action_row": 65
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ceftriaxone",
+      "other_R": 505,
+      "other_S": 410,
+      "powered": true,
+      "date": "2026-06-10",
+      "source_action_row": 66
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ciprofloxacin",
+      "other_R": 404,
+      "other_S": 277,
+      "powered": true,
+      "date": "2026-06-10",
+      "source_action_row": 60
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "gentamicin",
+      "other_R": 317,
+      "other_S": 339,
+      "powered": true,
+      "date": "2026-06-10",
+      "source_action_row": 66
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "meropenem",
+      "other_R": 236,
+      "other_S": 440,
+      "powered": true,
+      "date": "2026-06-10"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "tetracycline",
+      "other_R": 182,
+      "other_S": 132,
+      "powered": true,
+      "date": "2026-06-10",
+      "source_action_row": 66
+    },
+    {
+      "organism": "Salmonella",
+      "drug": "ciprofloxacin",
+      "other_R": 4,
+      "other_S": 87,
+      "powered": false,
+      "date": "2026-06-10",
+      "source_action_row": 60
+    }
   ]
 }

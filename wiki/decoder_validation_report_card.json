@@ -1,13 +1,13 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-06-10",
+  "date": "2026-06-11",
   "honest_tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution); NOT external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
     "ABSTAINS_BY_DESIGN": 2,
-    "SCORED": 6,
+    "SCORED": 7,
     "NO_FREE_PHENOTYPE_SOURCE": 11,
-    "NOT_CENSUSED": 4,
+    "NOT_CENSUSED": 3,
     "UNDERPOWERED": 1,
     "LABEL_CONFOUNDED": 1
   },
@@ -156,8 +156,17 @@
     {
       "organism": "klebsiella",
       "drug": "meropenem",
-      "state": "NOT_CENSUSED",
-      "note": "bacterial + census-able; no provenance census yet"
+      "state": "SCORED",
+      "acc": 0.683,
+      "sens": 0.467,
+      "spec": 0.9,
+      "n": 60,
+      "tp": 14,
+      "fp": 3,
+      "tn": 27,
+      "fn": 16,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_klebsiella_merop_2026-06-10.json"
     },
     {
       "organism": "klebsiella",
