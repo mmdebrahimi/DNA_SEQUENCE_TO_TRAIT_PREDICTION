@@ -1,0 +1,37 @@
+{
+  "_schema": "provenance-disjoint-validation-v1",
+  "date": "2026-06-12",
+  "organism": "Escherichia_coli_Shigella",
+  "amrfinder_organism": "Escherichia",
+  "drug": "ceftriaxone",
+  "registry_organism": "Escherichia_coli_Shigella",
+  "n_selected": 60,
+  "n_scored": 60,
+  "independence_tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+  "leakage_control": "all selected accessions are FRESH \u2014 excluded 859 accessions from 33 prior cohorts via the accession manifest (exact-self identity; excluded every cohort EXCEPT escherichia_coli_shigella_provdisjoint_ceftriaxone)",
+  "manifest_complete": true,
+  "manifest_degraded": false,
+  "manifest_warnings": [],
+  "ecosystem_excluded": [
+    "narms",
+    "genometrakr",
+    "pulsenet",
+    "cdc",
+    "centers for disease",
+    "fda",
+    "food and drug",
+    "usda",
+    "national antimicrobial"
+  ],
+  "metrics": {
+    "n_scored": 60,
+    "tp": 29,
+    "fp": 1,
+    "tn": 29,
+    "fn": 1,
+    "abstain": 0,
+    "acc": 0.967,
+    "sens": 0.967,
+    "spec": 0.967
+  }
+}

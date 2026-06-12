@@ -75,6 +75,77 @@
     },
     {
       "organism": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone",
+      "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
+      "raw_N": 60,
+      "raw_sens": 0.967,
+      "raw_spec": 0.967,
+      "raw_tp": 29,
+      "raw_fp": 1,
+      "raw_tn": 29,
+      "raw_fn": 1,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 23,
+          "effective_lineage_N_S": 25,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.857,
+              1.0
+            ],
+            "sens_eff_n": 23,
+            "spec": 0.96,
+            "spec_ci": [
+              0.805,
+              0.993
+            ],
+            "spec_eff_n": 25,
+            "tp": 23,
+            "fp": 1,
+            "tn": 24,
+            "fn": 0,
+            "n_clusters_R": 23,
+            "n_clusters_S": 25,
+            "n_discordant": 1,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 11,
+          "effective_lineage_N_S": 17,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.741,
+              1.0
+            ],
+            "sens_eff_n": 11,
+            "spec": 1.0,
+            "spec_ci": [
+              0.816,
+              1.0
+            ],
+            "spec_eff_n": 17,
+            "tp": 11,
+            "fp": 0,
+            "tn": 17,
+            "fn": 0,
+            "n_clusters_R": 11,
+            "n_clusters_S": 17,
+            "n_discordant": 3,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "limited (8-14 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
       "drug": "ciprofloxacin",
       "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
       "raw_N": 60,
