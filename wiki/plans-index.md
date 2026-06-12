@@ -425,3 +425,14 @@
 - Steps amended post-/brainstorm (audit-notes only) — re-run /technical-plan before /execute-plan to fold C1/C2/M1/M2 into the Implementation Steps.
 
 ---
+
+## [plan_file: Clonality_Disclosure_Layer_Plan/] 2026-06-11
+**Status:** candidate
+**Summary:** Add a lineage-disclosure layer to the provdisjoint report card — per-cell raw_N + effective_lineage_N@{0.001,0.005} + cluster-weighted sens/spec (Wilson CI + effective-N) + graded lineage annotation + reframed honest tier — because the report-card metrics are clonality-inflated (every SCORED R class <20 effective lineages; meropenem FN was one clone from one BioProject). Disclose, do NOT hard-dedup-and-demote.
+**Key decisions:**
+- Whole-cohort greedy-representative clustering (chaining-resistant), NOT single-linkage; mixed-label clusters -> DISCORDANT category, never majority-voted.
+- Cluster-weighted sens/spec MUST render with Wilson CI + effective-N (point estimate alone is a honesty inversion).
+- Genome completeness-gate + partial-cohort flag; canonical join key across the 3 sidecars; recompute with original rule-path args + assert raw reconciles.
+- Probe×2 + brainstorm (Claude-only, codex hook-blocked) vetted; toolkit-validated check=clean/waves=clean.
+
+---
