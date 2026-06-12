@@ -124,6 +124,18 @@ def test_weighted_raw_vs_weighted_divergence():
     assert c["sens"] == 0.5 and c["tp"] == 1 and c["fn"] == 1
 
 
+def test_weighted_missing_pred_defaults_to_abstain():
+    # A member with NO entry in preds is treated as ABSTAIN (preds.get default).
+    # The S lineage has no prediction at all -> whole cluster abstains, not scored.
+    preds = {"r0": "R"}  # s0 missing entirely
+    labels = {"r0": 1, "s0": 0}
+    clusters = {"r0": 0, "s0": 1}
+    c = cluster_weighted_confusion(preds, labels, clusters)
+    assert c["tp"] == 1 and c["n_clusters_S"] == 1
+    # the S cluster had only a missing->ABSTAIN member -> excluded from the matrix
+    assert c["n_cluster_abstain"] == 1 and c["tn"] == 0 and c["spec"] is None
+
+
 # --------------------------------------------------------------------------- #
 # wilson_ci (C3)
 # --------------------------------------------------------------------------- #
@@ -161,6 +173,16 @@ def test_effective_lineage_n_excludes_discordant():
     clusters = {"a": 0, "b": 0}  # one discordant cluster
     assert effective_lineage_n(clusters, labels, "R") == 0
     assert effective_lineage_n(clusters, labels, "S") == 0
+
+
+def test_effective_lineage_n_normalizes_cls_arg():
+    # cls may arrive as int 1/0 or lowercase "r"/"s" — all normalize to the same count.
+    labels = {"r0": 1, "r1": 1, "s0": 0}
+    clusters = {"r0": 0, "r1": 0, "s0": 1}  # 1 R lineage, 1 S lineage
+    assert effective_lineage_n(clusters, labels, 1) == 1
+    assert effective_lineage_n(clusters, labels, "r") == 1
+    assert effective_lineage_n(clusters, labels, 0) == 1
+    assert effective_lineage_n(clusters, labels, "s") == 1
 
 
 def test_cluster_members_sorted():

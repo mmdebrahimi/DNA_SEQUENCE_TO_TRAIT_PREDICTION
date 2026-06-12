@@ -108,6 +108,16 @@ def test_reconcile_raises_on_mismatch(tmp_path, monkeypatch):
         m.reconcile_raw_metrics(selected, tmp_path, "glob", "cipro", "Org", bad_artifact)
 
 
+def test_reconcile_skips_accession_with_no_run_dir(tmp_path, monkeypatch):
+    # An accession whose _run_dir resolves to None is skipped (not scored), not crashed.
+    selected = {"a": 1, "b": 1}
+    monkeypatch.setattr(m, "_run_dir", lambda acc, own, glob: None if acc == "b" else own / acc)
+    monkeypatch.setattr(m, "call_resistance", lambda mt, drug, organism=None, **kw: {"prediction": "R"})
+    artifact_metrics = {"tp": 1, "fp": 0, "tn": 0, "fn": 0, "sens": 1.0, "spec": None, "n_scored": 1}
+    raw, preds = m.reconcile_raw_metrics(selected, tmp_path, "glob", "cipro", "Org", artifact_metrics)
+    assert raw["n_scored"] == 1 and preds == {"a": "R"}  # "b" skipped entirely
+
+
 # --------------------------------------------------------------------------- #
 # pure metric assembly
 # --------------------------------------------------------------------------- #
@@ -189,3 +199,32 @@ def test_sidecar_roundtrip(tmp_path):
     m.write_sidecar(sc, p)
     reloaded = m.load_sidecar(p)
     assert reloaded["cells"][0]["raw_N"] == 60
+
+
+def test_load_sidecar_malformed_returns_fresh(tmp_path):
+    # A corrupt sidecar must not crash a re-run — it falls back to a fresh skeleton.
+    p = tmp_path / "lineage.json"
+    p.write_text("{ this is not json", encoding="utf-8")
+    sc = m.load_sidecar(p)
+    assert sc["_schema"] == m.SCHEMA and sc["cells"] == []
+
+
+def test_load_sidecar_existing_without_cells_key(tmp_path):
+    # A valid JSON missing the "cells" key gets it defaulted (setdefault path).
+    p = tmp_path / "lineage.json"
+    p.write_text(json.dumps({"_schema": m.SCHEMA, "date": "2026-06-11"}), encoding="utf-8")
+    sc = m.load_sidecar(p)
+    assert sc["cells"] == []
+
+
+# --------------------------------------------------------------------------- #
+# process_cohort guard paths (no Docker / network: only the early-exit branches)
+# --------------------------------------------------------------------------- #
+def test_process_cohort_no_artifact_raises(tmp_path, monkeypatch):
+    """A provdisjoint cohort dir with no committed validation JSON raises FileNotFoundError
+    BEFORE any Mash/genome work (the artifact is the reconciliation source of truth — M4)."""
+    cd = tmp_path / "klebsiella_provdisjoint_ciprofloxacin"
+    cd.mkdir()
+    monkeypatch.setattr(m, "find_artifact", lambda slug, drug: None)
+    with pytest.raises(FileNotFoundError):
+        m.process_cohort(cd, use_docker=False)

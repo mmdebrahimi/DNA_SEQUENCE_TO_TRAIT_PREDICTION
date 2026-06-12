@@ -193,6 +193,39 @@ def test_build_lineage_block_states():
     assert sc["status"] == "scored" and sc["effective_lineage_N"]["0.005"] == {"R": 2, "S": 8}
 
 
+def test_build_lineage_block_unreconciled_not_partial_is_not_computed():
+    """A cell that didn't emit a tier but is NOT partial (e.g. reconcile failed) -> not_computed,
+    never 'incomplete' (incomplete is reserved for genome-completeness gaps)."""
+    blk = mod.build_lineage_block({"partial": False, "lineage_tier_emitted": False, "raw_N": 60,
+                                   "n_genomes_missing": 0})
+    assert blk["status"] == "not_computed" and blk["raw_N"] == 60
+
+
+def test_load_lineage_metrics_reads_and_keys_by_canonical(tmp_path, monkeypatch):
+    wiki = tmp_path / "wiki"
+    wiki.mkdir()
+    (wiki / mod.LINEAGE_SIDECAR).write_text(json.dumps({
+        "_schema": "provdisjoint-lineage-metrics-v1",
+        "cells": [{"organism": "Klebsiella", "drug": "Ciprofloxacin", "raw_N": 60}],
+    }), encoding="utf-8")
+    monkeypatch.setattr(mod, "WIKI", wiki)
+    got = mod.load_lineage_metrics()
+    assert got[("klebsiella", "ciprofloxacin")]["raw_N"] == 60  # canonical-keyed
+
+
+def test_load_lineage_metrics_absent_is_empty(tmp_path, monkeypatch):
+    monkeypatch.setattr(mod, "WIKI", tmp_path)  # no sidecar on disk
+    assert mod.load_lineage_metrics() == {}
+
+
+def test_load_lineage_metrics_malformed_is_empty(tmp_path, monkeypatch):
+    wiki = tmp_path / "wiki"
+    wiki.mkdir()
+    (wiki / mod.LINEAGE_SIDECAR).write_text("{ not json", encoding="utf-8")
+    monkeypatch.setattr(mod, "WIKI", wiki)
+    assert mod.load_lineage_metrics() == {}  # malformed must not break the read-only roll-up
+
+
 def test_main_renders_lineage_columns_with_ci(monkeypatch, tmp_path):
     wiki = _redirect_io(monkeypatch, tmp_path)
     (wiki / "provenance_disjoint_validation_kleb_cipro_2026-06-10.json").write_text(json.dumps({

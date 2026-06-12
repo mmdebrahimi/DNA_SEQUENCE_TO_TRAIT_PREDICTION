@@ -169,3 +169,12 @@
 **Lesson:** When /save-plan stamps structural amendments onto a plan, the executable Steps and the plan's actual intent DIVERGE — either re-run /technical-plan to regenerate Steps from the amended design, or have the executor treat Steps + amendments as one spec AND say so explicitly (and never fan out to parallel worktree agents, which see only the literal Steps). Separately: any leakage/exclusion list that enumerates members by hand under-covers as the set grows — drive it from a data manifest with exact-identity matching + fail-closed loading.
 
 ---
+
+## [plan_file: Clonality_Disclosure_Layer_Plan] Executed 2026-06-11
+**Mode:** sequential (4 waves; linear data flow 1->2->3->4) | **Result:** All 4 steps completed
+**PRs:** branches merged locally
+**Salience:** NONE
+**Modules:** dna_decode/eval/clonality.py (new), scripts/compute_lineage_metrics.py (new) + dna_decode/data/cell_key.py (new), scripts/build_validation_report_card.py (lineage consumption), tests + CLAUDE.md docs
+**Notable:** Execution matched plan. 1000 -> 1043 passed, 0 regressions (baseline/final taken with tests/test_models_foundation.py ignored — pre-existing torch OSError WinError 1455 paging-file fault on this host). Docker Mash step (compute_lineage_metrics.main) deferred to manual verification per plan; math validated via pure-helper unit tests + an M4 reconcile spot-check against the real klebsiella_provdisjoint_ciprofloxacin cohort (recomputed 29/1/29/1 == committed artifact).
+
+---
