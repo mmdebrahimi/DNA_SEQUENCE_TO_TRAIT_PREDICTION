@@ -1,6 +1,6 @@
 {
   "_schema": "provdisjoint-lineage-metrics-v1",
-  "date": "2026-06-11",
+  "date": "2026-06-12",
   "cells": [
     {
       "organism": "Campylobacter",
@@ -146,6 +146,77 @@
     },
     {
       "organism": "Klebsiella",
+      "drug": "ceftriaxone",
+      "cohort": "klebsiella_provdisjoint_ceftriaxone",
+      "raw_N": 60,
+      "raw_sens": 1.0,
+      "raw_spec": 0.9,
+      "raw_tp": 30,
+      "raw_fp": 3,
+      "raw_tn": 27,
+      "raw_fn": 0,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 21,
+          "effective_lineage_N_S": 30,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.845,
+              1.0
+            ],
+            "sens_eff_n": 21,
+            "spec": 0.9,
+            "spec_ci": [
+              0.744,
+              0.965
+            ],
+            "spec_eff_n": 30,
+            "tp": 21,
+            "fp": 3,
+            "tn": 27,
+            "fn": 0,
+            "n_clusters_R": 21,
+            "n_clusters_S": 30,
+            "n_discordant": 0,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 16,
+          "effective_lineage_N_S": 21,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.806,
+              1.0
+            ],
+            "sens_eff_n": 16,
+            "spec": 0.95,
+            "spec_ci": [
+              0.764,
+              0.991
+            ],
+            "spec_eff_n": 20,
+            "tp": 16,
+            "fp": 1,
+            "tn": 19,
+            "fn": 0,
+            "n_clusters_R": 16,
+            "n_clusters_S": 21,
+            "n_discordant": 2,
+            "n_cluster_abstain": 1
+          }
+        }
+      },
+      "lineage_grade": "moderate (>=15 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Klebsiella",
       "drug": "ciprofloxacin",
       "cohort": "klebsiella_provdisjoint_ciprofloxacin",
       "raw_N": 60,
@@ -217,6 +288,77 @@
     },
     {
       "organism": "Klebsiella",
+      "drug": "gentamicin",
+      "cohort": "klebsiella_provdisjoint_gentamicin",
+      "raw_N": 60,
+      "raw_sens": 0.933,
+      "raw_spec": 0.933,
+      "raw_tp": 28,
+      "raw_fp": 2,
+      "raw_tn": 28,
+      "raw_fn": 2,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 16,
+          "effective_lineage_N_S": 13,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.806,
+              1.0
+            ],
+            "sens_eff_n": 16,
+            "spec": 0.923,
+            "spec_ci": [
+              0.667,
+              0.986
+            ],
+            "spec_eff_n": 13,
+            "tp": 16,
+            "fp": 1,
+            "tn": 12,
+            "fn": 0,
+            "n_clusters_R": 16,
+            "n_clusters_S": 13,
+            "n_discordant": 2,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 11,
+          "effective_lineage_N_S": 7,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.741,
+              1.0
+            ],
+            "sens_eff_n": 11,
+            "spec": 0.857,
+            "spec_ci": [
+              0.487,
+              0.974
+            ],
+            "spec_eff_n": 7,
+            "tp": 11,
+            "fp": 1,
+            "tn": 6,
+            "fn": 0,
+            "n_clusters_R": 11,
+            "n_clusters_S": 7,
+            "n_discordant": 2,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "limited (8-14 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Klebsiella",
       "drug": "meropenem",
       "cohort": "klebsiella_provdisjoint_meropenem",
       "raw_N": 60,
@@ -284,6 +426,77 @@
         }
       },
       "lineage_grade": "scarce (3-7 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "tetracycline",
+      "cohort": "klebsiella_provdisjoint_tetracycline",
+      "raw_N": 60,
+      "raw_sens": 0.8,
+      "raw_spec": 0.967,
+      "raw_tp": 24,
+      "raw_fp": 1,
+      "raw_tn": 29,
+      "raw_fn": 6,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 24,
+          "effective_lineage_N_S": 28,
+          "cluster_weighted": {
+            "sens": 0.833,
+            "sens_ci": [
+              0.641,
+              0.933
+            ],
+            "sens_eff_n": 24,
+            "spec": 0.964,
+            "spec_ci": [
+              0.823,
+              0.994
+            ],
+            "spec_eff_n": 28,
+            "tp": 20,
+            "fp": 1,
+            "tn": 27,
+            "fn": 4,
+            "n_clusters_R": 24,
+            "n_clusters_S": 28,
+            "n_discordant": 0,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 19,
+          "effective_lineage_N_S": 27,
+          "cluster_weighted": {
+            "sens": 0.842,
+            "sens_ci": [
+              0.624,
+              0.945
+            ],
+            "sens_eff_n": 19,
+            "spec": 0.963,
+            "spec_ci": [
+              0.817,
+              0.993
+            ],
+            "spec_eff_n": 27,
+            "tp": 16,
+            "fp": 1,
+            "tn": 26,
+            "fn": 3,
+            "n_clusters_R": 19,
+            "n_clusters_S": 27,
+            "n_discordant": 1,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "moderate (>=15 effective lineages)",
       "lineage_tier_emitted": true
     }
   ]

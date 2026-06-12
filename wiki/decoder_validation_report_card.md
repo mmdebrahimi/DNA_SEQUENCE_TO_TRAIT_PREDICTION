@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-06-11
+# Decoder-suite provenance-disjoint validation report card — 2026-06-12
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -65,11 +65,11 @@ Raw sens/spec counts one vote per ISOLATE; clones inflate it. Below: lineage-eff
 |---|---|---|---|---|---|---|---|---|
 | campylobacter | ciprofloxacin | 40 | 16/17 | 15/14 | 1.0 [0.796–1.0] (n=15) | 1.0 [0.785–1.0] (n=14) | 0 | moderate (>=15 effective lineages) |
 | escherichia_coli_shigella | ciprofloxacin | 60 | 14/27 | 4/21 | 0.5 [0.15–0.85] (n=4) | 0.8 [0.584–0.919] (n=20) | 1 | scarce (3-7 effective lineages) |
-| klebsiella | ceftriaxone | — | — | — | — | — | — | lineage: not computed |
+| klebsiella | ceftriaxone | 60 | 21/30 | 16/21 | 1.0 [0.806–1.0] (n=16) | 0.95 [0.764–0.991] (n=20) | 2 | moderate (>=15 effective lineages) |
 | klebsiella | ciprofloxacin | 60 | 9/23 | 2/18 | 0.5 [0.095–0.905] (n=2) | 1.0 [0.824–1.0] (n=18) | 1 | clonal (<3 effective lineages) |
-| klebsiella | gentamicin | — | — | — | — | — | — | lineage: not computed |
+| klebsiella | gentamicin | 60 | 16/13 | 11/7 | 1.0 [0.741–1.0] (n=11) | 0.857 [0.487–0.974] (n=7) | 2 | limited (8-14 effective lineages) |
 | klebsiella | meropenem | 60 | 14/23 | 6/21 | 1.0 [0.61–1.0] (n=6) | 0.952 [0.773–0.992] (n=21) | 4 | scarce (3-7 effective lineages) |
-| klebsiella | tetracycline | — | — | — | — | — | — | lineage: not computed |
+| klebsiella | tetracycline | 60 | 24/28 | 19/27 | 0.842 [0.624–0.945] (n=19) | 0.963 [0.817–0.993] (n=27) | 1 | moderate (>=15 effective lineages) |
 
 ## Provenance
 

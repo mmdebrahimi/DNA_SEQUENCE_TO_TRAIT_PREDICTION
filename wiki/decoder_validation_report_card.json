@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-06-11",
+  "date": "2026-06-12",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -217,7 +217,51 @@
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json",
       "lineage": {
-        "status": "not_computed"
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 21,
+            "S": 30
+          },
+          "0.005": {
+            "R": 16,
+            "S": 21
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.845,
+              1.0
+            ],
+            "sens_eff_n": 21,
+            "spec": 0.9,
+            "spec_ci": [
+              0.744,
+              0.965
+            ],
+            "spec_eff_n": 30,
+            "n_discordant": 0
+          },
+          "0.005": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.806,
+              1.0
+            ],
+            "sens_eff_n": 16,
+            "spec": 0.95,
+            "spec_ci": [
+              0.764,
+              0.991
+            ],
+            "spec_eff_n": 20,
+            "n_discordant": 2
+          }
+        },
+        "grade": "moderate (>=15 effective lineages)"
       }
     },
     {
@@ -297,7 +341,51 @@
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json",
       "lineage": {
-        "status": "not_computed"
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 16,
+            "S": 13
+          },
+          "0.005": {
+            "R": 11,
+            "S": 7
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.806,
+              1.0
+            ],
+            "sens_eff_n": 16,
+            "spec": 0.923,
+            "spec_ci": [
+              0.667,
+              0.986
+            ],
+            "spec_eff_n": 13,
+            "n_discordant": 2
+          },
+          "0.005": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.741,
+              1.0
+            ],
+            "sens_eff_n": 11,
+            "spec": 0.857,
+            "spec_ci": [
+              0.487,
+              0.974
+            ],
+            "spec_eff_n": 7,
+            "n_discordant": 2
+          }
+        },
+        "grade": "limited (8-14 effective lineages)"
       }
     },
     {
@@ -377,7 +465,51 @@
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json",
       "lineage": {
-        "status": "not_computed"
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 24,
+            "S": 28
+          },
+          "0.005": {
+            "R": 19,
+            "S": 27
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 0.833,
+            "sens_ci": [
+              0.641,
+              0.933
+            ],
+            "sens_eff_n": 24,
+            "spec": 0.964,
+            "spec_ci": [
+              0.823,
+              0.994
+            ],
+            "spec_eff_n": 28,
+            "n_discordant": 0
+          },
+          "0.005": {
+            "sens": 0.842,
+            "sens_ci": [
+              0.624,
+              0.945
+            ],
+            "sens_eff_n": 19,
+            "spec": 0.963,
+            "spec_ci": [
+              0.817,
+              0.993
+            ],
+            "spec_eff_n": 27,
+            "n_discordant": 1
+          }
+        },
+        "grade": "moderate (>=15 effective lineages)"
       }
     },
     {
