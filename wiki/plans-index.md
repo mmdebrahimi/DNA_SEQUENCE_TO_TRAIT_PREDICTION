@@ -427,7 +427,7 @@
 ---
 
 ## [plan_file: Clonality_Disclosure_Layer_Plan/] 2026-06-11
-**Status:** candidate
+**Status:** executed (archived to executed_plans/; commit 6837836; tests 1000→1053, 0 regressions; Docker Mash run deferred to manual verification)
 **Summary:** Add a lineage-disclosure layer to the provdisjoint report card — per-cell raw_N + effective_lineage_N@{0.001,0.005} + cluster-weighted sens/spec (Wilson CI + effective-N) + graded lineage annotation + reframed honest tier — because the report-card metrics are clonality-inflated (every SCORED R class <20 effective lineages; meropenem FN was one clone from one BioProject). Disclose, do NOT hard-dedup-and-demote.
 **Key decisions:**
 - Whole-cohort greedy-representative clustering (chaining-resistant), NOT single-linkage; mixed-label clusters -> DISCORDANT category, never majority-voted.
