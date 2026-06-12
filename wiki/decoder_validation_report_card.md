@@ -20,8 +20,7 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 
 | state | cells |
 |---|---|
-| `SCORED` | 9 |
-| `POWERED_UNSCORED` | 1 |
+| `SCORED` | 10 |
 | `UNDERPOWERED` | 1 |
 | `ABSTAINS_BY_DESIGN` | 2 |
 | `LABEL_CONFOUNDED` | 1 |
@@ -40,7 +39,7 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | escherichia_coli_shigella | ceftriaxone | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | TP29 FP1 TN29 FN1 |
 | escherichia_coli_shigella | ciprofloxacin | `SCORED` | 0.817 | 0.933 | 0.7 | 60 | TP28 FP9 TN21 FN2 |
 | escherichia_coli_shigella | gentamicin | `SCORED` | 0.95 | 0.9 | 1.0 | 60 | TP27 FP0 TN30 FN3 |
-| escherichia_coli_shigella | tetracycline | `POWERED_UNSCORED` | — | — | — | — | censused 1789R/2630S provenance-disjoint (>=MIN/class); not yet scored |
+| escherichia_coli_shigella | tetracycline | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | TP28 FP2 TN28 FN2 |
 | influenza_a | oseltamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
 | influenza_a | peramivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
 | influenza_a | zanamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
@@ -67,6 +66,7 @@ Raw sens/spec counts one vote per ISOLATE; clones inflate it. Below: lineage-eff
 | escherichia_coli_shigella | ceftriaxone | 60 | 23/25 | 11/17 | 1.0 [0.741–1.0] (n=11) | 1.0 [0.816–1.0] (n=17) | 3 | limited (8-14 effective lineages) |
 | escherichia_coli_shigella | ciprofloxacin | 60 | 14/27 | 4/21 | 0.5 [0.15–0.85] (n=4) | 0.8 [0.584–0.919] (n=20) | 1 | scarce (3-7 effective lineages) |
 | escherichia_coli_shigella | gentamicin | 60 | 15/23 | 5/9 | 0.6 [0.231–0.882] (n=5) | 1.0 [0.701–1.0] (n=9) | 4 | scarce (3-7 effective lineages) |
+| escherichia_coli_shigella | tetracycline | 60 | 23/26 | 17/19 | 0.882 [0.657–0.967] (n=17) | 1.0 [0.832–1.0] (n=19) | 5 | moderate (>=15 effective lineages) |
 | klebsiella | ceftriaxone | 60 | 21/30 | 16/21 | 1.0 [0.806–1.0] (n=16) | 0.95 [0.764–0.991] (n=20) | 2 | moderate (>=15 effective lineages) |
 | klebsiella | ciprofloxacin | 60 | 9/23 | 2/18 | 0.5 [0.095–0.905] (n=2) | 1.0 [0.824–1.0] (n=18) | 1 | clonal (<3 effective lineages) |
 | klebsiella | gentamicin | 60 | 16/13 | 11/7 | 1.0 [0.741–1.0] (n=11) | 0.857 [0.487–0.974] (n=7) | 2 | limited (8-14 effective lineages) |

@@ -5,9 +5,8 @@
   "no_aggregate_headline": true,
   "state_counts": {
     "ABSTAINS_BY_DESIGN": 2,
-    "SCORED": 9,
+    "SCORED": 10,
     "NO_FREE_PHENOTYPE_SOURCE": 11,
-    "POWERED_UNSCORED": 1,
     "UNDERPOWERED": 1,
     "LABEL_CONFOUNDED": 1
   },
@@ -293,8 +292,64 @@
     {
       "organism": "escherichia_coli_shigella",
       "drug": "tetracycline",
-      "state": "POWERED_UNSCORED",
-      "note": "censused 1789R/2630S provenance-disjoint (>=MIN/class); not yet scored"
+      "state": "SCORED",
+      "acc": 0.933,
+      "sens": 0.933,
+      "spec": 0.933,
+      "n": 60,
+      "tp": 28,
+      "fp": 2,
+      "tn": 28,
+      "fn": 2,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_escherichia_coli_shigella_tetra_2026-06-12.json",
+      "lineage": {
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 23,
+            "S": 26
+          },
+          "0.005": {
+            "R": 17,
+            "S": 19
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 0.913,
+            "sens_ci": [
+              0.732,
+              0.976
+            ],
+            "sens_eff_n": 23,
+            "spec": 0.962,
+            "spec_ci": [
+              0.811,
+              0.993
+            ],
+            "spec_eff_n": 26,
+            "n_discordant": 1
+          },
+          "0.005": {
+            "sens": 0.882,
+            "sens_ci": [
+              0.657,
+              0.967
+            ],
+            "sens_eff_n": 17,
+            "spec": 1.0,
+            "spec_ci": [
+              0.832,
+              1.0
+            ],
+            "spec_eff_n": 19,
+            "n_discordant": 5
+          }
+        },
+        "grade": "moderate (>=15 effective lineages)"
+      }
     },
     {
       "organism": "influenza_a",
