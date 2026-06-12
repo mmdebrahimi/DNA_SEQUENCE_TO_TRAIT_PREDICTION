@@ -282,7 +282,8 @@ def write_sidecar(sidecar: dict, path: Path = SIDECAR) -> None:
 # --------------------------------------------------------------------------- #
 def process_cohort(cohort_dir: Path, *, use_docker: bool = True) -> dict:
     """Full per-cohort pipeline: reconcile -> genome gate -> Mash cluster -> cell."""
-    from dna_decode.eval.clonality import greedy_representative_clusters
+    from dna_decode.eval.clonality import greedy_representative_clusters_from_matrix
+    from dna_decode.eval.phylogeny import compute_mash_distances
 
     slug, drug = parse_cohort_dir(cohort_dir.name)
     artifact_path = find_artifact(slug, drug)
@@ -314,8 +315,11 @@ def process_cohort(cohort_dir: Path, *, use_docker: bool = True) -> dict:
                           raw=raw, raw_reconciled=True, partial=True,
                           n_genomes_missing=len(missing), threshold_results=None)
 
+    # ONE Mash sketch+dist per cohort; cluster at every threshold from the same matrix
+    # (avoids redundant Docker invocations — each container spin-up is a churn-corruption risk on this host).
+    dm = compute_mash_distances(present, use_docker=use_docker)
     clusters_by_threshold = {
-        t: greedy_representative_clusters(present, t, use_docker=use_docker) for t in THRESHOLDS
+        t: greedy_representative_clusters_from_matrix(dm, t) for t in THRESHOLDS
     }
     tr = build_threshold_results(preds, selected, clusters_by_threshold)
     return build_cell(organism=organism, drug=a_drug, cohort=cohort_dir.name,

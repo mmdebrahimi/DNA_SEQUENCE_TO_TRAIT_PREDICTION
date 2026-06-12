@@ -2,7 +2,7 @@
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
-> **Honest tier (do NOT inflate):** every SCORED cell is provenance-disjoint (different submitter/lab/country), **NOT** methodology-independent (most submitters use CLSI broth microdilution) and **NOT** external clinical validation. There is deliberately **no aggregate “X% validated” number** — read the grid cell by cell.
+> **Honest tier (do NOT inflate):** every SCORED cell is an isolate-level provenance-disjoint stress test (different submitter/lab/country). The R classes are **clonally dominated** — the raw-isolate sens/spec is inflated by over-sampled clones, so the **Lineage disclosure** table below reports lineage-effective N + cluster-weighted sens/spec (one vote per lineage) with a Wilson CI. It is **NOT** methodology-independent (most submitters use CLSI broth microdilution) and **NOT** lineage-independent external clinical validation. There is deliberately **no aggregate “X% validated” number** — read the grid cell by cell.
 
 ## State legend
 
@@ -57,10 +57,25 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | salmonella | ciprofloxacin | `UNDERPOWERED` | — | — | — | — | censused 4R/87S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | staphylococcus_aureus | oxacillin | `LABEL_CONFOUNDED` | — | — | — | — | phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate) |
 
+## Lineage disclosure (clonality-corrected)
+
+Raw sens/spec counts one vote per ISOLATE; clones inflate it. Below: lineage-effective N (greedy-representative Mash clustering — chaining-resistant, NOT single-linkage) + cluster-weighted sens/spec (one vote per same-label lineage; mixed-label clones are DISCORDANT, never majority-voted) with a 95% Wilson CI. Weighted N is tiny — the CI is the point. Weighted metrics shown at Mash 0.005 (conservative); the JSON carries 0.001 too.
+
+| organism | drug | raw N | eff lineages R/S @.001 | eff lineages R/S @.005 | wtd sens [95% CI] (n) | wtd spec [95% CI] (n) | discordant | grade |
+|---|---|---|---|---|---|---|---|---|
+| campylobacter | ciprofloxacin | 40 | 16/17 | 15/14 | 1.0 [0.796–1.0] (n=15) | 1.0 [0.785–1.0] (n=14) | 0 | moderate (>=15 effective lineages) |
+| escherichia_coli_shigella | ciprofloxacin | 60 | 14/27 | 4/21 | 0.5 [0.15–0.85] (n=4) | 0.8 [0.584–0.919] (n=20) | 1 | scarce (3-7 effective lineages) |
+| klebsiella | ceftriaxone | — | — | — | — | — | — | lineage: not computed |
+| klebsiella | ciprofloxacin | 60 | 9/23 | 2/18 | 0.5 [0.095–0.905] (n=2) | 1.0 [0.824–1.0] (n=18) | 1 | clonal (<3 effective lineages) |
+| klebsiella | gentamicin | — | — | — | — | — | — | lineage: not computed |
+| klebsiella | meropenem | 60 | 14/23 | 6/21 | 1.0 [0.61–1.0] (n=6) | 0.952 [0.773–0.992] (n=21) | 4 | scarce (3-7 effective lineages) |
+| klebsiella | tetracycline | — | — | — | — | — | — | lineage: not computed |
+
 ## Provenance
 
 - Row set: `dna_decode/data/shipped_decoder_surface.py` (deployed-claim surface) ∪ observed cells.
 - SCORED cells: `wiki/provenance_disjoint_validation_*.json` (Stage-2 `provenance_disjoint_validate.py`).
 - Powering: `wiki/provdisjoint_census_results.json` (Stage-1 `ncbi_pd_provenance_census.py`).
 - ABSTAINS: `dna_decode/data/calibrated_amr_rules.json` (EXPRESSION_FLOOR verdicts).
+- Lineage disclosure: `wiki/provdisjoint_lineage_metrics.json` (`scripts/compute_lineage_metrics.py`).
 - Rebuild: `.venv/Scripts/python.exe scripts/build_validation_report_card.py` (read-only roll-up; re-run as cells land).

@@ -1,0 +1,290 @@
+{
+  "_schema": "provdisjoint-lineage-metrics-v1",
+  "date": "2026-06-11",
+  "cells": [
+    {
+      "organism": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "cohort": "campylobacter_provdisjoint_ciprofloxacin",
+      "raw_N": 40,
+      "raw_sens": 1.0,
+      "raw_spec": 1.0,
+      "raw_tp": 20,
+      "raw_fp": 0,
+      "raw_tn": 20,
+      "raw_fn": 0,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 16,
+          "effective_lineage_N_S": 17,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.806,
+              1.0
+            ],
+            "sens_eff_n": 16,
+            "spec": 1.0,
+            "spec_ci": [
+              0.816,
+              1.0
+            ],
+            "spec_eff_n": 17,
+            "tp": 16,
+            "fp": 0,
+            "tn": 17,
+            "fn": 0,
+            "n_clusters_R": 16,
+            "n_clusters_S": 17,
+            "n_discordant": 0,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 15,
+          "effective_lineage_N_S": 14,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.796,
+              1.0
+            ],
+            "sens_eff_n": 15,
+            "spec": 1.0,
+            "spec_ci": [
+              0.785,
+              1.0
+            ],
+            "spec_eff_n": 14,
+            "tp": 15,
+            "fp": 0,
+            "tn": 14,
+            "fn": 0,
+            "n_clusters_R": 15,
+            "n_clusters_S": 14,
+            "n_discordant": 0,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "moderate (>=15 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin",
+      "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
+      "raw_N": 60,
+      "raw_sens": 0.933,
+      "raw_spec": 0.7,
+      "raw_tp": 28,
+      "raw_fp": 9,
+      "raw_tn": 21,
+      "raw_fn": 2,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 14,
+          "effective_lineage_N_S": 27,
+          "cluster_weighted": {
+            "sens": 0.857,
+            "sens_ci": [
+              0.601,
+              0.96
+            ],
+            "sens_eff_n": 14,
+            "spec": 0.704,
+            "spec_ci": [
+              0.515,
+              0.841
+            ],
+            "spec_eff_n": 27,
+            "tp": 12,
+            "fp": 8,
+            "tn": 19,
+            "fn": 2,
+            "n_clusters_R": 14,
+            "n_clusters_S": 27,
+            "n_discordant": 0,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 4,
+          "effective_lineage_N_S": 21,
+          "cluster_weighted": {
+            "sens": 0.5,
+            "sens_ci": [
+              0.15,
+              0.85
+            ],
+            "sens_eff_n": 4,
+            "spec": 0.8,
+            "spec_ci": [
+              0.584,
+              0.919
+            ],
+            "spec_eff_n": 20,
+            "tp": 2,
+            "fp": 4,
+            "tn": 16,
+            "fn": 2,
+            "n_clusters_R": 4,
+            "n_clusters_S": 21,
+            "n_discordant": 1,
+            "n_cluster_abstain": 1
+          }
+        }
+      },
+      "lineage_grade": "scarce (3-7 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ciprofloxacin",
+      "cohort": "klebsiella_provdisjoint_ciprofloxacin",
+      "raw_N": 60,
+      "raw_sens": 0.967,
+      "raw_spec": 0.967,
+      "raw_tp": 29,
+      "raw_fp": 1,
+      "raw_tn": 29,
+      "raw_fn": 1,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 9,
+          "effective_lineage_N_S": 23,
+          "cluster_weighted": {
+            "sens": 0.889,
+            "sens_ci": [
+              0.565,
+              0.98
+            ],
+            "sens_eff_n": 9,
+            "spec": 0.957,
+            "spec_ci": [
+              0.79,
+              0.992
+            ],
+            "spec_eff_n": 23,
+            "tp": 8,
+            "fp": 1,
+            "tn": 22,
+            "fn": 1,
+            "n_clusters_R": 9,
+            "n_clusters_S": 23,
+            "n_discordant": 0,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 2,
+          "effective_lineage_N_S": 18,
+          "cluster_weighted": {
+            "sens": 0.5,
+            "sens_ci": [
+              0.095,
+              0.905
+            ],
+            "sens_eff_n": 2,
+            "spec": 1.0,
+            "spec_ci": [
+              0.824,
+              1.0
+            ],
+            "spec_eff_n": 18,
+            "tp": 1,
+            "fp": 0,
+            "tn": 18,
+            "fn": 1,
+            "n_clusters_R": 2,
+            "n_clusters_S": 18,
+            "n_discordant": 1,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "clonal (<3 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "meropenem",
+      "cohort": "klebsiella_provdisjoint_meropenem",
+      "raw_N": 60,
+      "raw_sens": 0.467,
+      "raw_spec": 0.9,
+      "raw_tp": 14,
+      "raw_fp": 3,
+      "raw_tn": 27,
+      "raw_fn": 16,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 14,
+          "effective_lineage_N_S": 23,
+          "cluster_weighted": {
+            "sens": 0.786,
+            "sens_ci": [
+              0.524,
+              0.924
+            ],
+            "sens_eff_n": 14,
+            "spec": 0.957,
+            "spec_ci": [
+              0.79,
+              0.992
+            ],
+            "spec_eff_n": 23,
+            "tp": 11,
+            "fp": 1,
+            "tn": 22,
+            "fn": 3,
+            "n_clusters_R": 14,
+            "n_clusters_S": 23,
+            "n_discordant": 3,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 6,
+          "effective_lineage_N_S": 21,
+          "cluster_weighted": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.61,
+              1.0
+            ],
+            "sens_eff_n": 6,
+            "spec": 0.952,
+            "spec_ci": [
+              0.773,
+              0.992
+            ],
+            "spec_eff_n": 21,
+            "tp": 6,
+            "fp": 1,
+            "tn": 20,
+            "fn": 0,
+            "n_clusters_R": 6,
+            "n_clusters_S": 21,
+            "n_discordant": 4,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "scarce (3-7 effective lineages)",
+      "lineage_tier_emitted": true
+    }
+  ]
+}

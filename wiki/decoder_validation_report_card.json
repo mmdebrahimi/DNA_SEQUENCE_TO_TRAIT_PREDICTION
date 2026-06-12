@@ -1,7 +1,7 @@
 {
   "_schema": "decoder-validation-report-card-v0",
   "date": "2026-06-11",
-  "honest_tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution); NOT external clinical validation",
+  "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
     "ABSTAINS_BY_DESIGN": 2,
@@ -31,7 +31,54 @@
       "tn": 20,
       "fn": 0,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json"
+      "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json",
+      "lineage": {
+        "status": "scored",
+        "raw_N": 40,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 16,
+            "S": 17
+          },
+          "0.005": {
+            "R": 15,
+            "S": 14
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.806,
+              1.0
+            ],
+            "sens_eff_n": 16,
+            "spec": 1.0,
+            "spec_ci": [
+              0.816,
+              1.0
+            ],
+            "spec_eff_n": 17,
+            "n_discordant": 0
+          },
+          "0.005": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.796,
+              1.0
+            ],
+            "sens_eff_n": 15,
+            "spec": 1.0,
+            "spec_ci": [
+              0.785,
+              1.0
+            ],
+            "spec_eff_n": 14,
+            "n_discordant": 0
+          }
+        },
+        "grade": "moderate (>=15 effective lineages)"
+      }
     },
     {
       "organism": "candida_auris",
@@ -76,7 +123,54 @@
       "tn": 21,
       "fn": 2,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_escherichia_coli_shigella_cipro_2026-06-10.json"
+      "file": "provenance_disjoint_validation_escherichia_coli_shigella_cipro_2026-06-10.json",
+      "lineage": {
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 14,
+            "S": 27
+          },
+          "0.005": {
+            "R": 4,
+            "S": 21
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 0.857,
+            "sens_ci": [
+              0.601,
+              0.96
+            ],
+            "sens_eff_n": 14,
+            "spec": 0.704,
+            "spec_ci": [
+              0.515,
+              0.841
+            ],
+            "spec_eff_n": 27,
+            "n_discordant": 0
+          },
+          "0.005": {
+            "sens": 0.5,
+            "sens_ci": [
+              0.15,
+              0.85
+            ],
+            "sens_eff_n": 4,
+            "spec": 0.8,
+            "spec_ci": [
+              0.584,
+              0.919
+            ],
+            "spec_eff_n": 20,
+            "n_discordant": 1
+          }
+        },
+        "grade": "scarce (3-7 effective lineages)"
+      }
     },
     {
       "organism": "escherichia_coli_shigella",
@@ -121,7 +215,10 @@
       "tn": 27,
       "fn": 0,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json"
+      "file": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json",
+      "lineage": {
+        "status": "not_computed"
+      }
     },
     {
       "organism": "klebsiella",
@@ -136,7 +233,54 @@
       "tn": 29,
       "fn": 1,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_klebsiella_cipro_2026-06-10.json"
+      "file": "provenance_disjoint_validation_klebsiella_cipro_2026-06-10.json",
+      "lineage": {
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 9,
+            "S": 23
+          },
+          "0.005": {
+            "R": 2,
+            "S": 18
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 0.889,
+            "sens_ci": [
+              0.565,
+              0.98
+            ],
+            "sens_eff_n": 9,
+            "spec": 0.957,
+            "spec_ci": [
+              0.79,
+              0.992
+            ],
+            "spec_eff_n": 23,
+            "n_discordant": 0
+          },
+          "0.005": {
+            "sens": 0.5,
+            "sens_ci": [
+              0.095,
+              0.905
+            ],
+            "sens_eff_n": 2,
+            "spec": 1.0,
+            "spec_ci": [
+              0.824,
+              1.0
+            ],
+            "spec_eff_n": 18,
+            "n_discordant": 1
+          }
+        },
+        "grade": "clonal (<3 effective lineages)"
+      }
     },
     {
       "organism": "klebsiella",
@@ -151,7 +295,10 @@
       "tn": 28,
       "fn": 2,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json"
+      "file": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json",
+      "lineage": {
+        "status": "not_computed"
+      }
     },
     {
       "organism": "klebsiella",
@@ -166,7 +313,54 @@
       "tn": 27,
       "fn": 16,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_klebsiella_merop_2026-06-10.json"
+      "file": "provenance_disjoint_validation_klebsiella_merop_2026-06-10.json",
+      "lineage": {
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 14,
+            "S": 23
+          },
+          "0.005": {
+            "R": 6,
+            "S": 21
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 0.786,
+            "sens_ci": [
+              0.524,
+              0.924
+            ],
+            "sens_eff_n": 14,
+            "spec": 0.957,
+            "spec_ci": [
+              0.79,
+              0.992
+            ],
+            "spec_eff_n": 23,
+            "n_discordant": 3
+          },
+          "0.005": {
+            "sens": 1.0,
+            "sens_ci": [
+              0.61,
+              1.0
+            ],
+            "sens_eff_n": 6,
+            "spec": 0.952,
+            "spec_ci": [
+              0.773,
+              0.992
+            ],
+            "spec_eff_n": 21,
+            "n_discordant": 4
+          }
+        },
+        "grade": "scarce (3-7 effective lineages)"
+      }
     },
     {
       "organism": "klebsiella",
@@ -181,7 +375,10 @@
       "tn": 29,
       "fn": 6,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
-      "file": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json"
+      "file": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json",
+      "lineage": {
+        "status": "not_computed"
+      }
     },
     {
       "organism": "plasmodium_falciparum",
