@@ -89,12 +89,14 @@ def test_path_helpers_compose(tmp_path: Path):
 # ---- download_genome happy path ----
 
 
-def test_download_genome_writes_package_and_sentinel(tmp_path: Path):
+def test_download_genome_writes_sentinel_and_reclaims_zip(tmp_path: Path):
+    """The raw package.zip is an intermediate: it MUST be removed after a successful unpack
+    (it leaked 3.9 GB and wedged Docker, 2026-06-12). Only the sentinel marks the cache valid."""
     with patch.object(refseq, "_http_get_with_retry", return_value=_mock_ok_response()):
         out = refseq.download_genome("GCF_000005845.2", tmp_path)
 
     assert out == tmp_path / "GCF_000005845.2"
-    assert (out / "package.zip").exists()
+    assert not (out / "package.zip").exists()  # reclaimed after unpack — no leak
     assert (out / ".complete").exists()
     assert refseq.is_cache_complete(out)
 

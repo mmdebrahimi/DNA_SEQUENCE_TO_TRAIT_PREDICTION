@@ -153,6 +153,12 @@ def download_genome(
     # Wave 1.5: unpack the ZIP into the 3 canonical files
     _unpack_ncbi_datasets_zip(archive_path, cache_path)
 
+    # Reclaim the raw archive — it's an intermediate; the unpacked genome.fna /
+    # annotations.* are what consumers read, and the .complete sentinel marks the
+    # cache valid. Leaving it behind leaked ~5-15 MB/accession (784 stale zips =
+    # 3.9 GB filled C: and wedged Docker, 2026-06-12). Drop it before the sentinel.
+    archive_path.unlink(missing_ok=True)
+
     # Sentinel last → marks atomicity-complete
     _write_atomic(cache_path / ".complete", "")
 
