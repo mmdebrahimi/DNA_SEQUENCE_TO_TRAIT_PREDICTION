@@ -228,3 +228,86 @@ def test_process_cohort_no_artifact_raises(tmp_path, monkeypatch):
     monkeypatch.setattr(m, "find_artifact", lambda slug, drug: None)
     with pytest.raises(FileNotFoundError):
         m.process_cohort(cd, use_docker=False)
+
+
+def _stage_process_cohort_fixture(tmp_path, monkeypatch, *, metrics, preds, missing=()):
+    """Build a process_cohort fixture with everything mocked except the pure math.
+
+    Cohort: a,b (R) + c,d (S). _run_dir/call_resistance/ensure_cohort_genomes are stubbed;
+    find_artifact returns an on-disk JSON whose metrics the caller supplies."""
+    cd = tmp_path / "klebsiella_provdisjoint_ciprofloxacin"
+    (cd / "amrfinder_runs").mkdir(parents=True)
+    (cd / "selected.tsv").write_text("a\tR\nb\tR\nc\tS\nd\tS\n")
+    art = cd / "art.json"
+    art.write_text(json.dumps({"organism": "Klebsiella", "registry_organism": "Klebsiella",
+                               "drug": "ciprofloxacin", "metrics": metrics}))
+    monkeypatch.setattr(m, "find_artifact", lambda slug, drug: art)
+    monkeypatch.setattr(m, "_run_dir", lambda acc, own, glob: own / acc)
+    monkeypatch.setattr(m, "call_resistance", lambda mt, drug, organism=None, **kw: {"prediction": preds[mt.parent.name]})
+    present = {acc: cd / "refseq" / acc / "genome.fna" for acc in preds if acc not in missing}
+    monkeypatch.setattr(m, "ensure_cohort_genomes", lambda sel, root: (present, list(missing)))
+    return cd
+
+
+def test_process_cohort_calls_mash_once_and_clusters_both_thresholds(tmp_path, monkeypatch):
+    """The Mash-once refactor: process_cohort computes ONE distance matrix per cohort and clusters
+    at every threshold from it — NOT one Mash run per threshold."""
+    import numpy as np
+    import dna_decode.eval.phylogeny as phylo
+    from dna_decode.eval.phylogeny import DistanceMatrix
+
+    metrics = {"tp": 2, "fp": 0, "tn": 2, "fn": 0, "sens": 1.0, "spec": 1.0, "n_scored": 4}
+    preds = {"a": "R", "b": "R", "c": "S", "d": "S"}
+    _stage_process_cohort_fixture(tmp_path, monkeypatch, metrics=metrics, preds=preds)
+
+    # a~b are a clone (0.0005); c,d are distinct lineages. R lineages=1, S lineages=2 at both thresholds.
+    sids = ["a", "b", "c", "d"]
+    mat = np.array([[0, .0005, .05, .05], [.0005, 0, .05, .05],
+                    [.05, .05, 0, .05], [.05, .05, .05, 0]], dtype=np.float32)
+    calls = {"n": 0}
+
+    def fake_mash(genomes, *, use_docker=True):
+        calls["n"] += 1
+        return DistanceMatrix(strain_ids=sids, matrix=mat)
+
+    monkeypatch.setattr(phylo, "compute_mash_distances", fake_mash)
+    cell = m.process_cohort(tmp_path / "klebsiella_provdisjoint_ciprofloxacin", use_docker=False)
+
+    assert calls["n"] == 1  # ONE Mash run for the whole cohort, not one per threshold
+    assert cell["lineage_tier_emitted"] is True
+    assert set(cell["thresholds"]) == {"0.001", "0.005"}
+    assert cell["thresholds"]["0.005"]["effective_lineage_N_R"] == 1  # the a~b clone collapses
+    assert cell["thresholds"]["0.005"]["effective_lineage_N_S"] == 2
+    assert cell["lineage_grade"].startswith("clonal")  # 1 R lineage
+
+
+def test_process_cohort_partial_genomes_emits_no_tier(tmp_path, monkeypatch):
+    """A cohort with a missing genome is PARTIAL -> raw + flags, NO lineage tier, NO Mash (M1)."""
+    import dna_decode.eval.phylogeny as phylo
+    metrics = {"tp": 2, "fp": 0, "tn": 2, "fn": 0, "sens": 1.0, "spec": 1.0, "n_scored": 4}
+    preds = {"a": "R", "b": "R", "c": "S", "d": "S"}
+    _stage_process_cohort_fixture(tmp_path, monkeypatch, metrics=metrics, preds=preds, missing=("d",))
+
+    def boom(*a, **k):
+        raise AssertionError("Mash must not run on a partial cohort")
+
+    monkeypatch.setattr(phylo, "compute_mash_distances", boom)
+    cell = m.process_cohort(tmp_path / "klebsiella_provdisjoint_ciprofloxacin", use_docker=False)
+    assert cell["partial"] is True and cell["n_genomes_missing"] == 1
+    assert cell["lineage_tier_emitted"] is False and cell["thresholds"] == {}
+
+
+def test_process_cohort_reconcile_fail_emits_no_tier(tmp_path, monkeypatch):
+    """If recomputed raw disagrees with the artifact (M4), process_cohort returns an unreconciled
+    no-tier cell rather than trusting a weighted number — and never reaches the genome gate / Mash."""
+    import dna_decode.eval.phylogeny as phylo
+    bad_metrics = {"tp": 99, "fp": 0, "tn": 0, "fn": 0, "sens": 1.0, "spec": None, "n_scored": 99}
+    preds = {"a": "R", "b": "R", "c": "S", "d": "S"}
+    _stage_process_cohort_fixture(tmp_path, monkeypatch, metrics=bad_metrics, preds=preds)
+
+    def boom(*a, **k):
+        raise AssertionError("Mash must not run when reconciliation fails")
+
+    monkeypatch.setattr(phylo, "compute_mash_distances", boom)
+    cell = m.process_cohort(tmp_path / "klebsiella_provdisjoint_ciprofloxacin", use_docker=False)
+    assert cell["raw_reconciled"] is False and cell["lineage_tier_emitted"] is False
