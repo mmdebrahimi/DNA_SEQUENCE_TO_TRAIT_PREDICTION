@@ -25,12 +25,36 @@
     },
     {
       "organism": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone",
+      "other_R": 1230,
+      "other_S": 2767,
+      "powered": true,
+      "date": "2026-06-12"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
       "drug": "ciprofloxacin",
       "other_R": 1262,
       "other_S": 3486,
       "powered": true,
       "date": "2026-06-10",
       "source_action_row": 65
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "other_R": 798,
+      "other_S": 3827,
+      "powered": true,
+      "date": "2026-06-12"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "tetracycline",
+      "other_R": 1789,
+      "other_S": 2630,
+      "powered": true,
+      "date": "2026-06-12"
     },
     {
       "organism": "Klebsiella",

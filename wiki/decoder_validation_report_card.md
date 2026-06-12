@@ -21,9 +21,9 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | state | cells |
 |---|---|
 | `SCORED` | 7 |
+| `POWERED_UNSCORED` | 3 |
 | `UNDERPOWERED` | 1 |
 | `ABSTAINS_BY_DESIGN` | 2 |
-| `NOT_CENSUSED` | 3 |
 | `LABEL_CONFOUNDED` | 1 |
 | `NO_FREE_PHENOTYPE_SOURCE` | 11 |
 
@@ -37,10 +37,10 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | candida_auris | fluconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_erg11; no free isolate-level AST source (structural non-cell) |
 | candida_auris | micafungin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_fks1; no free isolate-level AST source (structural non-cell) |
 | candida_auris | voriconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_erg11; no free isolate-level AST source (structural non-cell) |
-| escherichia_coli_shigella | ceftriaxone | `NOT_CENSUSED` | — | — | — | — | bacterial + census-able; no provenance census yet |
+| escherichia_coli_shigella | ceftriaxone | `POWERED_UNSCORED` | — | — | — | — | censused 1230R/2767S provenance-disjoint (>=MIN/class); not yet scored |
 | escherichia_coli_shigella | ciprofloxacin | `SCORED` | 0.817 | 0.933 | 0.7 | 60 | TP28 FP9 TN21 FN2 |
-| escherichia_coli_shigella | gentamicin | `NOT_CENSUSED` | — | — | — | — | bacterial + census-able; no provenance census yet |
-| escherichia_coli_shigella | tetracycline | `NOT_CENSUSED` | — | — | — | — | bacterial + census-able; no provenance census yet |
+| escherichia_coli_shigella | gentamicin | `POWERED_UNSCORED` | — | — | — | — | censused 798R/3827S provenance-disjoint (>=MIN/class); not yet scored |
+| escherichia_coli_shigella | tetracycline | `POWERED_UNSCORED` | — | — | — | — | censused 1789R/2630S provenance-disjoint (>=MIN/class); not yet scored |
 | influenza_a | oseltamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
 | influenza_a | peramivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
 | influenza_a | zanamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |

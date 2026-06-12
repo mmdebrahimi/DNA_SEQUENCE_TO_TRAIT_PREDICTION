@@ -7,7 +7,7 @@
     "ABSTAINS_BY_DESIGN": 2,
     "SCORED": 7,
     "NO_FREE_PHENOTYPE_SOURCE": 11,
-    "NOT_CENSUSED": 3,
+    "POWERED_UNSCORED": 3,
     "UNDERPOWERED": 1,
     "LABEL_CONFOUNDED": 1
   },
@@ -107,8 +107,8 @@
     {
       "organism": "escherichia_coli_shigella",
       "drug": "ceftriaxone",
-      "state": "NOT_CENSUSED",
-      "note": "bacterial + census-able; no provenance census yet"
+      "state": "POWERED_UNSCORED",
+      "note": "censused 1230R/2767S provenance-disjoint (>=MIN/class); not yet scored"
     },
     {
       "organism": "escherichia_coli_shigella",
@@ -175,14 +175,14 @@
     {
       "organism": "escherichia_coli_shigella",
       "drug": "gentamicin",
-      "state": "NOT_CENSUSED",
-      "note": "bacterial + census-able; no provenance census yet"
+      "state": "POWERED_UNSCORED",
+      "note": "censused 798R/3827S provenance-disjoint (>=MIN/class); not yet scored"
     },
     {
       "organism": "escherichia_coli_shigella",
       "drug": "tetracycline",
-      "state": "NOT_CENSUSED",
-      "note": "bacterial + census-able; no provenance census yet"
+      "state": "POWERED_UNSCORED",
+      "note": "censused 1789R/2630S provenance-disjoint (>=MIN/class); not yet scored"
     },
     {
       "organism": "influenza_a",
