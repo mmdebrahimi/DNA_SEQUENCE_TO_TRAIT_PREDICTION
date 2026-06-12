@@ -216,6 +216,77 @@
       "lineage_tier_emitted": true
     },
     {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
+      "raw_N": 60,
+      "raw_sens": 0.9,
+      "raw_spec": 1.0,
+      "raw_tp": 27,
+      "raw_fp": 0,
+      "raw_tn": 30,
+      "raw_fn": 3,
+      "raw_reconciled": true,
+      "partial": false,
+      "n_genomes_missing": 0,
+      "thresholds": {
+        "0.001": {
+          "effective_lineage_N_R": 15,
+          "effective_lineage_N_S": 23,
+          "cluster_weighted": {
+            "sens": 0.867,
+            "sens_ci": [
+              0.621,
+              0.963
+            ],
+            "sens_eff_n": 15,
+            "spec": 1.0,
+            "spec_ci": [
+              0.857,
+              1.0
+            ],
+            "spec_eff_n": 23,
+            "tp": 13,
+            "fp": 0,
+            "tn": 23,
+            "fn": 2,
+            "n_clusters_R": 15,
+            "n_clusters_S": 23,
+            "n_discordant": 2,
+            "n_cluster_abstain": 0
+          }
+        },
+        "0.005": {
+          "effective_lineage_N_R": 5,
+          "effective_lineage_N_S": 9,
+          "cluster_weighted": {
+            "sens": 0.6,
+            "sens_ci": [
+              0.231,
+              0.882
+            ],
+            "sens_eff_n": 5,
+            "spec": 1.0,
+            "spec_ci": [
+              0.701,
+              1.0
+            ],
+            "spec_eff_n": 9,
+            "tp": 3,
+            "fp": 0,
+            "tn": 9,
+            "fn": 2,
+            "n_clusters_R": 5,
+            "n_clusters_S": 9,
+            "n_discordant": 4,
+            "n_cluster_abstain": 0
+          }
+        }
+      },
+      "lineage_grade": "scarce (3-7 effective lineages)",
+      "lineage_tier_emitted": true
+    },
+    {
       "organism": "Klebsiella",
       "drug": "ceftriaxone",
       "cohort": "klebsiella_provdisjoint_ceftriaxone",

@@ -5,9 +5,9 @@
   "no_aggregate_headline": true,
   "state_counts": {
     "ABSTAINS_BY_DESIGN": 2,
-    "SCORED": 8,
+    "SCORED": 9,
     "NO_FREE_PHENOTYPE_SOURCE": 11,
-    "POWERED_UNSCORED": 2,
+    "POWERED_UNSCORED": 1,
     "UNDERPOWERED": 1,
     "LABEL_CONFOUNDED": 1
   },
@@ -231,8 +231,64 @@
     {
       "organism": "escherichia_coli_shigella",
       "drug": "gentamicin",
-      "state": "POWERED_UNSCORED",
-      "note": "censused 798R/3827S provenance-disjoint (>=MIN/class); not yet scored"
+      "state": "SCORED",
+      "acc": 0.95,
+      "sens": 0.9,
+      "spec": 1.0,
+      "n": 60,
+      "tp": 27,
+      "fp": 0,
+      "tn": 30,
+      "fn": 3,
+      "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
+      "file": "provenance_disjoint_validation_escherichia_coli_shigella_genta_2026-06-12.json",
+      "lineage": {
+        "status": "scored",
+        "raw_N": 60,
+        "effective_lineage_N": {
+          "0.001": {
+            "R": 15,
+            "S": 23
+          },
+          "0.005": {
+            "R": 5,
+            "S": 9
+          }
+        },
+        "cluster_weighted": {
+          "0.001": {
+            "sens": 0.867,
+            "sens_ci": [
+              0.621,
+              0.963
+            ],
+            "sens_eff_n": 15,
+            "spec": 1.0,
+            "spec_ci": [
+              0.857,
+              1.0
+            ],
+            "spec_eff_n": 23,
+            "n_discordant": 2
+          },
+          "0.005": {
+            "sens": 0.6,
+            "sens_ci": [
+              0.231,
+              0.882
+            ],
+            "sens_eff_n": 5,
+            "spec": 1.0,
+            "spec_ci": [
+              0.701,
+              1.0
+            ],
+            "spec_eff_n": 9,
+            "n_discordant": 4
+          }
+        },
+        "grade": "scarce (3-7 effective lineages)"
+      }
     },
     {
       "organism": "escherichia_coli_shigella",
