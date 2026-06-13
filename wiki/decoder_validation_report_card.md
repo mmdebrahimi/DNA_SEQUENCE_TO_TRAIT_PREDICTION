@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-06-12
+# Decoder-suite provenance-disjoint validation report card — 2026-06-13
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -21,7 +21,7 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | state | cells |
 |---|---|
 | `SCORED` | 10 |
-| `UNDERPOWERED` | 1 |
+| `UNDERPOWERED` | 3 |
 | `ABSTAINS_BY_DESIGN` | 2 |
 | `LABEL_CONFOUNDED` | 1 |
 | `NO_FREE_PHENOTYPE_SOURCE` | 11 |
@@ -54,6 +54,8 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | plasmodium_falciparum | dihydroartemisinin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
 | pseudomonas_aeruginosa | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@3) — rule refuses expression-driven R it cannot decode |
 | salmonella | ciprofloxacin | `UNDERPOWERED` | — | — | — | — | censused 4R/87S provenance-disjoint (< MIN/class) — surveillance-dominated |
+| salmonella | gentamicin | `UNDERPOWERED` | — | — | — | — | censused 5R/86S provenance-disjoint (< MIN/class) — surveillance-dominated |
+| salmonella | tetracycline | `UNDERPOWERED` | — | — | — | — | censused 4R/81S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | staphylococcus_aureus | oxacillin | `LABEL_CONFOUNDED` | — | — | — | — | phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate) |
 
 ## Lineage disclosure (clonality-corrected)

@@ -1,13 +1,13 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-06-12",
+  "date": "2026-06-13",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
     "ABSTAINS_BY_DESIGN": 2,
     "SCORED": 10,
     "NO_FREE_PHENOTYPE_SOURCE": 11,
-    "UNDERPOWERED": 1,
+    "UNDERPOWERED": 3,
     "LABEL_CONFOUNDED": 1
   },
   "cells": [
@@ -714,6 +714,18 @@
       "drug": "ciprofloxacin",
       "state": "UNDERPOWERED",
       "note": "censused 4R/87S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
+    },
+    {
+      "organism": "salmonella",
+      "drug": "gentamicin",
+      "state": "UNDERPOWERED",
+      "note": "censused 5R/86S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
+    },
+    {
+      "organism": "salmonella",
+      "drug": "tetracycline",
+      "state": "UNDERPOWERED",
+      "note": "censused 4R/81S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
     },
     {
       "organism": "staphylococcus_aureus",

@@ -108,6 +108,22 @@
       "powered": false,
       "date": "2026-06-10",
       "source_action_row": 60
+    },
+    {
+      "organism": "Salmonella",
+      "drug": "gentamicin",
+      "other_R": 5,
+      "other_S": 86,
+      "powered": false,
+      "date": "2026-06-13"
+    },
+    {
+      "organism": "Salmonella",
+      "drug": "tetracycline",
+      "other_R": 4,
+      "other_S": 81,
+      "powered": false,
+      "date": "2026-06-13"
     }
   ]
 }
