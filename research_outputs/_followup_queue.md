@@ -69,3 +69,15 @@
 | Arabidopsis flowering-time 1003 acc, sampling-independent, no catalog | PMC4949382 | the true embedding-niche test (YES/YES/YES) — but needs plant DNA-FM on >=24GB GPU = compute/MONEY gate | high |
 | Multimodal colony-image+WGS paired set | s41597-025-06319-4 | EXCLUDE — no public paired dataset (iron-law infeasible); targeted Kaggle/Zenodo search before reconsidering | medium |
 | PlantCaduceus compute class >=24GB GPU | arxiv 2403.03234 | sizes the Arabidopsis compute gate; confirm GPU or budget before that path | high |
+
+## New non-circular label sources (added 2026-06-14)
+
+Source memo: `acquirable-ecoli-phenotype-label-sources-2026-06-14` — reopen the frozen v0.5.0 AMR decoder beyond the saturated public-label grid. ALL rows are websearch-summary provenance (medRxiv/Lancet 403'd) → verify against direct source before acting.
+
+| Claim | Source | Candidate use / Verification needed | Confidence |
+|---|---|---|---|
+| Oxford 2875 E. coli WGS + measured clinical MIC (8 drugs, UK OUH, outside US ecosystem) | thelancet.com/.../PIIS2666-5247(25)00111-9 | TOP candidate — RE-VALIDATE the frozen decoder on independent measured MIC (cipro/cef/gent overlap). VERIFY: read the Data-Availability statement — are assemblies PUBLICLY downloadable (free) or controlled-access (MTA)? This one fact gates everything. | medium |
+| ecoref / eLife panel: 894 strains, 214 growth conditions, 696 public genomes | elifesciences.org/articles/31035 | NEW-trait candidate (growth/fitness; non-AMR) at depth, free download. VERIFY: pick one growth condition with ≥20/class balance; check it survives Mash-clonality + isn't lineage-confounded (0-for-4 embedding risk). | medium |
+| von Mentzer ETEC: ≥439 public (≤1083 total) toxin-typed genomes | journals.asm.org/doi/10.1128/jcm.00570-23 | Pathotype reference. VERIFY the toxin label is WET-LAB not molecular gene-call — if molecular, drop (re-enters closed pathotype-circularity trap). | medium |
+| Pfizer ATLAS 6.5M measured MIC — DISQUALIFIED (no assemblies) | nature.com/articles/s41467-022-30635-7 | EXCLUDE — confirmed genotype-markers-only, no genomes → fails criterion 3. Recorded to avoid re-investigation. | medium |
+| NARMS raw broth-microdilution MIC — DISQUALIFIED (is the excluded ecosystem) | fda.gov/media/164290/download | EXCLUDE as disjoint source — it is the surveillance ecosystem already excluded; fails criterion 4 by definition. | high |
