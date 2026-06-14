@@ -81,3 +81,9 @@ Source memo: `acquirable-ecoli-phenotype-label-sources-2026-06-14` — reopen th
 | von Mentzer ETEC: ≥439 public (≤1083 total) toxin-typed genomes | journals.asm.org/doi/10.1128/jcm.00570-23 | Pathotype reference. VERIFY the toxin label is WET-LAB not molecular gene-call — if molecular, drop (re-enters closed pathotype-circularity trap). | medium |
 | Pfizer ATLAS 6.5M measured MIC — DISQUALIFIED (no assemblies) | nature.com/articles/s41467-022-30635-7 | EXCLUDE — confirmed genotype-markers-only, no genomes → fails criterion 3. Recorded to avoid re-investigation. | medium |
 | NARMS raw broth-microdilution MIC — DISQUALIFIED (is the excluded ecosystem) | fda.gov/media/164290/download | EXCLUDE as disjoint source — it is the surveillance ecosystem already excluded; fails criterion 4 by definition. | high |
+
+### UPDATE 2026-06-14 (/soraya --advance): Oxford cohort public-deposit gate RESOLVED
+
+The load-bearing unknown on the TOP candidate is resolved: the Oxford Gram-negative bacteraemia WGS (blood-culture portion, ~2410 of the 2875 MIC cohort) is **OPENLY deposited at ENA/NCBI BioProject `PRJNA604975`** (verbatim data-availability statement, Lipworth et al. *Genome Medicine* 2021, PMC8414751 — "All sequencing data has been deposited in the NCBI under project accession number PRJNA604975"). => genomes are **free-download, NOT controlled-access/MTA** => re-validating the frozen v0.5.0 decoder on independent measured MIC is **EXECUTOR-DOABLE**.
+
+Remaining verification (paper-supplement read, not blocking the genome download): exact E.coli-with-both-genome-AND-MIC join N; whether the MIC values are in a downloadable supplement; the 465 urine isolates' (2020) accession (may be a separate/later deposit).
