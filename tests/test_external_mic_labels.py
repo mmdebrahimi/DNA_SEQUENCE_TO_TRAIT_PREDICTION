@@ -54,8 +54,47 @@ def test_parse_mic_token_na():
 # --------------------------------------------------------------------------- #
 # tier_for_isolate (real classify_tier; cipro clsi_r=2 clsi_s=0.5)
 # --------------------------------------------------------------------------- #
-def test_tier_high_r():
-    assert eml.tier_for_isolate([">8"], set(), "ciprofloxacin") == "HIGH_R"   # 8 >= 4*2
+def test_tier_high_r_plain():
+    assert eml.tier_for_isolate(["8"], set(), "ciprofloxacin") == "HIGH_R"   # plain 8 >= 4*2
+
+
+# --- operator-aware censoring (Step 2) ---
+def test_tier_censored_lower_bound_high_r():
+    # ">8" is a lower bound whose bound itself lands HIGH_R -> CENSORED_HIGH_R
+    assert eml.tier_for_isolate([">8"], set(), "ciprofloxacin") == "CENSORED_HIGH_R"
+
+
+def test_tier_censored_upper_bound_high_s():
+    # "<=0.06" upper bound, bound <= clsi_s/4 -> CENSORED_HIGH_S
+    assert eml.tier_for_isolate(["<=0.06"], set(), "ciprofloxacin") == "CENSORED_HIGH_S"
+
+
+def test_tier_censored_lower_bound_midrange_excluded():
+    # ">2" lower bound, bound is BORDERLINE not HIGH_R -> excluded (conservative)
+    assert eml.tier_for_isolate([">2"], set(), "ciprofloxacin") == "CENSORED_EXCLUDED"
+
+
+def test_tier_upper_bound_never_calls_r():
+    # "<=8" upper bound at a high value must NOT be called R (the strip-to-bound bug)
+    assert eml.tier_for_isolate(["<=8"], set(), "ciprofloxacin") == "CENSORED_EXCLUDED"
+
+
+def test_tier_lower_bound_never_calls_s():
+    # ">=0.06" lower bound at a low value must NOT be called S
+    assert eml.tier_for_isolate([">=0.06"], set(), "ciprofloxacin") == "CENSORED_EXCLUDED"
+
+
+def test_parse_mic_value_preserves_operator():
+    assert eml.parse_mic_value(">8") == eml.MicValue(8.0, ">", ">8")
+    assert eml.parse_mic_value("4") == eml.MicValue(4.0, "=", "4")
+    assert eml.parse_mic_value("<=0.5 mg/L").operator == "<="
+    assert eml.parse_mic_value("NA") is None
+
+
+def test_censored_high_r_is_strict_label():
+    res = eml.build_drug_labels({"GCA_x": [">16"]}, "ciprofloxacin")
+    assert res["strict"]["GCA_x"] == "R"
+    assert res["buckets"].get("CENSORED_HIGH_R") == 1
 
 
 def test_tier_high_s():

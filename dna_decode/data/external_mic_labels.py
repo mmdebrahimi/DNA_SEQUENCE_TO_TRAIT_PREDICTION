@@ -19,9 +19,13 @@ pilot are rejected.
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 from dna_decode.data.mic_tiers import breakpoints_for, classify_tier
+
+_LOWER_OPS = (">=", ">")   # lower bound -> true value is AT OR ABOVE
+_UPPER_OPS = ("<=", "<")   # upper bound -> true value is AT OR BELOW
 
 # Breakpoint provenance (matches dna_decode/data/mic_tiers.py DRUG_BREAKPOINTS).
 BREAKPOINT_VERSION = "CLSI 2024 + EUCAST 14.0 (E. coli)"
@@ -35,9 +39,9 @@ CANONICAL_DRUG: dict[str, str] = {
 
 PILOT_DRUGS = frozenset({"ciprofloxacin", "ceftriaxone", "gentamicin"})
 
-STRICT_TIERS = {"HIGH_R": "R", "HIGH_S": "S"}
+STRICT_TIERS = {"HIGH_R": "R", "HIGH_S": "S", "CENSORED_HIGH_R": "R", "CENSORED_HIGH_S": "S"}
 RELAXED_EXTRA = {"DECISIVE_R": "R", "DECISIVE_S": "S"}
-EXCLUDED_TIERS = ("BORDERLINE", "AMBIGUOUS", "CONFLICT", "NO_MIC")
+EXCLUDED_TIERS = ("BORDERLINE", "AMBIGUOUS", "CONFLICT", "NO_MIC", "CENSORED_EXCLUDED")
 
 
 def canonical_drug(name: str) -> str | None:
@@ -77,12 +81,87 @@ def parse_mic_token(token) -> float | None:
         return None
 
 
+@dataclass(frozen=True)
+class MicValue:
+    """A parsed MIC cell that PRESERVES the censoring operator (vs parse_mic_token,
+    which discards it). `operator` is one of '', '=', '>', '>=', '<', '<='."""
+    value: float
+    operator: str
+    raw: str
+
+
+def parse_mic_value(token) -> MicValue | None:
+    """Parse a MIC cell into a MicValue (numeric bound + operator + raw token).
+
+    Same numeric tolerance as parse_mic_token (units, NA) but RETAINS the operator
+    so the censor DIRECTION can be modeled by tier_for_isolate. None if unparseable.
+    """
+    if token is None:
+        return None
+    if isinstance(token, (int, float)):
+        return MicValue(float(token), "=", str(token))
+    raw = str(token).strip()
+    s = raw
+    if not s or s.upper() in ("NA", "N/A", "NULL", "NONE", "."):
+        return None
+    op = ""
+    for cand in (">=", "<=", ">", "<", "="):
+        if s.startswith(cand):
+            op = cand
+            s = s[len(cand):].strip()
+            break
+    for unit in ("mg/l", "ug/ml", "µg/ml", "mg/L", "ug/mL"):
+        if s.lower().endswith(unit):
+            s = s[: -len(unit)].strip()
+            break
+    try:
+        return MicValue(float(s), op or "=", raw)
+    except ValueError:
+        return None
+
+
+def _censored_tier(values: list[MicValue], bps) -> str:
+    """Operator-aware tier for an all-censored isolate (no plain `=` value).
+
+    A lower bound (`>`/`>=`) can only support R, and only if its bound itself lands
+    HIGH_R (true value is >= bound, so at least that resistant). An upper bound
+    (`<`/`<=`) can only support S, and only if its bound lands HIGH_S. Anything else
+    (mid-range bound, contradictory directions, or DECISIVE-only) is interval-censored
+    -> CENSORED_EXCLUDED. NEVER calls R from an upper bound or S from a lower bound.
+    """
+    lowers = [v.value for v in values if v.operator in _LOWER_OPS]
+    uppers = [v.value for v in values if v.operator in _UPPER_OPS]
+    if lowers and not uppers:
+        # most-resistant lower bound; classify the bound itself
+        if classify_tier([max(lowers)], set(), bps) == "HIGH_R":
+            return "CENSORED_HIGH_R"
+        return "CENSORED_EXCLUDED"
+    if uppers and not lowers:
+        if classify_tier([min(uppers)], set(), bps) == "HIGH_S":
+            return "CENSORED_HIGH_S"
+        return "CENSORED_EXCLUDED"
+    return "CENSORED_EXCLUDED"   # both directions or neither -> ambiguous
+
+
 def tier_for_isolate(mic_tokens, distinct_calls, drug: str) -> str:
-    """Classify one isolate's MICs for `drug` into a mic_tiers tier string."""
+    """Classify one isolate's MICs for `drug` into a mic_tiers tier string.
+
+    Plain (`=`) values go through classify_tier (the existing path). When an isolate
+    has ONLY censored values, censor direction is modeled by _censored_tier so an
+    upper bound can't be falsely called R (and a lower bound can't be falsely S).
+    """
     bps = breakpoints_for(drug)
-    mics = [v for v in (parse_mic_token(t) for t in mic_tokens) if v is not None]
     calls = {str(c).strip().upper() for c in (distinct_calls or set()) if str(c).strip()}
-    return classify_tier(mics, calls, bps)
+    # contradictory categorical calls dominate (matches classify_tier's CONFLICT).
+    if (calls & {"R", "RESISTANT"}) and (calls & {"S", "SUSCEPTIBLE"}):
+        return "CONFLICT"
+    parsed = [p for p in (parse_mic_value(t) for t in mic_tokens) if p is not None]
+    plain = [p.value for p in parsed if p.operator in ("", "=")]
+    if plain:
+        return classify_tier(plain, calls, bps)        # existing numeric path
+    if not parsed:
+        return classify_tier([], calls, bps)           # NO_MIC
+    return _censored_tier(parsed, bps)                 # all-censored, operator-aware
 
 
 def build_drug_labels(isolate_to_mics: dict[str, list], drug: str,
