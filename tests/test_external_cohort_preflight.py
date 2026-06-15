@@ -112,6 +112,20 @@ def test_overall_fail_zero_free():
     assert any("free pilot N is zero" in r for r in out["reasons"])
 
 
+def test_overall_fail_closed_on_incomplete_manifest():
+    out = pf.overall_verdict(_good_leakage(), _avail(3), mic_open=True,
+                             manifest_incomplete=True, allow_degraded=False)
+    assert out["verdict"] == "FAIL"
+    assert any("INCOMPLETE leakage manifest" in r for r in out["reasons"])
+
+
+def test_overall_incomplete_manifest_degraded_override():
+    out = pf.overall_verdict(_good_leakage(), _avail(3), mic_open=True,
+                             manifest_incomplete=True, allow_degraded=True)
+    assert out["verdict"] == "PASS"                      # override clears the block...
+    assert out["manifest_degraded_override"] is True     # ...but is stamped degraded
+
+
 def test_overall_accumulates_multiple_reasons():
     # mic-gated AND zero-free AND an overlap leak all surface (no short-circuit).
     leak = pf.leakage_verdict({"GCA_a": "SAMN_shared"}, cohort_biosamples={"SAMN_shared"})
@@ -194,3 +208,32 @@ def test_preflight_fail_on_leak(tmp_path, monkeypatch):
                        resolver=resolver, wiki_dir=tmp_path, write=False)
     assert art["verdict"] == "FAIL"
     assert "SAMEA_SHARED" in art["leakage"]["overlap_biosamples"]
+
+
+def test_preflight_fail_closed_on_incomplete_manifest(tmp_path, monkeypatch):
+    fetch = _uid_aware_fetch(
+        read_run_tsv="run_accession\tsample_accession\nERR1\tSAMEA_C1\n",
+        esearch_term_to_uid={"SAMEA_C1": "1", "GCA_TUNING.1": "999"},
+        uid_to_record={
+            "1": {"assemblyaccession": "GCA_C1.1", "biosampleaccn": "SAMEA_C1"},
+            "999": {"assemblyaccession": "GCA_TUNING.1", "biosampleaccn": "SAMN_DISJOINT"},
+        },
+    )
+    resolver = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=fetch)
+
+    class _M:                       # manifest that failed to load a source
+        incomplete = True
+        cohorts = [1]
+        warnings = ["parquet load failed: x"]
+    monkeypatch.setattr(pf, "build_manifest", lambda: _M())
+    monkeypatch.setattr(pf, "prior_accessions", lambda m, exclude_cohort: {"GCA_TUNING.1"})
+
+    art = pf.preflight("PRJEB_TEST", "oxford", mic_open=True, resolver=resolver,
+                       wiki_dir=tmp_path, write=False, allow_degraded=False)
+    assert art["verdict"] == "FAIL"
+    assert art["manifest_complete"] is False
+    # with override -> proceeds, stamped degraded
+    art2 = pf.preflight("PRJEB_TEST", "oxford", mic_open=True, resolver=resolver,
+                        wiki_dir=tmp_path, write=False, allow_degraded=True)
+    assert art2["verdict"] == "PASS"
+    assert art2["manifest_degraded"] is True

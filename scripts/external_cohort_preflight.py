@@ -79,14 +79,22 @@ def leakage_verdict(tuning_acc_to_bs: dict[str, str | None], cohort_biosamples: 
     }
 
 
-def overall_verdict(leakage: dict, availability: dict, mic_open: bool | None) -> dict:
-    """Combine the three signals into a PASS/FAIL with reasons."""
+def overall_verdict(leakage: dict, availability: dict, mic_open: bool | None,
+                    manifest_incomplete: bool = False, allow_degraded: bool = False) -> dict:
+    """Combine the signals into a PASS/FAIL with reasons.
+
+    An INCOMPLETE leakage manifest fails closed (cannot prove disjointness) unless
+    `allow_degraded` — mirrors `provenance_disjoint_validate.py`'s fail-closed posture.
+    """
     reasons: list[str] = []
     if leakage["fail_overlap"]:
         reasons.append(f"BioSample overlap with tuning: {leakage['overlap_biosamples']}")
     if leakage["fail_unresolved"]:
         reasons.append(f"unresolved tuning fraction {leakage['unresolved_fraction']} "
                        f"> {leakage['unresolved_threshold']}")
+    if manifest_incomplete and not allow_degraded:
+        reasons.append("INCOMPLETE leakage manifest — a tuning source failed to load, so "
+                       "disjointness cannot be proven (pass --allow-degraded to override)")
     if mic_open is False:
         reasons.append("MIC table is not openly downloadable (MTA-gated)")
     if mic_open is None:
@@ -94,7 +102,8 @@ def overall_verdict(leakage: dict, availability: dict, mic_open: bool | None) ->
     if availability["n_free"] == 0:
         reasons.append("no FREE (assembly-resolvable) BioSamples — free pilot N is zero")
     verdict = "PASS" if not reasons else "FAIL"
-    return {"verdict": verdict, "reasons": reasons}
+    return {"verdict": verdict, "reasons": reasons,
+            "manifest_degraded_override": bool(manifest_incomplete and allow_degraded)}
 
 
 # --------------------------------------------------------------------------- #
@@ -102,7 +111,8 @@ def overall_verdict(leakage: dict, availability: dict, mic_open: bool | None) ->
 # --------------------------------------------------------------------------- #
 def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
               resolver: BioSampleResolver | None = None,
-              wiki_dir: str | Path = "wiki", write: bool = True) -> dict:
+              wiki_dir: str | Path = "wiki", write: bool = True,
+              allow_degraded: bool = False) -> dict:
     resolver = resolver or BioSampleResolver()
 
     # cohort BioSamples (ENA read_run for the project)
@@ -121,7 +131,8 @@ def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
 
     resolver.save_cache()
 
-    verdict = overall_verdict(leakage, availability, mic_open)
+    verdict = overall_verdict(leakage, availability, mic_open,
+                              manifest_incomplete=manifest.incomplete, allow_degraded=allow_degraded)
     artifact = {
         "_schema": "external-preflight-v1",
         "date": _date.today().isoformat(),
@@ -134,6 +145,8 @@ def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
         "leakage": leakage,
         "mic_open": mic_open,
         "manifest_complete": not manifest.incomplete,
+        "manifest_degraded": bool(manifest.incomplete and allow_degraded),
+        "manifest_warnings": manifest.warnings if manifest.incomplete else [],
         "manifest_n_cohorts": len(manifest.cohorts),
     }
     if write:
@@ -153,8 +166,10 @@ def main() -> int:
                      help="per-isolate MIC table confirmed openly downloadable")
     mic.add_argument("--mic-gated", dest="mic_open", action="store_false",
                      help="per-isolate MIC table is MTA-gated")
+    ap.add_argument("--allow-degraded", action="store_true",
+                    help="proceed even if the leakage manifest is incomplete (stamps manifest_degraded)")
     a = ap.parse_args()
-    art = preflight(a.project, a.cohort_name, mic_open=a.mic_open)
+    art = preflight(a.project, a.cohort_name, mic_open=a.mic_open, allow_degraded=a.allow_degraded)
     print(f"\nPREFLIGHT {art['verdict']} — {art['cohort_name']} ({a.project})")
     print(f"  cohort BioSamples: {art['n_cohort_biosamples']} "
           f"(FREE {art['assembly_availability']['n_free']} / "
