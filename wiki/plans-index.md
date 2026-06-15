@@ -436,3 +436,14 @@
 - Probe×2 + brainstorm (Claude-only, codex hook-blocked) vetted; toolkit-validated check=clean/waves=clean.
 
 ---
+
+## [plan_file: Oxford_Cohort_External_Revalidation_Plan/] 2026-06-14
+**Status:** executed (2026-06-15; archived to executed_plans/; code + 86 offline tests shipped, manual network/Docker run deferred)
+**Summary:** Re-validate the FROZEN v0.5.0 deterministic AMR decoder (cipro/cef/gent) on an INDEPENDENT non-US measured-MIC E. coli cohort (Oxford PRJNA604975 pilot; Spain PROBAC PRJEB62601 fallback), landing results in a separate external_validation namespace without touching the frozen report card.
+**Key decisions:**
+- Fix C: separate `wiki/external_validation_*.json` + own roll-up (`build_external_validation_report.py`); frozen report card + compute_lineage_metrics byte-unchanged (collision avoided)
+- Step 1 Gate-0 preflight = real assembly→BioSample resolver + persisted cache + fail-closed if >5% tuning accessions unresolved or any BioSample overlap
+- Decoder reused UNCHANGED: pinned `independent_cohort_validate._conf`, canonical drug-name map before breakpoints_for, exact `organism="Escherichia_coli_Shigella"`
+- Artifacts carry `evidence_tier=external_clinical`; clonality math reused inline in the roll-up
+
+---
