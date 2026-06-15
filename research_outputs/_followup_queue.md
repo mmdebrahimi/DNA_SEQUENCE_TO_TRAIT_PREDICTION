@@ -87,3 +87,18 @@ Source memo: `acquirable-ecoli-phenotype-label-sources-2026-06-14` — reopen th
 The load-bearing unknown on the TOP candidate is resolved: the Oxford Gram-negative bacteraemia WGS (blood-culture portion, ~2410 of the 2875 MIC cohort) is **OPENLY deposited at ENA/NCBI BioProject `PRJNA604975`** (verbatim data-availability statement, Lipworth et al. *Genome Medicine* 2021, PMC8414751 — "All sequencing data has been deposited in the NCBI under project accession number PRJNA604975"). => genomes are **free-download, NOT controlled-access/MTA** => re-validating the frozen v0.5.0 decoder on independent measured MIC is **EXECUTOR-DOABLE**.
 
 Remaining verification (paper-supplement read, not blocking the genome download): exact E.coli-with-both-genome-AND-MIC join N; whether the MIC values are in a downloadable supplement; the 465 urine isolates' (2020) accession (may be a separate/later deposit).
+
+## Validation-source PORTFOLIO (breadth run, added 2026-06-14)
+
+Source memo: `ecoli-amr-revalidation-source-portfolio-2026-06-14` — user goal = BREADTH (multi-source validation portfolio for the frozen v0.5.0 AMR decoder). 6+ independent non-US cohorts found. All rows websearch-summary provenance → verify direct.
+
+| Cohort | Genomes accession | AST | Country | Use / Verify |
+|---|---|---|---|---|
+| Spain PROBAC (224) | ENA PRJEB62601 (confirmed) | measured MIC (EUCAST BMD, 16 drugs) | Spain | 2nd MIC cohort. Verify: per-isolate MIC table downloadable; assemblies vs reads. |
+| 234-isolate European | accession TBC (PMC9829913) | measured MIC (ISO BMD, 11 drugs) | Europe | 3rd MIC cohort. Verify: pin accession + country. |
+| Denmark "One day" (699) | ENA PRJEB37711 (confirmed) | categorical (likely) | Denmark | binary-validation, urine-heavy. Verify AST fields. |
+| Netherlands bacteraemia (281) | ENA PRJEB35000 (confirmed) | categorical (likely) | Netherlands | binary-validation, ESBL-enriched. Verify AST. |
+| Norway NORM BSI (~thousands) | accession TBC | NORM surveillance AST | Norway | largest non-US. Verify accession + MIC-vs-categorical + disjointness. |
+| Jakarta BSI (22) | ENA PRJNA596854 (confirmed) | unconfirmed | Indonesia | small; geographic spread. Verify AST method. |
+
+Recommended execution order: MIC core (Oxford+Spain+234) → categorical breadth (Denmark+Netherlands) → extend (Norway+Jakarta). Each is auto-executor-doable (open ENA + local AMRFinder), no money.
