@@ -97,6 +97,29 @@ def test_censored_high_r_is_strict_label():
     assert res["buckets"].get("CENSORED_HIGH_R") == 1
 
 
+def test_tier_censored_both_directions_excluded():
+    # A lower AND an upper bound on the same isolate -> interval-censored -> excluded.
+    assert eml.tier_for_isolate([">0.5", "<8"], set(), "ciprofloxacin") == "CENSORED_EXCLUDED"
+
+
+def test_tier_plain_value_wins_over_censored():
+    # When ANY plain (=) value is present it takes the numeric path; censored is ignored.
+    assert eml.tier_for_isolate(["8", ">0.5"], set(), "ciprofloxacin") == "HIGH_R"
+
+
+def test_tier_no_mic_when_all_unparseable():
+    assert eml.tier_for_isolate([], set(), "ciprofloxacin") == "NO_MIC"
+    assert eml.tier_for_isolate(["NA"], set(), "ciprofloxacin") == "NO_MIC"
+
+
+def test_censored_high_s_is_strict_s_label():
+    # CENSORED_HIGH_S maps to a STRICT S label (the symmetric partner of CENSORED_HIGH_R).
+    res = eml.build_drug_labels({"GCA_s": ["<=0.06"]}, "ciprofloxacin")
+    assert res["strict"]["GCA_s"] == "S"
+    assert res["relaxed"]["GCA_s"] == "S"
+    assert res["buckets"].get("CENSORED_HIGH_S") == 1
+
+
 def test_tier_high_s():
     assert eml.tier_for_isolate(["0.06"], set(), "ciprofloxacin") == "HIGH_S"  # <= 0.5/4
 

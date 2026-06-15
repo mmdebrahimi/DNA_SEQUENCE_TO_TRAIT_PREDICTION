@@ -235,6 +235,29 @@ def test_build_artifact_degraded_flag():
     assert art2["independence_degraded"] is False
 
 
+def test_predict_records_label_case_insensitive():
+    # Lowercase "r"/"s" labels normalize via .upper() -> correct y + uppercased label.
+    free = {"SAMN_r": "GCA_r.1", "SAMN_s": "GCA_s.1"}
+    labels = {"SAMN_r": "r", "SAMN_s": " s "}
+    records, _ = ecr.predict_records(free, labels, lambda g: "R")
+    by_bs = {r["biosample"]: r for r in records}
+    assert by_bs["SAMN_r"]["label"] == "R" and by_bs["SAMN_r"]["y"] == 1
+    assert by_bs["SAMN_s"]["label"] == "S" and by_bs["SAMN_s"]["y"] == 0
+
+
+def test_assert_manifest_alignment_empty_selected_ok():
+    # An empty scored set is trivially a subset -> no drift error.
+    ecr.assert_manifest_alignment(set(), {"SAMEA1", "SAMEA2"})
+
+
+def test_powering_degraded_zero_attempted_no_zero_division():
+    # n_attempted_free == 0 -> indeterminate_fraction is 0.0 (guarded), not a crash.
+    pg = ecr.powering_gate({"n_scored": 0, "tp": 0, "fn": 0, "tn": 0, "fp": 0},
+                           n_attempted_free=0, n_indeterminate=0)
+    assert pg["indeterminate_fraction"] == 0.0
+    assert pg["degraded"] is False
+
+
 def test_predict_records_empty_labels():
     records, n_excl = ecr.predict_records({"SAMN_a": "GCA_a.1"}, {}, lambda g: "R")
     assert records == [] and n_excl == 0

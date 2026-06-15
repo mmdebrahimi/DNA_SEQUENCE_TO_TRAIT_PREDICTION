@@ -40,6 +40,30 @@ def test_resolution_summary():
     assert "missing9" in res["unresolved_sample"]
 
 
+def test_resolution_summary_empty_keys_no_zero_division():
+    # No MIC keys -> rate 0.0 (not a ZeroDivisionError), empty unresolved sample.
+    res = w0.resolution_summary([], [{"sample_accession": "SAMEA1"}])
+    assert res["n_mic_keys"] == 0
+    assert res["resolution_rate"] == 0.0
+    assert res["unresolved_sample"] == []
+
+
+def test_resolution_summary_unresolved_sample_capped_at_10():
+    # >10 unresolved keys -> unresolved_sample is truncated to the first 10.
+    keys = [f"missing{i:02d}" for i in range(15)]
+    res = w0.resolution_summary(keys, [{"sample_accession": "SAMEA1"}])
+    assert res["n_resolved"] == 0
+    assert len(res["unresolved_sample"]) == 10
+
+
+def test_candidate_key_cardinality_ignores_missing_field():
+    # A field absent from some records contributes only where present (no KeyError).
+    records = [{"run_accession": "ERR1"}, {"sample_accession": "SAMEA1"}]
+    card = w0.candidate_key_cardinality(records)
+    assert card["run_accession"] == 1
+    assert card["sample_accession"] == 1
+
+
 def test_read_table_csv_and_tsv(tmp_path):
     csv_p = tmp_path / "t.csv"
     csv_p.write_text("iso,CIP\nk1,8\n")

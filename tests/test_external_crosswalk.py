@@ -69,6 +69,27 @@ def test_resolve_keys_conflicts_scoped_to_wanted():
     assert out["conflicts"] == []              # dup conflict not in scope
 
 
+def test_records_missing_biosample_skipped():
+    # A record with empty/missing sample_accession contributes NO crosswalk entries
+    # (it has no resolution target); other records still resolve.
+    records = [
+        {"run_accession": "ERR1", "sample_accession": ""},        # no BioSample -> skipped
+        {"run_accession": "ERR2"},                                # missing field -> skipped
+        {"run_accession": "ERR3", "sample_accession": "SAMEA3"},
+    ]
+    built = xw.build_crosswalk(records)
+    assert built["crosswalk"] == {"SAMEA3": "SAMEA3", "ERR3": "SAMEA3"}
+    assert built["conflicts"] == []
+
+
+def test_resolve_keys_strips_and_ignores_blank_native_keys():
+    # Blank / whitespace native keys are dropped; surviving keys are stripped before lookup.
+    records = [{"run_accession": "ERR1", "sample_accession": "SAMEA1"}]
+    out = xw.resolve_keys([" ERR1 ", "", "   ", None], records)
+    assert out["resolved"] == {"ERR1": "SAMEA1"}
+    assert out["unresolved"] == []
+
+
 def test_write_crosswalk_roundtrip(tmp_path):
     built = xw.build_crosswalk([{"run_accession": "ERR1", "sample_accession": "SAMEA1"}])
     p = tmp_path / "cw.json"

@@ -39,6 +39,32 @@ def test_manifest_rows_tier_and_label():
     assert by_bs["SAMEA3"]["censor_meta"] is True and by_bs["SAMEA3"]["label"] == "R"
 
 
+def test_manifest_rows_decisive_is_relaxed_only():
+    # A DECISIVE_R isolate (MIC 5) -> relaxed True / strict False (the RELAXED_EXTRA branch).
+    bs_data = {"SAMEA1": {"ciprofloxacin": {"mics": [MicValue(5.0, "=", "5")], "calls": set()}}}
+    row = bol.manifest_rows_for_drug(bs_data, "ciprofloxacin")[0]
+    assert row["tier"] == "DECISIVE_R"
+    assert row["label"] == "R" and row["strict"] is False and row["relaxed"] is True
+    assert row["censor_meta"] is False
+
+
+def test_manifest_rows_skips_biosample_without_drug():
+    # A BioSample carrying a DIFFERENT drug slot produces no row for the queried drug.
+    bs_data = {"SAMEA1": {"gentamicin": {"mics": [MicValue(16.0, "=", "16")], "calls": set()}}}
+    assert bol.manifest_rows_for_drug(bs_data, "ciprofloxacin") == []
+
+
+def test_rekey_partial_resolution_drops_only_unresolved():
+    # Mixed: one native key resolves, one doesn't -> resolved kept, other in dropped.
+    data = {
+        "ERR1": {"ciprofloxacin": {"mics": [MicValue(8.0, "=", "8")], "calls": set()}},
+        "missing": {"ciprofloxacin": {"mics": [MicValue(16.0, "=", "16")], "calls": set()}},
+    }
+    bs_data, dropped = bol.rekey_to_biosample(data, {"ERR1": "SAMEA1"})
+    assert set(bs_data) == {"SAMEA1"}
+    assert dropped == ["missing"]
+
+
 def test_drug_inputs_shape():
     bs_data = {"SAMEA1": {"ciprofloxacin": {"mics": [MicValue(8.0, "=", "8")], "calls": {"R"}}}}
     iso_mics, iso_calls = bol._drug_inputs(bs_data, "ciprofloxacin")

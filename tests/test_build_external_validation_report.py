@@ -66,6 +66,29 @@ def test_load_skips_corrupt_json(tmp_path):
     assert [a["cohort"] for a in arts] == ["ok"]
 
 
+# --- gap: _publishable predicate (tested directly, not only via load) ------ #
+def test_publishable_clean_cell():
+    assert rep._publishable({}, allow_degraded=False) is True
+
+
+def test_publishable_hard_fail_never_published():
+    assert rep._publishable({"powering": {"hard_fail": True}}, allow_degraded=True) is False
+
+
+def test_publishable_degraded_gated_by_flag():
+    assert rep._publishable({"run_degraded": True}, allow_degraded=False) is False
+    assert rep._publishable({"run_degraded": True}, allow_degraded=True) is True
+
+
+# --- gap: explicit `artifacts` list takes precedence over run_id/glob ------- #
+def test_load_explicit_artifacts_precedence(tmp_path):
+    p = tmp_path / "external_validation_z_cipro_runZ_2026.json"
+    p.write_text(json.dumps({"_schema": "external-validation-v1", "cohort": "z"}))
+    arts = rep.load_external_artifacts(tmp_path, artifacts=[str(p)])
+    assert [a["cohort"] for a in arts] == ["z"]
+    assert arts[0]["_path"] == str(p)
+
+
 # --------------------------------------------------------------------------- #
 # _fmt_ci fallback (malformed / missing CI -> em-dash, never a crash)
 # --------------------------------------------------------------------------- #
@@ -92,6 +115,18 @@ def test_cluster_weighted_with_ci():
     assert out["tp"] == 1 and out["tn"] == 1        # one R-clone, one S-clone
     assert isinstance(out["sens_ci"], tuple) and len(out["sens_ci"]) == 2
     assert out["effective_lineage_n_R"] == 1 and out["effective_lineage_n_S"] == 1
+
+
+def test_cluster_weighted_with_ci_one_class_only():
+    # All-R clusters: spec denominator is 0 -> spec_ci spans (0.0, 1.0), no crash;
+    # eff-N S is 0. Guards the zero-denominator Wilson path the report card relies on.
+    clusters = {"g1": 0, "g2": 1}
+    labels = {"g1": "R", "g2": "R"}
+    preds = {"g1": "R", "g2": "R"}
+    out = rep.cluster_weighted_with_ci(preds, labels, clusters)
+    assert out["tp"] == 2 and out["fp"] == 0 and out["tn"] == 0 and out["fn"] == 0
+    assert out["spec_ci"] == (0.0, 1.0)
+    assert out["effective_lineage_n_S"] == 0 and out["effective_lineage_n_R"] == 2
 
 
 # --------------------------------------------------------------------------- #

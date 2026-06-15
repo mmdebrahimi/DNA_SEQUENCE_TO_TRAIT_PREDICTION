@@ -238,6 +238,45 @@ def test_assembly_to_biosample_agreement_returns_value(tmp_path):
     assert r.assembly_to_biosample("GCA_1.1") == "SAMN_SAME"
 
 
+def test_biosample_to_assemblies_entrez_raises_falls_back_to_ena(tmp_path):
+    # Entrez fetch RAISES (network error) -> the except branch falls through to ENA.
+    def fetch(url):
+        if "eutils.ncbi" in url:
+            raise RuntimeError("entrez down")
+        if "result=assembly" in url:
+            return "assembly_accession\tsample_accession\nGCA_8.1\tSAMEA8\n"
+        raise AssertionError(url)
+
+    r = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=fetch)
+    assert r.biosample_to_assemblies("SAMEA8") == ["GCA_8.1"]
+
+
+def test_assembly_to_biosample_both_sources_raise_is_none(tmp_path):
+    # Both Entrez and ENA raise -> reconcile(None, None) -> None (unresolved), no crash.
+    def boom(url):
+        raise RuntimeError("network down")
+
+    r = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=boom)
+    assert r.assembly_to_biosample("GCA_x.1") is None
+
+
+def test_assembly_to_biosample_caches_none(tmp_path):
+    # A resolved-None result is cached so a second call does not re-fetch.
+    calls = {"n": 0}
+
+    def fetch(url):
+        calls["n"] += 1
+        if "esearch" in url:
+            return json.dumps({"esearchresult": {"idlist": []}})
+        return "assembly_accession\tsample_accession\n"   # ENA: header only -> None
+
+    r = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=fetch)
+    assert r.assembly_to_biosample("GCA_none.1") is None
+    n_after_first = calls["n"]
+    assert r.assembly_to_biosample("GCA_none.1") is None   # cache hit
+    assert calls["n"] == n_after_first
+
+
 def test_biosample_to_assemblies_multiple_deduped_sorted(tmp_path):
     # Two UIDs -> two assemblies (one duplicated) -> sorted unique list.
     routes = {
