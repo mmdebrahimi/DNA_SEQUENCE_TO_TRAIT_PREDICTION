@@ -447,3 +447,15 @@
 - Artifacts carry `evidence_tier=external_clinical`; clonality math reused inline in the roll-up
 
 ---
+
+## [plan_file: Oxford_MIC_Ingester_Plan/] 2026-06-15
+**Status:** executed (2026-06-15; archived to executed_plans/; code + 77 offline tests shipped, live network/Docker run deferred)
+**Summary:** Build the ingestion layer (MIC-table ingester + alias→BioSample crosswalk + label-emission + one-command live driver) that turns the Oxford PRJNA604975 MIC table into the {BioSample: R/S} labels the shipped external-revalidation arm consumes, gated so every verdict covers exactly the scored cohort. Decoder + 5 frozen files byte-unchanged.
+**Key decisions:**
+- W0 empirical probe FIRST pins the unverified MIC-table schema + crosswalk feasibility before the ingester codes against it
+- Single run-scoped `cohort_manifest_external_<run_id>.json` is the handoff consumed by preflight (exact-set mode) + scorer (drift-guard) + roll-up; project-wide preflight demoted to a non-scored `external_project_probe_*` diagnostic
+- Crosswalk hard-fails (with field provenance) on 1-MIC-key→>1-BioSample + cross-field collisions; operator-aware MicValue censoring (CENSORED_HIGH_R/S vs CENSORED_EXCLUDED)
+- Roll-up refuses glob-all by default + skips hard_fail cells; driver gates roll-up on required-drug completion (primary invariant)
+- Modifies 4 shipped arm modules additively (external_mic_labels/preflight/revalidate/roll-up); 5 FROZEN files untouched
+
+---
