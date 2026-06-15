@@ -53,6 +53,25 @@ def test_parse_entrez_assembly_summary():
     assert parse_entrez_assembly_summary(js) == [{"assembly": "GCA_9.1", "biosample": "SAMN9"}]
 
 
+def test_parse_ena_assembly_missing_column_is_empty():
+    # No assembly_accession column -> [] (mirrors read_run's no-required-column case).
+    assert parse_ena_assembly("foo\tbar\nx\ty\n") == []
+    assert parse_ena_assembly("") == []
+
+
+def test_parse_entrez_assembly_summary_pascalcase_keys():
+    # NCBI sometimes returns PascalCase; the `or` fallback branch must pick them up.
+    js = json.dumps({"result": {
+        "uids": ["7"],
+        "7": {"AssemblyAccession": "GCA_7.2", "BioSampleAccn": "SAMN7"},
+    }})
+    assert parse_entrez_assembly_summary(js) == [{"assembly": "GCA_7.2", "biosample": "SAMN7"}]
+
+
+def test_parse_entrez_assembly_summary_bad_json():
+    assert parse_entrez_assembly_summary("not json") == []
+
+
 # --------------------------------------------------------------------------- #
 # _reconcile_biosample (C4 disagreement -> None)
 # --------------------------------------------------------------------------- #
@@ -164,3 +183,27 @@ def test_assembly_to_biosample_disagreement_none(tmp_path):
     }
     r = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=_fake_fetch_factory(routes))
     assert r.assembly_to_biosample("GCA_1.1") is None  # disagreement -> unresolved
+
+
+def test_assembly_to_biosample_agreement_returns_value(tmp_path):
+    # Both Entrez + ENA agree -> the value resolves (the leakage-positive direction).
+    routes = {
+        "esearch.fcgi": json.dumps({"esearchresult": {"idlist": ["1"]}}),
+        "esummary.fcgi": json.dumps({"result": {"uids": ["1"],
+                                                 "1": {"assemblyaccession": "GCA_1.1", "biosampleaccn": "SAMN_SAME"}}}),
+        "result=assembly": "assembly_accession\tsample_accession\nGCA_1.1\tSAMN_SAME\n",
+    }
+    r = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=_fake_fetch_factory(routes))
+    assert r.assembly_to_biosample("GCA_1.1") == "SAMN_SAME"
+
+
+def test_biosample_to_assemblies_multiple_deduped_sorted(tmp_path):
+    # Two UIDs -> two assemblies (one duplicated) -> sorted unique list.
+    routes = {
+        "esearch.fcgi": json.dumps({"esearchresult": {"idlist": ["1", "2"]}}),
+        "esummary.fcgi": json.dumps({"result": {"uids": ["1", "2"],
+                                                 "1": {"assemblyaccession": "GCF_9.1", "biosampleaccn": "SAMN5"},
+                                                 "2": {"assemblyaccession": "GCF_2.1", "biosampleaccn": "SAMN5"}}}),
+    }
+    r = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=_fake_fetch_factory(routes))
+    assert r.biosample_to_assemblies("SAMN5") == ["GCF_2.1", "GCF_9.1"]

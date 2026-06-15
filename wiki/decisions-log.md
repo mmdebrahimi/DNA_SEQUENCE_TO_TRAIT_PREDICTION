@@ -1,6 +1,19 @@
 # Decisions Log
 <!-- Auto-maintained by /retrospective. Do not edit manually. -->
 
+## [plan_file: Oxford_Cohort_External_Revalidation_Plan/technical-plan.md] Executed 2026-06-15
+**Mode:** sequential (forced — frozen-file invariant + contract-coupled chain; NOT parallel despite a 2-step Wave 0, to keep autonomous worktree agents away from the frozen NCBI-PD cells) | **Result:** all 6 steps completed, none skipped/failed
+**PRs:** N/A (direct commits to main per the project's two-machine sync-via-main convention: 0b1fba0, 86b04e3, 40f7435, 46ca473, eaab0b6, 839e22e)
+**Salience:** HIGH
+**Modules:** Step 1 Gate-0 preflight + bidirectional BioSample resolver; Step 2 MIC→tiered R/S via `classify_tier`; Step 3 BioSample→GCA accession resolver; Step 4 external scorer mirroring `provenance_disjoint_validate`; Step 5 external roll-up + inline clonality (new `external_validation_*` namespace); Step 6 docs (CLAUDE.md gotcha + README commands). Substrate = Oxford E. coli cohort (ENA PRJNA604975, open-deposit; resolved b5f4b6b).
+**Notable:** Baseline test count 1056 → final 1127 (+71 new offline unit tests; 0 regressions). Architecture compare NOT run (sentrux absent). Execution uneventful at code level — the load-bearing event was a pre-save /brainstorm that caught an artifact-key collision BEFORE any code was written (see Reversals).
+**Corrections:** none from user during execution.
+**Reversals:** Pre-save /brainstorm caught an ARTIFACT-KEY COLLISION: emitting the existing `provenance_disjoint_validation_*` schema for an external E. coli cell would have SILENTLY OVERWRITTEN the frozen NCBI-PD cell — both keyed by `canonical_cell_key(organism, drug)`. Fix C adopted: a separate `external_validation_*` namespace + its own roll-up, leaving frozen consumers byte-unchanged. Had the original schema shipped, the 2026-06-13 reproducibility freeze would have been corrupted by a same-key overwrite.
+**Discoveries:** (a) ORGANISM-TRIPLE read-not-invented: `call_resistance(organism="Escherichia_coli_Shigella")` does NOT activate a calibrated registry (Escherichia→None→DRUG_RULE default — that default IS the validated path); AMRFinder `-O` is `"Escherichia"`. Both were read VERBATIM from the frozen cells' committed artifacts so external numbers stay comparable, not re-derived. (b) MIC→binary MUST route through `classify_tier` (strict HIGH_R/HIGH_S primary + relaxed +DECISIVE secondary + bucket counts), never naive `MIC >= breakpoint` — the naive path corrupts sens/spec on intermediate/censored MICs. (c) Sequential mode was a deliberate choice over the toolkit's parallel trigger specifically to protect the frozen-file invariant from autonomous worktree agents.
+**Lesson:** A shared-key artifact namespace is a silent-overwrite trap whenever two producers write the same `(key) → file`; when adding a second producer for an existing keyed artifact family, give it its own namespace unless overwrite is the explicit intent — a pre-save /brainstorm is the cheapest place to catch this. Corollary on re-validating a frozen tool on new data: read the EXACT invocation params (organism triple, AMRFinder `-O`, label-tiering path) from the frozen run's committed artifacts and reuse them verbatim — never re-derive or guess them, or the new numbers stop being comparable to the frozen ones, which defeats the point of a re-validation.
+
+---
+
 ## [decision: Post-v0 EP ladder LOCKED + framing correction to tool-not-commercial] 2026-05-25
 **Salience:** HIGH
 **Session:** freeform

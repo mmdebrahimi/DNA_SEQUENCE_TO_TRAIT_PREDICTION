@@ -115,6 +115,13 @@ Project north star clarified 2026-05-18: "AI DNA decoder tool, not papers — fa
 - [x] **Databricks `/dbfs/` FUSE mkdir Errno-5 EIO workaround** documented in CLAUDE.md gotchas + cross-project memory at `~/.claude/projects/.../memory/feedback_databricks_dbfs_fuse_mkdir_bug.md`. Working notebook template: `C:/Users/Farshad/Downloads/Stress_Load_decoder_fixed_2026-5-18.py`. Working storage on `/local_disk0/` + final push via `dbutils.fs.cp`.
 - [x] **AMD Polaris GPU not viable for modern PyTorch** documented in CLAUDE.md gotchas + cross-project memory at `~/.claude/projects/.../memory/feedback_gpu_arch_verify_before_setup.md`. Verify GPU architecture tier BEFORE setup work; visual confirmation is cheapest gate.
 
+## External-cohort re-validation arm (2026-06-15)
+
+Code + offline unit tests shipped; the network/Docker run is a deferred manual step. Frozen surface untouched (Fix C namespace separation).
+
+- [x] **External-cohort re-validation arm shipped 2026-06-15** — `dna_decode/eval/biosample_resolver.py` + `dna_decode/data/external_mic_labels.py` + `dna_decode/data/external_cohort_genomes.py` + `scripts/external_cohort_preflight.py` + `scripts/external_cohort_revalidate.py` + `scripts/build_external_validation_report.py` (+ 6 test files). Scores the FROZEN v0.5.0 decoder on an independent measured-MIC E. coli cohort (pilot Oxford `PRJNA604975` / fallback Spain PROBAC `PRJEB62601`) in a SEPARATE `wiki/external_validation_*` namespace. Plan: `plans/Oxford_Cohort_External_Revalidation_Plan/technical-plan.md`.
+- [ ] **[OPEN, manual post-build step]** Run the actual external re-validation (network + Docker required). Sequence: (1) `external_cohort_preflight.py --project <PRJ> --cohort-name <name>` — Gate-0 BioSample-level leakage + assembly-availability + MIC-openness go/no-go; (2) on preflight PASS, `external_cohort_revalidate.py --cohort <name> --drug <drug> --labels-dir D --preflight-json P.json` per drug; (3) `build_external_validation_report.py` for the roll-up card. Step 1 is the empirical go/no-go — only proceed past it if leakage is clean and assemblies are reachable.
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.

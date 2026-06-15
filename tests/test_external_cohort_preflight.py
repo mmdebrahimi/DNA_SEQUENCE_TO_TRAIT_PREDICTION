@@ -54,6 +54,30 @@ def test_leakage_within_threshold_passes():
     assert v["passed"] is True
 
 
+def test_leakage_exactly_at_threshold_passes():
+    # 1 of 20 unresolved = exactly 5.0% — the gate is strictly `>` so this PASSES.
+    m = {f"GCA_{i}": (None if i == 0 else f"SAMN_{i}") for i in range(20)}
+    v = pf.leakage_verdict(m, cohort_biosamples={"SAMN_OUT"})
+    assert v["unresolved_fraction"] == 0.05
+    assert v["fail_unresolved"] is False
+    assert v["passed"] is True
+
+
+def test_leakage_just_over_threshold_fails():
+    # 2 of 20 unresolved = 10% > 5% -> fail-closed (the adjacent boundary case).
+    m = {f"GCA_{i}": (None if i < 2 else f"SAMN_{i}") for i in range(20)}
+    v = pf.leakage_verdict(m, cohort_biosamples={"SAMN_OUT"})
+    assert v["fail_unresolved"] is True
+    assert v["passed"] is False
+
+
+def test_leakage_empty_tuning_set():
+    # No tuning accessions -> 0/0 fraction is 0.0, not a ZeroDivisionError; passes.
+    v = pf.leakage_verdict({}, cohort_biosamples={"SAMN_OUT"})
+    assert v["unresolved_fraction"] == 0.0
+    assert v["passed"] is True
+
+
 # --------------------------------------------------------------------------- #
 # overall_verdict
 # --------------------------------------------------------------------------- #
@@ -86,6 +110,17 @@ def test_overall_fail_zero_free():
     out = pf.overall_verdict(_good_leakage(), _avail(0), mic_open=True)
     assert out["verdict"] == "FAIL"
     assert any("free pilot N is zero" in r for r in out["reasons"])
+
+
+def test_overall_accumulates_multiple_reasons():
+    # mic-gated AND zero-free AND an overlap leak all surface (no short-circuit).
+    leak = pf.leakage_verdict({"GCA_a": "SAMN_shared"}, cohort_biosamples={"SAMN_shared"})
+    out = pf.overall_verdict(leak, _avail(0), mic_open=False)
+    assert out["verdict"] == "FAIL"
+    assert any("overlap" in r for r in out["reasons"])
+    assert any("MTA-gated" in r for r in out["reasons"])
+    assert any("free pilot N is zero" in r for r in out["reasons"])
+    assert len(out["reasons"]) >= 3
 
 
 # --------------------------------------------------------------------------- #

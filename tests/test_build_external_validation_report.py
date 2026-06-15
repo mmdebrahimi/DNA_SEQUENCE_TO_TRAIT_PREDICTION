@@ -26,6 +26,28 @@ def test_load_ignores_wrong_schema(tmp_path):
     assert rep.load_external_artifacts(tmp_path) == []
 
 
+def test_load_skips_corrupt_json(tmp_path):
+    # A truncated/corrupt artifact is skipped, not raised; a good one alongside still loads.
+    (tmp_path / "external_validation_corrupt.json").write_text("{not valid json")
+    (tmp_path / "external_validation_ok_ciprofloxacin_2026-06-15.json").write_text(
+        json.dumps({"_schema": "external-validation-v1", "cohort": "ok", "drug": "ciprofloxacin"}))
+    arts = rep.load_external_artifacts(tmp_path)
+    assert [a["cohort"] for a in arts] == ["ok"]
+
+
+# --------------------------------------------------------------------------- #
+# _fmt_ci fallback (malformed / missing CI -> em-dash, never a crash)
+# --------------------------------------------------------------------------- #
+def test_fmt_ci_wellformed():
+    assert rep._fmt_ci((0.5, 0.95)) == "[0.5, 0.95]"
+
+
+def test_fmt_ci_malformed_falls_back():
+    assert rep._fmt_ci(None) == "—"
+    assert rep._fmt_ci((0.5,)) == "—"            # wrong length
+    assert rep._fmt_ci("nonsense") == "—"        # wrong type
+
+
 # --------------------------------------------------------------------------- #
 # cluster_weighted_with_ci (synthetic clusters; reuses clonality math)
 # --------------------------------------------------------------------------- #

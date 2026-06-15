@@ -117,3 +117,29 @@ def test_gate_fail_closed_on_missing():
 def test_gate_degraded_override():
     ok, reason = ecr.gate_ok({"verdict": "FAIL", "reasons": []}, allow_degraded=True)
     assert ok is True and "DEGRADED" in reason
+
+
+def test_gate_missing_preflight_degraded_override():
+    # No preflight artifact AT ALL + --allow-degraded -> proceed (distinct branch from FAIL+degraded).
+    ok, reason = ecr.gate_ok(None, allow_degraded=True)
+    assert ok is True and "DEGRADED" in reason
+
+
+# --------------------------------------------------------------------------- #
+# build_artifact degraded flag
+# --------------------------------------------------------------------------- #
+def test_build_artifact_degraded_flag():
+    art = ecr.build_artifact("oxford", "ciprofloxacin", strict={}, relaxed={},
+                             buckets={}, leakage_control="x", degraded=True)
+    assert art["independence_degraded"] is True
+    # default is non-degraded
+    art2 = ecr.build_artifact("oxford", "ciprofloxacin", strict={}, relaxed={},
+                              buckets={}, leakage_control="x")
+    assert art2["independence_degraded"] is False
+
+
+def test_predict_records_empty_labels():
+    records, n_excl = ecr.predict_records({"SAMN_a": "GCA_a.1"}, {}, lambda g: "R")
+    assert records == [] and n_excl == 0
+    conf = ecr.conf_from_records(records, n_excl)
+    assert conf["n_scored"] == 0 and conf["acc"] is None
