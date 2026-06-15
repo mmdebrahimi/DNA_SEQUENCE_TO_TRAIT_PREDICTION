@@ -204,3 +204,14 @@
 **Lesson:** When a pipeline VALIDATES one population and SCORES another, the validation is only as honest as the set it covers — make the scored set an explicit shared artifact (run-scoped cohort_manifest) and drift-guard every consumer against it; a broader whole-project preflight is a diagnostic, not the gate. Corollary (censoring): discarding a comparison operator on censored measurements manufactures confident WRONG labels exactly at the decision boundary — model the bound's direction (lower->R-only, upper->S-only, else exclude) rather than coercing to a point value.
 
 ---
+
+## [retrospective: post-ship brainstorm of shipped code catches fail-open on the untested live surface] 2026-06-15
+**Salience:** HIGH
+**Session:** freeform (standalone /retrospective over the Oxford re-validation epoch)
+**Modules:** scripts/external_cohort_{preflight,revalidate}.py, scripts/build_external_validation_report.py, dna_decode/data/external_mic_labels.py (+ the new ingester layer)
+**Corrections:** none (user-directed flow throughout)
+**Reversals:** none
+**Discoveries:** Running `/brainstorm` on JUST-SHIPPED code (not just the plan) found real fail-open bugs TWICE in one epoch that the offline-green suite could not surface, because they live on the deliberately-untested network/Docker surface: (1) the Oxford arm — preflight passed on an incomplete leakage manifest, the scorer wrote a clean artifact + exit 0 at n_scored==0, the roll-up blind-globbed stale/failed cells (→ C1-C4 hardening); (2) the ingester plan — the gate validated the whole project not the scored subset, the crosswalk silently collapsed alias collisions, censored MICs were coerced to point values (→ C1-C3 + operator-aware censoring). Both rounds were grounded-verified against the code before acceptance.
+**Lesson:** Offline-green ≠ fail-safe. When a pipeline ships with deferred live/network/Docker paths, run an adversarial `/brainstorm` on the SHIPPED code (not only the plan) targeting the untested surface — fail-open defaults (a stage that degrades to None/INDETERMINATE/empty and still exits 0) are the dominant bug class there and are invisible to a passing unit suite. Audit exit codes + completeness gates, not just return values.
+
+---
