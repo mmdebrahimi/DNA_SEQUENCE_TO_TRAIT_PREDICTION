@@ -83,6 +83,22 @@ def test_conf_from_records_matches_score_label_set():
 # --------------------------------------------------------------------------- #
 # build_artifact
 # --------------------------------------------------------------------------- #
+def test_assert_manifest_alignment_ok():
+    ecr.assert_manifest_alignment({"SAMEA1", "SAMEA2"}, {"SAMEA1", "SAMEA2", "SAMEA3"})  # subset -> no raise
+
+
+def test_assert_manifest_alignment_drift_raises():
+    import pytest
+    with pytest.raises(ecr.ManifestDriftError):
+        ecr.assert_manifest_alignment({"SAMEA1", "SAMEA_EXTRA"}, {"SAMEA1"})
+
+
+def test_build_artifact_carries_run_id():
+    art = ecr.build_artifact("oxford", "ciprofloxacin", strict={}, relaxed={}, buckets={},
+                             leakage_control="x", run_id="run_42")
+    assert art["run_id"] == "run_42"
+
+
 def test_build_artifact_schema():
     art = ecr.build_artifact("spain_probac", "ciprofloxacin",
                              strict={"n_scored": 10, "acc": 0.9, "sens": 0.9, "spec": 0.9},

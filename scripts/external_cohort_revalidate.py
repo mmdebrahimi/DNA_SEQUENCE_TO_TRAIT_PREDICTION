@@ -163,11 +163,13 @@ def powering_gate(strict_conf: dict, n_attempted_free: int, n_indeterminate: int
 
 def build_artifact(cohort: str, drug: str, *, strict: dict, relaxed: dict, buckets: dict,
                    leakage_control: str, degraded: bool = False,
-                   powering: dict | None = None, run_degraded: bool = False) -> dict:
+                   powering: dict | None = None, run_degraded: bool = False,
+                   run_id: str | None = None) -> dict:
     """Assemble the external-validation-v1 artifact (separate namespace)."""
     return {
         "_schema": "external-validation-v1",
         "date": _date.today().isoformat(),
+        "run_id": run_id,
         "cohort": cohort,
         "organism": REGISTRY_ORGANISM,
         "amrfinder_organism": AMRFINDER_ORGANISM,
@@ -199,6 +201,24 @@ def gate_ok(preflight: dict | None, allow_degraded: bool) -> tuple[bool, str]:
     return False, f"preflight {preflight.get('verdict')} ({preflight.get('reasons')}) — fail-closed"
 
 
+class ManifestDriftError(RuntimeError):
+    """selected.tsv BioSamples are not a subset of the cohort manifest (drift)."""
+
+
+def assert_manifest_alignment(selected_biosamples, manifest_biosamples) -> None:
+    """Drift guard: every scored BioSample MUST be in the cohort manifest.
+
+    Guarantees the leakage/availability verdict (computed by the exact-set preflight
+    over the manifest) covers EXACTLY what gets scored — the split that the brainstorm
+    flagged cannot reappear.
+    """
+    extra = sorted(set(selected_biosamples) - set(manifest_biosamples))
+    if extra:
+        raise ManifestDriftError(
+            f"{len(extra)} scored BioSample(s) absent from the cohort manifest: {extra[:5]}"
+            f"{'...' if len(extra) > 5 else ''}")
+
+
 def _read_selected(path: Path) -> dict[str, str]:
     out: dict[str, str] = {}
     if path.exists():
@@ -223,6 +243,11 @@ def main() -> int:
                          f"lower for a documented small pilot)")
     ap.add_argument("--skip-smoke", action="store_true",
                     help="skip the one-strain fail-fast smoke before the full scoring loop")
+    ap.add_argument("--cohort-manifest", default=None,
+                    help="cohort_manifest_external_<run_id>.json — drift-guards selected.tsv "
+                         "BioSamples subset of the manifest (required for a live run)")
+    ap.add_argument("--run-id", default=_date.today().isoformat(),
+                    help="run id stamped into the artifact + filename for run-scoped roll-up")
     a = ap.parse_args()
 
     preflight = json.loads(Path(a.preflight_json).read_text(encoding="utf-8")) if a.preflight_json else None
@@ -236,6 +261,12 @@ def main() -> int:
     relaxed_labels = _read_selected(labels_dir / "selected_relaxed.tsv")
     buckets_path = labels_dir / f"buckets_{a.drug}.json"
     buckets = json.loads(buckets_path.read_text(encoding="utf-8")) if buckets_path.exists() else {}
+
+    # Drift guard: selected.tsv BioSamples MUST be a subset of the cohort manifest.
+    if a.cohort_manifest:
+        man = json.loads(Path(a.cohort_manifest).read_text(encoding="utf-8"))
+        man_bs = man.get("biosamples") or sorted({r["biosample"] for r in man.get("rows", [])})
+        assert_manifest_alignment(set(strict_labels) | set(relaxed_labels), man_bs)
 
     # Resolve genomes for the union of labeled BioSamples, then score each set.
     from dna_decode.data.external_cohort_genomes import resolve_cohort_genomes
@@ -282,7 +313,7 @@ def main() -> int:
     artifact = build_artifact(a.cohort, a.drug, strict=strict_conf, relaxed=relaxed_conf,
                               buckets=buckets, leakage_control=leakage_control,
                               degraded=not (preflight and preflight.get("verdict") == "PASS"),
-                              powering=pg, run_degraded=pg["degraded"])
+                              powering=pg, run_degraded=pg["degraded"], run_id=a.run_id)
 
     base.mkdir(parents=True, exist_ok=True)
     (base / "selected_strict.tsv").write_text(
@@ -290,7 +321,7 @@ def main() -> int:
     (base / "selected_relaxed.tsv").write_text(
         "".join(f"{a}\t{rs}\n" for a, rs in sorted(relaxed_labels.items())), encoding="utf-8")
 
-    out = Path(f"wiki/external_validation_{a.cohort}_{a.drug}_{_date.today().isoformat()}.json")
+    out = Path(f"wiki/external_validation_{a.cohort}_{a.drug}_{a.run_id}_{_date.today().isoformat()}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
     print(f"RESULT strict acc={strict_conf['acc']} sens={strict_conf['sens']} spec={strict_conf['spec']} "
