@@ -16,14 +16,45 @@ def test_load_external_artifacts(tmp_path):
         json.dumps({"_schema": "external-validation-report-card-v1"}))  # the roll-up itself -> excluded
     (tmp_path / "provenance_disjoint_validation_x.json").write_text(
         json.dumps({"_schema": "provenance-disjoint-validation-v1"}))   # frozen surface -> not globbed
-    arts = rep.load_external_artifacts(tmp_path)
+    arts = rep.load_external_artifacts(tmp_path, allow_unscoped_glob=True)
     assert len(arts) == 1
     assert arts[0]["cohort"] == "spain"
 
 
 def test_load_ignores_wrong_schema(tmp_path):
     (tmp_path / "external_validation_bad.json").write_text(json.dumps({"_schema": "something-else"}))
-    assert rep.load_external_artifacts(tmp_path) == []
+    assert rep.load_external_artifacts(tmp_path, allow_unscoped_glob=True) == []
+
+
+# --- Step 9: run-scoping + hard_fail/degraded filtering ---
+def test_load_refuses_glob_all_by_default(tmp_path):
+    import pytest
+    (tmp_path / "external_validation_x_cipro_run1_2026.json").write_text(
+        json.dumps({"_schema": "external-validation-v1", "cohort": "x"}))
+    with pytest.raises(ValueError):
+        rep.load_external_artifacts(tmp_path)   # no run_id / artifacts / unscoped flag
+
+
+def test_load_run_scoped(tmp_path):
+    (tmp_path / "external_validation_x_cipro_run1_2026.json").write_text(
+        json.dumps({"_schema": "external-validation-v1", "cohort": "x", "run_id": "run1"}))
+    (tmp_path / "external_validation_x_cipro_run2_2026.json").write_text(
+        json.dumps({"_schema": "external-validation-v1", "cohort": "x", "run_id": "run2"}))
+    arts = rep.load_external_artifacts(tmp_path, run_id="run1")
+    assert [a["run_id"] for a in arts] == ["run1"]   # stale run2 excluded
+
+
+def test_load_skips_hard_fail_and_degraded(tmp_path):
+    (tmp_path / "external_validation_a_cipro_run1_2026.json").write_text(json.dumps(
+        {"_schema": "external-validation-v1", "cohort": "a", "powering": {"hard_fail": True}}))
+    (tmp_path / "external_validation_b_cipro_run1_2026.json").write_text(json.dumps(
+        {"_schema": "external-validation-v1", "cohort": "b", "run_degraded": True}))
+    (tmp_path / "external_validation_c_cipro_run1_2026.json").write_text(json.dumps(
+        {"_schema": "external-validation-v1", "cohort": "c"}))
+    clean = rep.load_external_artifacts(tmp_path, run_id="run1")
+    assert {a["cohort"] for a in clean} == {"c"}          # hard_fail + degraded skipped
+    with_deg = rep.load_external_artifacts(tmp_path, run_id="run1", allow_degraded=True)
+    assert {a["cohort"] for a in with_deg} == {"b", "c"}  # degraded now included, hard_fail still out
 
 
 def test_load_skips_corrupt_json(tmp_path):
@@ -31,7 +62,7 @@ def test_load_skips_corrupt_json(tmp_path):
     (tmp_path / "external_validation_corrupt.json").write_text("{not valid json")
     (tmp_path / "external_validation_ok_ciprofloxacin_2026-06-15.json").write_text(
         json.dumps({"_schema": "external-validation-v1", "cohort": "ok", "drug": "ciprofloxacin"}))
-    arts = rep.load_external_artifacts(tmp_path)
+    arts = rep.load_external_artifacts(tmp_path, allow_unscoped_glob=True)
     assert [a["cohort"] for a in arts] == ["ok"]
 
 
@@ -121,7 +152,7 @@ def test_main_writes_separate_namespace(tmp_path):
         json.dumps(_artifact() | {"_schema": "external-validation-v1"}))
     import sys
     argv = sys.argv
-    sys.argv = ["prog", "--wiki-dir", str(tmp_path), "--no-clonality"]
+    sys.argv = ["prog", "--wiki-dir", str(tmp_path), "--no-clonality", "--allow-unscoped-glob"]
     try:
         assert rep.main() == 0
     finally:

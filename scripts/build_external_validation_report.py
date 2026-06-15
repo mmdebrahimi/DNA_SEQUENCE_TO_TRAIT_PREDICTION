@@ -41,17 +41,44 @@ OUR_REPORT_CARD = "external_validation_report_card"
 # --------------------------------------------------------------------------- #
 # Pure: artifact loading + lineage block + rendering
 # --------------------------------------------------------------------------- #
-def load_external_artifacts(wiki_dir: str | Path) -> list[dict]:
-    """Load every external-validation-v1 artifact (excludes the roll-up itself)."""
+def _publishable(d: dict, allow_degraded: bool) -> bool:
+    """A cell publishes iff it is NOT a powering hard-fail and (not degraded OR allowed)."""
+    if (d.get("powering") or {}).get("hard_fail"):
+        return False
+    if d.get("run_degraded") and not allow_degraded:
+        return False
+    return True
+
+
+def load_external_artifacts(wiki_dir: str | Path, *, run_id: str | None = None,
+                            artifacts: list[str] | None = None,
+                            allow_unscoped_glob: bool = False,
+                            allow_degraded: bool = False) -> list[dict]:
+    """Load external-validation-v1 artifacts, RUN-SCOPED by default.
+
+    Scope precedence: explicit `artifacts` list > `run_id` filter > glob-all (ONLY when
+    `allow_unscoped_glob`, else refuse with a ValueError — stale prior cells must not
+    silently roll up). Always excludes the roll-up itself, hard-fail cells, and
+    (unless allow_degraded) run_degraded cells.
+    """
+    if artifacts is not None:
+        paths = list(artifacts)
+    elif run_id is not None:
+        paths = sorted(glob.glob(str(Path(wiki_dir) / f"external_validation_*_{run_id}_*.json")))
+    elif allow_unscoped_glob:
+        paths = sorted(glob.glob(str(Path(wiki_dir) / "external_validation_*.json")))
+    else:
+        raise ValueError("run-scoped roll-up requires --run-id or --artifacts "
+                         "(pass --allow-unscoped-glob to glob all, NOT recommended — stale cells)")
     out: list[dict] = []
-    for f in sorted(glob.glob(str(Path(wiki_dir) / "external_validation_*.json"))):
+    for f in paths:
         if Path(f).stem == OUR_REPORT_CARD:
             continue
         try:
             d = json.loads(Path(f).read_text(encoding="utf-8"))
         except (ValueError, OSError):
             continue
-        if d.get("_schema") == "external-validation-v1":
+        if d.get("_schema") == "external-validation-v1" and _publishable(d, allow_degraded):
             d["_path"] = f
             out.append(d)
     return out
@@ -179,9 +206,17 @@ def main() -> int:
     ap.add_argument("--wiki-dir", default="wiki")
     ap.add_argument("--no-clonality", action="store_true", help="skip the Docker Mash lineage block")
     ap.add_argument("--threshold", type=float, default=0.001)
+    ap.add_argument("--run-id", default=None, help="roll up only this run's artifacts (run-scoped)")
+    ap.add_argument("--artifacts", nargs="*", default=None, help="explicit artifact paths to roll up")
+    ap.add_argument("--allow-unscoped-glob", action="store_true",
+                    help="glob ALL external_validation_*.json (NOT recommended — may include stale cells)")
+    ap.add_argument("--allow-degraded", action="store_true",
+                    help="include run_degraded cells (stamped; never headline). hard_fail never included.")
     a = ap.parse_args()
 
-    artifacts = load_external_artifacts(a.wiki_dir)
+    artifacts = load_external_artifacts(
+        a.wiki_dir, run_id=a.run_id, artifacts=a.artifacts,
+        allow_unscoped_glob=a.allow_unscoped_glob, allow_degraded=a.allow_degraded)
     cells = []
     for art in artifacts:
         lineage = None if a.no_clonality else compute_lineage_for_cohort(art, threshold=a.threshold)
