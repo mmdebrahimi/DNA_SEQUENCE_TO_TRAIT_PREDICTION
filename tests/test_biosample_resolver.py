@@ -12,9 +12,50 @@ from dna_decode.eval.biosample_resolver import (
     _reconcile_biosample,
     parse_ena_assembly,
     parse_ena_read_run,
+    parse_ena_read_run_records,
     parse_entrez_assembly_summary,
     parse_entrez_esearch,
 )
+
+
+# --------------------------------------------------------------------------- #
+# parse_ena_read_run_records (multi-field; additive, Step 1)
+# --------------------------------------------------------------------------- #
+def test_parse_read_run_records_all_fields():
+    tsv = ("run_accession\tsample_accession\tsample_alias\tsecondary_sample_accession\n"
+           "ERR1\tSAMEA1\taliasA\tERS1\n"
+           "ERR2\tSAMEA2\taliasB\tERS2\n")
+    fields = ("run_accession", "sample_accession", "sample_alias", "secondary_sample_accession")
+    recs = parse_ena_read_run_records(tsv, fields)
+    assert recs[0] == {"run_accession": "ERR1", "sample_accession": "SAMEA1",
+                       "sample_alias": "aliasA", "secondary_sample_accession": "ERS1"}
+    assert len(recs) == 2
+
+
+def test_parse_read_run_records_missing_optional_column():
+    # only run+sample present; requested alias/secondary absent -> omitted, not crash
+    tsv = "run_accession\tsample_accession\nERR1\tSAMEA1\n"
+    recs = parse_ena_read_run_records(tsv, ("run_accession", "sample_accession",
+                                           "sample_alias", "secondary_sample_accession"))
+    assert recs == [{"run_accession": "ERR1", "sample_accession": "SAMEA1"}]
+
+
+def test_parse_read_run_records_empty():
+    assert parse_ena_read_run_records("", ("run_accession",)) == []
+    assert parse_ena_read_run_records("nomatch\tcols\nx\ty\n", ("run_accession",)) == []
+
+
+def test_read_run_records_for_project(tmp_path):
+    tsv = ("run_accession\tsample_accession\tsample_alias\tsecondary_sample_accession\n"
+           "ERR1\tSAMEA1\taliasA\tERS1\n")
+
+    def fetch(url):
+        assert "result=read_run" in url and "sample_alias" in url
+        return tsv
+
+    r = BioSampleResolver(cache_path=tmp_path / "c.json", fetch=fetch)
+    recs = r.read_run_records_for_project("PRJEB1")
+    assert recs[0]["sample_alias"] == "aliasA"
 
 
 # --------------------------------------------------------------------------- #

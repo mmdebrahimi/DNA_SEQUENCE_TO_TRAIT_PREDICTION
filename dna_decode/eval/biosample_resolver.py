@@ -74,6 +74,34 @@ def parse_ena_read_run(tsv: str) -> list[tuple[str, str]]:
     return out
 
 
+def parse_ena_read_run_records(tsv: str, fields: tuple[str, ...]) -> list[dict]:
+    """Parse an ENA filereport `result=read_run` TSV into a list of per-run dicts.
+
+    Unlike `parse_ena_read_run` (which returns just (run, biosample) tuples), this
+    keeps EVERY requested field present in the header — the crosswalk's candidate-key
+    source (run_accession / sample_accession / sample_alias / secondary_sample_accession).
+    Columns absent from the header are simply omitted from each record (tolerant).
+    A record is emitted only if it has at least one non-empty requested field.
+    """
+    lines = [ln for ln in tsv.splitlines() if ln.strip()]
+    if not lines:
+        return []
+    header = lines[0].split("\t")
+    col_idx = {f: header.index(f) for f in fields if f in header}
+    if not col_idx:
+        return []
+    out: list[dict] = []
+    for ln in lines[1:]:
+        cells = ln.split("\t")
+        rec = {}
+        for f, i in col_idx.items():
+            if i < len(cells) and cells[i].strip():
+                rec[f] = cells[i].strip()
+        if rec:
+            out.append(rec)
+    return out
+
+
 def parse_ena_assembly(tsv: str) -> list[str]:
     """Parse an ENA filereport `result=assembly` TSV into [assembly_accession,...]."""
     lines = [ln for ln in tsv.splitlines() if ln.strip()]
@@ -158,6 +186,20 @@ class BioSampleResolver:
         url = (f"{ENA_PORTAL}?accession={urllib.parse.quote(project)}"
                f"&result=read_run&fields=run_accession,sample_accession&format=tsv")
         return parse_ena_read_run(self.fetch(url))
+
+    # -- ENA read_run multi-field records (crosswalk candidate-key source) -- #
+    def read_run_records_for_project(
+        self, project: str,
+        fields: tuple[str, ...] = ("run_accession", "sample_accession",
+                                   "sample_alias", "secondary_sample_accession"),
+    ) -> list[dict]:
+        """Fetch per-run records with extra ENA fields for crosswalk construction.
+
+        Additive — does NOT change `runs_for_project`'s (run, sample) tuple contract.
+        """
+        url = (f"{ENA_PORTAL}?accession={urllib.parse.quote(project)}"
+               f"&result=read_run&fields={','.join(fields)}&format=tsv")
+        return parse_ena_read_run_records(self.fetch(url), fields)
 
     # -- biosample -> assemblies (Entrez primary, ENA fallback) ------------ #
     def _entrez_assemblies_for_biosample(self, biosample: str) -> list[str]:
