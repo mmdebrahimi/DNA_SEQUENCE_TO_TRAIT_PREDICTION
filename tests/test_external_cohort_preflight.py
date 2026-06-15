@@ -181,12 +181,39 @@ def test_preflight_pass(tmp_path, monkeypatch):
     monkeypatch.setattr(pf, "build_manifest", lambda: _M())
     monkeypatch.setattr(pf, "prior_accessions", lambda m, exclude_cohort: {"GCA_TUNING.1"})
 
+    # EXACT-SET (scored) mode: pass cohort BioSamples explicitly (e.g. from the manifest)
     art = pf.preflight("PRJEB_TEST", "spain_probac", mic_open=True,
-                       resolver=resolver, wiki_dir=tmp_path, write=True)
+                       resolver=resolver, wiki_dir=tmp_path, write=True,
+                       cohort_biosamples=["SAMEA_C1", "SAMEA_C2"])
     assert art["verdict"] == "PASS"
+    assert art["mode"] == "exact_set" and art["scored_gate"] is True
     assert art["assembly_availability"]["n_free"] >= 1
     assert art["leakage"]["overlap_biosamples"] == []
     assert (tmp_path / f"external_preflight_spain_probac_{art['date']}.json").exists()
+
+
+def test_preflight_project_probe_mode(tmp_path, monkeypatch):
+    fetch = _uid_aware_fetch(
+        read_run_tsv="run_accession\tsample_accession\nERR1\tSAMEA_C1\n",
+        esearch_term_to_uid={"SAMEA_C1": "1", "GCA_TUNING.1": "999"},
+        uid_to_record={
+            "1": {"assemblyaccession": "GCA_C1.1", "biosampleaccn": "SAMEA_C1"},
+            "999": {"assemblyaccession": "GCA_TUNING.1", "biosampleaccn": "SAMN_DISJOINT"},
+        },
+    )
+    resolver = BioSampleResolver(cache_path=tmp_path / "cache.json", fetch=fetch)
+
+    class _M:
+        incomplete = False
+        cohorts = [1]
+    monkeypatch.setattr(pf, "build_manifest", lambda: _M())
+    monkeypatch.setattr(pf, "prior_accessions", lambda m, exclude_cohort: {"GCA_TUNING.1"})
+
+    # project mode (no cohort_biosamples) -> non-scored probe + renamed artifact
+    art = pf.preflight("PRJEB_TEST", "oxford", mic_open=True, resolver=resolver,
+                       wiki_dir=tmp_path, write=True)
+    assert art["mode"] == "project_probe" and art["scored_gate"] is False
+    assert (tmp_path / f"external_project_probe_oxford_{art['date']}.json").exists()
 
 
 def test_preflight_fail_on_leak(tmp_path, monkeypatch):

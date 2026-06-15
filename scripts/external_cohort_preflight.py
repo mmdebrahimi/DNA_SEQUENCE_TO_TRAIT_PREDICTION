@@ -112,12 +112,22 @@ def overall_verdict(leakage: dict, availability: dict, mic_open: bool | None,
 def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
               resolver: BioSampleResolver | None = None,
               wiki_dir: str | Path = "wiki", write: bool = True,
-              allow_degraded: bool = False) -> dict:
-    resolver = resolver or BioSampleResolver()
+              allow_degraded: bool = False,
+              cohort_biosamples: list[str] | None = None) -> dict:
+    """Gate-0 preflight.
 
-    # cohort BioSamples (ENA read_run for the project)
-    runs = resolver.runs_for_project(project)
-    cohort_biosamples = sorted({bs for _run, bs in runs})
+    EXACT-SET mode (`cohort_biosamples` supplied, e.g. from the cohort manifest):
+    the leakage + availability verdict covers EXACTLY the scored set -> a SCORED gate.
+    PROJECT-PROBE mode (default, derives BioSamples from the whole project's read_run):
+    a coarse "worth ingesting?" diagnostic, `scored_gate=False` — NEVER a scored gate.
+    """
+    resolver = resolver or BioSampleResolver()
+    exact_set = cohort_biosamples is not None
+    if exact_set:
+        cohort_biosamples = sorted({bs for bs in cohort_biosamples if bs})
+    else:
+        runs = resolver.runs_for_project(project)
+        cohort_biosamples = sorted({bs for _run, bs in runs})
 
     # (a) assembly availability per cohort BioSample
     bs_to_assemblies = {bs: resolver.biosample_to_assemblies(bs) for bs in cohort_biosamples}
@@ -138,6 +148,8 @@ def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
         "date": _date.today().isoformat(),
         "project": project,
         "cohort_name": cohort_name,
+        "mode": "exact_set" if exact_set else "project_probe",
+        "scored_gate": exact_set,   # ONLY the exact-set verdict gates scoring
         "verdict": verdict["verdict"],
         "reasons": verdict["reasons"],
         "n_cohort_biosamples": len(cohort_biosamples),
@@ -150,7 +162,9 @@ def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
         "manifest_n_cohorts": len(manifest.cohorts),
     }
     if write:
-        out = Path(wiki_dir) / f"external_preflight_{cohort_name}_{_date.today().isoformat()}.json"
+        stem = (f"external_preflight_{cohort_name}" if exact_set
+                else f"external_project_probe_{cohort_name}")
+        out = Path(wiki_dir) / f"{stem}_{_date.today().isoformat()}.json"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
         artifact["_artifact_path"] = str(out)
@@ -168,8 +182,16 @@ def main() -> int:
                      help="per-isolate MIC table is MTA-gated")
     ap.add_argument("--allow-degraded", action="store_true",
                     help="proceed even if the leakage manifest is incomplete (stamps manifest_degraded)")
+    ap.add_argument("--cohort-manifest", default=None,
+                    help="cohort_manifest_external_<run_id>.json -> EXACT-set (scored) gate; "
+                         "without it the run is a non-scored project_probe diagnostic")
     a = ap.parse_args()
-    art = preflight(a.project, a.cohort_name, mic_open=a.mic_open, allow_degraded=a.allow_degraded)
+    cohort_bs = None
+    if a.cohort_manifest:
+        man = json.loads(Path(a.cohort_manifest).read_text(encoding="utf-8"))
+        cohort_bs = man.get("biosamples") or sorted({r["biosample"] for r in man.get("rows", [])})
+    art = preflight(a.project, a.cohort_name, mic_open=a.mic_open,
+                    allow_degraded=a.allow_degraded, cohort_biosamples=cohort_bs)
     print(f"\nPREFLIGHT {art['verdict']} — {art['cohort_name']} ({a.project})")
     print(f"  cohort BioSamples: {art['n_cohort_biosamples']} "
           f"(FREE {art['assembly_availability']['n_free']} / "
