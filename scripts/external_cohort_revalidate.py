@@ -36,6 +36,11 @@ from scripts.independent_cohort_validate import _conf
 AMRFINDER_ORGANISM = "Escherichia"
 REGISTRY_ORGANISM = "Escherichia_coli_Shigella"
 
+# Powering floor — an external CLINICAL claim must be powered, not just non-empty.
+# Mirrors independent_cohort_validate.py's promotion gate (MIN_PER_CLASS=10).
+MIN_PER_CLASS = 10
+MAX_INDETERMINATE_FRACTION = 0.20   # of attempted-FREE strains (reads-only exclusions don't count)
+
 EVIDENCE_TIER = "external_clinical"
 INDEPENDENCE_TIER = (
     "external clinical cohort — different country / lab / AST method than the decoder's "
@@ -105,8 +110,45 @@ def score_label_set(free_genomes: dict[str, str], labels: dict[str, str],
     return conf_from_records(records, n_excluded)
 
 
+def powering_gate(strict_conf: dict, n_attempted_free: int, n_indeterminate: int, *,
+                  min_per_class: int = MIN_PER_CLASS,
+                  max_indeterminate_frac: float = MAX_INDETERMINATE_FRACTION) -> dict:
+    """Decide whether the strict-tier result is a POWERED, non-fail-open external claim.
+
+    - HARD FAIL (not overridable): n_scored == 0, OR strict scored R/S below min_per_class
+      (an underpowered claim — lower --min-per-class for a documented pilot, don't override).
+    - DEGRADED (overridable by --allow-degraded): indeterminate fraction (of attempted-FREE
+      strains, so reads-only ASSEMBLY-REQUIRED exclusions don't count) exceeds the threshold —
+      a sign of broken Docker/NCBI rather than a clean run.
+    """
+    n_scored = strict_conf.get("n_scored", 0)
+    scored_R = strict_conf.get("tp", 0) + strict_conf.get("fn", 0)
+    scored_S = strict_conf.get("tn", 0) + strict_conf.get("fp", 0)
+    frac = round(n_indeterminate / n_attempted_free, 4) if n_attempted_free else 0.0
+    reasons: list[str] = []
+    hard_fail = False
+    if n_scored == 0:
+        hard_fail = True
+        reasons.append("n_scored == 0 (no FREE strain produced an R/S call — likely broken Docker/NCBI)")
+    if scored_R < min_per_class:
+        hard_fail = True
+        reasons.append(f"strict scored R {scored_R} < min_per_class {min_per_class} (underpowered)")
+    if scored_S < min_per_class:
+        hard_fail = True
+        reasons.append(f"strict scored S {scored_S} < min_per_class {min_per_class} (underpowered)")
+    degraded = frac > max_indeterminate_frac
+    if degraded:
+        reasons.append(f"indeterminate fraction {frac} > {max_indeterminate_frac} "
+                       f"(of {n_attempted_free} attempted-FREE)")
+    return {"hard_fail": hard_fail, "degraded": degraded, "reasons": reasons,
+            "n_attempted_free": n_attempted_free, "n_indeterminate": n_indeterminate,
+            "indeterminate_fraction": frac, "scored_R": scored_R, "scored_S": scored_S,
+            "min_per_class": min_per_class, "max_indeterminate_fraction": max_indeterminate_frac}
+
+
 def build_artifact(cohort: str, drug: str, *, strict: dict, relaxed: dict, buckets: dict,
-                   leakage_control: str, degraded: bool = False) -> dict:
+                   leakage_control: str, degraded: bool = False,
+                   powering: dict | None = None, run_degraded: bool = False) -> dict:
     """Assemble the external-validation-v1 artifact (separate namespace)."""
     return {
         "_schema": "external-validation-v1",
@@ -123,6 +165,8 @@ def build_artifact(cohort: str, drug: str, *, strict: dict, relaxed: dict, bucke
         "buckets": buckets,
         "leakage_control": leakage_control,
         "independence_degraded": bool(degraded),
+        "powering": powering or {},
+        "run_degraded": bool(run_degraded),
         "primary_metric": "strict",
     }
 
@@ -157,7 +201,11 @@ def main() -> int:
     ap.add_argument("--labels-dir", required=True,
                     help="dir with selected_strict.tsv + selected_relaxed.tsv + buckets_<drug>.json (Step 2)")
     ap.add_argument("--preflight-json", default=None, help="Step 1 preflight artifact (fail-closed if absent)")
-    ap.add_argument("--allow-degraded", action="store_true", help="proceed even if preflight FAILED/absent")
+    ap.add_argument("--allow-degraded", action="store_true",
+                    help="proceed even if preflight FAILED/absent OR the run is indeterminate-degraded")
+    ap.add_argument("--min-per-class", type=int, default=MIN_PER_CLASS,
+                    help=f"min strict-scored R and S to count as powered (default {MIN_PER_CLASS}; "
+                         f"lower for a documented small pilot)")
     a = ap.parse_args()
 
     preflight = json.loads(Path(a.preflight_json).read_text(encoding="utf-8")) if a.preflight_json else None
@@ -197,13 +245,19 @@ def main() -> int:
     (base / "predictions_strict.json").write_text(json.dumps(strict_records, indent=2), encoding="utf-8")
     (base / "predictions_relaxed.json").write_text(json.dumps(relaxed_records, indent=2), encoding="utf-8")
 
+    # Powering gate — fail-open guard (n_scored==0 / underpowered / high-indeterminate).
+    n_attempted_free = len(strict_records)
+    n_indeterminate = sum(1 for r in strict_records if str(r["prediction"]).upper() not in ("R", "S"))
+    pg = powering_gate(strict_conf, n_attempted_free, n_indeterminate, min_per_class=a.min_per_class)
+
     leakage_control = (
         f"BioSample-level preflight: {('PASS' if preflight and preflight.get('verdict') == 'PASS' else 'DEGRADED')}; "
         f"{genomes['n_assembly_required']} reads-only BioSamples excluded (ASSEMBLY-REQUIRED)"
     )
     artifact = build_artifact(a.cohort, a.drug, strict=strict_conf, relaxed=relaxed_conf,
                               buckets=buckets, leakage_control=leakage_control,
-                              degraded=not (preflight and preflight.get("verdict") == "PASS"))
+                              degraded=not (preflight and preflight.get("verdict") == "PASS"),
+                              powering=pg, run_degraded=pg["degraded"])
 
     base.mkdir(parents=True, exist_ok=True)
     (base / "selected_strict.tsv").write_text(
@@ -215,7 +269,15 @@ def main() -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
     print(f"RESULT strict acc={strict_conf['acc']} sens={strict_conf['sens']} spec={strict_conf['spec']} "
-          f"(n={strict_conf['n_scored']}); artifact: {out}")
+          f"(n={strict_conf['n_scored']}, scored {pg['scored_R']}R/{pg['scored_S']}S, "
+          f"indeterminate {pg['indeterminate_fraction']}); artifact: {out}")
+    # Fail-open guard: a hard-fail / un-overridden degraded run must NOT exit 0.
+    if pg["hard_fail"]:
+        print(f"POWERING HARD FAIL: {pg['reasons']}")
+        return 3
+    if pg["degraded"] and not a.allow_degraded:
+        print(f"RUN DEGRADED (pass --allow-degraded to accept): {pg['reasons']}")
+        return 1
     return 0
 
 

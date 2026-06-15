@@ -97,6 +97,63 @@ def test_build_artifact_schema():
 
 
 # --------------------------------------------------------------------------- #
+# powering_gate (fail-open guard)
+# --------------------------------------------------------------------------- #
+def _powered_conf(nR=12, nS=12):
+    # all correct: tp=nR, fn=0, tn=nS, fp=0
+    return {"n_scored": nR + nS, "tp": nR, "fn": 0, "tn": nS, "fp": 0}
+
+
+def test_powering_pass():
+    pg = ecr.powering_gate(_powered_conf(12, 12), n_attempted_free=24, n_indeterminate=0)
+    assert pg["hard_fail"] is False and pg["degraded"] is False
+    assert pg["scored_R"] == 12 and pg["scored_S"] == 12
+
+
+def test_powering_hard_fail_zero_scored():
+    pg = ecr.powering_gate({"n_scored": 0, "tp": 0, "fn": 0, "tn": 0, "fp": 0},
+                           n_attempted_free=20, n_indeterminate=20)
+    assert pg["hard_fail"] is True
+    assert any("n_scored == 0" in r for r in pg["reasons"])
+
+
+def test_powering_hard_fail_below_class_floor():
+    # 4R/4S scored, no indeterminates -> non-empty but UNDERPOWERED -> hard fail
+    pg = ecr.powering_gate(_powered_conf(4, 4), n_attempted_free=8, n_indeterminate=0)
+    assert pg["hard_fail"] is True
+    assert any("underpowered" in r for r in pg["reasons"])
+
+
+def test_powering_pilot_threshold_override():
+    # lowering min_per_class to a documented pilot threshold clears the floor
+    pg = ecr.powering_gate(_powered_conf(4, 4), n_attempted_free=8, n_indeterminate=0, min_per_class=4)
+    assert pg["hard_fail"] is False
+
+
+def test_powering_degraded_high_indeterminate():
+    # 12R/12S scored (powered) but 10 of 34 attempted-FREE were indeterminate -> ~0.29 > 0.20
+    pg = ecr.powering_gate(_powered_conf(12, 12), n_attempted_free=34, n_indeterminate=10)
+    assert pg["hard_fail"] is False
+    assert pg["degraded"] is True
+    assert pg["indeterminate_fraction"] > 0.20
+
+
+def test_powering_reads_only_exclusions_dont_count():
+    # attempted-FREE denominator excludes reads-only; 0 indeterminate of 24 attempted -> not degraded
+    pg = ecr.powering_gate(_powered_conf(12, 12), n_attempted_free=24, n_indeterminate=0)
+    assert pg["degraded"] is False and pg["indeterminate_fraction"] == 0.0
+
+
+def test_build_artifact_carries_powering():
+    pg = ecr.powering_gate(_powered_conf(12, 12), n_attempted_free=24, n_indeterminate=0)
+    art = ecr.build_artifact("oxford", "ciprofloxacin", strict=_powered_conf(12, 12),
+                             relaxed={}, buckets={}, leakage_control="x",
+                             powering=pg, run_degraded=pg["degraded"])
+    assert art["powering"]["scored_R"] == 12
+    assert art["run_degraded"] is False
+
+
+# --------------------------------------------------------------------------- #
 # gate_ok (fail-closed)
 # --------------------------------------------------------------------------- #
 def test_gate_pass():
