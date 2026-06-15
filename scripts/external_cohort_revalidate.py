@@ -100,6 +100,21 @@ def conf_from_records(records: list[dict], n_excluded: int = 0) -> dict:
     return conf
 
 
+def smoke_predict(free_genomes: dict[str, str], predict: Predict) -> dict:
+    """Fail-fast: run ONE FREE strain through the live AMRFinder/decoder path BEFORE
+    the full loop, so a broken Docker mount / missing DB / NCBI failure trips on
+    strain 1 (seconds) instead of after N AMRFinder runs (hours). ok iff the one
+    prediction is a real R/S call (INDETERMINATE means the live path is broken).
+    """
+    if not free_genomes:
+        return {"ok": False, "reason": "no FREE genomes to smoke", "gca": None, "prediction": None}
+    gca = sorted(free_genomes.values())[0]
+    pred = predict(gca)
+    ok = str(pred).upper() in ("R", "S")
+    return {"ok": ok, "gca": gca, "prediction": pred,
+            "reason": "" if ok else f"smoke strain {gca} -> {pred} (live AMRFinder/decoder path broken)"}
+
+
 def score_label_set(free_genomes: dict[str, str], labels: dict[str, str],
                     predict: Predict) -> dict:
     """Score one label set (thin wrapper): predict each FREE strain -> _conf.
@@ -206,6 +221,8 @@ def main() -> int:
     ap.add_argument("--min-per-class", type=int, default=MIN_PER_CLASS,
                     help=f"min strict-scored R and S to count as powered (default {MIN_PER_CLASS}; "
                          f"lower for a documented small pilot)")
+    ap.add_argument("--skip-smoke", action="store_true",
+                    help="skip the one-strain fail-fast smoke before the full scoring loop")
     a = ap.parse_args()
 
     preflight = json.loads(Path(a.preflight_json).read_text(encoding="utf-8")) if a.preflight_json else None
@@ -234,6 +251,14 @@ def main() -> int:
     gcache = base / "refseq"
     reuse_glob = f"data/raw/{a.cohort}_*/amrfinder_runs"
     predict = real_predictor(a.drug, own_runs, gcache, reuse_glob)
+
+    # Fail-fast smoke: one strain through the live path before the full loop.
+    if not a.skip_smoke:
+        smoke = smoke_predict(genomes["free"], predict)
+        print(f"SMOKE: {smoke['gca']} -> {smoke['prediction']} (ok={smoke['ok']})")
+        if not smoke["ok"] and not a.allow_degraded:
+            print(f"SMOKE FAILED (pass --skip-smoke or --allow-degraded to bypass): {smoke['reason']}")
+            return 3
 
     strict_records, strict_excl = predict_records(genomes["free"], strict_labels, predict)
     strict_conf = conf_from_records(strict_records, strict_excl)

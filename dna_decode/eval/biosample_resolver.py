@@ -11,7 +11,9 @@ both an NCBI assembly and an ENA run carry:
 
 PRIMARY resolver for the BioSample<->Assembly directions is NCBI Entrez
 `esearch`+`esummary` (works for both SAMEA and SAMN). ENA portal
-`result=assembly&query=sample_accession=` is the FALLBACK. When BOTH sources
+`filereport?accession=<biosample>&result=assembly&fields=assembly_accession,sample_accession`
+is the FALLBACK (the filereport `accession=` form — UNVERIFIED against the live API
+until the pre-scoring smoke runs). When BOTH sources
 answer and DISAGREE, the result is None with source="disagreement" — the caller
 counts a disagreement as UNRESOLVED for the leakage check, never as disjoint
 (C4 from the plan brainstorm).

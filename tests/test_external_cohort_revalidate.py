@@ -97,6 +97,30 @@ def test_build_artifact_schema():
 
 
 # --------------------------------------------------------------------------- #
+# smoke_predict (fail-fast before the full loop)
+# --------------------------------------------------------------------------- #
+def test_smoke_ok():
+    sm = ecr.smoke_predict({"SAMN_a": "GCA_a.1"}, lambda g: "R")
+    assert sm["ok"] is True and sm["gca"] == "GCA_a.1"
+
+
+def test_smoke_fail_on_indeterminate():
+    sm = ecr.smoke_predict({"SAMN_a": "GCA_a.1"}, lambda g: "INDETERMINATE")
+    assert sm["ok"] is False and "broken" in sm["reason"]
+
+
+def test_smoke_empty_genomes():
+    sm = ecr.smoke_predict({}, lambda g: "R")
+    assert sm["ok"] is False
+
+
+def test_smoke_picks_deterministic_first():
+    seen = []
+    ecr.smoke_predict({"SAMN_b": "GCA_z.1", "SAMN_a": "GCA_a.1"}, lambda g: seen.append(g) or "S")
+    assert seen == ["GCA_a.1"]                # sorted-first, deterministic
+
+
+# --------------------------------------------------------------------------- #
 # powering_gate (fail-open guard)
 # --------------------------------------------------------------------------- #
 def _powered_conf(nR=12, nS=12):
