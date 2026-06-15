@@ -71,3 +71,42 @@ def test_dedup_and_sorted_input():
     resolver = _FakeResolver({"SAMN_a": ["GCF_a.1"], "SAMN_b": ["GCF_b.1"]})
     out = ecg.resolve_cohort_genomes(["SAMN_b", "SAMN_a", "SAMN_a"], resolver)
     assert out["n_free"] == 2  # deduped
+
+
+# --------------------------------------------------------------------------- #
+# M1: BioSample key-shape guard (join-chain contract)
+# --------------------------------------------------------------------------- #
+def test_is_biosample_key():
+    assert ecg.is_biosample_key("SAMN12345")
+    assert ecg.is_biosample_key("SAMEA98765")
+    assert ecg.is_biosample_key("SAMD0001")
+    assert not ecg.is_biosample_key("ERR123456")        # run accession
+    assert not ecg.is_biosample_key("isolate_42")       # study-local alias
+
+
+def test_validate_biosample_keys():
+    v = ecg.validate_biosample_keys(["SAMN1", "ERR9", "alias_x"])
+    assert v["ok"] is False
+    assert v["bad_keys"] == ["ERR9", "alias_x"]
+    assert v["n_bad"] == 2
+
+
+def test_resolve_refuses_non_biosample_keys():
+    import pytest
+    resolver = _FakeResolver({})
+    with pytest.raises(ecg.ExternalKeyError):
+        ecg.resolve_cohort_genomes(["ERR111", "isolate_7"], resolver)  # not BioSamples
+
+
+def test_resolve_crosswalk_resolves_aliases():
+    # MIC-ingester crosswalk maps study aliases -> BioSamples before the guard.
+    resolver = _FakeResolver({"SAMN_a": ["GCF_a.1"]})
+    out = ecg.resolve_cohort_genomes(["isolate_7"], resolver, crosswalk={"isolate_7": "SAMN_a"})
+    assert out["free"] == {"SAMN_a": "GCF_a.1"}
+
+
+def test_resolve_bypass_guard_when_disabled():
+    # explicit opt-out (not recommended) -> alias key flows through, lands in ASSEMBLY_REQUIRED
+    resolver = _FakeResolver({})
+    out = ecg.resolve_cohort_genomes(["alias_x"], resolver, require_biosample_keys=False)
+    assert out["assembly_required"] == ["alias_x"]
