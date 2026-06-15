@@ -1,0 +1,138 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-06-15",
+  "cohort": "oxford_lipworth_ecoli_mic_arg",
+  "organism": "Escherichia_coli_Shigella",
+  "drugs": {
+    "ciprofloxacin": {
+      "strict": {
+        "n_scored": 1005,
+        "tp": 346,
+        "fp": 6,
+        "tn": 629,
+        "fn": 24,
+        "abstain": 0,
+        "acc": 0.97,
+        "sens": 0.935,
+        "spec": 0.991
+      },
+      "relaxed": {
+        "n_scored": 1005,
+        "tp": 346,
+        "fp": 6,
+        "tn": 629,
+        "fn": 24,
+        "abstain": 0,
+        "acc": 0.97,
+        "sens": 0.935,
+        "spec": 0.991
+      },
+      "binary": {
+        "n_scored": 2841,
+        "tp": 346,
+        "fp": 91,
+        "tn": 2380,
+        "fn": 24,
+        "abstain": 0,
+        "acc": 0.96,
+        "sens": 0.935,
+        "spec": 0.963
+      },
+      "buckets": {
+        "BORDERLINE": 1747,
+        "HIGH_S": 635,
+        "HIGH_R": 370,
+        "AMBIGUOUS": 89
+      },
+      "n_total": 2841
+    },
+    "ceftriaxone": {
+      "strict": {
+        "n_scored": 234,
+        "tp": 222,
+        "fp": 0,
+        "tn": 0,
+        "fn": 12,
+        "abstain": 0,
+        "acc": 0.949,
+        "sens": 0.949,
+        "spec": null
+      },
+      "relaxed": {
+        "n_scored": 234,
+        "tp": 222,
+        "fp": 0,
+        "tn": 0,
+        "fn": 12,
+        "abstain": 0,
+        "acc": 0.949,
+        "sens": 0.949,
+        "spec": null
+      },
+      "binary": {
+        "n_scored": 2868,
+        "tp": 225,
+        "fp": 765,
+        "tn": 1865,
+        "fn": 13,
+        "abstain": 0,
+        "acc": 0.729,
+        "sens": 0.945,
+        "spec": 0.709
+      },
+      "buckets": {
+        "BORDERLINE": 2634,
+        "HIGH_R": 234,
+        "AMBIGUOUS": 6
+      },
+      "n_total": 2874
+    },
+    "gentamicin": {
+      "strict": {
+        "n_scored": 2250,
+        "tp": 0,
+        "fp": 9,
+        "tn": 2241,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.996,
+        "sens": null,
+        "spec": 0.996
+      },
+      "relaxed": {
+        "n_scored": 2250,
+        "tp": 0,
+        "fp": 9,
+        "tn": 2241,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.996,
+        "sens": null,
+        "spec": 0.996
+      },
+      "binary": {
+        "n_scored": 2873,
+        "tp": 177,
+        "fp": 14,
+        "tn": 2667,
+        "fn": 15,
+        "abstain": 0,
+        "acc": 0.99,
+        "sens": 0.922,
+        "spec": 0.995
+      },
+      "buckets": {
+        "BORDERLINE": 598,
+        "HIGH_S": 2250,
+        "AMBIGUOUS": 25
+      },
+      "n_total": 2873
+    }
+  },
+  "evidence_tier": "external_clinical",
+  "independence_tier": "Oxford OUH measured MIC (broth microdilution) + Oxford's OWN AMRFinder genotype, joined by study guuid. MORE independent than NCBI-PD provdisjoint (independent genotype caller too). CAVEAT: AMRFinder version/DB differs from the frozen Docker pipeline (header-normalized in the adapter; Gene symbol -> Element symbol); the decoder's call_resistance RULE is what is validated.",
+  "leakage_status": "DISJOINT_PROJECT_LEVEL",
+  "leakage_evidence": "Oxford BioProjects PRJNA604975 + PRJNA1007570 deposit 0 NCBI assemblies (reads-only); the decoder's 1039 tuning/validation accessions are 100% GCA_/GCF_ assemblies -> an Oxford isolate (no GCA) cannot be in the tuning set. Disjoint by accession-type construction.",
+  "primary_metric": "binary (clean measured MIC; strict/relaxed tiers over-exclude gold-standard labels)",
+  "source": "github.com/samlipworth/ecoli_mic_arg (PRJNA604975 + PRJNA1007570)"
+}
