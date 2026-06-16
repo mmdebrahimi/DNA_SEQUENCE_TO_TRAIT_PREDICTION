@@ -1,0 +1,152 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-06-16",
+  "cohort": "sci234_lanellaecoli_PRJNA854358",
+  "organism": "Escherichia_coli_Shigella",
+  "drugs": {
+    "ciprofloxacin": {
+      "n_scored": 231,
+      "tp": 45,
+      "fp": 3,
+      "tn": 183,
+      "fn": 0,
+      "abstain": 0,
+      "acc": 0.987,
+      "sens": 1.0,
+      "spec": 0.984,
+      "mic_source": "CIPROF MIC",
+      "powering": "SCORED",
+      "powering_reason": "45R/186S both classes >=5"
+    },
+    "gentamicin": {
+      "n_scored": 221,
+      "tp": 0,
+      "fp": 2,
+      "tn": 219,
+      "fn": 0,
+      "abstain": 0,
+      "acc": 0.991,
+      "sens": null,
+      "spec": 0.991,
+      "mic_source": "GENTAM MIC",
+      "powering": "UNDERPOWERED",
+      "powering_reason": "0R/221S (no resistant isolates); sensitivity unmeasurable"
+    },
+    "ceftriaxone": {
+      "n_scored": 231,
+      "tp": 10,
+      "fp": 0,
+      "tn": 219,
+      "fn": 2,
+      "abstain": 0,
+      "acc": 0.991,
+      "sens": 0.833,
+      "spec": 1.0,
+      "mic_source": "CEFOTA (cefotaxime) MIC \u2014 3GC proxy; CLSI E.coli S<=1/R>=4 == ceftriaxone",
+      "powering": "SCORED",
+      "powering_reason": "12R/219S both classes >=5"
+    }
+  },
+  "discordances": {
+    "ciprofloxacin": [
+      {
+        "key": "00/0109",
+        "label": "S",
+        "pred": "R",
+        "n_det": 2,
+        "determinants": [
+          "gyrA_S83L",
+          "parE_I529L"
+        ]
+      },
+      {
+        "key": "18/1198",
+        "label": "S",
+        "pred": "R",
+        "n_det": 13,
+        "determinants": [
+          "parE_I355T",
+          "parE_L416F",
+          "parE_G423R",
+          "parE_P439S",
+          "parE_I444F",
+          "parE_L445H",
+          "parE_S458T",
+          "parE_S458A",
+          "parE_E460D",
+          "parE_I464F",
+          "parE_I470M",
+          "parE_D476N",
+          "parE_I529L"
+        ]
+      },
+      {
+        "key": "85/0324",
+        "label": "S",
+        "pred": "R",
+        "n_det": 13,
+        "determinants": [
+          "parE_I355T",
+          "parE_L416F",
+          "parE_G423R",
+          "parE_P439S",
+          "parE_I444F",
+          "parE_L445H",
+          "parE_S458T",
+          "parE_S458A",
+          "parE_E460D",
+          "parE_I464F",
+          "parE_I470M",
+          "parE_D476N",
+          "parE_I529L"
+        ]
+      }
+    ],
+    "gentamicin": [
+      {
+        "key": "10/0337",
+        "label": "S",
+        "pred": "R",
+        "n_det": 1,
+        "determinants": [
+          "aac(6')-Ib11"
+        ]
+      },
+      {
+        "key": "15/1924",
+        "label": "S",
+        "pred": "R",
+        "n_det": 1,
+        "determinants": [
+          "aac(6')-Ib11"
+        ]
+      }
+    ],
+    "ceftriaxone": [
+      {
+        "key": "05/1671",
+        "label": "R",
+        "pred": "S",
+        "n_det": 0,
+        "determinants": []
+      },
+      {
+        "key": "05/1680",
+        "label": "R",
+        "pred": "S",
+        "n_det": 0,
+        "determinants": []
+      }
+    ]
+  },
+  "unresolved_acquired_genes": {
+    "mdf(A)": 233
+  },
+  "evidence_tier": "external_clinical",
+  "independence_tier": "Sci Rep 2023 234-isolate E. coli cohort (Spain/Europe): own measured MIC (broth microdilution) + own ResFinder/PointFinder-style genotype, joined by study Key. Independent genotype caller; the call_resistance RULE is validated. cipro = QRDR-count (no Subclass lookup); gent+cef use the deployed fam.tsv per-gene Subclass resolver (scripts/fam_subclass_resolver.py) to reproduce AMRFinder v4.2.7 Class/Subclass.",
+  "fidelity_caveat": "gent+cef synthesize a main.tsv reproducing fam.tsv FAMILY-level Class/Subclass (faithful-but-imperfect proxy for real AMRFinder node-level assignment). CTX-M/CMY/DHA/ACT (E. coli 3GC drivers) + NDM/KPC resolve correctly; rare ESBL/carbapenemase variants on a generic BETA-LACTAM family node (TEM/SHV-ESBL, blaOXA-48) resolve to BETA-LACTAM and are NOT counted for cef -> conservative under-call, surfaced in discordances. gent resolution is clean (aac(3)*/armA/ant(2'')-Ia = GENTAMICIN).",
+  "leakage_status": "DISJOINT_PROJECT_LEVEL",
+  "leakage_evidence": "PRJNA854358 deposits 0 NCBI assemblies (reads-only); decoder tuning set is 100% GCA/GCF -> a 234-cohort isolate cannot be in it. Disjoint by accession-type construction.",
+  "source": "PMC9829913 / Sci Rep 2023 MOESM1_ESM.xlsx (open CC-BY)",
+  "note": "Direct supplement score (no assembly/Docker) \u2014 the genotype supplement ships QRDR mutations + acquired alleles."
+}
