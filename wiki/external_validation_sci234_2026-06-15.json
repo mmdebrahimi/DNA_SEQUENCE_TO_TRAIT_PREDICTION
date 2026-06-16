@@ -1,0 +1,25 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-06-15",
+  "cohort": "sci234_lanellaecoli_PRJNA854358",
+  "organism": "Escherichia_coli_Shigella",
+  "drugs": {
+    "ciprofloxacin": {
+      "n_scored": 231,
+      "tp": 45,
+      "fp": 3,
+      "tn": 183,
+      "fn": 0,
+      "abstain": 0,
+      "acc": 0.987,
+      "sens": 1.0,
+      "spec": 0.984
+    }
+  },
+  "evidence_tier": "external_clinical",
+  "independence_tier": "Sci Rep 2023 234-isolate E. coli cohort (Spain/Europe): own measured MIC (broth microdilution) + own ResFinder/PointFinder-style genotype, joined by study Key. Independent genotype caller; the call_resistance RULE is validated. cipro = QRDR-count (no Subclass lookup); gent+cef pending a fam.tsv Subclass resolver.",
+  "leakage_status": "DISJOINT_PROJECT_LEVEL",
+  "leakage_evidence": "PRJNA854358 deposits 0 NCBI assemblies (reads-only); decoder tuning set is 100% GCA/GCF -> a 234-cohort isolate cannot be in it. Disjoint by accession-type construction.",
+  "source": "PMC9829913 / Sci Rep 2023 MOESM1_ESM.xlsx (open CC-BY)",
+  "note": "Direct supplement score (no assembly/Docker) \u2014 the genotype supplement ships QRDR mutations + acquired alleles."
+}
