@@ -1,0 +1,136 @@
+{
+  "_schema": "cryptic-feasibility-probe-v1",
+  "date": "2026-06-16",
+  "source": "CRyPTIC reuse table 20240917 (EBI FTP)",
+  "n_isolates": 12287,
+  "census": {
+    "amikacin": {
+      "code": "AMI",
+      "R_all": 882,
+      "S_all": 11188,
+      "R_high": 597,
+      "S_high": 8375,
+      "verdict": "POWERED"
+    },
+    "bedaquiline": {
+      "code": "BDQ",
+      "R_all": 109,
+      "S_all": 11957,
+      "R_high": 71,
+      "S_high": 8464,
+      "verdict": "POWERED"
+    },
+    "clofazimine": {
+      "code": "CFZ",
+      "R_all": 525,
+      "S_all": 11522,
+      "R_high": 106,
+      "S_high": 7656,
+      "verdict": "POWERED"
+    },
+    "delamanid": {
+      "code": "DLM",
+      "R_all": 186,
+      "S_all": 11739,
+      "R_high": 85,
+      "S_high": 8009,
+      "verdict": "POWERED"
+    },
+    "ethambutol": {
+      "code": "EMB",
+      "R_all": 2261,
+      "S_all": 8336,
+      "R_high": 1460,
+      "S_high": 5154,
+      "verdict": "POWERED"
+    },
+    "ethionamide": {
+      "code": "ETH",
+      "R_all": 1727,
+      "S_all": 9431,
+      "R_high": 1189,
+      "S_high": 7062,
+      "verdict": "POWERED"
+    },
+    "isoniazid": {
+      "code": "INH",
+      "R_all": 5907,
+      "S_all": 6161,
+      "R_high": 4467,
+      "S_high": 5051,
+      "verdict": "POWERED"
+    },
+    "kanamycin": {
+      "code": "KAN",
+      "R_all": 1120,
+      "S_all": 11008,
+      "R_high": 759,
+      "S_high": 8573,
+      "verdict": "POWERED"
+    },
+    "levofloxacin": {
+      "code": "LEV",
+      "R_all": 2145,
+      "S_all": 10016,
+      "R_high": 1178,
+      "S_high": 6595,
+      "verdict": "POWERED"
+    },
+    "linezolid": {
+      "code": "LZD",
+      "R_all": 156,
+      "S_all": 12031,
+      "R_high": 76,
+      "S_high": 7064,
+      "verdict": "POWERED"
+    },
+    "moxifloxacin": {
+      "code": "MXF",
+      "R_all": 1724,
+      "S_all": 10468,
+      "R_high": 991,
+      "S_high": 5793,
+      "verdict": "POWERED"
+    },
+    "rifampicin": {
+      "code": "RIF",
+      "R_all": 4683,
+      "S_all": 7414,
+      "R_high": 3448,
+      "S_high": 5507,
+      "verdict": "POWERED"
+    },
+    "rifabutin": {
+      "code": "RFB",
+      "R_all": 4464,
+      "S_all": 7684,
+      "R_high": 3195,
+      "S_high": 6846,
+      "verdict": "POWERED"
+    }
+  },
+  "clonality_proxy": {
+    "distinct_sites": 11,
+    "top_sites": {
+      "05": 2643,
+      "06": 1828,
+      "10": 1631,
+      "04": 1509,
+      "08": 1288,
+      "03": 1098,
+      "02": 1074,
+      "20": 448
+    }
+  },
+  "rif_poc": {
+    "n_scored": 30,
+    "vcf_fetch_miss": 0,
+    "tp": 15,
+    "fp": 0,
+    "tn": 15,
+    "fn": 0,
+    "sens": 1.0,
+    "spec": 1.0,
+    "rule": "rpoB RRDR variant in NC_000962.3:761055-761165 (PoC proxy for WHO catalogue)"
+  }
+}
