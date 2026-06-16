@@ -134,5 +134,6 @@
   "leakage_status": "DISJOINT_PROJECT_LEVEL",
   "leakage_evidence": "Oxford BioProjects PRJNA604975 + PRJNA1007570 deposit 0 NCBI assemblies (reads-only); the decoder's 1039 tuning/validation accessions are 100% GCA_/GCF_ assemblies -> an Oxford isolate (no GCA) cannot be in the tuning set. Disjoint by accession-type construction.",
   "primary_metric": "binary (clean measured MIC; strict/relaxed tiers over-exclude gold-standard labels)",
-  "source": "github.com/samlipworth/ecoli_mic_arg (PRJNA604975 + PRJNA1007570)"
+  "source": "github.com/samlipworth/ecoli_mic_arg (PRJNA604975 + PRJNA1007570)",
+  "cef_caveat": "cef spec 0.709 is an AMRFinder-VERSION CONFOUND, not a deployed-decoder gap: the Oxford run scored the cohort's OWN older AMRFinder (blaEC Subclass=CEPHALOSPORIN, counted); the DEPLOYED pipeline runs v4.2.7 where blaEC is BETA-LACTAM and already excluded by the cef refinement. Deployed NCBI-PD cef cells: E.coli 0.967/0.967/0.967, Klebsiella 0.944 (sens 1.0/spec 0.9). blaOXA-1 what-if on cached v4.2.7 cef cohorts = zero change. NO frozen-rule change warranted (per /brainstorm 2026-06-15). cipro+gent are the independent-validation headline."
 }
