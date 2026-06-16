@@ -196,3 +196,45 @@ def test_main_writes_separate_namespace(tmp_path):
     assert (tmp_path / "external_validation_report_card.md").exists()
     # the frozen decoder report card must NOT be created by our roll-up
     assert not (tmp_path / "decoder_validation_report_card.json").exists()
+
+
+def test_build_cell_passes_through_experimental_branding():
+    art = {"cohort": "sci234", "drug": "trimethoprim-sulfamethoxazole",
+           "strict": {}, "binary": {"sens": 0.97, "spec": 0.99, "n_scored": 210},
+           "rule_status": "EXPERIMENTAL_SCORED", "rule_scope": "scorer_local",
+           "not_in_shipped_surface": True, "strata_reproduced": True}
+    c = rep.build_cell(art, None)
+    assert c["rule_status"] == "EXPERIMENTAL_SCORED"
+    assert c["rule_scope"] == "scorer_local"
+    assert c["not_in_shipped_surface"] is True
+    assert c["binary"]["n_scored"] == 210
+
+
+def test_build_cell_frozen_decoder_cell_unbranded():
+    c = rep.build_cell({"cohort": "oxford", "drug": "ciprofloxacin",
+                        "strict": {"sens": 0.94, "spec": 0.96, "n_scored": 1005}}, None)
+    assert c["rule_status"] is None and c["rule_scope"] is None
+
+
+def test_render_md_both_strict_and_binary_empty_defaults_to_strict():
+    # When strict is not usable AND binary has no scored rows, the `not b.get("n_scored")`
+    # branch keeps metric="strict" (all-None) rather than crashing or emitting "binary".
+    cell = rep.build_cell({"cohort": "empty", "drug": "trimethoprim-sulfamethoxazole",
+                           "strict": {}, "binary": {}}, None)
+    md = rep.render_md([cell])
+    assert "| strict |" in md          # falls back to strict label, not binary
+    assert "| binary |" not in md
+    assert "| empty |" in md           # row still renders (no crash on all-None metrics)
+
+
+def test_render_md_marks_experimental_and_falls_back_to_binary():
+    exp = rep.build_cell({"cohort": "sci234", "drug": "trimethoprim-sulfamethoxazole",
+                          "strict": {}, "binary": {"sens": 0.97, "spec": 0.99, "n_scored": 210},
+                          "rule_status": "EXPERIMENTAL_SCORED", "rule_scope": "scorer_local"}, None)
+    dep = rep.build_cell({"cohort": "oxford", "drug": "ciprofloxacin",
+                          "strict": {"sens": 0.94, "spec": 0.96, "n_scored": 1005}}, None)
+    md = rep.render_md([exp, dep])
+    assert "EXPERIMENTAL_SCORED (scorer_local)" in md   # experimental cell marked
+    assert "deployed-decoder" in md                      # frozen-decoder cell marked
+    assert "| binary |" in md                            # strict-degenerate cell falls back to binary
+    assert "| strict |" in md                            # the deployed cell shows strict

@@ -459,3 +459,13 @@
 - Modifies 4 shipped arm modules additively (external_mic_labels/preflight/revalidate/roll-up); 5 FROZEN files untouched
 
 ---
+
+## [plan_file: TMP_SMX_External_Validation_Cell_Plan/] 2026-06-16
+**Summary:** Add trimethoprim-sulfamethoxazole as an honestly-validated EXPERIMENTAL decoder cell, scored by a scorer-local `(>=1 sul) AND (>=1 dfr)` rule on the in-hand Oxford + Sci234 measured-MIC cohorts, with no edit to any frozen file.
+**Key decisions:**
+- TMP-SMX only — cefepime dropped (0.986 ceftriaxone-concordant; reused {CEPH,CARB} rule mis-calls the distinguishing cef-R/fep-S stratum; CLSI SDD gray zone).
+- Scorer-local AND-rule in the non-frozen external-validation arm (frozen DRUG_RULE cannot express AND-across-two-gene-families); reuse frozen classify_tier with non-frozen cotrimoxazole breakpoints.
+- Single-cell top-level external_validation_* artifact branded EXPERIMENTAL_SCORED/scorer_local; strata-reproduction (sul+dfr high-R, others low) is the SCORED-vs-INDETERMINATE gate.
+- Frozen files byte-unchanged (guarded by a no-leak test).
+
+---

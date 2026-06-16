@@ -1,0 +1,80 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-06-16",
+  "cohort": "oxford",
+  "organism": "Escherichia_coli_Shigella",
+  "drug": "trimethoprim-sulfamethoxazole",
+  "run_id": "tmpsmx20260616",
+  "strict": {
+    "n_scored": 777,
+    "tp": 725,
+    "fp": 0,
+    "tn": 0,
+    "fn": 52,
+    "abstain": 0,
+    "acc": 0.933,
+    "sens": 0.933,
+    "spec": null
+  },
+  "relaxed": {
+    "n_scored": 777,
+    "tp": 725,
+    "fp": 0,
+    "tn": 0,
+    "fn": 52,
+    "abstain": 0,
+    "acc": 0.933,
+    "sens": 0.933,
+    "spec": null
+  },
+  "binary": {
+    "n_scored": 2866,
+    "tp": 726,
+    "fp": 47,
+    "tn": 2032,
+    "fn": 61,
+    "abstain": 0,
+    "acc": 0.962,
+    "sens": 0.922,
+    "spec": 0.977
+  },
+  "strata": {
+    "sul+dfr": {
+      "n": 773,
+      "R": 726,
+      "S": 47,
+      "r_rate": 0.939
+    },
+    "sul-only": {
+      "n": 338,
+      "R": 8,
+      "S": 330,
+      "r_rate": 0.024
+    },
+    "dfr-only": {
+      "n": 106,
+      "R": 19,
+      "S": 87,
+      "r_rate": 0.179
+    },
+    "neither": {
+      "n": 1649,
+      "R": 34,
+      "S": 1615,
+      "r_rate": 0.021
+    }
+  },
+  "strata_reproduced": true,
+  "headline": "SCORED",
+  "rule_status": "EXPERIMENTAL_SCORED",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "R iff (>=1 acquired sul[1-4]) AND (>=1 acquired dfrA/B<allele>); else S (folP/folA target point-mutation TMP-R is an acquired-gene blind-spot)",
+  "primary_metric": "binary (clean measured MIC; strict HIGH_S needs MIC<=0.5 -> over-excludes co-trimoxazole, S-degenerate on Oxford)",
+  "evidence_tier": "external_clinical_experimental",
+  "independence_tier": "Oxford ecoli_mic_arg (UK): own AMRFinder genotype + measured Cotrim MIC, joined by guuid.",
+  "leakage_status": "DISJOINT_PROJECT_LEVEL",
+  "leakage_evidence": "PRJNA604975 + PRJNA1007570 deposit 0 NCBI assemblies (reads-only); tuning is 100% GCA/GCF.",
+  "fidelity_caveat": "acquired-gene AND rule; folP/folA target POINT-mutation TMP-R is invisible to it (the sul+dfr-negative R isolates). Genotype callers (Oxford AMRFinder / Sci234 ResFinder-style) share the curated acquired-gene vocabulary -> independence is of the pipeline, not the caller class.",
+  "note": "EXPERIMENTAL scorer-local rule (dna_decode/data/experimental_drug_rules.py); NOT in the frozen DRUG_RULE / shipped_decoder_surface. Direct supplement/AMRFinder join, no Docker."
+}

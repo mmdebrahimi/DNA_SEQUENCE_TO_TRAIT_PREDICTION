@@ -1,0 +1,104 @@
+{
+  "_schema": "external-validation-report-card-v1",
+  "date": "2026-06-16",
+  "n_cells": 2,
+  "note": "external clinical re-validation of the frozen decoder; strict-tier is the primary metric, relaxed secondary; raw sens/spec is clonality-inflated \u2014 see the cluster-weighted block. Separate from the frozen decoder report card.",
+  "cells": [
+    {
+      "cohort": "oxford",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "evidence_tier": "external_clinical_experimental",
+      "strict": {
+        "n_scored": 777,
+        "tp": 725,
+        "fp": 0,
+        "tn": 0,
+        "fn": 52,
+        "abstain": 0,
+        "acc": 0.933,
+        "sens": 0.933,
+        "spec": null
+      },
+      "relaxed": {
+        "n_scored": 777,
+        "tp": 725,
+        "fp": 0,
+        "tn": 0,
+        "fn": 52,
+        "abstain": 0,
+        "acc": 0.933,
+        "sens": 0.933,
+        "spec": null
+      },
+      "binary": {
+        "n_scored": 2866,
+        "tp": 726,
+        "fp": 47,
+        "tn": 2032,
+        "fn": 61,
+        "abstain": 0,
+        "acc": 0.962,
+        "sens": 0.922,
+        "spec": 0.977
+      },
+      "lineage": {
+        "status": "unavailable",
+        "reason": "no clonality computed"
+      },
+      "independence_tier": "Oxford ecoli_mic_arg (UK): own AMRFinder genotype + measured Cotrim MIC, joined by guuid.",
+      "rule_status": "EXPERIMENTAL_SCORED",
+      "rule_scope": "scorer_local",
+      "not_in_shipped_surface": true,
+      "strata_reproduced": true
+    },
+    {
+      "cohort": "sci234",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "evidence_tier": "external_clinical_experimental",
+      "strict": {
+        "n_scored": 223,
+        "tp": 69,
+        "fp": 1,
+        "tn": 152,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.991,
+        "sens": 0.986,
+        "spec": 0.993
+      },
+      "relaxed": {
+        "n_scored": 223,
+        "tp": 69,
+        "fp": 1,
+        "tn": 152,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.991,
+        "sens": 0.986,
+        "spec": 0.993
+      },
+      "binary": {
+        "n_scored": 233,
+        "tp": 69,
+        "fp": 1,
+        "tn": 161,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.987,
+        "sens": 0.972,
+        "spec": 0.994
+      },
+      "lineage": {
+        "status": "unavailable",
+        "reason": "no clonality computed"
+      },
+      "independence_tier": "Sci Rep 2023 234-isolate E. coli (Spain): own ResFinder/PointFinder-style genotype + measured TRISUL MIC, joined by study Key.",
+      "rule_status": "EXPERIMENTAL_SCORED",
+      "rule_scope": "scorer_local",
+      "not_in_shipped_surface": true,
+      "strata_reproduced": true
+    }
+  ]
+}

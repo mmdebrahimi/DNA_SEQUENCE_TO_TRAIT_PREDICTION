@@ -101,7 +101,12 @@ def cluster_weighted_with_ci(preds: dict[str, str], labels: dict[str, object],
 
 
 def build_cell(artifact: dict, lineage: dict | None) -> dict:
-    """One report-card cell from an artifact + an optional clonality block."""
+    """One report-card cell from an artifact + an optional clonality block.
+
+    Experimental-overlay artifacts (scorer-local rules NOT in the frozen deployed surface) carry
+    `rule_status`/`rule_scope`/`not_in_shipped_surface`/`strata_reproduced`; these pass through (default
+    None) so an experimental cell renders visibly distinct from a frozen-decoder external cell. Also
+    carries `binary` when present (the honest metric for clean measured MIC where strict over-excludes)."""
     return {
         "cohort": artifact.get("cohort"),
         "organism": artifact.get("organism"),
@@ -109,8 +114,13 @@ def build_cell(artifact: dict, lineage: dict | None) -> dict:
         "evidence_tier": artifact.get("evidence_tier"),
         "strict": artifact.get("strict", {}),
         "relaxed": artifact.get("relaxed", {}),
+        "binary": artifact.get("binary"),
         "lineage": lineage or {"status": "unavailable", "reason": "no clonality computed"},
         "independence_tier": artifact.get("independence_tier"),
+        "rule_status": artifact.get("rule_status"),
+        "rule_scope": artifact.get("rule_scope"),
+        "not_in_shipped_surface": artifact.get("not_in_shipped_surface"),
+        "strata_reproduced": artifact.get("strata_reproduced"),
     }
 
 
@@ -142,11 +152,23 @@ def render_md(cells: list[dict]) -> str:
         "Raw sens/spec is clonality-inflated — the cluster-weighted block (one vote per lineage, "
         "Wilson CI) is the honest companion. This is SEPARATE from the frozen decoder report card.",
         "",
-        "| cohort | drug | strict sens | strict spec | strict n | lineage-wt sens (CI) | lineage-wt spec (CI) | eff-N R/S |",
-        "|---|---|---|---|---|---|---|---|",
+        "| cohort | drug | metric | sens | spec | n | lineage-wt sens (CI) | lineage-wt spec (CI) | eff-N R/S | scope |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for c in cells:
-        s = c["strict"]
+        # Primary display metric: strict (HIGH_R/HIGH_S) when it scored anything; otherwise fall back to
+        # binary (the honest metric for clean measured MIC where the 4x-margin strict tier over-excludes
+        # — e.g. co-trimoxazole, whose strict HIGH_S needs MIC<=0.5).
+        s = c.get("strict") or {}
+        b = c.get("binary") or {}
+        # strict is usable only if it scored BOTH classes (sens AND spec computable). Co-trimoxazole's
+        # 4x-margin strict tier is S-degenerate on Oxford (no MIC<=0.5) -> spec None -> fall back to the
+        # binary metric (the honest one for clean measured MIC).
+        strict_usable = s.get("n_scored") and s.get("sens") is not None and s.get("spec") is not None
+        if strict_usable or not b.get("n_scored"):
+            metric, m = "strict", s
+        else:
+            metric, m = "binary", b
         lin = c["lineage"]
         if lin.get("status") == "unavailable":
             lw_sens = lw_spec = effn = "n/a"
@@ -154,9 +176,13 @@ def render_md(cells: list[dict]) -> str:
             lw_sens = f"{lin.get('sens')} {_fmt_ci(lin.get('sens_ci'))}"
             lw_spec = f"{lin.get('spec')} {_fmt_ci(lin.get('spec_ci'))}"
             effn = f"{lin.get('effective_lineage_n_R')}/{lin.get('effective_lineage_n_S')}"
+        if c.get("rule_status"):
+            scope = f"{c['rule_status']} ({c.get('rule_scope') or 'overlay'})"
+        else:
+            scope = "deployed-decoder"
         lines.append(
-            f"| {c['cohort']} | {c['drug']} | {s.get('sens')} | {s.get('spec')} | "
-            f"{s.get('n_scored')} | {lw_sens} | {lw_spec} | {effn} |"
+            f"| {c['cohort']} | {c['drug']} | {metric} | {m.get('sens')} | {m.get('spec')} | "
+            f"{m.get('n_scored')} | {lw_sens} | {lw_spec} | {effn} | {scope} |"
         )
     return "\n".join(lines) + "\n"
 
