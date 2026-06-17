@@ -1,0 +1,5 @@
+# TBProfiler/tbdb lineage barcode (Napier-2020 lineage, ratified F)
+# repo: jodyphelan/tbdb  pinned_commit: 618cf0ff5f22886971bd437929d2c49defa6c7bf  fetched: 2026-06-17
+# barcode.bed cols: chrom  start(0based)  end(=VCF POS,1based)  lineage  allele  major  spoligo  RD
+# sha256  size_bytes  filename
+9c05673045615483890c0e31e65ddb9175ecdce7a22ac9a6868a840ae3f2a753  78083  barcode.bed
