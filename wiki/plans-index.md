@@ -469,3 +469,15 @@
 - Frozen files byte-unchanged (guarded by a no-leak test).
 
 ---
+
+## [plan_file: TB_AMR_Decoder_RIF_INH_On_CRyPTIC_Plan/] 2026-06-17
+**Summary:** First M. tuberculosis decoder cell — deterministic WHO-catalogue RIF+INH determinant rule, lineage-collapsed on CRyPTIC as a labelled knowledge-baseline (pinned barcode caller, NOT de-novo SNP distance), with an in-scope independent post-2023 gold-set arm.
+**Key decisions:**
+- VCF call rule = FILTER==PASS + GT non-reference (no GCP FORMAT key); REGENOTYPED_VCF used for the callability denominator.
+- Lineage collapse via a pinned SNP barcode (Coll/Napier) feeding clonality.cluster_weighted_confusion (NOT de-novo SNP-distance + representative-dedup).
+- WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE label gated on the full per-drug prevalence-preserving cohort + callability (uncallable window → ABSTAIN, never S-by-absence).
+- New non-frozen dna_decode/organism_rules module (TMP-SMX overlay pattern); frozen E. coli surface byte-untouched + leak guard. Independent gold-set arm scored separately as INDEPENDENT_VALIDATION.
+
+**Status:** candidate
+
+---
