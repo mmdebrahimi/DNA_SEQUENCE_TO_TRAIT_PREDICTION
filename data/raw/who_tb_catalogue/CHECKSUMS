@@ -1,0 +1,10 @@
+# WHO M. tuberculosis mutation catalogue v2 (2023) - pinned acquisition manifest
+# repo: GTB-tbsequencing/mutation-catalogue-2023
+# pinned_commit: 0bb3914348c5a4c981859601447834c08f03ee3d
+# fetched: 2026-06-16  via raw.githubusercontent.com at the pinned commit
+# note: repo has NO releases; output files changed Feb/May 2024 -> pin by commit SHA + sha256.
+# subset: grade-bearing master + genomic-coordinate map + 7May2024 coordinate VCF (xlsx/PDFs skipped).
+# sha256  size_bytes  filename
+ff7600c1fbd4150422f696cdc9c94b2b324a139d10ca1518461f1a98c105e9cf  37308043  WHO-UCN-TB-2023.6-eng_catalogue_master_file.txt
+82812bf7e31a49581e9099b2a77ad576802ce300967131f489a5384082a62000  7847401  WHO-UCN-TB-2023.7-eng_genomic_coordinates.txt
+fad70e81d32744f39d3358fe5f25e88a984dcfbf59eb4e29f50f46b516fdc747  850540  Genomic_coordinates_7May2024.vcf.gz

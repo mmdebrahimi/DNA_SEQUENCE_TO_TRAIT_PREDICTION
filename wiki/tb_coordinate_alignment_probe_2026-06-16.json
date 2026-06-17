@@ -1,0 +1,93 @@
+{
+  "_schema": "tb-coordinate-alignment-probe-v1",
+  "date": "2026-06-16",
+  "who_catalogue_pinned_commit": "0bb3914348c5a4c981859601447834c08f03ee3d",
+  "reference": "NC_000962.3 (H37Rv) \u2014 both CRyPTIC VCFs and WHO catalogue",
+  "n_catalogue_variants": 30699,
+  "n_grade_1_2": 438,
+  "n_cached_vcfs": 30,
+  "verdict": "ALIGNED",
+  "sentinels": [
+    {
+      "sentinel": "RIF rpoB S450L",
+      "variant": "rpoB_p.Ser450Leu",
+      "grade_1_2": true,
+      "n_catalogue_coords": 7,
+      "n_vcf_matches": 10,
+      "aligned": true,
+      "example_matches": [
+        {
+          "isolate": "reproducibility_00_01_08_33_10833_site.02.iso.1.",
+          "pos": 761155,
+          "ref": "C",
+          "alt": "T",
+          "filter": "PASS",
+          "gt": "1/1",
+          "variant": "rpoB_p.Ser450Leu",
+          "label": "RIF rpoB S450L"
+        },
+        {
+          "isolate": "reproducibility_00_01_08_39_10839_site.02.iso.1.",
+          "pos": 761155,
+          "ref": "C",
+          "alt": "T",
+          "filter": "PASS",
+          "gt": "1/1",
+          "variant": "rpoB_p.Ser450Leu",
+          "label": "RIF rpoB S450L"
+        },
+        {
+          "isolate": "reproducibility_00_01_08_50_10850_site.02.iso.1.",
+          "pos": 761155,
+          "ref": "C",
+          "alt": "T",
+          "filter": "PASS",
+          "gt": "1/1",
+          "variant": "rpoB_p.Ser450Leu",
+          "label": "RIF rpoB S450L"
+        }
+      ]
+    },
+    {
+      "sentinel": "INH katG S315T",
+      "variant": "katG_p.Ser315Thr",
+      "grade_1_2": true,
+      "n_catalogue_coords": 5,
+      "n_vcf_matches": 10,
+      "aligned": true,
+      "example_matches": [
+        {
+          "isolate": "reproducibility_00_01_08_33_10833_site.02.iso.1.",
+          "pos": 2155168,
+          "ref": "C",
+          "alt": "G",
+          "filter": "PASS",
+          "gt": "1/1",
+          "variant": "katG_p.Ser315Thr",
+          "label": "INH katG S315T"
+        },
+        {
+          "isolate": "reproducibility_00_01_08_39_10839_site.02.iso.1.",
+          "pos": 2155168,
+          "ref": "C",
+          "alt": "G",
+          "filter": "PASS",
+          "gt": "1/1",
+          "variant": "katG_p.Ser315Thr",
+          "label": "INH katG S315T"
+        },
+        {
+          "isolate": "reproducibility_00_01_08_50_10850_site.02.iso.1.",
+          "pos": 2155168,
+          "ref": "C",
+          "alt": "G",
+          "filter": "PASS",
+          "gt": "1/1",
+          "variant": "katG_p.Ser315Thr",
+          "label": "INH katG S315T"
+        }
+      ]
+    }
+  ],
+  "honesty": "Verifies coordinate alignment on 2 canonical sentinels against the cached VCF subset. Proves the catalogue<->VCF reference frame matches; does NOT establish cohort sens/spec or biological independence (WHO catalogue built partly from CRyPTIC -> any CRyPTIC score is a KNOWLEDGE_BASELINE)."
+}
