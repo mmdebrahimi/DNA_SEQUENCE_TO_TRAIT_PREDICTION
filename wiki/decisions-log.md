@@ -228,3 +228,21 @@
 **Lesson:** Offline-green ≠ fail-safe. When a pipeline ships with deferred live/network/Docker paths, run an adversarial `/brainstorm` on the SHIPPED code (not only the plan) targeting the untested surface — fail-open defaults (a stage that degrades to None/INDETERMINATE/empty and still exits 0) are the dominant bug class there and are invisible to a passing unit suite. Audit exit codes + completeness gates, not just return values.
 
 ---
+
+## 2026-06-17 — First TB AMR decoder cell built (RIF + INH on CRyPTIC), all 7 plan steps
+
+**Context:** `/execute-plan plans/TB_AMR_Decoder_RIF_INH_On_CRyPTIC_Plan/` — the first M. tuberculosis cell, extending the deterministic decoder to a new organism/kingdom.
+
+**Decisions / what shipped:**
+- Sequential execution (commit-to-main, not the 7-PR worktree flow) — parallel's wall-clock win is nullified by the real bottleneck (data fetches, not code-build).
+- New non-frozen `dna_decode/organism_rules/` package (TMP-SMX overlay pattern). Frozen E. coli surface byte-untouched (leak guard pins its sha256). 53 tests, 0 regressions (1313→1366).
+- Determinant-scan + lineage-barcode-collapse + cluster_weighted_confusion is the SAME pattern as E. coli/C. auris — the kingdom jump is engineering, not research.
+
+**Surprises / lessons:**
+- The `REGENOTYPED_VCF` (callability source) is **177 MB/isolate** — ~800× the masked VCF (217 KB). A "callability track" assumption hid an 800×/1.6 TB data-size blowup; verifying per-record artifact SIZE before committing to a per-isolate fetch design is essential. (User ratified full-regeno → D: cache anyway, for zero-residual callability.)
+- There is **no `GCP` FORMAT key** in CRyPTIC VCFs (the brainstorm catch C1) — the quality floor IS the MIN_* FILTERs; `FILTER==PASS` subsumes it. Verified against real headers.
+- CRyPTIC reuse table has **no lineage column** → barcode caller (Napier/tbdb, used as DATA not the tool) is the lineage source, finer than Coll-2014.
+
+**Pending (BLOCKED-gated by design):** v1b SCORED number (needs ~1.6 TB cohort → D:); independent number (needs hand-curated post-2023 gold set). Plan left in place (resumable for the data runs), not archived.
+
+---
