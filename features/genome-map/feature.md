@@ -251,6 +251,16 @@ _(product-facing only; no implementation steps)_
   - The per-FEATURE phenotype overlay is feasible: AMRFinder `main.tsv` rows are per-gene; `calibrated_amr_rules.json.rules` maps determinant class→drug; `call_resistance` gives the genome-level R/S summary. TB uses `load_determinants` (per-variant). So a feature can be tagged `determinant-phenotype` + which drug, with the R/S verdict as a separate genome-level overlay.
   - Calibrated rules are IN-SAMPLE/opt-in (organism-gated); the default `DRUG_RULE` path remains — the map should surface which path produced a phenotype call (provenance), consistent with the project's honesty rails.
 
+### Captured by: brainstorm @ 2026-06-17 (pre-exec, on the technical plan)
+- Files read: dna_decode/data/annotations.py, scripts/pathotype_laptop_pipeline.py, scripts/drug_mechanism_audit.py, dna_decode/amr/cli.py, dna_decode/eval/amr_rules.py, dna_decode/data/resistance_db.py, dna_decode/organism_rules/tb_amr.py, dna_decode/organism_rules/tb_vcf.py, dna_decode/data/tb_who_catalogue.py, CLAUDE.md
+- Key claims (implementation-time bugs to fold via a /technical-plan re-run):
+  - [grounded] AMRFinder is consumed but never run by the plan; reuse `drug_mechanism_audit._run_amrfinder` (:83) + `amr/cli._run_amrfinder_for_genome` (:215) in a Wave-0 step + an explicit `--organism` (no Bakta auto-detect in v1).
+  - [grounded] Bakta GFF carries an embedded `##FASTA` block; `parse_gff3` + `load_annotation_table` (:173) choke on it → a shared `##FASTA`-stripping loader (cf. `parse_bakta_gff3` :70) for BOTH the Bakta-run + the offline provided-GFF path.
+  - [grounded] determinant functions return symbol/class NOT coords; gene_symbol join is the documented trap → parse raw main.tsv to a DeterminantHit (protein/coords) + join protein/coord > symbol-fallback w/ join_confidence; symbol-fallback EXCLUDED from determinant-phenotype + G1 credit; spike NO-GO if all joins fallback.
+  - [grounded] map schema must retain raw_product/raw_gene_symbol/raw_locus_tag/raw_feature_type/source_tool/classification_reason/secondary_evidence so G1 computes from the map alone.
+  - [grounded] a Wave-0 tool-surface manifest (Bakta vocab + AMRFinder headers) must GATE the tier + overlay steps (not be parallel/guessed).
+  - [grounded] DROP TB from the v1 spike (VCF-vs-GFF contract mismatch); bacterial-AMR-only (E. coli + 2nd bacterium + homology-heavy).
+
 ### Captured by: design @ 2026-06-17 (re-run, folding probe findings)
 - Files read: features/genome-map/feature.md, dna_decode/data/annotations.py, scripts/pathotype_laptop_pipeline.py, tools/docker_runner.py (consulted the probe @ 2026-06-17 grounding below)
 - Key claims:
