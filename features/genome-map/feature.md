@@ -229,6 +229,16 @@ _(product-facing only; no implementation steps)_
   - The per-FEATURE phenotype overlay is feasible: AMRFinder `main.tsv` rows are per-gene; `calibrated_amr_rules.json.rules` maps determinant class→drug; `call_resistance` gives the genome-level R/S summary. TB uses `load_determinants` (per-variant). So a feature can be tagged `determinant-phenotype` + which drug, with the R/S verdict as a separate genome-level overlay.
   - Calibrated rules are IN-SAMPLE/opt-in (organism-gated); the default `DRUG_RULE` path remains — the map should surface which path produced a phenotype call (provenance), consistent with the project's honesty rails.
 
+### Captured by: probe @ 2026-06-17
+- Files read: dna_decode/data/annotations.py, dna_decode/eval/amr_rules.py, dna_decode/organism_rules/tb_amr.py, dna_decode/data/tb_who_catalogue.py, tools/docker_runner.py, wiki/stage2_install_artifact_2026-05-15.md, CLAUDE.md
+- Key claims:
+  - REUSE: `annotations.py::parse_gff3` (:63) is an existing two-pass Bakta-style GFF parser — the annotation-ingestion layer is already built; the map reuses it.
+  - INSTALLED: Bakta (db-LIGHT 4GB) + AMRFinderPlus + BLAST+ via tools/docker_runner. NOT installed: hmmer/Pfam, eggNOG, diamond (the dedicated homology-middle-layer stack).
+  - [grounded] Bakta ANNOTATION was never smoke-tested on this host (stage2_install_artifact:59 — deferred, CPU-heavy) — the spike's input is unproven-runnable; a Bakta annotation smoke is the first concrete action.
+  - [grounded] db-light makes the headline unknown-rate a TOOLING-coverage metric → must be labelled `unknown_under_bakta_db_light` (DB+version in-field).
+  - [grounded] G1 (AC9) is gameable by relabelling existing Bakta/determinant output → tighten to "prevent a concrete wrong inference", >=1 not "unknown rate exists".
+  - [grounded/inferred] phenotype tier is determinant-only → no-determinant is the MODAL case for arbitrary genomes → reframe v1 as a function/QC map with determinant call-outs, not a phenotype map.
+
 ## Changelog
 - 2026-06-17 — record created (cascaded from intake; no template present, built from canonical sections)
 - 2026-06-17 — intake completed (Summary/Problem/Desired Outcome/Repo Fit/Scope/Actors populated; primary intent ratified = personal exploration/QC tool)
