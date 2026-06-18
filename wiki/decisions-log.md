@@ -246,3 +246,18 @@
 **Pending (BLOCKED-gated by design):** v1b SCORED number (needs ~1.6 TB cohort → D:); independent number (needs hand-curated post-2023 gold set). Plan left in place (resumable for the data runs), not archived.
 
 ---
+
+## 2026-06-17 — Strategy reframe: learned decoder = closed negative; north star = evidence-tiered annotation map
+
+**Trigger:** user asked "how far from the north star (DNA → rough map of what its parts do)?" + a /brainstorm that corrected the first answer.
+
+**Decisions:**
+- The learned/general decoder (genomic-FM embeddings) is a **CLOSED NEGATIVE on free data** — 3 de-confounded tests (E. coli AMR, AMR-suite clonality, Arabidopsis flowering-time on a real T4) all show embeddings learn lineage/structure, not mechanism. The earlier "pursue Path-B GPU / acquisition to reopen the learned niche" framing was STALE (Path-B already ran + failed 2026-06-12). Qualifier: closed for the current free-public-embedding strategy, not forever — reopening needs a NEW named label-clean substrate + a pre-registered classical-baseline/de-confound gate.
+- The achievable north star is reframed: a **rough map of what each part does = an evidence-tiered MOLECULAR-FUNCTION/ANNOTATION map** (structural annotation + homology/domain MIDDLE LAYER + curated-determinant phenotype cells), NOT a learned phenotype predictor. "Rough phenotype map across arbitrary traits" is a category error.
+- Key insight previously missed: the **homology/domain middle layer** (Pfam/eggNOG/orthology/structure-transfer) infers molecular function for uncatalogued genes WITHOUT phenotype labels — sidesteps the binding label constraint, GTX-860M/free-feasible, and is the bulk of "what does each part do."
+
+**Recommended next move:** an evidence-tier-schema + UX-gate scoping spike, then a map prototype on 2-3 genomes (NOT a build/catalog-stack yet). TB cell = finish as product coverage (science only from the independent gold set). TransPred/ecoref = parked card.
+
+**Full synthesis:** `wiki/north_star_distance_brainstorm_2026-06-17.md`.
+
+---
