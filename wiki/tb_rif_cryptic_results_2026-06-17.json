@@ -1,54 +1,54 @@
 {
   "drug": "rifampicin",
   "rule_status": "deterministic",
-  "n_isolates": 300,
+  "n_isolates": 8955,
   "n_uncallable_abstain": 0,
   "status": "TB_SUBSET_PLUMBING",
   "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
   "lineage_collapsed": {
-    "sens": 0.5,
-    "spec": 1.0,
-    "tp": 1,
-    "fp": 0,
-    "tn": 6,
-    "fn": 1,
+    "sens": 0.696,
+    "spec": 0.987,
+    "tp": 64,
+    "fp": 2,
+    "tn": 152,
+    "fn": 28,
     "sens_wilson_ci": [
-      0.095,
-      0.905
+      0.595,
+      0.78
     ],
     "spec_wilson_ci": [
-      0.61,
-      1.0
+      0.954,
+      0.996
     ],
-    "n_clusters_R": 2,
-    "n_clusters_S": 6,
-    "n_discordant": 6,
+    "n_clusters_R": 92,
+    "n_clusters_S": 154,
+    "n_discordant": 59,
     "n_cluster_abstain": 0,
-    "n_clusters_mixed_prediction": 5
+    "n_clusters_mixed_prediction": 57
   },
   "raw": {
-    "tp": 108,
-    "fp": 4,
-    "tn": 146,
-    "fn": 42,
-    "sens": 0.72,
-    "spec": 0.973
+    "tp": 3129,
+    "fp": 133,
+    "tn": 5374,
+    "fn": 319,
+    "sens": 0.907,
+    "spec": 0.976
   },
   "effective_lineage_n": {
-    "R": 2,
-    "S": 6
+    "R": 92,
+    "S": 154
   },
   "raw_to_lineage_shrinkage": {
     "R": [
-      150,
-      2
+      3448,
+      92
     ],
     "S": [
-      150,
-      6
+      5507,
+      154
     ]
   },
   "plumbing_note": "convenience/partial cohort \u2014 metrics are NOT the baseline; fetch the full per-drug prevalence-preserving cohort to earn the label",
   "callability_assessed": false,
-  "n_unassigned_lineage": 3
+  "n_unassigned_lineage": 225
 }
