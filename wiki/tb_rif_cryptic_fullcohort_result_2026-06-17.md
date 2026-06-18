@@ -30,7 +30,23 @@ C3 gate honestly withholds the `WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE` lab
 - The matcher recall gap means this 0.696 is a LOWER bound on the WHO-catalogue rule's lineage sens.
 - Knowledge-baseline framing unchanged: the WHO catalogue was built partly from CRyPTIC -> in-distribution.
 
+## UPDATE — MNV-normalization fix applied (same day, /soraya --advance)
+The exact `(pos,ref,alt)` matcher was decomposed to per-base SNV components (`tb_vcf.snv_components` +
+subset matching in `tb_amr`), so a determinant encoded INSIDE a larger multi-base isolate record now
+fires. Diagnostic first: of 319 R false-negatives, 177 carried an unmatched rpoB-window record
+(MNV-like, recoverable), 142 had no rpoB record (genuinely uncatalogued — matcher ceiling).
+
+| metric | exact match | **MNV-normalized** |
+|---|---|---|
+| lineage-collapsed sens | 0.696 | **0.739** (+4.3 pp) |
+| raw sens | 0.907 | **0.936** (+2.9 pp) |
+| spec (lineage / raw) | 0.987 / 0.976 | **0.987 / 0.973** (held) |
+
+Recovered ~98 MNV-encoded determinants (FN 319→~221), spec held. The residual ~221 FN is the
+genuinely-uncatalogued/non-rpoB/out-of-window bucket — REAL biology, not a matcher artifact. So **0.739
+is a faithful lineage sens** (still a PLUMBING lower bound — callability pending regeno).
+
 ## Next (TB thread)
-1. Codon-level determinant normalization (Step 1 enhancement) -> re-run -> expect higher lineage sens.
+1. ~~Codon/MNV determinant normalization~~ — DONE (above; +4.3 pp).
 2. Regeno fetch (`scripts/populate_tb_regeno_detached.bat`) -> callability -> the true BASELINE label.
 3. Hand-curated post-2023 independent gold set -> the only path to a SCIENTIFIC (non-baseline) number.

@@ -6,15 +6,15 @@
   "status": "TB_SUBSET_PLUMBING",
   "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
   "lineage_collapsed": {
-    "sens": 0.696,
+    "sens": 0.739,
     "spec": 0.987,
-    "tp": 64,
+    "tp": 68,
     "fp": 2,
     "tn": 152,
-    "fn": 28,
+    "fn": 24,
     "sens_wilson_ci": [
-      0.595,
-      0.78
+      0.641,
+      0.818
     ],
     "spec_wilson_ci": [
       0.954,
@@ -24,15 +24,15 @@
     "n_clusters_S": 154,
     "n_discordant": 59,
     "n_cluster_abstain": 0,
-    "n_clusters_mixed_prediction": 57
+    "n_clusters_mixed_prediction": 56
   },
   "raw": {
-    "tp": 3129,
-    "fp": 133,
-    "tn": 5374,
-    "fn": 319,
-    "sens": 0.907,
-    "spec": 0.976
+    "tp": 3228,
+    "fp": 146,
+    "tn": 5361,
+    "fn": 220,
+    "sens": 0.936,
+    "spec": 0.973
   },
   "effective_lineage_n": {
     "R": 92,

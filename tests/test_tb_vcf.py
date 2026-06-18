@@ -90,6 +90,17 @@ def test_window_invalid_raises():
         tb_vcf.is_window_callable(_HDR, 12, 10)
 
 
+def test_snv_components_splits_equal_length_mnv():
+    # the S450L SNV (761155 C>T) lives inside a 3-base MNV 761154 CCG>CTG
+    assert tb_vcf.snv_components(761154, "CCG", "CTG") == {(761155, "C", "T")}
+    assert tb_vcf.snv_components(100, "AT", "GC") == {(100, "A", "G"), (101, "T", "C")}
+
+
+def test_snv_components_single_and_indel_kept_whole():
+    assert tb_vcf.snv_components(5, "C", "T") == {(5, "C", "T")}
+    assert tb_vcf.snv_components(5, "C", "CTA") == {(5, "C", "CTA")}  # indel not decomposed
+
+
 def test_vcf_paths_for_reads_both_columns():
     row = {"VCF": " ../x.masked.vcf.gz ", "REGENOTYPED_VCF": "../x.regeno.vcf.gz"}
     assert tb_vcf.vcf_paths_for(row) == ("../x.masked.vcf.gz", "../x.regeno.vcf.gz")

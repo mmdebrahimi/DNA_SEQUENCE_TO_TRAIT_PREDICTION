@@ -44,8 +44,23 @@ class DrugCall:
     catalogue_commit: str = CATALOGUE_COMMIT
 
 
-def _matches(call: tb_vcf.VariantCall, det: Determinant) -> bool:
-    return call.ref == det.ref and call.alt == det.alt
+def _isolate_snvs(masked_calls: dict[int, tb_vcf.VariantCall]) -> set[tuple[int, str, str]]:
+    """All per-base SNV components carried by the isolate (MNV records decomposed)."""
+    out: set[tuple[int, str, str]] = set()
+    for c in masked_calls.values():
+        out |= tb_vcf.snv_components(c.pos, c.ref, c.alt)
+    return out
+
+
+def _matched_determinants(masked_calls, determinants) -> tuple[Determinant, ...]:
+    """A determinant matches iff ALL its SNV components are present in the isolate's decomposed SNVs.
+
+    Single-SNV determinants (the common case) reduce to "isolate carries that exact SNV" — but now the
+    isolate side is MNV-decomposed, so a determinant encoded inside a larger multi-base isolate record
+    still fires. Multi-base determinant encodings require all their components present (no partial match).
+    """
+    iso = _isolate_snvs(masked_calls)
+    return tuple(d for d in determinants if tb_vcf.snv_components(d.pos, d.ref, d.alt) <= iso)
 
 
 def score_drug(
@@ -54,10 +69,7 @@ def score_drug(
     determinants: list[Determinant],
     regeno_text: str | None = None,
 ) -> DrugCall:
-    matched = tuple(
-        d for d in determinants
-        if d.pos in masked_calls and _matches(masked_calls[d.pos], d)
-    )
+    matched = _matched_determinants(masked_calls, determinants)
     genes = tuple(sorted({d.gene for d in determinants}))
     positions = sorted({d.pos for d in determinants})
 

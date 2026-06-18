@@ -113,6 +113,20 @@ def parse_masked_calls(vcf_text: str) -> dict[int, VariantCall]:
     return calls
 
 
+def snv_components(pos: int, ref: str, alt: str) -> set[tuple[int, str, str]]:
+    """Decompose a call into per-base SNV components for MNV-tolerant determinant matching.
+
+    An equal-length MNV (`GGGTTGACCCA>GAGTTGACCTG`) is split into the single-base substitutions at the
+    positions that differ — so a determinant encoded as a clean SNV (e.g. rpoB S450L = 761155 C>T) still
+    matches an isolate that carries it INSIDE a larger multi-base record (the dominant CRyPTIC FN cause:
+    ~55% of RIF R false-negatives have an unmatched rpoB-window MNV). Unequal-length (indel) records are
+    kept whole (indel normalization is a separate concern; inhA-promoter indels handled there).
+    """
+    if len(ref) == len(alt) and len(ref) > 1:
+        return {(pos + i, ref[i], alt[i]) for i in range(len(ref)) if ref[i] != alt[i]}
+    return {(pos, ref, alt)}
+
+
 def callable_positions(regeno_text: str, positions) -> dict[int, bool]:
     """{pos: callable?} from a regeno VCF. Callable iff a PASS record exists at pos with an explicit
     (non-`./.`) GT. A position ABSENT from the regeno VCF is uncallable (conservative)."""

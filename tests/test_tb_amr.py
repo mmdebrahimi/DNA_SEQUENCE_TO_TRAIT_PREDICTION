@@ -43,6 +43,14 @@ def test_inh_determinant_match_is_R_and_scope_multilocus():
     assert out.coverage_scope == ("inhA", "katG")  # ratified A — multi-locus scope
 
 
+def test_determinant_matched_inside_mnv():
+    # isolate carries S450L (761155 C>T) inside a 3-base MNV record 761154 CCG>CTG (the dominant FN cause)
+    calls = tb_vcf.parse_masked_calls(_vcf(_rec(761154, "CCG", "CTG", "1/1")))
+    out = tb_amr.score_rif(calls, [RPOB_S450L])
+    assert out.prediction == tb_amr.R
+    assert out.matched[0].variant == "rpoB_p.Ser450Leu"
+
+
 def test_no_determinant_all_callable_is_S():
     calls = {}  # no variant
     regeno = _vcf(_rec(761155, "C", ".", "0/0"))  # determinant position callable (explicit ref)
