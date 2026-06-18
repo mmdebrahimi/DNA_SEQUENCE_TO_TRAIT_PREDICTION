@@ -481,3 +481,15 @@
 **Status:** candidate
 
 ---
+
+## [plan_file: features/genome-map/technical-plan.md] 2026-06-17
+**Summary:** Genome Map v1 "Bakta honesty report" — a personal single-genome tool that re-tiers Bakta's own annotation for honesty (4 evidence tiers) + overlays AMRFinder determinant call-outs behind a hard join-quality gate, with a DB-labelled unknown rate; bacterial-AMR-only spike with a prevent-wrong-inference GO/NO-GO gate.
+**Key decisions:**
+- Reuses existing Bakta runner + AMRFinder runner (_run_amrfinder) + GFF parser; a shared ##FASTA-stripping loader (Bakta GFF carries an embedded FASTA block parse_gff3 chokes on).
+- Determinant->feature join via DeterminantHit (raw main.tsv coords/protein) > symbol-fallback w/ join_confidence; symbol-fallback EXCLUDED from determinant-phenotype + G1 (the gene-symbol-trap guard; all-fallback -> NO_GO).
+- A Wave-0 tool-surface manifest (Bakta vocab + AMRFinder headers) gates the tier + overlay steps; map retains raw fields + classification_reason so G1 computes from the map alone.
+- TB/fungal out of the v1 spike (VCF-vs-GFF contract); no frozen-surface edit; offline-safe via the shared loader.
+
+**Status:** candidate
+
+---
