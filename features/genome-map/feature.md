@@ -1,7 +1,7 @@
 ---
 title: Rough genome map (evidence-tiered functional annotation)
 slug: genome-map
-status: spec-ready
+status: design
 created: 2026-06-17
 updated: 2026-06-17
 related_plans: []
@@ -60,20 +60,25 @@ decision-support intent was NOT chosen — this is an exploration/QC tool).
   already know," not "ships to a microbiologist."
 
 ## Workflow / Behavior
+**v1 scope (probe-tightened, 2026-06-17): the "Bakta honesty report".** Built ONLY on the
+already-installed Bakta(db-light) + AMRFinderPlus + the EXISTING GFF parser (`annotations.py::parse_gff3`)
++ the EXISTING Bakta runner (`pathotype_laptop_pipeline.bakta_annotate`). NO hmmer/Pfam/eggNOG (uninstalled,
+tens of GB). The map RE-TIERS Bakta's own annotation for honesty + overlays determinants — it does not
+produce new annotation. This is a function/QC map with determinant call-outs, NOT a phenotype map (for an
+arbitrary genome, no-determinant is the MODAL case).
+
 Actor: the developer, one genome at a time. Happy path:
-1. **Input** — one microbial genome: a FASTA (+ an optional precomputed GFF/annotation). Single genome; no
-   batch, no comparison in v1.
-2. **Locate features** — structural annotation (genes/CDS/RNA/operons) via a free external tool
-   (Bakta/Prokka) OR accept a provided GFF. (Tool feasibility is a `/probe` concern, not design.)
-3. **Tier each feature** — assign every feature its single HIGHEST-confidence evidence tier (table in
-   Rules), retaining lower-tier evidence as secondary. Sources: the curated determinant catalogs
-   (phenotype tier), curated-DB / homology hits (function/pathway/homology tiers), nothing (unknown).
-4. **Phenotype overlay** — features that are validated determinants get a phenotype annotation (the
-   drug/property they contribute to) from the EXISTING cells; the genome-level R/S verdict (the existing
-   decoder's `call_resistance` / `tb_amr` output) is shown SEPARATELY and clearly tier-tagged. The map
-   NEVER promotes a homology/pathway hit to a phenotype claim.
-5. **Output** — a JSON-first per-feature map + a flat feature table. Headline metrics: per-tier feature
-   counts + the **unknown rate** + the phenotype-tier feature list.
+1. **Input** — one microbial genome: a FASTA (+ an optional precomputed GFF). Single genome; no batch/compare.
+2. **Annotate** — run Bakta (db-light) → GFF3 via the existing runner, OR accept a provided GFF. **Bakta
+   annotation is unproven on this host (smoke deferred 2026-05-15) → a Bakta smoke is the FIRST build action;
+   a wedge yields a BLOCKED artifact, never a fake map.**
+3. **Tier each feature** — assign every feature its single HIGHEST-confidence tier (4 v1 tiers; table in
+   Rules) from Bakta's product/gene_symbol wording-confidence; retain lower evidence as secondary.
+4. **Determinant overlay** — features matching a validated determinant cell get a phenotype annotation
+   (drug/property + provenance) from the EXISTING cells; the genome-level R/S verdict (`call_resistance` /
+   `tb_amr`) is shown SEPARATELY, tier-tagged. The map NEVER promotes a function/homology hit to phenotype.
+5. **Output** — a JSON-first per-feature map + a flat table. Headline metrics: per-tier counts + the
+   **DB-labelled unknown rate** (`unknown_under_bakta_db_light`) + the determinant-phenotype feature list.
 
 Alternate / failure paths:
 - **No annotation tool / offline** → degrade to the tiers achievable from a provided GFF + the determinant
@@ -88,35 +93,35 @@ Alternate / failure paths:
 **Evidence tiers (precedence high → low). A feature gets ONE primary tier (highest applicable); lower
 evidence retained as secondary.**
 
-| tier | fires when | may emit a PHENOTYPE claim? |
+**v1 tiers = 4 (pathway DEFERRED — no KEGG in v1). Precedence high → low; one primary tier, lower evidence
+retained as secondary.**
+
+| tier | fires when (v1, Bakta-only) | may emit a PHENOTYPE claim? |
 |---|---|---|
 | `determinant-phenotype` | a validated determinant cell matches this feature (AMRFinder `main.tsv` row + `calibrated_amr_rules.json` class→drug; or `tb_amr`/organism determinant) | **YES — the only tier that may** |
-| `curated-molecular-function` | a curated-DB hit names a gene/enzyme (the annotation tool's confident call) | no |
-| `pathway-module` | KEGG/MetaCyc module membership inferred | no |
-| `homology-only-hypothesis` | Pfam/eggNOG/orthology domain hit, no curated identity | no |
-| `unknown` | no confident annotation | no |
+| `curated-molecular-function` | Bakta gives a named `gene_symbol` + a SPECIFIC product (a confident call) | no |
+| `homology-only-hypothesis` | Bakta low-confidence wording (`putative`/`probable`/`by similarity`/`domain-containing`/`uncharacterized`) | no |
+| `unknown` | `hypothetical protein` / empty product | no |
+| ~~`pathway-module`~~ | KEGG/MetaCyc module — **DEFERRED to a later version** (no KEGG; a GO-only add) | n/a |
 
 **Load-bearing rules:**
-- **Phenotype wall (R1):** a phenotype/property claim attaches ONLY at `determinant-phenotype`. No other
-  tier may express a phenotype — they are molecular-function / hypothesis / unknown ONLY.
-- **Unknown visibility (R2):** the unknown rate is a REPORTED headline metric; unknowns are never hidden,
-  collapsed, or back-filled with a weaker tier's guess.
-- **Highest-confidence primary (R3):** a feature with multiple evidences takes the highest tier as primary
-  and keeps the rest as secondary evidence (transparency, not suppression).
-- **No frozen edit (R4):** the phenotype tier READS the existing determinant cells/catalogs; it never
-  modifies `dna_decode/eval/amr_rules.py` or `calibrated_amr_rules.json`.
+- **Phenotype wall (R1):** a phenotype/property claim attaches ONLY at `determinant-phenotype`.
+- **DB-labelled unknown rate (R2):** the unknown rate is REPORTED but its field name carries the DB/version
+  coverage caveat — `unknown_under_bakta_db_light` (db-light has reduced functional coverage, so a bare
+  "unknown rate" would mislead as biology when it is partly tooling-coverage). Never hidden/back-filled.
+- **Highest-confidence primary (R3):** highest tier primary; lower evidence kept as observable secondary.
+- **No frozen edit (R4):** the phenotype tier READS the existing cells; never modifies
+  `dna_decode/eval/amr_rules.py` / `calibrated_amr_rules.json`.
 
-**UX / EVAL GATE (the make-or-break — the feature's go/no-go bar).** The prototype passes iff, on the 2-3
-test genomes, BOTH hold:
-- **G1 Differentiation-over-raw-Bakta:** for ≥1 genome there are concrete features where the tiered map
-  gives a MORE HONEST/useful read than the raw annotation TSV — e.g. a homology guess that raw-Bakta
-  states as fact but the map demotes to `homology-only-hypothesis`; or a determinant the map surfaces as
-  `determinant-phenotype` that raw-Bakta lists as a plain gene; or the reported unknown rate that raw
-  output never surfaces. If the map adds NOTHING over reading Bakta's TSV, the feature FAILS (it would be
-  catalog-stacking busywork).
-- **G2 No-tier-confusion:** a reader can distinguish phenotype vs molecular-function vs hypothesis vs
-  unknown at a glance; in a spot-check, zero features are mistakable as phenotype that are not
-  `determinant-phenotype`.
+**UX / EVAL GATE (the make-or-break — probe-tightened so relabelling alone CANNOT pass).** The prototype
+passes iff, on the 2-3 test genomes, BOTH hold:
+- **G1 Prevent-wrong-inference:** ≥3 concrete features on ≥1 genome where the tiered map PREVENTS a wrong
+  inference a reader would make from the raw Bakta TSV — (a) a raw product taken as fact (`putative`/`by
+  similarity`) that the map DEMOTES to `homology-only-hypothesis`; or (b) a determinant the map SURFACES as
+  `determinant-phenotype` that raw lists as a plain gene. **At least 1 of the ≥3 must be (a)/(b) — "the
+  unknown rate exists" alone does NOT satisfy G1** (that would be the catalog-stacking-busywork failure).
+- **G2 No-tier-confusion:** in a spot-check, zero non-`determinant-phenotype` features are mistakable as
+  phenotype claims.
 
 ## Edge Cases
 - **Gene that is BOTH curated-function AND a determinant** → `determinant-phenotype` (highest); function
@@ -128,7 +133,12 @@ test genomes, BOTH hold:
 - **High unknown fraction (>X%)** → a VALID, honest output (high unknown rate reported), NOT a failure.
   The whole point is preserving unknowns.
 - **Genome with no determinant hits** → phenotype tier is empty; the map is still useful (function/homology
-  tiers + unknowns). No phenotype is fabricated.
+  tiers + unknowns). No phenotype is fabricated. (This is the MODAL case for arbitrary genomes.)
+- **Bakta annotation wedges / unavailable** (the documented Docker-mount-corruption history) → emit a
+  `BAKTA_ANNOTATION_BLOCKED` artifact, never a fake map; the offline path (provided GFF) is the fallback.
+- **db-light inflates the unknown/homology fraction** → that is expected; the DB-labelled rate
+  (`unknown_under_bakta_db_light`) makes it non-misleading. Full Bakta DB / Pfam-eggNOG would shrink it but
+  is out of v1 scope.
 
 ## Acceptance Criteria
 **A. Map production**
@@ -198,6 +208,9 @@ _(product-facing only; no implementation steps)_
   D:-cache pattern. Offline-safe degradation required (tiers achievable without the heavy tools).
 - `viz/` holds a deferred genome browser — OUT of v1 (JSON-first + table only).
 - Compatibility: additive new module; touches no frozen file; reuses the determinant catalogs read-only.
+- **v1 reuse (probe):** `scripts/pathotype_laptop_pipeline.py::bakta_annotate` (existing Bakta runner) +
+  `dna_decode/data/annotations.py::parse_gff3` (existing GFF→AnnotationTable) — the map assembles existing
+  pieces. **NO hmmer/Pfam/eggNOG in v1** (uninstalled; the homology tier comes from Bakta's own wording).
 
 **Spec constraints (product contract for /technical-plan):**
 - **Prototype genomes (3):** one E. coli cohort strain (rich AMR overlay), one M. tuberculosis H37Rv-relative
@@ -229,6 +242,13 @@ _(product-facing only; no implementation steps)_
   - The per-FEATURE phenotype overlay is feasible: AMRFinder `main.tsv` rows are per-gene; `calibrated_amr_rules.json.rules` maps determinant class→drug; `call_resistance` gives the genome-level R/S summary. TB uses `load_determinants` (per-variant). So a feature can be tagged `determinant-phenotype` + which drug, with the R/S verdict as a separate genome-level overlay.
   - Calibrated rules are IN-SAMPLE/opt-in (organism-gated); the default `DRUG_RULE` path remains — the map should surface which path produced a phenotype call (provenance), consistent with the project's honesty rails.
 
+### Captured by: design @ 2026-06-17 (re-run, folding probe findings)
+- Files read: features/genome-map/feature.md, dna_decode/data/annotations.py, scripts/pathotype_laptop_pipeline.py, tools/docker_runner.py (consulted the probe @ 2026-06-17 grounding below)
+- Key claims:
+  - Folded the probe tightenings into design: v1 scope = "Bakta honesty report" (Bakta+AMRFinder+existing parser, NO hmmer/eggNOG); 4 tiers (pathway DEFERRED); R2 unknown rate is DB-LABELLED (`unknown_under_bakta_db_light`); G1 tightened to PREVENT-WRONG-INFERENCE (>=3 features, >=1 not "unknown rate exists"); Bakta-smoke-first; framed as a function/QC map (no-determinant is modal).
+  - Reuse confirmed: `pathotype_laptop_pipeline.bakta_annotate` (Bakta runner) + `annotations.parse_gff3` (GFF parser) → the map assembles existing pieces.
+  - The AC section is now STALE vs this updated design — a `/feature-design spec genome-map` re-run is required to regenerate AC1-AC12 (5-tier→4-tier, DB-labelled unknown rate, tightened G1) before spec-ready.
+
 ### Captured by: probe @ 2026-06-17
 - Files read: dna_decode/data/annotations.py, dna_decode/eval/amr_rules.py, dna_decode/organism_rules/tb_amr.py, dna_decode/data/tb_who_catalogue.py, tools/docker_runner.py, wiki/stage2_install_artifact_2026-05-15.md, CLAUDE.md
 - Key claims:
@@ -244,3 +264,5 @@ _(product-facing only; no implementation steps)_
 - 2026-06-17 — intake completed (Summary/Problem/Desired Outcome/Repo Fit/Scope/Actors populated; primary intent ratified = personal exploration/QC tool)
 - 2026-06-17 — design completed (Workflow/Behavior + Rules And Decisions [5-tier schema + phenotype wall + the UX/eval gate G1 differentiation-over-Bakta + G2 no-tier-confusion] + Edge Cases; Technical Notes enriched)
 - 2026-06-17 — spec completed (Acceptance Criteria AC1-AC12 grouped by outcome [map / honesty rails / overlay / the gate / robustness] + Test Scenarios [happy/edge/failure/precedence/regression/gate] + spec constraints [3 prototype genomes, JSON-as-contract, free-tool dependency]; status spec-ready)
+- 2026-06-17 — probe completed (feasibility GREEN-with-caveats: Bakta/AMRFinder/BLAST + existing parser installed, hmmer/eggNOG not; 3 design tightenings surfaced) [grounding appended]
+- 2026-06-17 — design RE-RUN (folded probe: v1 = Bakta-honesty-report, 4 tiers [pathway deferred], DB-labelled unknown rate, G1 = prevent-wrong-inference, Bakta-smoke-first, function/QC framing; status spec-ready -> design; AC now stale -> re-spec needed)
