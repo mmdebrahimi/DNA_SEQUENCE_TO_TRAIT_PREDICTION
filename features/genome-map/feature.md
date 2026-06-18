@@ -1,7 +1,7 @@
 ---
 title: Rough genome map (evidence-tiered functional annotation)
 slug: genome-map
-status: design
+status: spec-ready
 created: 2026-06-17
 updated: 2026-06-17
 related_plans: []
@@ -143,15 +143,19 @@ passes iff, on the 2-3 test genomes, BOTH hold:
 ## Acceptance Criteria
 **A. Map production**
 - **AC1** — Given one microbial genome (FASTA, or FASTA+GFF), the tool emits a per-feature map (JSON) + a
-  flat feature table; every feature has exactly ONE primary evidence tier from the 5-tier schema.
-- **AC2** — The output reports headline metrics: per-tier feature counts, the **unknown rate**
-  (unknown-tier features / total), and the list of `determinant-phenotype` features.
+  flat feature table; every feature has exactly ONE primary evidence tier from the **4-tier v1 schema**
+  (`determinant-phenotype` / `curated-molecular-function` / `homology-only-hypothesis` / `unknown`;
+  `pathway-module` deferred).
+- **AC2** — The output reports headline metrics: per-tier feature counts, the **DB-labelled unknown rate**
+  (the field is named `unknown_under_bakta_db_light`, not a bare "unknown rate"), and the list of
+  `determinant-phenotype` features.
 
 **B. Honesty rails (the differentiator)**
 - **AC3 (phenotype wall)** — No feature outside `determinant-phenotype` carries any phenotype/property
   claim (the phenotype field is non-empty ONLY on `determinant-phenotype` features).
-- **AC4 (unknown visibility)** — The unknown rate is a top-level reported field equal to
-  `count(unknown)/total`; unknowns are never relabelled to a lower tier.
+- **AC4 (DB-labelled unknown visibility)** — The unknown rate is a top-level field named
+  `unknown_under_bakta_db_light` equal to `count(unknown)/total`; the DB/version caveat is IN the field
+  name (db-light coverage ≠ biological unknown); unknowns are never relabelled to a lower tier.
 - **AC5 (highest-confidence primary)** — A feature with multi-tier evidence takes the highest-precedence
   tier as primary, with lower evidence retained as observable secondary evidence.
 - **AC6 (no frozen edit)** — A run leaves `dna_decode/eval/amr_rules.py` + `calibrated_amr_rules.json`
@@ -165,10 +169,12 @@ passes iff, on the 2-3 test genomes, BOTH hold:
   `ABSTAIN` (not a forced call) and the genome-level overlay propagates the abstain.
 
 **D. The UX/eval GATE (spike go/no-go)**
-- **AC9 (G1 differentiation)** — On ≥1 of the 2-3 prototype genomes, the spike documents ≥3 concrete
-  features where the tiered map is more honest/useful than the raw annotation TSV (a demoted homology
-  guess, a surfaced determinant-phenotype, or the reported unknown rate raw output omits). Zero such
-  features ⇒ NO-GO.
+- **AC9 (G1 prevent-wrong-inference)** — On ≥1 of the 2-3 prototype genomes, the spike documents ≥3
+  concrete features where the tiered map PREVENTS a wrong inference a reader would make from the raw Bakta
+  TSV: (a) a raw product taken as fact (`putative`/`by similarity`) that the map DEMOTES to
+  `homology-only-hypothesis`, or (b) a determinant the map SURFACES as `determinant-phenotype` that raw
+  lists as a plain gene. **At least 1 of the ≥3 must be of type (a)/(b)** — "the DB-labelled unknown rate
+  exists" alone does NOT count (the relabelling-only / busywork guard). Zero qualifying features ⇒ NO-GO.
 - **AC10 (G2 no-tier-confusion)** — In a spot-check of the prototype maps, zero non-`determinant-phenotype`
   features are mistakable as phenotype claims.
 - **AC11 (verdict)** — The spike emits a GO/NO-GO verdict on catalog integration, backed by the AC9
@@ -178,6 +184,9 @@ passes iff, on the 2-3 test genomes, BOTH hold:
 - **AC12 (offline-safe)** — With no external annotation tool available, the tool still emits a map (tiers
   from a provided GFF + the determinant cells; the rest `unknown`) + a degraded-coverage flag; it does not
   error.
+- **AC13 (Bakta feasibility gate)** — A Bakta annotation smoke runs on ≥1 genome on this host, emitting a
+  real GFF3 + a recorded field inventory (product/qualifier availability under db-light); if Bakta wedges
+  (the Docker-mount-corruption risk), a `BAKTA_ANNOTATION_BLOCKED` artifact is emitted, never a fake map.
 
 ## Test Scenarios
 - **Happy path** — an E. coli cohort strain (rich AMR): map has `determinant-phenotype` features (e.g.
@@ -266,3 +275,4 @@ _(product-facing only; no implementation steps)_
 - 2026-06-17 — spec completed (Acceptance Criteria AC1-AC12 grouped by outcome [map / honesty rails / overlay / the gate / robustness] + Test Scenarios [happy/edge/failure/precedence/regression/gate] + spec constraints [3 prototype genomes, JSON-as-contract, free-tool dependency]; status spec-ready)
 - 2026-06-17 — probe completed (feasibility GREEN-with-caveats: Bakta/AMRFinder/BLAST + existing parser installed, hmmer/eggNOG not; 3 design tightenings surfaced) [grounding appended]
 - 2026-06-17 — design RE-RUN (folded probe: v1 = Bakta-honesty-report, 4 tiers [pathway deferred], DB-labelled unknown rate, G1 = prevent-wrong-inference, Bakta-smoke-first, function/QC framing; status spec-ready -> design; AC now stale -> re-spec needed)
+- 2026-06-17 — spec RE-RUN (regenerated AC to match the tightened design: AC1 4-tier, AC2/AC4 DB-labelled unknown rate, AC9 G1 prevent-wrong-inference, +AC13 Bakta feasibility gate; status -> spec-ready). Record now aligned with the emitted technical-plan.
