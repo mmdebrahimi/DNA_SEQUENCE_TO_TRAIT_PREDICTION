@@ -61,3 +61,32 @@ def test_raw_confusion_basic():
     labels = {"a": "R", "b": "S", "c": "S", "d": "R"}
     raw = sc.raw_confusion(preds, labels)
     assert (raw["tp"], raw["fp"], raw["tn"], raw["fn"]) == (1, 1, 1, 1)
+
+
+def test_run_v1b_end_to_end_collapses_real_shapes():
+    from dna_decode.data.tb_who_catalogue import Determinant
+    from dna_decode.data.tb_lineage_barcode import BarcodeSNP
+    from dna_decode.organism_rules.tb_vcf import CHROM
+
+    fmt = "GT:DP:DPF:COV:FRS:GT_CONF:GT_CONF_PERCENTILE"
+    hdr = "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSAMPLE\n"
+
+    def rec(pos, ref, alt):
+        return f"{CHROM}\t{pos}\t.\t{ref}\t{alt}\t.\tPASS\t.\t{fmt}\t1/1:200:1:0,200:1:1500:78\n"
+
+    det = [Determinant("Rifampicin", "rpoB", "rpoB_p.Ser450Leu", "1) Assoc w R", "1",
+                       CHROM, 761155, "C", "T")]
+    barcode = [BarcodeSNP(500, "lineage4.2", "G")]
+    # s1,s2 same lineage (both carry 500:G) both R-determinant; s3 lineage-less S
+    strain_masked = {
+        "s1": hdr + rec(761155, "C", "T") + rec(500, "A", "G"),
+        "s2": hdr + rec(761155, "C", "T") + rec(500, "A", "G"),
+        "s3": hdr + rec(999, "A", "C"),
+    }
+    labels = {"s1": "R", "s2": "R", "s3": "S"}
+    out = sc.run_v1b(strain_masked, labels, det, barcode, drug="rifampicin", cohort_complete=False)
+    assert out["status"] == sc.PLUMBING_LABEL
+    assert out["callability_assessed"] is False
+    # s1+s2 collapse to ONE R lineage; s3 unassigned singleton
+    assert out["effective_lineage_n"]["R"] == 1
+    assert out["n_unassigned_lineage"] == 1
