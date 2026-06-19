@@ -113,6 +113,36 @@ def test_symbol_fallback_when_no_coords():
     assert counts["n_high_confidence_join"] == 0
 
 
+def test_coord_join_skips_whole_contig_region_feature():
+    # Bakta emits a `region` row spanning the whole contig; a determinant must
+    # join to the specific CDS, NOT the enclosing region (the real-data bug).
+    feats = pd.DataFrame([
+        {"seqid": "contig_1", "start": 1, "end": 5_000_000, "strand": "+", "type": "region",
+         "gene_id": "", "gene_symbol": "", "locus_tag": "", "product": ""},
+        {"seqid": "contig_1", "start": 2000, "end": 3000, "strand": "-", "type": "CDS",
+         "gene_id": "G2", "gene_symbol": "", "locus_tag": "T2", "product": "blaCTX-M-15"},
+    ])
+    hits = [DeterminantHit("blaCTX-M-15", "", "CEPHALOSPORIN", "", "EXACTX",
+                           protein_id=None, contig="contig_1", start=2010, stop=2900)]
+    joined, counts = join_hits(feats, hits)
+    assert joined[0].feature_index == 1  # the CDS, not the region (index 0)
+    assert joined[0].join_confidence == "coord"
+
+
+def test_coord_join_prefers_smallest_on_tie():
+    # two overlapping CDS; the determinant span matches the smaller exactly
+    feats = pd.DataFrame([
+        {"seqid": "c1", "start": 100, "end": 5000, "strand": "+", "type": "CDS",
+         "gene_id": "BIG", "gene_symbol": "", "locus_tag": "", "product": "big"},
+        {"seqid": "c1", "start": 100, "end": 900, "strand": "+", "type": "CDS",
+         "gene_id": "SMALL", "gene_symbol": "", "locus_tag": "", "product": "gyrA"},
+    ])
+    hits = [DeterminantHit("gyrA_S83L", "", "QUINOLONE", "", "POINTX",
+                           protein_id=None, contig="c1", start=100, stop=900)]
+    joined, _ = join_hits(feats, hits)
+    assert joined[0].feature_index == 1  # SMALL
+
+
 def test_unjoined_hit_counted():
     hits = [DeterminantHit("mystery", "", "OTHER", "", "EXACTX",
                            protein_id=None, contig=None, start=None, stop=None)]

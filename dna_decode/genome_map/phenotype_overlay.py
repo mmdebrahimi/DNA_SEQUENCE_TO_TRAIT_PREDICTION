@@ -51,6 +51,11 @@ SYMBOL_FALLBACK = "symbol_fallback"
 # AMRFinder's sentinel for "no value" in a coordinate/protein column.
 _NA_VALUES = {"", "NA", "na", "N/A"}
 
+# Bakta feature types that are NOT genes and must be EXCLUDED from the coordinate
+# join — chiefly `region`, the whole-contig (1..length) metadata feature that
+# would otherwise win every coordinate overlap and swallow all determinants.
+_NON_GENE_COORD_TYPES = frozenset({"region", "oriC", "oriT", "regulatory_region"})
+
 
 @dataclass
 class DeterminantHit:
@@ -207,9 +212,10 @@ def join_hits(
         ltag = str(r.get("locus_tag") or "")
         sym = str(r.get("gene_symbol") or "")
         seqid = str(r.get("seqid") or "")
+        ftype = str(r.get("type") or "")
         start = int(r.get("start") or 0)
         end = int(r.get("end") or 0)
-        feats.append({"seqid": seqid, "start": start, "end": end,
+        feats.append({"seqid": seqid, "start": start, "end": end, "type": ftype,
                       "gene_id": gid, "locus_tag": ltag, "gene_symbol": sym})
         for key in (gid, ltag):
             if key:
@@ -233,15 +239,22 @@ def join_hits(
             key = h.protein_id
 
         # 2. coordinate-overlap join (contig reconciled + ranges overlap).
+        #    Skips whole-contig metadata features (Bakta emits a `region` row per
+        #    contig spanning 1..len that would otherwise win every overlap); on a
+        #    tie prefers the SMALLEST (most specific) gene, so a determinant maps
+        #    to its CDS, not an enclosing feature.
         if idx is None and h.contig and h.start is not None and h.stop is not None:
             bakta_seqid = cmap.get(h.contig, h.contig)
-            best_i, best_ov = None, 0
+            best_i, best_ov, best_len = None, 0, None
             for i, fe in enumerate(feats):
-                if fe["seqid"] != bakta_seqid:
+                if fe["seqid"] != bakta_seqid or fe["type"] in _NON_GENE_COORD_TYPES:
                     continue
                 ov = _coord_overlap(h.start, h.stop, fe["start"], fe["end"])
-                if ov > best_ov:
-                    best_ov, best_i = ov, i
+                if ov <= 0:
+                    continue
+                flen = abs(fe["end"] - fe["start"]) + 1
+                if ov > best_ov or (ov == best_ov and (best_len is None or flen < best_len)):
+                    best_ov, best_i, best_len = ov, i, flen
             if best_i is not None:
                 idx = best_i
                 conf = "coord"
