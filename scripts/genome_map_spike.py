@@ -178,10 +178,16 @@ def render_verdict_md(entries: list[dict], aggregate: dict, *, generated: str | 
     lines: list[str] = []
     lines.append(f"# Genome-map v1 spike — GO/NO-GO verdict ({generated})")
     lines.append("")
-    lines.append(f"**Verdict: {aggregate['verdict']}**")
+    lines.append(f"**Tiering verdict (Bakta honesty re-tiering): {aggregate['verdict']}**")
+    if "overlay_go" in aggregate:
+        og = aggregate["overlay_go"]
+        lines.append(f"**Overlay-integrity verdict (determinant->feature join): "
+                     f"{'GO' if og else 'NOT DEMONSTRATED'}**")
     lines.append("")
     for r in aggregate.get("reasons", []):
         lines.append(f"- {r}")
+    if aggregate.get("overlay_reason"):
+        lines.append(f"- {aggregate['overlay_reason']}")
     lines.append("")
     lines.append("Honesty contract: phenotype claims appear ONLY behind a high-confidence "
                  "determinant join (symbol-fallback excluded); the unknown rate is DB-labelled "
@@ -227,7 +233,13 @@ def render_verdict_md(entries: list[dict], aggregate: dict, *, generated: str | 
                              f"[{', '.join(s for s in drugs if s)}]")
         lines.append(f"- **G2** no-tier-confusion: pass={gr['g2_spotcheck']['pass']} "
                      f"(violations={len(gr['g2_spotcheck']['violations'])})")
-        lines.append(f"- per-genome verdict: {gr['verdict']}")
+        og = gr.get("overlay_go")
+        og_str = "n/a (determinant-free)" if og is None else ("GO" if og else "NOT DEMONSTRATED")
+        oe = gr.get("overlay_evidence", {})
+        lines.append(f"- **overlay-integrity**: {og_str} "
+                     f"(main_rows={oe.get('n_main_rows')}, high_conf_joins={oe.get('n_high_confidence_join')}, "
+                     f"surfaced={oe.get('surface_determinant_count')})")
+        lines.append(f"- per-genome tiering verdict: {gr['verdict']}")
         lines.append("")
     return "\n".join(lines)
 

@@ -67,6 +67,65 @@ def test_cli_requires_an_input():
     assert main(["--no-amrfinder"]) == 2  # neither --genome-fasta nor --gff
 
 
+def test_cli_offline_overlay_status(tmp_path: Path):
+    import json
+    gff = _offline_gff(tmp_path)
+    out = tmp_path / "out"
+    main(["--gff", str(gff), "--no-amrfinder", "--sample-id", "S", "--out-dir", str(out)])
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["overlay_status"] == "OFFLINE_NO_AMRFINDER"
+
+
+def test_cli_gff_only_no_fasta_status(tmp_path: Path):
+    import json
+    gff = _offline_gff(tmp_path)
+    out = tmp_path / "out"
+    # only --gff (no --genome-fasta, no --no-amrfinder) -> nothing to scan -> GFF_ONLY_NO_FASTA
+    main(["--gff", str(gff), "--sample-id", "S", "--out-dir", str(out)])
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["overlay_status"] == "GFF_ONLY_NO_FASTA"
+    assert gm["degraded_coverage"] is True
+
+
+def test_cli_live_amrfinder_failure_blocks_by_default(tmp_path: Path, monkeypatch):
+    # LIVE mode (a FASTA supplied) + AMRFinder failure -> BLOCKED (exit 3), no map emitted
+    from dna_decode.genome_map import amrfinder
+
+    def _boom(*a, **k):
+        raise RuntimeError("docker down")
+
+    monkeypatch.setattr(amrfinder, "run_amrfinder", _boom)
+    gff = _offline_gff(tmp_path)
+    fasta = tmp_path / "g.fna"
+    fasta.write_text(">c\nACGT\n", encoding="utf-8")
+    out = tmp_path / "out"
+    rc = main(["--genome-fasta", str(fasta), "--gff", str(gff), "--sample-id", "S",
+               "--out-dir", str(out)])
+    assert rc == 3
+    assert not (out / "genome_map_S.json").exists()  # fail-closed: no silent no-determinant map
+
+
+def test_cli_live_amrfinder_failure_allow_degraded(tmp_path: Path, monkeypatch):
+    import json
+    from dna_decode.genome_map import amrfinder
+
+    def _boom(*a, **k):
+        raise RuntimeError("docker down")
+
+    monkeypatch.setattr(amrfinder, "run_amrfinder", _boom)
+    gff = _offline_gff(tmp_path)
+    fasta = tmp_path / "g.fna"
+    fasta.write_text(">c\nACGT\n", encoding="utf-8")
+    out = tmp_path / "out"
+    rc = main(["--genome-fasta", str(fasta), "--gff", str(gff), "--allow-degraded",
+               "--sample-id", "S", "--out-dir", str(out)])
+    assert rc == 0
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["overlay_status"] == "DEGRADED_USER_ACCEPTED"
+    assert gm["degraded_coverage"] is True
+    assert gm["metrics"]["determinant_phenotype_feature_count"] == 0
+
+
 def test_render_degraded_banner(tmp_path: Path):
     gff = _offline_gff(tmp_path)
     from dna_decode.genome_map import ingest

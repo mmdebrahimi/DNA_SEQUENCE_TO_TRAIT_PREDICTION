@@ -311,6 +311,7 @@ def determinant_phenotype_field(joined_hit: JoinedHit, drug: str, verdict: dict 
     h = joined_hit.hit
     pred = (verdict or {}).get("prediction")
     abstain = pred in {"ABSTAIN", "INDETERMINATE", "SUSPEND"}
+    genome_prediction = "ABSTAIN" if abstain else pred
     return {
         "drug": drug,
         "determinant_symbol": h.symbol,
@@ -318,7 +319,12 @@ def determinant_phenotype_field(joined_hit: JoinedHit, drug: str, verdict: dict 
         "amrfinder_subclass": h.subclass,
         "method": h.method,
         "join_confidence": joined_hit.join_confidence,
-        "phenotype": "ABSTAIN" if abstain else (verdict or {}).get("prediction"),
+        # This determinant is COUNTED toward the drug's deployed rule (the caller
+        # only builds this entry for refined-counted drugs). The phenotype is the
+        # SEPARATE genome-level R/S call, not a per-feature resistance claim.
+        "drug_rule_counted": True,
+        "genome_prediction": genome_prediction,
+        "phenotype": genome_prediction,  # back-compat alias of genome_prediction
         "provenance": (verdict or {}).get("rule", "amrfinder_curated_determinant"),
         "abstain": abstain,
     }

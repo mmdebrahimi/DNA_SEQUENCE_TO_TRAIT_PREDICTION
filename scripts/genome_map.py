@@ -46,10 +46,16 @@ def render_genome_summary_md(genome_map: dict, gate_result: dict, *, generated: 
     acc = genome_map.get("genome_accession")
     lines.append(f"# Genome map — {acc} ({generated})")
     lines.append("")
-    if genome_map.get("degraded_coverage"):
-        lines.append("> **DEGRADED COVERAGE** — no determinant overlay (offline / --no-amrfinder); "
-                     "tiers from the provided GFF only.")
+    overlay_status = genome_map.get("overlay_status")
+    if overlay_status and overlay_status != "FULL":
+        lines.append(f"> **overlay_status: {overlay_status}** — no determinant overlay; "
+                     "tiers from the GFF only. Phenotype claims require a full overlay.")
         lines.append("")
+    elif genome_map.get("degraded_coverage"):
+        lines.append("> **DEGRADED COVERAGE** — no determinant overlay; tiers from the GFF only.")
+        lines.append("")
+    if overlay_status:
+        lines.append(f"- overlay_status: `{overlay_status}`")
     lines.append(f"- organism (-O): `{genome_map.get('amrfinder_organism')}`")
     lines.append(f"- total features: {m['total_features']}")
     lines.append("- per-tier counts: " + ", ".join(f"{k}={v}" for k, v in m["per_tier_counts"].items()))
@@ -101,6 +107,10 @@ def main(argv=None) -> int:
                     help="comma-separated drugs for the overlay (default: all mic_tiers-supported)")
     ap.add_argument("--no-amrfinder", action="store_true",
                     help="skip AMRFinder (offline/degraded — tiers from GFF + determinant cells only)")
+    ap.add_argument("--allow-degraded", action="store_true",
+                    help="in LIVE mode, emit a tiers-only map (overlay_status=DEGRADED_USER_ACCEPTED) "
+                         "if AMRFinder fails, instead of exiting BLOCKED. Off by default so a live "
+                         "AMRFinder failure does not silently produce a no-determinant map.")
     ap.add_argument("--out-dir", type=Path, default=None,
                     help="output dir (default: wiki/genome_map_<sample>_<date>/)")
     ap.add_argument("--bakta-out", type=Path, default=None)
@@ -131,18 +141,33 @@ def main(argv=None) -> int:
             print(f"BAKTA_ANNOTATION_BLOCKED: {e}", file=sys.stderr)
             return 3
 
-    # --- AMRFinder (unless offline/degraded) ---
+    # --- AMRFinder + overlay_status ---
+    # overlay_status is an explicit top-level field so a degraded map is never
+    # mistaken for a full overlay. In LIVE mode (a FASTA was supplied expecting the
+    # determinant overlay) an AMRFinder failure is BLOCKED, not a silent degrade —
+    # a no-determinant map + exit 0 would be a fail-open. --allow-degraded opts in.
     main_tsv = None
     degraded = False
-    if args.no_amrfinder or args.genome_fasta is None:
-        degraded = True  # no determinant overlay possible without a FASTA to scan
+    if args.no_amrfinder:
+        degraded = True
+        overlay_status = "OFFLINE_NO_AMRFINDER"      # user asked to skip (intended)
+    elif args.genome_fasta is None:
+        degraded = True
+        overlay_status = "GFF_ONLY_NO_FASTA"          # no FASTA to scan (intended)
     else:
         try:
             main_tsv, _ = amrfinder.run_amrfinder(
                 args.genome_fasta, args.amrfinder_out or base / "amrfinder", organism=organism)
+            overlay_status = "FULL"
         except (DockerRunnerError, RuntimeError, OSError) as e:
-            print(f"WARN AMRFinder unavailable -> degraded (no determinant overlay): {e}", file=sys.stderr)
+            if not args.allow_degraded:
+                print(f"AMRFINDER_BLOCKED: {e}\n"
+                      f"(live mode expected the determinant overlay; pass --allow-degraded to emit a "
+                      f"tiers-only map instead)", file=sys.stderr)
+                return 3
+            print(f"WARN AMRFinder failed -> DEGRADED_USER_ACCEPTED (tiers-only map): {e}", file=sys.stderr)
             degraded = True
+            overlay_status = "DEGRADED_USER_ACCEPTED"
 
     if main_tsv is None:
         # offline / degraded: build the map with no determinants (tiers + unknown only).
@@ -159,6 +184,7 @@ def main(argv=None) -> int:
                                 fasta_path=args.genome_fasta)
         gm["degraded_coverage"] = degraded
 
+    gm["overlay_status"] = overlay_status
     gate_result = evaluate_gate(gm)
 
     (out_dir / f"genome_map_{sample_id}.json").write_text(json.dumps(gm, indent=2), encoding="utf-8")
@@ -168,10 +194,10 @@ def main(argv=None) -> int:
     (out_dir / f"genome_map_{sample_id}.md").write_text(md, encoding="utf-8")
 
     m = gm["metrics"]
-    print(f"Wrote {out_dir} | features={m['total_features']} "
+    print(f"Wrote {out_dir} | overlay_status={gm['overlay_status']} "
+          f"features={m['total_features']} "
           f"determinant-phenotype={m['determinant_phenotype_feature_count']} "
-          f"unknown_under_bakta_db_light={m['unknown_under_bakta_db_light']:.3f}"
-          + (" [DEGRADED]" if gm.get("degraded_coverage") else ""))
+          f"unknown_under_bakta_db_light={m['unknown_under_bakta_db_light']:.3f}")
     return 0
 
 
