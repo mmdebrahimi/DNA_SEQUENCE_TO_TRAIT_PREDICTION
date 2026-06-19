@@ -65,3 +65,6 @@ logs/
 
 # Project-state scratch/working copies (stale duplicates of the live ledger; not history)
 /project_state/*-scratch.md
+
+# genome-map spike per-genome feature maps (large, regenerable via scripts/genome_map_spike.py)
+wiki/genome_map_spike_*/

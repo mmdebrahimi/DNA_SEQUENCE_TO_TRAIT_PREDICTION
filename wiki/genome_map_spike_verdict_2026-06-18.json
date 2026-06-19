@@ -1,0 +1,26 @@
+{
+  "verdict": {
+    "verdict": "GO",
+    "spike_g1_pass": true,
+    "spike_g2_pass": true,
+    "any_all_symbol_fallback": false,
+    "reasons": [
+      "G1 satisfied on >=1 genome; G2 clean; no all-symbol-fallback genome"
+    ]
+  },
+  "generated": "2026-06-18",
+  "genomes": [
+    {
+      "accession": "GCA_002180195.1",
+      "status": "OK"
+    },
+    {
+      "accession": "GCA_000417105.1",
+      "status": "OK"
+    },
+    {
+      "accession": "GCF_000171775.1",
+      "status": "OK"
+    }
+  ]
+}
