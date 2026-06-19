@@ -264,7 +264,7 @@
 
 ## 2026-06-18 — Genome-map v1 "Bakta honesty report" executed; spike verdict GO
 
-**What shipped:** the 7-step genome-map plan (`features/genome-map/`) — `dna_decode/genome_map/` package (`ingest` ##FASTA-safe loader / `annotate` Bakta / `amrfinder` / `tiers` + `tier_vocab` / `phenotype_overlay` DeterminantHit+join-gate / `build_map` / `gate`) + `scripts/genome_map_{tool_surface,spike}.py`. 89 tests; frozen AMR surface byte-unchanged.
+**What shipped:** the 7-step genome-map plan (`features/genome-map/`) — `dna_decode/genome_map/` package (`ingest` ##FASTA-safe loader / `annotate` Bakta / `amrfinder` / `tiers` + `tier_vocab` / `phenotype_overlay` DeterminantHit+join-gate / `build_map` / `gate`) + `scripts/genome_map_{tool_surface,spike}.py`. 79 tests; frozen AMR surface byte-unchanged.
 
 **Verdict GO** (`wiki/genome_map_spike_verdict_2026-06-18.md`), live on 3 bacterial genomes:
 - E. coli ST131 (`GCA_002180195.1`, `-O Escherichia`): 5185 features, 23 determinant-phenotype, unknown 6.1%, 32/32 high-confidence coord joins. Surfaced a **real 7-copy tandem blaTEM-20 amplification array** on the plasmid.

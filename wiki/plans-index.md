@@ -490,6 +490,6 @@
 - A Wave-0 tool-surface manifest (Bakta vocab + AMRFinder headers) gates the tier + overlay steps; map retains raw fields + classification_reason so G1 computes from the map alone.
 - TB/fungal out of the v1 spike (VCF-vs-GFF contract); no frozen-surface edit; offline-safe via the shared loader.
 
-**Status:** executed — all 7 steps shipped 2026-06-18; live 3-genome spike verdict **GO** (`wiki/genome_map_spike_verdict_2026-06-18.md`). Package `dna_decode/genome_map/` + `scripts/genome_map_{tool_surface,spike}.py`; 89 tests; frozen AMR surface byte-unchanged. First end-to-end Bakta proof on this host (tool-surface manifest `wiki/genome_map_tool_surface_2026-06-18.json`).
+**Status:** executed — all 7 steps shipped 2026-06-18; live 3-genome spike verdict **GO** (`wiki/genome_map_spike_verdict_2026-06-18.md`). Package `dna_decode/genome_map/` + `scripts/genome_map_{tool_surface,spike}.py`; 79 tests; frozen AMR surface byte-unchanged. First end-to-end Bakta proof on this host (tool-surface manifest `wiki/genome_map_tool_surface_2026-06-18.json`).
 
 ---
