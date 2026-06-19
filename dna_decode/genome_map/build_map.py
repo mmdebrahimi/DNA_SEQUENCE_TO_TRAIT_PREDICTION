@@ -39,72 +39,79 @@ from dna_decode.genome_map.tiers import classify_feature_tier
 SCHEMA_VERSION = "genome-map-v1"
 
 
-def _determinant_counts_for_drug(hit, drug: str) -> bool:
-    """True iff this determinant would be COUNTED toward `drug`'s DEPLOYED R/S rule.
+def _counted_symbols_by_drug(drug_verdicts: dict, drugs: list[str]) -> dict[str, set[str]]:
+    """Per-drug set of determinant SYMBOLS the DEPLOYED ``call_resistance`` counted.
 
-    Mirrors the per-drug inclusion in ``amr_rules.call_resistance`` (via
-    ``rule_for``), NOT the broad AMRFinder class match. The per-feature drug label
-    MUST use the same refined inclusion as the genome-level rule — otherwise the
-    map labels a feature with a drug the deployed caller intentionally excludes
-    (e.g. a narrow ``blaTEM-1`` -> ceftriaxone, or a ``qnrB``/``oqxAB`` efflux gene
-    -> ciprofloxacin), re-introducing exactly the over-calling the frozen rule was
-    refined away from. READ-ONLY against the frozen surface (imports only).
+    The single source of truth for "does this determinant count toward drug d":
+    read it from the verdict the deployed caller already produced, rather than
+    RE-deriving inclusion in this module. The verdict's ``determinants`` list is
+    exactly the determinants that passed the deployed rule — DEFAULT or the
+    organism-CALIBRATED registry branch (which `run_genome_map_for` activates via
+    ``call_resistance(organism=...)``), and ``[]`` on ABSTAIN/EXPRESSION_FLOOR/
+    INDETERMINATE. Matching against this set mirrors the deployed inclusion by
+    construction — no divergence possible (calibrated, default, or abstain).
 
-    Inclusion per the deployed config:
-      - counter='qrdr_point' (cipro): a QRDR target-alteration POINT mutation
-        (gyrA/gyrB/parC/parE with AMRFinder Method POINT*).
-      - subclass_any (cef/gent/mero/oxacillin): broad drug-class match AND the
-        Subclass contains a refinement token.
-      - gene_prefixes (tet): broad class match AND the symbol starts with a prefix.
-      - else: the broad drug-class match.
+    Residual (accepted for v1): symbol-only matching marks ALL same-symbol
+    high-confidence rows as counted; fine for current rule shapes (duplicate
+    tandem copies all correctly count; QRDR symbols carry the mutation suffix).
     """
-    from dna_decode.data.mic_tiers import amrfinder_classes_for
-    from dna_decode.eval.amr_rules import QRDR_GENES, rule_for
-
-    cfg = rule_for(drug)
-    sym = hit.symbol or ""
-    cls = (hit.cls or "").upper()
-    sub = (hit.subclass or "").upper()
-
-    if cfg.get("counter") == "qrdr_point":
-        meth = (hit.method or "").upper()
-        return "POINT" in meth and any(sym == g or sym.startswith(g + "_") for g in QRDR_GENES)
-
-    classes = {c.upper() for c in amrfinder_classes_for(drug)}
-    if not any(c in cls or c in sub for c in classes):
-        return False
-    refine = cfg.get("subclass_any")
-    if refine is not None and not any(t.upper() in sub for t in refine):
-        return False
-    prefixes = cfg.get("gene_prefixes")
-    if prefixes and not sym.lower().startswith(tuple(p.lower() for p in prefixes)):
-        return False
-    return True
+    out: dict[str, set[str]] = {}
+    for d in drugs:
+        dets = (drug_verdicts.get(d) or {}).get("determinants") or []
+        out[d] = {(det.get("symbol") or "").strip() for det in dets if det.get("symbol")}
+    return out
 
 
 def _phenotype_for_feature(high_hits, drug_verdicts: dict, drugs: list[str]) -> list[dict]:
     """Build the phenotype list for a determinant-phenotype feature (the wall).
 
-    For each HIGH-confidence determinant hit, attach a drug-specific phenotype
-    entry ONLY for drugs whose DEPLOYED rule actually counts that determinant
-    (`_determinant_counts_for_drug`, mirroring ``call_resistance``); the entry
-    carries `drug_rule_counted=True` + the SEPARATE genome-level prediction
-    (ABSTAIN-aware) — it reports "this determinant counts toward the drug's rule
-    and the genome-level call is X", never "this feature IS resistant". A
-    determinant that NO requested drug's refined rule counts still surfaces with
-    its mechanism/class (drug=None, DETERMINANT_PRESENT) — it IS a curated
-    determinant, but the map asserts no drug for it (the over-call guard).
+    Three honest per-hit branches (first match wins, per drug):
+      1. COUNTED — the determinant is in the drug's deployed verdict `determinants`
+         (mirrors ``call_resistance`` exactly, calibrated or default) -> a drug
+         entry with `drug_rule_counted=True` + the SEPARATE genome-level prediction
+         + `threshold_met` (never "this feature IS resistant").
+      2. ABSTAIN-relevant (AC8) — the drug's deployed verdict is ABSTAIN/SUSPEND
+         (e.g. an EXPRESSION_FLOOR organism×drug returns `determinants=[]`) AND the
+         determinant is broadly relevant to the drug's class -> an explicit ABSTAIN
+         entry (`drug_rule_counted=False`, NOT a forced R call). The genome-level
+         overlay propagates the abstain in `genome_level_calls`.
+      3. DETERMINANT_PRESENT — a curated determinant no requested drug counted and
+         none abstain on -> mechanism/class only, drug=None (the over-call guard).
     """
+    counted_symbols = _counted_symbols_by_drug(drug_verdicts, drugs)
     out: list[dict] = []
     for jh in high_hits:
-        counted = [d for d in drugs if _determinant_counts_for_drug(jh.hit, d)]
+        sym = (jh.hit.symbol or "").strip()
+        counted = [d for d in drugs if sym in counted_symbols[d]]
+        abstain_drugs = [
+            d for d in drugs
+            if d not in counted
+            and (drug_verdicts.get(d) or {}).get("prediction") in {"ABSTAIN", "INDETERMINATE", "SUSPEND"}
+            and _hit_broad_class_matches(jh.hit, d)
+        ]
         if counted:
             for d in counted:
                 field = determinant_phenotype_field(jh, d, drug_verdicts.get(d))
                 if field is not None:
                     out.append(field)
+        elif abstain_drugs:
+            for d in abstain_drugs:
+                out.append({
+                    "drug": d,
+                    "determinant_symbol": jh.hit.symbol,
+                    "amrfinder_class": jh.hit.cls,
+                    "amrfinder_subclass": jh.hit.subclass,
+                    "method": jh.hit.method,
+                    "join_confidence": jh.join_confidence,
+                    "drug_rule_counted": False,
+                    "threshold_met": False,
+                    "phenotype": "ABSTAIN",
+                    "genome_prediction": "ABSTAIN",
+                    "provenance": (drug_verdicts.get(d) or {}).get("rule", "amrfinder_curated_determinant"),
+                    "abstain": True,
+                })
         else:
-            # Curated determinant present but no requested drug's REFINED rule counts it:
+            # Curated determinant present but no requested drug counted it and none abstain:
             # show the mechanism/class, assert no drug (do NOT over-call via broad class).
             out.append({
                 "drug": None,
@@ -119,6 +126,25 @@ def _phenotype_for_feature(high_hits, drug_verdicts: dict, drugs: list[str]) -> 
                 "abstain": False,
             })
     return out
+
+
+def _hit_broad_class_matches(hit, drug: str) -> bool:
+    """True iff the determinant's Class/Subclass is broadly relevant to `drug`.
+
+    Used ONLY to decide whether an ABSTAINing drug's overlay should surface an
+    ABSTAIN annotation on this determinant (AC8 relevance) — NEVER to make a
+    resistance call (that is verdict-derived). An over-broad match here only adds
+    an honest ABSTAIN note, never an R claim.
+    """
+    from dna_decode.data.mic_tiers import amrfinder_classes_for
+
+    try:
+        classes = {c.upper() for c in amrfinder_classes_for(drug)}
+    except Exception:  # noqa: BLE001 — unknown drug -> not relevant (CLI validates --drugs)
+        return False
+    cls = (hit.cls or "").upper()
+    sub = (hit.subclass or "").upper()
+    return any(c in cls or c in sub for c in classes)
 
 
 def build_genome_map(

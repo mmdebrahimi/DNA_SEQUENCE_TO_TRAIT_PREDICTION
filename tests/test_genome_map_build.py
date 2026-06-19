@@ -141,53 +141,58 @@ def _acquired_join(feature_index, symbol, cls, sub):
     )
 
 
-def test_refined_excludes_narrow_betalactam_from_ceftriaxone():
-    # blaTEM-1 (Subclass BETA-LACTAM, ampicillin-only) must NOT be tagged ceftriaxone
-    # (broad class match would have; the refined CEPHALOSPORIN/CARBAPENEM subclass rule excludes it).
+def test_excluded_determinant_not_drug_labelled():
+    # A determinant the DEPLOYED verdict did NOT count (determinants=[]) must NOT be
+    # tagged with that drug — it surfaces as DETERMINANT_PRESENT (the over-call guard).
     joined = [_acquired_join(1, "blaTEM-1", "BETA-LACTAM", "BETA-LACTAM")]
     counts = {"n_main_rows": 1, "n_high_confidence_join": 1, "n_symbol_fallback": 0, "n_unjoined": 0}
     m = build_genome_map("GCA_1", "Escherichia", _features(), joined, counts,
-                         drug_verdicts={"ceftriaxone": {"prediction": "S", "rule": "r"}},
+                         drug_verdicts={"ceftriaxone": {"prediction": "S", "determinants": [], "rule": "r"}},
                          drugs=["ceftriaxone"])
     f1 = m["features"][1]
-    assert f1["primary_tier"] == TIER_DETERMINANT_PHENOTYPE  # it IS a curated determinant
-    # but it carries NO drug — surfaced as DETERMINANT_PRESENT, not ceftriaxone
+    assert f1["primary_tier"] == TIER_DETERMINANT_PHENOTYPE
     assert all(p.get("drug") is None for p in f1["phenotype"])
     assert any(p.get("phenotype") == "DETERMINANT_PRESENT" for p in f1["phenotype"])
 
 
-def test_refined_keeps_esbl_ceftriaxone():
-    # blaCTX-M-15 (Subclass CEPHALOSPORIN) is a real ESBL -> still counts toward ceftriaxone
+def test_counted_determinant_drug_labelled_from_verdict():
+    # A determinant the deployed verdict counted (symbol in determinants) -> drug entry.
     joined = [_acquired_join(1, "blaCTX-M-15", "CEPHALOSPORIN", "CEPHALOSPORIN")]
     counts = {"n_main_rows": 1, "n_high_confidence_join": 1, "n_symbol_fallback": 0, "n_unjoined": 0}
     m = build_genome_map("GCA_1", "Escherichia", _features(), joined, counts,
-                         drug_verdicts={"ceftriaxone": {"prediction": "R", "rule": "r"}},
+                         drug_verdicts={"ceftriaxone": {"prediction": "R",
+                                                        "determinants": [{"symbol": "blaCTX-M-15"}], "rule": "r"}},
                          drugs=["ceftriaxone"])
-    pheno = m["features"][1]["phenotype"]
-    cef = [p for p in pheno if p.get("drug") == "ceftriaxone"]
+    cef = [p for p in m["features"][1]["phenotype"] if p.get("drug") == "ceftriaxone"]
     assert cef and cef[0]["drug_rule_counted"] is True
     assert cef[0]["genome_prediction"] == "R"
+    assert cef[0]["threshold_met"] is True
 
 
-def test_refined_excludes_efflux_from_ciprofloxacin():
-    # a QUINOLONE-class efflux/acquired gene that is NOT a QRDR POINT must NOT be tagged ciprofloxacin
-    joined = [_acquired_join(0, "qnrB19", "QUINOLONE", "QUINOLONE")]
+def test_verdict_derived_mirrors_calibrated_exclusion():
+    # The fix's whole point: per-feature label tracks the DEPLOYED verdict, even when
+    # it diverges from the default rule. A QRDR point present but the calibrated verdict
+    # excluded it (determinants=[]) -> DETERMINANT_PRESENT, not ciprofloxacin.
+    joined = [_high_join(0, "gyrA_S83L", "QUINOLONE")]
     counts = {"n_main_rows": 1, "n_high_confidence_join": 1, "n_symbol_fallback": 0, "n_unjoined": 0}
-    m = build_genome_map("GCA_1", "Escherichia", _features(), joined, counts,
-                         drug_verdicts={"ciprofloxacin": {"prediction": "S", "rule": "r"}},
+    m = build_genome_map("GCA_1", "Klebsiella_pneumoniae", _features(), joined, counts,
+                         drug_verdicts={"ciprofloxacin": {"prediction": "S", "determinants": [], "rule": "cal"}},
                          drugs=["ciprofloxacin"])
-    f0 = m["features"][0]
-    assert all(p.get("drug") is None for p in f0["phenotype"])  # not ciprofloxacin
+    assert all(p.get("drug") is None for p in m["features"][0]["phenotype"])
 
 
-def test_refined_keeps_qrdr_point_ciprofloxacin():
-    joined = [_high_join(0, "gyrA_S83L", "QUINOLONE")]  # _high_join uses Method POINTX
+def test_sub_threshold_counted_but_genome_s():
+    # A single QRDR point IS counted (in determinants) but genome call is S (below threshold).
+    joined = [_high_join(0, "gyrA_S83L", "QUINOLONE")]
     counts = {"n_main_rows": 1, "n_high_confidence_join": 1, "n_symbol_fallback": 0, "n_unjoined": 0}
     m = build_genome_map("GCA_1", "Escherichia", _features(), joined, counts,
-                         drug_verdicts={"ciprofloxacin": {"prediction": "R", "rule": "r"}},
+                         drug_verdicts={"ciprofloxacin": {"prediction": "S",
+                                                          "determinants": [{"symbol": "gyrA_S83L"}], "rule": "r"}},
                          drugs=["ciprofloxacin"])
     cip = [p for p in m["features"][0]["phenotype"] if p.get("drug") == "ciprofloxacin"]
     assert cip and cip[0]["drug_rule_counted"] is True
+    assert cip[0]["threshold_met"] is False  # counted in the tally, but below threshold
+    assert cip[0]["genome_prediction"] == "S"
 
 
 def test_feature_table_flat():

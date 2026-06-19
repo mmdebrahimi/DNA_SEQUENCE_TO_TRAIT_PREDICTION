@@ -67,6 +67,16 @@ def test_cli_requires_an_input():
     assert main(["--no-amrfinder"]) == 2  # neither --genome-fasta nor --gff
 
 
+def test_cli_unsupported_drug_rejected(tmp_path: Path):
+    # an unsupported --drugs value fails closed (exit 2) before any map is written
+    gff = _offline_gff(tmp_path)
+    out = tmp_path / "out"
+    rc = main(["--gff", str(gff), "--no-amrfinder", "--drugs", "notadrug",
+               "--sample-id", "S", "--out-dir", str(out)])
+    assert rc == 2
+    assert not (out / "genome_map_S.json").exists()
+
+
 def test_cli_offline_overlay_status(tmp_path: Path):
     import json
     gff = _offline_gff(tmp_path)

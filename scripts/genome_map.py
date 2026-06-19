@@ -126,6 +126,14 @@ def main(argv=None) -> int:
 
     organism = None if str(args.organism).lower() == "none" else args.organism
     drugs = [d.strip() for d in args.drugs.split(",")] if args.drugs else _supported_drugs_default()
+    # Validate --drugs at entry (before any output dir / Docker). An unsupported drug
+    # otherwise crashes the live path (call_resistance -> amrfinder_classes_for raises
+    # UnknownDrugError) or is silently ignored offline. Fail-closed with the supported list.
+    supported = set(_supported_drugs_default())
+    unsupported = [d for d in drugs if d not in supported]
+    if unsupported:
+        print(f"ERROR: unsupported --drugs {unsupported}; supported: {sorted(supported)}", file=sys.stderr)
+        return 2
     sample_id = args.sample_id or (args.genome_fasta or args.gff).stem
     today = _date.today().isoformat()
     out_dir = args.out_dir or (REPO / "wiki" / f"genome_map_{sample_id}_{today}")

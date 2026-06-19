@@ -320,9 +320,13 @@ def determinant_phenotype_field(joined_hit: JoinedHit, drug: str, verdict: dict 
         "method": h.method,
         "join_confidence": joined_hit.join_confidence,
         # This determinant is COUNTED toward the drug's deployed rule (the caller
-        # only builds this entry for refined-counted drugs). The phenotype is the
-        # SEPARATE genome-level R/S call, not a per-feature resistance claim.
+        # only builds this entry for drugs whose deployed verdict counted it). The
+        # phenotype is the SEPARATE genome-level R/S call, not a per-feature
+        # resistance claim. `threshold_met` disambiguates a sub-threshold count
+        # (e.g. a single QRDR cipro point: drug_rule_counted=True but the genome
+        # call is S because the count is below the rule threshold).
         "drug_rule_counted": True,
+        "threshold_met": genome_prediction == "R",
         "genome_prediction": genome_prediction,
         "phenotype": genome_prediction,  # back-compat alias of genome_prediction
         "provenance": (verdict or {}).get("rule", "amrfinder_curated_determinant"),

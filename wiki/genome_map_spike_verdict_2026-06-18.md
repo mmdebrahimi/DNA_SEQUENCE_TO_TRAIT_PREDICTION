@@ -1,6 +1,14 @@
 # Genome-map v1 spike — GO/NO-GO verdict (2026-06-18)
 
-**Verdict: GO**
+> **HISTORICAL (as-run 2026-06-18) — do NOT cite as current C1/C2/M1 evidence.** This run predates the
+> 2026-06-19 hardening: (1) per-feature drug labels here were the OLD broad-class match (C1 since refined to
+> mirror the deployed `call_resistance` verdict, calibrated-aware — so some per-feature drug labels in the
+> as-run per-genome maps would differ now); (2) the verdict was a single `GO` scalar (C2 since split into
+> `tiering_go` + a scoped `overlay_go`). The per-tier counts + unknown rates + join-quality below are
+> unaffected. Regenerate with `scripts/genome_map_spike.py` once the D: genome cache is available for a
+> current "confirmed on the real 3 genomes" claim.
+
+**Verdict (as-run, single-scalar GO; superseded by the tiering_go/overlay_go split): GO**
 
 - G1 satisfied on >=1 genome; G2 clean; no all-symbol-fallback genome
 
