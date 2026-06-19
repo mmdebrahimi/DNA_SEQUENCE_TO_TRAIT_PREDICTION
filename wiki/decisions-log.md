@@ -261,3 +261,20 @@
 **Full synthesis:** `wiki/north_star_distance_brainstorm_2026-06-17.md`.
 
 ---
+
+## 2026-06-18 — Genome-map v1 "Bakta honesty report" executed; spike verdict GO
+
+**What shipped:** the 7-step genome-map plan (`features/genome-map/`) — `dna_decode/genome_map/` package (`ingest` ##FASTA-safe loader / `annotate` Bakta / `amrfinder` / `tiers` + `tier_vocab` / `phenotype_overlay` DeterminantHit+join-gate / `build_map` / `gate`) + `scripts/genome_map_{tool_surface,spike}.py`. 89 tests; frozen AMR surface byte-unchanged.
+
+**Verdict GO** (`wiki/genome_map_spike_verdict_2026-06-18.md`), live on 3 bacterial genomes:
+- E. coli ST131 (`GCA_002180195.1`, `-O Escherichia`): 5185 features, 23 determinant-phenotype, unknown 6.1%, 32/32 high-confidence coord joins. Surfaced a **real 7-copy tandem blaTEM-20 amplification array** on the plasmid.
+- K. pneumoniae (`GCA_000417105.1`, `-O Klebsiella_pneumoniae`): 5427 features, 11 determinant-phenotype + 1 honest symbol-fallback (`aac(6')-Ib`, denied phenotype = the gene-symbol-trap guard firing live), unknown 8.6%.
+- Gemmata obscuriglobus (`GCF_000171775.1`, no `-O`): 9479 features, 0 determinants, **unknown 67.9%** — the DB-labelled-unknown-rate honesty demonstration on an unfamiliar Planctomycete under db-light.
+- Phenotype wall held (G2: 0 violations ×3); G1 prevent-wrong-inference satisfied on all 3 (demote-homology + surface-determinant); no all-symbol-fallback genome.
+
+**Key decisions / surprises:**
+- **First end-to-end Bakta proof on this host** (annotation was deferred/unproven since 2026-05-15). The Step-2 tool-surface manifest gate ran GREEN — Bakta db-light + AMRFinder both work via Docker; the documented WSL2-mount-corruption risk did not materialize this run.
+- **The determinant→feature coordinate join is the integrity crux** and depended on two real-data reconciliations the synthetic tests couldn't have surfaced: (1) AMRFinder `-n` reports ORIGINAL NCBI contig names while Bakta RENAMES contigs → reconcile by UNIQUE contig length; (2) `Protein id` is `NA` in `-n` mode → coord join is the only high-confidence path; (3) Bakta's whole-contig `region` feature was swallowing every max-overlap join → exclude it + tie-break by smallest feature span. Without the fix, 32 E. coli determinants collapsed onto 2 contig-region features (looked like 32/32 success but wrong features).
+- The map faithfully surfaced real biology (the tandem blaTEM-20 array) — a concrete demonstration of the tool's exploration value beyond a flat determinant verdict.
+
+**This is the achievable, label-free form of the north star** ("DNA → what its parts do") — an honest evidence-tiered function/QC map, explicitly NOT a learned phenotype predictor (that arm remains a closed negative). GO = invest further (catalog integration gated on this verdict).
