@@ -70,7 +70,7 @@ DEFAULT_GENOMES = [
                  drugs=["ciprofloxacin", "ceftriaxone", "tetracycline", "gentamicin"]),
     GenomeConfig("GCA_000417105.1", "Klebsiella_pneumoniae", "K. pneumoniae (carbapenem-R)",
                  drugs=["meropenem", "ciprofloxacin", "ceftriaxone", "gentamicin", "tetracycline"]),
-    GenomeConfig("GCF_000171775.2", None, "Gemmata obscuriglobus (homology stress test)",
+    GenomeConfig("GCF_000171775.1", None, "Gemmata obscuriglobus (homology stress test)",
                  drugs=[]),
 ]
 
