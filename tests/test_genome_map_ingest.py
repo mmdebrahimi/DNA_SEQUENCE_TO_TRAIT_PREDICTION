@@ -80,6 +80,18 @@ def test_load_genome_gff_plain_unaffected(tmp_path: Path):
     assert not (tmp_path / "plain.nofasta.gff3").exists()
 
 
+def test_load_genome_gff_percent_decodes_products(tmp_path: Path):
+    # Bakta percent-encodes reserved chars (commas) in products as %2C.
+    gff = tmp_path / "g.gff3"
+    gff.write_text(
+        "##gff-version 3\n"
+        "contig_1\tBakta\tCDS\t1\t9\t.\t+\t0\tID=c1;product=1%2C4-alpha-glucan branching enzyme GlgB\n",
+        encoding="utf-8",
+    )
+    table = ingest.load_genome_gff(gff)
+    assert table.iloc[0]["product"] == "1,4-alpha-glucan branching enzyme GlgB"
+
+
 def test_load_genome_gff_raises_on_malformed(tmp_path: Path):
     from dna_decode.data.annotations import AnnotationParseError
 

@@ -15,6 +15,7 @@ GFF/GBK normalization is out of scope.
 from __future__ import annotations
 
 from pathlib import Path
+from urllib.parse import unquote
 
 from dna_decode.data.annotations import AnnotationTable, parse_gff3
 
@@ -24,6 +25,21 @@ FASTA_DELIMITER = "##FASTA"
 
 # Suffix used for the stripped temp file written next to the source GFF.
 _STRIPPED_SUFFIX = ".nofasta.gff3"
+
+# GFF3 column-9 attribute values percent-encode reserved characters — Bakta
+# escapes commas in product names as `%2C` (e.g. `1%2C4-alpha-glucan branching
+# enzyme GlgB`). Decode these display string columns so the map + verdict read as
+# the real annotation. parse_gff3 itself is left untouched (shared, project-wide);
+# decoding lives in the genome_map-specific loader only.
+_DECODE_COLUMNS = ("product", "gene_symbol", "locus_tag", "gene_id")
+
+
+def _gff3_percent_decode(table: AnnotationTable) -> AnnotationTable:
+    """Percent-decode GFF3-escaped reserved chars (e.g. %2C -> ,) in display columns."""
+    for col in _DECODE_COLUMNS:
+        if col in table.columns:
+            table[col] = table[col].map(lambda v: unquote(v) if isinstance(v, str) and "%" in v else v)
+    return table
 
 
 def strip_fasta_block(gff_text: str) -> str:
@@ -51,8 +67,8 @@ def load_genome_gff(path: Path | str) -> AnnotationTable:
     raw = path.read_text(encoding="utf-8")
     if FASTA_DELIMITER not in raw:
         # Plain GFF — no temp file needed; parse in place.
-        return parse_gff3(path)
+        return _gff3_percent_decode(parse_gff3(path))
     stripped = strip_fasta_block(raw)
     tmp = path.with_suffix(_STRIPPED_SUFFIX)
     tmp.write_text(stripped, encoding="utf-8")
-    return parse_gff3(tmp)
+    return _gff3_percent_decode(parse_gff3(tmp))
