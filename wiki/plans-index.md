@@ -1,6 +1,19 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
+## [plan_file: plans/Genome_Map_Virulence_Overlay_Plan/technical-plan.md] 2026-06-19
+**Summary:** Genome-map v1 5th overlay tier — `virulence-determinant`: where a curated VirulenceFinder allele is present in ONE E. coli/Shigella genome, surface it behind the SAME coordinate-join integrity gate + a presence-only wall as the AMR determinant tier (presence, never a learned pathogenicity claim), with the deterministic pathotype-resolver call shown SEPARATELY as the genome-level overlay. Offline-degrades without blastn; D:-free on this host (native blastn + committed VF DB).
+**Key decisions (v2, post-/brainstorm — 3 criticals folded):**
+- C1: `genome_pathotype_call` mirrors the FULL deployed `resolve_call` contract (qc_pass from `assembly_qc.qc_verdict` + `support_gene_count` AND `cross_axis_support` from a per-gene-coverage map) — else a low-QC genome silently over-claims COMMENSAL/CONFIDENT. `insufficient_context` only when FASTA/VF unavailable.
+- C2: the tier surfaces ALL called VF alleles (DB has 4942; cluster mapping keeps ~23) — only clustered hits feed the resolver; capture the DB SHA; tier label says "curated VF allele present", not pathotype.
+- C3: `run_canonical_vf` gains an `all_hits` coord-retaining mode (best-hit + `-max_target_seqs 5` lost tandem copies) + interval dedup.
+- Empirically-pinned coord-join: `makeblastdb` WITHOUT `-parse_seqids` → `sseqid` = the exact FASTA header = the same token AMRFinder reports → the shared `build_contig_name_map` works for both overlays (`-parse_seqids` would mangle it); minus-strand normalize; LIVE integration fixture pins it.
+- M1 non-unique-contig detection + M2 VF metrics ISOLATED from the AMR `all_joins_symbol_fallback` + the AMR GO/NO-GO spike gate. New `virulence_organism_in_scope` helper (E.coli/Shigella). Frozen AMR surface byte-untouched (READ-only).
+
+**Status:** candidate (pre-exec chain COMPLETE: idea-anchor → probe-memo → technical-plan → pre-exec /brainstorm [3 criticals] → technical-plan↺ → save-plan; Open Q A/Q5 [pathotype-call authority decision] to ratify before /execute-plan)
+
+---
+
 ## [plan_file: plans/Two_Machine_Operating_Contract.md] 2026-05-26
 **Status:** active (in force; first production test = cef audit-aware closeout integration)
 **Summary:** Durable operating contract between Codex (Precision 7780) + Claude (GTX 860M). Ratifies Codex's 2026-05-26 division-of-labor proposal + 5 amendments from same-day /brainstorm round.
