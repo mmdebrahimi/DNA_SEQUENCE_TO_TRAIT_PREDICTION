@@ -102,3 +102,16 @@ Source memo: `ecoli-amr-revalidation-source-portfolio-2026-06-14` — user goal 
 | Jakarta BSI (22) | ENA PRJNA596854 (confirmed) | unconfirmed | Indonesia | small; geographic spread. Verify AST method. |
 
 Recommended execution order: MIC core (Oxford+Spain+234) → categorical breadth (Denmark+Netherlands) → extend (Norway+Jakarta). Each is auto-executor-doable (open ENA + local AMRFinder), no money.
+
+## VIRAL genotype-phenotype substrate (Wave B de-risk, added 2026-06-21)
+
+Source memo: `viral-antiviral-resistance-gp-datasets-2026-06-21` — user goal = GO/NO-GO on a FREE de-confounded viral genotype↔phenotype substrate to validate the project's (unvalidated) viral determinant decoder. **Verdict: GO for HIV.** All rows websearch-summary provenance (HIVDB pages JS-rendered) → verify direct. HCV/SARS-CoV-2 = honest gap (broad queries usage-policy-blocked this session).
+
+| Claim | Value | Source URL | Candidate use / Verification needed | Confidence |
+|---|---|---|---|---|
+| Stanford HIVDB public genotype-phenotype dataset | 2,167 isolates / 12,442 PhenoSense results | https://hivdb.stanford.edu/pages/genopheno.dataset.html | **Use:** first validated viral cell — validate HIV RT/protease/integrase decoder vs an INDEPENDENT wet-lab fold-change label (clears circular-label + sampling-defined gates). **Verify:** download the file; confirm seq↔fold-change pairing + drug coverage. | medium |
+| Phenotype = PhenoSense fold-change, rule-independent | qualitative | https://hivdb.stanford.edu/pages/genotype-phenotype.html | **Use:** the decisive de-confounding property. **Verify:** confirm deposited fold-change (not derived) + capture assay dynamic-range cutoffs (censoring → MicValue). | medium |
+| HIVDB license (data redistributability) — LOAD-BEARING | CC BY 4.0 / CC0 (inferred) | https://hivdb.stanford.edu/_wrapper/pages/pdf/Rhee.2016.JVI.pdf | **Use:** confirms data can ship as a committed validation cohort. **Verify (MUST, low-confidence):** read the authoritative HIVDB dataset terms-of-use page directly — NOT the associated papers. | low |
+| HCV + SARS-CoV-2 free gp-datasets | (not assessed) | (blocked) | **Use:** secondary viral substrates. **Verify:** re-run narrow domain-restricted /research (geno2pheno[hcv], Stanford CoVDB). | honest gap |
+
+8-gate screen (raw memo): HIVDB CLEARS the label gates that bound the bacterial learned arm (circular-label/study==class/sampling-defined/assembly-attrition); residual = the standard de-confound precondition (within-SUBTYPE concordance) + censoring-aware fold-change handling. Auto-executor-doable once the license is confirmed; no money.
