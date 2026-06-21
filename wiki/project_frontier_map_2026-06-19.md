@@ -55,6 +55,13 @@ Both require a USER decision — neither is a pure-executor task, and neither sh
   exactly what the chain protects).
 - **Genome-map richer homology tiers** (hmmer/Pfam/eggNOG) / a visual browser — explicitly deferred in v1;
   user investment call.
+- **Evo 2 zero-shot variant-effect probe** (parked horizon, added 2026-06-19 from the Arc "virtual cell" TED
+  talk research; `wiki/evo2_zeroshot_vep_lead_2026-06-19.md`). The ONE untried angle from the talk: Evo 2's
+  label-free reference-vs-variant likelihood-delta on the cipro QRDR mutations. DIFFERENT method from the
+  closed embedding bet; LOW expected value (conservation≠resistance caveat); GPU-gated (not the 860M). A
+  scoped pre-registered probe IF on a GPU host — NOT a pivot, does NOT reopen the embedding arm. The talk's
+  bulk (STATE / virtual cell / scRNA-seq) is wrong-modality/organism/data for us, but it externally
+  CONFIRMS our "labels not models" finding (Arc hits the same generalize-to-new-context wall).
 
 ## Recommendation
 
