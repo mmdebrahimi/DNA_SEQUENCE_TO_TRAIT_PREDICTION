@@ -1,22 +1,10 @@
-# Genome-map v1 spike — GO/NO-GO verdict (2026-06-18)
+# Genome-map v1 spike — GO/NO-GO verdict (2026-06-19)
 
-> **SUPERSEDED 2026-06-19** by `wiki/genome_map_spike_verdict_2026-06-19.md` — the spike was REGENERATED on
-> the same 3 cached genomes under the new C1/C2/M1 + C1-follow-up semantics (D: back online; no re-annotation
-> needed — cached Bakta GFF + AMRFinder main.tsv). The current verdict: tiering GO + overlay-integrity GO
-> (demonstrated on 2 AMR-bearing genomes); per-feature drug labels are now verdict-derived (verified on the
-> calibrated Klebsiella case). This 2026-06-18 file is retained as the original as-run record only.
->
-> **HISTORICAL (as-run 2026-06-18) — do NOT cite as current C1/C2/M1 evidence.** This run predates the
-> 2026-06-19 hardening: (1) per-feature drug labels here were the OLD broad-class match (C1 since refined to
-> mirror the deployed `call_resistance` verdict, calibrated-aware — so some per-feature drug labels in the
-> as-run per-genome maps would differ now); (2) the verdict was a single `GO` scalar (C2 since split into
-> `tiering_go` + a scoped `overlay_go`). The per-tier counts + unknown rates + join-quality below are
-> unaffected. Regenerate with `scripts/genome_map_spike.py` once the D: genome cache is available for a
-> current "confirmed on the real 3 genomes" claim.
-
-**Verdict (as-run, single-scalar GO; superseded by the tiering_go/overlay_go split): GO**
+**Tiering verdict (Bakta honesty re-tiering): GO**
+**Overlay-integrity verdict (determinant->feature join): GO**
 
 - G1 satisfied on >=1 genome; G2 clean; no all-symbol-fallback genome
+- determinant-overlay integrity demonstrated on 2 AMR-bearing genome(s)
 
 Honesty contract: phenotype claims appear ONLY behind a high-confidence determinant join (symbol-fallback excluded); the unknown rate is DB-labelled `unknown_under_bakta_db_light` (db-light = reduced functional coverage, not biological unknown).
 
@@ -36,7 +24,8 @@ Honesty contract: phenotype claims appear ONLY behind a high-confidence determin
     - DEMOTE: raw `PPC domain-containing protein` -> homology-only-hypothesis (low-confidence wording ('domain-containing protein'))
     - DEMOTE: raw `Putative pre-16S rRNA nuclease` -> homology-only-hypothesis (low-confidence wording ('putative'))
 - **G2** no-tier-confusion: pass=True (violations=0)
-- per-genome verdict: GO
+- **overlay-integrity**: GO (main_rows=32, high_conf_joins=32, surfaced=23)
+- per-genome tiering verdict: GO
 
 ## GCA_000417105.1 — K. pneumoniae (carbapenem-R)
 - organism (-O): `Klebsiella_pneumoniae`
@@ -54,7 +43,8 @@ Honesty contract: phenotype claims appear ONLY behind a high-confidence determin
     - DEMOTE: raw `HTH lacI-type domain-containing protein` -> homology-only-hypothesis (low-confidence wording ('domain-containing protein'))
     - DEMOTE: raw `Autotransporter outer membrane beta-barrel domain-containing protein` -> homology-only-hypothesis (low-confidence wording ('domain-containing protein'))
 - **G2** no-tier-confusion: pass=True (violations=0)
-- per-genome verdict: GO
+- **overlay-integrity**: GO (main_rows=12, high_conf_joins=11, surfaced=11)
+- per-genome tiering verdict: GO
 
 ## GCF_000171775.1 — Gemmata obscuriglobus (homology stress test)
 - organism (-O): `None`
@@ -72,4 +62,5 @@ Honesty contract: phenotype claims appear ONLY behind a high-confidence determin
     - DEMOTE: raw `HTH marR-type domain-containing protein` -> homology-only-hypothesis (low-confidence wording ('domain-containing protein'))
     - DEMOTE: raw `Transposase IS4-like domain-containing protein` -> homology-only-hypothesis (low-confidence wording ('domain-containing protein'))
 - **G2** no-tier-confusion: pass=True (violations=0)
-- per-genome verdict: GO
+- **overlay-integrity**: n/a (determinant-free) (main_rows=0, high_conf_joins=0, surfaced=0)
+- per-genome tiering verdict: GO
