@@ -1,6 +1,19 @@
 # Decisions Log
 <!-- Auto-maintained by /retrospective. Do not edit manually. -->
 
+## [plan_file: Genome_Map_Virulence_Overlay_Plan/technical-plan.md] Executed 2026-06-21
+**Mode:** sequential (4 waves) | **Result:** All 5 steps completed (W0: coord-retaining VF caller + virulence tier constant; W1: VF overlay module; W2: build_map virulence tier + M2 metric isolation; W3: live VF wiring + CLI)
+**PRs:** branch feat/genome-map-virulence-overlay (uncommitted; no PR)
+**Salience:** HIGH
+**Modules:** dna_decode/genome_map/ (phenotype_overlay/virulence overlay, tiers, build_map), dna_decode/pathotype/vf_runner.py, scripts/genome_map.py (CLI), tests
+**Notable:** 1472->1494 tests (26 new), 0 regressions, all steps inline. Two ratified Open Questions executed: Q5/A=YES include genome-level pathotype call (C1 QC-gated honesty contract); Q B=AMR determinant-phenotype wins tier precedence over virulence. Sentrux absent — Architecture Gate did not run.
+**Corrections:** none
+**Reversals:** none
+**Discoveries:** (1) `makeblastdb` WITHOUT `-parse_seqids` makes `sseqid` == the exact FASTA first-token == the SAME token AMRFinder reports, so ONE `build_contig_name_map` reconciles BOTH the AMR and virulence coord overlays — no second reconciler needed (extends the cross-tool coord-join lesson). (2) C2 silent-drop catch in pre-exec brainstorm: the tier must surface ALL ~4942 called VF alleles (cluster=None for unclustered), not just the 23 resolver clusters — clustering is a presentation layer, not a coverage filter.
+**Lesson:** When adding a second coord-overlay over the same genome, pin the upstream tool's identifier contract (here: no-`-parse_seqids`) so a single name-reconciler serves both overlays; and isolate the new overlay's join-quality metrics under SEPARATE keys (M2) so a frozen gate reading only the old keys can never be poisoned by the addition.
+
+---
+
 ## [plan_file: TMP_SMX_External_Validation_Cell_Plan/technical-plan.md] Executed 2026-06-16
 **Mode:** sequential | **Result:** All 5 steps completed (rule module, scorer, builder branding passthrough, tests, run+memo); none skipped/failed
 **PRs:** N/A (solo project; commits to main per the two-machine sync-via-main convention)

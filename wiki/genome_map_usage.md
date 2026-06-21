@@ -32,7 +32,37 @@ Outputs (per `--out-dir`): `genome_map_<id>.json` (per-feature map),
 
 Flags: `--organism none` runs AMRFinder generic (no `-O`, for an organism it
 doesn't curate); `--drugs cipro,ceftriaxone,...` scopes the overlay (default =
-all `mic_tiers`-supported drugs).
+all `mic_tiers`-supported drugs); `--no-virulence` skips the VF virulence overlay
+(see below).
+
+## Virulence-determinant overlay (E. coli / Shigella, shipped 2026-06-21)
+
+A 5th overlay tier (`dna_decode/genome_map/virulence_overlay.py`). Where a curated
+VirulenceFinder (VF) allele is PRESENT in an E. coli/Shigella genome, it's surfaced
+behind the SAME coordinate-join integrity gate + a presence-only wall as the AMR
+`determinant-phenotype` tier (presence of a curated determinant, NEVER a learned
+pathogenicity claim). The deterministic pathotype-resolver call is shown SEPARATELY
+as a genome-level overlay (`genome_pathotype_call`, the virulence analog of the AMR
+R/S call) — QC-gated, so a low-QC genome yields `AMBIGUOUS_LOW_QC` rather than a
+confident commensal.
+
+- VF caller: `vf_runner.run_canonical_vf(all_hits=True)` (NON-frozen) — raises
+  `-max_target_seqs` so tandem/multi-copy alleles survive; adds a coord-retaining
+  `per_hit` list + `db_sha`. `per_gene`/`per_cluster` stay best-hit byte-identical
+  so `build_vf_diff` is unchanged.
+- **no-`-parse_seqids` pin:** `makeblastdb` WITHOUT `-parse_seqids` keeps `sseqid` =
+  the exact FASTA header first-token (the same token AMRFinder reports) so the shared
+  `phenotype_overlay.build_contig_name_map` reconciles both overlays.
+- All VF metrics live under SEPARATE keys (`virulence_join_quality`,
+  `all_virulence_joins_symbol_fallback`, `virulence_determinant_feature_count`,
+  `genome_pathotype_call`) — they never feed the AMR `all_joins_symbol_fallback`
+  nor the AMR GO/NO-GO spike gate.
+- `virulence_status ∈ {FULL, UNAVAILABLE_NO_BLASTN, SKIPPED_NON_ECOLI, SKIPPED_USER}`.
+- DB: committed `data/virulencefinder_db/virulence_ecoli.fsa`. Offline-degrades to
+  `UNAVAILABLE_NO_BLASTN` without `blastn`.
+- Deferred: non-E.coli VF DBs; a virulence GO/NO-GO spike gate; folding virulence
+  into the AMR tier. The 3-genome spike stays AMR-only in v1
+  (`run_genome_map_for(virulence=True)` is opt-in; default False).
 
 ## 3-genome prototype spike (the GO/NO-GO harness)
 
@@ -51,14 +81,19 @@ MSYS_NO_PATHCONV=1 uv run python -m scripts.genome_map_tool_surface \
 #    or a documented BAKTA_ANNOTATION_BLOCKED / AMRFINDER_BLOCKED)
 ```
 
-## The 4 evidence tiers (precedence high → low)
+## The evidence tiers (precedence high → low)
 
 | tier | fires when | phenotype claim? |
 |---|---|---|
-| `determinant-phenotype` | a HIGH-confidence AMRFinder determinant join (protein-id / coord) | **YES — only this tier** |
+| `determinant-phenotype` | a HIGH-confidence AMRFinder determinant join (protein-id / coord) | presence-only (AMR R/S behind the wall) |
+| `virulence-determinant` | a HIGH-confidence VF allele coord-join (E. coli/Shigella; shipped 2026-06-21) | presence-only (pathotype call is a SEPARATE genome-level overlay) |
 | `curated-molecular-function` | a named gene_symbol OR a specific product | no |
 | `homology-only-hypothesis` | low-confidence wording (`putative`/`by similarity`/DUF/`domain-containing`) | no |
 | `unknown` | `hypothetical protein` / empty product | no |
+
+Per-feature precedence: high-confidence AMR join → `determinant-phenotype` wins over
+a high-confidence VF join → `virulence-determinant`; a symbol-fallback VF hit is
+`secondary_evidence` only (excluded from the tier).
 
 Headline metric: `unknown_under_bakta_db_light` (the db-light coverage caveat is
 IN the field name — high unknown is tooling coverage, not biological unknown).

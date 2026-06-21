@@ -136,6 +136,121 @@ def test_cli_live_amrfinder_failure_allow_degraded(tmp_path: Path, monkeypatch):
     assert gm["metrics"]["determinant_phenotype_feature_count"] == 0
 
 
+def _fake_amrfinder_factory(tmp_path: Path):
+    """Return a run_amrfinder stub that writes a header-only main.tsv (no AMR determinants)."""
+    def _fake(fasta, out, organism=None):
+        p = Path(out)
+        p.mkdir(parents=True, exist_ok=True)
+        tsv = p / "main.tsv"
+        tsv.write_text(
+            "Protein identifier\tContig id\tStart\tStop\tElement symbol\tElement name\tClass\tSubclass\tMethod\n",
+            encoding="utf-8")
+        return tsv, None
+    return _fake
+
+
+def _live_inputs(tmp_path: Path):
+    gff = _offline_gff(tmp_path)
+    fasta = tmp_path / "g.fna"
+    fasta.write_text(">c\nACGT\n", encoding="utf-8")
+    return gff, fasta
+
+
+def test_cli_virulence_skipped_non_ecoli(tmp_path: Path, monkeypatch):
+    import json
+    from dna_decode.genome_map import amrfinder
+
+    monkeypatch.setattr(amrfinder, "run_amrfinder", _fake_amrfinder_factory(tmp_path))
+    gff, fasta = _live_inputs(tmp_path)
+    out = tmp_path / "out"
+    rc = main(["--genome-fasta", str(fasta), "--gff", str(gff), "--organism", "Klebsiella_pneumoniae",
+               "--drugs", "ciprofloxacin", "--sample-id", "S", "--out-dir", str(out)])
+    assert rc == 0
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["virulence_status"] == "SKIPPED_NON_ECOLI"
+    assert gm["metrics"]["virulence_determinant_feature_count"] == 0
+
+
+def test_cli_no_virulence_flag(tmp_path: Path, monkeypatch):
+    import json
+    from dna_decode.genome_map import amrfinder
+
+    monkeypatch.setattr(amrfinder, "run_amrfinder", _fake_amrfinder_factory(tmp_path))
+    gff, fasta = _live_inputs(tmp_path)
+    out = tmp_path / "out"
+    rc = main(["--genome-fasta", str(fasta), "--gff", str(gff), "--organism", "Escherichia",
+               "--drugs", "ciprofloxacin", "--no-virulence", "--sample-id", "S", "--out-dir", str(out)])
+    assert rc == 0
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["virulence_status"] == "SKIPPED_USER"
+
+
+def test_cli_virulence_unavailable_no_blastn(tmp_path: Path, monkeypatch):
+    import json
+    from dna_decode.genome_map import amrfinder
+    from scripts import genome_map_spike
+
+    monkeypatch.setattr(amrfinder, "run_amrfinder", _fake_amrfinder_factory(tmp_path))
+    monkeypatch.setattr(genome_map_spike, "run_canonical_vf",
+                        lambda *a, **k: {"status": "unavailable", "reason": "no blastn",
+                                         "per_gene": {}, "per_cluster": {}, "per_hit": [], "db_sha": None})
+    gff, fasta = _live_inputs(tmp_path)
+    out = tmp_path / "out"
+    rc = main(["--genome-fasta", str(fasta), "--gff", str(gff), "--organism", "Escherichia",
+               "--drugs", "ciprofloxacin", "--sample-id", "S", "--out-dir", str(out)])
+    assert rc == 0
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["virulence_status"] == "UNAVAILABLE_NO_BLASTN"
+    assert gm["metrics"]["virulence_determinant_feature_count"] == 0
+
+
+def test_cli_virulence_full_path(tmp_path: Path, monkeypatch):
+    import json
+    from dna_decode.genome_map import amrfinder
+    from scripts import genome_map_spike
+
+    monkeypatch.setattr(amrfinder, "run_amrfinder", _fake_amrfinder_factory(tmp_path))
+
+    def _fake_vf(*a, **k):
+        # one called VF hit coord-joining the gyrA feature (contig_1:100-900) in the GFF
+        return {"status": "ok", "db_sha": "feedfacecafebeef",
+                "per_cluster": {"STX2": {"called": True, "best_gene": "stx2A:acc",
+                                         "percent_identity": 99.0, "percent_coverage": 100.0}},
+                "per_gene": {},
+                "per_hit": [{"allele_id": "stx2A:acc", "vf_gene": "stx2A", "cluster": "STX2",
+                             "sseqid": "contig_1", "start": 100, "stop": 900, "strand": "+",
+                             "percent_identity": 99.0, "percent_coverage": 100.0, "called": True}]}
+
+    monkeypatch.setattr(genome_map_spike, "run_canonical_vf", _fake_vf)
+    gff, fasta = _live_inputs(tmp_path)
+    out = tmp_path / "out"
+    rc = main(["--genome-fasta", str(fasta), "--gff", str(gff), "--organism", "Escherichia",
+               "--drugs", "ciprofloxacin", "--sample-id", "S", "--out-dir", str(out)])
+    assert rc == 0
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["virulence_status"] == "FULL"
+    assert gm["metrics"]["virulence_determinant_feature_count"] == 1
+    vfeat = next(f for f in gm["features"] if f["primary_tier"] == "virulence-determinant")
+    assert vfeat["virulence"][0]["vf_gene"] == "stx2A"
+    assert vfeat["virulence"][0]["db_sha"] == "feedfacecafebeef"
+    pc = gm["metrics"]["genome_pathotype_call"]
+    assert pc["status"] == "ok" and pc["db_sha"] == "feedfacecafebeef"
+    # the md surfaces virulence_status + the DB sha
+    md = (out / "genome_map_S.md").read_text()
+    assert "virulence_status" in md and "feedfacecafebeef" in md
+
+
+def test_cli_offline_virulence_status(tmp_path: Path):
+    import json
+    gff = _offline_gff(tmp_path)
+    out = tmp_path / "out"
+    # offline E. coli (no FASTA scanned) -> in scope but nothing to scan
+    main(["--gff", str(gff), "--no-amrfinder", "--organism", "Escherichia",
+          "--sample-id", "S", "--out-dir", str(out)])
+    gm = json.loads((out / "genome_map_S.json").read_text())
+    assert gm["virulence_status"] == "UNAVAILABLE_NO_BLASTN"
+
+
 def test_render_degraded_banner(tmp_path: Path):
     gff = _offline_gff(tmp_path)
     from dna_decode.genome_map import ingest

@@ -30,22 +30,32 @@ from __future__ import annotations
 # first may carry a phenotype claim (the phenotype wall). `pathway-module` is
 # DEFERRED (no KEGG in v1).
 TIER_DETERMINANT_PHENOTYPE = "determinant-phenotype"
+# 5th overlay tier (v2): a curated VirulenceFinder allele PRESENT behind the same
+# coordinate-join integrity gate as the AMR determinant tier. Presence of a curated
+# determinant — NEVER a learned pathogenicity claim. Ranks immediately AFTER the AMR
+# tier (Open Question B ratified: AMR `determinant-phenotype` wins when a feature is
+# both; near-zero real overlap), before the curated-function tier.
+TIER_VIRULENCE_DETERMINANT = "virulence-determinant"
 TIER_CURATED_FUNCTION = "curated-molecular-function"
 TIER_HOMOLOGY_HYPOTHESIS = "homology-only-hypothesis"
 TIER_UNKNOWN = "unknown"
 
 TIER_PRECEDENCE = (
     TIER_DETERMINANT_PHENOTYPE,
+    TIER_VIRULENCE_DETERMINANT,
     TIER_CURATED_FUNCTION,
     TIER_HOMOLOGY_HYPOTHESIS,
     TIER_UNKNOWN,
 )
 
-# The single tier that may emit a phenotype/property claim (R1, the phenotype wall).
+# The single tier that may emit a phenotype/property claim (R1, the AMR phenotype wall).
+# The virulence tier has its OWN presence-only wall (the `virulence` field) — it never
+# emits an AMR R/S phenotype, so PHENOTYPE_TIER stays the AMR tier alone.
 PHENOTYPE_TIER = TIER_DETERMINANT_PHENOTYPE
 
 __all__ = [
     "TIER_DETERMINANT_PHENOTYPE",
+    "TIER_VIRULENCE_DETERMINANT",
     "TIER_CURATED_FUNCTION",
     "TIER_HOMOLOGY_HYPOTHESIS",
     "TIER_UNKNOWN",

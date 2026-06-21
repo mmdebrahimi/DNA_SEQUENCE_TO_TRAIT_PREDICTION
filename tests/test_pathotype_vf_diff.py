@@ -82,6 +82,18 @@ def test_caller_is_not_independent_baseline():
     assert rec["caller"]["caller_is_independent_baseline"] is False
 
 
+def test_run_canonical_vf_additive_contract_keys():
+    """v2 adds per_hit + db_sha to run_canonical_vf WITHOUT disturbing the per_gene/
+    per_cluster best-hit contract build_vf_diff reads (regression pin)."""
+    res = run_canonical_vf(str(DB), str(DB), blastn_bin="/nonexistent/blastn")
+    for k in ("status", "per_gene", "per_cluster", "per_hit", "db_sha"):
+        assert k in res
+    assert isinstance(res["per_hit"], list)
+    # build_vf_diff still consumes the unavailable result unchanged
+    diff = build_vf_diff({"STX2": True}, res, resolver_marker_hits=[])
+    assert diff["status"] == "unavailable"
+
+
 def test_offline_safe_degrades_when_blastn_absent():
     """When canonical VF is unavailable the diff section is RETAINED as status=unavailable
     with a reason — never silently dropped (CI-on-no-binary contract)."""

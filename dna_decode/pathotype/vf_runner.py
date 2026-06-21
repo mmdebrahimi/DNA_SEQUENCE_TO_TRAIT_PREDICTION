@@ -20,6 +20,7 @@ run on a host without the binary while still asserting the contract.
 """
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
@@ -76,60 +77,75 @@ def _cluster_for_allele(allele_id: str) -> str | None:
     return None
 
 
-def run_canonical_vf(fasta: str | Path, db: str | Path, *,
-                     identity_threshold: float = VF_IDENTITY_THRESHOLD,
-                     coverage_threshold: float = VF_COVERAGE_THRESHOLD,
-                     blastn_bin: str | None = None,
-                     timeout: int = 600) -> dict:
-    """Run canonical (blastn) VirulenceFinder gene-calling of `db` alleles vs `fasta`.
+def _db_sha256(db: str | Path) -> str | None:
+    """sha256 (16-char prefix) of the VF DB file, or None if unreadable.
 
-    Returns a dict with `status` "ok" | "unavailable", and on ok: per-gene best hits
-    (gene -> {cluster, percent_identity, percent_coverage, called}) + per-cluster calls
-    (cluster -> {called, best_gene, percent_identity, percent_coverage})."""
-    blastn = blastn_bin or find_blastn()
-    if not blastn:
-        return {"status": "unavailable",
-                "reason": "blastn not found (set $BLASTN_BIN or install NCBI BLAST+)",
-                "tool": "blastn", "per_gene": {}, "per_cluster": {}}
-    makeblastdb = _find_makeblastdb(blastn)
-    if not makeblastdb:
-        return {"status": "unavailable",
-                "reason": "makeblastdb not found alongside blastn",
-                "tool": "makeblastdb", "per_gene": {}, "per_cluster": {}}
+    Carried into every result so a downstream virulence tier / pathotype call can
+    stamp exactly which curated DB produced its determinants (C2 provenance)."""
+    try:
+        return hashlib.sha256(Path(db).read_bytes()).hexdigest()[:16]
+    except OSError:
+        return None
 
-    with tempfile.TemporaryDirectory(prefix="vf_canonical_") as td:
-        asm_db = str(Path(td) / "asm")
+
+def _interval_dedup(hsps: list[dict]) -> list[dict]:
+    """Collapse overlapping HSPs of ONE copy; keep distinct copies at distinct coords (C3).
+
+    `hsps` are normalized (start<=stop) HSPs for a single (allele_id, sseqid). Sorted by
+    start; overlapping intervals merge (retaining the best-coverage HSP's identity /
+    coverage / strand); disjoint intervals stay separate — a real tandem / multi-copy
+    allele (e.g. a blaTEM array) yields one entry per copy rather than a single best-hit.
+    """
+    out: list[dict] = []
+    for h in sorted(hsps, key=lambda x: (x["start"], x["stop"])):
+        if out and h["start"] <= out[-1]["stop"]:
+            last = out[-1]
+            last["stop"] = max(last["stop"], h["stop"])
+            if h["percent_coverage"] > last["percent_coverage"]:
+                last["percent_identity"] = h["percent_identity"]
+                last["percent_coverage"] = h["percent_coverage"]
+                last["strand"] = h["strand"]
+        else:
+            out.append(dict(h))
+    return out
+
+
+def parse_blastn_outfmt6(stdout: str, identity_threshold: float,
+                         coverage_threshold: float) -> dict:
+    """Parse blastn `-outfmt 6 qseqid sseqid sstart send pident length qlen` into calls.
+
+    PURE (no subprocess) so the genotype/coord/strand handling is unit-testable on
+    synthetic stdout. Returns {per_gene, per_cluster, per_hit}:
+      - per_gene / per_cluster: best-hit (max coverage) per cluster — byte-identical to
+        the pre-change output so `build_vf_diff` is unaffected.
+      - per_hit: every CALLED HSP (clustered OR not — C2), coords normalized
+        (minus-strand sstart>send → start<=stop + strand), interval-deduped per copy.
+    """
+    best: dict[str, tuple[float, float]] = {}   # allele_id -> (pident, coverage)
+    called_by_copy: dict[tuple[str, str], list[dict]] = {}
+    for line in stdout.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 7:
+            continue
+        qid, sseqid, sstart_s, send_s, pident_s, length_s, qlen_s = parts[:7]
         try:
-            subprocess.run([makeblastdb, "-in", str(fasta), "-dbtype", "nucl",
-                            "-out", asm_db], check=True, capture_output=True,
-                           text=True, timeout=timeout)
-            # query = VF alleles, subject DB = the assembly → coverage is of the reference allele.
-            proc = subprocess.run(
-                [blastn, "-query", str(db), "-db", asm_db,
-                 "-outfmt", "6 qseqid pident length qlen",
-                 "-perc_identity", str(identity_threshold),
-                 "-max_target_seqs", "5", "-evalue", "1e-20"],
-                check=True, capture_output=True, text=True, timeout=timeout)
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as e:
-            return {"status": "unavailable",
-                    "reason": f"blastn invocation failed: {type(e).__name__}",
-                    "tool": "blastn", "per_gene": {}, "per_cluster": {}}
-
-        # best hit per allele (gene id): max coverage among identity-passing HSPs.
-        best: dict[str, tuple[float, float]] = {}   # allele_id -> (pident, coverage)
-        for line in proc.stdout.splitlines():
-            parts = line.split("\t")
-            if len(parts) < 4:
-                continue
-            qid, pident_s, length_s, qlen_s = parts[0], parts[1], parts[2], parts[3]
-            try:
-                pident = float(pident_s)
-                cov = (float(length_s) / float(qlen_s)) * 100.0 if float(qlen_s) else 0.0
-            except ValueError:
-                continue
-            prev = best.get(qid)
-            if prev is None or cov > prev[1]:
-                best[qid] = (pident, cov)
+            pident = float(pident_s)
+            qlen = float(qlen_s)
+            cov = (float(length_s) / qlen) * 100.0 if qlen else 0.0
+            sstart, send = int(sstart_s), int(send_s)
+        except ValueError:
+            continue
+        prev = best.get(qid)
+        if prev is None or cov > prev[1]:
+            best[qid] = (pident, cov)
+        if pident >= identity_threshold and cov >= coverage_threshold:
+            called_by_copy.setdefault((qid, sseqid), []).append({
+                "start": min(sstart, send),
+                "stop": max(sstart, send),
+                "strand": "+" if sstart <= send else "-",
+                "percent_identity": round(pident, 1),
+                "percent_coverage": round(cov, 1),
+            })
 
     per_gene: dict[str, dict] = {}
     per_cluster: dict[str, dict] = {}
@@ -157,14 +173,102 @@ def run_canonical_vf(fasta: str | Path, db: str | Path, *,
         per_cluster.setdefault(cluster, {"called": False, "best_gene": None,
                                          "percent_identity": None, "percent_coverage": None})
 
+    # per_hit: every called allele (clustered OR not — C2), interval-deduped per copy.
+    per_hit: list[dict] = []
+    for (allele_id, sseqid), hsps in called_by_copy.items():
+        cluster = _cluster_for_allele(allele_id)   # None when unclustered (kept, not dropped)
+        vf_gene = allele_id.split(":")[0]
+        for copy in _interval_dedup(hsps):
+            per_hit.append({
+                "allele_id": allele_id,
+                "vf_gene": vf_gene,
+                "cluster": cluster,
+                "sseqid": sseqid,
+                "start": copy["start"],
+                "stop": copy["stop"],
+                "strand": copy["strand"],
+                "percent_identity": copy["percent_identity"],
+                "percent_coverage": copy["percent_coverage"],
+                "called": True,
+            })
+    return {"per_gene": per_gene, "per_cluster": per_cluster, "per_hit": per_hit}
+
+
+def run_canonical_vf(fasta: str | Path, db: str | Path, *,
+                     identity_threshold: float = VF_IDENTITY_THRESHOLD,
+                     coverage_threshold: float = VF_COVERAGE_THRESHOLD,
+                     blastn_bin: str | None = None,
+                     all_hits: bool = False,
+                     timeout: int = 600) -> dict:
+    """Run canonical (blastn) VirulenceFinder gene-calling of `db` alleles vs `fasta`.
+
+    Returns a dict with `status` "ok" | "unavailable", and on ok:
+      - per-gene best hits (gene -> {cluster, percent_identity, percent_coverage, called})
+      - per-cluster calls (cluster -> {called, best_gene, percent_identity, percent_coverage})
+      - `per_hit`: ALL called HSPs (NOT cluster-filtered — C2: the DB has ~4942 alleles but
+        only ~23 map to a resolver cluster; the genome-map virulence tier surfaces every
+        called allele), each with retained coords {allele_id, vf_gene, cluster (None if
+        unclustered), sseqid, start, stop, strand, percent_identity, percent_coverage,
+        called}, interval-deduped per copy (tandem copies retained).
+      - `db_sha`: the VF DB sha256 prefix (provenance).
+
+    `all_hits=True` raises `-max_target_seqs` so tandem / multi-copy alleles are retained
+    (the genome-map tier needs every copy); `per_gene` / `per_cluster` stay best-hit and
+    byte-identical to the pre-change output (so `build_vf_diff` is UNCHANGED)."""
+    db_sha = _db_sha256(db)
+    blastn = blastn_bin or find_blastn()
+    if not blastn:
+        return {"status": "unavailable",
+                "reason": "blastn not found (set $BLASTN_BIN or install NCBI BLAST+)",
+                "tool": "blastn", "per_gene": {}, "per_cluster": {},
+                "per_hit": [], "db_sha": db_sha}
+    makeblastdb = _find_makeblastdb(blastn)
+    if not makeblastdb:
+        return {"status": "unavailable",
+                "reason": "makeblastdb not found alongside blastn",
+                "tool": "makeblastdb", "per_gene": {}, "per_cluster": {},
+                "per_hit": [], "db_sha": db_sha}
+
+    # `-max_target_seqs` bounds HSPs PER QUERY allele; raise it for the all-hits mode so a
+    # tandem array of one allele is not truncated before _interval_dedup can split copies.
+    max_target = "10000" if all_hits else "5"
+    with tempfile.TemporaryDirectory(prefix="vf_canonical_") as td:
+        asm_db = str(Path(td) / "asm")
+        try:
+            # Do NOT pass `-parse_seqids`: verified empirically 2026-06-19 that WITHOUT it
+            # blastn `sseqid` is the EXACT FASTA header first-token (e.g. `CP021689.1`) —
+            # the same token AMRFinder reports — so the shared genome_map
+            # `build_contig_name_map` reconciles both overlays. WITH `-parse_seqids` the id
+            # is mangled (`gb|CP021689.1|`) and the contig-name map silently breaks.
+            subprocess.run([makeblastdb, "-in", str(fasta), "-dbtype", "nucl",
+                            "-out", asm_db], check=True, capture_output=True,
+                           text=True, timeout=timeout)
+            # query = VF alleles, subject DB = the assembly → coverage is of the reference allele.
+            proc = subprocess.run(
+                [blastn, "-query", str(db), "-db", asm_db,
+                 "-outfmt", "6 qseqid sseqid sstart send pident length qlen",
+                 "-perc_identity", str(identity_threshold),
+                 "-max_target_seqs", max_target, "-evalue", "1e-20"],
+                check=True, capture_output=True, text=True, timeout=timeout)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError) as e:
+            return {"status": "unavailable",
+                    "reason": f"blastn invocation failed: {type(e).__name__}",
+                    "tool": "blastn", "per_gene": {}, "per_cluster": {},
+                    "per_hit": [], "db_sha": db_sha}
+
+        calls = parse_blastn_outfmt6(proc.stdout, identity_threshold, coverage_threshold)
+
     return {
         "status": "ok",
         "tool": "blastn",
         "method": "canonical_virulencefinder_blastn_v0_1",
+        "all_hits": all_hits,
         "parameters": {"identity_threshold": identity_threshold,
                        "coverage_threshold": coverage_threshold},
-        "per_gene": per_gene,
-        "per_cluster": per_cluster,
+        "per_gene": calls["per_gene"],
+        "per_cluster": calls["per_cluster"],
+        "per_hit": calls["per_hit"],
+        "db_sha": db_sha,
     }
 
 

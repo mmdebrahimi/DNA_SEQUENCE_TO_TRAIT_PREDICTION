@@ -68,6 +68,27 @@ def render_genome_summary_md(genome_map: dict, gate_result: dict, *, generated: 
     lines.append(f"- determinant-phenotype features: {m['determinant_phenotype_feature_count']}")
     gl = ", ".join(f"{d}={v.get('prediction')}" for d, v in m["genome_level_calls"].items())
     lines.append(f"- genome-level R/S calls (separate from features): {gl or '(none)'}")
+    # --- virulence overlay (presence of curated VF determinants, never a pathogenicity claim) ---
+    vstatus = genome_map.get("virulence_status")
+    if vstatus:
+        lines.append(f"- virulence_status: `{vstatus}`")
+        lines.append(f"- virulence-determinant features: {m.get('virulence_determinant_feature_count', 0)}")
+        vjq = m.get("virulence_join_quality") or {}
+        if vjq:
+            lines.append(f"- virulence join quality: n_vf_rows={vjq.get('n_vf_rows')} "
+                         f"high_confidence={vjq.get('n_high_confidence_join')} "
+                         f"symbol_fallback={vjq.get('n_symbol_fallback')} "
+                         f"ambiguous_contig={vjq.get('n_ambiguous_contig')}")
+        pc = m.get("genome_pathotype_call")
+        if pc and pc.get("status") == "ok" and pc.get("derived_call"):
+            dc = pc["derived_call"]
+            lines.append(f"- genome pathotype call (separate; presence-only): "
+                         f"{dc.get('primary')} [{dc.get('confidence_tier')}] "
+                         f"(rule {dc.get('rule_id')})")
+            if pc.get("db_sha"):
+                lines.append(f"  VF DB sha: `{pc['db_sha']}` — {pc.get('caveat', '')}")
+        elif pc:
+            lines.append(f"- genome pathotype call: {pc.get('status')}")
     lines.append("")
     lines.append("## Determinant-phenotype features (the only tier with a phenotype claim)")
     if m["determinant_phenotype_features"]:
@@ -94,6 +115,17 @@ def _supported_drugs_default() -> list[str]:
     return list(supported_drugs())
 
 
+def _offline_virulence_status(organism: str | None, no_virulence: bool) -> str:
+    """Virulence status for the offline/no-FASTA path (the overlay needs a FASTA + blastn)."""
+    from dna_decode.genome_map.virulence_overlay import virulence_organism_in_scope
+
+    if no_virulence:
+        return "SKIPPED_USER"
+    if not virulence_organism_in_scope(organism):
+        return "SKIPPED_NON_ECOLI"
+    return "UNAVAILABLE_NO_BLASTN"   # in scope, but no FASTA to scan in the offline path
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="genome_map", description=__doc__)
     ap.add_argument("--genome-fasta", type=Path, default=None,
@@ -107,6 +139,8 @@ def main(argv=None) -> int:
                     help="comma-separated drugs for the overlay (default: all mic_tiers-supported)")
     ap.add_argument("--no-amrfinder", action="store_true",
                     help="skip AMRFinder (offline/degraded — tiers from GFF + determinant cells only)")
+    ap.add_argument("--no-virulence", action="store_true",
+                    help="skip the VirulenceFinder overlay (E. coli/Shigella only; needs blastn + a FASTA)")
     ap.add_argument("--allow-degraded", action="store_true",
                     help="in LIVE mode, emit a tiers-only map (overlay_status=DEGRADED_USER_ACCEPTED) "
                          "if AMRFinder fails, instead of exiting BLOCKED. Off by default so a live "
@@ -187,9 +221,12 @@ def main(argv=None) -> int:
                               {"n_main_rows": 0, "n_high_confidence_join": 0,
                                "n_symbol_fallback": 0, "n_unjoined": 0},
                               drug_verdicts={}, drugs=drugs, degraded=True)
+        # no FASTA scanned in the offline path -> no virulence overlay.
+        gm["virulence_status"] = _offline_virulence_status(organism, args.no_virulence)
     else:
         gm = run_genome_map_for(sample_id, organism, gff, main_tsv, drugs,
-                                fasta_path=args.genome_fasta)
+                                fasta_path=args.genome_fasta,
+                                virulence=not args.no_virulence)
         gm["degraded_coverage"] = degraded
 
     gm["overlay_status"] = overlay_status

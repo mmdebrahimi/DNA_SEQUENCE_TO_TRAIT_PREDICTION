@@ -51,8 +51,19 @@ from dna_decode.genome_map.phenotype_overlay import (
     join_hits,
     parse_determinant_hits,
 )
+from dna_decode.genome_map.virulence_overlay import (
+    genome_pathotype_call,
+    join_virulence,
+    parse_virulence_hits,
+    virulence_organism_in_scope,
+)
+from dna_decode.pathotype.detect import parse_fasta
+from dna_decode.pathotype.vf_runner import run_canonical_vf
 
 VERDICT_BLOCKED = "BLOCKED"
+
+# The committed v1 VirulenceFinder E. coli allele DB (E. coli / Shigella scope).
+VF_DB_DEFAULT = REPO / "data" / "virulencefinder_db" / "virulence_ecoli.fsa"
 
 
 @dataclass
@@ -116,6 +127,33 @@ def bakta_contig_lengths(gff_path: Path | str) -> dict[str, int]:
 
 # ---------- per-genome map (file IO, no Docker) ----------
 
+def _virulence_for_genome(organism, fasta_path, features, contig_map, vf_db, *, enabled):
+    """Run the VF overlay (Step 5) → (status, joined, counts, pathotype_call, db_sha).
+
+    status ∈ {FULL, UNAVAILABLE_NO_BLASTN, SKIPPED_NON_ECOLI, SKIPPED_USER}. Reuses the
+    SAME contig-name map already built for the AMR join. Fail-soft: a non-ok VF result
+    (no blastn / blastn error / no FASTA to scan) yields UNAVAILABLE_NO_BLASTN with no
+    tier — the map still emits.
+    """
+    if not enabled:
+        return "SKIPPED_USER", None, None, None, None
+    if not virulence_organism_in_scope(organism):
+        return "SKIPPED_NON_ECOLI", None, None, None, None
+    if fasta_path is None or not Path(fasta_path).exists():
+        return "UNAVAILABLE_NO_BLASTN", None, None, None, None   # nothing to scan
+    vf_db = vf_db or VF_DB_DEFAULT
+    result = run_canonical_vf(str(fasta_path), str(vf_db), all_hits=True)
+    if result.get("status") != "ok":
+        return "UNAVAILABLE_NO_BLASTN", None, None, None, result.get("db_sha")
+    contigs = parse_fasta(fasta_path)
+    contig_names = [name for name, _ in contigs]
+    vir_hits = parse_virulence_hits(result)
+    joined, counts = join_virulence(features, vir_hits, contig_name_map=contig_map,
+                                    contig_names=contig_names)
+    pathotype_call = genome_pathotype_call(result, contigs)
+    return "FULL", joined, counts, pathotype_call, result.get("db_sha")
+
+
 def run_genome_map_for(
     accession: str,
     organism: str | None,
@@ -123,12 +161,20 @@ def run_genome_map_for(
     main_tsv_path: Path | str,
     drugs: list[str],
     fasta_path: Path | str | None = None,
+    *,
+    virulence: bool = False,
+    vf_db: Path | str | None = None,
 ) -> dict:
     """Build the genome map from a Bakta GFF + an AMRFinder main.tsv (no live tools).
 
     Reconciles AMRFinder contig names to Bakta seqids by length (when a FASTA is
     given) so the coordinate join can fire; computes per-drug genome-level
     verdicts via the frozen ``amr_rules.call_resistance`` (organism-aware).
+
+    `virulence=True` (the single-genome product surface) additionally runs the VF
+    overlay when the organism is in scope + a FASTA is present + blastn resolves —
+    reusing the SAME contig-name map — and stamps `gm["virulence_status"]`. Default
+    False keeps the AMR-only spike + direct callers byte-unchanged.
     """
     from dna_decode.eval.amr_rules import call_resistance
 
@@ -146,10 +192,17 @@ def run_genome_map_for(
     for d in drugs:
         drug_verdicts[d] = call_resistance(Path(main_tsv_path), d, organism=organism)
 
-    return build_genome_map(
+    vstatus, vir_joined, vir_counts, pathotype_call, vir_db_sha = _virulence_for_genome(
+        organism, fasta_path, features, contig_map, vf_db, enabled=virulence)
+
+    gm = build_genome_map(
         accession, organism, features, joined, counts,
         drug_verdicts=drug_verdicts, drugs=drugs,
+        virulence_joined_hits=vir_joined, virulence_join_counts=vir_counts,
+        pathotype_call=pathotype_call, virulence_db_sha=vir_db_sha,
     )
+    gm["virulence_status"] = vstatus
+    return gm
 
 
 # ---------- aggregation + rendering (pure) ----------

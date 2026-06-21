@@ -1,7 +1,7 @@
 # Plans Index
 <!-- Auto-maintained by /save-plan. Do not edit manually. -->
 
-## [plan_file: plans/Genome_Map_Virulence_Overlay_Plan/technical-plan.md] 2026-06-19
+## [plan_file: executed_plans/Genome_Map_Virulence_Overlay_Plan/technical-plan.md] 2026-06-19
 **Summary:** Genome-map v1 5th overlay tier — `virulence-determinant`: where a curated VirulenceFinder allele is present in ONE E. coli/Shigella genome, surface it behind the SAME coordinate-join integrity gate + a presence-only wall as the AMR determinant tier (presence, never a learned pathogenicity claim), with the deterministic pathotype-resolver call shown SEPARATELY as the genome-level overlay. Offline-degrades without blastn; D:-free on this host (native blastn + committed VF DB).
 **Key decisions (v2, post-/brainstorm — 3 criticals folded):**
 - C1: `genome_pathotype_call` mirrors the FULL deployed `resolve_call` contract (qc_pass from `assembly_qc.qc_verdict` + `support_gene_count` AND `cross_axis_support` from a per-gene-coverage map) — else a low-QC genome silently over-claims COMMENSAL/CONFIDENT. `insufficient_context` only when FASTA/VF unavailable.
@@ -10,7 +10,7 @@
 - Empirically-pinned coord-join: `makeblastdb` WITHOUT `-parse_seqids` → `sseqid` = the exact FASTA header = the same token AMRFinder reports → the shared `build_contig_name_map` works for both overlays (`-parse_seqids` would mangle it); minus-strand normalize; LIVE integration fixture pins it.
 - M1 non-unique-contig detection + M2 VF metrics ISOLATED from the AMR `all_joins_symbol_fallback` + the AMR GO/NO-GO spike gate. New `virulence_organism_in_scope` helper (E.coli/Shigella). Frozen AMR surface byte-untouched (READ-only).
 
-**Status:** candidate (pre-exec chain COMPLETE: idea-anchor → probe-memo → technical-plan → pre-exec /brainstorm [3 criticals] → technical-plan↺ → save-plan; Open Q A/Q5 [pathotype-call authority decision] to ratify before /execute-plan)
+**Status:** executed — shipped 2026-06-21. Open Q A/Q5 ratified YES (pathotype call included, C1 QC-gated) + Q B ratified AMR-wins. All 5 steps landed; 26 new tests (1494 passed, 0 regressions excl. test_models_foundation; frozen AMR surface byte-unchanged). Live verification on cached E. coli ST131 (GCA_002180195.1) via native blastn + committed VF DB: virulence_status=FULL, 27 virulence-determinant features (2690/2691 high-confidence coord joins, 0 symbol-fallback), all-called-allele coverage incl. unclustered (terC/iucC/sat/iha/gad) + tandem copies (terC×2, gad×2), genome pathotype call ExPEC_COMPATIBLE/LOW_CONFIDENCE (separate), DB sha e94e6c6d4dae1ca6; AMR side unchanged (23 determinant-phenotype features). New module `dna_decode/genome_map/virulence_overlay.py`; `vf_runner.run_canonical_vf(all_hits=True)` + `per_hit`/`db_sha`; tier `virulence-determinant` at TIER_PRECEDENCE[1]; `scripts/genome_map.py --no-virulence`.
 
 ---
 
