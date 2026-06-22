@@ -1,7 +1,7 @@
 # Research Follow-up Queue (V1.5 invocation)
 <!-- queue-schema: 0.1 -->
 
-> Last updated 2026-06-05 (ecoli bacterial-phenotype decoder-substrate-feasibility added; next-substrate ranking). Stale-days threshold: 30. Source memos scanned: 6.
+> Last updated 2026-06-22 (label-acquisition epoch: noncircular-label-sources shortlist added; 4 acquisition decisions surfaced). Stale-days threshold: 30. Source memos scanned: 7.
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
@@ -15,6 +15,19 @@
 - Active candidates (≤ 30 days old): 25
 - Stale candidates (> 30 days old): 0
 - Cross-flavor candidates (public + internal): 0
+
+## Acquisition decisions — label-acquisition epoch (2026-06-22, from noncircular-label-sources)
+
+These are AUTHORITY/MONEY decisions surfaced by the label-source survey — the user's to make, not executor-resolvable:
+
+| # | Decision | Type | Recommendation |
+|---|---|---|---|
+| LA-1 | TB independent validation via **free** CRyPTIC MIC (compute-bound on the ~1.6 TB regeno → D: wall, NOT acquisition-bound; needs a non-CRyPTIC-derived rule or a hand-curated post-2023 gold set) | compute/effort | **highest-leverage free move** — pursue if the D: compute is acceptable |
+| LA-2 | ~~Probe/acquire ARESdb / 11,087-isolate dataset~~ — **VERIFIED proprietary** (GEAR-base academic-only, no batch download / no public accessions; Ares Genetics sole owner) → **closed** for a solo non-academic project | money/MTA (hard gate) | CLOSED — no free downloadable genome+label pairs; reopen only via a commercial/academic-MTA you arrange |
+| LA-3 | Accept E. coli public-label **saturation** → pivot to **prospective-lock validation** of the frozen decoder (no new label) | strategic | executor-eligible anytime; the honest fallback |
+| LA-4 | Draft + **send** a request to a contact-gated collection (Whittam DECA / clinical AST export) — only if its label is a *measurement*, not a gene-definition | send/authority | I draft; you send |
+
+Full shortlist + gate-screening: `research_outputs/noncircular-label-sources-2026-06-22.md`.
 
 ## Active Candidates
 
