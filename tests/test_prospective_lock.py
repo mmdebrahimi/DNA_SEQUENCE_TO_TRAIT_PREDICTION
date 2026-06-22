@@ -41,7 +41,10 @@ def test_manifest_pins_all_surface_files_and_cells():
     m = _manifest()
     assert set(m["surface_sha256"]) == set(FROZEN_SURFACE_FILES)
     assert len(m["scored_cells"]) == len(SCORED_CELLS)
-    assert m["lock_date"] == "2026-06-22" and m["schema"] == "prospective-lock-manifest-v1"
+    # cutoff = the FREEZE date (decoder byte-identical to b3761c8 since); manifest created 2026-06-22.
+    assert m["lock_date"] == "2026-06-13" and m["schema"] == "prospective-lock-manifest-v1"
+    assert m["manifest_created"] == "2026-06-22" and m["frozen_commit"] == "b3761c8"
+    assert m["cutoff_justification"]   # the byte-identity rationale must be recorded
 
 
 def test_verify_lock_detects_tamper():
@@ -111,7 +114,7 @@ def test_build_artifact_stamps_lock_provenance():
                          powering={"status": "ACCRUING"}, generated="2026-06-22")
     assert art["prospective_lock_verified"] is True
     assert art["lock_manifest"]["surface_sha256"] == m["surface_sha256"]   # provably the locked decoder
-    assert art["lock_manifest"]["lock_date"] == "2026-06-22"
+    assert art["lock_manifest"]["lock_date"] == "2026-06-13"
 
 
 # ---- scorer CLI gates ----

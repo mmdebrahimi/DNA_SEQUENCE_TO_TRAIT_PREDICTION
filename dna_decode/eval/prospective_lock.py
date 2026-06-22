@@ -70,16 +70,22 @@ def surface_hashes(repo: Path = _REPO) -> dict[str, str]:
 
 
 def compute_lock_manifest(lock_date: str, frozen_commit: str, lock_commit: str,
-                          repo: Path = _REPO) -> dict:
+                          repo: Path = _REPO, manifest_created: str = "",
+                          cutoff_justification: str = "") -> dict:
     """The timestamped, hash-pinned prospective-lock commitment.
 
-    `lock_date` (YYYY-MM-DD) is the cutoff: an isolate is an eligible prospective test case iff it became
-    public strictly after this date. `frozen_commit` = the reproducibility-freeze commit (b3761c8);
-    `lock_commit` = the commit at which this manifest was created (the decoder files are byte-identical to
-    the freeze, which the hashes prove regardless of commit)."""
+    `lock_date` (YYYY-MM-DD) is the eligibility CUTOFF: an isolate is an eligible prospective test case iff it
+    became public strictly after this date. It is the decoder-FREEZE date (when the decoder state became
+    immutable), NOT necessarily the manifest-creation date — the manifest is a tamper-evident RECORD of a
+    state that already existed, so an isolate postdating the freeze is provably unseen regardless of when the
+    record was written. `frozen_commit` = the reproducibility-freeze commit (b3761c8); `lock_commit` = the
+    commit at which this manifest was created; `manifest_created` = that creation date; `cutoff_justification`
+    = why `lock_date` is honest (e.g. byte-identity of the frozen surface to `frozen_commit`)."""
     return {
         "schema": LOCK_SCHEMA,
         "lock_date": lock_date,
+        "manifest_created": manifest_created or lock_date,
+        "cutoff_justification": cutoff_justification,
         "frozen_commit": frozen_commit,
         "lock_commit": lock_commit,
         "eligibility_rule": ("an isolate is a leakage-free prospective test case IFF its earliest possible "

@@ -1,8 +1,10 @@
 {
   "schema": "prospective-lock-manifest-v1",
-  "lock_date": "2026-06-22",
+  "lock_date": "2026-06-13",
+  "manifest_created": "2026-06-22",
+  "cutoff_justification": "lock_date is the 2026-06-13 reproducibility-freeze date (commit b3761c8); the 5 frozen-surface files are VERIFIED byte-identical to b3761c8 (git hash-object 2026-06-22), so the decoder state has not changed since the freeze and any isolate public after 2026-06-13 is provably unseen. The manifest itself was created 2026-06-22 (lock_commit) as a tamper-evident record of that frozen state.",
   "frozen_commit": "b3761c8",
-  "lock_commit": "fc8834b",
+  "lock_commit": "b756ad0",
   "eligibility_rule": "an isolate is a leakage-free prospective test case IFF its earliest possible public date (INSDC first_public / release_date) is STRICTLY AFTER lock_date; missing / year-only / pre-lock dates are INELIGIBLE (fail-closed)",
   "protocol": "verify_lock (decoder == frozen) -> filter cohort to prospective-eligible -> frozen call_resistance(organism, drug) -> independent_cohort_validate._conf; the result is stamped with this manifest's surface hashes + lock_date so it is provably prospective",
   "surface_sha256": {
