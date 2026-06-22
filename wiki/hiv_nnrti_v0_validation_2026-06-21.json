@@ -1,0 +1,98 @@
+{
+  "artifact": "hiv_nnrti_v0_validation",
+  "schema": "hiv-nnrti-validation-v0",
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra interpretation)",
+  "caller": "dna_decode.data.hiv_amr v0 (class-level NNRTI major-DRM catalog)",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\NNRTI_DataSet.txt",
+  "n_isolates": 2272,
+  "primary_metric": "auc_call_separates_fold = P(fold|called-R > fold|called-S), cutoff-free",
+  "honest_caveats": [
+    "v0 is CLASS-LEVEL -> per-drug differential resistance over-calls ETR/RPV (the AUC gap quantifies it)",
+    "filtered dataset has no Subtype column -> per-subtype transfer check is v0.1 (needs the unfiltered set)",
+    "Stanford R-script least-squares regression is the v0.1 'validate-vs-underlying-tool' baseline (not run here)",
+    "fold>=3 sens/spec is illustrative, NOT a per-drug clinical breakpoint"
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use",
+  "per_drug": {
+    "efavirenz": {
+      "n_isolates_with_fold": 2168,
+      "n_called_R": 1057,
+      "n_called_S": 1111,
+      "auc_call_separates_fold": 0.9618,
+      "median_fold_called_R": 35.0,
+      "median_fold_called_S": 0.6,
+      "illustrative_fold3_sens": 0.947,
+      "illustrative_fold3_spec": 0.904,
+      "illustrative_fold3_confusion": {
+        "tp": 945,
+        "fp": 112,
+        "tn": 1058,
+        "fn": 53
+      }
+    },
+    "nevirapine": {
+      "n_isolates_with_fold": 2052,
+      "n_called_R": 963,
+      "n_called_S": 1089,
+      "auc_call_separates_fold": 0.9853,
+      "median_fold_called_R": 100.0,
+      "median_fold_called_S": 0.7,
+      "illustrative_fold3_sens": 0.906,
+      "illustrative_fold3_spec": 0.991,
+      "illustrative_fold3_confusion": {
+        "tp": 954,
+        "fp": 9,
+        "tn": 990,
+        "fn": 99
+      }
+    },
+    "etravirine": {
+      "n_isolates_with_fold": 998,
+      "n_called_R": 558,
+      "n_called_S": 440,
+      "auc_call_separates_fold": 0.75,
+      "median_fold_called_R": 2.3,
+      "median_fold_called_S": 0.8,
+      "illustrative_fold3_sens": 0.887,
+      "illustrative_fold3_spec": 0.571,
+      "illustrative_fold3_confusion": {
+        "tp": 251,
+        "fp": 307,
+        "tn": 408,
+        "fn": 32
+      }
+    },
+    "rilpivirine": {
+      "n_isolates_with_fold": 311,
+      "n_called_R": 185,
+      "n_called_S": 126,
+      "auc_call_separates_fold": 0.7001,
+      "median_fold_called_R": 3.5,
+      "median_fold_called_S": 1.25,
+      "illustrative_fold3_sens": 0.822,
+      "illustrative_fold3_spec": 0.544,
+      "illustrative_fold3_confusion": {
+        "tp": 97,
+        "fp": 88,
+        "tn": 105,
+        "fn": 21
+      }
+    },
+    "doravirine": {
+      "n_isolates_with_fold": 130,
+      "n_called_R": 93,
+      "n_called_S": 37,
+      "auc_call_separates_fold": 0.5554,
+      "median_fold_called_R": 4.8,
+      "median_fold_called_S": 3.9,
+      "illustrative_fold3_sens": 0.75,
+      "illustrative_fold3_spec": 0.348,
+      "illustrative_fold3_confusion": {
+        "tp": 63,
+        "fp": 30,
+        "tn": 16,
+        "fn": 21
+      }
+    }
+  }
+}

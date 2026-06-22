@@ -1,5 +1,17 @@
 # Wave B grounding — a new HIV drug-resistance viral cell (2026-06-21)
 
+> ## ✅ v0 SHIPPED + VALIDATED (2026-06-21) — the FIRST validated viral cell
+> Built `dna_decode/data/hiv_amr.py` (v0 class-level NNRTI major-DRM catalog, sourced verbatim from the
+> Stanford dataset page) + validated against the Stanford HIVDB PhenoSense fold-change (independent wet-lab,
+> N=2272 isolates). **AUC (call separates fold): efavirenz 0.962 · nevirapine 0.985** (excellent) ·
+> etravirine 0.75 · rilpivirine 0.70 · doravirine 0.56 (the honest class-level degradation on 2nd-gen
+> NNRTIs — quantifies the v0.1 per-drug need). Result: `wiki/hiv_nnrti_v0_validation_2026-06-21.{md,json}`;
+> harness `scripts/hiv_nnrti_validate.py` (+ tests). Circularity-safe (label = PhenoSense, NOT HIVDB Sierra).
+> Frozen AMR surface byte-unchanged. **v0.1 follow-ups (named):** per-drug catalog (fixes ETR/RPV/DOR
+> over-call) · within-subtype transfer check (needs the unfiltered dataset's Subtype column) · the Stanford
+> R-script least-squares baseline (validate-vs-underlying-tool) · report-card SCORED-cell integration · the
+> `dna-amr --drug` CLI route + HXB2-RT genome-mode caller for novel-FASTA input.
+
 Soraya `/probe`-by-hand + license-verification attempt, advancing Wave B (the highest-value net-new move
 per `wiki/phenotype_trait_tool_completion_assessment_2026-06-21.md` + the Wave-A closeout) as far as
 autonomy allows. **Result: the BUILD design is grounded + de-risked; the build itself is externally
