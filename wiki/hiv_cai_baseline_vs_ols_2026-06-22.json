@@ -1,0 +1,42 @@
+{
+  "artifact": "hiv_cai_validate_vs_underlying_tool",
+  "schema": "hiv-targetsite-baseline-v0",
+  "drug_class": "CAI",
+  "gene": "CA",
+  "call_mode": "mutant-level",
+  "wrapper": "dna_decode.data.hiv_amr (CAI catalog)",
+  "underlying_tool": "Stanford DRMcv.R-style OLS (log10 fold ~ binary mutation presence), 5-fold CV, Python/sklearn reimpl (shared machinery with the NNRTI baseline)",
+  "cutoff_note": "UNIFORM illustrative fold>=3 (NOT per-drug clinical); both models scored at the same cutoff so the DELTA is the fair wrapper-vs-tool signal; absolute calibration needs per-drug clinical cutoffs (v0.1, not sourced here)",
+  "n_features_min10": 6,
+  "interpretation": "small delta => the deterministic catalog MATCHES the full regression (adds interpretability, not error); large positive delta => per-drug/mutant signal the catalog misses (bounds a v0.1 refinement)",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; method Stanford DRMcv.R",
+  "per_drug": {
+    "lenacapavir": {
+      "n_isolates": 140,
+      "prevalence_R_at_cutoff": 0.793,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 109,
+        "fp": 20,
+        "tn": 9,
+        "fn": 2,
+        "sens": 0.982,
+        "spec": 0.31,
+        "accuracy": 0.843,
+        "balanced_accuracy": 0.646
+      },
+      "ols_baseline": {
+        "tp": 111,
+        "fp": 27,
+        "tn": 2,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.069,
+        "accuracy": 0.807,
+        "balanced_accuracy": 0.534,
+        "auc": 0.9105
+      },
+      "delta_ols_minus_catalog_balacc": -0.112
+    }
+  }
+}

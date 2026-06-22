@@ -23,7 +23,21 @@ def test_build_structure_and_modality_separation():
         assert "auc_call_separates_fold" in c and "delta_ols_minus_catalog" in c
 
 
+def test_pi_insti_cai_cells_carry_ols_baseline():
+    # The wrapper-vs-tool discipline gap closed 2026-06-22: PI/INSTI/CAI cells must carry the OLS
+    # underlying-tool baseline (not just the catalog AUC). Relies on the committed baseline JSONs.
+    rc = build()
+    new_cells = [c for c in rc["cells"] if c["drug_class"] in ("PI", "INSTI", "CAI")]
+    assert new_cells, "expected PI/INSTI/CAI cells (committed validation JSONs present)"
+    scored = [c for c in new_cells if c["ols_baseline_balacc"] is not None]
+    # at least the well-powered PI/INSTI/CAI drugs carry a numeric OLS baseline + catalog balacc + delta
+    assert scored, "PI/INSTI/CAI cells must carry the OLS baseline once baseline JSONs exist"
+    for c in scored:
+        assert c["catalog_balacc"] is not None and c["delta_ols_minus_catalog"] is not None
+
+
 if __name__ == "__main__":
     test_latest_missing_prefix_returns_none()
     test_build_structure_and_modality_separation()
+    test_pi_insti_cai_cells_carry_ols_baseline()
     print("PASS")

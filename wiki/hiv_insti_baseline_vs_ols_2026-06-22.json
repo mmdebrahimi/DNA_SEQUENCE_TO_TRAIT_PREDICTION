@@ -1,0 +1,150 @@
+{
+  "artifact": "hiv_insti_validate_vs_underlying_tool",
+  "schema": "hiv-targetsite-baseline-v0",
+  "drug_class": "INSTI",
+  "gene": "IN",
+  "call_mode": "position-based",
+  "wrapper": "dna_decode.data.hiv_amr (INSTI catalog)",
+  "underlying_tool": "Stanford DRMcv.R-style OLS (log10 fold ~ binary mutation presence), 5-fold CV, Python/sklearn reimpl (shared machinery with the NNRTI baseline)",
+  "cutoff_note": "UNIFORM illustrative fold>=3 (NOT per-drug clinical); both models scored at the same cutoff so the DELTA is the fair wrapper-vs-tool signal; absolute calibration needs per-drug clinical cutoffs (v0.1, not sourced here)",
+  "n_features_min10": 136,
+  "interpretation": "small delta => the deterministic catalog MATCHES the full regression (adds interpretability, not error); large positive delta => per-drug/mutant signal the catalog misses (bounds a v0.1 refinement)",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; method Stanford DRMcv.R",
+  "per_drug": {
+    "raltegravir": {
+      "n_isolates": 753,
+      "prevalence_R_at_cutoff": 0.413,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 292,
+        "fp": 82,
+        "tn": 360,
+        "fn": 19,
+        "sens": 0.939,
+        "spec": 0.814,
+        "accuracy": 0.866,
+        "balanced_accuracy": 0.877
+      },
+      "ols_baseline": {
+        "tp": 293,
+        "fp": 22,
+        "tn": 420,
+        "fn": 18,
+        "sens": 0.942,
+        "spec": 0.95,
+        "accuracy": 0.947,
+        "balanced_accuracy": 0.946,
+        "auc": 0.9799
+      },
+      "delta_ols_minus_catalog_balacc": 0.069
+    },
+    "elvitegravir": {
+      "n_isolates": 754,
+      "prevalence_R_at_cutoff": 0.5,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 328,
+        "fp": 54,
+        "tn": 323,
+        "fn": 49,
+        "sens": 0.87,
+        "spec": 0.857,
+        "accuracy": 0.863,
+        "balanced_accuracy": 0.863
+      },
+      "ols_baseline": {
+        "tp": 331,
+        "fp": 77,
+        "tn": 300,
+        "fn": 46,
+        "sens": 0.878,
+        "spec": 0.796,
+        "accuracy": 0.837,
+        "balanced_accuracy": 0.837,
+        "auc": 0.9453
+      },
+      "delta_ols_minus_catalog_balacc": -0.026
+    },
+    "dolutegravir": {
+      "n_isolates": 370,
+      "prevalence_R_at_cutoff": 0.195,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 72,
+        "fp": 139,
+        "tn": 159,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.534,
+        "accuracy": 0.624,
+        "balanced_accuracy": 0.767
+      },
+      "ols_baseline": {
+        "tp": 55,
+        "fp": 23,
+        "tn": 275,
+        "fn": 17,
+        "sens": 0.764,
+        "spec": 0.923,
+        "accuracy": 0.892,
+        "balanced_accuracy": 0.843,
+        "auc": 0.9185
+      },
+      "delta_ols_minus_catalog_balacc": 0.076
+    },
+    "bictegravir": {
+      "n_isolates": 287,
+      "prevalence_R_at_cutoff": 0.178,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 51,
+        "fp": 137,
+        "tn": 99,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.419,
+        "accuracy": 0.523,
+        "balanced_accuracy": 0.71
+      },
+      "ols_baseline": {
+        "tp": 24,
+        "fp": 17,
+        "tn": 219,
+        "fn": 27,
+        "sens": 0.471,
+        "spec": 0.928,
+        "accuracy": 0.847,
+        "balanced_accuracy": 0.699,
+        "auc": 0.8666
+      },
+      "delta_ols_minus_catalog_balacc": -0.011
+    },
+    "cabotegravir": {
+      "n_isolates": 64,
+      "prevalence_R_at_cutoff": 0.812,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 52,
+        "fp": 8,
+        "tn": 4,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.333,
+        "accuracy": 0.875,
+        "balanced_accuracy": 0.667
+      },
+      "ols_baseline": {
+        "tp": 50,
+        "fp": 0,
+        "tn": 12,
+        "fn": 2,
+        "sens": 0.962,
+        "spec": 1.0,
+        "accuracy": 0.969,
+        "balanced_accuracy": 0.981,
+        "auc": 0.9712
+      },
+      "delta_ols_minus_catalog_balacc": 0.314
+    }
+  }
+}

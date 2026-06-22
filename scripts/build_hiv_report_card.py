@@ -76,21 +76,26 @@ def build() -> dict:
             })
     # PI / INSTI / CAI: cutoff-free AUC per drug (position-based PI/INSTI; mutant-level CAI). No OLS baseline /
     # v0.1 / subtype columns yet (those are NNRTI/NRTI-only artifacts) -> render '-'.
-    for label, prefix in (("PI", "hiv_pi_v0_validation_"),
-                          ("INSTI", "hiv_insti_v0_validation_"),
-                          ("CAI", "hiv_cai_v0_validation_")):
+    for label, prefix, base_prefix in (
+            ("PI", "hiv_pi_v0_validation_", "hiv_pi_baseline_vs_ols_"),
+            ("INSTI", "hiv_insti_v0_validation_", "hiv_insti_baseline_vs_ols_"),
+            ("CAI", "hiv_cai_v0_validation_", "hiv_cai_baseline_vs_ols_")):
         val = _latest(prefix)
         if not val:
             continue
+        base = (_latest(base_prefix) or {}).get("per_drug", {})   # OLS underlying-tool baseline (wrapper-vs-tool)
         catalog = ("mutant-level (CAPELLA capsid)" if val.get("call_mode") == "mutant-level"
                    else "position-based v0 (Stanford majors)")
         for drug, m in val.get("per_drug", {}).items():
+            b = base.get(drug, {})
             cells.append({
                 "drug_class": label, "drug": drug, "catalog": catalog,
                 "n": m.get("n_isolates_with_fold"),
                 "auc_call_separates_fold": m.get("auc_call_separates_fold"),
-                "catalog_balacc": None, "ols_baseline_balacc": None,
-                "delta_ols_minus_catalog": None, "subtype_transfer": None, "v0_1_mutant_gain": None,
+                "catalog_balacc": (b.get("catalog") or {}).get("balanced_accuracy"),
+                "ols_baseline_balacc": (b.get("ols_baseline") or {}).get("balanced_accuracy"),
+                "delta_ols_minus_catalog": b.get("delta_ols_minus_catalog_balacc"),
+                "subtype_transfer": None, "v0_1_mutant_gain": None,
             })
     return {
         "artifact": "hiv_decoder_report_card", "schema": "hiv-report-card-v0",
@@ -108,7 +113,12 @@ def build() -> dict:
             "non-B subtype transfer is under-powered (data ~96% subtype B)",
             "PI/INSTI = position-based v0 (PI AUC 0.78-0.96; INSTI 0.74-1.0, 2nd-gen DTG/BIC lower as the "
             "class-level over-call predicts); CAI/lenacapavir = mutant-level (AUC 0.91) on a small "
-            "resistance-enriched dataset (n=140, 11 S); OLS/subtype columns are NNRTI/NRTI-only so far",
+            "resistance-enriched dataset (n=140, 11 S)",
+            "OLS underlying-tool baseline now run for PI/INSTI/CAI (uniform illustrative fold>=3 cutoff, "
+            "delta is the wrapper-vs-tool signal): PI catalog is high-sens/low-spec so OLS recovers "
+            "+0.06..+0.13 balacc (real v0.1 mutant-specific headroom, like NRTI); INSTI catalog is "
+            "competitive (+-0.07, ties/beats OLS on EVG/BIC); CAI catalog BEATS OLS +0.112 (OLS overfits "
+            "the tiny resistance-enriched set). Subtype-transfer column stays NNRTI/NRTI-only",
         ],
         "cells": cells,
     }

@@ -1,0 +1,231 @@
+{
+  "artifact": "hiv_pi_validate_vs_underlying_tool",
+  "schema": "hiv-targetsite-baseline-v0",
+  "drug_class": "PI",
+  "gene": "PR",
+  "call_mode": "position-based",
+  "wrapper": "dna_decode.data.hiv_amr (PI catalog)",
+  "underlying_tool": "Stanford DRMcv.R-style OLS (log10 fold ~ binary mutation presence), 5-fold CV, Python/sklearn reimpl (shared machinery with the NNRTI baseline)",
+  "cutoff_note": "UNIFORM illustrative fold>=3 (NOT per-drug clinical); both models scored at the same cutoff so the DELTA is the fair wrapper-vs-tool signal; absolute calibration needs per-drug clinical cutoffs (v0.1, not sourced here)",
+  "n_features_min10": 224,
+  "interpretation": "small delta => the deterministic catalog MATCHES the full regression (adds interpretability, not error); large positive delta => per-drug/mutant signal the catalog misses (bounds a v0.1 refinement)",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; method Stanford DRMcv.R",
+  "per_drug": {
+    "fosamprenavir": {
+      "n_isolates": 2052,
+      "prevalence_R_at_cutoff": 0.431,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 882,
+        "fp": 461,
+        "tn": 707,
+        "fn": 2,
+        "sens": 0.998,
+        "spec": 0.605,
+        "accuracy": 0.774,
+        "balanced_accuracy": 0.802
+      },
+      "ols_baseline": {
+        "tp": 815,
+        "fp": 74,
+        "tn": 1094,
+        "fn": 69,
+        "sens": 0.922,
+        "spec": 0.937,
+        "accuracy": 0.93,
+        "balanced_accuracy": 0.929,
+        "auc": 0.9801
+      },
+      "delta_ols_minus_catalog_balacc": 0.127
+    },
+    "atazanavir": {
+      "n_isolates": 1505,
+      "prevalence_R_at_cutoff": 0.529,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 795,
+        "fp": 204,
+        "tn": 505,
+        "fn": 1,
+        "sens": 0.999,
+        "spec": 0.712,
+        "accuracy": 0.864,
+        "balanced_accuracy": 0.856
+      },
+      "ols_baseline": {
+        "tp": 776,
+        "fp": 62,
+        "tn": 647,
+        "fn": 20,
+        "sens": 0.975,
+        "spec": 0.913,
+        "accuracy": 0.946,
+        "balanced_accuracy": 0.944,
+        "auc": 0.9891
+      },
+      "delta_ols_minus_catalog_balacc": 0.088
+    },
+    "indinavir": {
+      "n_isolates": 2098,
+      "prevalence_R_at_cutoff": 0.5,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 1046,
+        "fp": 308,
+        "tn": 740,
+        "fn": 4,
+        "sens": 0.996,
+        "spec": 0.706,
+        "accuracy": 0.851,
+        "balanced_accuracy": 0.851
+      },
+      "ols_baseline": {
+        "tp": 1006,
+        "fp": 59,
+        "tn": 989,
+        "fn": 44,
+        "sens": 0.958,
+        "spec": 0.944,
+        "accuracy": 0.951,
+        "balanced_accuracy": 0.951,
+        "auc": 0.99
+      },
+      "delta_ols_minus_catalog_balacc": 0.1
+    },
+    "lopinavir": {
+      "n_isolates": 1807,
+      "prevalence_R_at_cutoff": 0.521,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 939,
+        "fp": 252,
+        "tn": 614,
+        "fn": 2,
+        "sens": 0.998,
+        "spec": 0.709,
+        "accuracy": 0.859,
+        "balanced_accuracy": 0.853
+      },
+      "ols_baseline": {
+        "tp": 908,
+        "fp": 45,
+        "tn": 821,
+        "fn": 33,
+        "sens": 0.965,
+        "spec": 0.948,
+        "accuracy": 0.957,
+        "balanced_accuracy": 0.956,
+        "auc": 0.9916
+      },
+      "delta_ols_minus_catalog_balacc": 0.103
+    },
+    "nelfinavir": {
+      "n_isolates": 2133,
+      "prevalence_R_at_cutoff": 0.572,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 1205,
+        "fp": 178,
+        "tn": 734,
+        "fn": 16,
+        "sens": 0.987,
+        "spec": 0.805,
+        "accuracy": 0.909,
+        "balanced_accuracy": 0.896
+      },
+      "ols_baseline": {
+        "tp": 1174,
+        "fp": 44,
+        "tn": 868,
+        "fn": 47,
+        "sens": 0.962,
+        "spec": 0.952,
+        "accuracy": 0.957,
+        "balanced_accuracy": 0.957,
+        "auc": 0.9893
+      },
+      "delta_ols_minus_catalog_balacc": 0.061
+    },
+    "saquinavir": {
+      "n_isolates": 2084,
+      "prevalence_R_at_cutoff": 0.43,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 897,
+        "fp": 458,
+        "tn": 729,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.614,
+        "accuracy": 0.78,
+        "balanced_accuracy": 0.807
+      },
+      "ols_baseline": {
+        "tp": 862,
+        "fp": 102,
+        "tn": 1085,
+        "fn": 35,
+        "sens": 0.961,
+        "spec": 0.914,
+        "accuracy": 0.934,
+        "balanced_accuracy": 0.938,
+        "auc": 0.9868
+      },
+      "delta_ols_minus_catalog_balacc": 0.131
+    },
+    "tipranavir": {
+      "n_isolates": 1226,
+      "prevalence_R_at_cutoff": 0.249,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 304,
+        "fp": 489,
+        "tn": 432,
+        "fn": 1,
+        "sens": 0.997,
+        "spec": 0.469,
+        "accuracy": 0.6,
+        "balanced_accuracy": 0.733
+      },
+      "ols_baseline": {
+        "tp": 245,
+        "fp": 82,
+        "tn": 839,
+        "fn": 60,
+        "sens": 0.803,
+        "spec": 0.911,
+        "accuracy": 0.884,
+        "balanced_accuracy": 0.857,
+        "auc": 0.9399
+      },
+      "delta_ols_minus_catalog_balacc": 0.124
+    },
+    "darunavir": {
+      "n_isolates": 993,
+      "prevalence_R_at_cutoff": 0.307,
+      "illustrative_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 305,
+        "fp": 270,
+        "tn": 418,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.608,
+        "accuracy": 0.728,
+        "balanced_accuracy": 0.804
+      },
+      "ols_baseline": {
+        "tp": 279,
+        "fp": 55,
+        "tn": 633,
+        "fn": 26,
+        "sens": 0.915,
+        "spec": 0.92,
+        "accuracy": 0.918,
+        "balanced_accuracy": 0.917,
+        "auc": 0.9777
+      },
+      "delta_ols_minus_catalog_balacc": 0.113
+    }
+  }
+}
