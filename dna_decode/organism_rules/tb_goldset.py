@@ -66,6 +66,26 @@ def assert_independent(candidate_ids, cryptic_acc: set[str]) -> IndependenceRepo
     return IndependenceReport(clean=tuple(clean), leaked=tuple(leaked), n_checked=len(clean) + len(leaked))
 
 
+def assert_independent_aliased(candidate_aliases: dict[str, list[str]],
+                               cryptic_acc: set[str]) -> IndependenceReport:
+    """ALIAS-AWARE leakage: a candidate is leaked iff ANY of its accession aliases is in CRyPTIC.
+
+    `candidate_aliases` = {strain_id: [accession tokens]} — e.g. its run + sample + biosample (SRA `SRR/SRS/
+    SAMN` AND/OR ENA `ERR/ERS/SAMEA`). Needed because a candidate from NCBI/SRA (India PRJNA1155695) carries
+    different accession namespaces than CRyPTIC's ENA columns, so a single-token check would miss a real
+    overlap that shows up only on the sample/biosample alias. Case-insensitive exact-token per alias.
+
+    RESIDUAL (named, not closed): this catches LITERAL accession reuse across any provided alias. It does NOT
+    catch the cross-archive case where the SAME physical biosample was independently registered under two
+    DIFFERENT accessions (e.g. SAMEA in CRyPTIC vs SAMN in the candidate) — that needs a biosample crosswalk
+    (`dna_decode/eval/biosample_resolver`), a heavier ENA/Entrez resolution left to the acquisition step."""
+    clean, leaked = [], []
+    for sid, aliases in candidate_aliases.items():
+        hit = any(str(a).strip().upper() in cryptic_acc for a in aliases if str(a).strip())
+        (leaked if hit else clean).append(str(sid))
+    return IndependenceReport(clean=tuple(clean), leaked=tuple(leaked), n_checked=len(clean) + len(leaked))
+
+
 def goldset_available(manifest_path: Path) -> bool:
     return Path(manifest_path).exists()
 

@@ -46,6 +46,50 @@ def test_read_candidates_tsv(tmp_path):
                      "regeno_vcf": "", "rif_label": "R", "inh_label": "S"}]
 
 
+def test_assert_independent_aliased_catches_any_alias():
+    # CRyPTIC carries ENA-style; a candidate is SRA-style but shares its biosample alias -> leaked.
+    cryptic = {"ERR1", "SAMEA999"}
+    aliases = {
+        "indep1": ["SRR_NEW", "SRS_NEW", "SAMN_NEW"],      # no overlap -> clean
+        "leak_by_biosample": ["SRR_X", "SAMEA999"],         # biosample alias in CRyPTIC -> leaked
+        "leak_by_run": ["err1", "SAMN_Y"],                  # run alias matches ERR1 (case-insensitive) -> leaked
+    }
+    rep = tb_goldset.assert_independent_aliased(aliases, cryptic)
+    assert set(rep.clean) == {"indep1"}
+    assert set(rep.leaked) == {"leak_by_biosample", "leak_by_run"}
+    assert rep.n_checked == 3
+
+
+def test_validate_candidates_ok_and_balance():
+    from scripts.validate_tb_goldset_candidates import validate
+    header = ["strain_id", "run_accession", "masked_vcf", "regeno_vcf", "rif_label", "inh_label"]
+    rows = [
+        {"strain_id": "a", "run_accession": "SRR1", "masked_vcf": "", "regeno_vcf": "", "rif_label": "S", "inh_label": "S"},
+        {"strain_id": "b", "run_accession": "SRR2", "masked_vcf": "", "regeno_vcf": "", "rif_label": "R", "inh_label": "R"},
+    ]
+    ok, errors, summary = validate(rows, header, require_vcf=False)   # no --require-vcf -> blank VCF ok
+    assert ok and not errors
+    assert summary["n_usable"] == 2
+    assert summary["rif_inh_buckets"]["RIF=S/INH=S"] == 1 and summary["rif_inh_buckets"]["RIF=R/INH=R"] == 1
+
+
+def test_validate_candidates_failures():
+    from scripts.validate_tb_goldset_candidates import validate
+    base_header = ["strain_id", "run_accession", "masked_vcf", "regeno_vcf", "rif_label", "inh_label"]
+    # no accession-alias column at all -> structural fail
+    ok, errs, _ = validate([], ["strain_id", "masked_vcf", "regeno_vcf", "rif_label", "inh_label"])
+    assert not ok and any("accession-alias" in e for e in errs)
+    # bad label value
+    ok, errs, _ = validate([{"strain_id": "a", "run_accession": "SRR1", "masked_vcf": "", "regeno_vcf": "",
+                             "rif_label": "RESISTANT", "inh_label": "S"}], base_header)
+    assert not ok and any("bad labels in rif_label" in e for e in errs)
+    # duplicate strain_id
+    dup = [{"strain_id": "x", "run_accession": "SRR1", "masked_vcf": "", "regeno_vcf": "", "rif_label": "R", "inh_label": "S"},
+           {"strain_id": "x", "run_accession": "SRR2", "masked_vcf": "", "regeno_vcf": "", "rif_label": "S", "inh_label": "S"}]
+    ok, errs, _ = validate(dup, base_header)
+    assert not ok and any("duplicate strain_id" in e for e in errs)
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))

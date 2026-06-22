@@ -9,11 +9,17 @@ and the existing scoring arm (`organism_rules/tb_goldset` + `scripts/score_tb_in
 
 Candidate TSV columns (tab-separated, header required):
   strain_id        a stable id for the isolate (your choice)
-  ena_accession    the ENA run/sample/biosample accession — used for the CRyPTIC leakage check
   masked_vcf       path to the isolate's masked VCF vs H37Rv NC_000962.3 (determinant CALLS)
   regeno_vcf       path to the regeno VCF (callability); leave blank if none
   rif_label        measured RIF DST: R / S / (blank = no RIF label)
   inh_label        measured INH DST: R / S / (blank = no INH label)
+  # accession aliases for the CRyPTIC leakage check — supply AS MANY as you have (ALIAS-AWARE):
+  ena_accession            (legacy single token) AND/OR
+  run_accession            ERR/SRR/DRR
+  sample_accession         ERS/SRS/DRS
+  biosample_accession      SAMEA/SAMN/SAMD
+A candidate is dropped if ANY alias is in CRyPTIC. India PRJNA1155695 is SRA-style (SRR/SAMN) while CRyPTIC
+is ENA-style (ERR/SAMEA) — supplying run+sample+biosample maximizes the leakage catch.
 
 The scored INDEPENDENT number is still gated on you SUPPLYING this TSV + the VCFs (the external/data wall);
 this script makes the leakage + manifest step a single, auditable, executor-run command.
@@ -73,11 +79,15 @@ def main(argv=None) -> int:
 
     cand = read_candidates(a.candidates)
     cryptic = tb_goldset.cryptic_accessions(a.reuse_csv)
-    rep = tb_goldset.assert_independent([c.get("ena_accession", "") for c in cand], cryptic)
-    clean_acc = set(rep.clean)
-    clean_cand = [c for c in cand if c.get("ena_accession", "") in clean_acc]
+    # ALIAS-AWARE leakage: gather every accession alias each candidate carries (any subset of these cols).
+    alias_cols = ("ena_accession", "run_accession", "sample_accession", "biosample_accession")
+    aliases = {str(c.get("strain_id", "")).strip():
+               [c.get(col, "") for col in alias_cols if c.get(col)] for c in cand}
+    rep = tb_goldset.assert_independent_aliased(aliases, cryptic)
+    clean_ids = set(rep.clean)
+    clean_cand = [c for c in cand if str(c.get("strain_id", "")).strip() in clean_ids]
     print(f"[tb-goldset] {rep.n_checked} candidates | independent {len(rep.clean)} | "
-          f"CRyPTIC-leaked (dropped) {len(rep.leaked)}")
+          f"CRyPTIC-leaked (dropped) {len(rep.leaked)} (alias-aware: run+sample+biosample)")
 
     a.out_dir.mkdir(parents=True, exist_ok=True)
     if rep.leaked:
