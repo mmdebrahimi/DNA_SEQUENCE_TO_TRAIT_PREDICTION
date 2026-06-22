@@ -58,19 +58,33 @@ WHO surveillance SDRM list; the Stanford mutation comments). A real but bounded 
 v0 slice could start with ONE drug class (e.g. NNRTIs: K103N / Y181C / G190A on RT — high-prevalence,
 unambiguous) to prove the pipeline before the full catalog.
 
-## External walls (what blocks the BUILD — none code-closable by the agent)
+## External walls (what blocks the BUILD)
 
-1. **Dataset license confirmation — HUMAN/BROWSER.** The authoritative Terms-of-Use page
-   (`https://hivdb.stanford.edu/pages/FAQ/FAQ.html`) is JS-rendered; WebFetch returns only the page title
-   on every HIVDB page, and broad license queries trip the WebSearch usage-policy filter. The SIGNAL is
-   permissive (associated publications are CC BY 4.0; data often CC0) but the verbatim dataset-
-   redistribution terms need a human to open the page in a real browser. **One manual check.**
-2. **Dataset download — EXTERNAL.** The genotype-phenotype TSV/Excel (2,167 isolates / 12,442 PhenoSense
-   results) must be downloaded (`https://hivdb.stanford.edu/pages/genopheno.dataset.html`).
-3. **The build is a sizable NEW wave** — the HIV DRM catalog + `hiv_dr_caller.py` + `dna-amr` routing +
-   the de-confounded validation against PhenoSense + the Sierra baseline. Warrants the full planning chain
-   (`/idea-anchor` → `/probe` → `/technical-plan` → pre-exec `/brainstorm` → `/save-plan` → `/execute-plan`)
-   + the dataset in hand. NOT a single-batch build.
+1. **Dataset license — RESOLVED 2026-06-21 (GO).** The user opened the authoritative Terms-of-Use page
+   (`https://hivdb.stanford.edu/pages/FAQ/FAQ.html`, JS-rendered → read in-browser). Section I is a pure
+   warranty disclaimer (no non-commercial / no no-redistribution / no research-use restriction); the FAQ
+   states the data "belongs in the public domain", with "unfettered access", "publicly available" — "a
+   curated public database". **Free for research/education download + validation use.** Required citation:
+   **Rhee et al. 2003, Nucleic Acids Res 31:298-303**. ONE nuance: the footer is "© All Rights Reserved"
+   with no explicit open-license grant → do NOT RE-HOST the curated dataset in the repo. The deliverable
+   never needs that: follow the project's existing external-data pattern (refseq on D:, WHO TB catalogue
+   gitignored w/ only checksums) — **download + validate + cite, gitignore the data, commit a fetch
+   pointer + the cohort manifest**. So "redistributability" was never actually required; downloadability +
+   research-use IS granted.
+2. **Dataset download — EXTERNAL (user).** The genotype-phenotype dataset (`GENOTYPE-PHENO` nav →
+   `https://hivdb.stanford.edu/pages/genopheno.dataset.html`) — confirm the download format (TSV/Excel) +
+   that it pairs sequences with PhenoSense fold-change per drug.
+3. **The DRM catalog must be SOURCED, not fabricated (provenance discipline).** The v0 NNRTI catalog
+   (RT major DRMs) must come from a citable list — the HIVDB "NNRTI-associated DRMs" comment page (linked
+   in the FAQ) and/or the IAS-USA mutations list — NOT curated from memory. This is a `/research`-with-
+   sourcing step, the FIRST build step. (The genome-mode caller also needs an HXB2/consensus-B RT CDS
+   reference FASTA, committed like the influenza `N1_NA` ref; the pure `--observed` wheel-only path needs
+   neither the ref nor the dataset.)
+4. **The build is a NEW wave** — sourced catalog (`data/hiv_amr.py`) + `hiv_dr_caller.py` + `dna-amr`
+   routing + the de-confounded validation against PhenoSense + the Sierra baseline. Warrants the full
+   planning chain (`/idea-anchor` → `/technical-plan` → pre-exec `/brainstorm` → `/save-plan` →
+   `/execute-plan`) + the dataset + the sourced DRM list in hand. The pure-logic catalog + `call_from_
+   observed_substitutions` slice is unit-testable WITHOUT the dataset once the DRM list is sourced.
 
 ## Drafted `/idea-anchor` (PARKED for user confirmation — the one skill Soraya does not self-anchor)
 
