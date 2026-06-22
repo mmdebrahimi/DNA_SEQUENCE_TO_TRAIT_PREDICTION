@@ -1,0 +1,239 @@
+{
+  "artifact": "hiv_nrti_mutant_specific_v0_1",
+  "schema": "hiv-nrti-mutant-catalog-v0_1",
+  "method": "data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= log10(1.5) (independent >=1.5x effect, controlling for co-occurrence -> deconfounds revertants), >=5 carriers; 5-fold CROSS-VALIDATED held-out (derive on train, eval on test) -> NOT in-sample",
+  "honest_caveats": [
+    "deconfounded (OLS-coefficient) derivation recovers specificity for 5/6 NRTIs (AZT/D4T/TDF/3TC/ABC)",
+    "didanosine REGRESSES (balacc -0.201): ddI has a low resistance signal (cutoff 1.5) so few mutants clear the independent >=1.5x threshold -> sens collapses; production should keep POSITION-BASED for ddI",
+    "naive carriers'-median-fold derivation was CONFOUNDED (revertants ride on resistant lineages) -> FIXED to the multivariate-OLS-coefficient rule (a verify-in-batch catch)"
+  ],
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra)",
+  "cutoffs": {
+    "lamivudine": 5.0,
+    "abacavir": 2.0,
+    "zidovudine": 3.0,
+    "stavudine": 1.5,
+    "didanosine": 1.5,
+    "tenofovir": 1.5
+  },
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\NRTI_DataSet.txt",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; cutoffs from DRMcv.R",
+  "per_drug": {
+    "lamivudine": {
+      "n_isolates": 1839,
+      "prevalence_R": 0.572,
+      "position_based_v0": {
+        "tp": 1050,
+        "fp": 285,
+        "tn": 502,
+        "fn": 2,
+        "sens": 0.998,
+        "spec": 0.638,
+        "accuracy": 0.844,
+        "balanced_accuracy": 0.818
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 1042,
+        "fp": 185,
+        "tn": 602,
+        "fn": 10,
+        "sens": 0.99,
+        "spec": 0.765,
+        "accuracy": 0.894,
+        "balanced_accuracy": 0.878
+      },
+      "balacc_gain_v0_1_minus_v0": 0.06
+    },
+    "abacavir": {
+      "n_isolates": 1731,
+      "prevalence_R": 0.637,
+      "position_based_v0": {
+        "tp": 1099,
+        "fp": 139,
+        "tn": 490,
+        "fn": 3,
+        "sens": 0.997,
+        "spec": 0.779,
+        "accuracy": 0.918,
+        "balanced_accuracy": 0.888
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 1081,
+        "fp": 60,
+        "tn": 569,
+        "fn": 21,
+        "sens": 0.981,
+        "spec": 0.905,
+        "accuracy": 0.953,
+        "balanced_accuracy": 0.943
+      },
+      "balacc_gain_v0_1_minus_v0": 0.055
+    },
+    "zidovudine": {
+      "n_isolates": 1853,
+      "prevalence_R": 0.45,
+      "position_based_v0": {
+        "tp": 832,
+        "fp": 518,
+        "tn": 501,
+        "fn": 2,
+        "sens": 0.998,
+        "spec": 0.492,
+        "accuracy": 0.719,
+        "balanced_accuracy": 0.745
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 829,
+        "fp": 226,
+        "tn": 793,
+        "fn": 5,
+        "sens": 0.994,
+        "spec": 0.778,
+        "accuracy": 0.875,
+        "balanced_accuracy": 0.886
+      },
+      "balacc_gain_v0_1_minus_v0": 0.141
+    },
+    "stavudine": {
+      "n_isolates": 1846,
+      "prevalence_R": 0.454,
+      "position_based_v0": {
+        "tp": 831,
+        "fp": 514,
+        "tn": 494,
+        "fn": 7,
+        "sens": 0.992,
+        "spec": 0.49,
+        "accuracy": 0.718,
+        "balanced_accuracy": 0.741
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 764,
+        "fp": 188,
+        "tn": 820,
+        "fn": 74,
+        "sens": 0.912,
+        "spec": 0.813,
+        "accuracy": 0.858,
+        "balanced_accuracy": 0.863
+      },
+      "balacc_gain_v0_1_minus_v0": 0.122
+    },
+    "didanosine": {
+      "n_isolates": 1849,
+      "prevalence_R": 0.525,
+      "position_based_v0": {
+        "tp": 950,
+        "fp": 398,
+        "tn": 481,
+        "fn": 20,
+        "sens": 0.979,
+        "spec": 0.547,
+        "accuracy": 0.774,
+        "balanced_accuracy": 0.763
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 140,
+        "fp": 18,
+        "tn": 861,
+        "fn": 830,
+        "sens": 0.144,
+        "spec": 0.98,
+        "accuracy": 0.541,
+        "balanced_accuracy": 0.562
+      },
+      "balacc_gain_v0_1_minus_v0": -0.201
+    },
+    "tenofovir": {
+      "n_isolates": 1548,
+      "prevalence_R": 0.318,
+      "position_based_v0": {
+        "tp": 490,
+        "fp": 625,
+        "tn": 430,
+        "fn": 3,
+        "sens": 0.994,
+        "spec": 0.408,
+        "accuracy": 0.594,
+        "balanced_accuracy": 0.701
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 479,
+        "fp": 424,
+        "tn": 631,
+        "fn": 14,
+        "sens": 0.972,
+        "spec": 0.598,
+        "accuracy": 0.717,
+        "balanced_accuracy": 0.785
+      },
+      "balacc_gain_v0_1_minus_v0": 0.084
+    }
+  },
+  "deliverable_catalog_all_data": {
+    "lamivudine": [
+      "K65R",
+      "K70E",
+      "K70G",
+      "M184I",
+      "M184V",
+      "Q151M",
+      "T215E",
+      "T215F",
+      "T215I",
+      "T215L",
+      "T215Y",
+      "V75T"
+    ],
+    "abacavir": [
+      "K65R",
+      "L74V",
+      "M184I",
+      "M184V",
+      "Q151M",
+      "T215F",
+      "T215Y",
+      "V75T"
+    ],
+    "zidovudine": [
+      "K70R",
+      "K70T",
+      "L210W",
+      "M41L",
+      "Q151M",
+      "T215F",
+      "T215I",
+      "T215V",
+      "T215Y",
+      "V75A",
+      "V75I",
+      "V75M"
+    ],
+    "stavudine": [
+      "K65R",
+      "K70N",
+      "L210W",
+      "Q151M",
+      "T215F",
+      "T215Y",
+      "V75A",
+      "V75I"
+    ],
+    "didanosine": [
+      "K65R",
+      "M184I",
+      "Q151M",
+      "V75T"
+    ],
+    "tenofovir": [
+      "K65R",
+      "K70N",
+      "K70R",
+      "K70T",
+      "L210W",
+      "Q151M",
+      "T215F",
+      "T215Y"
+    ]
+  }
+}
