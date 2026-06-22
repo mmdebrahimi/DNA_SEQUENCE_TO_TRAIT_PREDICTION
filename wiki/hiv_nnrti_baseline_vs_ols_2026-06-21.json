@@ -1,0 +1,147 @@
+{
+  "artifact": "hiv_nnrti_validate_vs_underlying_tool",
+  "schema": "hiv-nnrti-baseline-v0",
+  "wrapper": "dna_decode.data.hiv_amr (deterministic class-level major-DRM catalog)",
+  "underlying_tool": "Stanford DRMcv.R OLS (log10 fold ~ binary mutation presence), 5-fold CV, reimplemented in Python/sklearn (R not installed)",
+  "clinical_cutoff_source": "DRMcv.R confusion-matrix lower cutoffs (EFV/NVP/ETR/RPV=3; DOR reused)",
+  "n_features_min10": 426,
+  "interpretation": "small delta => the simple deterministic catalog MATCHES the full regression (adds interpretability, not error); large delta on 2nd-gen NNRTIs => per-drug signal the class-level v0 misses (bounds the v0.1 per-drug catalog)",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; method Hedlin/Stanford DRMcv.R",
+  "per_drug": {
+    "efavirenz": {
+      "n_isolates": 2168,
+      "prevalence_R_at_cutoff": 0.46,
+      "clinical_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 945,
+        "fp": 112,
+        "tn": 1058,
+        "fn": 53,
+        "sens": 0.947,
+        "spec": 0.904,
+        "accuracy": 0.924,
+        "balanced_accuracy": 0.926
+      },
+      "ols_baseline": {
+        "tp": 929,
+        "fp": 57,
+        "tn": 1113,
+        "fn": 69,
+        "sens": 0.931,
+        "spec": 0.951,
+        "accuracy": 0.942,
+        "balanced_accuracy": 0.941,
+        "auc": 0.9773
+      },
+      "delta_ols_minus_catalog_balacc": 0.015
+    },
+    "nevirapine": {
+      "n_isolates": 2052,
+      "prevalence_R_at_cutoff": 0.513,
+      "clinical_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 954,
+        "fp": 9,
+        "tn": 990,
+        "fn": 99,
+        "sens": 0.906,
+        "spec": 0.991,
+        "accuracy": 0.947,
+        "balanced_accuracy": 0.948
+      },
+      "ols_baseline": {
+        "tp": 972,
+        "fp": 74,
+        "tn": 925,
+        "fn": 81,
+        "sens": 0.923,
+        "spec": 0.926,
+        "accuracy": 0.924,
+        "balanced_accuracy": 0.925,
+        "auc": 0.9729
+      },
+      "delta_ols_minus_catalog_balacc": -0.023
+    },
+    "etravirine": {
+      "n_isolates": 998,
+      "prevalence_R_at_cutoff": 0.284,
+      "clinical_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 251,
+        "fp": 307,
+        "tn": 408,
+        "fn": 32,
+        "sens": 0.887,
+        "spec": 0.571,
+        "accuracy": 0.66,
+        "balanced_accuracy": 0.729
+      },
+      "ols_baseline": {
+        "tp": 230,
+        "fp": 82,
+        "tn": 633,
+        "fn": 53,
+        "sens": 0.813,
+        "spec": 0.885,
+        "accuracy": 0.865,
+        "balanced_accuracy": 0.849,
+        "auc": 0.9282
+      },
+      "delta_ols_minus_catalog_balacc": 0.12
+    },
+    "rilpivirine": {
+      "n_isolates": 311,
+      "prevalence_R_at_cutoff": 0.379,
+      "clinical_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 97,
+        "fp": 88,
+        "tn": 105,
+        "fn": 21,
+        "sens": 0.822,
+        "spec": 0.544,
+        "accuracy": 0.65,
+        "balanced_accuracy": 0.683
+      },
+      "ols_baseline": {
+        "tp": 87,
+        "fp": 38,
+        "tn": 155,
+        "fn": 31,
+        "sens": 0.737,
+        "spec": 0.803,
+        "accuracy": 0.778,
+        "balanced_accuracy": 0.77,
+        "auc": 0.8671
+      },
+      "delta_ols_minus_catalog_balacc": 0.087
+    },
+    "doravirine": {
+      "n_isolates": 130,
+      "prevalence_R_at_cutoff": 0.646,
+      "clinical_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 63,
+        "fp": 30,
+        "tn": 16,
+        "fn": 21,
+        "sens": 0.75,
+        "spec": 0.348,
+        "accuracy": 0.608,
+        "balanced_accuracy": 0.549
+      },
+      "ols_baseline": {
+        "tp": 65,
+        "fp": 11,
+        "tn": 35,
+        "fn": 19,
+        "sens": 0.774,
+        "spec": 0.761,
+        "accuracy": 0.769,
+        "balanced_accuracy": 0.767,
+        "auc": 0.8452
+      },
+      "delta_ols_minus_catalog_balacc": 0.218
+    }
+  }
+}
