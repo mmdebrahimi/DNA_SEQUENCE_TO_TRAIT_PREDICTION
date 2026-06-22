@@ -74,6 +74,24 @@ def build() -> dict:
                 "subtype_transfer": (f"non-B balacc {nonb.get('balanced_accuracy')} (n={nonb.get('n')})"
                                      if nonb.get("balanced_accuracy") is not None else "under-powered"),
             })
+    # PI / INSTI / CAI: cutoff-free AUC per drug (position-based PI/INSTI; mutant-level CAI). No OLS baseline /
+    # v0.1 / subtype columns yet (those are NNRTI/NRTI-only artifacts) -> render '-'.
+    for label, prefix in (("PI", "hiv_pi_v0_validation_"),
+                          ("INSTI", "hiv_insti_v0_validation_"),
+                          ("CAI", "hiv_cai_v0_validation_")):
+        val = _latest(prefix)
+        if not val:
+            continue
+        catalog = ("mutant-level (CAPELLA capsid)" if val.get("call_mode") == "mutant-level"
+                   else "position-based v0 (Stanford majors)")
+        for drug, m in val.get("per_drug", {}).items():
+            cells.append({
+                "drug_class": label, "drug": drug, "catalog": catalog,
+                "n": m.get("n_isolates_with_fold"),
+                "auc_call_separates_fold": m.get("auc_call_separates_fold"),
+                "catalog_balacc": None, "ols_baseline_balacc": None,
+                "delta_ols_minus_catalog": None, "subtype_transfer": None, "v0_1_mutant_gain": None,
+            })
     return {
         "artifact": "hiv_decoder_report_card", "schema": "hiv-report-card-v0",
         "modality": "IN-DISTRIBUTION validation vs Stanford HIVDB PhenoSense fold-change (independent "
@@ -88,6 +106,9 @@ def build() -> dict:
             "NNRTI = mutant-specific (excellent on 1st-gen EFV/NVP); NRTI v0 = position-based (over-calls, "
             "fixed by the deconfounded mutant-specific v0.1 for 5/6 drugs; ddI keeps position-based)",
             "non-B subtype transfer is under-powered (data ~96% subtype B)",
+            "PI/INSTI = position-based v0 (PI AUC 0.78-0.96; INSTI 0.74-1.0, 2nd-gen DTG/BIC lower as the "
+            "class-level over-call predicts); CAI/lenacapavir = mutant-level (AUC 0.91) on a small "
+            "resistance-enriched dataset (n=140, 11 S); OLS/subtype columns are NNRTI/NRTI-only so far",
         ],
         "cells": cells,
     }
@@ -116,6 +137,10 @@ def render_md(rc: dict, generated: str) -> str:
 
 
 def main(argv=None) -> int:
+    try:                                    # the rendered table has Δ/− glyphs; Windows cp1252 stdout chokes
+        sys.stdout.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
     today = _date.today().isoformat()
     rc = build()
     (WIKI / "hiv_decoder_report_card.json").write_text(json.dumps(rc, indent=2), encoding="utf-8")

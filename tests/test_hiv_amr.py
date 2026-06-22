@@ -130,6 +130,80 @@ def test_call_nrti_susceptible_and_unknown():
     assert call_nrti_from_observed("notadrug", {"RT": {"M184V"}}).prediction == "INDETERMINATE"
 
 
+# ---------- PI / INSTI / CAI (protease / integrase / capsid target-site classes) ----------
+
+from dna_decode.data.hiv_amr import (  # noqa: E402
+    CAI_CLASS, INSTI_CLASS, PI_CLASS, all_supported_hiv_drugs, call_hiv_observed,
+    call_target_class, gene_for_hiv_drug, hiv_target_class_for, supported_cai_drugs,
+    supported_insti_drugs, supported_pi_drugs,
+)
+
+
+def test_new_class_supported_drugs():
+    assert "darunavir" in supported_pi_drugs() and "lopinavir" in supported_pi_drugs()
+    assert "dolutegravir" in supported_insti_drugs() and "raltegravir" in supported_insti_drugs()
+    assert supported_cai_drugs() == ["lenacapavir"]
+
+
+def test_catalog_positions_sourced():
+    # Stanford HIVDB major positions (PI/INSTI) + CAPELLA capsid emergent set (CAI). Pin so an edit can't
+    # silently drift the sourced catalog.
+    assert set(PI_CLASS.positions) == {30, 32, 33, 46, 47, 48, 50, 54, 76, 82, 84, 88, 90}
+    assert set(INSTI_CLASS.positions) == {66, 92, 118, 138, 140, 143, 147, 148, 155, 263}
+    assert set(CAI_CLASS.positions) == {56, 66, 67, 70, 74, 105, 107}
+
+
+def test_gene_for_hiv_drug_routes_all_five_classes():
+    assert gene_for_hiv_drug("efavirenz") == "RT"     # NNRTI
+    assert gene_for_hiv_drug("lamivudine") == "RT"    # NRTI
+    assert gene_for_hiv_drug("darunavir") == "PR"     # PI
+    assert gene_for_hiv_drug("dolutegravir") == "IN"  # INSTI
+    assert gene_for_hiv_drug("lenacapavir") == "CA"   # CAI
+    assert gene_for_hiv_drug("notadrug") is None
+
+
+def test_pi_position_based_call():
+    c = call_hiv_observed("lopinavir", {"PR": {"V82A"}})
+    assert c.prediction == "R" and c.determinants == ["PR:V82A"]
+    # POSITION-BASED: any non-consensus residue at a major position counts (deliberate over-call)
+    assert call_hiv_observed("lopinavir", {"PR": {"V82Z"}}).prediction == "R"
+    s = call_hiv_observed("lopinavir", {"PR": {"L10I"}})  # 10 is not a major PI position
+    assert s.prediction == "S" and s.undetectable_mechanisms
+
+
+def test_insti_position_based_call():
+    c = call_hiv_observed("dolutegravir", {"IN": {"R263K"}})
+    assert c.prediction == "R" and c.determinants == ["IN:R263K"]
+    assert call_hiv_observed("raltegravir", {"IN": {"N155H", "Q148H"}}).prediction == "R"
+
+
+def test_cai_is_mutant_level_not_position_based():
+    # CAI is MUTANT-LEVEL: a catalogued substitution -> R ...
+    assert call_hiv_observed("lenacapavir", {"CA": {"M66I"}}).prediction == "R"
+    assert call_hiv_observed("lenacapavir", {"CA": {"Q67H"}}).prediction == "R"
+    # ... but a NON-catalogued residue at a major capsid position (capsid polymorphism) -> S
+    # (this is the whole reason CAI is mutant-level: position-based over-called the resistance-enriched set).
+    assert CAI_CLASS.major_drms is not None
+    assert "A105V" not in CAI_CLASS.major_drms        # A105T/S are catalogued, A105V is not
+    assert call_hiv_observed("lenacapavir", {"CA": {"A105V"}}).prediction == "S"
+    assert {"M66I", "Q67H", "K70R", "N74D", "A105T", "T107N"} <= CAI_CLASS.major_drms
+
+
+def test_call_target_class_unknown_drug_indeterminate():
+    assert call_target_class("notadrug", {"PR": {"V82A"}}, PI_CLASS).prediction == "INDETERMINATE"
+
+
+def test_hiv_target_class_for_only_new_classes():
+    assert hiv_target_class_for("darunavir") is PI_CLASS
+    assert hiv_target_class_for("efavirenz") is None     # NNRTI not in the PI/INSTI/CAI registry
+    assert hiv_target_class_for("lenacapavir") is CAI_CLASS
+
+
+def test_all_supported_hiv_drugs_covers_five_classes():
+    drugs = set(all_supported_hiv_drugs())
+    assert {"efavirenz", "lamivudine", "darunavir", "dolutegravir", "lenacapavir"} <= drugs
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for fn in fns:

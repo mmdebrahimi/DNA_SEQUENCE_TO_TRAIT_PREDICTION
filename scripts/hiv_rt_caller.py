@@ -23,29 +23,29 @@ tests stay green without the binaries.
 """
 from __future__ import annotations
 
-from dna_decode.data.hiv_amr import (
-    HIVCall,
-    call_from_observed_substitutions,
-    call_nrti_from_observed,
-)
+from dna_decode.data.hiv_amr import HIVCall, call_hiv_observed
 # Reuse the PROVEN gene-generic BLAST + codon-mapping from the fungal caller (DRY — it BLASTs any in-frame
 # CDS reference vs a genome and codon-maps the best HSP; not ERG11/NA/K13-specific despite the lineage).
 from scripts.fungal_erg11_caller import observed_substitutions
 
 
+def call_hiv_target(genome_fasta: str, cds_ref_fasta: str, drug: str, gene: str) -> HIVCall:
+    """Full call: BLAST the in-frame CDS reference for `gene` (RT/PR/IN/CA) vs the genome -> observed
+    substitutions -> R/S via the unified HIV dispatcher (NNRTI/NRTI/PI/INSTI/CAI, routed by drug).
+
+    `cds_ref_fasta` MUST be the in-frame CDS for `gene` (HXB2 K03455.1 references ship as defaults); protein
+    position P <-> CDS nt (3P-2..3P), 1-based, consensus-B numbering."""
+    obs = observed_substitutions(genome_fasta, cds_ref_fasta, gene=gene)
+    if obs is None:
+        return HIVCall("INDETERMINATE", drug, [], [], "hiv_target_blastn_v0",
+                       "blastn/makeblastdb not found — install BLAST+ to call from a genome")
+    return call_hiv_observed(drug, obs)
+
+
 def call_hiv_rt(genome_fasta: str, rt_cds_ref_fasta: str, drug: str = "efavirenz",
                 is_nrti: bool = False, gene: str = "RT") -> HIVCall:
-    """Full call: BLAST RT-CDS-ref vs genome -> observed RT substitutions -> R/S vs the HIV DRM catalog.
-
-    `rt_cds_ref_fasta` MUST be the in-frame RT CDS (HXB2 K03455.1:2550-4229 ships as the default); protein
-    position P <-> CDS nt (3P-2..3P), 1-based, consensus-B numbering. `is_nrti=True` routes to the
-    position-based NRTI call; otherwise the NNRTI major-DRM call."""
-    obs = observed_substitutions(genome_fasta, rt_cds_ref_fasta, gene=gene)
-    if obs is None:
-        return HIVCall("INDETERMINATE", drug, [], [], "hiv_rt_blastn_v0",
-                       "blastn/makeblastdb not found — install BLAST+ to call from a genome")
-    call_fn = call_nrti_from_observed if is_nrti else call_from_observed_substitutions
-    return call_fn(drug, obs)
+    """Back-compat RT wrapper (NNRTI/NRTI). `is_nrti` is vestigial — the unified dispatcher routes by drug."""
+    return call_hiv_target(genome_fasta, rt_cds_ref_fasta, drug, gene)
 
 
 if __name__ == "__main__":

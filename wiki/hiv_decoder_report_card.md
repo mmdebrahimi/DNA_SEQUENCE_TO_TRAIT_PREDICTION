@@ -1,4 +1,4 @@
-# HIV viral-decoder report card (2026-06-21)
+# HIV viral-decoder report card (2026-06-22)
 
 **Modality:** IN-DISTRIBUTION validation vs Stanford HIVDB PhenoSense fold-change (independent wet-lab IC50). DISTINCT from the bacterial NCBI-PD provenance-disjoint report card — NOT conflated (a different, more external rigour modality).
 **Label independence:** PhenoSense fold-change is NOT HIVDB's own Sierra interpretation (non-circular).
@@ -17,10 +17,25 @@
 | NRTI | stavudine | 1846 | 0.8166 | 0.741 | 0.868 | 0.127 | 0.122 | non-B balacc 0.877 (n=49) |
 | NRTI | didanosine | 1849 | 0.9192 | 0.763 | 0.805 | 0.042 | -0.201 | non-B balacc 0.923 (n=49) |
 | NRTI | tenofovir | 1548 | 0.6986 | 0.701 | 0.816 | 0.115 | 0.084 | non-B balacc 0.804 (n=31) |
+| PI | fosamprenavir | 2052 | 0.8916 | None | None | None | - | - |
+| PI | atazanavir | 1505 | 0.9571 | None | None | None | - | - |
+| PI | indinavir | 2098 | 0.9288 | None | None | None | - | - |
+| PI | lopinavir | 1807 | 0.933 | None | None | None | - | - |
+| PI | nelfinavir | 2133 | 0.9477 | None | None | None | - | - |
+| PI | saquinavir | 2084 | 0.8991 | None | None | None | - | - |
+| PI | tipranavir | 1226 | 0.7825 | None | None | None | - | - |
+| PI | darunavir | 993 | 0.8825 | None | None | None | - | - |
+| INSTI | raltegravir | 753 | 0.9053 | None | None | None | - | - |
+| INSTI | elvitegravir | 754 | 0.9134 | None | None | None | - | - |
+| INSTI | dolutegravir | 370 | 0.745 | None | None | None | - | - |
+| INSTI | bictegravir | 287 | 0.8456 | None | None | None | - | - |
+| INSTI | cabotegravir | 64 | 1.0 | None | None | None | - | - |
+| CAI | lenacapavir | 140 | 0.9098 | None | None | None | - | - |
 
 ## Honest caveats
 - in-distribution (HIVDB), NOT provenance-disjoint -> a lower external-rigour bar than the bacterial card
 - NNRTI = mutant-specific (excellent on 1st-gen EFV/NVP); NRTI v0 = position-based (over-calls, fixed by the deconfounded mutant-specific v0.1 for 5/6 drugs; ddI keeps position-based)
 - non-B subtype transfer is under-powered (data ~96% subtype B)
+- PI/INSTI = position-based v0 (PI AUC 0.78-0.96; INSTI 0.74-1.0, 2nd-gen DTG/BIC lower as the class-level over-call predicts); CAI/lenacapavir = mutant-level (AUC 0.91) on a small resistance-enriched dataset (n=140, 11 S); OLS/subtype columns are NNRTI/NRTI-only so far
 
 Citation: Rhee 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use.

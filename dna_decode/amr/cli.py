@@ -36,10 +36,9 @@ from dna_decode.data.fungal_amr import (
     supported_fungal_drugs,
 )
 from dna_decode.data.hiv_amr import (
-    call_from_observed_substitutions as hiv_nnrti_call_from_observed,
-    call_nrti_from_observed as hiv_nrti_call_from_observed,
-    supported_hiv_drugs,
-    supported_nrti_drugs,
+    all_supported_hiv_drugs,
+    call_hiv_observed,
+    gene_for_hiv_drug,
 )
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
@@ -56,9 +55,14 @@ _DEFAULT_PFCRT_REF = Path(__file__).resolve().parent.parent.parent / "data" / "a
 # (viral). Routed by drug: oseltamivir/peramivir/zanamivir -> NA engine. Reference is N1 (WT His275).
 _DEFAULT_NA_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antiviral_ref" / "N1_NA_NC026434_cds.fna"
 
-# HIV-1 RT target-site path (BLAST RT CDS -> Stanford-HIVDB-sourced NNRTI/NRTI major-DRM catalog). Routed
-# by drug. Reference is the HXB2 RT p66 in-frame CDS (consensus-B WT at every catalogued DRM position).
-_DEFAULT_HIV_RT_REF = Path(__file__).resolve().parent.parent.parent / "data" / "hiv_ref" / "HIV1_RT_HXB2_cds.fna"
+# HIV-1 target-site path (BLAST the class's gene CDS -> Stanford/HIVDB-sourced major-DRM catalog). Routed
+# by drug -> gene (RT NNRTI/NRTI, PR PI, IN INSTI, CA CAI). References are HXB2 (K03455.1) in-frame CDS,
+# consensus-B WT at every catalogued DRM position.
+_HIV_REF_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "hiv_ref"
+_DEFAULT_HIV_RT_REF = _HIV_REF_DIR / "HIV1_RT_HXB2_cds.fna"
+_DEFAULT_HIV_PR_REF = _HIV_REF_DIR / "HIV1_PR_HXB2_cds.fna"
+_DEFAULT_HIV_IN_REF = _HIV_REF_DIR / "HIV1_IN_HXB2_cds.fna"
+_DEFAULT_HIV_CA_REF = _HIV_REF_DIR / "HIV1_CA_HXB2_cds.fna"
 
 
 def _parse_observed(observed: str) -> dict[str, set[str]]:
@@ -189,44 +193,45 @@ def _antimalarial_main(args) -> int:
 
 
 def _hiv_main(args) -> int:
-    """HIV-1 NNRTI/NRTI target-site decoder branch (a 2nd viral target; validated vs HIVDB PhenoSense).
+    """HIV-1 target-site decoder branch (5 classes / 4 genes; validated vs HIVDB PhenoSense).
 
-    Wheel-only `--observed RT:SUB[,...]` (e.g. RT:K103N,RT:M184V), OR genome-FASTA mode (`--genome-fasta
-    X.fna`) which BLASTs the committed HXB2 RT CDS reference vs the assembly and codon-maps the RT
-    substitutions (scripts/hiv_rt_caller; needs BLAST+), mirroring the influenza NA path."""
+    Routed by drug -> gene: NNRTI/NRTI->RT, PI->PR (protease), INSTI->IN (integrase), CAI->CA (capsid).
+    Wheel-only `--observed GENE:SUB[,...]` (e.g. RT:K103N, PR:V82A, IN:Q148H, CA:M66I), OR genome-FASTA mode
+    (`--genome-fasta X.fna`) which BLASTs the committed HXB2 CDS reference for that gene vs the assembly and
+    codon-maps the substitutions (scripts/hiv_rt_caller; needs BLAST+), mirroring the influenza NA path."""
     if args.organism == "Escherichia":            # relabel the bacterial default on this path
         args.organism = "HIV-1"
-    is_nrti = args.drug in supported_nrti_drugs()
-    call_fn = hiv_nrti_call_from_observed if is_nrti else hiv_nnrti_call_from_observed
+    gene = gene_for_hiv_drug(args.drug)            # RT / PR / IN / CA
+    ref_by_gene = {"RT": args.hiv_rt_ref, "PR": args.hiv_pr_ref,
+                   "IN": args.hiv_in_ref, "CA": args.hiv_ca_ref}
     if args.observed is not None:
-        call = call_fn(args.drug, _parse_observed(args.observed))
+        call = call_hiv_observed(args.drug, _parse_observed(args.observed))
         sample_id = args.sample_id or "observed"
-        prov = {"mode": "observed-substitutions", "observed": args.observed}
+        prov = {"mode": "observed-substitutions", "observed": args.observed, "gene": gene}
     elif args.genome_fasta is not None:
         if not args.genome_fasta.exists():
             print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
             return 2
-        if not Path(args.hiv_rt_ref).exists():
-            print(f"ERROR: genome mode for {args.drug} (gene RT) needs a committed HIV-1 RT CDS reference at "
-                  f"{args.hiv_rt_ref}. Use --observed RT:SUB for a wheel-only call.", file=sys.stderr)
+        ref = ref_by_gene.get(gene)
+        if ref is None or not Path(ref).exists():
+            print(f"ERROR: genome mode for {args.drug} (gene {gene}) needs a committed HIV-1 {gene} CDS "
+                  f"reference at {ref}. Use --observed {gene}:SUB for a wheel-only call.", file=sys.stderr)
             return 3
         sample_id = args.sample_id or args.genome_fasta.stem
         try:
-            from scripts.hiv_rt_caller import call_hiv_rt   # repo-only; needs BLAST+
+            from scripts.hiv_rt_caller import call_hiv_target   # repo-only; needs BLAST+
         except ImportError as e:
             print(f"ERROR: HIV genome mode needs scripts/hiv_rt_caller + BLAST+ ({e}). "
-                  "Use --observed RT:SUB for a wheel-only call.", file=sys.stderr)
+                  f"Use --observed {gene}:SUB for a wheel-only call.", file=sys.stderr)
             return 3
-        call = call_hiv_rt(str(args.genome_fasta), str(args.hiv_rt_ref), args.drug,
-                           is_nrti=is_nrti, gene="RT")
-        prov = {"mode": "blast-rt", "hiv_rt_ref": str(args.hiv_rt_ref)}
+        call = call_hiv_target(str(args.genome_fasta), str(ref), args.drug, gene)
+        prov = {"mode": "blast-hiv-target", "gene": gene, "hiv_ref": str(ref)}
     else:
-        print("ERROR: HIV drug needs --observed RT:SUB[,...] (e.g. RT:K103N) OR --genome-fasta X.fna.",
+        print(f"ERROR: HIV drug needs --observed {gene}:SUB[,...] (e.g. {gene}:K103N) OR --genome-fasta X.fna.",
               file=sys.stderr)
         return 2
     rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
-                              caller_name=("dna_decode-hiv-nrti-major-position-v0" if is_nrti
-                                           else "dna_decode-hiv-nnrti-major-drm-v0"),
+                              caller_name="dna_decode-" + call.rule.replace("_", "-"),
                               source="HIVDB-PhenoSense-validated (in-distribution; see hiv_decoder_report_card)")
     return _emit_target_site(rec, call, sample_id, args)
 
@@ -294,7 +299,7 @@ def main(argv=None) -> int:
     ap.add_argument("--drug", required=True,
                     choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
                                    | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
-                                   | set(supported_hiv_drugs()) | set(supported_nrti_drugs())),
+                                   | set(all_supported_hiv_drugs())),
                     metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), "
                                          "antimalarial (BLAST-Pfkelch13 engine), or antiviral "
                                          "(BLAST-influenza-NA engine) drug")
@@ -317,6 +322,12 @@ def main(argv=None) -> int:
     ap.add_argument("--hiv-rt-ref", type=Path, default=_DEFAULT_HIV_RT_REF,
                     help="[HIV] in-frame HIV-1 RT CDS reference FASTA (default: committed HXB2 "
                          "K03455.1:2550-4229 allele, consensus-B WT at every DRM position)")
+    ap.add_argument("--hiv-pr-ref", type=Path, default=_DEFAULT_HIV_PR_REF,
+                    help="[HIV] in-frame protease CDS reference FASTA (default: committed HXB2 K03455.1:2253-2549)")
+    ap.add_argument("--hiv-in-ref", type=Path, default=_DEFAULT_HIV_IN_REF,
+                    help="[HIV] in-frame integrase CDS reference FASTA (default: committed HXB2 K03455.1:4230-5093)")
+    ap.add_argument("--hiv-ca-ref", type=Path, default=_DEFAULT_HIV_CA_REF,
+                    help="[HIV] in-frame capsid CDS reference FASTA (default: committed HXB2 K03455.1:1186-1878)")
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--organism", default="Escherichia",
                     help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "
@@ -354,9 +365,9 @@ def main(argv=None) -> int:
             return 2
         return _antiviral_main(args)
 
-    if args.drug in supported_hiv_drugs() or args.drug in supported_nrti_drugs():
+    if args.drug in all_supported_hiv_drugs():
         if args.amrfinder_run is not None:
-            print("ERROR: --amrfinder-run is bacterial-only; HIV drugs use --observed RT:SUB[,...]",
+            print("ERROR: --amrfinder-run is bacterial-only; HIV drugs use --observed GENE:SUB[,...]",
                   file=sys.stderr)
             return 2
         return _hiv_main(args)

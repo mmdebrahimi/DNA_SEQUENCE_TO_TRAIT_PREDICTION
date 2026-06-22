@@ -216,3 +216,185 @@ def call_nrti_from_observed(drug: str, observed: dict[str, set[str]]) -> HIVCall
               + ("An S call cannot rule out minor NRTI mutations, per-drug differences, or non-RT / "
                  "different-class resistance." if pred == "S" else ""))
     return HIVCall(pred, drug, hits, undetectable, "hiv_nrti_major_position_v0", caveat)
+
+
+# ===========================================================================
+# PI / INSTI / CAI (v0 — POSITION-BASED; the protease, integrase, and capsid target-site classes)
+# ===========================================================================
+# THREE further HIV drug classes, each on a DIFFERENT viral target gene, sharing the NRTI v0 methodology
+# (POSITION-BASED: any non-consensus residue at a catalogued major position => major DRM present). Stanford
+# did not publish a single mutant-level "major" list on the dataset page for these the way it did for NNRTI,
+# so — exactly as for NRTI — v0 is position-based and DELIBERATELY OVER-CALLS (non-resistant polymorphisms /
+# revertants at a major position count); the per-drug validation AUC quantifies the spec hit, and a
+# mutant-specific deconfounded v0.1 mirrors the NRTI arc. One engine over a per-class spec (DRY).
+#
+# PROVENANCE (no fabrication): major positions sourced from —
+#   PI    (protease):  Stanford HIVDB protease major drug-resistance positions
+#                      30,32,33,46,47,48,50,54,76,82,84,88,90 (e.g. D30N/V32I/M46I/I47V/G48V/I50V/I54M/
+#                      L76V/V82A/I84V/N88S/L90M); xref Rhee 2022 Pathogens (atazanavir PI-resistance spectrum).
+#   INSTI (integrase): Stanford HIVDB integrase major drug-resistance positions
+#                      66,92,118,138,140,143,147,148,155,263 (e.g. T66I/E92Q/G118R/E138K/G140S/Y143R/S147G/
+#                      Q148H/N155H/R263K).
+#   CAI   (capsid):    lenacapavir treatment-emergent capsid substitutions, CAPELLA trial (Margot et al. 2022
+#                      J Infect Dis 226:1985-1991): emergent set 66,67,70,74 (M66I 234-fold, K70H 265-fold,
+#                      Q67H+K70R 15-fold); + the documented capsid-inhibitor positions 56,105,107.
+# Consensus-B wild-types at every position are CONFIRMED against HXB2 (K03455.1) by
+# tests/test_hiv_targetsite_caller.py (the same reference-numbering integrity gate as the RT cell).
+# Required HIVDB citation: Rhee et al. 2003, Nucleic Acids Res 31:298-303.
+
+
+@dataclass(frozen=True)
+class HIVTargetClass:
+    """An HIV target-site drug class (PI / INSTI / CAI). gene = PR / IN / CA.
+
+    Two call modes (mirroring the RT cells): if `major_drms` is None the class is POSITION-BASED (like NRTI —
+    any non-consensus residue at a major position counts; PI + INSTI use this); if `major_drms` is a set of
+    `<wt><pos><mut>` strings the class is MUTANT-LEVEL (like NNRTI — only catalogued substitutions count;
+    CAI uses this because capsid carries benign polymorphisms at the major positions, e.g. K70R / A105T)."""
+    label: str                 # PI / INSTI / CAI
+    gene: str                  # PR / IN / CA
+    drugs: tuple[str, ...]
+    positions: tuple[int, ...]
+    wt: dict[int, str]         # consensus-B wild-type residue at each major position (HXB2-confirmed)
+    rule: str
+    source: str
+    major_drms: frozenset[str] | None = None   # set => MUTANT-LEVEL; None => POSITION-BASED
+
+
+PI_CLASS = HIVTargetClass(
+    label="PI", gene="PR",
+    drugs=("fosamprenavir", "atazanavir", "indinavir", "lopinavir",
+           "nelfinavir", "saquinavir", "tipranavir", "darunavir"),
+    positions=(30, 32, 33, 46, 47, 48, 50, 54, 76, 82, 84, 88, 90),
+    wt={30: "D", 32: "V", 33: "L", 46: "M", 47: "I", 48: "G", 50: "I",
+        54: "I", 76: "L", 82: "V", 84: "I", 88: "N", 90: "L"},
+    rule="hiv_pi_major_position_v0",
+    source=("Stanford HIVDB protease major drug-resistance positions; xref Rhee 2022 Pathogens; "
+            "cite Rhee 2003 Nucleic Acids Res 31:298-303"),
+)
+
+INSTI_CLASS = HIVTargetClass(
+    label="INSTI", gene="IN",
+    drugs=("raltegravir", "elvitegravir", "dolutegravir", "bictegravir", "cabotegravir"),
+    positions=(66, 92, 118, 138, 140, 143, 147, 148, 155, 263),
+    wt={66: "T", 92: "E", 118: "G", 138: "E", 140: "G",
+        143: "Y", 147: "S", 148: "Q", 155: "N", 263: "R"},
+    rule="hiv_insti_major_position_v0",
+    source=("Stanford HIVDB integrase major drug-resistance positions; "
+            "cite Rhee 2003 Nucleic Acids Res 31:298-303"),
+)
+
+CAI_CLASS = HIVTargetClass(
+    label="CAI", gene="CA",
+    drugs=("lenacapavir",),
+    positions=(56, 66, 67, 70, 74, 105, 107),
+    wt={56: "L", 66: "M", 67: "Q", 70: "K", 74: "N", 105: "A", 107: "T"},
+    rule="hiv_cai_major_mutation_v0",
+    source=("lenacapavir CAPELLA treatment-emergent capsid substitutions "
+            "(Margot et al. 2022 J Infect Dis 226:1985-1991)"),
+    # MUTANT-LEVEL (capsid carries benign polymorphisms at these positions — K70R, A105T occur in
+    # non-resistant isolates, so a position-based rule over-calls; the Margot source gives specific mutants).
+    major_drms=frozenset({"L56I", "M66I", "Q67H", "K70H", "K70R", "K70N", "K70S",
+                          "N74D", "N74S", "A105T", "A105S", "T107N"}),
+)
+
+_HIV_TARGET_CLASSES = (PI_CLASS, INSTI_CLASS, CAI_CLASS)
+_CLASS_BY_DRUG: dict[str, HIVTargetClass] = {d: c for c in _HIV_TARGET_CLASSES for d in c.drugs}
+
+# Per-class blind spots a position-based major-DRM scan cannot see (label-templated).
+_TARGET_UNDETECTABLE_TMPL = (
+    "minor_or_accessory_{label}_mutations",
+    "per_drug_differential_resistance",
+    "novel_or_uncatalogued_{label}_substitution",
+    "other_drug_class_resistance",
+    "non_subtypeB_specific_resistance_pathway",
+    "mixture_or_minority_variant_below_sanger",
+)
+
+
+def _target_undetectable(label: str) -> list[str]:
+    return sorted(t.format(label=label) for t in _TARGET_UNDETECTABLE_TMPL)
+
+
+def supported_pi_drugs() -> list[str]:
+    return sorted(PI_CLASS.drugs)
+
+
+def supported_insti_drugs() -> list[str]:
+    return sorted(INSTI_CLASS.drugs)
+
+
+def supported_cai_drugs() -> list[str]:
+    return sorted(CAI_CLASS.drugs)
+
+
+def hiv_target_class_for(drug: str) -> HIVTargetClass | None:
+    """The PI/INSTI/CAI class for a drug, or None (NNRTI/NRTI/unknown are not in this registry)."""
+    return _CLASS_BY_DRUG.get(drug.lower())
+
+
+def is_target_major_position_mutation(cls: HIVTargetClass, substitution: str) -> bool:
+    """True iff `substitution` ('<wt><pos><mut>') is at one of the class's major positions."""
+    digits = "".join(c for c in substitution[1:] if c.isdigit())
+    try:
+        return int(digits) in cls.positions
+    except ValueError:
+        return False
+
+
+def call_target_class(drug: str, observed: dict[str, set[str]], cls: HIVTargetClass) -> HIVCall:
+    """Deterministic R/S call for a PI/INSTI/CAI drug — POSITION-BASED or MUTANT-LEVEL per the class.
+
+    POSITION-BASED (PI/INSTI; `major_drms is None`): R iff the gene carries >=1 non-consensus residue at a
+    catalogued major position — DELIBERATELY over-calls (the validation spec quantifies it; mutant-specific
+    v0.1 mirrors the NRTI arc). MUTANT-LEVEL (CAI; `major_drms` set): R iff the gene carries >=1 catalogued
+    resistance substitution. An S call surfaces the class blind spots (NOT 'definitely susceptible')."""
+    d = drug.lower()
+    if d not in cls.drugs:
+        return HIVCall("INDETERMINATE", drug, [], [], cls.rule, f"no {cls.label} catalog for {drug!r}")
+    obs_gene = observed.get(cls.gene, set())
+    if cls.major_drms is not None:                       # MUTANT-LEVEL (like NNRTI)
+        hits = sorted(f"{cls.gene}:{s}" for s in obs_gene if s in cls.major_drms)
+        mode, overcall = "MUTANT-LEVEL", "catalogued resistance substitutions only"
+    else:                                                # POSITION-BASED (like NRTI)
+        hits = sorted(f"{cls.gene}:{s}" for s in obs_gene if is_target_major_position_mutation(cls, s))
+        mode = "POSITION-BASED"
+        overcall = "over-calls non-resistant polymorphisms/revertants at a major position; mutant-level is v0.1"
+    pred = "R" if hits else "S"
+    undetectable = _target_undetectable(cls.label) if pred == "S" else []
+    caveat = (f"deterministic {cls.gene} major-{cls.label} call ({cls.label}, consensus-B numbering; "
+              f"{mode} v0 — {overcall}). Source: {cls.source}. Validate against PhenoSense fold-change, "
+              f"NEVER HIVDB's own Sierra interpretation (circular). "
+              + ("An S call cannot rule out minor mutations, per-drug differences, or other-class resistance."
+                 if pred == "S" else ""))
+    return HIVCall(pred, drug, sorted(hits), undetectable, cls.rule, caveat)
+
+
+# --- Unified cross-class dispatch (NNRTI/NRTI/PI/INSTI/CAI) — the CLI + genome caller route through this --
+
+def gene_for_hiv_drug(drug: str) -> str | None:
+    """Target gene (RT / PR / IN / CA) for ANY supported HIV drug across all 5 classes; None if unknown."""
+    d = drug.lower()
+    if d in HIV_RESISTANCE_MUTATIONS or d in NRTI_DRUGS:
+        return "RT"
+    cls = _CLASS_BY_DRUG.get(d)
+    return cls.gene if cls else None
+
+
+def all_supported_hiv_drugs() -> list[str]:
+    """Every HIV drug the decoder routes (NNRTI + NRTI + PI + INSTI + CAI)."""
+    return sorted(set(HIV_NNRTI_DRUGS) | set(NRTI_DRUGS) | set(_CLASS_BY_DRUG))
+
+
+def call_hiv_observed(drug: str, observed: dict[str, set[str]]) -> HIVCall:
+    """Deterministic HIV R/S call dispatching on drug class (NNRTI mutant-level / NRTI+PI+INSTI+CAI
+    position-based). `observed` = {gene: {substitutions}} keyed by the drug's target gene."""
+    d = drug.lower()
+    if d in HIV_RESISTANCE_MUTATIONS:
+        return call_from_observed_substitutions(d, observed)
+    if d in NRTI_DRUGS:
+        return call_nrti_from_observed(d, observed)
+    cls = _CLASS_BY_DRUG.get(d)
+    if cls is not None:
+        return call_target_class(d, observed, cls)
+    return HIVCall("INDETERMINATE", drug, [], [], "hiv_unknown_drug", f"no HIV catalog for {drug!r}")

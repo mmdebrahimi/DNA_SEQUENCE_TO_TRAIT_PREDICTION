@@ -1,0 +1,165 @@
+{
+  "artifact": "hiv_pi_v0_validation",
+  "schema": "hiv-targetsite-validation-v0",
+  "drug_class": "PI",
+  "gene": "PR",
+  "catalog_positions": [
+    30,
+    32,
+    33,
+    46,
+    47,
+    48,
+    50,
+    54,
+    76,
+    82,
+    84,
+    88,
+    90
+  ],
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra interpretation)",
+  "caller": "dna_decode.data.hiv_amr v0 (PI position-based major-DRM catalog)",
+  "catalog_source": "Stanford HIVDB protease major drug-resistance positions; xref Rhee 2022 Pathogens; cite Rhee 2003 Nucleic Acids Res 31:298-303",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\PI_DataSet.txt",
+  "n_isolates": 2171,
+  "primary_metric": "auc_call_separates_fold = P(fold|called-R > fold|called-S), cutoff-free",
+  "call_mode": "position-based",
+  "honest_caveats": [
+    "v0 is POSITION-BASED -> over-calls non-resistant polymorphisms/revertants at a major position (the PI spec quantifies it); mutant-specific deconfounded v0.1 mirrors the NRTI arc",
+    "class-level catalog -> per-drug differential resistance over-calls drugs a mutation spares",
+    "fold>=3 sens/spec is illustrative, NOT a per-drug clinical breakpoint",
+    "in-distribution vs HIVDB-PhenoSense (NOT provenance-disjoint external validation)"
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset public per HIVDB Terms of Use",
+  "per_drug": {
+    "fosamprenavir": {
+      "n_isolates_with_fold": 2052,
+      "n_called_R": 1343,
+      "n_called_S": 709,
+      "auc_call_separates_fold": 0.8916,
+      "median_fold_called_R": 6.5,
+      "median_fold_called_S": 0.7,
+      "illustrative_fold3_sens": 0.998,
+      "illustrative_fold3_spec": 0.605,
+      "illustrative_fold3_confusion": {
+        "tp": 882,
+        "fp": 461,
+        "tn": 707,
+        "fn": 2
+      }
+    },
+    "atazanavir": {
+      "n_isolates_with_fold": 1505,
+      "n_called_R": 999,
+      "n_called_S": 506,
+      "auc_call_separates_fold": 0.9571,
+      "median_fold_called_R": 17.0,
+      "median_fold_called_S": 0.9,
+      "illustrative_fold3_sens": 0.999,
+      "illustrative_fold3_spec": 0.712,
+      "illustrative_fold3_confusion": {
+        "tp": 795,
+        "fp": 204,
+        "tn": 505,
+        "fn": 1
+      }
+    },
+    "indinavir": {
+      "n_isolates_with_fold": 2098,
+      "n_called_R": 1354,
+      "n_called_S": 744,
+      "auc_call_separates_fold": 0.9288,
+      "median_fold_called_R": 12.7,
+      "median_fold_called_S": 0.8,
+      "illustrative_fold3_sens": 0.996,
+      "illustrative_fold3_spec": 0.706,
+      "illustrative_fold3_confusion": {
+        "tp": 1046,
+        "fp": 308,
+        "tn": 740,
+        "fn": 4
+      }
+    },
+    "lopinavir": {
+      "n_isolates_with_fold": 1807,
+      "n_called_R": 1191,
+      "n_called_S": 616,
+      "auc_call_separates_fold": 0.933,
+      "median_fold_called_R": 27.0,
+      "median_fold_called_S": 0.8,
+      "illustrative_fold3_sens": 0.998,
+      "illustrative_fold3_spec": 0.709,
+      "illustrative_fold3_confusion": {
+        "tp": 939,
+        "fp": 252,
+        "tn": 614,
+        "fn": 2
+      }
+    },
+    "nelfinavir": {
+      "n_isolates_with_fold": 2133,
+      "n_called_R": 1383,
+      "n_called_S": 750,
+      "auc_call_separates_fold": 0.9477,
+      "median_fold_called_R": 24.0,
+      "median_fold_called_S": 1.1,
+      "illustrative_fold3_sens": 0.987,
+      "illustrative_fold3_spec": 0.805,
+      "illustrative_fold3_confusion": {
+        "tp": 1205,
+        "fp": 178,
+        "tn": 734,
+        "fn": 16
+      }
+    },
+    "saquinavir": {
+      "n_isolates_with_fold": 2084,
+      "n_called_R": 1355,
+      "n_called_S": 729,
+      "auc_call_separates_fold": 0.8991,
+      "median_fold_called_R": 8.7,
+      "median_fold_called_S": 0.8,
+      "illustrative_fold3_sens": 1.0,
+      "illustrative_fold3_spec": 0.614,
+      "illustrative_fold3_confusion": {
+        "tp": 897,
+        "fp": 458,
+        "tn": 729,
+        "fn": 0
+      }
+    },
+    "tipranavir": {
+      "n_isolates_with_fold": 1226,
+      "n_called_R": 793,
+      "n_called_S": 433,
+      "auc_call_separates_fold": 0.7825,
+      "median_fold_called_R": 2.0,
+      "median_fold_called_S": 0.9,
+      "illustrative_fold3_sens": 0.997,
+      "illustrative_fold3_spec": 0.469,
+      "illustrative_fold3_confusion": {
+        "tp": 304,
+        "fp": 489,
+        "tn": 432,
+        "fn": 1
+      }
+    },
+    "darunavir": {
+      "n_isolates_with_fold": 993,
+      "n_called_R": 575,
+      "n_called_S": 418,
+      "auc_call_separates_fold": 0.8825,
+      "median_fold_called_R": 3.6,
+      "median_fold_called_S": 0.7,
+      "illustrative_fold3_sens": 1.0,
+      "illustrative_fold3_spec": 0.608,
+      "illustrative_fold3_confusion": {
+        "tp": 305,
+        "fp": 270,
+        "tn": 418,
+        "fn": 0
+      }
+    }
+  }
+}

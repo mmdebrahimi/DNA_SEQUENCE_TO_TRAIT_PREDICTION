@@ -71,13 +71,52 @@ def test_hiv_genome_mode_calls_nnrti_K103N(capsys, tmp_path):
     fa = _planted_genome(tmp_path, 103, "AAC")   # K103N
     rc, rec = _json(capsys, ["--drug", "efavirenz", "--genome-fasta", str(fa), "--json-only"])
     assert rc == 0 and rec["prediction"] == "R"
-    assert rec["provenance"]["mode"] == "blast-rt"
+    assert rec["provenance"]["mode"] == "blast-hiv-target" and rec["provenance"]["gene"] == "RT"
     assert any(d["subclass"] == "K103N" for d in rec["determinants"])
 
 
 def test_hiv_amrfinder_run_rejected(capsys, tmp_path):
     rc = main(["--drug", "lamivudine", "--amrfinder-run", str(tmp_path)])
     assert rc == 2 and "bacterial-only" in capsys.readouterr().err
+
+
+# ---------- PI / INSTI / CAI classes via the CLI ----------
+
+def test_pi_observed_resistant(capsys):
+    rc, rec = _json(capsys, ["--drug", "darunavir", "--observed", "PR:I84V", "--json-only"])
+    assert rc == 0 and rec["prediction"] == "R"
+    assert rec["provenance"]["organism"] == "HIV-1" and rec["provenance"]["gene"] == "PR"
+    assert rec["caller"]["name"] == "dna_decode-hiv-pi-major-position-v0"
+
+
+def test_insti_observed_resistant(capsys):
+    rc, rec = _json(capsys, ["--drug", "dolutegravir", "--observed", "IN:R263K", "--json-only"])
+    assert rc == 0 and rec["prediction"] == "R"
+    assert rec["caller"]["name"] == "dna_decode-hiv-insti-major-position-v0"
+
+
+def test_cai_observed_mutant_level(capsys):
+    rc, rec = _json(capsys, ["--drug", "lenacapavir", "--observed", "CA:M66I", "--json-only"])
+    assert rc == 0 and rec["prediction"] == "R"
+    assert rec["caller"]["name"] == "dna_decode-hiv-cai-major-mutation-v0"
+    # CAI is mutant-level: a non-catalogued capsid polymorphism at a major position -> S
+    _, rec_s = _json(capsys, ["--drug", "lenacapavir", "--observed", "CA:A105V", "--json-only"])
+    assert rec_s["prediction"] == "S"
+
+
+@pytest.mark.skipif(not _HAS_BLAST, reason="BLAST+ not installed")
+def test_pi_genome_mode_calls_V82A(capsys, tmp_path):
+    # genome built from the committed PR reference; planted V82A (V->A = GCC at codon 82)
+    seq = "".join(l for l in (_REF.parent / "HIV1_PR_HXB2_cds.fna").read_text().splitlines()
+                  if not l.startswith(">"))
+    i = 3 * (82 - 1)
+    seq = seq[:i] + "GCC" + seq[i + 3:]
+    fa = tmp_path / "pr.fna"
+    fa.write_text(">contig1\n" + "ACGT" * 60 + seq + "ACGT" * 60 + "\n", encoding="utf-8")
+    rc, rec = _json(capsys, ["--drug", "lopinavir", "--genome-fasta", str(fa), "--json-only"])
+    assert rc == 0 and rec["prediction"] == "R"
+    assert rec["provenance"]["gene"] == "PR" and rec["provenance"]["mode"] == "blast-hiv-target"
+    assert any(d["subclass"] == "V82A" for d in rec["determinants"])
 
 
 if __name__ == "__main__":

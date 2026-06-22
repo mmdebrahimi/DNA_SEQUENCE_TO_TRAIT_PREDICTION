@@ -1,0 +1,114 @@
+{
+  "artifact": "hiv_insti_v0_validation",
+  "schema": "hiv-targetsite-validation-v0",
+  "drug_class": "INSTI",
+  "gene": "IN",
+  "catalog_positions": [
+    66,
+    92,
+    118,
+    138,
+    140,
+    143,
+    147,
+    148,
+    155,
+    263
+  ],
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra interpretation)",
+  "caller": "dna_decode.data.hiv_amr v0 (INSTI position-based major-DRM catalog)",
+  "catalog_source": "Stanford HIVDB integrase major drug-resistance positions; cite Rhee 2003 Nucleic Acids Res 31:298-303",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\INI_DataSet.txt",
+  "n_isolates": 861,
+  "primary_metric": "auc_call_separates_fold = P(fold|called-R > fold|called-S), cutoff-free",
+  "call_mode": "position-based",
+  "honest_caveats": [
+    "v0 is POSITION-BASED -> over-calls non-resistant polymorphisms/revertants at a major position (the INSTI spec quantifies it); mutant-specific deconfounded v0.1 mirrors the NRTI arc",
+    "class-level catalog -> per-drug differential resistance over-calls drugs a mutation spares",
+    "fold>=3 sens/spec is illustrative, NOT a per-drug clinical breakpoint",
+    "in-distribution vs HIVDB-PhenoSense (NOT provenance-disjoint external validation)"
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset public per HIVDB Terms of Use",
+  "per_drug": {
+    "raltegravir": {
+      "n_isolates_with_fold": 753,
+      "n_called_R": 374,
+      "n_called_S": 379,
+      "auc_call_separates_fold": 0.9053,
+      "median_fold_called_R": 18.85,
+      "median_fold_called_S": 1.0,
+      "illustrative_fold3_sens": 0.939,
+      "illustrative_fold3_spec": 0.814,
+      "illustrative_fold3_confusion": {
+        "tp": 292,
+        "fp": 82,
+        "tn": 360,
+        "fn": 19
+      }
+    },
+    "elvitegravir": {
+      "n_isolates_with_fold": 754,
+      "n_called_R": 382,
+      "n_called_S": 372,
+      "auc_call_separates_fold": 0.9134,
+      "median_fold_called_R": 34.5,
+      "median_fold_called_S": 1.4,
+      "illustrative_fold3_sens": 0.87,
+      "illustrative_fold3_spec": 0.857,
+      "illustrative_fold3_confusion": {
+        "tp": 328,
+        "fp": 54,
+        "tn": 323,
+        "fn": 49
+      }
+    },
+    "dolutegravir": {
+      "n_isolates_with_fold": 370,
+      "n_called_R": 211,
+      "n_called_S": 159,
+      "auc_call_separates_fold": 0.745,
+      "median_fold_called_R": 1.6,
+      "median_fold_called_S": 0.9,
+      "illustrative_fold3_sens": 1.0,
+      "illustrative_fold3_spec": 0.534,
+      "illustrative_fold3_confusion": {
+        "tp": 72,
+        "fp": 139,
+        "tn": 159,
+        "fn": 0
+      }
+    },
+    "bictegravir": {
+      "n_isolates_with_fold": 287,
+      "n_called_R": 188,
+      "n_called_S": 99,
+      "auc_call_separates_fold": 0.8456,
+      "median_fold_called_R": 1.9,
+      "median_fold_called_S": 0.8,
+      "illustrative_fold3_sens": 1.0,
+      "illustrative_fold3_spec": 0.419,
+      "illustrative_fold3_confusion": {
+        "tp": 51,
+        "fp": 137,
+        "tn": 99,
+        "fn": 0
+      }
+    },
+    "cabotegravir": {
+      "n_isolates_with_fold": 64,
+      "n_called_R": 60,
+      "n_called_S": 4,
+      "auc_call_separates_fold": 1.0,
+      "median_fold_called_R": 9.0,
+      "median_fold_called_S": 0.95,
+      "illustrative_fold3_sens": 1.0,
+      "illustrative_fold3_spec": 0.333,
+      "illustrative_fold3_confusion": {
+        "tp": 52,
+        "fp": 8,
+        "tn": 4,
+        "fn": 0
+      }
+    }
+  }
+}

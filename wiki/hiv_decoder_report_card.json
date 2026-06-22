@@ -5,11 +5,12 @@
   "label_independence": "PhenoSense fold-change is NOT HIVDB's own Sierra interpretation (non-circular)",
   "underlying_tool_baseline": "Stanford DRMcv.R OLS, reimplemented (sklearn)",
   "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use",
-  "n_cells": 11,
+  "n_cells": 25,
   "honest_caveats": [
     "in-distribution (HIVDB), NOT provenance-disjoint -> a lower external-rigour bar than the bacterial card",
     "NNRTI = mutant-specific (excellent on 1st-gen EFV/NVP); NRTI v0 = position-based (over-calls, fixed by the deconfounded mutant-specific v0.1 for 5/6 drugs; ddI keeps position-based)",
-    "non-B subtype transfer is under-powered (data ~96% subtype B)"
+    "non-B subtype transfer is under-powered (data ~96% subtype B)",
+    "PI/INSTI = position-based v0 (PI AUC 0.78-0.96; INSTI 0.74-1.0, 2nd-gen DTG/BIC lower as the class-level over-call predicts); CAI/lenacapavir = mutant-level (AUC 0.91) on a small resistance-enriched dataset (n=140, 11 S); OLS/subtype columns are NNRTI/NRTI-only so far"
   ],
   "cells": [
     {
@@ -143,6 +144,174 @@
       "delta_ols_minus_catalog": 0.115,
       "v0_1_mutant_gain": 0.084,
       "subtype_transfer": "non-B balacc 0.804 (n=31)"
+    },
+    {
+      "drug_class": "PI",
+      "drug": "fosamprenavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 2052,
+      "auc_call_separates_fold": 0.8916,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "atazanavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 1505,
+      "auc_call_separates_fold": 0.9571,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "indinavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 2098,
+      "auc_call_separates_fold": 0.9288,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "lopinavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 1807,
+      "auc_call_separates_fold": 0.933,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "nelfinavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 2133,
+      "auc_call_separates_fold": 0.9477,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "saquinavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 2084,
+      "auc_call_separates_fold": 0.8991,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "tipranavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 1226,
+      "auc_call_separates_fold": 0.7825,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "PI",
+      "drug": "darunavir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 993,
+      "auc_call_separates_fold": 0.8825,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "INSTI",
+      "drug": "raltegravir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 753,
+      "auc_call_separates_fold": 0.9053,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "INSTI",
+      "drug": "elvitegravir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 754,
+      "auc_call_separates_fold": 0.9134,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "INSTI",
+      "drug": "dolutegravir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 370,
+      "auc_call_separates_fold": 0.745,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "INSTI",
+      "drug": "bictegravir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 287,
+      "auc_call_separates_fold": 0.8456,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "INSTI",
+      "drug": "cabotegravir",
+      "catalog": "position-based v0 (Stanford majors)",
+      "n": 64,
+      "auc_call_separates_fold": 1.0,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "CAI",
+      "drug": "lenacapavir",
+      "catalog": "mutant-level (CAPELLA capsid)",
+      "n": 140,
+      "auc_call_separates_fold": 0.9098,
+      "catalog_balacc": null,
+      "ols_baseline_balacc": null,
+      "delta_ols_minus_catalog": null,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
     }
   ]
 }
