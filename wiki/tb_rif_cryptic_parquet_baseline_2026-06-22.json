@@ -1,0 +1,54 @@
+{
+  "drug": "rifampicin",
+  "rule_status": "deterministic",
+  "n_isolates": 8955,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.41,
+    "spec": 0.991,
+    "tp": 64,
+    "fp": 2,
+    "tn": 228,
+    "fn": 92,
+    "sens_wilson_ci": [
+      0.336,
+      0.489
+    ],
+    "spec_wilson_ci": [
+      0.969,
+      0.998
+    ],
+    "n_clusters_R": 156,
+    "n_clusters_S": 230,
+    "n_discordant": 59,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 56
+  },
+  "raw": {
+    "tp": 3158,
+    "fp": 143,
+    "tn": 5364,
+    "fn": 290,
+    "sens": 0.916,
+    "spec": 0.974
+  },
+  "effective_lineage_n": {
+    "R": 156,
+    "S": 230
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      3448,
+      156
+    ],
+    "S": [
+      5507,
+      230
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic-nucleotide variant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 8774
+}

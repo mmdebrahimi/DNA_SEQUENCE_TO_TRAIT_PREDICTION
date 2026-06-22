@@ -1,0 +1,54 @@
+{
+  "drug": "isoniazid",
+  "rule_status": "deterministic",
+  "n_isolates": 9518,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.349,
+    "spec": 0.995,
+    "tp": 74,
+    "fp": 1,
+    "tn": 202,
+    "fn": 138,
+    "sens_wilson_ci": [
+      0.288,
+      0.415
+    ],
+    "spec_wilson_ci": [
+      0.973,
+      0.999
+    ],
+    "n_clusters_R": 212,
+    "n_clusters_S": 203,
+    "n_discordant": 60,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 57
+  },
+  "raw": {
+    "tp": 3970,
+    "fp": 57,
+    "tn": 4994,
+    "fn": 497,
+    "sens": 0.889,
+    "spec": 0.989
+  },
+  "effective_lineage_n": {
+    "R": 212,
+    "S": 203
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      4467,
+      212
+    ],
+    "S": [
+      5051,
+      203
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic-nucleotide variant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 9332
+}
