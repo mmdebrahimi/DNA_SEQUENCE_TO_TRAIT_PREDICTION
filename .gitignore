@@ -9,6 +9,9 @@
 # Exception: committed public influenza N1 NA reference + real field alleles for the antiviral (4th-kingdom)
 # real-data test (tiny GenBank CDS). Same class as fungal_ref.
 !/data/antiviral_ref/
+# Exception: committed public HIV-1 HXB2 RT CDS reference for the genome-mode caller self-check + planted-
+# mutation test (tiny NCBI CDS, K03455.1:2550-4229). Same class as fungal_ref/antiviral_ref.
+!/data/hiv_ref/
 *.h5
 *.parquet
 *.pkl

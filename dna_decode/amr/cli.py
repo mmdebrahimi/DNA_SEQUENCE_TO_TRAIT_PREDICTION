@@ -56,6 +56,10 @@ _DEFAULT_PFCRT_REF = Path(__file__).resolve().parent.parent.parent / "data" / "a
 # (viral). Routed by drug: oseltamivir/peramivir/zanamivir -> NA engine. Reference is N1 (WT His275).
 _DEFAULT_NA_REF = Path(__file__).resolve().parent.parent.parent / "data" / "antiviral_ref" / "N1_NA_NC026434_cds.fna"
 
+# HIV-1 RT target-site path (BLAST RT CDS -> Stanford-HIVDB-sourced NNRTI/NRTI major-DRM catalog). Routed
+# by drug. Reference is the HXB2 RT p66 in-frame CDS (consensus-B WT at every catalogued DRM position).
+_DEFAULT_HIV_RT_REF = Path(__file__).resolve().parent.parent.parent / "data" / "hiv_ref" / "HIV1_RT_HXB2_cds.fna"
+
 
 def _parse_observed(observed: str) -> dict[str, set[str]]:
     """'ERG11:Y132F,ERG11:K143R,FKS1:S639F' -> {'ERG11': {'Y132F','K143R'}, 'FKS1': {'S639F'}}."""
@@ -187,8 +191,9 @@ def _antimalarial_main(args) -> int:
 def _hiv_main(args) -> int:
     """HIV-1 NNRTI/NRTI target-site decoder branch (a 2nd viral target; validated vs HIVDB PhenoSense).
 
-    Wheel-only `--observed RT:SUB[,...]` (e.g. RT:K103N,RT:M184V). Genome-FASTA mode is deferred to v0.1
-    (needs a committed HXB2/consensus-B RT CDS reference + a BLAST caller, mirroring the influenza path)."""
+    Wheel-only `--observed RT:SUB[,...]` (e.g. RT:K103N,RT:M184V), OR genome-FASTA mode (`--genome-fasta
+    X.fna`) which BLASTs the committed HXB2 RT CDS reference vs the assembly and codon-maps the RT
+    substitutions (scripts/hiv_rt_caller; needs BLAST+), mirroring the influenza NA path."""
     if args.organism == "Escherichia":            # relabel the bacterial default on this path
         args.organism = "HIV-1"
     is_nrti = args.drug in supported_nrti_drugs()
@@ -198,11 +203,25 @@ def _hiv_main(args) -> int:
         sample_id = args.sample_id or "observed"
         prov = {"mode": "observed-substitutions", "observed": args.observed}
     elif args.genome_fasta is not None:
-        print("ERROR: HIV genome-FASTA mode is not yet wired (needs an HXB2/consensus-B RT CDS reference + "
-              "a BLAST caller; v0.1). Use --observed RT:SUB[,...] for a wheel-only call.", file=sys.stderr)
-        return 2
+        if not args.genome_fasta.exists():
+            print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
+            return 2
+        if not Path(args.hiv_rt_ref).exists():
+            print(f"ERROR: genome mode for {args.drug} (gene RT) needs a committed HIV-1 RT CDS reference at "
+                  f"{args.hiv_rt_ref}. Use --observed RT:SUB for a wheel-only call.", file=sys.stderr)
+            return 3
+        sample_id = args.sample_id or args.genome_fasta.stem
+        try:
+            from scripts.hiv_rt_caller import call_hiv_rt   # repo-only; needs BLAST+
+        except ImportError as e:
+            print(f"ERROR: HIV genome mode needs scripts/hiv_rt_caller + BLAST+ ({e}). "
+                  "Use --observed RT:SUB for a wheel-only call.", file=sys.stderr)
+            return 3
+        call = call_hiv_rt(str(args.genome_fasta), str(args.hiv_rt_ref), args.drug,
+                           is_nrti=is_nrti, gene="RT")
+        prov = {"mode": "blast-rt", "hiv_rt_ref": str(args.hiv_rt_ref)}
     else:
-        print("ERROR: HIV drug needs --observed RT:SUB[,...] (e.g. RT:K103N). Genome-FASTA mode is v0.1.",
+        print("ERROR: HIV drug needs --observed RT:SUB[,...] (e.g. RT:K103N) OR --genome-fasta X.fna.",
               file=sys.stderr)
         return 2
     rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
@@ -295,6 +314,9 @@ def main(argv=None) -> int:
     ap.add_argument("--na-ref", type=Path, default=_DEFAULT_NA_REF,
                     help="[antiviral] in-frame influenza N1 NA CDS reference FASTA (default: committed "
                          "NC_026434.1 A/California/07/2009 allele, WT His275)")
+    ap.add_argument("--hiv-rt-ref", type=Path, default=_DEFAULT_HIV_RT_REF,
+                    help="[HIV] in-frame HIV-1 RT CDS reference FASTA (default: committed HXB2 "
+                         "K03455.1:2550-4229 allele, consensus-B WT at every DRM position)")
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--organism", default="Escherichia",
                     help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "
