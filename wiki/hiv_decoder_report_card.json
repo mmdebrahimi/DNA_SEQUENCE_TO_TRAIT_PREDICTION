@@ -1,0 +1,148 @@
+{
+  "artifact": "hiv_decoder_report_card",
+  "schema": "hiv-report-card-v0",
+  "modality": "IN-DISTRIBUTION validation vs Stanford HIVDB PhenoSense fold-change (independent wet-lab IC50). DISTINCT from the bacterial NCBI-PD provenance-disjoint report card \u2014 NOT conflated (a different, more external rigour modality).",
+  "label_independence": "PhenoSense fold-change is NOT HIVDB's own Sierra interpretation (non-circular)",
+  "underlying_tool_baseline": "Stanford DRMcv.R OLS, reimplemented (sklearn)",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use",
+  "n_cells": 11,
+  "honest_caveats": [
+    "in-distribution (HIVDB), NOT provenance-disjoint -> a lower external-rigour bar than the bacterial card",
+    "NNRTI = mutant-specific (excellent on 1st-gen EFV/NVP); NRTI v0 = position-based (over-calls, fixed by the deconfounded mutant-specific v0.1 for 5/6 drugs; ddI keeps position-based)",
+    "non-B subtype transfer is under-powered (data ~96% subtype B)"
+  ],
+  "cells": [
+    {
+      "drug_class": "NNRTI",
+      "drug": "efavirenz",
+      "catalog": "mutant-specific (Stanford majors)",
+      "n": 2168,
+      "auc_call_separates_fold": 0.9618,
+      "catalog_balacc": 0.926,
+      "ols_baseline_balacc": 0.941,
+      "delta_ols_minus_catalog": 0.015,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "NNRTI",
+      "drug": "nevirapine",
+      "catalog": "mutant-specific (Stanford majors)",
+      "n": 2052,
+      "auc_call_separates_fold": 0.9853,
+      "catalog_balacc": 0.948,
+      "ols_baseline_balacc": 0.925,
+      "delta_ols_minus_catalog": -0.023,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "NNRTI",
+      "drug": "etravirine",
+      "catalog": "mutant-specific (Stanford majors)",
+      "n": 998,
+      "auc_call_separates_fold": 0.75,
+      "catalog_balacc": 0.729,
+      "ols_baseline_balacc": 0.849,
+      "delta_ols_minus_catalog": 0.12,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "NNRTI",
+      "drug": "rilpivirine",
+      "catalog": "mutant-specific (Stanford majors)",
+      "n": 311,
+      "auc_call_separates_fold": 0.7001,
+      "catalog_balacc": 0.683,
+      "ols_baseline_balacc": 0.77,
+      "delta_ols_minus_catalog": 0.087,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "NNRTI",
+      "drug": "doravirine",
+      "catalog": "mutant-specific (Stanford majors)",
+      "n": 130,
+      "auc_call_separates_fold": 0.5554,
+      "catalog_balacc": 0.549,
+      "ols_baseline_balacc": 0.767,
+      "delta_ols_minus_catalog": 0.218,
+      "subtype_transfer": null,
+      "v0_1_mutant_gain": null
+    },
+    {
+      "drug_class": "NRTI",
+      "drug": "lamivudine",
+      "catalog": "position-based v0 (+ mutant-specific v0.1)",
+      "n": 1839,
+      "auc_call_separates_fold": 0.9754,
+      "catalog_balacc": 0.818,
+      "ols_baseline_balacc": 0.938,
+      "delta_ols_minus_catalog": 0.12,
+      "v0_1_mutant_gain": 0.06,
+      "subtype_transfer": "non-B balacc 0.923 (n=49)"
+    },
+    {
+      "drug_class": "NRTI",
+      "drug": "abacavir",
+      "catalog": "position-based v0 (+ mutant-specific v0.1)",
+      "n": 1731,
+      "auc_call_separates_fold": 0.9737,
+      "catalog_balacc": 0.888,
+      "ols_baseline_balacc": 0.934,
+      "delta_ols_minus_catalog": 0.046,
+      "v0_1_mutant_gain": 0.055,
+      "subtype_transfer": "non-B balacc 0.934 (n=42)"
+    },
+    {
+      "drug_class": "NRTI",
+      "drug": "zidovudine",
+      "catalog": "position-based v0 (+ mutant-specific v0.1)",
+      "n": 1853,
+      "auc_call_separates_fold": 0.7793,
+      "catalog_balacc": 0.745,
+      "ols_baseline_balacc": 0.907,
+      "delta_ols_minus_catalog": 0.162,
+      "v0_1_mutant_gain": 0.141,
+      "subtype_transfer": "non-B balacc 0.921 (n=49)"
+    },
+    {
+      "drug_class": "NRTI",
+      "drug": "stavudine",
+      "catalog": "position-based v0 (+ mutant-specific v0.1)",
+      "n": 1846,
+      "auc_call_separates_fold": 0.8166,
+      "catalog_balacc": 0.741,
+      "ols_baseline_balacc": 0.868,
+      "delta_ols_minus_catalog": 0.127,
+      "v0_1_mutant_gain": 0.122,
+      "subtype_transfer": "non-B balacc 0.877 (n=49)"
+    },
+    {
+      "drug_class": "NRTI",
+      "drug": "didanosine",
+      "catalog": "position-based v0 (+ mutant-specific v0.1)",
+      "n": 1849,
+      "auc_call_separates_fold": 0.9192,
+      "catalog_balacc": 0.763,
+      "ols_baseline_balacc": 0.805,
+      "delta_ols_minus_catalog": 0.042,
+      "v0_1_mutant_gain": -0.201,
+      "subtype_transfer": "non-B balacc 0.923 (n=49)"
+    },
+    {
+      "drug_class": "NRTI",
+      "drug": "tenofovir",
+      "catalog": "position-based v0 (+ mutant-specific v0.1)",
+      "n": 1548,
+      "auc_call_separates_fold": 0.6986,
+      "catalog_balacc": 0.701,
+      "ols_baseline_balacc": 0.816,
+      "delta_ols_minus_catalog": 0.115,
+      "v0_1_mutant_gain": 0.084,
+      "subtype_transfer": "non-B balacc 0.804 (n=31)"
+    }
+  ]
+}
