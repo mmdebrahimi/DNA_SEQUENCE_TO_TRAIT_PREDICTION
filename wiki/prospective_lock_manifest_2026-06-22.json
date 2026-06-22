@@ -1,0 +1,58 @@
+{
+  "schema": "prospective-lock-manifest-v1",
+  "lock_date": "2026-06-22",
+  "frozen_commit": "b3761c8",
+  "lock_commit": "fc8834b",
+  "eligibility_rule": "an isolate is a leakage-free prospective test case IFF its earliest possible public date (INSDC first_public / release_date) is STRICTLY AFTER lock_date; missing / year-only / pre-lock dates are INELIGIBLE (fail-closed)",
+  "protocol": "verify_lock (decoder == frozen) -> filter cohort to prospective-eligible -> frozen call_resistance(organism, drug) -> independent_cohort_validate._conf; the result is stamped with this manifest's surface hashes + lock_date so it is provably prospective",
+  "surface_sha256": {
+    "dna_decode/eval/amr_rules.py": "a983bf28e4ff4f89034b152404e49ec3aa6b3907ac81c670b14e60e7cfe1fad4",
+    "dna_decode/data/calibrated_amr_rules.json": "d442b768979f35caa9b33875bf289a21a736fec68f5d85f1483578c7cab352ad",
+    "dna_decode/data/mic_tiers.py": "47d6c70103673736580c510cf1484b09917665981c6f8594c3b8521e850bc283",
+    "dna_decode/data/shipped_decoder_surface.py": "9a10b198afdf6b9016f57d94ccbbed8a94badfe552b18dfe7274a8cd43569f52",
+    "dna_decode/eval/cohort_manifest.py": "74a3459402ecdebd45c80a4eb7468cbf8bc72d38fe6c5b76b426bb41a44a8005"
+  },
+  "scored_cells": [
+    {
+      "organism": "Campylobacter",
+      "drug": "ciprofloxacin"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "tetracycline"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ciprofloxacin"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ceftriaxone"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "gentamicin"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "meropenem"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "tetracycline"
+    }
+  ],
+  "what_this_is_not": "NOT a validation number today \u2014 the number accrues as post-lock measured-AST genomes appear. This artifact is the tamper-evident commitment + eligibility rule that makes any later score PROVABLY prospective (leakage-free by time)."
+}
