@@ -1,0 +1,199 @@
+{
+  "artifact": "hiv_nrti_v0_validation",
+  "schema": "hiv-nrti-validation-v0",
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra)",
+  "caller": "dna_decode.data.hiv_amr v0 (POSITION-BASED NRTI major-position catalog)",
+  "underlying_tool": "Stanford DRMcv.R OLS, reimplemented (sklearn); 5-fold CV",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\NRTI_DataSet.txt",
+  "n_isolates": 1867,
+  "n_ols_features_min10": 325,
+  "honest_caveats": [
+    "v0 NRTI is POSITION-BASED -> over-calls T215 revertants / V75 polymorphisms (spec hit, esp AZT/D4T)",
+    "no Subtype column -> per-subtype transfer check is v0.1 (unfiltered set)",
+    "fold>=lower-cutoff binarization uses DRMcv.R's per-drug clinical cutoffs",
+    "v0.1: mutant-specific NRTI catalog (data-derived OLS coefficients / sourced SDRM list)"
+  ],
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; cutoffs from Hedlin/Stanford DRMcv.R",
+  "per_drug": {
+    "lamivudine": {
+      "n_isolates": 1839,
+      "prevalence_R_at_cutoff": 0.572,
+      "clinical_lower_cutoff_fold": 5.0,
+      "catalog": {
+        "tp": 1050,
+        "fp": 285,
+        "tn": 502,
+        "fn": 2,
+        "sens": 0.998,
+        "spec": 0.638,
+        "accuracy": 0.844,
+        "balanced_accuracy": 0.818,
+        "auc_call_separates_fold": 0.9754,
+        "median_fold_R": 100.0,
+        "median_fold_S": 1.0
+      },
+      "ols_baseline": {
+        "tp": 950,
+        "fp": 21,
+        "tn": 766,
+        "fn": 102,
+        "sens": 0.903,
+        "spec": 0.973,
+        "accuracy": 0.933,
+        "balanced_accuracy": 0.938,
+        "auc": 0.9798
+      },
+      "delta_ols_minus_catalog_balacc": 0.12
+    },
+    "abacavir": {
+      "n_isolates": 1731,
+      "prevalence_R_at_cutoff": 0.637,
+      "clinical_lower_cutoff_fold": 2.0,
+      "catalog": {
+        "tp": 1099,
+        "fp": 139,
+        "tn": 490,
+        "fn": 3,
+        "sens": 0.997,
+        "spec": 0.779,
+        "accuracy": 0.918,
+        "balanced_accuracy": 0.888,
+        "auc_call_separates_fold": 0.9737,
+        "median_fold_R": 4.8,
+        "median_fold_S": 0.9
+      },
+      "ols_baseline": {
+        "tp": 1020,
+        "fp": 36,
+        "tn": 593,
+        "fn": 82,
+        "sens": 0.926,
+        "spec": 0.943,
+        "accuracy": 0.932,
+        "balanced_accuracy": 0.934,
+        "auc": 0.9829
+      },
+      "delta_ols_minus_catalog_balacc": 0.046
+    },
+    "zidovudine": {
+      "n_isolates": 1853,
+      "prevalence_R_at_cutoff": 0.45,
+      "clinical_lower_cutoff_fold": 3.0,
+      "catalog": {
+        "tp": 832,
+        "fp": 518,
+        "tn": 501,
+        "fn": 2,
+        "sens": 0.998,
+        "spec": 0.492,
+        "accuracy": 0.719,
+        "balanced_accuracy": 0.745,
+        "auc_call_separates_fold": 0.7793,
+        "median_fold_R": 7.2,
+        "median_fold_S": 0.8
+      },
+      "ols_baseline": {
+        "tp": 784,
+        "fp": 128,
+        "tn": 891,
+        "fn": 50,
+        "sens": 0.94,
+        "spec": 0.874,
+        "accuracy": 0.904,
+        "balanced_accuracy": 0.907,
+        "auc": 0.9688
+      },
+      "delta_ols_minus_catalog_balacc": 0.162
+    },
+    "stavudine": {
+      "n_isolates": 1846,
+      "prevalence_R_at_cutoff": 0.454,
+      "clinical_lower_cutoff_fold": 1.5,
+      "catalog": {
+        "tp": 831,
+        "fp": 514,
+        "tn": 494,
+        "fn": 7,
+        "sens": 0.992,
+        "spec": 0.49,
+        "accuracy": 0.718,
+        "balanced_accuracy": 0.741,
+        "auc_call_separates_fold": 0.8166,
+        "median_fold_R": 1.8,
+        "median_fold_S": 0.9
+      },
+      "ols_baseline": {
+        "tp": 721,
+        "fp": 125,
+        "tn": 883,
+        "fn": 117,
+        "sens": 0.86,
+        "spec": 0.876,
+        "accuracy": 0.869,
+        "balanced_accuracy": 0.868,
+        "auc": 0.9372
+      },
+      "delta_ols_minus_catalog_balacc": 0.127
+    },
+    "didanosine": {
+      "n_isolates": 1849,
+      "prevalence_R_at_cutoff": 0.525,
+      "clinical_lower_cutoff_fold": 1.5,
+      "catalog": {
+        "tp": 950,
+        "fp": 398,
+        "tn": 481,
+        "fn": 20,
+        "sens": 0.979,
+        "spec": 0.547,
+        "accuracy": 0.774,
+        "balanced_accuracy": 0.763,
+        "auc_call_separates_fold": 0.9192,
+        "median_fold_R": 1.8,
+        "median_fold_S": 1.0
+      },
+      "ols_baseline": {
+        "tp": 743,
+        "fp": 137,
+        "tn": 742,
+        "fn": 227,
+        "sens": 0.766,
+        "spec": 0.844,
+        "accuracy": 0.803,
+        "balanced_accuracy": 0.805,
+        "auc": 0.8927
+      },
+      "delta_ols_minus_catalog_balacc": 0.042
+    },
+    "tenofovir": {
+      "n_isolates": 1548,
+      "prevalence_R_at_cutoff": 0.318,
+      "clinical_lower_cutoff_fold": 1.5,
+      "catalog": {
+        "tp": 490,
+        "fp": 625,
+        "tn": 430,
+        "fn": 3,
+        "sens": 0.994,
+        "spec": 0.408,
+        "accuracy": 0.594,
+        "balanced_accuracy": 0.701,
+        "auc_call_separates_fold": 0.6986,
+        "median_fold_R": 1.3,
+        "median_fold_S": 0.9
+      },
+      "ols_baseline": {
+        "tp": 379,
+        "fp": 144,
+        "tn": 911,
+        "fn": 114,
+        "sens": 0.769,
+        "spec": 0.864,
+        "accuracy": 0.833,
+        "balanced_accuracy": 0.816,
+        "auc": 0.8877
+      },
+      "delta_ols_minus_catalog_balacc": 0.115
+    }
+  }
+}

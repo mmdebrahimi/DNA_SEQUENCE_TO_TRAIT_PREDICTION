@@ -7,10 +7,20 @@
 > etravirine 0.75 · rilpivirine 0.70 · doravirine 0.56 (the honest class-level degradation on 2nd-gen
 > NNRTIs — quantifies the v0.1 per-drug need). Result: `wiki/hiv_nnrti_v0_validation_2026-06-21.{md,json}`;
 > harness `scripts/hiv_nnrti_validate.py` (+ tests). Circularity-safe (label = PhenoSense, NOT HIVDB Sierra).
-> Frozen AMR surface byte-unchanged. **v0.1 follow-ups (named):** per-drug catalog (fixes ETR/RPV/DOR
-> over-call) · within-subtype transfer check (needs the unfiltered dataset's Subtype column) · the Stanford
-> R-script least-squares baseline (validate-vs-underlying-tool) · report-card SCORED-cell integration · the
-> `dna-amr --drug` CLI route + HXB2-RT genome-mode caller for novel-FASTA input.
+> Frozen AMR surface byte-unchanged.
+>
+> ## ✅ EXTENDED — validate-vs-underlying-tool + a 2nd drug class (NRTI)
+> **OLS baseline** (`scripts/hiv_nnrti_baseline.py`, a faithful Python reimplementation of Stanford's
+> `DRMcv.R` — R not installed): the deterministic catalog **ties/beats** the full cross-validated OLS
+> regression on EFV/NVP (Δbalacc +0.015 / −0.023) — the wrapper adds interpretability, not error; the
+> regression's edge on 2nd-gen NNRTIs bounds the per-drug v0.1 headroom. **NRTI** (`hiv_amr` NRTI
+> position-based catalog + `scripts/hiv_nrti_validate.py`, N=1867): sens ~0.98–1.0 but spec degraded
+> (AZT/D4T ~0.49, TDF 0.41 — the *deliberate* T215-revertant/TAM over-call of position-based v0); OLS beats
+> it +0.04…+0.16 balacc (the mutant-specific v0.1 headroom). Clinical cutoffs sourced from `DRMcv.R`.
+> **v0.1 follow-ups (named):** mutant-specific catalogs (per-drug NNRTI + NRTI, data-derivable from the OLS
+> coefficients) · within-subtype transfer check (unfiltered dataset's Subtype column) · report-card
+> SCORED-cell integration · `dna-amr --drug` CLI route + HXB2-RT genome-mode caller for novel-FASTA input ·
+> the remaining HIV classes (PI / INSTI / CAI — same datasets + cutoffs available).
 
 Soraya `/probe`-by-hand + license-verification attempt, advancing Wave B (the highest-value net-new move
 per `wiki/phenotype_trait_tool_completion_assessment_2026-06-21.md` + the Wave-A closeout) as far as

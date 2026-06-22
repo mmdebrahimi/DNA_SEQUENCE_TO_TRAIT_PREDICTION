@@ -10,8 +10,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dna_decode.data.hiv_amr import (  # noqa: E402
-    HIV_UNDETECTABLE_MECHANISMS, NNRTI_RT_MAJOR_DRMS, _RT_WT, call_from_observed_substitutions,
-    gene_for_drug, is_resistance_mutation, resistance_mutations_for, supported_hiv_drugs,
+    HIV_UNDETECTABLE_MECHANISMS, NNRTI_RT_MAJOR_DRMS, NRTI_MAJOR_POSITIONS, NRTI_UNDETECTABLE_MECHANISMS,
+    _RT_WT, call_from_observed_substitutions, call_nrti_from_observed, gene_for_drug,
+    is_nrti_major_position_mutation, is_resistance_mutation, resistance_mutations_for,
+    supported_hiv_drugs, supported_nrti_drugs,
 )
 
 
@@ -90,6 +92,42 @@ def test_resistance_mutations_for_unknown_raises():
     except KeyError:
         return
     raise AssertionError("expected KeyError for unknown drug")
+
+
+# ---------- NRTI (v0 position-based) ----------
+
+def test_nrti_supported_drugs_and_positions():
+    assert {"lamivudine", "abacavir", "zidovudine", "tenofovir"} <= set(supported_nrti_drugs())
+    # Stanford NRTI major positions (2026-04-22)
+    assert set(NRTI_MAJOR_POSITIONS) == {41, 65, 70, 74, 75, 151, 184, 210, 215}
+
+
+def test_is_nrti_major_position_mutation():
+    assert is_nrti_major_position_mutation("M184V") is True
+    assert is_nrti_major_position_mutation("K65R") is True
+    assert is_nrti_major_position_mutation("T215Y") is True
+    assert is_nrti_major_position_mutation("A98G") is False   # 98 is not an NRTI major position
+
+
+def test_call_nrti_resistant_on_major_position():
+    c = call_nrti_from_observed("lamivudine", {"RT": {"M184V"}})
+    assert c.prediction == "R" and c.determinants == ["RT:M184V"]
+    c2 = call_nrti_from_observed("zidovudine", {"RT": {"T215Y", "M41L"}})
+    assert c2.prediction == "R" and c2.determinants == ["RT:M41L", "RT:T215Y"]
+
+
+def test_call_nrti_overcalls_t215_revertant_by_design():
+    # POSITION-BASED v0 DELIBERATELY calls a T215 revertant R (it's non-consensus at a major position).
+    # This documents the known over-call the validation quantifies — NOT a bug.
+    c = call_nrti_from_observed("zidovudine", {"RT": {"T215S"}})
+    assert c.prediction == "R"
+    assert "over-calls" in c.caveat
+
+
+def test_call_nrti_susceptible_and_unknown():
+    c = call_nrti_from_observed("lamivudine", {"RT": {"A98G"}})  # not at a major position
+    assert c.prediction == "S" and c.undetectable_mechanisms == NRTI_UNDETECTABLE_MECHANISMS
+    assert call_nrti_from_observed("notadrug", {"RT": {"M184V"}}).prediction == "INDETERMINATE"
 
 
 if __name__ == "__main__":

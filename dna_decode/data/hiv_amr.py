@@ -154,3 +154,65 @@ def call_from_observed_substitutions(drug: str, observed: dict[str, set[str]]) -
               + ("An S call cannot rule out minor/accessory NNRTI mutations, per-drug differences, or "
                  "non-RT / different-class resistance." if pred == "S" else ""))
     return HIVCall(pred, drug, sorted(hits), undetectable, "hiv_nnrti_major_drm_v0", caveat)
+
+
+# ===========================================================================
+# NRTI (v0 — POSITION-BASED; the second HIV drug class)
+# ===========================================================================
+# Stanford HIVDB genotype-phenotype dataset "NRTI Major Drug Resistance Positions" (2026-04-22):
+# 41, 65, 70, 74, 75, 151, 184, 210, 215 — POSITIONS ONLY (unlike NNRTI, Stanford did NOT publish
+# mutant-level NRTI majors on that page). So v0 NRTI is POSITION-BASED: any non-consensus mutation at one
+# of these RT positions counts as a major NRTI DRM present. HONEST CAVEAT (vs the NNRTI mutant-level v0):
+# this DELIBERATELY OVER-CALLS — T215 revertants (T215S/C/D/E/I/V) + V75 polymorphisms are non-consensus
+# at a major position but are NOT resistant -> reduced specificity (esp. AZT/D4T). The validation
+# quantifies the per-drug spec hit. v0.1 = a MUTANT-SPECIFIC catalog (data-derived from the OLS
+# coefficients, or a sourced SDRM list). Consensus-B wild-types per the HIVDB-linked reference.
+NRTI_MAJOR_POSITIONS = (41, 65, 70, 74, 75, 151, 184, 210, 215)
+NRTI_RT_WT = {41: "M", 65: "K", 70: "K", 74: "L", 75: "V", 151: "Q", 184: "M", 210: "L", 215: "T"}
+NRTI_DRUGS = ("lamivudine", "abacavir", "zidovudine", "stavudine", "didanosine", "tenofovir")
+
+NRTI_UNDETECTABLE_MECHANISMS = sorted({
+    "minor_or_accessory_NRTI_mutations",
+    "per_drug_differential_resistance",          # position-based v0 over-calls (215 revertants etc.)
+    "NNRTI_PI_INSTI_CAI_resistance",
+    "non_subtypeB_specific_resistance_pathway",
+    "mixture_or_minority_variant_below_sanger",
+})
+
+_NRTI_SOURCE = ("Stanford HIVDB genotype-phenotype dataset 'NRTI Major Drug Resistance Positions' "
+                "(2026-04-22; positions only); consensus-B wild-types; cite Rhee 2003")
+
+
+def supported_nrti_drugs() -> list[str]:
+    return sorted(NRTI_DRUGS)
+
+
+def is_nrti_major_position_mutation(substitution: str) -> bool:
+    """True iff `substitution` ('<wt><pos><mut>', e.g. 'M184V') is at an NRTI major position."""
+    digits = "".join(c for c in substitution[1:] if c.isdigit())
+    try:
+        return int(digits) in NRTI_MAJOR_POSITIONS
+    except ValueError:
+        return False
+
+
+def call_nrti_from_observed(drug: str, observed: dict[str, set[str]]) -> HIVCall:
+    """Deterministic POSITION-BASED NRTI R/S call from observed RT substitutions.
+
+    Rule (v0): R iff RT carries >=1 non-consensus substitution at an NRTI major position (Stanford's
+    filtered-dataset definition). DELIBERATELY over-calls (revertants/polymorphisms at a major position) —
+    an honest coarse first cut whose specificity hit the validation quantifies. An S call surfaces
+    NRTI_UNDETECTABLE_MECHANISMS (NOT 'definitely NRTI-susceptible')."""
+    if drug.lower() not in NRTI_DRUGS:
+        return HIVCall("INDETERMINATE", drug, [], [], "hiv_nrti_major_position_v0",
+                       f"no NRTI catalog for {drug!r}")
+    hits = sorted(f"RT:{s}" for s in observed.get("RT", set()) if is_nrti_major_position_mutation(s))
+    pred = "R" if hits else "S"
+    undetectable = NRTI_UNDETECTABLE_MECHANISMS if pred == "S" else []
+    caveat = (f"deterministic RT major-NRTI-POSITION call (NRTI, consensus-B numbering; POSITION-BASED v0 "
+              f"— over-calls 215 revertants / 75 polymorphisms; mutant-specific catalog is v0.1). Source: "
+              f"{_NRTI_SOURCE}. Validate against PhenoSense fold-change, NEVER HIVDB's own Sierra "
+              f"interpretation (circular). "
+              + ("An S call cannot rule out minor NRTI mutations, per-drug differences, or non-RT / "
+                 "different-class resistance." if pred == "S" else ""))
+    return HIVCall(pred, drug, hits, undetectable, "hiv_nrti_major_position_v0", caveat)
