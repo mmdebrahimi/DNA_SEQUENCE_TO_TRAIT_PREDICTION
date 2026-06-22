@@ -35,6 +35,12 @@ from dna_decode.data.fungal_amr import (
     call_from_observed_substitutions,
     supported_fungal_drugs,
 )
+from dna_decode.data.hiv_amr import (
+    call_from_observed_substitutions as hiv_nnrti_call_from_observed,
+    call_nrti_from_observed as hiv_nrti_call_from_observed,
+    supported_hiv_drugs,
+    supported_nrti_drugs,
+)
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
 
@@ -178,6 +184,34 @@ def _antimalarial_main(args) -> int:
     return _emit_target_site(rec, call, sample_id, args)
 
 
+def _hiv_main(args) -> int:
+    """HIV-1 NNRTI/NRTI target-site decoder branch (a 2nd viral target; validated vs HIVDB PhenoSense).
+
+    Wheel-only `--observed RT:SUB[,...]` (e.g. RT:K103N,RT:M184V). Genome-FASTA mode is deferred to v0.1
+    (needs a committed HXB2/consensus-B RT CDS reference + a BLAST caller, mirroring the influenza path)."""
+    if args.organism == "Escherichia":            # relabel the bacterial default on this path
+        args.organism = "HIV-1"
+    is_nrti = args.drug in supported_nrti_drugs()
+    call_fn = hiv_nrti_call_from_observed if is_nrti else hiv_nnrti_call_from_observed
+    if args.observed is not None:
+        call = call_fn(args.drug, _parse_observed(args.observed))
+        sample_id = args.sample_id or "observed"
+        prov = {"mode": "observed-substitutions", "observed": args.observed}
+    elif args.genome_fasta is not None:
+        print("ERROR: HIV genome-FASTA mode is not yet wired (needs an HXB2/consensus-B RT CDS reference + "
+              "a BLAST caller; v0.1). Use --observed RT:SUB[,...] for a wheel-only call.", file=sys.stderr)
+        return 2
+    else:
+        print("ERROR: HIV drug needs --observed RT:SUB[,...] (e.g. RT:K103N). Genome-FASTA mode is v0.1.",
+              file=sys.stderr)
+        return 2
+    rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
+                              caller_name=("dna_decode-hiv-nrti-major-position-v0" if is_nrti
+                                           else "dna_decode-hiv-nnrti-major-drm-v0"),
+                              source="HIVDB-PhenoSense-validated (in-distribution; see hiv_decoder_report_card)")
+    return _emit_target_site(rec, call, sample_id, args)
+
+
 def _antiviral_main(args) -> int:
     """Antiviral NA target-site decoder branch (routed when --drug is an NA-inhibitor drug). 4th kingdom."""
     if args.organism == "Escherichia":            # relabel the bacterial default on this path
@@ -240,7 +274,8 @@ def main(argv=None) -> int:
                                  description="Deterministic AMR R/S decoder from AMRFinder curated determinants")
     ap.add_argument("--drug", required=True,
                     choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
-                                   | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())),
+                                   | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
+                                   | set(supported_hiv_drugs()) | set(supported_nrti_drugs())),
                     metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), "
                                          "antimalarial (BLAST-Pfkelch13 engine), or antiviral "
                                          "(BLAST-influenza-NA engine) drug")
@@ -296,6 +331,13 @@ def main(argv=None) -> int:
                   file=sys.stderr)
             return 2
         return _antiviral_main(args)
+
+    if args.drug in supported_hiv_drugs() or args.drug in supported_nrti_drugs():
+        if args.amrfinder_run is not None:
+            print("ERROR: --amrfinder-run is bacterial-only; HIV drugs use --observed RT:SUB[,...]",
+                  file=sys.stderr)
+            return 2
+        return _hiv_main(args)
 
     if args.observed is not None:
         print("ERROR: --observed is fungal-only; bacterial drugs use --amrfinder-run or --genome-fasta",
