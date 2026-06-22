@@ -11,6 +11,7 @@ the manifest is absent; the scorer then BLOCKED-gates. The manifest is a JSON li
 """
 from __future__ import annotations
 
+import csv
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -22,6 +23,47 @@ class GoldsetIsolate:
     masked_vcf: str
     regeno_vcf: str | None
     label: str  # measured DST R/S
+
+
+# --- CRyPTIC-leakage exclusion (the "provably not in CRyPTIC" independence check) ---------------
+# CRyPTIC reuse table accession columns. An independent isolate must NOT appear in ANY of these.
+_CRYPTIC_ACC_COLS = ("ENA_RUN", "ENA_SAMPLE", "UNIQUEID")
+
+
+def cryptic_accessions(reuse_csv: Path) -> set[str]:
+    """All CRyPTIC isolate identifiers (ENA_RUN ∪ ENA_SAMPLE ∪ UNIQUEID), normalized for membership tests.
+
+    This is the exclusion set: a candidate gold-set isolate that matches ANY of these is NOT independent
+    (it is in CRyPTIC, which the WHO catalogue was built from). Run/sample accessions are the load-bearing
+    keys — an ERR/ERS/SAMEA hit means the same sequencing run/biosample."""
+    acc: set[str] = set()
+    with open(reuse_csv, encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            for col in _CRYPTIC_ACC_COLS:
+                v = (row.get(col) or "").strip()
+                if v:
+                    acc.add(v.upper())
+    return acc
+
+
+@dataclass(frozen=True)
+class IndependenceReport:
+    clean: tuple[str, ...]        # candidate ids with NO CRyPTIC overlap (independent)
+    leaked: tuple[str, ...]       # candidate ids found in CRyPTIC (must be dropped)
+    n_checked: int
+
+
+def assert_independent(candidate_ids, cryptic_acc: set[str]) -> IndependenceReport:
+    """Partition candidate isolate ids into clean (independent) vs leaked (present in CRyPTIC).
+
+    `candidate_ids` is any iterable of identifiers (ENA run/sample/biosample/strain). Matching is
+    case-insensitive exact-token (mirrors the accession-string leakage discipline elsewhere in the repo —
+    NOT substring). The caller drops `leaked` before scoring so a 'CRyPTIC-leaked' isolate can never inflate
+    an 'independent' number."""
+    clean, leaked = [], []
+    for cid in candidate_ids:
+        (leaked if str(cid).strip().upper() in cryptic_acc else clean).append(str(cid))
+    return IndependenceReport(clean=tuple(clean), leaked=tuple(leaked), n_checked=len(clean) + len(leaked))
 
 
 def goldset_available(manifest_path: Path) -> bool:
