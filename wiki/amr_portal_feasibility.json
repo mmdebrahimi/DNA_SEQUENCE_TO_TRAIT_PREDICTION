@@ -1,0 +1,2602 @@
+{
+  "Streptococcus pneumoniae|trimethoprim-sulfamethoxazole": {
+    "total": 11671,
+    "disjoint": 11671,
+    "disjoint_R": 5139,
+    "disjoint_S": 6532,
+    "leaked": 0,
+    "intermediate_or_blank": 1176
+  },
+  "Staphylococcus aureus|ciprofloxacin": {
+    "total": 3662,
+    "disjoint": 3658,
+    "disjoint_R": 1563,
+    "disjoint_S": 2095,
+    "leaked": 4,
+    "intermediate_or_blank": 268
+  },
+  "Staphylococcus aureus|gentamicin": {
+    "total": 4067,
+    "disjoint": 4040,
+    "disjoint_R": 502,
+    "disjoint_S": 3538,
+    "leaked": 27,
+    "intermediate_or_blank": 173
+  },
+  "Staphylococcus aureus|tetracycline": {
+    "total": 3529,
+    "disjoint": 3502,
+    "disjoint_R": 405,
+    "disjoint_S": 3097,
+    "leaked": 27,
+    "intermediate_or_blank": 178
+  },
+  "Staphylococcus aureus|rifampicin": {
+    "total": 3673,
+    "disjoint": 3647,
+    "disjoint_R": 88,
+    "disjoint_S": 3559,
+    "leaked": 26,
+    "intermediate_or_blank": 176
+  },
+  "Neisseria gonorrhoeae|ceftriaxone": {
+    "total": 14255,
+    "disjoint": 14255,
+    "disjoint_R": 85,
+    "disjoint_S": 14170,
+    "leaked": 0,
+    "intermediate_or_blank": 3208
+  },
+  "Neisseria gonorrhoeae|ciprofloxacin": {
+    "total": 12025,
+    "disjoint": 12025,
+    "disjoint_R": 5619,
+    "disjoint_S": 6406,
+    "leaked": 0,
+    "intermediate_or_blank": 3990
+  },
+  "Neisseria gonorrhoeae|tetracycline": {
+    "total": 6012,
+    "disjoint": 6012,
+    "disjoint_R": 2572,
+    "disjoint_S": 3440,
+    "leaked": 0,
+    "intermediate_or_blank": 2895
+  },
+  "Klebsiella pneumoniae|ceftriaxone": {
+    "total": 3550,
+    "disjoint": 3370,
+    "disjoint_R": 2496,
+    "disjoint_S": 874,
+    "leaked": 180,
+    "intermediate_or_blank": 1042
+  },
+  "Klebsiella pneumoniae|gentamicin": {
+    "total": 5172,
+    "disjoint": 4930,
+    "disjoint_R": 2026,
+    "disjoint_S": 2904,
+    "leaked": 242,
+    "intermediate_or_blank": 1643
+  },
+  "Klebsiella pneumoniae|trimethoprim-sulfamethoxazole": {
+    "total": 4405,
+    "disjoint": 4211,
+    "disjoint_R": 2827,
+    "disjoint_S": 1384,
+    "leaked": 194,
+    "intermediate_or_blank": 1229
+  },
+  "Klebsiella pneumoniae|ciprofloxacin": {
+    "total": 4617,
+    "disjoint": 4386,
+    "disjoint_R": 2970,
+    "disjoint_S": 1416,
+    "leaked": 231,
+    "intermediate_or_blank": 2088
+  },
+  "Klebsiella pneumoniae|meropenem": {
+    "total": 4870,
+    "disjoint": 4622,
+    "disjoint_R": 1724,
+    "disjoint_S": 2898,
+    "leaked": 248,
+    "intermediate_or_blank": 3195
+  },
+  "Klebsiella pneumoniae|tetracycline": {
+    "total": 2128,
+    "disjoint": 1995,
+    "disjoint_R": 1059,
+    "disjoint_S": 936,
+    "leaked": 133,
+    "intermediate_or_blank": 749
+  },
+  "Salmonella enterica|trimethoprim-sulfamethoxazole": {
+    "total": 26683,
+    "disjoint": 26622,
+    "disjoint_R": 1667,
+    "disjoint_S": 24955,
+    "leaked": 61,
+    "intermediate_or_blank": 1561
+  },
+  "Salmonella enterica|ciprofloxacin": {
+    "total": 25003,
+    "disjoint": 24972,
+    "disjoint_R": 2434,
+    "disjoint_S": 22538,
+    "leaked": 31,
+    "intermediate_or_blank": 7243
+  },
+  "Salmonella enterica|ceftriaxone": {
+    "total": 22917,
+    "disjoint": 22889,
+    "disjoint_R": 1630,
+    "disjoint_S": 21259,
+    "leaked": 28,
+    "intermediate_or_blank": 4013
+  },
+  "Salmonella enterica|gentamicin": {
+    "total": 25751,
+    "disjoint": 25732,
+    "disjoint_R": 1123,
+    "disjoint_S": 24609,
+    "leaked": 19,
+    "intermediate_or_blank": 4498
+  },
+  "Salmonella enterica|tetracycline": {
+    "total": 26381,
+    "disjoint": 26354,
+    "disjoint_R": 6941,
+    "disjoint_S": 19413,
+    "leaked": 27,
+    "intermediate_or_blank": 4031
+  },
+  "Escherichia coli|gentamicin": {
+    "total": 16124,
+    "disjoint": 15706,
+    "disjoint_R": 1944,
+    "disjoint_S": 13762,
+    "leaked": 418,
+    "intermediate_or_blank": 5404
+  },
+  "Escherichia coli|ciprofloxacin": {
+    "total": 16442,
+    "disjoint": 16022,
+    "disjoint_R": 3068,
+    "disjoint_S": 12954,
+    "leaked": 420,
+    "intermediate_or_blank": 3815
+  },
+  "Pseudomonas aeruginosa|ciprofloxacin": {
+    "total": 1265,
+    "disjoint": 1232,
+    "disjoint_R": 798,
+    "disjoint_S": 434,
+    "leaked": 33,
+    "intermediate_or_blank": 605
+  },
+  "Pseudomonas aeruginosa|meropenem": {
+    "total": 1258,
+    "disjoint": 1221,
+    "disjoint_R": 718,
+    "disjoint_S": 503,
+    "leaked": 37,
+    "intermediate_or_blank": 194
+  },
+  "Campylobacter jejuni|ciprofloxacin": {
+    "total": 5957,
+    "disjoint": 5891,
+    "disjoint_R": 1533,
+    "disjoint_S": 4358,
+    "leaked": 66,
+    "intermediate_or_blank": 72
+  },
+  "Campylobacter jejuni|gentamicin": {
+    "total": 5857,
+    "disjoint": 5791,
+    "disjoint_R": 80,
+    "disjoint_S": 5711,
+    "leaked": 66,
+    "intermediate_or_blank": 77
+  },
+  "Campylobacter jejuni|tetracycline": {
+    "total": 5956,
+    "disjoint": 5890,
+    "disjoint_R": 2600,
+    "disjoint_S": 3290,
+    "leaked": 66,
+    "intermediate_or_blank": 72
+  },
+  "Mycobacterium tuberculosis|ciprofloxacin": {
+    "total": 555,
+    "disjoint": 555,
+    "disjoint_R": 126,
+    "disjoint_S": 429,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Acinetobacter baumannii|ciprofloxacin": {
+    "total": 1509,
+    "disjoint": 1497,
+    "disjoint_R": 1276,
+    "disjoint_S": 221,
+    "leaked": 12,
+    "intermediate_or_blank": 115
+  },
+  "Acinetobacter baumannii|gentamicin": {
+    "total": 1473,
+    "disjoint": 1458,
+    "disjoint_R": 1216,
+    "disjoint_S": 242,
+    "leaked": 15,
+    "intermediate_or_blank": 176
+  },
+  "Acinetobacter baumannii|meropenem": {
+    "total": 1188,
+    "disjoint": 1129,
+    "disjoint_R": 761,
+    "disjoint_S": 368,
+    "leaked": 59,
+    "intermediate_or_blank": 149
+  },
+  "Acinetobacter baumannii|tetracycline": {
+    "total": 1067,
+    "disjoint": 1016,
+    "disjoint_R": 753,
+    "disjoint_S": 263,
+    "leaked": 51,
+    "intermediate_or_blank": 75
+  },
+  "Acinetobacter baumannii|ceftriaxone": {
+    "total": 940,
+    "disjoint": 937,
+    "disjoint_R": 848,
+    "disjoint_S": 89,
+    "leaked": 3,
+    "intermediate_or_blank": 101
+  },
+  "Acinetobacter baumannii|trimethoprim-sulfamethoxazole": {
+    "total": 1018,
+    "disjoint": 999,
+    "disjoint_R": 792,
+    "disjoint_S": 207,
+    "leaked": 19,
+    "intermediate_or_blank": 73
+  },
+  "Escherichia coli|meropenem": {
+    "total": 13159,
+    "disjoint": 12768,
+    "disjoint_R": 98,
+    "disjoint_S": 12670,
+    "leaked": 391,
+    "intermediate_or_blank": 3675
+  },
+  "Escherichia coli|ceftriaxone": {
+    "total": 9174,
+    "disjoint": 8778,
+    "disjoint_R": 1544,
+    "disjoint_S": 7234,
+    "leaked": 396,
+    "intermediate_or_blank": 3319
+  },
+  "Escherichia coli|tetracycline": {
+    "total": 8733,
+    "disjoint": 8427,
+    "disjoint_R": 3312,
+    "disjoint_S": 5115,
+    "leaked": 306,
+    "intermediate_or_blank": 2086
+  },
+  "Escherichia coli|trimethoprim-sulfamethoxazole": {
+    "total": 12257,
+    "disjoint": 11902,
+    "disjoint_R": 2625,
+    "disjoint_S": 9277,
+    "leaked": 355,
+    "intermediate_or_blank": 4511
+  },
+  "Klebsiella quasipneumoniae|ciprofloxacin": {
+    "total": 8,
+    "disjoint": 8,
+    "disjoint_R": 5,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Klebsiella quasipneumoniae|gentamicin": {
+    "total": 10,
+    "disjoint": 10,
+    "disjoint_R": 5,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Klebsiella quasipneumoniae|tetracycline": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Klebsiella quasipneumoniae|ceftriaxone": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Klebsiella quasipneumoniae|meropenem": {
+    "total": 8,
+    "disjoint": 8,
+    "disjoint_R": 2,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Pseudomonas aeruginosa|gentamicin": {
+    "total": 717,
+    "disjoint": 685,
+    "disjoint_R": 366,
+    "disjoint_S": 319,
+    "leaked": 32,
+    "intermediate_or_blank": 59
+  },
+  "Mycobacterium tuberculosis|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Mycobacterium tuberculosis|rifampicin": {
+    "total": 38774,
+    "disjoint": 26677,
+    "disjoint_R": 7926,
+    "disjoint_S": 18751,
+    "leaked": 12097,
+    "intermediate_or_blank": 1762
+  },
+  "Mycobacterium tuberculosis|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Salmonella enterica|meropenem": {
+    "total": 19485,
+    "disjoint": 19464,
+    "disjoint_R": 0,
+    "disjoint_S": 19464,
+    "leaked": 21,
+    "intermediate_or_blank": 645
+  },
+  "Campylobacter coli|ciprofloxacin": {
+    "total": 1802,
+    "disjoint": 1768,
+    "disjoint_R": 437,
+    "disjoint_S": 1331,
+    "leaked": 34,
+    "intermediate_or_blank": 36
+  },
+  "Campylobacter coli|tetracycline": {
+    "total": 1801,
+    "disjoint": 1767,
+    "disjoint_R": 923,
+    "disjoint_S": 844,
+    "leaked": 34,
+    "intermediate_or_blank": 37
+  },
+  "Campylobacter coli|gentamicin": {
+    "total": 1797,
+    "disjoint": 1763,
+    "disjoint_R": 92,
+    "disjoint_S": 1671,
+    "leaked": 34,
+    "intermediate_or_blank": 41
+  },
+  "Mycobacterium tuberculosis|isoniazid": {
+    "total": 37824,
+    "disjoint": 25773,
+    "disjoint_R": 8757,
+    "disjoint_S": 17016,
+    "leaked": 12051,
+    "intermediate_or_blank": 1805
+  },
+  "Streptococcus pneumoniae|meropenem": {
+    "total": 2056,
+    "disjoint": 2056,
+    "disjoint_R": 75,
+    "disjoint_S": 1981,
+    "leaked": 0,
+    "intermediate_or_blank": 274
+  },
+  "Streptococcus pneumoniae|tetracycline": {
+    "total": 8363,
+    "disjoint": 8363,
+    "disjoint_R": 2879,
+    "disjoint_S": 5484,
+    "leaked": 0,
+    "intermediate_or_blank": 2087
+  },
+  "Streptococcus pneumoniae|rifampicin": {
+    "total": 1082,
+    "disjoint": 1082,
+    "disjoint_R": 0,
+    "disjoint_S": 1082,
+    "leaked": 0,
+    "intermediate_or_blank": 92
+  },
+  "Enterococcus faecium|gentamicin": {
+    "total": 614,
+    "disjoint": 614,
+    "disjoint_R": 110,
+    "disjoint_S": 504,
+    "leaked": 0,
+    "intermediate_or_blank": 155
+  },
+  "Enterococcus faecium|ciprofloxacin": {
+    "total": 369,
+    "disjoint": 369,
+    "disjoint_R": 335,
+    "disjoint_S": 34,
+    "leaked": 0,
+    "intermediate_or_blank": 120
+  },
+  "Enterococcus faecium|tetracycline": {
+    "total": 401,
+    "disjoint": 401,
+    "disjoint_R": 300,
+    "disjoint_S": 101,
+    "leaked": 0,
+    "intermediate_or_blank": 114
+  },
+  "Streptococcus pneumoniae|ceftriaxone": {
+    "total": 941,
+    "disjoint": 941,
+    "disjoint_R": 161,
+    "disjoint_S": 780,
+    "leaked": 0,
+    "intermediate_or_blank": 5312
+  },
+  "Staphylococcus aureus|trimethoprim-sulfamethoxazole": {
+    "total": 2083,
+    "disjoint": 2053,
+    "disjoint_R": 224,
+    "disjoint_S": 1829,
+    "leaked": 30,
+    "intermediate_or_blank": 160
+  },
+  "Neisseria gonorrhoeae|gentamicin": {
+    "total": 9,
+    "disjoint": 9,
+    "disjoint_R": 0,
+    "disjoint_S": 9,
+    "leaked": 0,
+    "intermediate_or_blank": 1228
+  },
+  "Enterobacter cloacae|trimethoprim-sulfamethoxazole": {
+    "total": 108,
+    "disjoint": 99,
+    "disjoint_R": 61,
+    "disjoint_S": 38,
+    "leaked": 9,
+    "intermediate_or_blank": 136
+  },
+  "Providencia stuartii|trimethoprim-sulfamethoxazole": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Serratia marcescens|trimethoprim-sulfamethoxazole": {
+    "total": 49,
+    "disjoint": 49,
+    "disjoint_R": 6,
+    "disjoint_S": 43,
+    "leaked": 0,
+    "intermediate_or_blank": 38
+  },
+  "Proteus mirabilis|trimethoprim-sulfamethoxazole": {
+    "total": 39,
+    "disjoint": 39,
+    "disjoint_R": 29,
+    "disjoint_S": 10,
+    "leaked": 0,
+    "intermediate_or_blank": 46
+  },
+  "Shigella sonnei|trimethoprim-sulfamethoxazole": {
+    "total": 1139,
+    "disjoint": 1139,
+    "disjoint_R": 796,
+    "disjoint_S": 343,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Morganella morganii|trimethoprim-sulfamethoxazole": {
+    "total": 17,
+    "disjoint": 17,
+    "disjoint_R": 9,
+    "disjoint_S": 8,
+    "leaked": 0,
+    "intermediate_or_blank": 43
+  },
+  "Providencia rettgeri|trimethoprim-sulfamethoxazole": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 4,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 6
+  },
+  "Shigella flexneri|trimethoprim-sulfamethoxazole": {
+    "total": 207,
+    "disjoint": 207,
+    "disjoint_R": 138,
+    "disjoint_S": 69,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Salmonella Infantis|trimethoprim-sulfamethoxazole": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 3,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter cloacae|ciprofloxacin": {
+    "total": 146,
+    "disjoint": 138,
+    "disjoint_R": 89,
+    "disjoint_S": 49,
+    "leaked": 8,
+    "intermediate_or_blank": 450
+  },
+  "Providencia stuartii|ciprofloxacin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 1,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Serratia marcescens|ciprofloxacin": {
+    "total": 51,
+    "disjoint": 51,
+    "disjoint_R": 15,
+    "disjoint_S": 36,
+    "leaked": 0,
+    "intermediate_or_blank": 244
+  },
+  "Proteus mirabilis|ciprofloxacin": {
+    "total": 37,
+    "disjoint": 37,
+    "disjoint_R": 30,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 48
+  },
+  "Shigella sonnei|ciprofloxacin": {
+    "total": 1586,
+    "disjoint": 1586,
+    "disjoint_R": 625,
+    "disjoint_S": 961,
+    "leaked": 0,
+    "intermediate_or_blank": 41
+  },
+  "Morganella morganii|ciprofloxacin": {
+    "total": 15,
+    "disjoint": 15,
+    "disjoint_R": 8,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 43
+  },
+  "Providencia rettgeri|ciprofloxacin": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 3,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Shigella flexneri|ciprofloxacin": {
+    "total": 383,
+    "disjoint": 383,
+    "disjoint_R": 50,
+    "disjoint_S": 333,
+    "leaked": 0,
+    "intermediate_or_blank": 10
+  },
+  "Salmonella Infantis|ciprofloxacin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 1,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Enterobacter cloacae|gentamicin": {
+    "total": 135,
+    "disjoint": 126,
+    "disjoint_R": 37,
+    "disjoint_S": 89,
+    "leaked": 9,
+    "intermediate_or_blank": 569
+  },
+  "Providencia stuartii|gentamicin": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 4,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Serratia marcescens|gentamicin": {
+    "total": 51,
+    "disjoint": 51,
+    "disjoint_R": 8,
+    "disjoint_S": 43,
+    "leaked": 0,
+    "intermediate_or_blank": 255
+  },
+  "Proteus mirabilis|gentamicin": {
+    "total": 36,
+    "disjoint": 36,
+    "disjoint_R": 12,
+    "disjoint_S": 24,
+    "leaked": 0,
+    "intermediate_or_blank": 49
+  },
+  "Shigella sonnei|gentamicin": {
+    "total": 1480,
+    "disjoint": 1480,
+    "disjoint_R": 513,
+    "disjoint_S": 967,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Morganella morganii|gentamicin": {
+    "total": 15,
+    "disjoint": 15,
+    "disjoint_R": 4,
+    "disjoint_S": 11,
+    "leaked": 0,
+    "intermediate_or_blank": 44
+  },
+  "Providencia rettgeri|gentamicin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 2,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 10
+  },
+  "Salmonella Infantis|gentamicin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 1,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 3
+  },
+  "Enterobacter cloacae|meropenem": {
+    "total": 133,
+    "disjoint": 124,
+    "disjoint_R": 49,
+    "disjoint_S": 75,
+    "leaked": 9,
+    "intermediate_or_blank": 131
+  },
+  "Providencia stuartii|meropenem": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 2,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Serratia marcescens|meropenem": {
+    "total": 51,
+    "disjoint": 51,
+    "disjoint_R": 17,
+    "disjoint_S": 34,
+    "leaked": 0,
+    "intermediate_or_blank": 44
+  },
+  "Proteus mirabilis|meropenem": {
+    "total": 35,
+    "disjoint": 35,
+    "disjoint_R": 4,
+    "disjoint_S": 31,
+    "leaked": 0,
+    "intermediate_or_blank": 48
+  },
+  "Shigella sonnei|meropenem": {
+    "total": 883,
+    "disjoint": 883,
+    "disjoint_R": 0,
+    "disjoint_S": 883,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Morganella morganii|meropenem": {
+    "total": 15,
+    "disjoint": 15,
+    "disjoint_R": 3,
+    "disjoint_S": 12,
+    "leaked": 0,
+    "intermediate_or_blank": 43
+  },
+  "Salmonella Infantis|meropenem": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 0,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Clostridioides difficile|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 593
+  },
+  "Providencia rettgeri|meropenem": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 5,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Enterobacter cloacae|tetracycline": {
+    "total": 77,
+    "disjoint": 70,
+    "disjoint_R": 26,
+    "disjoint_S": 44,
+    "leaked": 7,
+    "intermediate_or_blank": 388
+  },
+  "Providencia stuartii|tetracycline": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 3,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia marcescens|tetracycline": {
+    "total": 37,
+    "disjoint": 37,
+    "disjoint_R": 32,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 210
+  },
+  "Proteus mirabilis|tetracycline": {
+    "total": 27,
+    "disjoint": 27,
+    "disjoint_R": 25,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 10
+  },
+  "Shigella sonnei|tetracycline": {
+    "total": 1426,
+    "disjoint": 1426,
+    "disjoint_R": 951,
+    "disjoint_S": 475,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Morganella morganii|tetracycline": {
+    "total": 18,
+    "disjoint": 18,
+    "disjoint_R": 12,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Providencia rettgeri|tetracycline": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 6,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Shigella flexneri|tetracycline": {
+    "total": 214,
+    "disjoint": 214,
+    "disjoint_R": 192,
+    "disjoint_S": 22,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Salmonella Infantis|tetracycline": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 5,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterococcus faecium|rifampicin": {
+    "total": 23,
+    "disjoint": 23,
+    "disjoint_R": 17,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Enterobacter cloacae|ceftriaxone": {
+    "total": 132,
+    "disjoint": 123,
+    "disjoint_R": 117,
+    "disjoint_S": 6,
+    "leaked": 9,
+    "intermediate_or_blank": 77
+  },
+  "Providencia stuartii|ceftriaxone": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 1,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Serratia marcescens|ceftriaxone": {
+    "total": 47,
+    "disjoint": 47,
+    "disjoint_R": 18,
+    "disjoint_S": 29,
+    "leaked": 0,
+    "intermediate_or_blank": 37
+  },
+  "Proteus mirabilis|ceftriaxone": {
+    "total": 36,
+    "disjoint": 36,
+    "disjoint_R": 26,
+    "disjoint_S": 10,
+    "leaked": 0,
+    "intermediate_or_blank": 46
+  },
+  "Shigella sonnei|ceftriaxone": {
+    "total": 1336,
+    "disjoint": 1336,
+    "disjoint_R": 426,
+    "disjoint_S": 910,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Morganella morganii|ceftriaxone": {
+    "total": 15,
+    "disjoint": 15,
+    "disjoint_R": 13,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 43
+  },
+  "Providencia rettgeri|ceftriaxone": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 6,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 6
+  },
+  "Shigella flexneri|ceftriaxone": {
+    "total": 387,
+    "disjoint": 387,
+    "disjoint_R": 14,
+    "disjoint_S": 373,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Salmonella Infantis|ceftriaxone": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 5,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Clostridioides difficile|ceftriaxone": {
+    "total": 59,
+    "disjoint": 59,
+    "disjoint_R": 42,
+    "disjoint_S": 17,
+    "leaked": 0,
+    "intermediate_or_blank": 593
+  },
+  "Neisseria meningitidis|ceftriaxone": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 0,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Neisseria meningitidis|ciprofloxacin": {
+    "total": 496,
+    "disjoint": 496,
+    "disjoint_R": 14,
+    "disjoint_S": 482,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Neisseria meningitidis|rifampicin": {
+    "total": 632,
+    "disjoint": 632,
+    "disjoint_R": 2,
+    "disjoint_S": 630,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Campylobacter jejuni|meropenem": {
+    "total": 311,
+    "disjoint": 311,
+    "disjoint_R": 0,
+    "disjoint_S": 311,
+    "leaked": 0,
+    "intermediate_or_blank": 493
+  },
+  "Campylobacter coli|meropenem": {
+    "total": 218,
+    "disjoint": 218,
+    "disjoint_R": 0,
+    "disjoint_S": 218,
+    "leaked": 0,
+    "intermediate_or_blank": 22
+  },
+  "Shigella boydii|ceftriaxone": {
+    "total": 25,
+    "disjoint": 25,
+    "disjoint_R": 13,
+    "disjoint_S": 12,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella dysenteriae|ceftriaxone": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 0,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella|ceftriaxone": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella boydii|ciprofloxacin": {
+    "total": 12,
+    "disjoint": 12,
+    "disjoint_R": 0,
+    "disjoint_S": 12,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella dysenteriae|ciprofloxacin": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 1,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella|ciprofloxacin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella boydii|trimethoprim-sulfamethoxazole": {
+    "total": 12,
+    "disjoint": 12,
+    "disjoint_R": 9,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella dysenteriae|trimethoprim-sulfamethoxazole": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 5,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella|trimethoprim-sulfamethoxazole": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 2,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella flexneri|gentamicin": {
+    "total": 382,
+    "disjoint": 382,
+    "disjoint_R": 9,
+    "disjoint_S": 373,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella boydii|gentamicin": {
+    "total": 12,
+    "disjoint": 12,
+    "disjoint_R": 0,
+    "disjoint_S": 12,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella dysenteriae|gentamicin": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 0,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella|gentamicin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella flexneri|meropenem": {
+    "total": 375,
+    "disjoint": 375,
+    "disjoint_R": 0,
+    "disjoint_S": 375,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella boydii|meropenem": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella|meropenem": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella dysenteriae|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella boydii|tetracycline": {
+    "total": 12,
+    "disjoint": 12,
+    "disjoint_R": 10,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella dysenteriae|tetracycline": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 4,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Shigella|tetracycline": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 2,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter hormaechei|ceftriaxone": {
+    "total": 79,
+    "disjoint": 79,
+    "disjoint_R": 72,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 126
+  },
+  "Enterobacter hormaechei|ciprofloxacin": {
+    "total": 81,
+    "disjoint": 81,
+    "disjoint_R": 29,
+    "disjoint_S": 52,
+    "leaked": 0,
+    "intermediate_or_blank": 131
+  },
+  "Enterobacter hormaechei|gentamicin": {
+    "total": 154,
+    "disjoint": 154,
+    "disjoint_R": 77,
+    "disjoint_S": 77,
+    "leaked": 0,
+    "intermediate_or_blank": 131
+  },
+  "Enterobacter hormaechei|meropenem": {
+    "total": 145,
+    "disjoint": 145,
+    "disjoint_R": 26,
+    "disjoint_S": 119,
+    "leaked": 0,
+    "intermediate_or_blank": 140
+  },
+  "Enterobacter hormaechei|tetracycline": {
+    "total": 81,
+    "disjoint": 81,
+    "disjoint_R": 31,
+    "disjoint_S": 50,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Enterobacter hormaechei|trimethoprim-sulfamethoxazole": {
+    "total": 86,
+    "disjoint": 86,
+    "disjoint_R": 32,
+    "disjoint_S": 54,
+    "leaked": 0,
+    "intermediate_or_blank": 126
+  },
+  "Enterobacter asburiae|ceftriaxone": {
+    "total": 11,
+    "disjoint": 11,
+    "disjoint_R": 10,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 63
+  },
+  "Enterobacter asburiae|ciprofloxacin": {
+    "total": 11,
+    "disjoint": 11,
+    "disjoint_R": 6,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 64
+  },
+  "Enterobacter asburiae|gentamicin": {
+    "total": 12,
+    "disjoint": 12,
+    "disjoint_R": 3,
+    "disjoint_S": 9,
+    "leaked": 0,
+    "intermediate_or_blank": 63
+  },
+  "Enterobacter asburiae|meropenem": {
+    "total": 12,
+    "disjoint": 12,
+    "disjoint_R": 5,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 64
+  },
+  "Enterobacter asburiae|tetracycline": {
+    "total": 9,
+    "disjoint": 9,
+    "disjoint_R": 1,
+    "disjoint_S": 8,
+    "leaked": 0,
+    "intermediate_or_blank": 12
+  },
+  "Enterobacter asburiae|trimethoprim-sulfamethoxazole": {
+    "total": 11,
+    "disjoint": 11,
+    "disjoint_R": 4,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 63
+  },
+  "Enterobacter kobei|ceftriaxone": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 6,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 33
+  },
+  "Enterobacter kobei|ciprofloxacin": {
+    "total": 10,
+    "disjoint": 10,
+    "disjoint_R": 2,
+    "disjoint_S": 8,
+    "leaked": 0,
+    "intermediate_or_blank": 34
+  },
+  "Enterobacter kobei|gentamicin": {
+    "total": 11,
+    "disjoint": 11,
+    "disjoint_R": 5,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 33
+  },
+  "Enterobacter kobei|meropenem": {
+    "total": 11,
+    "disjoint": 11,
+    "disjoint_R": 2,
+    "disjoint_S": 9,
+    "leaked": 0,
+    "intermediate_or_blank": 33
+  },
+  "Enterobacter kobei|tetracycline": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 1,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter kobei|trimethoprim-sulfamethoxazole": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 1,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 33
+  },
+  "Enterobacter roggenkampii|ceftriaxone": {
+    "total": 21,
+    "disjoint": 21,
+    "disjoint_R": 19,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 26
+  },
+  "Enterobacter roggenkampii|ciprofloxacin": {
+    "total": 20,
+    "disjoint": 20,
+    "disjoint_R": 1,
+    "disjoint_S": 19,
+    "leaked": 0,
+    "intermediate_or_blank": 27
+  },
+  "Enterobacter roggenkampii|gentamicin": {
+    "total": 21,
+    "disjoint": 21,
+    "disjoint_R": 0,
+    "disjoint_S": 21,
+    "leaked": 0,
+    "intermediate_or_blank": 26
+  },
+  "Enterobacter roggenkampii|meropenem": {
+    "total": 23,
+    "disjoint": 23,
+    "disjoint_R": 0,
+    "disjoint_S": 23,
+    "leaked": 0,
+    "intermediate_or_blank": 26
+  },
+  "Enterobacter roggenkampii|tetracycline": {
+    "total": 20,
+    "disjoint": 20,
+    "disjoint_R": 1,
+    "disjoint_S": 19,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter roggenkampii|trimethoprim-sulfamethoxazole": {
+    "total": 21,
+    "disjoint": 21,
+    "disjoint_R": 2,
+    "disjoint_S": 19,
+    "leaked": 0,
+    "intermediate_or_blank": 26
+  },
+  "Pseudomonas aeruginosa|ceftriaxone": {
+    "total": 56,
+    "disjoint": 56,
+    "disjoint_R": 52,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 70
+  },
+  "Pseudomonas aeruginosa|tetracycline": {
+    "total": 45,
+    "disjoint": 43,
+    "disjoint_R": 39,
+    "disjoint_S": 4,
+    "leaked": 2,
+    "intermediate_or_blank": 68
+  },
+  "Pseudomonas aeruginosa|trimethoprim-sulfamethoxazole": {
+    "total": 47,
+    "disjoint": 46,
+    "disjoint_R": 42,
+    "disjoint_S": 4,
+    "leaked": 1,
+    "intermediate_or_blank": 67
+  },
+  "Campylobacter lari|ciprofloxacin": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 7,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Campylobacter lari|gentamicin": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 0,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Campylobacter lari|tetracycline": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 0,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Streptococcus pneumoniae|ciprofloxacin": {
+    "total": 204,
+    "disjoint": 204,
+    "disjoint_R": 3,
+    "disjoint_S": 201,
+    "leaked": 0,
+    "intermediate_or_blank": 79
+  },
+  "Escherichia coli|rifampicin": {
+    "total": 45,
+    "disjoint": 43,
+    "disjoint_R": 36,
+    "disjoint_S": 7,
+    "leaked": 2,
+    "intermediate_or_blank": 117
+  },
+  "Acinetobacter baumannii|rifampicin": {
+    "total": 37,
+    "disjoint": 37,
+    "disjoint_R": 37,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Campylobacter coli|rifampicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 15
+  },
+  "Campylobacter jejuni|rifampicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 3
+  },
+  "Clostridioides difficile|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter aerogenes|ciprofloxacin": {
+    "total": 9,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 8,
+    "intermediate_or_blank": 19
+  },
+  "Enterobacter aerogenes|gentamicin": {
+    "total": 8,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 8,
+    "intermediate_or_blank": 17
+  },
+  "Enterobacter aerogenes|meropenem": {
+    "total": 8,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 8,
+    "intermediate_or_blank": 18
+  },
+  "Enterobacter aerogenes|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 22
+  },
+  "Enterobacter aerogenes|ceftriaxone": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 1,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 10
+  },
+  "Enterobacter aerogenes|tetracycline": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 13
+  },
+  "Enterobacter bugandensis|ceftriaxone": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 3,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Enterobacter bugandensis|ciprofloxacin": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 1,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Enterobacter bugandensis|gentamicin": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 0,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Enterobacter bugandensis|meropenem": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 2,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Enterobacter bugandensis|tetracycline": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 1,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter bugandensis|trimethoprim-sulfamethoxazole": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 1,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Enterobacter cancerogenus|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter cancerogenus|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter cancerogenus|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter cancerogenus|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter cancerogenus|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter chengduensis|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Enterobacter chengduensis|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Enterobacter chengduensis|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Enterobacter chengduensis|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Enterobacter chengduensis|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 7
+  },
+  "Enterobacter cloacae|rifampicin": {
+    "total": 3,
+    "disjoint": 2,
+    "disjoint_R": 1,
+    "disjoint_S": 1,
+    "leaked": 1,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter hormaechei|rifampicin": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 4,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter ludwigii|ceftriaxone": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 4,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 14
+  },
+  "Enterobacter ludwigii|ciprofloxacin": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 0,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 13
+  },
+  "Enterobacter ludwigii|gentamicin": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 0,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 13
+  },
+  "Enterobacter ludwigii|meropenem": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 1,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 13
+  },
+  "Enterobacter ludwigii|trimethoprim-sulfamethoxazole": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 0,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 13
+  },
+  "Enterobacter ludwigii|tetracycline": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 0,
+    "disjoint_S": 5,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter sichuanensis|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter sichuanensis|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter sichuanensis|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter sichuanensis|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter sichuanensis|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter soli|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter soli|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter soli|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter soli|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter soli|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Enterobacter sp.|ceftriaxone": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 4,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 19
+  },
+  "Enterobacter sp.|ciprofloxacin": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 3,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 45
+  },
+  "Enterobacter sp.|gentamicin": {
+    "total": 8,
+    "disjoint": 8,
+    "disjoint_R": 1,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 44
+  },
+  "Enterobacter sp.|meropenem": {
+    "total": 8,
+    "disjoint": 8,
+    "disjoint_R": 2,
+    "disjoint_S": 6,
+    "leaked": 0,
+    "intermediate_or_blank": 47
+  },
+  "Enterobacter sp.|tetracycline": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 3,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 14
+  },
+  "Enterobacter sp.|trimethoprim-sulfamethoxazole": {
+    "total": 8,
+    "disjoint": 8,
+    "disjoint_R": 5,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 44
+  },
+  "Enterococcus faecium|trimethoprim-sulfamethoxazole": {
+    "total": 5,
+    "disjoint": 5,
+    "disjoint_R": 3,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 9
+  },
+  "Haemophilus influenzae|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 14
+  },
+  "Haemophilus influenzae|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 14
+  },
+  "Haemophilus influenzae|tetracycline": {
+    "total": 88,
+    "disjoint": 88,
+    "disjoint_R": 1,
+    "disjoint_S": 87,
+    "leaked": 0,
+    "intermediate_or_blank": 14
+  },
+  "Haemophilus influenzae|trimethoprim-sulfamethoxazole": {
+    "total": 87,
+    "disjoint": 87,
+    "disjoint_R": 16,
+    "disjoint_S": 71,
+    "leaked": 0,
+    "intermediate_or_blank": 14
+  },
+  "Helicobacter pylori|tetracycline": {
+    "total": 54,
+    "disjoint": 54,
+    "disjoint_R": 0,
+    "disjoint_S": 54,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Klebsiella pneumoniae|rifampicin": {
+    "total": 54,
+    "disjoint": 52,
+    "disjoint_R": 49,
+    "disjoint_S": 3,
+    "leaked": 2,
+    "intermediate_or_blank": 17
+  },
+  "Morganella morganii|rifampicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 2
+  },
+  "Proteus alimentorum|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus alimentorum|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus alimentorum|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus alimentorum|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus alimentorum|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus columbae|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Proteus columbae|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Proteus columbae|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Proteus columbae|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Proteus columbae|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Proteus mirabilis|rifampicin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 2,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus terrae|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus terrae|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus terrae|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus terrae|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus terrae|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus vulgaris|ceftriaxone": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 3,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Proteus vulgaris|ciprofloxacin": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 0,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Proteus vulgaris|gentamicin": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Proteus vulgaris|meropenem": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 0,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Proteus vulgaris|trimethoprim-sulfamethoxazole": {
+    "total": 4,
+    "disjoint": 4,
+    "disjoint_R": 1,
+    "disjoint_S": 3,
+    "leaked": 0,
+    "intermediate_or_blank": 5
+  },
+  "Providencia alcalifaciens|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Providencia alcalifaciens|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Providencia alcalifaciens|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Providencia alcalifaciens|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Providencia alcalifaciens|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Pseudomonas aeruginosa|rifampicin": {
+    "total": 39,
+    "disjoint": 39,
+    "disjoint_R": 38,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 10
+  },
+  "Salmonella sp.|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Salmonella sp.|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia liquefaciens|ceftriaxone": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 2,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 3
+  },
+  "Serratia liquefaciens|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Serratia liquefaciens|gentamicin": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 2,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 3
+  },
+  "Serratia liquefaciens|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 3
+  },
+  "Serratia liquefaciens|trimethoprim-sulfamethoxazole": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 2,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 3
+  },
+  "Serratia liquefaciens|tetracycline": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 2,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia nematodiphila|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia nematodiphila|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia nematodiphila|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia nematodiphila|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia nematodiphila|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia rubidaea|ciprofloxacin": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 0,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia rubidaea|gentamicin": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 0,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia rubidaea|meropenem": {
+    "total": 7,
+    "disjoint": 7,
+    "disjoint_R": 0,
+    "disjoint_S": 7,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia rubidaea|trimethoprim-sulfamethoxazole": {
+    "total": 6,
+    "disjoint": 6,
+    "disjoint_R": 2,
+    "disjoint_S": 4,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia sp.|ciprofloxacin": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 2
+  },
+  "Serratia sp.|gentamicin": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 2
+  },
+  "Serratia sp.|tetracycline": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 2
+  },
+  "Serratia ureilytica|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Serratia ureilytica|ciprofloxacin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Serratia ureilytica|gentamicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Serratia ureilytica|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Serratia ureilytica|trimethoprim-sulfamethoxazole": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Staphylococcus aureus|ceftriaxone": {
+    "total": 14,
+    "disjoint": 7,
+    "disjoint_R": 1,
+    "disjoint_S": 6,
+    "leaked": 7,
+    "intermediate_or_blank": 0
+  },
+  "Staphylococcus aureus|meropenem": {
+    "total": 11,
+    "disjoint": 7,
+    "disjoint_R": 0,
+    "disjoint_S": 7,
+    "leaked": 4,
+    "intermediate_or_blank": 3
+  },
+  "Salmonella enterica|rifampicin": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 4
+  },
+  "Serratia rubidaea|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia rubidaea|tetracycline": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Streptococcus pneumoniae|gentamicin": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia sp.|ceftriaxone": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 1,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia sp.|meropenem": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia sp.|trimethoprim-sulfamethoxazole": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus vulgaris|tetracycline": {
+    "total": 3,
+    "disjoint": 3,
+    "disjoint_R": 3,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia marcescens|rifampicin": {
+    "total": 2,
+    "disjoint": 2,
+    "disjoint_R": 0,
+    "disjoint_S": 2,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus terrae|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter roggenkampii|rifampicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus sp.|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus sp.|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus sp.|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus sp.|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus sp.|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Proteus sp.|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterococcus faecium|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterococcus faecium|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Proteus columbae|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter mori|ceftriaxone": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter mori|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter mori|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter mori|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter mori|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Enterobacter mori|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia fonticola|ceftriaxone": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  },
+  "Serratia fonticola|meropenem": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia fonticola|tetracycline": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia fonticola|ciprofloxacin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia fonticola|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Serratia fonticola|trimethoprim-sulfamethoxazole": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 0,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Clostridioides difficile|tetracycline": {
+    "total": 23,
+    "disjoint": 23,
+    "disjoint_R": 22,
+    "disjoint_S": 1,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Providencia sp.|gentamicin": {
+    "total": 1,
+    "disjoint": 1,
+    "disjoint_R": 1,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 0
+  },
+  "Providencia sp.|meropenem": {
+    "total": 0,
+    "disjoint": 0,
+    "disjoint_R": 0,
+    "disjoint_S": 0,
+    "leaked": 0,
+    "intermediate_or_blank": 1
+  }
+}
