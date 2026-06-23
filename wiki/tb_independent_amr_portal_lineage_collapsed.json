@@ -1,0 +1,113 @@
+{
+  "n_isolates_with_vcf": 562,
+  "drugs": {
+    "rifampicin": {
+      "drug": "rifampicin",
+      "rule_status": "deterministic",
+      "n_isolates": 561,
+      "n_uncallable_abstain": 0,
+      "status": "TB_SUBSET_PLUMBING",
+      "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+      "lineage_collapsed": {
+        "sens": null,
+        "spec": 1.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 33,
+        "fn": 0,
+        "sens_wilson_ci": [
+          0.0,
+          1.0
+        ],
+        "spec_wilson_ci": [
+          0.896,
+          1.0
+        ],
+        "n_clusters_R": 0,
+        "n_clusters_S": 33,
+        "n_discordant": 9,
+        "n_cluster_abstain": 0,
+        "n_clusters_mixed_prediction": 9
+      },
+      "raw": {
+        "tp": 131,
+        "fp": 16,
+        "tn": 397,
+        "fn": 17,
+        "sens": 0.885,
+        "spec": 0.961
+      },
+      "effective_lineage_n": {
+        "R": 0,
+        "S": 33
+      },
+      "raw_to_lineage_shrinkage": {
+        "R": [
+          148,
+          0
+        ],
+        "S": [
+          413,
+          33
+        ]
+      },
+      "plumbing_note": "convenience/partial cohort \u2014 metrics are NOT the baseline; fetch the full per-drug prevalence-preserving cohort to earn the label",
+      "callability_assessed": false,
+      "n_unassigned_lineage": 9
+    },
+    "isoniazid": {
+      "drug": "isoniazid",
+      "rule_status": "deterministic",
+      "n_isolates": 562,
+      "n_uncallable_abstain": 0,
+      "status": "TB_SUBSET_PLUMBING",
+      "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+      "lineage_collapsed": {
+        "sens": 0.0,
+        "spec": 1.0,
+        "tp": 0,
+        "fp": 0,
+        "tn": 25,
+        "fn": 5,
+        "sens_wilson_ci": [
+          0.0,
+          0.434
+        ],
+        "spec_wilson_ci": [
+          0.867,
+          1.0
+        ],
+        "n_clusters_R": 5,
+        "n_clusters_S": 25,
+        "n_discordant": 12,
+        "n_cluster_abstain": 0,
+        "n_clusters_mixed_prediction": 8
+      },
+      "raw": {
+        "tp": 159,
+        "fp": 4,
+        "tn": 360,
+        "fn": 39,
+        "sens": 0.803,
+        "spec": 0.989
+      },
+      "effective_lineage_n": {
+        "R": 5,
+        "S": 25
+      },
+      "raw_to_lineage_shrinkage": {
+        "R": [
+          198,
+          5
+        ],
+        "S": [
+          364,
+          25
+        ]
+      },
+      "plumbing_note": "convenience/partial cohort \u2014 metrics are NOT the baseline; fetch the full per-drug prevalence-preserving cohort to earn the label",
+      "callability_assessed": false,
+      "n_unassigned_lineage": 9
+    }
+  }
+}
