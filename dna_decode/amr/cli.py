@@ -35,6 +35,11 @@ from dna_decode.data.fungal_amr import (
     call_from_observed_substitutions,
     supported_fungal_drugs,
 )
+from dna_decode.data.sarscov2_amr import (
+    all_supported_sarscov2_drugs,
+    call_sarscov2_observed,
+    gene_for_sarscov2_drug,
+)
 from dna_decode.data.hiv_amr import (
     all_supported_hiv_drugs,
     call_hiv_observed,
@@ -59,6 +64,11 @@ _DEFAULT_NA_REF = Path(__file__).resolve().parent.parent.parent / "data" / "anti
 # by drug -> gene (RT NNRTI/NRTI, PR PI, IN INSTI, CA CAI). References are HXB2 (K03455.1) in-frame CDS,
 # consensus-B WT at every catalogued DRM position.
 _HIV_REF_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "hiv_ref"
+# SARS-CoV-2 Mpro (3CLpro) target-site path — the next free-independent-label viral cell (validated vs the
+# Stanford CoV-RDB measured fold-change). Committed Wuhan-Hu-1 NC_045512.2 nsp5 reference, WT at every
+# catalogued position (catalytic dyad H41/C145 + E166 verified).
+_DEFAULT_SARSCOV2_MPRO_REF = (Path(__file__).resolve().parent.parent.parent / "data" / "sarscov2_ref"
+                              / "SARSCoV2_Mpro_NC045512_cds.fna")
 _DEFAULT_HIV_RT_REF = _HIV_REF_DIR / "HIV1_RT_HXB2_cds.fna"
 _DEFAULT_HIV_PR_REF = _HIV_REF_DIR / "HIV1_PR_HXB2_cds.fna"
 _DEFAULT_HIV_IN_REF = _HIV_REF_DIR / "HIV1_IN_HXB2_cds.fna"
@@ -270,6 +280,47 @@ def _antiviral_main(args) -> int:
     return _emit_target_site(rec, call, sample_id, args)
 
 
+def _sarscov2_main(args) -> int:
+    """SARS-CoV-2 Mpro target-site decoder branch (nirmatrelvir/ensitrelvir/lufotrelvir; validated vs CoV-RDB).
+
+    Wheel-only `--observed Mpro:E166V[,...]`, OR genome-FASTA mode (`--genome-fasta X.fna`) which BLASTs the
+    committed Wuhan-Hu-1 Mpro CDS reference vs the assembly and codon-maps the substitutions
+    (scripts/sarscov2_caller; needs BLAST+), mirroring the HIV / influenza-NA paths."""
+    if args.organism == "Escherichia":            # relabel the bacterial default on this path
+        args.organism = "SARS-CoV-2"
+    gene = gene_for_sarscov2_drug(args.drug)       # Mpro
+    if args.observed is not None:
+        call = call_sarscov2_observed(args.drug, _parse_observed(args.observed))
+        sample_id = args.sample_id or "observed"
+        prov = {"mode": "observed-substitutions", "observed": args.observed}
+    elif args.genome_fasta is not None:
+        if not args.genome_fasta.exists():
+            print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
+            return 2
+        ref = args.sarscov2_mpro_ref
+        if not Path(ref).exists():
+            print(f"ERROR: genome mode for {args.drug} (gene {gene}) needs a committed SARS-CoV-2 Mpro CDS "
+                  f"reference at {ref}. Use --observed {gene}:SUB for a wheel-only call.", file=sys.stderr)
+            return 3
+        sample_id = args.sample_id or args.genome_fasta.stem
+        try:
+            from scripts.sarscov2_caller import call_sarscov2_target   # repo-only; needs BLAST+
+        except ImportError as e:
+            print(f"ERROR: SARS-CoV-2 genome mode needs scripts/sarscov2_caller + BLAST+ ({e}). "
+                  f"Use --observed {gene}:SUB for a wheel-only call.", file=sys.stderr)
+            return 3
+        call = call_sarscov2_target(str(args.genome_fasta), str(ref), args.drug, gene)
+        prov = {"mode": "blast-sarscov2-mpro", "gene": gene, "sarscov2_mpro_ref": str(ref)}
+    else:
+        print(f"ERROR: SARS-CoV-2 drug needs --observed {gene}:SUB[,...] (e.g. {gene}:E166V) OR "
+              "--genome-fasta X.fna.", file=sys.stderr)
+        return 2
+    rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
+                              caller_name="dna_decode-sarscov2-mpro-target-mutation-v0",
+                              source="Stanford CoV-RDB selection-derived Mpro catalog (validate vs measured fold-change)")
+    return _emit_target_site(rec, call, sample_id, args)
+
+
 def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path,
                               organism: str = "Escherichia") -> Path:
     """Genome mode: lazily import the repo's AMRFinder Docker runner (not in the wheel).
@@ -299,7 +350,7 @@ def main(argv=None) -> int:
     ap.add_argument("--drug", required=True,
                     choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
                                    | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
-                                   | set(all_supported_hiv_drugs())),
+                                   | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs())),
                     metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), "
                                          "antimalarial (BLAST-Pfkelch13 engine), or antiviral "
                                          "(BLAST-influenza-NA engine) drug")
@@ -328,6 +379,9 @@ def main(argv=None) -> int:
                     help="[HIV] in-frame integrase CDS reference FASTA (default: committed HXB2 K03455.1:4230-5093)")
     ap.add_argument("--hiv-ca-ref", type=Path, default=_DEFAULT_HIV_CA_REF,
                     help="[HIV] in-frame capsid CDS reference FASTA (default: committed HXB2 K03455.1:1186-1878)")
+    ap.add_argument("--sarscov2-mpro-ref", type=Path, default=_DEFAULT_SARSCOV2_MPRO_REF,
+                    help="[SARS-CoV-2] in-frame Mpro (3CLpro/nsp5) CDS reference FASTA (default: committed "
+                         "Wuhan-Hu-1 NC_045512.2:10055-10972 allele, WT at every catalogued position)")
     ap.add_argument("--sample-id", default=None)
     ap.add_argument("--organism", default="Escherichia",
                     help="AMRFinder -O organism for genome mode (organism-specific QRDR point-mutation "
@@ -371,6 +425,13 @@ def main(argv=None) -> int:
                   file=sys.stderr)
             return 2
         return _hiv_main(args)
+
+    if args.drug in all_supported_sarscov2_drugs():
+        if args.amrfinder_run is not None:
+            print("ERROR: --amrfinder-run is bacterial-only; SARS-CoV-2 drugs use --observed Mpro:SUB[,...]",
+                  file=sys.stderr)
+            return 2
+        return _sarscov2_main(args)
 
     if args.observed is not None:
         print("ERROR: --observed is fungal-only; bacterial drugs use --amrfinder-run or --genome-fasta",
