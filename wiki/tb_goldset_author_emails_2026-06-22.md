@@ -41,11 +41,11 @@ mmdebrahimi@gmail.com
 ---
 
 ## Email B — Ethiopia childhood TB 2026 (Abebaw et al., BMC Infect Dis)
-**To:** _[corresponding-author email — on the article's first page footnote "Correspondence to …" at
-https://doi.org/10.1186/s12879-026-13206-9 ; likely the senior author]_
+**To:** woldearegay.erku@aau.edu.et  (Dr Woldaregay Erku Abegaz, Dept. of Microbiology, Immunology &
+Parasitology, College of Health Sciences, Addis Ababa University — corresponding author, verified)
 **Subject:** Request: per-isolate measured RIF/INH DST for your childhood DR-TB WGS isolates (PRJNA1104194/1204469)
 
-Dear Dr [Surname],
+Dear Dr Erku Abegaz,
 
 I'm developing and independently validating an open, deterministic *M. tuberculosis* drug-resistance caller
 (a transparent rule from the WHO 2023 catalogue) and am looking for an independent, *measured-phenotype*
@@ -66,12 +66,12 @@ mmdebrahimi@gmail.com
 
 ---
 
-## Email C — India nationwide WGS (Tamilzhalagan et al., PRJNA1155695)
-**To:** _[corresponding-author email — from the Frontiers in Microbiology 2025 article author list /
-"Correspondence"; the BioProject is PRJNA1155695]_
+## Email C — India nationwide WGS (Tamilzhalagan et al., Front Microbiol 2024, PRJNA1155695)
+**To:** umadevi.kr@icmr.gov.in  (Dr Uma Devi Ranganathan, National Institute for Research in Tuberculosis,
+ICMR, Chennai — corresponding author, verified; paper PMC11750862, BioProject PRJNA1155695, 2,207 isolates)
 **Subject:** Request: per-isolate measured RIF/INH DST linked to accessions (PRJNA1155695)
 
-Dear Dr [Surname],
+Dear Dr Ranganathan,
 
 I'm developing and independently validating an open, deterministic *M. tuberculosis* drug-resistance caller
 (a transparent rule from the WHO 2023 catalogue) and need an independent, *measured-phenotype* benchmark
@@ -112,7 +112,8 @@ mmdebrahimi@gmail.com
 ### Notes
 - **Send Email A first** — it's fully addressed and covers the two cleanest datasets in one go (and Prof. Clark
   is a central figure in public TB genomics, so a positive reply may also point to other measured-DST sets).
-- For B and C, the corresponding-author address is on the article's first page ("Correspondence to …"); paste it
-  in. If you want, send me the addresses and I'll finalise.
+- **B and C are now finalised** with verified corresponding-author addresses (Dr Woldaregay Erku Abegaz, AAU,
+  `woldearegay.erku@aau.edu.et`; Dr Uma Devi Ranganathan, NIRT/ICMR, `umadevi.kr@icmr.gov.in`). All four ready
+  to send. Salutations adjustable if you prefer "Prof." — both titles weren't explicit in the articles.
 - The moment any of them replies with a per-isolate measured-DST CSV, the built pipeline turns it into a scored,
   leakage-checked independent number in one command.
