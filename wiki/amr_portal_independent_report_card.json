@@ -1,0 +1,500 @@
+{
+  "schema": "amr-portal-independent-report-card-v1",
+  "status_field": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL",
+  "n_cells": 25,
+  "n_scored_independent": 21,
+  "n_underpowered": 4,
+  "cells": [
+    {
+      "organism": "Escherichia coli",
+      "drug": "ceftriaxone",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 1544,
+      "n_S": 7234,
+      "sens": 0.9209844559585493,
+      "spec": 0.9183024606027095,
+      "accuracy": 0.9187742082478925,
+      "sens_ci95": [
+        0.9064598003392054,
+        0.9334194224443148
+      ],
+      "spec_ci95": [
+        0.9117662514496618,
+        0.9243946283352731
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Escherichia coli",
+      "drug": "ciprofloxacin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 3068,
+      "n_S": 12951,
+      "sens": 0.8367014341590613,
+      "spec": 0.9766813373484673,
+      "accuracy": 0.9498720269679756,
+      "sens_ci95": [
+        0.8232018490375462,
+        0.8493588715412753
+      ],
+      "spec_ci95": [
+        0.9739373692358212,
+        0.9791425974076923
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Escherichia coli",
+      "drug": "gentamicin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 1944,
+      "n_S": 13762,
+      "sens": 0.9274691358024691,
+      "spec": 0.9953495131521581,
+      "accuracy": 0.9869476633133835,
+      "sens_ci95": [
+        0.9150769003651906,
+        0.9381752326624642
+      ],
+      "spec_ci95": [
+        0.9940663431670976,
+        0.9963562111647785
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Escherichia coli",
+      "drug": "meropenem",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 98,
+      "n_S": 12670,
+      "sens": 0.7755102040816326,
+      "spec": 0.987687450670876,
+      "accuracy": 0.9860588972431078,
+      "sens_ci95": [
+        0.6834165090713726,
+        0.8468186796923545
+      ],
+      "spec_ci95": [
+        0.9856140127649877,
+        0.9894652402375115
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Escherichia coli",
+      "drug": "tetracycline",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 3310,
+      "n_S": 5113,
+      "sens": 0.9697885196374623,
+      "spec": 0.9870917269704674,
+      "accuracy": 0.980292057461712,
+      "sens_ci95": [
+        0.963390587107498,
+        0.975097239226748
+      ],
+      "spec_ci95": [
+        0.9836115715073486,
+        0.9898404892326205
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Klebsiella pneumoniae",
+      "drug": "ceftriaxone",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 2496,
+      "n_S": 874,
+      "sens": 0.9635416666666666,
+      "spec": 0.9050343249427918,
+      "accuracy": 0.9483679525222551,
+      "sens_ci95": [
+        0.9554474777222264,
+        0.9702111720098205
+      ],
+      "spec_ci95": [
+        0.8837871458213828,
+        0.9227364912448033
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Klebsiella pneumoniae",
+      "drug": "ciprofloxacin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "calibrated_registry",
+      "n_R": 2970,
+      "n_S": 1415,
+      "sens": 0.7545454545454545,
+      "spec": 0.9943462897526502,
+      "accuracy": 0.831927023945268,
+      "sens_ci95": [
+        0.738745450900081,
+        0.7696878160230798
+      ],
+      "spec_ci95": [
+        0.9888831682385975,
+        0.9971324659238066
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Klebsiella pneumoniae",
+      "drug": "gentamicin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 2026,
+      "n_S": 2904,
+      "sens": 0.9284304047384008,
+      "spec": 0.9628099173553719,
+      "accuracy": 0.9486815415821501,
+      "sens_ci95": [
+        0.9163762107754622,
+        0.938862936949168
+      ],
+      "spec_ci95": [
+        0.9552934882306233,
+        0.9691034940534186
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Klebsiella pneumoniae",
+      "drug": "meropenem",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 1724,
+      "n_S": 2898,
+      "sens": 0.9477958236658933,
+      "spec": 0.8585231193926847,
+      "accuracy": 0.8918217221981826,
+      "sens_ci95": [
+        0.9362645505902504,
+        0.9573358813011915
+      ],
+      "spec_ci95": [
+        0.8453590633300998,
+        0.8707379145338885
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Klebsiella pneumoniae",
+      "drug": "tetracycline",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 1059,
+      "n_S": 936,
+      "sens": 0.7308781869688386,
+      "spec": 0.9797008547008547,
+      "accuracy": 0.8476190476190476,
+      "sens_ci95": [
+        0.7033670332492421,
+        0.7567203400714861
+      ],
+      "spec_ci95": [
+        0.9685133204421084,
+        0.9869668370652842
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Salmonella enterica",
+      "drug": "ceftriaxone",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 1629,
+      "n_S": 21259,
+      "sens": 0.9521178637200737,
+      "spec": 0.9982125217554918,
+      "accuracy": 0.9949318420132821,
+      "sens_ci95": [
+        0.9406431052226338,
+        0.9614652193080493
+      ],
+      "spec_ci95": [
+        0.9975476414621673,
+        0.998697375948864
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Salmonella enterica",
+      "drug": "ciprofloxacin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "calibrated_registry",
+      "n_R": 2434,
+      "n_S": 22538,
+      "sens": 0.9067378800328677,
+      "spec": 0.9644600230721448,
+      "accuracy": 0.9588338939612366,
+      "sens_ci95": [
+        0.8945354059346357,
+        0.9176584626087513
+      ],
+      "spec_ci95": [
+        0.961962654804474,
+        0.9667990839879768
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Salmonella enterica",
+      "drug": "gentamicin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 1122,
+      "n_S": 24608,
+      "sens": 0.9117647058823529,
+      "spec": 0.9906128088426528,
+      "accuracy": 0.9871745044694908,
+      "sens_ci95": [
+        0.8937318361462141,
+        0.9269875261512885
+      ],
+      "spec_ci95": [
+        0.9893290299240272,
+        0.9917434307405986
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Salmonella enterica",
+      "drug": "meropenem",
+      "tier": "UNDERPOWERED",
+      "routing": "drug_rule_default",
+      "n_R": 0,
+      "n_S": 19464,
+      "sens": null,
+      "spec": 1.0,
+      "accuracy": 1.0,
+      "sens_ci95": null,
+      "spec_ci95": [
+        0.999802669444362,
+        1.0
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Salmonella enterica",
+      "drug": "tetracycline",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 6941,
+      "n_S": 19411,
+      "sens": 0.957787062382942,
+      "spec": 0.9916026995002833,
+      "accuracy": 0.982695810564663,
+      "sens_ci95": [
+        0.9527979185557696,
+        0.9622697483583327
+      ],
+      "spec_ci95": [
+        0.9902181514743106,
+        0.9927927014187669
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella flexneri",
+      "drug": "ceftriaxone",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 14,
+      "n_S": 373,
+      "sens": 1.0,
+      "spec": 0.9865951742627346,
+      "accuracy": 0.9870801033591732,
+      "sens_ci95": [
+        0.7846829880728186,
+        1.0
+      ],
+      "spec_ci95": [
+        0.9690083309825474,
+        0.9942611169764891
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella flexneri",
+      "drug": "ciprofloxacin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 50,
+      "n_S": 333,
+      "sens": 0.9,
+      "spec": 0.996996996996997,
+      "accuracy": 0.9843342036553525,
+      "sens_ci95": [
+        0.7863950966521162,
+        0.956524876008429
+      ],
+      "spec_ci95": [
+        0.9831880109448199,
+        0.9994697130417662
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella flexneri",
+      "drug": "gentamicin",
+      "tier": "UNDERPOWERED",
+      "routing": "drug_rule_default",
+      "n_R": 9,
+      "n_S": 373,
+      "sens": 1.0,
+      "spec": 1.0,
+      "accuracy": 1.0,
+      "sens_ci95": [
+        0.7008472464490407,
+        1.0
+      ],
+      "spec_ci95": [
+        0.98980579638766,
+        1.0
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella flexneri",
+      "drug": "meropenem",
+      "tier": "UNDERPOWERED",
+      "routing": "drug_rule_default",
+      "n_R": 0,
+      "n_S": 375,
+      "sens": null,
+      "spec": 1.0,
+      "accuracy": 1.0,
+      "sens_ci95": null,
+      "spec_ci95": [
+        0.9898596141500828,
+        1.0
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella flexneri",
+      "drug": "tetracycline",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 192,
+      "n_S": 22,
+      "sens": 0.9895833333333334,
+      "spec": 0.9090909090909091,
+      "accuracy": 0.9813084112149533,
+      "sens_ci95": [
+        0.9628207069011787,
+        0.9971387705540709
+      ],
+      "spec_ci95": [
+        0.7218461934161421,
+        0.9747051037171622
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella sonnei",
+      "drug": "ceftriaxone",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 426,
+      "n_S": 910,
+      "sens": 0.9882629107981221,
+      "spec": 0.9945054945054945,
+      "accuracy": 0.9925149700598802,
+      "sens_ci95": [
+        0.9728218135210072,
+        0.9949765568554292
+      ],
+      "spec_ci95": [
+        0.9872024978075018,
+        0.9976508947279223
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella sonnei",
+      "drug": "ciprofloxacin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 625,
+      "n_S": 961,
+      "sens": 0.7296,
+      "spec": 0.9968782518210197,
+      "accuracy": 0.8915510718789408,
+      "sens_ci95": [
+        0.6934529264682332,
+        0.7629418158643353
+      ],
+      "spec_ci95": [
+        0.990861989003232,
+        0.9989377874574843
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella sonnei",
+      "drug": "gentamicin",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 513,
+      "n_S": 967,
+      "sens": 0.47173489278752434,
+      "spec": 0.9989658738366081,
+      "accuracy": 0.8162162162162162,
+      "sens_ci95": [
+        0.4289064479516301,
+        0.5149835175619816
+      ],
+      "spec_ci95": [
+        0.994165519817263,
+        0.9998174327055789
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella sonnei",
+      "drug": "meropenem",
+      "tier": "UNDERPOWERED",
+      "routing": "drug_rule_default",
+      "n_R": 0,
+      "n_S": 883,
+      "sens": null,
+      "spec": 1.0,
+      "accuracy": 1.0,
+      "sens_ci95": null,
+      "spec_ci95": [
+        0.9956682230513316,
+        0.9999999999999998
+      ],
+      "n_indeterminate": 0
+    },
+    {
+      "organism": "Shigella sonnei",
+      "drug": "tetracycline",
+      "tier": "SCORED_INDEPENDENT",
+      "routing": "drug_rule_default",
+      "n_R": 951,
+      "n_S": 475,
+      "sens": 0.9495268138801262,
+      "spec": 0.9747368421052631,
+      "accuracy": 0.9579242636746143,
+      "sens_ci95": [
+        0.9337150443260721,
+        0.9617214343526951
+      ],
+      "spec_ci95": [
+        0.9563657469817222,
+        0.9854905996681929
+      ],
+      "n_indeterminate": 0
+    }
+  ]
+}
