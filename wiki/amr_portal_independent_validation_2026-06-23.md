@@ -20,6 +20,35 @@ calls the **FROZEN `amr_rules.call_resistance` unchanged** → confusion vs the 
 HIV has, now delivered for the deployed bacterial core — for free. The tet number especially: the deployed
 config was tuned on a noisy N=12 (acc 0.833); the independent N=8,423 confirms it at 0.980.
 
+## Cross-organism independent validation (added — the rules + calibrated registry GENERALIZE)
+The same frozen scorer, routed per organism (E. coli/Shigella → DRUG_RULE default; Klebsiella/Salmonella →
+the OPT-IN calibrated registry for cipro), on the AMR Portal disjoint sets. **This is the first INDEPENDENT
+validation of the calibrated organism registry** — whose own provenance says "CALIBRATED configs need an
+INDEPENDENT cohort before becoming a default" (it was IN-SAMPLE N~30).
+
+| Cell | N (R/S) | sens | spec | accuracy | note |
+|---|---|---|---|---|---|
+| **Salmonella ciprofloxacin** | 2,434 / 22,538 | 0.907 | 0.964 | **0.959** | calibrated (broad) — VALIDATED at N=24,972 |
+| Salmonella ceftriaxone | 1,629 / 21,259 | 0.952 | 0.998 | **0.995** | default rule generalizes |
+| Salmonella gentamicin | 1,122 / 24,608 | 0.912 | 0.991 | **0.987** | |
+| Salmonella tetracycline | 6,941 / 19,411 | 0.958 | 0.992 | **0.983** | |
+| **Klebsiella ciprofloxacin** | 2,970 / 1,415 | 0.755 | **0.994** | 0.832 | calibrated (qrdr_point + oqxAB-exclusion) — spec 0.994 CONFIRMS the efflux-exclusion design; sens 0.755 = the non-QRDR (plasmid qnr / porin) blind spot, now quantified |
+| Klebsiella gentamicin | 2,026 / 2,904 | 0.928 | 0.963 | 0.949 | default generalizes |
+| Klebsiella ceftriaxone | 2,496 / 874 | 0.964 | 0.905 | 0.948 | |
+| Klebsiella meropenem | 1,724 / 2,898 | 0.948 | 0.859 | 0.892 | |
+| Klebsiella tetracycline | 1,059 / 936 | 0.731 | 0.980 | 0.848 | sens-limited |
+| Shigella sonnei ceftriaxone | 426 / 910 | 0.988 | 0.995 | **0.993** | Shigella shares E. coli rules |
+| Shigella sonnei tetracycline | 951 / 475 | 0.950 | 0.975 | 0.958 | |
+| Shigella sonnei ciprofloxacin | 625 / 961 | 0.730 | 0.997 | 0.892 | sens-limited (plasmid/single-QRDR) |
+| Shigella sonnei gentamicin | 513 / 967 | 0.472 | 0.999 | 0.816 | low sens — aminoglycoside mechanism the gene rule misses |
+
+**Headline:** the deterministic decoder generalizes across the Enterobacterales + Salmonella on independent
+data — Salmonella 0.96–0.995, E. coli 0.92–0.99, Klebsiella 0.83–0.95, Shigella 0.82–0.99. The calibrated
+Salmonella/Klebsiella cipro configs are now independently validated (Salmonella excellent; Klebsiella highly
+SPECIFIC with the intended oqxAB-exclusion, but sens-limited by non-QRDR mechanisms — a real, now-measured
+ceiling, not a regression). Salmonella + Shigella meropenem have ZERO resistant isolates (not powered;
+carbapenem-R absent in these species' disjoint sets) — reported, not hidden.
+
 ## Honest reading (the rule's known shape shows through, correctly)
 - **cipro sens 0.837 < spec 0.977** — the QRDR-threshold-2 rule UNDER-calls some R (single-QRDR + plasmid-
   mediated quinolone resistance qnr/aac(6')-Ib-cr are below the 2-point threshold by design). A documented

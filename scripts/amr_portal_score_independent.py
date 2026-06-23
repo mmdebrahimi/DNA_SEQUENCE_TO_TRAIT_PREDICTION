@@ -38,11 +38,18 @@ from scripts.amr_portal_feasibility import (  # noqa: E402  (reuse the verified 
 )
 
 GENO_PARQUET = Path("D:/dna_decode_cache/data files donwload/amr_portal/genotype.parquet")
-# the frozen bacterial cells (organism as the AMR Portal names it, our drug). TB uses a different rule (WHO
-# catalogue on VCF) -> not scored here; that is the documented next step.
-CELLS = [("Escherichia coli", "ciprofloxacin"), ("Escherichia coli", "ceftriaxone"),
-         ("Escherichia coli", "tetracycline"), ("Escherichia coli", "gentamicin"),
-         ("Escherichia coli", "meropenem")]
+# Per-organism rule routing: AMR-Portal organism name -> the `organism=` passed to call_resistance.
+#   None             -> the validated DRUG_RULE default (E. coli; Shigella shares the E. coli rules).
+#   "Klebsiella"/"Salmonella" -> the OPT-IN calibrated registry (cipro: Kleb qrdr_point+oqxAB-exclusion,
+#                    Salmonella broad) — IN-SAMPLE-calibrated (N~30) configs whose own provenance asks for an
+#                    INDEPENDENT cohort before becoming default; the AMR Portal disjoint set IS that cohort.
+RULE_ORGANISM = {
+    "Escherichia coli": None, "Shigella sonnei": None, "Shigella flexneri": None,
+    "Klebsiella pneumoniae": "Klebsiella", "Salmonella enterica": "Salmonella",
+}
+_DRUGS = ("ciprofloxacin", "ceftriaxone", "tetracycline", "gentamicin", "meropenem")
+# the frozen bacterial cells across organisms. TB uses a different rule (WHO catalogue on VCF) -> not here.
+CELLS = [(org, drug) for org in RULE_ORGANISM for drug in _DRUGS]
 _MAIN_TSV_HEADER = "Element symbol\tMethod\tClass\tSubclass\tElement name\t% Identity to reference"
 
 
@@ -143,7 +150,8 @@ def score(cells=CELLS, pheno_parquet: Path = DEFAULT_PARQUET, geno_parquet: Path
                 # no genotype row for this BioSample = AMRFinder found NO AMR determinants -> empty main.tsv
                 dets = []
             tmp.write_text(genotype_to_main_tsv(dets), encoding="utf-8")
-            pred = call_resistance(tmp, drug, organism=None)["prediction"]   # FROZEN rule, validated path
+            # FROZEN rule; organism routes E. coli/Shigella -> DRUG_RULE default, Kleb/Salmonella -> calibrated.
+            pred = call_resistance(tmp, drug, organism=RULE_ORGANISM.get(org))["prediction"]
             if pred not in ("R", "S"):
                 n_indet += 1
                 continue
