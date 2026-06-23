@@ -42,11 +42,17 @@ config was tuned on a noisy N=12 (acc 0.833); the independent N=8,423 confirms i
    byte-unchanged (leak-guard green).
 4. **Measured phenotype = non-circular** (wet-lab MIC/disk, not a prediction).
 
-## Next (documented, not done)
-- **TB independent number.** The same data has 26 k disjoint M. tuberculosis isolates with measured DST +
-  AMRFinder rpoB/katG POINT calls. TB uses a DIFFERENT rule (the WHO catalogue on VCF, `organism_rules/tb_amr`),
-  so scoring it needs an AMR-Portal-POINT → WHO-catalogue adapter (rpoB_S450L → the catalogue determinant).
-  That is the clear next step — it would finally deliver the independent TB number the gold-set saga blocked.
+## Next (documented, not done) — and a TB honesty caveat
+- **Why the bacterial cells are a CLEAN test here:** our deployed bacterial rule IS an AMRFinder-determinant
+  rule, so the AMR Portal's AMRFinder genotype table is the EXACT right input — scoring it tests OUR rule.
+- **TB is NOT clean via this genotype table (a real confound, not just "an adapter").** Our TB rule is the
+  WHO-2023-catalogue on RAW per-isolate VCF (`organism_rules/tb_amr`). The AMR Portal genotype is AMRFinder's
+  own (narrower, catalogue-derived) TB POINT calls — scoring our WHO rule against AMRFinder's pre-filtered TB
+  calls would test AMRFinder's TB caller, not the WHO catalogue, AND mismatch the rule's raw-variant input.
+  So the 26 k disjoint M. tuberculosis isolates here give a free independent **phenotype** + **accession set**,
+  but the TB independent number needs the RAW variants (fetch the assemblies the AMR Portal links → call
+  variants → score the WHO rule), i.e. the heavier genome-fetch path — not this table. This is the honest TB
+  next step (and it's now unblocked on the LABEL, which was the binding constraint).
 - **Tighten with BioSample resolution** (Gate-0) for the headline-publishable number.
 - **Candidate NEW cells.** Salmonella, Shigella, N. gonorrhoeae, Klebsiella, Pseudomonas, Acinetobacter each
   have a powered disjoint measured-AST set here (the 74 cells) — each a free new cell.
