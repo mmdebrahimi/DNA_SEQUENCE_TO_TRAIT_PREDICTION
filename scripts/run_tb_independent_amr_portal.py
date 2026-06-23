@@ -73,21 +73,43 @@ def fetch_assembly(gca: str, dest: Path) -> bool:
         return False
 
 
-def align_all(progress=True) -> int:
-    """One docker run: minimap2+paftools over every staged .fna lacking a .vcf. Returns #produced."""
+def align_all(progress=True, chunk: int = 250) -> int:
+    """Align every staged .fna lacking a .vcf, in CHUNKED, per-chunk-fault-tolerant Docker containers.
+
+    One short-lived container per `chunk` assemblies (vs one long-lived container over thousands — the
+    documented Docker D:-mount-churn wedge risk on an unattended multi-hour run). A chunk that throws
+    (container/mount death) is logged and SKIPPED; the next chunk proceeds. Missing VCFs are re-aligned on
+    the next call (skip-existing) — so a re-run fills any gaps. Returns #VCFs produced this call."""
     todo = [f for f in sorted(ASM.glob("*.fna")) if not (VCF / f"{f.stem}.vcf").exists()]
     if not todo:
         return 0
-    inner = ('for f in /data/asm/*.fna; do b=$(basename "$f" .fna); '
+    # each container aligns at most `chunk` still-missing .fna then EXITS (short-lived -> D: mount stays
+    # fresh). The inner loop skips already-produced VCFs, so successive containers make forward progress.
+    inner = (f'c=0; for f in /data/asm/*.fna; do b=$(basename "$f" .fna); '
              '[ -s "/data/vcf/$b.vcf" ] && continue; '
              'minimap2 -cx asm5 --cs /data/ref/H37Rv.fna "$f" 2>/dev/null '
              '| sort -k6,6 -k8,8n | paftools.js call -f /data/ref/H37Rv.fna - 2>/dev/null '
-             '> "/data/vcf/$b.vcf"; done')
-    cmd = ["docker", "run", "--rm", "-v", f"{WORK}:/data", IMG, "bash", "-c", inner]
+             '> "/data/vcf/$b.vcf"; '
+             f'c=$((c+1)); [ $c -ge {chunk} ] && break; done')
     if progress:
-        print(f"  aligning {len(todo)} assemblies in one container...")
-    subprocess.run(cmd, check=True, env={"MSYS_NO_PATHCONV": "1", **__import__("os").environ})
-    return sum(1 for f in todo if (VCF / f"{f.stem}.vcf").exists())
+        print(f"  aligning {len(todo)} assemblies in short-lived chunks of {chunk}...")
+    made = 0
+    max_containers = (len(todo) // chunk) + 3
+    for _ in range(max_containers):
+        cmd = ["docker", "run", "--rm", "-v", f"{WORK}:/data", IMG, "bash", "-c", inner]
+        try:
+            subprocess.run(cmd, check=True, timeout=3600,
+                           env={"MSYS_NO_PATHCONV": "1", **os.environ})
+        except Exception as e:                          # container/mount death -> next container resumes
+            print(f"  align chunk FAILED ({type(e).__name__}: {e}); continuing", file=sys.stderr)
+        new = sum(1 for f in todo if (VCF / f"{f.stem}.vcf").exists())
+        if progress:
+            print(f"    ...{new}/{len(todo)} aligned")
+        if new >= len(todo) or new == made:             # done, or a chunk made zero progress (give up pass)
+            made = new
+            break
+        made = new
+    return made
 
 
 def _pass_mask(vcf_text: str) -> str:
