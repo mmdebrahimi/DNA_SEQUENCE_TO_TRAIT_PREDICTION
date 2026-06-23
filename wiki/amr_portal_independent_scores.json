@@ -1,0 +1,132 @@
+{
+  "Escherichia coli|gentamicin": {
+    "organism": "Escherichia coli",
+    "drug": "gentamicin",
+    "confusion": {
+      "TP": 1803,
+      "FP": 64,
+      "TN": 13698,
+      "FN": 141
+    },
+    "n_R": 1944,
+    "n_S": 13762,
+    "sens": 0.9274691358024691,
+    "spec": 0.9953495131521581,
+    "accuracy": 0.9869476633133835,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.9150769003651906,
+      0.9381752326624642
+    ],
+    "spec_wilson95": [
+      0.9940663431670976,
+      0.9963562111647785
+    ],
+    "powered": true,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  },
+  "Escherichia coli|ciprofloxacin": {
+    "organism": "Escherichia coli",
+    "drug": "ciprofloxacin",
+    "confusion": {
+      "TP": 2567,
+      "FP": 302,
+      "TN": 12649,
+      "FN": 501
+    },
+    "n_R": 3068,
+    "n_S": 12951,
+    "sens": 0.8367014341590613,
+    "spec": 0.9766813373484673,
+    "accuracy": 0.9498720269679756,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.8232018490375462,
+      0.8493588715412753
+    ],
+    "spec_wilson95": [
+      0.9739373692358212,
+      0.9791425974076923
+    ],
+    "powered": true,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  },
+  "Escherichia coli|meropenem": {
+    "organism": "Escherichia coli",
+    "drug": "meropenem",
+    "confusion": {
+      "TP": 76,
+      "FP": 156,
+      "TN": 12514,
+      "FN": 22
+    },
+    "n_R": 98,
+    "n_S": 12670,
+    "sens": 0.7755102040816326,
+    "spec": 0.987687450670876,
+    "accuracy": 0.9860588972431078,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.6834165090713726,
+      0.8468186796923545
+    ],
+    "spec_wilson95": [
+      0.9856140127649877,
+      0.9894652402375115
+    ],
+    "powered": true,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  },
+  "Escherichia coli|tetracycline": {
+    "organism": "Escherichia coli",
+    "drug": "tetracycline",
+    "confusion": {
+      "TP": 3210,
+      "FP": 66,
+      "TN": 5047,
+      "FN": 100
+    },
+    "n_R": 3310,
+    "n_S": 5113,
+    "sens": 0.9697885196374623,
+    "spec": 0.9870917269704674,
+    "accuracy": 0.980292057461712,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.963390587107498,
+      0.975097239226748
+    ],
+    "spec_wilson95": [
+      0.9836115715073486,
+      0.9898404892326205
+    ],
+    "powered": true,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  },
+  "Escherichia coli|ceftriaxone": {
+    "organism": "Escherichia coli",
+    "drug": "ceftriaxone",
+    "confusion": {
+      "TP": 1422,
+      "FP": 591,
+      "TN": 6643,
+      "FN": 122
+    },
+    "n_R": 1544,
+    "n_S": 7234,
+    "sens": 0.9209844559585493,
+    "spec": 0.9183024606027095,
+    "accuracy": 0.9187742082478925,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.9064598003392054,
+      0.9334194224443148
+    ],
+    "spec_wilson95": [
+      0.9117662514496618,
+      0.9243946283352731
+    ],
+    "powered": true,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  }
+}
