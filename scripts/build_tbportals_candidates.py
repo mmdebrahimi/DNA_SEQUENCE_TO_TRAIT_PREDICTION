@@ -42,6 +42,19 @@ SUSCEPTIBLE_TOKENS = ("suscept", "sensitive")  # "Susceptible", "Sensitive", "S"
 RIF_TOKENS = ("rifampicin", "rifampin", "rif")
 INH_TOKENS = ("isoniazid", "inh")
 
+# --- TB Portals WIDE format (Patient_Cases spreadsheet; verified vs the 2026 data dictionary) ------------
+# Per-drug DST is one column per (method x drug): <method>_<drug>. Method is encoded in the column PREFIX.
+# Phenotypic (culture-based, measured -> KEEP): bactec_ (BACTEC MIC), le_ (Lowenstein-Jensen).
+# Molecular (genotype-derived -> DROP, gate G1): genexpert_, hain_ (Hain LPA), lpaother_, truenat_.
+TBPORTALS_PHENO_COLS = {"RIF": ("bactec_rifampicin", "le_rifampicin"),
+                        "INH": ("bactec_isoniazid", "le_isoniazid")}
+TBPORTALS_MOLECULAR_COLS = ("genexpert_rifampicin", "hain_rifampicin", "lpaother_rifampicin",
+                            "truenat_rifampicin", "genexpert_isoniazid", "hain_isoniazid",
+                            "lpaother_isoniazid", "truenat_isoniazid")
+TBPORTALS_ID_COLS = ("condition_id", "patient_id", "identifier")
+# alias column -> TB Portals NCBI column. ncbi_biosample (SAMN/SAMEA) is the clean cross-archive leakage key.
+TBPORTALS_ALIAS_MAP = {"biosample_accession": "ncbi_biosample", "sample_accession": "ncbi_sra"}
+
 ACCESSION_HINTS = ("run_accession", "sra", "ena", "biosample", "sample_accession", "accession",
                    "ncbi", "srr", "err", "drr")
 DRUG_HINTS = ("drug", "antibiotic", "agent", "compound")
@@ -93,6 +106,74 @@ def classify_drug(s) -> str:
     if any(t in v for t in INH_TOKENS):
         return "INH"
     return ""
+
+
+def parse_tbportals_result(cell) -> str:
+    """Parse a TB Portals wide DST cell -> 'R' / 'S' / '' (blank).
+
+    Cells are coded R / S / I / Ind / Not Reported; multiple records are aggregated like '{S, R}'.
+    A cell carrying BOTH R and S (discordant aggregate) is ambiguous -> blank (no clean measured call)."""
+    v = _norm(cell)
+    if not v or "not reported" in v or v in ("nan", "none"):
+        return ""
+    up = v.upper()
+    import re as _re
+    has_r = bool(_re.search(r"\bR\b", up)) or "RESIST" in up
+    has_s = bool(_re.search(r"\bS\b", up)) or "SENSITIV" in up or "SUSCEPT" in up
+    if has_r and has_s:
+        return ""          # {S, R} discordant aggregate
+    if has_r:
+        return "R"
+    if has_s:
+        return "S"
+    return ""              # I / Ind / unrecognized
+
+
+def is_tbportals_wide(header: list[str]) -> bool:
+    """True if the export is the TB Portals Patient_Cases WIDE shape (method-prefixed drug columns)."""
+    hs = set(header)
+    return any(c in hs for cols in TBPORTALS_PHENO_COLS.values() for c in cols)
+
+
+def pivot_tbportals_wide(rows: list[dict], header: list[str]) -> tuple[list[dict], dict]:
+    """TB Portals Patient_Cases wide rows -> one candidate dict per isolate.
+
+    Combines phenotypic methods (bactec + le) per drug: agree -> that call; disagree -> blank (conflict).
+    Molecular columns (genexpert/hain/lpaother/truenat) are NEVER read (gate G1). Returns (candidates, stats)."""
+    hs = set(header)
+    id_col = next((c for c in TBPORTALS_ID_COLS if c in hs), None)
+    alias_present = {a: col for a, col in TBPORTALS_ALIAS_MAP.items() if col in hs}
+    stats = Counter()
+    stats["molecular_cols_ignored"] = sum(1 for c in TBPORTALS_MOLECULAR_COLS if c in hs)
+    candidates = []
+    for r in rows:
+        iso = str(r.get(id_col, "")).strip() if id_col else ""
+        if not iso:
+            stats["no_isolate_id"] += 1
+            continue
+        labels = {}
+        for drug, cols in TBPORTALS_PHENO_COLS.items():
+            calls = {parse_tbportals_result(r.get(c)) for c in cols if c in hs}
+            calls.discard("")
+            if calls == {"R"}:
+                labels[drug] = "R"; stats[f"kept_{drug.lower()}_R"] += 1
+            elif calls == {"S"}:
+                labels[drug] = "S"; stats[f"kept_{drug.lower()}_S"] += 1
+            elif len(calls) > 1:
+                labels[drug] = ""; stats[f"conflict_{drug.lower()}"] += 1   # bactec vs le disagree
+            else:
+                labels[drug] = ""
+        if not (labels.get("RIF") or labels.get("INH")):
+            stats["no_usable_label"] += 1
+            continue
+        row = {"strain_id": iso, "masked_vcf": "", "regeno_vcf": "",
+               "rif_label": labels.get("RIF", ""), "inh_label": labels.get("INH", ""),
+               "run_accession": "", "sample_accession": "", "biosample_accession": ""}
+        for alias, col in alias_present.items():
+            row[alias] = str(r.get(col, "")).strip()
+        candidates.append(row)
+    stats["n_isolates_usable"] = len(candidates)
+    return candidates, dict(stats)
 
 
 def detect_columns(header: list[str]) -> dict:
@@ -195,9 +276,28 @@ def _read_csv(path: Path) -> tuple[list[dict], list[str]]:
 
 def _probe(path: Path) -> int:
     rows, header = _read_csv(path)
+    print(f"[probe] {path}  rows={len(rows)}  delimiter-sniffed")
+    if is_tbportals_wide(header):
+        hs = set(header)
+        print("[probe] FORMAT: TB Portals WIDE (Patient_Cases) — method-prefixed drug columns detected.")
+        id_col = next((c for c in TBPORTALS_ID_COLS if c in hs), None)
+        print(f"[probe] isolate id column: {id_col or '(NONE — cannot key isolates!)'}")
+        for drug, pcols in TBPORTALS_PHENO_COLS.items():
+            present = [c for c in pcols if c in hs]
+            print(f"[probe]   {drug} phenotypic cols present (KEEP): {present or 'NONE'}")
+        molc = [c for c in TBPORTALS_MOLECULAR_COLS if c in hs]
+        print(f"[probe]   molecular cols present (DROP, gate G1): {molc}")
+        alias = {a: col for a, col in TBPORTALS_ALIAS_MAP.items() if col in hs}
+        print(f"[probe]   accession columns: {alias or '(NONE — leakage check will be weak)'}")
+        cands, stats = pivot_tbportals_wide(rows, header)
+        rif = sum(1 for c in cands if c["rif_label"] in ("R", "S"))
+        inh = sum(1 for c in cands if c["inh_label"] in ("R", "S"))
+        print(f"[probe]   -> {len(cands)} isolates with a phenotypic label  (RIF={rif}  INH={inh})")
+        print(f"[probe]   stats: {stats}")
+        return 0
     cols = detect_columns(header)
     acc = _accession_cols(header)
-    print(f"[probe] {path}  rows={len(rows)}  delimiter-sniffed")
+    print("[probe] FORMAT: generic long-format (no TB Portals wide columns detected).")
     print(f"[probe] columns ({len(header)}): {header}")
     print(f"[probe] detected roles: {cols}")
     print(f"[probe] accession-alias columns: {acc or '(NONE detected — leakage check will be weak)'}")
@@ -222,8 +322,37 @@ def _probe(path: Path) -> int:
     return 0
 
 
+def _write_candidates(cands: list[dict], out: Path) -> None:
+    fields = ["strain_id", "run_accession", "sample_accession", "biosample_accession",
+              "masked_vcf", "regeno_vcf", "rif_label", "inh_label"]
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with open(out, "w", encoding="utf-8", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=fields, delimiter="\t")
+        w.writeheader()
+        for c in cands:
+            w.writerow({k: c.get(k, "") for k in fields})
+
+
 def _build(path: Path, out: Path, *, strict_phenotypic: bool, no_method_ok: bool) -> int:
     rows, header = _read_csv(path)
+    # TB Portals wide path: phenotypic columns are hardcoded-known, so the molecular drop is structural.
+    if is_tbportals_wide(header):
+        cands, stats = pivot_tbportals_wide(rows, header)
+        _write_candidates(cands, out)
+        rif = sum(1 for c in cands if c["rif_label"] in ("R", "S"))
+        inh = sum(1 for c in cands if c["inh_label"] in ("R", "S"))
+        print(f"[build] TB Portals WIDE: wrote {len(cands)} isolates -> {out}")
+        print(f"[build] measured (phenotypic: bactec+le) labels: RIF={rif}  INH={inh}")
+        print(f"[build] molecular DST columns IGNORED by construction (gate G1): "
+              f"{stats.get('molecular_cols_ignored', 0)}")
+        if not any(a in header for a in TBPORTALS_ALIAS_MAP.values()):
+            print("WARNING: no ncbi_biosample/ncbi_sra column — add accessions before the leakage check.",
+                  file=sys.stderr)
+        print(f"[build] stats: {stats}")
+        print("Next:\n"
+              f"  uv run python scripts/validate_tb_goldset_candidates.py {out}\n"
+              f"  uv run python -m scripts.build_tb_goldset_manifest --candidates {out}")
+        return 0
     cols = detect_columns(header)
     acc = _accession_cols(header)
     if cols.get("method") is None and not no_method_ok:

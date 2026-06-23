@@ -10,21 +10,33 @@ YOU download and the single command chain that does the rest.
 - **Me (autonomous after that):** the **genomes are PUBLIC on SRA**, so once the export is on disk I run
   schema-probe → candidate TSV → CRyPTIC leakage check → SRA fetch → variant-call → score, no further gating.
 
-## Step 1 — Download from TB Portals (you)
-1. Log in to the TB Portals data portal (post-DUA): **tbportals.niaid.nih.gov** → Data Download (or the
-   Analytic API export).
-2. Export a table that has, per isolate, ALL of:
-   - an **isolate/condition/specimen id**,
-   - **DST results** for **Rifampicin** and **Isoniazid** (the per-drug R/S calls),
-   - the **DST method** (MGIT / LJ / proportion / Hain / Xpert / WGS …) — **REQUIRED** so we can keep only
-     *phenotypic* (measured) calls,
-   - a **genome accession** (SRA `SRR…` run, and/or `SAMN…` BioSample). This is what lets us fetch the genome
-     and prove non-overlap with CRyPTIC.
-3. Save it as CSV (or TSV) to the same place as the CRyPTIC dump, e.g.
-   `D:/dna_decode_cache/data files donwload/tbportals_dst_export.csv`.
+## Step 1 — Download from TB Portals (you) — schema VERIFIED vs the 2026 data dictionary
 
-> If the export splits DST and genomic accessions into two files, download both — tell me the two paths and
-> I'll join them on the isolate id.
+The Data API + cohort export are **temporarily unavailable (Jan 2026)** → it's manual file-share. But the
+dictionary confirms the **`Patient_Cases` spreadsheet carries BOTH the phenotypic DST AND the NCBI
+accessions** — so the load-bearing download is a SINGLE clinical table.
+
+1. Get the **`Patient_Cases` CSV** from **AccessClinicalData@NIAID** → https://accessclinicaldata.niaid.nih.gov/
+   (the page banner: clinical data requests moved here, separate from the genomic/imaging DUA you signed).
+2. *(Only if your `Patient_Cases` export lacks the `ncbi_*` columns)* also grab the **`Genomics` CSV** from
+   the **Aspera File Share** via https://datasharing.tbportals.niaid.nih.gov/ (it has `sra_id` +
+   `ncbi_biosample`; ignore its TB-Profiler prediction columns — those are genotypic, NOT labels).
+3. Save it next to the CRyPTIC dump, e.g.
+   `D:/dna_decode_cache/data files donwload/tbportals_patient_cases.csv`, and give me the path.
+
+### The exact columns (verified) — the adapter auto-detects this wide shape, no flags needed
+- **DST method is the column PREFIX** of `<method>_<drug>` in `Patient_Cases`:
+  - **KEEP (phenotypic, culture-based, measured):** `bactec_rifampicin`/`bactec_isoniazid` (BACTEC MIC) +
+    `le_rifampicin`/`le_isoniazid` (Löwenstein-Jensen).
+  - **DROP (molecular / genotype-derived — gate G1):** `genexpert_*`, `hain_*` (Hain LPA), `lpaother_*`,
+    `truenat_*`. The adapter **never reads** these — the circularity drop is structural, not a flag.
+- **Results:** `R`/`S`/`I`/`Ind`/`Not Reported`; multi-record aggregated like `{S, R}`. `{S,R}` (discordant)
+  → blank; bactec-vs-le disagreement → blank (only unambiguous R/S kept).
+- **id:** `condition_id` (fallback `patient_id`). **accessions:** `ncbi_biosample` (SAMN/SAMEA — the clean
+  CRyPTIC leakage key) + `ncbi_sra`.
+
+> One remaining possible gate: if `Patient_Cases` needs its own approval at AccessClinicalData@NIAID
+> (separate from the genomic DUA), that's the last external step — tell me if you hit it.
 
 ## Step 2 — I run this (autonomous once the file is on disk)
 ```bash
