@@ -27,11 +27,11 @@
     "n_clusters_mixed_prediction": 56
   },
   "raw": {
-    "tp": 3158,
+    "tp": 3166,
     "fp": 143,
     "tn": 5364,
-    "fn": 290,
-    "sens": 0.916,
+    "fn": 282,
+    "sens": 0.918,
     "spec": 0.974
   },
   "effective_lineage_n": {
@@ -48,7 +48,25 @@
       230
     ]
   },
-  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic-nucleotide variant match)",
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
   "callability_assessed": false,
-  "n_with_inscope_calls": 8774
+  "n_with_inscope_calls": 8774,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 6,
+    "exact_cryptic_targets": 6,
+    "complex_delins_unmapped": 0,
+    "isolates_with_indel_hit": 8,
+    "snv_to_R_flips": 8,
+    "flips_true_positive": 8,
+    "flips_false_positive": 0
+  },
+  "raw_snv_only": {
+    "tp": 3158,
+    "fp": 143,
+    "tn": 5364,
+    "fn": 290,
+    "sens": 0.916,
+    "spec": 0.974
+  }
 }

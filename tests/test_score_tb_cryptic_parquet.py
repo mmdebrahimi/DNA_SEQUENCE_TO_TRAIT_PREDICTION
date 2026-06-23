@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.score_tb_cryptic_parquet import (  # noqa: E402
-    load_labels, parse_cryptic_variant,
+    indel_determinant_targets, load_labels, parse_cryptic_variant, who_indel_to_cryptic_string,
 )
 from dna_decode.data.tb_who_catalogue import Determinant  # noqa: E402
 from dna_decode.organism_rules import tb_amr, tb_vcf  # noqa: E402
@@ -61,6 +61,42 @@ def test_load_labels(tmp_path):
     assert rif == {"iso1": "R", "iso4": "R"}        # iso2 LOW, iso3 blank excluded
     inh = load_labels(p, "INH")
     assert inh == {"iso1": "S", "iso2": "R", "iso3": "R"}   # iso4 'U' excluded
+
+
+def test_who_indel_to_cryptic_string_verified_examples():
+    """EXACT conversion verified against real CRyPTIC VARIANTS rows (scripts/_tb_indel_probe.py)."""
+    # rpoB Phe433dup insertion: 761102 A>ATTC -> 761102_ins_ttc (NOT 761103 — ins anchors at pos+len(ref)-1)
+    assert who_indel_to_cryptic_string(761102, "A", "ATTC") == "761102_ins_ttc"
+    # rpoB Thr444dup: 761135 G>GACC -> 761135_ins_acc
+    assert who_indel_to_cryptic_string(761135, "G", "GACC") == "761135_ins_acc"
+    # rpoB deletion: 761100 CAATTCATGG>C -> 761101_del_aattcatgg (del anchors at pos+len(alt))
+    assert who_indel_to_cryptic_string(761100, "CAATTCATGG", "C") == "761101_del_aattcatgg"
+    # katG single-base deletion: 2153894 GC>G -> 2153895_del_c
+    assert who_indel_to_cryptic_string(2153894, "GC", "G") == "2153895_del_c"
+
+
+def test_who_indel_to_cryptic_string_complex_returns_none():
+    # alt does not share a clean prefix/suffix with ref (true delins) -> unmapped (needs ref left-alignment)
+    assert who_indel_to_cryptic_string(100, "A", "CCAGCATT") is None     # ins not anchored on ref base
+    assert who_indel_to_cryptic_string(100, "ACGT", "TGCA") is None      # equal-len would be MNV not indel here
+    # an SNV (equal length) is not an indel target either
+    assert who_indel_to_cryptic_string(761155, "C", "T") is None
+
+
+def test_indel_determinant_targets_skips_snv_and_complex():
+    dets = [
+        Determinant("Rifampicin", "rpoB", "rpoB_p.Ser450Leu", "1) Assoc w R", "1", "NC_000962.3",
+                    761155, "C", "T"),                                   # SNV -> skipped
+        Determinant("Rifampicin", "rpoB", "rpoB_p.Phe433dup", "1) Assoc w R", "1", "NC_000962.3",
+                    761102, "A", "ATTC"),                                # ins -> 761102_ins_ttc
+        Determinant("Isoniazid", "katG", "katG_LoF", "1) Assoc w R", "1", "NC_000962.3",
+                    2153894, "GC", "G"),                                 # del -> 2153895_del_c
+        Determinant("Isoniazid", "katG", "katG_complex", "1) Assoc w R", "1", "NC_000962.3",
+                    100, "A", "CCAGCATT"),                               # complex -> skipped
+    ]
+    targets = indel_determinant_targets(dets)
+    assert set(targets) == {"761102_ins_ttc", "2153895_del_c"}
+    assert targets["761102_ins_ttc"].variant == "rpoB_p.Phe433dup"
 
 
 if __name__ == "__main__":

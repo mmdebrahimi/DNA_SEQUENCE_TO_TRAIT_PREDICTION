@@ -48,7 +48,25 @@
       203
     ]
   },
-  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic-nucleotide variant match)",
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
   "callability_assessed": false,
-  "n_with_inscope_calls": 9332
+  "n_with_inscope_calls": 9332,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 930,
+    "exact_cryptic_targets": 924,
+    "complex_delins_unmapped": 6,
+    "isolates_with_indel_hit": 0,
+    "snv_to_R_flips": 0,
+    "flips_true_positive": 0,
+    "flips_false_positive": 0
+  },
+  "raw_snv_only": {
+    "tp": 3970,
+    "fp": 57,
+    "tn": 4994,
+    "fn": 497,
+    "sens": 0.889,
+    "spec": 0.989
+  }
 }
