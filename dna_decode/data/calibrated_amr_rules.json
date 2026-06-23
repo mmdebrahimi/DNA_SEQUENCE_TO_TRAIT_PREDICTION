@@ -1,73 +1,99 @@
 {
-  "_provenance": "IN-SAMPLE calibration on cached NCBI/BV-BRC cohorts (N~30 each), 2026-06-08. OPT-IN: call_resistance uses these ONLY when organism= is passed; DRUG_RULE remains the default. CALIBRATED configs need an INDEPENDENT cohort before becoming a default; EXPRESSION_FLOOR abstain verdicts are conservative and safe to ship. See wiki/calibrate_organism_validation_2026-06-08.md.",
-  "_schema": "calibrated-amr-rules-v1",
-  "rules": {
-    "Campylobacter|ciprofloxacin": {
-      "verdict": "CALIBRATED",
-      "counter": "qrdr_point",
-      "threshold": 1,
-      "intrinsic_families_excluded": [],
-      "loo_balanced_accuracy": 1.0,
-      "n": 30,
-      "n_R": 15,
-      "n_S": 15
-    },
-    "Klebsiella|ciprofloxacin": {
-      "verdict": "CALIBRATED",
-      "counter": "qrdr_point",
-      "threshold": 2,
-      "intrinsic_families_excluded": [
-        "oqxA",
-        "oqxB"
-      ],
-      "loo_balanced_accuracy": 1.0,
-      "n": 30,
-      "n_R": 15,
-      "n_S": 15
-    },
-    "Salmonella|ciprofloxacin": {
-      "verdict": "CALIBRATED",
-      "counter": "broad",
-      "threshold": 1,
-      "intrinsic_families_excluded": [],
-      "loo_balanced_accuracy": 1.0,
-      "n": 30,
-      "n_R": 15,
-      "n_S": 15
-    },
-    "Acinetobacter|meropenem": {
-      "verdict": "EXPRESSION_FLOOR",
-      "counter": "broad",
-      "threshold": 1,
-      "intrinsic_families_excluded": [
-        "blaADC",
-        "blaOXA-51-family"
-      ],
-      "loo_balanced_accuracy": 0.1333,
-      "n": 30,
-      "n_R": 15,
-      "n_S": 15,
-      "expression_context": {
-        "enabled": false,
-        "experimental": true,
-        "is_ref": "data/isaba1_ref/ISAba1_ref.fna",
-        "target_ref": "data/isaba1_ref/OXA51fam_ref.fna",
-        "upstream_bp": 400,
-        "_note": "ISAba1-upstream-of-blaOXA-51 junction -> ABSTAIN->R override. Ships OFF/experimental; opt-in only after independent-cohort PROMOTE (s_upgrades==0 AND r_rescues>=1 AND n_S>=15). See plans/Expression_Context_Acinetobacter_Meropenem_Plan/."
-      }
-    },
-    "Pseudomonas_aeruginosa|meropenem": {
-      "verdict": "EXPRESSION_FLOOR",
-      "counter": "broad",
-      "threshold": 3,
-      "intrinsic_families_excluded": [
-        "blaOXA",
-        "blaPDC"
-      ],
-      "loo_balanced_accuracy": 0.6667,
-      "n": 30,
-      "n_R": 15,
-      "n_S": 15
-    }
+ "_provenance": "IN-SAMPLE calibration on cached NCBI/BV-BRC cohorts (N~30 each), 2026-06-08. OPT-IN: call_resistance uses these ONLY when organism= is passed; DRUG_RULE remains the default. CALIBRATED configs need an INDEPENDENT cohort before becoming a default; EXPRESSION_FLOOR abstain verdicts are conservative and safe to ship. See wiki/calibrate_organism_validation_2026-06-08.md. AMENDED 2026-06-23: Salmonella|ciprofloxacin + Klebsiella|ciprofloxacin promoted to status INDEPENDENTLY_VALIDATED (EBI AMR Portal provenance-disjoint cohort, see each entry's independent_validation block + wiki/amr_portal_independent_report_card.md). METADATA-ONLY: rule behavior (counter/threshold/intrinsic) byte-stable since b3761c8.",
+ "_schema": "calibrated-amr-rules-v1",
+ "rules": {
+  "Campylobacter|ciprofloxacin": {
+   "verdict": "CALIBRATED",
+   "counter": "qrdr_point",
+   "threshold": 1,
+   "intrinsic_families_excluded": [],
+   "loo_balanced_accuracy": 1.0,
+   "n": 30,
+   "n_R": 15,
+   "n_S": 15
+  },
+  "Klebsiella|ciprofloxacin": {
+   "verdict": "CALIBRATED",
+   "counter": "qrdr_point",
+   "threshold": 2,
+   "intrinsic_families_excluded": [
+    "oqxA",
+    "oqxB"
+   ],
+   "loo_balanced_accuracy": 1.0,
+   "n": 30,
+   "n_R": 15,
+   "n_S": 15,
+   "status": "INDEPENDENTLY_VALIDATED",
+   "independent_validation": {
+    "source": "EBI AMR Portal (CABBAGE) 2025-12 provenance-disjoint, measured AST",
+    "date": "2026-06-23",
+    "card": "wiki/amr_portal_independent_report_card.md",
+    "n": 4385,
+    "n_R": 2970,
+    "n_S": 1415,
+    "accuracy": 0.832,
+    "sens": 0.755,
+    "spec": 0.994,
+    "note": "METADATA-ONLY amendment to the 2026-06-13 freeze (b3761c8): verdict/counter/threshold/intrinsic_families UNCHANGED -> predictions byte-stable; only this provenance block added."
+   }
+  },
+  "Salmonella|ciprofloxacin": {
+   "verdict": "CALIBRATED",
+   "counter": "broad",
+   "threshold": 1,
+   "intrinsic_families_excluded": [],
+   "loo_balanced_accuracy": 1.0,
+   "n": 30,
+   "n_R": 15,
+   "n_S": 15,
+   "status": "INDEPENDENTLY_VALIDATED",
+   "independent_validation": {
+    "source": "EBI AMR Portal (CABBAGE) 2025-12 provenance-disjoint, measured AST",
+    "date": "2026-06-23",
+    "card": "wiki/amr_portal_independent_report_card.md",
+    "n": 24972,
+    "n_R": 2434,
+    "n_S": 22538,
+    "accuracy": 0.959,
+    "sens": 0.907,
+    "spec": 0.964,
+    "note": "METADATA-ONLY amendment to the 2026-06-13 freeze (b3761c8): verdict/counter/threshold/intrinsic_families UNCHANGED -> predictions byte-stable; only this provenance block added."
+   }
+  },
+  "Acinetobacter|meropenem": {
+   "verdict": "EXPRESSION_FLOOR",
+   "counter": "broad",
+   "threshold": 1,
+   "intrinsic_families_excluded": [
+    "blaADC",
+    "blaOXA-51-family"
+   ],
+   "loo_balanced_accuracy": 0.1333,
+   "n": 30,
+   "n_R": 15,
+   "n_S": 15,
+   "expression_context": {
+    "enabled": false,
+    "experimental": true,
+    "is_ref": "data/isaba1_ref/ISAba1_ref.fna",
+    "target_ref": "data/isaba1_ref/OXA51fam_ref.fna",
+    "upstream_bp": 400,
+    "_note": "ISAba1-upstream-of-blaOXA-51 junction -> ABSTAIN->R override. Ships OFF/experimental; opt-in only after independent-cohort PROMOTE (s_upgrades==0 AND r_rescues>=1 AND n_S>=15). See plans/Expression_Context_Acinetobacter_Meropenem_Plan/."
+   }
+  },
+  "Pseudomonas_aeruginosa|meropenem": {
+   "verdict": "EXPRESSION_FLOOR",
+   "counter": "broad",
+   "threshold": 3,
+   "intrinsic_families_excluded": [
+    "blaOXA",
+    "blaPDC"
+   ],
+   "loo_balanced_accuracy": 0.6667,
+   "n": 30,
+   "n_R": 15,
+   "n_S": 15
   }
+ }
 }

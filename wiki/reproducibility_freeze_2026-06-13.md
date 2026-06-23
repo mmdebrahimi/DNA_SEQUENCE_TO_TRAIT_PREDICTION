@@ -8,6 +8,18 @@ a clean base for any future prospective-lock validation.
 
 Frozen at commit **b3761c8** (origin/main, 2026-06-13).
 
+## AMENDMENT 2026-06-23 (metadata-only — predictions byte-stable)
+`calibrated_amr_rules.json` was amended (sha `d442b768…` → `ece6744b…`; the leak-guard test + the
+prospective-lock manifest were re-pinned to the new sha) to promote **`Salmonella|ciprofloxacin`** +
+**`Klebsiella|ciprofloxacin`** from in-sample `CALIBRATED` to `status: INDEPENDENTLY_VALIDATED`, after the EBI
+AMR Portal (CABBAGE) provenance-disjoint cohort met the registry's own "needs an independent cohort before
+becoming default" requirement (Salmonella cipro acc 0.959 / N=24,972; Klebsiella cipro spec 0.994 / sens
+0.755 / N=4,385 — `wiki/amr_portal_independent_report_card.md`). **This is METADATA-ONLY:** each entry's
+`verdict` / `counter` / `threshold` / `intrinsic_families_excluded` are byte-unchanged, so the decoder's R/S
+**predictions are byte-stable since b3761c8** — only an `independent_validation` provenance block + a `status`
+field were added. The prospective-lock's behavioral-cutoff claim (predictions can't have been tuned to
+post-2026-06-13 data) therefore HOLDS; only the documentation bytes (and thus the file sha) changed.
+
 ## What is frozen (the load-bearing units of release)
 
 | Unit | Path | What it is |

@@ -21,7 +21,7 @@ FROZEN_SHA = {
     "dna_decode/eval/amr_rules.py":
         "a983bf28e4ff4f89034b152404e49ec3aa6b3907ac81c670b14e60e7cfe1fad4",
     "dna_decode/data/calibrated_amr_rules.json":
-        "d442b768979f35caa9b33875bf289a21a736fec68f5d85f1483578c7cab352ad",
+        "ece6744bda6be543d41955a4e98ecb447426b34daa9417670b9233e388c96a69",
 }
 
 # TB rule-construction modules — must NOT read CRyPTIC phenotype columns.
