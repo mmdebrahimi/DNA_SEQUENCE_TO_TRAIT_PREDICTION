@@ -28,8 +28,12 @@ REPO = Path(__file__).resolve().parent.parent
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
+import os
+
 COHORT = REPO / "data" / "raw" / "tb_goldset" / "amr_portal_tb_disjoint_cohort.tsv"
-WORK = REPO / "data" / "raw" / "tb_indep"
+# Work dir holds transient assemblies (~1.3MB each) + VCFs + checkpoint. Override to D: for the full run
+# (C: is disk-tight; 2,845 assemblies ~3.7GB). $TB_INDEP_WORK or --work.
+WORK = Path(os.environ.get("TB_INDEP_WORK", str(REPO / "data" / "raw" / "tb_indep")))
 REF = WORK / "ref" / "H37Rv.fna"
 ASM, VCF = WORK / "asm", WORK / "vcf"
 CKPT = WORK / "results.jsonl"
@@ -140,7 +144,12 @@ def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--max", type=int, default=50, help="isolate cap (0 = full 2,845 cohort)")
+    ap.add_argument("--work", type=Path, default=None, help="work dir (default $TB_INDEP_WORK or repo; use D: for full run)")
     a = ap.parse_args(argv)
+    if a.work:
+        global WORK, REF, ASM, VCF, CKPT
+        WORK = a.work; REF = WORK / "ref" / "H37Rv.fna"; ASM = WORK / "asm"; VCF = WORK / "vcf"
+        CKPT = WORK / "results.jsonl"
     if not REF.exists():
         print(f"ERROR: H37Rv reference missing at {REF}", file=sys.stderr); return 2
     for d in (ASM, VCF):
