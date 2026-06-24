@@ -23,6 +23,7 @@ import yaml
 
 DEFAULT_CONFIG_PATH = Path("config/datasources.yaml")
 DEFAULT_DEVICE_ENV_VAR = "DNA_DECODE_DEVICE"
+DEFAULT_MODEL_SOURCE_ENV_VAR = "DNA_DECODE_MODEL_DIR"
 
 
 class FoundationModelError(Exception):
@@ -66,6 +67,10 @@ class FoundationModel(ABC):
     @property
     def max_context(self) -> int:
         return self.metadata.max_context
+
+    def _model_source(self) -> str:
+        """Return actual pretrained source for weight loading."""
+        return _resolve_model_source(self.metadata.name, self.metadata.huggingface_id)
 
     def _ensure_loaded(self) -> None:
         if not self._loaded:
@@ -201,12 +206,12 @@ class EvoModel(FoundationModel):
             ) from e
         try:
             self._tokenizer = AutoTokenizer.from_pretrained(
-                self.metadata.huggingface_id, trust_remote_code=True
+                self._model_source(), trust_remote_code=True
             )
             # Real loading would use load_in_4bit=True via bitsandbytes; deferred to
             # first real-data run to avoid dragging a multi-GB model download into tests.
             self._model = AutoModel.from_pretrained(
-                self.metadata.huggingface_id, trust_remote_code=True
+                self._model_source(), trust_remote_code=True
             ).to(self._device).eval()
         except Exception as e:
             raise FoundationModelError(f"Failed to load Evo weights: {e}") from e
@@ -229,15 +234,20 @@ class DNABERT2Model(FoundationModel):
 
     def _load_weights(self) -> None:
         try:
-            from transformers import AutoModel, AutoTokenizer
+            from transformers import AutoConfig, AutoModel, AutoTokenizer
         except ImportError as e:
             raise FoundationModelError("transformers not installed") from e
         try:
+            model_source = self._model_source()
             self._tokenizer = AutoTokenizer.from_pretrained(
-                self.metadata.huggingface_id, trust_remote_code=True
+                model_source, trust_remote_code=True
             )
+            config = AutoConfig.from_pretrained(model_source, trust_remote_code=True)
+            # Force DNABERT2 onto the safe PyTorch attention path locally.
+            if getattr(config, "attention_probs_dropout_prob", 0.0) == 0.0:
+                config.attention_probs_dropout_prob = 1e-8
             self._model = AutoModel.from_pretrained(
-                self.metadata.huggingface_id, trust_remote_code=True
+                model_source, trust_remote_code=True, config=config
             ).to(self._device).eval()
         except Exception as e:
             raise FoundationModelError(f"Failed to load DNABERT-2 weights: {e}") from e
@@ -264,10 +274,10 @@ class NucleotideTransformerModel(FoundationModel):
             raise FoundationModelError("transformers not installed") from e
         try:
             self._tokenizer = AutoTokenizer.from_pretrained(
-                self.metadata.huggingface_id, trust_remote_code=True
+                self._model_source(), trust_remote_code=True
             )
             self._model = AutoModelForMaskedLM.from_pretrained(
-                self.metadata.huggingface_id, trust_remote_code=True
+                self._model_source(), trust_remote_code=True
             ).to(self._device).eval()
         except Exception as e:
             raise FoundationModelError(f"Failed to load NT weights: {e}") from e
@@ -315,9 +325,9 @@ class GenaLMModel(FoundationModel):
         except ImportError as e:
             raise FoundationModelError("transformers not installed") from e
         try:
-            self._tokenizer = AutoTokenizer.from_pretrained(self.metadata.huggingface_id)
+            self._tokenizer = AutoTokenizer.from_pretrained(self._model_source())
             self._model = (
-                AutoModel.from_pretrained(self.metadata.huggingface_id).to(self._device).eval()
+                AutoModel.from_pretrained(self._model_source()).to(self._device).eval()
             )
         except Exception as e:
             raise FoundationModelError(f"Failed to load GENA-LM weights: {e}") from e
@@ -341,6 +351,25 @@ _MODEL_REGISTRY: dict[str, type[FoundationModel]] = {
     "nucleotide_transformer": NucleotideTransformerModel,
     "gena_lm": GenaLMModel,
 }
+
+
+def _model_source_env_var(name: str) -> str:
+    """Per-model override env var for a local weights directory."""
+    return f"{DEFAULT_MODEL_SOURCE_ENV_VAR}_{name.upper()}"
+
+
+def _resolve_model_source(name: str, huggingface_id: str) -> str:
+    """Resolve model source from env override or config value."""
+    env_name = _model_source_env_var(name)
+    override = os.environ.get(env_name, "").strip()
+    if override:
+        return override
+    global_override = os.environ.get(DEFAULT_MODEL_SOURCE_ENV_VAR, "").strip()
+    if global_override:
+        candidate = Path(global_override) / name
+        if candidate.exists():
+            return str(candidate)
+    return huggingface_id
 
 
 def model_factory(
