@@ -46,6 +46,7 @@ from dna_decode.data.hiv_amr import (
     gene_for_hiv_drug,
 )
 from dna_decode.data.mic_tiers import supported_drugs
+from dna_decode.data.trust_surface import one_line, trust_block
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
 
 # Fungal target-site path (BLAST ERG11/FKS1 -> catalog), NOT AMRFinder (no AMRFinder-for-fungi). Routed by
@@ -103,6 +104,7 @@ def _target_site_record(call, sample_id: str, drug: str, organism: str, provenan
         "caller": {"name": caller_name, "rule": call.rule, "source": source,
                    "caller_is_independent_baseline": False},
         "caveat": call.caveat,
+        "validation": trust_block(drug, organism),
         "provenance": {**provenance, "organism": organism},
     }
 
@@ -157,6 +159,7 @@ def _emit_target_site(rec: dict, call, sample_id: str, args) -> int:
         if call.undetectable_mechanisms:
             print(f"  blind spots (an S call can't rule out): {', '.join(call.undetectable_mechanisms)}")
         print(f"  {call.caveat}")
+        print(f"  {one_line(rec['validation'])}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if call.prediction != "INDETERMINATE" else 4
@@ -471,6 +474,7 @@ def main(argv=None) -> int:
         "caller": {"name": "dna_decode-amr-rules-v1", "rule": call["rule"],
                    "source": "AMRFinderPlus curated main.tsv", "caller_is_independent_baseline": False},
         "caveat": call["caveat"],
+        "validation": trust_block(args.drug, args.organism),
         "provenance": {"amrfinder_run": str(run_dir), "amrfinder_image": AMRFINDER_IMAGE_PINNED,
                        "amrfinder_organism": args.organism},
     }
@@ -491,6 +495,7 @@ def main(argv=None) -> int:
             if not call["determinants"]:
                 print("  driven by: (no curated resistance determinants for this drug)")
             print(f"  {call['caveat']}")
+        print(f"  {one_line(rec['validation'])}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return {"INDETERMINATE": 4, "ABSTAIN": 5}.get(call["prediction"], 0)

@@ -61,6 +61,15 @@ learned-embedding alternative to the deterministic rules was tested to a decisiv
 **closed 0-for-4 negative** (it learned population structure, not mechanism); the deterministic decoder
 suite is the validated, shippable artifact (`wiki/negative_results_map_2026-06-13.md`).
 
+**Every prediction carries its own trust badge inline.** As of the productization pass, each `dna-amr`
+call emits a `validation:` line (and a `validation` block in the JSON record) reporting that exact cell's
+honest tier + headline metric + the standing report card it came from — e.g. `validation:
+INDEPENDENT_MEASURED -- acc 0.919 (N=8778)` for E. coli ceftriaxone, `INDEPENDENT_WETLAB -- AUC 0.962` for
+HIV efavirenz, `IN_DISTRIBUTION` for SARS-CoV-2, `NO_FREE_PHENOTYPE_SOURCE` for the fungal cells,
+`ABSTAINS_BY_DESIGN` for the carbapenem abstainers. The honesty discipline is now *user-facing* at the
+CLI, not buried in the wiki (`dna_decode/data/trust_surface.py`; tiers never averaged, metrics never
+fabricated).
+
 ### Organism-aware AMR calling (`dna-amr --organism`)
 
 The per-drug `DRUG_RULE` is E. coli-tuned. Cross-organism validation (6 organisms × cipro/meropenem,
