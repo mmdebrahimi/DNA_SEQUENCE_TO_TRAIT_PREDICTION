@@ -121,8 +121,13 @@ def render_md(card: dict) -> str:
         L += ["", "Source: `wiki/tb_{rif,inh}_cryptic_parquet_baseline_*.json` "
               "(`wiki/tb_cryptic_parquet_baseline_2026-06-22.md`).", ""]
     L += ["## Honesty rails",
-          "- **Independent at the ACCESSION level (upper bound).** BioSample/GCA disjoint vs CRyPTIC + our "
-          "cohorts; BioSample cross-archive resolution would only tighten it.",
+          "- **Independence is BioSample-resolution-CHECKED (upgraded 2026-06-23, `wiki/tb_independence_"
+          "biosample_check.json`).** The ENA-side disjoint isolates (1,364 with an `ERS` accession) are "
+          "already BioSample-grade — their `ERS` is string-matched DIRECTLY against CRyPTIC's `ENA_SAMPLE` "
+          "(ERS), the same namespace. The NCBI-side (1,480 `SAMN`) are the only cross-archive risk vs the "
+          "European CRyPTIC set; a bounded ENA-portal probe found **0/30** of their ENA-mirror accessions in "
+          "CRyPTIC. The one irreducible residual is genomic RE-SUBMISSION (an isolate sequenced twice as "
+          "distinct BioSample records) — which needs Mash genomic dedup, NOT accession resolution.",
           "- **Measured phenotype = non-circular** (BMD-MIC / measured DST); **WHO rule applied UNCHANGED.**",
           "- **RAW is the headline; lineage is disclosure** (homoplasy). The independent lineage figures "
           "(~0.44 / 0.32) match the in-distribution lineage figures (0.41 / 0.349), confirming the clonal "

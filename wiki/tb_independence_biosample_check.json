@@ -1,0 +1,24 @@
+{
+  "composition": {
+    "biosample_types": {
+      "SAMEA#": 1365,
+      "SAMN#": 1480
+    },
+    "sra_types": {
+      "ERS#": 1364,
+      "SRS#": 1480,
+      "EMPTY": 1
+    },
+    "ena_side_already_biosample_grade": 1364,
+    "ncbi_side_cross_archive_candidates": 1480
+  },
+  "cryptic_leakset_size": 36861,
+  "ncbi_side_probe": {
+    "n_probed": 30,
+    "n_ena_mirrored": 30,
+    "n_no_ena_mirror": 0,
+    "n_cross_archive_overlap": 0,
+    "hits": []
+  },
+  "verdict": "BIOSAMPLE_RESOLUTION_CHECKED: ENA-side already BioSample-grade (ERS<->ENA_SAMPLE direct); NCBI-side cross-archive overlap 0/30 probed. Irreducible residual = genomic re-submission (distinct BioSample record) -> needs Mash dedup, NOT accession resolution."
+}
