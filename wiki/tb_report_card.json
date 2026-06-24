@@ -1,0 +1,72 @@
+{
+  "schema": "tb-report-card-v1",
+  "headline_rule": "RAW per-isolate is the TB-AMR headline; lineage is a clonality DISCLOSURE (resistance is homoplasic). NAMESPACE-SEPARATE from the frozen bacterial cards.",
+  "n_independent_drugs": 2,
+  "n_in_distribution_drugs": 2,
+  "in_distribution": [
+    {
+      "tier": "IN_DISTRIBUTION_KNOWLEDGE_BASELINE",
+      "drug": "rifampicin",
+      "n": 8955,
+      "raw_sens": 0.918,
+      "raw_spec": 0.974,
+      "lineage_sens": 0.41,
+      "lineage_spec": 0.991,
+      "source": "WHO catalogue on CRyPTIC (catalogue built partly from CRyPTIC -> in-distribution)"
+    },
+    {
+      "tier": "IN_DISTRIBUTION_KNOWLEDGE_BASELINE",
+      "drug": "isoniazid",
+      "n": 9518,
+      "raw_sens": 0.889,
+      "raw_spec": 0.989,
+      "lineage_sens": 0.349,
+      "lineage_spec": 0.995,
+      "source": "WHO catalogue on CRyPTIC (catalogue built partly from CRyPTIC -> in-distribution)"
+    }
+  ],
+  "independent": [
+    {
+      "tier": "PROVENANCE_DISJOINT_INDEPENDENT",
+      "drug": "rifampicin",
+      "n": 2840,
+      "n_R": 1452,
+      "n_S": 1388,
+      "raw_sens": 0.9201101928374655,
+      "raw_spec": 0.9553314121037464,
+      "raw_acc": 0.9373239436619718,
+      "raw_sens_ci95": [
+        0.9050303523066914,
+        0.9329729029925113
+      ],
+      "raw_spec_ci95": [
+        0.9431493973701156,
+        0.9649999207706842
+      ],
+      "lineage_sens_disclosure": 0.444,
+      "lineage_spec_disclosure": 0.979,
+      "source": "EBI AMR Portal (CABBAGE) provenance-disjoint, measured AST (free; no DUA)"
+    },
+    {
+      "tier": "PROVENANCE_DISJOINT_INDEPENDENT",
+      "drug": "isoniazid",
+      "n": 2842,
+      "n_R": 1643,
+      "n_S": 1199,
+      "raw_sens": 0.8788800973828362,
+      "raw_spec": 0.9616346955796498,
+      "raw_acc": 0.9137931034482759,
+      "raw_sens_ci95": [
+        0.8622134559752964,
+        0.8937791057865633
+      ],
+      "raw_spec_ci95": [
+        0.9492057613407732,
+        0.9711149192874993
+      ],
+      "lineage_sens_disclosure": 0.321,
+      "lineage_spec_disclosure": 0.972,
+      "source": "EBI AMR Portal (CABBAGE) provenance-disjoint, measured AST (free; no DUA)"
+    }
+  ]
+}
