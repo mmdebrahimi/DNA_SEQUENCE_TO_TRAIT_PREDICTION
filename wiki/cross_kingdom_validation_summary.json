@@ -1,0 +1,43 @@
+{
+  "schema": "cross-kingdom-validation-summary-v1",
+  "no_aggregate_headline": true,
+  "principle": "Each surface has a DIFFERENT independence construction + honesty tier; they are PRESERVED, never averaged into a single accuracy. The binding constraint of the project (a free independent measured-phenotype label) is broken across bacteria AND TB; SARS-CoV-2/influenza/fungal cells are no-free-source or in-distribution; learned-embedding expansion is a closed 0-for-4 negative (see wiki/negative_results_map_2026-06-13.md).",
+  "n_surfaces": 5,
+  "surfaces": [
+    {
+      "kingdom": "Bacteria",
+      "surface": "NCBI-PD provenance-disjoint (frozen)",
+      "independence": "isolate-level provenance-disjoint (different submitter/lab/country); NOT methodology-independent",
+      "summary": "10 SCORED / 27 cells",
+      "card": "wiki/decoder_validation_report_card.md"
+    },
+    {
+      "kingdom": "Bacteria",
+      "surface": "EBI AMR Portal independent (measured AST)",
+      "independence": "BioSample/GCA disjoint vs CRyPTIC + tuning cohorts; measured wet-lab AST (non-circular); E.coli/Salmonella/Klebsiella/Shigella 0.83\u20130.995 acc",
+      "summary": "21 SCORED_INDEPENDENT / 25 cells",
+      "card": "wiki/amr_portal_independent_report_card.md"
+    },
+    {
+      "kingdom": "Bacteria (M. tuberculosis)",
+      "surface": "EBI AMR Portal INDEPENDENT (WHO rule)",
+      "independence": "BioSample-resolution-checked (ENA-side biosample-grade; NCBI-side 0/30 cross-archive); RAW headline (homoplasy -> lineage is disclosure); measured AST",
+      "summary": "RIF acc 0.937; ISO acc 0.914 (N~2,845, full cohort)",
+      "card": "wiki/tb_report_card.md"
+    },
+    {
+      "kingdom": "Virus (HIV)",
+      "surface": "Stanford HIVDB PhenoSense",
+      "independence": "PhenoSense fold-change is NOT HIVDB's own Sierra interpretation (non-circular)",
+      "summary": "25 cells (NNRTI/NRTI/PI/INSTI/CAI)",
+      "card": "wiki/hiv_decoder_report_card.md"
+    },
+    {
+      "kingdom": "Bacteria (external cohort)",
+      "surface": "external-cohort revalidation arm",
+      "independence": "external clinical re-validation of the frozen decoder; strict-tier is the primary metric, relaxed secondary; raw sens/spec is clonality-inflated \u2014 see the cluster-weighted block. Separate from the frozen decoder report card.",
+      "summary": "2 cells",
+      "card": "wiki/external_validation_report_card.md"
+    }
+  ]
+}
