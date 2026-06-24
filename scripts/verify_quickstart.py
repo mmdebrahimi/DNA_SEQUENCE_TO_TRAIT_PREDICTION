@@ -6,11 +6,11 @@ commands QUICKSTART.md documents and checks each one's call + inline trust badge
 torch/transformers, NO Docker, NO network: only the committed fixtures + the pure-Python observed-
 substitution paths + the offline-degradation path. Exit 0 = every quickstart step works.
 
-SCOPE (honest): this verifies the SOURCE-TREE / EDITABLE install (`pip install -e .` / `uv sync`) by
-calling each CLI's main(argv) in-process -- NOT a built wheel artifact. The trust cards load from the
-repo-root wiki/ on disk, which exists in an editable checkout. Wheel/artifact-boundary verification
-(cards shipped as package data + console-script subprocess on a fresh-env install) is the DEFERRED
-packaging gate; a built wheel does not currently ship the cards (see the productization brainstorm).
+SCOPE (honest): this verifies the SOURCE-TREE / EDITABLE install by calling each CLI's main(argv)
+in-process. The complementary ARTIFACT-boundary check (build the wheel -> fresh-env install -> badges
+served from the PACKAGED cards, no repo wiki/) is scripts/verify_wheel_ships_cards.py. The packaging gate
+LANDED 2026-06-24: a built wheel now ships the 4 trust cards as package data (dna_decode/report_cards/ via
+the pyproject force-include), so a wheel install no longer silently degrades the validation badges.
 
 Run: `uv run python scripts/verify_quickstart.py`  (also pinned by tests/test_verify_quickstart.py).
 """

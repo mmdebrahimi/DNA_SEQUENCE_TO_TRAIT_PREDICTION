@@ -98,6 +98,18 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["dna_decode"]
 
+# Ship the standing trust-surface report cards AS PACKAGE DATA so a built wheel carries them
+# (packaging gate, 2026-06-24). Without this a wheel install loses wiki/*.json -> trust_surface
+# silently degrades every validation badge (HIV->UNKNOWN, bacterial INDEPENDENT_MEASURED->NOT_CENSUSED).
+# Source layout (cards generated into wiki/) is preserved; the build copies them to dna_decode/report_cards/.
+# trust_surface._card_path loads the packaged copy in a wheel, falling back to repo wiki/ in an editable
+# checkout. These are the EXACT 4 cards trust_surface._load()s.
+[tool.hatch.build.targets.wheel.force-include]
+"wiki/amr_portal_independent_report_card.json" = "dna_decode/report_cards/amr_portal_independent_report_card.json"
+"wiki/decoder_validation_report_card.json" = "dna_decode/report_cards/decoder_validation_report_card.json"
+"wiki/hiv_decoder_report_card.json" = "dna_decode/report_cards/hiv_decoder_report_card.json"
+"wiki/tb_report_card.json" = "dna_decode/report_cards/tb_report_card.json"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

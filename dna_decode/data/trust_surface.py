@@ -23,7 +23,17 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
-_WIKI = Path(__file__).resolve().parent.parent.parent / "wiki"
+# Report cards load from the PACKAGED copy first (a built wheel force-includes them at
+# dna_decode/report_cards/ -- see pyproject), falling back to the repo-root wiki/ in an editable checkout.
+# This is the packaging gate (2026-06-24): without the packaged copy, a wheel install silently degrades
+# every trust badge because site-packages/wiki/ does not exist.
+_PKG_CARDS = Path(__file__).resolve().parent.parent / "report_cards"   # installed wheel
+_WIKI = Path(__file__).resolve().parent.parent.parent / "wiki"          # editable / source tree
+
+
+def _card_path(name: str) -> Path:
+    pkg = _PKG_CARDS / name
+    return pkg if pkg.exists() else (_WIKI / name)
 
 # --- tiers (ordered strongest -> weakest) ---
 INDEPENDENT_WETLAB = "INDEPENDENT_WETLAB"            # HIV: free isolate-level wet-lab fold-change (non-circular)
@@ -56,7 +66,7 @@ _SARSCOV2_DRUGS = {"nirmatrelvir", "ensitrelvir", "lufotrelvir"}
 
 @lru_cache(maxsize=None)
 def _load(name: str):
-    p = _WIKI / name
+    p = _card_path(name)
     if not p.exists():
         return None
     try:

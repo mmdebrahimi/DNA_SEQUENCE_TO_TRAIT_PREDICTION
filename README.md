@@ -95,10 +95,15 @@ a different-lab cohort.
 
 ```bash
 uv sync          # or: pip install -e .   -- DETERMINISTIC decoder core (no torch/transformers)
+uv build && pip install dist/dna_decode-*.whl     # a built WHEEL also works -- it ships the trust cards
 uv sync --extra ml   # ONLY for the foundation-model embedding track (a closed research negative)
 # AMR genome mode also needs Docker + an AMRFinderPlus DB (see Gotchas); cached-run + observed-substitution
 # modes are pure-Python. The default install no longer pulls the multi-GB torch/transformers/triton stack.
 ```
+
+The built wheel ships the standing validation **report cards as package data** (`dna_decode/report_cards/`
+via the pyproject force-include), so an installed `dna-amr` / `dna-decode` serves correct trust badges from
+the artifact — not just an editable checkout. Verify: `uv run python scripts/verify_wheel_ships_cards.py --fresh-env`.
 
 **New here? See [`QUICKSTART.md`](QUICKSTART.md)** — pure-Python commands (no Docker, no `[ml]`, no network)
 that run end-to-end, each verified by `scripts/verify_quickstart.py`.
