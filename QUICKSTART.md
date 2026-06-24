@@ -22,9 +22,9 @@ uv sync --extra ml      # only if you need the embedding/foundation-model experi
 
 External-tool workflows (genome-mode AMR via AMRFinder, the typing decoders via blastn, the genome-map
 Bakta report) additionally need **Docker** and/or **BLAST+** and their databases — see the README Gotchas.
-Without them those paths degrade to `unavailable` (never crash); the wheel-only paths below need none of it.
+Without them those paths degrade to `unavailable` (never crash); the pure-Python paths below need none of it.
 
-## Wheel-only decoder calls (no Docker, no DBs)
+## Pure-Python decoder calls (no Docker, no DBs)
 
 Antibiotic/antiviral/antifungal resistance from **observed substitutions** — pure-Python, instant:
 

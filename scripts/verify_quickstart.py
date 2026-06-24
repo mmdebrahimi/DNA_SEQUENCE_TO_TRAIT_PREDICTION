@@ -1,10 +1,16 @@
-"""Verified quickstart -- runs the documented WHEEL-ONLY decoder paths end-to-end and asserts they work.
+"""Verified quickstart -- runs the documented PURE-PYTHON decoder paths end-to-end and asserts they work.
 
 The point of the productization pass: a default `uv sync` (no [ml] extra, no Docker, no external DBs)
 must still deliver a working deterministic decoder. This script IS that proof -- it executes the exact
-commands QUICKSTART.md documents, in-process, and checks each one's call + inline trust badge. It needs
-NO torch/transformers, NO Docker, NO network: only the committed fixtures + the wheel-only observed-
+commands QUICKSTART.md documents and checks each one's call + inline trust badge. It needs NO
+torch/transformers, NO Docker, NO network: only the committed fixtures + the pure-Python observed-
 substitution paths + the offline-degradation path. Exit 0 = every quickstart step works.
+
+SCOPE (honest): this verifies the SOURCE-TREE / EDITABLE install (`pip install -e .` / `uv sync`) by
+calling each CLI's main(argv) in-process -- NOT a built wheel artifact. The trust cards load from the
+repo-root wiki/ on disk, which exists in an editable checkout. Wheel/artifact-boundary verification
+(cards shipped as package data + console-script subprocess on a fresh-env install) is the DEFERRED
+packaging gate; a built wheel does not currently ship the cards (see the productization brainstorm).
 
 Run: `uv run python scripts/verify_quickstart.py`  (also pinned by tests/test_verify_quickstart.py).
 """
@@ -27,13 +33,13 @@ _AMR_RUN = str(REPO / "tests" / "fixtures" / "amr_mini")
 
 # (label, main, argv, expected stdout substrings, expected exit code)
 STEPS = [
-    ("HIV observed -> R + free-wetlab badge (wheel-only)",
+    ("HIV observed -> R + free-wetlab badge (pure-Python)",
      amr_main, ["--drug", "efavirenz", "--observed", "RT:K103N", "--sample-id", "q"],
      ["CALL: R", "INDEPENDENT_WETLAB"], 0),
-    ("fungal observed -> R + no-free-source badge (wheel-only)",
+    ("fungal observed -> R + no-free-source badge (pure-Python)",
      amr_main, ["--drug", "fluconazole", "--observed", "ERG11:Y132F", "--sample-id", "q"],
      ["CALL: R", "NO_FREE_PHENOTYPE_SOURCE"], 0),
-    ("SARS-CoV-2 observed -> R + in-distribution badge (wheel-only)",
+    ("SARS-CoV-2 observed -> R + in-distribution badge (pure-Python)",
      amr_main, ["--drug", "nirmatrelvir", "--observed", "Mpro:E166V", "--sample-id", "q"],
      ["CALL: R", "IN_DISTRIBUTION"], 0),
     ("unified profile (cached AMR + offline typing degradation)",

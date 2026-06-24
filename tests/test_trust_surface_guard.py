@@ -52,6 +52,32 @@ def test_unknown_drug_has_no_evidence_cell():
     assert b["tier"] == ts.UNKNOWN and b["reason"] is None and b["evidence_cell"] is None
 
 
+# --- exact-organism-match (Shigella species collapse fix) ---
+
+def test_exact_species_wins_over_genus_sibling():
+    # S. sonnei must wear ITS OWN metric, never S. flexneri's (different acc: cipro 0.892 vs 0.984)
+    sonnei = ts.lookup_trust("ciprofloxacin", "Shigella sonnei")
+    flex = ts.lookup_trust("ciprofloxacin", "Shigella flexneri")
+    assert sonnei["tier"] == ts.INDEPENDENT_MEASURED and flex["tier"] == ts.INDEPENDENT_MEASURED
+    assert sonnei["metric"] != flex["metric"]                 # distinct species evidence, not borrowed
+    assert "sonnei" in sonnei["evidence_cell"].lower()
+    assert "flexneri" in flex["evidence_cell"].lower()
+
+
+def test_bare_ambiguous_genus_refuses_to_borrow():
+    # 'Shigella' spans flexneri + sonnei with different metrics -> must NOT silently pick one
+    b = ts.lookup_trust("ciprofloxacin", "Shigella")
+    assert b["tier"] == ts.UNKNOWN and b["reason"] == "ambiguous_genus"
+    assert b["metric"] is None
+
+
+def test_genus_unique_organisms_still_resolve():
+    # the wired bacterial paths pass a bare genus that maps to ONE species -> unchanged
+    for org in ("Escherichia", "Klebsiella", "Salmonella"):
+        b = ts.lookup_trust("ciprofloxacin", org)
+        assert b["tier"] == ts.INDEPENDENT_MEASURED and b["reason"] is None and b["metric"] is not None
+
+
 if __name__ == "__main__":
     import pytest
     raise SystemExit(pytest.main([__file__, "-q"]))

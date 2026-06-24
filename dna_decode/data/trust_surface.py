@@ -74,6 +74,31 @@ def _genus(organism: str | None) -> str:
     return organism.strip().replace("_", " ").split()[0].lower() if organism.strip() else ""
 
 
+def _norm_org(s: str | None) -> str:
+    """Full normalized organism string (lowercased, underscores->spaces) for EXACT cell matching."""
+    return (s or "").strip().lower().replace("_", " ")
+
+
+def _pick_bacterial_cell(cells: list[dict], d: str, organism: str | None):
+    """Pick a bacterial card cell for (drug, organism). EXACT normalized-organism match wins; genus fallback
+    fires ONLY when the genus resolves to a SINGLE distinct organism for this drug. A bare/under-specified
+    genus that spans >=2 distinct species cells (e.g. 'Shigella' -> flexneri vs sonnei, different metrics) is
+    AMBIGUOUS -> never silently borrows one species' number. Returns (cell, status) with status in
+    {'exact', 'genus', 'ambiguous', 'none'}."""
+    no, g = _norm_org(organism), _genus(organism)
+    drug_cells = [c for c in cells if str(c.get("drug", "")).strip().lower() == d]
+    for c in drug_cells:                                   # exact normalized-organism match first
+        if no and _norm_org(c.get("organism")) == no:
+            return c, "exact"
+    gmatch = [c for c in drug_cells if g and _genus(c.get("organism")) == g]
+    distinct = {_norm_org(c.get("organism")) for c in gmatch}
+    if len(distinct) == 1:
+        return gmatch[0], "genus"
+    if len(distinct) >= 2:
+        return None, "ambiguous"
+    return None, "none"
+
+
 # namespace genus tokens (the guard): an HIV/TB/SARS card may lend evidence ONLY when the requested organism
 # is ABSENT (drug-only lookup) or normalizes into that namespace -- never to a contradictory organism.
 _HIV_GENUS = {"hiv", "hiv-1", "hiv1"}
@@ -82,6 +107,9 @@ _SARS_GENUS = {"sars-cov-2", "sarscov2", "sars", "betacoronavirus"}
 
 _MISMATCH_CAVEAT = ("drug recognised in another organism's namespace but the requested organism does NOT "
                     "match it -- refusing to lend that cell's evidence (no fabricated tier; see evidence_cell)")
+_AMBIGUOUS_CAVEAT = ("the requested genus spans >=2 distinct species cells with DIFFERENT metrics -- refusing "
+                     "to borrow one species' number; pass the exact species (e.g. 'Shigella sonnei')")
+_REASON_CAVEAT = {"namespace_mismatch": _MISMATCH_CAVEAT, "ambiguous_genus": _AMBIGUOUS_CAVEAT}
 
 
 def _rec(tier: str, source_card: str, headline: str = "", metric: float | None = None,
@@ -99,7 +127,7 @@ def _rec(tier: str, source_card: str, headline: str = "", metric: float | None =
         "evidence_cell": ev,
         "reason": reason,
         "source_card": source_card,
-        "caveat": _MISMATCH_CAVEAT if reason == "namespace_mismatch" else _CAVEAT[tier],
+        "caveat": _REASON_CAVEAT.get(reason, _CAVEAT[tier]),
     }
 
 
@@ -146,35 +174,41 @@ def lookup_trust(drug: str, organism: str | None = None) -> dict:
                 rejected = rejected or (f"M.tuberculosis|{d}", "wiki/tb_report_card.md")
                 break
 
-    # 3. bacteria — EBI AMR Portal INDEPENDENT measured AST (genus + drug)
+    # 3. bacteria — EBI AMR Portal INDEPENDENT measured AST (exact organism > unambiguous genus)
     portal = _load("amr_portal_independent_report_card.json")
     if portal:
-        for c in portal.get("cells", []):
-            if str(c.get("drug", "")).strip().lower() == d and _genus(c.get("organism")) == g and g:
-                acc = c.get("accuracy")
-                n = (c.get("n_R") or 0) + (c.get("n_S") or 0)
-                tier = UNDERPOWERED if str(c.get("tier", "")).upper().startswith("UNDERPOWER") else INDEPENDENT_MEASURED
-                return _rec(tier, "wiki/amr_portal_independent_report_card.md",
-                            headline=f"acc {round(acc, 3)} (N={n})" if acc is not None else "scored",
-                            metric=acc, n=n, cell=f"{c.get('organism')}|{d}", requested_cell=req)
+        c, status = _pick_bacterial_cell(portal.get("cells", []), d, organism)
+        if status == "ambiguous":
+            return _rec(UNKNOWN, "wiki/amr_portal_independent_report_card.md",
+                        reason="ambiguous_genus", requested_cell=req, evidence_cell=None)
+        if c:
+            acc = c.get("accuracy")
+            n = (c.get("n_R") or 0) + (c.get("n_S") or 0)
+            tier = UNDERPOWERED if str(c.get("tier", "")).upper().startswith("UNDERPOWER") else INDEPENDENT_MEASURED
+            return _rec(tier, "wiki/amr_portal_independent_report_card.md",
+                        headline=f"acc {round(acc, 3)} (N={n})" if acc is not None else "scored",
+                        metric=acc, n=n, cell=f"{c.get('organism')}|{d}", requested_cell=req)
 
-    # 4. bacteria — NCBI-PD provenance-disjoint card (genus + drug); also carries the structural non-cells
+    # 4. bacteria — NCBI-PD provenance-disjoint card (exact > unambiguous genus); also the structural non-cells
     deck = _load("decoder_validation_report_card.json")
     if deck:
-        for c in deck.get("cells", []):
-            if str(c.get("drug", "")).strip().lower() == d and _genus(c.get("organism")) == g and g:
-                st = str(c.get("state", "")).upper()
-                if st == "SCORED":
-                    acc = c.get("acc")
-                    return _rec(PROVENANCE_DISJOINT, "wiki/decoder_validation_report_card.md",
-                                headline=f"acc {acc} (N={c.get('n')})" if acc is not None else "scored",
-                                metric=acc, n=c.get("n"), cell=f"{c.get('organism')}|{d}", requested_cell=req)
-                _STATE_TIER = {"ABSTAINS_BY_DESIGN": ABSTAINS_BY_DESIGN, "LABEL_CONFOUNDED": LABEL_CONFOUNDED,
-                               "UNDERPOWERED": UNDERPOWERED, "NO_FREE_PHENOTYPE_SOURCE": NO_FREE_PHENOTYPE_SOURCE,
-                               "NOT_CENSUSED": NOT_CENSUSED}
-                tier = _STATE_TIER.get(st, NOT_CENSUSED)
-                return _rec(tier, "wiki/decoder_validation_report_card.md",
-                            cell=f"{c.get('organism')}|{d}", requested_cell=req)
+        c, status = _pick_bacterial_cell(deck.get("cells", []), d, organism)
+        if status == "ambiguous":
+            return _rec(UNKNOWN, "wiki/decoder_validation_report_card.md",
+                        reason="ambiguous_genus", requested_cell=req, evidence_cell=None)
+        if c:
+            st = str(c.get("state", "")).upper()
+            if st == "SCORED":
+                acc = c.get("acc")
+                return _rec(PROVENANCE_DISJOINT, "wiki/decoder_validation_report_card.md",
+                            headline=f"acc {acc} (N={c.get('n')})" if acc is not None else "scored",
+                            metric=acc, n=c.get("n"), cell=f"{c.get('organism')}|{d}", requested_cell=req)
+            _STATE_TIER = {"ABSTAINS_BY_DESIGN": ABSTAINS_BY_DESIGN, "LABEL_CONFOUNDED": LABEL_CONFOUNDED,
+                           "UNDERPOWERED": UNDERPOWERED, "NO_FREE_PHENOTYPE_SOURCE": NO_FREE_PHENOTYPE_SOURCE,
+                           "NOT_CENSUSED": NOT_CENSUSED}
+            tier = _STATE_TIER.get(st, NOT_CENSUSED)
+            return _rec(tier, "wiki/decoder_validation_report_card.md",
+                        cell=f"{c.get('organism')}|{d}", requested_cell=req)
 
     # 5. SARS-CoV-2 — in-distribution knowledge baseline (separate namespace, underpowered; guarded)
     if d in _SARSCOV2_DRUGS:

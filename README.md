@@ -100,7 +100,7 @@ uv sync --extra ml   # ONLY for the foundation-model embedding track (a closed r
 # modes are pure-Python. The default install no longer pulls the multi-GB torch/transformers/triton stack.
 ```
 
-**New here? See [`QUICKSTART.md`](QUICKSTART.md)** — wheel-only commands (no Docker, no `[ml]`, no network)
+**New here? See [`QUICKSTART.md`](QUICKSTART.md)** — pure-Python commands (no Docker, no `[ml]`, no network)
 that run end-to-end, each verified by `scripts/verify_quickstart.py`.
 
 ## Quickstart (verified output)
