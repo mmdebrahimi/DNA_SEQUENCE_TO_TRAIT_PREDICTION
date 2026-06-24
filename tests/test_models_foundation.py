@@ -6,6 +6,8 @@ verify the dispatch + sliding-window + batching are correct.
 """
 from __future__ import annotations
 
+import sys
+import types
 from pathlib import Path
 
 import numpy as np
@@ -136,6 +138,64 @@ def test_factory_dnabert2_from_config(project_root: Path):
     assert m.metadata.embedding_dim == 768
 
 
+def test_dnabert2_load_forces_nonzero_attention_dropout(monkeypatch, project_root: Path):
+    calls: dict[str, object] = {}
+
+    class FakeTokenizer:
+        @classmethod
+        def from_pretrained(cls, source, trust_remote_code=False):
+            calls["tokenizer_source"] = source
+            calls["tokenizer_trust_remote_code"] = trust_remote_code
+            return object()
+
+    class FakeConfig:
+        def __init__(self):
+            self.attention_probs_dropout_prob = 0.0
+
+    class FakeAutoConfig:
+        @classmethod
+        def from_pretrained(cls, source, trust_remote_code=False):
+            calls["config_source"] = source
+            calls["config_trust_remote_code"] = trust_remote_code
+            cfg = FakeConfig()
+            calls["config_object"] = cfg
+            return cfg
+
+    class FakeModelInstance:
+        def to(self, device):
+            calls["device"] = device
+            return self
+
+        def eval(self):
+            calls["eval_called"] = True
+            return self
+
+    class FakeAutoModel:
+        @classmethod
+        def from_pretrained(cls, source, trust_remote_code=False, config=None):
+            calls["model_source"] = source
+            calls["model_trust_remote_code"] = trust_remote_code
+            calls["model_config"] = config
+            return FakeModelInstance()
+
+    fake_transformers = types.SimpleNamespace(
+        AutoConfig=FakeAutoConfig,
+        AutoModel=FakeAutoModel,
+        AutoTokenizer=FakeTokenizer,
+    )
+    monkeypatch.setitem(sys.modules, "transformers", fake_transformers)
+
+    model = model_factory("dnabert2", config_path=project_root / "config" / "datasources.yaml")
+    model._load_weights()
+
+    assert calls["tokenizer_trust_remote_code"] is True
+    assert calls["config_trust_remote_code"] is True
+    assert calls["model_trust_remote_code"] is True
+    assert calls["model_config"] is calls["config_object"]
+    assert calls["model_config"].attention_probs_dropout_prob == pytest.approx(1e-8)
+    assert calls["eval_called"] is True
+
+
 def test_factory_nucleotide_transformer_from_config(project_root: Path):
     m = model_factory(
         "nucleotide_transformer",
@@ -157,6 +217,37 @@ def test_factory_missing_config_raises(tmp_path: Path):
 def test_factory_device_override():
     m = model_factory("mock", device="cpu")
     assert m.device == "cpu"
+
+
+def test_factory_model_dir_env_override(project_root: Path, monkeypatch, tmp_path: Path):
+    local_dir = tmp_path / "nt_local"
+    local_dir.mkdir()
+    monkeypatch.setenv("DNA_DECODE_MODEL_DIR_NUCLEOTIDE_TRANSFORMER", str(local_dir))
+
+    m = model_factory(
+        "nucleotide_transformer",
+        config_path=project_root / "config" / "datasources.yaml",
+    )
+
+    assert isinstance(m, NucleotideTransformerModel)
+    assert m.metadata.huggingface_id == "InstaDeepAI/nucleotide-transformer-v2-100m-multi-species"
+    assert m._model_source() == str(local_dir)
+
+
+def test_factory_global_model_dir_override(project_root: Path, monkeypatch, tmp_path: Path):
+    root = tmp_path / "models"
+    local_dir = root / "nucleotide_transformer"
+    local_dir.mkdir(parents=True)
+    monkeypatch.setenv("DNA_DECODE_MODEL_DIR", str(root))
+
+    m = model_factory(
+        "nucleotide_transformer",
+        config_path=project_root / "config" / "datasources.yaml",
+    )
+
+    assert isinstance(m, NucleotideTransformerModel)
+    assert m.metadata.huggingface_id == "InstaDeepAI/nucleotide-transformer-v2-100m-multi-species"
+    assert m._model_source() == str(local_dir)
 
 
 # ---- ModelMetadata + lazy loading guarantee ----
