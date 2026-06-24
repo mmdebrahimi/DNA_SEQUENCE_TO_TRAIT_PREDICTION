@@ -80,6 +80,28 @@ def _resfinder(fasta, db_dir):
     return {"status": "ok", "genes": sorted(set(genes))}
 
 
+def _amr(main_tsv, drugs, organism, threshold):
+    """Per-drug R/S calls from a (cached or freshly-run) AMRFinder main.tsv, each carrying its INLINE trust
+    badge (the move-1 trust-surface). Offline-safe: a missing main.tsv marks the section 'unavailable'."""
+    if main_tsv is None or not Path(main_tsv).exists():
+        return {"status": "unavailable",
+                "reason": "no AMRFinder main.tsv (pass --amrfinder-run DIR for a cached run, or "
+                          "--run-amrfinder for a Docker run); amr is the only Docker/cached-run section"}
+    from dna_decode.data.trust_surface import trust_block
+    from dna_decode.eval.amr_rules import call_resistance
+    calls = {}
+    for drug in drugs:
+        try:
+            c = call_resistance(Path(main_tsv), drug, threshold, organism=organism)
+        except Exception as e:  # one drug failing never sinks the section
+            calls[drug] = {"status": "error", "reason": f"{type(e).__name__}: {str(e)[:80]}"}
+            continue
+        calls[drug] = {"prediction": c["prediction"], "confidence": c.get("confidence"),
+                       "n_determinants": c.get("n_determinants"),
+                       "validation": trust_block(drug, organism)}
+    return {"status": "ok", "organism": organism, "calls": calls}
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="dna-profile",
                                  description="Unified genome profile — run all assembly-FASTA decoders")
@@ -90,6 +112,17 @@ def main(argv=None) -> int:
     ap.add_argument("--serotype-db", default="data/serotypefinder_db/serotypefinder.fsa")
     ap.add_argument("--resfinder-db-dir", default="data/resfinder_db")
     ap.add_argument("--pointfinder-db-dir", default="data/pointfinder_db/escherichia_coli")
+    # AMR R/S section (the only Docker/cached-run section; offline-safe -> 'unavailable' without a source)
+    ap.add_argument("--amrfinder-run", type=Path, default=None,
+                    help="dir of a CACHED AMRFinder run (uses <dir>/main.tsv; no Docker)")
+    ap.add_argument("--run-amrfinder", action="store_true",
+                    help="run AMRFinder on the genome via Docker (needs Docker + an AMRFinder DB)")
+    ap.add_argument("--amr-organism", default="Escherichia",
+                    help="organism for AMR routing + the trust badge (default Escherichia)")
+    ap.add_argument("--amr-drugs", default="ciprofloxacin,ceftriaxone,tetracycline,gentamicin",
+                    help="comma-separated drugs for the AMR section")
+    ap.add_argument("--amr-threshold", type=int, default=None)
+    ap.add_argument("--amrfinder-db", type=Path, default=Path("data/amrfinder_db"))
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)
@@ -99,12 +132,28 @@ def main(argv=None) -> int:
         return 2
     sample_id = args.sample_id or args.fasta.stem
 
+    # Resolve an AMRFinder main.tsv source for the AMR section (cached run > Docker run > none/offline-safe).
+    amr_main_tsv = None
+    if args.amrfinder_run is not None:
+        amr_main_tsv = args.amrfinder_run / "main.tsv"
+    elif args.run_amrfinder:
+        try:
+            from dna_decode.amr.cli import _run_amrfinder_for_genome
+            run_dir = _run_amrfinder_for_genome(args.fasta, sample_id, Path("data/amrfinder_runs"),
+                                                args.amrfinder_db, organism=args.amr_organism)
+            amr_main_tsv = run_dir / "main.tsv"
+        except Exception as e:  # offline-safe: a failed Docker run leaves the section 'unavailable'
+            print(f"[warn] AMRFinder Docker run failed ({type(e).__name__}: {e}); amr section unavailable",
+                  file=sys.stderr)
+    amr_drugs = [d.strip() for d in args.amr_drugs.split(",") if d.strip()]
+
     decoders = {
         "pathotype": _pathotype(args.fasta, args.pathotype_db),
         "serotype": _serotype(args.fasta, args.serotype_db),
         "plasmid": _plasmid(args.fasta, args.plasmid_db),
         "resfinder": _resfinder(args.fasta, args.resfinder_db_dir),
         "pointfinder": _pointfinder(args.fasta, args.pointfinder_db_dir),
+        "amr": _amr(amr_main_tsv, amr_drugs, args.amr_organism, args.amr_threshold),
     }
     n_ok = sum(1 for d in decoders.values() if d.get("status") == "ok")
     rec = {
@@ -113,8 +162,9 @@ def main(argv=None) -> int:
         "decoders_ok": n_ok, "decoders_total": len(decoders),
         "decoders": decoders,
         "caveat": ("Each section is an independent deterministic curated-DB caller; 'unavailable' = that DB / "
-                   "blastn is absent, not a negative result. E. coli-oriented (pathotype/serotype). "
-                   "AMR point-mutations + amr R/S calls are NOT included here (run dna-amr separately). "
+                   "blastn / AMRFinder source is absent, not a negative result. E. coli-oriented (pathotype/"
+                   "serotype). The amr section carries each R/S call's INLINE validation tier (trust badge); "
+                   "it needs a cached (--amrfinder-run) or Docker (--run-amrfinder) AMRFinder source. "
                    "NOT a clinical tool."),
     }
     if args.out:
@@ -133,6 +183,18 @@ def main(argv=None) -> int:
         print(f"  resfinder: {', '.join(rf.get('genes', [])) or '(none)' if rf['status']=='ok' else '['+rf['status']+']'}")
         pf = decoders["pointfinder"]
         print(f"  pointfinder: {', '.join(pf.get('mutations', [])) or '(none)' if pf['status']=='ok' else '['+pf['status']+']'}")
+        am = decoders["amr"]
+        if am["status"] == "ok":
+            print(f"  amr ({am['organism']}):")
+            for drug, c in am["calls"].items():
+                if "prediction" in c:
+                    v = c["validation"]
+                    badge = f"{v['tier']}{(' ' + v['headline']) if v.get('headline') else ''}"
+                    print(f"    {drug:<14} {c['prediction']:<14} [{c.get('n_determinants')} det]  | {badge}")
+                else:
+                    print(f"    {drug:<14} [{c.get('status')}]")
+        else:
+            print(f"  amr: [{am['status']}]")
         print(f"  {rec['caveat']}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")

@@ -23,9 +23,9 @@ def test_profile_all_unavailable_still_succeeds(tmp_path):
     assert rc == 0
     rec = json.loads(out.read_text())
     assert rec["schema"] == "genome-profile-v0"
-    assert set(rec["decoders"]) == {"pathotype", "serotype", "plasmid", "resfinder", "pointfinder"}
+    assert set(rec["decoders"]) == {"pathotype", "serotype", "plasmid", "resfinder", "pointfinder", "amr"}
     assert all(d["status"] != "ok" for d in rec["decoders"].values())   # all unavailable, none crashed
-    assert rec["decoders_ok"] == 0 and rec["decoders_total"] == 5
+    assert rec["decoders_ok"] == 0 and rec["decoders_total"] == 6
 
 
 def test_pathotype_section_self_guards_on_bad_db(tmp_path):

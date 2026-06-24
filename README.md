@@ -35,7 +35,7 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 | Analysis | What | |
 |---|---|---|
 | `dna-decode concordance` | AMR cross-tool check — **AMRFinder (`amr`) vs ResFinder (`resfinder`)** acquired-gene calls, gene-family level + Jaccard agreement | the independent second-opinion `resfinder` was built for |
-| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder) on one genome → one unified report | the "tell me everything" UX; each section degrades independently |
+| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder+pointfinder) **+ AMR R/S calls with inline trust badges** on one genome → one unified honest report | the "tell me everything, honestly" UX; each section degrades independently. AMR R/S needs a cached (`--amrfinder-run`) or Docker (`--run-amrfinder`) AMRFinder source; each call carries its validation tier (e.g. `INDEPENDENT_MEASURED acc 0.95`) |
 | `dna-decode coloc` | **AMR×plasmid co-localization** — is *this* acquired resistance gene on the same contig as a plasmid replicon (likely plasmid-borne)? | turns "both present" into "the gene sits on the plasmid"; same-contig is suggestive, not proof | The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
