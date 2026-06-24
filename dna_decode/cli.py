@@ -54,6 +54,10 @@ TRAITS = {
         "summary": "MLST sequence type (PubMLST; v0 E. coli Achtman adk/fumC/gyrB/icd/mdh/purA/recA) - exact-allele -> profile -> ST",
         "validation": "deterministic blastn 100/100 exact-allele + PubMLST profile lookup; novel/incomplete -> ST not guessed; `dna-mlst --fetch-db` to install; offline-safe degrade",
     },
+    "ktype": {
+        "summary": "Klebsiella K-antigen (capsule) type via the wzi allele scheme (BIGSdb Pasteur, Kleborate-bundled) - the serotype sibling",
+        "validation": "deterministic wzi-blastn caller (identity 90 / coverage 80); faithful-to-tool; wzi->K ~94% NOT one-to-one; full-locus Kaptive more accurate; offline-safe degrade",
+    },
 }
 
 
@@ -90,6 +94,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "mlst":
         from dna_decode.mlst.cli import main as mlst_main
         return mlst_main(rest)
+    if trait == "ktype":
+        from dna_decode.ktype.cli import main as ktype_main
+        return ktype_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

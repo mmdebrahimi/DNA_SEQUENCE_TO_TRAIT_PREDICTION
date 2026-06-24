@@ -1,0 +1,28 @@
+{
+  "schema": "ktype-report-card-v1",
+  "trait": "ktype",
+  "organism": "Klebsiella",
+  "caller": "dna_decode-wzi-blastn-v0 (BIGSdb Pasteur wzi scheme, Kleborate-bundled)",
+  "tier": "FAITHFUL_TO_TOOL_MEASURED_LABEL_AVAILABLE",
+  "honest_tier_text": "deterministic single-gene wzi caller, FAITHFUL to the Kleborate/BIGSdb wzi method (NOT an independent baseline). A free MEASURED serological K-type label EXISTS (KlebNET-GSP 731-isolate set), so the cell is VALIDATABLE -- but the full wzi-caller-vs-serology number needs the cohort genome run (scoped). wzi->K is ~94% / NOT one-to-one; full-locus Kaptive is more accurate.",
+  "measured_label_ceiling": {
+    "n_isolates": 733,
+    "naive_numeric_concordant": 546,
+    "naive_numeric_rate": 0.745,
+    "paper_curated_rate": 0.845,
+    "note": "naive KL#==K# match UNDER-counts (drops the KL<->K renaming/alternative-type equivalence the paper applies); the curated rate is the real ceiling"
+  },
+  "caller_self_consistency": {
+    "n_sampled": 15,
+    "n_correct": 15,
+    "n_alleles_in_db": 555,
+    "all_correct": true
+  },
+  "pending_scale_up": "run the wzi caller on the 731 genomes (ENA run reads -> targeted wzi mapping) -> the genuine wzi-caller-vs-measured-serology number (namespace-separate).",
+  "sources": [
+    "KlebNET-GSP 2025 Technical Report (Zenodo 15742130, CC-BY)",
+    "Kleborate wzi DB (BIGSdb Pasteur)",
+    "Brisse 2013 JCM (wzi typing ~94%)"
+  ],
+  "namespace_note": "SEPARATE from the AMR/HIV/TB trust cards -- ktype is a typing trait, not a drug cell; never keyed into the frozen canonical_cell_key card."
+}
