@@ -1,10 +1,19 @@
 # DNA_SEQUENCE_TO_TRAIT_PREDICTION
 
-<!-- amr engine now spans 3 kingdoms: bacterial (AMRFinder) + fungal (BLAST-ERG11) + antimalarial/protozoan (BLAST-Pfkelch13), routed by --drug. -->
-**`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a bacterial **or fungal**
-genome; it returns a phenotype call (antibiotic resistance R/S, or E. coli pathotype) **plus the exact
-genes/mutations that drove the call** + its own blind spots + provenance. Mechanism-feature based, not an
-embedding black-box. **Not a clinical tool.**
+<!-- amr engine spans bacteria + M. tuberculosis + fungi + viruses (HIV / SARS-CoV-2 / influenza), routed by --drug; each cell carries its own honesty tier. -->
+**`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a genome (bacterial,
+fungal, mycobacterial, or viral); it returns a phenotype call (antibiotic / antiviral / antifungal
+resistance R/S, or E. coli pathotype) **plus the exact genes/mutations that drove the call** + its own
+blind spots + provenance. Mechanism-feature based, not an embedding black-box. **Not a clinical tool.**
+
+> **2026-06 — the independent-label breakthrough.** The project's binding constraint was a *free,
+> independent, measured* phenotype label (everything else risks circularity — scoring a rule against
+> another tool's predictions). It is now broken across **bacteria** (EBI AMR Portal measured AST:
+> E. coli / Salmonella / Klebsiella / Shigella, acc 0.83–0.995), **M. tuberculosis** (WHO-2023-catalogue
+> rule on N≈2,845 measured-AST isolates: rifampicin acc **0.937**, isoniazid **0.914**), and **HIV-1**
+> (Stanford HIVDB PhenoSense wet-lab fold-change). One legible view across every validation surface —
+> each surface's distinct independence tier preserved, never averaged into a misleading aggregate:
+> [`wiki/cross_kingdom_validation_summary.md`](wiki/cross_kingdom_validation_summary.md).
 
 ## What it decodes (v0.5.0)
 
@@ -30,6 +39,27 @@ embedding black-box. **Not a clinical tool.**
 | `dna-decode coloc` | **AMR×plasmid co-localization** — is *this* acquired resistance gene on the same contig as a plasmid replicon (likely plasmid-borne)? | turns "both present" into "the gene sits on the plasmid"; same-contig is suggestive, not proof | The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
+
+### Validated resistance cells — by kingdom (each with its own honesty tier)
+
+Beyond the E. coli-family bacterial decoders above, the same determinant-scan method now spans four
+kingdoms. Each cell is validated on the strongest *free* label available and carries its **honest
+independence tier** — an `in-distribution` knowledge baseline is never relabelled as `independent`, and
+each kingdom keeps a **namespace-separate** standing report card so the tiers can't be conflated:
+
+| Kingdom | Cell | Independent validation | Tier |
+|---|---|---|---|
+| **Bacteria** | cipro / cef / tet / gent / meropenem × E. coli · Klebsiella · Salmonella · Shigella | EBI AMR Portal **measured AST** (free; BioSample/GCA-disjoint), acc **0.83–0.995** | provenance-disjoint, measured — non-circular (`wiki/amr_portal_independent_report_card.md`) |
+| **M. tuberculosis** | rifampicin (`rpoB`) + isoniazid (`katG`/`inhA`) — WHO-2023 catalogue rule | EBI AMR Portal measured AST, **N≈2,845**: RIF acc **0.937**, INH **0.914** | independent, measured (`wiki/tb_report_card.md`) |
+| **Virus — HIV-1** | NNRTI / NRTI / PI / INSTI / CAI (RT · protease · integrase · capsid) | Stanford HIVDB **PhenoSense** wet-lab fold-change (NNRTI EFV AUC **0.962**) | free, independent, isolate-level wet-lab label (`wiki/hiv_decoder_report_card.md`) |
+| **Virus — SARS-CoV-2** | nirmatrelvir / ensitrelvir (Mpro / 3CLpro) | Stanford CoV-RDB fold-change — **in-distribution, underpowered** (37R/5S) | knowledge baseline, honestly labelled (`wiki/sarscov2_mpro_validation_result_2026-06-23.md`) |
+| **Fungus — C. auris** | fluconazole / voriconazole / caspofungin / micafungin (ERG11 / FKS1) | de-confounded WGS+MIC cohort, sens 1.0 across clades; spec label-limited | kingdom-jump, G1-validated (`wiki/fungal_ep7_g1_closeout_2026-06-08.md`) |
+
+The bacterial 6-drug deployed surface is under a **reproducibility freeze**
+(`wiki/reproducibility_freeze_2026-06-13.md`) — frozen, sha-pinned, one-command reproducible. A
+learned-embedding alternative to the deterministic rules was tested to a decisive verdict and is a
+**closed 0-for-4 negative** (it learned population structure, not mechanism); the deterministic decoder
+suite is the validated, shippable artifact (`wiki/negative_results_map_2026-06-13.md`).
 
 ### Organism-aware AMR calling (`dna-amr --organism`)
 
