@@ -74,46 +74,77 @@ def _genus(organism: str | None) -> str:
     return organism.strip().replace("_", " ").split()[0].lower() if organism.strip() else ""
 
 
+# namespace genus tokens (the guard): an HIV/TB/SARS card may lend evidence ONLY when the requested organism
+# is ABSENT (drug-only lookup) or normalizes into that namespace -- never to a contradictory organism.
+_HIV_GENUS = {"hiv", "hiv-1", "hiv1"}
+_TB_GENUS = {"mycobacterium", "m.tuberculosis", "mtb", "tuberculosis"}
+_SARS_GENUS = {"sars-cov-2", "sarscov2", "sars", "betacoronavirus"}
+
+_MISMATCH_CAVEAT = ("drug recognised in another organism's namespace but the requested organism does NOT "
+                    "match it -- refusing to lend that cell's evidence (no fabricated tier; see evidence_cell)")
+
+
 def _rec(tier: str, source_card: str, headline: str = "", metric: float | None = None,
-         n: int | None = None, cell: str = "") -> dict:
+         n: int | None = None, cell: str = "", *, reason: str | None = None,
+         requested_cell: str = "", evidence_cell: str | None = None) -> dict:
+    ev = evidence_cell if evidence_cell is not None else (cell or None)
     return {
         "tier": tier,
         "independent": tier in (INDEPENDENT_WETLAB, INDEPENDENT_MEASURED),
         "headline": headline,
         "metric": metric,
         "n": n,
-        "cell": cell,
+        "cell": cell,                          # backward-compat alias of evidence_cell
+        "requested_cell": requested_cell or cell or None,
+        "evidence_cell": ev,
+        "reason": reason,
         "source_card": source_card,
-        "caveat": _CAVEAT[tier],
+        "caveat": _MISMATCH_CAVEAT if reason == "namespace_mismatch" else _CAVEAT[tier],
     }
 
 
 def lookup_trust(drug: str, organism: str | None = None) -> dict:
     """Best-evidence honest validation badge for a (drug, organism) decoder cell. Always returns a dict
-    (tier UNKNOWN if nothing matches); never fabricates a metric, never averages across tiers."""
+    (tier UNKNOWN if nothing matches); never fabricates a metric, never averages across tiers.
+
+    NAMESPACE GUARD: the HIV/TB/SARS cards are matched by drug, but only LEND their evidence when the
+    requested organism is absent (drug-only) OR normalizes into that namespace. A contradictory organism
+    (e.g. rifampicin + Escherichia) is REFUSED -> tier UNKNOWN + reason='namespace_mismatch', with the
+    rejected candidate exposed in evidence_cell so the borrowing is auditable (never silently applied)."""
     d = (drug or "").strip().lower()
     g = _genus(organism)
+    req = f"{organism or '?'}|{d}"
+    rejected: tuple[str, str] | None = None   # (evidence_cell, source_card) of a drug-match the organism rejected
 
-    # 1. HIV — free wet-lab fold-change (matched by drug; HIV has no organism axis in the surface)
+    def _compatible(ns: set[str]) -> bool:
+        return g == "" or g in ns
+
+    # 1. HIV — free wet-lab fold-change (no organism axis in the card; guarded by namespace)
     hiv = _load("hiv_decoder_report_card.json")
     if hiv:
         for c in hiv.get("cells", []):
             if str(c.get("drug", "")).strip().lower() == d:
-                auc = c.get("auc_call_separates_fold")
-                return _rec(INDEPENDENT_WETLAB, "wiki/hiv_decoder_report_card.md",
-                            headline=f"AUC {auc} (N={c.get('n')}, {c.get('drug_class')})" if auc else "scored",
-                            metric=auc, n=c.get("n"), cell=f"HIV-1|{d}")
+                if _compatible(_HIV_GENUS):
+                    auc = c.get("auc_call_separates_fold")
+                    return _rec(INDEPENDENT_WETLAB, "wiki/hiv_decoder_report_card.md",
+                                headline=f"AUC {auc} (N={c.get('n')}, {c.get('drug_class')})" if auc else "scored",
+                                metric=auc, n=c.get("n"), cell=f"HIV-1|{d}", requested_cell=req)
+                rejected = rejected or (f"HIV-1|{d}", "wiki/hiv_decoder_report_card.md")
+                break
 
-    # 2. TB — independent measured AST (matched by drug)
+    # 2. TB — independent measured AST (guarded by namespace)
     tb = _load("tb_report_card.json")
     if tb:
         for c in tb.get("independent", []):
             if str(c.get("drug", "")).strip().lower() == d:
-                acc = c.get("raw_acc")
-                n = (c.get("n_R") or 0) + (c.get("n_S") or 0)
-                return _rec(INDEPENDENT_MEASURED, "wiki/tb_report_card.md",
-                            headline=f"acc {round(acc, 3)} (N={n})" if acc is not None else "scored",
-                            metric=acc, n=n, cell=f"M.tuberculosis|{d}")
+                if _compatible(_TB_GENUS):
+                    acc = c.get("raw_acc")
+                    n = (c.get("n_R") or 0) + (c.get("n_S") or 0)
+                    return _rec(INDEPENDENT_MEASURED, "wiki/tb_report_card.md",
+                                headline=f"acc {round(acc, 3)} (N={n})" if acc is not None else "scored",
+                                metric=acc, n=n, cell=f"M.tuberculosis|{d}", requested_cell=req)
+                rejected = rejected or (f"M.tuberculosis|{d}", "wiki/tb_report_card.md")
+                break
 
     # 3. bacteria — EBI AMR Portal INDEPENDENT measured AST (genus + drug)
     portal = _load("amr_portal_independent_report_card.json")
@@ -125,7 +156,7 @@ def lookup_trust(drug: str, organism: str | None = None) -> dict:
                 tier = UNDERPOWERED if str(c.get("tier", "")).upper().startswith("UNDERPOWER") else INDEPENDENT_MEASURED
                 return _rec(tier, "wiki/amr_portal_independent_report_card.md",
                             headline=f"acc {round(acc, 3)} (N={n})" if acc is not None else "scored",
-                            metric=acc, n=n, cell=f"{c.get('organism')}|{d}")
+                            metric=acc, n=n, cell=f"{c.get('organism')}|{d}", requested_cell=req)
 
     # 4. bacteria — NCBI-PD provenance-disjoint card (genus + drug); also carries the structural non-cells
     deck = _load("decoder_validation_report_card.json")
@@ -137,17 +168,21 @@ def lookup_trust(drug: str, organism: str | None = None) -> dict:
                     acc = c.get("acc")
                     return _rec(PROVENANCE_DISJOINT, "wiki/decoder_validation_report_card.md",
                                 headline=f"acc {acc} (N={c.get('n')})" if acc is not None else "scored",
-                                metric=acc, n=c.get("n"), cell=f"{c.get('organism')}|{d}")
+                                metric=acc, n=c.get("n"), cell=f"{c.get('organism')}|{d}", requested_cell=req)
                 _STATE_TIER = {"ABSTAINS_BY_DESIGN": ABSTAINS_BY_DESIGN, "LABEL_CONFOUNDED": LABEL_CONFOUNDED,
                                "UNDERPOWERED": UNDERPOWERED, "NO_FREE_PHENOTYPE_SOURCE": NO_FREE_PHENOTYPE_SOURCE,
                                "NOT_CENSUSED": NOT_CENSUSED}
                 tier = _STATE_TIER.get(st, NOT_CENSUSED)
-                return _rec(tier, "wiki/decoder_validation_report_card.md", cell=f"{c.get('organism')}|{d}")
+                return _rec(tier, "wiki/decoder_validation_report_card.md",
+                            cell=f"{c.get('organism')}|{d}", requested_cell=req)
 
-    # 5. SARS-CoV-2 — in-distribution knowledge baseline (separate namespace, underpowered)
+    # 5. SARS-CoV-2 — in-distribution knowledge baseline (separate namespace, underpowered; guarded)
     if d in _SARSCOV2_DRUGS:
-        return _rec(IN_DISTRIBUTION, "wiki/sarscov2_mpro_validation_result_2026-06-23.md",
-                    headline="in-distribution (CoV-RDB), underpowered", cell=f"SARS-CoV-2|{d}")
+        if _compatible(_SARS_GENUS):
+            return _rec(IN_DISTRIBUTION, "wiki/sarscov2_mpro_validation_result_2026-06-23.md",
+                        headline="in-distribution (CoV-RDB), underpowered", cell=f"SARS-CoV-2|{d}",
+                        requested_cell=req)
+        rejected = rejected or (f"SARS-CoV-2|{d}", "wiki/sarscov2_mpro_validation_result_2026-06-23.md")
 
     # 6. shipped-surface structural fallback (no card cell yet)
     try:
@@ -156,11 +191,16 @@ def lookup_trust(drug: str, organism: str | None = None) -> dict:
             if drg.strip().lower() == d and (not g or _genus(org) == g):
                 tier = {"no_free_source": NO_FREE_PHENOTYPE_SOURCE, "label_confounded": LABEL_CONFOUNDED,
                         "ncbi_pd": NOT_CENSUSED}.get(status, NOT_CENSUSED)
-                return _rec(tier, "dna_decode/data/shipped_decoder_surface.py", cell=f"{org}|{d}")
+                return _rec(tier, "dna_decode/data/shipped_decoder_surface.py",
+                            cell=f"{org}|{d}", requested_cell=req)
     except Exception:
         pass
 
-    return _rec(UNKNOWN, "", cell=f"{organism or '?'}|{d}")
+    # nothing matched. If a namespace card recognised the drug but the organism rejected it, say so.
+    if rejected:
+        return _rec(UNKNOWN, rejected[1], reason="namespace_mismatch",
+                    requested_cell=req, evidence_cell=rejected[0])
+    return _rec(UNKNOWN, "", requested_cell=req, evidence_cell=None)
 
 
 def trust_block(drug: str, organism: str | None = None) -> dict:

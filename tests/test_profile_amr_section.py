@@ -62,6 +62,24 @@ def test_profile_main_amr_unavailable_without_source(capsys):
     assert rec["decoders"]["amr"]["status"] == "unavailable"
 
 
+def test_profile_organism_assumed_is_self_disclosed(capsys):
+    # omitted --amr-organism -> E. coli is ASSUMED; the JSON must say so (not look like an explicit choice)
+    rc = profile_cli.main([str(_FASTA), "--amrfinder-run", str(_MAIN_TSV.parent), "--json-only"])
+    assert rc == 0
+    amr = json.loads(capsys.readouterr().out)["decoders"]["amr"]
+    assert amr["organism_requested"] is None
+    assert amr["organism_used"] == "Escherichia"
+    assert amr["organism_assumed"] is True
+
+
+def test_profile_explicit_organism_not_assumed(capsys):
+    rc = profile_cli.main([str(_FASTA), "--amrfinder-run", str(_MAIN_TSV.parent),
+                           "--amr-organism", "Klebsiella", "--json-only"])
+    assert rc == 0
+    amr = json.loads(capsys.readouterr().out)["decoders"]["amr"]
+    assert amr["organism_requested"] == "Klebsiella" and amr["organism_assumed"] is False
+
+
 if __name__ == "__main__":
     import pytest
     raise SystemExit(pytest.main([__file__, "-q"]))

@@ -277,11 +277,10 @@ toml = [
 
 [[package]]
 name = "dna-decode"
-version = "0.2.0"
+version = "0.5.0"
 source = { editable = "." }
 dependencies = [
     { name = "biopython" },
-    { name = "einops" },
     { name = "h5py" },
     { name = "numpy" },
     { name = "pandas" },
@@ -290,17 +289,20 @@ dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
     { name = "scikit-learn" },
-    { name = "torch" },
-    { name = "transformers" },
-    { name = "triton", marker = "sys_platform != 'win32'" },
-    { name = "triton-windows", marker = "sys_platform == 'win32'" },
-    { name = "xgboost" },
 ]
 
 [package.optional-dependencies]
 dev = [
     { name = "pytest-cov" },
     { name = "ruff" },
+]
+ml = [
+    { name = "einops" },
+    { name = "torch" },
+    { name = "transformers" },
+    { name = "triton", marker = "sys_platform != 'win32'" },
+    { name = "triton-windows", marker = "sys_platform == 'win32'" },
+    { name = "xgboost" },
 ]
 quantize = [
     { name = "bitsandbytes", marker = "sys_platform != 'win32'" },
@@ -310,7 +312,7 @@ quantize = [
 requires-dist = [
     { name = "biopython", specifier = ">=1.83" },
     { name = "bitsandbytes", marker = "sys_platform != 'win32' and extra == 'quantize'", specifier = ">=0.43" },
-    { name = "einops", specifier = ">=0.7" },
+    { name = "einops", marker = "extra == 'ml'", specifier = ">=0.7" },
     { name = "h5py", specifier = ">=3.10" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "pandas", specifier = ">=2.2" },
@@ -321,13 +323,13 @@ requires-dist = [
     { name = "requests", specifier = ">=2.31" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
     { name = "scikit-learn", specifier = ">=1.4" },
-    { name = "torch", specifier = ">=2.2", index = "https://download.pytorch.org/whl/cu118" },
-    { name = "transformers", specifier = ">=4.40,<5" },
-    { name = "triton", marker = "sys_platform != 'win32'", specifier = ">=2" },
-    { name = "triton-windows", marker = "sys_platform == 'win32'", specifier = ">=3.0" },
-    { name = "xgboost", specifier = ">=2.0" },
+    { name = "torch", marker = "extra == 'ml'", specifier = ">=2.2", index = "https://download.pytorch.org/whl/cu118" },
+    { name = "transformers", marker = "extra == 'ml'", specifier = ">=4.40,<5" },
+    { name = "triton", marker = "sys_platform != 'win32' and extra == 'ml'", specifier = ">=2" },
+    { name = "triton-windows", marker = "sys_platform == 'win32' and extra == 'ml'", specifier = ">=3.0" },
+    { name = "xgboost", marker = "extra == 'ml'", specifier = ">=2.0" },
 ]
-provides-extras = ["dev", "quantize"]
+provides-extras = ["dev", "ml", "quantize"]
 
 [[package]]
 name = "einops"

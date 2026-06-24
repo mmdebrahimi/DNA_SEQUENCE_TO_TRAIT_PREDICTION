@@ -117,8 +117,10 @@ def main(argv=None) -> int:
                     help="dir of a CACHED AMRFinder run (uses <dir>/main.tsv; no Docker)")
     ap.add_argument("--run-amrfinder", action="store_true",
                     help="run AMRFinder on the genome via Docker (needs Docker + an AMRFinder DB)")
-    ap.add_argument("--amr-organism", default="Escherichia",
-                    help="organism for AMR routing + the trust badge (default Escherichia)")
+    ap.add_argument("--amr-organism", default=None,
+                    help="organism for AMR routing + the trust badge. If omitted, E. coli is ASSUMED and the "
+                         "output is stamped organism_assumed=true (routing + badge are E. coli-oriented -- "
+                         "pass this explicitly for a non-E. coli genome)")
     ap.add_argument("--amr-drugs", default="ciprofloxacin,ceftriaxone,tetracycline,gentamicin",
                     help="comma-separated drugs for the AMR section")
     ap.add_argument("--amr-threshold", type=int, default=None)
@@ -132,6 +134,11 @@ def main(argv=None) -> int:
         return 2
     sample_id = args.sample_id or args.fasta.stem
 
+    # Organism SELF-DISCLOSURE: an omitted --amr-organism means E. coli is ASSUMED. Both the routing AND the
+    # trust badge are E. coli-oriented, so the output must NOT look identical to an explicit user choice.
+    amr_assumed = args.amr_organism is None
+    amr_org = args.amr_organism or "Escherichia"
+
     # Resolve an AMRFinder main.tsv source for the AMR section (cached run > Docker run > none/offline-safe).
     amr_main_tsv = None
     if args.amrfinder_run is not None:
@@ -140,20 +147,24 @@ def main(argv=None) -> int:
         try:
             from dna_decode.amr.cli import _run_amrfinder_for_genome
             run_dir = _run_amrfinder_for_genome(args.fasta, sample_id, Path("data/amrfinder_runs"),
-                                                args.amrfinder_db, organism=args.amr_organism)
+                                                args.amrfinder_db, organism=amr_org)
             amr_main_tsv = run_dir / "main.tsv"
         except Exception as e:  # offline-safe: a failed Docker run leaves the section 'unavailable'
             print(f"[warn] AMRFinder Docker run failed ({type(e).__name__}: {e}); amr section unavailable",
                   file=sys.stderr)
     amr_drugs = [d.strip() for d in args.amr_drugs.split(",") if d.strip()]
 
+    amr_section = _amr(amr_main_tsv, amr_drugs, amr_org, args.amr_threshold)
+    amr_section["organism_requested"] = args.amr_organism   # null when omitted
+    amr_section["organism_used"] = amr_org
+    amr_section["organism_assumed"] = amr_assumed
     decoders = {
         "pathotype": _pathotype(args.fasta, args.pathotype_db),
         "serotype": _serotype(args.fasta, args.serotype_db),
         "plasmid": _plasmid(args.fasta, args.plasmid_db),
         "resfinder": _resfinder(args.fasta, args.resfinder_db_dir),
         "pointfinder": _pointfinder(args.fasta, args.pointfinder_db_dir),
-        "amr": _amr(amr_main_tsv, amr_drugs, args.amr_organism, args.amr_threshold),
+        "amr": amr_section,
     }
     n_ok = sum(1 for d in decoders.values() if d.get("status") == "ok")
     rec = {
@@ -185,7 +196,9 @@ def main(argv=None) -> int:
         print(f"  pointfinder: {', '.join(pf.get('mutations', [])) or '(none)' if pf['status']=='ok' else '['+pf['status']+']'}")
         am = decoders["amr"]
         if am["status"] == "ok":
-            print(f"  amr ({am['organism']}):")
+            assumed_note = "  (organism ASSUMED E. coli -- pass --amr-organism for a non-E. coli genome)" \
+                if am.get("organism_assumed") else ""
+            print(f"  amr ({am['organism']}):{assumed_note}")
             for drug, c in am["calls"].items():
                 if "prediction" in c:
                     v = c["validation"]

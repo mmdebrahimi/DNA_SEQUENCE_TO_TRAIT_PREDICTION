@@ -12,21 +12,14 @@ dependencies = [
     "biopython>=1.83",
     "pyyaml>=6.0",
 
-    # ML core
-    "torch>=2.2",
-    # Pinned to 4.x: DNABERT-2 / Nucleotide Transformer / GENA-LM ship
-    # trust_remote_code modeling files written against transformers 4.x APIs.
-    # Transformers 5.x removed `find_pruneable_heads_and_indices` and changed
-    # `BertConfig.pad_token_id`, breaking those remote files. Re-evaluate when
-    # model authors publish 5.x-compatible code.
-    "transformers>=4.40,<5",
-    "einops>=0.7",          # DNABERT-2 modeling_bert.py imports einops at load time
-    # DNABERT-2's flash-attention path imports `triton`. Linux ships triton via
-    # pip; Windows uses the community `triton-windows` shim (registers as
-    # `triton` on import). NT / GENA-LM don't need it.
-    "triton>=2; platform_system != 'Windows'",
-    "triton-windows>=3.0; platform_system == 'Windows'",
-    "xgboost>=2.0",
+    # ML stats core (pure cross-platform wheels). The HEAVY foundation-model stack
+    # (torch / transformers / einops / triton / xgboost) moved to the [ml] extra
+    # 2026-06-24: the SHIPPED product is the DETERMINISTIC decoder CLI, which imports
+    # NONE of them (verified -- importing every dna-* CLI pulls no torch/transformers/
+    # xgboost), so a default `uv sync` no longer drags in the multi-GB / platform-
+    # specific torch+transformers+triton install. scikit-learn STAYS in default (the
+    # deterministic-adjacent validation + HIV-catalog scripts import it). The
+    # foundation-model embedding track (a closed 0-for-4 negative) needs `--extra ml`.
     "scikit-learn>=1.4",
     "numpy>=1.26",
     "pandas>=2.2",
@@ -65,6 +58,25 @@ dna-coloc = "dna_decode.colocalization.cli:main"
 dev = [
     "pytest-cov>=5",
     "ruff>=0.4",
+]
+
+# Heavy foundation-model stack — ONLY for the embedding/foundation-model track
+# (a closed 0-for-4 negative; NOT the shipped deterministic decoder). Multi-GB +
+# platform-specific (triton). `uv sync --extra ml` to populate. Split out 2026-06-24
+# so the default deterministic install stays lean.
+ml = [
+    "torch>=2.2",
+    # Pinned to 4.x: DNABERT-2 / Nucleotide Transformer / GENA-LM ship
+    # trust_remote_code modeling files written against transformers 4.x APIs.
+    # Transformers 5.x removed `find_pruneable_heads_and_indices` and changed
+    # `BertConfig.pad_token_id`, breaking those remote files.
+    "transformers>=4.40,<5",
+    "einops>=0.7",          # DNABERT-2 modeling_bert.py imports einops at load time
+    # DNABERT-2's flash-attention path imports `triton`. Linux ships triton via
+    # pip; Windows uses the community `triton-windows` shim (registers as `triton`).
+    "triton>=2; platform_system != 'Windows'",
+    "triton-windows>=3.0; platform_system == 'Windows'",
+    "xgboost>=2.0",
 ]
 
 # Heavy ML deps that fail on some platforms (Phase 1 plan assumed 4-bit Evo
