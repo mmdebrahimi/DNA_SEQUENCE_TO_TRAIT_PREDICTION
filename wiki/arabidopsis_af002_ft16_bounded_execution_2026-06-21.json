@@ -1,0 +1,87 @@
+{
+  "candidate_id": "AF-002",
+  "date": "2026-06-21",
+  "analysis_n": 970,
+  "n_groups": 9,
+  "structure_only_baseline": {
+    "r2": -0.22099709510803223,
+    "spearman": 0.460544169409903,
+    "within_group_r2": 0.13931761887845073
+  },
+  "gena_lm": {
+    "smoke_window_budget_4": {
+      "r2": -0.09510016441345215,
+      "spearman": -0.3010385998133416,
+      "within_group_r2": -0.00642545095301883,
+      "artifact": "wiki/pathb_ft16_bounded_genalm_smoke_2026-06-21.json"
+    },
+    "bounded_window_budget_32": {
+      "42": {
+        "r2": -0.06502830982208252,
+        "spearman": 0.00038878588182438337,
+        "within_group_r2": -0.013344162074297339,
+        "artifact": "wiki/pathb_ft16_bounded_genalm_mvp970_2026-06-21.json"
+      },
+      "7": {
+        "r2": -0.1195451021194458,
+        "spearman": -0.22121657656146212,
+        "within_group_r2": -0.03371533212974365,
+        "artifact": "wiki/pathb_ft16_bounded_genalm_seed7_mvp970_2026-06-21.json"
+      },
+      "99": {
+        "r2": -0.12867224216461182,
+        "spearman": -0.26455573312573194,
+        "within_group_r2": -0.04260493937797105,
+        "artifact": "wiki/pathb_ft16_bounded_genalm_seed99_mvp970_2026-06-21.json"
+      }
+    }
+  },
+  "nucleotide_transformer": {
+    "smoke_window_budget_4": {
+      "r2": -0.097076416015625,
+      "spearman": 0.09386478733220302,
+      "within_group_r2": -0.08489704767672723,
+      "artifact": "wiki/pathb_ft16_bounded_nt_smoke_2026-06-21.json"
+    },
+    "bounded_window_budget_32": {
+      "42": {
+        "r2": -0.04105520248413086,
+        "spearman": 0.14226764679092885,
+        "within_group_r2": 0.008533005914182934,
+        "artifact": "wiki/pathb_ft16_bounded_nt_mvp970_2026-06-21.json"
+      },
+      "7": {
+        "r2": -0.11139488220214844,
+        "spearman": 0.032492589917541365,
+        "within_group_r2": -0.027254799223095594,
+        "artifact": "wiki/pathb_ft16_bounded_nt_seed7_mvp970_2026-06-21.json"
+      },
+      "99": {
+        "r2": -0.06881821155548096,
+        "spearman": 0.07849083969407938,
+        "within_group_r2": -0.014791354952779834,
+        "artifact": "wiki/pathb_ft16_bounded_nt_seed99_mvp970_2026-06-21.json"
+      }
+    }
+  },
+  "dnabert2": {
+    "smoke_window_budget_4": {
+      "r2": -0.17610585689544678,
+      "spearman": 0.05949169495201909,
+      "within_group_r2": -0.15800511575994847,
+      "artifact": "wiki/pathb_ft16_bounded_dnabert2_smoke_2026-06-21.json"
+    },
+    "bounded_window_budget_32": {
+      "42": {
+        "r2": -0.09663605690002441,
+        "spearman": 0.1231412011169007,
+        "within_group_r2": -0.08863303649378196,
+        "artifact": "wiki/pathb_ft16_bounded_dnabert2_mvp970_2026-06-21.json"
+      }
+    }
+  },
+  "branch_status": "active_mixed_signal",
+  "decision_label": "support_check_complete",
+  "best_next_move": "use the completed FT16 packet to force the AF-001 stop-vs-escalate decision",
+  "fallback_next_move": "none; three cached supported models have already been tested on the same retained slice"
+}

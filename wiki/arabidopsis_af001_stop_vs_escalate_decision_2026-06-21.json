@@ -1,0 +1,39 @@
+{
+  "candidate_id": "AF-001",
+  "date": "2026-06-21",
+  "decision_label": "stop_default_no_money_pathb_execution",
+  "branch_state": "mixed_signal_not_escalation_ready",
+  "evidence_inputs": [
+    "wiki/g2_dry_manifest_2026-06-09_ft10_full1003.json",
+    "wiki/pathb_bounded_genalm_mvp114_2026-06-09.json",
+    "wiki/pathb_bounded_genalm_seed_stability_2026-06-09.json",
+    "reports/arabidopsis_af002_ft16_bounded_execution_2026-06-21.md",
+    "wiki/pathb_ft16_bounded_dnabert2_mvp970_2026-06-21.json"
+  ],
+  "ft10_state": {
+    "analysis_n": 1003,
+    "bounded_packet_n": 114,
+    "bounded_packet_status": "negative_across_all_tested_genalm_seeds"
+  },
+  "ft16_state": {
+    "analysis_n": 970,
+    "tested_models": [
+      "gena_lm",
+      "nucleotide_transformer",
+      "dnabert2"
+    ],
+    "best_model": "nucleotide_transformer",
+    "best_model_status": "mixed_signal"
+  },
+  "forced_readout": {
+    "r2_only_improvement_present": true,
+    "rank_signal_clean_pass_present": false,
+    "within_group_clean_pass_present": false
+  },
+  "escalate_only_if": [
+    "larger_gpu_or_rewritten_inference_path_is_explicitly_available",
+    "next_packet_is_predeclared_as_an_escalation_packet",
+    "success_is_judged_against_r2_spearman_and_within_group_r2"
+  ],
+  "recommended_next_move": "stop default no-money Path B execution; keep AF-002 as support evidence only; reopen Path B only as an explicit compute-backed escalation"
+}
