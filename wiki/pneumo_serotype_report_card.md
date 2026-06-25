@@ -12,7 +12,7 @@ assembly both independent of our caller (clears the circularity rail; NOT the in
 Cohort: 260 Poland isolates (50 explicit-QUELLUNG + 210 phenotypic), 32 serotypes. Runner:
 `scripts/pneumo_gps_quellung_validate.py` (ENA ERS→ERZ→contig.fa.gz, native blastn, checkpointed).
 
-**Pilot (n=10):** serogroup concordance **0.9**, exact-serotype **0.4**. The exact misses are systematically
+**Interim (n=48):** serogroup concordance **0.958**, exact-serotype **0.729** (the n=10 pilot's 0.4 exact was an unlucky early draw; full n≤260 accruing). The exact misses are systematically
 WITHIN-serogroup (9A↔9V, 6B↔6E, 15B↔15C) — the documented v0 ceiling (single-best cps reference resolves
 serogroup; within-serogroup pairs need the allele-level logic the full tools add), NOT a bug. **Honest
 headline: serogroup-level concordance is the v0's real resolution; exact-serotype is the lower bound that
