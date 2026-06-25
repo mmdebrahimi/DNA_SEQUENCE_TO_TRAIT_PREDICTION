@@ -65,6 +65,10 @@ enough to prove the fully-independent cell.
 bacterial-AMR expansion the public-data map closed.
 
 ## Status
+- **Scope of the "acquisition is the frontier" claim (corrected 2026-06-25):** acquisition is the frontier for
+  a **FULLY-INDEPENDENT bacterial-AMR learned-model** cell specifically — NOT a global "no more free data"
+  claim. Several **public/code-closable** paths remain open: TB CRyPTIC gold-set curation, the pneumo
+  AMRFinder swap (near→fully-independent), fuller GPS measured-AST exploitation, and the β-lactam PBP engine.
 - **Banked.** The epoch's wins are committed; the deferred cells are scoped with named walls; the acquisition
   frontier is now a concrete spec + ask, awaiting the user's relationship decision.
 - **No code/research task remains on the acquisition path** — it is, by design, a relationship decision. The

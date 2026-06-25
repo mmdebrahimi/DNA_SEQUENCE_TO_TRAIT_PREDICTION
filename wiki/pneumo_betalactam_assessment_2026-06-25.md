@@ -13,13 +13,21 @@ rigorous breakpoint-stratified ceiling, and made the wrap-vs-build decision expl
 ## Breakpoint-stratified ceiling (GPS PBP→MIC predicted R/S vs measured MIC)
 | Drug @ context | n | acc | sens | spec | R | verdict |
 |---|---|---|---|---|---|---|
-| **Penicillin @ meningitis** | 255 | **0.973** | 0.979 | 0.968 | 97 | **clean + well-powered** |
+| **Penicillin @ meningitis** | 255 | **0.973** | 0.979 | 0.968 | 99 | best-powered context (caveats below) |
 | Penicillin @ non-meningitis | 244 | 0.881 | 0.5 | 0.887 | 4 | underpowered R (4 R total — can't assess) |
 | Meropenem @ either | 229 | 0.782 | 1.0 | 0.779 | 3 | GPS over-calls (50 FP, 3 R) |
 
-**Finding:** the β-lactam cell is really ONE clean drug-context — **penicillin @ the meningitis breakpoint
-(0.973, 97 R)**. Non-meningitis is underpowered (4 R); meropenem is over-called. The acc swing on the SAME
-genomes/predictions (0.973 → 0.881) IS the breakpoint-ambiguity, now made explicit by the context-keyed module.
+**Finding:** the β-lactam cell is really ONE usable drug-context — **penicillin @ the meningitis breakpoint
+(raw acc 0.973)**. Non-meningitis is underpowered (4 R); meropenem is over-called. The acc swing on the SAME
+genomes/predictions (0.973 → 0.881) IS the breakpoint-ambiguity, now explicit via the context-keyed module.
+
+**Powering + clonality (corrected 2026-06-25 — raw acc is clonally inflated):** raw acc 0.973 carries a
+**Wilson 95% CI 0.945–0.987** (n=255). The R class is **99 isolates across 15 GPSC lineages** (effective-N=15,
+clears the project's G8 ≥3-lineage gate) BUT is **lineage-dominated — the largest clone (GPSC 6) is 37% of R**.
+So the raw isolate-level 0.973 is clonally inflated (one over-sampled clone carries it); a cluster-weighted
+recompute (one vote per lineage, per `compute_lineage_metrics`) would lower it. Honest claim: **best-powered
+β-lactam context, effective-N=15, but NOT lineage-independent — raw 0.973 is an upper bound.** This is a single
+Poland cohort (no external/temporal validation).
 
 ## The wrap-vs-build decision (the cell's crux)
 The 0.973 ceiling uses GPS's PBP→MIC predictions. To turn that into OUR cell, two paths:

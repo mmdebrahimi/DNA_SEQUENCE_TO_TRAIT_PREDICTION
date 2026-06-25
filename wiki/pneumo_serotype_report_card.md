@@ -12,8 +12,14 @@ assembly both independent of our caller (clears the circularity rail; NOT the in
 Cohort: 260 Poland isolates (50 explicit-QUELLUNG + 210 phenotypic), 32 serotypes. Runner:
 `scripts/pneumo_gps_quellung_validate.py` (ENA ERS→ERZ→contig.fa.gz, native blastn, checkpointed).
 
-**FINAL (n=230 scored; 25/260 assemblies unavailable, reported not hidden):** serogroup concordance **0.939**,
-exact-serotype **0.661**. The cleanest subset — explicit-QUELLUNG-method labels (n=42) — is serogroup **0.952**
+**FINAL — full 260-isolate accounting (corrected 2026-06-25):** 260 = **230 scored + 25 assembly-unavailable
++ 5 no-call** (caller found no cps match at threshold = non-typeable/novel; ~2.1% no-call rate of the 235
+typed assemblies — a utility fact, excluded from accuracy by construction). On the 230 scored: serogroup
+concordance **0.939**, exact-serotype **0.661**. **Label precision:** the wet-lab method is explicit QUELLUNG
+for n=42 (serogroup 0.952); the remaining ~210 are `Phenotypic_serotype` with method unspecified (still
+wet-lab serology, not in-silico) — so the cohort is "phenotypic serotype (Quellung-explicit subset n=42)",
+not pure-Quellung. The label is independent (measured phenotype) but the cps DB + serotype universe are a
+shared REFERENCE SYSTEM (reference-coupled, not circular). The cleanest subset — explicit-QUELLUNG-method labels (n=42) — is serogroup **0.952**
 / exact **0.690** (consistent). Fair v0 comparison to the full GPS pipeline's ~89% exact: the pipeline does
 allele-level within-serogroup resolution our single-best-reference v0 doesn't, so **serogroup ~0.94 is the
 honest v0 number**; exact ~0.66 is the within-serogroup-limited lower bound. The exact misses are systematically

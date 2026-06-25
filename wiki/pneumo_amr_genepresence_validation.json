@@ -2,7 +2,7 @@
   "schema": "pneumo-amr-genepresence-validation-v1",
   "label": "WET-LAB measured AST (GPS Poland; CLSI disc-diffusion zone breakpoints)",
   "genotype_source": "GPS pipeline determinant calls (gene-presence BLAST; ~AMRFinder-equivalent for erm/mef/tet)",
-  "honesty_tier": "NEAR_INDEPENDENT_MEASURED (label independent; determinant-calling = GPS, our-AMRFinder swap deferred)",
+  "honesty_tier": "EXTERNAL_GPS_DETERMINANT_TO_AST_RULE_VALIDATION (label=wet-lab measured AST independent; genotype=GPS pipeline determinant calls NOT our caller; supports rule plausibility NOT end-to-end dna_decode AMR calling; our-AMRFinder swap unmeasured -- corrected from the overstated 'near-independent' label 2026-06-25)",
   "scope": "gene-presence drugs only (macrolide, tetracycline); beta-lactam PBP cell deferred",
   "drugs": {
     "erythromycin": {

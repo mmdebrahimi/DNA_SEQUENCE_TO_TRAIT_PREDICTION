@@ -17,15 +17,18 @@ go/no-go identified). The β-lactam PBP half stays deferred (separate engine; se
 | **Macrolide (erm/mef)** | 127 | **0.961** | 0.968 | 0.954 | TP60 FP3 TN62 FN2 |
 | **Tetracycline (tetM)** | 74 | **0.932** | 0.964 | 0.913 | TP27 FP4 TN42 FN1 |
 
-## Honesty tier — NEAR-INDEPENDENT measured-label
+## Honesty tier — EXTERNAL GPS-determinant-to-AST RULE validation (corrected 2026-06-25)
+**This validates the erm/mef/tet → AST RULE, NOT the end-to-end `dna_decode` FASTA→determinant→AST path.**
 - **Label = WET-LAB measured AST** (disc/agar zone diameters), independent of any caller → clears the
-  circularity gate (G1/G3). This is a real measured phenotype, not a gene-call.
-- **Genotype = GPS pipeline determinant calls** (Supplementary Data 2). For GENE-PRESENCE genes
-  (erm/mef/tet) the call is plain BLAST presence, which AMRFinder replicates near-identically → the
-  faithful-to-tool gap is SMALL (unlike the β-lactam PBP regression). Hence **near-independent**.
-- **Fully-independent swap (deferred):** run OUR AMRFinder (organism `Streptococcus_pneumoniae`) on the GPS
-  assemblies → our own determinant calls → re-score. Docker-gated; deferred behind the running ktype
-  finisher (no contention). Expected to move the numbers only marginally (gene-presence is method-robust).
+  circularity gate (G1/G3). This half is genuinely independent: a real measured phenotype, not a gene-call.
+- **Genotype = GPS pipeline determinant calls** (Supplementary Data 2) — NOT our own caller. So the number
+  measures (GPS determinant-calling + our rule) vs measured AST. It **supports rule plausibility**; it is
+  **not** a shipped-decoder end-to-end performance claim. The earlier "near-independent" label overstated
+  this: the premise that AMRFinder ≈ GPS BLAST for these genes is **plausible but UNMEASURED**.
+- **To upgrade to a fully-independent number (deferred):** run OUR AMRFinder (organism
+  `Streptococcus_pneumoniae`) on the GPS assemblies → our own determinant calls → re-score, AND report the
+  GPS-vs-our determinant discordance. Docker-gated. Until then, the headline tier is **rule-validation**, not
+  decoder-validation.
 
 ## What this establishes
 - The pneumococcus AMR cell's **gene-presence component is a clean GO** (0.93–0.96 vs measured), confirming
