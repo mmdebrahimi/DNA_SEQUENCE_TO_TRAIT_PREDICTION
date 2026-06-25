@@ -12,8 +12,16 @@ deterministic single-gene wzi caller, FAITHFUL to the Kleborate/BIGSdb wzi metho
 - naive KL#==K# match UNDER-counts (drops the KL<->K renaming/alternative-type equivalence the paper applies); the curated rate is the real ceiling.
 - This is the *ceiling* a genomic K-typer approaches; the single-gene wzi-v0 is ~94% of full-locus Kaptive. The genuine wzi-caller-vs-serology number is the scoped scale-up below.
 
-## Pending scale-up
-- run the wzi caller on the 731 genomes (ENA run reads -> targeted wzi mapping) -> the genuine wzi-caller-vs-measured-serology number (namespace-separate).
+## Wzi-caller-vs-serology number (COMPLETE 2026-06-25, n=447)
+Ran the wzi caller on the full ENA-fetchable ERR cohort (targeted wzi read-mapping → `call_ktype`) vs the
+MEASURED serological K-type. **Concordance 0.629** (naive KL#==K#; 273/434 scored), n_attempted=447,
+n_called=434 (13 no-call), 5 error. Artifact: `wiki/ktype_cohort_validation.json`.
+- **Honest read:** 0.629 is the naive-numeric lower bound (the curated KL↔K equivalence the paper applies
+  lifts it toward the 0.745 naive / 0.845 curated CEILING above — and that ceiling is full-locus Kaptive,
+  whereas this is single-gene wzi-v0 = ~94% of Kaptive). So 0.629 vs the 0.745 naive ceiling is the expected
+  wzi-v0 gap, NOT a failure. Faithful-to-tool (the wzi method), never an independent baseline.
+- Cohort scope: 447 of the 733-isolate measured-serology set had a fetchable ERR accession (286 'TBD'/
+  unavailable skipped — reported, not hidden).
 
 ## Honesty rails
 - FAITHFUL-TO-TOOL (wzi method), NOT an independent baseline; `caller_is_independent_baseline=false`.

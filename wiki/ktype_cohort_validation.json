@@ -1,0 +1,16 @@
+{
+  "schema": "ktype-cohort-validation-v1",
+  "status": "COMPLETE",
+  "label": "wzi-caller vs MEASURED serological K-type (KlebNET-GSP ERR cohort)",
+  "n_total_ERR_cohort": 447,
+  "aggregate": {
+    "n_attempted": 447,
+    "n_called": 434,
+    "n_scored": 434,
+    "n_concordant": 273,
+    "concordance": 0.629,
+    "n_error": 5,
+    "n_nocall": 13
+  },
+  "caveat": "naive KL#==K# concordance (lower bound; curated KL<->K equivalence lifts it). wzi single-gene v0 (~94% of full Kaptive). Reads-based targeted wzi mapping. 13 no-call + 5 error (reported, not hidden)."
+}
