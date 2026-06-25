@@ -2,7 +2,21 @@
 
 **Decoder:** `dna-pneumo-serotype` (also `dna-decode pneumoserotype`) — deterministic cps-reference blastn caller.
 **Trait class:** capsular serotype ("their look" / antigenic identity). Sibling of `dna-serotype` (E. coli O:H) + `dna-ktype` (Klebsiella capsule).
-**Date:** 2026-06-24. **Status:** caller SHIPPED + offline-safe; **real-DB reference-control 4/4 exact** (below); full GPS Quellung cohort number = a runnable step.
+**Date:** 2026-06-24 (Quellung validation 2026-06-25). **Status:** caller SHIPPED; **real-DB reference-control 4/4 exact**; **INDEPENDENT phenotypic-Quellung validation IN PROGRESS** (GPS Poland cohort, n≤260; pilot below).
+
+## INDEPENDENT measured-label validation vs phenotypic Quellung (2026-06-25) — the real number
+The independent-measured-label win (the HIV pattern, for a typing trait): scored the deterministic caller vs
+the **wet-lab phenotypic serotype** from the GPS pipeline paper (Nat Commun 2025, **Supplementary Data 1**,
+column `Phenotypic_serotype`, method QUELLUNG/phenotypic) on **GPS-deposited ENA assemblies** — label AND
+assembly both independent of our caller (clears the circularity rail; NOT the in-silico Monocle field).
+Cohort: 260 Poland isolates (50 explicit-QUELLUNG + 210 phenotypic), 32 serotypes. Runner:
+`scripts/pneumo_gps_quellung_validate.py` (ENA ERS→ERZ→contig.fa.gz, native blastn, checkpointed).
+
+**Pilot (n=10):** serogroup concordance **0.9**, exact-serotype **0.4**. The exact misses are systematically
+WITHIN-serogroup (9A↔9V, 6B↔6E, 15B↔15C) — the documented v0 ceiling (single-best cps reference resolves
+serogroup; within-serogroup pairs need the allele-level logic the full tools add), NOT a bug. **Honest
+headline: serogroup-level concordance is the v0's real resolution; exact-serotype is the lower bound that
+motivates a v0.1** (allele-level within-serogroup typing). Full n≤260 number: `wiki/pneumo_serotype_cohort_validation.json` (run in progress).
 
 ## Real-DB reference-control (2026-06-24) — a REAL number
 Built the real cps DB from PneumoCaT's Stage-1 reference (95 serotypes; `scripts/build_pneumo_cps_db.py`)
