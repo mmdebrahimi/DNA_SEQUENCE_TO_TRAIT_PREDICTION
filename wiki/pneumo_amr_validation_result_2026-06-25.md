@@ -17,24 +17,24 @@ go/no-go identified). The β-lactam PBP half stays deferred (separate engine; se
 | **Macrolide (erm/mef)** | 127 | **0.961** | 0.968 | 0.954 | TP60 FP3 TN62 FN2 |
 | **Tetracycline (tetM)** | 74 | **0.932** | 0.964 | 0.913 | TP27 FP4 TN42 FN1 |
 
-## Honesty tier — EXTERNAL GPS-determinant-to-AST RULE validation (corrected 2026-06-25)
+## Honesty tier — FULLY-INDEPENDENT measured-label (confirmed 2026-06-25; see the AMRFinder-swap arm below)
 **This validates the erm/mef/tet → AST RULE, NOT the end-to-end `dna_decode` FASTA→determinant→AST path.**
 - **Label = WET-LAB measured AST** (disc/agar zone diameters), independent of any caller → clears the
   circularity gate (G1/G3). This half is genuinely independent: a real measured phenotype, not a gene-call.
 - **Genotype = GPS pipeline determinant calls** (Supplementary Data 2) — NOT our own caller. So this number
   measures (GPS determinant-calling + our rule) vs measured AST. It **supports rule plausibility**.
 
-### Fully-independent arm — MEASURED (2026-06-25, pilot n=15)
-The "AMRFinder ≈ GPS BLAST" premise is **no longer unmeasured.** `scripts/pneumo_amrfinder_swap.py` runs OUR
-AMRFinder (`ncbi/amr` 4.2.7) end-to-end on the GPS assemblies → our own erm/mef/tet determinant calls → re-score.
-- **Pilot n=15: our-AMRFinder-vs-GPS determinant agreement = 1.0** (15/15, both drugs) — the equivalence is
-  measured, not assumed.
-- **Fully-independent re-score (our caller end-to-end): macrolide acc 1.0 (TP9/TN6), tet acc 1.0 (TP2/TN6)** —
-  perfect on the pilot (small n; the full-cohort number is the real one).
-- **→ The gene-presence rule-validation number TRANSFERS to fully-independent** at the determinant-calling step
-  (1.0 agreement). Full 127-isolate run in progress → `wiki/pneumo_amr_amrfinder_swap_pilot.json` (becomes the
-  full fully-independent number on completion). Tier upgrades rule-validation → **near-independent measured,
-  determinant-agreement-confirmed** once the full run lands.
+### Fully-independent arm — COMPLETE (2026-06-25, full cohort n=127)
+The "AMRFinder ≈ GPS BLAST" premise is **measured and confirmed.** `scripts/pneumo_amrfinder_swap.py` ran OUR
+AMRFinder (`ncbi/amr` 4.2.7) end-to-end on all 127 GPS assemblies → our own erm/mef/tet determinant calls → re-score.
+- **our-AMRFinder-vs-GPS determinant agreement = 1.0 across the full n=127** (both drugs) — perfect; our caller
+  and GPS's pipeline call identical erm/mef/tet determinants.
+- **FULLY-INDEPENDENT re-score (our caller end-to-end vs measured AST): macrolide acc 0.961 (TP60/FP3/TN62/FN2,
+  n=127), tetracycline acc 0.932 (TP27/FP4/TN42/FN1, n=74)** — **identical** to the GPS-determinant rule-validation
+  numbers, because the determinant agreement is perfect.
+- **→ TIER UPGRADED: this is a FULLY-INDEPENDENT measured-label number** (our caller end-to-end, no GPS genotype
+  dependency), not just rule-validation. The C1 honesty gap is fully closed. Artifact:
+  `wiki/pneumo_amr_amrfinder_swap_pilot.json` (full n=127).
 
 ## What this establishes
 - The pneumococcus AMR cell's **gene-presence component is a clean GO** (0.93–0.96 vs measured), confirming

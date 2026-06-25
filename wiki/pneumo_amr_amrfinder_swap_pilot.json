@@ -1,36 +1,37 @@
 {
   "schema": "pneumo-amr-amrfinder-swap-v1",
   "label": "FULLY-INDEPENDENT: OUR AMRFinder (not GPS calls) -> our rule -> vs wet-lab disc AST",
-  "n_attempted": 15,
+  "n_attempted": 127,
   "drugs": {
     "erythromycin": {
       "fully_independent": {
-        "n": 15,
-        "acc": 1.0,
-        "tp": 9,
-        "fp": 0,
-        "tn": 6,
-        "fn": 0
+        "n": 127,
+        "acc": 0.961,
+        "tp": 60,
+        "fp": 3,
+        "tn": 62,
+        "fn": 2
       },
       "our_vs_gps_determinant_agreement": {
-        "n": 15,
+        "n": 127,
         "agree": 1.0
       }
     },
     "tetracycline": {
       "fully_independent": {
-        "n": 8,
-        "acc": 1.0,
-        "tp": 2,
-        "fp": 0,
-        "tn": 6,
-        "fn": 0
+        "n": 74,
+        "acc": 0.932,
+        "tp": 27,
+        "fp": 4,
+        "tn": 42,
+        "fn": 1
       },
       "our_vs_gps_determinant_agreement": {
-        "n": 15,
+        "n": 127,
         "agree": 1.0
       }
     }
   },
-  "note": "our_vs_gps_determinant_agreement MEASURES the previously-unmeasured 'AMRFinder ~= GPS BLAST' claim. High agreement => the gene-presence rule-validation number transfers to fully-independent."
+  "note": "our_vs_gps_determinant_agreement MEASURES the previously-unmeasured 'AMRFinder ~= GPS BLAST' claim. High agreement => the gene-presence rule-validation number transfers to fully-independent.",
+  "status": "COMPLETE_n127"
 }
