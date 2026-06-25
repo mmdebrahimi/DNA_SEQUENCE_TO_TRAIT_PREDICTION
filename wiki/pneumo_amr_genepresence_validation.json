@@ -1,0 +1,31 @@
+{
+  "schema": "pneumo-amr-genepresence-validation-v1",
+  "label": "WET-LAB measured AST (GPS Poland; CLSI disc-diffusion zone breakpoints)",
+  "genotype_source": "GPS pipeline determinant calls (gene-presence BLAST; ~AMRFinder-equivalent for erm/mef/tet)",
+  "honesty_tier": "NEAR_INDEPENDENT_MEASURED (label independent; determinant-calling = GPS, our-AMRFinder swap deferred)",
+  "scope": "gene-presence drugs only (macrolide, tetracycline); beta-lactam PBP cell deferred",
+  "drugs": {
+    "erythromycin": {
+      "n": 127,
+      "skipped_I_or_missing": 136,
+      "accuracy": 0.961,
+      "sensitivity": 0.968,
+      "specificity": 0.954,
+      "tp": 60,
+      "fp": 3,
+      "tn": 62,
+      "fn": 2
+    },
+    "tetracycline": {
+      "n": 74,
+      "skipped_I_or_missing": 189,
+      "accuracy": 0.932,
+      "sensitivity": 0.964,
+      "specificity": 0.913,
+      "tp": 27,
+      "fp": 4,
+      "tn": 42,
+      "fn": 1
+    }
+  }
+}
