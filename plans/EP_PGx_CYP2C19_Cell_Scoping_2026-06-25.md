@@ -55,4 +55,17 @@ All three free-data dependencies confirmed (the cleanest "higher organism" cell 
 - Uniquely, it has a FREE INDEPENDENT validation panel (GeT-RM) — better-grounded than most bacterial cells.
 - FROZEN E. coli AMR surface untouched (new `dna_decode/pgx/` package; non-frozen).
 
-## Status: GO, scoped. Build (P2–4) is the next focused execute — a fresh-domain effort, not rushed at session tail.
+## Status: BUILT (P2–4 shipped 2026-06-25, v0.6.0)
+
+> **UPDATE 2026-06-25 — the cell is BUILT.** `dna_decode/pgx/` ships the full VCF→star→diplotype→CPIC-phenotype
+> caller + `dna-pgx` console script + `dna-decode pgx` dispatch + 23 tests (all pass). Coordinates grounded
+> (GRCh38 chr10: *2=94781859, *3=94780653, *17=94761900); CPIC function + diplotype→phenotype table encoded
+> (Caudle 2020). Honest tier wired into the record (`calling_is_independent_baseline=True` /
+> `phenotype_is_independent_baseline=False`). Edge handling verified live: phased/unphased trans assumption,
+> multiallelic, no-call, assumed-reference-at-absent (all flagged, never silent). FROZEN AMR surface
+> byte-unchanged (leak guard green). Released as v0.6.0; CHANGELOG updated.
+>
+> **REMAINING (P3 "real number" — the live follow-up):** run the caller on the GeT-RM Coriell samples'
+> public 1000 Genomes VCFs → diplotype-vs-consensus cohort concordance (the genuine independent CALLING
+> number; PharmCAT's ceiling is ~59/59). Needs the VCF fetch (network). v0.1 refinements: *1-vs-*38
+> (rs3758581), non-core star alleles, an own report card. PyPI publish of 0.6.0 is a separate (gated) step.

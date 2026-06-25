@@ -3,6 +3,27 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.6.0] — the first HUMAN cell: CYP2C19 pharmacogenomics (2026-06-25)
+
+- **NEW `dna-pgx`** (`dna_decode/pgx/`) — the first **human** decoder cell + the honest catalog-tractable form
+  of the "higher organism" jump (the complex-trait/embedding path stays a closed 0-for-4 negative). A phased
+  VCF (GRCh38) → CYP2C19 defining-SNP genotypes → **star-allele → diplotype → CPIC metabolizer phenotype**
+  (PM/IM/NM/RM/UM). Pure-stdlib VCF parse (no pysam/Docker); handles phased/unphased, multiallelic, no-call,
+  and absent-record (assumed-reference, **explicitly flagged**, never silent ref-by-absence).
+- **Curated catalog** `dna_decode/pgx/cyp2c19_catalog.py` — core SNP-defined alleles **\*2 (rs4244285,
+  chr10:94781859), \*3 (rs4986893, chr10:94780653), \*17 (rs12248560, chr10:94761900)** + \*1; GRCh38
+  coordinates grounded vs PharmVar/dbSNP + Botton 2021 + Gaedigk 2022. CPIC standardized function +
+  diplotype→phenotype table (Caudle 2020), incl. \*2/\*17 = provisional IM.
+- **Honesty tier (load-bearing, two distinct claims):** star-allele **CALLING is independently validatable**
+  vs the free GeT-RM consensus panel (`calling_is_independent_baseline=True`); the metabolizer **PHENOTYPE is
+  FAITHFUL-TO-CPIC** (assigned, not measured; reference tool = PharmCAT;
+  `phenotype_is_independent_baseline=False`). v0 covers the core SNP set; a non-core star allele is mis-called
+  \*1 — a flagged blind spot. **NOT a clinical tool.**
+- Wired into the `dna-decode` dispatcher (`dna-decode pgx`) + `dna-decode list`. 23 tests
+  (`tests/test_pgx_cyp2c19.py`). FROZEN bacterial/viral/fungal AMR surface byte-unchanged.
+- Scoping + the GeT-RM⋈1000G cohort-concordance follow-up (the "real number" P3 run, needs the VCF fetch):
+  `plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md`.
+
 ## [0.5.3] — salmserovar bugfix + pneumococcus AMR engines (2026-06-25)
 
 - **FIX `dna-salmserovar` (was wrong on real genomes in 0.5.2):** `_best_per_axis` selected the H antigen by

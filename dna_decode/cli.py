@@ -66,6 +66,10 @@ TRAITS = {
         "summary": "S. pneumoniae capsular serotype via the cps-locus reference scheme (PneumoCaT/SeroBA-style)",
         "validation": "INDEPENDENT vs phenotypic Quellung (GPS Poland n=230): serogroup 0.939 / exact 0.661 (QUELLUNG-subset n=42: serogroup 0.952). deterministic cps-reference-blastn (id 90/cov 70); serogroup-reliable v0, within-serogroup (6A/6B,19A/19F) needs allele logic (v0.1); offline-safe degrade",
     },
+    "pgx": {
+        "summary": "HUMAN pharmacogenomics: CYP2C19 diplotype + CPIC metabolizer phenotype (PM/IM/NM/RM/UM) from a phased VCF (GRCh38) -- the first human cell",
+        "validation": "deterministic VCF->defining-SNP(*2/*3/*17)->star-allele->diplotype->CPIC phenotype. CALLING is independently validatable vs the GeT-RM consensus panel (free measured/consensus label); PHENOTYPE is faithful-to-CPIC (assigned, not measured; ref tool PharmCAT). v0 core SNP-defined alleles; non-core star -> mis-called *1 (flagged). NOT a clinical tool",
+    },
 }
 
 
@@ -111,6 +115,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pneumoserotype":
         from dna_decode.pneumoserotype.cli import main as pneumoserotype_main
         return pneumoserotype_main(rest)
+    if trait == "pgx":
+        from dna_decode.pgx.cli import main as pgx_main
+        return pgx_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
