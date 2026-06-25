@@ -1,4 +1,22 @@
-# S. pneumoniae β-lactam AMR — rec-1 assessment + wrap-vs-build decision (2026-06-25)
+# S. pneumoniae β-lactam AMR — ENGINE BUILT (2026-06-25)
+
+> **UPDATE 2026-06-25: the deferred β-lactam cell is BUILT.** The "multi-session CDC-model wall" was wrong —
+> the CDC engine ships a flat **PBP-type → MIC lookup table** (`Ref_PBPtype_MIC.csv`, GlobalPneumoSeq/spn-pbp-amr,
+> 307 PBP-type combos × 6 β-lactams). `dna_decode/organism_rules/pneumo_betalactam.py` does APT-lookup → MIC →
+> R/S via `data/pneumo_breakpoints.py`. **Validated vs wet-lab measured AST (GPS Poland): penicillin@meningitis
+> acc 0.974** (sens 0.97 / spec 0.976, n=193; 64 no-call = novel 'NEW' PBP types absent from the CDC table).
+> ceftriaxone@meningitis 1.0 (n=23). Non-meningitis + meropenem + cefotaxime over-call (low spec) — the
+> breakpoint-ambiguity + lookup conservatism, consistent with the ceiling analysis below.
+> **Honesty tier:** the engine is CDC's deterministic LOOKUP (faithful-to-tool, NOT independent); PBP TYPES are
+> GPS's (our-PBP-typer-from-genome swap deferred, mirrors the AMRFinder swap). Lookup table is CDC's published
+> reference — NOT a circular fit. Engine `pneumo_betalactam.py` + `scripts/pneumo_betalactam_validate.py` +
+> 7 tests; result `wiki/pneumo_betalactam_pbp_validation.json`. FROZEN E. coli AMR surface byte-unchanged.
+> **Remaining:** the PBP-typer-from-genome (BLAST `Ref_PBP_3.faa` transpeptidase domains) for a fully-deployable
+> end-to-end cell; reduce the no-call rate (novel types).
+
+---
+
+# (original) S. pneumoniae β-lactam AMR — rec-1 assessment + wrap-vs-build decision (2026-06-25)
 
 Completed the β-lactam half of the pneumococcus AMR cell (the deferred half from the go/no-go), as far as it
 goes WITHOUT a PBP→MIC engine + WITHOUT Docker (ktype occupies it). Built the breakpoint foundation + the

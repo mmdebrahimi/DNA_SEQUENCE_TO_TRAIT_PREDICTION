@@ -1,0 +1,86 @@
+{
+  "schema": "pneumo-betalactam-pbp-mic-validation-v1",
+  "engine": "CDC Ref_PBPtype_MIC lookup (GlobalPneumoSeq/spn-pbp-amr) -> pneumo_breakpoints",
+  "genotype_source": "GPS pipeline PBP types (our-PBP-typer-from-genome swap deferred)",
+  "label": "wet-lab measured AST (GPS Poland, MIC -> R/S via CLSI pneumo breakpoints)",
+  "n_isolates": 263,
+  "cells": {
+    "penicillin@meningitis": {
+      "n": 193,
+      "nocall": 64,
+      "accuracy": 0.974,
+      "sensitivity": 0.97,
+      "specificity": 0.976,
+      "tp": 65,
+      "fp": 3,
+      "tn": 123,
+      "fn": 2
+    },
+    "penicillin@non_meningitis": {
+      "n": 182,
+      "nocall": 64,
+      "accuracy": 0.753,
+      "sensitivity": 0.5,
+      "specificity": 0.756,
+      "tp": 1,
+      "fp": 44,
+      "tn": 136,
+      "fn": 1
+    },
+    "meropenem@meningitis": {
+      "n": 166,
+      "nocall": 65,
+      "accuracy": 0.795,
+      "sensitivity": 1.0,
+      "specificity": 0.791,
+      "tp": 3,
+      "fp": 34,
+      "tn": 129,
+      "fn": 0
+    },
+    "ceftriaxone@meningitis": {
+      "n": 23,
+      "nocall": 22,
+      "accuracy": 1.0,
+      "sensitivity": 1.0,
+      "specificity": 1.0,
+      "tp": 2,
+      "fp": 0,
+      "tn": 21,
+      "fn": 0
+    },
+    "ceftriaxone@non_meningitis": {
+      "n": 24,
+      "nocall": 19,
+      "accuracy": 0.875,
+      "sensitivity": null,
+      "specificity": 0.875,
+      "tp": 0,
+      "fp": 3,
+      "tn": 21,
+      "fn": 0
+    },
+    "cefotaxime@meningitis": {
+      "n": 160,
+      "nocall": 61,
+      "accuracy": 0.881,
+      "sensitivity": 1.0,
+      "specificity": 0.873,
+      "tp": 10,
+      "fp": 19,
+      "tn": 131,
+      "fn": 0
+    },
+    "cefotaxime@non_meningitis": {
+      "n": 180,
+      "nocall": 66,
+      "accuracy": 0.811,
+      "sensitivity": 1.0,
+      "specificity": 0.81,
+      "tp": 1,
+      "fp": 34,
+      "tn": 145,
+      "fn": 0
+    }
+  }
+}
