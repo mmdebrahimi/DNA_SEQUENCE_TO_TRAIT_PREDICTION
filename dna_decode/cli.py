@@ -58,6 +58,14 @@ TRAITS = {
         "summary": "Klebsiella K-antigen (capsule) type via the wzi allele scheme (BIGSdb Pasteur, Kleborate-bundled) - the serotype sibling",
         "validation": "deterministic wzi-blastn caller (identity 90 / coverage 80); faithful-to-tool; wzi->K ~94% NOT one-to-one; full-locus Kaptive more accurate; offline-safe degrade",
     },
+    "salmserovar": {
+        "summary": "Salmonella enterica serovar via the Kauffmann-White antigenic formula (O + H1=fliC + H2=fljB; SeqSero2-style antigen DB)",
+        "validation": "deterministic antigen-blastn + formula lookup (identity 90 / coverage 80); faithful-to-tool (SeqSero2/Kauffmann-White); serovar only when formula resolves uniquely; free measured label = traditional serotyping (validate vs wet-lab, not the tool); offline-safe degrade",
+    },
+    "pneumoserotype": {
+        "summary": "S. pneumoniae capsular serotype via the cps-locus reference scheme (PneumoCaT/SeroBA-style)",
+        "validation": "deterministic cps-reference-blastn caller (identity 90 / coverage 70); faithful-to-tool; serogroup-reliable, within-serogroup (6A/6B,19A/19F) needs allele logic; free measured label = GPS Quellung (n=11,810; ~89% in-silico ceiling); offline-safe degrade",
+    },
 }
 
 
@@ -97,6 +105,12 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "ktype":
         from dna_decode.ktype.cli import main as ktype_main
         return ktype_main(rest)
+    if trait == "salmserovar":
+        from dna_decode.salmserovar.cli import main as salmserovar_main
+        return salmserovar_main(rest)
+    if trait == "pneumoserotype":
+        from dna_decode.pneumoserotype.cli import main as pneumoserotype_main
+        return pneumoserotype_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
