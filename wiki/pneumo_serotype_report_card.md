@@ -2,7 +2,7 @@
 
 **Decoder:** `dna-pneumo-serotype` (also `dna-decode pneumoserotype`) — deterministic cps-reference blastn caller.
 **Trait class:** capsular serotype ("their look" / antigenic identity). Sibling of `dna-serotype` (E. coli O:H) + `dna-ktype` (Klebsiella capsule).
-**Date:** 2026-06-24 (Quellung validation 2026-06-25). **Status:** caller SHIPPED; **real-DB reference-control 4/4 exact**; **INDEPENDENT phenotypic-Quellung validation IN PROGRESS** (GPS Poland cohort, n≤260; pilot below).
+**Date:** 2026-06-24 (Quellung validation 2026-06-25). **Status:** caller SHIPPED + **INDEPENDENTLY VALIDATED vs phenotypic Quellung** (GPS Poland cohort, n=230): **serogroup concordance 0.939, exact-serotype 0.661**.
 
 ## INDEPENDENT measured-label validation vs phenotypic Quellung (2026-06-25) — the real number
 The independent-measured-label win (the HIV pattern, for a typing trait): scored the deterministic caller vs
@@ -12,7 +12,11 @@ assembly both independent of our caller (clears the circularity rail; NOT the in
 Cohort: 260 Poland isolates (50 explicit-QUELLUNG + 210 phenotypic), 32 serotypes. Runner:
 `scripts/pneumo_gps_quellung_validate.py` (ENA ERS→ERZ→contig.fa.gz, native blastn, checkpointed).
 
-**Interim (n=48):** serogroup concordance **0.958**, exact-serotype **0.729** (the n=10 pilot's 0.4 exact was an unlucky early draw; full n≤260 accruing). The exact misses are systematically
+**FINAL (n=230 scored; 25/260 assemblies unavailable, reported not hidden):** serogroup concordance **0.939**,
+exact-serotype **0.661**. The cleanest subset — explicit-QUELLUNG-method labels (n=42) — is serogroup **0.952**
+/ exact **0.690** (consistent). Fair v0 comparison to the full GPS pipeline's ~89% exact: the pipeline does
+allele-level within-serogroup resolution our single-best-reference v0 doesn't, so **serogroup ~0.94 is the
+honest v0 number**; exact ~0.66 is the within-serogroup-limited lower bound. The exact misses are systematically
 WITHIN-serogroup (9A↔9V, 6B↔6E, 15B↔15C) — the documented v0 ceiling (single-best cps reference resolves
 serogroup; within-serogroup pairs need the allele-level logic the full tools add), NOT a bug. **Honest
 headline: serogroup-level concordance is the v0's real resolution; exact-serotype is the lower bound that

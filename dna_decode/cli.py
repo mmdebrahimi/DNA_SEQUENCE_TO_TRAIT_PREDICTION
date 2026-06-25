@@ -64,7 +64,7 @@ TRAITS = {
     },
     "pneumoserotype": {
         "summary": "S. pneumoniae capsular serotype via the cps-locus reference scheme (PneumoCaT/SeroBA-style)",
-        "validation": "deterministic cps-reference-blastn caller (identity 90 / coverage 70); faithful-to-tool; serogroup-reliable, within-serogroup (6A/6B,19A/19F) needs allele logic; free measured label = GPS Quellung (n=11,810; ~89% in-silico ceiling); offline-safe degrade",
+        "validation": "INDEPENDENT vs phenotypic Quellung (GPS Poland n=230): serogroup 0.939 / exact 0.661 (QUELLUNG-subset n=42: serogroup 0.952). deterministic cps-reference-blastn (id 90/cov 70); serogroup-reliable v0, within-serogroup (6A/6B,19A/19F) needs allele logic (v0.1); offline-safe degrade",
     },
 }
 

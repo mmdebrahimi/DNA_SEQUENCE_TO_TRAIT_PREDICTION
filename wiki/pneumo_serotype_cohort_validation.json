@@ -1,0 +1,35 @@
+{
+  "schema": "pneumo-serotype-cohort-validation-v1",
+  "status": "COMPLETE",
+  "label": "wet-lab PHENOTYPIC serotype (GPS Poland cohort; Quellung/phenotypic; independent of genome)",
+  "source": "Nat Commun 2025 GPS pipeline paper Supplementary Data 1 (Phenotypic_serotype) + ENA GPS-deposited assemblies",
+  "caller": "dna_decode cps-reference blastn v0 (PneumoCaT Stage-1 DB, 95 serotypes)",
+  "aggregate": {
+    "n_total": 260,
+    "n_scored": 230,
+    "exact_concordance": 0.661,
+    "serogroup_concordance": 0.939,
+    "n_assembly_unavailable": 25
+  },
+  "quellung_explicit_subset": {
+    "n": 42,
+    "exact_concordance": 0.69,
+    "serogroup_concordance": 0.952
+  },
+  "serogroup_misses": {
+    "6E<-14": 2,
+    "19AF<-1": 1,
+    "9N<-19F": 1,
+    "19F<-18C": 1,
+    "17F<-22A": 1,
+    "3<-19F": 1,
+    "14<-19F": 1,
+    "6E<-10A": 1,
+    "23F<-14": 1,
+    "19A<-14": 1,
+    "10A<-6B": 1,
+    "38<-NT": 1,
+    "6A<-19F": 1
+  },
+  "honest_headline": "serogroup ~0.94 is the v0's real independent resolution (single-best cps reference); exact ~0.66 is the within-serogroup-limited lower bound. Full GPS pipeline ~89% exact does allele-level within-serogroup typing (a v0.1). Label + assembly both independent of our caller (clears circularity)."
+}
