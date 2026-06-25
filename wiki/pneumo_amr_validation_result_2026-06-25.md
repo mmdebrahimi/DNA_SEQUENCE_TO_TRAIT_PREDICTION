@@ -21,14 +21,20 @@ go/no-go identified). The β-lactam PBP half stays deferred (separate engine; se
 **This validates the erm/mef/tet → AST RULE, NOT the end-to-end `dna_decode` FASTA→determinant→AST path.**
 - **Label = WET-LAB measured AST** (disc/agar zone diameters), independent of any caller → clears the
   circularity gate (G1/G3). This half is genuinely independent: a real measured phenotype, not a gene-call.
-- **Genotype = GPS pipeline determinant calls** (Supplementary Data 2) — NOT our own caller. So the number
-  measures (GPS determinant-calling + our rule) vs measured AST. It **supports rule plausibility**; it is
-  **not** a shipped-decoder end-to-end performance claim. The earlier "near-independent" label overstated
-  this: the premise that AMRFinder ≈ GPS BLAST for these genes is **plausible but UNMEASURED**.
-- **To upgrade to a fully-independent number (deferred):** run OUR AMRFinder (organism
-  `Streptococcus_pneumoniae`) on the GPS assemblies → our own determinant calls → re-score, AND report the
-  GPS-vs-our determinant discordance. Docker-gated. Until then, the headline tier is **rule-validation**, not
-  decoder-validation.
+- **Genotype = GPS pipeline determinant calls** (Supplementary Data 2) — NOT our own caller. So this number
+  measures (GPS determinant-calling + our rule) vs measured AST. It **supports rule plausibility**.
+
+### Fully-independent arm — MEASURED (2026-06-25, pilot n=15)
+The "AMRFinder ≈ GPS BLAST" premise is **no longer unmeasured.** `scripts/pneumo_amrfinder_swap.py` runs OUR
+AMRFinder (`ncbi/amr` 4.2.7) end-to-end on the GPS assemblies → our own erm/mef/tet determinant calls → re-score.
+- **Pilot n=15: our-AMRFinder-vs-GPS determinant agreement = 1.0** (15/15, both drugs) — the equivalence is
+  measured, not assumed.
+- **Fully-independent re-score (our caller end-to-end): macrolide acc 1.0 (TP9/TN6), tet acc 1.0 (TP2/TN6)** —
+  perfect on the pilot (small n; the full-cohort number is the real one).
+- **→ The gene-presence rule-validation number TRANSFERS to fully-independent** at the determinant-calling step
+  (1.0 agreement). Full 127-isolate run in progress → `wiki/pneumo_amr_amrfinder_swap_pilot.json` (becomes the
+  full fully-independent number on completion). Tier upgrades rule-validation → **near-independent measured,
+  determinant-agreement-confirmed** once the full run lands.
 
 ## What this establishes
 - The pneumococcus AMR cell's **gene-presence component is a clean GO** (0.93–0.96 vs measured), confirming
