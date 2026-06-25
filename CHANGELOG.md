@@ -3,6 +3,18 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.5.3] — salmserovar bugfix + pneumococcus AMR engines (2026-06-25)
+
+- **FIX `dna-salmserovar` (was wrong on real genomes in 0.5.2):** `_best_per_axis` selected the H antigen by
+  coverage only, but flagellin (fliC/fljB) alleles cross-hybridize at full coverage → it picked the WRONG
+  antigen (S. Typhimurium LT2 gave 4:r:1,5,7 instead of 4:i:1,2). Now **identity-primary** → correct
+  (LT2 → Typhimurium, all 100%). Regression test added.
+- **NEW (library) `dna_decode/organism_rules/pneumo_betalactam.py`** — S. pneumoniae β-lactam PBP-type→MIC→R/S
+  engine (CDC `Ref_PBPtype_MIC` lookup + context-aware breakpoints). Validated vs measured AST:
+  penicillin@meningitis 0.974. Plus `organism_rules/pneumo_amr.py` (gene-presence macrolide/tet, 0.961/0.932,
+  fully-independent via AMRFinder swap) + `data/pneumo_breakpoints.py`. Non-frozen overlays; FROZEN E. coli
+  AMR surface byte-unchanged. (Engines are library modules; their DBs are gitignored, built via `scripts/`.)
+
 ## [0.5.2] — two new typing decoders (2026-06-25)
 
 - **NEW `dna-salmserovar`** — Salmonella enterica serovar via the Kauffmann-White antigenic formula
