@@ -65,7 +65,16 @@ All three free-data dependencies confirmed (the cleanest "higher organism" cell 
 > multiallelic, no-call, assumed-reference-at-absent (all flagged, never silent). FROZEN AMR surface
 > byte-unchanged (leak guard green). Released as v0.6.0; CHANGELOG updated.
 >
-> **REMAINING (P3 "real number" — the live follow-up):** run the caller on the GeT-RM Coriell samples'
-> public 1000 Genomes VCFs → diplotype-vs-consensus cohort concordance (the genuine independent CALLING
-> number; PharmCAT's ceiling is ~59/59). Needs the VCF fetch (network). v0.1 refinements: *1-vs-*38
-> (rs3758581), non-core star alleles, an own report card. PyPI publish of 0.6.0 is a separate (gated) step.
+> **P3 PARTIAL DONE 2026-06-25 — faithful-to-PharmCAT number landed; GeT-RM independent number is a tooling wall.**
+> `scripts/pgx_cyp2c19_validate.py` validates the caller against the reference tool's OWN real VCF fixtures
+> (PharmCAT, vendored under `tests/data/pgx_cyp2c19/`): **core diplotype 6/6 + phenotype 6/6**
+> (`wiki/pgx_cyp2c19_report_card.{md,json}`). Honest tier = FAITHFUL-TO-PHARMCAT (in-distribution; the
+> "validate-wrapper-vs-tool" discipline), NOT independent. Blind spots surfaced: *35→*1/*1, *4b→*1/*17
+> (shares the *17 SNP — clinically meaningful). 14 harness tests.
+>
+> **REMAINING (the genuine INDEPENDENT number — wall classification: code-closable, tooling/network):**
+> GeT-RM consensus ⋈ 1000 Genomes VCFs needs tabix/bcftools + a VCF fetch — ABSENT on this Windows host
+> (no htslib via pip on Windows). Run on a Linux/Docker host (Precision 7780 / Databricks); the harness
+> already consumes that cohort via `--source getrm --expected-tsv sample<TAB>diplotype`. NOT a labels wall
+> (GeT-RM is free) — purely tooling. v0.1 refinements: *1-vs-*38 (rs3758581), non-core star alleles.
+> PyPI publish of 0.6.0 is a separate (gated) step.

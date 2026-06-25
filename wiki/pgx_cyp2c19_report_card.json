@@ -1,0 +1,120 @@
+{
+  "schema": "pgx-cyp2c19-validation-v0",
+  "analysis_date": "2026-06-25",
+  "gene": "CYP2C19",
+  "cohort_source": "pharmcat",
+  "n_total": 8,
+  "n_core": 6,
+  "n_noncore_blindspot": 2,
+  "core_diplotype_concordance": 1.0,
+  "core_diplotype_hits": "6/6",
+  "core_phenotype_concordance": 1.0,
+  "core_phenotype_hits": "6/6",
+  "honesty_tier": "FAITHFUL_TO_PHARMCAT (reference tool's own test fixtures; in-distribution, NOT independent)",
+  "caller_is_independent_baseline": false,
+  "caveat": "Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are reported as blind-spot cases (the caller is EXPECTED to mis-call a non-core star to a *1-substituted diplotype + flag it) and do NOT count toward the headline. The GeT-RM INDEPENDENT number (1000 Genomes VCFs) needs tabix/bcftools + a fetch on a Linux/Docker host -- the named follow-up; this harness consumes that cohort identically via --expected-tsv. NOT a clinical tool.",
+  "core_rows": [
+    {
+      "fixture": "s1s1",
+      "expected_diplotype": "*1/*1",
+      "predicted_diplotype": "*1/*1",
+      "diplotype_match": true,
+      "is_core": true,
+      "predicted_phenotype": "Normal Metabolizer",
+      "expected_phenotype": "Normal Metabolizer",
+      "phenotype_match": true,
+      "phasing": "unphased",
+      "flags": []
+    },
+    {
+      "fixture": "s1s17",
+      "expected_diplotype": "*1/*17",
+      "predicted_diplotype": "*1/*17",
+      "diplotype_match": true,
+      "is_core": true,
+      "predicted_phenotype": "Rapid Metabolizer",
+      "expected_phenotype": "Rapid Metabolizer",
+      "phenotype_match": true,
+      "phasing": "unphased",
+      "flags": []
+    },
+    {
+      "fixture": "s1s1rs12248560missing",
+      "expected_diplotype": "*1/*1",
+      "predicted_diplotype": "*1/*1",
+      "diplotype_match": true,
+      "is_core": true,
+      "predicted_phenotype": "Normal Metabolizer",
+      "expected_phenotype": "Normal Metabolizer",
+      "phenotype_match": true,
+      "phasing": "unphased",
+      "flags": [
+        "assumed_reference_at_uncalled_sites:*17"
+      ]
+    },
+    {
+      "fixture": "s1s2",
+      "expected_diplotype": "*1/*2",
+      "predicted_diplotype": "*1/*2",
+      "diplotype_match": true,
+      "is_core": true,
+      "predicted_phenotype": "Intermediate Metabolizer",
+      "expected_phenotype": "Intermediate Metabolizer",
+      "phenotype_match": true,
+      "phasing": "unphased",
+      "flags": []
+    },
+    {
+      "fixture": "s2s2",
+      "expected_diplotype": "*2/*2",
+      "predicted_diplotype": "*2/*2",
+      "diplotype_match": true,
+      "is_core": true,
+      "predicted_phenotype": "Poor Metabolizer",
+      "expected_phenotype": "Poor Metabolizer",
+      "phenotype_match": true,
+      "phasing": "unphased",
+      "flags": []
+    },
+    {
+      "fixture": "s2s3",
+      "expected_diplotype": "*2/*3",
+      "predicted_diplotype": "*2/*3",
+      "diplotype_match": true,
+      "is_core": true,
+      "predicted_phenotype": "Poor Metabolizer",
+      "expected_phenotype": "Poor Metabolizer",
+      "phenotype_match": true,
+      "phasing": "unphased",
+      "flags": [
+        "unphased_trans_assumption"
+      ]
+    }
+  ],
+  "blindspot_rows": [
+    {
+      "fixture": "s1s35",
+      "expected_diplotype": "*1/*35",
+      "predicted_diplotype": "*1/*1",
+      "diplotype_match": false,
+      "is_core": false,
+      "predicted_phenotype": "Normal Metabolizer",
+      "expected_phenotype": null,
+      "phenotype_match": null,
+      "phasing": "unphased",
+      "flags": []
+    },
+    {
+      "fixture": "s1s4b",
+      "expected_diplotype": "*1/*4b",
+      "predicted_diplotype": "*1/*17",
+      "diplotype_match": false,
+      "is_core": false,
+      "predicted_phenotype": "Rapid Metabolizer",
+      "expected_phenotype": null,
+      "phenotype_match": null,
+      "phasing": "unphased",
+      "flags": []
+    }
+  ]
+}

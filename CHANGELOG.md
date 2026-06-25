@@ -21,8 +21,16 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   \*1 — a flagged blind spot. **NOT a clinical tool.**
 - Wired into the `dna-decode` dispatcher (`dna-decode pgx`) + `dna-decode list`. 23 tests
   (`tests/test_pgx_cyp2c19.py`). FROZEN bacterial/viral/fungal AMR surface byte-unchanged.
-- Scoping + the GeT-RM⋈1000G cohort-concordance follow-up (the "real number" P3 run, needs the VCF fetch):
-  `plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md`.
+- **VALIDATED** against the reference tool's own real VCF fixtures (`scripts/pgx_cyp2c19_validate.py` +
+  `wiki/pgx_cyp2c19_report_card.{md,json}`): **core diplotype 6/6 + phenotype 6/6** on PharmCAT's CYP2C19
+  test VCFs (`*1/*1, *1/*2, *1/*17, *2/*2, *2/*3` + a `*17`-site-missing no-call case). Honest tier =
+  **FAITHFUL-TO-PHARMCAT** (in-distribution; the reference tool's expectations) — NOT yet the GeT-RM
+  independent number. Two blind spots surfaced honestly: `*35` (rs12769205-defined, non-core)→ mis-called
+  `*1/*1`; `*4b`→ aliases to `*1/*17` (shares the *17 SNP rs12248560 — clinically meaningful). 14 harness
+  tests (`tests/test_pgx_validate.py`); fixtures vendored under `tests/data/pgx_cyp2c19/` (PharmCAT, MPL-2.0).
+- **P3 follow-up (named wall):** the GeT-RM ⋈ 1000 Genomes INDEPENDENT cohort number needs tabix/bcftools +
+  a VCF fetch (absent on this Windows host) → a Linux/Docker-host run; the harness consumes that cohort
+  identically via `--source getrm --expected-tsv`. Scoping: `plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md`.
 
 ## [0.5.3] — salmserovar bugfix + pneumococcus AMR engines (2026-06-25)
 
