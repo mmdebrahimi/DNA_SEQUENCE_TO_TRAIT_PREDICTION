@@ -44,6 +44,19 @@ def test_offline_safe_missing_db():
     assert r["status"] == "unavailable" and r["serovar"] is None and r["antigenic_formula"] is None
 
 
+def test_best_per_axis_is_identity_primary():
+    # Regression for the shipped-0.5.2 bug: flagellin (fliC/fljB) alleles cross-hybridize at near-full
+    # COVERAGE across antigen types, so coverage-only selection picked the WRONG H antigen (Typhimurium
+    # LT2 gave 4:r:1,5,7 instead of 4:i:1,2). The true antigen is the highest-IDENTITY hit.
+    from dna_decode.salmserovar.runner import _best_per_axis
+    per_allele = {
+        "H1__r__8": {"percent_identity": 92.1, "percent_coverage": 101.1, "called": True},  # cross-hybridizer
+        "H1__i__5": {"percent_identity": 100.0, "percent_coverage": 100.0, "called": True},  # true antigen
+    }
+    best = _best_per_axis(per_allele)
+    assert best["H1"]["antigen"] == "i"   # identity-primary picks i despite r's higher coverage
+
+
 # --- real blastn control (skip if blastn absent) ---
 
 @pytest.mark.skipif(_blastn() is None, reason="blastn not installed")

@@ -50,7 +50,13 @@ def load_serovar_table(tsv: str | Path) -> dict[tuple[str, str, str], str]:
 
 
 def _best_per_axis(per_allele: dict) -> dict[str, dict]:
-    """For each axis (O/H1/H2), the best-coverage CALLED antigen."""
+    """For each axis (O/H1/H2), the best CALLED antigen — ranked by IDENTITY then coverage.
+
+    Identity-PRIMARY is load-bearing for the H antigens: flagellin (fliC/fljB) alleles cross-hybridize at
+    near-full COVERAGE across different antigen types, so a coverage-only tiebreak picks the WRONG antigen
+    (e.g. Typhimurium fliC=i blasts ~100% id while the cross-hybridizing fliC=r hits ~92% id at equal
+    coverage). The true antigen is the highest-IDENTITY hit. (Verified on S. Typhimurium LT2: coverage-only
+    gave 4:r:1,5,7; identity-primary gives the correct 4:i:1,2.)"""
     axis_best: dict[str, dict] = {}
     for allele_id, hit in per_allele.items():
         if not hit["called"]:
@@ -59,11 +65,11 @@ def _best_per_axis(per_allele: dict) -> dict[str, dict]:
         if pa is None:
             continue
         axis, antigen = pa
-        cov = hit["percent_coverage"]
+        key = (hit["percent_identity"], hit["percent_coverage"])
         cur = axis_best.get(axis)
-        if cur is None or cov > cur["percent_coverage"]:
+        if cur is None or key > (cur["percent_identity"], cur["percent_coverage"]):
             axis_best[axis] = {"axis": axis, "antigen": antigen, "best_allele": allele_id,
-                               "percent_identity": hit["percent_identity"], "percent_coverage": cov}
+                               "percent_identity": hit["percent_identity"], "percent_coverage": hit["percent_coverage"]}
     return axis_best
 
 
