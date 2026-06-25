@@ -17,12 +17,15 @@ go/no-go identified). The β-lactam PBP half stays deferred (separate engine; se
 | **Macrolide (erm/mef)** | 127 | **0.961** | 0.968 | 0.954 | TP60 FP3 TN62 FN2 |
 | **Tetracycline (tetM)** | 74 | **0.932** | 0.964 | 0.913 | TP27 FP4 TN42 FN1 |
 
-## Honesty tier — FULLY-INDEPENDENT measured-label (confirmed 2026-06-25; see the AMRFinder-swap arm below)
-**This validates the erm/mef/tet → AST RULE, NOT the end-to-end `dna_decode` FASTA→determinant→AST path.**
+## Honesty tier — FULLY-INDEPENDENT measured-label (confirmed 2026-06-25)
+Two arms, both vs the same wet-lab measured AST; the second closes the gap the first left open.
 - **Label = WET-LAB measured AST** (disc/agar zone diameters), independent of any caller → clears the
-  circularity gate (G1/G3). This half is genuinely independent: a real measured phenotype, not a gene-call.
-- **Genotype = GPS pipeline determinant calls** (Supplementary Data 2) — NOT our own caller. So this number
-  measures (GPS determinant-calling + our rule) vs measured AST. It **supports rule plausibility**.
+  circularity gate (G1/G3). A real measured phenotype, not a gene-call.
+- **Arm 1 (rule-validation):** the headline 0.961/0.932 above used **GPS pipeline determinant calls** as the
+  genotype (Supplementary Data 2) — external, not our caller. On its own that arm only **supports rule plausibility**.
+- **Arm 2 (fully-independent — below):** OUR AMRFinder end-to-end on the assemblies AGREES with GPS determinants
+  1.0/1.0 across n=127, so the same 0.961/0.932 holds with NO external-genotype dependency. **The headline is
+  therefore a fully-independent measured-label number.**
 
 ### Fully-independent arm — COMPLETE (2026-06-25, full cohort n=127)
 The "AMRFinder ≈ GPS BLAST" premise is **measured and confirmed.** `scripts/pneumo_amrfinder_swap.py` ran OUR
