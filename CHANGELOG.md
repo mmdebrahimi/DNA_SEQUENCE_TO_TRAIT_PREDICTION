@@ -3,6 +3,19 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.5.2] — two new typing decoders (2026-06-25)
+
+- **NEW `dna-salmserovar`** — Salmonella enterica serovar via the Kauffmann-White antigenic formula
+  (O + H1=fliC + H2=fljB; SeqSero2-style antigen DB). Deterministic, offline-safe, faithful-to-tool.
+- **NEW `dna-pneumo-serotype`** — S. pneumoniae capsular serotype via the cps-locus reference scheme
+  (PneumoCaT/SeroBA-style). **INDEPENDENTLY validated vs phenotypic Quellung** (GPS Poland cohort, n=230):
+  serogroup concordance 0.939 / exact 0.661 — the first independent measured-label validation for a non-AMR
+  typing trait. See `wiki/pneumo_serotype_report_card.md`.
+- Both wired into the `dna-decode` dispatcher + `dna-decode list`. The published 0.5.1 wheel predated them.
+- Non-frozen pneumococcus AMR groundwork (library only, no new console script): `organism_rules/pneumo_amr.py`
+  (gene-presence macrolide/tet rule; validated vs measured AST 0.961/0.932) + `data/pneumo_breakpoints.py`
+  (context-keyed β-lactam breakpoints). FROZEN E. coli AMR surface byte-unchanged.
+
 ## [Unreleased] — Anchor-4: standing decoder-suite validation report card (2026-06-10)
 
 - **NEW `dna_decode/eval/cohort_manifest.py`** — data-driven accession-manifest registry. `build_manifest()`
