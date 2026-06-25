@@ -1,0 +1,51 @@
+{
+  "schema": "pneumo-reference-control-v1",
+  "n": 4,
+  "exact_concordant": 4,
+  "serogroup_concordant": 4,
+  "genomes": [
+    {
+      "accession": "GCA_000006885.1",
+      "strain": "TIGR4",
+      "measured": "4",
+      "predicted": "04",
+      "exact": true,
+      "serogroup": true,
+      "pid": 100.0,
+      "cov": 100.0
+    },
+    {
+      "accession": "GCA_000014365.1",
+      "strain": "D39",
+      "measured": "2",
+      "predicted": "02",
+      "exact": true,
+      "serogroup": true,
+      "pid": 100.0,
+      "cov": 100.0
+    },
+    {
+      "accession": "GCA_000019265.1",
+      "strain": "Hungary19A-6",
+      "measured": "19A",
+      "predicted": "19A",
+      "exact": true,
+      "serogroup": true,
+      "pid": 98.6,
+      "cov": 100.0
+    },
+    {
+      "accession": "GCA_000026665.1",
+      "strain": "ATCC700669(Spain23F)",
+      "measured": "23F",
+      "predicted": "23F",
+      "exact": true,
+      "serogroup": true,
+      "pid": 99.7,
+      "cov": 100.0
+    }
+  ],
+  "db": "PneumoCaT Stage-1 cps reference (95 serotypes)",
+  "blastn": "native 2.17",
+  "caveat": "n=4 textbook-known reference genomes (header-verified strains); reference-control, NOT the full GPS Quellung cohort. Validates real DB + caller integration."
+}

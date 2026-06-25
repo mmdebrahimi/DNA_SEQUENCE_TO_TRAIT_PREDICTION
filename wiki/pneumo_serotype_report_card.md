@@ -2,7 +2,24 @@
 
 **Decoder:** `dna-pneumo-serotype` (also `dna-decode pneumoserotype`) — deterministic cps-reference blastn caller.
 **Trait class:** capsular serotype ("their look" / antigenic identity). Sibling of `dna-serotype` (E. coli O:H) + `dna-ktype` (Klebsiella capsule).
-**Date:** 2026-06-24. **Status:** caller SHIPPED + offline-safe; validated on a synthetic cps control; full-cohort number = a runnable step (see below).
+**Date:** 2026-06-24. **Status:** caller SHIPPED + offline-safe; **real-DB reference-control 4/4 exact** (below); full GPS Quellung cohort number = a runnable step.
+
+## Real-DB reference-control (2026-06-24) — a REAL number
+Built the real cps DB from PneumoCaT's Stage-1 reference (95 serotypes; `scripts/build_pneumo_cps_db.py`)
+and ran the caller (native blastn) on **4 textbook-known reference genomes** (strain names header-verified
+from ENA — this caught + excluded 4 wrong-accession fetches that returned *Beijerinckia*/*Korarchaeum*/*Leptothrix*):
+
+| strain | measured serotype | predicted | exact | %id / %cov |
+|---|---|---|---|---|
+| TIGR4 | 4 | 04→4 | ✓ | 100 / 100 |
+| D39 | 2 | 02→2 | ✓ | 100 / 100 |
+| Hungary19A-6 | 19A | 19A | ✓ | 98.6 / 100 |
+| ATCC 700669 (Spain23F-1) | 23F | 23F | ✓ | 99.7 / 100 |
+
+**Reference-control: exact 4/4, serogroup 4/4.** This validates the real DB + caller integration end-to-end
+on real genomes with INDEPENDENT textbook labels. **Honest scope:** n=4 reference-control, NOT the full GPS
+Quellung cohort (the headline GREEN-VALIDATED number still needs the 11,810-isolate cohort run). Artifact:
+`wiki/pneumo_serotype_reference_control_2026-06-24.json`.
 
 ## GREEN-cell gate (from `plans/Non_AMR_GREEN_Cell_Triage_Round2_2026-06-24.md`)
 | Gate | Result |
@@ -18,7 +35,7 @@
 
 ## Validation status
 - **Synthetic control (committed, offline-safe):** `tests/test_pneumoserotype.py` — a synthetic 19F cps fixture → caller returns `19F` (real blastn) + the offline-safe degrade + pure-logic parsers. Always-green in CI without the real DB.
-- **Real cps DB:** NOT committed (gitignored-class external DB). Build path: derive a per-serotype `cps_references.fasta` (header `serotype__<ST>__<id>`) from PneumoCaT's `pneumo_capsular_locus_references` or SeroBA's database.
+- **Real cps DB:** NOT committed (gitignored-class external DB). Build path: derive a per-serotype `cps_references.fasta` (header `serotype__<ST>__<id>`) from PneumoCaT's `pneumo_capsular_locus_references` or SeroBA's database. **Acquisition note (verified 2026-06-24):** `git clone https://github.com/phe-bioinformatics/PneumoCaT` → its `streptococcus-pneumoniae-ctvdb` / capsular reference FASTAs → concatenate per-serotype references under the `serotype__<ST>__<id>` header convention. This is the MORE tractable of the two new cells' DBs (a flat per-serotype reference set, vs SeqSero2's algorithmic serovar logic).
 - **Full-cohort GREEN-VALIDATED number (PENDING — runnable):** `scripts/serotype_cohort_validate.py --cell pneumo` — per GPS isolate with a Quellung label: fetch assembly → `call_pneumo_serotype` → concordance vs the phenotypic Quellung serotype. Multi-hour cohort op (best on D: / a long window; native blastn, no Docker). Reports serogroup-level + exact-serotype concordance separately (honest, given the v0 within-serogroup ceiling).
 
 ## Provenance / reproducibility

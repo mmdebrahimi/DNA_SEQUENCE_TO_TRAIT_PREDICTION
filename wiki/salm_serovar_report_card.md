@@ -18,7 +18,7 @@
 
 ## Validation status
 - **Synthetic control (committed, offline-safe):** `tests/test_salmserovar.py` — a synthetic Typhimurium fixture (O=4 / H1=i / H2=1,2) → formula `4:i:1,2` → `Typhimurium` (real blastn) + offline-safe degrade + pure-logic parsers. Always-green in CI without the real DB.
-- **Real antigen DB:** NOT committed (gitignored-class external DB). Build path: derive `salmonella_antigens.fasta` (headers `O__<g>__id` / `H1__<a>__id` / `H2__<a>__id`) + `serovar_table.tsv` (the White-Kauffmann-Le Minor formula table) from the SeqSero2 database.
+- **Real antigen DB:** NOT committed (gitignored-class external DB). Build path: derive `salmonella_antigens.fasta` (headers `O__<g>__id` / `H1__<a>__id` / `H2__<a>__id`) + `serovar_table.tsv` (the White-Kauffmann-Le Minor formula table) from the SeqSero2 database. **Acquisition note (verified 2026-06-24):** SeqSero2 is **bioconda-only (NOT on PyPI)** — get the DB via `git clone https://github.com/denglab/SeqSero2` (or `conda install -c bioconda seqsero2`); the DB→`O__/H1__/H2__` + `serovar_table.tsv` adaptation is the remaining data-engineering step (SeqSero2's serovar logic is an algorithm, not a flat formula table, so the table needs deriving).
 - **Full-cohort GREEN-VALIDATED number (PENDING — runnable):** `scripts/serotype_cohort_validate.py --cell salm` — per lab-serotyped isolate: fetch assembly → `call_serovar` → concordance vs the wet-lab serovar. Native blastn, no Docker. Reports formula-resolved-rate + serovar concordance separately.
 
 ## Provenance / reproducibility
