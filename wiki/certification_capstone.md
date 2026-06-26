@@ -8,8 +8,8 @@
 
 - **Total cells:** 67
 - **By track:** amr=25, finder=4, pgx=3, typing=6, viral=29
-- **By honest evidence tier:** faithful_to_tool=11, independent_measured=26, knowledge_baseline=4, near_independent=15, no_free_source=11
-- **Routable-but-NOT_CENSUSED (0):** none
+- **By honest evidence tier:** faithful_to_tool=11, independent_measured=25, knowledge_baseline=4, near_independent=15, no_free_source=11, not_censused=1
+- **Routable-but-NOT_CENSUSED (1):** viral:HIV-1:delavirdine
 
 ## Per-domain validated headlines (verbatim — NOT averaged)
 

@@ -44,6 +44,10 @@ class EvidenceTier(str, Enum):
     FAITHFUL_TO_TOOL = "faithful_to_tool"           # faithful to a reference tool/DB/guideline, not an independent label
     KNOWLEDGE_BASELINE = "knowledge_baseline"       # literature/catalogue assignment, in-distribution
     NO_FREE_SOURCE = "no_free_source"               # no free isolate-level phenotype source exists
+    NOT_CENSUSED = "not_censused"                    # CLI-routable but never validated (no report-card row)
+
+
+HIV_UNDERPOWERED_N = 50  # report-card n below this -> measured-but-UNDERPOWERED rather than full SCORED
 
 
 # Tracks (v0.1). amr/viral both route through `dna-amr`; route ≠ track (brainstorm C2 split).
@@ -109,20 +113,47 @@ def _amr_contracts() -> list[CellContract]:
 
 
 # --- Viral cells: HIV-1 + SARS-CoV-2 drugs route via `dna-amr --drug` but are NOT in the AMR surface. ---
+def _hiv_card_drugs() -> dict[str, dict]:
+    """{drug: card_row} from the PACKAGED HIV report card (trust_surface loader; wheel-safe). {} if absent."""
+    from dna_decode.data import trust_surface
+    card = trust_surface._load("hiv_decoder_report_card.json")
+    if not card:
+        return {}
+    return {c["drug"]: c for c in card.get("cells", []) if c.get("drug")}
+
+
 def _viral_contracts() -> list[CellContract]:
     from dna_decode.data.hiv_amr import all_supported_hiv_drugs
     from dna_decode.data.sarscov2_amr import all_supported_sarscov2_drugs
     out: list[CellContract] = []
+    card = _hiv_card_drugs()  # data-drive HIV tiers from the report card (brainstorm C1: no overclaim)
     for d in sorted(all_supported_hiv_drugs()):
+        row = card.get(d)
+        if row is None:
+            # CLI-routable but NOT in the validation report card (e.g. delavirdine) -> NOT_CENSUSED, never measured
+            tier, status, vocab, native = (EvidenceTier.NOT_CENSUSED, "cli_routable_not_validated",
+                                           AbstentionVocab.NOT_CENSUSED, "NOT_CENSUSED")
+            vslice = "CLI-routable; NOT in the HIV report card (uncensused)"
+            falsifier = "none"
+        elif (row.get("n") or 0) >= HIV_UNDERPOWERED_N:
+            tier, status, vocab, native = (EvidenceTier.INDEPENDENT_MEASURED, "independent_wetlab_validated",
+                                           AbstentionVocab.SCORED, "SCORED")
+            vslice = f"Stanford HIVDB PhenoSense fold-change (n={row.get('n')}, class={row.get('drug_class')})"
+            falsifier = "scripts/hiv_targetsite_validate.py"
+        else:
+            tier, status, vocab, native = (EvidenceTier.INDEPENDENT_MEASURED, "independent_wetlab_underpowered",
+                                           AbstentionVocab.UNDERPOWERED, "UNDERPOWERED")
+            vslice = f"Stanford HIVDB PhenoSense fold-change, UNDERPOWERED (n={row.get('n')})"
+            falsifier = "scripts/hiv_targetsite_validate.py"
         out.append(CellContract(
             cell_id=f"viral:HIV-1:{d}", track="viral", route="dna-amr", organism="HIV-1", target=d,
             claim=f"HIV-1 RT/PR/IN/CA target-site resistance call for {d}",
-            evidence_tier=EvidenceTier.INDEPENDENT_MEASURED, claim_status="independent_wetlab_validated",
-            validation_slice="Stanford HIVDB PhenoSense fold-change (free INDEPENDENT isolate-level label)",
-            label_provenance="Stanford HIVDB PhenoSense (Rhee 2003); catalog from the HIVDB dataset page",
-            abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
-            falsifier_ref="scripts/hiv_targetsite_validate.py", incoming_data_gate="n/a",
-            demotion_rule="AUC below the per-class powering floor demotes to UNDERPOWERED",
+            evidence_tier=tier, claim_status=status, validation_slice=vslice,
+            label_provenance=("Stanford HIVDB PhenoSense (Rhee 2003); catalog from the HIVDB dataset page"
+                              if row is not None else "none (CLI-routable, not yet validated)"),
+            abstention_vocab=vocab, native_abstention=native,
+            falsifier_ref=falsifier, incoming_data_gate="n/a",
+            demotion_rule="re-tiers from the HIV report card on revalidation",
         ))
     for d in sorted(all_supported_sarscov2_drugs()):
         out.append(CellContract(
@@ -228,7 +259,7 @@ def surface_index() -> dict[tuple[str, str], dict]:
     The validation report card reads its grid from here (== the frozen surface_index by construction).
     """
     out: dict[tuple[str, str], dict] = {}
-    for c in amr_cells():
+    for c in _amr_contracts():  # project directly from AMR cells (narrow import surface; M2)
         out[canonical_cell_key(c.organism, c.target)] = {
             "organism": c.organism, "drug": c.target, "engine": c.engine,
             "organism_scope": c.organism_scope, "phenotype_source_status": c.claim_status,
@@ -240,6 +271,7 @@ def surface_index() -> dict[tuple[str, str], dict]:
 def cli_routable_manifest() -> dict[str, set[str]]:
     """The authoritative v0.1 CLI-routable set, derived LIVE from the CLI catalogs (drift-proof)."""
     from dna_decode.cli import TRAITS
+    from dna_decode.pgx import PGX_GENES
     from dna_decode.data.antimalarial_amr import supported_antimalarial_drugs
     from dna_decode.data.antiviral_amr import supported_antiviral_drugs
     from dna_decode.data.fungal_amr import supported_fungal_drugs
@@ -251,7 +283,7 @@ def cli_routable_manifest() -> dict[str, set[str]]:
                  | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs()))
     return {
         "dna-amr": {d.lower() for d in amr_drugs},
-        "dna-pgx": {"cyp2c19", "cyp2c9", "vkorc1"},
+        "dna-pgx": set(PGX_GENES),
         "traits": set(TRAITS) - {"amr", "pgx"},  # the typing/finder whole-tool traits
     }
 

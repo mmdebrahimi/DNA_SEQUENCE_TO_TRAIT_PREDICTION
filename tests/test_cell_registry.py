@@ -32,7 +32,8 @@ from dna_decode.data.cell_registry import (
 from dna_decode.data.cell_registry_vocab import NATIVE_TO_VOCAB, AbstentionVocab, to_vocab
 
 REPO = Path(__file__).resolve().parent.parent
-_PGX_GENES = {"cyp2c19", "cyp2c9", "vkorc1"}
+from dna_decode.pgx import PGX_GENES  # M1: single source -> a 4th gene can't pass coverage vacuously
+_PGX_GENES = set(PGX_GENES)
 
 
 # ------------------------- coverage (the per-route manifest) -------------------------
@@ -135,3 +136,41 @@ def test_incoming_gate_subset_of_known_gates():
     for c in cells():
         if c.incoming_data_gate != "n/a":
             assert {t.strip() for t in c.incoming_data_gate.split(",")} <= known, f"{c.cell_id}: unknown gate"
+
+
+# ------------------------- C1: HIV tiers data-driven from the report card (no overclaim) -------------------------
+
+def _hiv_card_drugs():
+    from dna_decode.data import trust_surface
+    card = trust_surface._load("hiv_decoder_report_card.json")
+    return {c["drug"] for c in (card or {}).get("cells", []) if c.get("drug")}
+
+
+def test_hiv_not_censused_set_equals_routable_minus_card():
+    """The HIV cells tiered NOT_CENSUSED must be EXACTLY the CLI-routable HIV drugs absent from the card.
+    A drug with no report-card row may NEVER be independent_measured (the delavirdine overclaim, C1)."""
+    from dna_decode.data.hiv_amr import all_supported_hiv_drugs
+    not_censused = {c.target for c in cells()
+                    if c.organism == "HIV-1" and c.evidence_tier == EvidenceTier.NOT_CENSUSED}
+    expected = set(all_supported_hiv_drugs()) - _hiv_card_drugs()
+    assert not_censused == expected
+    # no card-row HIV drug is NOT_CENSUSED; no uncensused HIV drug claims independent_measured
+    for c in cells():
+        if c.organism != "HIV-1":
+            continue
+        in_card = c.target in _hiv_card_drugs()
+        if not in_card:
+            assert c.evidence_tier == EvidenceTier.NOT_CENSUSED, f"{c.target}: uncensused but tier {c.evidence_tier}"
+
+
+def test_delavirdine_is_not_censused_regression_pin():
+    """Regression pin for the exact shipped overclaim: delavirdine (CLI-routable, no card row) -> NOT_CENSUSED."""
+    d = by_cell_id().get("viral:HIV-1:delavirdine")
+    assert d is not None and d.evidence_tier == EvidenceTier.NOT_CENSUSED
+    assert d.claim_status == "cli_routable_not_validated"
+
+
+def test_pgx_genes_single_source():
+    """M1: the manifest's PGx set derives from the importable PGX_GENES constant, not a copied literal."""
+    from dna_decode.data.cell_registry import cli_routable_manifest
+    assert cli_routable_manifest()["dna-pgx"] == set(PGX_GENES)

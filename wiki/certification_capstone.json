@@ -17,10 +17,13 @@
       "near_independent": 15,
       "faithful_to_tool": 11,
       "no_free_source": 11,
-      "independent_measured": 26,
+      "independent_measured": 25,
+      "not_censused": 1,
       "knowledge_baseline": 4
     },
-    "not_censused_cells": []
+    "not_censused_cells": [
+      "viral:HIV-1:delavirdine"
+    ]
   },
   "domain_report_cards": [
     {

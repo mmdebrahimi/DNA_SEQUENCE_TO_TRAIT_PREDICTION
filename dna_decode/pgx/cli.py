@@ -15,6 +15,7 @@ import json
 import sys
 from pathlib import Path
 
+from dna_decode.pgx import PGX_GENES
 from dna_decode.pgx.runner import call_cyp2c19, call_cyp2c9
 
 
@@ -24,7 +25,7 @@ def main(argv=None) -> int:
         description="Deterministic human pharmacogenomics: CYP2C19/CYP2C9 diplotype + CPIC metabolizer "
                     "phenotype, or VKORC1 warfarin sensitivity, from a phased VCF (GRCh38). NOT a clinical tool.")
     ap.add_argument("vcf", type=Path, help="phased VCF (GRCh38)")
-    ap.add_argument("--gene", default="cyp2c19", choices=["cyp2c19", "cyp2c9", "vkorc1"],
+    ap.add_argument("--gene", default="cyp2c19", choices=list(PGX_GENES),
                     help="gene to call (default cyp2c19)")
     ap.add_argument("--sample-id", default=None, help="label for the report (default: VCF stem)")
     ap.add_argument("--sample", default=None, help="sample COLUMN name in a multi-sample VCF (default: first)")
