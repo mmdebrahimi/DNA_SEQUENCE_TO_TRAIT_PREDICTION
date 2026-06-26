@@ -72,9 +72,17 @@ All three free-data dependencies confirmed (the cleanest "higher organism" cell 
 > "validate-wrapper-vs-tool" discipline), NOT independent. Blind spots surfaced: *35→*1/*1, *4b→*1/*17
 > (shares the *17 SNP — clinically meaningful). 14 harness tests.
 >
-> **REMAINING (the genuine INDEPENDENT number — wall classification: code-closable, tooling/network):**
-> GeT-RM consensus ⋈ 1000 Genomes VCFs needs tabix/bcftools + a VCF fetch — ABSENT on this Windows host
-> (no htslib via pip on Windows). Run on a Linux/Docker host (Precision 7780 / Databricks); the harness
-> already consumes that cohort via `--source getrm --expected-tsv sample<TAB>diplotype`. NOT a labels wall
-> (GeT-RM is free) — purely tooling. v0.1 refinements: *1-vs-*38 (rs3758581), non-core star alleles.
-> PyPI publish of 0.6.0 is a separate (gated) step.
+> **P3 REAL-1000G RUN DONE 2026-06-25 via Docker (the "tooling wall" was dissolved — Docker IS on this host).**
+> `scripts/pgx_1000g_population.py` ran the caller on the REAL 1000 Genomes 30x panel (n=3202), region
+> fetched via Docker bcftools remote-querying the public VCF (htslib via the `quay.io/biocontainers/bcftools`
+> image — no native htslib needed). Results (`wiki/pgx_1000g_population_2026-06-25.{md,json}`):
+> biologically-sane population phenotype distribution (NM 38.3% / IM 32.4% / RM 19.5% / PM 6.7% / UM 3.2%);
+> blind-spot exposure QUANTIFIED on real data (*35→*1 mis-call 44/3202=1.37%, *4-family 5/3202=0.16%);
+> and a GROUNDED GeT-RM data point — NA19122 (consensus *2/*35) → v0 calls *1/*2, genotypes confirm the
+> *35 haplotype is real + invisible to v0 (blind spot confirmed end-to-end on the real genome).
+>
+> **REMAINING (the full GeT-RM consensus concordance % — wall reclassified: data-access, NOT tooling):**
+> the per-sample GeT-RM consensus labels live in paper supplements (Gaedigk 2022 Table S; ursaPGx S1), not
+> a clean public TSV. `pgx_cyp2c19_validate.py --source getrm --expected-tsv` consumes them once extracted.
+> v0.1 refinements: the sentinel layer (rs28399504/*4 + rs12769205/*35 -> withhold, per the brainstorm),
+> *1-vs-*38 (rs3758581=chr10:94842866, verified). PyPI publish of 0.6.0 is a separate (gated) step.

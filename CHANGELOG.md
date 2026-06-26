@@ -28,9 +28,14 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   independent number. Two blind spots surfaced honestly: `*35` (rs12769205-defined, non-core)→ mis-called
   `*1/*1`; `*4b`→ aliases to `*1/*17` (shares the *17 SNP rs12248560 — clinically meaningful). 14 harness
   tests (`tests/test_pgx_validate.py`); fixtures vendored under `tests/data/pgx_cyp2c19/` (PharmCAT, MPL-2.0).
-- **P3 follow-up (named wall):** the GeT-RM ⋈ 1000 Genomes INDEPENDENT cohort number needs tabix/bcftools +
-  a VCF fetch (absent on this Windows host) → a Linux/Docker-host run; the harness consumes that cohort
-  identically via `--source getrm --expected-tsv`. Scoping: `plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md`.
+- **REAL-1000G run (`scripts/pgx_1000g_population.py` + `wiki/pgx_1000g_population_2026-06-25.{md,json}`):**
+  ran the caller on the REAL 1000 Genomes 30× panel (**n=3202**), region fetched via Docker bcftools
+  remote-querying the public VCF (the "no-htslib-on-Windows" wall dissolved — Docker provides it). Result:
+  biologically-sane population distribution (NM 38.3% / IM 32.4% / RM 19.5% / PM 6.7% / UM 3.2%); blind-spot
+  exposure quantified on real data (*35→*1 1.37%, *4-family 0.16%); grounded GeT-RM check NA19122 (consensus
+  *2/*35 → v0 *1/*2, *35 haplotype confirmed invisible to v0). The full GeT-RM consensus concordance % is
+  now a **data-access** step (labels in paper supplements), NOT a tooling wall; the harness consumes it via
+  `--source getrm --expected-tsv`. Scoping: `plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md`.
 
 ## [0.5.3] — salmserovar bugfix + pneumococcus AMR engines (2026-06-25)
 

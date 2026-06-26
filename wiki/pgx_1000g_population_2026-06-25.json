@@ -1,0 +1,52 @@
+{
+  "schema": "pgx-cyp2c19-1000g-population-v0",
+  "analysis_date": "2026-06-25",
+  "cohort": "1000 Genomes 30x phased panel (chr10 CYP2C19 region, fetched via Docker bcftools)",
+  "n_samples": 3202,
+  "honesty_tier": "REAL-1000G-DATA population characterization + 1 grounded GeT-RM data point (NA19122). NOT the full GeT-RM consensus concordance % (labels are in paper supplements -- a data-access step, not a tooling wall).",
+  "diplotype_distribution": {
+    "*1/*1": 1225,
+    "*1/*2": 804,
+    "*1/*17": 625,
+    "*2/*17": 185,
+    "*2/*2": 179,
+    "*17/*17": 101,
+    "*1/*3": 41,
+    "*2/*3": 33,
+    "*3/*17": 8,
+    "*3/*3": 1
+  },
+  "phenotype_distribution": {
+    "Normal Metabolizer": 1225,
+    "Intermediate Metabolizer": 1038,
+    "Rapid Metabolizer": 625,
+    "Poor Metabolizer": 213,
+    "Ultrarapid Metabolizer": 101
+  },
+  "phenotype_abbrev": {
+    "Poor Metabolizer": "PM",
+    "Intermediate Metabolizer": "IM",
+    "Normal Metabolizer": "NM",
+    "Rapid Metabolizer": "RM",
+    "Ultrarapid Metabolizer": "UM",
+    "Indeterminate": "IND"
+  },
+  "blind_spot_exposure": {
+    "star4_family_carriers_rs28399504_alt": 5,
+    "star4_family_pct": 0.16,
+    "star4b_aliased_as_17 (rs28399504_alt AND *17 called)": 0,
+    "star35_aliased_as_1 (rs12769205_alt without rs4244285)": 44,
+    "star35_pct": 1.37,
+    "interpretation": "These are the real-population rates at which the v0 core-SNP proxy would mis-call vs a full PharmVar caller -- the quantified cost of the v0.1 sentinel gap the brainstorm flagged. The v0.1 sentinel layer (rs28399504 + rs12769205) converts these silent mis-calls into withholds."
+  },
+  "na19122_grounded_check": {
+    "sample": "NA19122",
+    "v0_diplotype": "*1/*2",
+    "v0_phenotype": "Intermediate Metabolizer",
+    "getrm_consensus": "*2/*35",
+    "gt_rs4244285": "1|0",
+    "gt_rs12769205": "1|1",
+    "gt_rs28399504": "0|0",
+    "note": "GeT-RM consensus *2/*35; v0 sees rs4244285 het -> calls *1/*2; the *35 haplotype (rs12769205 without rs4244285) is invisible to the v0 core set -> CONFIRMED *35 blind spot on the real genome."
+  }
+}
