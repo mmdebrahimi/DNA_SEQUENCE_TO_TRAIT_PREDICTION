@@ -30,6 +30,8 @@ def main(argv=None) -> int:
     ap.add_argument("--runs-root", type=Path, default=ROOT / "data/amrfinder_runs")
     ap.add_argument("--organism", default="Escherichia")
     ap.add_argument("--limit", type=int, default=None, help="pilot: only the first N strains")
+    ap.add_argument("--download-only", action="store_true",
+                    help="fetch genomes to D: only (skip AMRFinder); for pre-fetching before offline")
     ap.add_argument("--out-parquet", type=Path, default=None)
     args = ap.parse_args(argv)
 
@@ -48,15 +50,21 @@ def main(argv=None) -> int:
         gpath = args.refseq_cache / acc / "genome.fna"
         try:
             if not gpath.exists():
-                download_genome(acc, args.refseq_cache)
-            if not (run_dir / "main.tsv").exists():
-                run_dir.mkdir(parents=True, exist_ok=True)
                 t0 = time.time()
-                _run_amrfinder(gpath, run_dir, organism=args.organism)
-                print(f"[{i}/{len(strains)}] {acc} ({s['label']}) amrfinder {time.time()-t0:.0f}s", flush=True)
+                download_genome(acc, args.refseq_cache)
+                print(f"[{i}/{len(strains)}] {acc} ({s['label']}) download {time.time()-t0:.0f}s", flush=True)
                 done += 1
             else:
                 skipped += 1
+            if args.download_only:
+                # genome-only pre-fetch: write the cohort row regardless (AMRFinder runs offline later)
+                if gpath.exists():
+                    rows.append({"strain_id": acc, "assembly_accession": acc, "mlst": mlst,
+                                 f"ast_{args.drug}": lab})
+                continue
+            if not (run_dir / "main.tsv").exists():
+                run_dir.mkdir(parents=True, exist_ok=True)
+                _run_amrfinder(gpath, run_dir, organism=args.organism)
             if (run_dir / "main.tsv").exists():
                 rows.append({"strain_id": acc, "assembly_accession": acc, "mlst": mlst,
                              f"ast_{args.drug}": lab})

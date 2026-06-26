@@ -132,7 +132,9 @@ def main() -> int:
     import sys
     if "--manifest" in sys.argv:
         drug = sys.argv[sys.argv.index("--manifest") + 1]
-        man = build_manifest(drug)
+        nl = int(sys.argv[sys.argv.index("--n-lineages") + 1]) if "--n-lineages" in sys.argv else 20
+        pc = int(sys.argv[sys.argv.index("--per-class") + 1]) if "--per-class" in sys.argv else 3
+        man = build_manifest(drug, n_lineages=nl, per_class=pc)
         man["analysis_date"] = datetime.date.today().isoformat()
         out = ROOT / "wiki" / f"dna_llm_shared_lineage_manifest_{drug}_{man['analysis_date']}.json"
         out.write_text(json.dumps(man, indent=2), encoding="utf-8")

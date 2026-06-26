@@ -1,0 +1,2011 @@
+{
+  "drug": "ceftriaxone",
+  "n_lineages": 40,
+  "per_class": 5,
+  "n_strains": 400,
+  "n_R": 200,
+  "n_S": 200,
+  "strains": [
+    {
+      "assembly_accession": "GCA_015690315.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_020858235.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006229975.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004569765.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003427735.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_016456335.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000352865.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_964049795.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_008388835.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000777945.1",
+      "mlst": "MLST.ecoli_achtman_4.131",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022974675.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022550585.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_008693265.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030510545.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCF_001894505.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003983445.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004523405.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_017310055.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002233355.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_900482015.1",
+      "mlst": "MLST.ecoli_achtman_4.10",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_024271505.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_015693725.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022815745.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006350455.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_028883665.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009798405.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002943325.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002464225.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_023838405.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_013424915.1",
+      "mlst": "MLST.ecoli_achtman_4.155",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003304035.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_013317085.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002991925.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003009535.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030162115.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002464595.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002459785.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_005396845.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036697605.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_026227905.1",
+      "mlst": "MLST.ecoli_achtman_4.101",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002946715.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_014494195.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006231335.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006232955.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_015701015.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_020591825.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_902163565.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_013340105.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCF_001749595.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036631775.1",
+      "mlst": "MLST.ecoli_achtman_4.38",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_026651225.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022130225.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_023527075.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_033341075.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_021892085.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_032483275.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036314705.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_006542125.2",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037891215.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019915545.1",
+      "mlst": "MLST.ecoli_achtman_4.69",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037286985.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003323205.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_037286965.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_023600545.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_014361285.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022546025.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003334715.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002741215.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_035823735.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_029946315.1",
+      "mlst": "MLST.ecoli_achtman_4.48",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037632005.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_037449095.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019282695.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_029269495.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_021890415.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_016457785.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_020085435.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019585935.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014893315.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_016457995.1",
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036486965.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_021697615.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_014857805.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_024026075.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCF_001894395.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_028752695.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003338735.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003860195.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003318575.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022972895.1",
+      "mlst": "MLST.ecoli_achtman_4.117",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_025403895.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_039682775.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003322535.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_024271685.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003321725.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_007623825.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_949786275.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_020051455.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_008041475.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003791925.1",
+      "mlst": "MLST.ecoli_achtman_4.58",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_029783065.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_900488885.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_018075285.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_900088105.2",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_900087705.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_039607115.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003290575.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003027435.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030708395.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCF_000987555.1",
+      "mlst": "MLST.ecoli_achtman_4.410",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_018199975.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_014926075.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004792825.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_031852425.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_024585925.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_963575505.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_025336685.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014894935.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_021535025.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_031628045.1",
+      "mlst": "MLST.ecoli_achtman_4.162",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014857865.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003302655.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003831055.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCF_001601605.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030012765.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_020966535.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002631035.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036498665.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019249915.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_013370555.1",
+      "mlst": "MLST.ecoli_achtman_4.744",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002232275.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004122425.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006237865.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_018444685.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004295365.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_026130015.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_964019875.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022811625.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014490235.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022029955.1",
+      "mlst": "MLST.ecoli_achtman_4.167",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_016820335.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_017896825.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030142825.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCF_001893535.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002517425.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_029855185.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_024607965.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000797695.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030295625.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037153515.1",
+      "mlst": "MLST.ecoli_achtman_4.156",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_025261795.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025261785.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025261285.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_013131455.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025261995.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_026801705.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_018863115.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_900480745.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_902499905.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_013047065.1",
+      "mlst": "MLST.ecoli_achtman_4.224",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_027921465.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025261605.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_017593845.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_017593945.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_036375575.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_021548275.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022586695.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_023599825.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_021513335.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003009265.1",
+      "mlst": "MLST.ecoli_achtman_4.93",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022489325.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_032336095.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_032143675.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030197215.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002196645.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009394015.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_020668525.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036506995.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_024354885.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_026614615.1",
+      "mlst": "MLST.ecoli_achtman_4.206",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCF_001894415.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_013404475.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_039683775.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009822885.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_013072735.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004284345.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_013368415.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019587405.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_020162755.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_017565845.1",
+      "mlst": "MLST.ecoli_achtman_4.746",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_900482205.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030208715.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_900481475.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_900481545.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCF_001891795.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003783845.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_932750795.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036914335.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_945980475.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_905330295.1",
+      "mlst": "MLST.ecoli_achtman_4.602",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_013601795.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025061435.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_031193915.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030364455.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_028488865.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_036689785.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_943737905.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003882495.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004378135.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004377885.1",
+      "mlst": "MLST.ecoli_achtman_4.457",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014901375.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006229915.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030073645.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_029865655.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002788115.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002459675.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002460475.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000407845.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_900448135.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCF_002002845.1",
+      "mlst": "MLST.ecoli_achtman_4.405",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003292295.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030294225.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_020552865.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003317595.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000474825.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025751095.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_016785585.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_021109675.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030167305.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003317675.1",
+      "mlst": "MLST.ecoli_achtman_4.648",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014494675.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022557015.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030069235.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_027988425.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025782825.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_029070385.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_035011105.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_900196465.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004170625.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_006350405.1",
+      "mlst": "MLST.ecoli_achtman_4.361",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019771875.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_018423365.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019104625.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025657795.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019683905.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019840765.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003010155.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_029783165.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_024654745.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030375485.1",
+      "mlst": "MLST.ecoli_achtman_4.46",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_902500005.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_902500175.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006233395.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_902500085.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_902500205.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_005393105.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_031700925.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_033037735.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_014895395.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000355555.1",
+      "mlst": "MLST.ecoli_achtman_4.1196",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_029351225.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009812215.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022969335.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_026612835.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022568615.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_900478625.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002521675.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000622265.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004170665.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_009671045.1",
+      "mlst": "MLST.ecoli_achtman_4.641",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_025260105.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025260235.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002307565.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025260235.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025260165.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009761895.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002512585.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_963573195.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_032367395.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002207145.1",
+      "mlst": "MLST.ecoli_achtman_4.23",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_021109785.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_029871475.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_020514375.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030846035.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004567675.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002456855.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022975395.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002519625.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002231565.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022977755.1",
+      "mlst": "MLST.ecoli_achtman_4.88",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_012063385.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019297555.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004567445.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002631405.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_022982975.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_011751325.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019282515.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCF_001877815.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_026412015.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003570555.1",
+      "mlst": "MLST.ecoli_achtman_4.95",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002554485.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000258615.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000320195.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000235205.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000320175.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003433275.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000703565.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002214745.2",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000235225.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003418725.1",
+      "mlst": "MLST.ecoli_achtman_4.678",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_011812765.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030283945.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019297445.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_013369755.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_026411545.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003146495.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022977445.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002473605.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022977415.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002545925.1",
+      "mlst": "MLST.ecoli_achtman_4.90",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002834445.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009812335.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002810875.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002834405.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002837555.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000446725.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002464675.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_001283185.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004172055.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002923495.1",
+      "mlst": "MLST.ecoli_achtman_4.29",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000511445.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_031193375.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000340235.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_013606725.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_004282675.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002516855.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002534965.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_024608285.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_036863275.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003145495.1",
+      "mlst": "MLST.ecoli_achtman_4.453",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_033599235.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_026306385.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_009653625.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019312405.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_008502185.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019054295.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003317115.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030194655.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037164905.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_015712395.1",
+      "mlst": "MLST.ecoli_achtman_4.617",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004566575.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_033033315.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_020251585.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_024104315.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_905134065.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019280045.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_000179115.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002522025.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030375165.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_026228745.1",
+      "mlst": "MLST.ecoli_achtman_4.448",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_018446435.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003194125.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_016615385.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_019436665.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_018439435.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_000488575.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037046185.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCF_001268925.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003338905.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_016760635.1",
+      "mlst": "MLST.ecoli_achtman_4.354",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002810895.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002930285.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_030168735.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002216905.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_036688085.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_025437235.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_003146155.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030196335.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022973305.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_030285525.1",
+      "mlst": "MLST.ecoli_achtman_4.1011",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_023657955.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003470505.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_003731335.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_006230285.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_963680905.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002519835.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_037198115.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_026236875.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004558235.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_002244235.1",
+      "mlst": "MLST.ecoli_achtman_4.12",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_004793145.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002099895.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_036036965.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002795025.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_002099885.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "R"
+    },
+    {
+      "assembly_accession": "GCA_037172525.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_008040825.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_009794675.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_019584705.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "S"
+    },
+    {
+      "assembly_accession": "GCA_022758325.1",
+      "mlst": "MLST.ecoli_achtman_4.398",
+      "label": "S"
+    }
+  ],
+  "analysis_date": "2026-06-26"
+}
