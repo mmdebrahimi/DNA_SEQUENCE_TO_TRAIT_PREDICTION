@@ -84,5 +84,7 @@ All three free-data dependencies confirmed (the cleanest "higher organism" cell 
 > **REMAINING (the full GeT-RM consensus concordance % — wall reclassified: data-access, NOT tooling):**
 > the per-sample GeT-RM consensus labels live in paper supplements (Gaedigk 2022 Table S; ursaPGx S1), not
 > a clean public TSV. `pgx_cyp2c19_validate.py --source getrm --expected-tsv` consumes them once extracted.
-> v0.1 refinements: the sentinel layer (rs28399504/*4 + rs12769205/*35 -> withhold, per the brainstorm),
-> *1-vs-*38 (rs3758581=chr10:94842866, verified). PyPI publish of 0.6.0 is a separate (gated) step.
+> v0.1 refinements: the sentinel layer (rs28399504/*4 + rs12769205/*35 -> withhold) **DONE 2026-06-25
+> (v0.6.1)** + phenotype_status split + CLI-nonzero-on-withheld + provenance honesty fix + rs3758581
+> coordinate fix + missing-sample raise + phase-ambiguity surfacing; core 6/6 held, s1s35/s1s4b now
+> withheld. PyPI publish of 0.6.x is a separate (gated) step.

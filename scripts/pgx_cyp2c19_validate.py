@@ -86,6 +86,9 @@ def validate_dir(vcf_dir: str | Path) -> list[dict]:
             "predicted_phenotype": r.phenotype,
             "expected_phenotype": exp_pheno,
             "phenotype_match": (r.phenotype == exp_pheno) if (is_core and exp_pheno) else None,
+            "phenotype_status": r.phenotype_status,
+            "withheld": r.phenotype_status == "phenotype_withheld",
+            "sentinel_hits": [h["implies"] for h in r.sentinel_hits],
             "phasing": r.phasing,
             "flags": r.flags,
         })
@@ -97,6 +100,7 @@ def build_report(rows: list[dict], source: str) -> dict:
     noncore = [r for r in rows if not r["is_core"]]
     core_dip_hits = sum(1 for r in core if r["diplotype_match"])
     core_phe_hits = sum(1 for r in core if r["phenotype_match"])
+    noncore_withheld = sum(1 for r in noncore if r["withheld"])
     independent = source.lower() == "getrm"
     return {
         "schema": "pgx-cyp2c19-validation-v0",
@@ -106,6 +110,7 @@ def build_report(rows: list[dict], source: str) -> dict:
         "n_total": len(rows),
         "n_core": len(core),
         "n_noncore_blindspot": len(noncore),
+        "n_noncore_correctly_withheld": noncore_withheld,
         "core_diplotype_concordance": round(core_dip_hits / len(core), 3) if core else None,
         "core_diplotype_hits": f"{core_dip_hits}/{len(core)}",
         "core_phenotype_concordance": round(core_phe_hits / len(core), 3) if core else None,
@@ -115,11 +120,12 @@ def build_report(rows: list[dict], source: str) -> dict:
             else "FAITHFUL_TO_PHARMCAT (reference tool's own test fixtures; in-distribution, NOT independent)"),
         "caller_is_independent_baseline": independent,
         "caveat": (
-            "Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are reported "
-            "as blind-spot cases (the caller is EXPECTED to mis-call a non-core star to a *1-substituted "
-            "diplotype + flag it) and do NOT count toward the headline. The GeT-RM INDEPENDENT number "
-            "(1000 Genomes VCFs) needs tabix/bcftools + a fetch on a Linux/Docker host -- the named "
-            "follow-up; this harness consumes that cohort identically via --expected-tsv. NOT a clinical tool."),
+            "Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are now "
+            "WITHHELD by the v0.1 sentinel layer (phenotype_status=phenotype_withheld) rather than silently "
+            "mis-called, and do NOT count toward the headline. The GeT-RM INDEPENDENT consensus number is a "
+            "DATA-ACCESS step (labels in paper supplements; the 1000G tooling is proven via Docker bcftools "
+            "-- see wiki/pgx_1000g_population_2026-06-25); this harness consumes it via --source getrm "
+            "--expected-tsv. NOT a clinical tool."),
         "core_rows": core,
         "blindspot_rows": noncore,
     }
@@ -141,11 +147,13 @@ def render_md(rep: dict) -> str:
                  f"{'OK' if r['diplotype_match'] else 'X'} | {r['predicted_phenotype']} | "
                  f"{'OK' if r['phenotype_match'] else 'X'} |")
     if rep["blindspot_rows"]:
-        L += ["", "## Non-core blind-spot cases (caller covers core SNP set only -- mis-call EXPECTED)", "",
-              "| fixture | expected (PharmCAT) | predicted (ours) | flags |", "|---|---|---|---|"]
+        L += ["", f"## Non-core cases -- v0.1 sentinel layer WITHHOLDS rather than mis-calls "
+              f"({rep['n_noncore_correctly_withheld']}/{rep['n_noncore_blindspot']} correctly withheld)", "",
+              "| fixture | expected (PharmCAT) | core-proxy | phenotype_status | sentinel |",
+              "|---|---|---|---|---|"]
         for r in rep["blindspot_rows"]:
             L.append(f"| {r['fixture']} | {r['expected_diplotype']} | {r['predicted_diplotype']} | "
-                     f"{'; '.join(r['flags'])} |")
+                     f"{r['phenotype_status']} | {','.join(r['sentinel_hits']) or '-'} |")
     L += ["", f"_{rep['caveat']}_", ""]
     return "\n".join(L)
 

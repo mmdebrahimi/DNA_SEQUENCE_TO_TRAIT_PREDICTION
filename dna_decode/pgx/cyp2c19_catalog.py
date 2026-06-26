@@ -53,10 +53,11 @@ CORE_DEFINING: list[DefiningVariant] = [
 ]
 
 # The reference allele when no core defining variant is present on a haplotype.
-# v0 CAVEAT: *38 is the true variant-free reference allele; *1 carries rs3758581 (c.991A>G, chr10:94852738).
-# Both *1 and *38 are NORMAL function, so the phenotype is identical -- v0 reports the normal-function
-# reference allele as *1 (the clinical convention) and records this caveat. Distinguishing *1 from *38
-# requires rs3758581 (a v0.1 refinement; phenotype-irrelevant).
+# v0 CAVEAT: *38 is the true variant-free reference allele; *1 carries rs3758581 (c.991A>G, chr10:94842866
+# GRCh38, verified at dbSNP NC_000010.11:g.94842866A>C). Both *1 and *38 are NORMAL function, so the
+# phenotype is identical -- v0 reports the normal-function reference allele as *1 (the clinical convention)
+# and records this caveat. Distinguishing *1 from *38 requires rs3758581 (a v0.1 refinement;
+# phenotype-irrelevant).
 REFERENCE_ALLELE = "*1"
 
 # CPIC standardized allele FUNCTION (Caudle 2020).
@@ -66,6 +67,31 @@ ALLELE_FUNCTION: dict[str, str] = {
     "*3": "none",         # no function
     "*17": "increased",   # increased function
 }
+
+# SENTINEL non-core variants (v0.1) -- NOT called as star alleles, but their presence proves a NON-CORE
+# allele the single-SNP core proxy CANNOT resolve, so the caller WITHHOLDS the phenotype rather than
+# emit a confident mis-call. Targeted at the two demonstrated aliasing failures (NOT a full AMP Tier-2
+# screen): *4 (aliases *17 via the shared rs12248560) and *35 (aliases *1 via rs12769205). Coordinates
+# GRCh38, confirmed in PharmCAT fixtures + the 1000 Genomes panel.
+@dataclass(frozen=True)
+class SentinelVariant:
+    rsid: str
+    chrom: str
+    pos: int
+    ref: str
+    alt: str
+    implies: str        # the non-core allele family this ALT signals
+    note: str
+
+
+SENTINELS: list[SentinelVariant] = [
+    SentinelVariant("rs28399504", "10", 94762706, "A", "G", "*4",
+                    "*4 initiation-codon SNP; *4b ALSO carries the *17 SNP rs12248560, so a core '*17' "
+                    "call on this haplotype is actually *4b (reduced/no function, not increased)."),
+    SentinelVariant("rs12769205", "10", 94775367, "A", "G", "*35",
+                    "shared by *2 (with rs4244285) and *35 (alone); an rs12769205 copy in EXCESS of the "
+                    "rs4244285 (*2) copies marks a *35 haplotype the core proxy mis-calls as *1."),
+]
 
 # CPIC CYP2C19 function-pair -> metabolizer phenotype (keyed by the SORTED function pair).
 # Grounded vs the CPIC diplotype-phenotype table (Caudle 2020 standardized terms).

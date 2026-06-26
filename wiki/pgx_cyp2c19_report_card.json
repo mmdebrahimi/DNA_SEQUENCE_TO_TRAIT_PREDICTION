@@ -6,13 +6,14 @@
   "n_total": 8,
   "n_core": 6,
   "n_noncore_blindspot": 2,
+  "n_noncore_correctly_withheld": 2,
   "core_diplotype_concordance": 1.0,
   "core_diplotype_hits": "6/6",
   "core_phenotype_concordance": 1.0,
   "core_phenotype_hits": "6/6",
   "honesty_tier": "FAITHFUL_TO_PHARMCAT (reference tool's own test fixtures; in-distribution, NOT independent)",
   "caller_is_independent_baseline": false,
-  "caveat": "Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are reported as blind-spot cases (the caller is EXPECTED to mis-call a non-core star to a *1-substituted diplotype + flag it) and do NOT count toward the headline. The GeT-RM INDEPENDENT number (1000 Genomes VCFs) needs tabix/bcftools + a fetch on a Linux/Docker host -- the named follow-up; this harness consumes that cohort identically via --expected-tsv. NOT a clinical tool.",
+  "caveat": "Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are now WITHHELD by the v0.1 sentinel layer (phenotype_status=phenotype_withheld) rather than silently mis-called, and do NOT count toward the headline. The GeT-RM INDEPENDENT consensus number is a DATA-ACCESS step (labels in paper supplements; the 1000G tooling is proven via Docker bcftools -- see wiki/pgx_1000g_population_2026-06-25); this harness consumes it via --source getrm --expected-tsv. NOT a clinical tool.",
   "core_rows": [
     {
       "fixture": "s1s1",
@@ -23,6 +24,9 @@
       "predicted_phenotype": "Normal Metabolizer",
       "expected_phenotype": "Normal Metabolizer",
       "phenotype_match": true,
+      "phenotype_status": "ok",
+      "withheld": false,
+      "sentinel_hits": [],
       "phasing": "unphased",
       "flags": []
     },
@@ -35,6 +39,9 @@
       "predicted_phenotype": "Rapid Metabolizer",
       "expected_phenotype": "Rapid Metabolizer",
       "phenotype_match": true,
+      "phenotype_status": "ok",
+      "withheld": false,
+      "sentinel_hits": [],
       "phasing": "unphased",
       "flags": []
     },
@@ -47,6 +54,9 @@
       "predicted_phenotype": "Normal Metabolizer",
       "expected_phenotype": "Normal Metabolizer",
       "phenotype_match": true,
+      "phenotype_status": "ok",
+      "withheld": false,
+      "sentinel_hits": [],
       "phasing": "unphased",
       "flags": [
         "assumed_reference_at_uncalled_sites:*17"
@@ -61,6 +71,9 @@
       "predicted_phenotype": "Intermediate Metabolizer",
       "expected_phenotype": "Intermediate Metabolizer",
       "phenotype_match": true,
+      "phenotype_status": "ok",
+      "withheld": false,
+      "sentinel_hits": [],
       "phasing": "unphased",
       "flags": []
     },
@@ -73,6 +86,9 @@
       "predicted_phenotype": "Poor Metabolizer",
       "expected_phenotype": "Poor Metabolizer",
       "phenotype_match": true,
+      "phenotype_status": "ok",
+      "withheld": false,
+      "sentinel_hits": [],
       "phasing": "unphased",
       "flags": []
     },
@@ -85,9 +101,13 @@
       "predicted_phenotype": "Poor Metabolizer",
       "expected_phenotype": "Poor Metabolizer",
       "phenotype_match": true,
+      "phenotype_status": "phase_ambiguous",
+      "withheld": false,
+      "sentinel_hits": [],
       "phasing": "unphased",
       "flags": [
-        "unphased_trans_assumption"
+        "unphased_trans_assumption",
+        "phase_ambiguous_phenotype_differs"
       ]
     }
   ],
@@ -98,11 +118,18 @@
       "predicted_diplotype": "*1/*1",
       "diplotype_match": false,
       "is_core": false,
-      "predicted_phenotype": "Normal Metabolizer",
+      "predicted_phenotype": null,
       "expected_phenotype": null,
       "phenotype_match": null,
+      "phenotype_status": "phenotype_withheld",
+      "withheld": true,
+      "sentinel_hits": [
+        "*35"
+      ],
       "phasing": "unphased",
-      "flags": []
+      "flags": [
+        "non_core_allele_sentinel"
+      ]
     },
     {
       "fixture": "s1s4b",
@@ -110,11 +137,18 @@
       "predicted_diplotype": "*1/*17",
       "diplotype_match": false,
       "is_core": false,
-      "predicted_phenotype": "Rapid Metabolizer",
+      "predicted_phenotype": null,
       "expected_phenotype": null,
       "phenotype_match": null,
+      "phenotype_status": "phenotype_withheld",
+      "withheld": true,
+      "sentinel_hits": [
+        "*4"
+      ],
       "phasing": "unphased",
-      "flags": []
+      "flags": [
+        "non_core_allele_sentinel"
+      ]
     }
   ]
 }

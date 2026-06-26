@@ -3,6 +3,30 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.6.1] — CYP2C19 v0.1 hardening: non-core sentinel withhold + honesty fields (2026-06-25)
+
+Closes the safety gaps a review surfaced on the v0.6.0 cell (the *4b→*17 silent alias was a real
+clinical-mis-call risk on real genomes — quantified at 0.16% *4-family / 1.37% *35 in the 1000G run):
+
+- **Sentinel non-core layer** (`dna_decode/pgx/cyp2c19_catalog.py::SENTINELS`): rs28399504 (*4) +
+  rs12769205 (*35). When a sentinel proves a non-core allele the single-SNP core proxy cannot resolve,
+  the phenotype is **WITHHELD**, not mis-called. *35 fires only on an rs12769205 copy in EXCESS of the
+  *2 (rs4244285) copies (so a plain *1/*2 with rs12769205 is NOT falsely withheld; the NA19122-style
+  *2/*35 excess-copy case IS caught).
+- **`phenotype_status` split from parse `status`** (`ok` / `phenotype_withheld` / `phase_ambiguous`);
+  phenotype is `None` when withheld; `core_proxy_diplotype` always exposed. **CLI exits nonzero (3) when
+  the phenotype is withheld** so automation can't consume a withheld call as valid.
+- **Phase ambiguity surfaced:** ≥2 unphased het core sites whose two phase resolutions give different
+  phenotypes → kept (standard trans call) but `phenotype_confidence=low` + `alternate_diplotype/phenotype`.
+- **Provenance honesty fix:** the per-record `calling_is_independent_baseline=True` overclaim is replaced by
+  `calling_independently_validatable` + `independent_validation_status` (`pending: faithful-to-PharmCAT
+  6/6 done; GeT-RM not yet run`) + `is_core_marker_proxy=True` (NOT a full PharmVar star-allele caller).
+- **`rs3758581` coordinate corrected** to chr10:**94842866** (GRCh38, verified at dbSNP; was 94852738).
+- **Raises on a missing `--sample`** column (was a silent fall-back to the first sample).
+- Re-validated: PharmCAT fixtures **core 6/6 hold** + the 2 non-core cases (`s1s35`, `s1s4b`) now **withheld**
+  (2/2) instead of mis-called. Tests: `tests/test_pgx_cyp2c19.py` (29) + `tests/test_pgx_validate.py` (16).
+  FROZEN bacterial/viral/fungal AMR surface byte-unchanged.
+
 ## [0.6.0] — the first HUMAN cell: CYP2C19 pharmacogenomics (2026-06-25)
 
 - **NEW `dna-pgx`** (`dna_decode/pgx/`) — the first **human** decoder cell + the honest catalog-tractable form

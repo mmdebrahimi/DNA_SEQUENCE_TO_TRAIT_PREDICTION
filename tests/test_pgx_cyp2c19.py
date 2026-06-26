@@ -25,17 +25,19 @@ _HEADER = (
     "##fileformat=VCFv4.2\n"
     "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSAMPLE\n"
 )
-# GRCh38 chr10 positions (grounded) for the three core defining SNPs.
+# GRCh38 chr10 positions (grounded) for the three core defining SNPs + the two v0.1 sentinels.
 _POS = {"*2": (94781859, "G", "A", "rs4244285"),
         "*3": (94780653, "G", "A", "rs4986893"),
-        "*17": (94761900, "C", "T", "rs12248560")}
+        "*17": (94761900, "C", "T", "rs12248560"),
+        "rs28399504": (94762706, "A", "G", "rs28399504"),   # *4 sentinel
+        "rs12769205": (94775367, "A", "G", "rs12769205")}   # *35 sentinel
 
 
 def _vcf(tmp_path, rows, name="s.vcf"):
-    """rows: list of (star, GT). Writes a VCF record per row at that star's defining site."""
+    """rows: list of (key, GT). key is a core star (*2/*3/*17) or a sentinel rsid. One record per row."""
     lines = [_HEADER.rstrip("\n")]
-    for star, gt in rows:
-        pos, ref, alt, rsid = _POS[star]
+    for key, gt in rows:
+        pos, ref, alt, rsid = _POS[key]
         lines.append(f"chr10\t{pos}\t{rsid}\t{ref}\t{alt}\t.\tPASS\t.\tGT\t{gt}")
     p = tmp_path / name
     p.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -164,8 +166,70 @@ def test_runner_record_shape(tmp_path):
     assert rec["sample_id"] == "T1"
     assert rec["diplotype"] == "*2/*2"
     assert rec["phenotype_abbrev"] == "PM"
-    assert rec["caller"]["calling_is_independent_baseline"] is True
-    assert rec["caller"]["phenotype_is_independent_baseline"] is False
+    assert rec["phenotype_status"] == "ok"
+    # v0.1 provenance: no overclaim of achieved independence
+    assert rec["caller"]["calling_independently_validatable"] is True
+    assert "pending" in rec["caller"]["independent_validation_status"]
+    assert rec["caller"]["phenotype_is_faithful_to_cpic"] is True
+    assert rec["caller"]["is_core_marker_proxy"] is True
+
+
+# --- v0.1 sentinel layer + phase ambiguity + missing-sample -----------------
+
+def test_sentinel_star4_withholds(tmp_path):
+    """rs28399504 (*4) ALT alongside a *17 call -> *4b, not *17 -> phenotype WITHHELD (not increased-func)."""
+    from dna_decode.pgx.runner import call_cyp2c19
+    vcf = _vcf(tmp_path, [("*17", "0/1"), ("rs28399504", "0/1")])
+    r = call_diplotype(vcf)
+    assert r.phenotype_status == "phenotype_withheld"
+    assert r.phenotype is None
+    assert any(h["implies"] == "*4" for h in r.sentinel_hits)
+    assert r.core_proxy_diplotype == "*1/*17"   # the proxy call is still visible
+    # runner mirrors + CLI exits nonzero
+    rec = call_cyp2c19(vcf)
+    assert rec["phenotype_status"] == "phenotype_withheld" and rec["phenotype"] is None
+
+
+def test_sentinel_star35_withholds(tmp_path):
+    """rs12769205 ALT WITHOUT rs4244285 (*2) -> *35 mis-called *1 -> WITHHELD. (Core sites present as ref,
+    as in a real VCF -- a *35 sample is hom-ref at the *2/*3/*17 positions.)"""
+    vcf = _vcf(tmp_path, [("*2", "0/0"), ("*3", "0/0"), ("*17", "0/0"), ("rs12769205", "0/1")])
+    r = call_diplotype(vcf)
+    assert r.phenotype_status == "phenotype_withheld"
+    assert any(h["implies"] == "*35" for h in r.sentinel_hits)
+
+
+def test_na19122_style_star2_star35_withholds(tmp_path):
+    """*2/*35: rs4244285 het + rs12769205 hom -> the *35 excess copy fires the sentinel -> WITHHELD
+    (the real NA19122 case: GeT-RM *2/*35, v0 core proxy would say *1/*2)."""
+    vcf = _vcf(tmp_path, [("*2", "1|0"), ("rs12769205", "1|1")])
+    r = call_diplotype(vcf)
+    assert r.phenotype_status == "phenotype_withheld"
+    assert r.core_proxy_diplotype == "*1/*2"
+
+
+def test_star2_alone_does_not_false_fire_star35(tmp_path):
+    """*1/*2 with rs12769205 het (the *2 haplotype carries it) -> excess 0 -> NOT a *35 hit -> clean call."""
+    vcf = _vcf(tmp_path, [("*2", "0/1"), ("rs12769205", "0/1")])
+    r = call_diplotype(vcf)
+    assert r.phenotype_status == "ok"
+    assert r.diplotype == "*1/*2" and r.phenotype == "Intermediate Metabolizer"
+
+
+def test_phase_ambiguous_unphased_two_hets(tmp_path):
+    """Unphased *2 + *17 hets -> trans *2/*17 IM kept, but flagged phase_ambiguous w/ low confidence."""
+    vcf = _vcf(tmp_path, [("*2", "0/1"), ("*17", "0/1")])
+    r = call_diplotype(vcf)
+    assert r.phenotype_status == "phase_ambiguous"
+    assert r.phenotype_confidence == "low"
+    assert r.phenotype == "Intermediate Metabolizer"     # standard trans call kept
+    assert r.alternate_phenotype is not None
+
+
+def test_missing_sample_raises(tmp_path):
+    vcf = _vcf(tmp_path, [("*2", "1/1")], name="multi.vcf")
+    with pytest.raises(ValueError, match="not found in VCF header"):
+        call_diplotype(vcf, sample="NOSUCHSAMPLE")
 
 
 def test_cli_smoke(tmp_path, capsys):

@@ -62,14 +62,26 @@ def test_pharmcat_core_concordance_is_6_of_6():
 
 @pytest.mark.skipif(not _FIX.exists() or not any(_FIX.glob("*.vcf")),
                     reason="PharmCAT fixtures not present")
-def test_documented_blindspots():
+def test_documented_blindspots_now_withheld():
+    """v0.1: the two non-core aliases are now WITHHELD (sentinel layer) instead of silently mis-called."""
     rows = {r["fixture"]: r for r in validate_dir(_FIX)}
-    # *35 is rs12769205-defined (not in the core SNP set) -> mis-called *1/*1
-    assert rows["s1s35"]["predicted_diplotype"] == "*1/*1"
-    assert rows["s1s35"]["is_core"] is False
-    # *4b carries the *17 SNP (rs12248560) + rs28399504; single-SNP *17 proxy aliases it to *1/*17
+    # *35 (rs12769205): core proxy would say *1/*1, but the sentinel fires -> withheld
+    assert rows["s1s35"]["withheld"] is True
+    assert rows["s1s35"]["predicted_diplotype"] == "*1/*1"   # proxy still visible
+    assert "*35" in rows["s1s35"]["sentinel_hits"]
+    # *4b shares the *17 SNP; the v0 proxy aliased it to *1/*17. v0.1 sentinel (rs28399504) -> withheld.
+    assert rows["s1s4b"]["withheld"] is True
     assert rows["s1s4b"]["predicted_diplotype"] == "*1/*17"
-    assert rows["s1s4b"]["is_core"] is False
+    assert "*4" in rows["s1s4b"]["sentinel_hits"]
+
+
+@pytest.mark.skipif(not _FIX.exists() or not any(_FIX.glob("*.vcf")),
+                    reason="PharmCAT fixtures not present")
+def test_core_fixtures_not_falsely_withheld():
+    """The 6 core fixtures must NOT trip a sentinel (esp. s1s2/s2s2 carry rs12769205 as part of *2)."""
+    rows = {r["fixture"]: r for r in validate_dir(_FIX)}
+    for fx in ("s1s1", "s1s2", "s1s17", "s2s2", "s2s3", "s1s1rs12248560missing"):
+        assert rows[fx]["withheld"] is False, f"{fx} falsely withheld"
 
 
 if __name__ == "__main__":

@@ -16,12 +16,14 @@ from dna_decode.pgx.cyp2c19_catalog import (
 SCHEMA = "pgx-diplotype-call-v0"
 
 CAVEAT = (
-    "Star-allele CALLING is deterministic + independently validatable vs the GeT-RM consensus panel "
-    "(caller_is_independent_baseline=True for the calling step). The metabolizer PHENOTYPE is "
-    "FAITHFUL-TO-CPIC -- assigned from the diplotype via CPIC's table, NOT a measured probe-drug PK "
-    "phenotype (caller_is_independent_baseline=False for that step; reference tool = PharmCAT). v0 covers "
-    "the CORE SNP-defined alleles (*2/*3/*17 + *1); a non-core star allele is mis-called *1 (a flagged "
-    "blind spot). Input = a phased VCF, GRCh38. NOT a clinical decision tool."
+    "A deterministic CORE-MARKER PROXY caller (the core SNP set *2/*3/*17 + *1 + non-core sentinels), NOT a "
+    "full PharmVar star-allele caller. Star-allele CALLING is DESIGNED to be independently validatable vs "
+    "the GeT-RM consensus panel; the validation RUN so far is faithful-to-PharmCAT (in-distribution) -- see "
+    "caller.independent_validation_status. The metabolizer PHENOTYPE is FAITHFUL-TO-CPIC (assigned from the "
+    "diplotype, NOT a measured probe-drug PK phenotype; reference tool = PharmCAT). When a NON-CORE sentinel "
+    "(*4 via rs28399504, *35 via rs12769205) proves an allele the core proxy cannot resolve, the phenotype is "
+    "WITHHELD (phenotype_status=phenotype_withheld) rather than mis-called. Check phenotype_status, NOT just "
+    "status, before consuming the phenotype. Input = a phased VCF, GRCh38. NOT a clinical decision tool."
 )
 
 
@@ -38,20 +40,30 @@ def call_cyp2c19(vcf: str | Path, sample_id: str | None = None,
         "assembly": ASSEMBLY,
         "analysis_date": datetime.date.today().isoformat(),
         "schema": SCHEMA,
-        "status": res.status,
+        "status": res.status,                       # PARSE status (did we read a usable VCF?)
+        "phenotype_status": res.phenotype_status,   # CONSUMABILITY (ok / phenotype_withheld / phase_ambiguous)
+        "phenotype_confidence": res.phenotype_confidence,
         "diplotype": res.diplotype,
+        "core_proxy_diplotype": res.core_proxy_diplotype,
         "allele1": res.allele1,
         "allele2": res.allele2,
         "phenotype": res.phenotype,
         "phenotype_abbrev": PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        "alternate_diplotype": res.alternate_diplotype,
+        "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits,
         "phasing": res.phasing,
         "flags": res.flags,
         "variant_calls": res.variant_calls,
         "caller": {
-            "name": "dna_decode-pgx-cyp2c19-v0",
-            "method": "vcf_defining_snp -> star_allele -> diplotype -> CPIC_phenotype",
-            "calling_is_independent_baseline": True,
-            "phenotype_is_independent_baseline": False,
+            "name": "dna_decode-pgx-cyp2c19-v0.1",
+            "method": "vcf_core_snp_proxy -> star_allele -> diplotype -> CPIC_phenotype (+ non-core sentinel withhold)",
+            # HONESTY: the calling step is DESIGNED to be independently validatable vs GeT-RM, but the only
+            # validation RUN so far is faithful-to-PharmCAT (in-distribution). Do not claim achieved independence.
+            "calling_independently_validatable": True,
+            "independent_validation_status": "pending: faithful-to-PharmCAT 6/6 done; GeT-RM consensus not yet run",
+            "phenotype_is_faithful_to_cpic": True,
+            "is_core_marker_proxy": True,  # NOT a full PharmVar star-allele caller (core SNP set + sentinels)
             "reference_tool": "PharmCAT",
         },
         "catalog": {

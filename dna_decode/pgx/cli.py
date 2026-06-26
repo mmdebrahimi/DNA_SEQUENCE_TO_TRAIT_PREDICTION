@@ -43,9 +43,19 @@ def main(argv=None) -> int:
         print(f"sample: {rec['sample_id']}  gene: {rec['gene']} ({rec['assembly']})")
         if rec["status"] != "ok":
             print(f"STATUS: {rec['status']} - {rec.get('reason')}")
+        elif rec["phenotype_status"] == "phenotype_withheld":
+            hits = ", ".join(f"{h['rsid']}->{h['implies']}" for h in rec["sentinel_hits"])
+            print(f"PHENOTYPE WITHHELD (non-core allele detected: {hits})")
+            print(f"  core-proxy diplotype: {rec['core_proxy_diplotype']}  (NOT a final call -- a "
+                  f"non-core star allele the core SNP set cannot resolve is present)")
         else:
             print(f"DIPLOTYPE: {rec['diplotype']}   PHENOTYPE: {rec['phenotype']} "
-                  f"({rec['phenotype_abbrev']})   [phasing: {rec['phasing']}]")
+                  f"({rec['phenotype_abbrev']})   [phasing: {rec['phasing']}; "
+                  f"confidence: {rec['phenotype_confidence']}]")
+            if rec["phenotype_status"] == "phase_ambiguous":
+                print(f"  PHASE-AMBIGUOUS: alternate resolution = {rec['alternate_diplotype']} "
+                      f"({rec['alternate_phenotype']}); reported call assumes trans (the standard).")
+        if rec["status"] == "ok":
             for vc in rec["variant_calls"]:
                 state = ("absent" if not vc["found"]
                          else "no-call" if vc["no_call"]
@@ -57,7 +67,9 @@ def main(argv=None) -> int:
             print(f"  {rec['caveat']}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
-    return 0 if rec["status"] == "ok" else 3
+    # exit nonzero when the phenotype is NOT safe to consume (parse failure OR withheld). phase_ambiguous
+    # keeps the (flagged) call -> exit 0.
+    return 0 if (rec["status"] == "ok" and rec["phenotype_status"] != "phenotype_withheld") else 3
 
 
 if __name__ == "__main__":

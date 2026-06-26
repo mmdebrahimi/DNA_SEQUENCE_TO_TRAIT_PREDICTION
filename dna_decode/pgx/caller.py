@@ -21,6 +21,7 @@ from dna_decode.pgx.cyp2c19_catalog import (
     CORE_DEFINING,
     GENE,
     REFERENCE_ALLELE,
+    SENTINELS,
     DefiningVariant,
     diplotype_phenotype,
 )
@@ -45,12 +46,23 @@ class VariantCall:
 
 @dataclass
 class DiplotypeResult:
-    status: str                # "ok" | "no_input"
-    diplotype: str | None      # "*2/*17"
+    status: str                # PARSE status: "ok" | "no_input"  (did we read a usable VCF?)
+    diplotype: str | None      # the core-proxy diplotype, e.g. "*2/*17"
     allele1: str | None
     allele2: str | None
-    phenotype: str | None      # CPIC metabolizer phenotype
+    phenotype: str | None      # CPIC metabolizer phenotype (None when withheld)
     phasing: str | None        # "phased" | "unphased" | None
+    # phenotype CONSUMABILITY status, distinct from parse `status` (v0.1):
+    #   "ok"                 -> phenotype is safe to consume
+    #   "phenotype_withheld" -> a non-core SENTINEL fired; the core proxy would mis-call -> phenotype=None
+    #   "phase_ambiguous"    -> >=2 unphased het sites whose phase resolutions differ; call kept, low conf
+    #   "no_input"           -> no defining site found
+    phenotype_status: str = "ok"
+    phenotype_confidence: str = "high"     # "high" | "low"
+    sentinel_hits: list[dict] = field(default_factory=list)
+    core_proxy_diplotype: str | None = None   # always the core-SNP proxy call (== diplotype)
+    alternate_diplotype: str | None = None    # the other phase resolution, when phase_ambiguous
+    alternate_phenotype: str | None = None
     flags: list[str] = field(default_factory=list)
     variant_calls: list[dict] = field(default_factory=list)
     reason: str | None = None
@@ -95,9 +107,13 @@ def scan_vcf(path: str | Path, defining: list[DefiningVariant] = CORE_DEFINING,
         if not line or line.startswith("##"):
             continue
         if line.startswith("#CHROM"):
-            header = line.split("\t")
+            header = line.rstrip("\n").split("\t")
             samples = header[9:] if len(header) > 9 else []
-            if sample and sample in samples:
+            if sample is not None:
+                if sample not in samples:
+                    raise ValueError(
+                        f"--sample {sample!r} not found in VCF header "
+                        f"(available: {', '.join(samples[:8])}{'...' if len(samples) > 8 else ''})")
                 sample_idx = samples.index(sample)
             continue
         cols = line.rstrip("\n").split("\t")
@@ -142,8 +158,14 @@ def _combine_haplotype(stars: list[str], flags: list[str]) -> str:
     return label
 
 
-def assemble_diplotype(calls: dict[str, VariantCall]) -> DiplotypeResult:
-    """Combine per-site VariantCalls into a diplotype + CPIC phenotype + honesty flags."""
+def assemble_diplotype(calls: dict[str, VariantCall],
+                       sentinel_counts: dict[str, int] | None = None) -> DiplotypeResult:
+    """Combine per-site VariantCalls into a diplotype + CPIC phenotype + honesty flags.
+
+    `sentinel_counts` (rsid -> ALT copy count) drives the v0.1 non-core withhold: when a sentinel proves a
+    non-core allele the core proxy cannot resolve, the phenotype is WITHHELD (phenotype_status =
+    phenotype_withheld, phenotype=None) rather than a confident mis-call. None -> no sentinel logic
+    (backward-compatible)."""
     flags: list[str] = []
     present = [c for c in calls.values() if c.found]
     if not present:
@@ -188,8 +210,41 @@ def assemble_diplotype(calls: dict[str, VariantCall]) -> DiplotypeResult:
 
     a1, a2 = sorted((a1, a2), key=_allele_sort_key)
     pheno = diplotype_phenotype(a1, a2)
-    return DiplotypeResult("ok", f"{a1}/{a2}", a1, a2, pheno, phasing, flags=flags,
-                           variant_calls=[_vc_dict(c) for c in calls.values()])
+    proxy = f"{a1}/{a2}"
+    res = DiplotypeResult("ok", proxy, a1, a2, pheno, phasing,
+                          core_proxy_diplotype=proxy, flags=flags,
+                          variant_calls=[_vc_dict(c) for c in calls.values()])
+
+    # --- phase ambiguity (v0.1): exactly 2 unphased het core sites whose two phase resolutions differ.
+    # Default above is TRANS (X/Y, the clinically standard call); the CIS alternate is *1 / (X+Y compound).
+    # Keep the standard call but flag + drop confidence + surface the alternate when phenotypes differ.
+    if phasing == "unphased" and len(hets) == 2:
+        cis_compound = "+".join(sorted({hets[0].star, hets[1].star}))
+        alt_a, alt_b = sorted((REFERENCE_ALLELE, cis_compound), key=_allele_sort_key)
+        alt_pheno = diplotype_phenotype(alt_a, alt_b)
+        if alt_pheno != pheno:
+            res.phenotype_status = "phase_ambiguous"
+            res.phenotype_confidence = "low"
+            res.alternate_diplotype = f"{alt_a}/{alt_b}"
+            res.alternate_phenotype = alt_pheno
+            res.flags.append("phase_ambiguous_phenotype_differs")
+
+    # --- sentinel non-core detection (v0.1): a proven non-core allele -> WITHHOLD the phenotype ---
+    star2_alt = calls["*2"].alt_count if calls.get("*2") and calls["*2"].found else 0
+    for s in SENTINELS:
+        n = (sentinel_counts or {}).get(s.rsid, 0)
+        if n <= 0:
+            continue
+        if s.implies == "*35" and (n - star2_alt) <= 0:
+            continue   # rs12769205 fully accounted for by *2 haplotype(s) -> not a *35 signal
+        res.sentinel_hits.append({"rsid": s.rsid, "implies": s.implies, "alt_count": n, "note": s.note})
+    if res.sentinel_hits:
+        res.phenotype_status = "phenotype_withheld"   # overrides phase_ambiguous (stronger)
+        res.phenotype = None
+        res.phenotype_confidence = "n/a"
+        res.flags.append("non_core_allele_sentinel")
+
+    return res
 
 
 def _allele_sort_key(a: str):
@@ -206,7 +261,45 @@ def _vc_dict(c: VariantCall) -> dict:
             "gt": c.gt, "phased": c.phased, "alt_count": c.alt_count, "no_call": c.no_call}
 
 
+def _scan_sentinel_counts(path: str | Path, sample: str | None = None) -> dict[str, int]:
+    """ALT copy count (0/1/2) per SENTINEL variant for the chosen sample. Raises on a named-but-absent
+    sample (same contract as scan_vcf)."""
+    by_pos = {(s.chrom, s.pos): s for s in SENTINELS}
+    counts = {s.rsid: 0 for s in SENTINELS}
+    sample_idx = 0
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        if not line or line.startswith("##"):
+            continue
+        if line.startswith("#CHROM"):
+            samples = line.rstrip("\n").split("\t")[9:]
+            if sample is not None:
+                if sample not in samples:
+                    raise ValueError(f"--sample {sample!r} not found in VCF header")
+                sample_idx = samples.index(sample)
+            continue
+        cols = line.rstrip("\n").split("\t")
+        if len(cols) < 8 or not cols[1].isdigit():
+            continue
+        s = by_pos.get((_norm_chrom(cols[0]), int(cols[1])))
+        if s is None:
+            continue
+        alts = cols[4].split(",")
+        if s.alt not in alts:
+            continue
+        ai = alts.index(s.alt) + 1
+        if len(cols) >= 10:
+            fmt = cols[8].split(":")
+            col = 9 + sample_idx
+            if "GT" in fmt and col < len(cols):
+                gt = cols[col].split(":")[fmt.index("GT")]
+                nums = [int(a) for a in gt.replace("|", "/").split("/") if a.isdigit()]
+                counts[s.rsid] = sum(1 for x in nums if x == ai)
+    return counts
+
+
 def call_diplotype(path: str | Path, sample: str | None = None,
                    defining: list[DefiningVariant] = CORE_DEFINING) -> DiplotypeResult:
-    """End-to-end: VCF -> CYP2C19 diplotype + CPIC phenotype. Convenience wrapper over scan + assemble."""
-    return assemble_diplotype(scan_vcf(path, defining=defining, sample=sample))
+    """End-to-end: VCF -> CYP2C19 diplotype + CPIC phenotype (+ v0.1 sentinel withhold + phase flag)."""
+    calls = scan_vcf(path, defining=defining, sample=sample)
+    sentinels = _scan_sentinel_counts(path, sample=sample)
+    return assemble_diplotype(calls, sentinel_counts=sentinels)

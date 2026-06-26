@@ -17,11 +17,11 @@
 | s2s2 | *2/*2 | *2/*2 | OK | Poor Metabolizer | OK |
 | s2s3 | *2/*3 | *2/*3 | OK | Poor Metabolizer | OK |
 
-## Non-core blind-spot cases (caller covers core SNP set only -- mis-call EXPECTED)
+## Non-core cases -- v0.1 sentinel layer WITHHOLDS rather than mis-calls (2/2 correctly withheld)
 
-| fixture | expected (PharmCAT) | predicted (ours) | flags |
-|---|---|---|---|
-| s1s35 | *1/*35 | *1/*1 |  |
-| s1s4b | *1/*4b | *1/*17 |  |
+| fixture | expected (PharmCAT) | core-proxy | phenotype_status | sentinel |
+|---|---|---|---|---|
+| s1s35 | *1/*35 | *1/*1 | phenotype_withheld | *35 |
+| s1s4b | *1/*4b | *1/*17 | phenotype_withheld | *4 |
 
-_Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are reported as blind-spot cases (the caller is EXPECTED to mis-call a non-core star to a *1-substituted diplotype + flag it) and do NOT count toward the headline. The GeT-RM INDEPENDENT number (1000 Genomes VCFs) needs tabix/bcftools + a fetch on a Linux/Docker host -- the named follow-up; this harness consumes that cohort identically via --expected-tsv. NOT a clinical tool._
+_Core concordance is on the v0 SNP-defined set (*1/*2/*3/*17). Non-core fixtures are now WITHHELD by the v0.1 sentinel layer (phenotype_status=phenotype_withheld) rather than silently mis-called, and do NOT count toward the headline. The GeT-RM INDEPENDENT consensus number is a DATA-ACCESS step (labels in paper supplements; the 1000G tooling is proven via Docker bcftools -- see wiki/pgx_1000g_population_2026-06-25); this harness consumes it via --source getrm --expected-tsv. NOT a clinical tool._
