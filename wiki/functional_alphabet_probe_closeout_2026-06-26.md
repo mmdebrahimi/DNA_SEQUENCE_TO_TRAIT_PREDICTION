@@ -24,16 +24,34 @@ Section 19 predicted tet (a distributed-mechanism drug) *might* show headroom be
 the **functional-determinant within-lineage concordance came back 0.963 (p<0.0001)** — NOT the predicted
 fail/tie. So across BOTH mechanism regimes tested:
 
-| drug | regime | functional within-lineage concordance |
-|---|---|---|
-| ciprofloxacin | concentrated (QRDR target-site) | **1.000** |
-| tetracycline | distributed (efflux/ribosomal/mobile) | **0.963** |
+## FINAL — D: reconnected, the formal k-mer comparison ran (2026-06-26, both arms, both drugs)
 
-The curated determinant alphabet separates R/S within-lineage on BOTH — even the "distributed" drug where
-headroom was expected. **There is no demonstrated headroom for a learned model on either.** The distributed-
-mechanism escape hatch (section 19) is now itself a soft-negative. (Caveat: the tet number is the functional
-arm alone — the k-mer comparator is blocked on a disconnected D: — but both readings of a k-mer result point
-to no learned-model headroom; see `wiki/functional_alphabet_probe_tet_partial_2026-06-26.md`.)
+| drug | regime | functional WL | k-mer WL | gap | verdict |
+|---|---|---|---|---|---|
+| ciprofloxacin | concentrated (QRDR target-site) | 1.000 | 0.721 | +0.28 | TIES (p=0.057) |
+| tetracycline | distributed (efflux/ribosomal/mobile) | **0.963** | **0.540** | **+0.42** | **BEATS_KMER (p=0.0)** |
+
+(tet: 20 shared lineages, 174 within-lineage pairs — properly powered, ~4× the cipro probe.)
+
+### The honest interpretation — BEATS_KMER STRENGTHENS "no headroom", it does not open one
+The functional alphabet is the **curated determinant set the deterministic decoder already uses** (tetA/tetB
+efflux, tetM/tetO ribosomal-protection, acrB/acrR). So this comparison is **decoder-alphabet vs raw-sequence
+(k-mer) alphabet**:
+- On tet the **base-level k-mer alphabet is at CHANCE within-lineage (0.540)** — raw sequence carries no
+  within-lineage tet-resistance signal once lineage is conditioned out (tet resistance = acquired-gene
+  presence; the top-N k-mer vocab is the core genome, which misses it within a lineage).
+- The **determinant alphabet carries it cleanly (0.963)**.
+- A learned **DNA-LLM operates on the raw-sequence side** (the chance-level one). To match the decoder it
+  would have to REDISCOVER the curated determinants — i.e. become a worse determinant caller. So
+  BEATS_KMER = "the determinant decoder is the right tool; raw-sequence learning has nothing to add here."
+- cipro (TIES) and tet (BEATS_KMER) differ only in *how badly* raw k-mer loses within-lineage (weak signal
+  from QRDR SNPs vs chance for acquired genes) — both land at **no demonstrated headroom for a learned model
+  over the curated deterministic decoder.** The distributed-mechanism escape hatch (section 19) is closed.
 
 ## Status
-The cheap CPU probe did its job: it gated the expensive build and returned a "no headroom over the shipped decoder" signal on BOTH cipro and tet. **The DNA-LLM-via-functional-alphabet path is parked (soft-negative across two mechanism regimes), no GPU spend.** Artifacts: `wiki/functional_alphabet_probe_{smoke,n147,tet_partial}_2026-06-26.{md,json}`; code `dna_decode/eval/functional_tokens.py` + `scripts/functional_alphabet_probe.py` (commit 753a1a9).
+The cheap CPU probe did its full job: it gated the expensive GPU build and returned a formal "no headroom
+over the shipped decoder" verdict on BOTH cipro (TIES) and tet (BEATS_KMER, determinant-side). **The
+DNA-LLM-via-alphabet path is a confirmed soft-negative across two mechanism regimes — no GPU spend.**
+Re-confirms the standing thesis: the binding constraint is labels, not compute. Artifacts:
+`wiki/functional_alphabet_probe_{smoke,n147,tet_n118}_2026-06-26.{md,json}` (the tet_partial packet is
+superseded by tet_n118); code `dna_decode/eval/functional_tokens.py` + `scripts/functional_alphabet_probe.py`.

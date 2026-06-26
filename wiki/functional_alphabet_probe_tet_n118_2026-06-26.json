@@ -1,0 +1,34 @@
+{
+  "schema": "functional-alphabet-probe-v0",
+  "cohort": "shared_lineage_tetracycline_cohort.parquet",
+  "drug": "tetracycline",
+  "n_admitted": 118,
+  "n_R": 58,
+  "n_S": 60,
+  "dropped_no_amrfinder": [],
+  "dropped_no_fasta": [],
+  "functional_vocab_size": 104,
+  "kmer_vocab_size": 10000,
+  "metric": {
+    "func_wl": 0.9626436781609196,
+    "kmer_wl": 0.5402298850574713,
+    "gap": 0.4224137931034483,
+    "n_pairs": 174,
+    "n_shared_lineages": 20,
+    "gap_p": 0.0,
+    "gap_null_ci": [
+      -0.14367816091954017,
+      0.15237068965517203
+    ]
+  },
+  "verdict": {
+    "verdict": "BEATS_KMER",
+    "func_wl": 0.9626436781609196,
+    "kmer_wl": 0.5402298850574713,
+    "gap": 0.4224137931034483,
+    "gap_p": 0.0,
+    "n_pairs": 174
+  },
+  "kill_criterion": "functional within-lineage concordance EXCEEDS k-mer with paired in-MLST label-permutation gap p < 0.05; UNDERPOWERED when n_pairs < 10. Any bucket is a valid honest completion.",
+  "analysis_date": "2026-06-26"
+}
