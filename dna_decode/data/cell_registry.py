@@ -1,24 +1,30 @@
-"""Evidence-Contract Registry (v0, thin cut) — one checked-in, test-enforced contract per shipped cell.
+"""Evidence-Contract Registry (v0.1) — one checked-in, test-enforced contract per shipped cell.
 
 A `CellContract` declares, for each deployed decoder cell, WHAT it claims, at what HONEST evidence tier,
 on what validation SLICE, with what label provenance, what abstention vocabulary it speaks, and (declared,
-not executed) its falsifier / incoming-data gate / demotion rule. The validation report card can later read
-its grid + tiers from here so a shipped decoder cannot ship invisibly and abstention has ONE vocabulary.
+not executed) its falsifier / incoming-data gate / demotion rule. The validation report card reads its AMR
+grid from here so a shipped decoder cannot ship invisibly and abstention has ONE vocabulary.
 
-v0 SCOPE (descoped per the 2026-06-26 /brainstorm + user direction): the VALIDATED/DEPLOYED CORE only —
-the AMR surface (projected verbatim from the frozen `shipped_decoder_surface`) + the 3 human-PGx genes.
-DEFERRED to v0.1: a `finder`/`typing`/`viral` track + a `route` field + report-card rebuild.
+v0.1 SCOPE (full CLI-routable surface — the brainstorm C1 per-route manifest):
+  - `amr`   (route dna-amr): the frozen `shipped_decoder_surface` (bacterial + fungal + antimalarial +
+            influenza-antiviral) projected verbatim.
+  - `viral` (route dna-amr): HIV-1 + SARS-CoV-2 drugs — CLI-routable via `dna-amr --drug` but NOT in the
+            AMR surface (their own report cards). track=viral, route=amr (brainstorm C2's track/route split).
+  - `pgx`   (route dna-pgx): CYP2C19 / CYP2C9 / VKORC1.
+  - `typing`/`finder` (route dna-<trait>): the 10 whole-tool typing + determinant-finder decoders.
 
 INTEGRITY RAILS (load-bearing):
 - `cell_id` is a DISPLAY string ONLY (brainstorm C2). The AMR join key is `cell_key.canonical_cell_key`
-  (organism, drug) — `amr_projection_keys()` returns exactly that set, and the consistency test asserts it
+  (organism, drug); `amr_projection_keys()` returns exactly that set and the consistency test asserts it
   EQUALS the frozen surface's keys. Never join AMR cells by raw `cell_id` string.
 - AMR contracts are a PROJECTION of `shipped_decoder_surface.shipped_decoder_rows()` built programmatically,
-  so the projection == surface BY CONSTRUCTION; the test pins it against silent drift.
+  so the projection == surface BY CONSTRUCTION. `surface_index()` re-exports the surface-shaped dict FROM
+  the registry so the report card reads its grid from here (equal by construction → 0 behavior change).
+- `cli_routable_manifest()` is derived from the LIVE CLI catalogs (the `dna-amr --drug` union, `dna-pgx
+  --gene`, `dna_decode.cli.TRAITS`) so the coverage test cannot silently drift as the CLI grows.
 - NO numeric confidence field exists anywhere (anti-"trust-layer-theater" guardrail). `evidence_tier` is a
   categorical honesty label; `claim_status` carries the structural status separately (brainstorm M1).
-- This module imports `shipped_decoder_surface` READ-ONLY and touches NO frozen file (`amr_rules.py` /
-  `calibrated_amr_rules.json` unchanged) -> `tests/test_tb_leak_guard.py` stays green.
+- Imports `shipped_decoder_surface` READ-ONLY and touches NO frozen file -> `test_tb_leak_guard.py` green.
 """
 from __future__ import annotations
 
@@ -31,14 +37,17 @@ from dna_decode.data.shipped_decoder_surface import shipped_decoder_rows
 
 
 class EvidenceTier(str, Enum):
-    """Honest evidence tier per cell. Categorical, NOT numeric (guardrail). Ordered conceptually
-    strong->weak for reading, but the enum carries no arithmetic and tests assert no numeric scale."""
+    """Honest evidence tier per cell. Categorical, NOT numeric (guardrail)."""
 
-    INDEPENDENT_MEASURED = "independent_measured"   # free INDEPENDENT isolate-level wet-lab label (e.g. HIV PhenoSense)
+    INDEPENDENT_MEASURED = "independent_measured"   # free INDEPENDENT isolate-level wet-lab label (HIV PhenoSense)
     NEAR_INDEPENDENT = "near_independent"           # provenance-disjoint stress test / consensus panel (NCBI-PD, GeT-RM)
-    FAITHFUL_TO_TOOL = "faithful_to_tool"           # faithful to a reference tool/guideline, not an independent label
+    FAITHFUL_TO_TOOL = "faithful_to_tool"           # faithful to a reference tool/DB/guideline, not an independent label
     KNOWLEDGE_BASELINE = "knowledge_baseline"       # literature/catalogue assignment, in-distribution
     NO_FREE_SOURCE = "no_free_source"               # no free isolate-level phenotype source exists
+
+
+# Tracks (v0.1). amr/viral both route through `dna-amr`; route ≠ track (brainstorm C2 split).
+TRACKS = ("amr", "viral", "pgx", "typing", "finder")
 
 
 @dataclass(frozen=True)
@@ -46,12 +55,13 @@ class CellContract:
     """One shipped decoder cell's evidence contract. Frozen; NO numeric confidence field by design."""
 
     cell_id: str               # DISPLAY string only ("track:organism:target"); NOT the join key
-    track: str                 # "amr" | "pgx"  (v0; finder/typing/viral deferred to v0.1)
+    track: str                 # one of TRACKS
+    route: str                 # the CLI entrypoint: "dna-amr" | "dna-pgx" | "dna-<trait>"
     organism: str
-    target: str                # drug (amr) | gene (pgx)
+    target: str                # drug (amr/viral) | gene (pgx) | scheme/tool name (typing/finder)
     claim: str                 # one-line plain claim the cell makes
     evidence_tier: EvidenceTier
-    claim_status: str          # structural status (phenotype_source_status for amr; calling-status for pgx) — M1 split
+    claim_status: str          # structural status (phenotype_source_status for amr; calling-status etc) — M1 split
     validation_slice: str      # the slice the tier was earned on
     label_provenance: str      # where the labels came from
     abstention_vocab: AbstentionVocab  # this cell's abstention KIND, collapsed to the controlled vocab
@@ -59,14 +69,17 @@ class CellContract:
     falsifier_ref: str         # path to a falsifier script, or "none" (DECLARED, not executed)
     incoming_data_gate: str    # which of the 8 rejection gates apply, or "n/a" (DECLARED)
     demotion_rule: str         # free-text v0: the trigger that would demote this cell's tier
+    # AMR-only surface fields (carried so surface_index() re-exports the surface-shaped dict from the registry):
+    engine: str | None = None
+    organism_scope: str | None = None
+    census_group: str | None = None
 
 
-# --- AMR phenotype_source_status -> (evidence_tier, abstention_vocab) mapping (the only judgment in the AMR
-#     projection; everything else is verbatim from the frozen surface). ---
-_AMR_STATUS_MAP: dict[str, tuple[EvidenceTier, AbstentionVocab]] = {
-    "ncbi_pd":          (EvidenceTier.NEAR_INDEPENDENT, AbstentionVocab.SCORED),
-    "label_confounded": (EvidenceTier.FAITHFUL_TO_TOOL, AbstentionVocab.LABEL_CONFOUNDED),
-    "no_free_source":   (EvidenceTier.NO_FREE_SOURCE,   AbstentionVocab.NO_FREE_SOURCE),
+# --- AMR phenotype_source_status -> (evidence_tier, abstention_vocab, native) ---
+_AMR_STATUS_MAP: dict[str, tuple[EvidenceTier, AbstentionVocab, str]] = {
+    "ncbi_pd":          (EvidenceTier.NEAR_INDEPENDENT, AbstentionVocab.SCORED, "SCORED"),
+    "label_confounded": (EvidenceTier.FAITHFUL_TO_TOOL, AbstentionVocab.LABEL_CONFOUNDED, "LABEL_CONFOUNDED"),
+    "no_free_source":   (EvidenceTier.NO_FREE_SOURCE,   AbstentionVocab.NO_FREE_SOURCE, "NO_FREE_PHENOTYPE"),
 }
 
 
@@ -74,82 +87,125 @@ def _amr_contracts() -> list[CellContract]:
     """Project every frozen `shipped_decoder_surface` row to an AMR CellContract (== surface by construction)."""
     out: list[CellContract] = []
     for r in shipped_decoder_rows():
-        org, drug = r["organism"], r["drug"]
-        status = r["phenotype_source_status"]
-        tier, vocab = _AMR_STATUS_MAP[status]
+        org, drug, status = r["organism"], r["drug"], r["phenotype_source_status"]
+        tier, vocab, native = _AMR_STATUS_MAP[status]
         scoreable = status == "ncbi_pd"
         out.append(CellContract(
-            cell_id=f"amr:{org}:{drug}",
-            track="amr",
-            organism=org,
-            target=drug,
+            cell_id=f"amr:{org}:{drug}", track="amr", route="dna-amr", organism=org, target=drug,
             claim=f"{r['engine']} R/S call for {org} x {drug}",
-            evidence_tier=tier,
-            claim_status=status,
+            evidence_tier=tier, claim_status=status,
             validation_slice=("NCBI-PD provenance-disjoint stress test (lineage-disclosed)" if scoreable
                               else "label-confounded surrogate (cefoxitin is the CLSI surrogate)"
-                              if status == "label_confounded"
-                              else "no free isolate-level phenotype source"),
+                              if status == "label_confounded" else "no free isolate-level phenotype source"),
             label_provenance=("NCBI Pathogen Detection AST_phenotypes" if scoreable else "none (structural non-cell)"),
-            abstention_vocab=vocab,
-            native_abstention=("SCORED" if scoreable
-                               else "LABEL_CONFOUNDED" if status == "label_confounded"
-                               else "NO_FREE_PHENOTYPE"),
+            abstention_vocab=vocab, native_abstention=native,
             falsifier_ref="scripts/provenance_disjoint_validate.py" if scoreable else "none",
-            incoming_data_gate=("G1,G7,G8" if scoreable else "n/a"),
-            demotion_rule=("SCORED -> UNDERPOWERED if either class falls below the powering floor; "
-                           "lineage-collapse can demote the disclosed metric" if scoreable
-                           else "n/a (no free label to demote against)"),
+            incoming_data_gate="G1,G7,G8" if scoreable else "n/a",
+            demotion_rule=("SCORED -> UNDERPOWERED below the powering floor; lineage-collapse can demote the "
+                           "disclosed metric" if scoreable else "n/a (no free label to demote against)"),
+            engine=r["engine"], organism_scope=r["organism_scope"], census_group=r["census_group"],
         ))
     return out
 
 
-# --- PGx cells: the 3 deployed human-PGx genes (dna-pgx --gene). Calling is independently validatable vs
-#     GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC. ---
+# --- Viral cells: HIV-1 + SARS-CoV-2 drugs route via `dna-amr --drug` but are NOT in the AMR surface. ---
+def _viral_contracts() -> list[CellContract]:
+    from dna_decode.data.hiv_amr import all_supported_hiv_drugs
+    from dna_decode.data.sarscov2_amr import all_supported_sarscov2_drugs
+    out: list[CellContract] = []
+    for d in sorted(all_supported_hiv_drugs()):
+        out.append(CellContract(
+            cell_id=f"viral:HIV-1:{d}", track="viral", route="dna-amr", organism="HIV-1", target=d,
+            claim=f"HIV-1 RT/PR/IN/CA target-site resistance call for {d}",
+            evidence_tier=EvidenceTier.INDEPENDENT_MEASURED, claim_status="independent_wetlab_validated",
+            validation_slice="Stanford HIVDB PhenoSense fold-change (free INDEPENDENT isolate-level label)",
+            label_provenance="Stanford HIVDB PhenoSense (Rhee 2003); catalog from the HIVDB dataset page",
+            abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+            falsifier_ref="scripts/hiv_targetsite_validate.py", incoming_data_gate="n/a",
+            demotion_rule="AUC below the per-class powering floor demotes to UNDERPOWERED",
+        ))
+    for d in sorted(all_supported_sarscov2_drugs()):
+        out.append(CellContract(
+            cell_id=f"viral:SARS-CoV-2:{d}", track="viral", route="dna-amr", organism="SARS-CoV-2", target=d,
+            claim=f"SARS-CoV-2 Mpro inhibitor resistance call for {d}",
+            evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="cov_rdb_in_distribution",
+            validation_slice="CoV-RDB invitro_selection fold-change (in-distribution knowledge baseline)",
+            label_provenance="Stanford CoV-RDB (covid-drdb-payload); UNDERPOWERED / TN-starved",
+            abstention_vocab=AbstentionVocab.UNDERPOWERED, native_abstention="UNDERPOWERED",
+            falsifier_ref="scripts/sarscov2_mpro_validate.py", incoming_data_gate="n/a",
+            demotion_rule="held-out CoV-RDB or clinical fold would re-tier toward independent",
+        ))
+    return out
+
+
+# --- PGx cells (dna-pgx --gene). ---
 _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
-        cell_id="pgx:human:cyp2c19", track="pgx", organism="human", target="cyp2c19",
+        cell_id="pgx:human:cyp2c19", track="pgx", route="dna-pgx", organism="human", target="cyp2c19",
         claim="CYP2C19 star-allele diplotype + CPIC metabolizer phenotype from a phased VCF",
-        evidence_tier=EvidenceTier.NEAR_INDEPENDENT,
-        claim_status="calling_validated_phenotype_faithful_to_cpic",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_phenotype_faithful_to_cpic",
         validation_slice="GeT-RM consensus core-diplotype concordance on real 1000G + trio Mendelian QC",
-        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) ⋈ 1000G",
+        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) join 1000G",
         abstention_vocab=AbstentionVocab.WITHHELD_NONCORE, native_abstention="phenotype_withheld",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="a non-core *4/*35 sentinel hit -> phenotype withheld rather than mis-called",
-    ),
+        demotion_rule="a non-core *4/*35 sentinel hit -> phenotype withheld rather than mis-called"),
     CellContract(
-        cell_id="pgx:human:cyp2c9", track="pgx", organism="human", target="cyp2c9",
+        cell_id="pgx:human:cyp2c9", track="pgx", route="dna-pgx", organism="human", target="cyp2c9",
         claim="CYP2C9 star-allele diplotype + CPIC activity-score phenotype from a phased VCF",
-        evidence_tier=EvidenceTier.NEAR_INDEPENDENT,
-        claim_status="calling_validated_phenotype_faithful_to_cpic",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_phenotype_faithful_to_cpic",
         validation_slice="GeT-RM consensus core-diplotype concordance 73/73 on real 1000G + trio Mendelian QC",
-        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) ⋈ 1000G",
+        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) join 1000G",
         abstention_vocab=AbstentionVocab.WITHHELD_NONCORE, native_abstention="phenotype_withheld",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="a non-core *5/*8/*9/*11 sentinel hit -> phenotype withheld",
-    ),
+        demotion_rule="a non-core *5/*8/*9/*11 sentinel hit -> phenotype withheld"),
     CellContract(
-        cell_id="pgx:human:vkorc1", track="pgx", organism="human", target="vkorc1",
+        cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
-        claim_status="single_snp_genotype_to_sensitivity",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",
         validation_slice="direct genotype readout (minus-strand encoded); not a star/diplotype system",
         label_provenance="literature sensitivity assignment (no independent panel validation in-repo)",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="n/a (deterministic single-SNP readout)",
-    ),
+        falsifier_ref="none", incoming_data_gate="n/a", demotion_rule="n/a (deterministic single-SNP readout)"),
+]
+
+# --- Typing + determinant-finder whole-tool cells (route dna-<trait>). Faithful-to-tool curated-DB callers. ---
+# (track, trait, organism-scope, one-line claim, native-abstention)
+_TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
+    ("typing", "pathotype", "Escherichia_coli", "E. coli pathotype compatibility call + abstention (VirulenceFinder resolver)", "ABSTAIN"),
+    ("typing", "serotype", "Escherichia_coli", "E. coli O:H serotype (SerotypeFinder allele DB)", "O?"),
+    ("typing", "mlst", "bacteria", "multi-locus sequence type (PubMLST allele->profile->ST)", "ABSTAIN"),
+    ("typing", "ktype", "Klebsiella", "Klebsiella K/O capsule type (Kaptive)", "ABSTAIN"),
+    ("typing", "salmserovar", "Salmonella", "Salmonella serovar (antigenic-formula resolver)", "ABSTAIN"),
+    ("typing", "pneumoserotype", "Streptococcus_pneumoniae", "pneumococcal capsular serotype", "ABSTAIN"),
+    ("finder", "plasmid", "bacteria", "plasmid Inc-replicon typing (PlasmidFinder allele DB)", "ABSTAIN"),
+    ("finder", "resfinder", "bacteria", "acquired AMR genes (ResFinder allele DB) — independent cross-tool check vs amr", "ABSTAIN"),
+    ("finder", "pointfinder", "Escherichia_coli", "chromosomal AMR point mutations (PointFinder) — independent vs amr POINT", "ABSTAIN"),
+    ("finder", "disinfinder", "bacteria", "biocide/disinfectant resistance genes (DisinFinder)", "ABSTAIN"),
 ]
 
 
+def _typing_finder_contracts() -> list[CellContract]:
+    from dna_decode.data.cell_registry_vocab import to_vocab
+    out: list[CellContract] = []
+    for track, trait, scope, claim, native in _TYPING_FINDER:
+        out.append(CellContract(
+            cell_id=f"{track}:{scope}:{trait}", track=track, route=f"dna-{trait}", organism=scope, target=trait,
+            claim=claim, evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+            claim_status="curated_db_caller_faithful_to_tool",
+            validation_slice="deterministic curated-allele-DB caller; faithful-to-tool, not an independent baseline",
+            label_provenance="the tool's own reference allele DB",
+            abstention_vocab=to_vocab(native), native_abstention=native,
+            falsifier_ref="none", incoming_data_gate="n/a",
+            demotion_rule="an independent-baseline comparison on disjoint data would re-tier"))
+    return out
+
+
 def cells() -> list[CellContract]:
-    """Every v0 cell contract (AMR projection + PGx)."""
-    return _amr_contracts() + list(_PGX_CONTRACTS)
+    """Every v0.1 cell contract (AMR projection + viral + PGx + typing/finder)."""
+    return _amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _typing_finder_contracts()
 
 
 def by_cell_id() -> dict[str, CellContract]:
-    """cell_id (display) -> contract. cell_id is unique within v0 by construction."""
     return {c.cell_id: c for c in cells()}
 
 
@@ -162,10 +218,43 @@ def pgx_cells() -> list[CellContract]:
 
 
 def amr_projection_keys() -> set[tuple[str, str]]:
-    """The AMR cells' canonical (organism, drug) join keys — for the surface-consistency test (NOT cell_id)."""
+    """AMR cells' canonical (organism, drug) join keys — for the surface-consistency test (NOT cell_id)."""
     return {canonical_cell_key(c.organism, c.target) for c in amr_cells()}
 
 
+def surface_index() -> dict[tuple[str, str], dict]:
+    """(organism.lower, drug.lower) -> surface-shaped row dict, re-exported FROM the registry's AMR cells.
+
+    The validation report card reads its grid from here (== the frozen surface_index by construction).
+    """
+    out: dict[tuple[str, str], dict] = {}
+    for c in amr_cells():
+        out[canonical_cell_key(c.organism, c.target)] = {
+            "organism": c.organism, "drug": c.target, "engine": c.engine,
+            "organism_scope": c.organism_scope, "phenotype_source_status": c.claim_status,
+            "census_group": c.census_group,
+        }
+    return out
+
+
+def cli_routable_manifest() -> dict[str, set[str]]:
+    """The authoritative v0.1 CLI-routable set, derived LIVE from the CLI catalogs (drift-proof)."""
+    from dna_decode.cli import TRAITS
+    from dna_decode.data.antimalarial_amr import supported_antimalarial_drugs
+    from dna_decode.data.antiviral_amr import supported_antiviral_drugs
+    from dna_decode.data.fungal_amr import supported_fungal_drugs
+    from dna_decode.data.hiv_amr import all_supported_hiv_drugs
+    from dna_decode.data.mic_tiers import supported_drugs
+    from dna_decode.data.sarscov2_amr import all_supported_sarscov2_drugs
+    amr_drugs = (set(supported_drugs()) | set(supported_fungal_drugs())
+                 | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
+                 | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs()))
+    return {
+        "dna-amr": {d.lower() for d in amr_drugs},
+        "dna-pgx": {"cyp2c19", "cyp2c9", "vkorc1"},
+        "traits": set(TRAITS) - {"amr", "pgx"},  # the typing/finder whole-tool traits
+    }
+
+
 def cli_routable_cell_ids() -> set[str]:
-    """The v0 CLI-routable cell-id set: AMR surface cells + the 3 PGx genes."""
     return set(by_cell_id())

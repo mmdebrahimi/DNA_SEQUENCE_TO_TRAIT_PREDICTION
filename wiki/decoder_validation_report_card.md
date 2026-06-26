@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-06-13
+# Decoder-suite provenance-disjoint validation report card — 2026-06-26
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 

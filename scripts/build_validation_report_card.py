@@ -44,7 +44,10 @@ ROOT = Path(__file__).resolve().parent.parent
 WIKI = ROOT / "wiki"
 sys.path.insert(0, str(ROOT))
 
-from dna_decode.data.shipped_decoder_surface import surface_index  # noqa: E402
+# The report card reads its AMR grid from the Evidence-Contract Registry (v0.1). registry.surface_index()
+# re-exports the frozen-surface-shaped dict FROM the registry's AMR cells (== shipped_decoder_surface by
+# construction; pinned by tests/test_cell_registry.py) so the registry is the single source the card reads.
+from dna_decode.data.cell_registry import surface_index  # noqa: E402
 from dna_decode.data.cell_key import canonical_cell_key  # noqa: E402
 
 # Reframed tier (lineage-disclosure layer): the headline must say BOTH that this is provenance-disjoint
