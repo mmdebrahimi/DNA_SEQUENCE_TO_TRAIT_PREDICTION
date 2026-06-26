@@ -18,5 +18,22 @@
 - **More shared-lineage data** to push p < 0.05 and power the metric (cohort expansion — external/data wall).
 - A **DISTRIBUTED-mechanism drug** (not concentrated like cipro QRDR) where curated determinants are incomplete and a learned representation might have real headroom — e.g. the tet failure mode (mobile elements). That is the only regime where the DNA-LLM bet has a plausible edge, and it is a *new-cohort + label* question, not a GPU question.
 
+## UPDATE 2026-06-26 PM — the tet test RAN, and it FALSIFIED the headroom prediction
+Section 19 predicted tet (a distributed-mechanism drug) *might* show headroom because its determinants are
+"incomplete". A powered tet shared-lineage cohort was built (118 strains, 20 shared lineages, 174 pairs) and
+the **functional-determinant within-lineage concordance came back 0.963 (p<0.0001)** — NOT the predicted
+fail/tie. So across BOTH mechanism regimes tested:
+
+| drug | regime | functional within-lineage concordance |
+|---|---|---|
+| ciprofloxacin | concentrated (QRDR target-site) | **1.000** |
+| tetracycline | distributed (efflux/ribosomal/mobile) | **0.963** |
+
+The curated determinant alphabet separates R/S within-lineage on BOTH — even the "distributed" drug where
+headroom was expected. **There is no demonstrated headroom for a learned model on either.** The distributed-
+mechanism escape hatch (section 19) is now itself a soft-negative. (Caveat: the tet number is the functional
+arm alone — the k-mer comparator is blocked on a disconnected D: — but both readings of a k-mer result point
+to no learned-model headroom; see `wiki/functional_alphabet_probe_tet_partial_2026-06-26.md`.)
+
 ## Status
-The cheap CPU probe did its job: it gated the expensive build and returned a "no headroom over the shipped decoder" signal. **The DNA-LLM-via-functional-alphabet path is parked (soft-negative), no GPU spend.** Artifacts: `wiki/functional_alphabet_probe_{smoke,n147}_2026-06-26.{md,json}`; code `dna_decode/eval/functional_tokens.py` + `scripts/functional_alphabet_probe.py` (commit 753a1a9).
+The cheap CPU probe did its job: it gated the expensive build and returned a "no headroom over the shipped decoder" signal on BOTH cipro and tet. **The DNA-LLM-via-functional-alphabet path is parked (soft-negative across two mechanism regimes), no GPU spend.** Artifacts: `wiki/functional_alphabet_probe_{smoke,n147,tet_partial}_2026-06-26.{md,json}`; code `dna_decode/eval/functional_tokens.py` + `scripts/functional_alphabet_probe.py` (commit 753a1a9).
