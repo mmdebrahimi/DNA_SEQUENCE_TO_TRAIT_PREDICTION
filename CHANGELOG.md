@@ -3,6 +3,38 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [Unreleased] — Evidence-Contract Registry + certification capstone + agent-discoverability + DNA-LLM probe (2026-06-26)
+
+Infrastructure + a research closeout; committed to `main`, not yet PyPI-published.
+
+- **Evidence-Contract Registry** (`dna_decode/data/cell_registry{,_vocab}.py`, `tests/test_cell_registry.py`):
+  one checked-in, test-enforced contract per shipped cell so a new decoder cannot ship invisibly and
+  abstention speaks ONE controlled vocabulary (not a confidence scale). **67 cells / 5 tracks** {amr 25
+  (projected verbatim from the frozen `shipped_decoder_surface` via `canonical_cell_key`), viral 29 (HIV-1
+  + SARS-CoV-2 — the CLI-routable-but-surface-absent gap), pgx 3, typing 6, finder 4}; `cli_routable_manifest()`
+  derived LIVE from the CLI catalogs (drift-proof); `build_validation_report_card.py` now reads its AMR grid
+  from the registry. NO numeric confidence / NO aggregate score (anti-"trust-layer-theater" guardrails).
+- **Certification capstone** (`scripts/build_certification_capstone.py` → `wiki/certification_capstone.{md,json}`):
+  a thin read-only presentation over the registry + per-domain report cards + the freeze/negative-results
+  boundaries. NO aggregate boolean verdict (a 6-tier surface reduced to one bool would certify the weakest
+  cell as strongly as the strongest) — `no_aggregate_verdict=True` pinned by test.
+- **Agent-era discoverability** (`AGENTS.md`, `.claude/skills/dna-decode-demo/SKILL.md`, `Makefile`,
+  `SECURITY.md`, `CITATION.cff`, `docs/quickstart.md`, `docs/validation.md`, `examples/README.md`,
+  `.github/workflows/tests.yml`, richer `pyproject` keywords/urls): a `dna-decode list`-authoritative agent
+  surface so coding agents can install/run/verify the tool. Research-use, not-clinical guardrails written
+  down explicitly. CI verified green (1760 passed).
+- **Non-neural functional-alphabet probe** (`dna_decode/eval/functional_tokens.py`,
+  `scripts/functional_alphabet_probe.py`): the cheap CPU gate before any "DNA-LLM" GPU spend — a drug-general
+  functional-determinant alphabet vs base-level k-mers, scored on the de-confounded within-lineage metric.
+  Result across two mechanism regimes: cipro functional within-lineage **1.000** (concentrated QRDR), tet
+  **0.963** (distributed efflux/ribosomal). The curated determinant alphabet separates R/S within-lineage on
+  BOTH — **no demonstrated headroom for a learned model**; the DNA-LLM-via-alphabet path is a soft-negative.
+  Re-confirms the project thesis: the binding constraint is labels, not compute. Closeout:
+  `wiki/functional_alphabet_probe_closeout_2026-06-26.md`.
+- FROZEN bacterial/viral/fungal AMR surface (`amr_rules.py` + `calibrated_amr_rules.json`) byte-unchanged
+  throughout. 0 regressions (full suite 1760 passed; the 10 errors are the pre-existing xgboost-`[ml]`-extra
+  predict-e2e, unrelated).
+
 ## [0.6.4] — PGx trust-surface report card + CYP2C9 sentinel v0.1 (2026-06-26)
 
 Consolidation: a standing trust surface for the human-PGx phase + closing CYP2C9's non-core residual.
