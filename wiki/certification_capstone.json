@@ -1,0 +1,113 @@
+{
+  "schema": "certification-capstone-v0",
+  "analysis_date": "2026-06-26",
+  "what_this_is": "A thin presentation layer over existing milestone evidence \u2014 NOT a clinical tool, NOT a new gate, NOT an aggregate verdict. Each cell + card keeps its own honest tier.",
+  "no_aggregate_verdict": true,
+  "aggregate_verdict_disclaimer": "Cells span 6 honest tiers; an aggregate pass/fail would certify the weakest cell as strongly as the strongest. No such field exists by design.",
+  "registry_census": {
+    "total_cells": 67,
+    "by_track": {
+      "amr": 25,
+      "viral": 29,
+      "pgx": 3,
+      "typing": 6,
+      "finder": 4
+    },
+    "by_evidence_tier": {
+      "near_independent": 15,
+      "faithful_to_tool": 11,
+      "no_free_source": 11,
+      "independent_measured": 26,
+      "knowledge_baseline": 4
+    },
+    "not_censused_cells": []
+  },
+  "domain_report_cards": [
+    {
+      "card": "decoder_validation_report_card.json",
+      "status": "present",
+      "headline": {
+        "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
+        "no_aggregate_headline": true,
+        "state_counts": {
+          "ABSTAINS_BY_DESIGN": 2,
+          "SCORED": 10,
+          "NO_FREE_PHENOTYPE_SOURCE": 11,
+          "UNDERPOWERED": 3,
+          "LABEL_CONFOUNDED": 1
+        }
+      }
+    },
+    {
+      "card": "amr_portal_independent_report_card.json",
+      "status": "present",
+      "headline": {
+        "n_cells": 25,
+        "n_scored_independent": 21,
+        "n_underpowered": 4,
+        "status_field": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+      }
+    },
+    {
+      "card": "external_validation_report_card.json",
+      "status": "present",
+      "headline": {
+        "note": "external clinical re-validation of the frozen decoder; strict-tier is the primary metric, relaxed secondary; raw sens/spec is clonality-inflated \u2014 see the cluster-weighted block. Separate from the frozen decoder report card."
+      }
+    },
+    {
+      "card": "tb_report_card.json",
+      "status": "present",
+      "headline": {
+        "headline_rule": "RAW per-isolate is the TB-AMR headline; lineage is a clonality DISCLOSURE (resistance is homoplasic). NAMESPACE-SEPARATE from the frozen bacterial cards.",
+        "n_independent_drugs": 2,
+        "n_in_distribution_drugs": 2
+      }
+    },
+    {
+      "card": "hiv_decoder_report_card.json",
+      "status": "present",
+      "headline": {
+        "label_independence": "PhenoSense fold-change is NOT HIVDB's own Sierra interpretation (non-circular)",
+        "n_cells": 25,
+        "honest_caveats": [
+          "in-distribution (HIVDB), NOT provenance-disjoint -> a lower external-rigour bar than the bacterial card",
+          "NNRTI = mutant-specific (excellent on 1st-gen EFV/NVP); NRTI v0 = position-based (over-calls, fixed by the deconfounded mutant-specific v0.1 for 5/6 drugs; ddI keeps position-based)",
+          "non-B subtype transfer is under-powered (data ~96% subtype B)",
+          "PI/INSTI = position-based v0 (PI AUC 0.78-0.96; INSTI 0.74-1.0, 2nd-gen DTG/BIC lower as the class-level over-call predicts); CAI/lenacapavir = mutant-level (AUC 0.91) on a small resistance-enriched dataset (n=140, 11 S)",
+          "OLS underlying-tool baseline now run for PI/INSTI/CAI (uniform illustrative fold>=3 cutoff, delta is the wrapper-vs-tool signal): PI catalog is high-sens/low-spec so OLS recovers +0.06..+0.13 balacc (real v0.1 mutant-specific headroom, like NRTI); INSTI catalog is competitive (+-0.07, ties/beats OLS on EVG/BIC); CAI catalog BEATS OLS +0.112 (OLS overfits the tiny resistance-enriched set). Subtype-transfer column stays NNRTI/NRTI-only"
+        ]
+      }
+    },
+    {
+      "card": "pgx_report_card.json",
+      "status": "present",
+      "headline": {
+        "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
+        "sources": {
+          "getrm_cyp2c19": true,
+          "getrm_cyp2c9": true,
+          "pharmcat_cyp2c19": true,
+          "functional_evidence": true,
+          "trio_mendelian": true
+        }
+      }
+    }
+  ],
+  "boundaries": [
+    {
+      "document": "reproducibility_freeze_2026-06-13.md",
+      "title": "Reproducibility freeze \u2014 deterministic AMR decoder (2026-06-13)",
+      "status": "present"
+    },
+    {
+      "document": "negative_results_map_2026-06-13.md",
+      "title": "Operational negative-results map \u2014 why each G2P expansion was rejected (2026-06-13)",
+      "status": "present"
+    }
+  ],
+  "sources": {
+    "registry": "dna_decode/data/cell_registry.py",
+    "supersedes_partially": "scripts/build_cross_kingdom_summary.py (AMR-family only, pre-registry)"
+  }
+}
