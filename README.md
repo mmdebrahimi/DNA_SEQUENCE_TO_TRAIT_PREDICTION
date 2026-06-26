@@ -15,6 +15,10 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 > each surface's distinct independence tier preserved, never averaged into a misleading aggregate:
 > [`wiki/cross_kingdom_validation_summary.md`](wiki/cross_kingdom_validation_summary.md).
 
+> **Using a coding agent?** See [`AGENTS.md`](AGENTS.md) for setup/test/run commands + the scientific
+> guardrails, and run `dna-decode list` for the authoritative supported-trait + validation surface.
+> Quickstart: [`docs/quickstart.md`](docs/quickstart.md) · Validation tiers: [`docs/validation.md`](docs/validation.md).
+
 ## What it decodes (v0.5.0)
 
 | Tool | Trait | Validation |

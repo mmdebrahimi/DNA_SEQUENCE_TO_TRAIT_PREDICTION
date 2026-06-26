@@ -6,7 +6,10 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Eman", email = "zoghalefaal@gmail.com" }]
-keywords = ["bioinformatics", "antimicrobial-resistance", "genomics", "genotype-phenotype", "amr"]
+keywords = [
+    "bioinformatics", "genomics", "microbial-genomics", "antimicrobial-resistance", "amr",
+    "genotype-phenotype", "pathotyping", "mlst", "resfinder", "pointfinder", "cli",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -68,6 +71,8 @@ dna-coloc = "dna_decode.colocalization.cli:main"
 [project.urls]
 Homepage = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION"
 Repository = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION"
+Changelog = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION/blob/main/CHANGELOG.md"
+Issues = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION/issues"
 
 [project.optional-dependencies]
 # Dev tooling (lint + coverage) not needed for basic test runs

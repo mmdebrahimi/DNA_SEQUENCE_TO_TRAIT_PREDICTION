@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use dna-decode in research, please cite it as below."
+title: "dna-decode: a deterministic, interpretable microbial genome-to-trait decoder"
+abstract: >-
+  Research-use Python CLI/library that calls antibiotic/antiviral/antifungal resistance (R/S) and
+  typing/pathotype traits from microbial genomes, naming the exact genes or mutations driving each call
+  together with its blind spots, abstention, and a per-call validation tier + provenance. Mechanism-feature
+  / rule based, not an embedding black box. Not a clinical tool.
+type: software
+authors:
+  # Published under the project's maintainer identity; edit name / add ORCID before any formal citation use.
+  - name: "Eman"
+    alias: mmdebrahimi
+repository-code: "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION"
+url: "https://pypi.org/project/dna-decode/"
+keywords:
+  - bioinformatics
+  - genomics
+  - microbial-genomics
+  - antimicrobial-resistance
+  - amr
+  - genotype-phenotype
+  - pathotyping
+  - mlst
+license: MIT
+version: "0.6.4"
