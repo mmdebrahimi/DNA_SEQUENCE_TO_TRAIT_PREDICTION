@@ -1,0 +1,30 @@
+{
+  "status": "OK",
+  "drugs": {
+    "ciprofloxacin": {
+      "ast_R": 11014,
+      "ast_S": 28879,
+      "downloadable_R": 6124,
+      "downloadable_S": 15378,
+      "shared_RS_lineages_ceiling": 317,
+      "within_lineage_pairs_ceiling": 722845,
+      "strains_in_shared_lineages": 12191,
+      "current_probe": {
+        "shared_lineages": 6,
+        "within_lineage_pairs": 43,
+        "n": 147
+      }
+    },
+    "tetracycline": {
+      "ast_R": 17667,
+      "ast_S": 20500,
+      "downloadable_R": 10770,
+      "downloadable_S": 10595,
+      "shared_RS_lineages_ceiling": 685,
+      "within_lineage_pairs_ceiling": 1187909,
+      "strains_in_shared_lineages": 17677,
+      "current_probe": null
+    }
+  },
+  "analysis_date": "2026-06-26"
+}
