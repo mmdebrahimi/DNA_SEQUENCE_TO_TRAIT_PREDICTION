@@ -88,4 +88,11 @@ The hypotheses that attack exactly that, with free data:
 - Unit B is a near-free QC that strengthens the calling claim using trios already in the 1000G data on disk.
 - Both are small, bounded, offline-testable, and leave the FROZEN surfaces untouched.
 
-## Status: PLANNED (decompose + technical plan). Build (Units A+B) is a separate greenlight.
+## Status: BUILT 2026-06-25 (v0.6.3). Units A + B shipped + validated.
+> **Unit A DONE:** `dna_decode/pgx/functional_evidence.py` + report — 6 alleles, AGREE 4 / DISAGREE 1
+> (CYP2C9 *3: predictors-benign vs CPIC-no-function) / FLAG 1 (CYP2C19 *2: synonymous-surface vs splice
+> mechanism). Missense signals live-fetched from Ensembl VEP; regulatory literature-grounded; GTEx-eQTL
+> confirmation deferred (didn't resolve via the v2 API). **Unit B DONE:** trio QC — CYP2C19 + CYP2C9 both
+> **602/602 (100%) Mendelian-consistent, 0 violations** (one-pass fix: 9-min stall → 0.9s). **Unit C** still
+> banked. 98 pgx-suite pass; FROZEN AMR surface byte-unchanged. Reports `wiki/pgx_functional_evidence_*` +
+> `wiki/pgx_trio_mendelian_*`.

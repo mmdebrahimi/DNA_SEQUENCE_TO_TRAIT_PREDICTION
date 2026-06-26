@@ -3,6 +3,28 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.6.3] — PGx independent functional-evidence + trio co-segregation layer (2026-06-25)
+
+From `/hypothesise` → the two units that attack the PGx cells' one circular link (the per-allele FUNCTION
+assignment is CPIC's own) + add a free internal QC. No new CLI surface (validation/evidence layer).
+
+- **Unit A — independent functional-evidence cross-check** (`dna_decode/pgx/functional_evidence.py` +
+  `scripts/pgx_functional_evidence.py` → `wiki/pgx_functional_evidence_2026-06-25.{md,json}`): per allele,
+  a NON-CPIC signal + an AGREE/DISAGREE/FLAG/NO_SIGNAL verdict vs CPIC's function. Missense → Ensembl VEP
+  predictors (live-fetched at curation: SIFT/PolyPhen); stop/splice → consequence class; regulatory →
+  documented cis-regulatory expression effect (Sim 2006 / Rieder 2005). **6 alleles: AGREE 4 / DISAGREE 1 /
+  FLAG 1.** The informative findings: **CYP2C9 *3 (I359L) DISAGREE** — predictors call it benign but CPIC =
+  no-function (faithful-to-CPIC rests on clinical evidence the predictors miss); **CYP2C19 *2 FLAG** — VEP
+  surface consequence is synonymous, the no-function mechanism is a documented cryptic splice. Honest tier:
+  orthogonal cross-check, NOT ground truth; GTEx-eQTL confirmation deferred (didn't resolve via the v2 API).
+- **Unit B — trio Mendelian co-segregation QC** (`scripts/pgx_trio_concordance.py` →
+  `wiki/pgx_trio_mendelian_2026-06-25.{md,json}`): the 1000G 602 trios → **CYP2C19 602/602 + CYP2C9 602/602
+  (100%) Mendelian-consistent, 0 violations** — an independent CALLING check (inheritance-physics axis,
+  distinct from GeT-RM). One-pass VCF read (the 3202-column wide-line re-read footgun → fixed: 9-min stall
+  → 0.9s).
+- 13 new tests (`tests/test_pgx_functional_evidence.py` + `tests/test_pgx_trio.py`); 98 pgx-suite pass.
+  FROZEN bacterial/viral/fungal AMR surface byte-unchanged.
+
 ## [0.6.2] — the warfarin pair: CYP2C9 (activity-score) + VKORC1 (2026-06-25)
 
 Expands the human-PGx phase with the next two genes, reusing the CYP2C19 harness (the data-source research's

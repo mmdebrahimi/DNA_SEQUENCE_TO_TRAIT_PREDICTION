@@ -1,0 +1,81 @@
+{
+  "schema": "pgx-functional-evidence-v0",
+  "analysis_date": "2026-06-25",
+  "purpose": "Independent (non-CPIC) functional-evidence cross-check of each PGx allele's CPIC function assignment -- the circularity-break. AGREE raises confidence; DISAGREE/FLAG surface where 'faithful-to-CPIC' rests on clinical evidence sequence-signals miss.",
+  "honesty": "Independent signals are ORTHOGONAL to CPIC curation, NOT ground truth: missense -> Ensembl VEP predictors (ML); stop/splice -> consequence class (fact); regulatory -> documented expression effect (measured, primary literature). Small-N per-allele annotation, NOT a concordance-%; GTEx-eQTL confirmation deferred (not asserted).",
+  "summary": {
+    "n": 6,
+    "AGREE": 4,
+    "DISAGREE": 1,
+    "FLAG": 1,
+    "NO_SIGNAL": 0
+  },
+  "evidence": [
+    {
+      "gene": "CYP2C19",
+      "allele": "*2",
+      "rsid": "rs4244285",
+      "cpic_function": "no function",
+      "variant_class": "synonymous_cryptic_splice",
+      "independent_signal": "Ensembl VEP most-severe = synonymous_variant; the no-function mechanism is a cryptic splice site (aberrant splicing, de Morais 1994) NOT captured by the consequence class",
+      "signal_source": "VEP + primary-literature",
+      "verdict": "FLAG",
+      "note": "A consequence-only predictor would UNDER-call this (synonymous); CPIC no-function rests on the documented splice defect -- a real flag, not a defect of the cell."
+    },
+    {
+      "gene": "CYP2C19",
+      "allele": "*3",
+      "rsid": "rs4986893",
+      "cpic_function": "no function",
+      "variant_class": "stop_gained",
+      "independent_signal": "Ensembl VEP most-severe = stop_gained (p.W212X) -> unambiguous loss of function",
+      "signal_source": "VEP-consequence",
+      "verdict": "AGREE",
+      "note": "Premature-stop consequence independently confirms CPIC no-function."
+    },
+    {
+      "gene": "CYP2C19",
+      "allele": "*17",
+      "rsid": "rs12248560",
+      "cpic_function": "increased function",
+      "variant_class": "regulatory_promoter",
+      "independent_signal": "Documented cis-regulatory promoter variant INCREASING CYP2C19 expression via a new GATA site (Sim 2006); GTEx-liver-significant-eQTL not resolved via the v2 API this run",
+      "signal_source": "primary-literature (Sim 2006)",
+      "verdict": "AGREE",
+      "note": "Independent expression-INCREASE direction matches CPIC increased-function; GTEx-eQTL confirmation deferred (not asserted)."
+    },
+    {
+      "gene": "CYP2C9",
+      "allele": "*2",
+      "rsid": "rs1799853",
+      "cpic_function": "decreased function",
+      "variant_class": "missense",
+      "independent_signal": "Ensembl VEP: PolyPhen probably/possibly_damaging, SIFT deleterious(low-conf)/tolerated mixed (p.R144C) -> damaging-leaning",
+      "signal_source": "VEP-predictor",
+      "verdict": "AGREE",
+      "note": "Damaging-leaning predictors match CPIC decreased-function."
+    },
+    {
+      "gene": "CYP2C9",
+      "allele": "*3",
+      "rsid": "rs1057910",
+      "cpic_function": "no function",
+      "variant_class": "missense",
+      "independent_signal": "Ensembl VEP: PolyPhen BENIGN, SIFT mixed (p.I359L) -> predictors UNDER-call",
+      "signal_source": "VEP-predictor",
+      "verdict": "DISAGREE",
+      "note": "In-silico predictors call this conservative I->L substitution benign, but CPIC assigns NO function on clinical/functional evidence -- a case where faithful-to-CPIC rests on MORE than sequence prediction. The honest value of this layer."
+    },
+    {
+      "gene": "VKORC1",
+      "allele": "-1639A",
+      "rsid": "rs9923231",
+      "cpic_function": "decreased expression (warfarin sensitivity)",
+      "variant_class": "regulatory_promoter",
+      "independent_signal": "Documented cis-regulatory promoter variant LOWERING VKORC1 expression (Rieder 2005); GTEx-liver-significant-eQTL not resolved via the v2 API this run",
+      "signal_source": "primary-literature (Rieder 2005)",
+      "verdict": "AGREE",
+      "note": "Independent expression-DECREASE direction matches the warfarin-sensitivity (low-dose) call."
+    }
+  ]
+}
