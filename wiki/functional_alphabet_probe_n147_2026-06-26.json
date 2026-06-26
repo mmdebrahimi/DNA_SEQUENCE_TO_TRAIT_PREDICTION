@@ -1,0 +1,34 @@
+{
+  "schema": "functional-alphabet-probe-v0",
+  "cohort": "stage2_n150_cipro_cohort.parquet",
+  "drug": "ciprofloxacin",
+  "n_admitted": 147,
+  "n_R": 72,
+  "n_S": 75,
+  "dropped_no_amrfinder": [],
+  "dropped_no_fasta": [],
+  "functional_vocab_size": 243,
+  "kmer_vocab_size": 10000,
+  "metric": {
+    "func_wl": 1.0,
+    "kmer_wl": 0.7209302325581395,
+    "gap": 0.2790697674418605,
+    "n_pairs": 43,
+    "n_shared_lineages": 6,
+    "gap_p": 0.0565,
+    "gap_null_ci": [
+      -0.34883720930232553,
+      0.313953488372093
+    ]
+  },
+  "verdict": {
+    "verdict": "TIES",
+    "func_wl": 1.0,
+    "kmer_wl": 0.7209302325581395,
+    "gap": 0.2790697674418605,
+    "gap_p": 0.0565,
+    "n_pairs": 43
+  },
+  "kill_criterion": "functional within-lineage concordance EXCEEDS k-mer with paired in-MLST label-permutation gap p < 0.05; UNDERPOWERED when n_pairs < 10. Any bucket is a valid honest completion.",
+  "analysis_date": "2026-06-26"
+}
