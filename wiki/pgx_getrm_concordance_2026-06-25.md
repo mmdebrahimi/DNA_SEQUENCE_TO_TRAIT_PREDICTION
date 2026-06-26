@@ -1,0 +1,110 @@
+# CYP2C19 caller vs GeT-RM consensus on real 1000G (2026-06-25)
+
+**Truth:** GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2C19_getrm_ngs
+**Genotypes:** 1000 Genomes 30x phased panel (chr10 CYP2C19 region, Docker bcftools)
+
+- Overlap samples scored: **87**
+- **Core-comparable diplotype concordance: 72/72 (1.0)**  (GeT-RM truth in *1/*2/*3/*17)
+- Phenotype-correct incl. *38==*1: **79/87** (+7 *38 samples: *38 is the true reference, phenotype-identical to *1)
+- Correctly WITHHELD by sentinel (*4/*35): **2**
+- **Genuine silent mis-call: 6/87 (6.9%)** -- non-core alleles beyond the v0 SNP set + 2 sentinels (*8/*13/*15/*39); the honest residual blind spot.
+- Correct-or-abstains: **81/87**
+
+_GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call)._
+
+## Core-comparable samples (GeT-RM truth in the v0 SNP set)
+
+| sample | GeT-RM | predicted | match |
+|---|---|---|---|
+| HG00276 | *1/*1 | *1/*1 | OK |
+| HG00436 | *1/*1 | *1/*1 | OK |
+| HG00589 | *1/*1 | *1/*1 | OK |
+| HG01190 | *1/*2 | *1/*2 | OK |
+| NA06991 | *1/*1 | *1/*1 | OK |
+| NA07000 | *1/*17 | *1/*17 | OK |
+| NA07019 | *1/*17 | *1/*17 | OK |
+| NA07048 | *1/*17 | *1/*17 | OK |
+| NA07055 | *1/*17 | *1/*17 | OK |
+| NA07056 | *1/*1 | *1/*1 | OK |
+| NA07348 | *2/*17 | *2/*17 | OK |
+| NA07357 | *2/*17 | *2/*17 | OK |
+| NA10831 | *1/*17 | *1/*17 | OK |
+| NA10838 | *1/*1 | *1/*1 | OK |
+| NA10846 | *1/*17 | *1/*17 | OK |
+| NA10847 | *1/*1 | *1/*1 | OK |
+| NA10851 | *1/*17 | *1/*17 | OK |
+| NA10854 | *1/*1 | *1/*1 | OK |
+| NA10856 | *1/*2 | *1/*2 | OK |
+| NA10859 | *1/*1 | *1/*1 | OK |
+| NA11881 | *1/*17 | *1/*17 | OK |
+| NA11993 | *1/*1 | *1/*1 | OK |
+| NA12003 | *1/*1 | *1/*1 | OK |
+| NA12006 | *1/*1 | *1/*1 | OK |
+| NA12145 | *2/*17 | *2/*17 | OK |
+| NA12156 | *1/*1 | *1/*1 | OK |
+| NA12236 | *1/*17 | *1/*17 | OK |
+| NA12336 | *17/*17 | *17/*17 | OK |
+| NA12717 | *2/*2 | *2/*2 | OK |
+| NA12753 | *1/*2 | *1/*2 | OK |
+| NA12815 | *1/*2 | *1/*2 | OK |
+| NA12873 | *1/*17 | *1/*17 | OK |
+| NA12878 | *1/*2 | *1/*2 | OK |
+| NA12892 | *1/*1 | *1/*1 | OK |
+| NA18484 | *1/*2 | *1/*2 | OK |
+| NA18518 | *2/*17 | *2/*17 | OK |
+| NA18519 | *1/*17 | *1/*17 | OK |
+| NA18526 | *1/*1 | *1/*1 | OK |
+| NA18544 | *1/*2 | *1/*2 | OK |
+| NA18564 | *2/*3 | *2/*3 | OK |
+| NA18565 | *1/*1 | *1/*1 | OK |
+| NA18572 | *1/*1 | *1/*1 | OK |
+| NA18617 | *1/*2 | *1/*2 | OK |
+| NA18855 | *1/*2 | *1/*2 | OK |
+| NA18861 | *1/*1 | *1/*1 | OK |
+| NA18868 | *1/*2 | *1/*2 | OK |
+| NA18873 | *1/*2 | *1/*2 | OK |
+| NA18942 | *1/*1 | *1/*1 | OK |
+| NA18945 | *1/*2 | *1/*2 | OK |
+| NA18966 | *1/*1 | *1/*1 | OK |
+| NA18973 | *1/*1 | *1/*1 | OK |
+| NA18980 | *1/*1 | *1/*1 | OK |
+| NA18992 | *1/*1 | *1/*1 | OK |
+| NA19003 | *1/*2 | *1/*2 | OK |
+| NA19007 | *1/*1 | *1/*1 | OK |
+| NA19035 | *17/*17 | *17/*17 | OK |
+| NA19095 | *1/*1 | *1/*1 | OK |
+| NA19109 | *17/*17 | *17/*17 | OK |
+| NA19147 | *1/*17 | *1/*17 | OK |
+| NA19174 | *1/*2 | *1/*2 | OK |
+| NA19176 | *2/*17 | *2/*17 | OK |
+| NA19207 | *2/*17 | *2/*17 | OK |
+| NA19226 | *1/*2 | *1/*2 | OK |
+| NA19238 | *1/*1 | *1/*1 | OK |
+| NA19700 | *1/*1 | *1/*1 | OK |
+| NA19785 | *1/*1 | *1/*1 | OK |
+| NA19789 | *1/*1 | *1/*1 | OK |
+| NA19819 | *1/*17 | *1/*17 | OK |
+| NA19908 | *1/*17 | *1/*17 | OK |
+| NA19920 | *1/*1 | *1/*1 | OK |
+| NA20296 | *1/*1 | *1/*1 | OK |
+| NA20509 | *2/*2 | *2/*2 | OK |
+
+## Non-core-truth samples (v0.1 sentinel SHOULD withhold)
+
+| sample | GeT-RM | core-proxy | phenotype_status |
+|---|---|---|---|
+| NA07029 | *8/*17 | *1/*17 | ok |
+| NA10855 | *1/*38 | *1/*1 | ok |
+| NA10865 | *8/*17 | *1/*17 | ok |
+| NA11832 | *2/*38 | *1/*2 | ok |
+| NA11839 | *1/*38 | *1/*1 | ok |
+| NA12813 | *17/*38 | *1/*17 | ok |
+| NA18552 | *1/*4 | *1/*1 | phenotype_withheld |
+| NA18563 | *1/*38 | *1/*1 | ok |
+| NA18952 | *1/*38 | *1/*1 | ok |
+| NA18959 | *1/*38 | *1/*1 | ok |
+| NA19122 | *2/*35 | *1/*2 | phenotype_withheld |
+| NA19143 | *1/*39 | *1/*1 | ok |
+| NA19213 | *1/*39 | *1/*1 | ok |
+| NA19239 | *13/*17 | *1/*17 | ok |
+| NA19917 | *2/*15 | *1/*2 | ok |

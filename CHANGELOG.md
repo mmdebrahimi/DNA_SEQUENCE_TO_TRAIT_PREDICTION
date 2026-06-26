@@ -26,6 +26,17 @@ clinical-mis-call risk on real genomes — quantified at 0.16% *4-family / 1.37%
 - Re-validated: PharmCAT fixtures **core 6/6 hold** + the 2 non-core cases (`s1s35`, `s1s4b`) now **withheld**
   (2/2) instead of mis-called. Tests: `tests/test_pgx_cyp2c19.py` (29) + `tests/test_pgx_validate.py` (16).
   FROZEN bacterial/viral/fungal AMR surface byte-unchanged.
+- **THE independent number landed — GeT-RM consensus concordance on real 1000G genomes**
+  (`scripts/pgx_getrm_concordance.py` + `wiki/pgx_getrm_concordance_2026-06-25.{md,json}`): scored the caller
+  vs the **GeT-RM NGS consensus** (Astrolabe+Stargazer+Aldy; Gaedigk 2022, via the ursaPGx benchmark table,
+  vendored under `tests/data/pgx_getrm/`) on the **87** samples overlapping the 1000G 30× panel — genotypes
+  from the public VCF (Docker bcftools), caller independent of the 3 consensus tools. **Core diplotype
+  concordance 72/72 (100%)**; +7 `*38`==`*1` phenotype-equivalent (79/87 phenotype-correct); 2 non-core
+  correctly **withheld** (`*4`/`*35`, incl. the real NA19122 `*2/*35`); **6/87 (6.9%) genuine non-core silent
+  residual** (`*8`/`*13`/`*15`/`*39` — beyond the v0 SNP set + 2 sentinels, honestly disclosed). This is the
+  strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). The
+  per-record `independent_validation_status` is upgraded from "pending" to this achieved number. 4 tests
+  (`tests/test_pgx_getrm.py`).
 
 ## [0.6.0] — the first HUMAN cell: CYP2C19 pharmacogenomics (2026-06-25)
 

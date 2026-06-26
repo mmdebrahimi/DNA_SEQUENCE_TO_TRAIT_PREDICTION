@@ -81,9 +81,13 @@ All three free-data dependencies confirmed (the cleanest "higher organism" cell 
 > and a GROUNDED GeT-RM data point — NA19122 (consensus *2/*35) → v0 calls *1/*2, genotypes confirm the
 > *35 haplotype is real + invisible to v0 (blind spot confirmed end-to-end on the real genome).
 >
-> **REMAINING (the full GeT-RM consensus concordance % — wall reclassified: data-access, NOT tooling):**
-> the per-sample GeT-RM consensus labels live in paper supplements (Gaedigk 2022 Table S; ursaPGx S1), not
-> a clean public TSV. `pgx_cyp2c19_validate.py --source getrm --expected-tsv` consumes them once extracted.
+> **GeT-RM INDEPENDENT NUMBER DONE 2026-06-25 (the data-access wall cleared).** Found the labels machine-
+> readable in the ursaPGx benchmark table (`CYP2C19_getrm_ngs` column; vendored `tests/data/pgx_getrm/`).
+> `scripts/pgx_getrm_concordance.py` scored the caller vs the GeT-RM NGS consensus on the 87 1000G-overlap
+> samples (genotypes via Docker bcftools; caller independent of the 3 consensus tools): **core diplotype
+> 72/72 (100%)**, 79/87 phenotype-correct incl. *38==*1, 2 non-core withheld (*4/*35), 6/87 (6.9%) non-core
+> silent residual (*8/*13/*15/*39). `wiki/pgx_getrm_concordance_2026-06-25`. The per-record
+> independent_validation_status is upgraded from pending -> this achieved number. Old note (now resolved):
 > v0.1 refinements: the sentinel layer (rs28399504/*4 + rs12769205/*35 -> withhold) **DONE 2026-06-25
 > (v0.6.1)** + phenotype_status split + CLI-nonzero-on-withheld + provenance honesty fix + rs3758581
 > coordinate fix + missing-sample raise + phase-ambiguity surfacing; core 6/6 held, s1s35/s1s4b now

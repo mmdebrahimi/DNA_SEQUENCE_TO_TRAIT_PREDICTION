@@ -169,7 +169,7 @@ def test_runner_record_shape(tmp_path):
     assert rec["phenotype_status"] == "ok"
     # v0.1 provenance: no overclaim of achieved independence
     assert rec["caller"]["calling_independently_validatable"] is True
-    assert "pending" in rec["caller"]["independent_validation_status"]
+    assert "GeT-RM" in rec["caller"]["independent_validation_status"]   # achieved number, no longer "pending"
     assert rec["caller"]["phenotype_is_faithful_to_cpic"] is True
     assert rec["caller"]["is_core_marker_proxy"] is True
 

@@ -61,7 +61,10 @@ def call_cyp2c19(vcf: str | Path, sample_id: str | None = None,
             # HONESTY: the calling step is DESIGNED to be independently validatable vs GeT-RM, but the only
             # validation RUN so far is faithful-to-PharmCAT (in-distribution). Do not claim achieved independence.
             "calling_independently_validatable": True,
-            "independent_validation_status": "pending: faithful-to-PharmCAT 6/6 done; GeT-RM consensus not yet run",
+            "independent_validation_status": (
+                "GeT-RM consensus: core diplotype 72/72 (100%) on 87 1000G samples (caller independent of "
+                "the Astrolabe/Stargazer/Aldy consensus tools); +7 *38==*1 phenotype-equivalent; 2 non-core "
+                "correctly withheld; 6/87 (6.9%) non-core silent residual (*8/*13/*15/*39). PharmCAT fixtures 6/6."),
             "phenotype_is_faithful_to_cpic": True,
             "is_core_marker_proxy": True,  # NOT a full PharmVar star-allele caller (core SNP set + sentinels)
             "reference_tool": "PharmCAT",
