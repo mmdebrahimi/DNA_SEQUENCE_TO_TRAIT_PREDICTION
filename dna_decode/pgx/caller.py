@@ -293,16 +293,19 @@ def _scan_sentinel_counts(path: str | Path, sample: str | None = None,
         if s is None:
             continue
         alts = cols[4].split(",")
-        if s.alt not in alts:
-            continue
-        ai = alts.index(s.alt) + 1
+        any_alt = s.alt == "*"   # wildcard: any non-ref ALT at this site signals a non-core allele
+        ai = -1
+        if not any_alt:
+            if s.alt not in alts:
+                continue
+            ai = alts.index(s.alt) + 1
         if len(cols) >= 10:
             fmt = cols[8].split(":")
             col = 9 + sample_idx
             if "GT" in fmt and col < len(cols):
                 gt = cols[col].split(":")[fmt.index("GT")]
                 nums = [int(a) for a in gt.replace("|", "/").split("/") if a.isdigit()]
-                counts[s.rsid] = sum(1 for x in nums if x == ai)
+                counts[s.rsid] = sum(1 for x in nums if (x > 0 if any_alt else x == ai))
     return counts
 
 

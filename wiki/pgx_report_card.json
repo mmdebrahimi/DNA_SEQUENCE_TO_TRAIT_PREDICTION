@@ -1,0 +1,47 @@
+{
+  "schema": "pgx-report-card-v0",
+  "analysis_date": "2026-06-26",
+  "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
+  "cells": [
+    {
+      "gene": "CYP2C19",
+      "trait": "metabolizer phenotype (PM/IM/NM/RM/UM)",
+      "getrm": "72/72",
+      "getrm_pct": 1.0,
+      "pharmcat": "6/6",
+      "functional_evidence": "A2/D0/F1",
+      "trio_mendelian": "602/602",
+      "tier": "GeT-RM consensus (independent of consensus tools) + PharmCAT fixtures; phenotype faithful-to-CPIC",
+      "residual": "non-core *4/*35 withheld (sentinel v0.1)"
+    },
+    {
+      "gene": "CYP2C9",
+      "trait": "metabolizer phenotype (activity-score)",
+      "getrm": "73/73",
+      "getrm_pct": 1.0,
+      "pharmcat": null,
+      "functional_evidence": "A1/D1/F0",
+      "trio_mendelian": "602/602",
+      "tier": "GeT-RM consensus; phenotype faithful-to-CPIC (activity-score)",
+      "residual": "non-core *5/*8/*9/*11 withheld (sentinel v0.1); *6-indel/*61 residual"
+    },
+    {
+      "gene": "VKORC1",
+      "trait": "warfarin sensitivity (rs9923231)",
+      "getrm": null,
+      "getrm_pct": null,
+      "pharmcat": null,
+      "functional_evidence": "A1/D0/F0",
+      "trio_mendelian": "\u2014",
+      "tier": "single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system",
+      "residual": "\u2014"
+    }
+  ],
+  "sources": {
+    "getrm_cyp2c19": true,
+    "getrm_cyp2c9": true,
+    "pharmcat_cyp2c19": true,
+    "functional_evidence": true,
+    "trio_mendelian": true
+  }
+}

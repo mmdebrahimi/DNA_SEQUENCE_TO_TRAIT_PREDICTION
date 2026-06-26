@@ -68,7 +68,9 @@ def test_cyp2c9_getrm_core_concordance_is_73_of_73():
     rep = json.loads((REPO / "wiki" / "pgx_getrm_concordance_cyp2c9_2026-06-25.json").read_text(encoding="utf-8"))
     assert rep["gene"] == "CYP2C9"
     assert rep["core_diplotype_hits"] == "73/73"          # caller perfect on *1/*2/*3
-    assert rep["genuine_silent_miscall"] == 14            # non-core *5/*6/*8/*9/*11/*61 (sentinel = v0.1)
+    # v0.1 sentinels (*5/*8/*9/*11) now WITHHOLD non-core SNP alleles -> residual is the indel/uncatalogued tail
+    assert rep["noncore_correctly_withheld"] == 10
+    assert rep["genuine_silent_miscall"] == 4             # *6 (indel) + *61 + undefined -- documented residual
 
 
 if __name__ == "__main__":

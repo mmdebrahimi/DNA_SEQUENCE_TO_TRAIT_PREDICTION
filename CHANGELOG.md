@@ -3,6 +3,23 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.6.4] — PGx trust-surface report card + CYP2C9 sentinel v0.1 (2026-06-26)
+
+Consolidation: a standing trust surface for the human-PGx phase + closing CYP2C9's non-core residual.
+
+- **PGx trust-surface report card** (`scripts/build_pgx_report_card.py` → `wiki/pgx_report_card.{md,json}`):
+  read-only roll-up (exit 0 always, a report not a gate) of every shipped PGx cell × validation axis
+  (GeT-RM concordance / PharmCAT fixtures / functional-evidence verdicts / trio Mendelian QC), per the AMR
+  report-card pattern. NO aggregate headline; each cell's honest tier stands alone; a missing sidecar renders
+  NOT_RUN (never a fabricated number). 3 cells: CYP2C19 (72/72), CYP2C9 (73/73), VKORC1.
+- **CYP2C9 sentinel v0.1** — honesty-parity with CYP2C19: the non-core SNP alleles **\*5/\*8/\*9/\*11**
+  (rs28371686/rs7900194/rs2256871/rs28371685, GRCh38 coords grounded via Ensembl REST) are now **withheld**
+  (any-non-ref-ALT-at-site sentinel) instead of silently mis-called \*1. GeT-RM re-validation: **core 73/73
+  held; 10 non-core now correctly WITHHELD; genuine silent mis-call 14→4** (the remaining \*6-indel / \*61 /
+  undefined tail — documented residual). The wildcard-ALT sentinel mode added to the shared caller.
+- 3 new tests (`tests/test_pgx_report_card.py` + CYP2C9-sentinel assertions); 100 pgx-suite pass. FROZEN
+  bacterial/viral/fungal AMR surface byte-unchanged.
+
 ## [0.6.3] — PGx independent functional-evidence + trio co-segregation layer (2026-06-25)
 
 From `/hypothesise` → the two units that attack the PGx cells' one circular link (the per-allele FUNCTION

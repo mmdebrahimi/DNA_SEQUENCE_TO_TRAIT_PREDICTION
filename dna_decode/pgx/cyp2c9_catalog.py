@@ -19,7 +19,7 @@ a v0.1 follow-up, mirroring the CYP2C19 arc). NOT a clinical tool.
 """
 from __future__ import annotations
 
-from dna_decode.pgx.cyp2c19_catalog import DefiningVariant  # reuse the dataclass
+from dna_decode.pgx.cyp2c19_catalog import DefiningVariant, SentinelVariant  # reuse the dataclasses
 
 GENE = "CYP2C9"
 ASSEMBLY = "GRCh38"
@@ -30,16 +30,25 @@ CORE_DEFINING: list[DefiningVariant] = [
     DefiningVariant("*3", "rs1057910", "10", 94981296, "A", "C", "c.1075A>C"),
 ]
 
+# v0.1 SENTINEL non-core sites: the common SNP-defined non-core alleles the core *2/*3 proxy cannot resolve.
+# alt="*" = "any non-ref ALT at this position" -> a non-core allele is present -> WITHHOLD (conservative; the
+# only common variant at each rsID IS the PGx allele). GRCh38 coords grounded via Ensembl REST. *6 (indel)
+# + *61 are NOT covered -> documented residual. This brings CYP2C9 to honesty-parity with CYP2C19's withhold.
+SENTINELS: list[SentinelVariant] = [
+    SentinelVariant("rs28371686", "10", 94981301, "C", "*", "*5", "CYP2C9*5 (p.D360E) non-core site"),
+    SentinelVariant("rs7900194", "10", 94942309, "G", "*", "*8", "CYP2C9*8 (p.R150H) non-core site"),
+    SentinelVariant("rs2256871", "10", 94949217, "A", "*", "*9", "CYP2C9*9 (p.H251R) non-core site"),
+    SentinelVariant("rs28371685", "10", 94981224, "C", "*", "*11", "CYP2C9*11 (p.R335W) non-core site"),
+]
+
 # CPIC activity VALUE per allele (sum -> activity score).
 ACTIVITY_VALUE: dict[str, float] = {"*1": 1.0, "*2": 0.5, "*3": 0.0}
 
 PHENOTYPE_ABBREV = {"Normal Metabolizer": "NM", "Intermediate Metabolizer": "IM",
                     "Poor Metabolizer": "PM", "Indeterminate": "IND"}
 
-SENTINELS: list = []   # v0: none (non-core *5/*6/*8/*9/*11 -> mis-called *1; sentinel layer = v0.1)
-
 UNDETECTABLE = sorted({
-    "non_core_star_allele",       # *5/*6/*8/*9/*11/*61 etc. -> mis-called *1 (no sentinel in v0)
+    "non_core_star_allele_indel",   # *6 (indel) + *61 not covered by the v0.1 SNP sentinels -> residual
     "novel_uncatalogued_variant",
     "cnv_or_gene_deletion",
 })
