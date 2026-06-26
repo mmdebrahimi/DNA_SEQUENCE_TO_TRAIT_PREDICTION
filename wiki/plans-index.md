@@ -506,3 +506,13 @@
 **Status:** executed — all 7 steps shipped 2026-06-18; live 3-genome spike verdict **GO** (`wiki/genome_map_spike_verdict_2026-06-18.md`). Package `dna_decode/genome_map/` + `scripts/genome_map_{tool_surface,spike}.py`; 79 tests; frozen AMR surface byte-unchanged. First end-to-end Bakta proof on this host (tool-surface manifest `wiki/genome_map_tool_surface_2026-06-18.json`).
 
 ---
+
+## [plan_file: Evidence_Contract_Registry_MVP_Plan/] 2026-06-26
+**Summary:** A checked-in, test-enforced Evidence-Contract Registry (`cell_id`-keyed, spanning AMR+PGx+typing+viral) that declares each shipped cell's claim/evidence-tier/validation-slice/provenance/abstention-vocab/falsifier-ref/incoming-gate/demotion-rule, with the validation report card reading from it.
+**Key decisions:**
+- New `dna_decode/data/cell_registry.py` keyed by `cell_id=track:organism:target`; AMR rows are a PROJECTION that must equal the frozen `shipped_decoder_surface` (additive, frozen surface byte-unchanged).
+- Abstention is a shared VOCABULARY (enum collapsing the 10 in-tree terms), NOT a shared confidence scale; no aggregate health score / no fused call (anti-theater guardrails from /brainstorm).
+- Falsifiers/incoming-gate/demotion are DECLARED only (executable monitor + #8 acquisition are separate, out-of-scope bricks).
+**Status:** as-built (thin v0 shipped 2026-06-26) — `dna_decode/data/cell_registry{,_vocab}.py` + `tests/test_cell_registry.py` (13 tests): CellContract + EVIDENCE_TIERS + AbstentionVocab + 28 cells (25 AMR projected verbatim from the frozen surface via `canonical_cell_key` + 3 PGx); coverage + consistency + no-numeric-confidence guards green; frozen AMR surface byte-unchanged. Brainstorm C2 (cell_id display-only, canonical-key join) folded in. **DEFERRED to v0.1:** 5th `finder` track + `route` field + typing/viral cell population + report-card rebuild (brainstorm C1/C3).
+
+---
