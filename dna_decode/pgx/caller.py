@@ -146,10 +146,11 @@ def scan_vcf(path: str | Path, defining: list[DefiningVariant] = CORE_DEFINING,
     return calls
 
 
-def _combine_haplotype(stars: list[str], flags: list[str]) -> str:
+def _combine_haplotype(stars: list[str], flags: list[str],
+                       reference_allele: str = REFERENCE_ALLELE) -> str:
     """Reduce a haplotype's ALT-bearing star list to a single allele label."""
     if not stars:
-        return REFERENCE_ALLELE
+        return reference_allele
     if len(stars) == 1:
         return stars[0]
     label = "+".join(sorted(set(stars)))
@@ -159,20 +160,25 @@ def _combine_haplotype(stars: list[str], flags: list[str]) -> str:
 
 
 def assemble_diplotype(calls: dict[str, VariantCall],
-                       sentinel_counts: dict[str, int] | None = None) -> DiplotypeResult:
+                       sentinel_counts: dict[str, int] | None = None, *,
+                       reference_allele: str = REFERENCE_ALLELE,
+                       phenotype_fn=diplotype_phenotype,
+                       sentinels: list = SENTINELS,
+                       gene: str = GENE) -> DiplotypeResult:
     """Combine per-site VariantCalls into a diplotype + CPIC phenotype + honesty flags.
 
-    `sentinel_counts` (rsid -> ALT copy count) drives the v0.1 non-core withhold: when a sentinel proves a
-    non-core allele the core proxy cannot resolve, the phenotype is WITHHELD (phenotype_status =
-    phenotype_withheld, phenotype=None) rather than a confident mis-call. None -> no sentinel logic
-    (backward-compatible)."""
+    Gene-parameterized (v0.1, for the CYP2C9 + future cells): `reference_allele` / `phenotype_fn` /
+    `sentinels` default to the CYP2C19 catalog (backward-compatible). `sentinel_counts` (rsid -> ALT copy
+    count) drives the non-core withhold: a sentinel proving a non-core allele the core proxy cannot resolve
+    WITHHOLDS the phenotype (phenotype_status=phenotype_withheld) rather than a confident mis-call. None /
+    empty sentinels -> no sentinel logic."""
     flags: list[str] = []
     present = [c for c in calls.values() if c.found]
     if not present:
         return DiplotypeResult("no_input", None, None, None, None, None,
                                flags=["no_defining_site_in_vcf"],
                                variant_calls=[_vc_dict(c) for c in calls.values()],
-                               reason="No CYP2C19 defining site found in the VCF (wrong region/assembly?).")
+                               reason=f"No {gene} defining site found in the VCF (wrong region/assembly?).")
 
     absent = [c.star for c in calls.values() if not c.found]
     if absent:
@@ -190,7 +196,8 @@ def assemble_diplotype(calls: dict[str, VariantCall],
         # exact phased resolution (homs are phasing-agnostic; their phased GT 1|1 -> hap (1,1))
         hap0 = [c.star for c in alts if c.hap and c.hap[0] == 1]
         hap1 = [c.star for c in alts if c.hap and c.hap[1] == 1]
-        a1, a2 = _combine_haplotype(hap0, flags), _combine_haplotype(hap1, flags)
+        a1 = _combine_haplotype(hap0, flags, reference_allele)
+        a2 = _combine_haplotype(hap1, flags, reference_allele)
         phasing = "phased"
     else:
         hap_a = [c.star for c in homs]
@@ -205,11 +212,12 @@ def assemble_diplotype(calls: dict[str, VariantCall],
             flags.append("ambiguous_multi_het_unphased")
             for i, c in enumerate(hets):
                 (hap_a if i % 2 == 0 else hap_b).append(c.star)
-        a1, a2 = _combine_haplotype(hap_a, flags), _combine_haplotype(hap_b, flags)
+        a1 = _combine_haplotype(hap_a, flags, reference_allele)
+        a2 = _combine_haplotype(hap_b, flags, reference_allele)
         phasing = "unphased"
 
     a1, a2 = sorted((a1, a2), key=_allele_sort_key)
-    pheno = diplotype_phenotype(a1, a2)
+    pheno = phenotype_fn(a1, a2)
     proxy = f"{a1}/{a2}"
     res = DiplotypeResult("ok", proxy, a1, a2, pheno, phasing,
                           core_proxy_diplotype=proxy, flags=flags,
@@ -220,8 +228,8 @@ def assemble_diplotype(calls: dict[str, VariantCall],
     # Keep the standard call but flag + drop confidence + surface the alternate when phenotypes differ.
     if phasing == "unphased" and len(hets) == 2:
         cis_compound = "+".join(sorted({hets[0].star, hets[1].star}))
-        alt_a, alt_b = sorted((REFERENCE_ALLELE, cis_compound), key=_allele_sort_key)
-        alt_pheno = diplotype_phenotype(alt_a, alt_b)
+        alt_a, alt_b = sorted((reference_allele, cis_compound), key=_allele_sort_key)
+        alt_pheno = phenotype_fn(alt_a, alt_b)
         if alt_pheno != pheno:
             res.phenotype_status = "phase_ambiguous"
             res.phenotype_confidence = "low"
@@ -231,11 +239,11 @@ def assemble_diplotype(calls: dict[str, VariantCall],
 
     # --- sentinel non-core detection (v0.1): a proven non-core allele -> WITHHOLD the phenotype ---
     star2_alt = calls["*2"].alt_count if calls.get("*2") and calls["*2"].found else 0
-    for s in SENTINELS:
+    for s in (sentinels or []):
         n = (sentinel_counts or {}).get(s.rsid, 0)
         if n <= 0:
             continue
-        if s.implies == "*35" and (n - star2_alt) <= 0:
+        if getattr(s, "implies", None) == "*35" and (n - star2_alt) <= 0:
             continue   # rs12769205 fully accounted for by *2 haplotype(s) -> not a *35 signal
         res.sentinel_hits.append({"rsid": s.rsid, "implies": s.implies, "alt_count": n, "note": s.note})
     if res.sentinel_hits:
@@ -261,11 +269,12 @@ def _vc_dict(c: VariantCall) -> dict:
             "gt": c.gt, "phased": c.phased, "alt_count": c.alt_count, "no_call": c.no_call}
 
 
-def _scan_sentinel_counts(path: str | Path, sample: str | None = None) -> dict[str, int]:
+def _scan_sentinel_counts(path: str | Path, sample: str | None = None,
+                          sentinels: list = SENTINELS) -> dict[str, int]:
     """ALT copy count (0/1/2) per SENTINEL variant for the chosen sample. Raises on a named-but-absent
     sample (same contract as scan_vcf)."""
-    by_pos = {(s.chrom, s.pos): s for s in SENTINELS}
-    counts = {s.rsid: 0 for s in SENTINELS}
+    by_pos = {(s.chrom, s.pos): s for s in sentinels}
+    counts = {s.rsid: 0 for s in sentinels}
     sample_idx = 0
     for line in Path(path).read_text(encoding="utf-8").splitlines():
         if not line or line.startswith("##"):
@@ -298,8 +307,14 @@ def _scan_sentinel_counts(path: str | Path, sample: str | None = None) -> dict[s
 
 
 def call_diplotype(path: str | Path, sample: str | None = None,
-                   defining: list[DefiningVariant] = CORE_DEFINING) -> DiplotypeResult:
-    """End-to-end: VCF -> CYP2C19 diplotype + CPIC phenotype (+ v0.1 sentinel withhold + phase flag)."""
+                   defining: list[DefiningVariant] = CORE_DEFINING, *,
+                   sentinels: list = SENTINELS,
+                   reference_allele: str = REFERENCE_ALLELE,
+                   phenotype_fn=diplotype_phenotype,
+                   gene: str = GENE) -> DiplotypeResult:
+    """End-to-end: VCF -> diplotype + CPIC phenotype (+ sentinel withhold + phase flag). Gene-parameterized
+    (defaults = CYP2C19); pass a gene's catalog (defining/sentinels/reference_allele/phenotype_fn) for others."""
     calls = scan_vcf(path, defining=defining, sample=sample)
-    sentinels = _scan_sentinel_counts(path, sample=sample)
-    return assemble_diplotype(calls, sentinel_counts=sentinels)
+    sentinel_counts = _scan_sentinel_counts(path, sample=sample, sentinels=sentinels)
+    return assemble_diplotype(calls, sentinel_counts=sentinel_counts, reference_allele=reference_allele,
+                              phenotype_fn=phenotype_fn, sentinels=sentinels, gene=gene)

@@ -67,8 +67,8 @@ TRAITS = {
         "validation": "INDEPENDENT vs phenotypic Quellung (GPS Poland n=230): serogroup 0.939 / exact 0.661 (QUELLUNG-subset n=42: serogroup 0.952). deterministic cps-reference-blastn (id 90/cov 70); serogroup-reliable v0, within-serogroup (6A/6B,19A/19F) needs allele logic (v0.1); offline-safe degrade",
     },
     "pgx": {
-        "summary": "HUMAN pharmacogenomics: CYP2C19 diplotype + CPIC metabolizer phenotype (PM/IM/NM/RM/UM) from a phased VCF (GRCh38) -- the first human cell",
-        "validation": "deterministic VCF->defining-SNP(*2/*3/*17)->star-allele->diplotype->CPIC phenotype. CALLING is independently validatable vs the GeT-RM consensus panel (free measured/consensus label); PHENOTYPE is faithful-to-CPIC (assigned, not measured; ref tool PharmCAT). v0 core SNP-defined alleles; non-core star -> mis-called *1 (flagged). NOT a clinical tool",
+        "summary": "HUMAN pharmacogenomics (--gene): CYP2C19 / CYP2C9 diplotype + CPIC metabolizer phenotype, or VKORC1 warfarin sensitivity, from a phased VCF (GRCh38) -- the first human cells",
+        "validation": "deterministic VCF->defining-SNP->star-allele->diplotype->CPIC phenotype. GeT-RM consensus concordance on real 1000G (caller independent of the consensus tools): CYP2C19 core 72/72, CYP2C9 core 73/73. CALLING independently validatable; PHENOTYPE faithful-to-CPIC (ref tool PharmCAT). v0 core SNP set; non-core star -> CYP2C19 withholds (sentinel), CYP2C9 mis-calls *1 (sentinel=v0.1). VKORC1 = single-SNP rs9923231 (minus-strand). NOT a clinical tool",
     },
 }
 

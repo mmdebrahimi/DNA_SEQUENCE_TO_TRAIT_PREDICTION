@@ -3,9 +3,10 @@
 Phased VCF (GRCh38) -> CYP2C19 diplotype + CPIC metabolizer phenotype + provenance. Deterministic
 variant->catalog caller (sibling of dna-amr's HIV/TB target-site cells). Pure-stdlib VCF parse, no Docker.
 
-    dna-pgx sample.vcf --sample-id MY_SAMPLE
-    dna-pgx cohort.vcf --sample NA12878      # pick a sample column by name
-    dna-pgx sample.vcf --json-only
+    dna-pgx sample.vcf --sample-id MY_SAMPLE                 # CYP2C19 (default)
+    dna-pgx sample.vcf --gene cyp2c9                         # CYP2C9 (activity-score)
+    dna-pgx sample.vcf --gene vkorc1                         # VKORC1 warfarin sensitivity
+    dna-pgx cohort.vcf --sample NA12878 --json-only
 """
 from __future__ import annotations
 
@@ -14,15 +15,17 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.pgx.runner import call_cyp2c19
+from dna_decode.pgx.runner import call_cyp2c19, call_cyp2c9
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="dna-pgx",
-        description="Deterministic human pharmacogenomics: CYP2C19 diplotype + CPIC metabolizer phenotype "
-                    "from a phased VCF (GRCh38). NOT a clinical tool.")
+        description="Deterministic human pharmacogenomics: CYP2C19/CYP2C9 diplotype + CPIC metabolizer "
+                    "phenotype, or VKORC1 warfarin sensitivity, from a phased VCF (GRCh38). NOT a clinical tool.")
     ap.add_argument("vcf", type=Path, help="phased VCF (GRCh38)")
+    ap.add_argument("--gene", default="cyp2c19", choices=["cyp2c19", "cyp2c9", "vkorc1"],
+                    help="gene to call (default cyp2c19)")
     ap.add_argument("--sample-id", default=None, help="label for the report (default: VCF stem)")
     ap.add_argument("--sample", default=None, help="sample COLUMN name in a multi-sample VCF (default: first)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
@@ -33,7 +36,26 @@ def main(argv=None) -> int:
         print(f"ERROR: VCF not found: {args.vcf}", file=sys.stderr)
         return 2
 
-    rec = call_cyp2c19(args.vcf, sample_id=args.sample_id, sample_column=args.sample)
+    # VKORC1 is a single-SNP genotype->sensitivity call (not a diplotype) -> its own shape.
+    if args.gene == "vkorc1":
+        from dna_decode.pgx.vkorc1 import call_vkorc1
+        rec = call_vkorc1(args.vcf, sample=args.sample)
+        rec["sample_id"] = args.sample_id or args.sample or args.vcf.stem
+        if args.out:
+            Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
+        if args.json_only:
+            print(json.dumps(rec, indent=2))
+        else:
+            print(f"sample: {rec['sample_id']}  gene: VKORC1 ({rec['assembly']})  {rec['position']}")
+            print(f"  rs9923231 {rec['genomic_ref_alt']}  GT={rec['genomic_gt']}  "
+                  f"cDNA {rec['cdna_genotype']}  -> {rec['warfarin_sensitivity']} ({rec['dose_category']})")
+            if rec["flags"]:
+                print(f"  flags: {', '.join(rec['flags'])}")
+            print(f"  {rec['caveat']}")
+        return 0
+
+    rec = (call_cyp2c9 if args.gene == "cyp2c9" else call_cyp2c19)(
+        args.vcf, sample_id=args.sample_id, sample_column=args.sample)
 
     if args.out:
         Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")

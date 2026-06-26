@@ -3,6 +3,26 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
+## [0.6.2] — the warfarin pair: CYP2C9 (activity-score) + VKORC1 (2026-06-25)
+
+Expands the human-PGx phase with the next two genes, reusing the CYP2C19 harness (the data-source research's
+rec #1). The caller is now **gene-parameterized** (backward-compatible — CYP2C19 byte-behaviour unchanged,
+72/72 GeT-RM regression held).
+
+- **CYP2C9** (`dna_decode/pgx/cyp2c9_catalog.py`): core SNP-defined *2 (rs1799853, chr10:94942290) + *3
+  (rs1057910, chr10:94981296) + *1; CPIC **ACTIVITY-SCORE** phenotype (*1=1.0/*2=0.5/*3=0.0 → AS 2=NM,
+  1–1.5=IM, 0–0.5=PM). **Validated vs GeT-RM consensus on real 1000G: core diplotype 73/73 (100%)**
+  (`scripts/pgx_getrm_concordance.py --gene cyp2c9` → `wiki/pgx_getrm_concordance_cyp2c9_2026-06-25.{md,json}`),
+  caller independent of the consensus tools. 14/87 (16.1%) non-core residual (*5/*6/*8/*9/*11/*61 — no
+  sentinel in v0; sentinel layer = v0.1, mirroring the CYP2C19 arc).
+- **VKORC1** (`dna_decode/pgx/vkorc1.py`): single-SNP rs9923231 (c.-1639G>A) → warfarin sensitivity. Encodes
+  the **minus-strand subtlety** (genomic chr16:31096368 C>T == cDNA G>A; genomic-T = the sensitive "A"
+  allele) → G/G normal / G/A intermediate / A/A high-sensitivity (low dose). Absent record → assumed-ref,
+  flagged.
+- Wired into `dna-pgx --gene {cyp2c19,cyp2c9,vkorc1}` + the `dna-decode pgx` dispatch + `dna-decode list`.
+  Coordinates grounded at dbSNP. 17 tests (`tests/test_pgx_cyp2c9.py`) + a CYP2C9 GeT-RM concordance test.
+  FROZEN bacterial/viral/fungal AMR surface byte-unchanged.
+
 ## [0.6.1] — CYP2C19 v0.1 hardening: non-core sentinel withhold + honesty fields (2026-06-25)
 
 Closes the safety gaps a review surfaced on the v0.6.0 cell (the *4b→*17 silent alias was a real

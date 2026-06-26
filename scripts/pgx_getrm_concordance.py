@@ -24,16 +24,33 @@ from pathlib import Path
 from dna_decode.pgx.caller import call_diplotype
 
 REPO = Path(__file__).resolve().parent.parent
-VCF = REPO / "data" / "pgx_1000g" / "cyp2c19_1000g.vcf.gz"
 # committed truth set (vendored from ursaPGx); fall back to the gitignored fetch dir if present
 TRUTH = REPO / "tests" / "data" / "pgx_getrm" / "star-allele-comparison_common.tsv"
 if not TRUTH.exists():
     TRUTH = REPO / "data" / "pgx_getrm" / "star-allele-comparison_common.tsv"
-CORE = {"*1", "*2", "*3", "*17"}
-# *38 is the TRUE variant-free reference allele -- NORMAL function, phenotype-IDENTICAL to *1 (distinguishing
-# them needs rs3758581, which is phenotype-irrelevant; documented in cyp2c19_catalog). So a GeT-RM *38 scores
-# as phenotype-equivalent to *1: the metabolizer call is correct even though the star-label differs.
-REF_EQUIV = {"*38": "*1"}
+
+
+def _c9_caller(plain_vcf, sample):
+    from dna_decode.pgx import cyp2c9_catalog as c9
+    return call_diplotype(plain_vcf, sample=sample, defining=c9.CORE_DEFINING, sentinels=c9.SENTINELS,
+                          reference_allele=c9.REFERENCE_ALLELE, phenotype_fn=c9.diplotype_phenotype,
+                          gene=c9.GENE)
+
+
+# Per-gene config: which 1000G region VCF, which truth column, the core SNP set, *38-equivalence, caller.
+# *38 is the TRUE variant-free reference (NORMAL function, phenotype==*1; rs3758581 distinguishes, but that
+# is phenotype-irrelevant) -> a GeT-RM *38 scores phenotype-equivalent to *1. (CYP2C9 has no *38 equivalent.)
+GENES = {
+    "cyp2c19": {"vcf": REPO / "data" / "pgx_1000g" / "cyp2c19_1000g.vcf.gz",
+                "truth_col": "CYP2C19_getrm_ngs", "core": {"*1", "*2", "*3", "*17"},
+                "ref_equiv": {"*38": "*1"}, "caller": lambda v, s: call_diplotype(v, sample=s),
+                "out_stem": "pgx_getrm_concordance_2026-06-25"},
+    "cyp2c9":  {"vcf": REPO / "data" / "pgx_1000g" / "cyp2c9_1000g.vcf.gz",
+                "truth_col": "CYP2C9_getrm_ngs", "core": {"*1", "*2", "*3"},
+                "ref_equiv": {}, "caller": _c9_caller,
+                "out_stem": "pgx_getrm_concordance_cyp2c9_2026-06-25"},
+}
+REF_EQUIV = GENES["cyp2c19"]["ref_equiv"]   # back-compat alias (CYP2C19 *38==*1)
 
 
 def _norm(diplo: str) -> tuple[str, ...]:
@@ -56,9 +73,18 @@ def _gunzip_to_plain(gz: Path) -> Path:
     return plain
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description="CYP2C9/CYP2C19 caller vs GeT-RM consensus on real 1000G.")
+    ap.add_argument("--gene", default="cyp2c19", choices=list(GENES))
+    args = ap.parse_args(argv)
+    cfg = GENES[args.gene]
+    VCF, CORE, REF_EQUIV = cfg["vcf"], cfg["core"], cfg["ref_equiv"]
+    truth_col, caller, out_stem = cfg["truth_col"], cfg["caller"], cfg["out_stem"]
+    gene_label = args.gene.upper()
+
     if not VCF.exists() or not TRUTH.exists():
-        print(f"ERROR: need {VCF} + {TRUTH}")
+        print(f"ERROR: need {VCF} + {TRUTH} (fetch the {gene_label} region via Docker bcftools first)")
         return 2
     plain_vcf = _gunzip_to_plain(VCF)
 
@@ -73,10 +99,10 @@ def main() -> int:
     with open(TRUTH, encoding="utf-8") as fh:
         for rec in csv.DictReader(fh, delimiter="\t"):
             cor = rec["Coriell"].strip()
-            truth = _norm(rec.get("CYP2C19_getrm_ngs", ""))
+            truth = _norm(rec.get(truth_col, ""))
             if not truth or cor not in samples_in_vcf:
                 continue
-            r = call_diplotype(plain_vcf, sample=cor)
+            r = caller(plain_vcf, cor)
             pred = _norm(r.diplotype or "")
             # *38 -> *1 phenotype-equivalent view of the truth (for the metabolizer-correct check)
             truth_pheno = tuple(sorted((REF_EQUIV.get(a, a) for a in truth),
@@ -111,11 +137,12 @@ def main() -> int:
     pheno_correct = core_hits + star38_equiv
 
     rep = {
-        "schema": "pgx-cyp2c19-getrm-concordance-v0",
+        "schema": f"pgx-{args.gene}-getrm-concordance-v0",
+        "gene": gene_label,
         "analysis_date": datetime.date.today().isoformat(),
         "truth_source": ("GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx "
-                         "benchmark star-allele-comparison_common.tsv, column CYP2C19_getrm_ngs"),
-        "genotype_source": "1000 Genomes 30x phased panel (chr10 CYP2C19 region, Docker bcftools)",
+                         f"benchmark star-allele-comparison_common.tsv, column {truth_col}"),
+        "genotype_source": f"1000 Genomes 30x phased panel ({gene_label} region, Docker bcftools)",
         "caller_is_independent_of_consensus_tools": True,
         "n_overlap_samples": len(rows),
         "n_core_comparable": len(core),
@@ -135,21 +162,22 @@ def main() -> int:
         "core_rows": core,
         "noncore_rows": noncore,
     }
-    out_json = REPO / "wiki" / "pgx_getrm_concordance_2026-06-25.json"
-    out_md = REPO / "wiki" / "pgx_getrm_concordance_2026-06-25.md"
+    out_json = REPO / "wiki" / f"{out_stem}.json"
+    out_md = REPO / "wiki" / f"{out_stem}.md"
     out_json.write_text(json.dumps(rep, indent=2), encoding="utf-8")
+    core_set = "/".join(sorted(CORE, key=lambda a: int(a.lstrip('*'))))
 
-    L = [f"# CYP2C19 caller vs GeT-RM consensus on real 1000G ({rep['analysis_date']})", "",
+    L = [f"# {gene_label} caller vs GeT-RM consensus on real 1000G ({rep['analysis_date']})", "",
          f"**Truth:** {rep['truth_source']}", f"**Genotypes:** {rep['genotype_source']}", "",
          f"- Overlap samples scored: **{rep['n_overlap_samples']}**",
          f"- **Core-comparable diplotype concordance: {rep['core_diplotype_hits']} "
-         f"({rep['core_diplotype_concordance']})**  (GeT-RM truth in *1/*2/*3/*17)",
+         f"({rep['core_diplotype_concordance']})**  (GeT-RM truth in {core_set})",
          f"- Phenotype-correct incl. *38==*1: **{rep['phenotype_correct_incl_star38']}** "
-         f"(+{star38_equiv} *38 samples: *38 is the true reference, phenotype-identical to *1)",
-         f"- Correctly WITHHELD by sentinel (*4/*35): **{noncore_withheld}**",
+         f"(+{star38_equiv} *38 phenotype-equivalent samples)",
+         f"- Correctly WITHHELD by sentinel: **{noncore_withheld}**",
          f"- **Genuine silent mis-call: {rep['genuine_silent_miscall']}/{rep['n_overlap_samples']} "
-         f"({rep['genuine_silent_miscall_pct']}%)** -- non-core alleles beyond the v0 SNP set + 2 sentinels "
-         f"(*8/*13/*15/*39); the honest residual blind spot.",
+         f"({rep['genuine_silent_miscall_pct']}%)** -- non-core alleles beyond the v0 SNP set "
+         f"(+ sentinels where present); the honest residual blind spot.",
          f"- Correct-or-abstains: **{rep['correct_or_abstains']}**", "",
          f"_{rep['honesty_tier']}_", "",
          "## Core-comparable samples (GeT-RM truth in the v0 SNP set)", "",

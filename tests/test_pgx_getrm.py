@@ -45,7 +45,7 @@ def test_truth_set_committed_and_has_cyp2c19_column():
 @pytest.mark.skipif(not _VCF.exists(), reason="1000G VCF not present (Docker-fetched, gitignored)")
 def test_getrm_core_concordance_is_72_of_72():
     from pgx_getrm_concordance import main
-    rc = main()
+    rc = main(["--gene", "cyp2c19"])
     assert rc == 0
     import json
     rep = json.loads((REPO / "wiki" / "pgx_getrm_concordance_2026-06-25.json").read_text(encoding="utf-8"))
@@ -54,6 +54,21 @@ def test_getrm_core_concordance_is_72_of_72():
     assert rep["noncore_correctly_withheld"] == 2          # *4 + *35 sentinels fired (incl. NA19122)
     assert rep["genuine_silent_miscall"] == 6              # *8/*13/*15/*39 residual (honest blind spot)
     assert rep["caller_is_independent_of_consensus_tools"] is True
+
+
+_C9_VCF = REPO / "data" / "pgx_1000g" / "cyp2c9_1000g.vcf.gz"
+
+
+@pytest.mark.skipif(not _C9_VCF.exists(), reason="CYP2C9 1000G region VCF not present (Docker-fetched)")
+def test_cyp2c9_getrm_core_concordance_is_73_of_73():
+    from pgx_getrm_concordance import main
+    rc = main(["--gene", "cyp2c9"])
+    assert rc == 0
+    import json
+    rep = json.loads((REPO / "wiki" / "pgx_getrm_concordance_cyp2c9_2026-06-25.json").read_text(encoding="utf-8"))
+    assert rep["gene"] == "CYP2C9"
+    assert rep["core_diplotype_hits"] == "73/73"          # caller perfect on *1/*2/*3
+    assert rep["genuine_silent_miscall"] == 14            # non-core *5/*6/*8/*9/*11/*61 (sentinel = v0.1)
 
 
 if __name__ == "__main__":
