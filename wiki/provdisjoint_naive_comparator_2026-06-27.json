@@ -1,0 +1,452 @@
+{
+  "_schema": "provdisjoint-naive-comparator-v1",
+  "date": "2026-06-27",
+  "baseline_definition": "naive = R iff ANY AMRFinder determinant Class in mic_tiers.amrfinder_classes_for(drug); frozen = call_resistance rule. Metric = balanced accuracy. M4 reconciliation guard: frozen CM must match the committed provdisjoint artifact before any delta is trusted.",
+  "rail": "validate-wrapper-vs-underlying-tool, on the primary 10-cell provenance-disjoint surface.",
+  "n_cells_reconciled": 7,
+  "n_curated_adds_value": 6,
+  "cells": {
+    "Campylobacter:ciprofloxacin": {
+      "drug": "ciprofloxacin",
+      "registry_organism": "Campylobacter",
+      "n_selected": 40,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 40,
+        "tp": 20,
+        "fp": 0,
+        "tn": 20,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "naive": {
+        "n_scored": 40,
+        "tp": 20,
+        "fp": 0,
+        "tn": 20,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "committed_cm": [
+        20,
+        0,
+        20,
+        0
+      ],
+      "recomputed_cm": [
+        20,
+        0,
+        20,
+        0
+      ],
+      "reconciled": true,
+      "frozen_balacc": 1.0,
+      "naive_balacc": 1.0,
+      "delta_balacc": 0.0,
+      "value_add_verdict": "NAIVE_TIES_CURATED"
+    },
+    "Escherichia_coli_Shigella:ciprofloxacin": {
+      "drug": "ciprofloxacin",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 60,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 60,
+        "tp": 28,
+        "fp": 9,
+        "tn": 21,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.817,
+        "sens": 0.933,
+        "spec": 0.7
+      },
+      "naive": {
+        "n_scored": 60,
+        "tp": 29,
+        "fp": 20,
+        "tn": 10,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.65,
+        "sens": 0.967,
+        "spec": 0.333
+      },
+      "committed_cm": [
+        28,
+        9,
+        21,
+        2
+      ],
+      "recomputed_cm": [
+        28,
+        9,
+        21,
+        2
+      ],
+      "reconciled": true,
+      "frozen_balacc": 0.8165,
+      "naive_balacc": 0.65,
+      "delta_balacc": 0.1665,
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "Escherichia_coli_Shigella:ceftriaxone": {
+      "drug": "ceftriaxone",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 60,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 60,
+        "tp": 29,
+        "fp": 1,
+        "tn": 29,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.967,
+        "sens": 0.967,
+        "spec": 0.967
+      },
+      "naive": {
+        "n_scored": 60,
+        "tp": 29,
+        "fp": 15,
+        "tn": 15,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.733,
+        "sens": 0.967,
+        "spec": 0.5
+      },
+      "committed_cm": [
+        29,
+        1,
+        29,
+        1
+      ],
+      "recomputed_cm": [
+        29,
+        1,
+        29,
+        1
+      ],
+      "reconciled": true,
+      "frozen_balacc": 0.967,
+      "naive_balacc": 0.7335,
+      "delta_balacc": 0.2335,
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "Escherichia_coli_Shigella:gentamicin": {
+      "drug": "gentamicin",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 60,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 60,
+        "tp": 27,
+        "fp": 0,
+        "tn": 30,
+        "fn": 3,
+        "abstain": 0,
+        "acc": 0.95,
+        "sens": 0.9,
+        "spec": 1.0
+      },
+      "naive": {
+        "n_scored": 60,
+        "tp": 30,
+        "fp": 22,
+        "tn": 8,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.633,
+        "sens": 1.0,
+        "spec": 0.267
+      },
+      "committed_cm": [
+        27,
+        0,
+        30,
+        3
+      ],
+      "recomputed_cm": [
+        27,
+        0,
+        30,
+        3
+      ],
+      "reconciled": true,
+      "frozen_balacc": 0.95,
+      "naive_balacc": 0.6335,
+      "delta_balacc": 0.3165,
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "Escherichia_coli_Shigella:tetracycline": {
+      "drug": "tetracycline",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 60,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 60,
+        "tp": 28,
+        "fp": 2,
+        "tn": 28,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.933,
+        "sens": 0.933,
+        "spec": 0.933
+      },
+      "naive": {
+        "n_scored": 60,
+        "tp": 28,
+        "fp": 7,
+        "tn": 23,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.85,
+        "sens": 0.933,
+        "spec": 0.767
+      },
+      "committed_cm": [
+        28,
+        2,
+        28,
+        2
+      ],
+      "recomputed_cm": [
+        28,
+        2,
+        28,
+        2
+      ],
+      "reconciled": true,
+      "frozen_balacc": 0.933,
+      "naive_balacc": 0.85,
+      "delta_balacc": 0.083,
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "Klebsiella:ciprofloxacin": {
+      "drug": "ciprofloxacin",
+      "registry_organism": "Klebsiella",
+      "n_selected": 60,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 60,
+        "tp": 29,
+        "fp": 1,
+        "tn": 29,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.967,
+        "sens": 0.967,
+        "spec": 0.967
+      },
+      "naive": {
+        "n_scored": 60,
+        "tp": 30,
+        "fp": 18,
+        "tn": 12,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.7,
+        "sens": 1.0,
+        "spec": 0.4
+      },
+      "committed_cm": [
+        29,
+        1,
+        29,
+        1
+      ],
+      "recomputed_cm": [
+        29,
+        1,
+        29,
+        1
+      ],
+      "reconciled": true,
+      "frozen_balacc": 0.967,
+      "naive_balacc": 0.7,
+      "delta_balacc": 0.267,
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "Klebsiella:ceftriaxone": {
+      "drug": "ceftriaxone",
+      "registry_organism": "Klebsiella",
+      "n_selected": 60,
+      "n_cached_missing": 6,
+      "frozen": {
+        "n_scored": 54,
+        "tp": 24,
+        "fp": 3,
+        "tn": 27,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.944,
+        "sens": 1.0,
+        "spec": 0.9
+      },
+      "naive": {
+        "n_scored": 54,
+        "tp": 24,
+        "fp": 30,
+        "tn": 0,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.444,
+        "sens": 1.0,
+        "spec": 0.0
+      },
+      "committed_cm": [
+        30,
+        3,
+        27,
+        0
+      ],
+      "recomputed_cm": [
+        24,
+        3,
+        27,
+        0
+      ],
+      "reconciled": false,
+      "value_add_verdict": "RECONCILE_MISMATCH"
+    },
+    "Klebsiella:gentamicin": {
+      "drug": "gentamicin",
+      "registry_organism": "Klebsiella",
+      "n_selected": 60,
+      "n_cached_missing": 57,
+      "frozen": {
+        "n_scored": 3,
+        "tp": 0,
+        "fp": 1,
+        "tn": 2,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.667,
+        "sens": null,
+        "spec": 0.667
+      },
+      "naive": {
+        "n_scored": 3,
+        "tp": 0,
+        "fp": 3,
+        "tn": 0,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.0,
+        "sens": null,
+        "spec": 0.0
+      },
+      "committed_cm": [
+        28,
+        2,
+        28,
+        2
+      ],
+      "recomputed_cm": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "reconciled": false,
+      "value_add_verdict": "RECONCILE_MISMATCH"
+    },
+    "Klebsiella:meropenem": {
+      "drug": "meropenem",
+      "registry_organism": "Klebsiella",
+      "n_selected": 60,
+      "n_cached_missing": 0,
+      "frozen": {
+        "n_scored": 60,
+        "tp": 14,
+        "fp": 3,
+        "tn": 27,
+        "fn": 16,
+        "abstain": 0,
+        "acc": 0.683,
+        "sens": 0.467,
+        "spec": 0.9
+      },
+      "naive": {
+        "n_scored": 60,
+        "tp": 30,
+        "fp": 30,
+        "tn": 0,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.5,
+        "sens": 1.0,
+        "spec": 0.0
+      },
+      "committed_cm": [
+        14,
+        3,
+        27,
+        16
+      ],
+      "recomputed_cm": [
+        14,
+        3,
+        27,
+        16
+      ],
+      "reconciled": true,
+      "frozen_balacc": 0.6835,
+      "naive_balacc": 0.5,
+      "delta_balacc": 0.1835,
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "Klebsiella:tetracycline": {
+      "drug": "tetracycline",
+      "registry_organism": "Klebsiella",
+      "n_selected": 60,
+      "n_cached_missing": 27,
+      "frozen": {
+        "n_scored": 33,
+        "tp": 8,
+        "fp": 0,
+        "tn": 22,
+        "fn": 3,
+        "abstain": 0,
+        "acc": 0.909,
+        "sens": 0.727,
+        "spec": 1.0
+      },
+      "naive": {
+        "n_scored": 33,
+        "tp": 8,
+        "fp": 1,
+        "tn": 21,
+        "fn": 3,
+        "abstain": 0,
+        "acc": 0.879,
+        "sens": 0.727,
+        "spec": 0.955
+      },
+      "committed_cm": [
+        24,
+        1,
+        29,
+        6
+      ],
+      "recomputed_cm": [
+        8,
+        0,
+        22,
+        3
+      ],
+      "reconciled": false,
+      "value_add_verdict": "RECONCILE_MISMATCH"
+    }
+  },
+  "frozen_surface_changed": false
+}
