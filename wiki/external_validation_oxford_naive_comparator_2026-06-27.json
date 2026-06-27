@@ -1,0 +1,111 @@
+{
+  "_schema": "external-validation-naive-comparator-v1",
+  "date": "2026-06-27",
+  "cohort": "oxford_lipworth_ecoli_mic_arg",
+  "organism": "Escherichia_coli_Shigella",
+  "baseline_definition": "naive = R iff ANY AMRFinder determinant Class in mic_tiers.amrfinder_classes_for(drug); no subclass/point/threshold refinement, no abstain. frozen = shipped call_resistance DRUG_RULE.",
+  "rail": "validate-wrapper-vs-underlying-tool: the curated layer must beat naive tool use on independent data.",
+  "drugs": {
+    "ciprofloxacin": {
+      "frozen": {
+        "n_scored": 2841,
+        "tp": 346,
+        "fp": 91,
+        "tn": 2380,
+        "fn": 24,
+        "abstain": 0,
+        "acc": 0.96,
+        "sens": 0.935,
+        "spec": 0.963,
+        "balacc": 0.949
+      },
+      "naive": {
+        "n_scored": 2841,
+        "tp": 356,
+        "fp": 1060,
+        "tn": 1411,
+        "fn": 14,
+        "abstain": 0,
+        "acc": 0.622,
+        "sens": 0.962,
+        "spec": 0.571,
+        "balacc": 0.7665
+      },
+      "delta_frozen_minus_naive": {
+        "acc": 0.338,
+        "sens": -0.027,
+        "spec": 0.392,
+        "balacc": 0.1825
+      },
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "ceftriaxone": {
+      "frozen": {
+        "n_scored": 2868,
+        "tp": 225,
+        "fp": 765,
+        "tn": 1865,
+        "fn": 13,
+        "abstain": 0,
+        "acc": 0.729,
+        "sens": 0.945,
+        "spec": 0.709,
+        "balacc": 0.827
+      },
+      "naive": {
+        "n_scored": 2868,
+        "tp": 238,
+        "fp": 2623,
+        "tn": 7,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.085,
+        "sens": 1.0,
+        "spec": 0.003,
+        "balacc": 0.5015
+      },
+      "delta_frozen_minus_naive": {
+        "acc": 0.644,
+        "sens": -0.055,
+        "spec": 0.706,
+        "balacc": 0.3255
+      },
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    "gentamicin": {
+      "frozen": {
+        "n_scored": 2873,
+        "tp": 177,
+        "fp": 14,
+        "tn": 2667,
+        "fn": 15,
+        "abstain": 0,
+        "acc": 0.99,
+        "sens": 0.922,
+        "spec": 0.995,
+        "balacc": 0.9585
+      },
+      "naive": {
+        "n_scored": 2873,
+        "tp": 186,
+        "fp": 1451,
+        "tn": 1230,
+        "fn": 6,
+        "abstain": 0,
+        "acc": 0.493,
+        "sens": 0.969,
+        "spec": 0.459,
+        "balacc": 0.714
+      },
+      "delta_frozen_minus_naive": {
+        "acc": 0.497,
+        "sens": -0.047,
+        "spec": 0.536,
+        "balacc": 0.2445
+      },
+      "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"
+    }
+  },
+  "source": "github.com/samlipworth/ecoli_mic_arg (PRJNA604975 + PRJNA1007570)",
+  "frozen_surface_changed": false
+}
