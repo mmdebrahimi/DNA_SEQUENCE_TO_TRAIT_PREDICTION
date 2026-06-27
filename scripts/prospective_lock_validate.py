@@ -181,7 +181,7 @@ def _predict_eligible(eligible: list[dict], args) -> list[dict]:
     if not eligible:
         return []
     from dna_decode.eval.amr_rules import call_resistance
-    from scripts.organism_drug_validate import _run_dir, ensure_run
+    from scripts.organism_drug_validate import ensure_run
     own_runs = REPO / "data" / "amrfinder_runs"
     gcache = REPO / "data" / "refseq_cache"
     records = []
@@ -189,10 +189,15 @@ def _predict_eligible(eligible: list[dict], args) -> list[dict]:
         gca = row.get("gca", "")
         if not gca:
             continue
-        ensure_run(gca, own_runs, gcache, args.amrfinder_organism, "*")
-        mt = _run_dir(own_runs, gca)
-        pred = call_resistance(mt / "main.tsv", args.drug, organism=args.organism)["prediction"]
-        records.append({"gca": gca, "prediction": pred, "y": row.get("label", "")})
+        # ensure_run RETURNS the main.tsv path (cache-hit -> download+AMRFinder -> None on failure).
+        main_tsv = ensure_run(gca, own_runs, gcache, args.amrfinder_organism, "*")
+        if main_tsv is None or not Path(main_tsv).exists():
+            print(f"  [{gca}] no AMRFinder output; skipping")
+            continue
+        pred = call_resistance(main_tsv, args.drug, organism=args.organism)["prediction"]
+        # _conf (independent_cohort_validate) wants y as int 1/0; the manifest TSV label is "R"/"S".
+        y = 1 if str(row.get("label", "")).strip().upper() in ("R", "1", "RESISTANT") else 0
+        records.append({"gca": gca, "prediction": pred, "y": y})
     return records
 
 
