@@ -1,0 +1,222 @@
+{
+  "artifact": "hiv_insti_mutant_specific_v0_1",
+  "schema": "hiv-insti-mutant-catalog-v0_1",
+  "method": "data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= log10(1.5) (independent >=1.5x effect, controlling for co-occurrence -> deconfounds accessory/polymorphic riders), >=5 carriers; 5-fold CROSS-VALIDATED held-out (derive on train, eval on test) -> NOT in-sample",
+  "cutoff_note": "DELTA-HONEST: both v0 (position-based) and v0.1 (mutant-specific) scored at the SAME UNIFORM illustrative fold>=3 (no per-drug INSTI clinical cutoff sourced in-repo); the headline is the v0->v0.1 balanced-accuracy GAIN at that fixed cutoff, NOT an absolute-calibration claim.",
+  "n_drugs": 5,
+  "n_drugs_improved_or_held": 5,
+  "mean_balacc_gain": 0.087,
+  "honest_caveats": [
+    "DELTA-HONEST at the uniform fold>=3 cutoff (no per-drug INSTI clinical breakpoint sourced); the GAIN is the signal, not the absolute balacc",
+    "deconfounded (multivariate-OLS-coefficient) derivation, mirroring the shipped NRTI/PI v0.1 arc; 5-fold CV held-out -> out-of-sample, not optimistic in-sample",
+    "in-distribution vs HIVDB-PhenoSense (NOT provenance-disjoint external validation)",
+    "INSTI headroom is MIXED, not uniform like PI: RAL/DTG have positive OLS-vs-catalog deltas, EVG/BIC are ~flat (position call near-optimal), CAB's large delta is at n=64 (UNSTABLE). v0.1 is expected to improve-or-hold positive-delta drugs + hold the flat ones; a per-drug result.",
+    "cabotegravir n is small (~64) -> its v0.1 number is unstable; treat as indicative only"
+  ],
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra)",
+  "illustrative_lower_cutoff_fold": 3.0,
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\INI_DataSet.txt",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; method Stanford DRMcv.R",
+  "per_drug": {
+    "raltegravir": {
+      "n_isolates": 753,
+      "prevalence_R": 0.413,
+      "position_based_v0": {
+        "tp": 292,
+        "fp": 82,
+        "tn": 360,
+        "fn": 19,
+        "sens": 0.939,
+        "spec": 0.814,
+        "accuracy": 0.866,
+        "balanced_accuracy": 0.877
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 287,
+        "fp": 22,
+        "tn": 420,
+        "fn": 24,
+        "sens": 0.923,
+        "spec": 0.95,
+        "accuracy": 0.939,
+        "balanced_accuracy": 0.937
+      },
+      "balacc_gain_v0_1_minus_v0": 0.06
+    },
+    "elvitegravir": {
+      "n_isolates": 754,
+      "prevalence_R": 0.5,
+      "position_based_v0": {
+        "tp": 328,
+        "fp": 54,
+        "tn": 323,
+        "fn": 49,
+        "sens": 0.87,
+        "spec": 0.857,
+        "accuracy": 0.863,
+        "balanced_accuracy": 0.863
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 312,
+        "fp": 29,
+        "tn": 348,
+        "fn": 65,
+        "sens": 0.828,
+        "spec": 0.923,
+        "accuracy": 0.875,
+        "balanced_accuracy": 0.875
+      },
+      "balacc_gain_v0_1_minus_v0": 0.012
+    },
+    "dolutegravir": {
+      "n_isolates": 370,
+      "prevalence_R": 0.195,
+      "position_based_v0": {
+        "tp": 72,
+        "fp": 139,
+        "tn": 159,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.534,
+        "accuracy": 0.624,
+        "balanced_accuracy": 0.767
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 72,
+        "fp": 100,
+        "tn": 198,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.664,
+        "accuracy": 0.73,
+        "balanced_accuracy": 0.832
+      },
+      "balacc_gain_v0_1_minus_v0": 0.065
+    },
+    "bictegravir": {
+      "n_isolates": 287,
+      "prevalence_R": 0.178,
+      "position_based_v0": {
+        "tp": 51,
+        "fp": 137,
+        "tn": 99,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.419,
+        "accuracy": 0.523,
+        "balanced_accuracy": 0.71
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 48,
+        "fp": 107,
+        "tn": 129,
+        "fn": 3,
+        "sens": 0.941,
+        "spec": 0.547,
+        "accuracy": 0.617,
+        "balanced_accuracy": 0.744
+      },
+      "balacc_gain_v0_1_minus_v0": 0.034
+    },
+    "cabotegravir": {
+      "n_isolates": 64,
+      "prevalence_R": 0.812,
+      "position_based_v0": {
+        "tp": 52,
+        "fp": 8,
+        "tn": 4,
+        "fn": 0,
+        "sens": 1.0,
+        "spec": 0.333,
+        "accuracy": 0.875,
+        "balanced_accuracy": 0.667
+      },
+      "mutant_specific_v0_1_heldout": {
+        "tp": 45,
+        "fp": 0,
+        "tn": 12,
+        "fn": 7,
+        "sens": 0.865,
+        "spec": 1.0,
+        "accuracy": 0.891,
+        "balanced_accuracy": 0.933
+      },
+      "balacc_gain_v0_1_minus_v0": 0.266
+    }
+  },
+  "deliverable_catalog_all_data": {
+    "raltegravir": [
+      "E92Q",
+      "G118R",
+      "G140A",
+      "G140C",
+      "G140S",
+      "N155H",
+      "Q148H",
+      "Q148K",
+      "Q148R",
+      "Y143A",
+      "Y143C",
+      "Y143G",
+      "Y143H",
+      "Y143R",
+      "Y143S"
+    ],
+    "elvitegravir": [
+      "E92G",
+      "E92Q",
+      "G118R",
+      "G140A",
+      "G140C",
+      "G140S",
+      "N155H",
+      "Q148H",
+      "Q148K",
+      "Q148R",
+      "R263K",
+      "S147G",
+      "T66I",
+      "Y143A",
+      "Y143C",
+      "Y143G",
+      "Y143R",
+      "Y143S"
+    ],
+    "dolutegravir": [
+      "E138K",
+      "E92Q",
+      "G118R",
+      "G140A",
+      "G140S",
+      "N155H",
+      "Q148H",
+      "Q148K",
+      "Q148R",
+      "R263K",
+      "S147G",
+      "Y143R"
+    ],
+    "bictegravir": [
+      "E138A",
+      "E138K",
+      "E92Q",
+      "G118R",
+      "G140A",
+      "G140C",
+      "G140S",
+      "N155H",
+      "Q148K",
+      "Q148R",
+      "R263K",
+      "S147G",
+      "Y143R"
+    ],
+    "cabotegravir": [
+      "E138K",
+      "G140A",
+      "G140S",
+      "Q148H",
+      "Q148R"
+    ]
+  }
+}
