@@ -74,20 +74,27 @@ def build() -> dict:
                 "subtype_transfer": (f"non-B balacc {nonb.get('balanced_accuracy')} (n={nonb.get('n')})"
                                      if nonb.get("balanced_accuracy") is not None else "under-powered"),
             })
-    # PI / INSTI / CAI: cutoff-free AUC per drug (position-based PI/INSTI; mutant-level CAI). No OLS baseline /
-    # v0.1 / subtype columns yet (those are NNRTI/NRTI-only artifacts) -> render '-'.
-    for label, prefix, base_prefix in (
-            ("PI", "hiv_pi_v0_validation_", "hiv_pi_baseline_vs_ols_"),
-            ("INSTI", "hiv_insti_v0_validation_", "hiv_insti_baseline_vs_ols_"),
-            ("CAI", "hiv_cai_v0_validation_", "hiv_cai_baseline_vs_ols_")):
+    # PI / INSTI / CAI: cutoff-free AUC per drug. PI (2026-06-23) + INSTI (2026-06-27) now ALSO carry the
+    # deconfounded mutant-specific v0.1 gain (same multivariate-OLS-coef + 5-fold-CV arc as NRTI); CAI stays
+    # mutant-level v0. The v0.1 gain column is fed from the `_v0.1_validation_` artifacts when present.
+    for label, prefix, base_prefix, mut_prefix in (
+            ("PI", "hiv_pi_v0_validation_", "hiv_pi_baseline_vs_ols_", "hiv_pi_v0.1_validation_"),
+            ("INSTI", "hiv_insti_v0_validation_", "hiv_insti_baseline_vs_ols_", "hiv_insti_v0.1_validation_"),
+            ("CAI", "hiv_cai_v0_validation_", "hiv_cai_baseline_vs_ols_", None)):
         val = _latest(prefix)
         if not val:
             continue
         base = (_latest(base_prefix) or {}).get("per_drug", {})   # OLS underlying-tool baseline (wrapper-vs-tool)
-        catalog = ("mutant-level (CAPELLA capsid)" if val.get("call_mode") == "mutant-level"
-                   else "position-based v0 (Stanford majors)")
+        mut = (_latest(mut_prefix) or {}).get("per_drug", {}) if mut_prefix else {}
+        if val.get("call_mode") == "mutant-level":
+            catalog = "mutant-level (CAPELLA capsid)"
+        elif mut:
+            catalog = "position-based v0 (+ deconfounded mutant-specific v0.1)"
+        else:
+            catalog = "position-based v0 (Stanford majors)"
         for drug, m in val.get("per_drug", {}).items():
             b = base.get(drug, {})
+            mm = mut.get(drug, {})
             cells.append({
                 "drug_class": label, "drug": drug, "catalog": catalog,
                 "n": m.get("n_isolates_with_fold"),
@@ -95,7 +102,8 @@ def build() -> dict:
                 "catalog_balacc": (b.get("catalog") or {}).get("balanced_accuracy"),
                 "ols_baseline_balacc": (b.get("ols_baseline") or {}).get("balanced_accuracy"),
                 "delta_ols_minus_catalog": b.get("delta_ols_minus_catalog_balacc"),
-                "subtype_transfer": None, "v0_1_mutant_gain": None,
+                "subtype_transfer": None,
+                "v0_1_mutant_gain": mm.get("balacc_gain_v0_1_minus_v0"),
             })
     return {
         "artifact": "hiv_decoder_report_card", "schema": "hiv-report-card-v0",
@@ -119,6 +127,11 @@ def build() -> dict:
             "+0.06..+0.13 balacc (real v0.1 mutant-specific headroom, like NRTI); INSTI catalog is "
             "competitive (+-0.07, ties/beats OLS on EVG/BIC); CAI catalog BEATS OLS +0.112 (OLS overfits "
             "the tiny resistance-enriched set). Subtype-transfer column stays NNRTI/NRTI-only",
+            "PI v0.1 (2026-06-23) + INSTI v0.1 (2026-06-27) deconfounded mutant-specific catalogs SHIPPED "
+            "(same OLS-coef + 5-fold-CV arc as NRTI): PI 8/8 improve-or-hold (mean +0.056), INSTI 5/5 "
+            "improve-or-hold (mean +0.087 — overturned the earlier deferral; gain on specificity via "
+            "accessory-rider deconfounding). The HIV class-deconfounding arc NRTI->PI->INSTI is COMPLETE; "
+            "only per-drug clinical-cutoff absolute calibration (v0.2) remains. v0.1 gain column shows it.",
         ],
         "cells": cells,
     }

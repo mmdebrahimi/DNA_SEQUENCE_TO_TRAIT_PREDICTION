@@ -177,6 +177,42 @@ def classify(key, scored, census, registry, surface=None) -> dict:
     return {"state": "NOT_CENSUSED", "note": "bacterial + census-able; no provenance census yet"}
 
 
+def load_naive_value_add() -> list[dict]:
+    """Curated-vs-naive value-add rows from the committed naive-comparator JSONs (2026-06-27).
+
+    The wrapper-vs-underlying-tool rail: the deployed call_resistance rule must BEAT naive AMRFinder use
+    ('any drug-class determinant -> R') on balanced accuracy. Two surfaces:
+      - Oxford independent measured-MIC  (external_validation_oxford_naive_comparator_*.json)
+      - the 10-cell provenance-disjoint  (provdisjoint_naive_comparator_*.json)
+    Read-only; returns [] if the JSONs are absent.
+    """
+    rows: list[dict] = []
+    ox = sorted(glob.glob(str(WIKI / "external_validation_oxford_naive_comparator_*.json")))
+    if ox:
+        try:
+            d = json.loads(Path(ox[-1]).read_text(encoding="utf-8"))
+            for drug, m in (d.get("drugs") or {}).items():
+                rows.append({"surface": "Oxford ext. MIC", "organism": "Escherichia_coli_Shigella",
+                             "drug": drug, "frozen_balacc": (m.get("frozen") or {}).get("balacc"),
+                             "naive_balacc": (m.get("naive") or {}).get("balacc"),
+                             "delta": (m.get("delta_frozen_minus_naive") or {}).get("balacc"),
+                             "verdict": m.get("value_add_verdict")})
+        except (OSError, json.JSONDecodeError):
+            pass
+    pd = sorted(glob.glob(str(WIKI / "provdisjoint_naive_comparator_*.json")))
+    if pd:
+        try:
+            d = json.loads(Path(pd[-1]).read_text(encoding="utf-8"))
+            for key, m in (d.get("cells") or {}).items():
+                org, _, drug = key.partition(":")
+                rows.append({"surface": "provdisjoint", "organism": org, "drug": drug,
+                             "frozen_balacc": m.get("frozen_balacc"), "naive_balacc": m.get("naive_balacc"),
+                             "delta": m.get("delta_balacc"), "verdict": m.get("value_add_verdict")})
+        except (OSError, json.JSONDecodeError):
+            pass
+    return rows
+
+
 def main() -> int:
     scored, census, registry = load_scored(), load_census(), load_registry()
     lineage = load_lineage_metrics()
@@ -198,6 +234,7 @@ def main() -> int:
     artifact = {"_schema": "decoder-validation-report-card-v0", "date": today,
                 "honest_tier": PROV_TIER, "no_aggregate_headline": True,
                 "state_counts": counts,
+                "curated_vs_naive_value_add": load_naive_value_add(),
                 "cells": [{"organism": k[0], "drug": k[1], **c} for k, c in rows]}
     (WIKI / "decoder_validation_report_card.json").write_text(json.dumps(artifact, indent=2), encoding="utf-8")
 
@@ -278,6 +315,28 @@ def main() -> int:
         L.append(f"| {org} | {drug} | {lin.get('raw_N')} | {_eff('0.001')} | {_eff('0.005')} | "
                  f"{_wtd('sens')} | {_wtd('spec')} | {disc} | {lin.get('grade', '—')} |")
 
+    # ---- Curated layer value-over-naive-baseline (wrapper-vs-underlying-tool rail) ----
+    nva = load_naive_value_add()
+    if nva:
+        L.append("\n## Curated layer value-over-naive-baseline\n")
+        L.append("The deployed `call_resistance` rule vs NAIVE AMRFinder use ('any drug-class determinant → R', "
+                 "no subclass/point/threshold refinement) on the SAME labels, balanced accuracy. The curated "
+                 "layer must BEAT naive tool use on INDEPENDENT data, else the number only proves the tool "
+                 "works (the validate-wrapper-vs-underlying-tool rail). Reconciled cells only.\n")
+        L.append("| surface | organism | drug | frozen balacc | naive balacc | Δ | verdict |\n"
+                 "|---|---|---|---|---|---|---|")
+        for r in nva:
+            if r.get("verdict") == "RECONCILE_MISMATCH":
+                continue
+            L.append(f"| {r['surface']} | {r['organism']} | {r['drug']} | {r.get('frozen_balacc')} | "
+                     f"{r.get('naive_balacc')} | {r.get('delta')} | {r.get('verdict')} |")
+        adds = sum(1 for r in nva if r.get("verdict") == "CURATED_LAYER_ADDS_VALUE")
+        ties = sum(1 for r in nva if r.get("verdict") == "NAIVE_TIES_CURATED")
+        L.append(f"\n_{adds} cells the curated layer adds value, {ties} ties, "
+                 f"{sum(1 for r in nva if r.get('verdict') == 'NAIVE_BEATS_CURATED')} naive-beats. "
+                 "Sources: `wiki/external_validation_oxford_naive_comparator_*.json` + "
+                 "`wiki/provdisjoint_naive_comparator_*.json`; full synthesis "
+                 "`wiki/curated_vs_naive_value_add_synthesis_2026-06-27.md`._")
     L.append("\n## Provenance\n")
     L.append("- Row set: `dna_decode/data/shipped_decoder_surface.py` (deployed-claim surface) ∪ observed cells.")
     L.append("- SCORED cells: `wiki/provenance_disjoint_validation_*.json` (Stage-2 `provenance_disjoint_validate.py`).")

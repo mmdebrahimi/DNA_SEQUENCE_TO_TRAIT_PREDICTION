@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-06-26",
+  "date": "2026-06-28",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -10,6 +10,125 @@
     "UNDERPOWERED": 3,
     "LABEL_CONFOUNDED": 1
   },
+  "curated_vs_naive_value_add": [
+    {
+      "surface": "Oxford ext. MIC",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin",
+      "frozen_balacc": 0.949,
+      "naive_balacc": 0.7665,
+      "delta": 0.1825,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "Oxford ext. MIC",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone",
+      "frozen_balacc": 0.827,
+      "naive_balacc": 0.5015,
+      "delta": 0.3255,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "Oxford ext. MIC",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "frozen_balacc": 0.9585,
+      "naive_balacc": 0.714,
+      "delta": 0.2445,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "frozen_balacc": 1.0,
+      "naive_balacc": 1.0,
+      "delta": 0.0,
+      "verdict": "NAIVE_TIES_CURATED"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin",
+      "frozen_balacc": 0.8165,
+      "naive_balacc": 0.65,
+      "delta": 0.1665,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone",
+      "frozen_balacc": 0.967,
+      "naive_balacc": 0.7335,
+      "delta": 0.2335,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "frozen_balacc": 0.95,
+      "naive_balacc": 0.6335,
+      "delta": 0.3165,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "tetracycline",
+      "frozen_balacc": 0.933,
+      "naive_balacc": 0.85,
+      "delta": 0.083,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Klebsiella",
+      "drug": "ciprofloxacin",
+      "frozen_balacc": 0.967,
+      "naive_balacc": 0.7,
+      "delta": 0.267,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Klebsiella",
+      "drug": "ceftriaxone",
+      "frozen_balacc": null,
+      "naive_balacc": null,
+      "delta": null,
+      "verdict": "RECONCILE_MISMATCH"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Klebsiella",
+      "drug": "gentamicin",
+      "frozen_balacc": null,
+      "naive_balacc": null,
+      "delta": null,
+      "verdict": "RECONCILE_MISMATCH"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Klebsiella",
+      "drug": "meropenem",
+      "frozen_balacc": 0.6835,
+      "naive_balacc": 0.5,
+      "delta": 0.1835,
+      "verdict": "CURATED_LAYER_ADDS_VALUE"
+    },
+    {
+      "surface": "provdisjoint",
+      "organism": "Klebsiella",
+      "drug": "tetracycline",
+      "frozen_balacc": null,
+      "naive_balacc": null,
+      "delta": null,
+      "verdict": "RECONCILE_MISMATCH"
+    }
+  ],
   "cells": [
     {
       "organism": "acinetobacter",

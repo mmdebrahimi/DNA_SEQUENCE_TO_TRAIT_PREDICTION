@@ -277,3 +277,25 @@ def test_main_partial_lineage_renders_incomplete(monkeypatch, tmp_path):
     assert mod.main() == 0
     md = (wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
     assert "lineage: incomplete (27 genomes missing)" in md
+
+
+def test_naive_value_add_loader_and_section(monkeypatch, tmp_path):
+    """The curated-vs-naive value-add (wrapper-vs-tool rail) must surface on the standing card; reconciled
+    cells render in the table, RECONCILE_MISMATCH cells are excluded."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "provdisjoint_naive_comparator_2026-06-27.json").write_text(json.dumps({
+        "_schema": "provdisjoint-naive-comparator-v1",
+        "cells": {
+            "Klebsiella:ciprofloxacin": {"frozen_balacc": 0.967, "naive_balacc": 0.7,
+                                         "delta_balacc": 0.267, "value_add_verdict": "CURATED_LAYER_ADDS_VALUE"},
+            "Klebsiella:gentamicin": {"value_add_verdict": "RECONCILE_MISMATCH"},
+        },
+    }), encoding="utf-8")
+    rows = mod.load_naive_value_add()
+    keys = {(r["organism"], r["drug"], r["verdict"]) for r in rows}
+    assert ("Klebsiella", "ciprofloxacin", "CURATED_LAYER_ADDS_VALUE") in keys
+    assert mod.main() == 0
+    md = (wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
+    assert "Curated layer value-over-naive-baseline" in md
+    assert "CURATED_LAYER_ADDS_VALUE" in md
+    assert "RECONCILE_MISMATCH" not in md  # mismatch cells excluded from the rendered table

@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-06-26
+# Decoder-suite provenance-disjoint validation report card — 2026-06-28
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -74,6 +74,25 @@ Raw sens/spec counts one vote per ISOLATE; clones inflate it. Below: lineage-eff
 | klebsiella | gentamicin | 60 | 16/13 | 11/7 | 1.0 [0.741–1.0] (n=11) | 0.857 [0.487–0.974] (n=7) | 2 | limited (8-14 effective lineages) |
 | klebsiella | meropenem | 60 | 14/23 | 6/21 | 1.0 [0.61–1.0] (n=6) | 0.952 [0.773–0.992] (n=21) | 4 | scarce (3-7 effective lineages) |
 | klebsiella | tetracycline | 60 | 24/28 | 19/27 | 0.842 [0.624–0.945] (n=19) | 0.963 [0.817–0.993] (n=27) | 1 | moderate (>=15 effective lineages) |
+
+## Curated layer value-over-naive-baseline
+
+The deployed `call_resistance` rule vs NAIVE AMRFinder use ('any drug-class determinant → R', no subclass/point/threshold refinement) on the SAME labels, balanced accuracy. The curated layer must BEAT naive tool use on INDEPENDENT data, else the number only proves the tool works (the validate-wrapper-vs-underlying-tool rail). Reconciled cells only.
+
+| surface | organism | drug | frozen balacc | naive balacc | Δ | verdict |
+|---|---|---|---|---|---|---|
+| Oxford ext. MIC | Escherichia_coli_Shigella | ciprofloxacin | 0.949 | 0.7665 | 0.1825 | CURATED_LAYER_ADDS_VALUE |
+| Oxford ext. MIC | Escherichia_coli_Shigella | ceftriaxone | 0.827 | 0.5015 | 0.3255 | CURATED_LAYER_ADDS_VALUE |
+| Oxford ext. MIC | Escherichia_coli_Shigella | gentamicin | 0.9585 | 0.714 | 0.2445 | CURATED_LAYER_ADDS_VALUE |
+| provdisjoint | Campylobacter | ciprofloxacin | 1.0 | 1.0 | 0.0 | NAIVE_TIES_CURATED |
+| provdisjoint | Escherichia_coli_Shigella | ciprofloxacin | 0.8165 | 0.65 | 0.1665 | CURATED_LAYER_ADDS_VALUE |
+| provdisjoint | Escherichia_coli_Shigella | ceftriaxone | 0.967 | 0.7335 | 0.2335 | CURATED_LAYER_ADDS_VALUE |
+| provdisjoint | Escherichia_coli_Shigella | gentamicin | 0.95 | 0.6335 | 0.3165 | CURATED_LAYER_ADDS_VALUE |
+| provdisjoint | Escherichia_coli_Shigella | tetracycline | 0.933 | 0.85 | 0.083 | CURATED_LAYER_ADDS_VALUE |
+| provdisjoint | Klebsiella | ciprofloxacin | 0.967 | 0.7 | 0.267 | CURATED_LAYER_ADDS_VALUE |
+| provdisjoint | Klebsiella | meropenem | 0.6835 | 0.5 | 0.1835 | CURATED_LAYER_ADDS_VALUE |
+
+_9 cells the curated layer adds value, 1 ties, 0 naive-beats. Sources: `wiki/external_validation_oxford_naive_comparator_*.json` + `wiki/provdisjoint_naive_comparator_*.json`; full synthesis `wiki/curated_vs_naive_value_add_synthesis_2026-06-27.md`._
 
 ## Provenance
 
