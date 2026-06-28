@@ -180,6 +180,34 @@ def build_contig_name_map(
     return out
 
 
+def contig_collision_count(
+    fasta_contig_lengths: dict[str, int],
+    bakta_contig_lengths: dict[str, int],
+) -> dict:
+    """Diagnostics for `build_contig_name_map`: how many contigs could NOT be reconciled
+    because their length is non-unique (a length COLLISION) on a side.
+
+    The honest design already routes collision-affected determinant hits to symbol-fallback
+    (surfaced via `n_symbol_fallback` / `all_joins_symbol_fallback`); this makes the REASON
+    for that fallback — length ambiguity between the AMRFinder (FASTA-named) and Bakta-renamed
+    contigs — AUDITABLE rather than silent. Pure; no IO. (Deferred honesty item, CLAUDE.md.)
+    """
+    def _ambiguous(d: dict[str, int]) -> int:
+        by_len: dict[int, int] = {}
+        for ln in d.values():
+            by_len[ln] = by_len.get(ln, 0) + 1
+        return sum(n for n in by_len.values() if n > 1)
+
+    reconciled = build_contig_name_map(fasta_contig_lengths, bakta_contig_lengths)
+    return {
+        "n_fasta_contigs": len(fasta_contig_lengths),
+        "n_bakta_contigs": len(bakta_contig_lengths),
+        "n_reconciled": len(reconciled),
+        "n_fasta_ambiguous_contigs": _ambiguous(fasta_contig_lengths),
+        "n_bakta_ambiguous_contigs": _ambiguous(bakta_contig_lengths),
+    }
+
+
 def _coord_overlap(a_start: int, a_stop: int, b_start: int, b_stop: int) -> int:
     """Length of the overlap between two inclusive ranges (0 if disjoint)."""
     lo = max(min(a_start, a_stop), min(b_start, b_stop))

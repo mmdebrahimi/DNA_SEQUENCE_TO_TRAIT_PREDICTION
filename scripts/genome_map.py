@@ -65,6 +65,13 @@ def render_genome_summary_md(genome_map: dict, gate_result: dict, *, generated: 
     lines.append(f"- determinant join quality: n_main_rows={jq.get('n_main_rows')} "
                  f"high_confidence={jq.get('n_high_confidence_join')} "
                  f"symbol_fallback={jq.get('n_symbol_fallback')} unjoined={jq.get('n_unjoined')}")
+    cr = m.get("contig_reconciliation") or {}
+    if cr:
+        amb = cr.get("n_fasta_ambiguous_contigs", 0) + cr.get("n_bakta_ambiguous_contigs", 0)
+        lines.append(f"- contig length-reconciliation: reconciled={cr.get('n_reconciled')}/"
+                     f"{cr.get('n_fasta_contigs')} FASTA contigs; "
+                     f"length-ambiguous={amb} (ambiguous contigs' determinants fall to "
+                     f"symbol-fallback by design — this makes the reason auditable)")
     lines.append(f"- determinant-phenotype features: {m['determinant_phenotype_feature_count']}")
     gl = ", ".join(f"{d}={v.get('prediction')}" for d, v in m["genome_level_calls"].items())
     lines.append(f"- genome-level R/S calls (separate from features): {gl or '(none)'}")

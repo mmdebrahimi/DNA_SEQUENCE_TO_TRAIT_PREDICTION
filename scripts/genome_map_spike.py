@@ -48,6 +48,7 @@ from dna_decode.genome_map.gate import (
 )
 from dna_decode.genome_map.phenotype_overlay import (
     build_contig_name_map,
+    contig_collision_count,
     join_hits,
     parse_determinant_hits,
 )
@@ -182,10 +183,11 @@ def run_genome_map_for(
     hits = parse_determinant_hits(main_tsv_path)
 
     contig_map = None
+    contig_recon = None
     if fasta_path is not None and Path(fasta_path).exists():
-        contig_map = build_contig_name_map(
-            fasta_contig_lengths(fasta_path), bakta_contig_lengths(gff_path)
-        )
+        _fl, _bl = fasta_contig_lengths(fasta_path), bakta_contig_lengths(gff_path)
+        contig_map = build_contig_name_map(_fl, _bl)
+        contig_recon = contig_collision_count(_fl, _bl)
     joined, counts = join_hits(features, hits, contig_name_map=contig_map)
 
     drug_verdicts = {}
@@ -200,6 +202,7 @@ def run_genome_map_for(
         drug_verdicts=drug_verdicts, drugs=drugs,
         virulence_joined_hits=vir_joined, virulence_join_counts=vir_counts,
         pathotype_call=pathotype_call, virulence_db_sha=vir_db_sha,
+        contig_reconciliation=contig_recon,
     )
     gm["virulence_status"] = vstatus
     return gm

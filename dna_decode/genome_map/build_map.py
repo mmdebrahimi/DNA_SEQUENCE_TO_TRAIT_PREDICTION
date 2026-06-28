@@ -185,6 +185,7 @@ def build_genome_map(
     virulence_join_counts: dict | None = None,
     pathotype_call: dict | None = None,
     virulence_db_sha: str | None = None,
+    contig_reconciliation: dict | None = None,
 ) -> dict:
     """Assemble the per-feature genome map dict.
 
@@ -342,6 +343,9 @@ def build_genome_map(
             join_counts.get("n_main_rows", 0) > 0
             and join_counts.get("n_high_confidence_join", 0) == 0
         ),
+        # contig length-reconciliation diagnostics (why some hits fell to symbol-fallback):
+        # how many AMRFinder(FASTA)/Bakta contigs were length-ambiguous + couldn't reconcile.
+        "contig_reconciliation": contig_reconciliation or {},
         "genome_level_calls": genome_level_calls,
         # --- virulence overlay (M2: SEPARATE keys; never feed the AMR keys/gate above) ---
         "virulence_determinant_feature_count": n_virulence_features,
