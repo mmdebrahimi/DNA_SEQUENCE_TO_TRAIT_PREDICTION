@@ -1,3 +1,8 @@
+> **⛔ SUPERSEDED — DO NOT SEND (2026-06-28).** The independent TB number these emails would request
+> ALREADY EXISTS, for free, no DUA, no author contact: RIF acc 0.937 / INH acc 0.914, N=2,845
+> (`wiki/tb_independent_number_2026-06-23.md`), via the EBI AMR Portal. Sending these would request data
+> the project already has. Kept for audit trail only. See `wiki/frontier_reassessment_2026-06-28.md`.
+
 # Author-request emails for the TB independent gold set (2026-06-22)
 
 What every one of these asks for (the ONE thing that's missing from the public record): a **per-isolate table

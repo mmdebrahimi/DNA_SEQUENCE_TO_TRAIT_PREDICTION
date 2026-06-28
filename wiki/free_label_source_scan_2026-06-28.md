@@ -1,3 +1,11 @@
+> **⚠️ CORRECTED (2026-06-28, same day).** This scan's headline "no NEW free, public, isolate-level,
+> MEASURED-phenotype DB exists beyond the Stanford family" is WRONG — it MISSED the **EBI AMR Portal**
+> (`wiki/amr_portal_feasibility_result_2026-06-23.md`), which is exactly that (1.71 M measured-AST rows,
+> 74 powered provenance-disjoint cells) and was already in the repo + exploited 5 days earlier. A
+> wrong-denominator / under-search miss. The scan's per-candidate gate analysis (FungAMR / MalariaGEN
+> verdicts) stands; only the "no free source exists" conclusion is retracted. See
+> `wiki/frontier_reassessment_2026-06-28.md`.
+
 # Free independent-label scan — hunting the next HIVDB-equivalent (2026-06-28)
 
 **Goal (Track A):** find a NEW free, public, **isolate-level, MEASURED-phenotype** genotype↔phenotype

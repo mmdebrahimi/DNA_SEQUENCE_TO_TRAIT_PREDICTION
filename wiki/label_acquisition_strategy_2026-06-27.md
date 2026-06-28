@@ -1,3 +1,10 @@
+> **⚠️ SUPERSEDED (2026-06-28).** This memo's premise — "the label wall blocks independence; acquisition
+> (author emails / DUA) is the lever" — was already FALSE when written: the EBI AMR Portal (2026-06-23,
+> `wiki/amr_portal_feasibility_result_2026-06-23.md`) is a FREE, public, isolate-level, MEASURED-AST source
+> that broke the wall (74 powered cells; TB + E. coli/Salmonella/Klebsiella/Shigella/Campylobacter already
+> SCORED_INDEPENDENT). The TB author emails are MOOT. Independence is now FREE + code-closable. Kept for
+> audit trail. See `wiki/frontier_reassessment_2026-06-28.md`.
+
 # Independent-label acquisition strategy — the best way to find the blocked data sources (2026-06-27)
 
 The decoder's binding constraint is the independent LABEL (reproducibility freeze 2026-06-13). Two cells are
