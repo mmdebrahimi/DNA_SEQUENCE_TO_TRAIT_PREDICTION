@@ -21,7 +21,10 @@ FROZEN_SHA = {
     "dna_decode/eval/amr_rules.py":
         "a983bf28e4ff4f89034b152404e49ec3aa6b3907ac81c670b14e60e7cfe1fad4",
     "dna_decode/data/calibrated_amr_rules.json":
-        "ece6744bda6be543d41955a4e98ecb447426b34daa9417670b9233e388c96a69",
+        # canonical repo-blob (LF) hash; re-pinned 2026-06-27 from the stale CRLF hash that
+        # passed only on a Windows working tree (.gitattributes now forces LF). Frozen CONTENT
+        # unchanged — the blob was already LF; only the pin was wrong.
+        "0435b0e44b4a991830c770400f0f3677ab3521a0379f2e2caa37b1b11fb84428",
 }
 
 # TB rule-construction modules — must NOT read CRyPTIC phenotype columns.

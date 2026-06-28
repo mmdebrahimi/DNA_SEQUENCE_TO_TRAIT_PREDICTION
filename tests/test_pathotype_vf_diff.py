@@ -14,6 +14,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dna_decode.pathotype.cli import DEFAULT_DB, analyze
 from dna_decode.pathotype.vf_runner import (
@@ -22,6 +24,13 @@ from dna_decode.pathotype.vf_runner import (
 
 ROOT = Path(__file__).resolve().parent.parent
 DB = ROOT / DEFAULT_DB
+
+# CI / fresh checkout: the VirulenceFinder DB lives under gitignored data/. Skip the module
+# when absent (repo convention for data-gated tests) instead of hard-failing.
+pytestmark = pytest.mark.skipif(
+    not DB.exists(),
+    reason="gitignored VirulenceFinder DB absent (data/virulencefinder_db/virulence_ecoli.fsa)",
+)
 
 
 def _first_allele(db_path: Path, prefix: str) -> tuple[str, str]:

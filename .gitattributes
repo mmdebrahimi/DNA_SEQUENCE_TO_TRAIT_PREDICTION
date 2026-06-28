@@ -1,0 +1,12 @@
+# Integrity-hashed surfaces must be byte-identical across platforms. The leak-guard
+# (tests/test_tb_leak_guard.py) and the prospective-lock manifests sha256-pin these files;
+# a Windows CRLF checkout would drift the hash vs a Linux/CI LF checkout. Force LF so the
+# pinned hash is stable everywhere. (Root-caused 2026-06-27: calibrated_amr_rules.json was
+# CRLF locally / LF in the repo blob -> CI hash mismatch on the frozen-surface gate.)
+dna_decode/eval/amr_rules.py            text eol=lf
+dna_decode/data/calibrated_amr_rules.json text eol=lf
+dna_decode/data/mic_tiers.py            text eol=lf
+dna_decode/data/shipped_decoder_surface.py text eol=lf
+dna_decode/eval/cohort_manifest.py      text eol=lf
+dna_decode/data/sarscov2_amr.py         text eol=lf
+scripts/sarscov2_caller.py              text eol=lf

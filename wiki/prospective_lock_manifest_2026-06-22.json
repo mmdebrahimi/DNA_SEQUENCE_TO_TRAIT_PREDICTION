@@ -9,7 +9,7 @@
   "protocol": "verify_lock (decoder == frozen) -> filter cohort to prospective-eligible -> frozen call_resistance(organism, drug) -> independent_cohort_validate._conf; the result is stamped with this manifest's surface hashes + lock_date so it is provably prospective",
   "surface_sha256": {
     "dna_decode/eval/amr_rules.py": "a983bf28e4ff4f89034b152404e49ec3aa6b3907ac81c670b14e60e7cfe1fad4",
-    "dna_decode/data/calibrated_amr_rules.json": "ece6744bda6be543d41955a4e98ecb447426b34daa9417670b9233e388c96a69",
+    "dna_decode/data/calibrated_amr_rules.json": "0435b0e44b4a991830c770400f0f3677ab3521a0379f2e2caa37b1b11fb84428",
     "dna_decode/data/mic_tiers.py": "47d6c70103673736580c510cf1484b09917665981c6f8594c3b8521e850bc283",
     "dna_decode/data/shipped_decoder_surface.py": "9a10b198afdf6b9016f57d94ccbbed8a94badfe552b18dfe7274a8cd43569f52",
     "dna_decode/eval/cohort_manifest.py": "74a3459402ecdebd45c80a4eb7468cbf8bc72d38fe6c5b76b426bb41a44a8005"

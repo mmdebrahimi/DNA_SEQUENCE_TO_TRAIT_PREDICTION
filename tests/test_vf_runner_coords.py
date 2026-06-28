@@ -104,6 +104,7 @@ def test_per_gene_per_cluster_byte_identical_best_hit_contract():
     assert per_cluster["ST"]["called"] is False and per_cluster["ST"]["best_gene"] is None
 
 
+@pytest.mark.skipif(not DB.exists(), reason="gitignored VirulenceFinder DB absent (db_sha needs a readable DB)")
 def test_run_canonical_vf_unavailable_carries_per_hit_and_db_sha():
     """The additive contract holds even on the offline-degrade path (no blastn)."""
     res = run_canonical_vf(str(DB), str(DB), blastn_bin="/nonexistent/blastn")

@@ -37,9 +37,19 @@ from dna_decode.pathotype.expec_score import (
 )
 from dna_decode.pathotype.markers import EXPEC_SUPPORT_GENE_PREFIXES
 
+import pytest
+
 F1 = REPO / "data/external/horesh2021_F1_genome_metadata.csv"
 COV = REPO / "data/pathotype_cov_cache"
 PERGENE = REPO / "data/pathotype_pergene_cache"
+
+# CI / fresh checkout: the cohort metadata + per-gene cache live under gitignored data/.
+# Skip the module when absent (the repo convention for data-gated tests) instead of
+# hard-failing with FileNotFoundError.
+pytestmark = pytest.mark.skipif(
+    not F1.exists() or not PERGENE.exists(),
+    reason="gitignored pathotype data absent (data/external/horesh2021_F1_genome_metadata.csv + data/pathotype_pergene_cache/)",
+)
 CONFIDENT_COV, PARTIAL_COV = 0.80, 0.65
 N_PER_CLASS = 12
 WGS_MASTER = re.compile(r"^[A-Z]{4}\d{8}(\.fa)?$", re.I)
