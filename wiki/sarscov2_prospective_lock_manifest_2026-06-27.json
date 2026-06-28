@@ -1,0 +1,15 @@
+{
+  "schema": "sarscov2-mpro-prospective-lock-v1",
+  "cell": "sarscov2_mpro_nirmatrelvir",
+  "lock_date": "2026-06-27",
+  "manifest_created": "2026-06-27",
+  "eligibility_rule": "a Mpro-inhibitor fold record is an eligible INDEPENDENT test iff its study's earliest public/publication date is STRICTLY AFTER lock_date (leakage-free by construction \u2014 the frozen catalog could not have been tuned to it)",
+  "cutoff_justification": "the SARS Mpro catalog (sarscov2_amr.MPRO_MAJOR_DRMS) shipped 2026-06-23 verbatim from CoV-RDB invitro_selection_results; lock_date is set on/after that freeze so the pinned surface is provably unchanged since",
+  "surface_sha256": {
+    "dna_decode/data/sarscov2_amr.py": "21c653aba522047d600cfce3631b70c1e7957370ecc1d22cbc000f608e33ea70",
+    "scripts/sarscov2_caller.py": "77bf78317013926935dd462420715cda51c2449b1857b105cdea6e2c7ec979c5"
+  },
+  "accrual_status": "ACCRUING \u2014 the 2026-06-27 census found 0 held-out CoV-RDB studies; all nirmatrelvir/ensitrelvir fold comes from the 2 catalog-building studies (FDA23-NTV, Krismer23). This manifest makes any LATER study a provable independent test; it is the mechanism, not a number",
+  "scoring_path": "re-run scripts/sarscov2_mpro_validate.py, filter rx_fold to refs whose study date > lock_date (is_prospective_eligible), score the frozen catalog on that held-out set",
+  "what_this_is_not": "NOT an independent number today (cohort empty); NOT a frozen-surface change (read-only pin); NOT the AMR prospective-lock (separate cell, separate manifest)"
+}

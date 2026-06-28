@@ -24,7 +24,7 @@ operator-censoring-aware).
 |---|---|---|---|---|---|---|
 | 1 | **Author request — Clark/LSHTM** (Thorpe 2024 n=59 + Thawong 2025 n≈1826) | free email | CLEAN: genomes verified provdisjoint vs CRyPTIC (0 overlap); measured pDST exists, just not public per-isolate | minutes (email DRAFTED) | medium-high (genomes already public; ask is just the linked table) | **Send Email A** (`wiki/tb_goldset_author_emails_2026-06-22.md`) |
 | 2 | **Author request — PLOS-GPH 2025** (`PRJEB68143`, n=17 per-isolate measured) | free email | CLEAN if post-CRyPTIC (accession-check); n=17 = under-powered first cut, combine with #1 | minutes (draft below) | high (per-isolate DST already in supplement; just confirm accession↔R/S linkage) | send the PLOS-GPH draft (below) |
-| 3 | **ReSeqTB** (platform.reseqtb.org — WHO-adopted; "open access to public data" per 2024 C-Path) | free download (VERIFY liveness — DNS did not resolve 2026-06-27) | **RISK: likely CIRCULAR** — it is the WHO-catalogue's own knowledgebase family + CRyPTIC-era; accession-check + use only post-2022 non-CRyPTIC isolates with MEASURED (not expert-graded) pDST, else rule-vs-rule | hours | medium (gated on liveness + provenance filter) | confirm platform is live + whether per-isolate measured pDST+accession is downloadable |
+| ~~3~~ | ~~ReSeqTB~~ **DEFUNCT — DROPPED (verified 2026-06-27)** | — | — | — | — | `www.reseqtb.org` now 301-redirects to a commercial QC vendor (domain lapsed); `platform.reseqtb.org` DNS dead. No longer a public download source. (It also carried circularity risk — WHO-catalogue family + CRyPTIC-era — so no loss.) |
 | 4 | **NIAID TB Portals** (depot.tbportals.niaid.nih.gov) | DUA/application (genomic split open; clinical+phenotypic split access-gated) | CLEAN (clinical measured DST) once DUA granted | weeks (application) | medium | apply for the clinical/phenotypic data-use agreement |
 | 5 | **National TB ref-lab WGS programs** (UK HSA / NL RIVM / ZA NICD) | DUA / collaboration | CLEAN | weeks-months | low-medium | institutional contact |
 
@@ -39,7 +39,7 @@ only if #1/#2 go cold. A combined #1+#2 set (≈59+17, plus Thawong if granted) 
 |---|---|---|---|---|---|---|
 | 1 | **Future CoV-RDB releases** (hivdb/covid-drdb-payload) | free (passive) | becomes independent ONLY for studies added AFTER the frozen catalog's source set | nil (watch releases) | medium over time | re-run the census periodically; score any NEW held-out study |
 | 2 | **Author request — clinical nirmatrelvir-failure cohorts** (Mpro fold from treatment-failure isolates not in CoV-RDB) | free email | CLEAN (external clinical fold) | minutes-hours | low-medium (clinical Paxlovid resistance is rare → small) | contact authors of clinical nirmatrelvir-resistance reports for per-isolate Mpro mutation + measured fold |
-| 3 | **prospective-lock the SARS cell** | free, in-repo | CLEAN by time-construction | code (mirrors the AMR prospective-lock) | high (already-built pattern) | extend the prospective-lock manifest to the SARS Mpro surface |
+| 3 | **prospective-lock the SARS cell** ✅ **BUILT 2026-06-27** | free, in-repo | CLEAN by time-construction | done (`scripts/sarscov2_prospective_lock.py` + manifest + 4 tests; reuses the AMR `is_prospective_eligible`) | high | re-run `sarscov2_mpro_validate.py` filtered to refs dated > lock when a new study lands |
 
 **Recommended SARS order:** #1 is the zero-effort default (the v0 in-distribution number stands meanwhile);
 #3 (prospective-lock by time) is the only path that produces an *independent-by-construction* number without
@@ -65,10 +65,11 @@ INDEPENDENT isolate-level wet-lab label corpus turned a whole cell from in-distr
 
 ## The decision (USER authority — this is the wall)
 Pick which to pursue; everything upstream is done + ready:
-1. **Send the 2 free TB author emails (Clark + PLOS-GPH)** — highest yield, CLEAN, near-zero effort. ← recommended first move
-2. **Verify ReSeqTB liveness + provenance** — free bonus, but circularity-screen hard.
-3. **Apply for TB Portals DUA** — only if #1 goes cold (weeks of latency).
-4. **SARS: accept the in-distribution v0 + plan the prospective-lock-by-time code move** (no acquisition needed).
+Status after the 2026-06-27 sequential pass (moves 2 + 4 executed autonomously; 1 + 3 staged + parked at your authority):
+1. **Send the free TB author emails** — STAGED + recipient-verified (5 ready in `wiki/tb_goldset_author_emails_2026-06-22.md`: A Clark, B Ethiopia, C India, D TB-Portals-followup, E Elton/PLOS-GPH). ← **your send** (outward to academics = your authority). Recommended: A + E first.
+2. ~~Verify ReSeqTB~~ — **DONE: DEFUNCT, dropped** (domain lapsed).
+3. **Apply for TB Portals DUA** — depot confirmed auth-gated (HTTP 403); the application is your authority. Email D is the follow-up once submitted.
+4. **SARS prospective-lock-by-time** — **DONE: BUILT** (`scripts/sarscov2_prospective_lock.py`, manifest pinned, 4 tests). Accrues; v0 in-distribution number stands meanwhile.
 
 Nothing here is further code-closable without a label landing. The pipelines are built; the ask is the user's
 to send. See `wiki/tb_goldset_howto_2026-06-22.md` for the ingest-the-instant-it-lands runbook.

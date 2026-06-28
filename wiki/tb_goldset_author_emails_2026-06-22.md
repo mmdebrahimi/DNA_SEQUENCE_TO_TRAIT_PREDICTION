@@ -109,6 +109,33 @@ mmdebrahimi@gmail.com
 
 ---
 
+## Email E — PLOS Glob. Public Health 2025 (Elton et al., UCL; PRJEB68143) — added 2026-06-27
+**To:** linzy.elton@ucl.ac.uk  (Dr Linzy Elton, Centre for Clinical Microbiology, University College London —
+corresponding author, verified)
+**Cc:** t.mchugh@ucl.ac.uk  (Prof. Timothy D. McHugh, senior author — verify exact address before sending)
+**Subject:** Request: per-isolate measured RIF/INH DST linked to accessions (PRJEB68143)
+
+Dear Dr Elton,
+
+I'm developing and independently validating an open, deterministic *M. tuberculosis* drug-resistance caller
+(a transparent rule from the WHO 2023 catalogue) and need an independent, *measured-phenotype* benchmark —
+genomes scored against laboratory DST rather than another genome-based prediction (which would be circular).
+
+Your 2025 *PLOS Global Public Health* WGS drug-resistance/lineage pipeline study (ENA PRJEB68143) is a clean
+fit: you performed phenotypic DST and deposited the reads, and the supplement appears to link isolates to both
+sequencing accessions (S3) and phenotypic/genotypic results (S6). Would you be willing to share a simple
+per-isolate table linking each isolate's ENA accession to its measured rifampicin and isoniazid DST result
+(R/S, with method/critical concentration if handy)? A CSV/spreadsheet is perfect.
+
+It would let me report a genuinely independent accuracy figure for the tool; even your ~17-isolate set is a
+useful first-cut benchmark. I'm glad to acknowledge or cite as you prefer and to share results. Thank you.
+
+Best regards,
+Farshad
+mmdebrahimi@gmail.com
+
+---
+
 ### Notes
 - **Send Email A first** — it's fully addressed and covers the two cleanest datasets in one go (and Prof. Clark
   is a central figure in public TB genomics, so a positive reply may also point to other measured-DST sets).
