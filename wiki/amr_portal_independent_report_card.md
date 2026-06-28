@@ -1,21 +1,23 @@
 # AMR Portal — INDEPENDENT validation report card
 
-Standing roll-up of the frozen deterministic decoder scored on the EBI AMR Portal (CABBAGE) provenance-disjoint, measured-AST isolates. **21 SCORED_INDEPENDENT** + 4 UNDERPOWERED of 25 cells. NO aggregate headline (per-cell truth only).
+Standing roll-up of the frozen deterministic decoder scored on the EBI AMR Portal (CABBAGE) provenance-disjoint, measured-AST isolates. **23 SCORED_INDEPENDENT** + 4 UNDERPOWERED of 27 cells. NO aggregate headline (per-cell truth only).
 
 ## Honesty rails
 - **Independent at the ACCESSION level (upper bound).** Disjoint vs CRyPTIC + our tuning cohorts by BioSample/ERS/GCA; BioSample cross-archive resolution would only TIGHTEN it.
 - **Genotype = the AMR Portal's own AMRFinderPlus run** (different operator → more independent; AMRFinder-version a named caveat). **Phenotype = wet-lab MIC/disk** (non-circular).
 - **Rule applied UNCHANGED**; the frozen surface (`amr_rules.py` + `calibrated_amr_rules.json`) is byte-unchanged. NAMESPACE-SEPARATE from the NCBI-PD / HIV / external-cohort cards.
-- **Calibrated registry now independently validated:** `Salmonella|ciprofloxacin` (broad) + `Klebsiella|ciprofloxacin` (qrdr_point + oqxAB-exclusion) — both OPT-IN configs whose provenance asked for an independent cohort; this card IS that cohort. (Promoting them to DEFAULT mutates the sha-pinned frozen file → a deliberate ratify-first freeze-amendment, NOT done here.)
+- **Calibrated registry now independently validated:** `Salmonella|ciprofloxacin` (broad) + `Klebsiella|ciprofloxacin` (qrdr_point + oqxAB-exclusion) + `Campylobacter|ciprofloxacin` (qrdr_point; added 2026-06-28, C. jejuni acc 0.981 / C. coli 0.995) — OPT-IN configs whose provenance asked for an independent cohort; this card IS that cohort. (Promoting them to DEFAULT mutates the sha-pinned frozen file → a deliberate ratify-first freeze-amendment, NOT done here.)
 
 ## Cells (per-organism, measured AST, provenance-disjoint)
 | Organism | Drug | Tier | Routing | nR / nS | sens (95% CI) | spec (95% CI) | acc |
 |---|---|---|---|---|---|---|---|
-| Escherichia coli | ceftriaxone | SCORED_INDEPENDENT | drug_rule_default | 1544/7234 | 0.921 [0.906, 0.933] | 0.918 [0.912, 0.924] | 0.919 |
-| Escherichia coli | ciprofloxacin | SCORED_INDEPENDENT | drug_rule_default | 3068/12951 | 0.837 [0.823, 0.849] | 0.977 [0.974, 0.979] | 0.950 |
-| Escherichia coli | gentamicin | SCORED_INDEPENDENT | drug_rule_default | 1944/13762 | 0.927 [0.915, 0.938] | 0.995 [0.994, 0.996] | 0.987 |
-| Escherichia coli | meropenem | SCORED_INDEPENDENT | drug_rule_default | 98/12670 | 0.776 [0.683, 0.847] | 0.988 [0.986, 0.989] | 0.986 |
-| Escherichia coli | tetracycline | SCORED_INDEPENDENT | drug_rule_default | 3310/5113 | 0.970 [0.963, 0.975] | 0.987 [0.984, 0.990] | 0.980 |
+| Campylobacter coli | ciprofloxacin | SCORED_INDEPENDENT | calibrated_registry | 437/1331 | 0.982 [0.964, 0.991] | 1.000 [0.997, 1.000] | 0.995 |
+| Campylobacter jejuni | ciprofloxacin | SCORED_INDEPENDENT | calibrated_registry | 1533/4358 | 0.943 [0.931, 0.954] | 0.994 [0.991, 0.996] | 0.981 |
+| Escherichia coli | ceftriaxone | SCORED_INDEPENDENT | drug_rule_default | 1541/7228 | 0.921 [0.906, 0.933] | 0.918 [0.912, 0.924] | 0.919 |
+| Escherichia coli | ciprofloxacin | SCORED_INDEPENDENT | drug_rule_default | 3060/12947 | 0.837 [0.823, 0.850] | 0.977 [0.974, 0.979] | 0.950 |
+| Escherichia coli | gentamicin | SCORED_INDEPENDENT | drug_rule_default | 1941/13756 | 0.928 [0.915, 0.939] | 0.995 [0.994, 0.996] | 0.987 |
+| Escherichia coli | meropenem | SCORED_INDEPENDENT | drug_rule_default | 97/12664 | 0.773 [0.680, 0.845] | 0.988 [0.986, 0.990] | 0.986 |
+| Escherichia coli | tetracycline | SCORED_INDEPENDENT | drug_rule_default | 3308/5112 | 0.970 [0.964, 0.975] | 0.987 [0.984, 0.990] | 0.980 |
 | Klebsiella pneumoniae | ceftriaxone | SCORED_INDEPENDENT | drug_rule_default | 2496/874 | 0.964 [0.955, 0.970] | 0.905 [0.884, 0.923] | 0.948 |
 | Klebsiella pneumoniae | ciprofloxacin | SCORED_INDEPENDENT | calibrated_registry | 2970/1415 | 0.755 [0.739, 0.770] | 0.994 [0.989, 0.997] | 0.832 |
 | Klebsiella pneumoniae | gentamicin | SCORED_INDEPENDENT | drug_rule_default | 2026/2904 | 0.928 [0.916, 0.939] | 0.963 [0.955, 0.969] | 0.949 |

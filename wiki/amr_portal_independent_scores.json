@@ -237,24 +237,24 @@
     "organism": "Escherichia coli",
     "drug": "gentamicin",
     "confusion": {
-      "TP": 1803,
+      "TP": 1801,
       "FP": 64,
-      "TN": 13698,
-      "FN": 141
+      "TN": 13692,
+      "FN": 140
     },
-    "n_R": 1944,
-    "n_S": 13762,
-    "sens": 0.9274691358024691,
-    "spec": 0.9953495131521581,
-    "accuracy": 0.9869476633133835,
+    "n_R": 1941,
+    "n_S": 13756,
+    "sens": 0.9278722308088614,
+    "spec": 0.9953474847339343,
+    "accuracy": 0.987003886092884,
     "n_indeterminate": 0,
     "sens_wilson95": [
-      0.9150769003651906,
-      0.9381752326624642
+      0.9154983880638087,
+      0.9385557415887039
     ],
     "spec_wilson95": [
-      0.9940663431670976,
-      0.9963562111647785
+      0.9940637569367519,
+      0.9963546211352747
     ],
     "powered": true,
     "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
@@ -263,24 +263,50 @@
     "organism": "Escherichia coli",
     "drug": "ciprofloxacin",
     "confusion": {
-      "TP": 2567,
-      "FP": 302,
-      "TN": 12649,
-      "FN": 501
+      "TP": 2561,
+      "FP": 301,
+      "TN": 12646,
+      "FN": 499
     },
-    "n_R": 3068,
-    "n_S": 12951,
-    "sens": 0.8367014341590613,
-    "spec": 0.9766813373484673,
-    "accuracy": 0.9498720269679756,
+    "n_R": 3060,
+    "n_S": 12947,
+    "sens": 0.8369281045751634,
+    "spec": 0.9767513709739708,
+    "accuracy": 0.9500218654338727,
     "n_indeterminate": 0,
     "sens_wilson95": [
-      0.8232018490375462,
-      0.8493588715412753
+      0.8234173572185347,
+      0.8495939368379205
     ],
     "spec_wilson95": [
-      0.9739373692358212,
-      0.9791425974076923
+      0.9740107415603735,
+      0.9792091634688102
+    ],
+    "powered": true,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  },
+  "Campylobacter jejuni|ciprofloxacin": {
+    "organism": "Campylobacter jejuni",
+    "drug": "ciprofloxacin",
+    "confusion": {
+      "TP": 1446,
+      "FP": 27,
+      "TN": 4331,
+      "FN": 87
+    },
+    "n_R": 1533,
+    "n_S": 4358,
+    "sens": 0.9432485322896281,
+    "spec": 0.9938044974759064,
+    "accuracy": 0.9806484467832286,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.9305200183742982,
+      0.9537610942660676
+    ],
+    "spec_wilson95": [
+      0.9910006453104718,
+      0.9957385338472491
     ],
     "powered": true,
     "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
@@ -289,24 +315,24 @@
     "organism": "Escherichia coli",
     "drug": "meropenem",
     "confusion": {
-      "TP": 76,
-      "FP": 156,
-      "TN": 12514,
+      "TP": 75,
+      "FP": 155,
+      "TN": 12509,
       "FN": 22
     },
-    "n_R": 98,
-    "n_S": 12670,
-    "sens": 0.7755102040816326,
-    "spec": 0.987687450670876,
-    "accuracy": 0.9860588972431078,
+    "n_R": 97,
+    "n_S": 12664,
+    "sens": 0.7731958762886598,
+    "spec": 0.9877605811749842,
+    "accuracy": 0.9861296136666405,
     "n_indeterminate": 0,
     "sens_wilson95": [
-      0.6834165090713726,
-      0.8468186796923545
+      0.6803937345246491,
+      0.8451830115801331
     ],
     "spec_wilson95": [
-      0.9856140127649877,
-      0.9894652402375115
+      0.9856922146949104,
+      0.9895331149303038
     ],
     "powered": true,
     "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
@@ -315,24 +341,24 @@
     "organism": "Escherichia coli",
     "drug": "tetracycline",
     "confusion": {
-      "TP": 3210,
+      "TP": 3209,
       "FP": 66,
-      "TN": 5047,
-      "FN": 100
+      "TN": 5046,
+      "FN": 99
     },
-    "n_R": 3310,
-    "n_S": 5113,
-    "sens": 0.9697885196374623,
-    "spec": 0.9870917269704674,
-    "accuracy": 0.980292057461712,
+    "n_R": 3308,
+    "n_S": 5112,
+    "sens": 0.9700725513905684,
+    "spec": 0.9870892018779343,
+    "accuracy": 0.9804038004750594,
     "n_indeterminate": 0,
     "sens_wilson95": [
-      0.963390587107498,
-      0.975097239226748
+      0.963698650096065,
+      0.9753559230453558
     ],
     "spec_wilson95": [
-      0.9836115715073486,
-      0.9898404892326205
+      0.9836083719670602,
+      0.9898384994137893
     ],
     "powered": true,
     "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
@@ -341,24 +367,24 @@
     "organism": "Escherichia coli",
     "drug": "ceftriaxone",
     "confusion": {
-      "TP": 1422,
+      "TP": 1419,
       "FP": 591,
-      "TN": 6643,
+      "TN": 6637,
       "FN": 122
     },
-    "n_R": 1544,
-    "n_S": 7234,
-    "sens": 0.9209844559585493,
-    "spec": 0.9183024606027095,
-    "accuracy": 0.9187742082478925,
+    "n_R": 1541,
+    "n_S": 7228,
+    "sens": 0.9208306294613887,
+    "spec": 0.918234643054787,
+    "accuracy": 0.9186908427414756,
     "n_indeterminate": 0,
     "sens_wilson95": [
-      0.9064598003392054,
-      0.9334194224443148
+      0.9062792686591787,
+      0.9332890081143106
     ],
     "spec_wilson95": [
-      0.9117662514496618,
-      0.9243946283352731
+      0.9116932800082473,
+      0.924331668325798
     ],
     "powered": true,
     "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
@@ -384,6 +410,32 @@
       1.0
     ],
     "powered": false,
+    "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
+  },
+  "Campylobacter coli|ciprofloxacin": {
+    "organism": "Campylobacter coli",
+    "drug": "ciprofloxacin",
+    "confusion": {
+      "TP": 429,
+      "FP": 0,
+      "TN": 1331,
+      "FN": 8
+    },
+    "n_R": 437,
+    "n_S": 1331,
+    "sens": 0.9816933638443935,
+    "spec": 1.0,
+    "accuracy": 0.995475113122172,
+    "n_indeterminate": 0,
+    "sens_wilson95": [
+      0.9642962341522144,
+      0.9906953092955907
+    ],
+    "spec_wilson95": [
+      0.9971220555307836,
+      1.0
+    ],
+    "powered": true,
     "status": "PROVENANCE_DISJOINT_INDEPENDENT_ACCESSION_LEVEL"
   },
   "Shigella sonnei|ciprofloxacin": {

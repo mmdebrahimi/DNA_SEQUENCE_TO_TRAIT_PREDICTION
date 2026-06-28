@@ -46,10 +46,21 @@ GENO_PARQUET = Path("D:/dna_decode_cache/data files donwload/amr_portal/genotype
 RULE_ORGANISM = {
     "Escherichia coli": None, "Shigella sonnei": None, "Shigella flexneri": None,
     "Klebsiella pneumoniae": "Klebsiella", "Salmonella enterica": "Salmonella",
+    # Campylobacter: routes to the endorsed calibrated cipro rule (qrdr_point, LOO balacc 1.0); added
+    # 2026-06-28 (it has a deployed rule + is SCORED on the NCBI-PD card, and AMR Portal has it powered).
+    "Campylobacter jejuni": "Campylobacter", "Campylobacter coli": "Campylobacter",
 }
 _DRUGS = ("ciprofloxacin", "ceftriaxone", "tetracycline", "gentamicin", "meropenem")
-# the frozen bacterial cells across organisms. TB uses a different rule (WHO catalogue on VCF) -> not here.
-CELLS = [(org, drug) for org in RULE_ORGANISM for drug in _DRUGS]
+# Scope contract (2026-06-28): the 5 deployed-default/calibrated organisms get ALL 5 drug rules;
+# Campylobacter is endorsed for ciprofloxacin ONLY (its sole calibrated registry rule). The generic
+# DRUG_RULE default for cef/mero/tet/gent is E. coli-derived + NOT validated for Campylobacter, so it is
+# NOT sprayed across it (the intrinsic-gene over-call guardrail). TB uses a different rule (WHO catalogue
+# on VCF) -> scored separately, not here.
+_FULL_DRUG_ORGS = ("Escherichia coli", "Shigella sonnei", "Shigella flexneri",
+                   "Klebsiella pneumoniae", "Salmonella enterica")
+_CIPRO_ONLY_ORGS = ("Campylobacter jejuni", "Campylobacter coli")
+CELLS = ([(org, drug) for org in _FULL_DRUG_ORGS for drug in _DRUGS]
+         + [(org, "ciprofloxacin") for org in _CIPRO_ONLY_ORGS])
 _MAIN_TSV_HEADER = "Element symbol\tMethod\tClass\tSubclass\tElement name\t% Identity to reference"
 
 

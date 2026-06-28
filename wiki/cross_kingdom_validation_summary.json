@@ -15,7 +15,7 @@
       "kingdom": "Bacteria",
       "surface": "EBI AMR Portal independent (measured AST)",
       "independence": "BioSample/GCA disjoint vs CRyPTIC + tuning cohorts; measured wet-lab AST (non-circular); E.coli/Salmonella/Klebsiella/Shigella 0.83\u20130.995 acc",
-      "summary": "21 SCORED_INDEPENDENT / 25 cells",
+      "summary": "23 SCORED_INDEPENDENT / 27 cells",
       "card": "wiki/amr_portal_independent_report_card.md"
     },
     {

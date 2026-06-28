@@ -18,12 +18,28 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
 SCORES = REPO / "wiki" / "amr_portal_independent_scores.json"
 OUT_MD = REPO / "wiki" / "amr_portal_independent_report_card.md"
 OUT_JSON = REPO / "wiki" / "amr_portal_independent_report_card.json"
 
-# which cells used the OPT-IN calibrated registry (vs the DRUG_RULE default)
-_CALIBRATED = {("Klebsiella pneumoniae", "ciprofloxacin"), ("Salmonella enterica", "ciprofloxacin")}
+def _calibrated_keys() -> set[str]:
+    """The set of `<registry_organism>|<drug>` keys whose verdict is CALIBRATED in the frozen rules.
+    Data-driven (NOT a hardcoded cell list, which drifts as cells are added — 2026-06-28: Campylobacter
+    cipro was mislabeled drug_rule_default by the old hand-list)."""
+    import json as _json
+    rules = _json.loads((REPO / "dna_decode" / "data" / "calibrated_amr_rules.json").read_text(encoding="utf-8"))
+    rules = rules.get("rules", rules)
+    return {k for k, v in rules.items() if isinstance(v, dict) and v.get("verdict") == "CALIBRATED"}
+
+
+def _is_calibrated(org: str, drug: str, calibrated_keys: set[str]) -> bool:
+    """A cell is calibrated-routed iff its registry organism|drug is a CALIBRATED key. The scorer's
+    RULE_ORGANISM maps the AMR-Portal organism name -> the call_resistance registry organism."""
+    from scripts.amr_portal_score_independent import RULE_ORGANISM
+    reg = RULE_ORGANISM.get(org)
+    return bool(reg) and f"{reg}|{drug}" in calibrated_keys
 
 
 def _fmt(x):
@@ -36,11 +52,12 @@ def _ci(c):
 
 def build(scores: dict) -> dict:
     rows = []
+    calibrated_keys = _calibrated_keys()
     for key, r in scores.items():
         org, drug = r["organism"], r["drug"]
         powered = bool(r.get("powered"))
         tier = "SCORED_INDEPENDENT" if powered else "UNDERPOWERED"
-        routing = "calibrated_registry" if (org, drug) in _CALIBRATED else "drug_rule_default"
+        routing = "calibrated_registry" if _is_calibrated(org, drug, calibrated_keys) else "drug_rule_default"
         rows.append({"organism": org, "drug": drug, "tier": tier, "routing": routing,
                      "n_R": r["n_R"], "n_S": r["n_S"], "sens": r["sens"], "spec": r["spec"],
                      "accuracy": r["accuracy"], "sens_ci95": r.get("sens_wilson95"),
@@ -70,9 +87,10 @@ def render_md(card: dict) -> str:
          "- **Rule applied UNCHANGED**; the frozen surface (`amr_rules.py` + `calibrated_amr_rules.json`) is "
          "byte-unchanged. NAMESPACE-SEPARATE from the NCBI-PD / HIV / external-cohort cards.",
          "- **Calibrated registry now independently validated:** `Salmonella|ciprofloxacin` (broad) + "
-         "`Klebsiella|ciprofloxacin` (qrdr_point + oqxAB-exclusion) — both OPT-IN configs whose provenance "
-         "asked for an independent cohort; this card IS that cohort. (Promoting them to DEFAULT mutates the "
-         "sha-pinned frozen file → a deliberate ratify-first freeze-amendment, NOT done here.)",
+         "`Klebsiella|ciprofloxacin` (qrdr_point + oqxAB-exclusion) + `Campylobacter|ciprofloxacin` "
+         "(qrdr_point; added 2026-06-28, C. jejuni acc 0.981 / C. coli 0.995) — OPT-IN configs whose "
+         "provenance asked for an independent cohort; this card IS that cohort. (Promoting them to DEFAULT "
+         "mutates the sha-pinned frozen file → a deliberate ratify-first freeze-amendment, NOT done here.)",
          "",
          "## Cells (per-organism, measured AST, provenance-disjoint)",
          "| Organism | Drug | Tier | Routing | nR / nS | sens (95% CI) | spec (95% CI) | acc |",
