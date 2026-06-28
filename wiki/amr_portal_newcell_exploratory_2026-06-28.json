@@ -1,0 +1,166 @@
+{
+  "_schema": "amr-portal-newcell-exploratory-v1",
+  "date": "2026-06-28",
+  "tier": "exploratory-new-cell-curation (NOT a deployed claim; NOT in the deployed independent card)",
+  "transfer_basis": "ciprofloxacin qrdr_point counts CONSERVED gyrA/parC/parE target-site point mutations -> the one drug whose rule legitimately transfers across Gram-negatives (the intrinsic-gene guardrail blocks acquired-gene drugs from such transfer)",
+  "promotion_note": "a TRANSFERS_CLEAN powered cell is a CANDIDATE for a calibrated-registry promotion = a USER-ratified frozen-surface amendment (sha-pinned file); NOT auto-promoted",
+  "n_candidates": 7,
+  "n_transfers_clean_powered": 3,
+  "cells": {
+    "Staphylococcus aureus|ciprofloxacin": {
+      "organism": "Staphylococcus aureus",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "STRESS: Gram-positive grlA/gyrA gene-naming differs -> may under-call",
+      "n_R": 1563,
+      "n_S": 2095,
+      "n_indeterminate": 0,
+      "sens": 0.944,
+      "spec": 0.892,
+      "accuracy": 0.914,
+      "sens_wilson95": [
+        0.9311448460320181,
+        0.9540754595815167
+      ],
+      "spec_wilson95": [
+        0.8776127069000947,
+        0.9042471533199428
+      ],
+      "powered": true,
+      "verdict": "TRANSFERS_CLEAN"
+    },
+    "Neisseria gonorrhoeae|ciprofloxacin": {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "QRDR gyrA S91F/D95 + parC conserved; huge N",
+      "n_R": 5618,
+      "n_S": 6406,
+      "n_indeterminate": 0,
+      "sens": 0.846,
+      "spec": 0.993,
+      "accuracy": 0.924,
+      "sens_wilson95": [
+        0.8361741903503973,
+        0.855058376572157
+      ],
+      "spec_wilson95": [
+        0.9906140162048773,
+        0.9947457468195318
+      ],
+      "powered": true,
+      "verdict": "TRANSFERS_CLEAN"
+    },
+    "Pseudomonas aeruginosa|ciprofloxacin": {
+      "organism": "Pseudomonas aeruginosa",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "STRESS: efflux(MexAB)-driven R w/o 2 QRDR muts -> under-call expected",
+      "n_R": 797,
+      "n_S": 434,
+      "n_indeterminate": 0,
+      "sens": 0.577,
+      "spec": 0.991,
+      "accuracy": 0.723,
+      "sens_wilson95": [
+        0.5425770716805274,
+        0.6110113532963968
+      ],
+      "spec_wilson95": [
+        0.9765443684274938,
+        0.9964102343329565
+      ],
+      "powered": true,
+      "verdict": "TRANSFERS_PARTIAL"
+    },
+    "Acinetobacter baumannii|ciprofloxacin": {
+      "organism": "Acinetobacter baumannii",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "QRDR gyrA S83L conserved BUT S-poor cohort (221S)",
+      "n_R": 1276,
+      "n_S": 221,
+      "n_indeterminate": 0,
+      "sens": 0.904,
+      "spec": 0.995,
+      "accuracy": 0.918,
+      "sens_wilson95": [
+        0.8870186906130663,
+        0.9193310951729247
+      ],
+      "spec_wilson95": [
+        0.9748182228803925,
+        0.9992008198590294
+      ],
+      "powered": true,
+      "verdict": "TRANSFERS_CLEAN"
+    },
+    "Enterobacter cloacae|ciprofloxacin": {
+      "organism": "Enterobacter cloacae",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "Enterobacterale; QRDR gyrA/parC conserved (E.coli-like)",
+      "n_R": 87,
+      "n_S": 48,
+      "n_indeterminate": 0,
+      "sens": 0.264,
+      "spec": 1.0,
+      "accuracy": 0.526,
+      "sens_wilson95": [
+        0.18309896615432053,
+        0.3655659626888528
+      ],
+      "spec_wilson95": [
+        0.9258973488472576,
+        0.9999999999999999
+      ],
+      "powered": true,
+      "verdict": "NEEDS_CURATION"
+    },
+    "Serratia marcescens|ciprofloxacin": {
+      "organism": "Serratia marcescens",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "Enterobacterale; QRDR conserved (small N)",
+      "n_R": 14,
+      "n_S": 36,
+      "n_indeterminate": 0,
+      "sens": 0.0,
+      "spec": 1.0,
+      "accuracy": 0.72,
+      "sens_wilson95": [
+        0.0,
+        0.21531701192718142
+      ],
+      "spec_wilson95": [
+        0.9035781695514236,
+        1.0
+      ],
+      "powered": true,
+      "verdict": "NEEDS_CURATION"
+    },
+    "Enterobacter hormaechei|ciprofloxacin": {
+      "organism": "Enterobacter hormaechei",
+      "drug": "ciprofloxacin",
+      "rule": "qrdr_point (DRUG_RULE default)",
+      "rationale": "Enterobacterale; QRDR conserved",
+      "n_R": 29,
+      "n_S": 52,
+      "n_indeterminate": 0,
+      "sens": 0.0,
+      "spec": 1.0,
+      "accuracy": 0.642,
+      "sens_wilson95": [
+        0.0,
+        0.11697359446555587
+      ],
+      "spec_wilson95": [
+        0.9312054095871178,
+        1.0
+      ],
+      "powered": true,
+      "verdict": "NEEDS_CURATION"
+    }
+  },
+  "frozen_surface_changed": false
+}
