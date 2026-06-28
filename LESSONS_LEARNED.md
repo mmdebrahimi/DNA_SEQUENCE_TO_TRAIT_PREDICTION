@@ -2,6 +2,10 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-06-27
+
+- **CI failed where local passed = environment delta (gitignored data + CRLF/LF), not a code bug.** The `tests` GitHub Actions workflow failed on every push (emailing the user) while the full suite passed locally. Two root causes, both environmental: (A) 10 tests hard-failed with `FileNotFoundError` on gitignored `data/` files the fresh CI checkout lacks — fix = `pytest.mark.skipif(not path.exists())` (the repo's existing convention for data-gated tests; don't commit multi-MB data just to green CI). (B) `calibrated_amr_rules.json` was CRLF in the Windows working tree (its sha = the leak-guard pin) but LF in the git blob (what ubuntu CI checks out) → frozen-hash mismatch; fix = re-pin to the canonical repo-blob LF hash (frozen content byte-unchanged — blob was already LF, the pin was stale) + `.gitattributes eol=lf` on every sha-pinned integrity file so a Windows checkout can't drift the hash again. Diagnose CI-only failures with `gh run view --log-failed`, not by re-running locally (local can't reproduce the runner's empty data dir / LF checkout).
+
 ## 2026-05-11 / 2026-05-12
 
 - **Inter-wave `/brainstorm` quality gates catch real contract-violation bugs.** Three brainstorm rounds (post-Wave-1, post-Wave-2, post-Wave-3) each surfaced 3 grounded issues that would have compounded into Wave N+1. Pattern repeats: `/execute-plan` agents fill plan interfaces but under-specify integration boundaries. Run `/brainstorm` between every wave; don't skip "to save time."
