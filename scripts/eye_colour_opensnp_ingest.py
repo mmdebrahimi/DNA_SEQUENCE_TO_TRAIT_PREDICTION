@@ -119,6 +119,37 @@ def _rs_from_member(zf: zipfile.ZipFile, member: str, rsid: str = EYE_COLOUR_LOC
     return None
 
 
+def rsids_from_member(zf: zipfile.ZipFile, member: str, rsids: set[str]) -> dict[str, str]:
+    """One-pass extraction of MANY rsids' genotypes from a DTC member (vs streaming once per rsid).
+
+    Returns {rsid: 2-allele genotype} for those found. Handles 23andMe (rsid\\tchrom\\tpos\\tgenotype),
+    AncestryDNA (rsid\\tchrom\\tpos\\tallele1\\tallele2), and quoted/comma variants. Used for the IrisPlex
+    6-SNP v0.1 (extracting all 6 pigmentation SNPs in a single stream of the member)."""
+    out: dict[str, str] = {}
+    want = set(rsids)
+    try:
+        with zf.open(member) as fh:
+            for bline in fh:
+                if not want:
+                    break
+                line = bline.decode("utf-8", errors="replace")
+                if not line or line[0] == "#" or line.startswith("rsid") or line.startswith('"rsid'):
+                    continue
+                parts = line.rstrip("\n").replace('"', "").replace(",", "\t").split("\t")
+                if not parts:
+                    continue
+                rid = parts[0].strip()
+                if rid in want:
+                    if len(parts) >= 5:
+                        out[rid] = (parts[3].strip() + parts[4].strip()).upper()
+                    elif len(parts) >= 4:
+                        out[rid] = parts[3].strip().upper()
+                    want.discard(rid)
+    except (KeyError, zipfile.BadZipFile, OSError):
+        return out
+    return out
+
+
 def run(zip_path: Path, limit: int | None = None, inspect: bool = False) -> dict:
     if not zip_path.exists():
         return {"status": "ZIP_NOT_PRESENT", "zip": str(zip_path),
