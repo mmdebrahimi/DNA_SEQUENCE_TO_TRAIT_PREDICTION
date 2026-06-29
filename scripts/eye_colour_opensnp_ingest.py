@@ -41,6 +41,24 @@ def _find_phenotype_member(zf: zipfile.ZipFile) -> str | None:
     return sorted(cands, key=len)[0] if cands else None
 
 
+def _pick_eye_column(hl: list[str]) -> int | None:
+    """Pick the free-text eye-COLOUR column, not a decoy.
+
+    The real OpenSNP 2017 phenotype CSV has SIX 'eye'-containing headers — e.g. 'Eye pigmentation'
+    (appears BEFORE 'Eye color'), 'Hair and eye color', "Mother's eye color". A naive first-'eye'
+    match grabs 'Eye pigmentation' (wrong). Prefer an exact 'eye colo(u)r', then a clean
+    colour-bearing 'eye' header (excluding hair/mother/relatives), then any 'eye' header.
+    """
+    exact = {"eye color", "eye colour", "eye colors", "eye colours"}
+    for i, h in enumerate(hl):
+        if h.strip() in exact:
+            return i
+    for i, h in enumerate(hl):
+        if "eye" in h and ("color" in h or "colour" in h) and "hair" not in h and "mother" not in h:
+            return i
+    return next((i for i, h in enumerate(hl) if "eye" in h), None)
+
+
 def _eye_colour_by_user(zf: zipfile.ZipFile, pheno_member: str) -> dict[str, str]:
     """Parse the OpenSNP phenotype CSV → {user_id: raw eye-colour string} for users with a value.
     OpenSNP CSV is ';'-separated; one row per user; a column whose header contains 'eye'."""
@@ -51,7 +69,7 @@ def _eye_colour_by_user(zf: zipfile.ZipFile, pheno_member: str) -> dict[str, str
     header = next(rdr, [])
     hl = [h.strip().lower() for h in header]
     uid_i = next((i for i, h in enumerate(hl) if h in ("user_id", "id", "user")), 0)
-    eye_i = next((i for i, h in enumerate(hl) if "eye" in h), None)
+    eye_i = _pick_eye_column(hl)
     if eye_i is None:
         return {}
     out = {}

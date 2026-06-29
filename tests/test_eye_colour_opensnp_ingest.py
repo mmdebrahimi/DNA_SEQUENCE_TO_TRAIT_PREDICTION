@@ -55,3 +55,15 @@ def test_ingest_scores_synthetic_zip(tmp_path):
 def test_zip_absent_is_honest(tmp_path):
     res = run(tmp_path / "nope.zip")
     assert res["status"] == "ZIP_NOT_PRESENT"
+
+
+def test_pick_eye_column_prefers_exact_over_decoy():
+    """Real OpenSNP-2017 regression: 'Eye pigmentation' precedes 'Eye color'; a naive first-'eye'
+    match grabs the decoy. Pin that we select the exact eye-colour column (caught by R3 inspect)."""
+    from scripts.eye_colour_opensnp_ingest import _pick_eye_column
+    hdr = ["user_id", "date_of_birth", "chrom_sex", "Retrognathia (Marfan Syndrome)",
+           "eye pigmentation ", "vegetarianism", "form of foot", "eye color",
+           "hair and eye color brown", "mother's eye color"]
+    assert _pick_eye_column(hdr) == 7              # 'eye color', NOT index 4 'eye pigmentation'
+    assert _pick_eye_column(["eye colour"]) == 0   # British spelling
+    assert _pick_eye_column(["no relevant column"]) is None

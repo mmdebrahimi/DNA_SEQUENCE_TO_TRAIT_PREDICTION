@@ -1,0 +1,42 @@
+{
+  "status": "SCORED",
+  "schema": "eye-colour-opensnp-archive-v1",
+  "date": "2026-06-28",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08); live site deleted 2025-04",
+  "rule": "rs12913832 single-locus v0 (strand-agnostic)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy)",
+  "n_users_eye_labelled": 923,
+  "n_binary_scored": 298,
+  "n_other_excluded": 377,
+  "n_no_genotype_file": 1,
+  "n_rs12913832_missing": 93,
+  "confusion_brown_positive": {
+    "TP": 100,
+    "FP": 0,
+    "TN": 196,
+    "FN": 2
+  },
+  "accuracy": 0.993,
+  "brown_sens": 0.98,
+  "blue_spec": 1.0,
+  "strata_pred_by_label": {
+    "blue": {
+      "blue": 196,
+      "brown": 0,
+      "intermediate": 6,
+      "indet": 1
+    },
+    "brown": {
+      "blue": 2,
+      "brown": 100,
+      "intermediate": 146,
+      "indet": 1
+    }
+  },
+  "caveats": [
+    "self-reported label (not a lab assay)",
+    "ancestry-confounded: rs12913832 European-calibrated; within-ancestry split = v0.1 (deferred)",
+    "intermediate/green/hazel excluded from the binary (reported in strata)",
+    "2017 dump (the last archived snapshot); single-locus v0 (IrisPlex 6-SNP = v0.1)"
+  ]
+}

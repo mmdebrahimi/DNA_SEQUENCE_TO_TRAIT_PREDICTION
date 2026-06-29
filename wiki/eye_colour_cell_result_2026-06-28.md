@@ -1,5 +1,12 @@
 # Eye-colour decoder — first off-pathogen cell (built) + OpenSNP label-source finding (2026-06-28)
 
+> **UPDATE 2026-06-28 (later same day): VALIDATED ON REAL DATA.** The user ratified downloading the archived
+> OpenSNP dump (deliberate, colleague-reviewed). The ~20 GB 2017 mirror was fetched to D:, and the rs12913832
+> v0 rule scored **accuracy 0.993 / brown-sens 0.98 / blue-spec 1.0 on N=298** binary-scored users — on the
+> DECISIVE (homozygote) subset, with honest abstention on heterozygotes. The "live ethical label source
+> needed" disposition below is SUPERSEDED for OpenSNP. Full result: `wiki/eye_colour_opensnp_validation_2026-06-28.md`.
+> The ethics framing (founders deleted it; this is the archive) stands and is recorded honestly.
+
 The wide-net scan's flagship (`wiki/wide_net_gene_phenotype_source_scan_2026-06-28.md`): generalize the
 deterministic gene→trait decoder from AMR to a human visible trait. **The RULE side is built, sourced, and
 tested; the live label source (OpenSNP) turned out to be DEAD + ethically-withdrawn** — an external+ethical
