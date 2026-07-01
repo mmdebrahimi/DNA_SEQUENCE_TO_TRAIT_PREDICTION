@@ -9,9 +9,14 @@ philosophy.
 
 COEFFICIENTS ARE SOURCED, NOT FABRICATED (load-bearing rail). Pulled from the brianbhsu/eye-color open
 implementation's `input/input.txt` (github.com/brianbhsu/eye-color), which encodes the published Walsh
-HIrisPlex eye model; values match the canonical published model (rs12913832 brown beta 5.41 / intermediate
-beta 3.16 is its signature). Structure: blue = reference category; two equations (intermediate, brown);
-each SNP coded additively as the count of its effect allele.
+HIrisPlex eye model; values are PUBLISHED-MODEL-CONSISTENT (rs12913832 brown beta 5.41 / intermediate beta
+3.16 is its signature) but were NOT directly cross-checked against the primary Walsh supplementary table or
+the official HIrisPlex-S webtool output -- so call this "the IrisPlex model FORM with published-consistent
+coefficients sourced via an open implementation", NOT "the deployed forensic model" verbatim (a primary-table
+checksum + one official example-input/expected-output would upgrade the provenance). Structure: blue =
+reference category; two equations (intermediate, brown); each SNP coded additively as the count of its
+effect allele. NOTE ON OPERATING MODE: `category_at_0.7` is the DEPLOYED forensic decision rule (abstains
+below 0.7); `prediction` (argmax) is a more-permissive always-call variant. Validation should report both.
 
 STRAND HANDLING: 5 of 6 SNPs are non-palindromic (A/G, C/T, G/T) → strand-agnostic effect-allele counting
 ({effect, complement(effect)}) is unambiguous, matching v0's proven rs12913832 strand-agnosticism. The

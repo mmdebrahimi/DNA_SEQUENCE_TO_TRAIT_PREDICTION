@@ -26,6 +26,8 @@ from scripts.eye_colour_pgp_validate import (  # noqa: E402
     SURVEY_URL, _get, fetch_snps, profile_genotype_file,
 )
 
+# PRIVACY / RETENTION: reuses the M3 PGP cache (D:/dna_decode_cache/pgp/, OUTSIDE the repo, never
+# git-tracked; CC0 open-consent source; local-only; purge with `rm -rf D:/dna_decode_cache/pgp/`).
 RS = "rs8176719"
 
 

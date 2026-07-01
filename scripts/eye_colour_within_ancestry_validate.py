@@ -111,15 +111,18 @@ def run(zip_path: Path) -> dict:
         "v0_within_european": eur,
         "v0_non_european": _accuracy(strata["NON_EUROPEAN"]),
         "v0_mixed_unknown": _accuracy(strata["MIXED_UNKNOWN"]),
-        "confound_verdict": "MECHANISTIC_HOLDS_WITHIN_EUROPEAN" if disentangled else
+        "confound_verdict": "CONFOUND_REDUCED_NOT_RESOLVED" if disentangled else
                             ("UNDERPOWERED_WITHIN_EUROPEAN" if eur["n_binary"] < 30 else "ACCURACY_DROPS_WITHIN_EUROPEAN"),
         "interpretation": (
-            "within-European accuracy ~= full-cohort accuracy -> rs12913832 predicts eye colour by MECHANISM, "
-            "not merely by tagging European ancestry (the confound does not drive the result)."
+            "within-European accuracy ~= full-cohort accuracy -> CONSISTENT WITH a mechanistic signal within "
+            "self-reported Europeans; ancestry confounding is REDUCED, NOT RESOLVED (n small, self-report "
+            "keyword proxy not genetic ancestry, homozygote binary calls only). A genome-wide/AIM ancestry "
+            "inference + CIs would be needed to resolve it."
             if disentangled else
-            "within-European stratum underpowered or accuracy drops -- see n_binary; cannot fully disentangle."
+            "within-European stratum underpowered or accuracy drops -- see n_binary; cannot disentangle."
         ),
         "caveats": [
+            "verdict is REDUCED-NOT-RESOLVED: consistent-with-mechanism, not proof the confound is absent",
             "self-reported ancestry via keyword proxy (not genetic ancestry inference)",
             "MIXED/ambiguous/Ashkenazi excluded from EUROPEAN/NON_EUROPEAN strata",
             "OpenSNP is Euro-dominated -> NON_EUROPEAN stratum is small (expected; that IS the point)",

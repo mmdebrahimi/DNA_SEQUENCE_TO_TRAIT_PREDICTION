@@ -40,9 +40,13 @@ def test_irisplex_harness_scores_and_rescues(tmp_path):
     assert res["status"] == "SCORED"
     assert res["n_complete_case_scored"] == 3          # users 1,2,3 (4 is green->other)
     assert res["n_other_excluded"] == 1
-    # full-set v0.1 binary: blue->blue, brown->brown, het(brown)->brown = 3/3
-    fb = res["v01_full_set_binary"]
+    # full-set v0.1 binary (argmax): blue->blue, brown->brown, het(brown)->brown = 3/3
+    fb = res["v01_full_set_binary_argmax"]
     assert fb["n"] == 3 and fb["accuracy"] == 1.0
+    # deployed 0.7-threshold mode present + never mis-calls (abstains below 0.7)
+    thr = res["v01_deployed_threshold_0.7"]
+    assert thr["FP"] == 0 and thr["FN"] == 0
+    assert "n_undefined_or_intermediate_abstained" in thr
     # the rescue: user3 (AG) is abstained by v0, resolved correctly by v0.1
     r = res["heterozygote_rescue"]
     assert r["n_v0_abstained"] == 1

@@ -1,5 +1,9 @@
 # M4 — ABO blood-type (O vs non-O) decoder on PGP: serological cell, underpowered pilot (2026-06-30)
 
+> **TIER: PILOT / DEMO** (self-reported label, n=6). Per `wiki/off_pathogen_cell_admission_gate_2026-07-01.md`:
+> a demo-tier integration result (deterministic rule hosts a serological trait), NOT a measured-phenotype
+> validation. Any future ABO A/B extension or powered run must clear the label-first admission gate.
+
 M4 extends the deterministic gene→trait decoder beyond pigmentation to a SEROLOGICAL trait: ABO blood group.
 Deterministic sourced rule (rs8176719 c.261delG homozygous deletion → blood type O) × free independent
 self-reported blood type (PGP survey 19). Sidecar: `wiki/abo_pgp_validation_2026-06-30.json`.

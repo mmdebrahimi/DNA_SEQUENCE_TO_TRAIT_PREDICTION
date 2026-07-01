@@ -67,6 +67,10 @@ def run(zip_path: Path, limit: int | None = None) -> dict:
     rescue_v01_correct = 0
     rescue_breakdown = {"brown": {"brown": 0, "blue": 0, "intermediate": 0},
                         "blue": {"brown": 0, "blue": 0, "intermediate": 0}}
+    # the DEPLOYED forensic operating mode: 0.7-threshold category (blue/brown/intermediate/undefined).
+    # argmax always emits a colour; the 0.7 threshold is the rule the real IrisPlex workflow uses.
+    v01_thresh_pairs: list[tuple[str, str]] = []
+    n_thresh_undefined = 0
     scored = 0
 
     for uid, raw_colour in eye.items():
@@ -92,6 +96,12 @@ def run(zip_path: Path, limit: int | None = None) -> dict:
             v01_pairs.append((label, v01_call))
         else:
             v01_intermediate_pred += 1
+        # DEPLOYED 0.7-threshold mode: count only confident blue/brown; intermediate/undefined -> abstain
+        cat = pred.get("category_at_0.7")
+        if cat in ("blue", "brown"):
+            v01_thresh_pairs.append((label, cat))
+        else:
+            n_thresh_undefined += 1
         # paired (complete-case) — both models on the same users; binary only when each gives blue/brown
         if v0_call in ("blue", "brown"):
             paired_v0.append((label, v0_call))
@@ -110,13 +120,21 @@ def run(zip_path: Path, limit: int | None = None) -> dict:
         "status": "SCORED" if scored else "NO_USERS_SCORED",
         "schema": "eye-colour-irisplex-v01-v1", "date": _date.today().isoformat(),
         "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
-        "rule": "IrisPlex 6-SNP deployed model (Walsh/HIrisPlex; coefficients sourced)",
+        "rule": "IrisPlex 6-SNP model form (Walsh/HIrisPlex); coefficients published-model-consistent, "
+                "sourced via open impl (primary Walsh table NOT directly cross-checked)",
         "label_tier": "self-reported (near-independent, non-circular, noisy)",
         "n_complete_case_scored": scored,
         "n_other_excluded": n_other, "n_no_genotype_file": n_nogeno,
         "n_incomplete_6snp": n_incomplete,
-        "v01_full_set_binary": _confusion(v01_pairs),
+        "v01_full_set_binary_argmax": _confusion(v01_pairs),
         "v01_predicted_intermediate": v01_intermediate_pred,
+        "v01_deployed_threshold_0.7": {
+            **_confusion(v01_thresh_pairs),
+            "n_undefined_or_intermediate_abstained": n_thresh_undefined,
+            "note": "the DEPLOYED forensic decision rule (0.7 threshold -> blue/brown/undefined); "
+                    "abstains below 0.7. This is the like-for-like validation of the deployed rule; "
+                    "argmax above is the more-permissive always-call variant.",
+        },
         "paired_complete_case": {
             "v0_single_snp": _confusion(paired_v0),
             "v01_irisplex": _confusion(paired_v01),

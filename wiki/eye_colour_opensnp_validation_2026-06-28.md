@@ -1,5 +1,10 @@
 # Eye-colour decoder — REAL OpenSNP validation result (2026-06-28)
 
+> **TIER: PILOT / DEMO** (self-reported label). Per the admission gate
+> `wiki/off_pathogen_cell_admission_gate_2026-07-01.md`, self-report cells are demo-tier: they show the
+> decoder can host deterministic non-microbial rules with honest abstention — NOT a measured-phenotype
+> validation. "Generalizes" is reserved for measured labels; this is the engineering/integration claim.
+
 The flagship off-pathogen cell, validated on real data. The deterministic gene→phenotype decoder, proven
 across the AMR/typing/viral surface, **generalizes to a human visible trait** — scored against FREE,
 INDEPENDENT, INDIVIDUAL-LEVEL labels (OpenSNP self-reported eye colour). Machine sidecar:

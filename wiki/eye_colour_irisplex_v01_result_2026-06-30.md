@@ -1,19 +1,29 @@
 # Eye-colour v0.1 (IrisPlex 6-SNP) — REAL OpenSNP result + value-over-v0 (2026-06-30, M1 complete)
 
-The deployed IrisPlex 6-SNP model (Walsh/HIrisPlex; coefficients sourced, not fabricated) scored on the same
-OpenSNP archive as v0. This is the "does the 6-SNP deployed model EARN its complexity over the 1-SNP
-baseline" test — the wrapper-vs-underlying-tool rail applied to our own v0→v0.1 step. Machine sidecar:
-`wiki/eye_colour_irisplex_v01_validation_2026-06-30.json`.
+> **TIER: PILOT / DEMO** (self-reported label — see the admission gate `wiki/off_pathogen_cell_admission_gate_2026-07-01.md`).
+> **PROVENANCE (2026-07-01):** this is the **IrisPlex model FORM** with **published-model-consistent**
+> coefficients **sourced via an open implementation** (brianbhsu/eye-color) — NOT directly cross-checked
+> against the primary Walsh supplementary table / official HIrisPlex-S webtool. Call it that, not "the
+> deployed forensic model" verbatim. A primary-table checksum + one official example I/O would upgrade it.
 
-## Headline
+The IrisPlex 6-SNP model scored on the same OpenSNP archive as v0. This is the "does the 6-SNP model EARN its
+complexity over the 1-SNP baseline" test — the wrapper-vs-underlying-tool rail applied to our own v0→v0.1
+step. Machine sidecar: `wiki/eye_colour_irisplex_v01_validation_2026-07-01.json` (both operating modes).
 
-| | N (binary) | accuracy | brown-sens | blue-spec |
-|---|---|---|---|---|
-| **v0** — rs12913832 alone (paired, complete-case) | 263 | 0.996 | 0.989 | 1.00 |
-| **v0.1** — IrisPlex 6-SNP | **391** | **0.985** | 0.986 | 0.983 |
+## Headline — TWO operating modes reported (2026-07-01 fix)
 
-**v0.1 makes 49% MORE confident calls (263 → 391) for a ~1 pp accuracy cost.** That is the correct
-engineering trade: the extra 128 calls are exactly the heterozygotes v0 abstained on.
+The deployed IrisPlex forensic rule uses a **0.7 probability threshold** (abstains below it). The original
+memo reported only the permissive **argmax** (always-call) variant; both are now reported:
+
+| mode | N (binary) | accuracy | brown-sens | blue-spec | abstained |
+|---|---|---|---|---|---|
+| **v0** — rs12913832 alone (paired, complete-case) | 263 | 0.996 | 0.989 | 1.00 | hets |
+| **v0.1 argmax** (permissive, always-call) | 391 | 0.985 | 0.986 | 0.983 | 0 |
+| **v0.1 deployed 0.7-threshold** (the real forensic rule) | **346** | **0.997** | 0.994 | 1.00 | 45 |
+
+**The deployed 0.7-threshold rule is the cleanest: 0.997 on N=346 (FP=0, FN=1), abstaining on 45 low-
+confidence cases.** The permissive argmax trades ~1 pp accuracy to call everyone (391). Either way, v0.1
+makes **~49% more confident calls than v0** by resolving the heterozygotes v0 abstained on — the value-add.
 
 ## The rescue (why v0.1 exists)
 

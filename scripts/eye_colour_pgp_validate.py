@@ -31,6 +31,12 @@ from dna_decode.data.eye_colour import EYE_COLOUR_LOCUS, call_eye_colour  # noqa
 from dna_decode.data.eye_colour_irisplex import _SNP_ORDER, predict_irisplex  # noqa: E402
 from scripts.eye_colour_opensnp_validate import bin_eye_colour  # noqa: E402
 
+# PRIVACY / RETENTION POSTURE (public-but-sensitive human genotype data):
+# - Downloaded DTC files are cached to D:/dna_decode_cache/pgp/ -- OUTSIDE the repo (never git-tracked;
+#   .gitignore's /data/* + the external drive both keep raw genomes out of version control).
+# - Source is PGP-Harvard CC0 open-consent data (participants explicitly consented to public release).
+# - Local-only research cache; not synced cross-machine. Purge with:  rm -rf D:/dna_decode_cache/pgp/
+#   (safe -- files are re-fetchable from PGP). Do NOT commit the cache or copy it off the local host.
 BASE = "https://my.pgp-hms.org"
 SURVEY_URL = f"{BASE}/google_surveys/19/download"
 CACHE = Path("D:/dna_decode_cache/pgp")

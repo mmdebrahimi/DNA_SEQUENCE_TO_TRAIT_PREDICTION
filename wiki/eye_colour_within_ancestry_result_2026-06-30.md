@@ -1,4 +1,9 @@
-# Eye-colour M2-full — within-ancestry re-score DISENTANGLES the confound (2026-06-30)
+# Eye-colour M2-full — within-ancestry re-score REDUCES (not resolves) the confound (2026-06-30)
+
+> **WORDING CORRECTED 2026-07-01:** the earlier "DISENTANGLES" / "confound does not drive the result" was
+> too strong for n=45 on a SELF-REPORTED-ancestry keyword proxy (homozygotes only). The honest verdict is
+> **CONFOUND_REDUCED_NOT_RESOLVED**: the result is *consistent with* a mechanistic signal within
+> self-reported Europeans; fully resolving it needs genome-wide/AIM ancestry inference + CIs. See below.
 
 M2's structural first cut (`wiki/eye_colour_ancestry_confound_2026-06-30.md`) showed rs12913832 is strongly
 ancestry-informative (EUR blue-allele 0.636 vs EAS 0.002, 318×) — raising the worry that the v0 0.993 could
