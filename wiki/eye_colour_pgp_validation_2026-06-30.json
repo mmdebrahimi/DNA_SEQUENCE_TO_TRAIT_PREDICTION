@@ -1,0 +1,38 @@
+{
+  "status": "SCORED",
+  "schema": "eye-colour-pgp-replication-v1",
+  "date": "2026-06-30",
+  "cohort": "Personal Genome Project (PGP-Harvard); Basic Phenotypes 2015 survey; CC0 open-consent",
+  "label_tier": "self-reported (independent 2nd cohort)",
+  "is_pilot": true,
+  "limit": 300,
+  "n_profiles_attempted": 300,
+  "n_eye_labelled_total": 1065,
+  "n_blue_brown_available": 574,
+  "n_no_genotype_file": 246,
+  "n_rs12913832_missing": 38,
+  "n_incomplete_6snp": 1,
+  "v0_rs12913832": {
+    "n_binary": 11,
+    "TP": 4,
+    "FP": 0,
+    "TN": 7,
+    "FN": 0,
+    "accuracy": 1.0
+  },
+  "v01_irisplex": {
+    "n_binary": 15,
+    "TP": 9,
+    "FP": 0,
+    "TN": 6,
+    "FN": 0,
+    "accuracy": 1.0
+  },
+  "replication_verdict": "PILOT_UNDERPOWERED",
+  "caveats": [
+    "self-reported label (2nd independent cohort; non-circular)",
+    "BOUNDED PILOT (--limit) -> replication signal, not a full-cohort number; full run = raise --limit",
+    "complete-case for v0.1 (all 6 SNPs); v0 needs only rs12913832",
+    "PGP is also Euro-majority -> same ancestry caveat as OpenSNP"
+  ]
+}
