@@ -1,8 +1,9 @@
 {
   "schema": "pgx-cyp2c19-getrm-concordance-v0",
-  "analysis_date": "2026-06-25",
+  "gene": "CYP2C19",
+  "analysis_date": "2026-06-27",
   "truth_source": "GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2C19_getrm_ngs",
-  "genotype_source": "1000 Genomes 30x phased panel (chr10 CYP2C19 region, Docker bcftools)",
+  "genotype_source": "1000 Genomes 30x phased panel (CYP2C19 region, Docker bcftools)",
   "caller_is_independent_of_consensus_tools": true,
   "n_overlap_samples": 87,
   "n_core_comparable": 72,

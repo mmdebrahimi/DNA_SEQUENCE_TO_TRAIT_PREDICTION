@@ -1,13 +1,13 @@
-# CYP2C19 caller vs GeT-RM consensus on real 1000G (2026-06-25)
+# CYP2C19 caller vs GeT-RM consensus on real 1000G (2026-06-27)
 
 **Truth:** GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2C19_getrm_ngs
-**Genotypes:** 1000 Genomes 30x phased panel (chr10 CYP2C19 region, Docker bcftools)
+**Genotypes:** 1000 Genomes 30x phased panel (CYP2C19 region, Docker bcftools)
 
 - Overlap samples scored: **87**
 - **Core-comparable diplotype concordance: 72/72 (1.0)**  (GeT-RM truth in *1/*2/*3/*17)
-- Phenotype-correct incl. *38==*1: **79/87** (+7 *38 samples: *38 is the true reference, phenotype-identical to *1)
-- Correctly WITHHELD by sentinel (*4/*35): **2**
-- **Genuine silent mis-call: 6/87 (6.9%)** -- non-core alleles beyond the v0 SNP set + 2 sentinels (*8/*13/*15/*39); the honest residual blind spot.
+- Phenotype-correct incl. *38==*1: **79/87** (+7 *38 phenotype-equivalent samples)
+- Correctly WITHHELD by sentinel: **2**
+- **Genuine silent mis-call: 6/87 (6.9%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
 - Correct-or-abstains: **81/87**
 
 _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call)._

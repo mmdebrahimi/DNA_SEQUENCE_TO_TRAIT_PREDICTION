@@ -1,6 +1,6 @@
 {
   "schema": "certification-capstone-v0",
-  "analysis_date": "2026-06-26",
+  "analysis_date": "2026-06-27",
   "what_this_is": "A thin presentation layer over existing milestone evidence \u2014 NOT a clinical tool, NOT a new gate, NOT an aggregate verdict. Each cell + card keeps its own honest tier.",
   "no_aggregate_verdict": true,
   "aggregate_verdict_disclaimer": "Cells span 6 honest tiers; an aggregate pass/fail would certify the weakest cell as strongly as the strongest. No such field exists by design.",

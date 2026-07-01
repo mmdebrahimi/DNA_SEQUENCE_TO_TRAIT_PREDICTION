@@ -1,4 +1,4 @@
-# Decoder certification capstone (2026-06-26)
+# Decoder certification capstone (2026-06-27)
 
 > _A thin presentation layer over existing milestone evidence — NOT a clinical tool, NOT a new gate, NOT an aggregate verdict. Each cell + card keeps its own honest tier._
 

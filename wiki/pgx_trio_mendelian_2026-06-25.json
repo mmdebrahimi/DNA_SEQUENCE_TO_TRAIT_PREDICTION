@@ -1,6 +1,6 @@
 {
   "schema": "pgx-trio-mendelian-v0",
-  "analysis_date": "2026-06-25",
+  "analysis_date": "2026-06-27",
   "cohort": "1000 Genomes 30x panel trios (20130606_g1k_3202_samples ped)",
   "n_trios_total": 603,
   "honesty": "Validates CALLING consistency (Mendelian inheritance), NOT phenotype. A VIOLATION definitively flags a calling error; consistency is necessary-not-sufficient. Independent axis from the GeT-RM panel.",

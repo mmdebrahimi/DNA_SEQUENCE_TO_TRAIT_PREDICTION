@@ -1,7 +1,7 @@
 {
   "schema": "pgx-cyp2c9-getrm-concordance-v0",
   "gene": "CYP2C9",
-  "analysis_date": "2026-06-26",
+  "analysis_date": "2026-06-27",
   "truth_source": "GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2C9_getrm_ngs",
   "genotype_source": "1000 Genomes 30x phased panel (CYP2C9 region, Docker bcftools)",
   "caller_is_independent_of_consensus_tools": true,

@@ -1,30 +1,29 @@
 {
-  "cohort_path": "data\\processed\\stage2_n150_cipro_cohort.parquet",
+  "cohort_path": "data\\processed\\gate_b_cohort.parquet",
   "refseq_cache": "data\\refseq_cache",
   "drug": "ciprofloxacin",
   "amrfinder_image": "ncbi/amr:4.2.7-2026-03-24.1",
   "amrfinder_db_path": "data\\amrfinder_db",
-  "n_processed": 147,
+  "n_processed": 50,
   "r_mech_counts": {
-    "QRDR_target_alteration": 63,
-    "plasmid_protect_modify": 27,
-    "regulatory": 10
+    "QRDR_target_alteration": 18,
+    "regulatory": 8,
+    "plasmid_protect_modify": 7
   },
   "s_mech_counts": {
-    "QRDR_target_alteration": 12,
-    "plasmid_protect_modify": 7,
-    "efflux": 1,
-    "regulatory": 3
+    "plasmid_protect_modify": 3,
+    "QRDR_target_alteration": 6,
+    "regulatory": 2
   },
-  "r_no_known_mechanism": 3,
-  "s_silent_mechanism_hits": 20,
+  "r_no_known_mechanism": 2,
+  "s_silent_mechanism_hits": 10,
   "verdict": "PRIMARY_DOMINANT",
   "verdict_breakdown": {
-    "n_R_strains": 72,
-    "n_R_with_primary_mechanism": 69,
-    "n_R_with_any_mechanism": 69
+    "n_R_strains": 20,
+    "n_R_with_primary_mechanism": 18,
+    "n_R_with_any_mechanism": 18
   },
-  "elapsed_sec": 2477.921195268631,
+  "elapsed_sec": 107.00743770599365,
   "per_strain": [
     {
       "strain_id": "1045010.61",
@@ -39,10 +38,10 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "1045010.62",
-      "accession": "GCA_008727155.1",
+      "strain_id": "1328432.3",
+      "accession": "GCA_000492655.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.11",
+      "mlst": "MLST.ecoli_achtman_4.2569",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
@@ -51,12 +50,36 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "1438684.3",
-      "accession": "GCA_000692695.1",
+      "strain_id": "1328433.3",
+      "accession": "GCA_000522345.1",
       "cohort_label": 1,
       "mlst": "MLST.ecoli_achtman_4.131",
       "status": "OK",
       "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_S30HfsTer59",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "marR_V84WfsTer14",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.60",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
         {
           "kind": "mutation",
           "symbol": "gyrA_D87N",
@@ -118,11 +141,16 @@
           "mechanism": "QRDR_target_alteration"
         }
       ],
-      "n_hits": 5,
+      "n_hits": 7,
       "mechanisms_present": [
-        "QRDR_target_alteration"
+        "QRDR_target_alteration",
+        "regulatory"
       ],
       "mech_hits": {
+        "regulatory": [
+          "acrR_S30HfsTer59",
+          "marR_V84WfsTer14"
+        ],
         "QRDR_target_alteration": [
           "gyrA_D87N",
           "gyrA_S83L",
@@ -134,24 +162,48 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "1438686.3",
-      "accession": "GCA_000692735.1",
+      "strain_id": "1328434.3",
+      "accession": "GCA_000522325.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.5441",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.101974",
-      "accession": "GCA_022694385.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.10",
+      "mlst": "MLST.ecoli_achtman_4.405",
       "status": "OK",
       "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
         {
           "kind": "mutation",
           "symbol": "parE_S458A",
@@ -163,351 +215,9 @@
           "identity": "99.68",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "acrR_E190RfsTer20",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
         }
       ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify",
-        "regulatory"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ],
-        "regulatory": [
-          "acrR_E190RfsTer20"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.101975",
-      "accession": "GCA_022694405.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.10",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "acrR_E190RfsTer20",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify",
-        "regulatory"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "regulatory": [
-          "acrR_E190RfsTer20"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.102124",
-      "accession": "GCA_022758785.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.10",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "acrR_E190RfsTer20",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify",
-        "regulatory"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "regulatory": [
-          "acrR_E190RfsTer20"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.109859",
-      "accession": "GCA_025200555.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.6617",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.109860",
-      "accession": "GCA_025200635.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.155",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 3,
+      "n_hits": 4,
       "mechanisms_present": [
         "QRDR_target_alteration"
       ],
@@ -515,28 +225,119 @@
         "QRDR_target_alteration": [
           "gyrA_D87N",
           "gyrA_S83L",
-          "parC_S80I"
+          "parC_S80I",
+          "parE_S458A"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.111034",
-      "accession": "GCA_025200615.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.398",
+      "strain_id": "562.12960",
+      "accession": "GCF_001874845.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.101",
       "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "acrR_T5N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.07",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.86",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_E460D",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "aac(6')-Ib3",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify",
+        "regulatory"
+      ],
+      "mech_hits": {
+        "regulatory": [
+          "acrR_T5N"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_E460D"
+        ],
+        "plasmid_protect_modify": [
+          "aac(6')-Ib3"
+        ]
+      },
+      "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.111035",
-      "accession": "GCA_025200675.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.12782",
+      "strain_id": "562.13502",
+      "accession": "GCF_001747365.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.10",
       "status": "OK",
       "hits": [
         {
@@ -550,473 +351,18 @@
           "identity": "99.09",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "qnrA1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
         }
       ],
-      "n_hits": 2,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ],
-        "plasmid_protect_modify": [
-          "qnrA1"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.111036",
-      "accession": "GCA_025200635.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.155",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 3,
+      "n_hits": 1,
       "mechanisms_present": [
         "QRDR_target_alteration"
       ],
       "mech_hits": {
         "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I"
+          "gyrA_S83L"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.112391",
-      "accession": "GCA_025782825.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.361",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrB1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 2,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5",
-          "qnrB1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
-    },
-    {
-      "strain_id": "562.115101",
-      "accession": "GCA_026420965.1",
-      "cohort_label": 1,
-      "mlst": "MLST.Escherichia_coli_2.398",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrS1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "qnrS1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
-    },
-    {
-      "strain_id": "562.115102",
-      "accession": "GCA_026421005.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.224",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.115105",
-      "accession": "GCA_026420945.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.683",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrS1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 2,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5",
-          "qnrS1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
-    },
-    {
-      "strain_id": "562.115106",
-      "accession": "GCA_026420925.1",
-      "cohort_label": 1,
-      "mlst": "MLST.Escherichia_coli_2.398",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrS1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "qnrS1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
-    },
-    {
-      "strain_id": "562.115107",
-      "accession": "GCA_026421045.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.4380",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
-          "method": "PARTIAL_CONTIG_ENDX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "88.59",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.12962",
-      "accession": "GCF_900093145.1",
-      "cohort_label": 0,
-      "mlst": "MLST.klebsiella.48",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "oqxB5",
-          "class": "PHENICOL/QUINOLONE",
-          "subclass": "PHENICOL/QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "efflux"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "oqxA",
-          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
-          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
-          "method": "BLASTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.74",
-          "coverage": "100.00",
-          "mechanism": "efflux"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "qnrS1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 3,
-      "mechanisms_present": [
-        "efflux",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "efflux": [
-          "oqxA",
-          "oqxB5"
-        ],
-        "plasmid_protect_modify": [
-          "qnrS1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
     },
     {
       "strain_id": "562.16325",
@@ -1081,48 +427,12 @@
       "primary_mechanism_class": "plasmid_protect_modify"
     },
     {
-      "strain_id": "562.16327",
-      "accession": "GCA_002056635.1",
+      "strain_id": "562.17621",
+      "accession": "GCA_002192295.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
+      "mlst": "MLST.ecoli_achtman_4.167",
       "status": "OK",
       "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
         {
           "kind": "mutation",
           "symbol": "gyrA_D87N",
@@ -1131,7 +441,7 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.86",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
@@ -1143,85 +453,51 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.86",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.73",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_V29YfsTer44",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
         }
       ],
       "n_hits": 5,
       "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.16466",
-      "accession": "GCA_002142695.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.617",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.74",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.74",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
+        "QRDR_target_alteration",
+        "regulatory"
       ],
       "mech_hits": {
         "QRDR_target_alteration": [
@@ -1229,76 +505,9 @@
           "gyrA_S83L",
           "parC_S80I",
           "parE_S458A"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.17620",
-      "accession": "GCA_002192275.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.617",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
+        ],
+        "regulatory": [
+          "acrR_V29YfsTer44"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
@@ -1416,291 +625,10 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.17722",
-      "accession": "GCA_002202175.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib3",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 7,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5",
-          "aac(6')-Ib3"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.19631",
-      "accession": "GCA_002180215.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.167",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.73",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "acrR_V29YfsTer44",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "regulatory"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "regulatory": [
-          "acrR_V29YfsTer44"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.19632",
-      "accession": "GCA_002180195.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.20499",
+      "strain_id": "562.22426",
       "accession": "GCA_002180135.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.167",
+      "mlst": "MLST.Escherichia_coli_1.167,MLST.Escherichia_coli_2.2",
       "status": "OK",
       "hits": [
         {
@@ -1799,247 +727,20 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.28566",
-      "accession": "GCA_003000615.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.167",
+      "strain_id": "562.28389",
+      "accession": "GCA_002948655.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.1276",
       "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.73",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.28805",
-      "accession": "GCA_003073955.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.410",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib3",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib3"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.29003",
-      "accession": "GCA_003075555.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.29006",
-      "accession": "GCA_003073875.1",
+      "strain_id": "562.28563",
+      "accession": "GCA_002999075.1",
       "cohort_label": 1,
       "mlst": "MLST.ecoli_achtman_4.156",
       "status": "OK",
@@ -2152,293 +853,22 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.30349",
-      "accession": "GCA_003194265.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.648",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.74",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.74",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_A108V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.73",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.73",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_A108V",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.33281",
-      "accession": "GCA_003324505.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.167",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.73",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.34085",
-      "accession": "GCA_003571665.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.34086",
-      "accession": "GCA_003571685.1",
+      "strain_id": "562.28565",
+      "accession": "GCA_003000595.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.62",
+      "mlst": "MLST.ecoli_achtman_4.38",
       "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.45845",
-      "accession": "GCA_004564175.1",
+      "strain_id": "562.28805",
+      "accession": "GCA_003073955.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.405",
+      "mlst": "MLST.ecoli_achtman_4.410",
       "status": "OK",
       "hits": [
         {
@@ -2473,7 +903,7 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.74",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
@@ -2485,15 +915,15 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.74",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
         {
           "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
+          "symbol": "aac(6')-Ib3",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
           "method": "ALLELEX",
           "scope": "core",
           "type": "",
@@ -2515,63 +945,27 @@
           "parE_S458A"
         ],
         "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
+          "aac(6')-Ib3"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.45846",
-      "accession": "GCA_004566475.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.7522",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.45849",
-      "accession": "GCA_004567165.1",
+      "strain_id": "562.30362",
+      "accession": "GCA_003204155.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.38",
+      "mlst": "MLST.ecoli_achtman_4.4",
       "status": "OK",
       "hits": [
         {
           "kind": "mutation",
-          "symbol": "parE_S458A",
+          "symbol": "gyrA_D87N",
           "class": "QUINOLONE",
           "subclass": "QUINOLONE",
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.73",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87Y",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
@@ -2583,19 +977,43 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.86",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
         {
           "kind": "mutation",
-          "symbol": "acrR_R45C",
+          "symbol": "parC_E84G",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_E91KfsTer6",
           "class": "MULTIDRUG",
           "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "99.53",
+          "identity": "100.00",
           "coverage": "100.00",
           "mechanism": "regulatory"
         }
@@ -2607,115 +1025,28 @@
       ],
       "mech_hits": {
         "QRDR_target_alteration": [
-          "gyrA_D87Y",
+          "gyrA_D87N",
           "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
+          "parC_E84G",
+          "parC_S80I"
         ],
         "regulatory": [
-          "acrR_R45C"
+          "acrR_E91KfsTer6"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.45850",
-      "accession": "GCA_004567315.1",
+      "strain_id": "562.45848",
+      "accession": "GCA_004567065.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.38",
+      "mlst": "MLST.ecoli_achtman_4.349",
       "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_S57T",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.07",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.07",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "PARTIALX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "65.76",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S57T",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
+      "hits": [],
+      "n_hits": 0,
+      "mechanisms_present": [],
+      "mech_hits": {},
+      "primary_mechanism_class": "NO_MECHANISM"
     },
     {
       "strain_id": "562.45851",
@@ -2730,109 +1061,10 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.45910",
-      "accession": "GCA_004569165.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "acrR_K80RfsTer14",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "regulatory"
-      ],
-      "mech_hits": {
-        "regulatory": [
-          "acrR_K80RfsTer14"
-        ],
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50224",
-      "accession": "GCA_004566395.1",
+      "strain_id": "562.45853",
+      "accession": "GCA_004567665.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.38",
+      "mlst": "MLST.ecoli_achtman_4.315",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
@@ -2841,142 +1073,24 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.50226",
-      "accession": "GCA_004566415.1",
+      "strain_id": "562.50237",
+      "accession": "GCA_004566685.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
+      "mlst": "MLST.ecoli_achtman_4.224",
       "status": "OK",
       "hits": [
         {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
           "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
           "method": "ALLELEX",
           "scope": "core",
           "type": "",
           "identity": "100.00",
           "coverage": "100.00",
           "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50230",
-      "accession": "GCA_004566545.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.69",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50233",
-      "accession": "GCA_004566595.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.410",
-      "status": "OK",
-      "hits": [
+        },
         {
           "kind": "mutation",
           "symbol": "parC_S80I",
@@ -2991,6 +1105,30 @@
         },
         {
           "kind": "mutation",
+          "symbol": "parE_S458A",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "mutation",
           "symbol": "gyrA_D87N",
           "class": "QUINOLONE",
           "subclass": "QUINOLONE",
@@ -3011,6 +1149,80 @@
           "type": "",
           "identity": "98.97",
           "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        }
+      ],
+      "n_hits": 6,
+      "mechanisms_present": [
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
+      ],
+      "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I",
+          "parE_S458A"
+        ]
+      },
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50245",
+      "accession": "GCA_004566865.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1431",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         },
         {
@@ -3024,13 +1236,29 @@
           "identity": "99.68",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "acquired",
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "ALLELEX",
+          "scope": "core",
+          "type": "",
+          "identity": "100.00",
+          "coverage": "100.00",
+          "mechanism": "plasmid_protect_modify"
         }
       ],
-      "n_hits": 4,
+      "n_hits": 6,
       "mechanisms_present": [
-        "QRDR_target_alteration"
+        "QRDR_target_alteration",
+        "plasmid_protect_modify"
       ],
       "mech_hits": {
+        "plasmid_protect_modify": [
+          "qnrS1"
+        ],
         "QRDR_target_alteration": [
           "gyrA_D87N",
           "gyrA_S83L",
@@ -3041,24 +1269,12 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.50235",
-      "accession": "GCA_004566665.1",
+      "strain_id": "562.50250",
+      "accession": "GCA_004566955.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
+      "mlst": "MLST.ecoli_achtman_4.44",
       "status": "OK",
       "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "acrR_W50LfsTer4",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        },
         {
           "kind": "mutation",
           "symbol": "gyrA_D87N",
@@ -3067,7 +1283,7 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.86",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
@@ -3079,19 +1295,19 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.86",
+          "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
         },
         {
           "kind": "mutation",
-          "symbol": "parC_E84V",
+          "symbol": "parE_S458T",
           "class": "QUINOLONE",
           "subclass": "QUINOLONE",
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "99.20",
+          "identity": "99.68",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         },
@@ -3103,60 +1319,67 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
+          "identity": "99.73",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         }
       ],
-      "n_hits": 6,
+      "n_hits": 4,
       "mechanisms_present": [
-        "QRDR_target_alteration",
-        "regulatory"
+        "QRDR_target_alteration"
       ],
       "mech_hits": {
-        "regulatory": [
-          "acrR_W50LfsTer4"
-        ],
         "QRDR_target_alteration": [
           "gyrA_D87N",
           "gyrA_S83L",
-          "parC_E84V",
           "parC_S80I",
-          "parE_I529L"
+          "parE_S458T"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.50238",
-      "accession": "GCA_004566715.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.501",
+      "strain_id": "562.50252",
+      "accession": "GCA_004566985.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.393",
       "status": "OK",
       "hits": [
         {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib'",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "GENTAMICIN",
-          "method": "EXACTX",
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "100.00",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.60",
           "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
+          "mechanism": "regulatory"
         },
         {
           "kind": "mutation",
@@ -3166,1073 +1389,31 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "99.20",
+          "identity": "99.07",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         },
         {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib'",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "GENTAMICIN",
-          "method": "EXACTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 3,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "aac(6')-Ib'"
-        ],
-        "QRDR_target_alteration": [
-          "parC_S57T"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50239",
-      "accession": "GCA_004566755.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.7358",
-      "status": "OK",
-      "hits": [
-        {
           "kind": "mutation",
-          "symbol": "gyrA_D87N",
+          "symbol": "parC_S80I",
           "class": "QUINOLONE",
           "subclass": "QUINOLONE",
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.74",
-          "coverage": "99.66",
+          "identity": "99.07",
+          "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         },
         {
           "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.74",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
+          "symbol": "parE_L416F",
           "class": "QUINOLONE",
           "subclass": "QUINOLONE",
           "method": "POINTX",
           "scope": "core",
           "type": "",
           "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50241",
-      "accession": "GCA_004566775.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50242",
-      "accession": "GCA_004566785.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50244",
-      "accession": "GCA_004566835.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50247",
-      "accession": "GCA_004566895.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50248",
-      "accession": "GCA_004566905.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.70",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.50249",
-      "accession": "GCA_004566915.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50251",
-      "accession": "GCA_004566965.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50257",
-      "accession": "GCA_004567115.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.547",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.50259",
-      "accession": "GCA_004567175.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.457",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87Y",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87Y",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50261",
-      "accession": "GCA_004567225.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50266",
-      "accession": "GCA_004567285.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.8671",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50269",
-      "accession": "GCA_004567375.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50270",
-      "accession": "GCA_004567405.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "acrR_W50LfsTer4",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         }
@@ -4243,516 +1424,15 @@
         "regulatory"
       ],
       "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S57T",
+          "parC_S80I",
+          "parE_L416F"
+        ],
         "regulatory": [
-          "acrR_W50LfsTer4"
-        ],
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50273",
-      "accession": "GCA_004567495.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50275",
-      "accession": "GCA_004567535.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50277",
-      "accession": "GCA_004567585.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50281",
-      "accession": "GCA_004567675.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.88",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50283",
-      "accession": "GCA_004567715.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50285",
-      "accession": "GCA_004567745.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
+          "acrR_W63Ter"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
@@ -4768,271 +1448,6 @@
       "mechanisms_present": [],
       "mech_hits": {},
       "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.50289",
-      "accession": "GCA_004567895.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 6,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50291",
-      "accession": "GCA_004568145.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50293",
-      "accession": "GCA_004568225.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.131",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_I529L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.52",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_E84V",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.20",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_E84V",
-          "parC_S80I",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
       "strain_id": "562.50295",
@@ -5092,15 +1507,82 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.50298",
-      "accession": "GCA_004569045.1",
+      "strain_id": "562.50301",
+      "accession": "GCA_004569855.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.131",
+      "mlst": "MLST.ecoli_achtman_4.1317",
       "status": "OK",
       "hits": [
         {
           "kind": "mutation",
-          "symbol": "parE_I529L",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        }
+      ],
+      "n_hits": 1,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ]
+      },
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
+      "strain_id": "562.50304",
+      "accession": "GCA_004569995.1",
+      "cohort_label": 1,
+      "mlst": "MLST.ecoli_achtman_4.1193",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_D87N",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.74",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parC_S80I",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.87",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_L416F",
           "class": "QUINOLONE",
           "subclass": "QUINOLONE",
           "method": "POINTX",
@@ -5112,119 +1594,31 @@
         },
         {
           "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
+          "identity": "97.92",
+          "coverage": "100.00",
+          "mechanism": "regulatory"
         }
       ],
-      "n_hits": 2,
+      "n_hits": 5,
       "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L",
-          "parE_I529L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.50299",
-      "accession": "GCA_004569675.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.457",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.50303",
-      "accession": "GCA_004569925.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.38",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.50305",
-      "accession": "GCA_004570035.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.744",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_A56T",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.60",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.60",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
+        "QRDR_target_alteration",
+        "regulatory"
       ],
       "mech_hits": {
         "QRDR_target_alteration": [
           "gyrA_D87N",
           "gyrA_S83L",
-          "parC_A56T",
-          "parC_S80I"
+          "parC_S80I",
+          "parE_L416F"
+        ],
+        "regulatory": [
+          "marR_S3N"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
@@ -5242,12 +1636,24 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.59218",
-      "accession": "GCA_902807085.1",
+      "strain_id": "562.59220",
+      "accession": "GCA_902807115.1",
       "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.410",
+      "mlst": "MLST.ecoli_achtman_4.354",
       "status": "OK",
       "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "parC_E84G",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
         {
           "kind": "mutation",
           "symbol": "parC_S80I",
@@ -5256,7 +1662,19 @@
           "method": "POINTX",
           "scope": "core",
           "type": "",
-          "identity": "99.87",
+          "identity": "99.60",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_I355T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.37",
           "coverage": "100.00",
           "mechanism": "QRDR_target_alteration"
         },
@@ -5283,246 +1701,6 @@
           "identity": "98.97",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.59222",
-      "accession": "GCA_902807135.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.5474",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrB1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 2,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5",
-          "qnrB1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
-    },
-    {
-      "strain_id": "562.59224",
-      "accession": "GCA_902807205.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.410",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration",
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_S458A"
-        ],
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.59226",
-      "accession": "GCA_902807265.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.224",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "parE_S458A",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "qepA4",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": ""
         }
       ],
       "n_hits": 5,
@@ -5533,91 +1711,12 @@
         "QRDR_target_alteration": [
           "gyrA_D87N",
           "gyrA_S83L",
+          "parC_E84G",
           "parC_S80I",
-          "parE_S458A"
+          "parE_I355T"
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.59229",
-      "accession": "GCA_902807295.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.5474",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrB6",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "aac(6')-Ib-cr5",
-          "class": "AMINOGLYCOSIDE/QUINOLONE",
-          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 2,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "aac(6')-Ib-cr5",
-          "qnrB6"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
-    },
-    {
-      "strain_id": "562.7565",
-      "accession": "GCA_001277395.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.517",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7567",
-      "accession": "GCA_001277435.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5488",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7568",
-      "accession": "GCA_001277455.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5339",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
     },
     {
       "strain_id": "562.7570",
@@ -5689,116 +1788,10 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.7573",
-      "accession": "GCA_001277555.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.443",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_L416F",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "qepA4",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": ""
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_L416F"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
       "strain_id": "562.7575",
       "accession": "GCA_001277595.1",
       "cohort_label": 0,
       "mlst": "MLST.ecoli_achtman_4.337",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7576",
-      "accession": "GCA_001277615.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5241",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7577",
-      "accession": "GCA_001277635.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.301",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
@@ -5838,58 +1831,54 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
+      "strain_id": "562.7580",
+      "accession": "GCA_001277695.1",
+      "cohort_label": 0,
+      "mlst": "MLST.ecoli_achtman_4.4424",
+      "status": "OK",
+      "hits": [
+        {
+          "kind": "mutation",
+          "symbol": "gyrA_S83L",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "98.97",
+          "coverage": "99.66",
+          "mechanism": "QRDR_target_alteration"
+        },
+        {
+          "kind": "mutation",
+          "symbol": "parE_I355T",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "method": "POINTX",
+          "scope": "core",
+          "type": "",
+          "identity": "99.68",
+          "coverage": "100.00",
+          "mechanism": "QRDR_target_alteration"
+        }
+      ],
+      "n_hits": 2,
+      "mechanisms_present": [
+        "QRDR_target_alteration"
+      ],
+      "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L",
+          "parE_I355T"
+        ]
+      },
+      "primary_mechanism_class": "QRDR_target_alteration"
+    },
+    {
       "strain_id": "562.7581",
       "accession": "GCA_001277715.1",
       "cohort_label": 0,
       "mlst": "MLST.ecoli_achtman_4.121",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7583",
-      "accession": "GCA_001277755.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.10",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7584",
-      "accession": "GCA_001277775.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.583",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7618",
-      "accession": "GCA_001283165.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.10",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7619",
-      "accession": "GCA_001283185.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.29",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
@@ -5910,10 +1899,10 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.7624",
-      "accession": "GCA_001283285.1",
+      "strain_id": "562.7625",
+      "accession": "GCA_001283305.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.328",
+      "mlst": "MLST.ecoli_achtman_4.378",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
@@ -5953,49 +1942,6 @@
       "primary_mechanism_class": "regulatory"
     },
     {
-      "strain_id": "562.7632",
-      "accession": "GCA_001283445.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5234",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7634",
-      "accession": "GCA_001283485.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.301",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
       "strain_id": "562.7641",
       "accession": "GCA_001283625.2",
       "cohort_label": 0,
@@ -6008,262 +1954,10 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.7642",
-      "accession": "GCA_001283645.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.4550",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
       "strain_id": "562.7645",
       "accession": "GCA_001283705.1",
       "cohort_label": 0,
       "mlst": "MLST.ecoli_achtman_4.34",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7646",
-      "accession": "GCA_001283725.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5426",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7649",
-      "accession": "GCA_001283785.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5353",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7652",
-      "accession": "GCA_001283845.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.121",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7656",
-      "accession": "GCA_001283925.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5618",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7660",
-      "accession": "GCA_001284005.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.443",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_L416F",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_L416F"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7665",
-      "accession": "GCA_001284105.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.382",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7669",
-      "accession": "GCA_001284185.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.337",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7671",
-      "accession": "GCA_001284225.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.40",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7673",
-      "accession": "GCA_001284265.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5553",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7678",
-      "accession": "GCA_001284365.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.378",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7679",
-      "accession": "GCA_001284385.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.589",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "marR_S3N",
-          "class": "MULTIDRUG",
-          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "97.92",
-          "coverage": "100.00",
-          "mechanism": "regulatory"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "regulatory"
-      ],
-      "mech_hits": {
-        "regulatory": [
-          "marR_S3N"
-        ]
-      },
-      "primary_mechanism_class": "regulatory"
-    },
-    {
-      "strain_id": "562.7683",
-      "accession": "GCA_001284465.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.378",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
@@ -6339,88 +2033,6 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.7693",
-      "accession": "GCA_001284665.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.443",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_L416F",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "qepA4",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": ""
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_L416F"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
       "strain_id": "562.7695",
       "accession": "GCA_001284705.1",
       "cohort_label": 0,
@@ -6450,37 +2062,6 @@
         ]
       },
       "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7696",
-      "accession": "GCA_001284725.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.803",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "acquired",
-          "symbol": "qnrS1",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": "plasmid_protect_modify"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "plasmid_protect_modify"
-      ],
-      "mech_hits": {
-        "plasmid_protect_modify": [
-          "qnrS1"
-        ]
-      },
-      "primary_mechanism_class": "plasmid_protect_modify"
     },
     {
       "strain_id": "562.7699",
@@ -6553,124 +2134,6 @@
       "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
-      "strain_id": "562.7700",
-      "accession": "GCA_001284805.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.34",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7701",
-      "accession": "GCA_001284825.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.335",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7702",
-      "accession": "GCA_001284845.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.2089",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7703",
-      "accession": "GCA_001284865.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.443",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_L416F",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "acquired",
-          "symbol": "qepA4",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "ALLELEX",
-          "scope": "core",
-          "type": "",
-          "identity": "100.00",
-          "coverage": "100.00",
-          "mechanism": ""
-        }
-      ],
-      "n_hits": 5,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_L416F"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
       "strain_id": "562.7710",
       "accession": "GCA_001285005.1",
       "cohort_label": 0,
@@ -6683,89 +2146,10 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.7712",
-      "accession": "GCA_001285045.1",
+      "strain_id": "562.7717",
+      "accession": "GCA_001285145.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.4590",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7724",
-      "accession": "GCA_001285285.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5406",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7730",
-      "accession": "GCA_001285405.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5485",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7733",
-      "accession": "GCA_001285465.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5330",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7734",
-      "accession": "GCA_001285485.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.381",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7742",
-      "accession": "GCA_001285645.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5381",
+      "mlst": "MLST.ecoli_achtman_4.2346",
       "status": "OK",
       "hits": [
         {
@@ -6779,165 +2163,7 @@
           "identity": "98.86",
           "coverage": "99.66",
           "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 1,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_S83L"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7761",
-      "accession": "GCA_001286025.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5582",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7771",
-      "accession": "GCA_001286225.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.443",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
         },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.97",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parE_L416F",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.68",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 4,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I",
-          "parE_L416F"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7775",
-      "accession": "GCA_001286305.1",
-      "cohort_label": 1,
-      "mlst": "MLST.ecoli_achtman_4.301",
-      "status": "OK",
-      "hits": [
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_D87N",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "gyrA_S83L",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "98.86",
-          "coverage": "99.66",
-          "mechanism": "QRDR_target_alteration"
-        },
-        {
-          "kind": "mutation",
-          "symbol": "parC_S80I",
-          "class": "QUINOLONE",
-          "subclass": "QUINOLONE",
-          "method": "POINTX",
-          "scope": "core",
-          "type": "",
-          "identity": "99.87",
-          "coverage": "100.00",
-          "mechanism": "QRDR_target_alteration"
-        }
-      ],
-      "n_hits": 3,
-      "mechanisms_present": [
-        "QRDR_target_alteration"
-      ],
-      "mech_hits": {
-        "QRDR_target_alteration": [
-          "gyrA_D87N",
-          "gyrA_S83L",
-          "parC_S80I"
-        ]
-      },
-      "primary_mechanism_class": "QRDR_target_alteration"
-    },
-    {
-      "strain_id": "562.7776",
-      "accession": "GCA_001286345.2",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.4554",
-      "status": "OK",
-      "hits": [
         {
           "kind": "mutation",
           "symbol": "marR_S3N",
@@ -6951,40 +2177,20 @@
           "mechanism": "regulatory"
         }
       ],
-      "n_hits": 1,
+      "n_hits": 2,
       "mechanisms_present": [
+        "QRDR_target_alteration",
         "regulatory"
       ],
       "mech_hits": {
+        "QRDR_target_alteration": [
+          "gyrA_S83L"
+        ],
         "regulatory": [
           "marR_S3N"
         ]
       },
-      "primary_mechanism_class": "regulatory"
-    },
-    {
-      "strain_id": "562.7779",
-      "accession": "GCA_001286385.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5251",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7783",
-      "accession": "GCA_001286465.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5445",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
+      "primary_mechanism_class": "QRDR_target_alteration"
     },
     {
       "strain_id": "562.7784",
@@ -6999,22 +2205,10 @@
       "primary_mechanism_class": "NO_MECHANISM"
     },
     {
-      "strain_id": "562.7785",
-      "accession": "GCA_001286505.1",
+      "strain_id": "562.7789",
+      "accession": "GCA_001286605.1",
       "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.5480",
-      "status": "OK",
-      "hits": [],
-      "n_hits": 0,
-      "mechanisms_present": [],
-      "mech_hits": {},
-      "primary_mechanism_class": "NO_MECHANISM"
-    },
-    {
-      "strain_id": "562.7790",
-      "accession": "GCA_001286625.1",
-      "cohort_label": 0,
-      "mlst": "MLST.ecoli_achtman_4.335",
+      "mlst": "MLST.ecoli_achtman_4.123",
       "status": "OK",
       "hits": [],
       "n_hits": 0,
