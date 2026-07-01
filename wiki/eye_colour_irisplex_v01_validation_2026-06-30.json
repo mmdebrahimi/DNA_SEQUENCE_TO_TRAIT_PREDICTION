@@ -1,0 +1,71 @@
+{
+  "status": "SCORED",
+  "schema": "eye-colour-irisplex-v01-v1",
+  "date": "2026-06-30",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
+  "rule": "IrisPlex 6-SNP deployed model (Walsh/HIrisPlex; coefficients sourced)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy)",
+  "n_complete_case_scored": 391,
+  "n_other_excluded": 377,
+  "n_no_genotype_file": 1,
+  "n_incomplete_6snp": 154,
+  "v01_full_set_binary": {
+    "TP": 212,
+    "FP": 3,
+    "TN": 173,
+    "FN": 3,
+    "n": 391,
+    "accuracy": 0.985,
+    "brown_sens": 0.986,
+    "blue_spec": 0.983
+  },
+  "v01_predicted_intermediate": 0,
+  "paired_complete_case": {
+    "v0_single_snp": {
+      "TP": 91,
+      "FP": 0,
+      "TN": 171,
+      "FN": 1,
+      "n": 263,
+      "accuracy": 0.996,
+      "brown_sens": 0.989,
+      "blue_spec": 1.0
+    },
+    "v01_irisplex": {
+      "TP": 212,
+      "FP": 3,
+      "TN": 173,
+      "FN": 3,
+      "n": 391,
+      "accuracy": 0.985,
+      "brown_sens": 0.986,
+      "blue_spec": 0.983
+    },
+    "note": "same complete-case users; coverage = n binary-called. v0.1 calls more (resolves hets)."
+  },
+  "heterozygote_rescue": {
+    "definition": "users v0 abstains on (rs12913832 AG -> 'intermediate')",
+    "n_v0_abstained": 128,
+    "n_v01_correct": 123,
+    "v01_recall_on_rescue": 0.961,
+    "breakdown_label_to_v01pred": {
+      "brown": {
+        "brown": 121,
+        "blue": 2,
+        "intermediate": 0
+      },
+      "blue": {
+        "brown": 3,
+        "blue": 2,
+        "intermediate": 0
+      }
+    }
+  },
+  "caveats": [
+    "self-reported label (not a lab assay)",
+    "complete-case: requires all 6 SNPs callable; coverage in n_complete_case_scored",
+    "ancestry-confounded: IrisPlex European-calibrated (within-ancestry split = a further step)",
+    "rs16891982 is C/G palindromic -> literal forward-strand assumption (bounded; named)",
+    "coefficients SOURCED from brianbhsu/eye-color (published Walsh/HIrisPlex model), not fabricated"
+  ]
+}
