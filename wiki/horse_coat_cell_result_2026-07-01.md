@@ -42,8 +42,30 @@ Supply an independently-observed dataset: `uv run python scripts/horse_coat_vali
 mc1r,asip,observed_colour>`. Realistic sources: transcribe the Rieder 2001 / 709-horse observed contingency
 from the papers (manual, small), or a future open observed-colour repository. NOT the Dryad file (circular).
 
+## Recovery attempts EXHAUSTED (2026-07-01, second pass) — the wall is demonstrated across 5 avenues
+
+Per the user's "find a way", a second pass actively hunted a non-circular observed dataset to score. All 5
+reachable avenues fail the clean-non-circular-per-individual bar:
+
+| Avenue | Fails because |
+|---|---|
+| Dryad `10.5061/dryad.3q111` per-individual CSV | colour genotype-DERIVED (circular) + auth-gated (401) |
+| 709-horse Synergy open contingency (PMC6447268, Table 2) | **marginal, not joint** (MC1R + ASIP counts reported SEPARATELY per colour → per-horse pairing unrecoverable) **+ non-functional 2-SNP diplotype coding** |
+| Rieder 2001 / Noma (joint FUNCTIONAL genotype × observed colour) | PDF/paywalled — not headlessly fetchable |
+| Figshare / Zenodo / GitHub | no matching open observed-colour dataset |
+| Arabidopsis AraPheno (open API) | traits quantitative — no clean binary Mendelian rule |
+
+**The 709-study finding is decisive + informative:** its colour IS independently observed (photos +
+registration, non-circular), but its genotype notation (`EeEe`/`AaAa` = heterozygous at TWO linked SNPs) is
+NOT the functional extension/agouti allele — proven because **all 31 observed BLACK horses are `AaAa`**
+(would be functional `a/a`) and **all 123 CHESTNUT are `EeEe`** (would be functional `e/e`): het-at-both ≠
+homozygous-recessive. So it cannot be mapped to the C901T / 11-bp-deletion functional rule. Even the best
+OPEN, NON-CIRCULAR, observed contingency is unusable for the functional rule.
+
 ## Recommendation
-**Bank (fork #1).** The scan + this build together show the off-pathogen frontier is deployed-rule
-integration whose clean non-circular open data is the binding constraint — the same LABELS wall as the rest
-of the project. The deterministic decoder's honest ceiling is reached at pilot/demo strength (eye/ABO) plus
-the built-but-data-walled horse rule. Recommend banking unless the user supplies an observed-colour dataset.
+**Bank (fork #1) — the wall is now demonstrated, not assumed.** Across 5 distinct open-data avenues, the
+cleanest off-pathogen Mendelian rule has NO clean, non-circular, per-individual, functional-genotype ×
+observed-colour open dataset. This is the LABELS wall at its finest grain. The deterministic decoder's honest
+off-pathogen ceiling: eye/ABO pilots (self-report) + the built, tested, but data-walled horse rule. The ONLY
+remaining unblock is a USER-supplied joint functional-genotype × observed-colour TSV (e.g. hand-transcribed
+from Rieder 2001 Table 2 via the PDF) → `horse_coat_validate.py --data`. Not worth autonomous pursuit.
