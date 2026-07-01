@@ -1,0 +1,30 @@
+{
+  "status": "SCORED",
+  "schema": "abo-pgp-o-status-v1",
+  "date": "2026-06-30",
+  "cohort": "PGP-Harvard Basic Phenotypes 2015; CC0 open-consent",
+  "rule": "rs8176719 c.261delG homozygous deletion (DD) -> O, else non-O (SOURCED; O/non-O only)",
+  "label_tier": "self-reported blood type (independent)",
+  "is_pilot": true,
+  "limit": 200,
+  "n_profiles_attempted": 200,
+  "n_blood_labelled_total": 888,
+  "n_no_genotype_file": 173,
+  "n_rs8176719_missing_or_nocall": 21,
+  "confusion_O_positive": {
+    "TP": 3,
+    "FP": 0,
+    "TN": 1,
+    "FN": 2,
+    "n": 6
+  },
+  "accuracy": 0.667,
+  "O_sens": 0.6,
+  "nonO_spec": 1.0,
+  "caveats": [
+    "O vs non-O only; A/B distinction deferred (tag-SNP allele coding not fabricated)",
+    "self-reported blood type (independent, noisy) -- some self-reports are wrong",
+    "BOUNDED PILOT (--limit); low PGP survey->genotype linkage yield (~5%, as M3)",
+    "rs8176719 I/D coding; '--' no-call -> INDETERMINATE (never guessed O)"
+  ]
+}
