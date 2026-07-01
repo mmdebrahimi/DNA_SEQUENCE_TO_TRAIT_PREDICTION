@@ -8,8 +8,23 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dna_decode.data.eye_colour_ancestry import (  # noqa: E402
-    BLUE_ALLELE, RS12913832_BLUE_FREQ_1000G, confound_summary,
+    BLUE_ALLELE, RS12913832_BLUE_FREQ_1000G, classify_self_reported_ancestry, confound_summary,
 )
+
+
+def test_ancestry_classifier():
+    c = classify_self_reported_ancestry
+    assert c("caucasian", "northern european") == "EUROPEAN"
+    assert c("caucasian", "") == "EUROPEAN"          # regression: 'asian' must NOT match inside 'caucasian'
+    assert c("caucasion", "") == "EUROPEAN"          # common OpenSNP misspelling
+    assert c("", "british isles, northern europe") == "EUROPEAN"
+    assert c("south asian", "") == "NON_EUROPEAN"
+    assert c("hispanic or mexican american", "") == "NON_EUROPEAN"
+    assert c("mixed", "mixed ancestry") == "MIXED_UNKNOWN"          # ambiguous
+    assert c("ashkenazi", "") == "MIXED_UNKNOWN"                    # distinct cluster -> excluded
+    assert c("german, italian", "south asian") == "MIXED_UNKNOWN"   # both continents
+    assert c("american", "") == "MIXED_UNKNOWN"                     # bare 'american' ambiguous
+    assert c("", "") == "MIXED_UNKNOWN"
 
 
 def test_blue_allele_is_G():

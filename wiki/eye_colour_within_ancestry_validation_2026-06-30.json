@@ -1,0 +1,56 @@
+{
+  "status": "SCORED",
+  "schema": "eye-colour-within-ancestry-v1",
+  "date": "2026-06-30",
+  "rule": "v0 rs12913832 (binary calls only), stratified by SELF-REPORTED ancestry",
+  "n_no_genotype_file": 1,
+  "n_rs12913832_missing": 93,
+  "v0_all_cohort": {
+    "n_binary": 298,
+    "TP": 100,
+    "FP": 0,
+    "TN": 196,
+    "FN": 2,
+    "accuracy": 0.993,
+    "brown_sens": 0.98,
+    "blue_spec": 1.0
+  },
+  "v0_within_european": {
+    "n_binary": 45,
+    "TP": 10,
+    "FP": 0,
+    "TN": 35,
+    "FN": 0,
+    "accuracy": 1.0,
+    "brown_sens": 1.0,
+    "blue_spec": 1.0
+  },
+  "v0_non_european": {
+    "n_binary": 9,
+    "TP": 9,
+    "FP": 0,
+    "TN": 0,
+    "FN": 0,
+    "accuracy": 1.0,
+    "brown_sens": 1.0,
+    "blue_spec": null
+  },
+  "v0_mixed_unknown": {
+    "n_binary": 244,
+    "TP": 81,
+    "FP": 0,
+    "TN": 161,
+    "FN": 2,
+    "accuracy": 0.992,
+    "brown_sens": 0.976,
+    "blue_spec": 1.0
+  },
+  "confound_verdict": "MECHANISTIC_HOLDS_WITHIN_EUROPEAN",
+  "interpretation": "within-European accuracy ~= full-cohort accuracy -> rs12913832 predicts eye colour by MECHANISM, not merely by tagging European ancestry (the confound does not drive the result).",
+  "caveats": [
+    "self-reported ancestry via keyword proxy (not genetic ancestry inference)",
+    "MIXED/ambiguous/Ashkenazi excluded from EUROPEAN/NON_EUROPEAN strata",
+    "OpenSNP is Euro-dominated -> NON_EUROPEAN stratum is small (expected; that IS the point)",
+    "v0 binary calls only (homozygotes); heterozygotes abstained as in v0"
+  ]
+}

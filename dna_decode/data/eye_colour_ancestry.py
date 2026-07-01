@@ -14,6 +14,8 @@ ancestry axis and is D:-gated (deferred). This module is the confound's magnitud
 """
 from __future__ import annotations
 
+import re
+
 BLUE_ALLELE = "G"   # rs12913832 G = blue (matches the validated v0 strand-agnostic rule: blue={G,C})
 
 # Blue-allele (G) frequency by 1000G phase-3 super-population. SOURCED: Ensembl REST, fetched 2026-06-30.
@@ -25,6 +27,46 @@ RS12913832_BLUE_FREQ_1000G: dict[str, float] = {
     "EAS": 0.0020,
     "ALL": 0.1773,
 }
+
+
+# self-reported-ancestry keyword classifier (for the within-European re-score, M2-full).
+# Conservative: a stratum is assigned ONLY when the text has that continent's keywords and NOT the other's;
+# 'mixed'/ambiguous/Ashkenazi(distinct cluster)/bare-'american' -> MIXED_UNKNOWN (excluded from the clean test).
+_EUROPEAN_KW = (
+    "european", "caucasian", "caucasion", "british", "irish", "ireland", "scottish", "scotland",
+    "english", "england", "welsh", "wales", "scandinav", "nordic", "finnish", "finland", "german",
+    "french", "italian", "spanish", "iberian", "portuguese", "russian", "polish", "czech", "dutch",
+    "norwegian", "swedish", "danish", "greek", "hungarian", "austrian", "romanian", "ukrain", "slav",
+)
+_NON_EUROPEAN_KW = (
+    "african", "hispanic", "latino", "mexican", "asian", "chinese", "japanese", "korean",
+    "south asian", "east asian", "native american", "amerindian", "middle eastern", "arab",
+    "persian", "filipino", "vietnamese", "thai", "caribbean", "black", "indian", "berber", "hmong",
+)
+_AMBIGUOUS_KW = ("mixed", "ashkenazi", "jewish", "adopted")
+
+
+def classify_self_reported_ancestry(*texts: str) -> str:
+    """Classify free-text self-reported ancestry -> EUROPEAN / NON_EUROPEAN / MIXED_UNKNOWN.
+
+    Conservative by design: EUROPEAN only if a European keyword is present AND no non-European keyword;
+    symmetric for NON_EUROPEAN; anything mixed/ambiguous/both/neither -> MIXED_UNKNOWN (excluded from the
+    clean within-ancestry test). This is a keyword proxy for SELF-REPORTED ancestry, not genetic inference."""
+    blob = " ".join(t for t in texts if t).lower()
+    if not blob.strip():
+        return "MIXED_UNKNOWN"
+    # word-boundary match: prevents 'asian' matching inside 'caucasian' (a real OpenSNP collision).
+    def _hit(kws):
+        return any(re.search(r"\b" + re.escape(k) + r"\b", blob) for k in kws)
+    if _hit(_AMBIGUOUS_KW):
+        return "MIXED_UNKNOWN"
+    has_eur = _hit(_EUROPEAN_KW)
+    has_non = _hit(_NON_EUROPEAN_KW)
+    if has_eur and not has_non:
+        return "EUROPEAN"
+    if has_non and not has_eur:
+        return "NON_EUROPEAN"
+    return "MIXED_UNKNOWN"
 
 
 def confound_summary() -> dict:
