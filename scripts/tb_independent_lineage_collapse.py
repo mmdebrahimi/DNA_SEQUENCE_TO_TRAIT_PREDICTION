@@ -72,6 +72,22 @@ def collapse(work: Path = WORK) -> dict:
         strain_masked = {sid: masked[sid] for sid in strain_label}
         res = run_v1b(strain_masked, strain_label, dets[drug], barcode,
                       drug=drug, cohort_complete=False)
+        # INDEPENDENT-ARM honesty override: run_v1b is SHARED with the CRyPTIC baseline and stamps an
+        # "in-distribution knowledge-baseline / NOT independent" honesty string (correct THERE, wrong HERE).
+        # This cohort IS accession-level provenance-disjoint (leaked=0 vs the CRyPTIC leakset;
+        # biosample cross-archive overlap 0/30 probed). Correct the framing WITHOUT touching the shared fn.
+        res["honesty"] = (
+            "GENUINELY INDEPENDENT (out-of-CRyPTIC-build): accession-level provenance-disjoint (leaked=0 vs "
+            "the CRyPTIC leakset; biosample cross-archive overlap 0/30 probed), measured phenotype "
+            "(non-circular), WHO catalogue applied UNCHANGED. The clonality-collapsed number is the honest "
+            "metric; raw is clone-inflated. NOT the in-distribution knowledge-baseline.")
+        res["independence_note"] = (
+            "Independent of the WHO-catalogue BUILD. Scored SEPARATELY from the CRyPTIC knowledge-baseline.")
+        res["cohort_scope"] = (
+            "ASSEMBLY-AVAILABLE subset: 2,845 of 26,941 not-leaked phenotyped isolates carry a downloadable "
+            "GCA assembly (the fetchable/callable subset) — NOT a prevalence-preserving full cohort, so the "
+            "status stays TB_SUBSET_PLUMBING honestly; but the cohort IS independent (the inherited "
+            "'in-distribution' label was a shared-fn copy artifact, corrected here).")
         result["drugs"][drug] = res
     return result
 

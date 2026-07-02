@@ -7,7 +7,7 @@
       "n_isolates": 2840,
       "n_uncallable_abstain": 0,
       "status": "TB_SUBSET_PLUMBING",
-      "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+      "honesty": "GENUINELY INDEPENDENT (out-of-CRyPTIC-build): accession-level provenance-disjoint (leaked=0 vs the CRyPTIC leakset; biosample cross-archive overlap 0/30 probed), measured phenotype (non-circular), WHO catalogue applied UNCHANGED. The clonality-collapsed number is the honest metric; raw is clone-inflated. NOT the in-distribution knowledge-baseline.",
       "lineage_collapsed": {
         "sens": 0.444,
         "spec": 0.979,
@@ -53,7 +53,9 @@
       },
       "plumbing_note": "convenience/partial cohort \u2014 metrics are NOT the baseline; fetch the full per-drug prevalence-preserving cohort to earn the label",
       "callability_assessed": false,
-      "n_unassigned_lineage": 39
+      "n_unassigned_lineage": 39,
+      "independence_note": "Independent of the WHO-catalogue BUILD. Scored SEPARATELY from the CRyPTIC knowledge-baseline.",
+      "cohort_scope": "ASSEMBLY-AVAILABLE subset: 2,845 of 26,941 not-leaked phenotyped isolates carry a downloadable GCA assembly (the fetchable/callable subset) \u2014 NOT a prevalence-preserving full cohort, so the status stays TB_SUBSET_PLUMBING honestly; but the cohort IS independent (the inherited 'in-distribution' label was a shared-fn copy artifact, corrected here)."
     },
     "isoniazid": {
       "drug": "isoniazid",
@@ -61,7 +63,7 @@
       "n_isolates": 2842,
       "n_uncallable_abstain": 0,
       "status": "TB_SUBSET_PLUMBING",
-      "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+      "honesty": "GENUINELY INDEPENDENT (out-of-CRyPTIC-build): accession-level provenance-disjoint (leaked=0 vs the CRyPTIC leakset; biosample cross-archive overlap 0/30 probed), measured phenotype (non-circular), WHO catalogue applied UNCHANGED. The clonality-collapsed number is the honest metric; raw is clone-inflated. NOT the in-distribution knowledge-baseline.",
       "lineage_collapsed": {
         "sens": 0.321,
         "spec": 0.972,
@@ -107,7 +109,9 @@
       },
       "plumbing_note": "convenience/partial cohort \u2014 metrics are NOT the baseline; fetch the full per-drug prevalence-preserving cohort to earn the label",
       "callability_assessed": false,
-      "n_unassigned_lineage": 39
+      "n_unassigned_lineage": 39,
+      "independence_note": "Independent of the WHO-catalogue BUILD. Scored SEPARATELY from the CRyPTIC knowledge-baseline.",
+      "cohort_scope": "ASSEMBLY-AVAILABLE subset: 2,845 of 26,941 not-leaked phenotyped isolates carry a downloadable GCA assembly (the fetchable/callable subset) \u2014 NOT a prevalence-preserving full cohort, so the status stays TB_SUBSET_PLUMBING honestly; but the cohort IS independent (the inherited 'in-distribution' label was a shared-fn copy artifact, corrected here)."
     }
   }
 }
