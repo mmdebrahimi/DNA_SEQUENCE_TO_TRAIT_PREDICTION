@@ -1,0 +1,356 @@
+{
+  "n_isolates": 970,
+  "k_clades": 18,
+  "conditions": [
+    {
+      "condition": "YPACETATE",
+      "n": 970,
+      "naive_r2": 0.011,
+      "clade_only_r2": 0.012,
+      "loco_r2": -0.727,
+      "within_clade_r2": -0.047,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDCAFEIN40",
+      "n": 970,
+      "naive_r2": 0.372,
+      "clade_only_r2": 0.114,
+      "loco_r2": -0.524,
+      "within_clade_r2": 0.365,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDHU",
+      "n": 970,
+      "naive_r2": -0.083,
+      "clade_only_r2": 0.022,
+      "loco_r2": -0.808,
+      "within_clade_r2": 0.019,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPETHANOL",
+      "n": 970,
+      "naive_r2": 0.065,
+      "clade_only_r2": 0.118,
+      "loco_r2": -1.236,
+      "within_clade_r2": -0.096,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPD14",
+      "n": 970,
+      "naive_r2": -0.112,
+      "clade_only_r2": 0.018,
+      "loco_r2": -0.41,
+      "within_clade_r2": -0.054,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDCAFEIN50",
+      "n": 970,
+      "naive_r2": 0.369,
+      "clade_only_r2": 0.122,
+      "loco_r2": -0.412,
+      "within_clade_r2": 0.343,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDKCL2M",
+      "n": 970,
+      "naive_r2": 0.158,
+      "clade_only_r2": 0.027,
+      "loco_r2": -0.113,
+      "within_clade_r2": 0.172,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPGALACTOSE",
+      "n": 970,
+      "naive_r2": 0.025,
+      "clade_only_r2": 0.025,
+      "loco_r2": -0.742,
+      "within_clade_r2": 0.112,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPD40",
+      "n": 970,
+      "naive_r2": 0.175,
+      "clade_only_r2": 0.059,
+      "loco_r2": -0.609,
+      "within_clade_r2": 0.034,
+      "n_clades_used": 3,
+      "verdict": "STRUCTURE"
+    },
+    {
+      "condition": "YPDCHX05",
+      "n": 970,
+      "naive_r2": -0.006,
+      "clade_only_r2": 0.03,
+      "loco_r2": -0.254,
+      "within_clade_r2": -0.018,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDLICL250MM",
+      "n": 970,
+      "naive_r2": -0.051,
+      "clade_only_r2": 0.009,
+      "loco_r2": -0.423,
+      "within_clade_r2": 0.024,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPGLYCEROL",
+      "n": 970,
+      "naive_r2": 0.051,
+      "clade_only_r2": 0.068,
+      "loco_r2": -1.648,
+      "within_clade_r2": -0.026,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPD42",
+      "n": 970,
+      "naive_r2": 0.176,
+      "clade_only_r2": 0.03,
+      "loco_r2": -0.272,
+      "within_clade_r2": 0.099,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDCHX1",
+      "n": 970,
+      "naive_r2": -0.159,
+      "clade_only_r2": 0.01,
+      "loco_r2": -0.351,
+      "within_clade_r2": -0.105,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDMV",
+      "n": 970,
+      "naive_r2": 0.047,
+      "clade_only_r2": 0.033,
+      "loco_r2": -0.395,
+      "within_clade_r2": 0.019,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPRIBOSE",
+      "n": 970,
+      "naive_r2": 0.031,
+      "clade_only_r2": 0.063,
+      "loco_r2": -0.388,
+      "within_clade_r2": -0.021,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPD6AU",
+      "n": 970,
+      "naive_r2": 0.04,
+      "clade_only_r2": 0.063,
+      "loco_r2": -1.028,
+      "within_clade_r2": -0.01,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDCUSO410MM",
+      "n": 970,
+      "naive_r2": 0.336,
+      "clade_only_r2": 0.197,
+      "loco_r2": -0.106,
+      "within_clade_r2": 0.238,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDNACL15M",
+      "n": 970,
+      "naive_r2": 0.041,
+      "clade_only_r2": 0.032,
+      "loco_r2": -0.774,
+      "within_clade_r2": 0.036,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPSORBITOL",
+      "n": 970,
+      "naive_r2": 0.005,
+      "clade_only_r2": 0.042,
+      "loco_r2": -0.352,
+      "within_clade_r2": -0.127,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDANISO10",
+      "n": 970,
+      "naive_r2": 0.197,
+      "clade_only_r2": 0.062,
+      "loco_r2": -0.362,
+      "within_clade_r2": 0.097,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDDMSO",
+      "n": 970,
+      "naive_r2": -0.1,
+      "clade_only_r2": 0.019,
+      "loco_r2": -0.344,
+      "within_clade_r2": -0.099,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDNACL1M",
+      "n": 970,
+      "naive_r2": 0.072,
+      "clade_only_r2": 0.066,
+      "loco_r2": -0.65,
+      "within_clade_r2": 0.057,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPXYLOSE",
+      "n": 970,
+      "naive_r2": 0.012,
+      "clade_only_r2": 0.055,
+      "loco_r2": -0.537,
+      "within_clade_r2": -0.021,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDANISO20",
+      "n": 970,
+      "naive_r2": 0.064,
+      "clade_only_r2": 0.132,
+      "loco_r2": -0.412,
+      "within_clade_r2": -0.044,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDETOH",
+      "n": 970,
+      "naive_r2": 0.004,
+      "clade_only_r2": 0.039,
+      "loco_r2": -0.396,
+      "within_clade_r2": 0.018,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDNYSTATIN",
+      "n": 970,
+      "naive_r2": -0.125,
+      "clade_only_r2": 0.022,
+      "loco_r2": -0.622,
+      "within_clade_r2": -0.097,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDANISO50",
+      "n": 970,
+      "naive_r2": -0.136,
+      "clade_only_r2": 0.088,
+      "loco_r2": -0.788,
+      "within_clade_r2": -0.142,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDFLUCONAZOLE",
+      "n": 970,
+      "naive_r2": -0.188,
+      "clade_only_r2": 0.027,
+      "loco_r2": -0.676,
+      "within_clade_r2": -0.168,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDSDS",
+      "n": 970,
+      "naive_r2": 0.083,
+      "clade_only_r2": 0.017,
+      "loco_r2": -0.404,
+      "within_clade_r2": 0.066,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDBENOMYL200",
+      "n": 970,
+      "naive_r2": -0.104,
+      "clade_only_r2": 0.022,
+      "loco_r2": -0.464,
+      "within_clade_r2": -0.047,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDFORMAMIDE4",
+      "n": 970,
+      "naive_r2": -0.172,
+      "clade_only_r2": -0.001,
+      "loco_r2": -0.459,
+      "within_clade_r2": -0.08,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    },
+    {
+      "condition": "YPDSODIUMMETAARSENITE",
+      "n": 970,
+      "naive_r2": 0.143,
+      "clade_only_r2": 0.024,
+      "loco_r2": -0.558,
+      "within_clade_r2": 0.2,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDBENOMYL500",
+      "n": 970,
+      "naive_r2": 0.321,
+      "clade_only_r2": 0.083,
+      "loco_r2": -0.151,
+      "within_clade_r2": 0.29,
+      "n_clades_used": 3,
+      "verdict": "MECHANISM"
+    },
+    {
+      "condition": "YPDFORMAMIDE5",
+      "n": 970,
+      "naive_r2": -0.191,
+      "clade_only_r2": -0.0,
+      "loco_r2": -0.489,
+      "within_clade_r2": -0.075,
+      "n_clades_used": 3,
+      "verdict": "WEAK"
+    }
+  ]
+}
