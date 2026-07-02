@@ -41,29 +41,11 @@ def _load(data: Path):
     return ph.loc[common], cnv.loc[common], dist.loc[common, common]
 
 
-def clade_centered_spearman(y, c, clades):
-    """Residualize BOTH phenotype and copy number by clade mean, then Spearman -> de-confounded association."""
-    yr, cr = y.copy(), c.copy()
-    for L in np.unique(clades):
-        m = clades == L
-        if m.sum() > 1:
-            yr[m] = y[m] - np.nanmean(y[m]); cr[m] = c[m] - np.nanmean(c[m])
-    return spearmanr(cr, yr)[0], yr, cr
-
-
-def _perm_null(y, cr, clades, n=200):
-    out = []
-    for s in range(n):
-        yp = y.copy(); rng = np.random.default_rng(s)
-        for L in np.unique(clades):
-            i = np.where(clades == L)[0]; v = yp[i].copy(); rng.shuffle(v); yp[i] = v
-        ypr = yp.copy()
-        for L in np.unique(clades):
-            m = clades == L
-            if m.sum() > 1:
-                ypr[m] = yp[m] - np.nanmean(yp[m])
-        out.append(spearmanr(cr, ypr)[0])
-    return np.array(out)
+# De-confounding primitives PROMOTED to the installable package (2026-07-02); this script is a thin runner.
+from dna_decode.deconfound import (  # noqa: E402
+    group_centered_spearman as clade_centered_spearman,
+    permutation_null as _perm_null,
+)
 
 
 def run_case(ph, cnv, dist, col, condition, direction, ks=(18, 30)) -> dict:

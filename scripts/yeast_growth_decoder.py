@@ -49,65 +49,13 @@ def _load(data_dir: Path):
     return ph.loc[common], pa.loc[common], dist.loc[common, common]
 
 
-def _clades(dist: pd.DataFrame, k: int) -> np.ndarray:
-    D = dist.values.astype(float)
-    D = (D + D.T) / 2.0
-    np.fill_diagonal(D, 0.0)
-    Z = linkage(squareform(D, checks=False), method="average")
-    return fcluster(Z, t=k, criterion="maxclust")
-
-
-def _r2(y_true, y_pred) -> float:
-    ss_res = float(np.sum((y_true - y_pred) ** 2))
-    ss_tot = float(np.sum((y_true - np.mean(y_true)) ** 2))
-    return 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
-
-
-def _cv_r2(X, y, groups=None, alpha=10.0, seed=0) -> float:
-    """5-fold CV r2. If groups given, leave-one-group-out; pooled out-of-fold r2."""
-    pred = np.full(len(y), np.nan)
-    if groups is not None:
-        for g in np.unique(groups):
-            te = groups == g; tr = ~te
-            if tr.sum() < 5 or te.sum() < 1:
-                continue
-            m = Ridge(alpha=alpha).fit(X[tr], y[tr])
-            pred[te] = m.predict(X[te])
-    else:
-        kf = KFold(n_splits=5, shuffle=True, random_state=seed)
-        for tr, te in kf.split(X):
-            m = Ridge(alpha=alpha).fit(X[tr], y[tr])
-            pred[te] = m.predict(X[te])
-    ok = ~np.isnan(pred)
-    return _r2(y[ok], pred[ok]) if ok.sum() > 10 else float("nan")
-
-
-def _within_clade_r2(X, y, clades, min_n=30, alpha=10.0) -> tuple[float, int]:
-    """Pooled out-of-fold r2 computed INSIDE each clade (>=min_n), scored on CLADE-CENTERED RESIDUALS so the
-    between-clade mean (population structure) cancels from BOTH truth and prediction. This is the honest
-    de-confounded metric: it measures ONLY within-clade explained variance — structure can't inflate it
-    (fixed 2026-07-02 after a synthetic-null test caught the clade-mean-add-back leak)."""
-    yr = np.full(len(y), np.nan)                       # clade-centered truth
-    pr = np.full(len(y), np.nan)                       # residual prediction
-    used = 0
-    for g in np.unique(clades):
-        idx = np.where(clades == g)[0]
-        if len(idx) < min_n:
-            continue
-        used += 1
-        Xg, yg = X[idx], y[idx]
-        kf = KFold(n_splits=5, shuffle=True, random_state=0)
-        for tr, te in kf.split(Xg):
-            mu = yg[tr].mean()
-            m = Ridge(alpha=alpha).fit(Xg[tr], yg[tr] - mu)   # predict within-clade residual
-            pr[idx[te]] = m.predict(Xg[te])
-            yr[idx[te]] = yg[te] - mu                          # center test truth by TRAIN mean
-    ok = ~np.isnan(pr)
-    if ok.sum() <= 10:
-        return float("nan"), used
-    ss_res = float(np.sum((yr[ok] - pr[ok]) ** 2))
-    ss_tot = float(np.sum(yr[ok] ** 2))                # residual variance (already ~zero-mean)
-    return (1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0), used
+# De-confounding primitives PROMOTED to the installable package (2026-07-02); this script is a thin runner.
+from dna_decode.deconfound import (  # noqa: E402
+    cluster_from_distance as _clades,
+    cv_r2 as _cv_r2,
+    r2 as _r2,
+    within_group_r2 as _within_clade_r2,
+)
 
 
 def run(data_dir: Path, conditions: list[str] | None = None, k_clades: int = 18) -> dict:

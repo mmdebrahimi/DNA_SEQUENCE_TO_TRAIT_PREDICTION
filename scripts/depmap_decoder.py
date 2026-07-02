@@ -49,37 +49,11 @@ def _drug_cols(treat: pd.DataFrame, drug: str) -> list[str]:
     return list(treat[m]["column_name"])
 
 
-def univariate_top(y: np.ndarray, G: np.ndarray, genes, n=12):
-    """t-stat of phenotype (mutant vs WT) per gene; sensitivity => mutant LFC LOWER => negative t."""
-    ts = np.zeros(G.shape[1])
-    for j in range(G.shape[1]):
-        g = G[:, j]
-        mut, wt = y[g == 1], y[g == 0]
-        if len(mut) < 5 or len(wt) < 5:
-            continue
-        se = np.sqrt(mut.std() ** 2 / len(mut) + wt.std() ** 2 / len(wt))
-        ts[j] = (mut.mean() - wt.mean()) / se if se > 0 else 0
-    order = np.argsort(np.abs(ts))[::-1][:n]
-    return [(genes[j], round(float(ts[j]), 2)) for j in order]
-
-
-def within_lineage_biomarker(y, g, lineage, min_both=4) -> dict:
-    """DE-CONFOUNDED single-gene attribution: does the biomarker separate response WITHIN lineages (not just
-    because the mutation concentrates in a sensitive lineage)? Center y by lineage mean, compare mut vs WT."""
-    yr = y.copy()
-    for L in np.unique(lineage):
-        m = lineage == L
-        if m.sum() > 1:
-            yr[m] = y[m] - np.nanmean(y[m])
-    mr, wr = yr[g == 1], yr[g == 0]
-    se = np.sqrt(mr.std() ** 2 / max(len(mr), 1) + wr.std() ** 2 / max(len(wr), 1))
-    t_within = float((mr.mean() - wr.mean()) / se) if se > 0 else 0.0
-    per = {}
-    for L in np.unique(lineage):
-        m = lineage == L; gm = g[m]; ym = y[m]
-        if (gm == 1).sum() >= min_both and (gm == 0).sum() >= min_both:
-            per[str(L)] = round(float(ym[gm == 1].mean() - ym[gm == 0].mean()), 2)
-    return {"within_lineage_t": round(t_within, 2), "per_lineage_delta_lfc": per}
+# Attribution primitives PROMOTED to the installable package (2026-07-02); this script is a thin runner.
+from dna_decode.deconfound import (  # noqa: E402
+    group_centered_biomarker_t as within_lineage_biomarker,
+    univariate_top,
+)
 
 
 def run(data: Path) -> dict:

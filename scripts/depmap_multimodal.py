@@ -55,16 +55,8 @@ def _read_target_cols(path: Path) -> pd.DataFrame:
     return pd.read_csv(path, usecols=pos, index_col=0)
 
 
-def _clade_centered_rho(y, x, lineage):
-    ok = ~np.isnan(y) & ~np.isnan(x)
-    y, x, lin = y[ok], x[ok], lineage[ok]
-    yr, xr = y.copy(), x.copy()
-    for L in np.unique(lin):
-        m = lin == L
-        if m.sum() > 1:
-            yr[m] = y[m] - np.nanmean(y[m]); xr[m] = x[m] - np.nanmean(x[m])
-    g = spearmanr(x, y)[0]
-    return (float(g) if not np.isnan(g) else 0.0), (float(spearmanr(xr, yr)[0]) if ok.sum() > 20 else float("nan")), int(ok.sum())
+# De-confounding primitive PROMOTED to the installable package (2026-07-02); this script is a thin runner.
+from dna_decode.deconfound import group_centered_association as _clade_centered_rho  # noqa: E402
 
 
 def run(data: Path) -> dict:
