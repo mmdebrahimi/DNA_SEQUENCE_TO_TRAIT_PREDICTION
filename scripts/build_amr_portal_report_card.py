@@ -24,6 +24,17 @@ SCORES = REPO / "wiki" / "amr_portal_independent_scores.json"
 OUT_MD = REPO / "wiki" / "amr_portal_independent_report_card.md"
 OUT_JSON = REPO / "wiki" / "amr_portal_independent_report_card.json"
 
+
+def _load_experimental() -> dict | None:
+    """Latest EXPERIMENTAL overlay artifact (TMP-SMX sul-AND-dfr on the AMR Portal). NAMESPACE-SEPARATE:
+    rendered as its OWN branded section, NEVER folded into the deployed-surface `cells`/counts (the
+    shared-key silent-overwrite lesson). Absent -> section omitted, card unchanged."""
+    arts = sorted((REPO / "wiki").glob("amr_portal_tmpsmx_experimental_*.json"))
+    if not arts:
+        return None
+    import json as _json
+    return _json.loads(arts[-1].read_text(encoding="utf-8"))
+
 def _calibrated_keys() -> set[str]:
     """The set of `<registry_organism>|<drug>` keys whose verdict is CALIBRATED in the frozen rules.
     Data-driven (NOT a hardcoded cell list, which drifts as cells are added — 2026-06-28: Campylobacter
@@ -71,6 +82,34 @@ def build(scores: dict) -> dict:
             "cells": rows}
 
 
+def render_experimental_md(exp: dict) -> list[str]:
+    """Branded, namespace-separate section for the EXPERIMENTAL TMP-SMX overlay — NOT part of the deployed
+    surface counts above."""
+    cells = exp.get("cells", {})
+    n_scored = exp.get("n_scored", 0)
+    L = ["",
+         "## Experimental overlay cells (NON-frozen — EXPERIMENTAL_SCORED, NOT in the shipped surface)",
+         "",
+         f"The TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` overlay "
+         f"(`dna_decode/data/experimental_drug_rules.py`; rule shape the frozen count/OR engine can't express) "
+         f"scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates. "
+         f"**{n_scored}/{len(cells)} SCORED** (strata-reproduction gate). **Namespace-separate by design:** "
+         f"these are `EXPERIMENTAL_SCORED` / `scorer_local` — NOT counted in the deployed-surface totals above, "
+         f"NOT in `shipped_decoder_surface`, and the frozen surface is byte-unchanged.",
+         "",
+         "- **Gate:** a cell is SCORED only if the 4-genotype strata REPRODUCE the Sci234/Oxford pattern "
+         "(sul+dfr = highest-R stratum AND sul-only R-rate < 0.5); else INDETERMINATE (honest — the overlay's "
+         "mechanism doesn't hold there, e.g. Klebsiella).",
+         "| Organism | Drug | headline | nR / nS | sens | spec | acc | strata-reproduced |",
+         "|---|---|---|---|---|---|---|---|"]
+    for k, c in sorted(cells.items()):
+        b = c.get("binary", {})
+        L.append(f"| {c['organism']} | {c['drug']} | {c['headline']} | {c['n_R']}/{c['n_S']} | "
+                 f"{_fmt(b.get('sens'))} | {_fmt(b.get('spec'))} | {_fmt(b.get('acc'))} | "
+                 f"{c['strata_reproduced']} |")
+    return L
+
+
 def render_md(card: dict) -> str:
     L = ["# AMR Portal — INDEPENDENT validation report card",
          "",
@@ -99,6 +138,8 @@ def render_md(card: dict) -> str:
         L.append(f"| {r['organism']} | {r['drug']} | {r['tier']} | {r['routing']} | {r['n_R']}/{r['n_S']} | "
                  f"{_fmt(r['sens'])} {_ci(r['sens_ci95'])} | {_fmt(r['spec'])} {_ci(r['spec_ci95'])} | "
                  f"{_fmt(r['accuracy'])} |")
+    if card.get("experimental"):
+        L += render_experimental_md(card["experimental"])
     L += ["",
           "## Provenance",
           "Scores `wiki/amr_portal_independent_scores.json` (`scripts/amr_portal_score_independent.py`, frozen "
@@ -114,10 +155,17 @@ def main(argv=None) -> int:
               file=sys.stderr)
         return 2
     card = build(json.loads(SCORES.read_text(encoding="utf-8")))
+    exp = _load_experimental()
+    if exp is not None:
+        # namespace-separate: own key, NOT merged into deployed cells/counts
+        card["experimental"] = exp
+        card["experimental_note"] = ("EXPERIMENTAL_SCORED overlay cells (TMP-SMX); NOT part of "
+                                     "n_scored_independent / n_cells; frozen surface byte-unchanged")
     OUT_JSON.write_text(json.dumps(card, indent=2, default=str), encoding="utf-8")
     OUT_MD.write_text(render_md(card), encoding="utf-8")
+    n_exp = exp.get("n_scored", 0) if exp else 0
     print(f"[amr-portal-card] {card['n_scored_independent']} SCORED_INDEPENDENT / {card['n_underpowered']} "
-          f"UNDERPOWERED of {card['n_cells']} cells -> {OUT_MD.name}, {OUT_JSON.name}")
+          f"UNDERPOWERED of {card['n_cells']} cells (+ {n_exp} EXPERIMENTAL_SCORED) -> {OUT_MD.name}, {OUT_JSON.name}")
     return 0
 
 

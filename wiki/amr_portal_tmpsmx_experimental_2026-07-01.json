@@ -1,0 +1,281 @@
+{
+  "_schema": "amr-portal-tmpsmx-experimental-v1",
+  "date": "2026-07-01",
+  "drug": "trimethoprim-sulfamethoxazole",
+  "rule_status": "EXPERIMENTAL_SCORED",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "R iff (>=1 acquired sul[1-4]) AND (>=1 acquired dfrA/B<allele>); else S (folP/folA target point-mutation TMP-R is an acquired-gene blind-spot)",
+  "independence_tier": "EBI AMR Portal provenance-disjoint (BioSample/ERS/GCA disjoint vs CRyPTIC + our tuning cohorts); genotype = the Portal's own AMRFinderPlus run; phenotype = wet-lab measured AST (binary R/S, non-circular)",
+  "metric_note": "binary measured AST only (Portal has no MIC -> no strict/relaxed tier); the 4-genotype-strata table + strata-reproduction gate is the experimental-honesty check (sul+dfr highest-R AND sul-only R-rate < 0.5, reproducing the Sci234/Oxford pattern)",
+  "n_cells": 5,
+  "n_scored": 4,
+  "cells": {
+    "Klebsiella pneumoniae|trimethoprim-sulfamethoxazole": {
+      "organism": "Klebsiella pneumoniae",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "binary": {
+        "n_scored": 4211,
+        "tp": 1215,
+        "fp": 26,
+        "tn": 1358,
+        "fn": 1612,
+        "abstain": 0,
+        "acc": 0.611,
+        "sens": 0.43,
+        "spec": 0.981
+      },
+      "strata": {
+        "sul+dfr": {
+          "n": 1241,
+          "R": 1215,
+          "S": 26,
+          "r_rate": 0.979
+        },
+        "sul-only": {
+          "n": 1427,
+          "R": 1297,
+          "S": 130,
+          "r_rate": 0.909
+        },
+        "dfr-only": {
+          "n": 91,
+          "R": 14,
+          "S": 77,
+          "r_rate": 0.154
+        },
+        "neither": {
+          "n": 1452,
+          "R": 301,
+          "S": 1151,
+          "r_rate": 0.207
+        }
+      },
+      "strata_reproduced": false,
+      "n_R": 2827,
+      "n_S": 1384,
+      "sens_wilson95": [
+        0.4116426920236085,
+        0.4481163280501391
+      ],
+      "spec_wilson95": [
+        0.9726156225423814,
+        0.9871480853620365
+      ],
+      "headline": "INDETERMINATE"
+    },
+    "Salmonella enterica|trimethoprim-sulfamethoxazole": {
+      "organism": "Salmonella enterica",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "binary": {
+        "n_scored": 26603,
+        "tp": 901,
+        "fp": 223,
+        "tn": 24713,
+        "fn": 766,
+        "abstain": 0,
+        "acc": 0.963,
+        "sens": 0.54,
+        "spec": 0.991
+      },
+      "strata": {
+        "sul+dfr": {
+          "n": 1124,
+          "R": 901,
+          "S": 223,
+          "r_rate": 0.802
+        },
+        "sul-only": {
+          "n": 4430,
+          "R": 570,
+          "S": 3860,
+          "r_rate": 0.129
+        },
+        "dfr-only": {
+          "n": 258,
+          "R": 31,
+          "S": 227,
+          "r_rate": 0.12
+        },
+        "neither": {
+          "n": 20791,
+          "R": 165,
+          "S": 20626,
+          "r_rate": 0.008
+        }
+      },
+      "strata_reproduced": true,
+      "n_R": 1667,
+      "n_S": 24936,
+      "sens_wilson95": [
+        0.5165023790268738,
+        0.5642952262039272
+      ],
+      "spec_wilson95": [
+        0.9898106043000713,
+        0.9921523284556845
+      ],
+      "headline": "SCORED"
+    },
+    "Escherichia coli|trimethoprim-sulfamethoxazole": {
+      "organism": "Escherichia coli",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "binary": {
+        "n_scored": 11888,
+        "tp": 1905,
+        "fp": 162,
+        "tn": 9107,
+        "fn": 714,
+        "abstain": 0,
+        "acc": 0.926,
+        "sens": 0.727,
+        "spec": 0.983
+      },
+      "strata": {
+        "sul+dfr": {
+          "n": 2067,
+          "R": 1905,
+          "S": 162,
+          "r_rate": 0.922
+        },
+        "sul-only": {
+          "n": 2059,
+          "R": 402,
+          "S": 1657,
+          "r_rate": 0.195
+        },
+        "dfr-only": {
+          "n": 402,
+          "R": 91,
+          "S": 311,
+          "r_rate": 0.226
+        },
+        "neither": {
+          "n": 7360,
+          "R": 221,
+          "S": 7139,
+          "r_rate": 0.03
+        }
+      },
+      "strata_reproduced": true,
+      "n_R": 2619,
+      "n_S": 9269,
+      "sens_wilson95": [
+        0.7099981604371773,
+        0.7440894977729106
+      ],
+      "spec_wilson95": [
+        0.9796477650086266,
+        0.984997204231439
+      ],
+      "headline": "SCORED"
+    },
+    "Shigella sonnei|trimethoprim-sulfamethoxazole": {
+      "organism": "Shigella sonnei",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "binary": {
+        "n_scored": 1139,
+        "tp": 666,
+        "fp": 14,
+        "tn": 329,
+        "fn": 130,
+        "abstain": 0,
+        "acc": 0.874,
+        "sens": 0.837,
+        "spec": 0.959
+      },
+      "strata": {
+        "sul+dfr": {
+          "n": 680,
+          "R": 666,
+          "S": 14,
+          "r_rate": 0.979
+        },
+        "sul-only": {
+          "n": 9,
+          "R": 3,
+          "S": 6,
+          "r_rate": 0.333
+        },
+        "dfr-only": {
+          "n": 332,
+          "R": 57,
+          "S": 275,
+          "r_rate": 0.172
+        },
+        "neither": {
+          "n": 118,
+          "R": 70,
+          "S": 48,
+          "r_rate": 0.593
+        }
+      },
+      "strata_reproduced": true,
+      "n_R": 796,
+      "n_S": 343,
+      "sens_wilson95": [
+        0.8093970873765898,
+        0.8607355988952919
+      ],
+      "spec_wilson95": [
+        0.9326619749387155,
+        0.9755335817649784
+      ],
+      "headline": "SCORED"
+    },
+    "Shigella flexneri|trimethoprim-sulfamethoxazole": {
+      "organism": "Shigella flexneri",
+      "drug": "trimethoprim-sulfamethoxazole",
+      "binary": {
+        "n_scored": 207,
+        "tp": 133,
+        "fp": 3,
+        "tn": 66,
+        "fn": 5,
+        "abstain": 0,
+        "acc": 0.961,
+        "sens": 0.964,
+        "spec": 0.957
+      },
+      "strata": {
+        "sul+dfr": {
+          "n": 136,
+          "R": 133,
+          "S": 3,
+          "r_rate": 0.978
+        },
+        "sul-only": {
+          "n": 7,
+          "R": 3,
+          "S": 4,
+          "r_rate": 0.429
+        },
+        "dfr-only": {
+          "n": 32,
+          "R": 0,
+          "S": 32,
+          "r_rate": 0.0
+        },
+        "neither": {
+          "n": 32,
+          "R": 2,
+          "S": 30,
+          "r_rate": 0.062
+        }
+      },
+      "strata_reproduced": true,
+      "n_R": 138,
+      "n_S": 69,
+      "sens_wilson95": [
+        0.9179884461257888,
+        0.9844266422544887
+      ],
+      "spec_wilson95": [
+        0.8797860261535665,
+        0.9851043661497328
+      ],
+      "headline": "SCORED"
+    }
+  },
+  "frozen_surface_changed": false
+}

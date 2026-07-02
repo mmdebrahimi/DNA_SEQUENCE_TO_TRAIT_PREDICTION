@@ -12,6 +12,8 @@ organism×drug needs an ENDORSED rule (deployed default validated for that organ
 organism-specific registry config) + its own independent powering check. Applying the E. coli rule to, say,
 Acinetobacter or Enterococcus is the intrinsic-gene over-call trap (`feedback_intrinsic_genes_break_broad_amr_class_rules`).
 
+> **Tier 1 DONE (2026-07-01):** TMP-SMX x5 scored on the AMR Portal -- **4/5 SCORED** (E. coli acc 0.926, Salmonella 0.963, Shigella sonnei 0.874, Shigella flexneri 0.961; strata-reproduced), **Klebsiella INDETERMINATE** (strata gate correctly fired -- sul-AND-dfr pattern doesn't hold there). Namespace-separate artifact wiki/amr_portal_tmpsmx_experimental_2026-07-01.json + wired into the AMR-Portal report card as a branded EXPERIMENTAL section (deployed-surface counts byte-unchanged). Frozen AMR surface untouched.
+
 ## Tier 1 — has a REAL rule, just not scored on the AMR Portal yet (the quick wins)
 
 | cells | rule status | action | VOI |

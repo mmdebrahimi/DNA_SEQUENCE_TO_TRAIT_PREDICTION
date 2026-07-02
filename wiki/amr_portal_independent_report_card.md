@@ -39,5 +39,18 @@ Standing roll-up of the frozen deterministic decoder scored on the EBI AMR Porta
 | Shigella sonnei | meropenem | UNDERPOWERED | drug_rule_default | 0/883 | — — | 1.000 [0.996, 1.000] | 1.000 |
 | Shigella sonnei | tetracycline | SCORED_INDEPENDENT | drug_rule_default | 951/475 | 0.950 [0.934, 0.962] | 0.975 [0.956, 0.985] | 0.958 |
 
+## Experimental overlay cells (NON-frozen — EXPERIMENTAL_SCORED, NOT in the shipped surface)
+
+The TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` overlay (`dna_decode/data/experimental_drug_rules.py`; rule shape the frozen count/OR engine can't express) scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates. **4/5 SCORED** (strata-reproduction gate). **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, and the frozen surface is byte-unchanged.
+
+- **Gate:** a cell is SCORED only if the 4-genotype strata REPRODUCE the Sci234/Oxford pattern (sul+dfr = highest-R stratum AND sul-only R-rate < 0.5); else INDETERMINATE (honest — the overlay's mechanism doesn't hold there, e.g. Klebsiella).
+| Organism | Drug | headline | nR / nS | sens | spec | acc | strata-reproduced |
+|---|---|---|---|---|---|---|---|
+| Escherichia coli | trimethoprim-sulfamethoxazole | SCORED | 2619/9269 | 0.727 | 0.983 | 0.926 | True |
+| Klebsiella pneumoniae | trimethoprim-sulfamethoxazole | INDETERMINATE | 2827/1384 | 0.430 | 0.981 | 0.611 | False |
+| Salmonella enterica | trimethoprim-sulfamethoxazole | SCORED | 1667/24936 | 0.540 | 0.991 | 0.963 | True |
+| Shigella flexneri | trimethoprim-sulfamethoxazole | SCORED | 138/69 | 0.964 | 0.957 | 0.961 | True |
+| Shigella sonnei | trimethoprim-sulfamethoxazole | SCORED | 796/343 | 0.837 | 0.959 | 0.874 | True |
+
 ## Provenance
 Scores `wiki/amr_portal_independent_scores.json` (`scripts/amr_portal_score_independent.py`, frozen rule). Feasibility `wiki/amr_portal_feasibility_result_2026-06-23.md`; validation memo `wiki/amr_portal_independent_validation_2026-06-23.md`. Rebuild: `uv run python scripts/build_amr_portal_report_card.py`.
