@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Neisseria gonorrhoeae",
+  "drug": "tetracycline",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "tet(M) -> R (rpsJ V57M accessory-only)",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 6010,
+    "tp": 1197,
+    "fp": 7,
+    "tn": 3431,
+    "fn": 1375,
+    "abstain": 0,
+    "acc": 0.77,
+    "sens": 0.465,
+    "spec": 0.998
+  },
+  "n_R": 2572,
+  "n_S": 3438,
+  "powered": true,
+  "sens_wilson95": [
+    0.4461851154675973,
+    0.4847112564211087
+  ],
+  "spec_wilson95": [
+    0.9958028786892076,
+    0.9990133847902042
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 1204,
+      "R": 1197,
+      "S": 7,
+      "r_rate": 0.994
+    },
+    "determinant_absent": {
+      "n": 4806,
+      "R": 1375,
+      "S": 3431,
+      "r_rate": 0.286
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

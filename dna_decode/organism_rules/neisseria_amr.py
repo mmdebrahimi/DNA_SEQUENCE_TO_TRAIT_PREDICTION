@@ -42,6 +42,29 @@ def _qrdr_hits(symbols: list[str]) -> dict[str, list[str]]:
     return hits
 
 
+DRUG_TET = "tetracycline"
+
+
+def call_ng_tetracycline(symbols: list[str]) -> dict:
+    """Predict tetracycline R/S for N. gonorrhoeae.
+
+    Two determinants: acquired **tet(M)** (plasmid ribosomal-protection -> HIGH-level R) and the **rpsJ V57M**
+    ribosomal S10 point mutation (chromosomal -> LOW-level R, often at/above the CLSI R>=2 breakpoint). Either
+    -> R. (mtrR/porB efflux variants contribute to multidrug tolerance but are not the primary tet
+    determinant.) Non-frozen / scorer-local; endorsed only if it clears the spec>=0.85 falsifier on the AMR
+    Portal (the rpsJ-only isolates are the spec risk if V57M sits below the breakpoint)."""
+    tetm = [s.strip() for s in symbols if s and s.strip().startswith("tet(M)")]
+    rpsj = [s.strip() for s in symbols if (s or "").strip() == "rpsJ_V57M"]
+    # tet(M)-ONLY: rpsJ V57M is common + LOW-level (frequently below the CLSI R>=2 breakpoint), so including
+    # it collapses specificity (empirically 0.35 on the AMR Portal). Demoted to accessory context.
+    return {
+        "prediction": "R" if tetm else "S",
+        "matched_tetM": tetm, "accessory_rpsJ_V57M": rpsj,
+        "rule": "tet(M) (high-level ribosomal protection) -> R (rpsJ V57M accessory-only: low-level, over-calls)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+    }
+
+
 def call_ng_ciprofloxacin(symbols: list[str]) -> dict:
     """Predict cipro R/S for N. gonorrhoeae from its determinant symbols.
 

@@ -823,6 +823,25 @@
         },
         "strata_reproduced": true
       },
+      "Neisseria gonorrhoeae|tetracycline": {
+        "organism": "Neisseria gonorrhoeae",
+        "drug": "tetracycline",
+        "headline": "SCORED",
+        "n_R": 2572,
+        "n_S": 3438,
+        "binary": {
+          "n_scored": 6010,
+          "tp": 1197,
+          "fp": 7,
+          "tn": 3431,
+          "fn": 1375,
+          "abstain": 0,
+          "acc": 0.77,
+          "sens": 0.465,
+          "spec": 0.998
+        },
+        "strata_reproduced": true
+      },
       "Staphylococcus aureus|ciprofloxacin": {
         "organism": "Staphylococcus aureus",
         "drug": "ciprofloxacin",
@@ -862,8 +881,8 @@
         "strata_reproduced": true
       }
     },
-    "n_cells": 8,
-    "n_scored": 7
+    "n_cells": 9,
+    "n_scored": 8
   },
   "experimental_note": "EXPERIMENTAL_SCORED overlay cells (TMP-SMX); NOT part of n_scored_independent / n_cells; frozen surface byte-unchanged"
 }

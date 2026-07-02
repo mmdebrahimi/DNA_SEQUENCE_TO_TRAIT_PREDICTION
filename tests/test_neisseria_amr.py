@@ -3,7 +3,19 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from dna_decode.organism_rules.neisseria_amr import call_ng_ciprofloxacin  # noqa: E402
+from dna_decode.organism_rules.neisseria_amr import (  # noqa: E402
+    call_ng_ciprofloxacin, call_ng_tetracycline,
+)
+
+
+def test_ng_tet_tetM_only():
+    # tet(M) (high-level) -> R; rpsJ V57M is accessory-only (low-level, over-calls -> excluded from the call)
+    assert call_ng_tetracycline(["tet(M)"])["prediction"] == "R"
+    assert call_ng_tetracycline(["tet(M)_1"])["prediction"] == "R"       # startswith tet(M)
+    r = call_ng_tetracycline(["rpsJ_V57M"])
+    assert r["prediction"] == "S" and r["accessory_rpsJ_V57M"] == ["rpsJ_V57M"]
+    assert call_ng_tetracycline([])["prediction"] == "S"
+    assert call_ng_tetracycline(["tet(M)", "rpsJ_V57M"])["prediction"] == "R"
 
 
 def test_gyrA_qrdr_confers_R():
