@@ -1,9 +1,16 @@
 # Yeast growth decoder — the first DE-CONFOUNDED learned-decoder WIN (2026-07-02)
 
-On the 1002 Yeast Genomes substrate (F4 pilot GO), a gene-content decoder shows **real mechanistic
-genotype→growth signal that survives lineage de-confounding** — the first positive after the foundation-model
-embedding arm went 0-for-4 (cipro within-lineage / pathotype / Arabidopsis flowering-time / …, all
-structure-learners).
+On the 1002 Yeast Genomes substrate (F4 pilot GO), a gene-content decoder shows **real genotype→growth signal
+that survives lineage de-confounding** — the first positive after the foundation-model embedding arm went
+0-for-4 (cipro within-lineage / pathotype / Arabidopsis flowering-time / …, all structure-learners).
+
+> **SCOPING UPDATE 2026-07-02 (attribution capstone — read `wiki/yeast_attribution_capstone_2026-07-02.md`):**
+> the "MECHANISM" label below is TEMPERED. The de-confounded within-clade signal is real + permutation-clean,
+> but it is **NOT attributable to the canonical resistance genes** (copper→CUP1 is copy-number-invisible to
+> presence/absence; copper's within-clade top genes are 2μm-plasmid/Ty accessory elements = likely finer
+> sub-structure). Honest label: **"de-confounded predictive signal, mechanistic identity UNRESOLVED"** — NOT
+> "MECHANISM confirmed." Resolving it needs SNP/copy-number features + a kinship mixed-model (a different
+> feature set), not gene presence/absence.
 
 ## Setup
 - **Substrate:** 970 *S. cerevisiae* isolates joined across phenotype (35 lab growth conditions, YPD-normalized)
