@@ -1,5 +1,14 @@
 # Yeast decoder — mechanistic attribution capstone (2026-07-02): ATTRIBUTION INCONCLUSIVE
 
+> **RESOLVED 2026-07-02 (`wiki/yeast_cnv_attribution_result_2026-07-02.md`):** the open thread below is now
+> CLOSED. Attribution was inconclusive *with gene presence/absence* because the canonical mechanisms are
+> COPY-NUMBER (CUP1) — the wrong feature type. Given the RIGHT feature (the free `genesMatrix_CopyNumber`),
+> a bounded confirmatory test (NOT the full SNP+LMM build) CONFIRMS canonical-gene attribution, de-confounded:
+> **CUP1 copy → copper clade-centered ρ +0.73** (perm_p 0.005); **ENA5 copy → sodium ρ +0.25** (perm_p 0.005),
+> mechanism-SPECIFIC (ionic Na/Li yes, non-ionic sorbitol null +0.03). So the failure below was a
+> feature/mechanism MISMATCH, not a capability gap — the 2nd proof (after DepMap) that the feature type must
+> match the mechanism type.
+
 The capstone tested whether the de-confounded within-clade yeast growth signal is attributable to the KNOWN
 canonical resistance genes (arsenite→ACR3/ARR, copper→CUP1, benomyl→TUB2). **It is NOT cleanly attributable.**
 The win (real, permutation-clean, K-robust de-confounded signal) STANDS; its mechanistic identity is

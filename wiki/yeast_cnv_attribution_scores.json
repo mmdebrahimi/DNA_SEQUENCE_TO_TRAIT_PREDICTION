@@ -1,0 +1,69 @@
+{
+  "n_isolates": 970,
+  "cases": {
+    "CUP1 (YHR055C)": {
+      "col": "X4306.YHR055C_NumOfGenes_4",
+      "condition": "YPDCUSO410MM",
+      "n": 970,
+      "copy_number_distribution": {
+        "count": 970.0,
+        "mean": 4.08,
+        "std": 4.93,
+        "min": 0.5,
+        "25%": 1.0,
+        "50%": 2.0,
+        "75%": 5.0,
+        "max": 45.5
+      },
+      "global_spearman": 0.824,
+      "by_k": {
+        "18": {
+          "clade_centered_spearman": 0.726,
+          "perm_null_p95": 0.06,
+          "perm_p": 0.005,
+          "direction_correct": true
+        },
+        "30": {
+          "clade_centered_spearman": 0.717,
+          "perm_null_p95": 0.063,
+          "perm_p": 0.005,
+          "direction_correct": true
+        }
+      },
+      "confirmed": true,
+      "mechanism": "copper metallothionein tandem array"
+    },
+    "ENA5 (YDR038C)": {
+      "col": "X2730.YDR038C_NumOfGenes_3",
+      "condition": "YPDNACL1M",
+      "n": 970,
+      "copy_number_distribution": {
+        "count": 970.0,
+        "mean": 1.56,
+        "std": 1.76,
+        "min": 0.0,
+        "25%": 0.0,
+        "50%": 1.0,
+        "75%": 2.0,
+        "max": 18.0
+      },
+      "global_spearman": 0.33,
+      "by_k": {
+        "18": {
+          "clade_centered_spearman": 0.251,
+          "perm_null_p95": 0.064,
+          "perm_p": 0.005,
+          "direction_correct": true
+        },
+        "30": {
+          "clade_centered_spearman": 0.251,
+          "perm_null_p95": 0.069,
+          "perm_p": 0.005,
+          "direction_correct": true
+        }
+      },
+      "confirmed": true,
+      "mechanism": "Na+/Li+ efflux ATPase tandem cluster (ENA1/2/5)"
+    }
+  }
+}
