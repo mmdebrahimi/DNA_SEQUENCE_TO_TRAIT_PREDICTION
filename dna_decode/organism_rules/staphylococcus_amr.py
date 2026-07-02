@@ -41,3 +41,24 @@ def call_sa_ciprofloxacin(symbols: list[str]) -> dict:
         "rule": "gyrA (Ser84/Ser85/Glu88) OR grlA/parC (Ser80/Glu84) QRDR point mutation -> R",
         "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
     }
+
+
+# --- rifampicin (rpoB RRDR) -------------------------------------------------------------------------------
+DRUG_RIF = "rifampicin"
+_RPOB_RE = re.compile(r"^rpoB_[A-Z]\d+[A-Z*]$")
+
+
+def call_sa_rifampicin(symbols: list[str]) -> dict:
+    """Predict rifampicin R/S for S. aureus from its determinant symbols.
+
+    R iff AMRFinderPlus reports ANY rpoB RRDR point substitution (e.g. rpoB_H481Y, rpoB_L466S, rpoB_A477V).
+    Unlike a fixed-codon QRDR list, rif resistance spans many RRDR codons (~464-529) — but AMRFinder's rpoB
+    POINT calls are ALL curated resistance mutations (it does not emit benign rpoB polymorphisms as AMR),
+    so presence of any is the correct deterministic determinant. Frozen surface untouched (scorer-local)."""
+    matched = [s.strip() for s in symbols if _RPOB_RE.match((s or "").strip())]
+    return {
+        "prediction": "R" if matched else "S",
+        "matched_rpoB": matched,
+        "rule": "any AMRFinder rpoB RRDR resistance point mutation -> R",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+    }

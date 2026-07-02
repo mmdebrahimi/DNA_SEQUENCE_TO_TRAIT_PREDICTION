@@ -1,0 +1,53 @@
+{
+  "_schema": "amr-portal-staphylococcus-rif-v1",
+  "date": "2026-07-01",
+  "organism": "Staphylococcus aureus",
+  "drug": "rifampicin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "any AMRFinder rpoB RRDR resistance point mutation -> R",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; genotype = the Portal's AMRFinderPlus POINT calls; phenotype = wet-lab measured AST (binary R/S, non-circular)",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) provenance-disjoint + strata reproduce",
+  "note_rare_R": "rifampicin resistance is rare in S. aureus -> R class small; powered but S-skewed",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 3638,
+    "tp": 60,
+    "fp": 32,
+    "tn": 3527,
+    "fn": 19,
+    "abstain": 0,
+    "acc": 0.986,
+    "sens": 0.759,
+    "spec": 0.991
+  },
+  "n_R": 79,
+  "n_S": 3559,
+  "powered": true,
+  "sens_wilson95": [
+    0.6546409953317426,
+    0.8402794311206679
+  ],
+  "spec_wilson95": [
+    0.9873347824677298,
+    0.9936237872312431
+  ],
+  "strata": {
+    "rpoB_present": {
+      "n": 92,
+      "R": 60,
+      "S": 32,
+      "r_rate": 0.652
+    },
+    "rpoB_absent": {
+      "n": 3546,
+      "R": 19,
+      "S": 3527,
+      "r_rate": 0.005
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

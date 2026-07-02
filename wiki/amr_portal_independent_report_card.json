@@ -841,10 +841,29 @@
           "spec": 0.884
         },
         "strata_reproduced": true
+      },
+      "Staphylococcus aureus|rifampicin": {
+        "organism": "Staphylococcus aureus",
+        "drug": "rifampicin",
+        "headline": "SCORED",
+        "n_R": 79,
+        "n_S": 3559,
+        "binary": {
+          "n_scored": 3638,
+          "tp": 60,
+          "fp": 32,
+          "tn": 3527,
+          "fn": 19,
+          "abstain": 0,
+          "acc": 0.986,
+          "sens": 0.759,
+          "spec": 0.991
+        },
+        "strata_reproduced": true
       }
     },
-    "n_cells": 7,
-    "n_scored": 6
+    "n_cells": 8,
+    "n_scored": 7
   },
   "experimental_note": "EXPERIMENTAL_SCORED overlay cells (TMP-SMX); NOT part of n_scored_independent / n_cells; frozen surface byte-unchanged"
 }
