@@ -804,6 +804,82 @@
         ],
         "headline": "SCORED"
       },
+      "Campylobacter coli|gentamicin": {
+        "organism": "Campylobacter coli",
+        "drug": "gentamicin",
+        "headline": "SCORED",
+        "n_R": 92,
+        "n_S": 1671,
+        "binary": {
+          "n_scored": 1763,
+          "tp": 87,
+          "fp": 0,
+          "tn": 1671,
+          "fn": 5,
+          "abstain": 0,
+          "acc": 0.997,
+          "sens": 0.946,
+          "spec": 1.0
+        },
+        "strata_reproduced": true
+      },
+      "Campylobacter coli|tetracycline": {
+        "organism": "Campylobacter coli",
+        "drug": "tetracycline",
+        "headline": "SCORED",
+        "n_R": 923,
+        "n_S": 844,
+        "binary": {
+          "n_scored": 1767,
+          "tp": 900,
+          "fp": 5,
+          "tn": 839,
+          "fn": 23,
+          "abstain": 0,
+          "acc": 0.984,
+          "sens": 0.975,
+          "spec": 0.994
+        },
+        "strata_reproduced": true
+      },
+      "Campylobacter jejuni|gentamicin": {
+        "organism": "Campylobacter jejuni",
+        "drug": "gentamicin",
+        "headline": "SCORED",
+        "n_R": 80,
+        "n_S": 5711,
+        "binary": {
+          "n_scored": 5791,
+          "tp": 70,
+          "fp": 2,
+          "tn": 5709,
+          "fn": 10,
+          "abstain": 0,
+          "acc": 0.998,
+          "sens": 0.875,
+          "spec": 1.0
+        },
+        "strata_reproduced": true
+      },
+      "Campylobacter jejuni|tetracycline": {
+        "organism": "Campylobacter jejuni",
+        "drug": "tetracycline",
+        "headline": "SCORED",
+        "n_R": 2600,
+        "n_S": 3290,
+        "binary": {
+          "n_scored": 5890,
+          "tp": 2554,
+          "fp": 42,
+          "tn": 3248,
+          "fn": 46,
+          "abstain": 0,
+          "acc": 0.985,
+          "sens": 0.982,
+          "spec": 0.987
+        },
+        "strata_reproduced": true
+      },
       "Enterobacter cloacae|ceftriaxone": {
         "organism": "Enterobacter cloacae",
         "drug": "ceftriaxone",
@@ -1147,8 +1223,8 @@
         "strata_reproduced": true
       }
     },
-    "n_cells": 23,
-    "n_scored": 17
+    "n_cells": 27,
+    "n_scored": 21
   },
   "experimental_note": "EXPERIMENTAL_SCORED overlay cells (TMP-SMX); NOT part of n_scored_independent / n_cells; frozen surface byte-unchanged"
 }

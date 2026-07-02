@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Campylobacter coli",
+  "drug": "gentamicin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "true gent enzyme aph(2'')/aac(3) -> R (aad9/spw non-gent excluded)",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 1763,
+    "tp": 87,
+    "fp": 0,
+    "tn": 1671,
+    "fn": 5,
+    "abstain": 0,
+    "acc": 0.997,
+    "sens": 0.946,
+    "spec": 1.0
+  },
+  "n_R": 92,
+  "n_S": 1671,
+  "powered": true,
+  "sens_wilson95": [
+    0.8790130893472858,
+    0.9765652816314958
+  ],
+  "spec_wilson95": [
+    0.9977062905530887,
+    1.0
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 87,
+      "R": 87,
+      "S": 0,
+      "r_rate": 1.0
+    },
+    "determinant_absent": {
+      "n": 1676,
+      "R": 5,
+      "S": 1671,
+      "r_rate": 0.003
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

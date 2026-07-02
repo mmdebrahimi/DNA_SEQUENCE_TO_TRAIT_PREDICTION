@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Campylobacter coli",
+  "drug": "tetracycline",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "tet(O)-family ribosomal protection -> R",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 1767,
+    "tp": 900,
+    "fp": 5,
+    "tn": 839,
+    "fn": 23,
+    "abstain": 0,
+    "acc": 0.984,
+    "sens": 0.975,
+    "spec": 0.994
+  },
+  "n_R": 923,
+  "n_S": 844,
+  "powered": true,
+  "sens_wilson95": [
+    0.962885313339561,
+    0.9833389390030183
+  ],
+  "spec_wilson95": [
+    0.9862072992793636,
+    0.9974670096953318
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 905,
+      "R": 900,
+      "S": 5,
+      "r_rate": 0.994
+    },
+    "determinant_absent": {
+      "n": 862,
+      "R": 23,
+      "S": 839,
+      "r_rate": 0.027
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

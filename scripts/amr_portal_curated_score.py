@@ -124,6 +124,14 @@ def _efm(fn_name, key):
     return _fn
 
 
+def _cj(fn_name, key):
+    def _fn(dets):
+        from dna_decode.organism_rules import campylobacter_amr as c
+        r = getattr(c, fn_name)(_syms(dets))
+        return {"prediction": r["prediction"], "determinant_present": bool(r[key])}
+    return _fn
+
+
 CURATED_CELLS = {
     "neisseria_tet": ("Neisseria gonorrhoeae", "tetracycline", _ng_tet, "neisseria_tet",
                       "tet(M) -> R (rpsJ V57M accessory-only)"),
@@ -133,6 +141,14 @@ CURATED_CELLS = {
                 "enterococcus_faecium_tet", "acquired tet gene -> R"),
     "efm_gent": ("Enterococcus faecium", "gentamicin", _efm("call_efm_gentamicin", "matched_aph2"),
                  "enterococcus_faecium_gent", "aph(2'') high-level -> R (intrinsic aac(6')-Ii excluded)"),
+    "cj_tet": ("Campylobacter jejuni", "tetracycline", _cj("call_cj_tetracycline", "matched_tetO"),
+               "campylobacter_jejuni_tet", "tet(O)-family ribosomal protection -> R"),
+    "cj_gent": ("Campylobacter jejuni", "gentamicin", _cj("call_cj_gentamicin", "matched_gent"),
+                "campylobacter_jejuni_gent", "true gent enzyme aph(2'')/aac(3) -> R (aad9/spw non-gent excluded)"),
+    "cc_tet": ("Campylobacter coli", "tetracycline", _cj("call_cj_tetracycline", "matched_tetO"),
+               "campylobacter_coli_tet", "tet(O)-family ribosomal protection -> R"),
+    "cc_gent": ("Campylobacter coli", "gentamicin", _cj("call_cj_gentamicin", "matched_gent"),
+                "campylobacter_coli_gent", "true gent enzyme aph(2'')/aac(3) -> R (aad9/spw non-gent excluded)"),
 }
 
 

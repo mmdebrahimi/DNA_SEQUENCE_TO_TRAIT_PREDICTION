@@ -41,11 +41,15 @@ Standing roll-up of the frozen deterministic decoder scored on the EBI AMR Porta
 
 ## Overlay cells (NON-frozen — EXPERIMENTAL / CURATED, NOT in the shipped surface)
 
-NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay (`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. N. gonorrhoeae cipro gyrA-QRDR). **17/23 SCORED**. **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.
+NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay (`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. N. gonorrhoeae cipro gyrA-QRDR). **21/27 SCORED**. **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.
 
 - **Gate:** a cell is SCORED only if the 4-genotype strata REPRODUCE the Sci234/Oxford pattern (sul+dfr = highest-R stratum AND sul-only R-rate < 0.5); else INDETERMINATE (honest — the overlay's mechanism doesn't hold there, e.g. Klebsiella).
 | Organism | Drug | headline | nR / nS | sens | spec | acc | strata-reproduced |
 |---|---|---|---|---|---|---|---|
+| Campylobacter coli | gentamicin | SCORED | 92/1671 | 0.946 | 1.000 | 0.997 | True |
+| Campylobacter coli | tetracycline | SCORED | 923/844 | 0.975 | 0.994 | 0.984 | True |
+| Campylobacter jejuni | gentamicin | SCORED | 80/5711 | 0.875 | 1.000 | 0.998 | True |
+| Campylobacter jejuni | tetracycline | SCORED | 2600/3290 | 0.982 | 0.987 | 0.985 | True |
 | Enterobacter cloacae | ceftriaxone | UNDERPOWERED | 117/6 | 0.573 | 0.500 | 0.569 | True |
 | Enterobacter cloacae | ciprofloxacin | SCORED | 87/48 | 0.264 | 1.000 | 0.526 | True |
 | Enterobacter cloacae | gentamicin | INDETERMINATE | 37/89 | 0.649 | 0.809 | 0.762 | True |

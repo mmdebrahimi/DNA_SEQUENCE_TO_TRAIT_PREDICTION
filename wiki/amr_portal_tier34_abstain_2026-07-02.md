@@ -29,8 +29,14 @@ headline is INDETERMINATE/UNDERPOWERED, or class-D cells not attempted.
 
 ## Disposition
 
-Tier-3/4 SCORED cells (Phase A+B+C): **13 new** (NG cipro/tet, SA cipro/rif, E. cloacae cipro/tet/TMP-SMX,
-Proteus gent/TMP-SMX, Serratia mero, E. faecium cipro/tet/gent) + the 4 TMP-SMX experimental = 17 overlay
-SCORED. The remaining backlog is the ABSTAIN set above — a correct, honest terminal (the determinant paradigm
-genuinely can't decode PBP/efflux/intrinsic-expression resistance). Any future attempt needs a different
-signal (expression/regulatory), not another gene-presence rule.
+Tier-3/4 SCORED cells (Phase A+B+C + Tier-3 Campylobacter): **17 new** (NG cipro/tet, SA cipro/rif,
+E. cloacae cipro/tet/TMP-SMX, Proteus gent/TMP-SMX, Serratia mero, E. faecium cipro/tet/gent,
+C. jejuni tet/gent, C. coli tet/gent) + the 4 TMP-SMX experimental = **21 overlay SCORED**. The remaining
+backlog is the ABSTAIN set above — a correct, honest terminal (the determinant paradigm genuinely can't
+decode PBP/efflux/intrinsic-expression resistance). Any future attempt needs a different signal
+(expression/regulatory), not another gene-presence rule.
+
+Note on Campylobacter gent: the initial probe showed the AMINOGLYCOSIDE subclass dominated by aad9/spw
+(spectinomycin/streptomycin, non-gent) — but the gent-R isolates DO carry true aph(2'')/aac(3) enzymes,
+which the `_GENT_MARKERS`-only rule separates cleanly (spec 1.0 both species). The non-gent-marker exclusion
+is the load-bearing piece (`tests/test_campylobacter_amr.py::test_gent_true_marker_only`).
