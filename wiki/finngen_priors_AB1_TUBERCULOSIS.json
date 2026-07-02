@@ -1,0 +1,42 @@
+{
+  "_schema": "finngen-locus-priors-v1",
+  "endpoint": "AB1_TUBERCULOSIS",
+  "release": "R12",
+  "resource": "FinnGen (host/human genetics) -- free, no-auth GWAS summary statistics",
+  "scope_note": "HOST-genetics locus priors for a future human-variant arm; does NOT feed the pathogen/organism decoder (different genetics axis). Banked, not load-bearing.",
+  "n_cases": "3063",
+  "n_controls": "497285",
+  "n_variants": 21327062,
+  "n_genome_wide_sig": 233,
+  "gw_sig_threshold": "p < 5e-8",
+  "n_gene_loci": 3,
+  "lead_loci_by_gene": [
+    {
+      "variant": "6:32373621:A:G",
+      "rsid": "rs9391858",
+      "gene": "TSBP1-AS1",
+      "pval": "2.17515e-09",
+      "mlogp": 8.66,
+      "beta": -0.189453,
+      "direction": "protective"
+    },
+    {
+      "variant": "6:32459827:G:C",
+      "rsid": "rs13207140",
+      "gene": "HLA-DRB9",
+      "pval": "6.96194e-09",
+      "mlogp": 8.16,
+      "beta": -0.189985,
+      "direction": "protective"
+    },
+    {
+      "variant": "6:32447985:A:G",
+      "rsid": "rs12529078",
+      "gene": "HLA-DRA",
+      "pval": "7.62237e-09",
+      "mlogp": 8.12,
+      "beta": -0.18916,
+      "direction": "protective"
+    }
+  ]
+}
