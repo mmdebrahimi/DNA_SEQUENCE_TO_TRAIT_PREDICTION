@@ -86,6 +86,8 @@ intrinsic cef). The value is a broader *honestly-tiered* AMR-Portal card, not "4
 half-to-one `--until-mvp` session; the whole backlog is many sessions — pursue Phase A first, one cell at a
 time, and re-rank after each (the Campylobacter/Neisseria cipro cells will calibrate the effort estimate).
 
+> **DONE 2026-07-01 (Phase A, cell 1):** Neisseria gonorrhoeae ciprofloxacin SCORED -- gyrA-QRDR (Ser91/Asp95) rule, acc 0.968 / sens 0.943 / spec 0.99 on 5618R/6406S provenance-disjoint AMR-Portal measured-AST (spec>>0.85 floor; strata gyrA-present 0.988 vs absent 0.048). organism_rules/neisseria_amr.py + scripts/neisseria_cipro_amr_portal_validate.py + 6 tests; wired into the AMR-Portal card overlay section. Frozen surface byte-unchanged. The 7-step recipe transfers cleanly; per-cell cost ~1 attended run. Next: Staphylococcus cipro (gyrA/grlA) or the acquired-gene Enterobacterales (Phase B).
+
 ## Recommended first executable move (next session, not now)
 **Phase A, Neisseria gonorrhoeae ciprofloxacin** — gyrA point mutation (S91F/D95), the cleanest class-A cell,
 directly reuses the validated `qrdr_point` machinery. One curated rule + powering + validate → the first new

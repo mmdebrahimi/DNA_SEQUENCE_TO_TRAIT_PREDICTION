@@ -26,14 +26,30 @@ OUT_JSON = REPO / "wiki" / "amr_portal_independent_report_card.json"
 
 
 def _load_experimental() -> dict | None:
-    """Latest EXPERIMENTAL overlay artifact (TMP-SMX sul-AND-dfr on the AMR Portal). NAMESPACE-SEPARATE:
-    rendered as its OWN branded section, NEVER folded into the deployed-surface `cells`/counts (the
-    shared-key silent-overwrite lesson). Absent -> section omitted, card unchanged."""
-    arts = sorted((REPO / "wiki").glob("amr_portal_tmpsmx_experimental_*.json"))
-    if not arts:
-        return None
+    """Latest NON-frozen overlay cells (TMP-SMX experimental multi-cell + curated single-cells like NG cipro).
+    NAMESPACE-SEPARATE: rendered as its OWN branded section, NEVER folded into the deployed-surface
+    `cells`/counts (the shared-key silent-overwrite lesson). Absent -> section omitted, card unchanged."""
     import json as _json
-    return _json.loads(arts[-1].read_text(encoding="utf-8"))
+    wiki = REPO / "wiki"
+    cells: dict[str, dict] = {}
+    # multi-cell experimental artifacts (TMP-SMX): merge their cells{} as-is
+    tmp = sorted(wiki.glob("amr_portal_tmpsmx_experimental_*.json"))
+    if tmp:
+        cells.update(_json.loads(tmp[-1].read_text(encoding="utf-8")).get("cells", {}))
+    # curated single-cell artifacts (Tier-3/4): normalise the top-level cell into the same per-cell shape
+    for pat in ("amr_portal_neisseria_cipro_*.json",):
+        arts = sorted(wiki.glob(pat))
+        if not arts:
+            continue
+        d = _json.loads(arts[-1].read_text(encoding="utf-8"))
+        cells[f"{d['organism']}|{d['drug']}"] = {
+            "organism": d["organism"], "drug": d["drug"], "headline": d["headline"],
+            "n_R": d["n_R"], "n_S": d["n_S"], "binary": d.get("binary", {}),
+            "strata_reproduced": d.get("strata_reproduced")}
+    if not cells:
+        return None
+    return {"cells": cells, "n_cells": len(cells),
+            "n_scored": sum(1 for c in cells.values() if c.get("headline") == "SCORED")}
 
 def _calibrated_keys() -> set[str]:
     """The set of `<registry_organism>|<drug>` keys whose verdict is CALIBRATED in the frozen rules.
@@ -88,14 +104,14 @@ def render_experimental_md(exp: dict) -> list[str]:
     cells = exp.get("cells", {})
     n_scored = exp.get("n_scored", 0)
     L = ["",
-         "## Experimental overlay cells (NON-frozen — EXPERIMENTAL_SCORED, NOT in the shipped surface)",
+         "## Overlay cells (NON-frozen — EXPERIMENTAL / CURATED, NOT in the shipped surface)",
          "",
-         f"The TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` overlay "
-         f"(`dna_decode/data/experimental_drug_rules.py`; rule shape the frozen count/OR engine can't express) "
-         f"scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates. "
-         f"**{n_scored}/{len(cells)} SCORED** (strata-reproduction gate). **Namespace-separate by design:** "
-         f"these are `EXPERIMENTAL_SCORED` / `scorer_local` — NOT counted in the deployed-surface totals above, "
-         f"NOT in `shipped_decoder_surface`, and the frozen surface is byte-unchanged.",
+         f"NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the "
+         f"TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay "
+         f"(`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. "
+         f"N. gonorrhoeae cipro gyrA-QRDR). **{n_scored}/{len(cells)} SCORED**. **Namespace-separate by "
+         f"design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in "
+         f"the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.",
          "",
          "- **Gate:** a cell is SCORED only if the 4-genotype strata REPRODUCE the Sci234/Oxford pattern "
          "(sul+dfr = highest-R stratum AND sul-only R-rate < 0.5); else INDETERMINATE (honest — the overlay's "
