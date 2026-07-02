@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Enterococcus faecium",
+  "drug": "gentamicin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "aph(2'') high-level -> R (intrinsic aac(6')-Ii excluded)",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 614,
+    "tp": 95,
+    "fp": 49,
+    "tn": 455,
+    "fn": 15,
+    "abstain": 0,
+    "acc": 0.896,
+    "sens": 0.864,
+    "spec": 0.903
+  },
+  "n_R": 110,
+  "n_S": 504,
+  "powered": true,
+  "sens_wilson95": [
+    0.787141630195824,
+    0.9155891817393563
+  ],
+  "spec_wilson95": [
+    0.873784351856497,
+    0.9256775275956787
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 144,
+      "R": 95,
+      "S": 49,
+      "r_rate": 0.66
+    },
+    "determinant_absent": {
+      "n": 470,
+      "R": 15,
+      "S": 455,
+      "r_rate": 0.032
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

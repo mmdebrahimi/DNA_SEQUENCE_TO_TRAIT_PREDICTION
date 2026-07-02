@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Enterobacter cloacae",
+  "drug": "ciprofloxacin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "FROZEN deployed DRUG_RULE default (organism-agnostic) on Enterobacter cloacae \u2014 spec-guard endorses",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 135,
+    "tp": 23,
+    "fp": 0,
+    "tn": 48,
+    "fn": 64,
+    "abstain": 0,
+    "acc": 0.526,
+    "sens": 0.264,
+    "spec": 1.0
+  },
+  "n_R": 87,
+  "n_S": 48,
+  "powered": true,
+  "sens_wilson95": [
+    0.18309896615432053,
+    0.3655659626888528
+  ],
+  "spec_wilson95": [
+    0.9258973488472576,
+    0.9999999999999999
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 23,
+      "R": 23,
+      "S": 0,
+      "r_rate": 1.0
+    },
+    "determinant_absent": {
+      "n": 112,
+      "R": 64,
+      "S": 48,
+      "r_rate": 0.571
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

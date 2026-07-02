@@ -804,6 +804,177 @@
         ],
         "headline": "SCORED"
       },
+      "Enterobacter cloacae|ceftriaxone": {
+        "organism": "Enterobacter cloacae",
+        "drug": "ceftriaxone",
+        "headline": "UNDERPOWERED",
+        "n_R": 117,
+        "n_S": 6,
+        "binary": {
+          "n_scored": 123,
+          "tp": 67,
+          "fp": 3,
+          "tn": 3,
+          "fn": 50,
+          "abstain": 0,
+          "acc": 0.569,
+          "sens": 0.573,
+          "spec": 0.5
+        },
+        "strata_reproduced": true
+      },
+      "Enterobacter cloacae|ciprofloxacin": {
+        "organism": "Enterobacter cloacae",
+        "drug": "ciprofloxacin",
+        "headline": "SCORED",
+        "n_R": 87,
+        "n_S": 48,
+        "binary": {
+          "n_scored": 135,
+          "tp": 23,
+          "fp": 0,
+          "tn": 48,
+          "fn": 64,
+          "abstain": 0,
+          "acc": 0.526,
+          "sens": 0.264,
+          "spec": 1.0
+        },
+        "strata_reproduced": true
+      },
+      "Enterobacter cloacae|gentamicin": {
+        "organism": "Enterobacter cloacae",
+        "drug": "gentamicin",
+        "headline": "INDETERMINATE",
+        "n_R": 37,
+        "n_S": 89,
+        "binary": {
+          "n_scored": 126,
+          "tp": 24,
+          "fp": 17,
+          "tn": 72,
+          "fn": 13,
+          "abstain": 0,
+          "acc": 0.762,
+          "sens": 0.649,
+          "spec": 0.809
+        },
+        "strata_reproduced": true
+      },
+      "Enterobacter cloacae|meropenem": {
+        "organism": "Enterobacter cloacae",
+        "drug": "meropenem",
+        "headline": "INDETERMINATE",
+        "n_R": 49,
+        "n_S": 75,
+        "binary": {
+          "n_scored": 124,
+          "tp": 33,
+          "fp": 29,
+          "tn": 46,
+          "fn": 16,
+          "abstain": 0,
+          "acc": 0.637,
+          "sens": 0.673,
+          "spec": 0.613
+        },
+        "strata_reproduced": true
+      },
+      "Enterobacter cloacae|tetracycline": {
+        "organism": "Enterobacter cloacae",
+        "drug": "tetracycline",
+        "headline": "SCORED",
+        "n_R": 26,
+        "n_S": 44,
+        "binary": {
+          "n_scored": 70,
+          "tp": 11,
+          "fp": 0,
+          "tn": 44,
+          "fn": 15,
+          "abstain": 0,
+          "acc": 0.786,
+          "sens": 0.423,
+          "spec": 1.0
+        },
+        "strata_reproduced": true
+      },
+      "Enterobacter cloacae|trimethoprim-sulfamethoxazole": {
+        "organism": "Enterobacter cloacae",
+        "drug": "trimethoprim-sulfamethoxazole",
+        "headline": "SCORED",
+        "n_R": 61,
+        "n_S": 38,
+        "binary": {
+          "n_scored": 99,
+          "tp": 42,
+          "fp": 1,
+          "tn": 37,
+          "fn": 19,
+          "abstain": 0,
+          "acc": 0.798,
+          "sens": 0.689,
+          "spec": 0.974
+        },
+        "strata_reproduced": true
+      },
+      "Enterococcus faecium|ciprofloxacin": {
+        "organism": "Enterococcus faecium",
+        "drug": "ciprofloxacin",
+        "headline": "SCORED",
+        "n_R": 335,
+        "n_S": 34,
+        "binary": {
+          "n_scored": 369,
+          "tp": 332,
+          "fp": 1,
+          "tn": 33,
+          "fn": 3,
+          "abstain": 0,
+          "acc": 0.989,
+          "sens": 0.991,
+          "spec": 0.971
+        },
+        "strata_reproduced": true
+      },
+      "Enterococcus faecium|gentamicin": {
+        "organism": "Enterococcus faecium",
+        "drug": "gentamicin",
+        "headline": "SCORED",
+        "n_R": 110,
+        "n_S": 504,
+        "binary": {
+          "n_scored": 614,
+          "tp": 95,
+          "fp": 49,
+          "tn": 455,
+          "fn": 15,
+          "abstain": 0,
+          "acc": 0.896,
+          "sens": 0.864,
+          "spec": 0.903
+        },
+        "strata_reproduced": true
+      },
+      "Enterococcus faecium|tetracycline": {
+        "organism": "Enterococcus faecium",
+        "drug": "tetracycline",
+        "headline": "SCORED",
+        "n_R": 300,
+        "n_S": 101,
+        "binary": {
+          "n_scored": 401,
+          "tp": 297,
+          "fp": 15,
+          "tn": 86,
+          "fn": 3,
+          "abstain": 0,
+          "acc": 0.955,
+          "sens": 0.99,
+          "spec": 0.851
+        },
+        "strata_reproduced": true
+      },
       "Neisseria gonorrhoeae|ciprofloxacin": {
         "organism": "Neisseria gonorrhoeae",
         "drug": "ciprofloxacin",
@@ -839,6 +1010,101 @@
           "acc": 0.77,
           "sens": 0.465,
           "spec": 0.998
+        },
+        "strata_reproduced": true
+      },
+      "Proteus mirabilis|gentamicin": {
+        "organism": "Proteus mirabilis",
+        "drug": "gentamicin",
+        "headline": "SCORED",
+        "n_R": 12,
+        "n_S": 24,
+        "binary": {
+          "n_scored": 36,
+          "tp": 11,
+          "fp": 2,
+          "tn": 22,
+          "fn": 1,
+          "abstain": 0,
+          "acc": 0.917,
+          "sens": 0.917,
+          "spec": 0.917
+        },
+        "strata_reproduced": true
+      },
+      "Proteus mirabilis|trimethoprim-sulfamethoxazole": {
+        "organism": "Proteus mirabilis",
+        "drug": "trimethoprim-sulfamethoxazole",
+        "headline": "SCORED",
+        "n_R": 29,
+        "n_S": 10,
+        "binary": {
+          "n_scored": 39,
+          "tp": 26,
+          "fp": 0,
+          "tn": 10,
+          "fn": 3,
+          "abstain": 0,
+          "acc": 0.923,
+          "sens": 0.897,
+          "spec": 1.0
+        },
+        "strata_reproduced": true
+      },
+      "Serratia marcescens|ceftriaxone": {
+        "organism": "Serratia marcescens",
+        "drug": "ceftriaxone",
+        "headline": "INDETERMINATE",
+        "n_R": 18,
+        "n_S": 29,
+        "binary": {
+          "n_scored": 47,
+          "tp": 18,
+          "fp": 29,
+          "tn": 0,
+          "fn": 0,
+          "abstain": 0,
+          "acc": 0.383,
+          "sens": 1.0,
+          "spec": 0.0
+        },
+        "strata_reproduced": false
+      },
+      "Serratia marcescens|ciprofloxacin": {
+        "organism": "Serratia marcescens",
+        "drug": "ciprofloxacin",
+        "headline": "INDETERMINATE",
+        "n_R": 14,
+        "n_S": 36,
+        "binary": {
+          "n_scored": 50,
+          "tp": 0,
+          "fp": 0,
+          "tn": 36,
+          "fn": 14,
+          "abstain": 0,
+          "acc": 0.72,
+          "sens": 0.0,
+          "spec": 1.0
+        },
+        "strata_reproduced": false
+      },
+      "Serratia marcescens|meropenem": {
+        "organism": "Serratia marcescens",
+        "drug": "meropenem",
+        "headline": "SCORED",
+        "n_R": 17,
+        "n_S": 34,
+        "binary": {
+          "n_scored": 51,
+          "tp": 13,
+          "fp": 0,
+          "tn": 34,
+          "fn": 4,
+          "abstain": 0,
+          "acc": 0.922,
+          "sens": 0.765,
+          "spec": 1.0
         },
         "strata_reproduced": true
       },
@@ -881,8 +1147,8 @@
         "strata_reproduced": true
       }
     },
-    "n_cells": 9,
-    "n_scored": 8
+    "n_cells": 23,
+    "n_scored": 17
   },
   "experimental_note": "EXPERIMENTAL_SCORED overlay cells (TMP-SMX); NOT part of n_scored_independent / n_cells; frozen surface byte-unchanged"
 }

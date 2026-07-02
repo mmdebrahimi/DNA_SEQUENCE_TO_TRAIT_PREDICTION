@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Enterococcus faecium",
+  "drug": "tetracycline",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "acquired tet gene -> R",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 401,
+    "tp": 297,
+    "fp": 15,
+    "tn": 86,
+    "fn": 3,
+    "abstain": 0,
+    "acc": 0.955,
+    "sens": 0.99,
+    "spec": 0.851
+  },
+  "n_R": 300,
+  "n_S": 101,
+  "powered": true,
+  "sens_wilson95": [
+    0.9710159953649371,
+    0.9965934432372818
+  ],
+  "spec_wilson95": [
+    0.7693273004006358,
+    0.9078847986134959
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 312,
+      "R": 297,
+      "S": 15,
+      "r_rate": 0.952
+    },
+    "determinant_absent": {
+      "n": 89,
+      "R": 3,
+      "S": 86,
+      "r_rate": 0.034
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

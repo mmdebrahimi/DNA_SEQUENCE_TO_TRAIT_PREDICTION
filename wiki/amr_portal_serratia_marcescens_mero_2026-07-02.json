@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Serratia marcescens",
+  "drug": "meropenem",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "FROZEN deployed DRUG_RULE default (organism-agnostic) on Serratia marcescens \u2014 spec-guard endorses",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 51,
+    "tp": 13,
+    "fp": 0,
+    "tn": 34,
+    "fn": 4,
+    "abstain": 0,
+    "acc": 0.922,
+    "sens": 0.765,
+    "spec": 1.0
+  },
+  "n_R": 17,
+  "n_S": 34,
+  "powered": true,
+  "sens_wilson95": [
+    0.5273775411082839,
+    0.9044511092832406
+  ],
+  "spec_wilson95": [
+    0.8984820937803899,
+    1.0
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 13,
+      "R": 13,
+      "S": 0,
+      "r_rate": 1.0
+    },
+    "determinant_absent": {
+      "n": 38,
+      "R": 4,
+      "S": 34,
+      "r_rate": 0.105
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Proteus mirabilis",
+  "drug": "gentamicin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "FROZEN deployed DRUG_RULE default (organism-agnostic) on Proteus mirabilis \u2014 spec-guard endorses",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 36,
+    "tp": 11,
+    "fp": 2,
+    "tn": 22,
+    "fn": 1,
+    "abstain": 0,
+    "acc": 0.917,
+    "sens": 0.917,
+    "spec": 0.917
+  },
+  "n_R": 12,
+  "n_S": 24,
+  "powered": true,
+  "sens_wilson95": [
+    0.6461140782014047,
+    0.9851352905492264
+  ],
+  "spec_wilson95": [
+    0.741507847985494,
+    0.9768416721570266
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 13,
+      "R": 11,
+      "S": 2,
+      "r_rate": 0.846
+    },
+    "determinant_absent": {
+      "n": 23,
+      "R": 1,
+      "S": 22,
+      "r_rate": 0.043
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Enterobacter cloacae",
+  "drug": "gentamicin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "FROZEN deployed DRUG_RULE default (organism-agnostic) on Enterobacter cloacae \u2014 spec-guard endorses",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 126,
+    "tp": 24,
+    "fp": 17,
+    "tn": 72,
+    "fn": 13,
+    "abstain": 0,
+    "acc": 0.762,
+    "sens": 0.649,
+    "spec": 0.809
+  },
+  "n_R": 37,
+  "n_S": 89,
+  "powered": true,
+  "sens_wilson95": [
+    0.48758729517569566,
+    0.7817459336889914
+  ],
+  "spec_wilson95": [
+    0.7152254054284447,
+    0.8771814466723377
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 41,
+      "R": 24,
+      "S": 17,
+      "r_rate": 0.585
+    },
+    "determinant_absent": {
+      "n": 85,
+      "R": 13,
+      "S": 72,
+      "r_rate": 0.153
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "INDETERMINATE"
+}

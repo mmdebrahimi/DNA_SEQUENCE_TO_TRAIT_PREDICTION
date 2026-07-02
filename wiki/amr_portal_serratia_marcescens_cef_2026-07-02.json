@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Serratia marcescens",
+  "drug": "ceftriaxone",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "FROZEN deployed DRUG_RULE default (organism-agnostic) on Serratia marcescens \u2014 spec-guard endorses",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 47,
+    "tp": 18,
+    "fp": 29,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.383,
+    "sens": 1.0,
+    "spec": 0.0
+  },
+  "n_R": 18,
+  "n_S": 29,
+  "powered": true,
+  "sens_wilson95": [
+    0.8241154494176252,
+    1.0
+  ],
+  "spec_wilson95": [
+    0.0,
+    0.11697359446555587
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 47,
+      "R": 18,
+      "S": 29,
+      "r_rate": 0.383
+    },
+    "determinant_absent": {
+      "n": 0,
+      "R": 0,
+      "S": 0,
+      "r_rate": null
+    }
+  },
+  "strata_reproduced": false,
+  "spec_floor": 0.85,
+  "headline": "INDETERMINATE"
+}

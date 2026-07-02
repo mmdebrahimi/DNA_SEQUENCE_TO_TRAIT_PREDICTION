@@ -36,14 +36,20 @@ def _load_experimental() -> dict | None:
     tmp = sorted(wiki.glob("amr_portal_tmpsmx_experimental_*.json"))
     if tmp:
         cells.update(_json.loads(tmp[-1].read_text(encoding="utf-8")).get("cells", {}))
-    # curated single-cell artifacts (Tier-3/4): normalise the top-level cell into the same per-cell shape
-    for pat in ("amr_portal_neisseria_cipro_*.json", "amr_portal_neisseria_tet_*.json",
-                "amr_portal_staphylococcus_cipro_*.json", "amr_portal_staphylococcus_rif_*.json"):
-        arts = sorted(wiki.glob(pat))
-        if not arts:
+    # AUTO-DETECT every curated single-cell artifact (Tier-3/4): any amr_portal_*.json with top-level
+    # organism/drug/headline + a CURATED/EXPERIMENTAL rule_status. Sorted so the latest date-stamp wins
+    # per (organism, drug). Future cells need NO glob edit. Skips multi-cell + non-cell artifacts.
+    for art in sorted(wiki.glob("amr_portal_*.json")):
+        try:
+            d = _json.loads(art.read_text(encoding="utf-8"))
+        except Exception:
             continue
-        d = _json.loads(arts[-1].read_text(encoding="utf-8"))
-        cells[f"{d['organism']}|{d['drug']}"] = {
+        if not (isinstance(d, dict) and {"organism", "drug", "headline"} <= d.keys()):
+            continue
+        if "CURATED_NONFROZEN" not in str(d.get("rule_status", "")) and \
+           "EXPERIMENTAL" not in str(d.get("rule_status", "")):
+            continue
+        cells[f"{d['organism']}|{d['drug']}"] = {           # latest date wins (sorted glob)
             "organism": d["organism"], "drug": d["drug"], "headline": d["headline"],
             "n_R": d["n_R"], "n_S": d["n_S"], "binary": d.get("binary", {}),
             "strata_reproduced": d.get("strata_reproduced")}

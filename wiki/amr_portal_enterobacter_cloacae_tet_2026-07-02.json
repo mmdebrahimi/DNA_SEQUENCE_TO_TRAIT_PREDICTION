@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-curated-cell-v1",
+  "date": "2026-07-02",
+  "organism": "Enterobacter cloacae",
+  "drug": "tetracycline",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "FROZEN deployed DRUG_RULE default (organism-agnostic) on Enterobacter cloacae \u2014 spec-guard endorses",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; AMRFinderPlus genotype x measured AST",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 70,
+    "tp": 11,
+    "fp": 0,
+    "tn": 44,
+    "fn": 15,
+    "abstain": 0,
+    "acc": 0.786,
+    "sens": 0.423,
+    "spec": 1.0
+  },
+  "n_R": 26,
+  "n_S": 44,
+  "powered": true,
+  "sens_wilson95": [
+    0.255441899027294,
+    0.6105170307888017
+  ],
+  "spec_wilson95": [
+    0.9197016822179859,
+    0.9999999999999999
+  ],
+  "strata": {
+    "determinant_present": {
+      "n": 11,
+      "R": 11,
+      "S": 0,
+      "r_rate": 1.0
+    },
+    "determinant_absent": {
+      "n": 59,
+      "R": 15,
+      "S": 44,
+      "r_rate": 0.254
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}

@@ -41,16 +41,30 @@ Standing roll-up of the frozen deterministic decoder scored on the EBI AMR Porta
 
 ## Overlay cells (NON-frozen — EXPERIMENTAL / CURATED, NOT in the shipped surface)
 
-NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay (`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. N. gonorrhoeae cipro gyrA-QRDR). **8/9 SCORED**. **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.
+NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay (`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. N. gonorrhoeae cipro gyrA-QRDR). **17/23 SCORED**. **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.
 
 - **Gate:** a cell is SCORED only if the 4-genotype strata REPRODUCE the Sci234/Oxford pattern (sul+dfr = highest-R stratum AND sul-only R-rate < 0.5); else INDETERMINATE (honest — the overlay's mechanism doesn't hold there, e.g. Klebsiella).
 | Organism | Drug | headline | nR / nS | sens | spec | acc | strata-reproduced |
 |---|---|---|---|---|---|---|---|
+| Enterobacter cloacae | ceftriaxone | UNDERPOWERED | 117/6 | 0.573 | 0.500 | 0.569 | True |
+| Enterobacter cloacae | ciprofloxacin | SCORED | 87/48 | 0.264 | 1.000 | 0.526 | True |
+| Enterobacter cloacae | gentamicin | INDETERMINATE | 37/89 | 0.649 | 0.809 | 0.762 | True |
+| Enterobacter cloacae | meropenem | INDETERMINATE | 49/75 | 0.673 | 0.613 | 0.637 | True |
+| Enterobacter cloacae | tetracycline | SCORED | 26/44 | 0.423 | 1.000 | 0.786 | True |
+| Enterobacter cloacae | trimethoprim-sulfamethoxazole | SCORED | 61/38 | 0.689 | 0.974 | 0.798 | True |
+| Enterococcus faecium | ciprofloxacin | SCORED | 335/34 | 0.991 | 0.971 | 0.989 | True |
+| Enterococcus faecium | gentamicin | SCORED | 110/504 | 0.864 | 0.903 | 0.896 | True |
+| Enterococcus faecium | tetracycline | SCORED | 300/101 | 0.990 | 0.851 | 0.955 | True |
 | Escherichia coli | trimethoprim-sulfamethoxazole | SCORED | 2619/9269 | 0.727 | 0.983 | 0.926 | True |
 | Klebsiella pneumoniae | trimethoprim-sulfamethoxazole | INDETERMINATE | 2827/1384 | 0.430 | 0.981 | 0.611 | False |
 | Neisseria gonorrhoeae | ciprofloxacin | SCORED | 5618/6406 | 0.943 | 0.990 | 0.968 | True |
 | Neisseria gonorrhoeae | tetracycline | SCORED | 2572/3438 | 0.465 | 0.998 | 0.770 | True |
+| Proteus mirabilis | gentamicin | SCORED | 12/24 | 0.917 | 0.917 | 0.917 | True |
+| Proteus mirabilis | trimethoprim-sulfamethoxazole | SCORED | 29/10 | 0.897 | 1.000 | 0.923 | True |
 | Salmonella enterica | trimethoprim-sulfamethoxazole | SCORED | 1667/24936 | 0.540 | 0.991 | 0.963 | True |
+| Serratia marcescens | ceftriaxone | INDETERMINATE | 18/29 | 1.000 | 0.000 | 0.383 | False |
+| Serratia marcescens | ciprofloxacin | INDETERMINATE | 14/36 | 0.000 | 1.000 | 0.720 | False |
+| Serratia marcescens | meropenem | SCORED | 17/34 | 0.765 | 1.000 | 0.922 | True |
 | Shigella flexneri | trimethoprim-sulfamethoxazole | SCORED | 138/69 | 0.964 | 0.957 | 0.961 | True |
 | Shigella sonnei | trimethoprim-sulfamethoxazole | SCORED | 796/343 | 0.837 | 0.959 | 0.874 | True |
 | Staphylococcus aureus | ciprofloxacin | SCORED | 1563/2095 | 0.981 | 0.884 | 0.926 | True |
