@@ -1,4 +1,26 @@
-# Horse coat-colour cell — rule built; validation hits the anti-circular data wall (2026-07-01)
+# Horse coat-colour cell — SCORED on real non-circular data (2026-07-01)
+
+> **RESOLVED 2026-07-01 (user-requested deep research):** the data wall below was CLEARED. A deep-research
+> pass found an **open-access** source with a **functional joint genotype × visually-observed colour** table:
+> **Sarcidano 2022 (MDPI *Animals*, mirrored on PMC9558981), Table 3** — 70 semi-feral Sardinian horses,
+> MC1R exon-1 + ASIP exon-3 sequenced (functional e / a alleles), colour visually assigned (non-circular).
+> Reconstructed to `data/horse/sarcidano_2022.tsv` (committed) and scored:
+>
+> **concordance 1.000 (62/62 base-colour horses)** — bay 4/4, black 19/19, chestnut 39/39, 0 discordant;
+> 8 phenotypically-grey e/e horses correctly EXCLUDED (grey = a separate masking locus; their genetic base
+> is chestnut, consistent). Artifact: `wiki/horse_coat_validation_2026-07-01.json`; regression test
+> `tests/test_horse_coat_sarcidano.py`.
+>
+> **HONEST framing:** 1.000 is *expected* — this is a deployed textbook rule validated on a single
+> genetically-isolated breed with limited genotype diversity (no E/E-A/A or E/E-A/a horses present;
+> chestnut-dominated). It CONFIRMS the rule + closes the cell on real non-circular data; it is NOT new
+> biological signal (deployed-rule integration, as always flagged). The MDPI-via-PMC route was the key —
+> headless MDPI/Dryad fetches are gated, but the PMC mirror is open. The label-first gate for THIS cell is
+> now cleared (observed, non-circular, open). The original data-wall narrative below is retained for record.
+
+---
+
+# Horse coat-colour cell — rule built; validation hits the anti-circular data wall (2026-07-01, SUPERSEDED above)
 
 Greenlit build of the label-first scan's winner (`wiki/label_first_scan_2026-07-01.md`): the horse base
 coat-colour decoder — the first off-pathogen cell targeting a **non-human, observed (not self-report)**

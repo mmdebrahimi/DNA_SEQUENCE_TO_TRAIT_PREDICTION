@@ -1,0 +1,29 @@
+{
+  "schema": "horse-coat-validation-v1",
+  "date": "2026-07-01",
+  "rule": "MC1R E/e epistatic to ASIP A/a (Rieder 2001 / UC Davis VGL): e/e->chestnut, E_A_->bay, E_aa->black",
+  "tier": "DEPLOYED-RULE INTEGRATION on a non-human OBSERVED label (clears the label-first gate IF colour is independently observed)",
+  "anti_circular_gate": "colour MUST be independently observed, not genotype-derived",
+  "status": "SCORED",
+  "n_scored": 62,
+  "n_correct": 62,
+  "concordance": 1.0,
+  "n_indeterminate": 0,
+  "n_excluded_nonbase": 8,
+  "confusion_observed_to_predicted": {
+    "black": {
+      "black": 19
+    },
+    "bay": {
+      "bay": 4
+    },
+    "chestnut": {
+      "chestnut": 39
+    }
+  },
+  "caveats": [
+    "colour must be INDEPENDENTLY OBSERVED (caller asserts this) -- else the score is circular",
+    "base-3 colours only (dark-bay/brown/grey shade-modifiers excluded)",
+    "this RE-CONFIRMS a deployed rule (VGL/Rieder); near-100% concordance is expected -- the informative signal is any DISCORDANT cell (a rule-breaker)"
+  ]
+}

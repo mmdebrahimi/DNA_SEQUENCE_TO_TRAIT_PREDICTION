@@ -1,5 +1,13 @@
 # Off-pathogen track — BANKED (2026-07-01)
 
+> **UPDATE 2026-07-01 (post-banking, user-requested deep research):** the horse-coat cell's data wall was
+> CLEARED — a deep-research pass found the Sarcidano 2022 open-access study (PMC9558981, Table 3), yielding a
+> functional joint genotype × visually-observed colour dataset. Horse rule now **SCORED: concordance 1.000
+> (62/62 base-colour horses), non-circular** (`data/horse/sarcidano_2022.tsv`,
+> `wiki/horse_coat_validation_2026-07-01.json`). This CLOSES the horse cell with a real number rather than a
+> data-wall; the banking of the broader track still stands (it remains deployed-rule integration on a single
+> isolated breed — confirming, not new signal). The horse row below is updated accordingly.
+
 Closeout for the off-pathogen expansion of the deterministic gene→trait decoder. This calls the plateau: the
 track is banked at its honest terminal. Further autonomous increments here are motion, not signal.
 
@@ -15,7 +23,7 @@ across two trait classes and two cohorts, all with honest tiers + frozen AMR sur
 | Ancestry confound | 1000G structural (EUR/EAS 318×) + within-EUR re-score 45/45 | CONFOUND_REDUCED_NOT_RESOLVED | — |
 | Eye colour PGP replication | same callers, 2nd cohort | v0 11/11 + v0.1 15/15, zero errors (underpowered, ~5% linkage yield) | PILOT/DEMO |
 | ABO blood type (rs8176719 O-status) | c.261delG deletion → O | non-O spec 1.0, n=6 pilot | PILOT/DEMO (serological) |
-| Horse coat colour (MC1R-E × ASIP-A) | Rieder/VGL Mendelian epistasis | **built + tested; real-data score data-walled** | rule-integration, unscored |
+| Horse coat colour (MC1R-E × ASIP-A) | Rieder/VGL Mendelian epistasis | **SCORED: concordance 1.000 (62/62) on Sarcidano-2022 real non-circular data** (update below) | rule-integration, scored |
 
 ## Why the track is banked (the demonstrated wall)
 
