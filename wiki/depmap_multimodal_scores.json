@@ -1,0 +1,178 @@
+{
+  "cases": [
+    {
+      "drug": "vemurafenib",
+      "gene": "BRAF",
+      "kind": "sensitize",
+      "modalities": {
+        "mutation": {
+          "available": true,
+          "n": 559,
+          "global_rho": -0.282,
+          "within_lineage_rho": -0.161,
+          "de_confounded_correct": true
+        },
+        "copy_number": {
+          "available": true,
+          "n": 559,
+          "global_rho": -0.056,
+          "within_lineage_rho": 0.013,
+          "de_confounded_correct": false
+        },
+        "expression": {
+          "available": true,
+          "n": 557,
+          "global_rho": -0.062,
+          "within_lineage_rho": -0.04,
+          "de_confounded_correct": false
+        }
+      },
+      "best_modality": "mutation"
+    },
+    {
+      "drug": "dabrafenib",
+      "gene": "BRAF",
+      "kind": "sensitize",
+      "modalities": {
+        "mutation": {
+          "available": true,
+          "n": 536,
+          "global_rho": -0.334,
+          "within_lineage_rho": -0.163,
+          "de_confounded_correct": true
+        },
+        "copy_number": {
+          "available": true,
+          "n": 536,
+          "global_rho": -0.12,
+          "within_lineage_rho": -0.058,
+          "de_confounded_correct": false
+        },
+        "expression": {
+          "available": true,
+          "n": 535,
+          "global_rho": -0.025,
+          "within_lineage_rho": -0.023,
+          "de_confounded_correct": false
+        }
+      },
+      "best_modality": "mutation"
+    },
+    {
+      "drug": "erlotinib",
+      "gene": "EGFR",
+      "kind": "sensitize",
+      "modalities": {
+        "mutation": {
+          "available": true,
+          "n": 557,
+          "global_rho": -0.02,
+          "within_lineage_rho": -0.033,
+          "de_confounded_correct": false
+        },
+        "copy_number": {
+          "available": true,
+          "n": 557,
+          "global_rho": -0.072,
+          "within_lineage_rho": -0.09,
+          "de_confounded_correct": false
+        },
+        "expression": {
+          "available": true,
+          "n": 555,
+          "global_rho": -0.206,
+          "within_lineage_rho": -0.115,
+          "de_confounded_correct": true
+        }
+      },
+      "best_modality": "expression"
+    },
+    {
+      "drug": "gefitinib",
+      "gene": "EGFR",
+      "kind": "sensitize",
+      "modalities": {
+        "mutation": {
+          "available": true,
+          "n": 549,
+          "global_rho": -0.05,
+          "within_lineage_rho": -0.039,
+          "de_confounded_correct": false
+        },
+        "copy_number": {
+          "available": true,
+          "n": 549,
+          "global_rho": -0.096,
+          "within_lineage_rho": -0.153,
+          "de_confounded_correct": true
+        },
+        "expression": {
+          "available": true,
+          "n": 547,
+          "global_rho": -0.252,
+          "within_lineage_rho": -0.105,
+          "de_confounded_correct": true
+        }
+      },
+      "best_modality": "copy_number"
+    },
+    {
+      "drug": "lapatinib",
+      "gene": "ERBB2",
+      "kind": "sensitize",
+      "modalities": {
+        "mutation": {
+          "available": true,
+          "n": 558,
+          "global_rho": 0.044,
+          "within_lineage_rho": 0.012,
+          "de_confounded_correct": false
+        },
+        "copy_number": {
+          "available": true,
+          "n": 558,
+          "global_rho": -0.115,
+          "within_lineage_rho": -0.131,
+          "de_confounded_correct": true
+        },
+        "expression": {
+          "available": true,
+          "n": 556,
+          "global_rho": -0.358,
+          "within_lineage_rho": -0.248,
+          "de_confounded_correct": true
+        }
+      },
+      "best_modality": "expression"
+    },
+    {
+      "drug": "nutlin-3",
+      "gene": "TP53",
+      "kind": "resist",
+      "modalities": {
+        "mutation": {
+          "available": true,
+          "n": 536,
+          "global_rho": 0.41,
+          "within_lineage_rho": 0.397,
+          "de_confounded_correct": true
+        },
+        "copy_number": {
+          "available": true,
+          "n": 536,
+          "global_rho": -0.093,
+          "within_lineage_rho": -0.061,
+          "de_confounded_correct": false
+        },
+        "expression": {
+          "available": true,
+          "n": 535,
+          "global_rho": -0.018,
+          "within_lineage_rho": -0.008,
+          "de_confounded_correct": false
+        }
+      },
+      "best_modality": "mutation"
+    }
+  ]
+}

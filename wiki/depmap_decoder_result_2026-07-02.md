@@ -45,6 +45,13 @@ mechanisms, attribution inconclusive): DepMap's gene-level mechanisms are cleanl
   AND it survives de-confounding (TP53 pan-lineage; BRAF within-melanoma). **The feature type matches the
   mechanism type** — this is the deciding difference.
 
+> **EGFR MISS RESOLVED 2026-07-02 (`wiki/depmap_multimodal_result_2026-07-02.md`):** the erlotinib/gefitinib
+> EGFR misses below are NOT a decoder failure — they are a feature-MODALITY mismatch. Mutation-presence can't
+> see EGFR amplification/expression. Adding CCLE copy-number + expression RECOVERS EGFR (erlotinib→expression
+> ρ −0.115; gefitinib→copy-number ρ −0.153), de-confounded + correct-signed, plus ERBB2→lapatinib
+> (expression −0.248). The general law holds across all 3 feature axes: match the feature type to the
+> mechanism type.
+
 ## Honest scope
 - The MULTIVARIATE within-lineage r² is ~0 — a full-gene-set decoder does NOT predict a novel line's response
   within lineage (single-gene mechanisms + small per-lineage n). The claim is **single-gene biomarker
