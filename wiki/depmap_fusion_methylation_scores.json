@@ -1,0 +1,157 @@
+{
+  "n_cells": 568,
+  "fusion_cases": [
+    {
+      "drug": "crizotinib",
+      "fusion": "--ALK",
+      "biomarker_gene": "ALK",
+      "direction": "sensitize",
+      "n_fusion_positive": 9,
+      "underpowered": true,
+      "fusion_within_lineage_t": -1.44,
+      "fusion_per_lineage_delta_lfc": {},
+      "fusion_direction_ok": true,
+      "wrong_modalities": {
+        "mutation": {
+          "within_lineage_t": 0.0,
+          "n_carriers": 15
+        },
+        "copy_number": {
+          "within_lineage_rho": 0.01,
+          "n": 559
+        },
+        "expression": {
+          "within_lineage_rho": 0.019,
+          "n": 557
+        }
+      },
+      "feature_match": true
+    },
+    {
+      "drug": "alectinib",
+      "fusion": "--ALK",
+      "biomarker_gene": "ALK",
+      "direction": "sensitize",
+      "n_fusion_positive": 9,
+      "underpowered": true,
+      "fusion_within_lineage_t": -1.25,
+      "fusion_per_lineage_delta_lfc": {},
+      "fusion_direction_ok": true,
+      "wrong_modalities": {
+        "mutation": {
+          "within_lineage_t": 0.0,
+          "n_carriers": 15
+        },
+        "copy_number": {
+          "within_lineage_rho": 0.015,
+          "n": 536
+        },
+        "expression": {
+          "within_lineage_rho": -0.011,
+          "n": 535
+        }
+      },
+      "feature_match": true
+    },
+    {
+      "drug": "lorlatinib",
+      "fusion": "--ALK",
+      "biomarker_gene": "ALK",
+      "direction": "sensitize",
+      "n_fusion_positive": 8,
+      "underpowered": true,
+      "fusion_within_lineage_t": -1.42,
+      "fusion_per_lineage_delta_lfc": {},
+      "fusion_direction_ok": true,
+      "wrong_modalities": {
+        "mutation": {
+          "within_lineage_t": 0.0,
+          "n_carriers": 15
+        },
+        "copy_number": {
+          "within_lineage_rho": 0.013,
+          "n": 539
+        },
+        "expression": {
+          "within_lineage_rho": -0.016,
+          "n": 537
+        }
+      },
+      "feature_match": true
+    }
+  ],
+  "methylation_cases": [
+    {
+      "drug": "temozolomide",
+      "biomarker_gene": "MGMT",
+      "direction": "sensitize",
+      "n": 464,
+      "methylation_global_rho": -0.179,
+      "methylation_within_lineage_rho": -0.171,
+      "methylation_direction_ok": true,
+      "wrong_modalities": {
+        "mutation": {
+          "within_lineage_t": 0.0,
+          "n_carriers": 1
+        },
+        "copy_number": {
+          "within_lineage_rho": 0.041,
+          "n": 551
+        },
+        "expression": {
+          "within_lineage_rho": 0.169,
+          "n": 549
+        }
+      },
+      "feature_match": true
+    },
+    {
+      "drug": "olaparib",
+      "biomarker_gene": "SLFN11",
+      "direction": "resist",
+      "n": 474,
+      "methylation_global_rho": 0.056,
+      "methylation_within_lineage_rho": 0.034,
+      "methylation_direction_ok": false,
+      "wrong_modalities": {
+        "mutation": {
+          "within_lineage_t": 0.0,
+          "n_carriers": 5
+        },
+        "copy_number": {
+          "within_lineage_rho": 0.081,
+          "n": 552
+        },
+        "expression": {
+          "within_lineage_rho": -0.048,
+          "n": 550
+        }
+      },
+      "feature_match": false
+    },
+    {
+      "drug": "topotecan",
+      "biomarker_gene": "SLFN11",
+      "direction": "resist",
+      "n": 464,
+      "methylation_global_rho": 0.174,
+      "methylation_within_lineage_rho": 0.103,
+      "methylation_direction_ok": true,
+      "wrong_modalities": {
+        "mutation": {
+          "within_lineage_t": 0.0,
+          "n_carriers": 5
+        },
+        "copy_number": {
+          "within_lineage_rho": -0.001,
+          "n": 539
+        },
+        "expression": {
+          "within_lineage_rho": -0.221,
+          "n": 537
+        }
+      },
+      "feature_match": true
+    }
+  ]
+}
