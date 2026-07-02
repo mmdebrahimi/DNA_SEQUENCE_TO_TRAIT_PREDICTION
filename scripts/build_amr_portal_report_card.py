@@ -37,7 +37,7 @@ def _load_experimental() -> dict | None:
     if tmp:
         cells.update(_json.loads(tmp[-1].read_text(encoding="utf-8")).get("cells", {}))
     # curated single-cell artifacts (Tier-3/4): normalise the top-level cell into the same per-cell shape
-    for pat in ("amr_portal_neisseria_cipro_*.json",):
+    for pat in ("amr_portal_neisseria_cipro_*.json", "amr_portal_staphylococcus_cipro_*.json"):
         arts = sorted(wiki.glob(pat))
         if not arts:
             continue

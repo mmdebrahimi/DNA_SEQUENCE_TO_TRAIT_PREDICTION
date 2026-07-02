@@ -41,7 +41,7 @@ Standing roll-up of the frozen deterministic decoder scored on the EBI AMR Porta
 
 ## Overlay cells (NON-frozen — EXPERIMENTAL / CURATED, NOT in the shipped surface)
 
-NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay (`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. N. gonorrhoeae cipro gyrA-QRDR). **5/6 SCORED**. **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.
+NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST isolates: the TMP-SMX `(≥1 acquired sul) AND (≥1 acquired dfr)` experimental overlay (`experimental_drug_rules.py`) + curated Tier-3/4 organism rules (`organism_rules/`, e.g. N. gonorrhoeae cipro gyrA-QRDR). **6/7 SCORED**. **Namespace-separate by design:** these are `EXPERIMENTAL_SCORED` / `CURATED_NONFROZEN` / `scorer_local` — NOT counted in the deployed-surface totals above, NOT in `shipped_decoder_surface`, frozen surface byte-unchanged.
 
 - **Gate:** a cell is SCORED only if the 4-genotype strata REPRODUCE the Sci234/Oxford pattern (sul+dfr = highest-R stratum AND sul-only R-rate < 0.5); else INDETERMINATE (honest — the overlay's mechanism doesn't hold there, e.g. Klebsiella).
 | Organism | Drug | headline | nR / nS | sens | spec | acc | strata-reproduced |
@@ -52,6 +52,7 @@ NON-frozen rules scored on the SAME AMR-Portal provenance-disjoint measured-AST 
 | Salmonella enterica | trimethoprim-sulfamethoxazole | SCORED | 1667/24936 | 0.540 | 0.991 | 0.963 | True |
 | Shigella flexneri | trimethoprim-sulfamethoxazole | SCORED | 138/69 | 0.964 | 0.957 | 0.961 | True |
 | Shigella sonnei | trimethoprim-sulfamethoxazole | SCORED | 796/343 | 0.837 | 0.959 | 0.874 | True |
+| Staphylococcus aureus | ciprofloxacin | SCORED | 1563/2095 | 0.981 | 0.884 | 0.926 | True |
 
 ## Provenance
 Scores `wiki/amr_portal_independent_scores.json` (`scripts/amr_portal_score_independent.py`, frozen rule). Feasibility `wiki/amr_portal_feasibility_result_2026-06-23.md`; validation memo `wiki/amr_portal_independent_validation_2026-06-23.md`. Rebuild: `uv run python scripts/build_amr_portal_report_card.py`.

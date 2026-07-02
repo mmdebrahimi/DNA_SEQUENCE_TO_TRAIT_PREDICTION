@@ -1,0 +1,52 @@
+{
+  "_schema": "amr-portal-staphylococcus-cipro-v1",
+  "date": "2026-07-01",
+  "organism": "Staphylococcus aureus",
+  "drug": "ciprofloxacin",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "gyrA (Ser84/Ser85/Glu88) OR grlA/parC (Ser80/Glu84) QRDR point mutation -> R",
+  "independence_tier": "EBI AMR Portal provenance-disjoint; genotype = the Portal's AMRFinderPlus POINT calls; phenotype = wet-lab measured AST (binary R/S, non-circular)",
+  "endorsement_gate": "spec >= 0.85 on powered (>=10 R/S) provenance-disjoint + strata reproduce",
+  "frozen_surface_changed": false,
+  "binary": {
+    "n_scored": 3658,
+    "tp": 1534,
+    "fp": 242,
+    "tn": 1853,
+    "fn": 29,
+    "abstain": 0,
+    "acc": 0.926,
+    "sens": 0.981,
+    "spec": 0.884
+  },
+  "n_R": 1563,
+  "n_S": 2095,
+  "powered": true,
+  "sens_wilson95": [
+    0.9734802153344938,
+    0.9870508300500557
+  ],
+  "spec_wilson95": [
+    0.8700900261338196,
+    0.8974762351790875
+  ],
+  "strata": {
+    "qrdr_present": {
+      "n": 1776,
+      "R": 1534,
+      "S": 242,
+      "r_rate": 0.864
+    },
+    "qrdr_absent": {
+      "n": 1882,
+      "R": 29,
+      "S": 1853,
+      "r_rate": 0.015
+    }
+  },
+  "strata_reproduced": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED"
+}
