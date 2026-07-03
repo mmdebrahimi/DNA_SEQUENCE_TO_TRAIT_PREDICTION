@@ -1,0 +1,13 @@
+{
+  "n_lines": 197,
+  "n_snps": 12365,
+  "k_clades": 6,
+  "structure_method": "pca_ward_5pc",
+  "n_clades_used": 3,
+  "discrete_structure_degenerate": true,
+  "eu_top_clade_size": 191,
+  "naive_cv_r2": 0.0154,
+  "within_clade_r2": 0.0349,
+  "perm_null_within_p95_abs_corr": 0.1435,
+  "verdict": "LEARNED_PATH_NEGATIVE_UNDER_DECONFOUNDING"
+}
