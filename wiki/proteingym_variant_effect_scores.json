@@ -1,0 +1,13 @@
+{
+  "substrate": "PTEN VAMP-seq abundance DMS (Matreyek 2018; MAVEDB urn:mavedb:00000102-0-1)",
+  "phenotype": "molecular (protein variant -> measured abundance)",
+  "deterministic_feature": "BLOSUM62 substitution score",
+  "n_missense_scored": 5083,
+  "spearman_blosum_vs_abundance": 0.2168,
+  "nonsense_mean_abundance": 0.177,
+  "missense_mean_abundance": 0.717,
+  "n_nonsense": 201,
+  "direction_sanity_ok": true,
+  "learned_contrast": "published ProteinGym zero-shot models (ESM-1v/EVE/TranceptEVE) ~0.4-0.5 Spearman on PTEN abundance (CITED, NOT run here -- GPU). First modality where learned > deterministic.",
+  "verdict": "DETERMINISTIC_SUBSTITUTION_BASELINE_MODEST_SIGNAL"
+}
