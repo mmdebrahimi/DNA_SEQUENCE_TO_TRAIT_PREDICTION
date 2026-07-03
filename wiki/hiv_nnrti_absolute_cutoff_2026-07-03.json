@@ -1,0 +1,155 @@
+{
+  "artifact": "hiv_absolute_cutoff_calibration",
+  "schema": "hiv-absolute-cutoff-v0.2",
+  "drug_class": "NNRTI",
+  "gene": "RT",
+  "call_mode": "mutant",
+  "cutoff_source": "Stanford HIVDB DRMcv.R cutoffmat (per-drug clinical lower cutoff) \u2014 SOURCED, not fabricated",
+  "label_source": "Stanford HIVDB PhenoSense fold (independent wet-lab IC50; NOT Sierra)",
+  "filter": "Method=PhenoSense AND Type=Clinical",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\NNRTI_DataSet.Full.txt",
+  "n_clinical_phenosense": 2585,
+  "n_drugs_calibrated": 4,
+  "n_drugs_total": 5,
+  "honest_caveats": [
+    "cutoffs SOURCED from DRMcv.R (the script the NRTI cell used); DOR + all INSTI are ABSENT from it (postdate integrase inhibitors / doravirine) -> CUTOFF_UNAVAILABLE, reported as a wall not guessed",
+    "PI/INSTI are POSITION-BASED v0 (deliberate over-call at major positions) -> LOW spec at the cutoff is EXPECTED; the mutant-specific v0.1 catalogs (hiv_pi_mutant_catalog) lift it",
+    "for NNRTI every DRMcv.R lower cutoff is 3 == the prior illustrative fold>=3 -> the illustrative choice already matched the clinical cutoff (a confirmation, not a change)",
+    "within-B is the powered de-confound arm (~96% B data)"
+  ],
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; cutoffs from Stanford HIVDB DRMcv.R",
+  "per_drug": {
+    "efavirenz": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 2529,
+        "n_label_R": 1201,
+        "cutoff": 3.0,
+        "sens": 0.962,
+        "spec": 0.855,
+        "balacc": 0.908,
+        "confusion": {
+          "tp": 1155,
+          "fp": 193,
+          "tn": 1135,
+          "fn": 46
+        }
+      },
+      "within_B": {
+        "n": 2444,
+        "n_label_R": 1174,
+        "cutoff": 3.0,
+        "sens": 0.963,
+        "spec": 0.861,
+        "balacc": 0.912,
+        "confusion": {
+          "tp": 1130,
+          "fp": 177,
+          "tn": 1093,
+          "fn": 44
+        }
+      }
+    },
+    "nevirapine": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 2423,
+        "n_label_R": 1311,
+        "cutoff": 3.0,
+        "sens": 0.926,
+        "spec": 0.962,
+        "balacc": 0.944,
+        "confusion": {
+          "tp": 1214,
+          "fp": 42,
+          "tn": 1070,
+          "fn": 97
+        }
+      },
+      "within_B": {
+        "n": 2343,
+        "n_label_R": 1274,
+        "cutoff": 3.0,
+        "sens": 0.926,
+        "spec": 0.964,
+        "balacc": 0.945,
+        "confusion": {
+          "tp": 1180,
+          "fp": 38,
+          "tn": 1031,
+          "fn": 94
+        }
+      }
+    },
+    "etravirine": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 1175,
+        "n_label_R": 335,
+        "cutoff": 3.0,
+        "sens": 0.916,
+        "spec": 0.54,
+        "balacc": 0.728,
+        "confusion": {
+          "tp": 307,
+          "fp": 386,
+          "tn": 454,
+          "fn": 28
+        }
+      },
+      "within_B": {
+        "n": 1152,
+        "n_label_R": 328,
+        "cutoff": 3.0,
+        "sens": 0.918,
+        "spec": 0.539,
+        "balacc": 0.728,
+        "confusion": {
+          "tp": 301,
+          "fp": 380,
+          "tn": 444,
+          "fn": 27
+        }
+      }
+    },
+    "rilpivirine": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 343,
+        "n_label_R": 143,
+        "cutoff": 3.0,
+        "sens": 0.853,
+        "spec": 0.595,
+        "balacc": 0.724,
+        "confusion": {
+          "tp": 122,
+          "fp": 81,
+          "tn": 119,
+          "fn": 21
+        }
+      },
+      "within_B": {
+        "n": 324,
+        "n_label_R": 133,
+        "cutoff": 3.0,
+        "sens": 0.88,
+        "spec": 0.586,
+        "balacc": 0.733,
+        "confusion": {
+          "tp": 117,
+          "fp": 79,
+          "tn": 112,
+          "fn": 16
+        }
+      }
+    },
+    "doravirine": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "reason": "no DRMcv.R clinical cutoff (drug postdates the script); external sourcing required \u2014 not guessed"
+    }
+  }
+}

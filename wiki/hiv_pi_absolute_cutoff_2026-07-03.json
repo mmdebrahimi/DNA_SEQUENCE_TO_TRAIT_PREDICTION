@@ -1,0 +1,279 @@
+{
+  "artifact": "hiv_absolute_cutoff_calibration",
+  "schema": "hiv-absolute-cutoff-v0.2",
+  "drug_class": "PI",
+  "gene": "PR",
+  "call_mode": "position",
+  "cutoff_source": "Stanford HIVDB DRMcv.R cutoffmat (per-drug clinical lower cutoff) \u2014 SOURCED, not fabricated",
+  "label_source": "Stanford HIVDB PhenoSense fold (independent wet-lab IC50; NOT Sierra)",
+  "filter": "Method=PhenoSense AND Type=Clinical",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\PI_DataSet.Full.txt",
+  "n_clinical_phenosense": 2646,
+  "n_drugs_calibrated": 8,
+  "n_drugs_total": 8,
+  "honest_caveats": [
+    "cutoffs SOURCED from DRMcv.R (the script the NRTI cell used); DOR + all INSTI are ABSENT from it (postdate integrase inhibitors / doravirine) -> CUTOFF_UNAVAILABLE, reported as a wall not guessed",
+    "PI/INSTI are POSITION-BASED v0 (deliberate over-call at major positions) -> LOW spec at the cutoff is EXPECTED; the mutant-specific v0.1 catalogs (hiv_pi_mutant_catalog) lift it",
+    "for NNRTI every DRMcv.R lower cutoff is 3 == the prior illustrative fold>=3 -> the illustrative choice already matched the clinical cutoff (a confirmation, not a change)",
+    "within-B is the powered de-confound arm (~96% B data)"
+  ],
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; cutoffs from Stanford HIVDB DRMcv.R",
+  "per_drug": {
+    "fosamprenavir": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 2502,
+        "n_label_R": 1107,
+        "cutoff": 3.0,
+        "sens": 0.998,
+        "spec": 0.573,
+        "balacc": 0.786,
+        "confusion": {
+          "tp": 1105,
+          "fp": 595,
+          "tn": 800,
+          "fn": 2
+        }
+      },
+      "within_B": {
+        "n": 2380,
+        "n_label_R": 1090,
+        "cutoff": 3.0,
+        "sens": 0.999,
+        "spec": 0.567,
+        "balacc": 0.783,
+        "confusion": {
+          "tp": 1089,
+          "fp": 558,
+          "tn": 732,
+          "fn": 1
+        }
+      }
+    },
+    "atazanavir": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 1870,
+        "n_label_R": 995,
+        "cutoff": 3.0,
+        "sens": 0.999,
+        "spec": 0.682,
+        "balacc": 0.841,
+        "confusion": {
+          "tp": 994,
+          "fp": 278,
+          "tn": 597,
+          "fn": 1
+        }
+      },
+      "within_B": {
+        "n": 1827,
+        "n_label_R": 977,
+        "cutoff": 3.0,
+        "sens": 0.999,
+        "spec": 0.678,
+        "balacc": 0.838,
+        "confusion": {
+          "tp": 976,
+          "fp": 274,
+          "tn": 576,
+          "fn": 1
+        }
+      }
+    },
+    "indinavir": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 2544,
+        "n_label_R": 1333,
+        "cutoff": 3.0,
+        "sens": 0.997,
+        "spec": 0.689,
+        "balacc": 0.843,
+        "confusion": {
+          "tp": 1329,
+          "fp": 377,
+          "tn": 834,
+          "fn": 4
+        }
+      },
+      "within_B": {
+        "n": 2422,
+        "n_label_R": 1313,
+        "cutoff": 3.0,
+        "sens": 0.998,
+        "spec": 0.691,
+        "balacc": 0.844,
+        "confusion": {
+          "tp": 1310,
+          "fp": 343,
+          "tn": 766,
+          "fn": 3
+        }
+      }
+    },
+    "lopinavir": {
+      "status": "CALIBRATED",
+      "cutoff": 9.0,
+      "all": {
+        "n": 2265,
+        "n_label_R": 1025,
+        "cutoff": 9.0,
+        "sens": 0.999,
+        "spec": 0.58,
+        "balacc": 0.789,
+        "confusion": {
+          "tp": 1024,
+          "fp": 521,
+          "tn": 719,
+          "fn": 1
+        }
+      },
+      "within_B": {
+        "n": 2159,
+        "n_label_R": 1011,
+        "cutoff": 9.0,
+        "sens": 1.0,
+        "spec": 0.57,
+        "balacc": 0.785,
+        "confusion": {
+          "tp": 1011,
+          "fp": 494,
+          "tn": 654,
+          "fn": 0
+        }
+      }
+    },
+    "nelfinavir": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 2600,
+        "n_label_R": 1533,
+        "cutoff": 3.0,
+        "sens": 0.986,
+        "spec": 0.773,
+        "balacc": 0.88,
+        "confusion": {
+          "tp": 1512,
+          "fp": 242,
+          "tn": 825,
+          "fn": 21
+        }
+      },
+      "within_B": {
+        "n": 2477,
+        "n_label_R": 1507,
+        "cutoff": 3.0,
+        "sens": 0.987,
+        "spec": 0.779,
+        "balacc": 0.883,
+        "confusion": {
+          "tp": 1487,
+          "fp": 214,
+          "tn": 756,
+          "fn": 20
+        }
+      }
+    },
+    "saquinavir": {
+      "status": "CALIBRATED",
+      "cutoff": 3.0,
+      "all": {
+        "n": 2560,
+        "n_label_R": 1122,
+        "cutoff": 3.0,
+        "sens": 1.0,
+        "spec": 0.578,
+        "balacc": 0.789,
+        "confusion": {
+          "tp": 1122,
+          "fp": 607,
+          "tn": 831,
+          "fn": 0
+        }
+      },
+      "within_B": {
+        "n": 2438,
+        "n_label_R": 1103,
+        "cutoff": 3.0,
+        "sens": 1.0,
+        "spec": 0.571,
+        "balacc": 0.785,
+        "confusion": {
+          "tp": 1103,
+          "fp": 573,
+          "tn": 762,
+          "fn": 0
+        }
+      }
+    },
+    "tipranavir": {
+      "status": "CALIBRATED",
+      "cutoff": 2.0,
+      "all": {
+        "n": 1561,
+        "n_label_R": 531,
+        "cutoff": 2.0,
+        "sens": 0.987,
+        "spec": 0.5,
+        "balacc": 0.743,
+        "confusion": {
+          "tp": 524,
+          "fp": 515,
+          "tn": 515,
+          "fn": 7
+        }
+      },
+      "within_B": {
+        "n": 1501,
+        "n_label_R": 517,
+        "cutoff": 2.0,
+        "sens": 0.994,
+        "spec": 0.498,
+        "balacc": 0.746,
+        "confusion": {
+          "tp": 514,
+          "fp": 494,
+          "tn": 490,
+          "fn": 3
+        }
+      }
+    },
+    "darunavir": {
+      "status": "CALIBRATED",
+      "cutoff": 10.0,
+      "all": {
+        "n": 1282,
+        "n_label_R": 256,
+        "cutoff": 10.0,
+        "sens": 1.0,
+        "spec": 0.492,
+        "balacc": 0.746,
+        "confusion": {
+          "tp": 256,
+          "fp": 521,
+          "tn": 505,
+          "fn": 0
+        }
+      },
+      "within_B": {
+        "n": 1231,
+        "n_label_R": 254,
+        "cutoff": 10.0,
+        "sens": 1.0,
+        "spec": 0.487,
+        "balacc": 0.744,
+        "confusion": {
+          "tp": 254,
+          "fp": 501,
+          "tn": 476,
+          "fn": 0
+        }
+      }
+    }
+  }
+}

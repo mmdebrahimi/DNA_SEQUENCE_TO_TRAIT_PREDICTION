@@ -1,0 +1,43 @@
+{
+  "artifact": "hiv_absolute_cutoff_calibration",
+  "schema": "hiv-absolute-cutoff-v0.2",
+  "drug_class": "INSTI",
+  "gene": "IN",
+  "call_mode": "position",
+  "cutoff_source": "Stanford HIVDB DRMcv.R cutoffmat (per-drug clinical lower cutoff) \u2014 SOURCED, not fabricated",
+  "label_source": "Stanford HIVDB PhenoSense fold (independent wet-lab IC50; NOT Sierra)",
+  "filter": "Method=PhenoSense AND Type=Clinical",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\INI_DataSet.Full.txt",
+  "n_clinical_phenosense": 782,
+  "n_drugs_calibrated": 0,
+  "n_drugs_total": 5,
+  "honest_caveats": [
+    "cutoffs SOURCED from DRMcv.R (the script the NRTI cell used); DOR + all INSTI are ABSENT from it (postdate integrase inhibitors / doravirine) -> CUTOFF_UNAVAILABLE, reported as a wall not guessed",
+    "PI/INSTI are POSITION-BASED v0 (deliberate over-call at major positions) -> LOW spec at the cutoff is EXPECTED; the mutant-specific v0.1 catalogs (hiv_pi_mutant_catalog) lift it",
+    "for NNRTI every DRMcv.R lower cutoff is 3 == the prior illustrative fold>=3 -> the illustrative choice already matched the clinical cutoff (a confirmation, not a change)",
+    "within-B is the powered de-confound arm (~96% B data)"
+  ],
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; cutoffs from Stanford HIVDB DRMcv.R",
+  "per_drug": {
+    "raltegravir": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "reason": "no DRMcv.R clinical cutoff (drug postdates the script); external sourcing required \u2014 not guessed"
+    },
+    "elvitegravir": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "reason": "no DRMcv.R clinical cutoff (drug postdates the script); external sourcing required \u2014 not guessed"
+    },
+    "dolutegravir": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "reason": "no DRMcv.R clinical cutoff (drug postdates the script); external sourcing required \u2014 not guessed"
+    },
+    "bictegravir": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "reason": "no DRMcv.R clinical cutoff (drug postdates the script); external sourcing required \u2014 not guessed"
+    },
+    "cabotegravir": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "reason": "no DRMcv.R clinical cutoff (drug postdates the script); external sourcing required \u2014 not guessed"
+    }
+  }
+}
