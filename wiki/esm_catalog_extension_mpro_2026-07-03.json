@@ -1,0 +1,63 @@
+{
+  "artifact": "esm_catalog_extension_sarscov2_mpro",
+  "schema": "esm-catalog-extension-v1",
+  "date": "2026-07-03",
+  "model": "esm2_t33_650M_UR50D",
+  "protein": "SARS-CoV-2 Mpro (nsp5, 306aa)",
+  "label_source": "CoV-RDB measured fold (same independent label as the deterministic Mpro cell)",
+  "method": "ESM masked-marginals (Meier 2021); LLR = log p(mut) - log p(wt); -LLR = deleteriousness",
+  "n_variants_scored": 29,
+  "n_fn_blindspot_R": 29,
+  "n_benign_neg": 2,
+  "spearman_negLLR_vs_log_fold": 0.073,
+  "blindspot_rescue_auc": 0.293,
+  "verdict": "NO_WIN",
+  "famous_misses_esm_llr": [
+    {
+      "var": "G143S",
+      "fold": 3.6,
+      "esm_llr": -3.354
+    },
+    {
+      "var": "F140A",
+      "fold": 21.0,
+      "esm_llr": -1.706
+    },
+    {
+      "var": "S144E",
+      "fold": 480.0,
+      "esm_llr": -1.454
+    },
+    {
+      "var": "F140L",
+      "fold": 8.85,
+      "esm_llr": -1.156
+    },
+    {
+      "var": "L50F",
+      "fold": 28.8,
+      "esm_llr": -1.151
+    },
+    {
+      "var": "L167F",
+      "fold": 54.7,
+      "esm_llr": -1.122
+    }
+  ],
+  "benign_esm_llr": [
+    {
+      "var": "P132H",
+      "esm_llr": -0.6
+    },
+    {
+      "var": "K90R",
+      "esm_llr": -0.231
+    }
+  ],
+  "honest_caveats": [
+    "CoV-RDB Mpro is R-ENRICHED -> the benign negative set is small (2 sourced polymorphisms); the blindspot AUC is a FIRST-PASS indicator, not a powered number (HIV RT/PR/IN, rich in R+S, is the scale-up if this wins)",
+    "ESM is scored on the SAME CoV-RDB fold labels the deterministic cell used -> in-distribution (the honest scale-up is a held-out / independent fold source, mirroring the cell's own arc)",
+    "masked-marginals (not fine-tuned) -> a pure zero-shot masked-LM signal, exactly the 'predict the missing part' paradigm the user proposed"
+  ],
+  "next": "PHASE-1 NO-WIN -> masked protein-LM does not clearly rescue the Mpro blindspot here"
+}
