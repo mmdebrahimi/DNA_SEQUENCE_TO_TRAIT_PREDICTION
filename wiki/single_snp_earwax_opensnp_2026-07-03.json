@@ -1,0 +1,33 @@
+{
+  "status": "SCORED",
+  "schema": "single-snp-opensnp-v1",
+  "date": "2026-07-03",
+  "trait": "earwax",
+  "rsid": "rs17822931",
+  "gene": "ABCC11",
+  "tier": "STRONG_MENDELIAN",
+  "rule_source": "Yoshiura 2006 Nat Genet 38:324",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy) \u2014 PILOT/DEMO",
+  "positive_class": "dry",
+  "negative_class": "wet",
+  "n_users_labelled": 274,
+  "n_scored": 247,
+  "n_indeterminate_call": 0,
+  "n_no_genotype_file": 0,
+  "n_rsid_missing": 27,
+  "confusion_positive_dry": {
+    "TP": 9,
+    "FP": 1,
+    "TN": 180,
+    "FN": 57
+  },
+  "accuracy": 0.765,
+  "pos_sens": 0.136,
+  "neg_spec": 0.994,
+  "caveats": [
+    "self-reported label (not a lab assay) \u2014 PILOT/DEMO tier, like the eye-colour openSNP cell",
+    "deployed textbook rule -> a WIN validates the rule, it is not new biological signal",
+    "ancestry-confounded where the derived allele is population-specific (e.g. lactase European -13910*T); within-ancestry split deferred"
+  ]
+}

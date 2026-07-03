@@ -1,0 +1,33 @@
+{
+  "status": "SCORED",
+  "schema": "single-snp-opensnp-v1",
+  "date": "2026-07-03",
+  "trait": "cilantro",
+  "rsid": "rs72921001",
+  "gene": "OR6A2-region",
+  "tier": "WEAK_ASSOCIATION_CONTRAST",
+  "rule_source": "Eriksson 2012 Flavour 1:22 (23andMe GWAS, weak OR)",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy) \u2014 PILOT/DEMO",
+  "positive_class": "soapy",
+  "negative_class": "not-soapy",
+  "n_users_labelled": 144,
+  "n_scored": 51,
+  "n_indeterminate_call": 0,
+  "n_no_genotype_file": 0,
+  "n_rsid_missing": 93,
+  "confusion_positive_soapy": {
+    "TP": 3,
+    "FP": 38,
+    "TN": 9,
+    "FN": 1
+  },
+  "accuracy": 0.235,
+  "pos_sens": 0.75,
+  "neg_spec": 0.191,
+  "caveats": [
+    "self-reported label (not a lab assay) \u2014 PILOT/DEMO tier, like the eye-colour openSNP cell",
+    "deployed textbook rule -> a WIN validates the rule, it is not new biological signal",
+    "WEAK-EFFECT association by design (not Mendelian) -> near-chance is the CORRECT, honest outcome"
+  ]
+}

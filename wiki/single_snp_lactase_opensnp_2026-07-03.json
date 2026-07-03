@@ -1,0 +1,33 @@
+{
+  "status": "SCORED",
+  "schema": "single-snp-opensnp-v1",
+  "date": "2026-07-03",
+  "trait": "lactase",
+  "rsid": "rs4988235",
+  "gene": "MCM6/LCT",
+  "tier": "STRONG_MENDELIAN",
+  "rule_source": "Enattah 2002 Nat Genet 30:233 (European -13910*T)",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy) \u2014 PILOT/DEMO",
+  "positive_class": "intolerant",
+  "negative_class": "tolerant",
+  "n_users_labelled": 407,
+  "n_scored": 339,
+  "n_indeterminate_call": 1,
+  "n_no_genotype_file": 1,
+  "n_rsid_missing": 66,
+  "confusion_positive_intolerant": {
+    "TP": 49,
+    "FP": 31,
+    "TN": 215,
+    "FN": 44
+  },
+  "accuracy": 0.779,
+  "pos_sens": 0.527,
+  "neg_spec": 0.874,
+  "caveats": [
+    "self-reported label (not a lab assay) \u2014 PILOT/DEMO tier, like the eye-colour openSNP cell",
+    "deployed textbook rule -> a WIN validates the rule, it is not new biological signal",
+    "ancestry-confounded where the derived allele is population-specific (e.g. lactase European -13910*T); within-ancestry split deferred"
+  ]
+}
