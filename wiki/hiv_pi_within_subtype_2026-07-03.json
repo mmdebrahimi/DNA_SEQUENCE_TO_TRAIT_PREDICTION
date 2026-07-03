@@ -1,0 +1,329 @@
+{
+  "artifact": "hiv_within_subtype_transfer",
+  "schema": "hiv-within-subtype-v0",
+  "drug_class": "PI",
+  "gene": "PR",
+  "call_mode": "position",
+  "catalog": "frozen dna_decode.data.hiv_amr (position-level, consensus-B numbering)",
+  "label_source": "Stanford HIVDB PhenoSense fold (independent wet-lab IC50; NOT Sierra)",
+  "metric": "cutoff-free AUC = P(fold|called-R > fold|called-S), per subtype group",
+  "filter": "Method=PhenoSense AND Type=Clinical",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\PI_DataSet.Full.txt",
+  "n_clinical_phenosense": 2646,
+  "subtype_mix": {
+    "B": 2492,
+    "non_B_pooled": 154
+  },
+  "subtype_counts": {
+    "B": 2492,
+    "C": 57,
+    "CRF02_AG": 35,
+    "G": 30,
+    "U": 6,
+    "F": 6,
+    "D": 6,
+    "CRF01_AE": 4,
+    "A": 4,
+    "H": 1,
+    "CRF45_cpx": 1,
+    "CRF05_DF": 1,
+    "J": 1,
+    "CRF13_cpx": 1,
+    "B + G": 1
+  },
+  "class_verdict": {
+    "verdict": "HOLDS_WITHIN_SUBTYPE",
+    "n_powered_drugs": 8,
+    "median_within_b_auc": 0.9209,
+    "median_pooled_minus_within_b_auc": -0.0055
+  },
+  "honest_caveats": [
+    "the free HIVDB gp data is ~96% subtype B -> the non-B arm is UNDER-POWERED (a free-data limit, reported not hidden); within-B is the well-powered arm and is the de-confounding test that matters",
+    "cutoff-free AUC needs no clinical breakpoint; the fold>=3 sens/spec is illustrative only",
+    "PI/INSTI are POSITION-BASED v0 (deliberate over-call at major positions) -> their AUC has a built-in ceiling below a mutant-specific catalog; the within-vs-pooled DELTA (not the level) is the de-confounding readout",
+    "a within-B AUC ~ the pooled AUC means the class-mixed number was NOT subtype-inflated; it does NOT prove non-B generalisation at scale (non-B is small)"
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use",
+  "per_drug": {
+    "fosamprenavir": {
+      "all": {
+        "n": 2502,
+        "n_label_R_f3": 1107,
+        "n_called_R": 1700,
+        "n_called_S": 802,
+        "auc": 0.9002,
+        "median_fold_R": 6.5,
+        "median_fold_S": 0.7,
+        "sens_f3": 0.998,
+        "spec_f3": 0.573
+      },
+      "B": {
+        "n": 2380,
+        "n_label_R_f3": 1090,
+        "n_called_R": 1647,
+        "n_called_S": 733,
+        "auc": 0.9052,
+        "median_fold_R": 6.9,
+        "median_fold_S": 0.7,
+        "sens_f3": 0.999,
+        "spec_f3": 0.567
+      },
+      "non-B": {
+        "n": 122,
+        "n_label_R_f3": 17,
+        "n_called_R": 53,
+        "n_called_S": 69,
+        "auc": 0.7751,
+        "median_fold_R": 1.2,
+        "median_fold_S": 0.5,
+        "sens_f3": 0.941,
+        "spec_f3": 0.648
+      }
+    },
+    "atazanavir": {
+      "all": {
+        "n": 1870,
+        "n_label_R_f3": 995,
+        "n_called_R": 1272,
+        "n_called_S": 598,
+        "auc": 0.9537,
+        "median_fold_R": 17.0,
+        "median_fold_S": 0.9,
+        "sens_f3": 0.999,
+        "spec_f3": 0.682
+      },
+      "B": {
+        "n": 1827,
+        "n_label_R_f3": 977,
+        "n_called_R": 1250,
+        "n_called_S": 577,
+        "auc": 0.9541,
+        "median_fold_R": 17.0,
+        "median_fold_S": 0.9,
+        "sens_f3": 0.999,
+        "spec_f3": 0.678
+      },
+      "non-B": {
+        "n": 43,
+        "n_label_R_f3": 18,
+        "n_called_R": 22,
+        "n_called_S": 21,
+        "auc": 0.9589,
+        "median_fold_R": 14.5,
+        "median_fold_S": 1.1,
+        "sens_f3": 1.0,
+        "spec_f3": 0.84
+      }
+    },
+    "indinavir": {
+      "all": {
+        "n": 2544,
+        "n_label_R_f3": 1333,
+        "n_called_R": 1706,
+        "n_called_S": 838,
+        "auc": 0.9339,
+        "median_fold_R": 13.0,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.997,
+        "spec_f3": 0.689
+      },
+      "B": {
+        "n": 2422,
+        "n_label_R_f3": 1313,
+        "n_called_R": 1653,
+        "n_called_S": 769,
+        "auc": 0.9413,
+        "median_fold_R": 13.0,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.998,
+        "spec_f3": 0.691
+      },
+      "non-B": {
+        "n": 122,
+        "n_label_R_f3": 20,
+        "n_called_R": 53,
+        "n_called_S": 69,
+        "auc": 0.7147,
+        "median_fold_R": 1.3,
+        "median_fold_S": 0.7,
+        "sens_f3": 0.95,
+        "spec_f3": 0.667
+      }
+    },
+    "lopinavir": {
+      "all": {
+        "n": 2265,
+        "n_label_R_f3": 1205,
+        "n_called_R": 1545,
+        "n_called_S": 720,
+        "auc": 0.9334,
+        "median_fold_R": 27.0,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.998,
+        "spec_f3": 0.677
+      },
+      "B": {
+        "n": 2159,
+        "n_label_R_f3": 1187,
+        "n_called_R": 1505,
+        "n_called_S": 654,
+        "auc": 0.9367,
+        "median_fold_R": 28.0,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.999,
+        "spec_f3": 0.672
+      },
+      "non-B": {
+        "n": 106,
+        "n_label_R_f3": 18,
+        "n_called_R": 40,
+        "n_called_S": 66,
+        "auc": 0.8189,
+        "median_fold_R": 2.0,
+        "median_fold_S": 0.7,
+        "sens_f3": 0.944,
+        "spec_f3": 0.739
+      }
+    },
+    "nelfinavir": {
+      "all": {
+        "n": 2600,
+        "n_label_R_f3": 1533,
+        "n_called_R": 1754,
+        "n_called_S": 846,
+        "auc": 0.9496,
+        "median_fold_R": 23.7,
+        "median_fold_S": 1.1,
+        "sens_f3": 0.986,
+        "spec_f3": 0.773
+      },
+      "B": {
+        "n": 2477,
+        "n_label_R_f3": 1507,
+        "n_called_R": 1701,
+        "n_called_S": 776,
+        "auc": 0.9554,
+        "median_fold_R": 24.0,
+        "median_fold_S": 1.1,
+        "sens_f3": 0.987,
+        "spec_f3": 0.779
+      },
+      "non-B": {
+        "n": 123,
+        "n_label_R_f3": 26,
+        "n_called_R": 53,
+        "n_called_S": 70,
+        "auc": 0.8047,
+        "median_fold_R": 2.8,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.962,
+        "spec_f3": 0.711
+      }
+    },
+    "saquinavir": {
+      "all": {
+        "n": 2560,
+        "n_label_R_f3": 1122,
+        "n_called_R": 1729,
+        "n_called_S": 831,
+        "auc": 0.8974,
+        "median_fold_R": 7.7,
+        "median_fold_S": 0.8,
+        "sens_f3": 1.0,
+        "spec_f3": 0.578
+      },
+      "B": {
+        "n": 2438,
+        "n_label_R_f3": 1103,
+        "n_called_R": 1676,
+        "n_called_S": 762,
+        "auc": 0.9025,
+        "median_fold_R": 8.4,
+        "median_fold_S": 0.8,
+        "sens_f3": 1.0,
+        "spec_f3": 0.571
+      },
+      "non-B": {
+        "n": 122,
+        "n_label_R_f3": 19,
+        "n_called_R": 53,
+        "n_called_S": 69,
+        "auc": 0.738,
+        "median_fold_R": 1.3,
+        "median_fold_S": 0.7,
+        "sens_f3": 1.0,
+        "spec_f3": 0.67
+      }
+    },
+    "tipranavir": {
+      "all": {
+        "n": 1561,
+        "n_label_R_f3": 397,
+        "n_called_R": 1039,
+        "n_called_S": 522,
+        "auc": 0.7911,
+        "median_fold_R": 2.0,
+        "median_fold_S": 0.9,
+        "sens_f3": 0.997,
+        "spec_f3": 0.448
+      },
+      "B": {
+        "n": 1501,
+        "n_label_R_f3": 391,
+        "n_called_R": 1008,
+        "n_called_S": 493,
+        "auc": 0.7985,
+        "median_fold_R": 2.0,
+        "median_fold_S": 0.9,
+        "sens_f3": 0.997,
+        "spec_f3": 0.443
+      },
+      "non-B": {
+        "n": 60,
+        "n_label_R_f3": 6,
+        "n_called_R": 31,
+        "n_called_S": 29,
+        "auc": 0.579,
+        "median_fold_R": 1.2,
+        "median_fold_S": 1.1,
+        "sens_f3": 1.0,
+        "spec_f3": 0.537
+      }
+    },
+    "darunavir": {
+      "all": {
+        "n": 1282,
+        "n_label_R_f3": 396,
+        "n_called_R": 777,
+        "n_called_S": 505,
+        "auc": 0.8711,
+        "median_fold_R": 3.2,
+        "median_fold_S": 0.7,
+        "sens_f3": 1.0,
+        "spec_f3": 0.57
+      },
+      "B": {
+        "n": 1231,
+        "n_label_R_f3": 393,
+        "n_called_R": 755,
+        "n_called_S": 476,
+        "auc": 0.8787,
+        "median_fold_R": 3.5,
+        "median_fold_S": 0.7,
+        "sens_f3": 1.0,
+        "spec_f3": 0.568
+      },
+      "non-B": {
+        "n": 51,
+        "n_label_R_f3": 3,
+        "n_called_R": 22,
+        "n_called_S": 29,
+        "auc": 0.5956,
+        "median_fold_R": 1.15,
+        "median_fold_S": 1.0,
+        "sens_f3": 1.0,
+        "spec_f3": 0.604
+      }
+    }
+  }
+}

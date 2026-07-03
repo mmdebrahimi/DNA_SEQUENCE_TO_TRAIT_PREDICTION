@@ -1,0 +1,192 @@
+{
+  "artifact": "hiv_within_subtype_transfer",
+  "schema": "hiv-within-subtype-v0",
+  "drug_class": "INSTI",
+  "gene": "IN",
+  "call_mode": "position",
+  "catalog": "frozen dna_decode.data.hiv_amr (position-level, consensus-B numbering)",
+  "label_source": "Stanford HIVDB PhenoSense fold (independent wet-lab IC50; NOT Sierra)",
+  "metric": "cutoff-free AUC = P(fold|called-R > fold|called-S), per subtype group",
+  "filter": "Method=PhenoSense AND Type=Clinical",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\INI_DataSet.Full.txt",
+  "n_clinical_phenosense": 782,
+  "subtype_mix": {
+    "B": 640,
+    "non_B_pooled": 39
+  },
+  "subtype_counts": {
+    "B": 640,
+    "Unknown": 103,
+    "C": 19,
+    "A": 9,
+    "CRF01_AE": 3,
+    "D": 2,
+    "D/B": 2,
+    "F": 1,
+    "CRF02_AG": 1,
+    "A + G": 1,
+    "A1": 1
+  },
+  "class_verdict": {
+    "verdict": "HOLDS_WITHIN_SUBTYPE",
+    "n_powered_drugs": 4,
+    "median_within_b_auc": 0.8981,
+    "median_pooled_minus_within_b_auc": 0.0434
+  },
+  "honest_caveats": [
+    "the free HIVDB gp data is ~96% subtype B -> the non-B arm is UNDER-POWERED (a free-data limit, reported not hidden); within-B is the well-powered arm and is the de-confounding test that matters",
+    "cutoff-free AUC needs no clinical breakpoint; the fold>=3 sens/spec is illustrative only",
+    "PI/INSTI are POSITION-BASED v0 (deliberate over-call at major positions) -> their AUC has a built-in ceiling below a mutant-specific catalog; the within-vs-pooled DELTA (not the level) is the de-confounding readout",
+    "a within-B AUC ~ the pooled AUC means the class-mixed number was NOT subtype-inflated; it does NOT prove non-B generalisation at scale (non-B is small)"
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use",
+  "per_drug": {
+    "raltegravir": {
+      "all": {
+        "n": 689,
+        "n_label_R_f3": 140,
+        "n_called_R": 181,
+        "n_called_S": 508,
+        "auc": 0.9317,
+        "median_fold_R": 20.0,
+        "median_fold_S": 1.0,
+        "sens_f3": 0.971,
+        "spec_f3": 0.918
+      },
+      "B": {
+        "n": 629,
+        "n_label_R_f3": 88,
+        "n_called_R": 130,
+        "n_called_S": 499,
+        "auc": 0.9111,
+        "median_fold_R": 12.2,
+        "median_fold_S": 1.0,
+        "sens_f3": 0.989,
+        "spec_f3": 0.921
+      },
+      "non-B": {
+        "n": 12,
+        "note": "under-powered (<15)"
+      }
+    },
+    "elvitegravir": {
+      "all": {
+        "n": 708,
+        "n_label_R_f3": 194,
+        "n_called_R": 208,
+        "n_called_S": 500,
+        "auc": 0.9428,
+        "median_fold_R": 97.0,
+        "median_fold_S": 1.3,
+        "sens_f3": 0.918,
+        "spec_f3": 0.942
+      },
+      "B": {
+        "n": 596,
+        "n_label_R_f3": 91,
+        "n_called_R": 105,
+        "n_called_S": 491,
+        "auc": 0.8937,
+        "median_fold_R": 31.0,
+        "median_fold_S": 1.3,
+        "sens_f3": 0.868,
+        "spec_f3": 0.949
+      },
+      "non-B": {
+        "n": 12,
+        "note": "under-powered (<15)"
+      }
+    },
+    "dolutegravir": {
+      "all": {
+        "n": 174,
+        "n_label_R_f3": 63,
+        "n_called_R": 115,
+        "n_called_S": 59,
+        "auc": 0.9133,
+        "median_fold_R": 3.5,
+        "median_fold_S": 1.0,
+        "sens_f3": 1.0,
+        "spec_f3": 0.532
+      },
+      "B": {
+        "n": 84,
+        "n_label_R_f3": 29,
+        "n_called_R": 53,
+        "n_called_S": 31,
+        "auc": 0.8509,
+        "median_fold_R": 3.0,
+        "median_fold_S": 1.0,
+        "sens_f3": 1.0,
+        "spec_f3": 0.564
+      },
+      "non-B": {
+        "n": 39,
+        "n_label_R_f3": 9,
+        "n_called_R": 18,
+        "n_called_S": 21,
+        "auc": 0.9709,
+        "median_fold_R": 5.9,
+        "median_fold_S": 0.8,
+        "sens_f3": 1.0,
+        "spec_f3": 0.7
+      }
+    },
+    "bictegravir": {
+      "all": {
+        "n": 144,
+        "n_label_R_f3": 38,
+        "n_called_R": 115,
+        "n_called_S": 29,
+        "auc": 0.9402,
+        "median_fold_R": 2.2,
+        "median_fold_S": 0.9,
+        "sens_f3": 1.0,
+        "spec_f3": 0.274
+      },
+      "B": {
+        "n": 29,
+        "n_label_R_f3": 8,
+        "n_called_R": 15,
+        "n_called_S": 14,
+        "auc": 0.9024,
+        "median_fold_R": 3.0,
+        "median_fold_S": 1.0,
+        "sens_f3": 1.0,
+        "spec_f3": 0.667
+      },
+      "non-B": {
+        "n": 15,
+        "n_label_R_f3": 1,
+        "n_called_R": 4,
+        "n_called_S": 11,
+        "auc": 0.9205,
+        "median_fold_R": 1.65,
+        "median_fold_S": 0.9,
+        "sens_f3": 1.0,
+        "spec_f3": 0.786
+      }
+    },
+    "cabotegravir": {
+      "all": {
+        "n": 66,
+        "n_label_R_f3": 52,
+        "n_called_R": 62,
+        "n_called_S": 4,
+        "auc": 1.0,
+        "median_fold_R": 8.8,
+        "median_fold_S": 0.95,
+        "sens_f3": 1.0,
+        "spec_f3": 0.286
+      },
+      "B": {
+        "n": 4,
+        "note": "under-powered (<15)"
+      },
+      "non-B": {
+        "n": 10,
+        "note": "under-powered (<15)"
+      }
+    }
+  }
+}

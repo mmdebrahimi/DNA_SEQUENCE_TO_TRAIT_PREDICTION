@@ -1,0 +1,212 @@
+{
+  "artifact": "hiv_within_subtype_transfer",
+  "schema": "hiv-within-subtype-v0",
+  "drug_class": "NNRTI",
+  "gene": "RT",
+  "call_mode": "mutant",
+  "catalog": "frozen dna_decode.data.hiv_amr (mutant-level, consensus-B numbering)",
+  "label_source": "Stanford HIVDB PhenoSense fold (independent wet-lab IC50; NOT Sierra)",
+  "metric": "cutoff-free AUC = P(fold|called-R > fold|called-S), per subtype group",
+  "filter": "Method=PhenoSense AND Type=Clinical",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\NNRTI_DataSet.Full.txt",
+  "n_clinical_phenosense": 2585,
+  "subtype_mix": {
+    "B": 2482,
+    "non_B_pooled": 97
+  },
+  "subtype_counts": {
+    "B": 2482,
+    "A": 41,
+    "G": 15,
+    "C": 12,
+    "CRF02_AG": 9,
+    "Unknown": 6,
+    "A1": 4,
+    "D": 4,
+    "CRF01_AE": 2,
+    "U": 2,
+    "F": 2,
+    "H": 1,
+    "A + G": 1,
+    "B + G": 1,
+    "CRF25_cpx": 1,
+    "F1": 1,
+    "AE": 1
+  },
+  "class_verdict": {
+    "verdict": "HOLDS_WITHIN_SUBTYPE",
+    "n_powered_drugs": 5,
+    "median_within_b_auc": 0.795,
+    "median_pooled_minus_within_b_auc": -0.0005
+  },
+  "honest_caveats": [
+    "the free HIVDB gp data is ~96% subtype B -> the non-B arm is UNDER-POWERED (a free-data limit, reported not hidden); within-B is the well-powered arm and is the de-confounding test that matters",
+    "cutoff-free AUC needs no clinical breakpoint; the fold>=3 sens/spec is illustrative only",
+    "PI/INSTI are POSITION-BASED v0 (deliberate over-call at major positions) -> their AUC has a built-in ceiling below a mutant-specific catalog; the within-vs-pooled DELTA (not the level) is the de-confounding readout",
+    "a within-B AUC ~ the pooled AUC means the class-mixed number was NOT subtype-inflated; it does NOT prove non-B generalisation at scale (non-B is small)"
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset CC public per HIVDB Terms of Use",
+  "per_drug": {
+    "efavirenz": {
+      "all": {
+        "n": 2529,
+        "n_label_R_f3": 1201,
+        "n_called_R": 1348,
+        "n_called_S": 1181,
+        "auc": 0.9586,
+        "median_fold_R": 29.0,
+        "median_fold_S": 0.6,
+        "sens_f3": 0.962,
+        "spec_f3": 0.855
+      },
+      "B": {
+        "n": 2444,
+        "n_label_R_f3": 1174,
+        "n_called_R": 1307,
+        "n_called_S": 1137,
+        "auc": 0.9614,
+        "median_fold_R": 31.0,
+        "median_fold_S": 0.6,
+        "sens_f3": 0.963,
+        "spec_f3": 0.861
+      },
+      "non-B": {
+        "n": 85,
+        "n_label_R_f3": 27,
+        "n_called_R": 41,
+        "n_called_S": 44,
+        "auc": 0.8731,
+        "median_fold_R": 5.7,
+        "median_fold_S": 0.5,
+        "sens_f3": 0.926,
+        "spec_f3": 0.724
+      }
+    },
+    "nevirapine": {
+      "all": {
+        "n": 2423,
+        "n_label_R_f3": 1311,
+        "n_called_R": 1256,
+        "n_called_S": 1167,
+        "auc": 0.9795,
+        "median_fold_R": 200.0,
+        "median_fold_S": 0.7,
+        "sens_f3": 0.926,
+        "spec_f3": 0.962
+      },
+      "B": {
+        "n": 2343,
+        "n_label_R_f3": 1274,
+        "n_called_R": 1218,
+        "n_called_S": 1125,
+        "auc": 0.9798,
+        "median_fold_R": 200.0,
+        "median_fold_S": 0.7,
+        "sens_f3": 0.926,
+        "spec_f3": 0.964
+      },
+      "non-B": {
+        "n": 80,
+        "n_label_R_f3": 37,
+        "n_called_R": 38,
+        "n_called_S": 42,
+        "auc": 0.9765,
+        "median_fold_R": 55.5,
+        "median_fold_S": 0.5,
+        "sens_f3": 0.919,
+        "spec_f3": 0.907
+      }
+    },
+    "etravirine": {
+      "all": {
+        "n": 1175,
+        "n_label_R_f3": 335,
+        "n_called_R": 693,
+        "n_called_S": 482,
+        "auc": 0.7631,
+        "median_fold_R": 2.2,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.916,
+        "spec_f3": 0.54
+      },
+      "B": {
+        "n": 1152,
+        "n_label_R_f3": 328,
+        "n_called_R": 681,
+        "n_called_S": 471,
+        "auc": 0.7636,
+        "median_fold_R": 2.2,
+        "median_fold_S": 0.8,
+        "sens_f3": 0.918,
+        "spec_f3": 0.539
+      },
+      "non-B": {
+        "n": 23,
+        "n_label_R_f3": 7,
+        "n_called_R": 12,
+        "n_called_S": 11,
+        "auc": 0.7311,
+        "median_fold_R": 2.55,
+        "median_fold_S": 0.6,
+        "sens_f3": 0.857,
+        "spec_f3": 0.625
+      }
+    },
+    "rilpivirine": {
+      "all": {
+        "n": 343,
+        "n_label_R_f3": 143,
+        "n_called_R": 203,
+        "n_called_S": 140,
+        "auc": 0.7836,
+        "median_fold_R": 4.1,
+        "median_fold_S": 1.0,
+        "sens_f3": 0.853,
+        "spec_f3": 0.595
+      },
+      "B": {
+        "n": 324,
+        "n_label_R_f3": 133,
+        "n_called_R": 196,
+        "n_called_S": 128,
+        "auc": 0.795,
+        "median_fold_R": 4.05,
+        "median_fold_S": 0.85,
+        "sens_f3": 0.88,
+        "spec_f3": 0.586
+      },
+      "non-B": {
+        "n": 13,
+        "note": "under-powered (<15)"
+      }
+    },
+    "doravirine": {
+      "all": {
+        "n": 127,
+        "n_label_R_f3": 80,
+        "n_called_R": 94,
+        "n_called_S": 33,
+        "auc": 0.6043,
+        "median_fold_R": 4.8,
+        "median_fold_S": 3.0,
+        "sens_f3": 0.787,
+        "spec_f3": 0.34
+      },
+      "B": {
+        "n": 122,
+        "n_label_R_f3": 77,
+        "n_called_R": 92,
+        "n_called_S": 30,
+        "auc": 0.5815,
+        "median_fold_R": 4.8,
+        "median_fold_S": 3.15,
+        "sens_f3": 0.792,
+        "spec_f3": 0.311
+      },
+      "non-B": {
+        "n": 5,
+        "note": "under-powered (<15)"
+      }
+    }
+  }
+}
