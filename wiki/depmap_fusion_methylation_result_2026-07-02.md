@@ -81,6 +81,9 @@ model — the negative result that motivated this whole modality sweep.
   fuller drug-response screen with the CML/heme lines (CTRP or GDSC, which include K562 etc.) would power the
   BCR-ABL→imatinib/dasatinib/nilotinib cases and the ALK cases. The fusion + methylation loaders already
   support this — only the response matrix needs swapping. No new code, just a broader-cohort fetch.
+  **→ WALL CLOSED 2026-07-02** via GDSC (`scripts/gdsc_fusion_decoder.py`,
+  `wiki/gdsc_fusion_result_2026-07-02.md`): BCR-ABL→imatinib/dasatinib/nilotinib/ponatinib now n=8–10 with
+  within-lineage t −4.8 to −15; ALK→crizotinib n=15, within-lineage t −4.09. The fusion cell is powered.
 - **In-distribution, not independent.** This is a de-confounded association test on public data, not a held-out
   external validation. It demonstrates *which feature type carries a mechanism*, not a deployable predictor.
 - Both new modalities reuse the frozen `dna_decode.deconfound` primitives — no new statistics were invented.

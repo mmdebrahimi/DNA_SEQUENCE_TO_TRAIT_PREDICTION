@@ -1,0 +1,96 @@
+{
+  "n_gdsc_rows": 561820,
+  "n_cell_lines_total": 956,
+  "cases": [
+    {
+      "drug": "imatinib",
+      "dataset": "GDSC1",
+      "biomarker_fusion": "BCR--ABL1",
+      "direction": "sensitize",
+      "n_cell_lines": 392,
+      "n_fusion_positive": 9,
+      "powered": true,
+      "global_ln_ic50_delta": -4.02,
+      "global_mannwhitney_p": 0.0,
+      "within_lineage_t": -6.5,
+      "per_lineage_delta_ln_ic50": {
+        "blood": -3.53
+      },
+      "direction_ok": true,
+      "feature_match_powered": true,
+      "biomarker_gene": "ABL1"
+    },
+    {
+      "drug": "dasatinib",
+      "dataset": "GDSC2",
+      "biomarker_fusion": "BCR--ABL1",
+      "direction": "sensitize",
+      "n_cell_lines": 941,
+      "n_fusion_positive": 10,
+      "powered": true,
+      "global_ln_ic50_delta": -8.34,
+      "global_mannwhitney_p": 0.0,
+      "within_lineage_t": -14.95,
+      "per_lineage_delta_ln_ic50": {
+        "blood": -7.61
+      },
+      "direction_ok": true,
+      "feature_match_powered": true,
+      "biomarker_gene": "ABL1"
+    },
+    {
+      "drug": "nilotinib",
+      "dataset": "GDSC2",
+      "biomarker_fusion": "BCR--ABL1",
+      "direction": "sensitize",
+      "n_cell_lines": 935,
+      "n_fusion_positive": 9,
+      "powered": true,
+      "global_ln_ic50_delta": -7.58,
+      "global_mannwhitney_p": 0.0,
+      "within_lineage_t": -9.09,
+      "per_lineage_delta_ln_ic50": {
+        "blood": -5.88
+      },
+      "direction_ok": true,
+      "feature_match_powered": true,
+      "biomarker_gene": "ABL1"
+    },
+    {
+      "drug": "ponatinib",
+      "dataset": "GDSC1",
+      "biomarker_fusion": "BCR--ABL1",
+      "direction": "sensitize",
+      "n_cell_lines": 855,
+      "n_fusion_positive": 8,
+      "powered": true,
+      "global_ln_ic50_delta": -6.14,
+      "global_mannwhitney_p": 0.0,
+      "within_lineage_t": -4.83,
+      "per_lineage_delta_ln_ic50": {
+        "blood": -4.53
+      },
+      "direction_ok": true,
+      "feature_match_powered": true,
+      "biomarker_gene": "ABL1"
+    },
+    {
+      "drug": "crizotinib",
+      "dataset": "GDSC2",
+      "biomarker_fusion": "--ALK",
+      "direction": "sensitize",
+      "n_cell_lines": 945,
+      "n_fusion_positive": 15,
+      "powered": true,
+      "global_ln_ic50_delta": -2.19,
+      "global_mannwhitney_p": 2e-05,
+      "within_lineage_t": -4.09,
+      "per_lineage_delta_ln_ic50": {
+        "lymphocyte": -3.25
+      },
+      "direction_ok": true,
+      "feature_match_powered": true,
+      "biomarker_gene": "ALK"
+    }
+  ]
+}
