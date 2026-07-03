@@ -1,0 +1,75 @@
+{
+  "predictor_deterministic": "Site-Independent",
+  "learned_reference": [
+    "ESM-1v (ensemble)",
+    "EVE (ensemble)",
+    "GEMME"
+  ],
+  "n_human_assays": 96,
+  "by_selection": [
+    {
+      "selection": "Activity",
+      "n": 20,
+      "site_independent": 0.4265,
+      "ESM-1v (ensemble)": 0.5225,
+      "EVE (ensemble)": 0.5195,
+      "GEMME": 0.5415,
+      "beats_a_learned_model": false,
+      "gap_to_best_learned": 0.115
+    },
+    {
+      "selection": "Binding",
+      "n": 8,
+      "site_independent": 0.3875,
+      "ESM-1v (ensemble)": 0.3405,
+      "EVE (ensemble)": 0.405,
+      "GEMME": 0.348,
+      "beats_a_learned_model": true,
+      "gap_to_best_learned": 0.0175
+    },
+    {
+      "selection": "Stability",
+      "n": 23,
+      "site_independent": 0.394,
+      "ESM-1v (ensemble)": 0.526,
+      "EVE (ensemble)": 0.502,
+      "GEMME": 0.528,
+      "beats_a_learned_model": false,
+      "gap_to_best_learned": 0.134
+    },
+    {
+      "selection": "Expression",
+      "n": 15,
+      "site_independent": 0.372,
+      "ESM-1v (ensemble)": 0.49,
+      "EVE (ensemble)": 0.437,
+      "GEMME": 0.481,
+      "beats_a_learned_model": false,
+      "gap_to_best_learned": 0.118
+    },
+    {
+      "selection": "OrganismalFitness",
+      "n": 30,
+      "site_independent": 0.3755,
+      "ESM-1v (ensemble)": 0.4535,
+      "EVE (ensemble)": 0.4165,
+      "GEMME": 0.4215,
+      "beats_a_learned_model": false,
+      "gap_to_best_learned": 0.078
+    }
+  ],
+  "overall_human": {
+    "n": 96,
+    "site_independent": 0.3905,
+    "ESM-1v (ensemble)": 0.48,
+    "EVE (ensemble)": 0.466,
+    "GEMME": 0.478
+  },
+  "project_anchors": {
+    "blosum_floor": 0.2103,
+    "alphamissense": 0.4228
+  },
+  "function_site_independent": 0.4265,
+  "function_best_learned": 0.5415,
+  "verdict": "DETERMINISTIC_CONSERVATION_LARGELY_COMPETES"
+}
