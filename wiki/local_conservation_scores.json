@@ -1,0 +1,255 @@
+{
+  "spec": {
+    "lambda": 0.5,
+    "formula": "weighted delta-log2-odds; gaps excluded; ProteinGym weights",
+    "n_assays": 19
+  },
+  "assays": [
+    {
+      "n_scored": 5575,
+      "local_conservation_spearman": 0.4537,
+      "proteingym_site_independent_spearman": 0.4585,
+      "weighted": true,
+      "msa_sha": "7833630934c8ace1",
+      "weights_sha": "e3a46df8b1dd8a50",
+      "ncol": 294,
+      "n_seqs": 201108,
+      "DMS_id": "ADRB2_HUMAN_Jones_2020",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 209,
+      "local_conservation_spearman": 0.1296,
+      "proteingym_site_independent_spearman": 0.1375,
+      "weighted": false,
+      "msa_sha": "dbaa4ef2444170dd",
+      "weights_sha": null,
+      "ncol": 174,
+      "n_seqs": null,
+      "DMS_id": "AICDA_HUMAN_Gajula_2014_3cycles",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 1377,
+      "local_conservation_spearman": 0.4961,
+      "proteingym_site_independent_spearman": 0.4658,
+      "weighted": false,
+      "msa_sha": "c246bdbcd5b0bdf6",
+      "weights_sha": null,
+      "ncol": 228,
+      "n_seqs": null,
+      "DMS_id": "CASP3_HUMAN_Roychowdhury_2020",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 1442,
+      "local_conservation_spearman": 0.4764,
+      "proteingym_site_independent_spearman": 0.4475,
+      "weighted": false,
+      "msa_sha": "afe48a1ae620e47b",
+      "weights_sha": null,
+      "ncol": 240,
+      "n_seqs": null,
+      "DMS_id": "CASP7_HUMAN_Roychowdhury_2020",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 5098,
+      "local_conservation_spearman": 0.4519,
+      "proteingym_site_independent_spearman": 0.4579,
+      "weighted": false,
+      "msa_sha": "a15aa45172b488c7",
+      "weights_sha": null,
+      "ncol": 307,
+      "n_seqs": null,
+      "DMS_id": "HEM3_HUMAN_Loggerenberg_2023",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 2271,
+      "local_conservation_spearman": 0.4303,
+      "proteingym_site_independent_spearman": 0.411,
+      "weighted": false,
+      "msa_sha": "be6d6ead7c5b5e16",
+      "weights_sha": null,
+      "ncol": 125,
+      "n_seqs": null,
+      "DMS_id": "KCNE1_HUMAN_Muhammad_2023_function",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 200,
+      "local_conservation_spearman": 0.3098,
+      "proteingym_site_independent_spearman": 0.4494,
+      "weighted": true,
+      "msa_sha": "7cc728d34a1ae2f0",
+      "weights_sha": "47bb400d7beb56fa",
+      "ncol": 31,
+      "n_seqs": 13900,
+      "DMS_id": "KCNH2_HUMAN_Kozek_2020",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 5130,
+      "local_conservation_spearman": 0.5025,
+      "proteingym_site_independent_spearman": 0.5132,
+      "weighted": false,
+      "msa_sha": "ee5147608ec09d7f",
+      "weights_sha": null,
+      "ncol": 273,
+      "n_seqs": null,
+      "DMS_id": "MET_HUMAN_Estevam_2023",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 637,
+      "local_conservation_spearman": 0.6787,
+      "proteingym_site_independent_spearman": 0.6826,
+      "weighted": false,
+      "msa_sha": "4856543945453364",
+      "weights_sha": null,
+      "ncol": 1261,
+      "n_seqs": null,
+      "DMS_id": "NPC1_HUMAN_Erwood_2022_HEK293T",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 63,
+      "local_conservation_spearman": 0.6961,
+      "proteingym_site_independent_spearman": 0.7788,
+      "weighted": false,
+      "msa_sha": "4856543945453364",
+      "weights_sha": null,
+      "ncol": 1261,
+      "n_seqs": null,
+      "DMS_id": "NPC1_HUMAN_Erwood_2022_RPE1",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 1500,
+      "local_conservation_spearman": 0.5194,
+      "proteingym_site_independent_spearman": 0.527,
+      "weighted": false,
+      "msa_sha": "1b4d329e089bd3ff",
+      "weights_sha": null,
+      "ncol": 308,
+      "n_seqs": null,
+      "DMS_id": "OTC_HUMAN_Lo_2023",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 5302,
+      "local_conservation_spearman": 0.4093,
+      "proteingym_site_independent_spearman": 0.4035,
+      "weighted": false,
+      "msa_sha": "a76bd15ae4d4527c",
+      "weights_sha": null,
+      "ncol": 378,
+      "n_seqs": null,
+      "DMS_id": "PAI1_HUMAN_Huttinger_2021",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 7676,
+      "local_conservation_spearman": 0.4825,
+      "proteingym_site_independent_spearman": 0.4576,
+      "weighted": false,
+      "msa_sha": "0ff44715a174184d",
+      "weights_sha": null,
+      "ncol": 404,
+      "n_seqs": null,
+      "DMS_id": "PPARG_HUMAN_Majithia_2016",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 5525,
+      "local_conservation_spearman": 0.4777,
+      "proteingym_site_independent_spearman": 0.5424,
+      "weighted": true,
+      "msa_sha": "b173cfdebc7f5447",
+      "weights_sha": "0636896ee1bffe7b",
+      "ncol": 303,
+      "n_seqs": 18945,
+      "DMS_id": "PTEN_HUMAN_Mighell_2018",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 3078,
+      "local_conservation_spearman": 0.4503,
+      "proteingym_site_independent_spearman": 0.452,
+      "weighted": true,
+      "msa_sha": "000e4f612fa133c7",
+      "weights_sha": "236d27c5e9ce4d83",
+      "ncol": 163,
+      "n_seqs": 203361,
+      "DMS_id": "RASH_HUMAN_Bandaru_2017",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 8344,
+      "local_conservation_spearman": 0.4773,
+      "proteingym_site_independent_spearman": 0.4737,
+      "weighted": false,
+      "msa_sha": "eaaec0beac12bcd0",
+      "weights_sha": null,
+      "ncol": 446,
+      "n_seqs": null,
+      "DMS_id": "S22A1_HUMAN_Yee_2023_activity",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 9260,
+      "local_conservation_spearman": 0.451,
+      "proteingym_site_independent_spearman": 0.4655,
+      "weighted": true,
+      "msa_sha": "75dcf3392146dfe4",
+      "weights_sha": "b02a0629504b8051",
+      "ncol": 507,
+      "n_seqs": 40416,
+      "DMS_id": "SC6A4_HUMAN_Young_2021",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 3372,
+      "local_conservation_spearman": 0.5082,
+      "proteingym_site_independent_spearman": 0.5257,
+      "weighted": true,
+      "msa_sha": "a25169b8794c0902",
+      "weights_sha": "0efd54292ad343af",
+      "ncol": 433,
+      "n_seqs": 26676,
+      "DMS_id": "SRC_HUMAN_Ahler_2019",
+      "selection": "Activity"
+    },
+    {
+      "n_scored": 3637,
+      "local_conservation_spearman": 0.4281,
+      "proteingym_site_independent_spearman": 0.4346,
+      "weighted": true,
+      "msa_sha": "e7621daaa827721c",
+      "weights_sha": "0efd54292ad343af",
+      "ncol": 466,
+      "n_seqs": 26676,
+      "DMS_id": "SRC_HUMAN_Chakraborty_2023_binding-DAS_25uM",
+      "selection": "Activity"
+    }
+  ],
+  "by_selection": {
+    "Activity": {
+      "n": 19,
+      "local_conservation": 0.4764,
+      "proteingym_site_independent": 0.4585
+    }
+  },
+  "overall_median_local": 0.4764,
+  "weighted_subset": {
+    "n": 7,
+    "local_median": 0.451,
+    "proteingym_si_median": 0.4585,
+    "reproduction_delta_median": 0.0145
+  },
+  "unweighted_fallback": {
+    "n": 12,
+    "local_median": 0.4799
+  }
+}
