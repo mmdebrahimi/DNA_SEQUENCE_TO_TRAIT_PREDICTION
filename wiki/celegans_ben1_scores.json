@@ -1,0 +1,168 @@
+{
+  "n_strains": 611,
+  "n_ben1_determinant_pos": 65,
+  "assays": [
+    {
+      "phenotype": "abz_hta_norm_res",
+      "n_scored": 285,
+      "n_resistant": 137,
+      "n_sensitive": 148,
+      "n_determinant_pos": 40,
+      "TP": 36,
+      "FP": 4,
+      "FN": 101,
+      "TN": 144,
+      "sensitivity": 0.263,
+      "specificity": 0.973,
+      "ppv": 0.9,
+      "accuracy": 0.632,
+      "strong_vs_marginal": {
+        "mean_pheno_resistant_determinant_pos": 136.6,
+        "mean_pheno_resistant_determinant_neg": 10.4,
+        "mean_pheno_sensitive": -36.59
+      },
+      "class_breakdown": {
+        "Deletion": {
+          "n": 9,
+          "n_resistant": 9
+        },
+        "Frameshift": {
+          "n": 14,
+          "n_resistant": 14
+        },
+        "Inframe_deletion": {
+          "n": 1,
+          "n_resistant": 0
+        },
+        "Inversion": {
+          "n": 2,
+          "n_resistant": 1
+        },
+        "Low ben-1 expression": {
+          "n": 3,
+          "n_resistant": 1
+        },
+        "Missense": {
+          "n": 5,
+          "n_resistant": 5
+        },
+        "No variant": {
+          "n": 245,
+          "n_resistant": 101
+        },
+        "Start/stop altering": {
+          "n": 6,
+          "n_resistant": 6
+        }
+      }
+    },
+    {
+      "phenotype": "abz_hta_2018_res",
+      "n_scored": 202,
+      "n_resistant": 111,
+      "n_sensitive": 91,
+      "n_determinant_pos": 36,
+      "TP": 33,
+      "FP": 3,
+      "FN": 78,
+      "TN": 88,
+      "sensitivity": 0.297,
+      "specificity": 0.967,
+      "ppv": 0.917,
+      "accuracy": 0.599,
+      "strong_vs_marginal": {
+        "mean_pheno_resistant_determinant_pos": 121.4,
+        "mean_pheno_resistant_determinant_neg": 2.77,
+        "mean_pheno_sensitive": -45.28
+      },
+      "class_breakdown": {
+        "Deletion": {
+          "n": 9,
+          "n_resistant": 9
+        },
+        "Frameshift": {
+          "n": 13,
+          "n_resistant": 13
+        },
+        "Inframe_deletion": {
+          "n": 1,
+          "n_resistant": 0
+        },
+        "Inversion": {
+          "n": 1,
+          "n_resistant": 1
+        },
+        "Low ben-1 expression": {
+          "n": 2,
+          "n_resistant": 0
+        },
+        "Missense": {
+          "n": 5,
+          "n_resistant": 5
+        },
+        "No variant": {
+          "n": 166,
+          "n_resistant": 78
+        },
+        "Start/stop altering": {
+          "n": 5,
+          "n_resistant": 5
+        }
+      }
+    },
+    {
+      "phenotype": "abz_hta_2024_res",
+      "n_scored": 188,
+      "n_resistant": 58,
+      "n_sensitive": 130,
+      "n_determinant_pos": 19,
+      "TP": 15,
+      "FP": 4,
+      "FN": 43,
+      "TN": 126,
+      "sensitivity": 0.259,
+      "specificity": 0.969,
+      "ppv": 0.789,
+      "accuracy": 0.75,
+      "strong_vs_marginal": {
+        "mean_pheno_resistant_determinant_pos": 176.83,
+        "mean_pheno_resistant_determinant_neg": 17.51,
+        "mean_pheno_sensitive": -34.75
+      },
+      "class_breakdown": {
+        "Deletion": {
+          "n": 2,
+          "n_resistant": 2
+        },
+        "Frameshift": {
+          "n": 4,
+          "n_resistant": 4
+        },
+        "Inframe_deletion": {
+          "n": 1,
+          "n_resistant": 0
+        },
+        "Inversion": {
+          "n": 2,
+          "n_resistant": 1
+        },
+        "Low ben-1 expression": {
+          "n": 3,
+          "n_resistant": 1
+        },
+        "Missense": {
+          "n": 2,
+          "n_resistant": 2
+        },
+        "No variant": {
+          "n": 169,
+          "n_resistant": 43
+        },
+        "Start/stop altering": {
+          "n": 5,
+          "n_resistant": 5
+        }
+      }
+    }
+  ]
+}
