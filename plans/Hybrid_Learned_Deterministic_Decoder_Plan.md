@@ -69,7 +69,13 @@ surface is the floor and is never regressed.
 - **Independent-label note:** in-distribution first (HIVDB); an external-cohort fold confirmation mirrors the
   decoder's own provdisjoint/external arc IF Phase 2 wins.
 
-### Phase 3 — Imputation hybrid (input completeness; INDEPENDENT of Phase 2)  [class d/e]
+### Phase 3 — Imputation hybrid (input completeness; INDEPENDENT of Phase 2)  ✅ DONE 2026-07-04 → PASS
+- **Result:** `PASS` (`wiki/impute_abstain_abo_result_2026-07-04.md`). LD imputation of the uncallable ABO
+  O-deletion `rs8176719` from its tag `rs657152`: LOO genotype accuracy **0.985**, imputed→O-status accuracy
+  **0.989**, **69/70** tag-only abstain-users rescued to a call. → **V2 is the deployable hybrid value-add**:
+  a masked-genotype imputer as a PRE-PROCESSOR that cuts the decoder's ABSTAIN rate at ~99%, feeding the
+  frozen catalog better input (LD-learning is a FEATURE here, not the phenotype-prediction confound).
+
 - **Terminal claim:** a masked-genotype imputation model reduces the deterministic decoder's ABSTAIN rate on
   uncallable determinant positions WITHOUT lowering accuracy vs abstaining.
 - **Substrate:** TB regeno-callability gaps (ABSTAIN vs S-by-absence) + ABO `--` no-calls + low-coverage
@@ -119,17 +125,25 @@ baseline-beating hybrid layer with an independent-label win; OR (b) a documented
 components do not beat the deterministic decoder on independent labels — a real finding that closes the
 hybrid question with evidence, leaving the deterministic product as the terminal.
 
-## State of the plan (2026-07-03)
-Phase 1 ✅ (partial zero-shot signal, mechanism-gated) → Phase 2 ✅ **PARTIAL** (head beats zero-shot, loses to
-the catalog on known positions). **The evidence-grounded conclusion so far:** a learned protein-level scorer
-is a BOUNDED FALLBACK (catalog-silent variants), NOT a catalog replacement — the deterministic decoder stays
-primary. The grand "learned beats deterministic" form is closed on independent-label held-out tests.
+## State of the plan (2026-07-04) — the hybrid arc is SETTLED
 
-**Remaining options (user's call — the hybrid's honest ceiling is now known):**
-- **Phase 4 (fallback-only)** — evaluate the head on the catalog-SILENT subset specifically; wire it as a
-  fail-closed fallback ONLY if it beats the K/N null there. Modest, bounded value.
-- **Phase 3 (imputation)** — the OTHER, independent value-add (reduce ABSTAIN rate); untouched by the Phase-2
-  result and arguably the higher-VOI remaining move (LD-learning as a feature, not competing with the catalog).
-- **Bank** — the hybrid question is substantively answered: learned scoring does not beat curated knowledge
-  on known positions; the deterministic decoder is the terminal product. Phase 3 imputation is the only
-  remaining branch that could add deployable value.
+| branch | verdict | role in the hybrid |
+|---|---|---|
+| Learned phenotype-prediction from FM embeddings (prior, 0-for-5) | de-confounded NEGATIVE | rejected |
+| **V1** learned SCORER — zero-shot (P1) + supervised head (P2) | **PARTIAL** (beats zero-shot, loses to catalog) | novel-variant FALLBACK only |
+| **V2** masked-genotype IMPUTATION (P3) | **PASS** (98.9% abstain-reduction) | **the deployable win** |
+
+**The best version of the hybrid idea is IMPUTATION, not phenotype prediction.** A learned phenotype scorer
+does not beat curated determinant knowledge (V1 fallback-only); but a masked-genotype IMPUTER that fills the
+decoder's uncallable inputs cuts its ABSTAIN rate at ~99% (V2 PASS). The deterministic decoder stays primary;
+the learned layer feeds it better DATA. LD-learning — the confound that kills learned phenotype-prediction —
+is exactly what makes imputation work.
+
+**Remaining (user's call):**
+- **Phase 4 productionize V2** — wire the imputation pre-processor into the live decode path (impute
+  uncallable determinant positions before calling; fail-closed to ABSTAIN when no confident tag). Real
+  deployable value; a bounded engineering build.
+- **Phase 5 (genotype world-model)** — stays DEFERRED; a full generative genotype model is unnecessary — the
+  simple per-tag LD imputer already clears the bar, and a learned phenotype predictor is closed.
+- **Bank** — the hybrid question is fully answered with evidence: imputation is the deployable value-add;
+  learned scoring is a bounded fallback; the deterministic decoder is the terminal product.

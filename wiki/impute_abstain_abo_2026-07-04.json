@@ -1,0 +1,24 @@
+{
+  "artifact": "impute_determinant_abstain",
+  "schema": "impute-abstain-v1",
+  "date": "2026-07-04",
+  "target": "rs8176719",
+  "tag": "rs657152",
+  "cell": "ABO O-status (abo_blood.call_abo_o_status)",
+  "source": "OpenSNP archive dump (2017-12-08); LD-based imputation (majority target | tag genotype)",
+  "n_scanned": 1000,
+  "n_cocalled": 842,
+  "n_tag_only_abstain_pop": 70,
+  "loo_genotype_imputation_accuracy": 0.985,
+  "imputed_to_ostatus_accuracy": 0.989,
+  "n_abstain_rescued": 69,
+  "abstain_reduction_note": "69 tag-only users (rs8176719 uncallable) get an imputed O-status call instead of INDETERMINATE, at ~98.9% accuracy",
+  "verdict": "PASS",
+  "interpretation": "PASS: LD imputation of the uncallable O-deletion from its tag reduces the decoder's ABSTAIN rate at high accuracy -> V2 (imputation) is the deployable hybrid value-add; LD-learning is a FEATURE here, not the confound that kills phenotype-prediction. This is the one part of the masked-genotype idea that survives every test.",
+  "honest_caveats": [
+    "single best tag (majority-conditional imputation); a multi-tag / full-panel imputer (Beagle-class) would be marginally better but this already clears the bar",
+    "openSNP is European-dominated -> the tag-target LD is European; other-ancestry LD may differ (a reference-panel-ancestry caveat, standard for imputation)",
+    "self-report-independent: this validates GENOTYPE imputation vs the true typed genotype (not a phenotype label) -> no self-report noise; the O-status rule is the frozen deterministic cell",
+    "scan capped at 1000 users for wall-clock (21GB zip streaming); accuracy is LOO on n_cocalled"
+  ]
+}
