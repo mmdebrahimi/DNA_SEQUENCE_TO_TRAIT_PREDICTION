@@ -30,7 +30,7 @@ single-SNP candidate shortlist.
 | **FinnGen** (R12) | `finngen_r12_endpoint_index.tsv` | 2,469 | endpoint manifest (phenocode/phenotype/category/n). Bulk = `gs://finngen-public-data-r12/summary_stats/`. |
 | **PGS Catalog** | `pgs_catalog_index.tsv` | 5,385 | polygenic-score metadata (id/name/trait/n_variants/ftp). |
 | **Pan-UKBB** | `pan_ukbb_phenotype_index.tsv` | 7,223 | phenotype manifest (trait_type/phenocode/description/n). |
-| **OpenGWAS** (MRC IEU) | **NOT captured — AUTH-GATED** | — | requires a free JWT token since 2024-05; the study index needs `Authorization: Bearer <token>`. A credential the USER provides — register at api.opengwas.io, then re-run. |
+| **OpenGWAS** (MRC IEU) | **capture pipeline BUILT — token-gated** (`scripts/capture_opengwas_index.py`) | — | one command from done: verified there is NO token-free route (old MRC-IEU metadata API dead; `gwasinfo` needs `Authorization: Bearer <JWT>`). The JWT is a free USER credential (api.opengwas.io/profile/, password-equivalent — never written to disk by the script). Run `OPENGWAS_JWT=<token> uv run python scripts/capture_opengwas_index.py` → committed `opengwas_study_index.tsv`. |
 
 Scripts: `scripts/capture_summary_stat_indexes.py` (PGS/Pan-UKBB/FinnGen) + `scripts/mine_gwas_single_snp_candidates.py` (GWAS).
 
