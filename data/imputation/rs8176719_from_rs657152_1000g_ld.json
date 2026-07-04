@@ -1,0 +1,36 @@
+{
+  "schema": "1000g-ld-annotation-v1",
+  "tag": "rs657152",
+  "target": "rs8176719",
+  "source": "Ensembl REST /ld/human/pairwise (1000 Genomes phase 3 super-populations)",
+  "valid_r2_threshold": 0.9,
+  "by_superpopulation": {
+    "EUR": {
+      "r2": 0.971,
+      "d_prime": 0.996
+    },
+    "AFR": {
+      "r2": 0.328,
+      "d_prime": 0.821
+    },
+    "EAS": {
+      "r2": 0.925,
+      "d_prime": 0.978
+    },
+    "SAS": {
+      "r2": 0.987,
+      "d_prime": 1.0
+    },
+    "AMR": {
+      "r2": 0.903,
+      "d_prime": 1.0
+    }
+  },
+  "valid_populations": [
+    "EUR",
+    "EAS",
+    "SAS",
+    "AMR"
+  ],
+  "ancestry_caveat": "tag is a reliable proxy (r2>=0.9) in ['EUR', 'EAS', 'SAS', 'AMR'] population(s); imputation from this tag is UNRELIABLE elsewhere \u2014 a map derived in one ancestry must NOT be applied across ancestries without this check"
+}
