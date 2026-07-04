@@ -21,6 +21,9 @@
 # Exception: committed frozen LD-imputation maps (tiny data-derived tag->target genotype tables for the
 # fail-closed imputation pre-processor; the raw openSNP dump stays gitignored). Same class as *_ref.
 !/data/imputation/
+# Exception: committed curated ClinVar gene-panel catalog (P/LP+B/LB variants for a canonical Mendelian gene
+# set; the full 192MB ClinVar VCF stays on D:/gitignored). The disease analogue of the AMR catalog.
+!/data/clinvar/
 *.h5
 *.parquet
 *.pkl
