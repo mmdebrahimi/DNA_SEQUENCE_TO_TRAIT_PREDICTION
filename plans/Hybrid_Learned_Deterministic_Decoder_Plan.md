@@ -43,7 +43,13 @@ surface is the floor and is never regressed.
 - **Result:** YES but PARTIAL + mechanism-gated (best powered AUC 0.821; NNRTI anti-predictive 0.244).
   `wiki/esm_hiv_resistance_matched_test_2026-07-03.md`. **Gate for Phase 2: PASSED** (signal exists to build on).
 
-### Phase 2 — Supervised resistance head (THE decisive learned-scoring test)  [class b/e; NEXT]
+### Phase 2 — Supervised resistance head (THE decisive learned-scoring test)  ✅ DONE 2026-07-03 → PARTIAL
+- **Result:** `PARTIAL` (`wiki/esm_supervised_head_result_2026-07-03.md`). Leave-one-position-out head BEATS
+  zero-shot ESM (pooled AUC 0.691 vs 0.587) but does NOT beat the deterministic catalog (balacc 0.590 vs
+  0.783). On KNOWN positions, curated knowledge > learning-from-embeddings; the head does not recover NNRTI
+  pocket resistance to a deployable level. → **V1 = novel-variant FALLBACK only, not a catalog replacement.**
+  Phase 4 integrates it fail-closed on the catalog-SILENT subset only; Phase 5 stays deferred.
+
 - **Terminal claim:** a supervised head on ESM embeddings (logreg / shallow MLP, OR LoRA-fine-tuned ESM)
   trained on PhenoSense fold BEATS both (a) the deterministic catalog and (b) zero-shot ESM, on HELD-OUT
   variants — INCLUDING recovering the NNRTI pocket signal zero-shot misses.
@@ -113,7 +119,17 @@ baseline-beating hybrid layer with an independent-label win; OR (b) a documented
 components do not beat the deterministic decoder on independent labels — a real finding that closes the
 hybrid question with evidence, leaving the deterministic product as the terminal.
 
-## Immediate next step (Phase 2)
-Build `scripts/esm_supervised_resistance_head.py`: ESM embeddings + a shallow head, leave-one-position-out CV
-on HIV PhenoSense, scored vs the deterministic catalog + zero-shot ESM. This is the decisive "does learning
-beat the curated catalog" test. Cheap (deps installed). Run it as the next `--until-mvp`.
+## State of the plan (2026-07-03)
+Phase 1 ✅ (partial zero-shot signal, mechanism-gated) → Phase 2 ✅ **PARTIAL** (head beats zero-shot, loses to
+the catalog on known positions). **The evidence-grounded conclusion so far:** a learned protein-level scorer
+is a BOUNDED FALLBACK (catalog-silent variants), NOT a catalog replacement — the deterministic decoder stays
+primary. The grand "learned beats deterministic" form is closed on independent-label held-out tests.
+
+**Remaining options (user's call — the hybrid's honest ceiling is now known):**
+- **Phase 4 (fallback-only)** — evaluate the head on the catalog-SILENT subset specifically; wire it as a
+  fail-closed fallback ONLY if it beats the K/N null there. Modest, bounded value.
+- **Phase 3 (imputation)** — the OTHER, independent value-add (reduce ABSTAIN rate); untouched by the Phase-2
+  result and arguably the higher-VOI remaining move (LD-learning as a feature, not competing with the catalog).
+- **Bank** — the hybrid question is substantively answered: learned scoring does not beat curated knowledge
+  on known positions; the deterministic decoder is the terminal product. Phase 3 imputation is the only
+  remaining branch that could add deployable value.

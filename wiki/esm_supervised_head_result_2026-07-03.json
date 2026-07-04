@@ -1,0 +1,65 @@
+{
+  "artifact": "esm_supervised_resistance_head",
+  "schema": "esm-supervised-head-v1",
+  "date": "2026-07-03",
+  "model": "esm2_t33_650M_UR50D",
+  "design": "leave-one-POSITION-out CV; head=StandardScaler+PCA(30)+LogReg(balanced) on [zero-shot LLR, BLOSUM62, ESM WT per-position embedding]; baselines scored on the SAME held-out variants (zero-shot -LLR AUC + deterministic catalog balacc). Label = fold>=3.",
+  "n_total": 293,
+  "n_scored_oof": 293,
+  "n_R": 102,
+  "verdict": "PARTIAL",
+  "pooled": {
+    "n": 293,
+    "n_R": 102,
+    "head_auc": 0.691,
+    "zeroshot_auc": 0.587,
+    "head_balacc": 0.59,
+    "catalog_balacc": 0.783,
+    "zeroshot_balacc": 0.483
+  },
+  "per_class": {
+    "INSTI": {
+      "n": 175,
+      "n_R": 54,
+      "head_auc": 0.758,
+      "zeroshot_auc": 0.724,
+      "head_balacc": 0.596,
+      "catalog_balacc": 0.769,
+      "zeroshot_balacc": 0.5
+    },
+    "PI": {
+      "n": 33,
+      "n_R": 1,
+      "head_auc": 0.031,
+      "zeroshot_auc": 1.0,
+      "head_balacc": 0.484,
+      "catalog_balacc": 0.938,
+      "zeroshot_balacc": 0.5
+    },
+    "NRTI": {
+      "n": 28,
+      "n_R": 14,
+      "head_auc": 0.707,
+      "zeroshot_auc": 0.821,
+      "head_balacc": 0.75,
+      "catalog_balacc": 0.75,
+      "zeroshot_balacc": 0.536
+    },
+    "NNRTI": {
+      "n": 57,
+      "n_R": 33,
+      "head_auc": 0.348,
+      "zeroshot_auc": 0.244,
+      "head_balacc": 0.388,
+      "catalog_balacc": 0.79,
+      "zeroshot_balacc": 0.439
+    }
+  },
+  "interpretation": "the head beats zero-shot but not the curated catalog -> it is a novel-variant FALLBACK (score catalog-silent variants), NOT a replacement; integrate cautiously in Phase 4.",
+  "honest_caveats": [
+    "leave-one-position-out is the HARD, honest CV (generalize to unseen resistance sites); random split would inflate via memorization",
+    "N=293 single-mutant variants (the attributable-label price); in-distribution HIVDB fold",
+    "the deterministic catalog is a strong baseline = essentially a known-DRM lookup; the head's value is generalizing to catalog-SILENT variants",
+    "single-class LOPO folds (a position with only R or only S) are skipped for the head (reported n)"
+  ]
+}
