@@ -37,6 +37,16 @@ def build() -> dict:
     nrti_val = _latest("hiv_nrti_v0_validation_")
     nrti_mut = _latest("hiv_nrti_mutant_catalog_v0_1_")
     nrti_sub = _latest("hiv_nrti_within_subtype_")
+    # within-subtype de-confounding extended to ALL classes (2026-07-03) + v0.2 absolute cutoffs (PI/NNRTI)
+    nnrti_sub = _latest("hiv_nnrti_within_subtype_")
+    pi_sub = _latest("hiv_pi_within_subtype_")
+    insti_sub = _latest("hiv_insti_within_subtype_")
+    _sub_by_class = {"NNRTI": nnrti_sub, "PI": pi_sub, "INSTI": insti_sub}
+
+    def _within_b(sub: dict | None, drug: str) -> str | None:
+        d = (((sub or {}).get("per_drug", {}).get(drug)) or {}).get("B") or {}
+        a = d.get("auc")
+        return f"within-B AUC {a} (n={d.get('n')})" if a is not None else None
 
     cells = []
     # NNRTI: AUC (call separates fold) + catalog-vs-OLS balacc delta
@@ -51,7 +61,7 @@ def build() -> dict:
                 "catalog_balacc": (b.get("catalog") or {}).get("balanced_accuracy"),
                 "ols_baseline_balacc": (b.get("ols_baseline") or {}).get("balanced_accuracy"),
                 "delta_ols_minus_catalog": b.get("delta_ols_minus_catalog_balacc"),
-                "subtype_transfer": None, "v0_1_mutant_gain": None,
+                "subtype_transfer": _within_b(nnrti_sub, drug), "v0_1_mutant_gain": None,
             })
     # NRTI: catalog vs OLS + mutant-specific v0.1 gain + subtype transfer
     if nrti_val:
@@ -102,7 +112,7 @@ def build() -> dict:
                 "catalog_balacc": (b.get("catalog") or {}).get("balanced_accuracy"),
                 "ols_baseline_balacc": (b.get("ols_baseline") or {}).get("balanced_accuracy"),
                 "delta_ols_minus_catalog": b.get("delta_ols_minus_catalog_balacc"),
-                "subtype_transfer": None,
+                "subtype_transfer": _within_b(_sub_by_class.get(label), drug),
                 "v0_1_mutant_gain": mm.get("balacc_gain_v0_1_minus_v0"),
             })
     return {
@@ -126,12 +136,20 @@ def build() -> dict:
             "delta is the wrapper-vs-tool signal): PI catalog is high-sens/low-spec so OLS recovers "
             "+0.06..+0.13 balacc (real v0.1 mutant-specific headroom, like NRTI); INSTI catalog is "
             "competitive (+-0.07, ties/beats OLS on EVG/BIC); CAI catalog BEATS OLS +0.112 (OLS overfits "
-            "the tiny resistance-enriched set). Subtype-transfer column stays NNRTI/NRTI-only",
+            "the tiny resistance-enriched set)",
+            "WITHIN-SUBTYPE de-confounding now cleared for ALL 4 classes (2026-07-03): the catalogs decode "
+            "MECHANISM not subtype structure — median within-B AUC NNRTI 0.795 / PI 0.921 / INSTI 0.898 "
+            "(NRTI held earlier); pooled-minus-within-B ~0 for every class -> the class-mixed numbers were "
+            "NOT subtype-inflated. Subtype-transfer column now populated for all classes (within-B AUC).",
             "PI v0.1 (2026-06-23) + INSTI v0.1 (2026-06-27) deconfounded mutant-specific catalogs SHIPPED "
             "(same OLS-coef + 5-fold-CV arc as NRTI): PI 8/8 improve-or-hold (mean +0.056), INSTI 5/5 "
-            "improve-or-hold (mean +0.087 — overturned the earlier deferral; gain on specificity via "
-            "accessory-rider deconfounding). The HIV class-deconfounding arc NRTI->PI->INSTI is COMPLETE; "
-            "only per-drug clinical-cutoff absolute calibration (v0.2) remains. v0.1 gain column shows it.",
+            "improve-or-hold (mean +0.087). The HIV class-deconfounding arc NRTI->PI->INSTI is COMPLETE.",
+            "v0.2 ABSOLUTE-CUTOFF calibration DONE (2026-07-03) by SOURCING per-drug cutoffs from Stanford "
+            "DRMcv.R (not fabricated): PI calibrated 8/8 (real per-drug cutoffs LPV 9/TPV 2/DRV 10; the "
+            "position-based over-call now quantified as low spec at the real cutoff); NNRTI confirmed 4/5 "
+            "(all DRMcv cutoffs = the prior illustrative 3; DOR postdates DRMcv -> walled); INSTI 0/5 "
+            "CUTOFF_UNAVAILABLE (integrase inhibitors postdate DRMcv.R -> external wall, reported not guessed). "
+            "wiki/hiv_{nnrti,pi,insti}_absolute_cutoff_2026-07-03.",
         ],
         "cells": cells,
     }
