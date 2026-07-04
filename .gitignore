@@ -18,6 +18,9 @@
 # Exception: committed public horse coat-colour validation TSV (Sarcidano 2022 PMC9558981 Table 3;
 # functional MC1R/ASIP genotype x visually-observed colour; tiny, non-circular). Same class as *_ref.
 !/data/horse/
+# Exception: committed frozen LD-imputation maps (tiny data-derived tag->target genotype tables for the
+# fail-closed imputation pre-processor; the raw openSNP dump stays gitignored). Same class as *_ref.
+!/data/imputation/
 *.h5
 *.parquet
 *.pkl

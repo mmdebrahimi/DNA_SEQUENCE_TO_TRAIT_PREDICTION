@@ -1,0 +1,26 @@
+{
+  "schema": "ld-imputation-map-v1",
+  "target": "rs8176719",
+  "tag": "rs657152",
+  "cell": "ABO O-status (abo_blood.call_abo_o_status)",
+  "source": "OpenSNP archive dump (2017-12-08); LD-based imputation (majority target | tag genotype)",
+  "n_cocalled": 330,
+  "loo_genotype_accuracy": 0.985,
+  "map": {
+    "AC": {
+      "majority": "DI",
+      "purity": 0.98,
+      "n": 150
+    },
+    "CC": {
+      "majority": "DD",
+      "purity": 1.0,
+      "n": 132
+    },
+    "AA": {
+      "majority": "II",
+      "purity": 0.9583,
+      "n": 48
+    }
+  }
+}

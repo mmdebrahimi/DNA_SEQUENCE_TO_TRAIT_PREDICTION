@@ -139,10 +139,15 @@ decoder's uncallable inputs cuts its ABSTAIN rate at ~99% (V2 PASS). The determi
 the learned layer feeds it better DATA. LD-learning — the confound that kills learned phenotype-prediction —
 is exactly what makes imputation work.
 
+**Phase 4 ✅ DONE 2026-07-04 — V2 productionized.** `dna_decode/imputation.py` (`LdImputer` +
+`call_with_imputation`): a reusable, FAIL-CLOSED, provenance-tagged imputation pre-processor. Impute an
+uncallable determinant from a committed data-derived LD map ONLY at purity ≥ 0.90; else ABSTAIN honestly;
+every result is tagged `direct` / `imputed:<tag>=<gt>@<purity>` / `abstain:<reason>` so an imputed call is
+never confused with a typed one. Committed frozen map `data/imputation/abo_rs8176719_from_rs657152.json`
+(real openSNP, LOO acc 0.985; CC→DD@1.0 / AC→DI@0.98 / AA→II@0.958). Verified end-to-end on the real map;
+frozen AMR surface byte-unchanged. The imputation value-add is now a deployable, safe layer.
+
 **Remaining (user's call):**
-- **Phase 4 productionize V2** — wire the imputation pre-processor into the live decode path (impute
-  uncallable determinant positions before calling; fail-closed to ABSTAIN when no confident tag). Real
-  deployable value; a bounded engineering build.
 - **Phase 5 (genotype world-model)** — stays DEFERRED; a full generative genotype model is unnecessary — the
   simple per-tag LD imputer already clears the bar, and a learned phenotype predictor is closed.
 - **Bank** — the hybrid question is fully answered with evidence: imputation is the deployable value-add;

@@ -48,6 +48,20 @@ def _impute_map(pairs: list[tuple[str, str]]) -> dict[str, str]:
     return {tag: c.most_common(1)[0][0] for tag, c in by_tag.items()}
 
 
+def _frozen_map(pairs: list[tuple[str, str]]) -> dict:
+    """Per-tag-genotype {majority target, purity, n} — the FROZEN reference the productionized imputer loads.
+    `purity` is the confidence the fail-closed imputer gates on (impute only when purity >= threshold)."""
+    by_tag: dict[str, Counter] = {}
+    for tgt, tag in pairs:
+        by_tag.setdefault(tag, Counter())[tgt] += 1
+    out = {}
+    for tag, c in by_tag.items():
+        maj, n_maj = c.most_common(1)[0]
+        n = sum(c.values())
+        out[tag] = {"majority": maj, "purity": round(n_maj / n, 4), "n": int(n)}
+    return out
+
+
 def run(zip_path: Path, scan_cap: int = 1000) -> dict:
     if not zip_path.exists():
         return {"status": "ZIP_NOT_PRESENT", "zip": str(zip_path)}
@@ -92,7 +106,9 @@ def run(zip_path: Path, scan_cap: int = 1000) -> dict:
     n_tag_only = len(tag_only)
 
     verdict = "PASS" if (geno_acc >= 0.90 and ostatus_acc >= 0.90 and n_rescued > 0) else "FAIL"
+    frozen = _frozen_map(co)
     return {
+        "_frozen_map": frozen,
         "artifact": "impute_determinant_abstain", "schema": "impute-abstain-v1", "date": _date.today().isoformat(),
         "target": TARGET, "tag": TAG, "cell": "ABO O-status (abo_blood.call_abo_o_status)",
         "source": "OpenSNP archive dump (2017-12-08); LD-based imputation (majority target | tag genotype)",
@@ -127,8 +143,18 @@ def main(argv=None) -> int:
     ap.add_argument("--zip", type=Path, default=DEFAULT_ZIP)
     ap.add_argument("--scan-cap", type=int, default=1000)
     ap.add_argument("--out", type=Path, default=REPO / "wiki" / f"impute_abstain_abo_{_date.today().isoformat()}.json")
+    ap.add_argument("--dump-map", type=Path, default=None, help="freeze the learned tag->target map to a committed reference JSON")
     a = ap.parse_args(argv)
     res = run(a.zip, a.scan_cap)
+    if a.dump_map and "_frozen_map" in res:
+        a.dump_map.parent.mkdir(parents=True, exist_ok=True)
+        a.dump_map.write_text(json.dumps({
+            "schema": "ld-imputation-map-v1", "target": res["target"], "tag": res["tag"],
+            "cell": res["cell"], "source": res["source"], "n_cocalled": res["n_cocalled"],
+            "loo_genotype_accuracy": res["loo_genotype_imputation_accuracy"],
+            "map": res["_frozen_map"]}, indent=2), encoding="utf-8")
+        print(f"[froze imputation map -> {a.dump_map}]")
+    res.pop("_frozen_map", None)
     a.out.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print(json.dumps(res, indent=2))
     print(f"\n[wrote {a.out}]")
