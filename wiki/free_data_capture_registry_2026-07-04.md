@@ -16,14 +16,23 @@ closed 0-for-5 negative).
 | **1** | **ClinVar** (GRCh38 VCF, 192 MB on D:) | a deterministic human-variant decoder — the Mendelian-disease analogue of the AMR catalog (curated catalog → regime-1 win). 31,616 P/LP+B/LB variants across 10 canonical Mendelian genes. | `dna_decode/data/clinvar.py` + committed `data/clinvar/clinvar_panel.tsv` + `scripts/capture_clinvar.py` (extensible to any gene panel). Verified: F508del→PATHOGENIC(4★); unknown→INDETERMINATE. |
 | **2** | **1000 Genomes** (via Ensembl REST LD — no bulk download; C: disk-tight) | an INDEPENDENT ancestry-stratified LD validation of the imputation layer. ABO tag pair: EUR 0.97 / EAS 0.93 / SAS 0.99 / AMR 0.90 valid, **AFR 0.33 fails** → quantifies the imputation map's ancestry limit. | `scripts/capture_1000g_ld.py` + committed `data/imputation/rs8176719_from_rs657152_1000g_ld.json`. |
 
-## STAGED — pointers, NOT integrated (polygenic prior-layer; integrating = motion)
+## CAPTURED as indexes (user-directed, 2026-07-04) — bounded core fetched; full bulk on-demand
 
-| Source | Access (free) | Why NOT decoder-integrated |
-|---|---|---|
-| **GWAS Catalog** (EBI) | FTP TSV — **download path currently unstable** (2 probed URLs 404'd 2026-07-04; use the current `ftp.ebi.ac.uk/pub/databases/gwas/releases/latest/` release file) | SNP→trait SUMMARY STATS. Product-value ONLY as a future **single-SNP candidate miner** (filter for strong single-locus effects → seed new deterministic cells like lactase/earwax). Pure-polygenic otherwise = dead-embedding territory. **Deferred as a candidate-mining next step, not an integration.** |
-| **FinnGen** (R12) | public download; partially staged on D: (`finngen_R12_manifest.tsv` + 1 endpoint) | GWAS summary stats per ~2,400 endpoints. Locus-priors / endpoint-definitions layer — a prior, not a determinant the deterministic decoder calls. |
-| **PGS Catalog** | REST API (reachable, http 200) | POLYGENIC score definitions — the opposite paradigm to single-locus determinant decoding. |
-| **Pan-UKBB / OpenGWAS** | free bulk summary stats (TB-scale) | polygenic summary-stat repositories; not bounded to fetch + not decoder-consumable. Pointers only. |
+Per the user's follow-up ("I would still like to get GWAS Catalog, FinnGen, PGS, Pan-UKBB, OpenGWAS"), each
+is now CAPTURED as a committed compact INDEX (`data/summary_stat_sources/`; see its `README.md` for the
+bulk-fetch recipes). The honesty caveat stands — they are polygenic prior-layer NOT wired into the
+deterministic decoder — but they are available + indexed. The one product-aligned extract is the GWAS
+single-SNP candidate shortlist.
+
+| Source | Captured | Rows | Note |
+|---|---|---|---|
+| **GWAS Catalog** (EBI, `...-associations_ontology-annotated-full.zip`, 716 MB on D:) | `gwas_single_snp_candidates.tsv` (product-aligned) | 400 | strongest single-rsID, P≤5e-8, OR 2–20 (OR-artifact cap = a verify-in-batch fix). Re-found rs8176719→ABO (a known cell) — validates the miner. Candidate DISCOVERY, not validated cells. |
+| **FinnGen** (R12) | `finngen_r12_endpoint_index.tsv` | 2,469 | endpoint manifest (phenocode/phenotype/category/n). Bulk = `gs://finngen-public-data-r12/summary_stats/`. |
+| **PGS Catalog** | `pgs_catalog_index.tsv` | 5,385 | polygenic-score metadata (id/name/trait/n_variants/ftp). |
+| **Pan-UKBB** | `pan_ukbb_phenotype_index.tsv` | 7,223 | phenotype manifest (trait_type/phenocode/description/n). |
+| **OpenGWAS** (MRC IEU) | **NOT captured — AUTH-GATED** | — | requires a free JWT token since 2024-05; the study index needs `Authorization: Bearer <token>`. A credential the USER provides — register at api.opengwas.io, then re-run. |
+
+Scripts: `scripts/capture_summary_stat_indexes.py` (PGS/Pan-UKBB/FinnGen) + `scripts/mine_gwas_single_snp_candidates.py` (GWAS).
 
 ## Completion verdict
 **The free-data sweep is CLOSED.** The two product-aligned free sources are captured + integrated (ClinVar =

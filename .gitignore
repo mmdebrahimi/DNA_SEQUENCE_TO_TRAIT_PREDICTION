@@ -24,6 +24,9 @@
 # Exception: committed curated ClinVar gene-panel catalog (P/LP+B/LB variants for a canonical Mendelian gene
 # set; the full 192MB ClinVar VCF stays on D:/gitignored). The disease analogue of the AMR catalog.
 !/data/clinvar/
+# Exception: committed compact INDEXES of the polygenic summary-stat sources (PGS/Pan-UKBB/FinnGen row-indexes
+# + GWAS single-SNP candidate shortlist; the TB-scale bulk stays on D:/gitignored). User-directed capture.
+!/data/summary_stat_sources/
 *.h5
 *.parquet
 *.pkl

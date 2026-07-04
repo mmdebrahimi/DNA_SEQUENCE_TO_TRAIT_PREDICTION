@@ -1,0 +1,21 @@
+[
+  {
+    "source": "PGS Catalog",
+    "n": 4000,
+    "total_reported": 5385,
+    "out": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\summary_stat_sources\\pgs_catalog_index.tsv",
+    "bulk_recipe": "per-score harmonized scoring files at each row's ftp_scoring_file (PGS Catalog FTP)"
+  },
+  {
+    "source": "Pan-UKBB",
+    "n": 7223,
+    "out": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\summary_stat_sources\\pan_ukbb_phenotype_index.tsv",
+    "bulk_recipe": "per-phenotype multi-ancestry sumstats via each row's manifest aws/gs path (TB-scale)"
+  },
+  {
+    "source": "FinnGen R12",
+    "n": 2469,
+    "out": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\summary_stat_sources\\finngen_r12_endpoint_index.tsv",
+    "bulk_recipe": "per-endpoint GWAS sumstats at gs://finngen-public-data-r12/summary_stats/ (TB-scale)"
+  }
+]
