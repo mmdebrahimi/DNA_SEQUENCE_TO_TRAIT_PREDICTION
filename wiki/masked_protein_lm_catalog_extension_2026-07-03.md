@@ -1,5 +1,15 @@
 # Masked-protein-LM "extend the catalog" test — a decisive NEGATIVE with a clear mechanism (2026-07-03)
 
+> **AMENDED 2026-07-03 (adversarial review): this result is UNDERPOWERED / INCONCLUSIVE, not a decisive
+> NO_WIN, and the mechanistic "resistance ⊥ conservation" claim is a plausible CONCERN, not an established
+> law.** Two flaws: (1) the blindspot AUC (0.293) compared R variants vs only n=2 benign variants at
+> DIFFERENT positions — ESM LLR is position-conservation-dominated, so that AUC largely measures position
+> conservation, not R-vs-S; (2) the Spearman (0.073) is WITHIN the all-R set (magnitude ordering among
+> resistant variants), not the R-vs-S separation the hypothesis needs — no S set was scored. The proper
+> test (HIV RT/PR/IN single-mutant isolates, rich R+S at attributable per-variant folds) is run separately
+> (`wiki/esm_hiv_resistance_matched_test_2026-07-03.md`) and supersedes this verdict. The genotype-level
+> LD-confound argument (below) stands for PURE self-supervised models; a supervised head is a separate case.
+
 **The user's masked-prediction idea ("mask parts, predict the missing part — CLIP/world-model style"),
 tested at the granularity where it is CAUSAL (protein, not genotype), against the sharpest target (does it
 fill the deterministic AMR catalog's documented gaps?). Phase-1 result: `NO_WIN` for AMR — and the reason is

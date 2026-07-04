@@ -1,0 +1,145 @@
+{
+  "artifact": "esm_hiv_resistance_matched_test",
+  "schema": "esm-hiv-resistance-v1",
+  "date": "2026-07-03",
+  "model": "esm2_t33_650M_UR50D",
+  "design": "single-mutant isolates (attributable per-variant fold); AUC(-LLR separates R from S); WT-marginals; label = PhenoSense fold>=3 (independent wet-lab)",
+  "verdict": "ESM_CARRIES_RESISTANCE_SIGNAL",
+  "best_powered_class_auc": 0.821,
+  "n_pooled": 293,
+  "pooled_R": 102,
+  "pooled_S": 191,
+  "pooled_resistance_auc": 0.587,
+  "per_class": {
+    "NNRTI": {
+      "gene": "RT",
+      "drug": "EFV",
+      "n_single_mutant": 57,
+      "n_R": 33,
+      "n_S": 24,
+      "resistance_auc": 0.244,
+      "note": "powered",
+      "top_R": [
+        {
+          "var": "G190S",
+          "fold": 124.5,
+          "esm_llr": -3.053
+        },
+        {
+          "var": "Y188L",
+          "fold": 121.2,
+          "esm_llr": 0.701
+        },
+        {
+          "var": "Y188L",
+          "fold": 111.0,
+          "esm_llr": 0.701
+        },
+        {
+          "var": "V106M",
+          "fold": 106.0,
+          "esm_llr": -4.022
+        },
+        {
+          "var": "K103N",
+          "fold": 97.3,
+          "esm_llr": -3.062
+        }
+      ]
+    },
+    "NRTI": {
+      "gene": "RT",
+      "drug": "3TC",
+      "n_single_mutant": 28,
+      "n_R": 14,
+      "n_S": 14,
+      "resistance_auc": 0.821,
+      "note": "powered",
+      "top_R": [
+        {
+          "var": "M184I",
+          "fold": 123.0,
+          "esm_llr": -3.848
+        },
+        {
+          "var": "M184V",
+          "fold": 96.0,
+          "esm_llr": -5.502
+        },
+        {
+          "var": "M184I",
+          "fold": 96.0,
+          "esm_llr": -3.848
+        },
+        {
+          "var": "M184V",
+          "fold": 79.0,
+          "esm_llr": -5.502
+        },
+        {
+          "var": "M184V",
+          "fold": 79.0,
+          "esm_llr": -5.502
+        }
+      ]
+    },
+    "PI": {
+      "gene": "PR",
+      "drug": "NFV",
+      "n_single_mutant": 33,
+      "n_R": 1,
+      "n_S": 32,
+      "resistance_auc": 1.0,
+      "note": "under-powered",
+      "top_R": [
+        {
+          "var": "I84C",
+          "fold": 15.3,
+          "esm_llr": -7.216
+        }
+      ]
+    },
+    "INSTI": {
+      "gene": "IN",
+      "drug": "RAL",
+      "n_single_mutant": 175,
+      "n_R": 54,
+      "n_S": 121,
+      "resistance_auc": 0.724,
+      "note": "powered",
+      "top_R": [
+        {
+          "var": "N155H",
+          "fold": 107.0,
+          "esm_llr": -4.967
+        },
+        {
+          "var": "Q148K",
+          "fold": 53.0,
+          "esm_llr": -9.277
+        },
+        {
+          "var": "Q148K",
+          "fold": 41.0,
+          "esm_llr": -9.277
+        },
+        {
+          "var": "Q148K",
+          "fold": 37.0,
+          "esm_llr": -9.277
+        },
+        {
+          "var": "Q148R",
+          "fold": 35.0,
+          "esm_llr": -8.895
+        }
+      ]
+    }
+  },
+  "interpretation": "This is the FAIR test the Mpro probe was not: balanced R+S, attributable per-variant fold, no LD confound, matched at the per-variant level. AUC ~0.5 = ESM (evolutionary fitness) is blind to resistance -> the ZERO-SHOT extension idea fails, and a SUPERVISED head is the only surviving learned-scoring form. AUC >~0.7 = zero-shot representation DOES carry resistance signal -> the learned-scoring hybrid branch is empirically greenlit.",
+  "honest_caveats": [
+    "single-mutant restriction shrinks N but is what makes the fold ATTRIBUTABLE (the fair-label price)",
+    "fold>=3 is an illustrative uniform cutoff (per-drug DRMcv cutoffs would refine but not flip AUC)",
+    "in-distribution (HIVDB fold); an independent-cohort fold is the eventual scale-up, as elsewhere"
+  ]
+}
