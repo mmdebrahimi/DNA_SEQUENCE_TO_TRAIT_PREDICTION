@@ -86,3 +86,4 @@ logs/
 
 # genome-map spike per-genome feature maps (large, regenerable via scripts/genome_map_spike.py)
 wiki/genome_map_spike_*/
+bash.exe.stackdump

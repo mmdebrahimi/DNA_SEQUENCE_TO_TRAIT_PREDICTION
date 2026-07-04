@@ -1,0 +1,3 @@
+# Soraya --until-mvp: ProteinGym-native three-way (own the number)
+
+Verdict: mvp-reached (4/4). Feasibility: SI per-mutant only in the 1.8GB zero-shot archive; ProteinGym-native route (96 human assays, no MAVEDB mapping) sidesteps the coordinate landmine. Three-way on IDENTICAL rows (88 assays): SI function 0.426 == row-312 cited 0.427 (caveat moot); AM edges SI ~0.07 on function; SI BEATS AM on stability (0.393 vs 0.334); overall SI 0.386 vs AM 0.456; BLOSUM 0.207. Verdict DETERMINISTIC_LARGELY_COMPETES. Owns the number. Commit HEAD. verify-in-batch caught the _si_column bug. No-resume: bounded attempts per active session only.

@@ -1,0 +1,3 @@
+# Soraya --until-mvp: deterministic conservation feature
+
+Verdict: mvp-reached (4/4) -- a REVISING result. Plan RESHAPED by the pre-build /brainstorm (use ProteinGym published Site-Independent scores, not a hand-rolled MSA pipeline -> rigorous + completable, dodged the heavy MSA-build wall + coordinate/polarity landmine). RESULT: deterministic conservation LARGELY COMPETES -- Site-Independent 0.427 on function (~2x BLOSUM floor), ALL-HUMAN 0.391 ~= AlphaMissense 0.423, beats ESM-1v on binding; best learned (GEMME 0.54) retains ~0.1 on function/stability. Revises the earlier learned-wins story. Commit HEAD. Follow-up: build a fresh local frozen-spec conservation score to OWN the number. No-resume: bounded attempts per active session only.

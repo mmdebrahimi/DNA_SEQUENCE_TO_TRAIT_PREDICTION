@@ -1,0 +1,3 @@
+# Soraya --advance: more human/animal G2P recommendations (sequential)
+
+Went through the recs in order. #1 (new PGx gene) PARKED grounding-critical (CYP2C19-hardcoded caller refactor + GeT-RM data CYP2C19/2C9-only + per-variant coord sourcing = clinical fabrication risk; focused pass warranted). #2 (ProteinGym molecular-phenotype) SHIPPED: PTEN abundance DMS, BLOSUM62 Spearman 0.217, nonsense sanity perfect; FIRST modality where learned>deterministic (~0.4-0.5 published, cited not run) -> maps the decoder boundary. #3 (animal determinant cell) QUEUED. Stopped here: 7th build of a long session; parked item is grounding-critical, not code-blocked. Commit HEAD. No-resume: bounded attempts per active session only.

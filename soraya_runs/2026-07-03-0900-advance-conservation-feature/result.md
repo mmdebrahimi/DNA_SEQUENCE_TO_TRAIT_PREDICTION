@@ -1,0 +1,3 @@
+# Soraya --advance: definitive-N DMS benchmark + modality x predictor
+
+Highest-VOI completable move (conservation breakthrough classified as heavy dedicated-session build, not attended-advance). Scaled the benchmark to 63 assays/40 genes; headline holds (BLOSUM 0.210, AM 0.423, ~2x). NEW conclusion: AM gain is modality-dependent + inverse to the floor (binding floor 0.268/gain +0.149; function gain +0.357). Reused scripts via --manifest. Commit HEAD. Plateau-aware: this produced a NEW conclusion (modality interaction), not a re-confirmation. NEXT (dedicated session): deterministic conservation feature (per-protein MSA) targeting the function deficit = the real deterministic-competes breakthrough test. No-resume: bounded attempts per active session only.
