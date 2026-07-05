@@ -11,15 +11,19 @@ already deposited** in the open ENA archive (no dbGaP/EGA, no committee). The de
 (`dna_decode/pgx/cli.py`, `dna-pgx`) consumes a VCF **directly** → this is real-people validation of the
 decoder without waiting on the UK Biobank application.
 
-## THE GOTCHA (verified, load-bearing) — assembly mismatch
+## THE GOTCHA (verified, load-bearing) — assembly, but liftOver is CONDITIONAL
 - All 99 PGP-UK VCFs are **GRCh37 / hg19** — ENA `ASSEMBLY = GCA_000001405.14` (GRCh38 starts at `.15`),
   verified on both analysis batches (`ERZ389532`, `ERZ1065952`).
-- The PGx catalog is **GRCh38** and matches by position → a direct run on a GRCh37 VCF returns **all
-  INDETERMINATE / "absent"** (fail-closed + honest, but zero signal).
-- **REQUIRED step: liftOver GRCh37 → GRCh38** before decoding (free: UCSC `liftOver` + `hg19ToHg38.over.chain`,
-  or `CrossMap.py vcf`, or `bcftools +liftover`). *(If the PGx caller also matches on rsID from the VCF `ID`
-  column, liftOver may be skippable for CYP2C19/CYP2C9/VKORC1 — worth a 2-minute check of `pgx/caller.py`
-  before lifting the whole cohort.)*
+- **The PGx caller matches by (chrom,pos) FIRST, then FALLS BACK to rsID** — verified in
+  `dna_decode/pgx/caller.py:101–129` (`by_pos.get((chrom,pos))` → else `by_rsid.get(vcf_ID_col)`). The
+  defining CYP2C19/CYP2C9 sites are all standard dbSNP rsIDs (rs4244285, rs4986893, rs12248560, …).
+- **⇒ liftOver is CONDITIONAL, likely UNNECESSARY:**
+  - **If the VCF `ID` column carries rsIDs** (common for GATK/dbSNP-annotated VCFs) → the rsID fallback
+    matches despite the GRCh37 coords → **run `dna-pgx` DIRECTLY, no liftOver.**
+  - **Only if the `ID` column is `.`** → the position path misses on GRCh37 → **liftOver GRCh37→GRCh38 first**
+    (free: UCSC `liftOver`+`hg19ToHg38.over.chain`, `CrossMap.py vcf`, or `bcftools +liftover`).
+- **2-second check at download time:** `zcat FR07961000.pass.recode.vcf.gz | grep -v '^#' | head`
+  — is column 3 an `rs…` id? **Yes → skip liftOver.** `.` → liftOver.
 
 ## Verified decoder command (from `dna_decode/pgx/cli.py`)
 ```
@@ -39,8 +43,8 @@ Phased VCF preferred (unphased → `phase_ambiguous` flag, still calls); pure-st
 
 ## Suggested minimal run (done-criterion)
 1. Download **one** PGP-UK VCF (~MB) to D:.
-2. liftOver GRCh37→GRCh38 (unless rsID-match confirmed).
-3. `dna-pgx lifted.vcf --gene cyp2c19 --json-only` → a real CPIC metabolizer call on a real person.
+2. Check the `ID` column (`zcat …vcf.gz | grep -v '^#' | head`): rsIDs present → **skip liftOver**; `.` → liftOver GRCh37→GRCh38.
+3. `dna-pgx <vcf> --gene cyp2c19 --json-only` → a real CPIC metabolizer call on a real person.
 4. Done = a non-INDETERMINATE diplotype/phenotype on ≥1 PGP-UK individual → first real-people deterministic
    decode on a free non-gated cohort. Scale to the cohort + a report card as you see fit.
 
