@@ -57,6 +57,17 @@
       "trio_mendelian": "\u2014",
       "tier": "single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system",
       "residual": "\u2014"
+    },
+    {
+      "gene": "SLCO1B1",
+      "trait": "statin myopathy (rs4149056 / *5 521T>C)",
+      "getrm": null,
+      "getrm_pct": null,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned (simvastatin function is assigned largely from 521T>C).",
+      "residual": "single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants"
     }
   ],
   "sources": {

@@ -55,6 +55,24 @@ def main(argv=None) -> int:
             print(f"  {rec['caveat']}")
         return 0
 
+    # SLCO1B1 is a single-SNP (rs4149056) function readout (statin myopathy) -> its own shape (like VKORC1).
+    if args.gene == "slco1b1":
+        from dna_decode.pgx.slco1b1 import call_slco1b1
+        rec = call_slco1b1(args.vcf, sample=args.sample)
+        rec["sample_id"] = args.sample_id or args.sample or args.vcf.stem
+        if args.out:
+            Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
+        if args.json_only:
+            print(json.dumps(rec, indent=2))
+        else:
+            print(f"sample: {rec['sample_id']}  gene: SLCO1B1 ({rec['assembly']})  {rec['position']}")
+            print(f"  rs4149056 {rec['genomic_ref_alt']}  GT={rec['genomic_gt']}  521 {rec['variant_genotype']}  "
+                  f"({rec['star_proxy']})  -> {rec['function']} (simvastatin myopathy: {rec['myopathy_risk']})")
+            if rec["flags"]:
+                print(f"  flags: {', '.join(rec['flags'])}")
+            print(f"  {rec['caveat']}")
+        return 0
+
     _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8, "cyp3a5": call_cyp3a5}
     rec = _dispatch.get(args.gene, call_cyp2c19)(
         args.vcf, sample_id=args.sample_id, sample_column=args.sample)

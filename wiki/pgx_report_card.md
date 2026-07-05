@@ -9,6 +9,7 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 | CYP2C8 | star-allele diplotype (*2/*3/*4) — CALLING only (no CPIC phenotype) | 82/82 (1.0) | — | — | — | rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design |
 | CYP3A5 | expressor/non-expressor phenotype (tacrolimus) | 8/8 (1.0) | — | — | — | UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1 |
 | VKORC1 | warfarin sensitivity (rs9923231) | — | — | A1/D0/F0 | — | — |
+| SLCO1B1 | statin myopathy (rs4149056 / *5 521T>C) | — | — | — | — | single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants |
 
 ## Honest tier per cell
 
@@ -17,5 +18,6 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 - **CYP2C8:** GeT-RM consensus (independent of consensus tools); CALLING validated 82/82. NO CPIC metabolizer phenotype — CYP2C8 function is substrate-dependent, so this is a CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP).
 - **CYP3A5:** REAL GeT-RM CDC multi-lab consensus (independent of the labs); 8/8 core-diplotype incl. *1/*3/*6/*7 (the *7 insertion + *6/*7 non-expressor cases). UNDERPOWERED (n=8). Phenotype faithful-to-CPIC (expressor/non-expressor). First gene outside the CYP2C cluster.
 - **VKORC1:** single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system
+- **SLCO1B1:** single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned (simvastatin function is assigned largely from 521T>C).
 
 _Validation axes: GeT-RM = consensus concordance on real 1000G (independent of the consensus tools); PharmCAT = reference-tool fixtures; func-evidence = non-CPIC cross-check of the function assignment (AGREE/DISAGREE/FLAG); trio = Mendelian calling-consistency on 1000G trios. NOT a clinical tool._

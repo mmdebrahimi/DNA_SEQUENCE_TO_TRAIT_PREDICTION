@@ -215,6 +215,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         label_provenance="literature sensitivity assignment (no independent panel validation in-repo)",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
         falsifier_ref="none", incoming_data_gate="n/a", demotion_rule="n/a (deterministic single-SNP readout)"),
+    CellContract(
+        cell_id="pgx:human:slco1b1", track="pgx", route="dna-pgx", organism="human", target="slco1b1",
+        claim="SLCO1B1 c.521T>C (rs4149056, *5) transporter-function genotype -> simvastatin myopathy risk, from a phased VCF",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_function",
+        validation_slice="direct 521T>C genotype readout (plus-strand); NOT an independent star-diplotype concordance (single-SNP tautology); genotype+trio only",
+        label_provenance="CPIC simvastatin function assignment (Cooper-DeHoff 2022); no independent panel validation in-repo (rs4149056 IS the truth for a 521 call)",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants (v0 scope-limit)"),
 ]
 
 # --- Typing + determinant-finder whole-tool cells (route dna-<trait>). Faithful-to-tool curated-DB callers. ---
