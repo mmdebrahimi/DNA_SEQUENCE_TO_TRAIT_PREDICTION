@@ -1,4 +1,4 @@
-# CYP2C9 caller vs GeT-RM consensus on real 1000G (2026-06-27)
+# CYP2C9 caller vs GeT-RM consensus on real 1000G (2026-07-04)
 
 **Truth:** GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2C9_getrm_ngs
 **Genotypes:** 1000 Genomes 30x phased panel (CYP2C9 region, Docker bcftools)

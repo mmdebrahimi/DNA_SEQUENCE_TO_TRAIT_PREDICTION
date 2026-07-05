@@ -1,4 +1,4 @@
-# PGx decoder report card (2026-06-27)
+# PGx decoder report card (2026-07-04)
 
 _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured)._
 
