@@ -26,5 +26,36 @@ code that generates it (no hand-edit drift) and honest by construction.
 - **Scope bound (no silent truncation):** verified a **targeted load-bearing subset**, not all **225** test files (full suite exceeds a 10-min run — that is DNA-11's CI concern, out of scope for a claim-verification pass).
 - **What this does NOT assert:** the underlying biological validity of each claim (that stays with each domain card's own honest tier); only that the claims **reproduce** from code + data and the capstone **faithfully renders** what the code computes.
 
+## Follow-up (2026-07-04, `--until-mvp` — both lanes)
+
+### Lane 1 — FULL suite (upgrades check #1 to whole-suite) — PASS
+Ran all **225** test files chunked (5×45, cache/bytecode suppressed → DNA-11 tree untouched). Aggregate:
+
+| passed | failed | skipped | errored |
+|---|---|---|---|
+| **1,988** | **0** | 8 (by design) | 10 |
+
+The **10 errors are all one infra cause** — `ModuleNotFoundError: No module named 'xgboost'` (an explicitly
+OPTIONAL Phase-1 dep; the test itself says "run `uv sync` to install Phase 1 deps"). **Zero real
+regressions.** The decoder reproduces clean across the whole suite. (xgboost NOT installed — would have
+mutated DNA-11's shared venv for no verdict gain.)
+
+### Lane 2 — data-gap: a free, NON-gated, individual-level human cohort — PASS
+**Finding:** DNA-11's individual-level human path is the GATED UK Biobank application (pending). **PGP-UK**
+(Personal Genome Project UK) is a **free, open-consent, NON-application-gated** individual-level human
+multi-omics cohort (WGS + WGBS methylation + RNA-seq + self-reported phenotype) in **OPEN** EMBL-EBI repos
+(ENA / ArrayExpress) — not dbGaP/EGA. It unblocks individual-level human work **without a data-access
+committee**, and DNA-11 has not captured it (non-overlapping with its summary-stat-index / variant-DB
+free-data workstream).
+
+**Verified real-surface (live 2026-07-04, not asserted):**
+- ENA `PRJEB17529` (WGS/WGBS) API returns real FTP download URLs — e.g. `ftp.sra.ebi.ac.uk/vol1/fastq/ERR172/008/ERR1726428/ERR1726428_1.fastq.gz`, sample `PGP-UK uk33D02F`.
+- `www.personalgenomes.org.uk/data` live with a Phenotype column + genome/methylome reports.
+- **Capture stub RAN**: `scripts/capture_pgp_uk.py` (this commit) pulled **55 downloadable run records** (35 WGS/WGBS + 20 RNA-seq) + 4 pointers → manifest on `D:/dna_decode_cache/pgp_uk/` (index only; the ~2 TB raw panel is a separate explicit D:-targeted fetch, NOT run here).
+
+Open accessions: ENA `PRJEB17529` (WGS/WGBS), `PRJEB25139` (RNA-seq; also ArrayExpress `E-MTAB-6523`),
+ArrayExpress `E-MTAB-5377` (450k methylation IDATs), phenotype+reports at personalgenomes.org.uk/data.
+
 ## Residual / recommended
-- None blocking. If desired, a scheduled full-suite run (all 225 files, chunked to beat the 10-min wall) would upgrade check #1 from "load-bearing subset" to "whole suite".
+- **Lane 1:** to clear the 10 optional-dep errors, `uv sync` (installs xgboost) in the target env — cosmetic; not a regression.
+- **Lane 2:** the index is captured; the **bulk raw fetch (~2 TB) is a separate, explicit, D:-targeted step** the user/DNA-11 can trigger. PGP-UK is modest-N (pilot panel ~10 deep multi-omics + broader WGS) — good for **molecular / deterministic / Mendelian** validation on real people, NOT a polygenic-complex-trait cohort (that stays confound-blocked regardless of source).
