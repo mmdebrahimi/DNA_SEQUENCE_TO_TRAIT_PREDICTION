@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 from dna_decode.pgx import PGX_GENES
-from dna_decode.pgx.runner import call_cyp2c8, call_cyp2c19, call_cyp2c9
+from dna_decode.pgx.runner import call_cyp2c8, call_cyp2c19, call_cyp2c9, call_cyp3a5
 
 
 def main(argv=None) -> int:
@@ -55,7 +55,7 @@ def main(argv=None) -> int:
             print(f"  {rec['caveat']}")
         return 0
 
-    _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8}
+    _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8, "cyp3a5": call_cyp3a5}
     rec = _dispatch.get(args.gene, call_cyp2c19)(
         args.vcf, sample_id=args.sample_id, sample_column=args.sample)
 

@@ -16,9 +16,11 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import os
 import struct
+import subprocess
 import sys
-import urllib.request
+import tempfile
 import zlib
 from pathlib import Path
 
@@ -28,17 +30,36 @@ BASE = ("http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_h
 VCF_TMPL = BASE + "/1kGP_high_coverage_Illumina.{chrom}.filtered.SNV_INDEL_SV_phased_panel.vcf.gz"
 
 
-def _http_range(url: str, start: int, end: int | None = None, timeout: int = 120) -> bytes:
-    """HTTP Range GET [start, end] inclusive (end=None -> open-ended)."""
-    rng = f"bytes={start}-" + ("" if end is None else str(end))
-    req = urllib.request.Request(url, headers={"Range": rng})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+def _http_range(url: str, start: int, end: int | None = None, timeout: int = 90) -> bytes:
+    """HTTP Range GET [start, end] inclusive (end=None -> open-ended). Via curl.
+
+    curl is used instead of urllib: on this (Windows) host urllib intermittently HANGS on the large 1000G
+    chr VCFs while curl fetches the same range in <1s (empirically verified 2026-07-05). curl is a hard
+    dependency of the fetch path (already required for the Docker-free posture)."""
+    rng = f"{start}-" + ("" if end is None else str(end))
+    last = None
+    for _ in range(4):
+        fd, tmp = tempfile.mkstemp(suffix=".bin")
+        os.close(fd)
+        try:
+            r = subprocess.run(["curl", "-sSL", "--max-time", str(timeout), "-r", rng, url, "-o", tmp],
+                               capture_output=True, text=True)
+            data = Path(tmp).read_bytes()
+            if r.returncode == 0 and data:
+                return data
+            last = RuntimeError(f"curl rc={r.returncode} bytes={len(data)}: {r.stderr[:160]}")
+        except Exception as e:  # noqa: BLE001 — retry transient failures
+            last = e
+        finally:
+            try:
+                os.unlink(tmp)
+            except OSError:
+                pass
+    raise last or RuntimeError("curl range fetch failed")
 
 
-def _http_get(url: str, timeout: int = 120) -> bytes:
-    with urllib.request.urlopen(url, timeout=timeout) as r:
-        return r.read()
+def _http_get(url: str, timeout: int = 90) -> bytes:
+    return _http_range(url, 0, None, timeout)
 
 
 # ---- tabix (.tbi) index parse (little-endian; spec: samtools tabix / SAMv1 §5.2) ----
@@ -121,8 +142,10 @@ def fetch_region(chrom: str, start: int, end: int, out: Path, *, verbose: bool =
     url = VCF_TMPL.format(chrom=chrom)
     if verbose:
         print(f"[fetch] {chrom}:{start}-{end}  <- {url}", flush=True)
-    # 1) header: first chunk of the file holds ## meta + the #CHROM sample line
-    head_raw = _http_range(url, 0, 3_000_000)
+    # 1) header: first chunk of the file holds ## meta + the #CHROM sample line. 400KB is ample even at
+    # 3202 samples (~26KB #CHROM line, within the first ~2 bgzf blocks); a smaller GET is far less
+    # stall-prone than a 3MB one under EBI throttling.
+    head_raw = _http_range(url, 0, 400_000, timeout=60)
     header_lines: list[str] = []
     done_header = False
     carry = ""
@@ -168,7 +191,7 @@ def fetch_region(chrom: str, start: int, end: int, out: Path, *, verbose: bool =
     cmin = min(_voff_coffset(c[0]) for c in chunks)
     cmax = max(_voff_coffset(c[1]) for c in chunks)
     # +65536 to include the final block that cmax points into
-    region_raw = _http_range(url, cmin, cmax + 65536)
+    region_raw = _http_range(url, cmin, cmax + 65536, timeout=90)
     if verbose:
         print(f"[fetch] header {len(header_lines)} lines; region bytes {cmin}-{cmax} "
               f"({len(region_raw)//1024} KB compressed)", flush=True)

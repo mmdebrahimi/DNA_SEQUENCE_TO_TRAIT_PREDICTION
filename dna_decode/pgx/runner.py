@@ -199,3 +199,58 @@ def call_cyp2c8(vcf: str | Path, sample_id: str | None = None,
     if res.reason:
         rec["reason"] = res.reason
     return rec
+
+
+def call_cyp3a5(vcf: str | Path, sample_id: str | None = None,
+                sample_column: str | None = None) -> dict:
+    """Run the CYP3A5 caller (tacrolimus; expressor/non-expressor phenotype) on a VCF -> provenance record.
+
+    Function-pair CPIC phenotype (like CYP2C19): *1 = expressor (normal); *3/*6/*7 = no function. Validated
+    against the REAL GeT-RM CDC multi-lab consensus (8/8 on the 1000G-overlapping samples; UNDERPOWERED)."""
+    from dna_decode.pgx import cyp3a5_catalog as c3
+    res = call_diplotype(vcf, sample=sample_column, defining=c3.CORE_DEFINING, sentinels=c3.SENTINELS,
+                         reference_allele=c3.REFERENCE_ALLELE, phenotype_fn=c3.diplotype_phenotype,
+                         gene=c3.GENE)
+    sid = sample_id or sample_column or Path(vcf).stem
+    rec = {
+        "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": c3.GENE,
+        "organism": "Homo sapiens", "assembly": c3.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "phenotype": res.phenotype,
+        "phenotype_abbrev": c3.PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-cyp3a5-v0",
+            "method": "vcf_core_variant_proxy -> star_allele -> diplotype -> CPIC_expressor_phenotype",
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "GeT-RM CDC multi-lab consensus (CYP3A5_getrm_cons): 8/8 core diplotype concordance on the "
+                "1000G-overlapping samples covering *1/*3/*6/*7 incl. the *7 insertion + *6/*7 non-expressor "
+                "cases (caller independent of the labs). UNDERPOWERED (n=8). Rare non-core alleles mis-called *1."),
+            "phenotype_is_faithful_to_cpic": True, "is_core_marker_proxy": True,
+            "reference_tool": "PharmCAT",
+        },
+        "catalog": {
+            "gene": c3.GENE, "core_alleles": [d.star for d in c3.CORE_DEFINING] + ["*1"],
+            "allele_function": c3.ALLELE_FUNCTION,
+            "defining_variants": [
+                {"star": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in c3.CORE_DEFINING],
+            "source": ("CYP3A5 *3/*6/*7 defining variants; GRCh38 coords VERIFIED via Ensembl REST + "
+                       "AF-confirmed on 1000G; CPIC tacrolimus guideline (Birdwell 2015)"),
+        },
+        "undetectable": c3.UNDETECTABLE,
+        "caveat": ("CYP3A5 v0 = core *3/*6/*7 (no-function) + *1 (expressor) with CPIC expressor/non-expressor "
+                   "phenotype (NM=expressor / IM / PM=non-expressor). Star-allele calling independently "
+                   "validatable vs GeT-RM (8/8, UNDERPOWERED). Phenotype faithful-to-CPIC. NO sentinel layer -> "
+                   "rare non-core alleles mis-called *1. Tacrolimus-relevant. NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec

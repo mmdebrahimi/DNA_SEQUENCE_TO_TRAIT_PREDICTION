@@ -199,6 +199,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
         demotion_rule="rare non-core CYP2C8 allele mis-called *1 (no sentinel layer in v0); function is substrate-dependent so NO PM/IM/NM is ever emitted"),
     CellContract(
+        cell_id="pgx:human:cyp3a5", track="pgx", route="dna-pgx", organism="human", target="cyp3a5",
+        claim="CYP3A5 star-allele diplotype (*3/*6/*7) + CPIC expressor/non-expressor phenotype (tacrolimus) from a phased VCF",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_underpowered_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC multi-lab consensus (CYP3A5_getrm_cons) 8/8 core-diplotype on 1000G-overlap; UNDERPOWERED n=8; covers *1/*3/*6/*7 incl. *7 insertion",
+        label_provenance="GeT-RM CDC reference-material multi-lab consensus (CYP3A4/CYP3A5 J Mol Diagn 2023 table) join 1000G",
+        abstention_vocab=AbstentionVocab.UNDERPOWERED, native_abstention="UNDERPOWERED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="only ~8 GeT-RM CYP3A5 samples overlap 1000G (UNDERPOWERED); rare non-core alleles mis-called *1 (no sentinel layer v0)"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",

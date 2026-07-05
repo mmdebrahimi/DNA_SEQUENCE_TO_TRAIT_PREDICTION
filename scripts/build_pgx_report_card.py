@@ -28,6 +28,7 @@ def main() -> int:
     getrm_c19 = _load("pgx_getrm_concordance_2026-06-25.json")
     getrm_c9 = _load("pgx_getrm_concordance_cyp2c9_2026-06-25.json")
     getrm_c8 = _load("pgx_getrm_concordance_cyp2c8_2026-07-05.json")
+    getrm_c3a5 = _load("pgx_getrm_concordance_cyp3a5_2026-07-05.json")
     pharmcat = _load("pgx_cyp2c19_report_card.json")
     fe = _load("pgx_functional_evidence_2026-06-25.json")
     trio = _load("pgx_trio_mendelian_2026-06-25.json")
@@ -72,6 +73,15 @@ def main() -> int:
                   "NO CPIC metabolizer phenotype — CYP2C8 function is substrate-dependent, so this is a "
                   "CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP)."),
          "residual": "rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design"},
+        {"gene": "CYP3A5", "trait": "expressor/non-expressor phenotype (tacrolimus)",
+         "getrm": getrm_c3a5 and getrm_c3a5.get("core_diplotype_hits"),
+         "getrm_pct": getrm_c3a5 and getrm_c3a5.get("core_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP3A5"), "trio_mendelian": trio_summ("CYP3A5"),
+         "tier": ("REAL GeT-RM CDC multi-lab consensus (independent of the labs); 8/8 core-diplotype incl. "
+                  "*1/*3/*6/*7 (the *7 insertion + *6/*7 non-expressor cases). UNDERPOWERED (n=8). "
+                  "Phenotype faithful-to-CPIC (expressor/non-expressor). First gene outside the CYP2C cluster."),
+         "residual": "UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1"},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",
@@ -86,7 +96,7 @@ def main() -> int:
                  "GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured)."),
         "cells": cells,
         "sources": {"getrm_cyp2c19": bool(getrm_c19), "getrm_cyp2c9": bool(getrm_c9),
-                    "getrm_cyp2c8": bool(getrm_c8),
+                    "getrm_cyp2c8": bool(getrm_c8), "getrm_cyp3a5": bool(getrm_c3a5),
                     "pharmcat_cyp2c19": bool(pharmcat), "functional_evidence": bool(fe),
                     "trio_mendelian": bool(trio)},
     }

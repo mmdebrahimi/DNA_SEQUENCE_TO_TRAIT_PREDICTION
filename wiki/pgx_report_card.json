@@ -37,6 +37,17 @@
       "residual": "rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design"
     },
     {
+      "gene": "CYP3A5",
+      "trait": "expressor/non-expressor phenotype (tacrolimus)",
+      "getrm": "8/8",
+      "getrm_pct": 1.0,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "REAL GeT-RM CDC multi-lab consensus (independent of the labs); 8/8 core-diplotype incl. *1/*3/*6/*7 (the *7 insertion + *6/*7 non-expressor cases). UNDERPOWERED (n=8). Phenotype faithful-to-CPIC (expressor/non-expressor). First gene outside the CYP2C cluster.",
+      "residual": "UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1"
+    },
+    {
       "gene": "VKORC1",
       "trait": "warfarin sensitivity (rs9923231)",
       "getrm": null,
@@ -52,6 +63,7 @@
     "getrm_cyp2c19": true,
     "getrm_cyp2c9": true,
     "getrm_cyp2c8": true,
+    "getrm_cyp3a5": true,
     "pharmcat_cyp2c19": true,
     "functional_evidence": true,
     "trio_mendelian": true

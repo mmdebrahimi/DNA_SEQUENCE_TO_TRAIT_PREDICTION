@@ -44,6 +44,13 @@ def _c8_caller(plain_vcf, sample):
                           gene=c8.GENE)
 
 
+def _c3a5_caller(plain_vcf, sample):
+    from dna_decode.pgx import cyp3a5_catalog as c3
+    return call_diplotype(plain_vcf, sample=sample, defining=c3.CORE_DEFINING, sentinels=c3.SENTINELS,
+                          reference_allele=c3.REFERENCE_ALLELE, phenotype_fn=c3.diplotype_phenotype,
+                          gene=c3.GENE)
+
+
 # Per-gene config: which 1000G region VCF, which truth column, the core SNP set, *38-equivalence, caller.
 # *38 is the TRUE variant-free reference (NORMAL function, phenotype==*1; rs3758581 distinguishes, but that
 # is phenotype-irrelevant) -> a GeT-RM *38 scores phenotype-equivalent to *1. (CYP2C9 has no *38 equivalent.)
@@ -61,6 +68,12 @@ GENES = {
                 "ref_equiv": {}, "caller": _c8_caller,
                 "out_stem": "pgx_getrm_concordance_cyp2c8_2026-07-05",
                 "fetch_note": "pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker)"},
+    "cyp3a5":  {"vcf": REPO / "data" / "pgx_1000g" / "cyp3a5_1000g.vcf.gz",
+                "truth_col": "CYP3A5_getrm_cons", "core": {"*1", "*3", "*6", "*7"},
+                "ref_equiv": {}, "caller": _c3a5_caller,
+                "truth_file": REPO / "tests" / "data" / "pgx_getrm" / "getrm_cyp3a5_consensus.tsv",
+                "out_stem": "pgx_getrm_concordance_cyp3a5_2026-07-05",
+                "fetch_note": "pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker); GeT-RM CDC CYP3A4/5 table"},
 }
 REF_EQUIV = GENES["cyp2c19"]["ref_equiv"]   # back-compat alias (CYP2C19 *38==*1)
 
@@ -93,10 +106,11 @@ def main(argv=None) -> int:
     cfg = GENES[args.gene]
     VCF, CORE, REF_EQUIV = cfg["vcf"], cfg["core"], cfg["ref_equiv"]
     truth_col, caller, out_stem = cfg["truth_col"], cfg["caller"], cfg["out_stem"]
+    TRUTH_F = cfg.get("truth_file", TRUTH)   # per-gene truth override (CYP3A5 uses its own GeT-RM table)
     gene_label = args.gene.upper()
 
-    if not VCF.exists() or not TRUTH.exists():
-        print(f"ERROR: need {VCF} + {TRUTH} (fetch the {gene_label} region via Docker bcftools first)")
+    if not VCF.exists() or not TRUTH_F.exists():
+        print(f"ERROR: need {VCF} + {TRUTH_F} (fetch the {gene_label} region first)")
         return 2
     plain_vcf = _gunzip_to_plain(VCF)
 
@@ -108,7 +122,7 @@ def main(argv=None) -> int:
             break
 
     rows = []
-    with open(TRUTH, encoding="utf-8") as fh:
+    with open(TRUTH_F, encoding="utf-8") as fh:
         for rec in csv.DictReader(fh, delimiter="\t"):
             cor = rec["Coriell"].strip()
             truth = _norm(rec.get(truth_col, ""))
