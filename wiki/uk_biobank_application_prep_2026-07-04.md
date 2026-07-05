@@ -1,5 +1,16 @@
 # UK Biobank application prep — the chosen acquisition path (2026-07-04)
 
+> **⛔ STATUS 2026-07-05 — EXTERNALLY WALLED (path paused).** UK Biobank's **Research Analysis Platform
+> (UKB-RAP)** is **CLOSED** following the security incidents + the Board-led review (report published; CEO
+> Prof. Sir Rory Collins' notice). Reopening is planned **phased, timeline TBD** (a detailed timetable was
+> promised "during June"; compute credits + project duration to be auto-extended on resumption). **The
+> data-access/compute half is blocked** — do NOT treat UKB as an available substrate until RAP reopens.
+> Distinction: **AMS registration + application** (becoming a registered researcher, getting a project
+> approved) is a SEPARATE pipeline and may still accept submissions — so the only low-cost move now is to
+> **get registered + queued** so you're ready the instant RAP reopens; the actual analysis waits. Re-check
+> the official reopening timetable before investing further. The live, NON-walled forward work is the PGx
+> decoder track (CYP2C-cluster shipped; ~13 more free genes on the Docker-free harness).
+
 **User directive 2026-07-04:** "Go straight to UK Biobank — the individual/international-friendly one."
 Chosen over All of Us after the DURA check (York University not registered → needs a slow institutional
 agreement; UWO registered but user is alumnus-only, no active affiliation). **UK Biobank needs NO
