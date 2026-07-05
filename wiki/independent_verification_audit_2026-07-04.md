@@ -56,6 +56,14 @@ free-data workstream).
 Open accessions: ENA `PRJEB17529` (WGS/WGBS), `PRJEB25139` (RNA-seq; also ArrayExpress `E-MTAB-6523`),
 ArrayExpress `E-MTAB-5377` (450k methylation IDATs), phenotype+reports at personalgenomes.org.uk/data.
 
+**Usability confirmed — CHEAP realization path (2026-07-04):** PGP-UK provides **called VCFs directly** via
+ENA analysis objects (`result=analysis`, PRJEB17529): **9 `SEQUENCE_VARIATION` analyses** with real VCF
+download URLs, e.g. `ftp.sra.ebi.ac.uk/vol1/analysis/ERZ389/ERZ389532/FR07961000.pass.recode.vcf.gz`. So the
+deterministic decoder (ClinVar / PGx / Mendelian, VCF-consuming) can validate on **real people** with **no
+FASTQ→variant-calling pipeline** — a per-participant VCF is ~MB, not the 2 TB raw panel. **The realization
+step (download a VCF → run the decoder → real-people validation report) is DNA-11's territory** (it owns the
+validation-report-card workstream); it is HANDED OFF, not run in parallel, to avoid duplicating that work.
+
 ## Residual / recommended
 - **Lane 1:** to clear the 10 optional-dep errors, `uv sync` (installs xgboost) in the target env — cosmetic; not a regression.
 - **Lane 2:** the index is captured; the **bulk raw fetch (~2 TB) is a separate, explicit, D:-targeted step** the user/DNA-11 can trigger. PGP-UK is modest-N (pilot panel ~10 deep multi-omics + broader WGS) — good for **molecular / deterministic / Mendelian** validation on real people, NOT a polygenic-complex-trait cohort (that stays confound-blocked regardless of source).
