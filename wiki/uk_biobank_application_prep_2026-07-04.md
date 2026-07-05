@@ -58,9 +58,14 @@ the exact quote **before** any spend. Notes:
 ## 4. Drafted project — grounded in the decoder's validated human cells
 
 The north-star fit: UK Biobank is the **free independent LAB-MEASURED label** the human decoder needs. The
-current human cells are openSNP **self-report** (PILOT tier); UKB's genotype × measured-phenotype at n≈500k
-upgrades them to real external validation — the human analogue of the HIV Stanford / TB AMR-Portal
-independent numbers. It also gives a substrate for the one unrun *fair learned-decoder* test (deep,
+current human cells sit at two tiers: (a) openSNP **self-report** (PILOT tier); and (b) — stronger — a
+**GeT-RM-validated human pharmacogenomics suite** now covering the whole CYP2C cluster: **CYP2C19 72/72,
+CYP2C9 73/73, and CYP2C8 82/82** exact core-diplotype concordance vs the GeT-RM NGS consensus on real 1000
+Genomes genomes (an independent caller vs the field's accepted consensus truth set; `wiki/pgx_report_card`).
+That is already deterministic human genotype→star-allele decoding validated against a free reference panel.
+What UKB adds is the tier neither has: genotype × **measured** phenotype at n≈500k, which upgrades the
+self-report cells to real external validation — the human analogue of the HIV Stanford / TB AMR-Portal
+independent numbers — and gives a substrate for the one unrun *fair learned-decoder* test (a deep,
 lab-measured trait with no curated determinant catalog).
 
 ### Lay summary (draft — for the AMS "lay summary" field)
