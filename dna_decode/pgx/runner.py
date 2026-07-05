@@ -138,3 +138,64 @@ def call_cyp2c9(vcf: str | Path, sample_id: str | None = None,
     if res.reason:
         rec["reason"] = res.reason
     return rec
+
+
+def call_cyp2c8(vcf: str | Path, sample_id: str | None = None,
+                sample_column: str | None = None) -> dict:
+    """Run the CYP2C8 caller (star-allele CALLING only) on a VCF -> full provenance record.
+
+    CYP2C8 has NO CPIC metabolizer-phenotype system (function is substrate-dependent), so this record
+    reports the star-allele diplotype + a per-allele PharmVar-clinical FUNCTION annotation, never a
+    PM/IM/NM phenotype (has_cpic_phenotype=False). Star-allele calling is independently validatable vs
+    the GeT-RM consensus (CYP2C8_getrm_ngs)."""
+    from dna_decode.pgx import cyp2c8_catalog as c8
+    res = call_diplotype(vcf, sample=sample_column, defining=c8.CORE_DEFINING, sentinels=c8.SENTINELS,
+                         reference_allele=c8.REFERENCE_ALLELE, phenotype_fn=c8.diplotype_phenotype,
+                         gene=c8.GENE)
+    sid = sample_id or sample_column or Path(vcf).stem
+    rec = {
+        "sample_id": sid, "trait": "pgx_star_allele_diplotype", "gene": c8.GENE,
+        "organism": "Homo sapiens", "assembly": c8.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "has_cpic_phenotype": False,
+        "function_annotation": res.phenotype,   # substrate-dependent function descriptor (NOT a phenotype)
+        "phenotype": None,                       # explicit: CYP2C8 has no CPIC metabolizer phenotype
+        "phenotype_abbrev": None,
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-cyp2c8-v0",
+            "method": "vcf_core_snp_proxy -> star_allele -> diplotype (CALLING only; no CPIC phenotype)",
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "GeT-RM consensus (CYP2C8_getrm_ngs): core diplotype concordance reported in "
+                "wiki/pgx_getrm_concordance_cyp2c8_* (caller independent of the consensus tools); "
+                "rare non-core CYP2C8 alleles mis-called *1 in v0 (no sentinel layer yet)."),
+            "phenotype_is_faithful_to_cpic": False,   # no CPIC CYP2C8 metabolizer phenotype exists
+            "has_cpic_phenotype": False,
+            "is_core_marker_proxy": True,
+            "reference_tool": "PharmCAT (star-allele calling; PharmCAT likewise emits no CYP2C8 metabolizer phenotype)",
+        },
+        "catalog": {
+            "gene": c8.GENE, "core_alleles": [d.star for d in c8.CORE_DEFINING] + ["*1"],
+            "allele_function": c8.ALLELE_FUNCTION,
+            "defining_variants": [
+                {"star": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in c8.CORE_DEFINING],
+            "source": ("CYP2C8 *2/*3/*4 defining variants; GRCh38 coords VERIFIED via Ensembl REST; "
+                       "star->rsID->function from the CYP2C8 pharmacogenetics review + dbSNP"),
+        },
+        "undetectable": c8.UNDETECTABLE,
+        "caveat": ("CYP2C8 v0 = core SNP-defined *2/*3/*4 + *1, CALLING ONLY. CYP2C8 function is "
+                   "substrate-dependent and has NO CPIC metabolizer-phenotype system -> this cell reports "
+                   "the star-allele diplotype + per-allele PharmVar-clinical function, never a PM/IM/NM call. "
+                   "Star-allele calling is independently validatable vs GeT-RM. NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec

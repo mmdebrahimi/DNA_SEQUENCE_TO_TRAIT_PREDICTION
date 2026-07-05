@@ -190,6 +190,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
         demotion_rule="a non-core *5/*8/*9/*11 sentinel hit -> phenotype withheld"),
     CellContract(
+        cell_id="pgx:human:cyp2c8", track="pgx", route="dna-pgx", organism="human", target="cyp2c8",
+        claim="CYP2C8 star-allele diplotype (*2/*3/*4) from a phased VCF — CALLING only, NO CPIC phenotype",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_no_cpic_phenotype_substrate_dependent",
+        validation_slice="GeT-RM CYP2C8_getrm_ngs core-diplotype concordance 82/82 on real 1000G (Docker-free tabix-HTTP region fetch)",
+        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2C8_getrm_ngs join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="rare non-core CYP2C8 allele mis-called *1 (no sentinel layer in v0); function is substrate-dependent so NO PM/IM/NM is ever emitted"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",

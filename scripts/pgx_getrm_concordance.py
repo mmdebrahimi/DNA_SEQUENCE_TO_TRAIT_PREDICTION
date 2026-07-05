@@ -37,6 +37,13 @@ def _c9_caller(plain_vcf, sample):
                           gene=c9.GENE)
 
 
+def _c8_caller(plain_vcf, sample):
+    from dna_decode.pgx import cyp2c8_catalog as c8
+    return call_diplotype(plain_vcf, sample=sample, defining=c8.CORE_DEFINING, sentinels=c8.SENTINELS,
+                          reference_allele=c8.REFERENCE_ALLELE, phenotype_fn=c8.diplotype_phenotype,
+                          gene=c8.GENE)
+
+
 # Per-gene config: which 1000G region VCF, which truth column, the core SNP set, *38-equivalence, caller.
 # *38 is the TRUE variant-free reference (NORMAL function, phenotype==*1; rs3758581 distinguishes, but that
 # is phenotype-irrelevant) -> a GeT-RM *38 scores phenotype-equivalent to *1. (CYP2C9 has no *38 equivalent.)
@@ -44,11 +51,16 @@ GENES = {
     "cyp2c19": {"vcf": REPO / "data" / "pgx_1000g" / "cyp2c19_1000g.vcf.gz",
                 "truth_col": "CYP2C19_getrm_ngs", "core": {"*1", "*2", "*3", "*17"},
                 "ref_equiv": {"*38": "*1"}, "caller": lambda v, s: call_diplotype(v, sample=s),
-                "out_stem": "pgx_getrm_concordance_2026-06-25"},
+                "out_stem": "pgx_getrm_concordance_2026-06-25", "fetch_note": "Docker bcftools"},
     "cyp2c9":  {"vcf": REPO / "data" / "pgx_1000g" / "cyp2c9_1000g.vcf.gz",
                 "truth_col": "CYP2C9_getrm_ngs", "core": {"*1", "*2", "*3"},
                 "ref_equiv": {}, "caller": _c9_caller,
-                "out_stem": "pgx_getrm_concordance_cyp2c9_2026-06-25"},
+                "out_stem": "pgx_getrm_concordance_cyp2c9_2026-06-25", "fetch_note": "Docker bcftools"},
+    "cyp2c8":  {"vcf": REPO / "data" / "pgx_1000g" / "cyp2c8_1000g.vcf.gz",
+                "truth_col": "CYP2C8_getrm_ngs", "core": {"*1", "*2", "*3", "*4"},
+                "ref_equiv": {}, "caller": _c8_caller,
+                "out_stem": "pgx_getrm_concordance_cyp2c8_2026-07-05",
+                "fetch_note": "pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker)"},
 }
 REF_EQUIV = GENES["cyp2c19"]["ref_equiv"]   # back-compat alias (CYP2C19 *38==*1)
 
@@ -142,7 +154,7 @@ def main(argv=None) -> int:
         "analysis_date": datetime.date.today().isoformat(),
         "truth_source": ("GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx "
                          f"benchmark star-allele-comparison_common.tsv, column {truth_col}"),
-        "genotype_source": f"1000 Genomes 30x phased panel ({gene_label} region, Docker bcftools)",
+        "genotype_source": f"1000 Genomes 30x phased panel ({gene_label} region, {cfg.get('fetch_note', 'region slice')})",
         "caller_is_independent_of_consensus_tools": True,
         "n_overlap_samples": len(rows),
         "n_core_comparable": len(core),

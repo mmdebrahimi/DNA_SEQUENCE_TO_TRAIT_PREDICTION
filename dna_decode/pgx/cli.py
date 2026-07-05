@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 from dna_decode.pgx import PGX_GENES
-from dna_decode.pgx.runner import call_cyp2c19, call_cyp2c9
+from dna_decode.pgx.runner import call_cyp2c8, call_cyp2c19, call_cyp2c9
 
 
 def main(argv=None) -> int:
@@ -55,7 +55,8 @@ def main(argv=None) -> int:
             print(f"  {rec['caveat']}")
         return 0
 
-    rec = (call_cyp2c9 if args.gene == "cyp2c9" else call_cyp2c19)(
+    _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8}
+    rec = _dispatch.get(args.gene, call_cyp2c19)(
         args.vcf, sample_id=args.sample_id, sample_column=args.sample)
 
     if args.out:
@@ -71,6 +72,10 @@ def main(argv=None) -> int:
             print(f"PHENOTYPE WITHHELD (non-core allele detected: {hits})")
             print(f"  core-proxy diplotype: {rec['core_proxy_diplotype']}  (NOT a final call -- a "
                   f"non-core star allele the core SNP set cannot resolve is present)")
+        elif rec.get("has_cpic_phenotype") is False:
+            # CYP2C8: star-allele CALLING only; NO CPIC metabolizer phenotype (substrate-dependent function).
+            print(f"DIPLOTYPE: {rec['diplotype']}   [phasing: {rec['phasing']}]")
+            print(f"  FUNCTION (no CPIC phenotype): {rec['function_annotation']}")
         else:
             print(f"DIPLOTYPE: {rec['diplotype']}   PHENOTYPE: {rec['phenotype']} "
                   f"({rec['phenotype_abbrev']})   [phasing: {rec['phasing']}; "

@@ -27,6 +27,7 @@ def _load(name):
 def main() -> int:
     getrm_c19 = _load("pgx_getrm_concordance_2026-06-25.json")
     getrm_c9 = _load("pgx_getrm_concordance_cyp2c9_2026-06-25.json")
+    getrm_c8 = _load("pgx_getrm_concordance_cyp2c8_2026-07-05.json")
     pharmcat = _load("pgx_cyp2c19_report_card.json")
     fe = _load("pgx_functional_evidence_2026-06-25.json")
     trio = _load("pgx_trio_mendelian_2026-06-25.json")
@@ -62,6 +63,15 @@ def main() -> int:
          "functional_evidence": fe_summ("CYP2C9"), "trio_mendelian": trio_summ("CYP2C9"),
          "tier": "GeT-RM consensus; phenotype faithful-to-CPIC (activity-score)",
          "residual": "non-core *5/*8/*9/*11 withheld (sentinel v0.1); *6-indel/*61 residual"},
+        {"gene": "CYP2C8", "trait": "star-allele diplotype (*2/*3/*4) — CALLING only (no CPIC phenotype)",
+         "getrm": getrm_c8 and getrm_c8.get("core_diplotype_hits"),
+         "getrm_pct": getrm_c8 and getrm_c8.get("core_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP2C8"), "trio_mendelian": trio_summ("CYP2C8"),
+         "tier": ("GeT-RM consensus (independent of consensus tools); CALLING validated 82/82. "
+                  "NO CPIC metabolizer phenotype — CYP2C8 function is substrate-dependent, so this is a "
+                  "CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP)."),
+         "residual": "rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design"},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",
@@ -76,6 +86,7 @@ def main() -> int:
                  "GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured)."),
         "cells": cells,
         "sources": {"getrm_cyp2c19": bool(getrm_c19), "getrm_cyp2c9": bool(getrm_c9),
+                    "getrm_cyp2c8": bool(getrm_c8),
                     "pharmcat_cyp2c19": bool(pharmcat), "functional_evidence": bool(fe),
                     "trio_mendelian": bool(trio)},
     }

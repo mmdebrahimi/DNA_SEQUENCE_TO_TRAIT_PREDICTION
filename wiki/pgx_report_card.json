@@ -1,6 +1,6 @@
 {
   "schema": "pgx-report-card-v0",
-  "analysis_date": "2026-07-04",
+  "analysis_date": "2026-07-05",
   "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
   "cells": [
     {
@@ -26,6 +26,17 @@
       "residual": "non-core *5/*8/*9/*11 withheld (sentinel v0.1); *6-indel/*61 residual"
     },
     {
+      "gene": "CYP2C8",
+      "trait": "star-allele diplotype (*2/*3/*4) \u2014 CALLING only (no CPIC phenotype)",
+      "getrm": "82/82",
+      "getrm_pct": 1.0,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "GeT-RM consensus (independent of consensus tools); CALLING validated 82/82. NO CPIC metabolizer phenotype \u2014 CYP2C8 function is substrate-dependent, so this is a CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP).",
+      "residual": "rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design"
+    },
+    {
       "gene": "VKORC1",
       "trait": "warfarin sensitivity (rs9923231)",
       "getrm": null,
@@ -40,6 +51,7 @@
   "sources": {
     "getrm_cyp2c19": true,
     "getrm_cyp2c9": true,
+    "getrm_cyp2c8": true,
     "pharmcat_cyp2c19": true,
     "functional_evidence": true,
     "trio_mendelian": true
