@@ -51,6 +51,21 @@ def _c3a5_caller(plain_vcf, sample):
                           gene=c3.GENE)
 
 
+def _tpmt_caller(plain_vcf, sample):
+    from dna_decode.pgx import tpmt_catalog as tp
+    from dna_decode.pgx.compound_caller import assemble_compound_diplotype
+    return assemble_compound_diplotype(plain_vcf, tp.COMPONENTS, tp.COMPOUND_RULES,
+                                       reference_allele=tp.REFERENCE_ALLELE,
+                                       phenotype_fn=tp.diplotype_phenotype, gene=tp.GENE, sample=sample)
+
+
+def _c2b6_caller(plain_vcf, sample):
+    from dna_decode.pgx import cyp2b6_catalog as c6
+    return call_diplotype(plain_vcf, sample=sample, defining=c6.CORE_DEFINING, sentinels=c6.SENTINELS,
+                          reference_allele=c6.REFERENCE_ALLELE, phenotype_fn=c6.diplotype_phenotype,
+                          gene=c6.GENE)
+
+
 # Per-gene config: which 1000G region VCF, which truth column, the core SNP set, *38-equivalence, caller.
 # *38 is the TRUE variant-free reference (NORMAL function, phenotype==*1; rs3758581 distinguishes, but that
 # is phenotype-irrelevant) -> a GeT-RM *38 scores phenotype-equivalent to *1. (CYP2C9 has no *38 equivalent.)
@@ -74,6 +89,18 @@ GENES = {
                 "truth_file": REPO / "tests" / "data" / "pgx_getrm" / "getrm_cyp3a5_consensus.tsv",
                 "out_stem": "pgx_getrm_concordance_cyp3a5_2026-07-05",
                 "fetch_note": "pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker); GeT-RM CDC CYP3A4/5 table"},
+    "tpmt":    {"vcf": REPO / "data" / "pgx_1000g" / "tpmt_1000g.vcf.gz",
+                "truth_col": "TPMT_getrm_cons", "core": {"*1", "*3A", "*3B", "*3C"},
+                "ref_equiv": {}, "caller": _tpmt_caller,
+                "truth_file": REPO / "tests" / "data" / "pgx_getrm" / "getrm_tpmt_consensus.tsv",
+                "out_stem": "pgx_getrm_concordance_tpmt_2026-07-05",
+                "fetch_note": "pure-Python tabix-over-HTTP (no Docker); GeT-RM CDC consolidated PGx table; COMPOUND *3A caller"},
+    "cyp2b6":  {"vcf": REPO / "data" / "pgx_1000g" / "cyp2b6_1000g.vcf.gz",
+                "truth_col": "CYP2B6_getrm_cons", "core": {"*1", "*6"},
+                "ref_equiv": {}, "caller": _c2b6_caller,
+                "truth_file": REPO / "tests" / "data" / "pgx_getrm" / "getrm_cyp2b6_consensus.tsv",
+                "out_stem": "pgx_getrm_concordance_cyp2b6_2026-07-05",
+                "fetch_note": "pure-Python tabix-over-HTTP (no Docker); GeT-RM CDC consolidated PGx table; SINGLE-SNP *6-proxy (785 absent from panel)"},
 }
 REF_EQUIV = GENES["cyp2c19"]["ref_equiv"]   # back-compat alias (CYP2C19 *38==*1)
 
@@ -191,7 +218,10 @@ def main(argv=None) -> int:
     out_json = REPO / "wiki" / f"{out_stem}.json"
     out_md = REPO / "wiki" / f"{out_stem}.md"
     out_json.write_text(json.dumps(rep, indent=2), encoding="utf-8")
-    core_set = "/".join(sorted(CORE, key=lambda a: int(a.lstrip('*'))))
+    def _star_num(a):
+        d = "".join(ch for ch in a.lstrip("*") if ch.isdigit())
+        return (int(d) if d else 999, a)
+    core_set = "/".join(sorted(CORE, key=_star_num))
 
     L = [f"# {gene_label} caller vs GeT-RM consensus on real 1000G ({rep['analysis_date']})", "",
          f"**Truth:** {rep['truth_source']}", f"**Genotypes:** {rep['genotype_source']}", "",

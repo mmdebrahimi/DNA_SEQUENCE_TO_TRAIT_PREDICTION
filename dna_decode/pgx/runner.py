@@ -254,3 +254,117 @@ def call_cyp3a5(vcf: str | Path, sample_id: str | None = None,
     if res.reason:
         rec["reason"] = res.reason
     return rec
+
+
+def call_tpmt(vcf: str | Path, sample_id: str | None = None,
+              sample_column: str | None = None) -> dict:
+    """Run the TPMT COMPOUND caller (thiopurines) on a VCF -> provenance record.
+
+    First true compound-allele cell: *3A is resolved from BOTH rs1800460 (*3B) + rs1142345 (*3C) on the
+    same haplotype (each SNP alone = *3B / *3C). Validated 85/85 vs the GeT-RM CDC consolidated consensus."""
+    from dna_decode.pgx import tpmt_catalog as tp
+    from dna_decode.pgx.compound_caller import assemble_compound_diplotype
+    res = assemble_compound_diplotype(vcf, tp.COMPONENTS, tp.COMPOUND_RULES,
+                                      reference_allele=tp.REFERENCE_ALLELE,
+                                      phenotype_fn=tp.diplotype_phenotype, gene=tp.GENE, sample=sample_column)
+    sid = sample_id or sample_column or Path(vcf).stem
+    rec = {
+        "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": tp.GENE,
+        "organism": "Homo sapiens", "assembly": tp.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "phenotype": res.phenotype,
+        "phenotype_abbrev": tp.PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-tpmt-v0",
+            "method": "vcf_compound_haplotype -> star_allele (*3A=*3B+*3C in cis) -> CPIC_phenotype",
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "GeT-RM CDC consolidated consensus (TPMT): 85/85 core-comparable diplotype concordance on "
+                "1000G-overlap (truth in *1/*3A/*3B/*3C); the compound *3A path is exercised (6 *3A + 8 *3C "
+                "truth samples). Rare non-core alleles (*2/*8/*16...) mis-called *1."),
+            "phenotype_is_faithful_to_cpic": True, "is_core_marker_proxy": True,
+            "is_compound_allele_caller": True,
+            "reference_tool": "PharmCAT",
+        },
+        "catalog": {
+            "gene": tp.GENE, "core_alleles": ["*1", "*3A", "*3B", "*3C"],
+            "allele_function": tp.ALLELE_FUNCTION,
+            "component_variants": [
+                {"tag": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in tp.COMPONENTS],
+            "compound_rules": {r.star: sorted(r.components) for r in tp.COMPOUND_RULES},
+            "source": ("TPMT *3A/*3B/*3C compound; GRCh38 coords VERIFIED via Ensembl + AF-confirmed on "
+                       "1000G; CPIC thiopurine guideline (Relling 2019)"),
+        },
+        "undetectable": tp.UNDETECTABLE,
+        "caveat": ("TPMT v0 = COMPOUND *3A (=*3B+*3C in cis) / *3B / *3C + *1, with CPIC thiopurine "
+                   "phenotype. First true compound-allele cell (two SNPs on one haplotype -> *3A). Star "
+                   "calling independently validatable vs GeT-RM (85/85). Phenotype faithful-to-CPIC. Rare "
+                   "non-core alleles mis-called *1 (no sentinel layer). NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec
+
+
+def call_cyp2b6(vcf: str | Path, sample_id: str | None = None,
+                sample_column: str | None = None) -> dict:
+    """Run the CYP2B6 caller (efavirenz; *6-proxy from the 516G>T signal) on a VCF -> provenance record.
+
+    v0 is a SINGLE-SNP *6-proxy: rs2279343 (785A>G, the 2nd *6 component) is absent from the 1000G 30x
+    panel, so this cannot split *6 from *9 (documented). Validated 62/62 on clean *1/*6 truth samples."""
+    from dna_decode.pgx import cyp2b6_catalog as c6
+    res = call_diplotype(vcf, sample=sample_column, defining=c6.CORE_DEFINING, sentinels=c6.SENTINELS,
+                         reference_allele=c6.REFERENCE_ALLELE, phenotype_fn=c6.diplotype_phenotype,
+                         gene=c6.GENE)
+    sid = sample_id or sample_column or Path(vcf).stem
+    rec = {
+        "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": c6.GENE,
+        "organism": "Homo sapiens", "assembly": c6.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "phenotype": res.phenotype,
+        "phenotype_abbrev": c6.PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-cyp2b6-v0",
+            "method": "vcf_single_snp_proxy(516G>T) -> *6-proxy -> CPIC_phenotype",
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "GeT-RM CDC consolidated consensus (CYP2B6): 62/62 on clean *1/*6 truth samples on "
+                "1000G-overlap. SINGLE-SNP *6-proxy (516G>T) — cannot split *6 from *9 (rs2279343/785A>G "
+                "absent from the 1000G 30x panel); *4/other non-core mis-called. Documented residual."),
+            "phenotype_is_faithful_to_cpic": True, "is_core_marker_proxy": True,
+            "is_single_snp_proxy": True,
+            "reference_tool": "PharmCAT",
+        },
+        "catalog": {
+            "gene": c6.GENE, "core_alleles": ["*1", "*6"],
+            "allele_function": c6.ALLELE_FUNCTION,
+            "defining_variants": [
+                {"star": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in c6.CORE_DEFINING],
+            "source": ("CYP2B6 516G>T (rs3745274) *6-signal; GRCh38 coord VERIFIED via Ensembl + "
+                       "AF-confirmed on 1000G; CPIC efavirenz guideline (Desta 2019)"),
+        },
+        "undetectable": c6.UNDETECTABLE,
+        "caveat": ("CYP2B6 v0 = *6-PROXY from the 516G>T signal (rs3745274) + *1, CPIC efavirenz phenotype. "
+                   "SINGLE-SNP proxy: rs2279343 (785A>G, the 2nd *6 component) is absent from the 1000G 30x "
+                   "panel, so *6 cannot be split from the rare *9 (documented; a callset with 785 upgrades "
+                   "to the compound resolver as in TPMT). Validated 62/62 on clean *1/*6. NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec

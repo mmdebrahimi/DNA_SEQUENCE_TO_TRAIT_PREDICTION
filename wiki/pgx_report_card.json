@@ -48,6 +48,28 @@
       "residual": "UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1"
     },
     {
+      "gene": "TPMT",
+      "trait": "thiopurine phenotype (COMPOUND *3A=*3B+*3C)",
+      "getrm": "85/85",
+      "getrm_pct": 1.0,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "REAL GeT-RM CDC consolidated consensus; 85/85 core-comparable. FIRST compound-allele cell \u2014 *3A resolved from two SNPs in cis (*3B+*3C), each alone = *3B/*3C. Phenotype faithful-to-CPIC (thiopurine).",
+      "residual": "rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0)"
+    },
+    {
+      "gene": "CYP2B6",
+      "trait": "efavirenz phenotype (*6-proxy, 516G>T)",
+      "getrm": "62/62",
+      "getrm_pct": 1.0,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "REAL GeT-RM CDC consolidated consensus; 62/62 on clean *1/*6. SINGLE-SNP *6-proxy (516G>T) \u2014 rs2279343 (785A>G) is absent from the 1000G 30x panel so *6 can't be split from *9. Phenotype faithful-to-CPIC.",
+      "residual": "single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset)"
+    },
+    {
       "gene": "VKORC1",
       "trait": "warfarin sensitivity (rs9923231)",
       "getrm": null,
@@ -75,6 +97,8 @@
     "getrm_cyp2c9": true,
     "getrm_cyp2c8": true,
     "getrm_cyp3a5": true,
+    "getrm_tpmt": true,
+    "getrm_cyp2b6": true,
     "pharmcat_cyp2c19": true,
     "functional_evidence": true,
     "trio_mendelian": true

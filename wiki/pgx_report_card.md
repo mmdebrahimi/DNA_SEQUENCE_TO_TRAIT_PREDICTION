@@ -8,6 +8,8 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 | CYP2C9 | metabolizer phenotype (activity-score) | 73/73 (1.0) | — | A1/D1/F0 | 602/602 | non-core *5/*8/*9/*11 withheld (sentinel v0.1); *6-indel/*61 residual |
 | CYP2C8 | star-allele diplotype (*2/*3/*4) — CALLING only (no CPIC phenotype) | 82/82 (1.0) | — | — | — | rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design |
 | CYP3A5 | expressor/non-expressor phenotype (tacrolimus) | 8/8 (1.0) | — | — | — | UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1 |
+| TPMT | thiopurine phenotype (COMPOUND *3A=*3B+*3C) | 85/85 (1.0) | — | — | — | rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0) |
+| CYP2B6 | efavirenz phenotype (*6-proxy, 516G>T) | 62/62 (1.0) | — | — | — | single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset) |
 | VKORC1 | warfarin sensitivity (rs9923231) | — | — | A1/D0/F0 | — | — |
 | SLCO1B1 | statin myopathy (rs4149056 / *5 521T>C) | — | — | — | — | single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants |
 
@@ -17,6 +19,8 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 - **CYP2C9:** GeT-RM consensus; phenotype faithful-to-CPIC (activity-score)
 - **CYP2C8:** GeT-RM consensus (independent of consensus tools); CALLING validated 82/82. NO CPIC metabolizer phenotype — CYP2C8 function is substrate-dependent, so this is a CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP).
 - **CYP3A5:** REAL GeT-RM CDC multi-lab consensus (independent of the labs); 8/8 core-diplotype incl. *1/*3/*6/*7 (the *7 insertion + *6/*7 non-expressor cases). UNDERPOWERED (n=8). Phenotype faithful-to-CPIC (expressor/non-expressor). First gene outside the CYP2C cluster.
+- **TPMT:** REAL GeT-RM CDC consolidated consensus; 85/85 core-comparable. FIRST compound-allele cell — *3A resolved from two SNPs in cis (*3B+*3C), each alone = *3B/*3C. Phenotype faithful-to-CPIC (thiopurine).
+- **CYP2B6:** REAL GeT-RM CDC consolidated consensus; 62/62 on clean *1/*6. SINGLE-SNP *6-proxy (516G>T) — rs2279343 (785A>G) is absent from the 1000G 30x panel so *6 can't be split from *9. Phenotype faithful-to-CPIC.
 - **VKORC1:** single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system
 - **SLCO1B1:** single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned (simvastatin function is assigned largely from 521T>C).
 
