@@ -24,7 +24,10 @@ SNP-defined star-allele cell** validated on the SNP-decodable GeT-RM subset. **A
 
 1. **Tiered denominators, never one inflated number.** Real measured split (87 total): **47 core-SNP (scored)
    / 7 non-core SNP (residual) / 31 structural (EXCLUDED) / 2 ambiguous (EXCLUDED)**. The pre-brainstorm "56"
-   was wrong (it counted non-core + let `(*68)+*4` hybrids leak). The report emits all four tiers.
+   was wrong (it counted non-core + let `(*68)+*4` hybrids leak); the brainstorm's corrected **~49** estimate
+   landed at **47 measured** — the 2-sample delta is the ambiguous-excluded bucket (parenthetical
+   `*2 (*35)` / `*2 (*45)` alternative annotations that must NOT be scored as a match or a miss). The report
+   emits all four tiers, never one number.
 2. **Structural = EXCLUDED, NOT "withheld".** A SNP VCF cannot even SEE a structural allele, so it cannot
    withhold it — a structurally-confounded sample may be SILENTLY MIS-CALLED. Every record carries
    `cnv_hybrid_unassessed=true`; the concordance excludes structural truth from the scored denominator. Never
