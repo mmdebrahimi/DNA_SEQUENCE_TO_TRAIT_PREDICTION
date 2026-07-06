@@ -51,7 +51,7 @@ HIV_UNDERPOWERED_N = 50  # report-card n below this -> measured-but-UNDERPOWERED
 
 
 # Tracks (v0.1). amr/viral both route through `dna-amr`; route ≠ track (brainstorm C2 split).
-TRACKS = ("amr", "viral", "pgx", "mendelian", "typing", "finder")
+TRACKS = ("amr", "viral", "pgx", "hla", "mendelian", "typing", "finder")
 
 
 @dataclass(frozen=True)
@@ -284,6 +284,30 @@ _MENDELIAN_CONTRACTS: list[CellContract] = [
 ]
 
 
+# --- HLA drug-hypersensitivity cells (route dna-hla). Tag-SNP LD-proxy carriage callers. ---
+def _hla_contracts() -> list[CellContract]:
+    from dna_decode.hla.catalog import CATALOG
+    out: list[CellContract] = []
+    for key, a in CATALOG.items():
+        gold = a.proxy_tier == "gold_standard"
+        out.append(CellContract(
+            cell_id=f"hla:human:{key}", track="hla", route="dna-hla", organism="human", target=key,
+            claim=f"{a.allele} carriage (tag SNP {a.rsid}) -> {a.drug} {a.reaction} risk (CPIC)",
+            evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+            claim_status=("tag_snp_ld_proxy_gold_standard" if gold else "tag_snp_ld_proxy_provisional"),
+            validation_slice=("literature-established LD proxy (the deployed clinical screen) + 1000G "
+                              "per-superpopulation AF corroboration; sample-level concordance vs free "
+                              "published 1000G HLA truth PENDING (external data acquisition)"),
+            label_provenance="CPIC guideline + dbSNP tag; validation truth = free 1000G HLA types (pending)",
+            abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+            falsifier_ref="scripts/hla_concordance.py", incoming_data_gate="n/a",
+            demotion_rule=("LD PROXY, NOT sequence-based typing -> sample-level concordance vs real HLA truth "
+                           "(Gourraud-class) is the SCORED number; " + ("gold-standard tag (B*57:01/abacavir, "
+                           "sens~100%)" if gold else "PROVISIONAL tag — LD is population-dependent, validate "
+                           "in the target population before use"))))
+    return out
+
+
 def _typing_finder_contracts() -> list[CellContract]:
     from dna_decode.data.cell_registry_vocab import to_vocab
     out: list[CellContract] = []
@@ -302,7 +326,7 @@ def _typing_finder_contracts() -> list[CellContract]:
 
 def cells() -> list[CellContract]:
     """Every v0.1 cell contract (AMR projection + viral + PGx + typing/finder)."""
-    return (_amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS)
+    return (_amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _hla_contracts()
             + list(_MENDELIAN_CONTRACTS) + _typing_finder_contracts())
 
 
@@ -320,6 +344,10 @@ def pgx_cells() -> list[CellContract]:
 
 def mendelian_cells() -> list[CellContract]:
     return [c for c in cells() if c.track == "mendelian"]
+
+
+def hla_cells() -> list[CellContract]:
+    return [c for c in cells() if c.track == "hla"]
 
 
 def amr_projection_keys() -> set[tuple[str, str]]:
@@ -345,6 +373,7 @@ def surface_index() -> dict[tuple[str, str], dict]:
 def cli_routable_manifest() -> dict[str, set[str]]:
     """The authoritative v0.1 CLI-routable set, derived LIVE from the CLI catalogs (drift-proof)."""
     from dna_decode.cli import TRAITS
+    from dna_decode.hla import HLA_ALLELES
     from dna_decode.pgx import PGX_GENES
     from dna_decode.data.antimalarial_amr import supported_antimalarial_drugs
     from dna_decode.data.antiviral_amr import supported_antiviral_drugs
@@ -359,6 +388,7 @@ def cli_routable_manifest() -> dict[str, set[str]]:
         "dna-amr": {d.lower() for d in amr_drugs},
         "dna-pgx": set(PGX_GENES),
         "dna-clinvar": {"germline_pathogenicity"},  # the Mendelian (ClinVar) single-decoder route
+        "dna-hla": set(HLA_ALLELES),                 # HLA drug-hypersensitivity tag-SNP cells
         "traits": set(TRAITS) - {"amr", "pgx"},  # the typing/finder whole-tool traits
     }
 

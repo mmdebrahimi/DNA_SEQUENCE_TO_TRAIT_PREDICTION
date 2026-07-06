@@ -66,6 +66,15 @@ def test_every_mendelian_target_has_a_contract():
     assert len(targets) == len(set(targets))
 
 
+def test_every_hla_allele_has_a_contract():
+    """COVERAGE: the dna-hla route has exactly one contract per allele -> a shipped HLA decoder cannot ship
+    invisibly to the trust surface."""
+    from dna_decode.data.cell_registry import cli_routable_manifest, hla_cells
+    targets = [c.target for c in hla_cells()]
+    assert set(targets) == cli_routable_manifest()["dna-hla"]
+    assert len(targets) == len(set(targets))
+
+
 def test_every_typing_finder_trait_has_exactly_one_contract():
     """COVERAGE: every dna_decode.cli TRAIT except amr/pgx is a typing/finder whole-tool cell."""
     traits = cli_routable_manifest()["traits"]
