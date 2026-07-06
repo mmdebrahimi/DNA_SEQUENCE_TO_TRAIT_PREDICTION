@@ -1,0 +1,99 @@
+{
+  "schema": "pgx-pgp-uk-cohort-card-v0",
+  "n_individuals": 5,
+  "samples": [
+    "FR07961000",
+    "FR07961003",
+    "FR07961006",
+    "FR07961007",
+    "FR07961009"
+  ],
+  "per_gene": {
+    "cyp2c19": {
+      "diplotypes": {
+        "*1/*2": 2,
+        "*2/*17": 1,
+        "*1/*17": 1,
+        "*1/*1": 1
+      },
+      "phenotypes": {
+        "IM": 3,
+        "RM": 1,
+        "NM": 1
+      },
+      "observed_allele_counts": {
+        "*1": 5,
+        "*2": 3,
+        "*17": 2
+      }
+    },
+    "cyp2c9": {
+      "diplotypes": {
+        "*1/*1": 3,
+        "*1/*2": 1,
+        "*2/*2": 1
+      },
+      "phenotypes": {
+        "NM": 3,
+        "IM": 2
+      },
+      "observed_allele_counts": {
+        "*1": 7,
+        "*2": 3
+      }
+    },
+    "cyp3a5": {
+      "diplotypes": {
+        "*1/*1": 4,
+        "*1/*6": 1
+      },
+      "phenotypes": {
+        "NM": 4,
+        "IM": 1
+      },
+      "observed_allele_counts": {
+        "*1": 9,
+        "*6": 1
+      }
+    },
+    "tpmt": {
+      "diplotypes": {
+        "*1/*1": 5
+      },
+      "phenotypes": {
+        "NM": 5
+      },
+      "observed_allele_counts": {
+        "*1": 10
+      }
+    },
+    "cyp2b6": {
+      "diplotypes": {
+        "*1/*6": 4,
+        "*1/*1": 1
+      },
+      "phenotypes": {
+        "IM": 4,
+        "NM": 1
+      },
+      "observed_allele_counts": {
+        "*1": 6,
+        "*6": 4
+      }
+    },
+    "vkorc1": {
+      "genotypes": {
+        "G/G": 2,
+        "A/A": 2,
+        "G/A": 1
+      }
+    },
+    "slco1b1": {
+      "genotypes": {
+        "T/T": 5
+      }
+    }
+  },
+  "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",
+  "honest_tier": "deployment/robustness demonstration on real independent-cohort individuals; tiny-N observed allele counts (NOT a population estimate); no GeT-RM truth here (accuracy lives in the concordance cells). NOT a clinical tool."
+}
