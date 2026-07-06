@@ -26,7 +26,12 @@ _STARS = {
     "no_classification_provided": 0,
     "no_classifications_from_unflagged_records": 0,
 }
-_DEFAULT_PANEL = Path(__file__).resolve().parent.parent.parent / "data" / "clinvar" / "clinvar_panel.tsv"
+_CLINVAR_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "clinvar"
+# The committed panel ships GZIPPED (the ACMG-SF-v3.2-broadened 86-gene panel is ~24 MB plain -> ~2.3 MB gz;
+# disk/sync-friendly). from_tsv opens .gz transparently. Plain .tsv still works (e.g. the GRCh37 demo panel).
+_DEFAULT_PANEL = _CLINVAR_DIR / "clinvar_panel.tsv.gz"
+if not _DEFAULT_PANEL.exists():
+    _DEFAULT_PANEL = _CLINVAR_DIR / "clinvar_panel.tsv"
 
 
 def _verdict(sig: str) -> str:
@@ -53,8 +58,10 @@ class ClinVarDecoder:
 
     @classmethod
     def from_tsv(cls, path: str | Path = _DEFAULT_PANEL) -> "ClinVarDecoder":
+        import gzip
         table = {}
-        with open(path, encoding="utf-8") as f:
+        opener = gzip.open if str(path).endswith(".gz") else open
+        with opener(path, "rt", encoding="utf-8") as f:
             hdr = f.readline().rstrip("\n").split("\t")
             i = {k: hdr.index(k) for k in hdr}
             for line in f:

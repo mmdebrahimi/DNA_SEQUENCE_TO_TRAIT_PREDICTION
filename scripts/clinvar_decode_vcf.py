@@ -79,6 +79,7 @@ def decode_vcf(vcf: Path, decoder: ClinVarDecoder, sample: str | None = None) ->
                              "gt": gt, "gene": call.gene, "verdict": call.verdict,
                              "significance": call.significance, "stars": call.stars,
                              "disease": call.disease, "provenance": call.provenance})
+    from collections import Counter
     path = [h for h in hits if h["verdict"] == "PATHOGENIC"]
     benign = [h for h in hits if h["verdict"] == "BENIGN"]
     path.sort(key=lambda h: -(h["stars"] or 0))
@@ -86,6 +87,8 @@ def decode_vcf(vcf: Path, decoder: ClinVarDecoder, sample: str | None = None) ->
             "n_carried_alts_in_panel_genes_checked": n_variants,
             "n_indeterminate_not_in_panel": n_indeterminate,
             "n_pathogenic": len(path), "n_benign": len(benign),
+            "benign_by_gene": dict(Counter(h["gene"] for h in benign).most_common()),
+            "pathogenic_by_gene": dict(Counter(h["gene"] for h in path).most_common()),
             "pathogenic_hits": path, "benign_hits": benign[:50]}
 
 

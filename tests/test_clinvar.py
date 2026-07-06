@@ -23,7 +23,7 @@ def test_synthetic_decoder():
 
 
 def _panel():
-    p = Path(__file__).resolve().parent.parent / "data" / "clinvar" / "clinvar_panel.tsv"
+    p = Path(__file__).resolve().parent.parent / "data" / "clinvar" / "clinvar_panel.tsv.gz"
     if not p.exists():
         import pytest
         pytest.skip("committed ClinVar panel not present")
