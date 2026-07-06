@@ -6,26 +6,24 @@ Take a step back from the closed branch packets and rank the remaining ways to m
 
 ## Current state
 
-### Decoder side
+### Tracked repo side
 
-- frozen surface is banked on `origin/main`
-- prospective validation channel exists
-- lock date is correctly anchored to `2026-06-13`
-- no immediate free executor move is high-yield in the current short post-freeze window
+- `origin/main` has moved materially
+- the live branch now includes the first real-people PGx extension and multiple new PGx cells
+- prospective validation still exists, but it is not the highest-yield immediate move
+- public PyPI advanced again, but the landing-page cleanup is still incomplete
 
-### Workhorse side
+### Workhorse/J2 side
 
-- `NF-001` is frozen as a negative result under the current binary objective
-- `AF-002` completed as a mixed-signal support check
-- `AF-001` now says stop default no-money Path B execution
-- this Databricks-bundle checkout is still source-control unconverged:
-  - local `.git` exists
-  - no commits
-  - no remote
+- J2 is now a completed result, not a pending experiment
+- real ESM-2 `650M` vs ProteinGym passed on the workhorse GPU
+- median `|Spearman| = 0.491`
+- shuffled control `0.011`
+- this is the first banked self-owned learned-protein-model signal capture in the project
 
 ## Highest-value lanes
 
-### 1. Source-control convergence recovery
+### 1. PGx extension and report-card hardening
 
 Status:
 
@@ -33,23 +31,47 @@ Status:
 
 Why:
 
-- current biggest risk is silent divergence, not missing science packets
-- decoder-side state is banked
-- workhorse-side state still exists only as local report / packet files
+- it already lives on `origin/main`
+- it is closest to a user-facing, decision-bearing decoder surface
+- it now has the strongest combination of product relevance and real-world evidence
 
 Concrete value:
 
-- makes cross-session state trustworthy
-- prevents redoing closed work
-- makes later branch selection cleaner
+- converts recent upstream momentum into a cleaner public and validation story
+- builds on the strongest live branch instead of starting over elsewhere
 
 What counts as progress:
 
-1. identify the intended tracked repo lineage for the workhorse artifacts
-2. recover a real tracked clone or otherwise reattach this content to history
-3. only then treat origin-backed state as genuinely converged
+1. stabilize the new PGx cells and report cards
+2. clarify what the current PGx surface does and does not claim
+3. keep it aligned with release/public-package work
 
-### 2. Decoder-side periodic prospective accrual
+### 2. J2 follow-through
+
+Status:
+
+- newly valuable
+- now backed by a real pass packet
+
+Why:
+
+- J2 is no longer hypothetical
+- it is the first real self-owned learned-sequence capability proof here
+- it creates a reusable benchmark harness, not just a one-off result
+
+Concrete value:
+
+- reusable learned-protein evaluation surface
+- stronger technical credibility for future JEPA / CLIP-adjacent claims
+- a banked result that can inform where to spend science time next
+
+What counts as progress:
+
+1. keep the exact runbook and artifact paths pinned
+2. decide whether to add one bounded follow-up comparison
+3. do not keep rerunning it unless the next run changes a real decision
+
+### 3. Decoder-side periodic prospective accrual
 
 Status:
 
@@ -71,7 +93,7 @@ What counts as progress:
 2. wait until enough post-freeze isolates exist
 3. run the next periodic validation on a meaningful cohort, not a tiny trickle
 
-### 3. External-label / independent-gold-set path for the decoder
+### 4. External-label / independent-gold-set path for the decoder
 
 Status:
 
@@ -94,7 +116,30 @@ What blocks it:
 - human curation
 - money / contact / MTA constraints
 
-### 4. Path B escalation contract
+### 5. PyPI landing-page cleanup / release hygiene
+
+Status:
+
+- still valuable
+- no longer top-ranked by itself
+
+Why:
+
+- the public package already advanced again
+- but the public landing page still trails the better short-form package story
+
+Concrete value:
+
+- cleaner first-contact surface for new users
+- less mismatch between public packaging and current project maturity
+
+What counts as progress:
+
+1. merge the shorter PyPI-facing README path cleanly
+2. keep public metadata aligned with current command surface
+3. verify release packaging before each push
+
+### 6. Path B escalation contract
 
 Status:
 
@@ -118,7 +163,7 @@ What the contract must freeze:
 3. full metric surface
 4. explicit stop condition
 
-### 5. New-frontier intake
+### 7. New-frontier intake
 
 Status:
 
@@ -141,7 +186,7 @@ Only promote a new branch if all are true:
 3. time-to-first-packet is bounded
 4. the branch changes a real portfolio decision now
 
-### 6. Re-scoped fungal interpretation branch
+### 8. Re-scoped fungal interpretation branch
 
 Status:
 
@@ -164,19 +209,21 @@ Required before reopening:
 
 ## Recommended order
 
-1. recover workhorse-side source-control convergence
-2. keep default Path B closed unless an explicit escalation contract is written
-3. schedule decoder prospective accrual later, not immediately
-4. prepare for an externally gated gold-set / label path if access becomes available
-5. otherwise select a genuinely new frontier with a bounded first packet
+1. keep pushing the live PGx branch where value is already compounding
+2. bank J2 as a reusable learned-protein harness, not a one-off curiosity
+3. keep PyPI/public-package cleanup moving, but as a secondary lane
+4. schedule decoder prospective accrual later, not immediately
+5. prepare for an externally gated gold-set / label path if access becomes available
+6. otherwise select a genuinely new frontier with a bounded first packet
 
 ## What is not worth doing now
 
 - more default FT16 support runs
+- blind J2 reruns after the pass packet
 - reopening `NF-001` under the old binary objective
 - immediate prospective validation on a tiny post-freeze pool
-- pretending the workhorse side is converged because local `.git` exists
+- pretending convergence is still the main bottleneck
 
 ## Short readout
 
-The project is no longer bottlenecked on easy local experiments. The best remaining value is operational convergence first, then either a deliberate Path B escalation, a stronger external validation path, or a genuinely new frontier with a cleaner signal surface.
+The project is no longer bottlenecked on convergence recovery or easy local experiments. The strongest live lane is PGx on `origin/main`; the strongest newly banked science proof is J2; and the remaining question is where those two facts change the next unit of work most.
