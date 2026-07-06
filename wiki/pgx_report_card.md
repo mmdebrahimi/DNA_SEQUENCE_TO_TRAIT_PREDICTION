@@ -6,11 +6,11 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 |---|---|---|---|---|---|---|
 | CYP2C19 | metabolizer phenotype (PM/IM/NM/RM/UM) | 72/72 (1.0) | 6/6 | A2/D0/F1 | 602/602 | non-core *4/*35 withheld (sentinel v0.1) |
 | CYP2C9 | metabolizer phenotype (activity-score) | 73/73 (1.0) | — | A1/D1/F0 | 602/602 | non-core *5/*8/*9/*11 withheld (sentinel v0.1); *6-indel/*61 residual |
-| CYP2C8 | star-allele diplotype (*2/*3/*4) — CALLING only (no CPIC phenotype) | 82/82 (1.0) | — | — | — | rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design |
-| CYP3A5 | expressor/non-expressor phenotype (tacrolimus) | 8/8 (1.0) | — | — | — | UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1 |
-| TPMT | thiopurine phenotype (COMPOUND *3A=*3B+*3C) | 85/85 (1.0) | — | — | — | rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0) |
-| CYP2B6 | efavirenz phenotype (*6-proxy, 516G>T) | 62/62 (1.0) | — | — | — | single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset) |
-| CYP2D6 | metabolizer phenotype (activity-score) — SNP surface only | 46/47 (0.9787) | — | — | — | STRUCTURAL alleles NOT VCF-decodable -> may be SILENTLY mis-called (BAM/Cyrius-class required); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0) |
+| CYP2C8 | star-allele diplotype (*2/*3/*4) — CALLING only (no CPIC phenotype) | 82/82 (1.0) | — | — | 602/602 | rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design |
+| CYP3A5 | expressor/non-expressor phenotype (tacrolimus) | 8/8 (1.0) | — | — | 602/602 | UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1 |
+| TPMT | thiopurine phenotype (COMPOUND *3A=*3B+*3C) | 85/85 (1.0) | — | — | 602/602 | rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0) |
+| CYP2B6 | efavirenz phenotype (*6-proxy, 516G>T) | 62/62 (1.0) | — | — | 602/602 | single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset) |
+| CYP2D6 | metabolizer phenotype (activity-score) — SNP surface only | 46/47 (0.9787) | — | — | 592/602 | STRUCTURAL alleles NOT VCF-decodable -> may be SILENTLY mis-called (BAM/Cyrius-class required); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0) |
 | VKORC1 | warfarin sensitivity (rs9923231) | — | — | A1/D0/F0 | — | — |
 | SLCO1B1 | statin myopathy (rs4149056 / *5 521T>C) | — | — | — | — | single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants |
 

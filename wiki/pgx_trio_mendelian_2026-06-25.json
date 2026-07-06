@@ -3,7 +3,8 @@
   "analysis_date": "2026-07-06",
   "cohort": "1000 Genomes 30x panel trios (20130606_g1k_3202_samples ped)",
   "n_trios_total": 603,
-  "honesty": "Validates CALLING consistency (Mendelian inheritance), NOT phenotype. A VIOLATION definitively flags a calling error; consistency is necessary-not-sufficient. Independent axis from the GeT-RM panel.",
+  "scope": "Every STAR-ALLELE PGx gene (CYP2C19/CYP2C9/CYP2C8/CYP3A5/CYP2B6/TPMT/CYP2D6). VKORC1 + SLCO1B1 are single-SNP genotype readouts with no diplotype-assembly step -> a trio check is tautological (the phased panel is already Mendelian-clean at a single biallelic SNP) -> out of scope.",
+  "honesty": "Validates CALLING consistency (Mendelian inheritance), NOT phenotype. A VIOLATION definitively flags a calling error; consistency is necessary-not-sufficient. Independent axis from the GeT-RM panel. For CYP2D6 the ~1.7% violation rate is the STRUCTURAL-confound signature (all violations are homozygous-child calls \u2014 a CNV/hybrid the SNP surface can't see), corroborating the GeT-RM 46/47 residual, NOT a SNP-logic bug.",
   "genes": {
     "CYP2C19": {
       "status": "ok",
@@ -12,6 +13,7 @@
       "consistent": 602,
       "violation": 0,
       "uncallable": 0,
+      "hom_child_violations": 0,
       "mendelian_consistency": 1.0,
       "violations_sample": []
     },
@@ -22,8 +24,126 @@
       "consistent": 602,
       "violation": 0,
       "uncallable": 0,
+      "hom_child_violations": 0,
       "mendelian_consistency": 1.0,
       "violations_sample": []
+    },
+    "CYP2C8": {
+      "status": "ok",
+      "n_trios_in_vcf": 602,
+      "n_callable": 602,
+      "consistent": 602,
+      "violation": 0,
+      "uncallable": 0,
+      "hom_child_violations": 0,
+      "mendelian_consistency": 1.0,
+      "violations_sample": []
+    },
+    "CYP3A5": {
+      "status": "ok",
+      "n_trios_in_vcf": 602,
+      "n_callable": 602,
+      "consistent": 602,
+      "violation": 0,
+      "uncallable": 0,
+      "hom_child_violations": 0,
+      "mendelian_consistency": 1.0,
+      "violations_sample": []
+    },
+    "CYP2B6": {
+      "status": "ok",
+      "n_trios_in_vcf": 602,
+      "n_callable": 602,
+      "consistent": 602,
+      "violation": 0,
+      "uncallable": 0,
+      "hom_child_violations": 0,
+      "mendelian_consistency": 1.0,
+      "violations_sample": []
+    },
+    "TPMT": {
+      "status": "ok",
+      "n_trios_in_vcf": 602,
+      "n_callable": 602,
+      "consistent": 602,
+      "violation": 0,
+      "uncallable": 0,
+      "hom_child_violations": 0,
+      "mendelian_consistency": 1.0,
+      "violations_sample": []
+    },
+    "CYP2D6": {
+      "status": "ok",
+      "n_trios_in_vcf": 602,
+      "n_callable": 602,
+      "consistent": 592,
+      "violation": 10,
+      "uncallable": 0,
+      "hom_child_violations": 10,
+      "mendelian_consistency": 0.9834,
+      "violations_sample": [
+        {
+          "child": "HG00615",
+          "c": "*10/*10",
+          "f": "*2/*2",
+          "m": "*10/*10"
+        },
+        {
+          "child": "HG00694",
+          "c": "*10/*10",
+          "f": "*10/*10",
+          "m": "*1/*35"
+        },
+        {
+          "child": "HG02575",
+          "c": "*1/*1",
+          "f": "*1/*1",
+          "m": "*17/*17"
+        },
+        {
+          "child": "HG02880",
+          "c": "*1/*1",
+          "f": "*10/*10",
+          "m": "*1/*2"
+        },
+        {
+          "child": "HG03251",
+          "c": "*1/*1",
+          "f": "*4/*4",
+          "m": "*1/*29"
+        },
+        {
+          "child": "HG03584",
+          "c": "*17/*17",
+          "f": "*29/*29",
+          "m": "*4/*17"
+        },
+        {
+          "child": "NA10831",
+          "c": "*4/*4",
+          "f": "*1/*1",
+          "m": "*4/*4"
+        },
+        {
+          "child": "NA10856",
+          "c": "*1/*1",
+          "f": "*4/*4",
+          "m": "*1/*1"
+        },
+        {
+          "child": "NA12336",
+          "c": "*41/*41",
+          "f": "*4/*41",
+          "m": "*1/*1"
+        },
+        {
+          "child": "NA18863",
+          "c": "*1/*1",
+          "f": "*1/*1",
+          "m": "*29/*29"
+        }
+      ],
+      "structural_confound_note": "all 10 violations are homozygous-child calls -> the structural-confound signature (CNV/hybrid makes a het locus read homozygous at the SNP level); NOT a SNP-logic bug. This is the cnv_hybrid_unassessed blind spot independently quantified by the trio axis."
     }
   }
 }

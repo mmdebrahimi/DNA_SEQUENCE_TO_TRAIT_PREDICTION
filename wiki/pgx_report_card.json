@@ -32,7 +32,7 @@
       "getrm_pct": 1.0,
       "pharmcat": null,
       "functional_evidence": "\u2014",
-      "trio_mendelian": "\u2014",
+      "trio_mendelian": "602/602",
       "tier": "GeT-RM consensus (independent of consensus tools); CALLING validated 82/82. NO CPIC metabolizer phenotype \u2014 CYP2C8 function is substrate-dependent, so this is a CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP).",
       "residual": "rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design"
     },
@@ -43,7 +43,7 @@
       "getrm_pct": 1.0,
       "pharmcat": null,
       "functional_evidence": "\u2014",
-      "trio_mendelian": "\u2014",
+      "trio_mendelian": "602/602",
       "tier": "REAL GeT-RM CDC multi-lab consensus (independent of the labs); 8/8 core-diplotype incl. *1/*3/*6/*7 (the *7 insertion + *6/*7 non-expressor cases). UNDERPOWERED (n=8). Phenotype faithful-to-CPIC (expressor/non-expressor). First gene outside the CYP2C cluster.",
       "residual": "UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1"
     },
@@ -54,7 +54,7 @@
       "getrm_pct": 1.0,
       "pharmcat": null,
       "functional_evidence": "\u2014",
-      "trio_mendelian": "\u2014",
+      "trio_mendelian": "602/602",
       "tier": "REAL GeT-RM CDC consolidated consensus; 85/85 core-comparable. FIRST compound-allele cell \u2014 *3A resolved from two SNPs in cis (*3B+*3C), each alone = *3B/*3C. Phenotype faithful-to-CPIC (thiopurine).",
       "residual": "rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0)"
     },
@@ -65,7 +65,7 @@
       "getrm_pct": 1.0,
       "pharmcat": null,
       "functional_evidence": "\u2014",
-      "trio_mendelian": "\u2014",
+      "trio_mendelian": "602/602",
       "tier": "REAL GeT-RM CDC consolidated consensus; 62/62 on clean *1/*6. SINGLE-SNP *6-proxy (516G>T) \u2014 rs2279343 (785A>G) is absent from the 1000G 30x panel so *6 can't be split from *9. Phenotype faithful-to-CPIC.",
       "residual": "single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset)"
     },
@@ -76,7 +76,7 @@
       "getrm_pct": 0.9787,
       "pharmcat": null,
       "functional_evidence": "\u2014",
-      "trio_mendelian": "\u2014",
+      "trio_mendelian": "592/602",
       "tier": "The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); 46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). SNP surface ONLY \u2014 structural alleles (*5 deletion / *xN dup / *13/*36/*68 hybrids; ~28/87) are BAM-required and EXCLUDED (cnv_hybrid_unassessed), NOT withheld. Phenotype faithful-to-CPIC (activity-score).",
       "residual": "STRUCTURAL alleles NOT VCF-decodable -> may be SILENTLY mis-called (BAM/Cyrius-class required); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"
     },

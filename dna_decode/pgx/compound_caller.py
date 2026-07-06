@@ -53,11 +53,16 @@ def assemble_compound_diplotype(
     phenotype_fn,
     gene: str,
     sample: str | None = None,
+    calls: dict | None = None,
 ) -> DiplotypeResult:
     """Resolve a compound-allele diplotype from a VCF. `components[i].star` is the component tag used in
     the `rules`; `rules` map component-tag SETS -> star labels. Returns the same DiplotypeResult shape as
-    the core caller so the runner/report wiring is uniform."""
-    calls = scan_vcf(vcf, defining=components, sample=sample)
+    the core caller so the runner/report wiring is uniform.
+
+    `calls` (optional): a pre-scanned {tag: VariantCall} dict (e.g. from a one-pass in-memory panel read in
+    the trio harness) — when provided, `vcf`/`sample` are not read (avoids the per-sample re-read footgun)."""
+    if calls is None:
+        calls = scan_vcf(vcf, defining=components, sample=sample)
     present_calls = [c for c in calls.values() if c.found]
     flags: list[str] = []
     if not present_calls:
