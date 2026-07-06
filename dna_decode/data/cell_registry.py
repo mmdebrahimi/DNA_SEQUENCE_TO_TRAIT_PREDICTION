@@ -51,7 +51,7 @@ HIV_UNDERPOWERED_N = 50  # report-card n below this -> measured-but-UNDERPOWERED
 
 
 # Tracks (v0.1). amr/viral both route through `dna-amr`; route ≠ track (brainstorm C2 split).
-TRACKS = ("amr", "viral", "pgx", "typing", "finder")
+TRACKS = ("amr", "viral", "pgx", "mendelian", "typing", "finder")
 
 
 @dataclass(frozen=True)
@@ -260,6 +260,21 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 ]
 
 
+# --- Mendelian (germline pathogenicity) cell (route dna-clinvar). Curated ClinVar catalog decoder. ---
+_MENDELIAN_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="mendelian:human:germline_pathogenicity", track="mendelian", route="dna-clinvar",
+        organism="human", target="germline_pathogenicity",
+        claim="curated ClinVar germline pathogenicity (P/LP + B/LB) over the ACMG SF v3.2 + carrier 86-gene panel, from a VCF",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL, claim_status="curated_clinvar_catalog_faithful_to_tool",
+        validation_slice="deterministic ClinVar-catalog lookup; deployment demonstration on real PGP-UK individuals (N=5; 0 reportable pathogenic = expected ACMG-SF base rate, benign carrier load surfaced); faithful-to-ClinVar, no independent truth beyond the curated DB",
+        label_provenance="ClinVar curated germline classifications (NCBI); P/LP + B/LB only; ACMG SF v3.2 (81) + 5 carrier genes",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="VUS/conflicting excluded (deployable-claim tier only); bounded 86-gene panel -> out-of-panel = INDETERMINATE (absence != benign)"),
+]
+
+
 def _typing_finder_contracts() -> list[CellContract]:
     from dna_decode.data.cell_registry_vocab import to_vocab
     out: list[CellContract] = []
@@ -278,7 +293,8 @@ def _typing_finder_contracts() -> list[CellContract]:
 
 def cells() -> list[CellContract]:
     """Every v0.1 cell contract (AMR projection + viral + PGx + typing/finder)."""
-    return _amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _typing_finder_contracts()
+    return (_amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS)
+            + list(_MENDELIAN_CONTRACTS) + _typing_finder_contracts())
 
 
 def by_cell_id() -> dict[str, CellContract]:
@@ -291,6 +307,10 @@ def amr_cells() -> list[CellContract]:
 
 def pgx_cells() -> list[CellContract]:
     return [c for c in cells() if c.track == "pgx"]
+
+
+def mendelian_cells() -> list[CellContract]:
+    return [c for c in cells() if c.track == "mendelian"]
 
 
 def amr_projection_keys() -> set[tuple[str, str]]:
@@ -329,6 +349,7 @@ def cli_routable_manifest() -> dict[str, set[str]]:
     return {
         "dna-amr": {d.lower() for d in amr_drugs},
         "dna-pgx": set(PGX_GENES),
+        "dna-clinvar": {"germline_pathogenicity"},  # the Mendelian (ClinVar) single-decoder route
         "traits": set(TRAITS) - {"amr", "pgx"},  # the typing/finder whole-tool traits
     }
 

@@ -57,6 +57,15 @@ def test_every_pgx_gene_has_exactly_one_contract():
     assert len(pgx_targets) == len(set(pgx_targets))
 
 
+def test_every_mendelian_target_has_a_contract():
+    """COVERAGE: the dna-clinvar (Mendelian) route has exactly one contract per target -> a shipped
+    Mendelian decoder cannot ship invisibly to the trust surface."""
+    from dna_decode.data.cell_registry import cli_routable_manifest, mendelian_cells
+    targets = [c.target for c in mendelian_cells()]
+    assert set(targets) == cli_routable_manifest()["dna-clinvar"]
+    assert len(targets) == len(set(targets))
+
+
 def test_every_typing_finder_trait_has_exactly_one_contract():
     """COVERAGE: every dna_decode.cli TRAIT except amr/pgx is a typing/finder whole-tool cell."""
     traits = cli_routable_manifest()["traits"]
