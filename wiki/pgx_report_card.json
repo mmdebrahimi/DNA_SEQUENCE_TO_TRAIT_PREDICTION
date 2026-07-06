@@ -1,6 +1,6 @@
 {
   "schema": "pgx-report-card-v0",
-  "analysis_date": "2026-07-05",
+  "analysis_date": "2026-07-06",
   "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
   "cells": [
     {
@@ -70,6 +70,17 @@
       "residual": "single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset)"
     },
     {
+      "gene": "CYP2D6",
+      "trait": "metabolizer phenotype (activity-score) \u2014 SNP surface only",
+      "getrm": "46/47",
+      "getrm_pct": 0.9787,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); 46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). SNP surface ONLY \u2014 structural alleles (*5 deletion / *xN dup / *13/*36/*68 hybrids; ~28/87) are BAM-required and EXCLUDED (cnv_hybrid_unassessed), NOT withheld. Phenotype faithful-to-CPIC (activity-score).",
+      "residual": "STRUCTURAL alleles NOT VCF-decodable -> may be SILENTLY mis-called (BAM/Cyrius-class required); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"
+    },
+    {
       "gene": "VKORC1",
       "trait": "warfarin sensitivity (rs9923231)",
       "getrm": null,
@@ -99,6 +110,7 @@
     "getrm_cyp3a5": true,
     "getrm_tpmt": true,
     "getrm_cyp2b6": true,
+    "getrm_cyp2d6": true,
     "pharmcat_cyp2c19": true,
     "functional_evidence": true,
     "trio_mendelian": true

@@ -226,6 +226,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
         demotion_rule="single-SNP *6-proxy: rs2279343 (785A>G) absent from the 1000G 30x panel so *6 can't be split from *9; a callset with 785 upgrades to the compound resolver (v0.1)"),
     CellContract(
+        cell_id="pgx:human:cyp2d6", track="pgx", route="dna-pgx", organism="human", target="cyp2d6",
+        claim="CYP2D6 SNP-surface star-allele diplotype (core {*2,*3,*4,*6,*9,*10,*17,*29,*35,*41}) + CPIC activity-score phenotype from a phased VCF — structural alleles UNASSESSED",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="snp_surface_calling_validated_structural_unassessed_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC/ursaPGx consensus (CYP2D6_getrm_cons) core-comparable SNP-diplotype concordance on the SNP-decodable 1000G-overlap subset; structural alleles (*5/*13/*36/*68/*xN; ~28/87) BAM-required and EXCLUDED (cnv_hybrid_unassessed)",
+        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2D6_getrm_cons join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="SNP surface only: CYP2D6 structural alleles are NOT withheld and may be SILENTLY mis-called (needs a BAM/CRAM + Cyrius-class caller); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel layer v0)"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",

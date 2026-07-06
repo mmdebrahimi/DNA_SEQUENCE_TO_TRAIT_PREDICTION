@@ -12,4 +12,4 @@ surfaces are untouched (this is a new, non-frozen package).
 # Single source of truth for the CLI-routable PGx genes — drives the dna-pgx --gene choices, the
 # Evidence-Contract Registry manifest, and the coverage test (so adding a gene can't pass coverage
 # vacuously). M1 fix, 2026-06-26.
-PGX_GENES: tuple[str, ...] = ("cyp2c19", "cyp2c9", "cyp2c8", "cyp3a5", "tpmt", "cyp2b6", "vkorc1", "slco1b1")
+PGX_GENES: tuple[str, ...] = ("cyp2c19", "cyp2c9", "cyp2c8", "cyp3a5", "tpmt", "cyp2b6", "cyp2d6", "vkorc1", "slco1b1")

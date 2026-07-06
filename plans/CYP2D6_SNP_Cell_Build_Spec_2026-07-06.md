@@ -1,91 +1,78 @@
-# CYP2D6 SNP-defined star-allele cell — build spec (the last major pharmacogene, 2026-07-06)
+# CYP2D6 SNP-defined star-allele cell — build spec + as-built record (2026-07-06)
 
-**Status: PLAN — awaiting user ratification before execution (Planning-STOP).** Decompose + `--plan` produced;
-no build code written yet.
+**Status: AS-BUILT / EXECUTED 2026-07-06.** Shipped as the 9th `dna-pgx` gene. The pre-execution `/brainstorm`
+(2 Codex rounds) is folded in below; the plan was rewritten from the pre-brainstorm draft (which said
+"56-sample", "structural WITHHELD", "F2 sentinel") to the honest as-built spec before execution.
 
-## R2 pre-bar framing check — the load-bearing decision (derive, don't assert)
+## R2 pre-bar framing check — the load-bearing decision (derived, not asserted)
 
-The user asked for a "CYP2D6 structural caller." **That bar is INFEASIBLE from a VCF and is the wrong bar.**
-Measured from the real data this session:
-- CYP2D6 GeT-RM truth (local `star-allele-comparison_common.tsv`, `CYP2D6_getrm_cons`): **87 samples.**
-- **56/87 are SNP-only-truth (VCF-decodable).** **31/87 are STRUCTURAL** — gene deletions (`*5`), duplications
-  (`*36x2`, `xN`), and CYP2D6-CYP2D7 hybrids (`*13`, `*36`, `*68`). Structural detection needs **read-depth /
-  breakpoint analysis on a BAM/CRAM** (the Cyrius/Aldy/StellarPGx approach) — it is NOT recoverable from the
-  1000G/PGP-UK phased VCFs (no coverage track).
-- The 56 SNP-only samples are **well-powered** (comparable to CYP2C8 82 / TPMT 85 / CYP3A5 8) and dominated
-  by clinically-central alleles: **\*4 (19), \*2 (19), \*17 (6), \*41 (5), \*29 (5), \*35 (4), \*3 (3)**, +
-  \*6, \*9, \*10, \*21, \*40, \*14, \*15, \*45, \*46.
+The user asked for a "CYP2D6 structural caller." **That bar is INFEASIBLE from a phased VCF and is the wrong
+bar** — structural detection (gene deletions *5, duplications *xN, CYP2D6-CYP2D7 hybrids *13/*36/*68) needs
+read-depth / breakpoint analysis on a BAM/CRAM (the Cyrius/Aldy/StellarPGx approach). Measured from the real
+GeT-RM data (`CYP2D6_getrm_cons`, 87 samples):
 
-**Reframed bar (feasible + validatable + honest):** a **CYP2D6 SNP-defined star-allele cell**, validated on the
-**56-sample SNP-only GeT-RM subset**, with the **31 structural samples as a documented, WITHHELD (not
-mis-called) BAM-required blind spot** — exactly the "core-comparable + non-core residual" pattern the CYP2C
-cells already use, plus a structural-withhold sentinel. This is the reachable form of "the last major
-pharmacogene," not a Cyrius reimplementation.
+- **~28/87 are STRUCTURAL** (gene deletion / duplication / hybrid) — NOT VCF-decodable.
+- **The SNP-decodable subset is well-powered** and dominated by clinically-central alleles: *4 (19), *2 (19),
+  *17 (6), *29 (5), *41 (5), *35 (3), *3 (4), *10 (2), plus *6/*9.
 
-## Decompose — families + flow-down + critical path
+**Reframed bar (feasible + validatable + honest, ratified in execute-mode draft-then-ratify):** a **CYP2D6
+SNP-defined star-allele cell** validated on the SNP-decodable GeT-RM subset. **Adjusted verdict thresholds**
+(from the pre-brainstorm ≥0.90/0.75/… to account for the honest smaller denominator + multi-SNP complexity):
+**≥0.85 CLEAN / 0.70–0.85 NOISY / <0.70 FAIL** on core-comparable SNP-diplotype concordance.
 
-Terminal: **CYP2D6 is a registered, GeT-RM-validated PGx cell (SNP surface) with an honest structural blind
-spot**, on the same trust surface as the other 8 PGx genes.
+## Honest-denominator fixes (from the pre-exec /brainstorm — all baked in)
 
-- **F1 — Catalog** (`dna_decode/pgx/cyp2d6_catalog.py`): verified GRCh38 (chr22, ~42.12–42.13 Mb) defining
-  variants for the SNP-defined core {*2,*3,*4,*6,*9,*10,*17,*29,*35,*41}; CPIC activity-value → phenotype
-  (CYP2D6 uses the activity-score model like CYP2C9). Multi-SNP alleles (e.g. *2 = 2851C>T + 4181G>C; *17,
-  *41) → reuse `compound_caller`. **DEP: none.**
-- **F2 — Structural withhold sentinel**: a sentinel layer that WITHHOLDS the phenotype when the VCF evidence
-  is consistent with a structural allele the SNP proxy can't resolve (mirrors the CYP2C19 *4/*35 sentinel).
-  v0-honest fallback: score core-comparable only on SNP-only truth; structural truth = non-core residual.
-  **DEP: F1.**
-- **F3 — Wiring**: `runner.call_cyp2d6` + `PGX_GENES` + `dna-pgx --gene cyp2d6` dispatch + registry
-  `CellContract` + `cli_routable_manifest`. **DEP: F1.**
-- **F4 — Validation**: fetch chr22 CYP2D6 region (existing `scripts/fetch_1000g_region.py`) + a `cyp2d6`
-  config in `scripts/pgx_getrm_concordance.py` → real core-comparable concordance on the 56-sample subset.
-  **DEP: F1, F3, data.**
-- **F5 — Report card + docs**: add CYP2D6 to `pgx_report_card` + regenerate the certification capstone (→ 74
-  cells) + README note. **DEP: F4.**
+1. **Tiered denominators, never one inflated number.** Real measured split (87 total): **47 core-SNP (scored)
+   / 7 non-core SNP (residual) / 31 structural (EXCLUDED) / 2 ambiguous (EXCLUDED)**. The pre-brainstorm "56"
+   was wrong (it counted non-core + let `(*68)+*4` hybrids leak). The report emits all four tiers.
+2. **Structural = EXCLUDED, NOT "withheld".** A SNP VCF cannot even SEE a structural allele, so it cannot
+   withhold it — a structurally-confounded sample may be SILENTLY MIS-CALLED. Every record carries
+   `cnv_hybrid_unassessed=true`; the concordance excludes structural truth from the scored denominator. Never
+   claim "withheld" for CYP2D6 structure.
+3. **Normalizer keeps raw + normalized + an ambiguous-excluded bucket** (`_classify_cyp2d6_truth`). A
+   parenthetical alternative (`*2 (*35)`) is genuinely ambiguous truth → EXCLUDED, never collapsed into a
+   match/miss. `raw_truth` + `normalized_truth` both retained per row.
+4. **Priority-ordered resolver, NOT the subset-largest compound caller.** CYP2D6 alleles share a SNP
+   background (*2's 2851/486 rides on *4/*17/*29/*35/*41; *4 carries *10's 100C>T). The subset-tolerance the
+   brainstorm flagged is sidestepped by DESIGN: `cyp2d6_caller._haplotype_star_priority` picks the
+   most-specific defining SNP (1846 *4 before 100 *10; every allele-specific SNP before the 2851 *2
+   background). A `multi_specific_haplotype` flag surfaces the (anomalous) >=2-specific-SNP case.
 
-**Critical path:** F1 → F3 → F4 → F5 (F2 parallel to F3; F2's full sentinel can be a v0.1 follow-on).
+## As-built artifacts
 
-## Acceptance bar (DRAFT — ratify before execution)
+- `dna_decode/pgx/cyp2d6_catalog.py` — 11 components (NCBI-verified GRCh38 + AF-confirmed on 1000G; indels
+  in the exact 1000G left-anchored form), `STAR_PRIORITY`, CPIC activity-score phenotype (Caudle 2020).
+- `dna_decode/pgx/cyp2d6_caller.py` — priority-ordered per-haplotype resolver + phased/unphased assembly.
+- `dna_decode/pgx/runner.py::call_cyp2d6` — provenance record + `cnv_hybrid_unassessed=true`.
+- `dna_decode/pgx/cli.py` — `dna-pgx --gene cyp2d6` dispatch + structural note + gene→chrom display fix.
+- `dna_decode/pgx/__init__.py` — `PGX_GENES += cyp2d6` (9 genes).
+- `scripts/pgx_getrm_concordance.py::_run_cyp2d6` — isolated tiered-honest concordance path.
+- `dna_decode/data/cell_registry.py` — CYP2D6 CellContract (NEAR_INDEPENDENT / SCORED).
+- `tests/test_pgx_cyp2d6.py` — 28 tests (coords, activity-score, the load-bearing priority-resolution cases,
+  runner `cnv_hybrid_unassessed`, CLI, tiered classifier).
+- `wiki/pgx_getrm_concordance_cyp2d6_2026-07-06.{md,json}` — the result packet.
+- Report card + certification capstone regenerated.
 
-MVP `--until-mvp` criteria (all checkable):
-1. `dna_decode/pgx/cyp2d6_catalog.py` — every defining coord VERIFIED via Ensembl REST + empirically
-   AF-confirmed on 1000G (the *4/*10 orientation-flip guard); unit tests green (`test-exit-0 pytest`).
-2. CYP2D6 scored vs `CYP2D6_getrm_cons` on the SNP-only subset → a committed
-   `wiki/pgx_getrm_concordance_cyp2d6_*.{md,json}` (`file-exists`).
-3. Full pgx + registry suite green incl. a CYP2D6 coverage-in-`PGX_GENES` test (`test-exit-0 pytest`).
-4. Frozen bacterial/viral/fungal/TB AMR surface byte-unchanged (`test-exit-0` leak guard).
+## Result (2026-07-06) — CLEAN PASS
 
-## Verdict-time pre-commitments (before results land — per project pattern)
+**Core-SNP diplotype concordance: 46/47 (0.979)** vs the GeT-RM consensus on the SNP-decodable subset
+(independent of the Astrolabe/Stargazer/Aldy consensus tools). Phenotype concordance 46/47. The **single
+miss (NA12156, truth `*1/*4` → predicted `*4/*4`) is a DIAGNOSED structural confound** — the *4 defining SNP
+is `1|1` (homozygous) in the phased VCF while the read-depth consensus resolves `*1/*4`, i.e. a hidden CNV/
+hybrid the SNP surface cannot see. It VALIDATES the `cnv_hybrid_unassessed` honesty claim rather than
+contradicting the caller. Non-core SNP residuals (*14/*15/*21/*40/*46 → their background *2/*17) and the 2
+ambiguous samples are surfaced separately, never scored as matches.
 
-Core-comparable concordance on the 56-sample SNP-only subset:
-- **≥0.90 → CLEAN PASS** (ships as NEAR_INDEPENDENT, like CYP2C8/3A5/TPMT).
-- **0.75–0.90 → NOISY PASS** — inspect the mis-calls; likely a missing multi-SNP allele definition (e.g. *2
-  needs both SNPs) → add the component, re-score. Ships with the residual documented.
-- **<0.75 → FAIL / re-scope** — probable structural-truth leakage into the "SNP-only" filter (a `+`/`x`/`*5`
-  the regex missed) OR a strand/orientation error. Diagnose before shipping; do NOT ship a low number.
+## Honesty rails (carried from the PGx cells)
 
-## Engine reuse (minimal new code — mirror CYP2C8/TPMT)
+- CALLING validatable vs GeT-RM (SNP surface); PHENOTYPE faithful-to-CPIC (activity-score). NOT a clinical tool.
+- Structural blind spot is load-bearing: *5/*13/*36/*68/*xN are NOT VCF-decodable → EXCLUDED +
+  `cnv_hybrid_unassessed`, may be silently mis-called; never imply full CYP2D6 typing.
+- Frozen bacterial/viral/fungal/TB AMR surface byte-unchanged (non-frozen pgx package; leak guard green).
 
-Catalog dataclasses + `call_diplotype`/`assemble_compound_diplotype` + `pgx_getrm_concordance.py` GENES-config
-+ `fetch_1000g_region.py` + the registry `_PGX_CONTRACTS` pattern are ALL reused. New code ≈ one catalog +
-one runner fn + one concordance config + tests. No new machinery.
+## v0.1 follow-ons (deferred, named)
 
-## Honesty rails (carry from the PGx cells)
-
-- **Structural blind spot is load-bearing**: *5/*13/*36/*68/xN are NOT VCF-decodable → WITHHELD, never
-  mis-called; the concordance is explicitly "SNP-surface only, 56/87 GeT-RM samples; structural = BAM-required
-  (Cyrius-class), out of scope." Never imply full CYP2D6 typing.
-- CALLING validatable vs GeT-RM consensus; PHENOTYPE faithful-to-CPIC (activity-score). NOT a clinical tool.
-- Frozen AMR surface untouched (non-frozen pgx package).
-
-## Provenance
-GeT-RM subset counts (56 SNP-only / 31 structural) + the SNP-only star distribution measured 2026-07-06 from
-`tests/data/pgx_getrm/star-allele-comparison_common.tsv`. Coords to be Ensembl-verified at F1 (rs3892097 *4,
-rs1065852 *10, rs35742686 *3, rs5030655 *6, rs28371706 *17, rs28371725 *41, rs16947 *2, …). Est. ~18–25
-executable steps (a CYP2C8-class build).
-
-## Alternative considered (the "different organism/trait" fork)
-A new organism/trait (e.g. a 2nd Gram-positive AMR drug, or a new human trait) was the other user-offered
-option. CYP2D6-SNP is recommended over it: highest-value remaining pharmacogene, GeT-RM-validatable NOW on a
-well-powered subset, ~100% machinery reuse (near-zero new infra risk). A new organism/trait carries dataset +
-substrate unknowns (the label wall) that CYP2D6-SNP does not.
+- A BAM/CRAM structural surface (Cyrius-class copy-number + hybrid breakpoint) to lift the 31 excluded +
+  resolve confounds like NA12156 — the genuine "structural caller" the SNP surface cannot be.
+- A sentinel layer for the common non-core SNP alleles (*14/*15/*21/*40/*46) to WITHHOLD rather than
+  mis-call (mirrors the CYP2C19 → CYP2C9 sentinel arc).

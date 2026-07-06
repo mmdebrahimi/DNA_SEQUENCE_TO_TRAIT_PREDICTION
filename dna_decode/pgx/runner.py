@@ -368,3 +368,74 @@ def call_cyp2b6(vcf: str | Path, sample_id: str | None = None,
     if res.reason:
         rec["reason"] = res.reason
     return rec
+
+
+def call_cyp2d6(vcf: str | Path, sample_id: str | None = None,
+                sample_column: str | None = None) -> dict:
+    """Run the CYP2D6 caller (the last major pharmacogene; activity-score phenotype) on a VCF.
+
+    SNP-surface caller with PRIORITY-ORDERED per-haplotype star resolution (shared-background-aware).
+    Structural alleles (*5 deletion / *xN dup / *13/*36/*68 hybrids) are NOT VCF-decodable -> they are
+    NOT withheld (the proxy can't see them) and may be SILENTLY MIS-CALLED. Every CYP2D6 record carries
+    `cnv_hybrid_unassessed=true`. Validated on the SNP-only GeT-RM subset (structural samples excluded)."""
+    from dna_decode.pgx import cyp2d6_catalog as c2d6
+    from dna_decode.pgx.cyp2d6_caller import assemble_cyp2d6_diplotype
+    res = assemble_cyp2d6_diplotype(vcf, c2d6.COMPONENTS, c2d6.STAR_PRIORITY,
+                                    reference_allele=c2d6.REFERENCE_ALLELE,
+                                    phenotype_fn=c2d6.diplotype_phenotype, gene=c2d6.GENE, sample=sample_column)
+    sid = sample_id or sample_column or Path(vcf).stem
+    a_s = c2d6.activity_score(res.allele1, res.allele2) if res.allele1 else None
+    rec = {
+        "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": c2d6.GENE,
+        "organism": "Homo sapiens", "assembly": c2d6.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "activity_score": a_s,
+        "phenotype": res.phenotype,
+        "phenotype_abbrev": c2d6.PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        # LOAD-BEARING HONESTY: a SNP VCF cannot see CYP2D6 structural alleles (*5/*13/*36/*68/*xN). This is
+        # NOT a withhold (the proxy can't detect them) -> the call may be a SILENT structural mis-call.
+        "cnv_hybrid_unassessed": True,
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-cyp2d6-v0",
+            "method": ("vcf_snp_priority_resolver -> star_allele -> diplotype -> CPIC_activity_score -> "
+                       "phenotype (SNP surface only; structural alleles unassessed)"),
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "GeT-RM consensus (CYP2D6_getrm_cons): core-comparable diplotype concordance reported in "
+                "wiki/pgx_getrm_concordance_cyp2d6_* on the SNP-decodable subset (caller independent of the "
+                "consensus tools). Structural alleles (*5/*13/*36/*68/*xN; ~28/87 GeT-RM samples) are "
+                "BAM-required (Cyrius-class) and EXCLUDED from the scored denominator; non-core SNP alleles "
+                "(*14/*15/*21/*40/*46) mis-called (no sentinel layer v0)."),
+            "phenotype_is_faithful_to_cpic": True, "is_core_marker_proxy": True,
+            "is_priority_resolver": True, "cnv_hybrid_unassessed": True,
+            "reference_tool": "PharmCAT (SNP calling); Cyrius/Aldy/StellarPGx for the structural surface",
+        },
+        "catalog": {
+            "gene": c2d6.GENE, "core_alleles": ["*1"] + [s for s, _ in c2d6.STAR_PRIORITY],
+            "activity_values": c2d6.ACTIVITY_VALUE,
+            "star_priority": [{"star": s, "tag": t} for s, t in c2d6.STAR_PRIORITY],
+            "defining_variants": [
+                {"tag": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in c2d6.COMPONENTS],
+            "source": ("CYP2D6 SNP-defined core; GRCh38 coords VERIFIED via NCBI variation service + "
+                       "AF-confirmed on 1000G; CPIC CYP2D6 genotype-to-phenotype consensus (Caudle 2020)"),
+        },
+        "undetectable": c2d6.UNDETECTABLE,
+        "caveat": ("CYP2D6 v0 = SNP-surface star-allele caller (core {*2,*3,*4,*6,*9,*10,*17,*29,*35,*41} + "
+                   "*1) with CPIC ACTIVITY-SCORE phenotype (PM/IM/NM). Priority-ordered per-haplotype "
+                   "resolver (shared-background-aware). STRUCTURAL alleles (*5 deletion / *xN duplication / "
+                   "*13/*36/*68 CYP2D6-CYP2D7 hybrids) are NOT VCF-decodable -> NOT withheld and may be "
+                   "SILENTLY MIS-CALLED (cnv_hybrid_unassessed=true; full typing needs a BAM/CRAM + "
+                   "Cyrius-class caller). Non-core SNP alleles mis-called (no sentinel layer v0). Calling "
+                   "independently validatable vs GeT-RM on the SNP subset. NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec

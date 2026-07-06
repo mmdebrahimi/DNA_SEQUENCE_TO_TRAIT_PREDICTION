@@ -21,9 +21,14 @@ from dna_decode.pgx.runner import (
     call_cyp2c8,
     call_cyp2c19,
     call_cyp2c9,
+    call_cyp2d6,
     call_cyp3a5,
     call_tpmt,
 )
+
+# gene -> chromosome, for the per-variant display line (CYP2D6 is chr22, not chr10).
+_GENE_CHROM = {"CYP2C19": "10", "CYP2C9": "10", "CYP2C8": "10", "CYP3A5": "7",
+               "TPMT": "6", "CYP2B6": "19", "CYP2D6": "22"}
 
 
 def main(argv=None) -> int:
@@ -81,7 +86,7 @@ def main(argv=None) -> int:
         return 0
 
     _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8, "cyp3a5": call_cyp3a5,
-                 "tpmt": call_tpmt, "cyp2b6": call_cyp2b6}
+                 "tpmt": call_tpmt, "cyp2b6": call_cyp2b6, "cyp2d6": call_cyp2d6}
     rec = _dispatch.get(args.gene, call_cyp2c19)(
         args.vcf, sample_id=args.sample_id, sample_column=args.sample)
 
@@ -110,11 +115,15 @@ def main(argv=None) -> int:
                 print(f"  PHASE-AMBIGUOUS: alternate resolution = {rec['alternate_diplotype']} "
                       f"({rec['alternate_phenotype']}); reported call assumes trans (the standard).")
         if rec["status"] == "ok":
+            chrom = _GENE_CHROM.get(rec["gene"], "")
+            if rec.get("cnv_hybrid_unassessed"):
+                print("  NOTE: SNP surface only — CYP2D6 structural alleles (*5/*13/*36/*68/*xN) are "
+                      "NOT assessed and may be silently mis-called (BAM/CRAM required).")
             for vc in rec["variant_calls"]:
                 state = ("absent" if not vc["found"]
                          else "no-call" if vc["no_call"]
                          else {0: "ref", 1: "het", 2: "hom-alt"}.get(vc["alt_count"], "?"))
-                print(f"  {vc['star']:4} {vc['rsid']:12} chr10:{vc['pos']}  {state}"
+                print(f"  {vc['star']:8} {vc['rsid']:12} chr{chrom}:{vc['pos']}  {state}"
                       + (f"  GT={vc['gt']}" if vc["gt"] else ""))
             if rec["flags"]:
                 print(f"  flags: {', '.join(rec['flags'])}")

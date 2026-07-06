@@ -5,17 +5,17 @@
   "no_aggregate_verdict": true,
   "aggregate_verdict_disclaimer": "Cells span 6 honest tiers; an aggregate pass/fail would certify the weakest cell as strongly as the strongest. No such field exists by design.",
   "registry_census": {
-    "total_cells": 73,
+    "total_cells": 74,
     "by_track": {
       "amr": 25,
       "viral": 29,
-      "pgx": 8,
+      "pgx": 9,
       "mendelian": 1,
       "typing": 6,
       "finder": 4
     },
     "by_evidence_tier": {
-      "near_independent": 19,
+      "near_independent": 20,
       "faithful_to_tool": 12,
       "no_free_source": 11,
       "independent_measured": 25,
@@ -98,6 +98,7 @@
           "getrm_cyp3a5": true,
           "getrm_tpmt": true,
           "getrm_cyp2b6": true,
+          "getrm_cyp2d6": true,
           "pharmcat_cyp2c19": true,
           "functional_evidence": true,
           "trio_mendelian": true

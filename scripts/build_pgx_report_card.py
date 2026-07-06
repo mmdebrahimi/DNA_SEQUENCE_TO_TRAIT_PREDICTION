@@ -31,6 +31,7 @@ def main() -> int:
     getrm_c3a5 = _load("pgx_getrm_concordance_cyp3a5_2026-07-05.json")
     getrm_tpmt = _load("pgx_getrm_concordance_tpmt_2026-07-05.json")
     getrm_c2b6 = _load("pgx_getrm_concordance_cyp2b6_2026-07-05.json")
+    getrm_c2d6 = _load("pgx_getrm_concordance_cyp2d6_2026-07-06.json")
     pharmcat = _load("pgx_cyp2c19_report_card.json")
     fe = _load("pgx_functional_evidence_2026-06-25.json")
     trio = _load("pgx_trio_mendelian_2026-06-25.json")
@@ -102,6 +103,19 @@ def main() -> int:
                   "(516G>T) — rs2279343 (785A>G) is absent from the 1000G 30x panel so *6 can't be split "
                   "from *9. Phenotype faithful-to-CPIC."),
          "residual": "single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset)"},
+        {"gene": "CYP2D6", "trait": "metabolizer phenotype (activity-score) — SNP surface only",
+         "getrm": getrm_c2d6 and getrm_c2d6.get("core_snp_diplotype_hits"),
+         "getrm_pct": getrm_c2d6 and getrm_c2d6.get("core_snp_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP2D6"), "trio_mendelian": trio_summ("CYP2D6"),
+         "tier": ("The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); "
+                  "46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed "
+                  "structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). "
+                  "SNP surface ONLY — structural alleles (*5 deletion / *xN dup / *13/*36/*68 hybrids; "
+                  "~28/87) are BAM-required and EXCLUDED (cnv_hybrid_unassessed), NOT withheld. Phenotype "
+                  "faithful-to-CPIC (activity-score)."),
+         "residual": ("STRUCTURAL alleles NOT VCF-decodable -> may be SILENTLY mis-called (BAM/Cyrius-class "
+                      "required); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",
@@ -125,6 +139,7 @@ def main() -> int:
         "sources": {"getrm_cyp2c19": bool(getrm_c19), "getrm_cyp2c9": bool(getrm_c9),
                     "getrm_cyp2c8": bool(getrm_c8), "getrm_cyp3a5": bool(getrm_c3a5),
                     "getrm_tpmt": bool(getrm_tpmt), "getrm_cyp2b6": bool(getrm_c2b6),
+                    "getrm_cyp2d6": bool(getrm_c2d6),
                     "pharmcat_cyp2c19": bool(pharmcat), "functional_evidence": bool(fe),
                     "trio_mendelian": bool(trio)},
     }
