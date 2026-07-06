@@ -111,11 +111,13 @@ def main() -> int:
          "tier": ("The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); "
                   "46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed "
                   "structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). "
-                  "SNP surface ONLY — structural alleles (*5 deletion / *xN dup / *13/*36/*68 hybrids; "
-                  "~28/87) are BAM-required and EXCLUDED (cnv_hybrid_unassessed), NOT withheld. Phenotype "
-                  "faithful-to-CPIC (activity-score)."),
-         "residual": ("STRUCTURAL alleles NOT VCF-decodable -> may be SILENTLY mis-called (BAM/Cyrius-class "
-                      "required); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)")},
+                  "Phenotype faithful-to-CPIC (activity-score). Trio-Mendelian 592/602 — the ~2% residual is "
+                  "the structural-confound signature (all homozygous-child). STRUCTURAL SURFACE (read-depth "
+                  "copy-number off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN "
+                  "duplication validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); hybrid "
+                  "IDENTITY (*13/*36/*68) still needs CYP2D6-vs-CYP2D7 PSV analysis (Cyrius-class)."),
+         "residual": ("hybrid IDENTITY (*13/*36/*68) unresolved (PSV analysis, Cyrius-class = v0.3); non-core "
+                      "SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0). CN surface needs a BAM/CRAM")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",

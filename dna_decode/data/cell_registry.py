@@ -233,7 +233,7 @@ _PGX_CONTRACTS: list[CellContract] = [
         label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2D6_getrm_cons join 1000G",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="SNP surface only: CYP2D6 structural alleles are NOT withheld and may be SILENTLY mis-called (needs a BAM/CRAM + Cyrius-class caller); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel layer v0)"),
+        demotion_rule="SNP surface: structural alleles NOT withheld (may be SILENTLY mis-called). COPY-NUMBER half (*5 deletion / *xN duplication) now resolvable from a BAM/CRAM via the read-depth structural surface (dna_decode.pgx.cyp2d6_structural; 26/26 on 1000G CRAMs); hybrid IDENTITY (*13/*36/*68) still needs CYP2D6-vs-CYP2D7 PSV analysis (Cyrius-class, v0.3); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"),
     CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",

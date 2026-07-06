@@ -1,0 +1,357 @@
+{
+  "schema": "cyp2d6-structural-cn-v0",
+  "analysis_date": "2026-07-06",
+  "method": "CYP2D6-body/control read-depth ratio off 1000G 30x CRAMs (samtools + ENA reference auto-fetch, no full-reference download); ratio -> integer copy number -> deletion/normal/duplication.",
+  "cyp2d6_region": "chr22:42126000-42130000",
+  "control_region": "chr22:41000000-41050000",
+  "normal_baseline_pinned": 1.26,
+  "normal_baseline_measured": 1.267,
+  "n_samples_measured": 39,
+  "n_cn_scored": 26,
+  "n_hybrid_or_ambiguous_excluded": 13,
+  "cn_class_concordance": 1.0,
+  "cn_class_hits": "26/26",
+  "honesty_tier": "Real-CRAM read-depth copy-number caller (the structural surface the SNP cell is blind to). Resolves *5 deletion + *xN duplication; NEVER resolves hybrid IDENTITY (*13/*36/*68 -> excluded from CN scoring, measured only; needs CYP2D6-vs-CYP2D7 PSV analysis, Cyrius-class). Coarse integer CN, not a breakpoint caller.",
+  "scored_rows": [
+    {
+      "sample": "NA12873",
+      "truth": "*1/*5",
+      "ratio": 0.581,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA18873",
+      "truth": "*5/*17",
+      "ratio": 0.592,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA10856",
+      "truth": "*1/*5",
+      "ratio": 0.593,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA18855",
+      "truth": "*1/*5",
+      "ratio": 0.624,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA18992",
+      "truth": "*1/*5",
+      "ratio": 0.625,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA18868",
+      "truth": "*2/*5",
+      "ratio": 0.632,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA18945",
+      "truth": "*1/*5",
+      "ratio": 0.639,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA18861",
+      "truth": "*5/*29",
+      "ratio": 0.647,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA19035",
+      "truth": "*2/*5",
+      "ratio": 0.657,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "HG00276",
+      "truth": "*4/*5",
+      "ratio": 0.662,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA12336",
+      "truth": "*5/*41",
+      "ratio": 0.673,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "NA10831",
+      "truth": "*4/*5",
+      "ratio": 0.715,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": "deletion",
+      "match": true
+    },
+    {
+      "sample": "HG00589",
+      "truth": "*1/*21",
+      "ratio": 1.161,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA07000",
+      "truth": "*2(*35)/*9",
+      "ratio": 1.227,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA07056",
+      "truth": "*2/*4",
+      "ratio": 1.235,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA07029",
+      "truth": "*1/*35",
+      "ratio": 1.262,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA07048",
+      "truth": "*1/*4",
+      "ratio": 1.272,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA07019",
+      "truth": "*1/*4",
+      "ratio": 1.293,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA06991",
+      "truth": "*1/*4",
+      "ratio": 1.347,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "NA07055",
+      "truth": "*4/*4",
+      "ratio": 1.403,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": "normal_copy_number",
+      "match": true
+    },
+    {
+      "sample": "HG00436",
+      "truth": "*2x2/*71",
+      "ratio": 1.736,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": "duplication",
+      "match": true
+    },
+    {
+      "sample": "NA19920",
+      "truth": "*1/*4x2",
+      "ratio": 1.764,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": "duplication",
+      "match": true
+    },
+    {
+      "sample": "NA19226",
+      "truth": "*2/*2x2",
+      "ratio": 1.774,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": "duplication",
+      "match": true
+    },
+    {
+      "sample": "NA19207",
+      "truth": "*2x2/*10",
+      "ratio": 1.9,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": "duplication",
+      "match": true
+    },
+    {
+      "sample": "NA19819",
+      "truth": "*2/*4x2",
+      "ratio": 1.939,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": "duplication",
+      "match": true
+    },
+    {
+      "sample": "NA19109",
+      "truth": "*2x2/*29",
+      "ratio": 1.976,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": "duplication",
+      "match": true
+    }
+  ],
+  "measured_only_rows": [
+    {
+      "sample": "HG01190",
+      "truth": "*68+*4/*5",
+      "ratio": 0.813,
+      "copy_number": 1,
+      "predicted": "deletion",
+      "truth_class": null
+    },
+    {
+      "sample": "NA11832",
+      "truth": "*1/(*68)+*4",
+      "ratio": 1.321,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": null
+    },
+    {
+      "sample": "NA12878",
+      "truth": "*3/(*68)+*4",
+      "ratio": 1.41,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": null
+    },
+    {
+      "sample": "NA10855",
+      "truth": "*1/(*68)+*4",
+      "ratio": 1.413,
+      "copy_number": 2,
+      "predicted": "normal_copy_number",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18565",
+      "truth": "*10/*36x2",
+      "ratio": 1.67,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA19785",
+      "truth": "*1/*13+*2",
+      "ratio": 1.681,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18572",
+      "truth": "*36+*10/*41",
+      "ratio": 1.705,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18959",
+      "truth": "*2/*36+*10",
+      "ratio": 1.773,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18563",
+      "truth": "*1/*36+*10",
+      "ratio": 1.793,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18980",
+      "truth": "*2/*36+*10",
+      "ratio": 1.806,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18564",
+      "truth": "*2A/*36+*10",
+      "ratio": 1.867,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18617",
+      "truth": "*36+*10/*36+*10",
+      "ratio": 2.149,
+      "copy_number": 3,
+      "predicted": "duplication",
+      "truth_class": null
+    },
+    {
+      "sample": "NA18526",
+      "truth": "*1/*36x2+*10",
+      "ratio": 2.295,
+      "copy_number": 4,
+      "predicted": "duplication",
+      "truth_class": null
+    }
+  ]
+}
