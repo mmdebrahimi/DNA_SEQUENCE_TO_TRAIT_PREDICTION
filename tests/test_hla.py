@@ -41,9 +41,26 @@ def test_b5701_tag_coords_grounded_ncbi():
     assert a.drug == "abacavir" and a.proxy_tier == "gold_standard"
 
 
-def test_b5801_a3101_provisional():
-    assert get("b5801").proxy_tier == "provisional" and get("b5801").drug == "allopurinol"
-    assert get("a3101").proxy_tier == "provisional" and get("a3101").drug == "carbamazepine"
+def test_b5801_a3101_demoted_not_shipped():
+    """Real 1000G-HLA-truth validation FAILED the provisional tags -> demoted, NOT routable cells."""
+    from dna_decode.hla.catalog import _UNVALIDATED_TAGS
+    assert "b5801" not in HLA_ALLELES and "a3101" not in HLA_ALLELES
+    assert "b5801" not in CATALOG and "a3101" not in CATALOG
+    assert set(_UNVALIDATED_TAGS) == {"b5801", "a3101"}
+    assert _UNVALIDATED_TAGS["a3101"]["verdict"] == "no_valid_tag_on_1000g"
+
+
+def test_b5701_validated_concordance_artifact():
+    """The committed validation artifact records the SCORED b5701 concordance vs the 1000G HLA truth."""
+    import json
+    p = REPO / "wiki" / "hla_b5701_validation_2026-07-06.json"
+    if not p.exists():
+        import pytest
+        pytest.skip("validation artifact not present")
+    d = json.loads(p.read_text(encoding="utf-8"))
+    sc = d.get("sample_concordance")
+    assert sc and sc["sensitivity"] >= 0.95 and sc["specificity"] >= 0.95
+    assert d["sample_concordance_status"] == "SCORED"
 
 
 @pytest.mark.parametrize("gt,copies,carrier,zyg", [

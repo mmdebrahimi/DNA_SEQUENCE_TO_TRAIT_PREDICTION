@@ -14,4 +14,9 @@ wrapper-vs-truth concordance, never a literature-asserted LD alone.
 """
 
 # Single source of truth for the CLI-routable HLA alleles (drives dna-hla --allele + the registry + coverage).
-HLA_ALLELES: tuple[str, ...] = ("b5701", "b5801", "a3101")
+# NARROWED to the VALIDATED tag after real 1000G-HLA-truth concordance (2026-07-06): only B*57:01/abacavir
+# (rs2395029) cleared deployment (sens 0.979 / spec 0.992 / PPV 0.855). The provisional B*58:01 (rs9263726,
+# sens 0.61 / PPV 0.18 — weak) + A*31:01 (rs1061235 — not paneled on 1000G, sens 0.0) FAILED validation and
+# are DEMOTED to a documented negative (dna_decode.hla.catalog._UNVALIDATED_TAGS), NOT shipped as routable
+# cells. See wiki/hla_validation_2026-07-06.md.
+HLA_ALLELES: tuple[str, ...] = ("b5701",)

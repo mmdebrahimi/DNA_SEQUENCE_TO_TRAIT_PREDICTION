@@ -15,8 +15,12 @@ PROVENANCE (grounded, NO fabrication):
   * A*31:01 / rs1061235 (g.29945521 A>T): tags HLA-A*31:01 region; carbamazepine HSR/DRESS. CPIC
     carbamazepine (Phillips 2018). Proxy quality less established than B*57:01 -> flagged PROVISIONAL.
 
-NOT a clinical tool. v0 anchor = B*57:01/abacavir (the gold-standard tag); B*58:01 + A*31:01 ship as
-PROVISIONAL proxies (validate the LD in the target population before any use).
+NOT a clinical tool. VALIDATION OUTCOME (2026-07-06, vs the free 1000G HLA truth `20140702_hla_diversity`):
+only **B*57:01/abacavir (rs2395029)** cleared deployment — sens 0.979 / spec 0.992 / PPV 0.855 (n=1103).
+The provisional **B*58:01 (rs9263726)** measured a WEAK sens 0.61 / PPV 0.18 (mixed-population LD) and
+**A*31:01 (rs1061235)** is NOT paneled on 1000G (sens 0.0) — both DEMOTED to a documented negative
+(`_UNVALIDATED_TAGS`), NOT shipped as routable cells. The single-SNP LD-proxy approach that works for
+B*57:01 does NOT generalize (`wiki/hla_validation_2026-07-06.md`).
 """
 from __future__ import annotations
 
@@ -49,24 +53,25 @@ CATALOG: dict[str, HLATagAllele] = {
         cpic_action="AVOID abacavir in a B*57:01 carrier (CPIC Martin 2014)",
         proxy_tier="gold_standard",
         proxy_note="rs2395029(G) tags B*57:01 with ~100% sensitivity + high specificity (Colombo 2008; "
-                   "PREDICT-1/Mallal 2008); the deployed clinical abacavir screen.",
+                   "PREDICT-1/Mallal 2008); the deployed clinical abacavir screen. VALIDATED vs 1000G HLA "
+                   "truth 2026-07-06: sens 0.979 / spec 0.992 / PPV 0.855 (n=1103, 47TP/1FN/8FP).",
         source="NCBI dbSNP (GRCh38) + CPIC abacavir guideline (Martin 2014); AF-confirmed on 1000G"),
-    "b5801": HLATagAllele(
-        key="b5801", allele="HLA-B*58:01", rsid="rs9263726", chrom="6", pos=31138722, ref="G", tag_alt="A",
-        drug="allopurinol", reaction="SJS/TEN (severe cutaneous)",
-        cpic_action="AVOID allopurinol in a B*58:01 carrier (CPIC Saito 2016)",
-        proxy_tier="provisional",
-        proxy_note="rs9263726(A) tags B*58:01; LD is strong in East Asians, weaker elsewhere -> PROVISIONAL, "
-                   "validate in the target population.",
-        source="NCBI dbSNP (GRCh38) + CPIC allopurinol guideline (Saito 2016)"),
-    "a3101": HLATagAllele(
-        key="a3101", allele="HLA-A*31:01", rsid="rs1061235", chrom="6", pos=29945521, ref="A", tag_alt="T",
-        drug="carbamazepine", reaction="HSR / DRESS",
-        cpic_action="consider avoiding carbamazepine in an A*31:01 carrier (CPIC Phillips 2018)",
-        proxy_tier="provisional",
-        proxy_note="rs1061235(T) tags the HLA-A*31:01 region; proxy quality less established than B*57:01 -> "
-                   "PROVISIONAL.",
-        source="NCBI dbSNP (GRCh38) + CPIC carbamazepine guideline (Phillips 2018)"),
+}
+
+# DEMOTED — provisional tags that FAILED real 1000G-HLA-truth validation (2026-07-06); NOT shipped as
+# routable cells (would mislead a clinical screen). Kept as a documented negative + the measured numbers.
+# The B*58:01/A*31:01 lesson: a single-SNP LD proxy that works for B*57:01 does NOT generalize — these need
+# either a population-specific tag (B*58:01: rs9263726 LD is strong only in East Asians) or sequence-based
+# typing (A*31:01: no clean 1000G-paneled single-SNP tag). See wiki/hla_validation_2026-07-06.md.
+_UNVALIDATED_TAGS: dict[str, dict] = {
+    "b5801": {"allele": "HLA-B*58:01", "rsid": "rs9263726", "drug": "allopurinol",
+              "measured": "sens 0.609 / spec 0.824 / PPV 0.176 (n=1103) — WEAK proxy (mixed-population LD); "
+                          "misses 39% of carriers -> unsafe for an SJS/TEN screen",
+              "verdict": "weak_proxy_measured_not_deployable"},
+    "a3101": {"allele": "HLA-A*31:01", "rsid": "rs1061235", "drug": "carbamazepine",
+              "measured": "sens 0.0 (0TP/74FN) — rs1061235 is NOT paneled on 1000G (no variant record at "
+                          "chr6:29945521) -> the tag cannot call carriers",
+              "verdict": "no_valid_tag_on_1000g"},
 }
 
 

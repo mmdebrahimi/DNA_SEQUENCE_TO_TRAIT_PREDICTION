@@ -288,23 +288,21 @@ _MENDELIAN_CONTRACTS: list[CellContract] = [
 def _hla_contracts() -> list[CellContract]:
     from dna_decode.hla.catalog import CATALOG
     out: list[CellContract] = []
-    for key, a in CATALOG.items():
-        gold = a.proxy_tier == "gold_standard"
+    for key, a in CATALOG.items():  # CATALOG now holds ONLY the validated cell(s) (b5701); failed tags demoted
         out.append(CellContract(
             cell_id=f"hla:human:{key}", track="hla", route="dna-hla", organism="human", target=key,
             claim=f"{a.allele} carriage (tag SNP {a.rsid}) -> {a.drug} {a.reaction} risk (CPIC)",
-            evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
-            claim_status=("tag_snp_ld_proxy_gold_standard" if gold else "tag_snp_ld_proxy_provisional"),
-            validation_slice=("literature-established LD proxy (the deployed clinical screen) + 1000G "
-                              "per-superpopulation AF corroboration; sample-level concordance vs free "
-                              "published 1000G HLA truth PENDING (external data acquisition)"),
-            label_provenance="CPIC guideline + dbSNP tag; validation truth = free 1000G HLA types (pending)",
-            abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+            evidence_tier=EvidenceTier.NEAR_INDEPENDENT,
+            claim_status="tag_snp_ld_proxy_validated_vs_1000g_hla_truth",
+            validation_slice=("sample-level concordance vs the free 1000G HLA truth (20140702_hla_diversity, "
+                              "n=1103): sens 0.979 / spec 0.992 / PPV 0.855 — the deployed clinical abacavir "
+                              "screen (rs2395029), independently measured"),
+            label_provenance="1000G HLA types (20140702_hla_diversity) join rs2395029 tag genotypes; CPIC abacavir guideline",
+            abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
             falsifier_ref="scripts/hla_concordance.py", incoming_data_gate="n/a",
-            demotion_rule=("LD PROXY, NOT sequence-based typing -> sample-level concordance vs real HLA truth "
-                           "(Gourraud-class) is the SCORED number; " + ("gold-standard tag (B*57:01/abacavir, "
-                           "sens~100%)" if gold else "PROVISIONAL tag — LD is population-dependent, validate "
-                           "in the target population before use"))))
+            demotion_rule=("LD PROXY (not sequence-based typing) but VALIDATED vs real HLA truth (sens 0.979); "
+                           "the sibling provisional tags (B*58:01 rs9263726 sens 0.61 weak; A*31:01 rs1061235 "
+                           "not-paneled sens 0.0) FAILED validation and are demoted, NOT shipped")))
     return out
 
 

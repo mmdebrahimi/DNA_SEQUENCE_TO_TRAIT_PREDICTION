@@ -41,6 +41,15 @@
     "EAS": "very low (~0.005-0.01)"
   },
   "af_corroboration": "PARTIAL \u2014 the tag's per-superpopulation frequency tracking the allele's known population structure is necessary-not-sufficient. The SCORED number is the sample-level concordance vs a real HLA truth set (--truth).",
-  "sample_concordance": null,
-  "sample_concordance_status": "PENDING \u2014 supply a free published 1000G HLA truth TSV via --truth (e.g. Gourraud 2014); this is an external data-acquisition step, NOT a code wall. The harness computes sens/spec/PPV of the tag proxy."
+  "sample_concordance": {
+    "n_scored": 1103,
+    "tp": 47,
+    "fp": 8,
+    "tn": 1047,
+    "fn": 1,
+    "sensitivity": 0.9792,
+    "specificity": 0.9924,
+    "ppv": 0.8545
+  },
+  "sample_concordance_status": "SCORED"
 }

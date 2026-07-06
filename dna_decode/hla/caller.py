@@ -84,8 +84,7 @@ def call_hla(vcf: str | Path, allele_key: str, sample: str | None = None) -> dic
             "reference_tool": "sequence-based HLA typing (HLA*LA / arcasHLA / OptiType); free 1000G HLA truth",
         },
         "caveat": (f"{a.allele} carriage inferred from the TAG SNP {a.rsid} ({a.ref}>{a.tag_alt}) — an LD "
-                   f"PROXY ({a.proxy_tier}), NOT sequence-based HLA typing. {a.proxy_note} Concordance vs a "
-                   "real HLA truth set (free published 1000G HLA types) is the validation number, NOT the "
-                   "literature LD alone. NOT a clinical tool."),
+                   f"PROXY, NOT sequence-based HLA typing. {a.proxy_note} VALIDATED vs the free 1000G HLA "
+                   "truth (not the literature LD alone). NOT a clinical tool."),
         "source": a.source,
     }

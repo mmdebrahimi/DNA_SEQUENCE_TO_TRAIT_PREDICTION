@@ -6,9 +6,9 @@
 
 ## Registry census (the per-cell spine)
 
-- **Total cells:** 77
-- **By track:** amr=25, finder=4, hla=3, mendelian=1, pgx=9, typing=6, viral=29
-- **By honest evidence tier:** faithful_to_tool=15, independent_measured=25, knowledge_baseline=5, near_independent=20, no_free_source=11, not_censused=1
+- **Total cells:** 75
+- **By track:** amr=25, finder=4, hla=1, mendelian=1, pgx=9, typing=6, viral=29
+- **By honest evidence tier:** faithful_to_tool=12, independent_measured=25, knowledge_baseline=5, near_independent=21, no_free_source=11, not_censused=1
 - **Routable-but-NOT_CENSUSED (1):** viral:HIV-1:delavirdine
 
 ## Per-domain validated headlines (verbatim — NOT averaged)
