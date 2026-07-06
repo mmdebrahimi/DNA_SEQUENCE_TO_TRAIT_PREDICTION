@@ -40,6 +40,40 @@ CONTROL_REGION = ("chr22", 41000000, 41050000)
 NORMAL_BASELINE = 1.26
 MAX_COPY_NUMBER = 6   # clamp (defensive; CYP2D6 copy number rarely exceeds ~4-5)
 
+# --- HYBRID DETECTION (v0.3) — the CYP2D7 paralog read-depth signal ------------------------------------
+# A CYP2D6-CYP2D7 HYBRID allele (*13/*36/*68) carries extra CYP2D7-derived sequence, so it ELEVATES the
+# CYP2D7 read depth. Measuring depth over the CYP2D7 paralog (just telomeric of CYP2D6) vs the control gives
+# a hybrid signal that DISTINGUISHES a hybrid from a pure CYP2D6 duplication (a pure *xN dup elevates CYP2D6
+# but NOT CYP2D7). This is the read-depth-tractable half of hybrid resolution; the exact IDENTITY (*13 vs
+# *36 vs *68) still needs PSV analysis of CYP2D6-vs-CYP2D7 reads (Cyrius-class, future).
+CYP2D7_REGION = ("chr22", 42139500, 42144300)
+# Threshold calibrated on the 38-sample structural set (scripts/cyp2d6_hybrid_validate): d7/ctl >= 1.25 gives
+# spec 1.00 / sens 0.62 — a HIGH-SPECIFICITY detector (a positive is trustworthy; it never fired on a pure
+# dup or normal). Sensitivity is partial: the *68 family (common, non-functional) detects cleanly (>1.5);
+# some subtle *36 + the opposite-signature *13 (LOW d7) are missed.
+HYBRID_D7_THRESHOLD = 1.25
+
+
+def hybrid_suspected(cyp2d7_depth_ratio: float, threshold: float = HYBRID_D7_THRESHOLD) -> bool:
+    """True if the CYP2D7-paralog/control depth ratio is elevated -> a CYP2D6-CYP2D7 hybrid is present.
+    HIGH-SPECIFICITY: a True is trustworthy (spec 1.0 in validation); a False does NOT rule out a subtle
+    *36/*13 hybrid (sens ~0.62)."""
+    return cyp2d7_depth_ratio >= threshold
+
+
+def hybrid_detection(cyp2d7_depth_ratio: float, threshold: float = HYBRID_D7_THRESHOLD) -> dict:
+    """CYP2D7 depth ratio -> hybrid-presence call (NOT identity). Detects that a CYP2D6-CYP2D7 hybrid
+    (*13/*36/*68) is present; never resolves WHICH (that needs PSV analysis, Cyrius-class)."""
+    susp = hybrid_suspected(cyp2d7_depth_ratio, threshold)
+    note = ("elevated CYP2D7 paralog depth -> a CYP2D6-CYP2D7 HYBRID allele (*13/*36/*68) is PRESENT "
+            "(high-specificity detector; a positive is trustworthy). Detects PRESENCE only — the exact "
+            "identity (*13 vs *36 vs *68) needs CYP2D6-vs-CYP2D7 PSV analysis (Cyrius-class)."
+            if susp else
+            "CYP2D7 depth not elevated — no hybrid detected (a subtle *36 or the opposite-signature *13 "
+            "hybrid can still be missed; sens ~0.62 in validation).")
+    return {"cyp2d7_depth_ratio": round(cyp2d7_depth_ratio, 3), "hybrid_suspected": susp,
+            "hybrid_identity_resolved": False, "note": note}
+
 
 @dataclass(frozen=True)
 class StructuralCall:

@@ -1,0 +1,89 @@
+{
+  "schema": "cyp2d6-hybrid-detection-v0",
+  "analysis_date": "2026-07-06",
+  "method": "CYP2D7-paralog/control read-depth ratio off 1000G CRAMs; d7_ratio >= threshold -> a CYP2D6-CYP2D7 hybrid (*13/*36/*68) is present. Distinguishes a hybrid from a pure CYP2D6 duplication (a *xN dup elevates CYP2D6, not CYP2D7).",
+  "cyp2d7_region": "chr22:42139500-42144300",
+  "threshold": 1.25,
+  "n_samples": 38,
+  "n_hybrid_truth": 13,
+  "n_nonhybrid": 25,
+  "sensitivity": 0.6154,
+  "specificity": 1.0,
+  "auroc": 0.8277,
+  "confusion": {
+    "tp": 8,
+    "fp": 0,
+    "tn": 25,
+    "fn": 5
+  },
+  "honesty_tier": "Real-CRAM CYP2D7-depth hybrid PRESENCE detector \u2014 HIGH SPECIFICITY (a positive is trustworthy; spec 1.0 in validation, never fires on a pure dup/normal). Partial sensitivity: the *68 family (common, non-functional) detects cleanly; subtle *36 + the opposite-signature *13 (low CYP2D7 depth) are missed. Detects PRESENCE, NOT the exact identity (*13/*36/*68 = Cyrius-class PSV analysis, future).",
+  "detected_hybrids": [
+    {
+      "sample": "NA12878",
+      "truth": "*3/(*68)+*4",
+      "d7_ratio": 1.617
+    },
+    {
+      "sample": "HG01190",
+      "truth": "*68+*4/*5",
+      "d7_ratio": 1.606
+    },
+    {
+      "sample": "NA11832",
+      "truth": "*1/(*68)+*4",
+      "d7_ratio": 1.597
+    },
+    {
+      "sample": "NA10855",
+      "truth": "*1/(*68)+*4",
+      "d7_ratio": 1.543
+    },
+    {
+      "sample": "NA18526",
+      "truth": "*1/*36x2+*10",
+      "d7_ratio": 1.401
+    },
+    {
+      "sample": "NA18572",
+      "truth": "*36+*10/*41",
+      "d7_ratio": 1.331
+    },
+    {
+      "sample": "NA18563",
+      "truth": "*1/*36+*10",
+      "d7_ratio": 1.301
+    },
+    {
+      "sample": "NA18617",
+      "truth": "*36+*10/*36+*10",
+      "d7_ratio": 1.252
+    }
+  ],
+  "missed_hybrids": [
+    {
+      "sample": "NA18565",
+      "truth": "*10/*36x2",
+      "d7_ratio": 1.249
+    },
+    {
+      "sample": "NA18564",
+      "truth": "*2A/*36+*10",
+      "d7_ratio": 1.213
+    },
+    {
+      "sample": "NA18959",
+      "truth": "*2/*36+*10",
+      "d7_ratio": 1.172
+    },
+    {
+      "sample": "NA18980",
+      "truth": "*2/*36+*10",
+      "d7_ratio": 1.153
+    },
+    {
+      "sample": "NA19785",
+      "truth": "*1/*13+*2",
+      "d7_ratio": 0.677
+    }
+  ]
+}

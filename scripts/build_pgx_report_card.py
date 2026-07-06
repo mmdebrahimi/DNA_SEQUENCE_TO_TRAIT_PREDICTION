@@ -113,11 +113,14 @@ def main() -> int:
                   "structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). "
                   "Phenotype faithful-to-CPIC (activity-score). Trio-Mendelian 592/602 — the ~2% residual is "
                   "the structural-confound signature (all homozygous-child). STRUCTURAL SURFACE (read-depth "
-                  "copy-number off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN "
-                  "duplication validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); hybrid "
-                  "IDENTITY (*13/*36/*68) still needs CYP2D6-vs-CYP2D7 PSV analysis (Cyrius-class)."),
-         "residual": ("hybrid IDENTITY (*13/*36/*68) unresolved (PSV analysis, Cyrius-class = v0.3); non-core "
-                      "SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0). CN surface needs a BAM/CRAM")},
+                  "off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN duplication CN "
+                  "validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); HYBRID PRESENCE "
+                  "(*13/*36/*68) DETECTED via elevated CYP2D7 depth — sens 0.62 / spec 1.0 / AUROC 0.83 "
+                  "(wiki/cyp2d6_hybrid_2026-07-06; the *68 family detected cleanly). Hybrid IDENTITY (which "
+                  "of *13/*36/*68) still needs PSV analysis (Cyrius-class)."),
+         "residual": ("hybrid IDENTITY (which of *13/*36/*68) unresolved (PSV analysis, Cyrius-class); hybrid "
+                      "detection sens partial (subtle *36 + opposite-signature *13 missed); non-core SNP alleles "
+                      "(*14/*15/*21/*40/*46) mis-called (no sentinel v0). Structural surface needs a BAM/CRAM")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",

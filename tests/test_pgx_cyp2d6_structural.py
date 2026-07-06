@@ -13,13 +13,17 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
 from dna_decode.pgx.cyp2d6_structural import (  # noqa: E402
+    HYBRID_D7_THRESHOLD,
     NORMAL_BASELINE,
     copy_number_from_ratio,
+    hybrid_detection,
+    hybrid_suspected,
     structural_call,
     truth_copy_number_class,
 )
 
 _RATIOS = REPO / "tests" / "data" / "pgx_getrm" / "cyp2d6_structural_ratios.tsv"
+_HYBRID_RATIOS = REPO / "tests" / "data" / "pgx_getrm" / "cyp2d6_hybrid_ratios.tsv"
 
 
 # --- pure copy-number logic (calibrated so a 2-copy sample ~= NORMAL_BASELINE) ---
@@ -85,6 +89,38 @@ def test_real_cn_class_concordance():
         correct += (pred == tclass) or (pred in dels and tclass in dels)
     assert scored >= 25
     assert correct / scored >= 0.85          # the copy-number surface separates DEL/NORMAL/DUP cleanly
+
+
+# --- HYBRID DETECTION (v0.3) — CYP2D7 paralog depth signal ---
+@pytest.mark.parametrize("d7_ratio,suspected", [
+    (1.10, False), (1.16, False), (1.24, False),   # non-hybrid band
+    (1.25, True), (1.30, True), (1.62, True),       # hybrid band (*68 family)
+])
+def test_hybrid_suspected(d7_ratio, suspected):
+    assert hybrid_suspected(d7_ratio) is suspected
+
+
+def test_hybrid_detection_never_resolves_identity():
+    """LOAD-BEARING: detects PRESENCE only — never claims the exact *13/*36/*68 identity."""
+    for d7 in (1.1, 1.4):
+        assert hybrid_detection(d7)["hybrid_identity_resolved"] is False
+    # a POSITIVE call names PRESENCE + defers identity to PSV analysis (never a specific allele call)
+    pos = hybrid_detection(1.4)
+    assert pos["hybrid_suspected"] is True and "PRESENCE" in pos["note"] and "PSV" in pos["note"]
+
+
+@pytest.mark.skipif(not _HYBRID_RATIOS.exists(), reason="committed hybrid ratios TSV not present")
+def test_hybrid_detection_high_specificity():
+    """The CYP2D7-depth detector must SEPARATE hybrids from non-hybrids incl. pure dups (the confound),
+    at HIGH specificity (a positive is trustworthy) — validated on the real 38-sample structural set."""
+    import csv
+    from scripts.cyp2d6_hybrid_validate import validate
+    rows = list(csv.DictReader(_HYBRID_RATIOS.open(encoding="utf-8"), delimiter="\t"))
+    rep = validate(rows)
+    assert rep["n_hybrid_truth"] >= 10
+    assert rep["specificity"] == 1.0            # never fires on a pure dup / normal (the confound test)
+    assert rep["sensitivity"] >= 0.5            # partial (the *68 family detects cleanly)
+    assert rep["auroc"] >= 0.75
 
 
 if __name__ == "__main__":
