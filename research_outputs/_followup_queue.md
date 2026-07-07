@@ -128,3 +128,16 @@ Source memo: `viral-antiviral-resistance-gp-datasets-2026-06-21` — user goal =
 | HCV + SARS-CoV-2 free gp-datasets | (not assessed) | (blocked) | **Use:** secondary viral substrates. **Verify:** re-run narrow domain-restricted /research (geno2pheno[hcv], Stanford CoVDB). | honest gap |
 
 8-gate screen (raw memo): HIVDB CLEARS the label gates that bound the bacterial learned arm (circular-label/study==class/sampling-defined/assembly-attrition); residual = the standard de-confound precondition (within-SUBTYPE concordance) + censoring-aware fold-change handling. Auto-executor-doable once the license is confirmed; no money.
+
+## CYP2D6-CYP2D7 hybrid IDENTITY (2026-07-07, from cyp2d6-cyp2d7-psv-hybrid-identity)
+
+_Fresh research arc: lifting dna_decode's shipped CYP2D6 hybrid-PRESENCE detector (sens 0.62/spec 1.0) to
+hybrid IDENTITY (*13/*36/*68). 5 decisions surfaced; NOT a promotion list — human review required._
+
+| # | Decision | Candidate use | Verification needed |
+|---|---|---|---|
+| 1 | Adopt the Cyrius PSV method (117 CYP2D6/CYP2D7 differentiating bases; per-site CYP2D6-CN profile) as the identity engine | curate the 117 PSV coords from the Cyrius GitHub `CYP2D6.json` (not the paper) + per-site CN from CRAM pileup → CN-change location → breakpoint → identity | confirm Cyrius config license reuse; GRCh38 coord lift |
+| 2 | Use the breakpoint-location discriminator (*36 exon9 / *68 intron1 / *13 exon9\|intron4\|intron1) | map the within-gene CN-change position → breakpoint table → specific hybrid allele | cross-check the DRAGEN breakpoint list vs PharmVar structural-variation defs |
+| 3 | Validate against benchmark anchors NA12878=*68 / NA24631=*36 / HG01161=*13 | fetchable GIAB/1000G CRAMs (the remote-CRAM tooling dna_decode already proved) → real-surface identity test | confirm CRAM reachability + current PharmVar truth per anchor |
+| 4 | Set the accuracy bar at the field ceiling (Cyrius 96.5%/99.3%; beats Aldy 86.8%) | target ≥90% hybrid-identity concordance to be worth shipping over presence-only | derive the hybrid-only-subset bar, don't assume the full-diplotype number |
+| 5 | Accept the *36 embedded-exon-9 gene-conversion blind spot as a documented residual | a pure conversion yields no CN change → needs read-level PSV base-counting, not depth alone | confirm whether read-level PSV allele-fraction is required (raises build cost) |
