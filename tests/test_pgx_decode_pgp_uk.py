@@ -23,8 +23,27 @@ def test_grch37_map_covers_every_catalog_site():
 
 def test_all_variants_nonempty_and_spans_genes():
     chroms = {chrom for _rs, chrom, *_ in m._all_variants()}
-    # CYP2C cluster (10), CYP3A5 (7), CYP2B6 (19), TPMT (6), VKORC1 (16), SLCO1B1 (12)
-    assert {"6", "7", "10", "12", "16", "19"} <= chroms
+    # CYP2C cluster (10), CYP3A5 (7), CYP2B6 (19), TPMT (6), VKORC1 (16), SLCO1B1 (12), CYP2D6 (22)
+    assert {"6", "7", "10", "12", "16", "19", "22"} <= chroms
+
+
+def test_cyp2d6_wired_with_grch37_positions():
+    """The flagship pharmacogene must be lifted too — every CYP2D6 defining rsID needs a GRCh37 position."""
+    from dna_decode.pgx import cyp2d6_catalog as c2d6
+    d6_rsids = {d.rsid for d in c2d6.COMPONENTS}
+    assert d6_rsids, "CYP2D6 has no defining components"
+    all_rsids = {rs for rs, *_ in m._all_variants()}
+    assert d6_rsids <= all_rsids, "CYP2D6 defining sites not yielded by _all_variants"
+    missing37 = [rs for rs in d6_rsids if m.GRCH37_POS.get(rs) is None]
+    assert not missing37, f"CYP2D6 GRCh37 position missing for: {missing37}"
+
+
+def test_minivcf_lifts_cyp2d6_snp():
+    # rs1065852 (*10, P34S); catalog GRCh38 22:42130692 G>A — a het lifts to the CYP2D6 minivcf row
+    found = {"rs1065852": ("G", "A", "0/1")}
+    vcf, audit = m.build_grch38_minivcf(found, chroms_seen={"22"}, sample_id="S")
+    assert "42130692\trs1065852\tG\tA" in vcf and "GT\t0/1" in vcf
+    assert any(a["rsid"] == "rs1065852" and a["state"] == "lifted" for a in audit)
 
 
 def test_minivcf_lifts_concordant_snp():

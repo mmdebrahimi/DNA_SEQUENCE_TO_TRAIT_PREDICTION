@@ -33,6 +33,7 @@ from dna_decode.pgx import (
     cyp2c8_catalog as c8,
     cyp2c9_catalog as c9,
     cyp2c19_catalog as c19,
+    cyp2d6_catalog as c2d6,
     cyp3a5_catalog as c3,
     slco1b1,
     tpmt_catalog as tp,
@@ -43,6 +44,7 @@ from dna_decode.pgx.runner import (
     call_cyp2c8,
     call_cyp2c19,
     call_cyp2c9,
+    call_cyp2d6,
     call_cyp3a5,
     call_tpmt,
 )
@@ -60,6 +62,12 @@ GRCH37_POS: dict[str, int] = {
     "rs1800460": 18139228, "rs1142345": 18130918,                            # TPMT *3B/*3C
     "rs9923231": 31107689,                                                     # VKORC1
     "rs4149056": 21331549,                                                     # SLCO1B1 *5
+    # CYP2D6 (chr22) defining variants — GRCh37 positions resolved via Ensembl GRCh37 REST 2026-07-07,
+    # cross-checked vs the GRCh38 catalog (uniform +396002 offset for SNVs / +396003 for the 3 indels).
+    "rs3892097": 42524947, "rs1065852": 42526694, "rs16947": 42523943,        # CYP2D6 *4/*10/*2
+    "rs1135840": 42522613, "rs28371706": 42525772, "rs28371725": 42523805,    # CYP2D6 486/*17/*41
+    "rs59421388": 42523610, "rs769258": 42526763,                             # CYP2D6 *29/*35
+    "rs35742686": 42524244, "rs5030655": 42525086, "rs5030656": 42524176,     # CYP2D6 *3/*6/*9 (indels)
 }
 
 
@@ -71,6 +79,8 @@ def _all_variants():
         for s in getattr(cat, "SENTINELS", []):
             yield s.rsid, s.chrom, s.pos, s.ref, s.alt
     for d in tp.COMPONENTS:
+        yield d.rsid, d.chrom, d.pos, d.ref, d.alt
+    for d in c2d6.COMPONENTS:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     yield vkorc1.RSID, vkorc1.CHROM, vkorc1.POS, vkorc1.REF, vkorc1.ALT
     yield slco1b1.RSID, slco1b1.CHROM, slco1b1.POS, slco1b1.REF, slco1b1.ALT
@@ -176,13 +186,23 @@ def main(argv=None) -> int:
         results[g] = {"diplotype": rec["diplotype"], "phenotype": rec.get("phenotype"),
                       "phenotype_abbrev": rec.get("phenotype_abbrev"),
                       "phenotype_status": rec["phenotype_status"], "phasing": rec["phasing"]}
+    # CYP2D6 — the flagship pharmacogene. SNP-diplotype surface (activity-score phenotype). LOAD-BEARING
+    # HONESTY: a SNP VCF cannot see the CYP2D6 structural alleles (*5 del / *xN dup / *13/*36/*68 hybrids) ->
+    # the caller stamps cnv_hybrid_unassessed=True; the copy-number half is resolvable only from a BAM/CRAM
+    # (PGP-UK ships called VCFs, not reads), so this is a SNP-proxy diplotype, honestly flagged.
+    d6 = call_cyp2d6(tmp, sample_id=args.sample_id)
+    results["cyp2d6"] = {"diplotype": d6["diplotype"], "phenotype": d6.get("phenotype"),
+                         "phenotype_abbrev": d6.get("phenotype_abbrev"),
+                         "phenotype_status": d6["phenotype_status"], "phasing": d6.get("phasing"),
+                         "activity_score": d6.get("activity_score"),
+                         "cnv_hybrid_unassessed": d6.get("cnv_hybrid_unassessed", True)}
     vk = vkorc1.call_vkorc1(tmp); vk["sample_id"] = args.sample_id
     results["vkorc1"] = {"genotype": vk["cdna_genotype"], "sensitivity": vk["warfarin_sensitivity"]}
     sl = slco1b1.call_slco1b1(tmp); sl["sample_id"] = args.sample_id
     results["slco1b1"] = {"genotype": sl["variant_genotype"], "function": sl["function"],
                           "myopathy_risk": sl["myopathy_risk"]}
 
-    n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp3a5", "tpmt", "cyp2b6")
+    n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp2d6", "cyp3a5", "tpmt", "cyp2b6")
                  if results[g]["phenotype"] not in (None, "Indeterminate")
                  and results[g]["phenotype_status"] == "ok")
     out = {"schema": "pgx-pgp-uk-realization-v0", "sample_id": args.sample_id,

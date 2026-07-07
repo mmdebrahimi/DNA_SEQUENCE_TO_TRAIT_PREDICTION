@@ -21,7 +21,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-DIPLO_GENES = ["cyp2c19", "cyp2c9", "cyp3a5", "tpmt", "cyp2b6"]
+DIPLO_GENES = ["cyp2c19", "cyp2c9", "cyp2d6", "cyp3a5", "tpmt", "cyp2b6"]
 SNP_GENES = ["vkorc1", "slco1b1"]
 
 
@@ -84,7 +84,12 @@ def render_md(card: dict) -> str:
                  f"observed allele counts: {pg['observed_allele_counts']}")
     for g in SNP_GENES:
         L.append(f"- **{g.upper()}** — genotypes: {card['per_gene'][g]['genotypes']}")
-    L += ["", "_Accuracy-vs-truth lives in the GeT-RM concordance cells (`wiki/pgx_report_card.md`); this "
+    L += ["", "_**CYP2D6 caveat (load-bearing honesty):** the CYP2D6 call here is a SNP-proxy diplotype from "
+          "a called VCF — it CANNOT see the structural alleles (*5 deletion / *xN duplication / *13/*36/*68 "
+          "hybrids), so every CYP2D6 cell carries `cnv_hybrid_unassessed`. The copy-number half is resolvable "
+          "only from a BAM/CRAM (dna_decode.pgx.cyp2d6_structural, 26/26 on 1000G CRAMs); PGP-UK ships VCFs, "
+          "not reads._",
+          "", "_Accuracy-vs-truth lives in the GeT-RM concordance cells (`wiki/pgx_report_card.md`); this "
           "card is real-world deployment coverage, not a new accuracy number._", ""]
     return "\n".join(L)
 

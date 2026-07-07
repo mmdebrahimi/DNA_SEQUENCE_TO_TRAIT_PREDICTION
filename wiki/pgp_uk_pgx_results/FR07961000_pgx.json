@@ -4,7 +4,7 @@
   "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",
   "vcf": "D:\\dna_decode_cache\\pgp_uk\\FR07961000.vcf.gz",
   "assembly_source": "GRCh37 -> targeted position-liftover -> GRCh38 catalog",
-  "n_genes_real_call": 5,
+  "n_genes_real_call": 6,
   "results": {
     "cyp2c19": {
       "diplotype": "*1/*2",
@@ -47,6 +47,15 @@
       "phenotype_abbrev": "IM",
       "phenotype_status": "ok",
       "phasing": "unphased"
+    },
+    "cyp2d6": {
+      "diplotype": "*1/*10",
+      "phenotype": "Normal Metabolizer",
+      "phenotype_abbrev": "NM",
+      "phenotype_status": "ok",
+      "phasing": "unphased",
+      "activity_score": 1.25,
+      "cnv_hybrid_unassessed": true
     },
     "vkorc1": {
       "genotype": "G/G",
@@ -143,6 +152,55 @@
     },
     {
       "rsid": "rs1142345",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs3892097",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs1065852",
+      "state": "lifted",
+      "gt": "0/1"
+    },
+    {
+      "rsid": "rs16947",
+      "state": "allele_mismatch",
+      "vcf": "A>G",
+      "catalog": "G>A"
+    },
+    {
+      "rsid": "rs1135840",
+      "state": "allele_mismatch",
+      "vcf": "G>C",
+      "catalog": "C>G"
+    },
+    {
+      "rsid": "rs28371706",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs28371725",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs59421388",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs769258",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs35742686",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs5030655",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs5030656",
       "state": "assumed_ref_0/0_wgs"
     },
     {
