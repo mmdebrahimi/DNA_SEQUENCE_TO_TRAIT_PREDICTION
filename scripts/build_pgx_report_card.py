@@ -121,6 +121,18 @@ def main() -> int:
          "residual": ("subtle *36 exon-9 gene-conversions abstain (hybrid_present_identity_unresolved); *13 "
                       "identity single-sample-UNPOWERED (n=1); non-core SNP alleles (*14/*15/*21/*40/*46) "
                       "mis-called (no sentinel v0). Identity needs a BAM/CRAM + read-level pileup")},
+        {"gene": "DPYD", "trait": "fluoropyrimidine (5-FU/capecitabine) toxicity phenotype (activity-score)",
+         "getrm": None, "getrm_pct": None, "pharmcat": None,
+         "functional_evidence": fe_summ("DPYD"), "trio_mendelian": trio_summ("DPYD"),
+         "tier": ("NEW — the clinically highest-stakes pharmacogene (DPD deficiency = severe/fatal 5-FU "
+                  "toxicity). The four CPIC-actionable DPD-deficiency haplotypes (*2A/*13 no-function, "
+                  "c.2846A>T/HapB3 decreased), CPIC ACTIVITY-SCORE phenotype (Amstutz 2018; AS 2=NM, "
+                  "1-1.5=IM [reduce ~50%], 0-0.5=PM [avoid]). All-SNP, NO structural blind spot "
+                  "(Ensembl-GRCh38-verified coords). v0 DEPLOYMENT tier: decoded on 5 real PGP-UK humans "
+                  "(all *1/*1 NM — no false-positive deficiency call). Phenotype faithful-to-CPIC."),
+         "residual": ("no GeT-RM concordance number yet (v0.1 = CDC GeT-RM characterized DPYD in the "
+                      "2016/2019 rounds -> fetch+join); NO sentinel layer -> rarer uncertain-function DPYD "
+                      "alleles called *1 (CPIC's own non-actionable posture)")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",

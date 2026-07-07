@@ -235,6 +235,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
         demotion_rule="SNP surface: structural alleles NOT withheld (may be SILENTLY mis-called). Structural surface off a BAM/CRAM resolves COPY NUMBER (*5/*xN, 26/26), HYBRID PRESENCE (CYP2D7 depth, sens 0.62/spec 1.0), and HYBRID IDENTITY via read-level PSV D6-fraction (cyp2d6_hybrid_identity; Cyrius 117-PSV method; full-N GO, spec 1.0, *68 4/4 / *36 6/8); subtle *36 conversions + *13 (n=1 unpowered) abstain; non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"),
     CellContract(
+        cell_id="pgx:human:dpyd", track="pgx", route="dna-pgx", organism="human", target="dpyd",
+        claim="DPYD fluoropyrimidine-toxicity phenotype: CPIC activity-score over the 4 actionable DPD-deficiency haplotypes (*2A/*13 no-function, c.2846A>T/HapB3 decreased) from a phased VCF",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="cpic_activity_score_deployment_validated_no_getrm_concordance_yet",
+        validation_slice="v0 DEPLOYMENT tier: decoded end-to-end on 5 real PGP-UK humans (all *1/*1 NM, no false-positive deficiency call); the 4 haplotype coords are Ensembl-GRCh38-verified. GeT-RM DPYD concordance = v0.1 (CDC characterized DPYD in the 2016/2019 rounds -> fetch+join)",
+        label_provenance="CPIC DPYD guideline (Amstutz 2018) allele-functionality + PharmVar DPYD; deployment on PGP-UK PRJEB17529",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
+        demotion_rule="all-SNP, NO structural blind spot (unlike CYP2D6); NO sentinel layer -> rarer uncertain-function DPYD alleles called *1 (CPIC's own non-actionable posture — only the 4 actionable haplotypes change fluoropyrimidine dosing)"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",

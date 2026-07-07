@@ -23,12 +23,13 @@ from dna_decode.pgx.runner import (
     call_cyp2c9,
     call_cyp2d6,
     call_cyp3a5,
+    call_dpyd,
     call_tpmt,
 )
 
-# gene -> chromosome, for the per-variant display line (CYP2D6 is chr22, not chr10).
+# gene -> chromosome, for the per-variant display line (CYP2D6 is chr22, not chr10; DPYD is chr1).
 _GENE_CHROM = {"CYP2C19": "10", "CYP2C9": "10", "CYP2C8": "10", "CYP3A5": "7",
-               "TPMT": "6", "CYP2B6": "19", "CYP2D6": "22"}
+               "TPMT": "6", "CYP2B6": "19", "CYP2D6": "22", "DPYD": "1"}
 
 
 def main(argv=None) -> int:
@@ -86,7 +87,7 @@ def main(argv=None) -> int:
         return 0
 
     _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8, "cyp3a5": call_cyp3a5,
-                 "tpmt": call_tpmt, "cyp2b6": call_cyp2b6, "cyp2d6": call_cyp2d6}
+                 "tpmt": call_tpmt, "cyp2b6": call_cyp2b6, "cyp2d6": call_cyp2d6, "dpyd": call_dpyd}
     rec = _dispatch.get(args.gene, call_cyp2c19)(
         args.vcf, sample_id=args.sample_id, sample_column=args.sample)
 

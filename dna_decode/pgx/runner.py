@@ -140,6 +140,64 @@ def call_cyp2c9(vcf: str | Path, sample_id: str | None = None,
     return rec
 
 
+def call_dpyd(vcf: str | Path, sample_id: str | None = None,
+              sample_column: str | None = None) -> dict:
+    """Run the DPYD caller (fluoropyrimidine-toxicity activity-score phenotype) on a VCF -> record.
+
+    DPYD is the 5-FU / capecitabine toxicity gene; CPIC (Amstutz 2018) doses on a gene ACTIVITY SCORE over
+    the four actionable DPD-deficiency haplotypes (*2A/*13 no-function, c.2846A>T/HapB3 decreased). Same
+    activity-score engine as CYP2C9/CYP2D6."""
+    from dna_decode.pgx import dpyd_catalog as dp
+    res = call_diplotype(vcf, sample=sample_column, defining=dp.CORE_DEFINING, sentinels=dp.SENTINELS,
+                         reference_allele=dp.REFERENCE_ALLELE, phenotype_fn=dp.diplotype_phenotype,
+                         gene=dp.GENE)
+    sid = sample_id or sample_column or Path(vcf).stem
+    a_s = dp.activity_score(res.allele1, res.allele2) if res.allele1 else None
+    rec = {
+        "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": dp.GENE,
+        "organism": "Homo sapiens", "assembly": dp.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "activity_score": a_s,
+        "phenotype": res.phenotype,
+        "phenotype_abbrev": dp.PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-dpyd-v0",
+            "method": "vcf_core_snp_proxy -> haplotype -> diplotype -> CPIC_activity_score -> phenotype",
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "v0 deployment tier: caller runs end-to-end on real VCFs (PGP-UK); the four actionable "
+                "haplotype SNP coords are Ensembl-GRCh38-verified. GeT-RM DPYD consensus concordance is a "
+                "v0.1 follow-up (CDC GeT-RM characterized DPYD in the 2016/2019 rounds — fetch + join)."),
+            "phenotype_is_faithful_to_cpic": True, "is_core_marker_proxy": True,
+            "reference_tool": "PharmCAT",
+        },
+        "catalog": {
+            "gene": dp.GENE, "core_alleles": [d.star for d in dp.CORE_DEFINING] + ["*1"],
+            "activity_values": dp.ACTIVITY_VALUE,
+            "defining_variants": [
+                {"star": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in dp.CORE_DEFINING],
+            "source": "PharmVar DPYD + CPIC fluoropyrimidine guideline (Amstutz 2018); Ensembl GRCh38 coords",
+        },
+        "undetectable": dp.UNDETECTABLE,
+        "caveat": ("DPYD v0 = the four CPIC-actionable DPD-deficiency haplotypes (*2A/*13 no-function, "
+                   "c.2846A>T/HapB3 decreased) + *1, CPIC ACTIVITY-SCORE phenotype (AS 2=NM, 1-1.5=IM "
+                   "[reduce fluoropyrimidine ~50%], 0-0.5=PM [avoid]). NO sentinel layer -> rarer "
+                   "uncertain-function DPYD alleles are called *1 (CPIC's own non-actionable posture). "
+                   "Phenotype faithful-to-CPIC. NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec
+
+
 def call_cyp2c8(vcf: str | Path, sample_id: str | None = None,
                 sample_column: str | None = None) -> dict:
     """Run the CYP2C8 caller (star-allele CALLING only) on a VCF -> full provenance record.

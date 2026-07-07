@@ -1,6 +1,6 @@
 {
   "schema": "pgx-report-card-v0",
-  "analysis_date": "2026-07-06",
+  "analysis_date": "2026-07-07",
   "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
   "cells": [
     {
@@ -79,6 +79,17 @@
       "trio_mendelian": "592/602",
       "tier": "The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); 46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). Phenotype faithful-to-CPIC (activity-score). Trio-Mendelian 592/602 \u2014 the ~2% residual is the structural-confound signature (all homozygous-child). STRUCTURAL SURFACE (read-depth off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN duplication CN validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); HYBRID PRESENCE via elevated CYP2D7 depth (sens 0.62/spec 1.0); HYBRID IDENTITY via read-level PSV D6-fraction (Cyrius 117-PSV method) \u2014 full-N GO, spec 1.0, *68 4/4 / *36 6/8 (wiki/cyp2d6_hybrid_identity_2026-07-06). Everything short-read WGS can resolve.",
       "residual": "subtle *36 exon-9 gene-conversions abstain (hybrid_present_identity_unresolved); *13 identity single-sample-UNPOWERED (n=1); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0). Identity needs a BAM/CRAM + read-level pileup"
+    },
+    {
+      "gene": "DPYD",
+      "trait": "fluoropyrimidine (5-FU/capecitabine) toxicity phenotype (activity-score)",
+      "getrm": null,
+      "getrm_pct": null,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "NEW \u2014 the clinically highest-stakes pharmacogene (DPD deficiency = severe/fatal 5-FU toxicity). The four CPIC-actionable DPD-deficiency haplotypes (*2A/*13 no-function, c.2846A>T/HapB3 decreased), CPIC ACTIVITY-SCORE phenotype (Amstutz 2018; AS 2=NM, 1-1.5=IM [reduce ~50%], 0-0.5=PM [avoid]). All-SNP, NO structural blind spot (Ensembl-GRCh38-verified coords). v0 DEPLOYMENT tier: decoded on 5 real PGP-UK humans (all *1/*1 NM \u2014 no false-positive deficiency call). Phenotype faithful-to-CPIC.",
+      "residual": "no GeT-RM concordance number yet (v0.1 = CDC GeT-RM characterized DPYD in the 2016/2019 rounds -> fetch+join); NO sentinel layer -> rarer uncertain-function DPYD alleles called *1 (CPIC's own non-actionable posture)"
     },
     {
       "gene": "VKORC1",

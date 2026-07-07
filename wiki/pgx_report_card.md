@@ -1,4 +1,4 @@
-# PGx decoder report card (2026-07-06)
+# PGx decoder report card (2026-07-07)
 
 _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured)._
 
@@ -11,6 +11,7 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 | TPMT | thiopurine phenotype (COMPOUND *3A=*3B+*3C) | 85/85 (1.0) | — | — | 602/602 | rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0) |
 | CYP2B6 | efavirenz phenotype (*6-proxy, 516G>T) | 62/62 (1.0) | — | — | 602/602 | single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset) |
 | CYP2D6 | metabolizer phenotype (activity-score) — SNP surface only | 46/47 (0.9787) | — | — | 592/602 | subtle *36 exon-9 gene-conversions abstain (hybrid_present_identity_unresolved); *13 identity single-sample-UNPOWERED (n=1); non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0). Identity needs a BAM/CRAM + read-level pileup |
+| DPYD | fluoropyrimidine (5-FU/capecitabine) toxicity phenotype (activity-score) | — | — | — | — | no GeT-RM concordance number yet (v0.1 = CDC GeT-RM characterized DPYD in the 2016/2019 rounds -> fetch+join); NO sentinel layer -> rarer uncertain-function DPYD alleles called *1 (CPIC's own non-actionable posture) |
 | VKORC1 | warfarin sensitivity (rs9923231) | — | — | A1/D0/F0 | — | — |
 | SLCO1B1 | statin myopathy (rs4149056 / *5 521T>C) | — | — | — | — | single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants |
 
@@ -23,6 +24,7 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 - **TPMT:** REAL GeT-RM CDC consolidated consensus; 85/85 core-comparable. FIRST compound-allele cell — *3A resolved from two SNPs in cis (*3B+*3C), each alone = *3B/*3C. Phenotype faithful-to-CPIC (thiopurine).
 - **CYP2B6:** REAL GeT-RM CDC consolidated consensus; 62/62 on clean *1/*6. SINGLE-SNP *6-proxy (516G>T) — rs2279343 (785A>G) is absent from the 1000G 30x panel so *6 can't be split from *9. Phenotype faithful-to-CPIC.
 - **CYP2D6:** The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); 46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). Phenotype faithful-to-CPIC (activity-score). Trio-Mendelian 592/602 — the ~2% residual is the structural-confound signature (all homozygous-child). STRUCTURAL SURFACE (read-depth off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN duplication CN validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); HYBRID PRESENCE via elevated CYP2D7 depth (sens 0.62/spec 1.0); HYBRID IDENTITY via read-level PSV D6-fraction (Cyrius 117-PSV method) — full-N GO, spec 1.0, *68 4/4 / *36 6/8 (wiki/cyp2d6_hybrid_identity_2026-07-06). Everything short-read WGS can resolve.
+- **DPYD:** NEW — the clinically highest-stakes pharmacogene (DPD deficiency = severe/fatal 5-FU toxicity). The four CPIC-actionable DPD-deficiency haplotypes (*2A/*13 no-function, c.2846A>T/HapB3 decreased), CPIC ACTIVITY-SCORE phenotype (Amstutz 2018; AS 2=NM, 1-1.5=IM [reduce ~50%], 0-0.5=PM [avoid]). All-SNP, NO structural blind spot (Ensembl-GRCh38-verified coords). v0 DEPLOYMENT tier: decoded on 5 real PGP-UK humans (all *1/*1 NM — no false-positive deficiency call). Phenotype faithful-to-CPIC.
 - **VKORC1:** single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system
 - **SLCO1B1:** single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned (simvastatin function is assigned largely from 521T>C).
 

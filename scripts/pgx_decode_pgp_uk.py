@@ -35,6 +35,7 @@ from dna_decode.pgx import (
     cyp2c19_catalog as c19,
     cyp2d6_catalog as c2d6,
     cyp3a5_catalog as c3,
+    dpyd_catalog as dp,
     slco1b1,
     tpmt_catalog as tp,
     vkorc1,
@@ -46,6 +47,7 @@ from dna_decode.pgx.runner import (
     call_cyp2c9,
     call_cyp2d6,
     call_cyp3a5,
+    call_dpyd,
     call_tpmt,
 )
 
@@ -68,6 +70,10 @@ GRCH37_POS: dict[str, int] = {
     "rs1135840": 42522613, "rs28371706": 42525772, "rs28371725": 42523805,    # CYP2D6 486/*17/*41
     "rs59421388": 42523610, "rs769258": 42526763,                             # CYP2D6 *29/*35
     "rs35742686": 42524244, "rs5030655": 42525086, "rs5030656": 42524176,     # CYP2D6 *3/*6/*9 (indels)
+    # DPYD (chr1) — the four CPIC-actionable fluoropyrimidine-toxicity haplotypes; GRCh37 positions
+    # resolved via Ensembl GRCh37 REST 2026-07-07, cross-checked vs the Ensembl GRCh38 catalog coords.
+    "rs3918290": 97915614, "rs55886062": 97981343,                            # DPYD *2A/*13 (no function)
+    "rs67376798": 97547947, "rs75017182": 98045449,                           # DPYD c.2846A>T/HapB3 (decreased)
 }
 
 
@@ -81,6 +87,8 @@ def _all_variants():
     for d in tp.COMPONENTS:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     for d in c2d6.COMPONENTS:
+        yield d.rsid, d.chrom, d.pos, d.ref, d.alt
+    for d in dp.CORE_DEFINING:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     yield vkorc1.RSID, vkorc1.CHROM, vkorc1.POS, vkorc1.REF, vkorc1.ALT
     yield slco1b1.RSID, slco1b1.CHROM, slco1b1.POS, slco1b1.REF, slco1b1.ALT
@@ -196,13 +204,22 @@ def main(argv=None) -> int:
                          "phenotype_status": d6["phenotype_status"], "phasing": d6.get("phasing"),
                          "activity_score": d6.get("activity_score"),
                          "cnv_hybrid_unassessed": d6.get("cnv_hybrid_unassessed", True)}
+    # DPYD — the fluoropyrimidine (5-FU/capecitabine) toxicity gene. CPIC activity-score over the four
+    # actionable DPD-deficiency haplotypes. All-SNP, no structural blind spot (unlike CYP2D6). A DPYD IM/PM
+    # call is clinically load-bearing (dose reduction / avoidance), so this extends the real-human coverage
+    # to the highest-stakes actionable pharmacogene.
+    dd = call_dpyd(tmp, sample_id=args.sample_id)
+    results["dpyd"] = {"diplotype": dd["diplotype"], "phenotype": dd.get("phenotype"),
+                       "phenotype_abbrev": dd.get("phenotype_abbrev"),
+                       "phenotype_status": dd["phenotype_status"], "phasing": dd.get("phasing"),
+                       "activity_score": dd.get("activity_score")}
     vk = vkorc1.call_vkorc1(tmp); vk["sample_id"] = args.sample_id
     results["vkorc1"] = {"genotype": vk["cdna_genotype"], "sensitivity": vk["warfarin_sensitivity"]}
     sl = slco1b1.call_slco1b1(tmp); sl["sample_id"] = args.sample_id
     results["slco1b1"] = {"genotype": sl["variant_genotype"], "function": sl["function"],
                           "myopathy_risk": sl["myopathy_risk"]}
 
-    n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp2d6", "cyp3a5", "tpmt", "cyp2b6")
+    n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp2d6", "dpyd", "cyp3a5", "tpmt", "cyp2b6")
                  if results[g]["phenotype"] not in (None, "Indeterminate")
                  and results[g]["phenotype_status"] == "ok")
     out = {"schema": "pgx-pgp-uk-realization-v0", "sample_id": args.sample_id,
