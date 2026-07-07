@@ -42,9 +42,33 @@ Run the read-level PSV hybrid surface on NA12156's now-acquirable CRAM: generate
 structural+hybrid surfaces TOGETHER explain the miss (and the honest resolution is `*1/(*68+*4)`, not a SNP
 error); if flat, the miss is a panel artifact. Either outcome closes the 46/47 open question honestly.
 
+## RESOLVED (same day) — it is a 1000G panel genotyping artifact, NOT a decoder bug
+
+Ran the read-level PSV hybrid surface on NA12156's CRAM (new committed helper `scripts/cyp2d6_pileup_gen.py`
+→ 117/117 PSV coords covered, 115 callable) + the abstaining classifier:
+
+- **PSV profile = `flat_nonhybrid`** (5′−3′ = −0.062, exon9-tip dip = −0.017; D6-fraction ~0.47–0.5 flat
+  across all 13 regions). **NOT a `*68`/`*13`/`*36` hybrid.** (The `classify_hybrid_identity` "unresolved"
+  return is out-of-contract here — that classifier assumes the depth detector already flagged a hybrid; the
+  depth detector did NOT flag NA12156, and the raw evidence signal is flat.)
+- **The decisive read-level check** — actual base counts at rs3892097 (`*4` @ chr22:42128945, C→T) in the
+  real CRAM: **C=21, T=23 → ALT-fraction 0.523 = a clean HETEROZYGOTE (0/1).** NA12156 is genuinely `*1/*4`,
+  exactly as the GeT-RM truth says. (Corroborated: `*10` rs1065852 also het 0.559; `*2` rs16947 hom-ref 0.0.)
+
+**Conclusion.** All three surfaces agree the individual is a normal-copy-number, non-hybrid, true `*1/*4`
+heterozygote. The SNP-caller's `*4/*4` came from the **1000G phased-panel VCF mis-genotyping rs3892097 as
+homozygous `1/1`** — an input-panel genotyping/imputation artifact, provable from the reads — **not a decoder
+error.** The decoder faithfully propagated a wrong input. So the CYP2D6 SNP-surface concordance miss (46/47)
+is a **label/input-quality issue at one 1000G site**, the project's recurring "suspect the label/input"
+pattern — the caller logic is correct on the true genotype. This does NOT change the committed 46/47 number
+(measured against the 1000G VCF input, which is wrong at this site); it EXPLAINS it to root cause with real
+CRAM evidence.
+
 ## Honesty
 
-- Real CRAM, real depth, real boundary (R3). CN=2 is a measured fact, not an assertion.
-- This did NOT (yet) move 46/47 → 47/47 — it **removed the wrong hypothesis** (CNV) and pointed at the right
-  tool (hybrid surface). The committed 40-row structural ratios set is unchanged (NA12156 measured separately).
+- Real CRAM, real depth, real boundary (R3). CN=2, the flat PSV profile, and the rs3892097 read counts are
+  all measured facts, not assertions.
+- The committed 40-row structural ratios set + the 46/47 concordance number are unchanged (this is a
+  root-cause diagnosis, not a re-scoring). Pileup files are large regenerable intermediates — NOT committed;
+  regenerate via `resolve_1000g_cram.py` → `cyp2d6_pileup_gen.py`. Frozen AMR surface byte-unchanged.
 - Frozen AMR surface byte-unchanged.
