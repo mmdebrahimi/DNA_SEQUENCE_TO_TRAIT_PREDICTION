@@ -21,7 +21,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-DIPLO_GENES = ["cyp2c19", "cyp2c9", "cyp2d6", "dpyd", "cyp3a5", "tpmt", "cyp2b6"]
+DIPLO_GENES = ["cyp2c19", "cyp2c9", "cyp2d6", "dpyd", "nudt15", "cyp3a5", "tpmt", "cyp2b6"]
 SNP_GENES = ["vkorc1", "slco1b1"]
 
 

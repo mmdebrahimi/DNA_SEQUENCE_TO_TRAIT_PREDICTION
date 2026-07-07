@@ -136,6 +136,17 @@ def main() -> int:
                       "supplement table, not in the CYP-only ursaPGx benchmark -> manual curation; deferred). "
                       "Validation is AF-corroboration + PGP-UK deployment (KNOWLEDGE_BASELINE tier, like "
                       "VKORC1/SLCO1B1). NO sentinel layer -> rarer uncertain-function DPYD alleles called *1")},
+        {"gene": "NUDT15", "trait": "thiopurine-toxicity phenotype (activity-score) — pairs with TPMT",
+         "getrm": None, "getrm_pct": None, "pharmcat": None,
+         "functional_evidence": fe_summ("NUDT15"), "trio_mendelian": trio_summ("NUDT15"),
+         "tier": ("NEW — 2nd thiopurine gene (azathioprine/mercaptopurine myelosuppression). Dominant "
+                  "actionable no-function *3 (rs116855232, ~9.5% EAS) + *1, CPIC ACTIVITY-SCORE phenotype "
+                  "(Relling 2019; AS 2=NM, 1=IM [reduce], 0=PM [avoid]). All-SNP, Ensembl-GRCh38-verified. "
+                  "v0 DEPLOYMENT tier: decoded on 5 real PGP-UK humans (EUR — all *1/*1 NM, consistent with "
+                  "the ~0.2% EUR *3 freq). Phenotype faithful-to-CPIC."),
+         "residual": ("*2 shares rs116855232 -> called *3 (SAME no-function phenotype, CPIC call unaffected). "
+                      "GeT-RM NUDT15 concordance = external wall (paper-supplement, like DPYD); validation is "
+                      "the *3 EAS-AF match + PGP-UK deployment. NO sentinel layer -> rarer alleles called *1")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",

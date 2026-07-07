@@ -244,6 +244,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
         demotion_rule="all-SNP, NO structural blind spot (unlike CYP2D6); NO sentinel layer -> rarer uncertain-function DPYD alleles called *1 (CPIC's own non-actionable posture — only the 4 actionable haplotypes change fluoropyrimidine dosing)"),
     CellContract(
+        cell_id="pgx:human:nudt15", track="pgx", route="dna-pgx", organism="human", target="nudt15",
+        claim="NUDT15 thiopurine-toxicity phenotype: CPIC activity-score over the dominant no-function *3 (rs116855232) from a phased VCF",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="cpic_activity_score_deployment_validated_no_getrm_concordance_yet",
+        validation_slice="v0 DEPLOYMENT tier: caller runs end-to-end on real VCFs (PGP-UK); *3 coord Ensembl-GRCh38-verified; *3 EAS AF ~9.5% matches the thiopurine-toxicity spectrum. GeT-RM NUDT15 concordance = external wall (paper-supplement, like DPYD)",
+        label_provenance="CPIC NUDT15 guideline (Relling 2019) allele-functionality + PharmVar NUDT15; deployment on PGP-UK PRJEB17529",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
+        demotion_rule="*2 shares rs116855232 -> called *3 (SAME no-function phenotype, CPIC call unaffected); NO sentinel layer -> rarer non-core NUDT15 alleles called *1 (only *3/*2 change thiopurine dosing at v0)"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",

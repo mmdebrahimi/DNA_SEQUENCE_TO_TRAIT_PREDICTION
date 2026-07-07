@@ -68,6 +68,17 @@
         "*1": 10
       }
     },
+    "nudt15": {
+      "diplotypes": {
+        "*1/*1": 5
+      },
+      "phenotypes": {
+        "NM": 5
+      },
+      "observed_allele_counts": {
+        "*1": 10
+      }
+    },
     "cyp3a5": {
       "diplotypes": {
         "*1/*1": 4,

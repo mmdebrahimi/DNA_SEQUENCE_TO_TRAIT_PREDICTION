@@ -4,7 +4,7 @@
   "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",
   "vcf": "D:\\dna_decode_cache\\pgp_uk\\FR07961006.vcf.gz",
   "assembly_source": "GRCh37 -> targeted position-liftover -> GRCh38 catalog",
-  "n_genes_real_call": 7,
+  "n_genes_real_call": 8,
   "results": {
     "cyp2c19": {
       "diplotype": "*1/*2",
@@ -58,6 +58,14 @@
       "cnv_hybrid_unassessed": true
     },
     "dpyd": {
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "phenotype_abbrev": "NM",
+      "phenotype_status": "ok",
+      "phasing": "unphased",
+      "activity_score": 2.0
+    },
+    "nudt15": {
       "diplotype": "*1/*1",
       "phenotype": "Normal Metabolizer",
       "phenotype_abbrev": "NM",
@@ -219,6 +227,10 @@
     },
     {
       "rsid": "rs75017182",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs116855232",
       "state": "assumed_ref_0/0_wgs"
     },
     {
