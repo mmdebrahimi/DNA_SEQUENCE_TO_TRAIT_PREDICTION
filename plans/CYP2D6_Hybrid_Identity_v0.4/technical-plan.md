@@ -1,9 +1,11 @@
 # CYP2D6 hybrid IDENTITY (*13/*36/*68) — Phase B technical plan (drafted 2026-07-07)
 
-**Status: DRAFTED — Phase A GO landed; Phase B (the classifier) awaits user ratification (Planning-STOP).**
-Phase A (`scripts/cyp2d6_psv_evidence.py` + falsifier `wiki/cyp2d6_psv_evidence_falsifier.md`) is SHIPPED +
-validated (GO: 3/3 hybrids signalled, 3/3 non-hybrids flat on a real-CRAM panel). This plan folds in the
-pre-exec `/brainstorm` (2 rounds) refinements.
+**Status: EXECUTED 2026-07-06 (via `--advance`) — Phase A GO + Phase B classifier SHIPPED + full-N validated.**
+Phase A (`scripts/cyp2d6_psv_evidence.py`) proved the signal; Phase B (`scripts/cyp2d6_psv_phaseb_falsifier.py`
++ `dna_decode/pgx/cyp2d6_hybrid_identity.py`) validated at FULL N (spec 1.0, *68 4/4, *36 6/8; *13 n=1
+unpowered) and shipped the three-level abstaining classifier. `wiki/cyp2d6_hybrid_identity_2026-07-06.md`.
+Remaining residuals (subtle *36 conversion, *13 power) are long-read / more-truth, NOT code. This plan folded
+in the pre-exec `/brainstorm` (2 rounds) refinements.
 
 ## Where we are
 - SHIPPED CYP2D6 surface: SNP diplotype (46/47) + copy-number (*5/*xN, 26/26) + hybrid-PRESENCE (CYP2D7
