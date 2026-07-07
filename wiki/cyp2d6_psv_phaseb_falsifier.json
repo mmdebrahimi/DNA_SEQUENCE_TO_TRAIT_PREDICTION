@@ -1,0 +1,459 @@
+{
+  "schema": "cyp2d6-psv-phaseb-falsifier-v0",
+  "analysis_date": "2026-07-06",
+  "n_samples": 39,
+  "n_hybrid": 13,
+  "n_nonhybrid": 26,
+  "overall_hybrid_signal_sensitivity": 0.846,
+  "nonhybrid_specificity": 1.0,
+  "per_allele": {
+    "*68": {
+      "n": 4,
+      "correct_signal": 4,
+      "rate": 1.0
+    },
+    "*13": {
+      "n": 1,
+      "correct_signal": 1,
+      "rate": 1.0
+    },
+    "*36": {
+      "n": 8,
+      "correct_signal": 6,
+      "rate": 0.75
+    }
+  },
+  "verdict": "GO_BUILD_CLASSIFIER",
+  "interpretation": "Full-N separation: the well-powered hybrid alleles (*68 n>=4, *36 n>=8) get their directional/exon9 signal AND non-hybrids (normal/dup/deletion) stay flat (the confound test). GO -> the Phase-B abstaining classifier is justified. PARTIAL -> some alleles muddy at scale; keep presence-only as the ceiling for those.",
+  "rows": [
+    {
+      "sample": "NA10855",
+      "truth": "*1/(*68)+*4",
+      "expected_signal": "directional_5p_high_3p_low",
+      "got_signal": "directional_5p_high_3p_low",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.192,
+      "exon9_tip_dip": 0.029,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA11832",
+      "truth": "*1/(*68)+*4",
+      "expected_signal": "directional_5p_high_3p_low",
+      "got_signal": "directional_5p_high_3p_low",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.172,
+      "exon9_tip_dip": 0.017,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA19785",
+      "truth": "*1/*13+*2",
+      "expected_signal": "directional_5p_low_3p_high",
+      "got_signal": "directional_5p_low_3p_high",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.234,
+      "exon9_tip_dip": 0.04,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18563",
+      "truth": "*1/*36+*10",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "exon9_tip_dip",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.013,
+      "exon9_tip_dip": 0.165,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18526",
+      "truth": "*1/*36x2+*10",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "exon9_tip_dip",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.104,
+      "exon9_tip_dip": 0.354,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18565",
+      "truth": "*10/*36x2",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "exon9_tip_dip",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.097,
+      "exon9_tip_dip": 0.17,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18959",
+      "truth": "*2/*36+*10",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "exon9_tip_dip",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.036,
+      "exon9_tip_dip": 0.217,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18980",
+      "truth": "*2/*36+*10",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "exon9_tip_dip",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.082,
+      "exon9_tip_dip": 0.212,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18564",
+      "truth": "*2A/*36+*10",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "exon9_tip_dip",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.034,
+      "exon9_tip_dip": 0.172,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA12878",
+      "truth": "*3/(*68)+*4",
+      "expected_signal": "directional_5p_high_3p_low",
+      "got_signal": "directional_5p_high_3p_low",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.272,
+      "exon9_tip_dip": -0.023,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "NA18617",
+      "truth": "*36+*10/*36+*10",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "directional_5p_high_3p_low",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.151,
+      "exon9_tip_dip": 0.348,
+      "is_hybrid": true,
+      "correct": false
+    },
+    {
+      "sample": "NA18572",
+      "truth": "*36+*10/*41",
+      "expected_signal": "exon9_tip_dip",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.059,
+      "exon9_tip_dip": 0.128,
+      "is_hybrid": true,
+      "correct": false
+    },
+    {
+      "sample": "HG01190",
+      "truth": "*68+*4/*5",
+      "expected_signal": "directional_5p_high_3p_low",
+      "got_signal": "directional_5p_high_3p_low",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.216,
+      "exon9_tip_dip": -0.008,
+      "is_hybrid": true,
+      "correct": true
+    },
+    {
+      "sample": "HG00589",
+      "truth": "*1/*21",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.018,
+      "exon9_tip_dip": -0.094,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA07029",
+      "truth": "*1/*35",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.045,
+      "exon9_tip_dip": -0.008,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA06991",
+      "truth": "*1/*4",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.003,
+      "exon9_tip_dip": 0.012,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA07019",
+      "truth": "*1/*4",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.039,
+      "exon9_tip_dip": -0.055,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA07048",
+      "truth": "*1/*4",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.002,
+      "exon9_tip_dip": 0.02,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA19920",
+      "truth": "*1/*4x2",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 0,
+      "five_prime_minus_three_prime": null,
+      "exon9_tip_dip": null,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA10856",
+      "truth": "*1/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.118,
+      "exon9_tip_dip": -0.03,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA12873",
+      "truth": "*1/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.082,
+      "exon9_tip_dip": -0.077,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA18855",
+      "truth": "*1/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.048,
+      "exon9_tip_dip": 0.022,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA18945",
+      "truth": "*1/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.05,
+      "exon9_tip_dip": -0.139,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA18992",
+      "truth": "*1/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.051,
+      "exon9_tip_dip": -0.01,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA07000",
+      "truth": "*2(*35)/*9",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.065,
+      "exon9_tip_dip": -0.004,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA19226",
+      "truth": "*2/*2x2",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.013,
+      "exon9_tip_dip": 0.058,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA07056",
+      "truth": "*2/*4",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.075,
+      "exon9_tip_dip": 0.002,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA19819",
+      "truth": "*2/*4x2",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.058,
+      "exon9_tip_dip": 0.013,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA18868",
+      "truth": "*2/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.039,
+      "exon9_tip_dip": -0.033,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA19035",
+      "truth": "*2/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.054,
+      "exon9_tip_dip": 0.035,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA19207",
+      "truth": "*2x2/*10",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.018,
+      "exon9_tip_dip": 0.039,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA19109",
+      "truth": "*2x2/*29",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.064,
+      "exon9_tip_dip": 0.002,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "HG00436",
+      "truth": "*2x2/*71",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.013,
+      "exon9_tip_dip": -0.006,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA07055",
+      "truth": "*4/*4",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.013,
+      "exon9_tip_dip": 0.001,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "HG00276",
+      "truth": "*4/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.072,
+      "exon9_tip_dip": -0.08,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA10831",
+      "truth": "*4/*5",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.023,
+      "exon9_tip_dip": -0.015,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA18873",
+      "truth": "*5/*17",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": 0.021,
+      "exon9_tip_dip": -0.009,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA18861",
+      "truth": "*5/*29",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.031,
+      "exon9_tip_dip": -0.094,
+      "is_hybrid": false,
+      "correct": true
+    },
+    {
+      "sample": "NA12336",
+      "truth": "*5/*41",
+      "expected_signal": "flat_nonhybrid",
+      "got_signal": "flat_nonhybrid",
+      "n_callable": 115,
+      "five_prime_minus_three_prime": -0.04,
+      "exon9_tip_dip": -0.083,
+      "is_hybrid": false,
+      "correct": true
+    }
+  ]
+}

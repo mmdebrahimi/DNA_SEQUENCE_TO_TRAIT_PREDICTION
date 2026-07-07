@@ -114,13 +114,13 @@ def main() -> int:
                   "Phenotype faithful-to-CPIC (activity-score). Trio-Mendelian 592/602 — the ~2% residual is "
                   "the structural-confound signature (all homozygous-child). STRUCTURAL SURFACE (read-depth "
                   "off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN duplication CN "
-                  "validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); HYBRID PRESENCE "
-                  "(*13/*36/*68) DETECTED via elevated CYP2D7 depth — sens 0.62 / spec 1.0 / AUROC 0.83 "
-                  "(wiki/cyp2d6_hybrid_2026-07-06; the *68 family detected cleanly). Hybrid IDENTITY (which "
-                  "of *13/*36/*68) still needs PSV analysis (Cyrius-class)."),
-         "residual": ("hybrid IDENTITY (which of *13/*36/*68) unresolved (PSV analysis, Cyrius-class); hybrid "
-                      "detection sens partial (subtle *36 + opposite-signature *13 missed); non-core SNP alleles "
-                      "(*14/*15/*21/*40/*46) mis-called (no sentinel v0). Structural surface needs a BAM/CRAM")},
+                  "validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); HYBRID PRESENCE via "
+                  "elevated CYP2D7 depth (sens 0.62/spec 1.0); HYBRID IDENTITY via read-level PSV D6-fraction "
+                  "(Cyrius 117-PSV method) — full-N GO, spec 1.0, *68 4/4 / *36 6/8 "
+                  "(wiki/cyp2d6_hybrid_identity_2026-07-06). Everything short-read WGS can resolve."),
+         "residual": ("subtle *36 exon-9 gene-conversions abstain (hybrid_present_identity_unresolved); *13 "
+                      "identity single-sample-UNPOWERED (n=1); non-core SNP alleles (*14/*15/*21/*40/*46) "
+                      "mis-called (no sentinel v0). Identity needs a BAM/CRAM + read-level pileup")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",

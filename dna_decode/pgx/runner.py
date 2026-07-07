@@ -405,9 +405,13 @@ def call_cyp2d6(vcf: str | Path, sample_id: str | None = None,
         # CYP2D6-vs-CYP2D7 PSV analysis (Cyrius-class) — not resolved by either surface here.
         "structural_surface": {"available": True,
                                "resolves": "copy_number (*5 deletion / *xN duplication) + HYBRID PRESENCE "
-                                           "(*13/*36/*68 via elevated CYP2D7 depth; high-specificity)",
-                               "requires": "BAM/CRAM read-depth", "module": "dna_decode.pgx.cyp2d6_structural",
-                               "hybrid_presence_detectable": True, "hybrid_identity_resolved": False},
+                                           "(elevated CYP2D7 depth) + HYBRID IDENTITY (*68 clean / *36 partial "
+                                           "via read-level PSV D6-fraction profile; *13 unpowered n=1); "
+                                           "high-specificity (spec 1.0)",
+                               "requires": "BAM/CRAM read-depth (identity: read-level PSV pileup)",
+                               "module": "dna_decode.pgx.cyp2d6_structural + cyp2d6_hybrid_identity",
+                               "hybrid_presence_detectable": True,
+                               "hybrid_identity_resolved": "partial (*68 4/4, *36 6/8; subtle *36 + *13 abstain)"},
         "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
         "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
         "variant_calls": res.variant_calls,
