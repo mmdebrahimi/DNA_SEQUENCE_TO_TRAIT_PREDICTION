@@ -1,0 +1,904 @@
+{
+  "schema": "pgx-cyp2b6-getrm-concordance-v0",
+  "gene": "CYP2B6",
+  "analysis_date": "2026-07-05",
+  "truth_source": "GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2B6_getrm_cons",
+  "genotype_source": "1000 Genomes 30x phased panel (CYP2B6 region, pure-Python tabix-over-HTTP (no Docker); GeT-RM CDC consolidated PGx table; SINGLE-SNP *6-proxy (785 absent from panel))",
+  "caller_is_independent_of_consensus_tools": true,
+  "n_overlap_samples": 88,
+  "n_core_comparable": 62,
+  "core_diplotype_concordance": 1.0,
+  "core_diplotype_hits": "62/62",
+  "n_noncore_truth": 26,
+  "star38_phenotype_equivalent": 0,
+  "noncore_correctly_withheld": 0,
+  "genuine_silent_miscall": 26,
+  "genuine_silent_miscall_pct": 29.5,
+  "phenotype_correct_incl_star38": "62/88",
+  "correct_or_abstains": "62/88",
+  "honesty_tier": "GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call).",
+  "core_rows": [
+    {
+      "sample": "HG00436",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "HG00589",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA06991",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA06993",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA07000",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA07048",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA07348",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA07357",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10831",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10838",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10846",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10847",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10854",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10855",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10856",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10859",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA11832",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA11881",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA11993",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12003",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12145",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12156",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12336",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12753",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12815",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12873",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12878",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA12892",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18518",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18519",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18526",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18544",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18552",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18563",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18564",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18565",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18572",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18617",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18855",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18868",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18952",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18966",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18973",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18980",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18992",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19003",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19007",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19035",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19109",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19122",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19143",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19176",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19207",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19213",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19238",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19239",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19700",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19785",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19819",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19908",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19917",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19920",
+      "getrm": "*6/*6",
+      "predicted": "*6/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    }
+  ],
+  "noncore_rows": [
+    {
+      "sample": "HG00276",
+      "getrm": "*2/(*4)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "HG01190",
+      "getrm": "*1(*27)/*1(*5)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA07019",
+      "getrm": "*1(*5) or *1(*22)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA07029",
+      "getrm": "*6/(*27)",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA07055",
+      "getrm": "*6/(*27)",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA07056",
+      "getrm": "*6/(*22)",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA10851",
+      "getrm": "*1/*1 (*27)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA10865",
+      "getrm": "*1/(*2;*10)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA11839",
+      "getrm": "*1/*1 (*15)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA12006",
+      "getrm": "*1/*1 (*5)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA12236",
+      "getrm": "*1/*1 (*4)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA12717",
+      "getrm": "*1/*7",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA12813",
+      "getrm": "*1/*2",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA18484",
+      "getrm": "*1/*18",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA18861",
+      "getrm": "*1/*18",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA18873",
+      "getrm": "*1/*18",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA18942",
+      "getrm": "*1/*2",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA18945",
+      "getrm": "*6/(*2;*10)",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA18959",
+      "getrm": "*1/*1(*27)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA19095",
+      "getrm": "*18/*18",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA19147",
+      "getrm": "*1/*18",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA19174",
+      "getrm": "*6/*18",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA19226",
+      "getrm": "*18/(*20)",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA19789",
+      "getrm": "*1/*1 (*27)",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA20296",
+      "getrm": "*1/*2",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    },
+    {
+      "sample": "NA20509",
+      "getrm": "*1/*7",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": false,
+      "bucket": "genuine_miscall",
+      "match": null
+    }
+  ]
+}

@@ -1,5 +1,16 @@
 # UK Biobank application prep — the chosen acquisition path (2026-07-04)
 
+> **⛔ STATUS 2026-07-05 — EXTERNALLY WALLED (path paused).** UK Biobank's **Research Analysis Platform
+> (UKB-RAP)** is **CLOSED** following the security incidents + the Board-led review (report published; CEO
+> Prof. Sir Rory Collins' notice). Reopening is planned **phased, timeline TBD** (a detailed timetable was
+> promised "during June"; compute credits + project duration to be auto-extended on resumption). **The
+> data-access/compute half is blocked** — do NOT treat UKB as an available substrate until RAP reopens.
+> Distinction: **AMS registration + application** (becoming a registered researcher, getting a project
+> approved) is a SEPARATE pipeline and may still accept submissions — so the only low-cost move now is to
+> **get registered + queued** so you're ready the instant RAP reopens; the actual analysis waits. Re-check
+> the official reopening timetable before investing further. The live, NON-walled forward work is the PGx
+> decoder track (CYP2C-cluster shipped; ~13 more free genes on the Docker-free harness).
+
 **User directive 2026-07-04:** "Go straight to UK Biobank — the individual/international-friendly one."
 Chosen over All of Us after the DURA check (York University not registered → needs a slow institutional
 agreement; UWO registered but user is alumnus-only, no active affiliation). **UK Biobank needs NO
@@ -58,9 +69,14 @@ the exact quote **before** any spend. Notes:
 ## 4. Drafted project — grounded in the decoder's validated human cells
 
 The north-star fit: UK Biobank is the **free independent LAB-MEASURED label** the human decoder needs. The
-current human cells are openSNP **self-report** (PILOT tier); UKB's genotype × measured-phenotype at n≈500k
-upgrades them to real external validation — the human analogue of the HIV Stanford / TB AMR-Portal
-independent numbers. It also gives a substrate for the one unrun *fair learned-decoder* test (deep,
+current human cells sit at two tiers: (a) openSNP **self-report** (PILOT tier); and (b) — stronger — a
+**GeT-RM-validated human pharmacogenomics suite** now covering the whole CYP2C cluster: **CYP2C19 72/72,
+CYP2C9 73/73, and CYP2C8 82/82** exact core-diplotype concordance vs the GeT-RM NGS consensus on real 1000
+Genomes genomes (an independent caller vs the field's accepted consensus truth set; `wiki/pgx_report_card`).
+That is already deterministic human genotype→star-allele decoding validated against a free reference panel.
+What UKB adds is the tier neither has: genotype × **measured** phenotype at n≈500k, which upgrades the
+self-report cells to real external validation — the human analogue of the HIV Stanford / TB AMR-Portal
+independent numbers — and gives a substrate for the one unrun *fair learned-decoder* test (a deep,
 lab-measured trait with no curated determinant catalog).
 
 ### Lay summary (draft — for the AMS "lay summary" field)

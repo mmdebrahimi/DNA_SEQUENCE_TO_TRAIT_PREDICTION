@@ -87,3 +87,6 @@ logs/
 # genome-map spike per-genome feature maps (large, regenerable via scripts/genome_map_spike.py)
 wiki/genome_map_spike_*/
 bash.exe.stackdump
+
+# ClinVar plain panels are large + regenerable; ship the gzipped GRCh38 panel only
+data/clinvar/*.tsv

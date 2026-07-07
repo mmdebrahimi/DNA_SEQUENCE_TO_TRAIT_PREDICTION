@@ -51,7 +51,7 @@ HIV_UNDERPOWERED_N = 50  # report-card n below this -> measured-but-UNDERPOWERED
 
 
 # Tracks (v0.1). amr/viral both route through `dna-amr`; route ≠ track (brainstorm C2 split).
-TRACKS = ("amr", "viral", "pgx", "typing", "finder")
+TRACKS = ("amr", "viral", "pgx", "hla", "mendelian", "typing", "finder")
 
 
 @dataclass(frozen=True)
@@ -190,6 +190,51 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
         demotion_rule="a non-core *5/*8/*9/*11 sentinel hit -> phenotype withheld"),
     CellContract(
+        cell_id="pgx:human:cyp2c8", track="pgx", route="dna-pgx", organism="human", target="cyp2c8",
+        claim="CYP2C8 star-allele diplotype (*2/*3/*4) from a phased VCF — CALLING only, NO CPIC phenotype",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_no_cpic_phenotype_substrate_dependent",
+        validation_slice="GeT-RM CYP2C8_getrm_ngs core-diplotype concordance 82/82 on real 1000G (Docker-free tabix-HTTP region fetch)",
+        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2C8_getrm_ngs join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="rare non-core CYP2C8 allele mis-called *1 (no sentinel layer in v0); function is substrate-dependent so NO PM/IM/NM is ever emitted"),
+    CellContract(
+        cell_id="pgx:human:cyp3a5", track="pgx", route="dna-pgx", organism="human", target="cyp3a5",
+        claim="CYP3A5 star-allele diplotype (*3/*6/*7) + CPIC expressor/non-expressor phenotype (tacrolimus) from a phased VCF",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_underpowered_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC multi-lab consensus (CYP3A5_getrm_cons) 8/8 core-diplotype on 1000G-overlap; UNDERPOWERED n=8; covers *1/*3/*6/*7 incl. *7 insertion",
+        label_provenance="GeT-RM CDC reference-material multi-lab consensus (CYP3A4/CYP3A5 J Mol Diagn 2023 table) join 1000G",
+        abstention_vocab=AbstentionVocab.UNDERPOWERED, native_abstention="UNDERPOWERED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="only ~8 GeT-RM CYP3A5 samples overlap 1000G (UNDERPOWERED); rare non-core alleles mis-called *1 (no sentinel layer v0)"),
+    CellContract(
+        cell_id="pgx:human:tpmt", track="pgx", route="dna-pgx", organism="human", target="tpmt",
+        claim="TPMT COMPOUND star-allele diplotype (*3A=*3B+*3C) + CPIC thiopurine metabolizer phenotype from a phased VCF",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="compound_calling_validated_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC consolidated consensus 85/85 core-comparable on 1000G-overlap (truth *1/*3A/*3B/*3C); compound *3A path exercised (6 *3A + 8 *3C samples)",
+        label_provenance="GeT-RM CDC consolidated 363-sample PGx consensus (TPMT/NUDT15 J Mol Diagn 2022) join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="first true compound-allele cell (>=2 SNPs in cis -> *3A); rare non-core alleles (*2/*8/*16) mis-called *1 (no sentinel layer v0)"),
+    CellContract(
+        cell_id="pgx:human:cyp2b6", track="pgx", route="dna-pgx", organism="human", target="cyp2b6",
+        claim="CYP2B6 *6-proxy (516G>T signal) + CPIC efavirenz metabolizer phenotype from a phased VCF",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_proxy_calling_validated_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC consolidated consensus 62/62 on clean *1/*6 truth on 1000G-overlap; SINGLE-SNP *6-proxy (516G>T) — cannot split *6/*9 (rs2279343/785A>G absent from 1000G 30x panel)",
+        label_provenance="GeT-RM CDC consolidated 363-sample PGx consensus (CYP2B6) join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="single-SNP *6-proxy: rs2279343 (785A>G) absent from the 1000G 30x panel so *6 can't be split from *9; a callset with 785 upgrades to the compound resolver (v0.1)"),
+    CellContract(
+        cell_id="pgx:human:cyp2d6", track="pgx", route="dna-pgx", organism="human", target="cyp2d6",
+        claim="CYP2D6 SNP-surface star-allele diplotype (core {*2,*3,*4,*6,*9,*10,*17,*29,*35,*41}) + CPIC activity-score phenotype from a phased VCF — structural alleles UNASSESSED",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="snp_surface_calling_validated_structural_unassessed_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC/ursaPGx consensus (CYP2D6_getrm_cons) core-comparable SNP-diplotype concordance on the SNP-decodable 1000G-overlap subset; structural alleles (*5/*13/*36/*68/*xN; ~28/87) BAM-required and EXCLUDED (cnv_hybrid_unassessed)",
+        label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2D6_getrm_cons join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="SNP surface: structural alleles NOT withheld (may be SILENTLY mis-called). Structural surface off a BAM/CRAM resolves COPY NUMBER (*5/*xN, 26/26), HYBRID PRESENCE (CYP2D7 depth, sens 0.62/spec 1.0), and HYBRID IDENTITY via read-level PSV D6-fraction (cyp2d6_hybrid_identity; Cyrius 117-PSV method; full-N GO, spec 1.0, *68 4/4 / *36 6/8); subtle *36 conversions + *13 (n=1 unpowered) abstain; non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",
@@ -197,6 +242,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         label_provenance="literature sensitivity assignment (no independent panel validation in-repo)",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
         falsifier_ref="none", incoming_data_gate="n/a", demotion_rule="n/a (deterministic single-SNP readout)"),
+    CellContract(
+        cell_id="pgx:human:slco1b1", track="pgx", route="dna-pgx", organism="human", target="slco1b1",
+        claim="SLCO1B1 c.521T>C (rs4149056, *5) transporter-function genotype -> simvastatin myopathy risk, from a phased VCF",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_function",
+        validation_slice="direct 521T>C genotype readout (plus-strand); NOT an independent star-diplotype concordance (single-SNP tautology); genotype+trio only",
+        label_provenance="CPIC simvastatin function assignment (Cooper-DeHoff 2022); no independent panel validation in-repo (rs4149056 IS the truth for a 521 call)",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants (v0 scope-limit)"),
 ]
 
 # --- Typing + determinant-finder whole-tool cells (route dna-<trait>). Faithful-to-tool curated-DB callers. ---
@@ -213,6 +267,43 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     ("finder", "pointfinder", "Escherichia_coli", "chromosomal AMR point mutations (PointFinder) — independent vs amr POINT", "ABSTAIN"),
     ("finder", "disinfinder", "bacteria", "biocide/disinfectant resistance genes (DisinFinder)", "ABSTAIN"),
 ]
+
+
+# --- Mendelian (germline pathogenicity) cell (route dna-clinvar). Curated ClinVar catalog decoder. ---
+_MENDELIAN_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="mendelian:human:germline_pathogenicity", track="mendelian", route="dna-clinvar",
+        organism="human", target="germline_pathogenicity",
+        claim="curated ClinVar germline pathogenicity (P/LP + B/LB) over the ACMG SF v3.2 + carrier 86-gene panel, from a VCF",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL, claim_status="curated_clinvar_catalog_faithful_to_tool",
+        validation_slice="deterministic ClinVar-catalog lookup; deployment demonstration on real PGP-UK individuals (N=5; 0 reportable pathogenic = expected ACMG-SF base rate, benign carrier load surfaced); faithful-to-ClinVar, no independent truth beyond the curated DB",
+        label_provenance="ClinVar curated germline classifications (NCBI); P/LP + B/LB only; ACMG SF v3.2 (81) + 5 carrier genes",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="VUS/conflicting excluded (deployable-claim tier only); bounded 86-gene panel -> out-of-panel = INDETERMINATE (absence != benign)"),
+]
+
+
+# --- HLA drug-hypersensitivity cells (route dna-hla). Tag-SNP LD-proxy carriage callers. ---
+def _hla_contracts() -> list[CellContract]:
+    from dna_decode.hla.catalog import CATALOG
+    out: list[CellContract] = []
+    for key, a in CATALOG.items():  # CATALOG now holds ONLY the validated cell(s) (b5701); failed tags demoted
+        out.append(CellContract(
+            cell_id=f"hla:human:{key}", track="hla", route="dna-hla", organism="human", target=key,
+            claim=f"{a.allele} carriage (tag SNP {a.rsid}) -> {a.drug} {a.reaction} risk (CPIC)",
+            evidence_tier=EvidenceTier.NEAR_INDEPENDENT,
+            claim_status="tag_snp_ld_proxy_validated_vs_1000g_hla_truth",
+            validation_slice=("sample-level concordance vs the free 1000G HLA truth (20140702_hla_diversity, "
+                              "n=1103): sens 0.979 / spec 0.992 / PPV 0.855 — the deployed clinical abacavir "
+                              "screen (rs2395029), independently measured"),
+            label_provenance="1000G HLA types (20140702_hla_diversity) join rs2395029 tag genotypes; CPIC abacavir guideline",
+            abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+            falsifier_ref="scripts/hla_concordance.py", incoming_data_gate="n/a",
+            demotion_rule=("LD PROXY (not sequence-based typing) but VALIDATED vs real HLA truth (sens 0.979); "
+                           "the sibling provisional tags (B*58:01 rs9263726 sens 0.61 weak; A*31:01 rs1061235 "
+                           "not-paneled sens 0.0) FAILED validation and are demoted, NOT shipped")))
+    return out
 
 
 def _typing_finder_contracts() -> list[CellContract]:
@@ -233,7 +324,8 @@ def _typing_finder_contracts() -> list[CellContract]:
 
 def cells() -> list[CellContract]:
     """Every v0.1 cell contract (AMR projection + viral + PGx + typing/finder)."""
-    return _amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _typing_finder_contracts()
+    return (_amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _hla_contracts()
+            + list(_MENDELIAN_CONTRACTS) + _typing_finder_contracts())
 
 
 def by_cell_id() -> dict[str, CellContract]:
@@ -246,6 +338,14 @@ def amr_cells() -> list[CellContract]:
 
 def pgx_cells() -> list[CellContract]:
     return [c for c in cells() if c.track == "pgx"]
+
+
+def mendelian_cells() -> list[CellContract]:
+    return [c for c in cells() if c.track == "mendelian"]
+
+
+def hla_cells() -> list[CellContract]:
+    return [c for c in cells() if c.track == "hla"]
 
 
 def amr_projection_keys() -> set[tuple[str, str]]:
@@ -271,6 +371,7 @@ def surface_index() -> dict[tuple[str, str], dict]:
 def cli_routable_manifest() -> dict[str, set[str]]:
     """The authoritative v0.1 CLI-routable set, derived LIVE from the CLI catalogs (drift-proof)."""
     from dna_decode.cli import TRAITS
+    from dna_decode.hla import HLA_ALLELES
     from dna_decode.pgx import PGX_GENES
     from dna_decode.data.antimalarial_amr import supported_antimalarial_drugs
     from dna_decode.data.antiviral_amr import supported_antiviral_drugs
@@ -284,6 +385,8 @@ def cli_routable_manifest() -> dict[str, set[str]]:
     return {
         "dna-amr": {d.lower() for d in amr_drugs},
         "dna-pgx": set(PGX_GENES),
+        "dna-clinvar": {"germline_pathogenicity"},  # the Mendelian (ClinVar) single-decoder route
+        "dna-hla": set(HLA_ALLELES),                 # HLA drug-hypersensitivity tag-SNP cells
         "traits": set(TRAITS) - {"amr", "pgx"},  # the typing/finder whole-tool traits
     }
 

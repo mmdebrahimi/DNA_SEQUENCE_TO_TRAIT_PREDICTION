@@ -1,0 +1,64 @@
+{
+  "schema": "clinvar-pgp-uk-cohort-card-v0",
+  "n_individuals": 5,
+  "samples": [
+    "FR07961000",
+    "FR07961003",
+    "FR07961006",
+    "FR07961007",
+    "FR07961009"
+  ],
+  "panel": "ACMG SF v3.2 union 5 carrier genes = 86 genes, 171,519 P/LP+B/LB variants (GRCh37)",
+  "per_sample": [
+    {
+      "sample_id": "FR07961000",
+      "n_pathogenic": 0,
+      "n_benign": 1899
+    },
+    {
+      "sample_id": "FR07961003",
+      "n_pathogenic": 0,
+      "n_benign": 1700
+    },
+    {
+      "sample_id": "FR07961006",
+      "n_pathogenic": 0,
+      "n_benign": 1499
+    },
+    {
+      "sample_id": "FR07961007",
+      "n_pathogenic": 0,
+      "n_benign": 1823
+    },
+    {
+      "sample_id": "FR07961009",
+      "n_pathogenic": 0,
+      "n_benign": 1410
+    }
+  ],
+  "cohort_n_pathogenic": 0,
+  "cohort_pathogenic_hits": [],
+  "benign_carrier_load_range": [
+    1410,
+    1899
+  ],
+  "top_genes_by_benign_coverage": {
+    "RYR2": 714,
+    "TTN": 558,
+    "BRCA2": 512,
+    "BRCA1": 504,
+    "RYR1": 333,
+    "TRDN": 233,
+    "GAA": 219,
+    "DSP": 211,
+    "CACNA1S": 200,
+    "KCNQ1": 182,
+    "BMPR1A": 168,
+    "FBN1": 161,
+    "RET": 152,
+    "MYH11": 151,
+    "TSC1": 147
+  },
+  "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",
+  "honest_tier": "research demonstration on real open-consent individuals; curated ClinVar allele classifications, NOT a clinical diagnosis; 0 reportable pathogenic across a small healthy cohort is the expected ACMG-SF base-rate result. NOT a clinical tool."
+}

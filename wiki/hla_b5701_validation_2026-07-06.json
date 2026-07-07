@@ -1,0 +1,55 @@
+{
+  "schema": "hla-tag-validation-v0",
+  "allele": "HLA-B*57:01",
+  "allele_key": "b5701",
+  "tag": "rs2395029 chr6:31464003 T>G",
+  "drug": "abacavir",
+  "analysis_date": "2026-07-06",
+  "proxy_tier": "gold_standard",
+  "population_af": {
+    "AFR": {
+      "tag_alt_count": 5,
+      "n_hap": 1786,
+      "tag_af": 0.0028
+    },
+    "AMR": {
+      "tag_alt_count": 18,
+      "n_hap": 980,
+      "tag_af": 0.0184
+    },
+    "EAS": {
+      "tag_alt_count": 17,
+      "n_hap": 1170,
+      "tag_af": 0.0145
+    },
+    "EUR": {
+      "tag_alt_count": 52,
+      "n_hap": 1266,
+      "tag_af": 0.0411
+    },
+    "SAS": {
+      "tag_alt_count": 105,
+      "n_hap": 1202,
+      "tag_af": 0.0874
+    }
+  },
+  "known_allele_freq": {
+    "SAS": "high (~0.04-0.07)",
+    "EUR": "moderate (~0.03-0.04)",
+    "AMR": "low-moderate",
+    "AFR": "low (~0.01-0.02)",
+    "EAS": "very low (~0.005-0.01)"
+  },
+  "af_corroboration": "PARTIAL \u2014 the tag's per-superpopulation frequency tracking the allele's known population structure is necessary-not-sufficient. The SCORED number is the sample-level concordance vs a real HLA truth set (--truth).",
+  "sample_concordance": {
+    "n_scored": 1103,
+    "tp": 47,
+    "fp": 8,
+    "tn": 1047,
+    "fn": 1,
+    "sensitivity": 0.9792,
+    "specificity": 0.9924,
+    "ppv": 0.8545
+  },
+  "sample_concordance_status": "SCORED"
+}

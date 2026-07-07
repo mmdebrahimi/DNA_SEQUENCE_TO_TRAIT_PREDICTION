@@ -1,0 +1,103 @@
+{
+  "schema": "pgx-cyp3a5-getrm-concordance-v0",
+  "gene": "CYP3A5",
+  "analysis_date": "2026-07-05",
+  "truth_source": "GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP3A5_getrm_cons",
+  "genotype_source": "1000 Genomes 30x phased panel (CYP3A5 region, pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker); GeT-RM CDC CYP3A4/5 table)",
+  "caller_is_independent_of_consensus_tools": true,
+  "n_overlap_samples": 8,
+  "n_core_comparable": 8,
+  "core_diplotype_concordance": 1.0,
+  "core_diplotype_hits": "8/8",
+  "n_noncore_truth": 0,
+  "star38_phenotype_equivalent": 0,
+  "noncore_correctly_withheld": 0,
+  "genuine_silent_miscall": 0,
+  "genuine_silent_miscall_pct": 0.0,
+  "phenotype_correct_incl_star38": "8/8",
+  "correct_or_abstains": "8/8",
+  "honesty_tier": "GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call).",
+  "core_rows": [
+    {
+      "sample": "HG00436",
+      "getrm": "*3/*3",
+      "predicted": "*3/*3",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA10856",
+      "getrm": "*1/*3",
+      "predicted": "*1/*3",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18484",
+      "getrm": "*1/*7",
+      "predicted": "*1/*7",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18518",
+      "getrm": "*1/*6",
+      "predicted": "*1/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA18564",
+      "getrm": "*1/*1",
+      "predicted": "*1/*1",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19143",
+      "getrm": "*6/*7",
+      "predicted": "*6/*7",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19819",
+      "getrm": "*3/*6",
+      "predicted": "*3/*6",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    },
+    {
+      "sample": "NA19920",
+      "getrm": "*7/*7",
+      "predicted": "*7/*7",
+      "phenotype_status": "ok",
+      "withheld": false,
+      "is_core_truth": true,
+      "bucket": "core_exact",
+      "match": true
+    }
+  ],
+  "noncore_rows": []
+}

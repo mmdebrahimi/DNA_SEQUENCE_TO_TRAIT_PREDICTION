@@ -1,0 +1,154 @@
+{
+  "schema": "pgx-pgp-uk-realization-v0",
+  "sample_id": "FR07961009",
+  "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",
+  "vcf": "D:\\dna_decode_cache\\pgp_uk\\FR07961009.vcf.gz",
+  "assembly_source": "GRCh37 -> targeted position-liftover -> GRCh38 catalog",
+  "n_genes_real_call": 5,
+  "results": {
+    "cyp2c19": {
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "phenotype_abbrev": "NM",
+      "phenotype_status": "ok",
+      "phasing": "unphased"
+    },
+    "cyp2c9": {
+      "diplotype": "*2/*2",
+      "phenotype": "Intermediate Metabolizer",
+      "phenotype_abbrev": "IM",
+      "phenotype_status": "ok",
+      "phasing": "unphased"
+    },
+    "cyp2c8": {
+      "diplotype": "*3/*3",
+      "phenotype": null,
+      "phenotype_abbrev": null,
+      "phenotype_status": "ok",
+      "phasing": "unphased"
+    },
+    "cyp3a5": {
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "phenotype_abbrev": "NM",
+      "phenotype_status": "ok",
+      "phasing": "unphased"
+    },
+    "tpmt": {
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "phenotype_abbrev": "NM",
+      "phenotype_status": "ok",
+      "phasing": "phased"
+    },
+    "cyp2b6": {
+      "diplotype": "*1/*1",
+      "phenotype": "Normal Metabolizer",
+      "phenotype_abbrev": "NM",
+      "phenotype_status": "ok",
+      "phasing": "unphased"
+    },
+    "vkorc1": {
+      "genotype": "G/G",
+      "sensitivity": "Normal sensitivity"
+    },
+    "slco1b1": {
+      "genotype": "T/T",
+      "function": "Normal Function",
+      "myopathy_risk": "typical_risk"
+    }
+  },
+  "lift_audit": [
+    {
+      "rsid": "rs4244285",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs4986893",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs12248560",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs28399504",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs12769205",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs1799853",
+      "state": "lifted",
+      "gt": "1/1"
+    },
+    {
+      "rsid": "rs1057910",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs28371686",
+      "state": "ref_no_sentinel"
+    },
+    {
+      "rsid": "rs7900194",
+      "state": "ref_no_sentinel"
+    },
+    {
+      "rsid": "rs2256871",
+      "state": "ref_no_sentinel"
+    },
+    {
+      "rsid": "rs28371685",
+      "state": "ref_no_sentinel"
+    },
+    {
+      "rsid": "rs11572103",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs11572080",
+      "state": "lifted",
+      "gt": "1/1"
+    },
+    {
+      "rsid": "rs1058930",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs776746",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs10264272",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs41303343",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs3745274",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs1800460",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs1142345",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs9923231",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs4149056",
+      "state": "assumed_ref_0/0_wgs"
+    }
+  ],
+  "honest_tier": "DEPLOYMENT/robustness demonstration on a real independent-cohort individual VCF; PGP-UK ships no GeT-RM truth so this is NOT an accuracy-vs-truth number."
+}

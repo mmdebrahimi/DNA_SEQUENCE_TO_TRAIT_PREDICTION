@@ -6,9 +6,10 @@ the deployable-claim tier; VUS excluded) into a small committed catalog that `dn
 loads. The full 192 MB VCF stays on D: (gitignored); only the committed subset ships. Same pattern as the
 other curated catalogs (mic_tiers / hiv_amr / fungal_amr): committed curated data + a deterministic caller.
 
-Demo gene panel (canonical, sourced Mendelian genes across AR/AD/X-linked; extensible via --genes):
-  CFTR (cystic fibrosis) · HBB (sickle/β-thal) · LDLR (FH) · BRCA1/BRCA2 (HBOC) · TP53 (Li-Fraumeni) ·
-  PAH (PKU) · G6PD (X-linked) · HFE (haemochromatosis) · F8 (haemophilia A).
+Gene panel (broadened 2026-07-06): the **ACMG SF v3.2** medically-actionable secondary-findings gene list
+(81 genes; the canonical "which genes to report incidental findings" set, sourced from
+ncbi.nlm.nih.gov/clinvar/docs/acmg) UNIONed with the original 5 recessive-carrier genes NOT in ACMG SF
+(CFTR/HBB/PAH/G6PD/F8) -> 86 genes total. Extensible via --genes.
 """
 from __future__ import annotations
 
@@ -19,7 +20,20 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 DEFAULT_VCF = Path("D:/dna_decode_cache/clinvar/clinvar.vcf.gz")
-DEFAULT_GENES = ["CFTR", "HBB", "LDLR", "BRCA1", "BRCA2", "TP53", "PAH", "G6PD", "HFE", "F8"]
+
+# ACMG SF v3.2 (81 genes) — verified from ncbi.nlm.nih.gov/clinvar/docs/acmg (2026-07-06), NOT from memory.
+ACMG_SF_V3_2 = [
+    "APC", "MYH11", "ACTA2", "TMEM43", "DSP", "PKP2", "DSG2", "DSC2", "BTD", "BRCA1", "BRCA2", "SCN5A",
+    "RYR2", "CASQ2", "CALM1", "TRDN", "FLNC", "LMNA", "TNNT2", "DES", "MYH7", "TNNC1", "RBM20", "BAG3",
+    "TTN", "COL3A1", "GLA", "LDLR", "APOB", "TPM1", "MYBPC3", "PRKAG2", "TNNI3", "MYL3", "MYL2", "ACTC1",
+    "RET", "PALB2", "HFE", "ENG", "ACVRL1", "SDHD", "SDHB", "TTR", "PCSK9", "BMPR1A", "SMAD4", "TP53",
+    "TGFBR1", "TGFBR2", "SMAD3", "KCNQ1", "KCNH2", "CALM2", "CALM3", "MSH2", "MLH1", "PMS2", "MSH6", "RYR1",
+    "CACNA1S", "FBN1", "HNF1A", "MEN1", "MUTYH", "NF2", "OTC", "SDHAF2", "SDHC", "STK11", "MAX", "TMEM127",
+    "GAA", "PTEN", "RB1", "RPE65", "TSC1", "TSC2", "VHL", "WT1", "ATP7B",
+]
+# recessive-carrier genes from the original 10 that are NOT in ACMG SF (kept for carrier-status coverage)
+_EXTRA_CARRIER = ["CFTR", "HBB", "PAH", "G6PD", "F8"]
+DEFAULT_GENES = ACMG_SF_V3_2 + _EXTRA_CARRIER   # 86 genes (ACMG SF v3.2 union the 5 extra carrier genes)
 # the deployable-claim significance tiers (VUS/other excluded from the committed catalog)
 KEEP_SIG = {"Pathogenic", "Likely_pathogenic", "Pathogenic/Likely_pathogenic",
             "Benign", "Likely_benign", "Benign/Likely_benign"}

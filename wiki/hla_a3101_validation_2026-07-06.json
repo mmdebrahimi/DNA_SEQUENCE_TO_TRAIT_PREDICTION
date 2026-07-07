@@ -1,0 +1,23 @@
+{
+  "schema": "hla-tag-validation-v0",
+  "allele": "HLA-A*31:01",
+  "allele_key": "a3101",
+  "tag": "rs1061235 chr6:29945521 A>T",
+  "drug": "carbamazepine",
+  "analysis_date": "2026-07-06",
+  "proxy_tier": "provisional",
+  "population_af": {},
+  "known_allele_freq": "not tabulated",
+  "af_corroboration": "PARTIAL \u2014 the tag's per-superpopulation frequency tracking the allele's known population structure is necessary-not-sufficient. The SCORED number is the sample-level concordance vs a real HLA truth set (--truth).",
+  "sample_concordance": {
+    "n_scored": 1103,
+    "tp": 0,
+    "fp": 0,
+    "tn": 1029,
+    "fn": 74,
+    "sensitivity": 0.0,
+    "specificity": 1.0,
+    "ppv": null
+  },
+  "sample_concordance_status": "SCORED"
+}

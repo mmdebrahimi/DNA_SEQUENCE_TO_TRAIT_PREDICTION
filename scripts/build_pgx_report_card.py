@@ -27,6 +27,11 @@ def _load(name):
 def main() -> int:
     getrm_c19 = _load("pgx_getrm_concordance_2026-06-25.json")
     getrm_c9 = _load("pgx_getrm_concordance_cyp2c9_2026-06-25.json")
+    getrm_c8 = _load("pgx_getrm_concordance_cyp2c8_2026-07-05.json")
+    getrm_c3a5 = _load("pgx_getrm_concordance_cyp3a5_2026-07-05.json")
+    getrm_tpmt = _load("pgx_getrm_concordance_tpmt_2026-07-05.json")
+    getrm_c2b6 = _load("pgx_getrm_concordance_cyp2b6_2026-07-05.json")
+    getrm_c2d6 = _load("pgx_getrm_concordance_cyp2d6_2026-07-06.json")
     pharmcat = _load("pgx_cyp2c19_report_card.json")
     fe = _load("pgx_functional_evidence_2026-06-25.json")
     trio = _load("pgx_trio_mendelian_2026-06-25.json")
@@ -62,11 +67,72 @@ def main() -> int:
          "functional_evidence": fe_summ("CYP2C9"), "trio_mendelian": trio_summ("CYP2C9"),
          "tier": "GeT-RM consensus; phenotype faithful-to-CPIC (activity-score)",
          "residual": "non-core *5/*8/*9/*11 withheld (sentinel v0.1); *6-indel/*61 residual"},
+        {"gene": "CYP2C8", "trait": "star-allele diplotype (*2/*3/*4) — CALLING only (no CPIC phenotype)",
+         "getrm": getrm_c8 and getrm_c8.get("core_diplotype_hits"),
+         "getrm_pct": getrm_c8 and getrm_c8.get("core_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP2C8"), "trio_mendelian": trio_summ("CYP2C8"),
+         "tier": ("GeT-RM consensus (independent of consensus tools); CALLING validated 82/82. "
+                  "NO CPIC metabolizer phenotype — CYP2C8 function is substrate-dependent, so this is a "
+                  "CALLING-only cell (never a PM/IM/NM). Region VCF fetched Docker-free (tabix-over-HTTP)."),
+         "residual": "rare non-core allele mis-called *1 (no sentinel layer v0); no phenotype layer by design"},
+        {"gene": "CYP3A5", "trait": "expressor/non-expressor phenotype (tacrolimus)",
+         "getrm": getrm_c3a5 and getrm_c3a5.get("core_diplotype_hits"),
+         "getrm_pct": getrm_c3a5 and getrm_c3a5.get("core_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP3A5"), "trio_mendelian": trio_summ("CYP3A5"),
+         "tier": ("REAL GeT-RM CDC multi-lab consensus (independent of the labs); 8/8 core-diplotype incl. "
+                  "*1/*3/*6/*7 (the *7 insertion + *6/*7 non-expressor cases). UNDERPOWERED (n=8). "
+                  "Phenotype faithful-to-CPIC (expressor/non-expressor). First gene outside the CYP2C cluster."),
+         "residual": "UNDERPOWERED n=8 (only ~8 GeT-RM CYP3A5 samples overlap 1000G); rare non-core alleles mis-called *1"},
+        {"gene": "TPMT", "trait": "thiopurine phenotype (COMPOUND *3A=*3B+*3C)",
+         "getrm": getrm_tpmt and getrm_tpmt.get("core_diplotype_hits"),
+         "getrm_pct": getrm_tpmt and getrm_tpmt.get("core_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("TPMT"), "trio_mendelian": trio_summ("TPMT"),
+         "tier": ("REAL GeT-RM CDC consolidated consensus; 85/85 core-comparable. FIRST compound-allele "
+                  "cell — *3A resolved from two SNPs in cis (*3B+*3C), each alone = *3B/*3C. Phenotype "
+                  "faithful-to-CPIC (thiopurine)."),
+         "residual": "rare non-core (*2/*8/*16...) mis-called *1 (no sentinel layer v0)"},
+        {"gene": "CYP2B6", "trait": "efavirenz phenotype (*6-proxy, 516G>T)",
+         "getrm": getrm_c2b6 and getrm_c2b6.get("core_diplotype_hits"),
+         "getrm_pct": getrm_c2b6 and getrm_c2b6.get("core_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP2B6"), "trio_mendelian": trio_summ("CYP2B6"),
+         "tier": ("REAL GeT-RM CDC consolidated consensus; 62/62 on clean *1/*6. SINGLE-SNP *6-proxy "
+                  "(516G>T) — rs2279343 (785A>G) is absent from the 1000G 30x panel so *6 can't be split "
+                  "from *9. Phenotype faithful-to-CPIC."),
+         "residual": "single-SNP proxy; *9/*4/other non-core mis-called (785A>G absent from callset)"},
+        {"gene": "CYP2D6", "trait": "metabolizer phenotype (activity-score) — SNP surface only",
+         "getrm": getrm_c2d6 and getrm_c2d6.get("core_snp_diplotype_hits"),
+         "getrm_pct": getrm_c2d6 and getrm_c2d6.get("core_snp_diplotype_concordance"),
+         "pharmcat": None,
+         "functional_evidence": fe_summ("CYP2D6"), "trio_mendelian": trio_summ("CYP2D6"),
+         "tier": ("The last major pharmacogene. GeT-RM consensus (independent of the consensus tools); "
+                  "46/47 core-comparable on the SNP-DECODABLE subset (the single miss is a diagnosed "
+                  "structural confound). PRIORITY-ordered per-haplotype resolver (shared-background-aware). "
+                  "Phenotype faithful-to-CPIC (activity-score). Trio-Mendelian 592/602 — the ~2% residual is "
+                  "the structural-confound signature (all homozygous-child). STRUCTURAL SURFACE (read-depth "
+                  "off a real CRAM, dna_decode.pgx.cyp2d6_structural): *5 deletion + *xN duplication CN "
+                  "validated 26/26 on 1000G CRAMs (wiki/cyp2d6_structural_2026-07-06); HYBRID PRESENCE via "
+                  "elevated CYP2D7 depth (sens 0.62/spec 1.0); HYBRID IDENTITY via read-level PSV D6-fraction "
+                  "(Cyrius 117-PSV method) — full-N GO, spec 1.0, *68 4/4 / *36 6/8 "
+                  "(wiki/cyp2d6_hybrid_identity_2026-07-06). Everything short-read WGS can resolve."),
+         "residual": ("subtle *36 exon-9 gene-conversions abstain (hybrid_present_identity_unresolved); *13 "
+                      "identity single-sample-UNPOWERED (n=1); non-core SNP alleles (*14/*15/*21/*40/*46) "
+                      "mis-called (no sentinel v0). Identity needs a BAM/CRAM + read-level pileup")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",
          "tier": "single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system",
          "residual": "—"},
+        {"gene": "SLCO1B1", "trait": "statin myopathy (rs4149056 / *5 521T>C)",
+         "getrm": None, "getrm_pct": None, "pharmcat": None,
+         "functional_evidence": fe_summ("SLCO1B1"), "trio_mendelian": "—",
+         "tier": ("single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. "
+                  "NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned "
+                  "(simvastatin function is assigned largely from 521T>C)."),
+         "residual": "single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants"},
     ]
 
     rep = {
@@ -76,6 +142,9 @@ def main() -> int:
                  "GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured)."),
         "cells": cells,
         "sources": {"getrm_cyp2c19": bool(getrm_c19), "getrm_cyp2c9": bool(getrm_c9),
+                    "getrm_cyp2c8": bool(getrm_c8), "getrm_cyp3a5": bool(getrm_c3a5),
+                    "getrm_tpmt": bool(getrm_tpmt), "getrm_cyp2b6": bool(getrm_c2b6),
+                    "getrm_cyp2d6": bool(getrm_c2d6),
                     "pharmcat_cyp2c19": bool(pharmcat), "functional_evidence": bool(fe),
                     "trio_mendelian": bool(trio)},
     }
