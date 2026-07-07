@@ -103,6 +103,17 @@
       "residual": "*2 shares rs116855232 -> called *3 (SAME no-function phenotype, CPIC call unaffected). GeT-RM NUDT15 concordance = external wall (paper-supplement, like DPYD); validation is the *3 EAS-AF match + PGP-UK deployment. NO sentinel layer -> rarer alleles called *1"
     },
     {
+      "gene": "UGT1A1",
+      "trait": "irinotecan-toxicity phenotype (activity-score) \u2014 tag-SNP surface",
+      "getrm": null,
+      "getrm_pct": null,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "NEW \u2014 irinotecan toxicity / Gilbert. *STRUCTURAL: the major *28 allele is a promoter TA-REPEAT (STR), NOT a SNP \u2014 unresolvable from a short-read SNP VCF. v0 uses rs887829 (*80) as the validated LD-TAG proxy for *28 (EUR r^2 ~0.9+; rs887829 EUR AF ~30% == the *28 frequency, confirming the tag) + *6 (rs4148323, clean SNP). CPIC activity-score (Gammal 2016; AS 2=NM, 1.5=IM, 1.0=PM). Ensembl-GRCh38-verified. v0 deployment: decoded on 5 real PGP-UK humans. Phenotype faithful-to-CPIC. Tag-SNP wrapper (like the HLA cells).",
+      "residual": "*28 TA-repeat length UNASSESSED (star28_ta_repeat_unassessed) \u2014 rs887829 is an LD-tag PROXY, imperfect off-EUR; *37/*36 repeat alleles not called. GeT-RM UGT1A1 concordance = external wall (paper-supplement). Needs a repeat-aware caller for a direct *28 call"
+    },
+    {
       "gene": "VKORC1",
       "trait": "warfarin sensitivity (rs9923231)",
       "getrm": null,

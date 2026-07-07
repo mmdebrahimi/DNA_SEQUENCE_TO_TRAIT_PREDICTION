@@ -39,6 +39,7 @@ from dna_decode.pgx import (
     nudt15_catalog as nu,
     slco1b1,
     tpmt_catalog as tp,
+    ugt1a1_catalog as ug,
     vkorc1,
 )
 from dna_decode.pgx.runner import (
@@ -51,6 +52,7 @@ from dna_decode.pgx.runner import (
     call_dpyd,
     call_nudt15,
     call_tpmt,
+    call_ugt1a1,
 )
 
 # GRCh37 positions for every defining + sentinel PGx variant, resolved via Ensembl GRCh37 REST 2026-07-05
@@ -78,6 +80,8 @@ GRCH37_POS: dict[str, int] = {
     "rs67376798": 97547947, "rs75017182": 98045449,                           # DPYD c.2846A>T/HapB3 (decreased)
     # NUDT15 (chr13) *3 — GRCh37 position resolved via Ensembl GRCh37 REST 2026-07-07.
     "rs116855232": 48619855,                                                   # NUDT15 *3 (no function)
+    # UGT1A1 (chr2) — GRCh37 positions resolved via Ensembl GRCh37 REST 2026-07-07.
+    "rs887829": 234668570, "rs4148323": 234669144,                            # UGT1A1 *80 (*28-tag) / *6
 }
 
 
@@ -95,6 +99,8 @@ def _all_variants():
     for d in dp.CORE_DEFINING:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     for d in nu.CORE_DEFINING:
+        yield d.rsid, d.chrom, d.pos, d.ref, d.alt
+    for d in ug.CORE_DEFINING:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     yield vkorc1.RSID, vkorc1.CHROM, vkorc1.POS, vkorc1.REF, vkorc1.ALT
     yield slco1b1.RSID, slco1b1.CHROM, slco1b1.POS, slco1b1.REF, slco1b1.ALT
@@ -226,13 +232,22 @@ def main(argv=None) -> int:
                          "phenotype_abbrev": nn.get("phenotype_abbrev"),
                          "phenotype_status": nn["phenotype_status"], "phasing": nn.get("phasing"),
                          "activity_score": nn.get("activity_score")}
+    # UGT1A1 — irinotecan toxicity. TAG-SNP surface: *28 is a promoter TA-repeat (STR) tagged by rs887829
+    # (*80); the record flags star28_ta_repeat_unassessed. *6 is a clean SNP.
+    uu = call_ugt1a1(tmp, sample_id=args.sample_id)
+    results["ugt1a1"] = {"diplotype": uu["diplotype"], "phenotype": uu.get("phenotype"),
+                         "phenotype_abbrev": uu.get("phenotype_abbrev"),
+                         "phenotype_status": uu["phenotype_status"], "phasing": uu.get("phasing"),
+                         "activity_score": uu.get("activity_score"),
+                         "star28_ta_repeat_unassessed": uu.get("star28_ta_repeat_unassessed", True)}
     vk = vkorc1.call_vkorc1(tmp); vk["sample_id"] = args.sample_id
     results["vkorc1"] = {"genotype": vk["cdna_genotype"], "sensitivity": vk["warfarin_sensitivity"]}
     sl = slco1b1.call_slco1b1(tmp); sl["sample_id"] = args.sample_id
     results["slco1b1"] = {"genotype": sl["variant_genotype"], "function": sl["function"],
                           "myopathy_risk": sl["myopathy_risk"]}
 
-    n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp2d6", "dpyd", "nudt15", "cyp3a5", "tpmt", "cyp2b6")
+    n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp2d6", "dpyd", "nudt15", "ugt1a1",
+                             "cyp3a5", "tpmt", "cyp2b6")
                  if results[g]["phenotype"] not in (None, "Indeterminate")
                  and results[g]["phenotype_status"] == "ok")
     out = {"schema": "pgx-pgp-uk-realization-v0", "sample_id": args.sample_id,

@@ -254,6 +254,64 @@ def call_nudt15(vcf: str | Path, sample_id: str | None = None,
     return rec
 
 
+def call_ugt1a1(vcf: str | Path, sample_id: str | None = None,
+                sample_column: str | None = None) -> dict:
+    """Run the UGT1A1 caller (irinotecan-toxicity activity-score phenotype) on a VCF -> record.
+
+    LOAD-BEARING HONESTY: UGT1A1*28 is a promoter TA-REPEAT (STR), not a SNP — v0 uses rs887829 (*80) as the
+    validated LD-tag PROXY for *28 status (like the HLA tag-SNP cells). The record carries
+    star28_ta_repeat_unassessed=True; the true repeat length needs a repeat-aware caller."""
+    from dna_decode.pgx import ugt1a1_catalog as ug
+    res = call_diplotype(vcf, sample=sample_column, defining=ug.CORE_DEFINING, sentinels=ug.SENTINELS,
+                         reference_allele=ug.REFERENCE_ALLELE, phenotype_fn=ug.diplotype_phenotype,
+                         gene=ug.GENE)
+    sid = sample_id or sample_column or Path(vcf).stem
+    a_s = ug.activity_score(res.allele1, res.allele2) if res.allele1 else None
+    rec = {
+        "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": ug.GENE,
+        "organism": "Homo sapiens", "assembly": ug.ASSEMBLY,
+        "analysis_date": datetime.date.today().isoformat(), "schema": SCHEMA,
+        "status": res.status, "phenotype_status": res.phenotype_status,
+        "phenotype_confidence": res.phenotype_confidence,
+        "diplotype": res.diplotype, "core_proxy_diplotype": res.core_proxy_diplotype,
+        "allele1": res.allele1, "allele2": res.allele2,
+        "activity_score": a_s,
+        "phenotype": res.phenotype,
+        "phenotype_abbrev": ug.PHENOTYPE_ABBREV.get(res.phenotype or "", None),
+        # LOAD-BEARING: *28 is a TA-repeat (STR) tagged by rs887829 (*80), NOT directly called.
+        "star28_ta_repeat_unassessed": True,
+        "alternate_diplotype": res.alternate_diplotype, "alternate_phenotype": res.alternate_phenotype,
+        "sentinel_hits": res.sentinel_hits, "phasing": res.phasing, "flags": res.flags,
+        "variant_calls": res.variant_calls,
+        "caller": {
+            "name": "dna_decode-pgx-ugt1a1-v0",
+            "method": "vcf_tag_snp_proxy(*80 for *28) + *6 -> diplotype -> CPIC_activity_score -> phenotype",
+            "calling_independently_validatable": True,
+            "independent_validation_status": (
+                "v0 tag-SNP deployment tier: rs887829 (*80) EUR AF ~30% == the *28 frequency (confirms the LD "
+                "tag); coords Ensembl-GRCh38-verified; decoded on real VCFs (PGP-UK). The direct *28 TA-repeat "
+                "is a STRUCTURAL WALL (needs a repeat-aware caller); GeT-RM UGT1A1 concordance = external wall."),
+            "phenotype_is_faithful_to_cpic": True, "is_core_marker_proxy": True,
+            "is_ld_tag_proxy_not_direct_repeat_call": True,
+            "reference_tool": "PharmCAT",
+        },
+        "catalog": {
+            "gene": ug.GENE, "core_alleles": [d.star for d in ug.CORE_DEFINING] + ["*1"],
+            "activity_values": ug.ACTIVITY_VALUE,
+            "defining_variants": [
+                {"star": d.star, "rsid": d.rsid, "chrom": d.chrom, "pos": d.pos,
+                 "ref": d.ref, "alt": d.alt, "cdna": d.cdna} for d in ug.CORE_DEFINING],
+            "source": "PharmVar UGT1A1 + CPIC irinotecan guideline (Gammal 2016); Ensembl GRCh38 coords",
+        },
+        "undetectable": ug.UNDETECTABLE,
+        "caveat": ug.STRUCTURAL_CAVEAT + (" CPIC activity-score (AS 2=NM, 1.5=IM, 1.0=PM). *6 (rs4148323) "
+                  "is a clean SNP. Phenotype faithful-to-CPIC. NOT a clinical tool."),
+    }
+    if res.reason:
+        rec["reason"] = res.reason
+    return rec
+
+
 def call_cyp2c8(vcf: str | Path, sample_id: str | None = None,
                 sample_column: str | None = None) -> dict:
     """Run the CYP2C8 caller (star-allele CALLING only) on a VCF -> full provenance record.

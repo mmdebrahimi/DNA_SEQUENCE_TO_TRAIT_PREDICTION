@@ -79,6 +79,20 @@
         "*1": 10
       }
     },
+    "ugt1a1": {
+      "diplotypes": {
+        "*1/*80": 3,
+        "*1/*1": 2
+      },
+      "phenotypes": {
+        "IM": 3,
+        "NM": 2
+      },
+      "observed_allele_counts": {
+        "*1": 7,
+        "*80": 3
+      }
+    },
     "cyp3a5": {
       "diplotypes": {
         "*1/*1": 4,

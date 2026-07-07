@@ -253,6 +253,15 @@ _PGX_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
         demotion_rule="*2 shares rs116855232 -> called *3 (SAME no-function phenotype, CPIC call unaffected); NO sentinel layer -> rarer non-core NUDT15 alleles called *1 (only *3/*2 change thiopurine dosing at v0)"),
     CellContract(
+        cell_id="pgx:human:ugt1a1", track="pgx", route="dna-pgx", organism="human", target="ugt1a1",
+        claim="UGT1A1 irinotecan-toxicity phenotype: CPIC activity-score over the SNP-callable *80 (rs887829, LD-tag for the *28 TA-repeat) + *6 (rs4148323) from a phased VCF",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="cpic_activity_score_ld_tag_proxy_star28_repeat_unassessed",
+        validation_slice="v0 TAG-SNP tier: rs887829 (*80) EUR AF ~30% == the *28 frequency (confirms the LD tag); coords Ensembl-GRCh38-verified; decoded on real VCFs (PGP-UK). The direct *28 TA-repeat is a STRUCTURAL WALL (repeat-aware caller needed); GeT-RM UGT1A1 concordance = external wall",
+        label_provenance="CPIC UGT1A1 guideline (Gammal 2016) + PharmVar UGT1A1; rs887829 as the validated *28 LD-tag; deployment on PGP-UK PRJEB17529",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
+        demotion_rule="STRUCTURAL: *28 (promoter TA-repeat) is NOT directly called — rs887829 (*80) is an LD-tag PROXY (EUR r^2 ~0.9+, imperfect off-EUR); star28_ta_repeat_unassessed=True. *37/*36 repeat alleles + rarer non-core called *1"),
+    CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
         claim="VKORC1 -1639G>A (rs9923231) warfarin-sensitivity genotype from a phased VCF",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_sensitivity",
