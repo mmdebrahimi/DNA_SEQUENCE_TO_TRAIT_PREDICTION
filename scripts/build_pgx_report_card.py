@@ -129,10 +129,13 @@ def main() -> int:
                   "c.2846A>T/HapB3 decreased), CPIC ACTIVITY-SCORE phenotype (Amstutz 2018; AS 2=NM, "
                   "1-1.5=IM [reduce ~50%], 0-0.5=PM [avoid]). All-SNP, NO structural blind spot "
                   "(Ensembl-GRCh38-verified coords). v0 DEPLOYMENT tier: decoded on 5 real PGP-UK humans "
-                  "(all *1/*1 NM — no false-positive deficiency call). Phenotype faithful-to-CPIC."),
-         "residual": ("no GeT-RM concordance number yet (v0.1 = CDC GeT-RM characterized DPYD in the "
-                      "2016/2019 rounds -> fetch+join); NO sentinel layer -> rarer uncertain-function DPYD "
-                      "alleles called *1 (CPIC's own non-actionable posture)")},
+                  "(all *1/*1 NM — no false-positive deficiency call). Phenotype faithful-to-CPIC. "
+                  "AF-CORROBORATED 4/4: each actionable variant's 1000G EUR frequency matches the "
+                  "CPIC/gnomAD DPD-deficiency spectrum (wiki/dpyd_validation_2026-07-07)."),
+         "residual": ("GeT-RM DPYD concordance = EXTERNAL WALL (Pratt 2016 CDC consensus is a paper-"
+                      "supplement table, not in the CYP-only ursaPGx benchmark -> manual curation; deferred). "
+                      "Validation is AF-corroboration + PGP-UK deployment (KNOWLEDGE_BASELINE tier, like "
+                      "VKORC1/SLCO1B1). NO sentinel layer -> rarer uncertain-function DPYD alleles called *1")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",

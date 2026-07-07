@@ -1,0 +1,50 @@
+{
+  "schema": "dpyd-af-corroboration-v0",
+  "gene": "DPYD",
+  "analysis_date": "2026-07-07",
+  "method": "1000G/gnomAD EUR allele-frequency corroboration of the 4 CPIC-actionable DPD-deficiency haplotypes vs the CPIC/gnomAD-expected frequency band; AFs from Ensembl 1000G phase3 EUR",
+  "n_variants": 4,
+  "n_in_band": 4,
+  "verdict": "AF_CORROBORATED",
+  "getrm_concordance_status": "EXTERNAL_WALL: GeT-RM DPYD consensus (Pratt 2016 CDC) is a paper-supplement table, NOT in the CYP-only ursaPGx benchmark \u2192 needs manual curation for a clean automated concordance; deferred",
+  "deployment": "decoded on 5 real PGP-UK humans (all *1/*1 NM \u2014 consistent with these low freqs)",
+  "honesty_tier": "KNOWLEDGE_BASELINE AF-corroboration (like VKORC1/SLCO1B1) \u2014 confirms the caller's 4 actionable variants are real + correctly-positioned at CPIC-expected population frequencies; NOT an independent per-sample diplotype concordance number. NOT clinical.",
+  "variants": [
+    {
+      "rsid": "rs3918290",
+      "allele": "*2A",
+      "function": "no_function",
+      "eur_af": 0.00497,
+      "expected_lo": 0.002,
+      "expected_hi": 0.015,
+      "verdict": "IN_BAND"
+    },
+    {
+      "rsid": "rs55886062",
+      "allele": "*13",
+      "function": "no_function",
+      "eur_af": 0.00099,
+      "expected_lo": 0.0,
+      "expected_hi": 0.005,
+      "verdict": "IN_BAND"
+    },
+    {
+      "rsid": "rs67376798",
+      "allele": "c.2846A>T",
+      "function": "decreased",
+      "eur_af": 0.00696,
+      "expected_lo": 0.002,
+      "expected_hi": 0.015,
+      "verdict": "IN_BAND"
+    },
+    {
+      "rsid": "rs75017182",
+      "allele": "HapB3",
+      "function": "decreased",
+      "eur_af": 0.02386,
+      "expected_lo": 0.01,
+      "expected_hi": 0.06,
+      "verdict": "IN_BAND"
+    }
+  ]
+}
