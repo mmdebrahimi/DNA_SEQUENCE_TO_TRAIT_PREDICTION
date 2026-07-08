@@ -1,0 +1,35 @@
+{
+  "status": "SCORED",
+  "schema": "single-snp-opensnp-v1",
+  "date": "2026-07-08",
+  "trait": "photic",
+  "rsid": "rs10427255",
+  "gene": "ZEB2-region",
+  "tier": "WEAK_ASSOCIATION_CONTRAST",
+  "rule_source": "Eriksson 2010 PLoS Genet 6:e1000993 (23andMe, OR~1.32)",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy) \u2014 PILOT/DEMO",
+  "positive_class": "sneezer",
+  "negative_class": "non-sneezer",
+  "n_users_labelled": 143,
+  "n_scored": 108,
+  "n_indeterminate_call": 0,
+  "n_no_genotype_file": 1,
+  "n_rsid_missing": 34,
+  "confusion_positive_sneezer": {
+    "TP": 39,
+    "FP": 36,
+    "TN": 26,
+    "FN": 7
+  },
+  "accuracy": 0.602,
+  "majority_null_accuracy": 0.574,
+  "verdict_vs_null": "NEAR_CHANCE",
+  "pos_sens": 0.848,
+  "neg_spec": 0.419,
+  "caveats": [
+    "self-reported label (not a lab assay) \u2014 PILOT/DEMO tier, like the eye-colour openSNP cell",
+    "deployed textbook rule -> a WIN validates the rule, it is not new biological signal",
+    "WEAK-EFFECT association by design (not Mendelian) -> near-chance is the CORRECT, honest outcome"
+  ]
+}

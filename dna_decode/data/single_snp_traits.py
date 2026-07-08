@@ -75,7 +75,80 @@ def call_cilantro(rs72921001: str) -> str:
     return INDETERMINATE
 
 
+def call_photic(rs10427255: str) -> str:
+    """PHOTIC-SNEEZER iff a C risk allele present (dominant, OR~1.32); non-sneezer iff homozygous T.
+    Eriksson 2010 (PLoS Genet 6:e1000993, near ZEB2). MODEST effect -> expected near-chance (honest
+    single-locus-sufficiency test). Strand-agnostic: risk C == G on the minus strand."""
+    a = _alleles(rs10427255)
+    if not a:
+        return INDETERMINATE
+    if a & {"C", "G"}:                    # >=1 risk allele -> sneezer (dominant)
+        return "sneezer"
+    if a <= {"T"} or a <= {"A"}:          # homozygous non-risk
+        return "non-sneezer"
+    return INDETERMINATE
+
+
+def call_asparagus(rs4481887: str) -> str:
+    """CAN-SMELL iff an A allele present (better perception, dominant); ANOSMIC iff homozygous G.
+    Eriksson 2010 + Pelchat 2011 (near OR2M7). Perception, not production. Strand-agnostic: A == T,
+    G == C on the minus strand."""
+    a = _alleles(rs4481887)
+    if not a:
+        return INDETERMINATE
+    if a & {"A", "T"}:                    # >=1 smeller allele -> can-smell (dominant)
+        return "can-smell"
+    if a <= {"G"} or a <= {"C"}:          # homozygous anosmia allele
+        return "anosmic"
+    return INDETERMINATE
+
+
 # --- Self-report binners (raw openSNP free-text -> the binary label, or None = unscoreable) ---
+
+def _mentions_genotype(s: str) -> bool:
+    """A self-report that references the SNP/genotype is CIRCULAR (label contaminated by the genotype it
+    would validate) -> must be dropped. Guards against 'photic sneezer with the snp', 'gg - but i can
+    smell it', 'rs10427255', bare 'cc'/'gg'/'ag' calls, etc."""
+    if "snp" in s or "rs" in s or "allele" in s or "genotype" in s:
+        return True
+    _genos = {"cc", "ct", "tc", "tt", "gg", "ag", "ga", "aa", "gc", "cg"}
+    if s in _genos:
+        return True
+    toks = s.replace("-", " ").replace(",", " ").replace(".", " ").split()
+    return bool(toks) and toks[0] in _genos     # leading bare genotype, e.g. 'gg - but i can smell it'
+
+
+def bin_photic(raw: str) -> str | None:
+    """'Photic Sneeze Reflex' free text -> sneezer / non-sneezer. Drops SNP-referencing (circular) reports
+    + the non-photic 'sneezing fits not in light' + pepper-sneeze rows."""
+    s = (raw or "").strip().lower()
+    if not s or s in ("-", "unknown", "n/a", "rather not say", "don't know", "dont know"):
+        return None
+    if _mentions_genotype(s):
+        return None
+    if "not in light" in s or "pepper" in s:      # sneezing, but not photic-specific
+        return None
+    if "no sneez" in s or s == "no":
+        return "non-sneezer"
+    if "photic sneez" in s or "sneezer" in s or s in ("yes", "sometimes"):
+        return "sneezer"
+    return None
+
+
+def bin_asparagus(raw: str) -> str | None:
+    """'Asparagus Metabolite Detection' free text -> can-smell / anosmic. Column semantics = ability to
+    SMELL (detect) the odor. Drops SNP-referencing (circular) reports."""
+    s = (raw or "").strip().lower()
+    if not s or s in ("-", "unknown", "n/a", "rather not say", "don't know", "dont know"):
+        return None
+    if _mentions_genotype(s):
+        return None
+    if "can't smell" in s or "cannot smell" in s or "anosmi" in s or "not smell" in s or s == "no":
+        return "anosmic"
+    if "can smell" in s or "smell it" in s or s in ("yes", "y", "true"):
+        return "can-smell"
+    return None
+
 
 def bin_earwax(raw: str) -> str | None:
     s = (raw or "").strip().lower()
@@ -141,4 +214,15 @@ TRAITS: dict[str, SingleSnpTrait] = {
         key="cilantro", rsid="rs72921001", gene="OR6A2-region", phenotype_keywords=("cilantro", "coriander"),
         positive_label="soapy", negative_label="not-soapy", call=call_cilantro, binner=bin_cilantro,
         tier="WEAK_ASSOCIATION_CONTRAST", source="Eriksson 2012 Flavour 1:22 (23andMe GWAS, weak OR)"),
+    "photic": SingleSnpTrait(
+        key="photic", rsid="rs10427255", gene="ZEB2-region",
+        phenotype_keywords=("photic", "photoptarmis"),
+        positive_label="sneezer", negative_label="non-sneezer", call=call_photic, binner=bin_photic,
+        tier="WEAK_ASSOCIATION_CONTRAST", source="Eriksson 2010 PLoS Genet 6:e1000993 (23andMe, OR~1.32)"),
+    "asparagus": SingleSnpTrait(
+        key="asparagus", rsid="rs4481887", gene="OR2M7-region",
+        phenotype_keywords=("asparagus",),
+        positive_label="anosmic", negative_label="can-smell", call=call_asparagus, binner=bin_asparagus,
+        tier="WEAK_ASSOCIATION_CONTRAST",
+        source="Eriksson 2010 PLoS Genet 6:e1000993 + Pelchat 2011 Chem Senses 36:9 (near OR2M7)"),
 }

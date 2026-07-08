@@ -1,0 +1,35 @@
+{
+  "status": "SCORED",
+  "schema": "single-snp-opensnp-v1",
+  "date": "2026-07-08",
+  "trait": "asparagus",
+  "rsid": "rs4481887",
+  "gene": "OR2M7-region",
+  "tier": "WEAK_ASSOCIATION_CONTRAST",
+  "rule_source": "Eriksson 2010 PLoS Genet 6:e1000993 + Pelchat 2011 Chem Senses 36:9 (near OR2M7)",
+  "source": "OpenSNP archive dump (archive.org/opensnp_data_dumps, 2017-12-08)",
+  "label_tier": "self-reported (near-independent, non-circular, noisy) \u2014 PILOT/DEMO",
+  "positive_class": "anosmic",
+  "negative_class": "can-smell",
+  "n_users_labelled": 68,
+  "n_scored": 61,
+  "n_indeterminate_call": 0,
+  "n_no_genotype_file": 0,
+  "n_rsid_missing": 7,
+  "confusion_positive_anosmic": {
+    "TP": 6,
+    "FP": 23,
+    "TN": 29,
+    "FN": 3
+  },
+  "accuracy": 0.574,
+  "majority_null_accuracy": 0.852,
+  "verdict_vs_null": "BELOW_NULL",
+  "pos_sens": 0.667,
+  "neg_spec": 0.558,
+  "caveats": [
+    "self-reported label (not a lab assay) \u2014 PILOT/DEMO tier, like the eye-colour openSNP cell",
+    "deployed textbook rule -> a WIN validates the rule, it is not new biological signal",
+    "WEAK-EFFECT association by design (not Mendelian) -> near-chance is the CORRECT, honest outcome"
+  ]
+}

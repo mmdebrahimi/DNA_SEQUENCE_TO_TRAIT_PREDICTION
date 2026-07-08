@@ -47,9 +47,10 @@ def test_binners_polarity():
 
 
 def test_registry_shape():
-    assert set(TRAITS) == {"earwax", "lactase", "cilantro"}
+    assert set(TRAITS) == {"earwax", "lactase", "cilantro", "photic", "asparagus"}
     assert TRAITS["earwax"].rsid == "rs17822931" and TRAITS["earwax"].tier == "STRONG_MENDELIAN"
     assert TRAITS["cilantro"].tier == "WEAK_ASSOCIATION_CONTRAST"
+    assert TRAITS["photic"].rsid == "rs10427255" and TRAITS["asparagus"].rsid == "rs4481887"
 
 
 def _synth_zip(tmp: Path) -> Path:

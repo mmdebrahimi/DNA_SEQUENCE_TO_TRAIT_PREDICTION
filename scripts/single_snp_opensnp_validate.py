@@ -58,6 +58,17 @@ def _label_by_user(header, rows, trait: SingleSnpTrait) -> dict[str, str]:
     return best
 
 
+def _verdict_vs_null(acc: float, null: float) -> str:
+    """Threshold-vs-null-baseline discipline: a single-locus rule only 'predicts' if it clears the
+    majority-class null by a real margin. Below/at null = single-locus INSUFFICIENT (honest falsification)."""
+    d = acc - null
+    if d > 0.05:
+        return "ABOVE_NULL"
+    if d < -0.02:
+        return "BELOW_NULL"
+    return "NEAR_CHANCE"
+
+
 def run(zip_path: Path, trait_key: str, limit: int | None = None) -> dict:
     trait = TRAITS[trait_key]
     if not zip_path.exists():
@@ -110,6 +121,8 @@ def run(zip_path: Path, trait_key: str, limit: int | None = None) -> dict:
         "n_indeterminate_call": n_indet, "n_no_genotype_file": n_nogeno, "n_rsid_missing": n_nors,
         "confusion_positive_%s" % pos: {"TP": tp, "FP": fp, "TN": tn, "FN": fn},
         "accuracy": round((tp + tn) / n, 3) if n else None,
+        "majority_null_accuracy": round(max(tp + fn, tn + fp) / n, 3) if n else None,
+        "verdict_vs_null": _verdict_vs_null((tp + tn) / n, max(tp + fn, tn + fp) / n) if n else None,
         "pos_sens": round(tp / (tp + fn), 3) if (tp + fn) else None,
         "neg_spec": round(tn / (tn + fp), 3) if (tn + fp) else None,
         "caveats": [
