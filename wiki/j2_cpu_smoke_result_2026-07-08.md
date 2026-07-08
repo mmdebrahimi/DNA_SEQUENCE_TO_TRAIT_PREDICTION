@@ -34,8 +34,26 @@ assays from the public HF mirror (`ICML2022/ProteinGym`) and ran the **canonical
 
 ## ESM-2 650M on the same 6 assays (CPU) — model-size control
 
-<!-- 650M-RESULT -->
-(pending — 650M CPU run in progress; folded in on completion.)
+Same 6 assays, **ESM-2 650M** (CPU, ~100–190 s/assay):
+
+| assay | 35M rho | **650M rho** | 650M shuffled |
+|---|---|---|---|
+| IF1_ECOLI_Kelsic_2016 | +0.477 | **+0.599** | +0.010 |
+| SUMO1_HUMAN_Weile_2017 | +0.496 | +0.509 | −0.009 |
+| CCDB_ECOLI_Adkar_2012 | −0.015 | **+0.472** | +0.018 |
+| CCDB_ECOLI_Tripathi_2016 | +0.036 | **+0.340** | −0.043 |
+| F7YBW8_MESOW_Aakre_2015 | −0.007 | **+0.335** | −0.139 |
+| TAT_HV1BR_Fernandes_2016 | −0.008 | +0.017 | +0.003 |
+
+**650M mini-median = 0.406** (vs 35M's 0.025).
+
+**Finding: model size rescues the "chance" assays.** The three assays 35M near-chanced on (CCDB×2, F7YBW8)
+jump to 0.34–0.47 with 650M — so the near-chance 35M median was mostly **model capacity**, not the pipeline
+or the assays. Only TAT_HV1BR stays low on both (+0.017) — a genuinely hard short HIV-Tat construct.
+**Honest caveats:** (1) these are still the 6 *smallest* assays (biased short/hard), so 0.406 is not the
+full-set number; (2) two assays have elevated shuffled |rho| (F7YBW8 0.139, CCDB_Tripathi 0.043) — a
+few-effective-variant noise artifact on the smallest assays, so *those* per-assay rhos are noisier (the
+median shuffled 0.014 is clean). The real 0.48-comparable number is 650M over the FULL 217-set (the GPU run).
 
 ## Honest bottom line
 
