@@ -61,3 +61,20 @@ The real number that supports the 0.48 claim still needs the **650M+ model over 
 the free-GPU Kaggle run (the smallest-6/35M CPU proxy can't stand in for it). But the pipeline is now
 **validated on real data end-to-end on this machine**, and `scripts/j2_cpu_smoke.py` lets any laptop
 reproduce a real per-assay number for free. Reproduce: `python scripts/j2_cpu_smoke.py --k 6 --data-dir <dir>`.
+
+## ProteinGym v1.1 benchmark catalog (wiki/proteingym_v1.1_substitutions_catalog.tsv, 2026-07-08)
+
+Structured map of the full current benchmark (217 substitution assays), built from the v1.1 reference — for
+planning the GPU-run sharding + the free-CPU-scorable subset. Zero-thrash (metadata only).
+
+- **Taxon:** Human 96 · Prokaryote 50 · Eukaryote 40 · Virus 31.
+- **Size buckets:** ≤200 aa 96 · 201–400 aa 44 · 401–1022 aa 61 · >1022 aa 16 (windowing-only).
+- **Free-CPU-tractable (≤400 aa & ≥20 single mutants): 140 / 217** — most of the benchmark can be
+  characterized on a laptop with a small/mid ESM-2, no GPU.
+- **Best free-CPU substrate = the v1.1 Tsuboyama domains** (TCRG1 37 aa/621 mut, PIN1 39/686, YNZC 39/714 …)
+  — tiny + thousands of mutants each. NOT on the HF v1.0 mirror (404); they need the v1.1 archive (~1 GB),
+  which is Kaggle-bound anyway. Staging them is the highest-value next free capture once the archive host is
+  reachable.
+
+NOTE: this catalog is a benchmark MAP, not new scored numbers — the scored data comes from the 35M-full run
+(in progress) + the 650M control above.
