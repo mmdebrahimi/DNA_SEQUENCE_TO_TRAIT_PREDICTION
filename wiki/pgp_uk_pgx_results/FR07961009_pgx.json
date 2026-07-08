@@ -102,6 +102,42 @@
       "rosuvastatin_exposure": "intermediate_exposure"
     }
   },
+  "interpretations": {
+    "warfarin": {
+      "drug": "warfarin",
+      "status": "ok",
+      "dose_direction": "lower_dose_requirement",
+      "contributors": {
+        "VKORC1": "Normal sensitivity (dose standard)",
+        "CYP2C9": "Intermediate Metabolizer (dose lower)",
+        "CYP4F2": "Intermediate (dose higher)"
+      },
+      "caveat": "Qualitative genotype-derived warfarin dose DIRECTION combining VKORC1 + CYP2C9 + CYP4F2 (CPIC Johnson 2017). NOT a mg/day dose \u2014 the IWPC/Gage algorithm needs clinical inputs (age/weight/BSA/amiodarone) a VCF lacks. Annotation only. NOT a clinical tool."
+    },
+    "statins": {
+      "drug": "statins",
+      "status": "ok",
+      "simvastatin_myopathy_risk": "typical_risk",
+      "rosuvastatin_exposure_risk": "increased_risk",
+      "contributors": {
+        "SLCO1B1": "Normal Function",
+        "ABCG2": "Decreased Function"
+      },
+      "caveat": "Per-statin myopathy risk: SLCO1B1 521T>C drives SIMVASTATIN risk (uptake), ABCG2 Q141K drives ROSUVASTATIN exposure (efflux) \u2014 different statins, reported separately (CPIC Cooper-DeHoff 2022). Annotation only. NOT a clinical tool."
+    },
+    "thiopurines": {
+      "drug": "thiopurines",
+      "status": "ok",
+      "toxicity_risk": "normal_risk",
+      "dosing_note": "standard starting dose",
+      "governing_gene": "TPMT+NUDT15 (equal)",
+      "contributors": {
+        "TPMT": "Normal Metabolizer",
+        "NUDT15": "Normal Metabolizer"
+      },
+      "caveat": "Combined thiopurine toxicity risk \u2014 CPIC (Relling 2019) uses the MORE-deficient of TPMT / NUDT15 (real two-gene rule). Annotation only. NOT a clinical tool."
+    }
+  },
   "lift_audit": [
     {
       "rsid": "rs4244285",

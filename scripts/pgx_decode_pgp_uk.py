@@ -264,10 +264,15 @@ def main(argv=None) -> int:
                              "cyp3a5", "tpmt", "cyp2b6")
                  if results[g]["phenotype"] not in (None, "Indeterminate")
                  and results[g]["phenotype_status"] == "ok")
+    # Integrated multi-gene interpretation — the payoff of the completed warfarin/statin/thiopurine groups.
+    from dna_decode.pgx import interpret as _interp
+    interpretations = _interp.interpret_all(results)
+
     out = {"schema": "pgx-pgp-uk-realization-v0", "sample_id": args.sample_id,
            "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",
            "vcf": str(args.vcf), "assembly_source": "GRCh37 -> targeted position-liftover -> GRCh38 catalog",
-           "n_genes_real_call": n_real, "results": results, "lift_audit": audit,
+           "n_genes_real_call": n_real, "results": results, "interpretations": interpretations,
+           "lift_audit": audit,
            "honest_tier": ("DEPLOYMENT/robustness demonstration on a real independent-cohort individual VCF; "
                            "PGP-UK ships no GeT-RM truth so this is NOT an accuracy-vs-truth number.")}
     print(json.dumps({"sample_id": args.sample_id, "n_genes_real_call": n_real,
