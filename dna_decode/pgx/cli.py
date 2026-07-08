@@ -6,6 +6,7 @@ variant->catalog caller (sibling of dna-amr's HIV/TB target-site cells). Pure-st
     dna-pgx sample.vcf --sample-id MY_SAMPLE                 # CYP2C19 (default)
     dna-pgx sample.vcf --gene cyp2c9                         # CYP2C9 (activity-score)
     dna-pgx sample.vcf --gene vkorc1                         # VKORC1 warfarin sensitivity
+    dna-pgx sample.vcf --all                                 # ALL 14 genes + integrated drug annotations
     dna-pgx cohort.vcf --sample NA12878 --json-only
 """
 from __future__ import annotations
@@ -34,6 +35,58 @@ _GENE_CHROM = {"CYP2C19": "10", "CYP2C9": "10", "CYP2C8": "10", "CYP3A5": "7",
                "TPMT": "6", "CYP2B6": "19", "CYP2D6": "22", "DPYD": "1", "NUDT15": "13", "UGT1A1": "2"}
 
 
+def _decode_all(args) -> int:
+    """Decode ALL 14 PGx genes from one GRCh38 VCF + integrated drug interpretations (the one-command tool)."""
+    from dna_decode.pgx import interpret as _interp
+    from dna_decode.pgx.vkorc1 import call_vkorc1
+    from dna_decode.pgx.slco1b1 import call_slco1b1
+    from dna_decode.pgx.cyp4f2 import call_cyp4f2
+    from dna_decode.pgx.abcg2 import call_abcg2
+    sid = args.sample_id or args.sample or args.vcf.stem
+    _diplo = {"cyp2c19": call_cyp2c19, "cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8, "cyp3a5": call_cyp3a5,
+              "tpmt": call_tpmt, "cyp2b6": call_cyp2b6, "cyp2d6": call_cyp2d6, "dpyd": call_dpyd,
+              "nudt15": call_nudt15, "ugt1a1": call_ugt1a1}
+    results = {}
+    for g, fn in _diplo.items():
+        rec = fn(args.vcf, sample_id=sid, sample_column=args.sample)
+        results[g] = {"diplotype": rec.get("diplotype"), "phenotype": rec.get("phenotype"),
+                      "phenotype_abbrev": rec.get("phenotype_abbrev"), "phenotype_status": rec.get("phenotype_status")}
+    for g, fn in (("vkorc1", call_vkorc1), ("slco1b1", call_slco1b1),
+                  ("cyp4f2", call_cyp4f2), ("abcg2", call_abcg2)):
+        rec = fn(args.vcf, sample=args.sample)
+        if g == "vkorc1":
+            results[g] = {"genotype": rec["cdna_genotype"], "sensitivity": rec["warfarin_sensitivity"]}
+        else:
+            results[g] = {"genotype": rec["variant_genotype"], "function": rec["function"]}
+    interpretations = _interp.interpret_all(results)
+    out = {"schema": "pgx-decode-all-v0", "sample_id": sid, "assembly": "GRCh38", "vcf": str(args.vcf),
+           "n_genes": len(results), "results": results, "interpretations": interpretations,
+           "caveat": ("Deterministic PGx decode of 14 genes + integrated drug annotations from a GRCh38 VCF. "
+                      "Phenotypes faithful-to-CPIC (assigned, not measured); interpretations are qualitative "
+                      "annotations, NOT clinical doses. NOT a clinical tool.")}
+    if args.out:
+        Path(args.out).write_text(json.dumps(out, indent=2), encoding="utf-8")
+    if args.json_only:
+        print(json.dumps(out, indent=2))
+        return 0
+    print(f"sample: {sid}  (GRCh38)  — 14-gene PGx decode")
+    for g in _diplo:
+        r = results[g]
+        print(f"  {g.upper():8} {str(r['diplotype']):14} -> {r['phenotype']} ({r.get('phenotype_abbrev')})")
+    for g in ("vkorc1", "slco1b1", "cyp4f2", "abcg2"):
+        r = results[g]
+        print(f"  {g.upper():8} {str(r['genotype']):14} -> {r['function' if 'function' in r else 'sensitivity']}")
+    print("  -- integrated drug annotations (qualitative, NOT clinical) --")
+    w = interpretations["warfarin"]; s = interpretations["statins"]; t = interpretations["thiopurines"]
+    print(f"  WARFARIN     : {w.get('dose_direction', w.get('status'))}")
+    print(f"  STATINS      : simvastatin {s.get('simvastatin_myopathy_risk', s.get('status'))} / "
+          f"rosuvastatin {s.get('rosuvastatin_exposure_risk', '')}")
+    print(f"  THIOPURINES  : {t.get('toxicity_risk', t.get('status'))} (gov {t.get('governing_gene', '?')})")
+    if args.out:
+        print(f"[provenance -> {args.out}]")
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="dna-pgx",
@@ -46,11 +99,16 @@ def main(argv=None) -> int:
     ap.add_argument("--sample", default=None, help="sample COLUMN name in a multi-sample VCF (default: first)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
+    ap.add_argument("--all", action="store_true",
+                    help="decode ALL 14 PGx genes + integrated drug interpretations from one GRCh38 VCF")
     args = ap.parse_args(argv)
 
     if not args.vcf.exists():
         print(f"ERROR: VCF not found: {args.vcf}", file=sys.stderr)
         return 2
+
+    if args.all:
+        return _decode_all(args)
 
     # VKORC1 is a single-SNP genotype->sensitivity call (not a diplotype) -> its own shape.
     if args.gene == "vkorc1":
