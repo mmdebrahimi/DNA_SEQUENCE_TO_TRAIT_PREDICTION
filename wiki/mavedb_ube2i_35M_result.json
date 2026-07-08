@@ -1,0 +1,11 @@
+{
+  "source": "MaveDB",
+  "urn": "urn:mavedb:00000001-a-4",
+  "title": "UBE2I joint data",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "protein_len": 158,
+  "n": 2872,
+  "rho": 0.0005381723341451804,
+  "rho_shuf": 0.007100962312796646,
+  "mism": 0
+}

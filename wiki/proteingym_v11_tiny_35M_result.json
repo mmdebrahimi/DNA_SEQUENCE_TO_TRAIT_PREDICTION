@@ -1,0 +1,93 @@
+{
+  "source": "ProteinGym v1.1 Tsuboyama tiny domains (range-extracted, Zenodo 13936340)",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "n_assays": 12,
+  "median_abs_rho": 0.4832986398959367,
+  "median_abs_shuf": 0.02300350600631752,
+  "assays": [
+    {
+      "dms_id": "TCRG1_MOUSE_Tsuboyama_2023_1E0L",
+      "seqlen": 37,
+      "n": 621,
+      "rho": 0.6982388520845203,
+      "rho_shuf": 0.040309727928277334
+    },
+    {
+      "dms_id": "PIN1_HUMAN_Tsuboyama_2023_1I6C",
+      "seqlen": 39,
+      "n": 686,
+      "rho": 0.6520684672592234,
+      "rho_shuf": -0.046022805258909096
+    },
+    {
+      "dms_id": "YNZC_BACSU_Tsuboyama_2023_2JVD",
+      "seqlen": 39,
+      "n": 714,
+      "rho": 0.38385267896034336,
+      "rho_shuf": 0.10609842265646242
+    },
+    {
+      "dms_id": "SQSTM_MOUSE_Tsuboyama_2023_2RRU",
+      "seqlen": 40,
+      "n": 707,
+      "rho": 0.4422601047804813,
+      "rho_shuf": -0.03564516710675519
+    },
+    {
+      "dms_id": "VG08_BPP22_Tsuboyama_2023_2GP8",
+      "seqlen": 40,
+      "n": 723,
+      "rho": 0.51388127817925,
+      "rho_shuf": -0.018849532497276816
+    },
+    {
+      "dms_id": "MAFG_MOUSE_Tsuboyama_2023_1K1V",
+      "seqlen": 41,
+      "n": 762,
+      "rho": 0.4844237370785559,
+      "rho_shuf": -0.002310159517562264
+    },
+    {
+      "dms_id": "THO1_YEAST_Tsuboyama_2023_2WQG",
+      "seqlen": 41,
+      "n": 656,
+      "rho": 0.4039415973998703,
+      "rho_shuf": -0.024642783968360442
+    },
+    {
+      "dms_id": "OTU7A_HUMAN_Tsuboyama_2023_2L2D",
+      "seqlen": 42,
+      "n": 635,
+      "rho": 0.5633285795230599,
+      "rho_shuf": 0.0024794643363466834
+    },
+    {
+      "dms_id": "SAV1_MOUSE_Tsuboyama_2023_2YSB",
+      "seqlen": 43,
+      "n": 679,
+      "rho": 0.4821735427133174,
+      "rho_shuf": -0.020761883806528724
+    },
+    {
+      "dms_id": "ODP2_GEOSE_Tsuboyama_2023_1W4G",
+      "seqlen": 44,
+      "n": 669,
+      "rho": 0.13740060204869692,
+      "rho_shuf": 0.002917944313501369
+    },
+    {
+      "dms_id": "RD23A_HUMAN_Tsuboyama_2023_1IFY",
+      "seqlen": 44,
+      "n": 798,
+      "rho": 0.6676102625853094,
+      "rho_shuf": 0.021364228044274597
+    },
+    {
+      "dms_id": "SDA_BACSU_Tsuboyama_2023_1PV0",
+      "seqlen": 44,
+      "n": 834,
+      "rho": 0.18274918290238595,
+      "rho_shuf": -0.04131216782581727
+    }
+  ]
+}

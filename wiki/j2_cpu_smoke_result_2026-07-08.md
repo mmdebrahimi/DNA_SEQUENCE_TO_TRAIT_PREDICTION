@@ -78,3 +78,27 @@ planning the GPU-run sharding + the free-CPU-scorable subset. Zero-thrash (metad
 
 NOTE: this catalog is a benchmark MAP, not new scored numbers — the scored data comes from the 35M-full run
 (in progress) + the 650M control above.
+
+## Two new data sources captured (2026-07-08, `--until-mvp`)
+
+Both free, no GPU/D:/money — via `scripts/proteingym_v11_fetch.py` + `scripts/mavedb_cpu_smoke.py`.
+
+### C1 — ProteinGym v1.1 tiny Tsuboyama domains (the best free-CPU substrate)
+The v1.1 DMS assays ship only in an 11 GB Zenodo zip; the HF mirrors are v1.0. **Unlocked for free via HTTP
+range requests**: the assay CSVs are in a 43 MB *nested* zip, so `remotezip` pulls just that (43 MB, not
+11 GB) → all 217 v1.1 assays staged locally. Scored the 12 smallest (37–44 aa) with ESM-2 **35M** on CPU:
+
+**35M mini-median |Spearman| = 0.483** (shuffled 0.023) — the *smallest* model matches the published
+650M-scale 0.48 on these well-behaved single domains (TCRG1 0.698, PIN1 0.652, RD23A 0.668 …). Confirms the
+tiny domains are the ideal free-CPU substrate. Result: `wiki/proteingym_v11_tiny_35M_result.json`.
+
+### C2 — MaveDB (independent DB ingest)
+`scripts/mavedb_cpu_smoke.py` fetches a MaveDB score set (metadata + scores), translates DNA targets →
+protein, parses `hgvs_pro` → single missense, and scores via the canonical scorer. Ran on UBE2I
+(`urn:mavedb:00000001-a-4`, "joint data"): 158 aa, **2872 single missense, mism=0** (adapter correct —
+target↔variant numbering aligns perfectly). **rho = +0.001 (chance), shuffled +0.007** — HONEST: this
+imputed/joint scoreset shows no ESM-35M signal (either the imputed-score column isn't a clean functional
+score, or 35M is too weak here; the null shuffled control confirms it's real, not a bug). The *ingest
+pipeline* generalizes to MaveDB; a raw measured scoreset or 650M is the follow-up for a signal number.
+MaveDB's `/scores` API was intermittently 504-degraded — used a cached CSV (retry-backoff + `--scores-csv`
+fallback both shipped). Result: `wiki/mavedb_ube2i_35M_result.json`.
