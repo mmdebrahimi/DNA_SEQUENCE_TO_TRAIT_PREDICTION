@@ -1,0 +1,39 @@
+{
+  "status": "SCORED",
+  "schema": "abo-full-opensnp-validation-v1",
+  "date": "2026-07-07",
+  "source": "OpenSNP archive dump 2017-12-08; staged substrate data/j3_abo/j3_abo_substrate.json",
+  "rule": "3-variant deterministic ABO (rs8176719 + rs8176746 + rs8176747); UK-Biobank-style method",
+  "label_tier": "self-reported ABO (near-independent, non-circular, ~15% noisy)",
+  "n_scored": 386,
+  "n_correct": 348,
+  "accuracy_4way": 0.902,
+  "n_indeterminate": 9,
+  "n_no_label": 0,
+  "o_vs_nonO": {
+    "TP": 146,
+    "FP": 12,
+    "TN": 211,
+    "FN": 17,
+    "accuracy": 0.925
+  },
+  "confusion_label_pred": {
+    "A->A": 134,
+    "A->AB": 2,
+    "A->B": 1,
+    "A->O": 10,
+    "AB->A": 5,
+    "AB->AB": 22,
+    "AB->O": 2,
+    "B->AB": 1,
+    "B->B": 46,
+    "O->A": 15,
+    "O->B": 2,
+    "O->O": 146
+  },
+  "caveats": [
+    "self-report ~15% erroneous",
+    "non-deletional O / A2 / cis-AB not captured",
+    "the A-vs-B extension of the O-vs-non-O cell (rs8176746/47 sourced, not fabricated)"
+  ]
+}
