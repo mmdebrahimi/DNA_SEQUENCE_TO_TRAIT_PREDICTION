@@ -1,0 +1,12 @@
+{
+  "status": "EXTRACTED",
+  "schema": "j3-abo-region-genotypes-v1",
+  "date": "2026-07-07",
+  "assembly": "GRCh37",
+  "window": "chr9:136120000-136155000",
+  "n_samples": 395,
+  "n_samples_with_region_snps": 331,
+  "n_distinct_positions": 98,
+  "n_genotype_rows": 20390,
+  "note": "git-transferable ABO-window genotype matrix aligned to the substrate user_id index; the workhorse embeds this + a self-fetched GRCh37 reference. No zip transfer / no external drive."
+}

@@ -67,12 +67,26 @@ freq varies by ancestry, so an ancestry-blind AUROC is confounded), compared to 
 **Verdict:** the rep has a niche ONLY if `within-group` metric > the mechanism baseline AND > structure-only.
 Reuse `dna_decode/eval` + the `clade`/`within-group` machinery; no new confound-handling invented here.
 
-## 4. Transfer
+## 4. Transfer — git only, the 21 GB zip NEVER moves (workhorse has no external drive)
 
-Git is the cross-machine channel. The **substrate TSV** (`data/j3_abo/`, small, public open-consent OpenSNP
-data) is force-committed so both machines share the EXACT sample index. The 21 GB zip is NOT git-transferred
-(the workhorse either has its own copy at the same `D:` path or the user transfers it out-of-band). The
-`.npz` embeddings are workhorse outputs → committed back (or synced) for the laptop falsifier.
+The workhorse cannot mount external drives and git cannot carry the 21 GB dump — but **the workhorse does
+not need the zip.** It only needs the ABO-locus data for the 395 samples, which is tiny and travels through
+the mmdebrahimi git repo. Everything the workhorse needs is committed:
+
+| artifact | file (in git) | role |
+|---|---|---|
+| sample index + labels + causal SNPs | `data/j3_abo/j3_abo_substrate.tsv` | the canonical `user_id` order |
+| **full ABO-window genotype matrix** | `data/j3_abo/j3_abo_region_genotypes.tsv` | all array SNPs in chr9:136,120,000-136,155,000 (GRCh37) per sample — long format, lossless |
+| region manifest | `data/j3_abo/j3_abo_region_manifest.json` | window / n_positions / n_samples |
+| contract | this file | the `.npz` shapes + invariants |
+
+The **GRCh37 reference sequence** for the ABO window is a standard public download the workhorse fetches
+itself (e.g. Ensembl/UCSC `chr9`) — it is NOT gated by the zip. The workhorse builds each sample's ABO
+sequence = reference window with that sample's genotyped SNPs substituted (array positions only; no
+imputation), then embeds it (`frozen_fm`) and passes it through the JEPA encoder (`learned_rep`).
+
+The two `.npz` embeddings are workhorse OUTPUTS → committed/pushed back to mmdebrahimi for the laptop
+falsifier. **Round trip is 100% git; no drive, no large transfer, ever.**
 
 ## 5. Status
 
