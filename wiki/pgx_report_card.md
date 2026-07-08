@@ -16,6 +16,8 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 | UGT1A1 | irinotecan-toxicity phenotype (activity-score) — tag-SNP surface | — | — | — | — | *28 TA-repeat length UNASSESSED (star28_ta_repeat_unassessed) — rs887829 is an LD-tag PROXY, imperfect off-EUR; *37/*36 repeat alleles not called. GeT-RM UGT1A1 concordance = external wall (paper-supplement). Needs a repeat-aware caller for a direct *28 call |
 | VKORC1 | warfarin sensitivity (rs9923231) | — | — | A1/D0/F0 | — | — |
 | SLCO1B1 | statin myopathy (rs4149056 / *5 521T>C) | — | — | — | — | single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants |
+| CYP4F2 | warfarin dose modifier (rs2108622 / *3 V433M) | — | — | — | — | single-SNP *3 proxy (rs2108622 IS the *3 truth); a DOSE modifier not a metabolizer phenotype; dose direction is annotation only, NOT a clinical dose |
+| ABCG2 | rosuvastatin transporter (rs2231142 / Q141K) | — | — | — | — | single-SNP Q141K readout (rs2231142 IS the truth); ROSUVASTATIN-specific (not all statins); transporter function, not a metabolizer phenotype |
 
 ## Honest tier per cell
 
@@ -31,5 +33,7 @@ _Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggrega
 - **UGT1A1:** NEW — irinotecan toxicity / Gilbert. *STRUCTURAL: the major *28 allele is a promoter TA-REPEAT (STR), NOT a SNP — unresolvable from a short-read SNP VCF. v0 uses rs887829 (*80) as the validated LD-TAG proxy for *28 (EUR r^2 ~0.9+; rs887829 EUR AF ~30% == the *28 frequency, confirming the tag) + *6 (rs4148323, clean SNP). CPIC activity-score (Gammal 2016; AS 2=NM, 1.5=IM, 1.0=PM). Ensembl-GRCh38-verified. v0 deployment: decoded on 5 real PGP-UK humans. Phenotype faithful-to-CPIC. Tag-SNP wrapper (like the HLA cells).
 - **VKORC1:** single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system
 - **SLCO1B1:** single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned (simvastatin function is assigned largely from 521T>C).
+- **CYP4F2:** NEW — completes the WARFARIN TRIAD (VKORC1 + CYP2C9 + CYP4F2). Single-SNP rs2108622 genotype->function readout (minus-strand cDNA C>T == 433 Val>Met); *3 reduced-function carriers need a HIGHER warfarin dose (CPIC Johnson 2017, ~+0.4 mg/day per *3). KNOWLEDGE_BASELINE; AF-corroborated (*3 ~29% EUR / ~79% EAS). Deployed on 5 PGP-UK humans.
+- **ABCG2:** NEW — pairs with SLCO1B1 for STATINS. Single-SNP rs2231142 genotype->transporter-function readout (minus-strand cDNA G>T == 141 Gln>Lys); 141K poor-function carriers have INCREASED rosuvastatin exposure (CPIC Cooper-DeHoff 2022 -> lower rosuvastatin dose cap). KNOWLEDGE_BASELINE; AF-corroborated (141K ~9% EUR / ~29% EAS). Deployed on 5 PGP-UK humans.
 
 _Validation axes: GeT-RM = consensus concordance on real 1000G (independent of the consensus tools); PharmCAT = reference-tool fixtures; func-evidence = non-CPIC cross-check of the function assignment (AGREE/DISAGREE/FLAG); trio = Mendelian calling-consistency on 1000G trios. NOT a clinical tool._

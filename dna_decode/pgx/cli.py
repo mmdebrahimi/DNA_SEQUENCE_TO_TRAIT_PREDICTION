@@ -88,6 +88,42 @@ def main(argv=None) -> int:
             print(f"  {rec['caveat']}")
         return 0
 
+    # CYP4F2 is a single-SNP (rs2108622 *3) warfarin dose-modifier readout -> its own shape (like VKORC1).
+    if args.gene == "cyp4f2":
+        from dna_decode.pgx.cyp4f2 import call_cyp4f2
+        rec = call_cyp4f2(args.vcf, sample=args.sample)
+        rec["sample_id"] = args.sample_id or args.sample or args.vcf.stem
+        if args.out:
+            Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
+        if args.json_only:
+            print(json.dumps(rec, indent=2))
+        else:
+            print(f"sample: {rec['sample_id']}  gene: CYP4F2 ({rec['assembly']})  {rec['position']}")
+            print(f"  rs2108622 {rec['genomic_ref_alt']}  GT={rec['genomic_gt']}  433 {rec['variant_genotype']}  "
+                  f"({rec['star_proxy']})  -> {rec['function']} (warfarin dose: {rec['warfarin_dose_direction']})")
+            if rec["flags"]:
+                print(f"  flags: {', '.join(rec['flags'])}")
+            print(f"  {rec['caveat']}")
+        return 0
+
+    # ABCG2 is a single-SNP (rs2231142 Q141K) rosuvastatin transporter-function readout -> its own shape.
+    if args.gene == "abcg2":
+        from dna_decode.pgx.abcg2 import call_abcg2
+        rec = call_abcg2(args.vcf, sample=args.sample)
+        rec["sample_id"] = args.sample_id or args.sample or args.vcf.stem
+        if args.out:
+            Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
+        if args.json_only:
+            print(json.dumps(rec, indent=2))
+        else:
+            print(f"sample: {rec['sample_id']}  gene: ABCG2 ({rec['assembly']})  {rec['position']}")
+            print(f"  rs2231142 {rec['genomic_ref_alt']}  GT={rec['genomic_gt']}  141 {rec['variant_genotype']}  "
+                  f"({rec['star_proxy']})  -> {rec['function']} (rosuvastatin exposure: {rec['rosuvastatin_exposure']})")
+            if rec["flags"]:
+                print(f"  flags: {', '.join(rec['flags'])}")
+            print(f"  {rec['caveat']}")
+        return 0
+
     _dispatch = {"cyp2c9": call_cyp2c9, "cyp2c8": call_cyp2c8, "cyp3a5": call_cyp3a5,
                  "tpmt": call_tpmt, "cyp2b6": call_cyp2b6, "cyp2d6": call_cyp2d6, "dpyd": call_dpyd,
                  "nudt15": call_nudt15, "ugt1a1": call_ugt1a1}

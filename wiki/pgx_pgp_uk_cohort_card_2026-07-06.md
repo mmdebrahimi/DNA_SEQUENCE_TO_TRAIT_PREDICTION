@@ -6,13 +6,13 @@ _deployment/robustness demonstration on real independent-cohort individuals; tin
 
 ## Per-individual calls
 
-| sample | CYP2C19 | CYP2C9 | CYP2D6 | DPYD | NUDT15 | UGT1A1 | CYP3A5 | TPMT | CYP2B6 | VKORC1 | SLCO1B1 |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| FR07961000 | *1/*2 IM | *1/*1 NM | *1/*10 NM | *1/*1 NM | *1/*1 NM | *1/*80 IM | *1/*6 IM | *1/*1 NM | *1/*6 IM | G/G | T/T |
-| FR07961003 | *2/*17 IM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*80 IM | *1/*1 NM | *1/*1 NM | *1/*6 IM | G/A | T/T |
-| FR07961006 | *1/*2 IM | *1/*2 IM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*6 IM | A/A | T/T |
-| FR07961007 | *1/*17 RM | *1/*1 NM | *1/*41 NM | *1/*1 NM | *1/*1 NM | *1/*80 IM | *1/*1 NM | *1/*1 NM | *1/*6 IM | A/A | T/T |
-| FR07961009 | *1/*1 NM | *2/*2 IM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | G/G | T/T |
+| sample | CYP2C19 | CYP2C9 | CYP2D6 | DPYD | NUDT15 | UGT1A1 | CYP3A5 | TPMT | CYP2B6 | VKORC1 | SLCO1B1 | CYP4F2 | ABCG2 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| FR07961000 | *1/*2 IM | *1/*1 NM | *1/*10 NM | *1/*1 NM | *1/*1 NM | *1/*80 IM | *1/*6 IM | *1/*1 NM | *1/*6 IM | G/G | T/T | Val/Val | Gln/Gln |
+| FR07961003 | *2/*17 IM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*80 IM | *1/*1 NM | *1/*1 NM | *1/*6 IM | G/A | T/T | Val/Met | Gln/Lys |
+| FR07961006 | *1/*2 IM | *1/*2 IM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*6 IM | A/A | T/T | Met/Met | Gln/Gln |
+| FR07961007 | *1/*17 RM | *1/*1 NM | *1/*41 NM | *1/*1 NM | *1/*1 NM | *1/*80 IM | *1/*1 NM | *1/*1 NM | *1/*6 IM | A/A | T/T | Val/Val | Gln/Gln |
+| FR07961009 | *1/*1 NM | *2/*2 IM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | *1/*1 NM | G/G | T/T | Val/Met | Gln/Lys |
 
 ## Per-gene distribution (across the cohort)
 
@@ -27,6 +27,8 @@ _deployment/robustness demonstration on real independent-cohort individuals; tin
 - **CYP2B6** — phenotypes: {'IM': 4, 'NM': 1}; diplotypes: {'*1/*6': 4, '*1/*1': 1}; observed allele counts: {'*1': 6, '*6': 4}
 - **VKORC1** — genotypes: {'G/G': 2, 'A/A': 2, 'G/A': 1}
 - **SLCO1B1** — genotypes: {'T/T': 5}
+- **CYP4F2** — genotypes: {'Val/Val': 2, 'Val/Met': 2, 'Met/Met': 1}
+- **ABCG2** — genotypes: {'Gln/Gln': 3, 'Gln/Lys': 2}
 
 _**CYP2D6 caveat (load-bearing honesty):** the CYP2D6 call here is a SNP-proxy diplotype from a called VCF — it CANNOT see the structural alleles (*5 deletion / *xN duplication / *13/*36/*68 hybrids), so every CYP2D6 cell carries `cnv_hybrid_unassessed`. The copy-number half is resolvable only from a BAM/CRAM (dna_decode.pgx.cyp2d6_structural, 26/26 on 1000G CRAMs); PGP-UK ships VCFs, not reads._
 

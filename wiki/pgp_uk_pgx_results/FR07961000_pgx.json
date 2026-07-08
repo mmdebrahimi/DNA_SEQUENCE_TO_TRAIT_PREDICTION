@@ -90,6 +90,16 @@
       "genotype": "T/T",
       "function": "Normal Function",
       "myopathy_risk": "typical_risk"
+    },
+    "cyp4f2": {
+      "genotype": "Val/Val",
+      "function": "Normal Function",
+      "warfarin_dose_direction": "no_adjustment"
+    },
+    "abcg2": {
+      "genotype": "Gln/Gln",
+      "function": "Normal Function",
+      "rosuvastatin_exposure": "typical_exposure"
     }
   },
   "lift_audit": [
@@ -263,6 +273,14 @@
     },
     {
       "rsid": "rs4149056",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs2108622",
+      "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs2231142",
       "state": "assumed_ref_0/0_wgs"
     }
   ],

@@ -90,6 +90,16 @@
       "genotype": "T/T",
       "function": "Normal Function",
       "myopathy_risk": "typical_risk"
+    },
+    "cyp4f2": {
+      "genotype": "Val/Met",
+      "function": "Intermediate",
+      "warfarin_dose_direction": "slightly_higher_dose"
+    },
+    "abcg2": {
+      "genotype": "Gln/Lys",
+      "function": "Decreased Function",
+      "rosuvastatin_exposure": "intermediate_exposure"
     }
   },
   "lift_audit": [
@@ -258,6 +268,16 @@
     {
       "rsid": "rs4149056",
       "state": "assumed_ref_0/0_wgs"
+    },
+    {
+      "rsid": "rs2108622",
+      "state": "lifted",
+      "gt": "0/1"
+    },
+    {
+      "rsid": "rs2231142",
+      "state": "lifted",
+      "gt": "0/1"
     }
   ],
   "honest_tier": "DEPLOYMENT/robustness demonstration on a real independent-cohort individual VCF; PGP-UK ships no GeT-RM truth so this is NOT an accuracy-vs-truth number."

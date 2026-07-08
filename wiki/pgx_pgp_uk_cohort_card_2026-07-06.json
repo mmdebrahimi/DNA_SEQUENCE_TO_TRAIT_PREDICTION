@@ -143,6 +143,19 @@
       "genotypes": {
         "T/T": 5
       }
+    },
+    "cyp4f2": {
+      "genotypes": {
+        "Val/Val": 2,
+        "Val/Met": 2,
+        "Met/Met": 1
+      }
+    },
+    "abcg2": {
+      "genotypes": {
+        "Gln/Gln": 3,
+        "Gln/Lys": 2
+      }
     }
   },
   "cohort": "PGP-UK (Personal Genome Project UK), ENA PRJEB17529, open-consent GRCh37",

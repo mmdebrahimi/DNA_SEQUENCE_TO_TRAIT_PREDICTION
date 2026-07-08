@@ -134,6 +134,28 @@
       "trio_mendelian": "\u2014",
       "tier": "single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned (simvastatin function is assigned largely from 521T>C).",
       "residual": "single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants"
+    },
+    {
+      "gene": "CYP4F2",
+      "trait": "warfarin dose modifier (rs2108622 / *3 V433M)",
+      "getrm": null,
+      "getrm_pct": null,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "NEW \u2014 completes the WARFARIN TRIAD (VKORC1 + CYP2C9 + CYP4F2). Single-SNP rs2108622 genotype->function readout (minus-strand cDNA C>T == 433 Val>Met); *3 reduced-function carriers need a HIGHER warfarin dose (CPIC Johnson 2017, ~+0.4 mg/day per *3). KNOWLEDGE_BASELINE; AF-corroborated (*3 ~29% EUR / ~79% EAS). Deployed on 5 PGP-UK humans.",
+      "residual": "single-SNP *3 proxy (rs2108622 IS the *3 truth); a DOSE modifier not a metabolizer phenotype; dose direction is annotation only, NOT a clinical dose"
+    },
+    {
+      "gene": "ABCG2",
+      "trait": "rosuvastatin transporter (rs2231142 / Q141K)",
+      "getrm": null,
+      "getrm_pct": null,
+      "pharmcat": null,
+      "functional_evidence": "\u2014",
+      "trio_mendelian": "\u2014",
+      "tier": "NEW \u2014 pairs with SLCO1B1 for STATINS. Single-SNP rs2231142 genotype->transporter-function readout (minus-strand cDNA G>T == 141 Gln>Lys); 141K poor-function carriers have INCREASED rosuvastatin exposure (CPIC Cooper-DeHoff 2022 -> lower rosuvastatin dose cap). KNOWLEDGE_BASELINE; AF-corroborated (141K ~9% EUR / ~29% EAS). Deployed on 5 PGP-UK humans.",
+      "residual": "single-SNP Q141K readout (rs2231142 IS the truth); ROSUVASTATIN-specific (not all statins); transporter function, not a metabolizer phenotype"
     }
   ],
   "sources": {

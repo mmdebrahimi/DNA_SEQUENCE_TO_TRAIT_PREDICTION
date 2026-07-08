@@ -37,6 +37,8 @@ from dna_decode.pgx import (
     cyp3a5_catalog as c3,
     dpyd_catalog as dp,
     nudt15_catalog as nu,
+    abcg2,
+    cyp4f2,
     slco1b1,
     tpmt_catalog as tp,
     ugt1a1_catalog as ug,
@@ -82,6 +84,9 @@ GRCH37_POS: dict[str, int] = {
     "rs116855232": 48619855,                                                   # NUDT15 *3 (no function)
     # UGT1A1 (chr2) — GRCh37 positions resolved via Ensembl GRCh37 REST 2026-07-07.
     "rs887829": 234668570, "rs4148323": 234669144,                            # UGT1A1 *80 (*28-tag) / *6
+    # CYP4F2 (chr19) + ABCG2 (chr4) — GRCh37 positions resolved via Ensembl GRCh37 REST 2026-07-07.
+    "rs2108622": 15990431,                                                     # CYP4F2 *3 (V433M)
+    "rs2231142": 89052323,                                                     # ABCG2 Q141K
 }
 
 
@@ -104,6 +109,8 @@ def _all_variants():
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     yield vkorc1.RSID, vkorc1.CHROM, vkorc1.POS, vkorc1.REF, vkorc1.ALT
     yield slco1b1.RSID, slco1b1.CHROM, slco1b1.POS, slco1b1.REF, slco1b1.ALT
+    yield cyp4f2.RSID, cyp4f2.CHROM, cyp4f2.POS, cyp4f2.REF, cyp4f2.ALT
+    yield abcg2.RSID, abcg2.CHROM, abcg2.POS, abcg2.REF, abcg2.ALT
 
 
 def _norm_chrom(c: str) -> str:
@@ -245,6 +252,13 @@ def main(argv=None) -> int:
     sl = slco1b1.call_slco1b1(tmp); sl["sample_id"] = args.sample_id
     results["slco1b1"] = {"genotype": sl["variant_genotype"], "function": sl["function"],
                           "myopathy_risk": sl["myopathy_risk"]}
+    # CYP4F2 — 3rd warfarin gene (with VKORC1 + CYP2C9). ABCG2 — statin transporter (pairs with SLCO1B1).
+    cf = cyp4f2.call_cyp4f2(tmp); cf["sample_id"] = args.sample_id
+    results["cyp4f2"] = {"genotype": cf["variant_genotype"], "function": cf["function"],
+                         "warfarin_dose_direction": cf["warfarin_dose_direction"]}
+    ab = abcg2.call_abcg2(tmp); ab["sample_id"] = args.sample_id
+    results["abcg2"] = {"genotype": ab["variant_genotype"], "function": ab["function"],
+                        "rosuvastatin_exposure": ab["rosuvastatin_exposure"]}
 
     n_real = sum(1 for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp2d6", "dpyd", "nudt15", "ugt1a1",
                              "cyp3a5", "tpmt", "cyp2b6")

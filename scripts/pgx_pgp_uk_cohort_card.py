@@ -22,7 +22,7 @@ from collections import Counter
 from pathlib import Path
 
 DIPLO_GENES = ["cyp2c19", "cyp2c9", "cyp2d6", "dpyd", "nudt15", "ugt1a1", "cyp3a5", "tpmt", "cyp2b6"]
-SNP_GENES = ["vkorc1", "slco1b1"]
+SNP_GENES = ["vkorc1", "slco1b1", "cyp4f2", "abcg2"]
 
 
 def load_results(results_dir: Path) -> list[dict]:
