@@ -132,8 +132,8 @@ def _assay_ranking_loss(model, tok, seq, variants, device, torch, mask_id, aa_id
         logits = model(stack).logits
         for r, p in enumerate(chunk):
             logp_at[p] = torch.log_softmax(logits[r, p].float(), dim=-1)
-    scores = torch.stack([logp_at[p][aa_ids[mut]] - logp_at[p][aa_ids[wt]] for _w, p, mut, _y in
-                          [(w, p, m, y) for (w, p, m, y) in variants]])
+    scores = torch.stack([logp_at[p][aa_ids[mut]] - logp_at[p][aa_ids[wt]]
+                          for _w, p, mut, _y in variants])
     ys = [y for _w, _p, _m, y in variants]
     pairs = sample_pairs(len(variants), max_pairs, seed)
     if not pairs:
@@ -149,12 +149,18 @@ def _assay_ranking_loss(model, tok, seq, variants, device, torch, mask_id, aa_id
     return torch.stack(losses).mean()
 
 
-def train_lora(train_examples, base_model, rank, epochs, lr, dtype, device, torch, mask_id, aa_ids,
+def train_lora(train_examples, base_model, rank, epochs, lr, device, torch, tok, mask_id, aa_ids,
                batch, max_pairs, seed):
-    """LoRA-adapt ESM-2 on TRAIN proteins' variants. Returns the adapted model (adapters active)."""
+    """LoRA-adapt ESM-2 on TRAIN proteins' variants. Returns the adapted model (adapters active).
+
+    TRAINING DTYPE = float32 ALWAYS (not the eval --dtype): raw-fp16 LoRA training with AdamW NaNs/stalls
+    — small (lr*grad) updates underflow in fp16, and there is no autocast/GradScaler here. ESM2-650M in
+    fp32 fits a free T4 16 GB comfortably (~2.6 GB weights). For a 3B backbone, fp32 training is tight on a
+    free T4 — prefer bf16 + autocast (a documented follow-up), NOT raw fp16. `tok` is passed explicitly
+    (no module global)."""
     from peft import LoraConfig, get_peft_model
     from transformers import AutoModelForMaskedLM
-    model = AutoModelForMaskedLM.from_pretrained(base_model, torch_dtype=dtype)
+    model = AutoModelForMaskedLM.from_pretrained(base_model, torch_dtype=torch.float32)
     cfg = LoraConfig(r=rank, lora_alpha=2 * rank, lora_dropout=0.05, bias="none",
                      target_modules=["query", "key", "value"])   # ESM-2 attention projections
     model = get_peft_model(model, cfg).to(device)
@@ -164,7 +170,7 @@ def train_lora(train_examples, base_model, rank, epochs, lr, dtype, device, torc
         random.Random(seed + ep).shuffle(train_examples)
         tot = 0.0
         for k, (seq, variants) in enumerate(train_examples):
-            loss = _assay_ranking_loss(model, tok_g, seq, variants, device, torch, mask_id, aa_ids,
+            loss = _assay_ranking_loss(model, tok, seq, variants, device, torch, mask_id, aa_ids,
                                        batch, max_pairs, seed + k)
             opt.zero_grad(); loss.backward(); opt.step()
             tot += float(loss.detach())
@@ -216,14 +222,13 @@ def main(argv=None):
 
     import torch
     from transformers import AutoModelForMaskedLM, AutoTokenizer
-    global tok_g
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    dtype = torch.float16 if args.dtype == "float16" else torch.float32
+    dtype = torch.float16 if args.dtype == "float16" else torch.float32   # EVAL/inference dtype only
     if device == "cpu":
         print("WARNING: no CUDA — LoRA fine-tune on CPU is impractically slow. Use a free T4/P100 kernel.")
-    tok_g = AutoTokenizer.from_pretrained(args.model)
-    mask_id = tok_g.mask_token_id
-    aa_ids = {aa: tok_g.convert_tokens_to_ids(aa) for aa in AA}
+    tok = AutoTokenizer.from_pretrained(args.model)
+    mask_id = tok.mask_token_id
+    aa_ids = {aa: tok.convert_tokens_to_ids(aa) for aa in AA}
     dms_of = {}
     for d in refs:
         path, seq = refs[d]
@@ -250,7 +255,7 @@ def main(argv=None):
             if d not in dms_of:
                 continue
             path, seq = dms_of[d]
-            r, why = score_assay(seq, load_dms(path), tok_g, model, device, mask_id, aa_ids,
+            r, why = score_assay(seq, load_dms(path), tok, model, device, mask_id, aa_ids,
                                  args.batch, args.maxlen, torch, long_mode="skip")
             if r:
                 rhos.append(r["rho"])
@@ -262,8 +267,8 @@ def main(argv=None):
           f"({zs['n_assays']} assays)")
     del base
 
-    adapted = train_lora(train_examples, args.model, args.rank, args.epochs, args.lr, dtype, device,
-                         torch, mask_id, aa_ids, args.batch, args.max_pairs, args.seed)
+    adapted = train_lora(train_examples, args.model, args.rank, args.epochs, args.lr, device,
+                         torch, tok, mask_id, aa_ids, args.batch, args.max_pairs, args.seed)
     ft = eval_fold(adapted)
     delta = ft["median_abs_rho"] - zs["median_abs_rho"]
     print(f"FINE-TUNED on held-out fold: median |Spearman| = {ft['median_abs_rho']:.3f}")
