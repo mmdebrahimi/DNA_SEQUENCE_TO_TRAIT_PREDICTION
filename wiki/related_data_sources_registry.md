@@ -34,6 +34,16 @@ Mostly already decoder-owned (in-repo catalogs or `D:` caches); listed for compl
 | **BV-BRC / NCBI-PD** | `ftp.bvbrc.org`, NCBI Pathogen Detection | E. coli AMR cohorts (the deployed 6-drug surface) | Decoder-owned |
 | **WHO TB catalogue v2 / Napier barcode** | WHO / tbdb | Deterministic TB determinant rule + lineage barcode | Pinned in-repo (`data/raw/`) |
 
+## Baseline predictors & alternative phenotype axes (cataloged)
+
+Reachability verified today; all catalog-only (too big to commit / not variant-level-ESM-scorable).
+
+| Source | Access | Scale (verified) | Role |
+|---|---|---|---|
+| **AlphaMissense** | `storage.googleapis.com/dm_alphamissense/AlphaMissense_aa_substitutions.tsv.gz` | **1.2 GB** | Per-variant pathogenicity **predictor** — the direct baseline to beat on humsavar/ClinVar (does a supervised model out-discriminate ESM masked-marginals?) |
+| **DepMap** (CRISPR gene effect) | figshare (`ndownloader.figshare.com/files/43346616`, 302→S3) | redirect | Gene-**essentiality** fitness across cell lines — a *different* phenotype axis (gene-level, not missense) |
+| **gnomAD constraint** | `storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/…tsv` | **95 MB** | Population variant-**tolerance** proxy (o/e, pLI) — gene-level; weak-label for missense tolerance |
+
 ## Notes / recipes
 
 - **ProteinGym v1.1 range-extract** — the 11 GB Zenodo zip is not fully downloaded; the substitutions
