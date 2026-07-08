@@ -102,3 +102,48 @@ def test_drift_guard_scoring_core_matches_canonical():
 
 def test_pass_constants_match_canonical():
     assert (NB.PASS_BAR, NB.STRETCH, NB.SHUFFLE_MAX) == (CANON.PASS_BAR, CANON.STRETCH, CANON.SHUFFLE_MAX)
+
+
+# ---- J2 Phase-2 (beat 0.48) additions: windowing + ensemble ----
+def test_window_for_position_math():
+    # short protein: whole-sequence path, token index == residue index
+    assert NB.window_for_position(5, 500, 1022) == (0, 500, 5)
+    # long protein, maxlen=1022: window is always exactly maxlen residues, loc in [1, maxlen]
+    assert NB.window_for_position(1, 2000, 1022) == (0, 1022, 1)          # left edge
+    assert NB.window_for_position(2000, 2000, 1022) == (978, 2000, 1022)  # right edge (clamped)
+    assert NB.window_for_position(1000, 2000, 1022) == (488, 1510, 512)   # centered
+    for p in (1, 250, 999, 1500, 2000):
+        s, e, loc = NB.window_for_position(p, 2000, 1022)
+        assert e - s == 1022 and 1 <= loc <= 1022 and s <= p - 1 < e       # p inside window
+
+
+def test_combine_variant_scores_zscore_average():
+    # identical models preserve order; shared-key intersection; constant model contributes 0
+    c = NB.combine_variant_scores([{"A": 1, "B": 2, "C": 3}, {"A": 1, "B": 2, "C": 3}])
+    assert c["A"] < c["B"] < c["C"]
+    inter = NB.combine_variant_scores([{"A": 1, "B": 2, "C": 3}, {"B": 9, "C": 8, "D": 7}])
+    assert set(inter) == {"B", "C"}
+    mixed = NB.combine_variant_scores([{"A": 5, "B": 5}, {"A": 1, "B": 2}])  # first is constant -> z=0
+    assert mixed["A"] < mixed["B"]
+    assert NB.combine_variant_scores([]) == {} and NB.combine_variant_scores([{"A": 1}, {"B": 1}]) == {}
+
+
+def test_ensemble_merge_recomputes_rho(tmp_path):
+    # two model runs (--keep-scores) over one shared assay -> ensemble combine -> finite rho, 1 assay
+    var0 = [[f"A{i}G", float(i), float(i)] for i in range(1, 26)]        # model0 perfectly ranks y
+    var1 = [[f"A{i}G", float(i) * 0.9, float(i)] for i in range(1, 26)]  # model1 nearly so
+    import json as _j
+    f0 = tmp_path / "m0.json"; f1 = tmp_path / "m1.json"
+    _j.dump({"results": [{"dms_id": "X", "n": 25, "rho": 1.0, "rho_shuf": 0.0, "var": var0}]}, f0.open("w"))
+    _j.dump({"results": [{"dms_id": "X", "n": 25, "rho": 1.0, "rho_shuf": 0.0, "var": var1}]}, f1.open("w"))
+    m = NB.ensemble_merge([str(f0), str(f1)])
+    assert m["n_assays"] == 1 and m["median_abs_rho"] > 0.9
+
+
+def test_phase2_helpers_match_canonical():
+    # drift guard extension: the new shared logic must be byte-equivalent across notebook + canonical
+    for args in [(1, 2000, 1022), (2000, 2000, 1022), (1000, 2000, 1022), (7, 500, 1022)]:
+        assert NB.window_for_position(*args) == CANON.window_for_position(*args)
+    a = NB.combine_variant_scores([{"A": 1, "B": 3, "C": 2}, {"A": 2, "B": 1, "C": 5}])
+    b = CANON.combine_variant_scores([{"A": 1, "B": 3, "C": 2}, {"A": 2, "B": 1, "C": 5}])
+    assert a == b

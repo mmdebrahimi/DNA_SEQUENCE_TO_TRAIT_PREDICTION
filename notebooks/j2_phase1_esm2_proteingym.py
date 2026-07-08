@@ -156,14 +156,84 @@ def merge(paths):
     return {"merged_from": list(paths), "results": results, **s}
 
 
+def ensemble_merge(paths):
+    """Ensemble across MODELS (Phase 2): each input JSON is a full run of a DIFFERENT model written with
+    --keep-scores (per-assay `var` = [key, x, y] rows). For each assay present in ALL models, z-score-average
+    the per-variant scores (combine_variant_scores) then recompute rho vs the wet-lab y. Needs no GPU."""
+    objs = [json.load(open(p, encoding="utf-8")) for p in paths]
+    per_model = [{r["dms_id"]: r for r in o.get("results", []) if "var" in r} for o in objs]
+    shared = set(per_model[0])
+    for d in per_model[1:]:
+        shared &= set(d)
+    results = []
+    for dms_id in sorted(shared):
+        rows_by_model = [{k: x for k, x, _y in d[dms_id]["var"]} for d in per_model]
+        y_by_key = {k: y for k, _x, y in per_model[0][dms_id]["var"]}
+        combined = combine_variant_scores(rows_by_model)
+        if len(combined) < 20:
+            continue
+        keys = sorted(combined)
+        xs = [combined[k] for k in keys]
+        ys = [y_by_key[k] for k in keys]
+        rng = np.random.default_rng(0)
+        yss = np.array(ys); rng.shuffle(yss)
+        results.append({"dms_id": dms_id, "n": len(xs), "rho": spearman(xs, ys),
+                        "rho_shuf": spearman(xs, yss)})
+    s = _summary(results)
+    s["ok"] = bool(s["n_assays"] and s["median_abs_rho"] >= PASS_BAR and s["median_abs_shuf"] < SHUFFLE_MAX)
+    return {"ensemble_of": list(paths), "results": results, **s}
+
+
+# ---- J2 Phase-2 shared pure helpers (drift-guarded against scripts/esm_zeroshot_dms.py) ----
+def window_for_position(pos, L, maxlen):
+    """Long-protein windowing (Phase 2): for a protein longer than `maxlen`, return the maxlen-residue
+    window CENTERED on 1-based residue `pos`, clamped to sequence ends. Returns
+    (start0, end0, local_token_index): 0-based residue slice [start0:end0] + the 1-based token index of
+    `pos` inside that window (CLS at token 0, first window residue at token 1). Pure position math — the
+    bug-prone part, so it is unit-tested independently of any model."""
+    if L <= maxlen:
+        return 0, L, pos                      # whole-sequence path: token index == residue index
+    half = maxlen // 2
+    start0 = max(0, min(pos - 1 - half, L - maxlen))
+    end0 = start0 + maxlen
+    return start0, end0, pos - start0          # 1-based local token index of `pos`
+
+
+def combine_variant_scores(per_model_scores):
+    """Ensemble combine (Phase 2): given a list of {variant_key: score} dicts (one per model), z-score each
+    model's vector over the variants ALL models share, then average. Returns {variant_key: mean_z}. Rank-
+    based ensembling via z-scores is the classic ProteinGym top approach — free (just more inference). Pure
+    + unit-tested; a constant-score model contributes 0 (its z-vector is all-zero)."""
+    if not per_model_scores:
+        return {}
+    keys = set(per_model_scores[0])
+    for d in per_model_scores[1:]:
+        keys &= set(d)
+    keys = sorted(keys)
+    if not keys:
+        return {}
+    combined = {k: 0.0 for k in keys}
+    n = len(per_model_scores)
+    for d in per_model_scores:
+        v = np.array([d[k] for k in keys], dtype=float)
+        sd = v.std()
+        z = (v - v.mean()) / sd if sd > 0 else np.zeros_like(v)
+        for k, zz in zip(keys, z):
+            combined[k] += float(zz) / n
+    return combined
+
+
 # ---- ESM-2 masked-marginals (copied faithfully from scripts/esm_zeroshot_dms.py::score_assay) ----
-def score_assay(seq, dms, tok, model, device, mask_id, aa_ids, batch, maxlen, torch):
-    """ESM-2 masked-marginals: score = logP(mut|ctx) - logP(wt|ctx) per variant."""
-    if len(seq) > maxlen:
-        return None, "too_long"
-    enc = tok(seq, return_tensors="pt")
-    ids = enc["input_ids"].to(device)
+def score_assay(seq, dms, tok, model, device, mask_id, aa_ids, batch, maxlen, torch,
+                long_mode="skip", keep_scores=False):
+    """ESM-2 masked-marginals: score = logP(mut|ctx) - logP(wt|ctx) per variant.
+
+    long_mode: 'skip' (baseline — proteins > maxlen dropped, the published-0.48 behavior) or 'window'
+    (Phase 2 — each mutated position scored in a maxlen window centered on it, recovering long assays).
+    keep_scores: also return per-variant [key, x, y] rows (for the ensemble-merge path)."""
     L = len(seq)
+    if L > maxlen and long_mode != "window":
+        return None, "too_long"
     variants, positions, mism = [], set(), 0
     for m, y in dms.items():
         try:
@@ -182,23 +252,44 @@ def score_assay(seq, dms, tok, model, device, mask_id, aa_ids, batch, maxlen, to
     positions = sorted(positions)
     logp_at = {}
     with torch.no_grad():
-        for i in range(0, len(positions), batch):
-            chunk = positions[i:i + batch]
-            stack = ids.repeat(len(chunk), 1)
-            for r, p in enumerate(chunk):
-                stack[r, p] = mask_id
-            logits = model(stack).logits
-            for r, p in enumerate(chunk):
-                logp_at[p] = torch.log_softmax(logits[r, p], dim=-1).float().cpu()
-    xs, ys = [], []
+        if L <= maxlen:
+            enc = tok(seq, return_tensors="pt")
+            ids = enc["input_ids"].to(device)
+            for i in range(0, len(positions), batch):
+                chunk = positions[i:i + batch]
+                stack = ids.repeat(len(chunk), 1)
+                for r, p in enumerate(chunk):
+                    stack[r, p] = mask_id                       # token index p == 1-based residue p
+                logits = model(stack).logits
+                for r, p in enumerate(chunk):
+                    logp_at[p] = torch.log_softmax(logits[r, p], dim=-1).float().cpu()
+        else:                                                  # windowed long-protein path (Phase 2)
+            for i in range(0, len(positions), batch):
+                chunk = positions[i:i + batch]
+                wins = [window_for_position(p, L, maxlen) for p in chunk]
+                seqs = [seq[s:e] for (s, e, _) in wins]         # each exactly maxlen residues
+                locs = [loc for (_, _, loc) in wins]
+                enc = tok(seqs, return_tensors="pt", padding=True)
+                stack = enc["input_ids"].to(device)
+                for r, loc in enumerate(locs):
+                    stack[r, loc] = mask_id
+                logits = model(stack).logits
+                for r, (p, loc) in enumerate(zip(chunk, locs)):
+                    logp_at[p] = torch.log_softmax(logits[r, loc], dim=-1).float().cpu()
+    xs, ys, var = [], [], []
     for wt, pos, mut, y in variants:
         lp = logp_at[pos]
-        xs.append(float(lp[aa_ids[mut]] - lp[aa_ids[wt]]))
-        ys.append(y)
+        x = float(lp[aa_ids[mut]] - lp[aa_ids[wt]])
+        xs.append(x); ys.append(y)
+        if keep_scores:
+            var.append([f"{wt}{pos}{mut}", x, y])
     rho = spearman(xs, ys)
     rng = np.random.default_rng(0)
     yss = np.array(ys); rng.shuffle(yss)
-    return {"n": len(xs), "rho": rho, "rho_shuf": spearman(xs, yss), "mism": mism}, None
+    out = {"n": len(xs), "rho": rho, "rho_shuf": spearman(xs, yss), "mism": mism}
+    if keep_scores:
+        out["var"] = var
+    return out, None
 
 
 def main(argv=None):
@@ -213,6 +304,15 @@ def main(argv=None):
     ap.add_argument("--out", default="", help="write per-assay results JSON here (for --merge later)")
     ap.add_argument("--fetch", action="store_true", help="download the reference file, then continue")
     ap.add_argument("--merge", nargs="+", default=None, help="MERGE these shard JSONs (no GPU) and exit")
+    ap.add_argument("--dtype", choices=["float32", "float16"], default="float32",
+                    help="float16 fits ESM2-3B on a free T4/P100 (Phase 2 — the certain lift over 650M)")
+    ap.add_argument("--long-mode", choices=["skip", "window"], default="skip",
+                    help="skip = baseline (drop >maxlen proteins, the published-0.48 behavior); "
+                         "window = Phase 2 (score long proteins in a centered maxlen window)")
+    ap.add_argument("--keep-scores", action="store_true",
+                    help="write per-variant [key,x,y] rows into --out (needed for --ensemble-merge)")
+    ap.add_argument("--ensemble-merge", nargs="+", default=None,
+                    help="ENSEMBLE across model runs (each written with --keep-scores); no GPU; then exit")
     args = ap.parse_args(argv)
 
     if args.merge:
@@ -220,6 +320,14 @@ def main(argv=None):
         print(json.dumps({k: v for k, v in m.items() if k != "results"}, indent=2))
         tag = "  (>= 0.48 — matches the field!)" if m["median_abs_rho"] >= STRETCH else ""
         print(f"\nMERGED: {m['n_assays']} assays, median |Spearman| = {m['median_abs_rho']:.3f}{tag} "
+              f"(shuffled {m['median_abs_shuf']:.3f}) -> {'PASS' if m['ok'] else 'below 0.45'}")
+        return 0 if m["ok"] else 1
+
+    if args.ensemble_merge:
+        m = ensemble_merge(args.ensemble_merge)
+        print(json.dumps({k: v for k, v in m.items() if k != "results"}, indent=2))
+        tag = "  (>= 0.48 — matches/beats the field!)" if m["median_abs_rho"] >= STRETCH else ""
+        print(f"\nENSEMBLE: {m['n_assays']} assays, median |Spearman| = {m['median_abs_rho']:.3f}{tag} "
               f"(shuffled {m['median_abs_shuf']:.3f}) -> {'PASS' if m['ok'] else 'below 0.45'}")
         return 0 if m["ok"] else 1
 
@@ -237,7 +345,8 @@ def main(argv=None):
         print("WARNING: no CUDA — 650M on CPU is slow. Use a free T4/P100 kernel or a smaller --model.")
 
     tok = AutoTokenizer.from_pretrained(args.model)
-    model = AutoModelForMaskedLM.from_pretrained(args.model).to(device).eval()
+    dt = torch.float16 if args.dtype == "float16" else torch.float32
+    model = AutoModelForMaskedLM.from_pretrained(args.model, torch_dtype=dt).to(device).eval()
     mask_id = tok.mask_token_id
     aa_ids = {aa: tok.convert_tokens_to_ids(aa) for aa in AA}
 
@@ -256,7 +365,8 @@ def main(argv=None):
         dms = load_dms(path)
         if not dms:
             continue
-        r, why = score_assay(seq, dms, tok, model, device, mask_id, aa_ids, args.batch, args.maxlen, torch)
+        r, why = score_assay(seq, dms, tok, model, device, mask_id, aa_ids, args.batch, args.maxlen, torch,
+                             long_mode=args.long_mode, keep_scores=args.keep_scores)
         if why == "too_long":
             skipped_long += 1; continue
         if why == "too_few":

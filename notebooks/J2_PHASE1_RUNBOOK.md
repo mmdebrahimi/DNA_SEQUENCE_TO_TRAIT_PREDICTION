@@ -86,3 +86,32 @@ assays, so the merged median is the true full-cohort number. Stack more kernels 
 The final line: `median |Spearman| = 0.4x (shuffled 0.0x)` (single kernel) or the `MERGED: …` line
 (distributed). That's the real J2 Phase 1 number. If it lands ≥ 0.48 we've matched the field on our own
 model; then the Phase 2 "beat it" decision (GPU-heavier, possibly money) is the next fork.
+
+---
+
+## Phase 2 — BEAT 0.48 on free compute (added 2026-07-08)
+
+Phase 1 re-confirms the ~0.48 baseline. **Phase 2 beats it**, still free (inference + ensembling, no
+training). Three levers now in the runner (all CPU-tested; see `wiki/j2_phase2_beat_0.48_plan_2026-07-08.md`
+for the pre-registered plan + bar):
+
+1. **ESM2-3B in fp16** (`--model facebook/esm2_t36_3B_UR50D --dtype float16`) — the certain lift
+   (650M ≈0.48 → 3B ≈0.51 published); fits a free T4 16 GB.
+2. **Long-protein windowing** (`--long-mode window`) — scores proteins >1022 aa (previously dropped) in a
+   centered window. Completeness, not a guaranteed median lift.
+3. **Ensemble** (650M + 3B) — run each with `--keep-scores`, then combine on CPU with `--ensemble-merge`.
+
+```python
+# The certain beat (one GPU cell):
+!python j2_phase1_esm2_proteingym.py --data-dir /kaggle/input/<slug> \
+    --model facebook/esm2_t36_3B_UR50D --dtype float16 --long-mode window --out j2_3b.json
+
+# Ensemble (two GPU cells + one CPU merge):
+!python j2_phase1_esm2_proteingym.py --data-dir /kaggle/input/<slug> --model facebook/esm2_t33_650M_UR50D \
+    --dtype float16 --long-mode window --keep-scores --out j2_650m.json
+!python j2_phase1_esm2_proteingym.py --data-dir /kaggle/input/<slug> --model facebook/esm2_t36_3B_UR50D \
+    --dtype float16 --long-mode window --keep-scores --out j2_3b.json
+!python j2_phase1_esm2_proteingym.py --ensemble-merge j2_650m.json j2_3b.json   # no GPU
+```
+
+**PASS (pre-registered):** median |Spearman| **> 0.48** on the full joinable cohort, shuffled < 0.05.
