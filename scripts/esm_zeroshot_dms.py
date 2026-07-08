@@ -115,6 +115,26 @@ def combine_variant_scores(per_model_scores):
     return combined
 
 
+def self_test_report(refs, maxlen, exists_fn):
+    """No-GPU pre-run guard: given the parsed reference {id:(dms_csv_path, target_seq)}, report how many
+    assays have their per-assay CSV attached + how many exceed `maxlen` (recovered only with --long-mode
+    window). Lets the user confirm the ProteinGym dataset is correctly attached BEFORE spending GPU minutes.
+    Pure (exists_fn injected) → unit-tested."""
+    total = len(refs)
+    have_csv = long_n = scorable_skip = 0
+    for _id, (path, seq) in refs.items():
+        present = bool(exists_fn(path))
+        L = len(seq)
+        if present:
+            have_csv += 1
+            if L <= maxlen:
+                scorable_skip += 1
+        if L > maxlen:
+            long_n += 1
+    return {"total": total, "have_csv": have_csv, "long_gt_maxlen": long_n,
+            "scorable_skip_mode": scorable_skip, "scorable_window_mode": have_csv}
+
+
 def score_assay(seq, dms, tok, model, device, mask_id, aa_ids, batch, maxlen, torch,
                 long_mode="skip", keep_scores=False):
     """ESM-2 masked-marginals: score = logP(mut|context) - logP(wt|context), summed per variant.

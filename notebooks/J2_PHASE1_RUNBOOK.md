@@ -26,6 +26,10 @@ verified). Upload it once as a **private Kaggle Dataset**:
 2. In your notebook → **Add Data** → attach it. It mounts at `/kaggle/input/<your-slug>`.
 3. Pass `--data-dir /kaggle/input/<your-slug>` (the runner tolerates both the `pg_reference.csv`+`pg_dms/`
    layout and the official `DMS_substitutions.csv`+`DMS_ProteinGym_substitutions/` layout).
+4. **Confirm the mount before spending GPU** (no-GPU check): `python j2_phase1_esm2_proteingym.py
+   --self-test --data-dir /kaggle/input/<your-slug>` → reports how many assays have their per-assay CSV
+   attached (exit 0 = READY, exit 1 = data not attached). The load path is verified against the real
+   217-assay reference.
 
 Alternatives: **Colab** → upload the same folder to Google Drive, `drive.mount`, point `--data-dir` at it.
 **Fetch fallback** → `--fetch` downloads the reference file from the official ProteinGym GitHub, but the

@@ -223,6 +223,26 @@ def combine_variant_scores(per_model_scores):
     return combined
 
 
+def self_test_report(refs, maxlen, exists_fn):
+    """No-GPU pre-run guard: given the parsed reference {id:(dms_csv_path, target_seq)}, report how many
+    assays have their per-assay CSV attached + how many exceed `maxlen` (recovered only with --long-mode
+    window). Lets the user confirm the ProteinGym dataset is correctly attached BEFORE spending GPU minutes.
+    Pure (exists_fn injected) → unit-tested."""
+    total = len(refs)
+    have_csv = long_n = scorable_skip = 0
+    for _id, (path, seq) in refs.items():
+        present = bool(exists_fn(path))
+        L = len(seq)
+        if present:
+            have_csv += 1
+            if L <= maxlen:
+                scorable_skip += 1
+        if L > maxlen:
+            long_n += 1
+    return {"total": total, "have_csv": have_csv, "long_gt_maxlen": long_n,
+            "scorable_skip_mode": scorable_skip, "scorable_window_mode": have_csv}
+
+
 # ---- ESM-2 masked-marginals (copied faithfully from scripts/esm_zeroshot_dms.py::score_assay) ----
 def score_assay(seq, dms, tok, model, device, mask_id, aa_ids, batch, maxlen, torch,
                 long_mode="skip", keep_scores=False):
@@ -313,7 +333,19 @@ def main(argv=None):
                     help="write per-variant [key,x,y] rows into --out (needed for --ensemble-merge)")
     ap.add_argument("--ensemble-merge", nargs="+", default=None,
                     help="ENSEMBLE across model runs (each written with --keep-scores); no GPU; then exit")
+    ap.add_argument("--self-test", action="store_true",
+                    help="no-GPU pre-run check: is the ProteinGym data attached + how many assays scorable?")
     args = ap.parse_args(argv)
+
+    if args.self_test:
+        refs = load_reference(args.data_dir)
+        rep = self_test_report(refs, args.maxlen, os.path.exists)
+        print(json.dumps(rep, indent=2))
+        print(f"\nSELF-TEST: {rep['have_csv']}/{rep['total']} assays have their per-assay CSV attached; "
+              f"{rep['long_gt_maxlen']} exceed maxlen={args.maxlen} (recovered only with --long-mode window). "
+              + ("READY to run on a GPU kernel." if rep["have_csv"]
+                 else "NO PER-ASSAY DATA — attach the ProteinGym CSVs (see the runbook Step 0)."))
+        return 0 if rep["have_csv"] else 1
 
     if args.merge:
         m = merge(args.merge)

@@ -147,3 +147,36 @@ def test_phase2_helpers_match_canonical():
     a = NB.combine_variant_scores([{"A": 1, "B": 3, "C": 2}, {"A": 2, "B": 1, "C": 5}])
     b = CANON.combine_variant_scores([{"A": 1, "B": 3, "C": 2}, {"A": 2, "B": 1, "C": 5}])
     assert a == b
+
+
+def test_self_test_report_counts():
+    refs = {
+        "a": ("/x/a.csv", "M" * 100),    # short, present -> scorable in skip-mode
+        "b": ("/x/b.csv", "M" * 2000),   # long, present  -> only scorable with windowing
+        "c": ("/x/c.csv", "M" * 50),     # short, absent  -> not scorable
+    }
+    present = {"/x/a.csv", "/x/b.csv"}
+    rep = NB.self_test_report(refs, 1022, lambda p: p in present)
+    assert rep == {"total": 3, "have_csv": 2, "long_gt_maxlen": 1,
+                   "scorable_skip_mode": 1, "scorable_window_mode": 2}
+
+
+def test_self_test_report_matches_canonical():
+    refs = {"a": ("/x/a.csv", "M" * 100), "b": ("/x/b.csv", "M" * 3000)}
+    ef = lambda p: True
+    assert NB.self_test_report(refs, 1022, ef) == CANON.self_test_report(refs, 1022, ef)
+
+
+def test_self_test_on_real_reference_when_online(tmp_path):
+    """R3 real-surface: fetch the REAL ProteinGym reference + verify load_reference + self_test_report.
+    Skips cleanly when offline so the suite stays green without network."""
+    import urllib.request
+    try:
+        data = urllib.request.urlopen(NB._REF_URL, timeout=20).read()
+    except Exception:
+        pytest.skip("offline / ProteinGym reference unreachable")
+    (tmp_path / "DMS_substitutions.csv").write_bytes(data)
+    refs = NB.load_reference(str(tmp_path))
+    assert len(refs) > 200                         # real benchmark is 217 assays
+    rep = NB.self_test_report(refs, 1022, lambda p: False)   # no per-assay CSVs attached here
+    assert rep["total"] == len(refs) and rep["have_csv"] == 0 and rep["long_gt_maxlen"] >= 10
