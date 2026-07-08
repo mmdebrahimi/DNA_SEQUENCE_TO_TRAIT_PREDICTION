@@ -119,3 +119,21 @@ for the pre-registered plan + bar):
 ```
 
 **PASS (pre-registered):** median |Spearman| **> 0.48** on the full joinable cohort, shuffled < 0.05.
+
+---
+
+## Phase 2b — LoRA fine-tune (genuine training; beat zero-shot on HELD-OUT proteins)
+
+The deeper world-model bet: does LoRA-adapting ESM-2 teach transferable variant-effect biology? Honest,
+leakage-controlled, cross-protein. Full spec: `wiki/j2_phase2b_lora_plan_2026-07-08.md`.
+
+```python
+# no-GPU sanity (leakage-safe split for this fold):
+!python j2_phase2b_lora_finetune.py --dry-run --data-dir /kaggle/input/<slug> --nfolds 5 --fold 0
+# one fold (GPU): reports zero-shot vs finetuned median |Spearman| on HELD-OUT proteins + the delta
+!pip -q install peft
+!python j2_phase2b_lora_finetune.py --data-dir /kaggle/input/<slug> --nfolds 5 --fold 0 \
+    --model facebook/esm2_t33_650M_UR50D --dtype float16 --rank 8 --epochs 2 --out j2b_fold0.json
+```
+Upload BOTH `j2_phase2b_lora_finetune.py` + `j2_phase1_esm2_proteingym.py` (the scaffold reuses the Phase-1
+scoring core). **HEADLINE = finetuned − zeroshot on the same held-out fold** (>0 = the world model improved).
