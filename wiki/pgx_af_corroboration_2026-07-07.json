@@ -1,0 +1,78 @@
+{
+  "schema": "pgx-af-corroboration-v0",
+  "analysis_date": "2026-07-07",
+  "genes": [
+    "ABCG2",
+    "CYP4F2",
+    "NUDT15",
+    "UGT1A1"
+  ],
+  "method": "1000G ALT-allele-frequency corroboration of each new cell's actionable variant vs the CPIC/gnomAD-expected band, in the most-informative population; AFs from Ensembl 1000G phase3",
+  "n_variants": 5,
+  "n_in_band": 5,
+  "verdict": "AF_CORROBORATED",
+  "getrm_concordance_status": "EXTERNAL_WALL for all: GeT-RM truth for NUDT15/UGT1A1/CYP4F2/ABCG2 is paper-supplement (not in the CYP-only ursaPGx benchmark); manual curation",
+  "honesty_tier": "KNOWLEDGE_BASELINE AF-corroboration (like DPYD/VKORC1/SLCO1B1) \u2014 confirms each new cell's actionable variant is real + correctly-positioned at CPIC-expected population frequency; NOT an independent per-sample concordance number. NOT clinical.",
+  "variants": [
+    {
+      "gene": "NUDT15",
+      "allele": "*3",
+      "rsid": "rs116855232",
+      "alt": "T",
+      "pop": "EAS",
+      "af": 0.0952,
+      "lo": 0.05,
+      "hi": 0.15,
+      "note": "no-function; EAS ~10% (thiopurine toxicity)",
+      "verdict": "IN_BAND"
+    },
+    {
+      "gene": "UGT1A1",
+      "allele": "*80",
+      "rsid": "rs887829",
+      "alt": "T",
+      "pop": "EUR",
+      "af": 0.2982,
+      "lo": 0.22,
+      "hi": 0.42,
+      "note": "*28 LD-tag; EUR ~30% == *28 freq",
+      "verdict": "IN_BAND"
+    },
+    {
+      "gene": "UGT1A1",
+      "allele": "*6",
+      "rsid": "rs4148323",
+      "alt": "A",
+      "pop": "EAS",
+      "af": 0.1379,
+      "lo": 0.08,
+      "hi": 0.2,
+      "note": "decreased; EAS-common ~14%",
+      "verdict": "IN_BAND"
+    },
+    {
+      "gene": "CYP4F2",
+      "allele": "*3",
+      "rsid": "rs2108622",
+      "alt": "T",
+      "pop": "EUR",
+      "af": 0.2903,
+      "lo": 0.2,
+      "hi": 0.4,
+      "note": "reduced; EUR ~29% (warfarin dose-up)",
+      "verdict": "IN_BAND"
+    },
+    {
+      "gene": "ABCG2",
+      "allele": "141K",
+      "rsid": "rs2231142",
+      "alt": "T",
+      "pop": "EAS",
+      "af": 0.2907,
+      "lo": 0.2,
+      "hi": 0.4,
+      "note": "poor-function; EAS ~29% (rosuvastatin)",
+      "verdict": "IN_BAND"
+    }
+  ]
+}
