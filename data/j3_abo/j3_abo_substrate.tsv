@@ -1,0 +1,396 @@
+user_id	raw_label	abo_group	label_o_vs_nonO	rs8176719	rs8176746	rs8176747	deterministic_o_call	det_vs_label_concordant	genotype_member
+4140	O+	O	O	DD	GG	CC	O	True	user4140_file2806_yearofbirth_unknown_sex_unknown.23andme.txt
+4130	A+	A	non_O	DI	GG	CC	non_O	True	user4130_file2797_yearofbirth_unknown_sex_unknown.23andme.txt
+609	O+	O	O	DD	GG	CC	O	True	user609_file401_yearofbirth_1988_sex_XY.23andme.txt
+4036	0-	O	O	DD	GG	CC	O	True	user4036_file2726_yearofbirth_unknown_sex_unknown.23andme.txt
+842	O+	O	O	DD	GG	CC	O	True	user842_file417_yearofbirth_unknown_sex_unknown.23andme.txt
+865	O+	O	O	DD	GG	CC	O	True	user865_file427_yearofbirth_1979_sex_XY.23andme.txt
+910	O+	O	O	DD	GG	CC	O	True	user910_file448_yearofbirth_1982_sex_unknown.23andme.txt
+915	Ab+	AB	non_O	II	GT	CG	non_O	True	user915_file451_yearofbirth_unknown_sex_unknown.23andme.txt
+916	O-	O	O	DD	GG	CC	O	True	user916_file452_yearofbirth_unknown_sex_unknown.23andme.txt
+918	B+	B	non_O	II	TT	GG	non_O	True	user918_file454_yearofbirth_unknown_sex_XX.23andme.txt
+899	O+	O	O	DD	GG	CC	O	True	user899_file436_yearofbirth_unknown_sex_unknown.23andme.txt
+3004	A+ (a/o)	A	non_O	DI	GG	CC	non_O	True	user3004_file1925_yearofbirth_unknown_sex_unknown.23andme.txt
+943	A+	A	non_O	DI	GG	CC	non_O	True	user943_file470_yearofbirth_1979_sex_XY.23andme.txt
+669	O-	O	O	DD	GG	CC	O	True	user669_file471_yearofbirth_1970_sex_XY.23andme.txt
+966	O+	O	O	DD	GG	CC	O	True	user966_file479_yearofbirth_unknown_sex_unknown.23andme.txt
+2745	Ab-	AB	non_O	DD	GG	CC	O	False	user2745_file1749_yearofbirth_unknown_sex_unknown.23andme.txt
+972	O-	O	O	DD	GG	CC	O	True	user972_file483_yearofbirth_1979_sex_XY.23andme.txt
+990	O+	O	O	DD	GG	CC	O	True	user990_file492_yearofbirth_unknown_sex_unknown.23andme.txt
+1010	O+	O	O	DD	GG	CC	O	True	user1010_file502_yearofbirth_1984_sex_XY.23andme.txt
+180	O+	O	O	DD	GG	CC	O	True	user180_file322_yearofbirth_1980_sex_XY.23andme.txt
+704	O+	O	O	DD	GG	CC	O	True	user704_file323_yearofbirth_1976_sex_unknown.23andme.txt
+10	B+	B	non_O	DI	GT	CG	non_O	True	user10_file3_yearofbirth_1982_sex_XY.23andme.txt
+14	O+	O	O	DD	GG	CC	O	True	user14_file6_yearofbirth_unknown_sex_unknown.23andme.txt
+1	A+	A	non_O	DI	GG	CC	non_O	True	user1_file9_yearofbirth_1985_sex_XY.23andme.txt
+26	O-	O	O	DD	GG	CC	O	True	user26_file10_yearofbirth_unknown_sex_unknown.23andme.txt
+33	A+	A	non_O	DI	GG	CC	non_O	True	user33_file12_yearofbirth_unknown_sex_unknown.23andme.txt
+42	A+	A	non_O	DD	GG	CC	O	False	user42_file18_yearofbirth_1985_sex_XY.23andme.txt
+44	A-	A	non_O	DI	GG	CC	non_O	True	user44_file19_yearofbirth_1970_sex_XY.23andme.txt
+53	A-	A	non_O	DI	GG	CC	non_O	True	user53_file22_yearofbirth_unknown_sex_unknown.23andme.txt
+80	O-	O	O	DD	GG	CC	O	True	user80_file41_yearofbirth_1979_sex_XY.23andme.txt
+1568	Rs601338 a/a non-secretor	A	non_O	DD	GG	CC	O	False	user1568_file878_yearofbirth_1971_sex_XX.23andme.txt
+99	O+	O	O	DD	GG	CC	O	True	user99_file49_yearofbirth_1986_sex_XY.23andme.txt
+124	O+	O	O	DD	GG	CC	O	True	user124_file55_yearofbirth_1947_sex_XX.23andme.txt
+137	B+	B	non_O	DI	GT	CG	non_O	True	user137_file58_yearofbirth_1964_sex_XY.23andme.txt
+141	O-	O	O	DD	GG	CC	O	True	user141_file60_yearofbirth_unknown_sex_unknown.23andme.txt
+146	B+	B	non_O	DI	GT	CG	non_O	True	user146_file62_yearofbirth_1971_sex_XY.23andme.txt
+159	B+	B	non_O	DI	GT	CG	non_O	True	user159_file67_yearofbirth_1984_sex_XX.23andme.txt
+165	O/O +/-	O	O	DD	GG	CC	O	True	user165_file71_yearofbirth_unknown_sex_unknown.23andme.txt
+175	B+	B	non_O	DI	GT	CG	non_O	True	user175_file76_yearofbirth_1974_sex_XY.23andme.txt
+202	A+	A	non_O	DI	GG	CC	non_O	True	user202_file85_yearofbirth_unknown_sex_unknown.23andme.txt
+207	O+	O	O	DD	GG	CC	O	True	user207_file89_yearofbirth_unknown_sex_unknown.23andme.txt
+217	A+	A	non_O	II	GG	CC	non_O	True	user217_file92_yearofbirth_unknown_sex_unknown.23andme.txt
+240	O +	O	O	DD	GG	CC	O	True	user240_file94_yearofbirth_1948_sex_XX.23andme.txt
+251	B+	B	non_O	DI	GT	CG	non_O	True	user251_file97_yearofbirth_unknown_sex_XX.23andme.txt
+258	B+	B	non_O	DI	GT	CG	non_O	True	user258_file101_yearofbirth_unknown_sex_unknown.23andme.txt
+262	B+	B	non_O	DI	GT	CG	non_O	True	user262_file103_yearofbirth_1975_sex_XY.23andme.txt
+266	AB+	AB	non_O	II	GT	CG	non_O	True	user266_file104_yearofbirth_unknown_sex_unknown.23andme.txt
+241	AB+	AB	non_O	II	GT	CG	non_O	True	user241_file107_yearofbirth_1984_sex_XY.23andme.txt
+216	A+	A	non_O	DI	GG	CC	non_O	True	user216_file109_yearofbirth_1984_sex_XY.23andme.txt
+276	B+	B	non_O	DI	GT	CG	non_O	True	user276_file110_yearofbirth_1972_sex_XY.23andme.txt
+279	O+	O	O	DD	GG	CC	O	True	user279_file113_yearofbirth_unknown_sex_unknown.23andme.txt
+280	A+	A	non_O	DI	GG	CC	non_O	True	user280_file114_yearofbirth_1989_sex_XX.23andme.txt
+285	A+	A	non_O	DI	GG	CC	non_O	True	user285_file118_yearofbirth_1976_sex_XY.23andme.txt
+295	A+	A	non_O	DI	GG	CC	non_O	True	user295_file126_yearofbirth_unknown_sex_unknown.23andme.txt
+296	O+	O	O	DD	GG	CC	O	True	user296_file127_yearofbirth_unknown_sex_unknown.23andme.txt
+17	B-	B	non_O	DI	GT	CG	non_O	True	user17_file143_yearofbirth_unknown_sex_XX.23andme.txt
+325	A+	A	non_O	DI	GG	CC	non_O	True	user325_file149_yearofbirth_1987_sex_XY.23andme.txt
+347	O +	O	O	DD	GG	CC	O	True	user347_file157_yearofbirth_1952_sex_XX.23andme.txt
+349	A+	A	non_O	II	GG	CC	non_O	True	user349_file160_yearofbirth_1987_sex_XY.23andme.txt
+352	O+	O	O	DD	GG	CC	O	True	user352_file161_yearofbirth_unknown_sex_unknown.23andme.txt
+357	A+	A	non_O	DI	GG	CC	non_O	True	user357_file163_yearofbirth_unknown_sex_unknown.23andme.txt
+368	O+	O	O	DD	GG	CC	O	True	user368_file168_yearofbirth_1958_sex_XX.23andme.txt
+189	AB+	AB	non_O	II	GT	CG	non_O	True	user189_file174_yearofbirth_unknown_sex_unknown.23andme.txt
+394	O+	O	O	DD	GG	CC	O	True	user394_file175_yearofbirth_1954_sex_XY.23andme.txt
+11	B+	B	non_O	DI	GT	CG	non_O	True	user11_file176_yearofbirth_unknown_sex_unknown.23andme.txt
+397	O+	O	O	DD	GG	CC	O	True	user397_file178_yearofbirth_1961_sex_XY.23andme.txt
+429	A+ Secretor / Saliva Non Secretor!!	A	non_O	DI	GG	CC	non_O	True	user429_file187_yearofbirth_unknown_sex_unknown.23andme.txt
+437	O+	O	O	DD	GG	CC	O	True	user437_file190_yearofbirth_1973_sex_XY.23andme.txt
+468	O+	O	O	DD	GG	CC	O	True	user468_file200_yearofbirth_1978_sex_XX.23andme.txt
+481	O+	O	O	DD	GG	CC	O	True	user481_file215_yearofbirth_unknown_sex_unknown.23andme.txt
+2611	A-	A	non_O	DI	GG	CC	non_O	True	user2611_file1630_yearofbirth_unknown_sex_unknown.23andme.txt
+495	A+	A	non_O	DI	GG	CC	non_O	True	user495_file223_yearofbirth_1965_sex_XX.23andme.txt
+502	B+	B	non_O	DI	GT	CG	non_O	True	user502_file226_yearofbirth_unknown_sex_unknown.23andme.txt
+533	A+	A	non_O	II	GG	CC	non_O	True	user533_file242_yearofbirth_1984_sex_XY.23andme.txt
+539	O-	O	O	DD	GG	CC	O	True	user539_file246_yearofbirth_1983_sex_XX.23andme.txt
+328	A+	A	non_O	II	GG	CC	non_O	True	user328_file316_yearofbirth_1992_sex_XY.23andme.txt
+549	O+	O	O	DD	GG	CC	O	True	user549_file252_yearofbirth_1948_sex_XY.23andme.txt
+556	B-	B	non_O	DI	GT	CG	non_O	True	user556_file254_yearofbirth_unknown_sex_unknown.23andme.txt
+561	B-	B	non_O	DI	GT	CG	non_O	True	user561_file257_yearofbirth_unknown_sex_unknown.23andme.txt
+572	A+	A	non_O	--	GG	--		False	user572_file261_yearofbirth_unknown_sex_unknown.23andme.txt
+574	O +	O	O	--	GG	--		False	user574_file262_yearofbirth_1959_sex_XY.23andme.txt
+187	O+	O	O	DD	GG	CC	O	True	user187_file267_yearofbirth_unknown_sex_unknown.23andme.txt
+585	O +	O	O	DD	GG	CC	O	True	user585_file270_yearofbirth_unknown_sex_XY.23andme.txt
+503	O+	O	O	DD	GG	CC	O	True	user503_file274_yearofbirth_1962_sex_XX.23andme.txt
+595	B-	B	non_O	DI	GT	CG	non_O	True	user595_file277_yearofbirth_unknown_sex_unknown.23andme.txt
+613	B+	B	non_O	DI	GT	CG	non_O	True	user613_file285_yearofbirth_unknown_sex_XY.23andme.txt
+637	A+	A	non_O	DI	GG	CC	non_O	True	user637_file293_yearofbirth_1989_sex_XY.23andme.txt
+646	O-	O	O	DD	GG	CC	O	True	user646_file297_yearofbirth_1955_sex_XY.23andme.txt
+684	A+	A	non_O	DI	GG	CC	non_O	True	user684_file319_yearofbirth_unknown_sex_unknown.23andme.txt
+717	O +	O	O	DD	GG	CC	O	True	user717_file333_yearofbirth_unknown_sex_unknown.23andme.txt
+721	A+	A	non_O	II	GG	CC	non_O	True	user721_file336_yearofbirth_unknown_sex_unknown.23andme.txt
+735	A+	A	non_O	II	GG	CC	non_O	True	user735_file344_yearofbirth_unknown_sex_unknown.23andme.txt
+761	A+	A	non_O	II	GG	CC	non_O	True	user761_file360_yearofbirth_unknown_sex_unknown.23andme.txt
+775	A+	A	non_O	DI	GG	CC	non_O	True	user775_file365_yearofbirth_1966_sex_XY.23andme.txt
+782	rs601338 A/G secretor	A	non_O	DI	GT	CG	non_O	True	user782_file371_yearofbirth_unknown_sex_XX.23andme.txt
+792	A+	A	non_O	DI	GG	CC	non_O	True	user792_file377_yearofbirth_1975_sex_XY.23andme.txt
+763	A+ (a/o)	A	non_O	DI	GG	CC	non_O	True	user763_file382_yearofbirth_unknown_sex_unknown.23andme.txt
+803	A+	A	non_O	DI	GG	CC	non_O	True	user803_file383_yearofbirth_1978_sex_XX.23andme.txt
+758	O+	O	O	DD	GG	CC	O	True	user758_file387_yearofbirth_unknown_sex_unknown.23andme.txt
+806	Rs601338 a/g secretor	A	non_O	DI	GG	CC	non_O	True	user806_file388_yearofbirth_1967_sex_XY.23andme.txt
+807	A+	A	non_O	DI	GG	CC	non_O	True	user807_file389_yearofbirth_unknown_sex_unknown.23andme.txt
+808	B-	B	non_O	DI	GT	CG	non_O	True	user808_file390_yearofbirth_unknown_sex_XY.23andme.txt
+1051	O +	O	O	DD	GG	CC	O	True	user1051_file530_yearofbirth_1949_sex_unknown.23andme.txt
+1020	Ab+	AB	non_O	II	GT	CG	non_O	True	user1020_file507_yearofbirth_unknown_sex_unknown.23andme.txt
+1024	O+	O	O	DI	GG	CC	non_O	False	user1024_file510_yearofbirth_1971_sex_XX.23andme.txt
+1627	A+	A	non_O	DI	GG	CC	non_O	True	user1627_file925_yearofbirth_1973_sex_XY.23andme.txt
+1028	A-	A	non_O	DI	GG	CC	non_O	True	user1028_file514_yearofbirth_unknown_sex_unknown.23andme.txt
+1029	Non ABO Blood group Kell K-k+ (GG)	AB	non_O	DI	GG	CC	non_O	True	user1029_file515_yearofbirth_unknown_sex_unknown.23andme.txt
+2616	B+	B	non_O	DI	GT	CG	non_O	True	user2616_file1634_yearofbirth_1979_sex_XY.23andme.txt
+1034	Ab+	AB	non_O	II	GT	CG	non_O	True	user1034_file517_yearofbirth_unknown_sex_unknown.23andme.txt
+1039	O+	O	O	DD	GG	CC	O	True	user1039_file521_yearofbirth_1958_sex_XY.23andme.txt
+1040	A+	A	non_O	DI	GG	CC	non_O	True	user1040_file522_yearofbirth_unknown_sex_unknown.23andme.txt
+1641	A+	A	non_O	DI	GG	CC	non_O	True	user1641_file935_yearofbirth_1952_sex_XX.23andme.txt
+685	B+	B	non_O	DI	GT	CG	non_O	True	user685_file545_yearofbirth_1979_sex_XX.23andme.txt
+1045	A+	A	non_O	DI	GG	CC	non_O	True	user1045_file526_yearofbirth_1972_sex_XX.23andme.txt
+1058	O+	O	O	DD	GG	CC	O	True	user1058_file533_yearofbirth_unknown_sex_unknown.23andme.txt
+1066	A+	A	non_O	DI	GG	CC	non_O	True	user1066_file543_yearofbirth_unknown_sex_unknown.23andme.txt
+1075	O+	O	O	DD	GG	CC	O	True	user1075_file550_yearofbirth_1963_sex_XX.23andme.txt
+1077	A+	A	non_O	DI	GG	CC	non_O	True	user1077_file551_yearofbirth_unknown_sex_unknown.23andme.txt
+1071	O-	O	O	DD	GG	CC	O	True	user1071_file552_yearofbirth_1968_sex_XY.23andme.txt
+1079	O+	O	O	DD	GG	CC	O	True	user1079_file554_yearofbirth_unknown_sex_unknown.23andme.txt
+1087	A+	A	non_O	DI	GG	CC	non_O	True	user1087_file558_yearofbirth_unknown_sex_unknown.23andme.txt
+1103	A-	A	non_O	II	GG	CC	non_O	True	user1103_file565_yearofbirth_unknown_sex_XX.23andme.txt
+1125	A-	A	non_O	DI	GG	CC	non_O	True	user1125_file582_yearofbirth_unknown_sex_unknown.23andme.txt
+1114	B-	B	non_O	DI	GT	CG	non_O	True	user1114_file574_yearofbirth_unknown_sex_unknown.23andme.txt
+1033	O+	O	O	DD	GG	CC	O	True	user1033_file567_yearofbirth_1992_sex_XY.23andme.txt
+1091	O-	O	O	DD	GG	CC	O	True	user1091_file560_yearofbirth_1990_sex_XY.23andme.txt
+1089	A+	A	non_O	II	GG	CC	non_O	True	user1089_file559_yearofbirth_unknown_sex_unknown.23andme.txt
+2620	O+	O	O	DI	GG	CC	non_O	False	user2620_file1640_yearofbirth_1993_sex_XY.23andme.txt
+1171	B+	B	non_O	DI	GT	CG	non_O	True	user1171_file607_yearofbirth_unknown_sex_XX.23andme.txt
+1100	O+	O	O	DD	GG	CC	O	True	user1100_file606_yearofbirth_unknown_sex_unknown.23andme.txt
+2635	O-	O	O	DI	GG	CC	non_O	False	user2635_file1654_yearofbirth_1970_sex_XX.23andme.txt
+2640	AB+	AB	non_O	II	GT	CG	non_O	True	user2640_file1657_yearofbirth_1989_sex_XY.23andme.txt
+1235	O+	O	O	DD	GG	CC	O	True	user1235_file654_yearofbirth_unknown_sex_unknown.23andme.txt
+1255	O +	O	O	DD	GG	CC	O	True	user1255_file663_yearofbirth_1962_sex_XY.23andme.txt
+1190	O +	O	O	DD	GG	CC	O	True	user1190_file626_yearofbirth_unknown_sex_XX.23andme.txt
+1191	O+	O	O	DD	GG	CC	O	True	user1191_file625_yearofbirth_unknown_sex_unknown.23andme.txt
+1269	Non abo blood group kell k-k+ (gg)	AB	non_O	DI	GG	CC	non_O	True	user1269_file673_yearofbirth_1967_sex_XX.23andme.txt
+1273	A+	A	non_O	DI	GG	CC	non_O	True	user1273_file675_yearofbirth_unknown_sex_unknown.23andme.txt
+1275	A-	A	non_O	DI	GG	CC	non_O	True	user1275_file676_yearofbirth_unknown_sex_unknown.23andme.txt
+1288	A-	A	non_O	DI	GG	CC	non_O	True	user1288_file686_yearofbirth_unknown_sex_unknown.23andme.txt
+1325	O +	O	O	DD	GG	CC	O	True	user1325_file706_yearofbirth_1977_sex_XX.23andme.txt
+1338	O+	O	O	DD	GG	CC	O	True	user1338_file711_yearofbirth_1987_sex_XY.23andme.txt
+1375	O+	O	O	DD	GG	CC	O	True	user1375_file726_yearofbirth_1976_sex_XX.23andme.txt
+1379	A-	A	non_O	DI	GG	CC	non_O	True	user1379_file730_yearofbirth_1984_sex_XX.23andme.txt
+1382	A+	A	non_O	DI	GG	CC	non_O	True	user1382_file733_yearofbirth_1973_sex_XX.23andme.txt
+1589	A+	A	non_O	DI	GG	CC	non_O	True	user1589_file891_yearofbirth_1967_sex_XY.23andme.txt
+1401	A+	A	non_O	II	GG	CC	non_O	True	user1401_file749_yearofbirth_1984_sex_XY.23andme.txt
+1404	Ab+	AB	non_O	II	GT	CG	non_O	True	user1404_file752_yearofbirth_1947_sex_unknown.23andme.txt
+1432	A+	A	non_O	DI	GG	CC	non_O	True	user1432_file774_yearofbirth_1979_sex_XY.23andme.txt
+1447	O+	O	O	DD	GG	CC	O	True	user1447_file789_yearofbirth_unknown_sex_unknown.23andme.txt
+1457	A-	A	non_O	DI	GG	CC	non_O	True	user1457_file795_yearofbirth_1961_sex_XY.23andme.txt
+1459	A+	A	non_O	DI	GG	CC	non_O	True	user1459_file799_yearofbirth_1967_sex_XX.23andme.txt
+1465	A+	A	non_O	DI	GG	CC	non_O	True	user1465_file803_yearofbirth_unknown_sex_unknown.23andme.txt
+1499	Secretor - rs601338 GG   B-	B	non_O	DI	GT	CG	non_O	True	user1499_file818_yearofbirth_unknown_sex_unknown.23andme.txt
+1501	O +	O	O	DD	GG	CC	O	True	user1501_file820_yearofbirth_1977_sex_XY.23andme.txt
+1509	O+	O	O	DD	GG	CC	O	True	user1509_file826_yearofbirth_1977_sex_XY.23andme.txt
+1512	O-	O	O	DD	GG	CC	O	True	user1512_file828_yearofbirth_unknown_sex_unknown.23andme.txt
+1537	O +	O	O	DD	GG	CC	O	True	user1537_file846_yearofbirth_unknown_sex_unknown.23andme.txt
+999	B+	B	non_O	DI	GT	CG	non_O	True	user999_file856_yearofbirth_1979_sex_XY.23andme.txt
+1626	Ab+	AB	non_O	II	GT	CG	non_O	True	user1626_file924_yearofbirth_1977_sex_XX.23andme.txt
+1635	O+	O	O	DI	GT	CG	non_O	False	user1635_file931_yearofbirth_1988_sex_XY.23andme.txt
+2645	B+	B	non_O	DI	GT	CG	non_O	True	user2645_file1662_yearofbirth_unknown_sex_unknown.23andme.txt
+2675	B+	B	non_O	DI	GT	CG	non_O	True	user2675_file1693_yearofbirth_unknown_sex_XX.23andme.txt
+2676	O +	O	O	DD	GG	CC	O	True	user2676_file1694_yearofbirth_unknown_sex_unknown.23andme.txt
+2692	O-	O	O	DD	GG	CC	O	True	user2692_file1706_yearofbirth_unknown_sex_unknown.23andme.txt
+2707	O-	O	O	DD	GG	CC	O	True	user2707_file1717_yearofbirth_unknown_sex_unknown.23andme.txt
+2903	O+	O	O	DD	GG	CC	O	True	user2903_file1843_yearofbirth_1958_sex_XX.23andme.txt
+2914	A+	A	non_O	DI	GG	CC	non_O	True	user2914_file1852_yearofbirth_1989_sex_XX.23andme.txt
+1664	A+	A	non_O	DI	GG	CC	non_O	True	user1664_file952_yearofbirth_unknown_sex_unknown.23andme.txt
+1669	Rs601338 a/a non-secretor	A	non_O	DI	GG	CC	non_O	True	user1669_file955_yearofbirth_unknown_sex_unknown.23andme.txt
+1695	A+	A	non_O	II	GG	CC	non_O	True	user1695_file977_yearofbirth_unknown_sex_unknown.23andme.txt
+1712	O+	O	O	DD	GG	CC	O	True	user1712_file988_yearofbirth_1953_sex_unknown.23andme.txt
+1718	O-	O	O	DD	GG	CC	O	True	user1718_file993_yearofbirth_1951_sex_unknown.23andme.txt
+1742	Non abo blood group kell k-k+ (gg)	AB	non_O	DI	GG	CC	non_O	True	user1742_file1010_yearofbirth_unknown_sex_unknown.23andme.txt
+1759	O+	O	O	DD	GG	CC	O	True	user1759_file1022_yearofbirth_unknown_sex_unknown.23andme.txt
+1763	A+	A	non_O	DI	GG	CC	non_O	True	user1763_file1024_yearofbirth_unknown_sex_unknown.23andme.txt
+1764	O/o +/-	O	O	DD	GG	CC	O	True	user1764_file1025_yearofbirth_unknown_sex_unknown.23andme.txt
+1790	A+	A	non_O	DI	GG	CC	non_O	True	user1790_file1047_yearofbirth_unknown_sex_unknown.23andme.txt
+1794	Ab+	AB	non_O	II	GT	CG	non_O	True	user1794_file1049_yearofbirth_unknown_sex_unknown.23andme.txt
+1808	O +	O	O	DD	GG	CC	O	True	user1808_file1056_yearofbirth_unknown_sex_unknown.23andme.txt
+1813	O +	O	O	DD	GG	CC	O	True	user1813_file1063_yearofbirth_unknown_sex_unknown.23andme.txt
+1827	A+	A	non_O	DI	GG	CC	non_O	True	user1827_file1072_yearofbirth_unknown_sex_unknown.23andme.txt
+1837	O+	O	O	DD	GG	CC	O	True	user1837_file1080_yearofbirth_1993_sex_XX.23andme.txt
+1875	Rs601338 a/g secretor	A	non_O	DI	GG	CC	non_O	True	user1875_file1113_yearofbirth_unknown_sex_unknown.23andme.txt
+1879	O+	O	O	DD	GT	CG	O	True	user1879_file1117_yearofbirth_1980_sex_XY.23andme.txt
+1887	Rs601338 a/a non-secretor	A	non_O	DD	GG	CC	O	False	user1887_file1123_yearofbirth_1967_sex_XY.23andme.txt
+1901	B+	B	non_O	DI	GT	CG	non_O	True	user1901_file1134_yearofbirth_1971_sex_XY.23andme.txt
+1970	A-	A	non_O	DI	GG	CC	non_O	True	user1970_file1158_yearofbirth_1965_sex_XX.23andme.txt
+1972	O-	O	O	DI	GG	CC	non_O	False	user1972_file1159_yearofbirth_unknown_sex_unknown.23andme.txt
+1975	O-	O	O	DD	GG	CC	O	True	user1975_file1162_yearofbirth_1992_sex_XY.23andme.txt
+1984	Non abo blood group kell k-k+ (gg)	AB	non_O	DD	GG	CC	O	False	user1984_file1170_yearofbirth_1973_sex_XX.23andme.txt
+1994	A+	A	non_O	DI	GG	CC	non_O	True	user1994_file1180_yearofbirth_unknown_sex_unknown.23andme.txt
+2018	A+	A	non_O	DI	GG	CC	non_O	True	user2018_file1200_yearofbirth_1976_sex_XY.23andme.txt
+2024	B-	B	non_O	DI	GT	CG	non_O	True	user2024_file1204_yearofbirth_unknown_sex_unknown.23andme.txt
+2037	Ab+	AB	non_O	II	GT	CG	non_O	True	user2037_file1218_yearofbirth_unknown_sex_unknown.23andme.txt
+2048	A+	A	non_O	DI	GG	CC	non_O	True	user2048_file1227_yearofbirth_unknown_sex_XX.23andme.txt
+2052	Rs601338 a/a non-secretor	A	non_O	II	GG	CC	non_O	True	user2052_file1229_yearofbirth_1994_sex_XX.23andme.txt
+2055	O +	O	O	DD	GG	CC	O	True	user2055_file1234_yearofbirth_unknown_sex_unknown.23andme.txt
+2083	Dont know	O	O	DI	GG	CC	non_O	False	user2083_file1259_yearofbirth_1960_sex_XX.23andme.txt
+2090	Rs601338 a/g secretor	A	non_O	DD	GG	CC	O	False	user2090_file1265_yearofbirth_unknown_sex_unknown.23andme.txt
+2099	A+	A	non_O	DI	GG	CC	non_O	True	user2099_file1272_yearofbirth_unknown_sex_unknown.23andme.txt
+2116	O+	O	O	DI	GG	CC	non_O	False	user2116_file1284_yearofbirth_unknown_sex_unknown.23andme.txt
+2133	A+	A	non_O	DI	GG	CC	non_O	True	user2133_file1299_yearofbirth_unknown_sex_XY.23andme.txt
+2183	A+	A	non_O	DI	GG	CC	non_O	True	user2183_file1330_yearofbirth_unknown_sex_unknown.23andme.txt
+2202	O+	O	O	DD	GG	CC	O	True	user2202_file1346_yearofbirth_1981_sex_XX.23andme.txt
+2268	B+	B	non_O	DI	GT	CG	non_O	True	user2268_file1386_yearofbirth_unknown_sex_unknown.23andme.txt
+2281	Ab+	AB	non_O	II	GT	CG	non_O	True	user2281_file1396_yearofbirth_unknown_sex_unknown.23andme.txt
+2288	A+	A	non_O	DI	GG	CC	non_O	True	user2288_file1401_yearofbirth_1942_sex_XX.23andme.txt
+2291	B+ (r1r2)	B	non_O	DI	GT	CG	non_O	True	user2291_file1402_yearofbirth_unknown_sex_unknown.23andme.txt
+2302	A+	A	non_O	DI	GG	CC	non_O	True	user2302_file1413_yearofbirth_unknown_sex_unknown.23andme.txt
+2533	Rs601338 a/g secretor	A	non_O	DD	GG	CC	O	False	user2533_file1566_yearofbirth_1969_sex_XX.23andme.txt
+2307	O +	O	O	DD	GG	CC	O	True	user2307_file1417_yearofbirth_1979_sex_XX.23andme.txt
+2314	A+	A	non_O	DI	GG	CC	non_O	True	user2314_file1424_yearofbirth_1981_sex_XX.23andme.txt
+2359	O+	O	O	DD	GG	CC	O	True	user2359_file1459_yearofbirth_unknown_sex_unknown.23andme.txt
+2371	O+	O	O	DD	GG	CC	O	True	user2371_file1469_yearofbirth_1968_sex_XY.23andme.txt
+2379	O+	O	O	DD	GG	CC	O	True	user2379_file1475_yearofbirth_unknown_sex_unknown.23andme.txt
+2385	A+ (AO/+-) Non-Secretor	A	non_O	DI	GG	CC	non_O	True	user2385_file1478_yearofbirth_unknown_sex_unknown.23andme.txt
+5359	No	O	O	DI	TG		non_O	False	user5359_file3871_yearofbirth_unknown_sex_unknown.ancestry.txt
+1213	B+	B	non_O	DI	GT	CG	non_O	True	user1213_file642_yearofbirth_unknown_sex_unknown.23andme.txt
+1233	Ab+	AB	non_O	II	GT	CG	non_O	True	user1233_file652_yearofbirth_unknown_sex_unknown.23andme.txt
+2755	Rs601338 a/a non-secretor	A	non_O	DD	GG	CC	O	False	user2755_file1758_yearofbirth_unknown_sex_unknown.23andme.txt
+2826	O+	O	O	DD	GG	CC	O	True	user2826_file1787_yearofbirth_unknown_sex_unknown.23andme.txt
+1215	O-	O	O	DD	GG	CC	O	True	user1215_file645_yearofbirth_1969_sex_XX.23andme.txt
+1566	O+	O	O	DD	GG	CC	O	True	user1566_file876_yearofbirth_unknown_sex_unknown.23andme.txt
+2805	B+	B	non_O	DI	GT	CG	non_O	True	user2805_file1775_yearofbirth_unknown_sex_unknown.23andme.txt
+2849	A-	A	non_O	DI	GG	CC	non_O	True	user2849_file1808_yearofbirth_1976_sex_XY.23andme.txt
+1227	B-	B	non_O	DI	GT	CG	non_O	True	user1227_file651_yearofbirth_1954_sex_XY.23andme.txt
+2417	A+	A	non_O	DI	GG	CC	non_O	True	user2417_file1506_yearofbirth_unknown_sex_unknown.23andme.txt
+2446	O+	O	O	DD	GG	CC	O	True	user2446_file1510_yearofbirth_unknown_sex_unknown.23andme.txt
+2453	A+	A	non_O	II	GG	CC	non_O	True	user2453_file1517_yearofbirth_1947_sex_unknown.23andme.txt
+2455	O+	O	O	DD	GG	CC	O	True	user2455_file1519_yearofbirth_unknown_sex_unknown.23andme.txt
+2850	A+	A	non_O	II	GG	CC	non_O	True	user2850_file1809_yearofbirth_unknown_sex_unknown.23andme.txt
+2510	A+	A	non_O	DI	GG	CC	non_O	True	user2510_file1539_yearofbirth_unknown_sex_unknown.23andme.txt
+2881	O-	O	O	DD	GG	CC	O	True	user2881_file1824_yearofbirth_unknown_sex_unknown.23andme.txt
+2516	A+	A	non_O	DI	GG	CC	non_O	True	user2516_file1545_yearofbirth_unknown_sex_unknown.23andme.txt
+2758	A+	A	non_O	DI	GG	CC	non_O	True	user2758_file1761_yearofbirth_unknown_sex_unknown.23andme.txt
+2456	O+	O	O	DI	GG	CC	non_O	False	user2456_file1553_yearofbirth_unknown_sex_unknown.23andme.txt
+2890	O+	O	O	DD	GG	CC	O	True	user2890_file1831_yearofbirth_1982_sex_XY.23andme.txt
+2971	A+	A	non_O	DI	GG	CC	non_O	True	user2971_file1899_yearofbirth_1953_sex_XX.23andme.txt
+2983	A+	A	non_O	DI	GG	CC	non_O	True	user2983_file1909_yearofbirth_unknown_sex_unknown.23andme.txt
+3036	Rs601338 a/g secretor	A	non_O	DD	GG	CC	O	False	user3036_file1951_yearofbirth_unknown_sex_unknown.23andme.txt
+3046	A-	A	non_O	II	GT	CG	non_O	True	user3046_file1955_yearofbirth_1979_sex_unknown.23andme.txt
+3082	Ab+	AB	non_O	II	GT	CG	non_O	True	user3082_file1983_yearofbirth_1965_sex_XY.23andme.txt
+3091	A-	A	non_O	DI	GG	CC	non_O	True	user3091_file1990_yearofbirth_unknown_sex_unknown.23andme.txt
+3130	O-	O	O	DD	GG	CC	O	True	user3130_file2019_yearofbirth_unknown_sex_XY.23andme.txt
+5098	A+ (ao/+-) non-secretor	A	non_O	DI	GG	CC	non_O	True	user5098_file3615_yearofbirth_unknown_sex_unknown.23andme.txt
+3201	A+	A	non_O	DI	GG	CC	non_O	True	user3201_file2082_yearofbirth_unknown_sex_unknown.23andme.txt
+3252	O-	O	O	DD	GG	CC	O	True	user3252_file2116_yearofbirth_unknown_sex_unknown.23andme.txt
+3268	O+	O	O	DD	GG	CC	O	True	user3268_file2124_yearofbirth_1969_sex_XX.23andme.txt
+3275	O+	O	O	DD	GG	CC	O	True	user3275_file2129_yearofbirth_unknown_sex_unknown.23andme.txt
+3355	A+	A	non_O	DI	GG	CC	non_O	True	user3355_file2179_yearofbirth_unknown_sex_unknown.23andme.txt
+1104	Rs601338 a/g secretor	A	non_O	DD	GG	CC	O	False	user1104_file2221_yearofbirth_1972_sex_XX.23andme.txt
+3449	O (rh factor unknown)	A	non_O	DD	GG	CC	O	False	user3449_file2249_yearofbirth_1954_sex_XX.23andme.txt
+3454	B+	B	non_O	DI	GT	CG	non_O	True	user3454_file2250_yearofbirth_unknown_sex_unknown.23andme.txt
+3467	O+	O	O	DD	GG	CC	O	True	user3467_file2256_yearofbirth_unknown_sex_unknown.23andme.txt
+3478	B+	B	non_O	DI	GT	CG	non_O	True	user3478_file2262_yearofbirth_1978_sex_XX.23andme.txt
+3486	A-	A	non_O	DI	GG	CC	non_O	True	user3486_file2266_yearofbirth_1983_sex_XX.23andme.txt
+3489	A+	A	non_O	II	GG	CC	non_O	True	user3489_file2267_yearofbirth_1965_sex_XX.23andme.txt
+3494	A+	A	non_O	DI	GG	CC	non_O	True	user3494_file2270_yearofbirth_unknown_sex_XY.23andme.txt
+3257	A+	A	non_O	DI	GG	CC	non_O	True	user3257_file2282_yearofbirth_1966_sex_XY.23andme.txt
+3532	A+	A	non_O	DI	GG	CC	non_O	True	user3532_file2305_yearofbirth_unknown_sex_unknown.23andme.txt
+3526	A+	A	non_O	DI	GG	CC	non_O	True	user3526_file2299_yearofbirth_unknown_sex_unknown.23andme.txt
+3531	O-	O	O	DD	GG	CC	O	True	user3531_file2303_yearofbirth_1968_sex_XX.23andme.txt
+3540	B+	B	non_O	DI	GT	CG	non_O	True	user3540_file2310_yearofbirth_unknown_sex_unknown.23andme.txt
+3544	0-	O	O	DD	GG	CC	O	True	user3544_file2314_yearofbirth_unknown_sex_unknown.23andme.txt
+3547	O+	O	O	DD	GG	CC	O	True	user3547_file2321_yearofbirth_unknown_sex_unknown.23andme.txt
+3563	African	A	non_O	DD	GG	CC	O	False	user3563_file2332_yearofbirth_unknown_sex_unknown.23andme.txt
+3581	A+	A	non_O	DI	GG	CC	non_O	True	user3581_file2348_yearofbirth_unknown_sex_unknown.23andme.txt
+3591	B+	B	non_O	DI	GT	CG	non_O	True	user3591_file2355_yearofbirth_unknown_sex_unknown.23andme.txt
+3605	O+	O	O	DD	GG	CC	O	True	user3605_file2365_yearofbirth_unknown_sex_unknown.23andme.txt
+3638	A+	A	non_O	II	GT	CG	non_O	True	user3638_file2391_yearofbirth_unknown_sex_unknown.23andme.txt
+3639	O+	O	O	DD	GG	CC	O	True	user3639_file2392_yearofbirth_unknown_sex_unknown.23andme.txt
+3642	A+	A	non_O	DI	GG	CC	non_O	True	user3642_file2394_yearofbirth_unknown_sex_unknown.23andme.txt
+3644	O-	O	O	DD	GG	CC	O	True	user3644_file2396_yearofbirth_unknown_sex_unknown.23andme.txt
+3654	B-	B	non_O	DI	GT	CG	non_O	True	user3654_file2402_yearofbirth_1977_sex_XY.23andme.txt
+3664	O+	O	O	DD	GG	CC	O	True	user3664_file2410_yearofbirth_unknown_sex_unknown.23andme.txt
+3680	A+	A	non_O	DI	GG	CC	non_O	True	user3680_file2428_yearofbirth_unknown_sex_unknown.23andme.txt
+3689	O+	O	O	DD	GG	CC	O	True	user3689_file2434_yearofbirth_unknown_sex_unknown.23andme.txt
+814	O+	O	O	DD	GG	CC	O	True	user814_file2442_yearofbirth_1986_sex_XY.23andme.txt
+3695	O+	O	O	DD	GG	CC	O	True	user3695_file2438_yearofbirth_unknown_sex_unknown.23andme.txt
+3706	O-	O	O	DD	GG	CC	O	True	user3706_file2446_yearofbirth_unknown_sex_unknown.23andme.txt
+4443	B+ (r1r2)	B	non_O	II	GT	GG	non_O	True	user4443_file3048_yearofbirth_unknown_sex_unknown.23andme.txt
+4456	O+	O	O	DD	GG	CC	O	True	user4456_file3052_yearofbirth_unknown_sex_unknown.23andme.txt
+3812	Ab+	AB	non_O	II	GT	CG	non_O	True	user3812_file2533_yearofbirth_unknown_sex_unknown.23andme.txt
+4558	A+	A	non_O	DI	GG	CC	non_O	True	user4558_file3150_yearofbirth_unknown_sex_XY.23andme.txt
+3865	O+	O	O	DI	GG	CC	non_O	False	user3865_file2575_yearofbirth_unknown_sex_unknown.23andme.txt
+3948	O-	O	O	DD	GG	CC	O	True	user3948_file2651_yearofbirth_unknown_sex_unknown.23andme.txt
+3942	AB-	AB	non_O	II	GT	CG	non_O	True	user3942_file2642_yearofbirth_unknown_sex_unknown.23andme.txt
+3949	A+	A	non_O	DI	GG	CC	non_O	True	user3949_file2647_yearofbirth_unknown_sex_unknown.23andme.txt
+3945	O+	O	O	DD	GG	CC	O	True	user3945_file2644_yearofbirth_unknown_sex_unknown.23andme.txt
+500	Secretor (saliva non-secretor)	A	non_O	DI	GG	CC	non_O	True	user500_file2637_yearofbirth_1956_sex_XY.23andme.txt
+3923	A+	A	non_O	DI	GG	CC	non_O	True	user3923_file2623_yearofbirth_unknown_sex_unknown.23andme.txt
+3919	O-	O	O	DD	GG	CC	O	True	user3919_file2620_yearofbirth_unknown_sex_unknown.23andme.txt
+3913	O+	O	O	DD	GG	CC	O	True	user3913_file2617_yearofbirth_unknown_sex_unknown.23andme.txt
+4023	A+	A	non_O	DI	GG	CC	non_O	True	user4023_file2713_yearofbirth_unknown_sex_unknown.23andme.txt
+4052	0-	O	O	DD	GG	CC	O	True	user4052_file2738_yearofbirth_unknown_sex_unknown.23andme.txt
+4095	A+	A	non_O	DI	GG	CC	non_O	True	user4095_file2771_yearofbirth_unknown_sex_unknown.23andme.txt
+4073	O+	O	O	DD	GG	CC	O	True	user4073_file2759_yearofbirth_unknown_sex_unknown.23andme.txt
+3974	A+	A	non_O	DI	GG	CC	non_O	True	user3974_file2744_yearofbirth_unknown_sex_unknown.23andme.txt
+3881	O+	O	O	DD	GG	CC	O	True	user3881_file2588_yearofbirth_1960_sex_XX.23andme.txt
+3867	Ab+	AB	non_O	II	GT	CG	non_O	True	user3867_file2577_yearofbirth_unknown_sex_unknown.23andme.txt
+4484	O+	O	O	DD	GG	CC	O	True	user4484_file3081_yearofbirth_1958_sex_XX.23andme.txt
+4482	B+	B	non_O	DI	GT	CG	non_O	True	user4482_file3079_yearofbirth_1949_sex_XY.23andme.txt
+4494	B+	B	non_O	DI	GT	CG	non_O	True	user4494_file3090_yearofbirth_unknown_sex_unknown.23andme.txt
+4181	A+	A	non_O	DI	GG	CC	non_O	True	user4181_file2839_yearofbirth_unknown_sex_unknown.23andme.txt
+4191	A-	A	non_O	II	GG	CC	non_O	True	user4191_file2844_yearofbirth_unknown_sex_XY.23andme.txt
+4693	A+	A	non_O	DI	GG	CC	non_O	True	user4693_file3301_yearofbirth_unknown_sex_unknown.23andme.txt
+3766	A-	A	non_O	DI	GG	CC	non_O	True	user3766_file2493_yearofbirth_unknown_sex_unknown.23andme.txt
+3747	O+	O	O	DD	GG	CC	O	True	user3747_file2482_yearofbirth_unknown_sex_unknown.23andme.txt
+3780	O+	O	O	DI	GG	CC	non_O	False	user3780_file2506_yearofbirth_unknown_sex_unknown.23andme.txt
+4356	A+	A	non_O	DI	GG	CC	non_O	True	user4356_file2928_yearofbirth_unknown_sex_unknown.23andme.txt
+4359	B+	B	non_O	II	TT	GG	non_O	True	user4359_file2931_yearofbirth_unknown_sex_unknown.23andme.txt
+4388	O+	O	O	DD	GG	CC	O	True	user4388_file2992_yearofbirth_1990_sex_XY.23andme.txt
+4392	A+	A	non_O	DI	GG	CC	non_O	True	user4392_file2994_yearofbirth_1972_sex_XY.23andme.txt
+4415	O+	O	O	DD	GG	CC	O	True	user4415_file3015_yearofbirth_unknown_sex_unknown.23andme.txt
+1449	O+	O	O	DD	GG	CC	O	True	user1449_file3021_yearofbirth_unknown_sex_unknown.23andme.txt
+4342	"A""B+"	AB	non_O	II	GT	CG	non_O	True	user4342_file3029_yearofbirth_unknown_sex_unknown.23andme.txt
+4372	O+	O	O	DD	GG	CC	O	True	user4372_file3063_yearofbirth_1948_sex_XY.23andme.txt
+4504	B+	B	non_O	DI	GT	CG	non_O	True	user4504_file3102_yearofbirth_1984_sex_XX.23andme.txt
+4507	O+	O	O	DI	GG	CC	non_O	False	user4507_file3104_yearofbirth_1978_sex_XY.23andme.txt
+4532	O+	O	O	DD	GG	CC	O	True	user4532_file3128_yearofbirth_1993_sex_XX.23andme.txt
+4509	Ab+	AB	non_O	II	--	CG	non_O	True	user4509_file3106_yearofbirth_unknown_sex_XY.23andme.txt
+4438	O-	O	O	DD	GG	CC	O	True	user4438_file3042_yearofbirth_1944_sex_XX.23andme.txt
+5107	B+	B	non_O	II	GT	CG	non_O	True	user5107_file3623_yearofbirth_1986_sex_XX.23andme.txt
+4577	Rs601338 a/g secretor	A	non_O	DI	GG	CC	non_O	True	user4577_file3161_yearofbirth_unknown_sex_unknown.23andme.txt
+4594	A+	A	non_O	DI	GG	CC	non_O	True	user4594_file3193_yearofbirth_unknown_sex_unknown.23andme.txt
+4605	A+ (a/o)	A	non_O	DI	GG	CC	non_O	True	user4605_file3207_yearofbirth_1973_sex_XY.23andme.txt
+4627	O-	O	O	DD	GG	CC	O	True	user4627_file3226_yearofbirth_unknown_sex_XX.23andme.txt
+4580	A-	A	non_O	II	GG	CC	non_O	True	user4580_file3227_yearofbirth_1952_sex_XX.23andme.txt
+5257	A-	A	non_O	II	GG	CC	non_O	True	user5257_file3765_yearofbirth_unknown_sex_unknown.23andme.txt
+4632	A+	A	non_O	II	GG	CC	non_O	True	user4632_file3231_yearofbirth_unknown_sex_unknown.23andme.txt
+4657	A+	A	non_O	DI	GG	CC	non_O	True	user4657_file3264_yearofbirth_unknown_sex_unknown.23andme.txt
+4712	O+	O	O	DD	GG	CC	O	True	user4712_file3311_yearofbirth_unknown_sex_unknown.23andme.txt
+4784	O +	O	O	DI	GG	CC	non_O	False	user4784_file3373_yearofbirth_unknown_sex_unknown.23andme.txt
+5168	A+	A	non_O	DI	GG	CC	non_O	True	user5168_file3676_yearofbirth_unknown_sex_unknown.23andme.txt
+5205	O+	O	O	DD	GG		O	True	user5205_file3714_yearofbirth_unknown_sex_unknown.ancestry.txt
+4801	Ab-	AB	non_O	II	GT	CG	non_O	True	user4801_file3385_yearofbirth_unknown_sex_XY.23andme.txt
+4806	o rh negative	O	O	DD	GG	CC	O	True	user4806_file3388_yearofbirth_1971_sex_XY.23andme.txt
+5085	A-	A	non_O	DI	GG	CC	non_O	True	user5085_file3650_yearofbirth_1991_sex_unknown.23andme.txt
+5144	O+	O	O	DD	GG	CC	O	True	user5144_file3652_yearofbirth_unknown_sex_XX.23andme.txt
+5211	O +	O	O	DD	GG	CC	O	True	user5211_file3722_yearofbirth_unknown_sex_unknown.23andme.txt
+5284	O+	O	O	DD	GG	CC	O	True	user5284_file3792_yearofbirth_1969_sex_XX.23andme.txt
+4825	O+	O	O	DD	GG	CC	O	True	user4825_file3403_yearofbirth_1979_sex_XY.23andme.txt
+4895	O+	O	O	DD	GG	CC	O	True	user4895_file3451_yearofbirth_1978_sex_XX.23andme.txt
+4907	A+	A	non_O	DI	GG	CC	non_O	True	user4907_file3461_yearofbirth_unknown_sex_unknown.23andme.txt
+5218	O-	O	O	DD	GG	CC	O	True	user5218_file3729_yearofbirth_unknown_sex_unknown.23andme.txt
+5276	O+	O	O	DI	GG	CC	non_O	False	user5276_file3787_yearofbirth_unknown_sex_unknown.23andme.txt
+5378	A-	A	non_O	DI	GG	CC	non_O	True	user5378_file3891_yearofbirth_unknown_sex_unknown.23andme.txt
+4960	A+	A	non_O	II	GG	CC	non_O	True	user4960_file3501_yearofbirth_unknown_sex_unknown.23andme.txt
+5219	O+	O	O	DD	GG	CC	O	True	user5219_file3730_yearofbirth_1948_sex_XX.23andme.txt
+4983	B+	B	non_O	DI	GT	CG	non_O	True	user4983_file3521_yearofbirth_unknown_sex_unknown.23andme.txt
+4985	A-	A	non_O	DI	GG	CC	non_O	True	user4985_file3522_yearofbirth_unknown_sex_unknown.23andme.txt
+4999	A+	A	non_O	DI	GG	CC	non_O	True	user4999_file3540_yearofbirth_unknown_sex_unknown.23andme.txt
+5012	O+	O	O	DD	CC		O	True	user5012_file3548_yearofbirth_unknown_sex_unknown.23andme.txt
+5027	No	O	O	DD	GG		O	True	user5027_file3561_yearofbirth_1972_sex_XY.ancestry.txt
+5044	O-	O	O	DD	GG	CC	O	True	user5044_file3573_yearofbirth_unknown_sex_unknown.23andme.txt
+5073	A-	A	non_O	DI	GG	CC	non_O	True	user5073_file3594_yearofbirth_1948_sex_XX.23andme.txt
+5235	A+	A	non_O	DI	GG	CC	non_O	True	user5235_file3749_yearofbirth_1978_sex_XY.23andme.txt
+5246	B+	B	non_O	DI	GT	CG	non_O	True	user5246_file3758_yearofbirth_1997_sex_XY.23andme.txt
+5392	Ab+	AB	non_O	II	GT	CG	non_O	True	user5392_file3906_yearofbirth_unknown_sex_unknown.23andme.txt
+5412	A+	A	non_O	DI	GG	CC	non_O	True	user5412_file3929_yearofbirth_unknown_sex_unknown.23andme.txt
+5475	O+	O	O	DD	GG	CC	O	True	user5475_file3971_yearofbirth_1967_sex_XY.23andme.txt
+5487	Ab+	AB	non_O	II	GT	CG	non_O	True	user5487_file3981_yearofbirth_unknown_sex_unknown.23andme.txt
+5342	A+	A	non_O	DI	GG	CC	non_O	True	user5342_file3856_yearofbirth_unknown_sex_unknown.23andme.txt
+949	B-	B	non_O	DI	GT	CG	non_O	True	user949_file3858_yearofbirth_1972_sex_XY.23andme.txt
+5444	O+	O	O	DD	GG	CC	O	True	user5444_file3944_yearofbirth_unknown_sex_unknown.23andme.txt
+5448	Ab+	AB	non_O	II	GG	CC	non_O	True	user5448_file3947_yearofbirth_1990_sex_XY.23andme.txt
+5506	O rh negative	O	O	DD	GG		O	True	user5506_file4000_yearofbirth_unknown_sex_unknown.ancestry.txt
+5734	A+	A	non_O	DI	GG	CC	non_O	True	user5734_file4208_yearofbirth_unknown_sex_unknown.23andme.txt
+5850	Ab+	AB	non_O	DI	GG	CC	non_O	True	user5850_file4328_yearofbirth_1956_sex_XY.23andme.txt
+5853	B+ (r1r2)	B	non_O	DI	GT	CG	non_O	True	user5853_file4332_yearofbirth_1982_sex_XY.23andme.txt
+5857	0-	O	O	DD	GG		O	True	user5857_file4335_yearofbirth_unknown_sex_unknown.ancestry.txt
+5516	A-	A	non_O	DI	GG	CC	non_O	True	user5516_file4008_yearofbirth_unknown_sex_unknown.23andme.txt
+5743	O+	O	O	DD	GG	CC	O	True	user5743_file4219_yearofbirth_unknown_sex_unknown.23andme.txt
+5790	O+	O	O	DD	GG		O	True	user5790_file4266_yearofbirth_unknown_sex_unknown.ancestry.txt
+5526	A+	A	non_O	DI	GG	CC	non_O	True	user5526_file4017_yearofbirth_unknown_sex_unknown.23andme.txt
+5529	O+	O	O	DI	GT	CG	non_O	False	user5529_file4021_yearofbirth_1993_sex_XY.23andme.txt
+5624	A-	A	non_O	DI	GG		non_O	True	user5624_file4115_yearofbirth_1986_sex_XX.ancestry.txt
+5629	O+	O	O	DD	GG	CC	O	True	user5629_file4119_yearofbirth_unknown_sex_unknown.23andme.txt
+5581	O+	O	O	DI	GG	CC	non_O	False	user5581_file4402_yearofbirth_1991_sex_XX.23andme.txt
+5602	No	O	O	DI	GG	CC	non_O	False	user5602_file4096_yearofbirth_unknown_sex_unknown.23andme.txt
+5614	A+	A	non_O	DI	GG	CC	non_O	True	user5614_file4106_yearofbirth_1973_sex_XX.23andme.txt
+5623	A-	A	non_O	DI	GG		non_O	True	user5623_file4114_yearofbirth_unknown_sex_XX.ancestry.txt
+2969	O-	O	O	DD	GG	CC	O	True	user2969_file4132_yearofbirth_1990_sex_XX.23andme.txt
+5754	A-	A	non_O	DI	GG		non_O	True	user5754_file4228_yearofbirth_1977_sex_XX.ancestry.txt
+5773	A-	A	non_O	DI	GG	CC	non_O	True	user5773_file4247_yearofbirth_unknown_sex_unknown.23andme.txt
+5866	O+	O	O	DI	GG	CC	non_O	False	user5866_file4342_yearofbirth_unknown_sex_unknown.23andme.txt
+5221	A+	A	non_O	DI	GG		non_O	True	user5221_file4376_yearofbirth_1981_sex_unknown.ancestry.txt
+5917	O+	O	O	DD	GG	CC	O	True	user5917_file4386_yearofbirth_1979_sex_XX.23andme.txt
+5924	A-	A	non_O	DI	GG	CC	non_O	True	user5924_file4389_yearofbirth_1988_sex_XY.23andme.txt
+5918	A+	A	non_O	DI	GG	CC	non_O	True	user5918_file4387_yearofbirth_unknown_sex_unknown.23andme.txt
+5965	Ab-	AB	non_O	II	GT	CG	non_O	True	user5965_file4482_yearofbirth_1987_sex_XX.23andme.txt
+6005	O+	O	O	DD	GG	CC	O	True	user6005_file4513_yearofbirth_unknown_sex_unknown.23andme.txt
+5998	O	O	O	DD	GG		O	True	user5998_file4507_yearofbirth_1971_sex_XY.ancestry.txt
