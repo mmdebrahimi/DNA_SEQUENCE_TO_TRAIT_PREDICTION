@@ -164,6 +164,7 @@ def main():
     if device == "cuda" and torch.cuda.get_device_capability()[0] >= 7:
         model = model.half()   # sm_60 (Kaggle's legacy P100) is unsupported by current torch => stay fp32
     rhos = []
+    per_assay = []                                     # (DMS_id, seqlen, n_scored, rho)
     for k, did in enumerate(ids, 1):
         dms = assays[did]
         seq = seqs[did]
@@ -177,9 +178,21 @@ def main():
             continue
         rho = spearman([esm[v] for v in common], [dms[v] for v in common])
         rhos.append(rho)
+        per_assay.append((did, len(seq), len(common), rho))
         if k % 10 == 0 or k == len(ids):
             print(f"  [{k}/{len(ids)}] {did[:40]:40s} len={len(seq):4d} n={len(common):5d} "
                   f"rho={rho:+.3f}  running median={statistics.median(rhos):.3f}")
+    # Per-assay rows -> /kaggle/working, so a run can be compared assay-by-assay against
+    # ProteinGym's own DMS_level CSV instead of only median-to-median.
+    try:
+        with open("per_assay_spearman.csv", "w") as fh:
+            fh.write("DMS_id,seq_len,n_scored,spearman\n")
+            for did, sl, n, r in per_assay:
+                fh.write(f"{did},{sl},{n},{r:.6f}\n")
+        print(f"wrote per_assay_spearman.csv ({len(per_assay)} rows)")
+    except OSError as e:
+        print("could not write per-assay csv:", e)
+
     print(f"\nMEDIAN Spearman over {len(rhos)} assays = {statistics.median(rhos):.3f}  "
           f"(mean {statistics.mean(rhos):.3f})   model={MODEL.split('_')[2]}")
     print("ProteinGym per-assay reference (217 assays)  median | mean:")

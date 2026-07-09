@@ -1,0 +1,47 @@
+{
+ "date": "2026-07-09",
+ "benchmark": "ProteinGym v1.1 substitutions (Zenodo 13936340)",
+ "model": "facebook/esm2_t33_650M_UR50D",
+ "device": "Kaggle GPU (Tesla T4, fp16)",
+ "scoring": "zero-shot masked-marginal, single substitutions only, sliding window for >1022aa",
+ "assays_scored": 217,
+ "assays_available": 217,
+ "assays_errored": 0,
+ "min_variants_per_assay": 10,
+ "our_median_spearman": 0.49,
+ "our_mean_spearman": 0.429,
+ "proteingym_official_per_assay": {
+  "ESM2 (650M)": {
+   "median": 0.484,
+   "mean": 0.4382,
+   "n": 217
+  },
+  "ESM2 (3B)": {
+   "median": 0.467,
+   "mean": 0.4321,
+   "n": 217
+  },
+  "ESM2 (15B)": {
+   "median": 0.438,
+   "mean": 0.4253,
+   "n": 217
+  }
+ },
+ "official_published_average_spearman": {
+  "ESM2 (650M)": 0.414,
+  "ESM2 (3B)": 0.406,
+  "ESM2 (15B)": 0.4
+ },
+ "delta_vs_official_median": 0.006,
+ "delta_vs_official_mean": -0.0092,
+ "finding": "Harness reproduces published ESM2-650M zero-shot on the FULL 217-assay benchmark: median 0.49 vs official 0.484 (+0.006); mean 0.429 vs 0.4382 (-0.009). All 217 assays scored, 0 errors.",
+ "scale_finding": "650M is the PEAK of the ESM2 family on ProteinGym. 3B and 15B regress monotonically on per-assay median (0.484 -> 0.467 -> 0.438), per-assay mean, and the published Average_Spearman. Corroborates the humsavar n=7 result (mean paired delta 650M->3B = -0.021).",
+ "aggregation_caveat": "Published Average_Spearman (0.414 for 650M) is the mean of the 5 function-category averages, NOT a per-assay mean (0.438). Do not compare directly.",
+ "residual_differences": [
+  "multi-mutant rows skipped (single-substitution benchmark)",
+  "assays with <10 scorable variants dropped (none triggered: 217/217 scored)",
+  "own sliding-window + spearman implementation, not ProteinGym's scorer"
+ ],
+ "kaggle_kernel": "emanueleebrahimi/proteingym-esm2-650m-full-sweep",
+ "script": "scripts/kaggle_proteingym_sweep.py"
+}
