@@ -9,7 +9,8 @@ interpretable attribution. See plans/Ecoli_G2P_Platform_Technical_Plan.md.
 # Mirrors dna_decode.cli._version(). Falls back only for a source tree with no
 # metadata (e.g. running uninstalled).
 try:
-    from importlib.metadata import PackageNotFoundError, version as _pkg_version
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _pkg_version
 
     try:
         __version__ = _pkg_version("dna_decode")

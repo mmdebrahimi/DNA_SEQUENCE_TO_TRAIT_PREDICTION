@@ -40,9 +40,10 @@ def synthetic_fixtures(tmp_path: Path, project_root: Path):
 
     Returns a dict with paths + the strain_id under test.
     """
+    from datetime import date as _date
+
     from dna_decode.models.cache import EmbeddingCache
     from dna_decode.models.classifiers import train_xgboost_classifier
-    from datetime import date as _date
 
     strain_id = "TEST_STRAIN_001"
     embedding_dim = 8

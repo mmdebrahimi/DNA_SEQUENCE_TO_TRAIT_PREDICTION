@@ -4,23 +4,22 @@ Verifies the bootstrap is sound before Wave 1 agents start adding modules.
 """
 from pathlib import Path
 
-import pytest
 import yaml
 
 
 def test_package_imports_cleanly():
     """All 5 subpackages + the top-level package import without side-effects."""
+    # __version__ is derived from the installed package metadata (never a hardcoded
+    # literal — it was pinned to a stale "0.0.1" while pyproject was 0.6.5). Assert it
+    # tracks the metadata source of truth so this test can't re-pin a drifting literal.
+    from importlib.metadata import version as _pkg_version
+
     import dna_decode
     import dna_decode.data
     import dna_decode.eval
     import dna_decode.interp
     import dna_decode.models
     import dna_decode.viz
-
-    # __version__ is derived from the installed package metadata (never a hardcoded
-    # literal — it was pinned to a stale "0.0.1" while pyproject was 0.6.5). Assert it
-    # tracks the metadata source of truth so this test can't re-pin a drifting literal.
-    from importlib.metadata import version as _pkg_version
 
     assert dna_decode.__version__ == _pkg_version("dna_decode")
     assert dna_decode.__version__ != "0.0.1"
@@ -79,7 +78,7 @@ def test_foundation_models_complete(project_root: Path):
         f"Expected leaderboard models {leaderboard}, got {set(models.keys())}"
     )
     # Extra entries (e.g., `mock`) are permitted but must satisfy the same schema.
-    for name, meta in models.items():
+    for _name, meta in models.items():
         assert "huggingface_id" in meta
         assert "embedding_dim" in meta and meta["embedding_dim"] > 0
         assert "max_context" in meta and meta["max_context"] > 0
