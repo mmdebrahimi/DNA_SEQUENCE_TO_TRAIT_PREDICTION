@@ -59,6 +59,15 @@ Full shortlist + gate-screening: `research_outputs/noncircular-label-sources-202
 | Embedding features untried for carbon-utilization | not present | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC10729968/ | **Candidate use:** the embedding niche is literally open here — no published DNA-LM decoder for metabolic traits. **Verification needed:** confirm via a focused lit check that no 2024-2026 preprint already did NT/Evo on BacDive metabolic traits. | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype (ranked shortlist) | open embedding niche |
 | E. coli host-association GWAS cohort is sampling-defined (EXCLUDE) | 1198 | isolates | https://pmc.ncbi.nlm.nih.gov/articles/PMC10088187/ | **Candidate use:** EXCLUDE — host/source labels reproduce the pathotype study==class confound; do not pick as substrate. **Verification needed:** none (confirmatory negative). | high | ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | Candidate genotype-to-phenotype decoder substrates beyond AMR/pathotype (ranked shortlist) | confirmatory negative — what to AVOID |
 
+### ddg-to-fold-change-calibration-drug-resistance (2026-07-09) — /hypothesise #2 (physics ΔΔG labels)
+
+| # | Decision / candidate use | Verification needed | Confidence |
+|---|---|---|---|
+| 1 | Scope hypothesis #2 (physics-ΔΔG labels) to **target-site-competitive** resistance cells only (HIV PR/RT/INSTI, kinase/protease inhibitors, β-lactam↔PBP) — NOT efflux/β-lactamase/regulatory/kcat-Km cells, which binding-ΔΔG is structurally blind to. | Confirm which project cells are competitive-binding. | high |
+| 2 | Use cheap ddG (Rosetta cartesian_ddg / RaSP) as a **hotspot CLASSIFIER** (>1 kcal/mol), reserve FEP+ for a small validation set; do NOT expect quantitative MIC (cheap-ddG RMSE 1–1.9 kcal/mol = 5–24× fold-change error). | Pilot: FoldX/Rosetta on ~10 known HIV RT/PR DRMs vs measured PhenoSense fold-change; clears the >1 kcal/mol bar + beats the catalog blind spot? | high |
+| 3 | Treat ΔΔG→fold-change as **exact physics** (`exp(ΔΔG/RT)`, 1.373 kcal/mol/decade @300 K) — model only the ΔΔG computation, no learned calibration layer. | None (verified). | high |
+| 4 | The antimicrobial ΔΔG→MIC calibration literature was **policy-search-walled** in this run — retrieve on an unfiltered surface before committing. | Re-run the antimicrobial (not just oncology-kinase) ΔΔG→MIC search on a non-filtered machine. | medium |
+
 ## Stale Candidates
 
 (None — all 4 source memos captured within the 30-day window.)
