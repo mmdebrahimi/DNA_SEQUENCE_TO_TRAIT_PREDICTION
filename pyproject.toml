@@ -139,6 +139,7 @@ python_files = ["test_*.py"]
 addopts = "-v"
 markers = [
     "slow: tests that require GPU + large model downloads (excluded by default in CI)",
+    "integration: end-to-end tests that shell out / touch real I/O (heavier than unit tests)",
 ]
 
 [tool.ruff]

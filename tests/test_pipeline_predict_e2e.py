@@ -23,6 +23,11 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+# xgboost lives in the [ml] extra (not in a default `uv sync`); the synthetic
+# fixtures train a real classifier, so skip the whole module when it is absent —
+# matching test_models_classifiers / test_smoke / test_pipeline_cli / etc.
+xgboost = pytest.importorskip("xgboost")
+
 
 @pytest.fixture
 def project_root() -> Path:

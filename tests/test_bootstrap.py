@@ -17,7 +17,13 @@ def test_package_imports_cleanly():
     import dna_decode.models
     import dna_decode.viz
 
-    assert dna_decode.__version__ == "0.0.1"
+    # __version__ is derived from the installed package metadata (never a hardcoded
+    # literal — it was pinned to a stale "0.0.1" while pyproject was 0.6.5). Assert it
+    # tracks the metadata source of truth so this test can't re-pin a drifting literal.
+    from importlib.metadata import version as _pkg_version
+
+    assert dna_decode.__version__ == _pkg_version("dna_decode")
+    assert dna_decode.__version__ != "0.0.1"
 
 
 def test_datasources_yaml_loads(project_root: Path):
