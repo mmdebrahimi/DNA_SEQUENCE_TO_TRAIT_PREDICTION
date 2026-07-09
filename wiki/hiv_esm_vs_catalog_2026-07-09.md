@@ -62,6 +62,32 @@ likelihood-based scorer — BLOSUM62 and ESM alike — therefore rates the resis
 retains only a modest independent tie to circulating frequency (partial ρ +0.218), and that is *not*
 what drives the DRM ranking.
 
+### The rule generalizes — and the genetic code does most of the work
+
+`scripts/resistance_conservativeness_probe.py` tests the prediction with **BLOSUM62 alone** (no model,
+no GPU) across three unrelated pathogens. Mid-ranks throughout: BLOSUM scores tie heavily, and
+breaking ties by iteration order silently shifts the median (it inflated an earlier draft of this
+number).
+
+| catalog | n | median BLOSUM rank of the resistant residue (null 10.0) |
+|---|---|---|
+| HIV RT (NNRTI+NRTI) | 38 | **4.5** |
+| SARS-CoV-2 Mpro | 84 | **6.5** |
+| fungal ERG11/FKS1 | 17 | **4.0** |
+| **pooled** | **139** | **4.5** |
+
+**But the obvious confound explains most of it.** A resistance mutation must be reachable by a
+*single nucleotide* change, and the genetic code is error-minimizing — single-nt neighbours are
+chemically similar by construction. Re-ranking each HIV DRM among only the substitutions reachable
+from its real HXB2 codon: median rank **2.5** against an accessible-null of **3.5**, i.e.
+P(more conservative than a random *accessible* substitution) = **0.614 on n = 22 (12/22)**. That is
+**suggestive and underpowered — not a claim.** A random reachable substitution is already
+conservative.
+
+So: resistance mutations are chemically conservative (robust, 3 pathogens), driven mostly by **codon
+accessibility** with at most a modest selection preference this data cannot establish. **The
+practical rule does not depend on resolving which.**
+
 **This is the design rule, and it is stronger than either rival.** The blindness is a property of
 **the phenotype**, not of model capacity or of the sites. It is not fixable by scale (650M→3B is
 worse), nor by filtering on conservation (the sites are averagely conserved), nor by swapping in a

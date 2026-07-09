@@ -1,0 +1,34 @@
+{
+ "date": "2026-07-09",
+ "matrix": "BLOSUM62",
+ "null_median_rank_of_19": 10.0,
+ "part1_per_pathogen": {
+  "HIV RT (NNRTI+NRTI)": {
+   "n": 38,
+   "median_rank": 4.5,
+   "frac_le5": 0.5526
+  },
+  "SARS-CoV-2 Mpro": {
+   "n": 84,
+   "median_rank": 6.5,
+   "frac_le5": 0.4524
+  },
+  "Fungal ERG11/FKS1": {
+   "n": 17,
+   "median_rank": 4.0,
+   "frac_le5": 0.6471
+  }
+ },
+ "part1_pooled_n": 139,
+ "part1_pooled_median_rank": 4.5,
+ "part1_generalization": "HOLDS across HIV RT, SARS-CoV-2 Mpro, fungal ERG11/FKS1",
+ "part2_hiv_n_reachable": 22,
+ "part2_hiv_n_unreachable": 16,
+ "part2_median_rank_all19": 2.75,
+ "part2_median_rank_accessible": 2.5,
+ "part2_accessible_null_median": 3.5,
+ "part2_better_than_accessible_null": "12/22",
+ "part2_p_more_conservative_than_accessible": 0.6136,
+ "part2_verdict": "codon accessibility explains most of it; residual selection preference is SUGGESTIVE AND UNDERPOWERED (n=22), not a claim",
+ "practical_rule": "a conservation-/exchangeability-based scorer is structurally blind to resistance, regardless of which driver dominates"
+}
