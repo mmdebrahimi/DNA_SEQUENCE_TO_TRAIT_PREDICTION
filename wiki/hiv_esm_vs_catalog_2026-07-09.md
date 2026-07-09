@@ -69,11 +69,38 @@ baseline of 0.783 (ESM's lift is **+0.013**), against a catalog that is itself n
 A raw `≥0.65` count would have recorded that as a win; the machine-readable JSON now carries
 `n_drugs_passing_bar_genuine: 0` alongside the nominal count, plus the caveat.
 
-**ESM's sensitivity tracks the fitness cost of the resistance mechanism, not resistance.** On NNRTI
-it is at or below chance (0.43–0.49): K103N and Y181C are cheap, high-frequency, well-tolerated. On
-NRTI it is genuinely sensitive (0.57–0.77, 3TC best): M184V, K65R and the TAMs carry real replicative
-cost, so evolutionary likelihood does see them. **But even where ESM is sensitive it loses to the
-catalog** (3TC 0.766 vs 0.865; AZT 0.661 vs 0.745), and it adds nothing on the blind spot.
+### The obvious explanation for the NNRTI/NRTI split is wrong
+
+The tempting story is *"ESM's sensitivity tracks the **fitness cost** of the mechanism — NNRTI DRMs
+(K103N, Y181C) are cheap so ESM misses them; NRTI DRMs (M184V, K65R, the TAMs) cost replication so
+ESM sees them."* It is intuitive and it is **false**. Two probes, both on the cached matrix, no new
+inference (`scripts/hiv_esm_mechanism_probe.py`, `wiki/hiv_esm_mechanism_probe_2026-07-09.json`):
+
+**Probe 1 — per-DRM.** If fitness cost drove it, NRTI DRMs should look *more* damaging at their own
+positions. They look **less**: median damage percentile **0.184** (NRTI) vs **0.289** (NNRTI), and
+P(a random NRTI DRM looks more damaging than a random NNRTI DRM) = **0.472** — a coin flip.
+**Falsified.**
+
+**Probe 2 — per-cohort. The real explanation is mutation burden.** NRTI-resistant isolates are
+treatment-experienced and simply carry more mutations. **Counting mutations — ignoring the language
+model entirely — beats ESM on 10 of 11 drugs:**
+
+| | ESM | burden | ESM − burden |
+|---|---|---|---|
+| EFV | 0.454 | 0.609 | −0.154 |
+| NVP | 0.464 | 0.660 | −0.196 |
+| RPV | 0.430 | 0.548 | −0.118 |
+| **3TC** | **0.766** | 0.731 | **+0.035** |
+| ABC | 0.734 | 0.760 | −0.026 |
+| AZT | 0.661 | 0.792 | −0.130 |
+| D4T | 0.598 | **0.824** | −0.226 |
+| TDF | 0.567 | 0.711 | −0.143 |
+
+**ESM has no resistance signal in either class.** Its apparent NRTI "sensitivity" (0.57–0.77) is a
+treatment-experience confound that a trivial count captures *better*. It loses to the catalog
+everywhere (3TC 0.766 vs 0.865), loses to counting mutations almost everywhere, and adds nothing on
+the blind spot. Note that burden itself is a confound, not biology — on the catalog-negative subset
+it collapses to ~0.45–0.53.
 
 ## What this settles
 
@@ -83,9 +110,16 @@ The deterministic catalog stays the right product. This is a clean, free, indepe
 It also **refines the recorded regime boundary** (`feedback_g2p_decoder_regime_boundary`). "Molecular
 property → learned wins" was measured on DMS *fitness* (ProteinGym; ESM2-650M median Spearman 0.490).
 Drug resistance is a different kind of molecular property: it is **antagonistically selected**. The
-resistant variant is the one evolution has *kept*, so an evolutionary-likelihood model scores it as
-ordinary. Learned scoring wins where the phenotype aligns with fitness and loses — even inverts —
-where the phenotype is defined against a drug the training distribution already adapted to.
+resistant variant is the one evolution has *kept* under drug pressure, and it is abundant in the
+training distribution, so an evolutionary-likelihood model scores it as ordinary — Control B's 0.29
+median percentile is exactly that. Learned zero-shot scoring wins where the phenotype aligns with
+fitness and is uninformative-to-inverted where the phenotype is defined against a selective agent the
+training data has already adapted to.
+
+**Method note, recorded because it nearly became a false finding:** the first version of this memo
+attributed the NNRTI/NRTI split to fitness cost. That explanation survived exactly as long as it took
+to test it, and both probes rejected it. An explanation that merely *fits* the top-line numbers is not
+a finding — the burden baseline had to be run on the **full** cohort (not just the subset) to see it.
 
 ## Caveats
 

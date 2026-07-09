@@ -1,0 +1,101 @@
+{
+ "date": "2026-07-09",
+ "model": "facebook/esm2_t33_650M_UR50D",
+ "probe1_nnrti_median_damage_percentile": 0.2895,
+ "probe1_nrti_median_damage_percentile": 0.1842,
+ "probe1_p_nrti_more_damaging": 0.4716,
+ "probe1_fitness_cost_story": "FALSIFIED",
+ "probe2_per_drug": [
+  {
+   "drug": "EFV",
+   "cls": "NNRTI",
+   "n": 2168,
+   "esm_auroc": 0.4543,
+   "burden_auroc": 0.6085,
+   "esm_minus_burden": -0.1542
+  },
+  {
+   "drug": "NVP",
+   "cls": "NNRTI",
+   "n": 2052,
+   "esm_auroc": 0.4637,
+   "burden_auroc": 0.6597,
+   "esm_minus_burden": -0.1959
+  },
+  {
+   "drug": "ETR",
+   "cls": "NNRTI",
+   "n": 998,
+   "esm_auroc": 0.4907,
+   "burden_auroc": 0.5001,
+   "esm_minus_burden": -0.0094
+  },
+  {
+   "drug": "RPV",
+   "cls": "NNRTI",
+   "n": 311,
+   "esm_auroc": 0.4298,
+   "burden_auroc": 0.548,
+   "esm_minus_burden": -0.1182
+  },
+  {
+   "drug": "DOR",
+   "cls": "NNRTI",
+   "n": 130,
+   "esm_auroc": 0.5721,
+   "burden_auroc": 0.6937,
+   "esm_minus_burden": -0.1216
+  },
+  {
+   "drug": "3TC",
+   "cls": "NRTI",
+   "n": 1839,
+   "esm_auroc": 0.7662,
+   "burden_auroc": 0.731,
+   "esm_minus_burden": 0.0352
+  },
+  {
+   "drug": "ABC",
+   "cls": "NRTI",
+   "n": 1731,
+   "esm_auroc": 0.7343,
+   "burden_auroc": 0.7604,
+   "esm_minus_burden": -0.026
+  },
+  {
+   "drug": "AZT",
+   "cls": "NRTI",
+   "n": 1853,
+   "esm_auroc": 0.6612,
+   "burden_auroc": 0.7917,
+   "esm_minus_burden": -0.1305
+  },
+  {
+   "drug": "D4T",
+   "cls": "NRTI",
+   "n": 1846,
+   "esm_auroc": 0.5977,
+   "burden_auroc": 0.824,
+   "esm_minus_burden": -0.2263
+  },
+  {
+   "drug": "DDI",
+   "cls": "NRTI",
+   "n": 1849,
+   "esm_auroc": 0.585,
+   "burden_auroc": 0.6717,
+   "esm_minus_burden": -0.0867
+  },
+  {
+   "drug": "TDF",
+   "cls": "NRTI",
+   "n": 1548,
+   "esm_auroc": 0.5674,
+   "burden_auroc": 0.7106,
+   "esm_minus_burden": -0.1433
+  }
+ ],
+ "probe2_esm_beats_burden_on": 1,
+ "probe2_n_drugs": 11,
+ "conclusion": "ESM has no resistance signal in either class; its apparent NRTI sensitivity is mutation burden (treatment experience), which a trivial count captures better on 10/11 drugs."
+}
