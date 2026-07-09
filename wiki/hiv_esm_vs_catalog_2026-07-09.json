@@ -1,0 +1,29 @@
+{
+ "date": "2026-07-09",
+ "model": "facebook/esm2_t33_650M_UR50D",
+ "drug": "EFV",
+ "cutoff_fold": 3.0,
+ "subset": "catalog-negative (no NNRTI major DRM)",
+ "n": 1111,
+ "n_resistant": 53,
+ "n_susceptible": 1058,
+ "esm_mean_damage_auroc": 0.4485,
+ "esm_sum_damage_auroc": 0.4322,
+ "mutation_burden_auroc": 0.4514,
+ "shuffled_null_auroc": 0.4974,
+ "pass_bar": "esm>=0.65 AND esm>burden AND null<0.55",
+ "passed": false,
+ "control_a_full_cohort_esm_auroc": 0.4543,
+ "control_a_full_cohort_catalog_auroc": 0.9256,
+ "control_a_full_cohort_n": 2168,
+ "control_a_full_cohort_n_resistant": 998,
+ "control_b_drm_damage_percentile_median": 0.2895,
+ "instrument_sensitive_to_resistance": false,
+ "excluded_positions_hxb2_ne_consensus": [
+  122,
+  214,
+  272,
+  277
+ ],
+ "honest_prior": "ESM scores evolutionary likelihood, not drug binding; resistance mutations are often fitness-costly, so 'damaging' != 'resistance-conferring'."
+}
