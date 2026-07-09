@@ -20,7 +20,12 @@ from __future__ import annotations
 import argparse
 import sys
 
-# Per-trait capability registry: subcommand -> (delegate dotted-path main, one-line capability + validation).
+# Per-trait capability registry: `dna-decode` SUBCOMMAND -> (delegate dotted-path main, one-line
+# capability + validation). This is INTENTIONALLY a different namespace from
+# `dna_decode.data.cell_registry.cli_routable_manifest()`, which maps top-level CONSOLE SCRIPTS
+# (dna-amr / dna-pgx / dna-hla / dna-clinvar / traits) to their routable cells. The two are
+# orthogonal by design — do NOT "unify" TRAITS to be generated from the cell registry; they answer
+# different questions (subcommand dispatch table vs console-script->cell manifest).
 TRAITS = {
     "amr": {
         "summary": "antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem; E.coli/Klebsiella/Pseudomonas/S.aureus) + FUNGAL azole/echinocandin (fluconazole/voriconazole/caspofungin/micafungin; C. auris) via --drug",
