@@ -44,6 +44,26 @@ Reachability verified today; all catalog-only (too big to commit / not variant-l
 | **DepMap** (CRISPR gene effect) | figshare (`ndownloader.figshare.com/files/43346616`, 302→S3) | redirect | Gene-**essentiality** fitness across cell lines — a *different* phenotype axis (gene-level, not missense) |
 | **gnomAD constraint** | `storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/…tsv` | **95 MB** | Population variant-**tolerance** proxy (o/e, pLI) — gene-level; weak-label for missense tolerance |
 
+## Evaluated → rejected (2026-07-08)
+
+HF datasets screened and NOT adopted, with the one-line reason (so they don't resurface). Screen = the
+negative-results-map gates: **no genotype side / sampling-defined label / population-structure confound /
+not sequence-level**.
+
+| Dataset (HF) | What it is | Why rejected |
+|---|---|---|
+| `EthnicErotic/phenotype-catalog` | human appearance-by-ethnicity (Fitzpatrick skin type, ethnography, images) | no genotype; population-structure / sampling-defined label; quality + ethics red flags |
+| `ClarusC64/genetics-phenotype-definition-integrity-v0.1` | tiny (n<1K) NLP text-classification ("definition integrity") | no genotype; NLP eval, not G→P data |
+| `davidkartchner/plant-phenotype` | PPR literature relation-extraction corpus | no genotype; NLP text corpus |
+| `envedabio/plant-phenotype` | same PPR corpus (train+test) | no genotype; NLP text corpus |
+| `Solshine/Rice_Genotype_and_Phenotype_Data` | rice ~12k-SNP genotype + 12 agronomic quantitative traits (GWAS panel, Orhobor 2018) | real G+P **but regime-2** (organism polygenic; population-structure confound = closed-negative for learned embeddings). Classical GBLUP only; not our frontier |
+
+**Reference ontologies (optional — reference, NOT a modeling substrate):**
+
+| Dataset (HF) | What it is | Use |
+|---|---|---|
+| `pankajrajdeo/ontologies_{genes_to_phenotype,phenotype_to_genes}_JAX` | HPO gene↔phenotype-term tables (Jackson Lab) | Optional REFERENCE for the deterministic decoder's attribution/annotation (gene → known disease phenotype). Pull from `hpo.jax.org` source, not a re-upload. Not a sequence-level G→P training set. |
+
 ## Notes / recipes
 
 - **ProteinGym v1.1 range-extract** — the 11 GB Zenodo zip is not fully downloaded; the substitutions
