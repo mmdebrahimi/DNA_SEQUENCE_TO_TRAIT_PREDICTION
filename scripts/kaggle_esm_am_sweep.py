@@ -8,7 +8,9 @@ head-to-head with a larger ESM on GPU.
 HOW TO RUN ON KAGGLE
 --------------------
 1. kaggle.com -> Create -> New Notebook.
-2. Settings (right panel): Accelerator = GPU T4 x2 (or P100); Internet = ON.
+2. Settings (right panel): Accelerator = GPU T4 x2; Internet = ON.
+   (NOT P100 -- sm_60 is below the CC>=7.0 floor of Kaggle's current torch; fp16 dies with
+    'no kernel image is available for execution on the device'. The code now falls back to fp32.)
 3. Paste this whole file into ONE code cell. Run. (~5-10 min for 650M; ~15-25 min for 3B.)
 4. Read the final MEDIAN line + per-protein table. Paste it back.
 
@@ -142,8 +144,8 @@ def main():
     print(f"device={device}  model={MODEL}")
     tok = AutoTokenizer.from_pretrained(MODEL)
     model = AutoModelForMaskedLM.from_pretrained(MODEL).eval().to(device)
-    if device == "cuda":
-        model = model.half()
+    if device == "cuda" and torch.cuda.get_device_capability()[0] >= 7:
+        model = model.half()   # sm_60 (Kaggle's legacy P100) is unsupported by current torch => stay fp32
     labels = humsavar_labels()
     am = alphamissense()
     rows = []

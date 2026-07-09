@@ -7,7 +7,8 @@ vs the published leaderboard. This is the true "quality" metric for the sequence
 
 HOW TO RUN ON KAGGLE
 --------------------
-1. kaggle.com -> New Notebook. Settings: Accelerator = GPU T4/P100; Internet = ON.
+1. kaggle.com -> New Notebook. Settings: Accelerator = GPU T4 (NOT P100); Internet = ON.
+   (P100 = sm_60 < CC 7.0 floor of Kaggle's current torch; fp16 fails. Code falls back to fp32.)
 2. Paste this whole file into ONE cell. Run.
 3. It prints a running median every 20 assays + a final MEDIAN Spearman vs the ESM2 leaderboard.
    650M over all 217 with windowing is long (~1-3 h). For a fast first read set MAX_SEQLEN=400
@@ -145,8 +146,8 @@ def main():
     print(f"scoring {len(ids)} assays (of {len(assays)} available)")
     tok = AutoTokenizer.from_pretrained(MODEL)
     model = AutoModelForMaskedLM.from_pretrained(MODEL).eval().to(device)
-    if device == "cuda":
-        model = model.half()
+    if device == "cuda" and torch.cuda.get_device_capability()[0] >= 7:
+        model = model.half()   # sm_60 (Kaggle's legacy P100) is unsupported by current torch => stay fp32
     rhos = []
     for k, did in enumerate(ids, 1):
         dms = assays[did]
