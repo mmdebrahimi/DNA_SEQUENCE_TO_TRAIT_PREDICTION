@@ -1,0 +1,11 @@
+{
+  "source": "MaveDB",
+  "urn": "urn:mavedb:00000055-a-1",
+  "title": "NUDT15 protein stability scores",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "protein_len": 164,
+  "n": 2922,
+  "rho": 0.3412453280545037,
+  "rho_shuf": -0.02611327243765757,
+  "mism": 0
+}

@@ -1,0 +1,11 @@
+{
+  "source": "MaveDB",
+  "urn": "urn:mavedb:00000001-a-3",
+  "title": "UBE2I DMS-TileSeq",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "protein_len": 158,
+  "n": 2870,
+  "rho": -0.0027288092439162093,
+  "rho_shuf": -0.010919759075987264,
+  "mism": 0
+}

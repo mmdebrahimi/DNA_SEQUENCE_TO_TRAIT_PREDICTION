@@ -1,0 +1,11 @@
+{
+  "source": "MaveDB",
+  "urn": "urn:mavedb:00000001-a-2",
+  "title": "UBE2I DMS-BarSeq",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "protein_len": 158,
+  "n": 569,
+  "rho": 0.03028273237612708,
+  "rho_shuf": 0.04316443476323671,
+  "mism": 0
+}

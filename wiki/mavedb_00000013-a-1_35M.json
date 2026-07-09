@@ -1,0 +1,11 @@
+{
+  "source": "MaveDB",
+  "urn": "urn:mavedb:00000013-a-1",
+  "title": "PTEN VAMP-seq",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "protein_len": 403,
+  "n": 4112,
+  "rho": 0.28123475841984585,
+  "rho_shuf": 0.00997923855658321,
+  "mism": 0
+}

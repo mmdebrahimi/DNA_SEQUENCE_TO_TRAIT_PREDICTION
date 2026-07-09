@@ -1,0 +1,14 @@
+{
+  "purpose": "Close the registry gap 'MaveDB needs a real-score scoreset' — validate the MaveDB adapter on REAL experimental (non-imputed) score sets with ESM2-35M zero-shot masked-marginals.",
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "date": "2026-07-08",
+  "results": [
+    {"urn": "urn:mavedb:00000013-a-1", "target": "PTEN", "assay": "VAMP-seq abundance", "design": "single-missense", "n": 4112, "rho": 0.281, "rho_shuffled": 0.010, "mism": 0, "signal": true},
+    {"urn": "urn:mavedb:00000055-a-1", "target": "NUDT15", "assay": "protein stability", "design": "single-missense", "n": 2922, "rho": 0.341, "rho_shuffled": -0.026, "mism": 0, "signal": true},
+    {"urn": "urn:mavedb:00000001-a-2", "target": "UBE2I", "assay": "DMS-BarSeq", "design": "multi-mutant library", "n": 569, "rho": 0.030, "rho_shuffled": 0.043, "mism": 0, "signal": false},
+    {"urn": "urn:mavedb:00000001-a-3", "target": "UBE2I", "assay": "DMS-TileSeq", "design": "multi-mutant library", "n": 2870, "rho": -0.003, "rho_shuffled": -0.011, "mism": 0, "signal": false},
+    {"urn": "urn:mavedb:00000001-a-4", "target": "UBE2I", "assay": "joint data", "design": "multi-mutant library", "n": 2872, "rho": 0.001, "rho_shuffled": 0.007, "mism": 0, "signal": false}
+  ],
+  "finding": "The MaveDB adapter shows real ESM signal on clean single-missense DMS (PTEN VAMP-seq 0.281, NUDT15 stability 0.341 vs ~0 shuffled). Multi-mutant libraries (UBE2I BarSeq/TileSeq/joint) give chance on their small/noisy single-missense subset — this is a data-design property (the raw library scores combinations), NOT an adapter bug (mism=0 throughout). ProteinGym's value-add is precisely the curation into clean single-missense subsets with joint/imputed scores.",
+  "script": "scripts/mavedb_cpu_smoke.py"
+}
