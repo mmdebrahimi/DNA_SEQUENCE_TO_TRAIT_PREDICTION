@@ -58,6 +58,16 @@ def auroc(labels, scores):
     return (sr - npos * (npos + 1) / 2.0) / (npos * nneg)
 
 
+def ranknorm(vals):
+    """Rank-normalize to [0,1] (ties get sequential ranks; fine for ensembling)."""
+    order = sorted(range(len(vals)), key=lambda i: vals[i])
+    r = [0.0] * len(vals)
+    n = len(vals)
+    for rank, i in enumerate(order):
+        r[i] = rank / (n - 1) if n > 1 else 0.5
+    return r
+
+
 def humsavar_labels():
     urllib.request.urlretrieve(
         "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/variants/humsavar.txt",
@@ -146,18 +156,26 @@ def main():
             print(f"{gene}: too few shared ({len(sh)})")
             continue
         y = [lab[v] for v in sh]
-        ae = auroc(y, [-esm[v] for v in sh])
-        aa = auroc(y, [am[(ac, v)] for v in sh])
-        rows.append((gene, ac, len(sh), ae, aa))
-        print(f"{gene:8s} n={len(sh):3d}  ESM_AUROC={ae:.3f}  AM_AUROC={aa:.3f}  "
-              f"gap={aa-ae:+.3f}   (35M was {BASELINE_35M.get(ac, float('nan')):.3f})")
+        esm_p = [-esm[v] for v in sh]          # higher => more pathogenic
+        am_p = [am[(ac, v)] for v in sh]
+        ae = auroc(y, esm_p)
+        aa = auroc(y, am_p)
+        # ENSEMBLE: rank-normalize both pathogenicity-oriented scores to [0,1], average
+        ens = [(a + b) / 2 for a, b in zip(ranknorm(esm_p), ranknorm(am_p))]
+        aen = auroc(y, ens)
+        rows.append((gene, ac, len(sh), ae, aa, aen))
+        print(f"{gene:8s} n={len(sh):3d}  ESM={ae:.3f}  AM={aa:.3f}  ENSEMBLE={aen:.3f}   "
+              f"(35M was {BASELINE_35M.get(ac, float('nan')):.3f})")
     esm_med = statistics.median([r[3] for r in rows])
     am_med = statistics.median([r[4] for r in rows])
+    ens_med = statistics.median([r[5] for r in rows])
     print(f"\nMEDIAN over {len(rows)}: ESM({MODEL.split('_')[2]})={esm_med:.3f}  "
-          f"AlphaMissense={am_med:.3f}  gap={am_med-esm_med:+.3f}  "
-          f"(35M baseline median 0.706; AM 0.823, gap +0.117)")
+          f"AlphaMissense={am_med:.3f}  ENSEMBLE={ens_med:.3f}")
+    print(f"  gap ESM-vs-AM={am_med-esm_med:+.3f} | ensemble lift vs best-single="
+          f"{ens_med-max(esm_med,am_med):+.3f}  (35M baseline median 0.706; AM 0.823)")
     print("VERDICT:", "bigger LM CLOSES the gap" if am_med - esm_med < 0.06
-          else "gap PERSISTS — supervised still wins")
+          else "gap PERSISTS — supervised still wins",
+          "| ENSEMBLE helps" if ens_med > max(esm_med, am_med) + 0.005 else "| ensemble ~= best single")
 
 
 main()
