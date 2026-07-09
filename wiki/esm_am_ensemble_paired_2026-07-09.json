@@ -1,0 +1,176 @@
+{
+ "date": "2026-07-09",
+ "task": "humsavar pathogenic-vs-benign, 7 proteins",
+ "device": "Kaggle GPU (Tesla T4, fp16)",
+ "script": "scripts/kaggle_esm_am_sweep.py",
+ "reproduced_prior_runs_exactly": true,
+ "models": {
+  "esm2_650M": {
+   "esm_median": 0.811,
+   "am_median": 0.823,
+   "ens_median": 0.828,
+   "unpaired_lift": 0.005,
+   "paired_lift_median": -0.002,
+   "paired_lift_mean": -0.0006,
+   "ens_wins": 3,
+   "n_proteins": 7,
+   "per_protein": [
+    {
+     "gene": "MLH1",
+     "uniprot": "P40692",
+     "n": 128,
+     "esm": 0.715,
+     "am": 0.8,
+     "ens": 0.775,
+     "paired_lift": -0.025
+    },
+    {
+     "gene": "MSH2",
+     "uniprot": "P43246",
+     "n": 97,
+     "esm": 0.786,
+     "am": 0.753,
+     "ens": 0.784,
+     "paired_lift": -0.002
+    },
+    {
+     "gene": "PROC",
+     "uniprot": "P04070",
+     "n": 74,
+     "esm": 0.559,
+     "am": 0.523,
+     "ens": 0.551,
+     "paired_lift": -0.008
+    },
+    {
+     "gene": "SLC4A1",
+     "uniprot": "P02730",
+     "n": 74,
+     "esm": 0.904,
+     "am": 0.914,
+     "ens": 0.923,
+     "paired_lift": 0.009
+    },
+    {
+     "gene": "MECP2",
+     "uniprot": "P51608",
+     "n": 71,
+     "esm": 0.937,
+     "am": 0.983,
+     "ens": 0.977,
+     "paired_lift": -0.006
+    },
+    {
+     "gene": "PINK1",
+     "uniprot": "Q9BXM7",
+     "n": 64,
+     "esm": 0.811,
+     "am": 0.823,
+     "ens": 0.828,
+     "paired_lift": 0.005
+    },
+    {
+     "gene": "MYOC",
+     "uniprot": "Q99972",
+     "n": 46,
+     "esm": 0.97,
+     "am": 0.973,
+     "ens": 0.996,
+     "paired_lift": 0.023
+    }
+   ]
+  },
+  "esm2_3B": {
+   "esm_median": 0.834,
+   "am_median": 0.823,
+   "ens_median": 0.835,
+   "unpaired_lift": 0.001,
+   "paired_lift_median": -0.006,
+   "paired_lift_mean": -0.0104,
+   "ens_wins": 2,
+   "n_proteins": 7,
+   "per_protein": [
+    {
+     "gene": "MLH1",
+     "uniprot": "P40692",
+     "n": 128,
+     "esm": 0.671,
+     "am": 0.8,
+     "ens": 0.752,
+     "paired_lift": -0.048
+    },
+    {
+     "gene": "MSH2",
+     "uniprot": "P43246",
+     "n": 97,
+     "esm": 0.684,
+     "am": 0.753,
+     "ens": 0.737,
+     "paired_lift": -0.016
+    },
+    {
+     "gene": "PROC",
+     "uniprot": "P04070",
+     "n": 74,
+     "esm": 0.538,
+     "am": 0.523,
+     "ens": 0.529,
+     "paired_lift": -0.009
+    },
+    {
+     "gene": "SLC4A1",
+     "uniprot": "P02730",
+     "n": 74,
+     "esm": 0.9,
+     "am": 0.914,
+     "ens": 0.912,
+     "paired_lift": -0.002
+    },
+    {
+     "gene": "MECP2",
+     "uniprot": "P51608",
+     "n": 71,
+     "esm": 0.938,
+     "am": 0.983,
+     "ens": 0.977,
+     "paired_lift": -0.006
+    },
+    {
+     "gene": "PINK1",
+     "uniprot": "Q9BXM7",
+     "n": 64,
+     "esm": 0.834,
+     "am": 0.823,
+     "ens": 0.835,
+     "paired_lift": 0.001
+    },
+    {
+     "gene": "MYOC",
+     "uniprot": "Q99972",
+     "n": 46,
+     "esm": 0.97,
+     "am": 0.973,
+     "ens": 0.98,
+     "paired_lift": 0.007
+    }
+   ]
+  }
+ },
+ "finding_ensemble": "Rank-average ESM+AlphaMissense ensembling gives NO paired lift at either scale. 650M: paired median -0.0020, wins 3/7. 3B: paired median -0.0060, wins 2/7. The positive 'lift' printed by the old script (+0.005 / +0.002) was an artifact of differencing medians taken over different proteins.",
+ "finding_scale": "650M -> 3B is a NET REGRESSION on this panel: mean paired delta -0.0210, worse on 4/7, better on 2/7. The 'ESM-3B edges past AlphaMissense' headline (median 0.834 vs 0.823) rests on PINK1, the single protein 3B improves (+0.023) and the median element of both runs. Consistent with the published ProteinGym curve flattening after 650M.",
+ "scale_deltas_650M_to_3B": {
+  "MLH1": -0.044,
+  "MSH2": -0.102,
+  "PROC": -0.021,
+  "SLC4A1": -0.004,
+  "MECP2": 0.001,
+  "PINK1": 0.023,
+  "MYOC": 0.0
+ },
+ "caveats": [
+  "n=7 proteins; AUROC gaps of ~0.01 are within per-protein noise.",
+  "AlphaMissense has home-field advantage (supervised, likely overlaps these clinical labels).",
+  "Only rank-average ensembling tested; a stacked/weighted ensemble needs labels => circular.",
+  "PROC is ~chance for every predictor (0.52-0.56)."
+ ]
+}
