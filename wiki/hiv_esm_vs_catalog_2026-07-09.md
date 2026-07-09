@@ -47,16 +47,32 @@ separate this from the obvious rival:
 | probe | question | result |
 |---|---|---|
 | **A** positional tolerance | are DRM *sites* just unconserved, so anything looks benign? | **No.** DRM positions sit at entropy percentile **0.494** — exactly average conservation. |
-| **B** mutant specificity | does ESM favour the *resistant residue* itself? | **Yes.** Median rank **4.5 / 19** among alternatives (null 10); **55%** are in ESM's top-5 most likely. |
-| **C** the likelihood story | does ESM's log-prob track what actually circulates? | **Yes.** Substitutions seen ≥5× in the cohort: mean log-prob **−3.08** vs **−4.70** unseen (Δ +1.62); ρ(log-prob, empirical count) = **+0.279**. |
+| **B** mutant specificity | does ESM rank the *resistant residue* as likely? | **Yes.** Median rank **4.5 / 19** among alternatives (null 10); **55%** in ESM's top-5. |
+| **C** the likelihood story | does ESM's log-prob track what actually circulates? | **Yes.** Seen-≥5× substitutions: mean log-prob **−3.08** vs **−4.70** unseen (Δ +1.62); ρ = **+0.279**. |
+| **D** the BLOSUM62 control | is *any* of B/C ESM-specific, or just amino-acid exchangeability? | **B is NOT ESM-specific.** BLOSUM62 ranks the same DRMs at **4.0 / 19** — better than ESM's 4.5 — and ESM wins on only **12/38** (BLOSUM better on 18, 8 ties). **C survives:** partial ρ(ESM, count │ BLOSUM) = **+0.218**. |
 
-**This matters for the design rule.** The rival ("don't trust an LM at tolerant sites") would be a
-site-level caveat, fixable by filtering on conservation. The measured explanation is not: the model
-specifically up-weights the resistant residue *at an ordinarily-conserved position*, because that
-residue is part of the circulating variation it was trained on. **No amount of model scale or
-site-filtering repairs that.** The signal is not merely absent — it is **anti-aligned** with
-resistance. Without Control A, the 0.449 would have been misread as "the blind spot is irreducible"
-instead of "the instrument points the wrong way."
+**Probe D is the one that matters, and it overturned this memo's first draft.** The tempting reading
+of B+C was *"ESM specifically up-weights the resistant residue because it has SEEN it"* — a
+memorization story. BLOSUM62, which has never seen an HIV sequence, ranks those same DRMs **as well
+or better**. So B is generic **exchangeability**, not memorization.
+
+**What survives all four:** DRM sites are **ordinarily conserved** (A), and resistance is achieved
+through chemically **conservative** substitutions at those sites (B + D). Any exchangeability- or
+likelihood-based scorer — BLOSUM62 and ESM alike — therefore rates the resistant residue benign. ESM
+retains only a modest independent tie to circulating frequency (partial ρ +0.218), and that is *not*
+what drives the DRM ranking.
+
+**This is the design rule, and it is stronger than either rival.** The blindness is a property of
+**the phenotype**, not of model capacity or of the sites. It is not fixable by scale (650M→3B is
+worse), nor by filtering on conservation (the sites are averagely conserved), nor by swapping in a
+better likelihood model (a 1992 substitution matrix already does it). Evolution reaches resistance
+by the cheapest chemical route available, which is exactly the route every conservation-based scorer
+calls harmless. Expect the same failure for **any** conservation-based predictor on **any**
+antagonistically-selected phenotype.
+
+Without Control A, the 0.449 would have been misread as "the blind spot is irreducible" instead of
+"the instrument points the wrong way." Without Probe D, this memo would have shipped a memorization
+story that a 1992 matrix falsifies.
 
 ## It generalizes across 11 RT drugs, and the exception is instructive
 

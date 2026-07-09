@@ -27,9 +27,23 @@ PROBE B (mutant specificity). Rank of the DRM residue among the 19 non-WT altern
 log-prob (rank 1 = ESM's single most likely substitution). Null median rank = 10.
 
 PROBE C (the likelihood story, direct). Across every (position, substitution) ESM scores, does the
-model's log-prob track the substitution's EMPIRICAL FREQUENCY in the 2272-isolate cohort? A strong
-positive correlation means the LM is reproducing observed circulating variation -- which is exactly
-why it cannot separate R from S: resistant variants ARE the observed variation.
+model's log-prob track the substitution's EMPIRICAL FREQUENCY in the 2272-isolate cohort?
+
+PROBE D (the BLOSUM control -- the one that matters). ESM favours chemically conservative
+substitutions, and conservative substitutions are common in ANY protein. So probes B and C might
+measure generic amino-acid exchangeability rather than anything ESM learned about HIV. Re-run both
+against BLOSUM62:
+  - B: BLOSUM62 ranks the same DRMs at median 4.0/19 vs ESM's 4.5, and ESM is more favourable on
+    only 12/38. **Probe B is fully explained by exchangeability.** ESM is NOT specifically
+    up-weighting the resistant residue; the DRMs are just chemically mild substitutions.
+  - C: partial rho(ESM, count | BLOSUM) = +0.218 (vs partial rho(BLOSUM, count | ESM) = +0.161), so
+    ESM does retain an independent, modest correlation with circulating frequency.
+
+CONCLUSION (what survives all four): DRM sites are ordinarily conserved (A), and resistance is
+achieved through chemically CONSERVATIVE substitutions there (B+D). Any exchangeability- or
+likelihood-based scorer -- BLOSUM62 and ESM alike -- therefore rates the resistant residue benign.
+That is a structural blindness, not a model-capacity problem, and it predicts the same failure for
+any conservation-based predictor on any antagonistically-selected phenotype.
 """
 import csv
 import json
@@ -153,16 +167,59 @@ def main():
     tracks = st.mean(seen) > st.mean(unseen) and rho_obs > 0.2
     print(f"  ESM reproduces circulating variation? {'YES' if tracks else 'NO'}")
 
+    # ---- PROBE D: the BLOSUM control. Is any of this ESM-specific, or just exchangeability? ----
+    from Bio.Align import substitution_matrices as _sm
+    B = _sm.load("BLOSUM62")
+
+    def bl_rank(drm):
+        wt, mut = drm[0], drm[-1]
+        alts = [a for a in AA if a != wt]
+        return sorted(alts, key=lambda a: -B[wt, a]).index(mut) + 1
+
+    drms = sorted(H.NNRTI_RT_MAJOR_DRMS) + NRTI_DRMS
+    pairs = [(mut_rank(d), bl_rank(d)) for d in drms if mut_rank(d)]
+    med_bl = st.median([b for _, b in pairs])
+    esm_better = sum(1 for e, b in pairs if e < b)
+
+    bl_obs = [B[prot[p - 1], aa] for p, aa in obs]
+    r_ec, r_eb, r_bc = rho_obs, spearman(x, bl_obs), spearman(bl_obs, y)
+
+    def partial(rxy, rxz, ryz):
+        d = ((1 - rxz ** 2) * (1 - ryz ** 2)) ** 0.5
+        return (rxy - rxz * ryz) / d if d else float("nan")
+    p_esm = partial(r_ec, r_eb, r_bc)
+    p_bl = partial(r_bc, r_eb, r_ec)
+
+    print("\nPROBE D -- BLOSUM62 control (is ANY of this ESM-specific?)")
+    print(f"  DRM rank: ESM median {med_rank:.1f}/19   BLOSUM median {med_bl:.1f}/19   "
+          f"ESM better on {esm_better}/{len(pairs)}")
+    print(f"  rho(BLOSUM, empirical count) = {r_bc:+.3f}  (ESM was {r_ec:+.3f})")
+    print(f"  PARTIAL rho(ESM, count | BLOSUM) = {p_esm:+.3f}   "
+          f"PARTIAL rho(BLOSUM, count | ESM) = {p_bl:+.3f}")
+    b_is_esm_specific = med_rank < med_bl - 0.5 and esm_better > len(pairs) * 0.6
+    c_survives = p_esm > 0.15
+    print(f"  Probe B ESM-specific? {'YES' if b_is_esm_specific else 'NO -- explained by exchangeability'}")
+    print(f"  Probe C survives the control? {'YES' if c_survives else 'NO'}")
+
     print("\n" + "=" * 74)
-    if specific and tracks:
-        verdict = ("LIKELIHOOD story SUPPORTED. ESM specifically up-weights the resistant residue "
-                   "and its log-prob tracks what circulates. Positional tolerance is "
-                   f"{'also present' if tolerant else 'NOT the explanation'}.")
-    elif tolerant and not specific:
-        verdict = ("POSITIONAL-TOLERANCE story. DRM sites are unconserved; nothing special about "
-                   "the resistant residue. The likelihood claim in CLAUDE.md must be corrected.")
+    if tolerant and not specific:
+        verdict = ("POSITIONAL-TOLERANCE story: DRM sites are unconserved. "
+                   "The likelihood claim must be corrected.")
+    elif specific and not b_is_esm_specific:
+        verdict = ("CONSERVATIVE-SUBSTITUTION story. DRM sites are ordinarily conserved (A), and "
+                   "the resistant residues are chemically MILD substitutions there -- BLOSUM62 "
+                   f"ranks them {med_bl:.1f}/19, no worse than ESM's {med_rank:.1f}/19 (D). So the "
+                   "apparent 'ESM up-weights the resistant residue' is generic exchangeability, "
+                   "NOT evidence the model memorized circulating DRMs. ESM does retain a modest "
+                   f"independent tie to circulating frequency (partial rho {p_esm:+.3f}), but that "
+                   "is not what drives the DRM ranking. Any exchangeability- or likelihood-based "
+                   "scorer is structurally blind here -- a property of the phenotype, not of model "
+                   "capacity.")
+    elif specific and b_is_esm_specific and tracks:
+        verdict = ("MEMORIZATION story SUPPORTED: ESM favours the resistant residue beyond what "
+                   "BLOSUM explains, and tracks circulating variation.")
     else:
-        verdict = "MIXED / neither cleanly supported -- report the components, claim nothing more."
+        verdict = "MIXED -- report the components, claim nothing more."
     print(verdict)
     print("=" * 74)
 
@@ -178,6 +235,14 @@ def main():
                "probeC_mean_logp_unseen": round(st.mean(unseen), 4),
                "probeC_spearman_logp_vs_empirical_count": round(rho_obs, 4),
                "probeC_esm_reproduces_circulating_variation": bool(tracks),
+               "probeD_blosum_drm_median_rank_of_19": med_bl,
+               "probeD_esm_drm_median_rank_of_19": med_rank,
+               "probeD_esm_better_than_blosum_on": f"{esm_better}/{len(pairs)}",
+               "probeD_rho_blosum_vs_empirical_count": round(r_bc, 4),
+               "probeD_partial_rho_esm_given_blosum": round(p_esm, 4),
+               "probeD_partial_rho_blosum_given_esm": round(p_bl, 4),
+               "probeD_probeB_is_esm_specific": bool(b_is_esm_specific),
+               "probeD_probeC_survives_control": bool(c_survives),
                "verdict": verdict},
               open("wiki/hiv_esm_likelihood_probe_2026-07-09.json", "w"), indent=1)
     print("\nwrote wiki/hiv_esm_likelihood_probe_2026-07-09.json")

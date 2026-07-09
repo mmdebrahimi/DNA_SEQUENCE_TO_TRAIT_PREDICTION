@@ -12,5 +12,13 @@
  "probeC_mean_logp_unseen": -4.6979,
  "probeC_spearman_logp_vs_empirical_count": 0.2789,
  "probeC_esm_reproduces_circulating_variation": true,
- "verdict": "LIKELIHOOD story SUPPORTED. ESM specifically up-weights the resistant residue and its log-prob tracks what circulates. Positional tolerance is NOT the explanation."
+ "probeD_blosum_drm_median_rank_of_19": 4.0,
+ "probeD_esm_drm_median_rank_of_19": 4.5,
+ "probeD_esm_better_than_blosum_on": "12/38",
+ "probeD_rho_blosum_vs_empirical_count": 0.2389,
+ "probeD_partial_rho_esm_given_blosum": 0.2177,
+ "probeD_partial_rho_blosum_given_esm": 0.1612,
+ "probeD_probeB_is_esm_specific": false,
+ "probeD_probeC_survives_control": true,
+ "verdict": "CONSERVATIVE-SUBSTITUTION story. DRM sites are ordinarily conserved (A), and the resistant residues are chemically MILD substitutions there -- BLOSUM62 ranks them 4.0/19, no worse than ESM's 4.5/19 (D). So the apparent 'ESM up-weights the resistant residue' is generic exchangeability, NOT evidence the model memorized circulating DRMs. ESM does retain a modest independent tie to circulating frequency (partial rho +0.218), but that is not what drives the DRM ranking. Any exchangeability- or likelihood-based scorer is structurally blind here -- a property of the phenotype, not of model capacity."
 }
