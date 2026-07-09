@@ -133,7 +133,7 @@ def _assay_ranking_loss(model, tok, seq, variants, device, torch, mask_id, aa_id
         for r, p in enumerate(chunk):
             logp_at[p] = torch.log_softmax(logits[r, p].float(), dim=-1)
     scores = torch.stack([logp_at[p][aa_ids[mut]] - logp_at[p][aa_ids[wt]]
-                          for _w, p, mut, _y in variants])
+                          for wt, p, mut, _y in variants])
     ys = [y for _w, _p, _m, y in variants]
     pairs = sample_pairs(len(variants), max_pairs, seed)
     if not pairs:
