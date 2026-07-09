@@ -39,11 +39,24 @@ The two positive controls turn this from a shrug into a diagnosis:
   **0.29**. ESM rates the true resistance mutations as **less** damaging than a random substitution
   there. Only Y181C (0.95), Y188H (0.84) and K103N (0.63) rank high.
 
-**Mechanism.** ESM's masked-marginal is *evolutionary likelihood*, and DRMs are frequently observed:
-they are viable, circulating, and drug-selected, and UniRef contains many drug-experienced HIV RT
-sequences. So the model rates them **likely**, not damaging. The signal is not merely absent — it is
-**anti-aligned** with resistance. Without Control A, the 0.449 would have been misread as "the blind
-spot is irreducible" instead of "the instrument points the wrong way."
+**Mechanism — measured, not inferred** (`scripts/hiv_esm_likelihood_probe.py`,
+`wiki/hiv_esm_likelihood_probe_2026-07-09.json`). ESM's masked-marginal is *evolutionary likelihood*,
+and it rates the resistance mutation as **likely**, not damaging. Three probes on the cached matrix
+separate this from the obvious rival:
+
+| probe | question | result |
+|---|---|---|
+| **A** positional tolerance | are DRM *sites* just unconserved, so anything looks benign? | **No.** DRM positions sit at entropy percentile **0.494** — exactly average conservation. |
+| **B** mutant specificity | does ESM favour the *resistant residue* itself? | **Yes.** Median rank **4.5 / 19** among alternatives (null 10); **55%** are in ESM's top-5 most likely. |
+| **C** the likelihood story | does ESM's log-prob track what actually circulates? | **Yes.** Substitutions seen ≥5× in the cohort: mean log-prob **−3.08** vs **−4.70** unseen (Δ +1.62); ρ(log-prob, empirical count) = **+0.279**. |
+
+**This matters for the design rule.** The rival ("don't trust an LM at tolerant sites") would be a
+site-level caveat, fixable by filtering on conservation. The measured explanation is not: the model
+specifically up-weights the resistant residue *at an ordinarily-conserved position*, because that
+residue is part of the circulating variation it was trained on. **No amount of model scale or
+site-filtering repairs that.** The signal is not merely absent — it is **anti-aligned** with
+resistance. Without Control A, the 0.449 would have been misread as "the blind spot is irreducible"
+instead of "the instrument points the wrong way."
 
 ## It generalizes across 11 RT drugs, and the exception is instructive
 

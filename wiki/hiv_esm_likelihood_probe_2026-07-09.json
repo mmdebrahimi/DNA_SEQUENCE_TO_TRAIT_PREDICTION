@@ -1,0 +1,16 @@
+{
+ "date": "2026-07-09",
+ "model": "facebook/esm2_t33_650M_UR50D",
+ "probeA_all_positions_median_entropy": 2.076,
+ "probeA_drm_positions_median_entropy": 2.0628,
+ "probeA_drm_median_entropy_percentile": 0.4936,
+ "probeA_drm_sites_unusually_tolerant": false,
+ "probeB_drm_median_rank_of_19": 4.5,
+ "probeB_frac_in_top5": 0.5526,
+ "probeB_esm_favours_resistant_residue": true,
+ "probeC_mean_logp_seen": -3.0793,
+ "probeC_mean_logp_unseen": -4.6979,
+ "probeC_spearman_logp_vs_empirical_count": 0.2789,
+ "probeC_esm_reproduces_circulating_variation": true,
+ "verdict": "LIKELIHOOD story SUPPORTED. ESM specifically up-weights the resistant residue and its log-prob tracks what circulates. Positional tolerance is NOT the explanation."
+}
