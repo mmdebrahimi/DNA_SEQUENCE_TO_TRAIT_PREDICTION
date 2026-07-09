@@ -17,8 +17,23 @@ HOW TO RUN ON KAGGLE
 Data: range-reads only the 43 MB nested substitutions zip + ref.csv from the 11 GB Zenodo record
 (no 11 GB download), via `remotezip`. Reads only; writes nothing outside the session.
 
-Published ESM2 zero-shot median Spearman on ProteinGym substitution (for context):
-  35M ~0.38 | 150M ~0.43 | 650M ~0.47 | 3B ~0.48 | 15B ~0.48-0.49   (curve flattens after 650M)
+Reference ESM2 zero-shot numbers, recomputed 2026-07-09 from ProteinGym's own per-assay CSV
+(benchmarks/DMS_zero_shot/substitutions/Spearman/DMS_substitutions_Spearman_DMS_level.csv, 217 assays):
+
+  model | per-assay MEDIAN | per-assay mean | published Average_Spearman
+   35M  |      0.349       |     0.319      |     0.321
+  150M  |      0.451       |     0.401      |     0.387
+  650M  |    **0.484**     |     0.438      |     0.414     <- PEAK of the ESM2 family
+    3B  |      0.467       |     0.432      |     0.406
+   15B  |      0.438       |     0.425      |     0.400
+
+Scale does NOT flatten after 650M -- it REGRESSES. 650M is the best ESM2 checkpoint on this
+benchmark, and 3B/15B are monotonically worse on all three aggregations.
+
+Compare THIS script's output against the per-assay MEDIAN column (it prints a plain per-assay
+median + mean). The published Average_Spearman is NOT a per-assay mean: it is the mean of the 5
+function-category averages (Activity/Binding/Expression/OrganismalFitness/Stability), which is why
+650M reads 0.414 there but 0.438 as a plain mean. Do not compare the two directly.
 """
 import io
 import re
@@ -167,7 +182,10 @@ def main():
                   f"rho={rho:+.3f}  running median={statistics.median(rhos):.3f}")
     print(f"\nMEDIAN Spearman over {len(rhos)} assays = {statistics.median(rhos):.3f}  "
           f"(mean {statistics.mean(rhos):.3f})   model={MODEL.split('_')[2]}")
-    print("Leaderboard ESM2 zero-shot median (substitution): 650M ~0.47 | 3B ~0.48 | 15B ~0.48-0.49")
+    print("ProteinGym per-assay reference (217 assays)  median | mean:")
+    print("  ESM2 650M 0.484 | 0.438   <- peak      ESM2 3B 0.467 | 0.432   ESM2 15B 0.438 | 0.425")
+    print("  Scale REGRESSES past 650M. Do not compare to the published Average_Spearman (0.414 for")
+    print("  650M) -- that is the mean of 5 function-category averages, not a per-assay mean.")
 
 
 main()
