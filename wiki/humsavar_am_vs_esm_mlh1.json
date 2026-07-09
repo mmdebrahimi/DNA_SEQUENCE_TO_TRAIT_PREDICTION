@@ -1,0 +1,15 @@
+{
+  "comparison": "AlphaMissense (supervised) vs ESM2-35M masked-marginal (zero-shot)",
+  "task": "humsavar pathogenic-vs-benign discrimination",
+  "protein": "MLH1/P40692",
+  "n": 128,
+  "n_path": 83,
+  "n_benign": 45,
+  "esm2_35M": { "auroc": 0.666, "abs_rho": 0.275 },
+  "alphamissense": { "auroc": 0.800, "abs_rho": 0.497 },
+  "delta_auroc_am_minus_esm": 0.134,
+  "finding": "On independent clinical pathogenicity labels, the supervised predictor beats the zero-shot LM by +13.4pp AUROC — consistent with the molecular-property regime boundary (learned/AlphaMissense wins).",
+  "caveat": "Single protein (MLH1, n=128). AlphaMissense training data likely overlaps clinical/population labels (home-field advantage), so this is a zero-shot-LM vs supervised-predictor comparison, NOT a held-out independent test for AlphaMissense. ESM |rho|=0.275 here vs 0.314 in the standalone pilot differs only by the inline-vs-score_assay masked-marginal implementation.",
+  "script": "scripts/humsavar_am_vs_esm.py",
+  "date": "2026-07-08"
+}
