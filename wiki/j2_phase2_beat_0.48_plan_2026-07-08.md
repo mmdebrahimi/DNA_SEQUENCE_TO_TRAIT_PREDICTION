@@ -1,5 +1,51 @@
 # J2 Phase 2 — beat ESM-2 ProteinGym 0.48 on FREE compute (pre-registered, 2026-07-08)
 
+> ## STATUS 2026-07-09: **RESOLVED — bar already met; Lever 1 FALSIFIED. Do not run this plan as written.**
+>
+> The pre-registration below is preserved verbatim (it is a pre-registration; it gets annotated, never
+> rewritten). What actually happened, from a real Kaggle T4 run over all 217 assays
+> (`wiki/proteingym_esm2_650m_full_2026-07-09.md`):
+>
+> **1. The PASS bar is already cleared by the FROZEN 650M, with zero levers applied.** Our run scored
+> **median 0.490** over 217/217 assays (windowing on, no ensemble, no 3B) against the pre-registered bar
+> of `median |Spearman| > 0.48`. Only 3/217 assays have negative rho, so the signed median equals the
+> |rho| median — apples-to-apples. **Phase 2's goal is met without spending a single lever.**
+>
+> **2. Lever 1 ("ESM2-3B … 650M ≈0.48 → 3B ≈0.51 (published). HIGH — the certain beat") is WRONG, and
+> wrong in direction.** Recomputed from ProteinGym's own per-assay CSV (vendored at
+> `wiki/refs/proteingym_v1.3_DMS_level_Spearman.csv`):
+>
+> | ESM2 | per-assay median | published `Average_Spearman` |
+> |---|---|---|
+> | **650M** | **0.484** | 0.414 |
+> | 3B | 0.467 | 0.406 |
+> | 15B | 0.438 | 0.400 |
+>
+> **650M is the PEAK of the ESM2 family.** Running Lever 1 would burn 1–3 GPU-h to score *below* the bar,
+> and would read as a project failure when it is a known, published regression. Independently corroborated
+> on humsavar: 650M → 3B is worse on 4/7 proteins, mean paired delta −0.021
+> (`wiki/esm_am_ensemble_paired_2026-07-09.md`).
+>
+> **3. Lever 2 (long-protein windowing) is already done** and is included in the 0.490 —
+> `scripts/kaggle_proteingym_sweep.py` windows proteins >1022 aa; 217/217 scored, 0 dropped, 0 errors.
+>
+> **4. Lever 3 (650M + 3B ensemble) now has a weak prior**, since it would ensemble the peak checkpoint
+> with a strictly worse one. Not formally falsified — cross-*checkpoint* rank-averaging is a different
+> pairing from the cross-*method* ESM+AlphaMissense ensemble that showed no paired lift — but it is no
+> longer a "med-HIGH" bet. If run, judge it on the **paired** per-assay delta vs best-single, never on a
+> difference of medians (that error is what produced the false "ENSEMBLE helps" verdict; see `b82aa79`).
+>
+> **Where the real headroom is** (official leaderboard; ESM2-650M is rank 45 / 97):
+>
+> | direction | ceiling | delta vs 650M |
+> |---|---|---|
+> | same modality (single sequence) | 0.458 (VespaG, rank 16) | +0.044 |
+> | **+ structure** (ProSST, rank 3) | **0.507** | **+0.093** |
+> | + MSA / retrieval (rank 1–2) | 0.518 | +0.104 |
+>
+> Scale is dead; naive score-averaging is dead. The remaining levers are **modality** (structure, MSA) and
+> **training** (Phase 2b LoRA) — not more parameters.
+
 **Goal:** improve our genomics world model in the ONE regime where a learned model is *supposed* to win —
 molecular-property (protein variant-effect) — by beating the published ESM2-650M ProteinGym zero-shot
 number (**median |Spearman| ≈ 0.48**) on a **free** T4/P100 kernel. No money, no training in this phase

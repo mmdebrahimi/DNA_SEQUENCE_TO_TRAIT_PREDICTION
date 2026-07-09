@@ -1,5 +1,22 @@
 # J2 Phase 2b — LoRA fine-tune ESM-2 (genuine training), pre-registered 2026-07-08
 
+> **UPDATE 2026-07-09 — Phase 2b is now the ONLY surviving lever of the two J2 plans, and its premise is
+> unchanged.** Phase 2's scaling lever is falsified (ESM2 peaks at 650M; 3B and 15B regress) and its bar was
+> already met by the frozen 650M at median 0.490. See the STATUS block in
+> `wiki/j2_phase2_beat_0.48_plan_2026-07-08.md`.
+>
+> Two corrections to the framing below:
+> - **The backbone must stay 650M**, not 3B. 650M is the peak ESM2 checkpoint (per-assay median 0.484 vs
+>   3B 0.467). The plan already defaults to 650M and calls 3B "the stretch" — that stretch is now a
+>   known-worse base and should be dropped, not attempted.
+> - **The zero-shot comparator is per-fold, not the global 0.48** — the plan already gets this right
+>   (base vs adapted on the *identical* held-out assays). Do not compare a fold's number to 0.490 either.
+>
+> A fair reference for how much a *learned* single-sequence method can buy: **VespaG reaches 0.458 average
+> (rank 16) vs ESM2-650M's 0.414 (rank 45)** — same modality, no structure, no MSA. That is the realistic
+> ceiling for this lever, roughly +0.04, and it is the number Phase 2b should be judged against, not the
+> 0.507–0.518 achieved by structure- and MSA-augmented models.
+
 The deeper world-model bet. Phase 2 beats 0.48 by scaling/combining **frozen** open weights (inference).
 Phase 2b asks: **does LoRA-adapting the ESM-2 backbone teach it transferable variant-effect biology that
 generalizes to proteins it never trained on?** That is the genuine "improve the world model" claim.
