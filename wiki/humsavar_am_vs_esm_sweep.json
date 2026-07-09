@@ -1,0 +1,75 @@
+{
+  "model": "facebook/esm2_t12_35M_UR50D",
+  "n_proteins": 7,
+  "esm_median_auroc": 0.706,
+  "am_median_auroc": 0.823,
+  "median_gap": 0.117,
+  "am_wins": 6,
+  "per_protein": [
+    {
+      "uniprot": "P40692",
+      "n": 128,
+      "n_path": 83,
+      "n_benign": 45,
+      "esm_auroc": 0.666,
+      "am_auroc": 0.8,
+      "gap": 0.134
+    },
+    {
+      "uniprot": "P43246",
+      "n": 97,
+      "n_path": 61,
+      "n_benign": 36,
+      "esm_auroc": 0.75,
+      "am_auroc": 0.753,
+      "gap": 0.003
+    },
+    {
+      "uniprot": "P04070",
+      "n": 74,
+      "n_path": 36,
+      "n_benign": 38,
+      "esm_auroc": 0.531,
+      "am_auroc": 0.523,
+      "gap": -0.007
+    },
+    {
+      "uniprot": "P02730",
+      "n": 74,
+      "n_path": 39,
+      "n_benign": 35,
+      "esm_auroc": 0.848,
+      "am_auroc": 0.914,
+      "gap": 0.066
+    },
+    {
+      "uniprot": "P51608",
+      "n": 71,
+      "n_path": 47,
+      "n_benign": 24,
+      "esm_auroc": 0.728,
+      "am_auroc": 0.983,
+      "gap": 0.255
+    },
+    {
+      "uniprot": "Q9BXM7",
+      "n": 64,
+      "n_path": 23,
+      "n_benign": 41,
+      "esm_auroc": 0.706,
+      "am_auroc": 0.823,
+      "gap": 0.117
+    },
+    {
+      "uniprot": "Q99972",
+      "n": 46,
+      "n_path": 21,
+      "n_benign": 25,
+      "esm_auroc": 0.531,
+      "am_auroc": 0.973,
+      "gap": 0.442
+    }
+  ],
+  "task": "humsavar pathogenic-vs-benign",
+  "date": "2026-07-08"
+}

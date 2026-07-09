@@ -40,7 +40,7 @@ Reachability verified today; all catalog-only (too big to commit / not variant-l
 
 | Source | Access | Scale (verified) | Role |
 |---|---|---|---|
-| **AlphaMissense** | `storage.googleapis.com/dm_alphamissense/AlphaMissense_aa_substitutions.tsv.gz` | **1.2 GB** (stream-filter per UniProt) | Per-variant pathogenicity **predictor** — baseline to beat. **Head-to-head run (MLH1, n=128):** AlphaMissense AUROC **0.800** > ESM2-35M **0.666** (+13.4 pp) — supervised beats zero-shot on clinical pathogenicity (`scripts/humsavar_am_vs_esm.py`, `wiki/humsavar_am_vs_esm_mlh1.json`). Caveat: AM's training likely overlaps clinical labels (home-field advantage). |
+| **AlphaMissense** | `storage.googleapis.com/dm_alphamissense/AlphaMissense_aa_substitutions.tsv.gz` | **1.2 GB** (stream-filter per UniProt) | Per-variant pathogenicity **predictor** — baseline to beat. **Head-to-head (7 proteins):** median AUROC AlphaMissense **0.823** > ESM2-35M **0.706** (+11.7 pp; AM wins 6/7) — supervised beats zero-shot on clinical pathogenicity (`scripts/humsavar_am_vs_esm{,_sweep}.py`, `wiki/humsavar_am_vs_esm_sweep.json`). Caveat: AM's training likely overlaps clinical labels (home-field advantage). |
 | **DepMap** (CRISPR gene effect) | figshare (`ndownloader.figshare.com/files/43346616`, 302→S3) | redirect | Gene-**essentiality** fitness across cell lines — a *different* phenotype axis (gene-level, not missense) |
 | **gnomAD constraint** | `storage.googleapis.com/gcp-public-data--gnomad/release/4.1/constraint/…tsv` | **95 MB** | Population variant-**tolerance** proxy (o/e, pLI) — gene-level; weak-label for missense tolerance |
 
