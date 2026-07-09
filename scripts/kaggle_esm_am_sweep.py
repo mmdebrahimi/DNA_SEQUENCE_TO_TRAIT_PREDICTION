@@ -171,13 +171,20 @@ def main():
     esm_med = statistics.median([r[3] for r in rows])
     am_med = statistics.median([r[4] for r in rows])
     ens_med = statistics.median([r[5] for r in rows])
+    # Ensemble lift MUST be paired. median(ENS) - max(median(ESM), median(AM)) takes its
+    # medians over different proteins, so it reports a "lift" even when the ensemble loses
+    # on most proteins (650M: unpaired +0.005, but 4/7 paired losses, mean delta -0.0006).
+    lifts = [r[5] - max(r[3], r[4]) for r in rows]
+    lift_med, wins = statistics.median(lifts), sum(l > 0 for l in lifts)
     print(f"\nMEDIAN over {len(rows)}: ESM({MODEL.split('_')[2]})={esm_med:.3f}  "
           f"AlphaMissense={am_med:.3f}  ENSEMBLE={ens_med:.3f}")
-    print(f"  gap ESM-vs-AM={am_med-esm_med:+.3f} | ensemble lift vs best-single="
-          f"{ens_med-max(esm_med,am_med):+.3f}  (35M baseline median 0.706; AM 0.823)")
+    print(f"  gap ESM-vs-AM (median)={am_med-esm_med:+.3f}   (35M baseline median 0.706; AM 0.823)")
+    print(f"  PAIRED ensemble lift vs best-single: median={lift_med:+.4f} "
+          f"mean={statistics.mean(lifts):+.4f} wins={wins}/{len(rows)}")
     print("VERDICT:", "bigger LM CLOSES the gap" if am_med - esm_med < 0.06
           else "gap PERSISTS — supervised still wins",
-          "| ENSEMBLE helps" if ens_med > max(esm_med, am_med) + 0.005 else "| ensemble ~= best single")
+          "| ENSEMBLE helps" if lift_med > 0.005 and wins > len(rows) / 2
+          else "| ensemble ~= best single (no paired lift)")
 
 
 main()
