@@ -1,0 +1,23 @@
+{
+  "model": "facebook/esm2_t36_3B_UR50D",
+  "device": "kaggle GPU (T4, fp16)",
+  "task": "humsavar pathogenic-vs-benign",
+  "date": "2026-07-08",
+  "n_proteins": 7,
+  "esm_median_auroc": 0.834,
+  "am_median_auroc": 0.823,
+  "median_gap": -0.011,
+  "esm_beats_am": 2,
+  "per_protein": [
+    {"uniprot": "P40692", "gene": "MLH1",   "n": 128, "esm_auroc": 0.671, "am_auroc": 0.800, "gap": 0.129, "esm_35M": 0.666, "esm_650M": 0.715},
+    {"uniprot": "P43246", "gene": "MSH2",   "n": 97,  "esm_auroc": 0.684, "am_auroc": 0.753, "gap": 0.069, "esm_35M": 0.750, "esm_650M": 0.786},
+    {"uniprot": "P04070", "gene": "PROC",   "n": 74,  "esm_auroc": 0.538, "am_auroc": 0.523, "gap": -0.015, "esm_35M": 0.531, "esm_650M": 0.559},
+    {"uniprot": "P02730", "gene": "SLC4A1", "n": 74,  "esm_auroc": 0.900, "am_auroc": 0.914, "gap": 0.015, "esm_35M": 0.848, "esm_650M": 0.904},
+    {"uniprot": "P51608", "gene": "MECP2",  "n": 71,  "esm_auroc": 0.938, "am_auroc": 0.983, "gap": 0.045, "esm_35M": 0.728, "esm_650M": 0.937},
+    {"uniprot": "Q9BXM7", "gene": "PINK1",  "n": 64,  "esm_auroc": 0.834, "am_auroc": 0.823, "gap": -0.011, "esm_35M": 0.706, "esm_650M": 0.811},
+    {"uniprot": "Q99972", "gene": "MYOC",   "n": 46,  "esm_auroc": 0.970, "am_auroc": 0.973, "gap": 0.004, "esm_35M": 0.531, "esm_650M": 0.970}
+  ],
+  "finding": "ESM2-3B median AUROC 0.834 slightly EXCEEDS AlphaMissense 0.823 (gap -0.011); the zero-shot LM now edges the supervised predictor on the median. Full scale trajectory: 35M 0.706 -> 650M 0.811 -> 3B 0.834, crossing AM's 0.823.",
+  "caveat": "n=7. The crossing is THIN (-0.011) and 3B is NOT uniformly better than 650M — MLH1 (0.671<0.715) and MSH2 (0.684<0.786) regressed vs 650M while PINK1 gained (0.834>0.811); per-protein noise at n=7. AlphaMissense retains home-field advantage (training likely overlaps these clinical labels), so a zero-shot LM edging it is the notable result. PROC stays ~chance for both.",
+  "script": "scripts/kaggle_esm_am_sweep.py"
+}
