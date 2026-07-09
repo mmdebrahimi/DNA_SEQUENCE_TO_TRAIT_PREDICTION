@@ -1,0 +1,24 @@
+{
+  "model": "facebook/esm2_t33_650M_UR50D",
+  "device": "kaggle GPU (T4, fp16)",
+  "task": "humsavar pathogenic-vs-benign",
+  "date": "2026-07-08",
+  "n_proteins": 7,
+  "esm_median_auroc": 0.811,
+  "am_median_auroc": 0.823,
+  "median_gap": 0.012,
+  "am_wins": 4,
+  "esm_wins": 2,
+  "per_protein": [
+    {"uniprot": "P40692", "gene": "MLH1",   "n": 128, "esm_auroc": 0.715, "am_auroc": 0.800, "gap": 0.086, "esm_35M": 0.666},
+    {"uniprot": "P43246", "gene": "MSH2",   "n": 97,  "esm_auroc": 0.786, "am_auroc": 0.753, "gap": -0.033, "esm_35M": 0.750},
+    {"uniprot": "P04070", "gene": "PROC",   "n": 74,  "esm_auroc": 0.559, "am_auroc": 0.523, "gap": -0.036, "esm_35M": 0.531},
+    {"uniprot": "P02730", "gene": "SLC4A1", "n": 74,  "esm_auroc": 0.904, "am_auroc": 0.914, "gap": 0.010, "esm_35M": 0.848},
+    {"uniprot": "P51608", "gene": "MECP2",  "n": 71,  "esm_auroc": 0.937, "am_auroc": 0.983, "gap": 0.046, "esm_35M": 0.728},
+    {"uniprot": "Q9BXM7", "gene": "PINK1",  "n": 64,  "esm_auroc": 0.811, "am_auroc": 0.823, "gap": 0.012, "esm_35M": 0.706},
+    {"uniprot": "Q99972", "gene": "MYOC",   "n": 46,  "esm_auroc": 0.970, "am_auroc": 0.973, "gap": 0.004, "esm_35M": 0.531}
+  ],
+  "finding": "Scaling the zero-shot LM from 35M to 650M collapses the AlphaMissense gap from +0.117 to +0.012 (near-parity), and ESM-650M BEATS AlphaMissense on 2/7 proteins (MSH2, PROC). The earlier 'supervised beats zero-shot on clinical pathogenicity' was a MODEL-SIZE artifact at 35M, NOT a fundamental regime property. Largest per-protein lifts: MYOC 0.531->0.970, MECP2 0.728->0.937, SLC4A1 0.848->0.904.",
+  "caveat": "AlphaMissense retains a home-field advantage (its training likely overlaps these clinical labels), so a zero-shot LM reaching parity DESPITE that is the notable result. PROC stays hard for both (0.559/0.523) — a genuinely low-signal protein, not a model-size issue.",
+  "script": "scripts/kaggle_esm_am_sweep.py"
+}
