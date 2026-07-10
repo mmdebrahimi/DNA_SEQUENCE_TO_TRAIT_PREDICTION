@@ -5,31 +5,30 @@ sub-step 1 only when the falsifier verdict is PASS. Codex on the Precision 7780
 runs this (Docker Desktop + Mash image required); Claude on the GTX 860M laptop
 drafts + tests the pure-logic helpers locally.
 
-Threshold sweep (per brainstorm B5):
-  sweep [0.02, 0.03, 0.04, 0.05, 0.07, 0.10]
+Threshold sweep (per brainstorm B5, HARDENED 2026-07-10):
+  sweep [0.005, 0.008, 0.010, 0.015, 0.02, 0.03, 0.04, 0.05, 0.07, 0.10]
   pick = the threshold satisfying ALL of:
     - n_clades >= 3
     - max-clade fraction < 0.60 (no single clade dominates)
-    - intra-clade-vs-inter-clade variance ratio MINIMIZED (lower = clades tight + well separated).
-      NOTE: this docstring previously said "maximized"; the implementation and its tests MINIMIZE.
-      Corrected 2026-07-09.
+    - singleton fraction <= 0.20 (OVER-SPLIT GUARD)
+    - intra-clade-vs-inter-clade variance ratio MINIMIZED (lower = clades tight + well separated)
   fallback = 0.05 (matches plan default, flagged in JSON sidecar)
+  clustering = `clonality.greedy_representative_clusters_from_matrix` (chaining-resistant)
 
-KNOWN DEFECTS (documented 2026-07-09, deliberately NOT fixed here -- the selection rule feeds downstream
-contracts, so the fix is surfaced for ratification. See
-`wiki/cipro_mash_clades_n147_threshold_diagnostic_2026-07-09.md`):
-  1. 0.02 is the GRID FLOOR and, on the real N=147 cohort, the ONLY qualifying rung -- so the chosen
-     threshold is a boundary artifact. It yields a 57.8%-largest clade, which makes leave-one-clade-out
-     CV effectively leave-58%-out. (0.015 would beat it at the 4th decimal if merely added.)
+The three defects documented in `wiki/cipro_mash_clades_n147_threshold_diagnostic_2026-07-09.md` are FIXED
+here (2026-07-10), in the order the diagnostic required -- guard FIRST, then grid, then method:
+  1. The grid floor (0.02) was the only qualifying rung on the real N=147 cohort, so the "chosen" threshold
+     was a boundary artifact yielding a 57.8%-largest clade (leave-one-clade-out == leave-58%-out).
+     -> grid extended down to 0.005.
   2. `variance_ratio` -> 0 as clusters -> singletons, so MINIMIZING it is monotonically biased toward
-     over-splitting. Extending the grid downward WITHOUT an over-split guard (max singleton fraction /
-     min clade size) selects 0.002 -> 101 clades, 56.5% singletons. The coarse grid is load-bearing by
-     accident; the qualifying criteria guard only against a dominant clade, never against over-splitting.
-  3. `cluster_by_ani` is single-linkage and CHAINS (at 0.015 it reports a 57.8% clade where
-     `clonality.greedy_representative_clusters_from_matrix` reports 31.3%). The greedy-representative
-     method is the chaining-resistant one the frozen lineage layer uses.
-  Also: a missing FASTA is WARN-and-skipped, so an incomplete refseq cache silently clusters a subset
-  (43 of 146 accessions were cached before the 2026-07-09 run fetched the rest).
+     over-splitting; extending the grid alone would have selected 0.002 (101 clades, 56.5% singletons).
+     -> MAX_SINGLETON_FRACTION guard added; the qualifying criteria now bound BOTH degenerate ends.
+  3. `cluster_by_ani` is single-linkage and CHAINS (at 0.015: 57.8% largest clade vs greedy-rep's 31.3%).
+     -> main() now clusters with the chaining-resistant greedy-representative method the frozen lineage
+     layer uses.
+  Still true: a missing FASTA is WARN-and-skipped, so an incomplete refseq cache silently clusters a
+  subset (43 of 146 accessions were cached before the 2026-07-09 run fetched the rest). Verify the cache
+  is complete before trusting the artifact.
 
 Outputs:
   wiki/cipro_mash_clades_n147_<DATE>.json  (machine-readable: clade per strain + scoring summary)
@@ -48,10 +47,20 @@ from pathlib import Path
 import numpy as np
 
 
-CANDIDATE_THRESHOLDS: tuple[float, ...] = (0.02, 0.03, 0.04, 0.05, 0.07, 0.10)
+# Grid EXTENDED downward 2026-07-10. The old floor (0.02) was the only qualifying rung on the real
+# N=147 cohort, so the "chosen" threshold was a grid-boundary artifact yielding a 57.8%-largest clade.
+# Extending the grid is only SAFE alongside the over-split guard below: `variance_ratio` -> 0 as clusters
+# -> singletons, so minimizing it alone would now select 0.002 (101 clades, 56.5% singletons).
+CANDIDATE_THRESHOLDS: tuple[float, ...] = (0.005, 0.008, 0.010, 0.015, 0.02, 0.03, 0.04, 0.05, 0.07, 0.10)
 FALLBACK_THRESHOLD: float = 0.05
 MIN_CLADES: int = 3
 MAX_SINGLE_CLADE_FRACTION: float = 0.60
+# OVER-SPLIT GUARD (added 2026-07-10). A partition where >20% of strains are their own clade offers no
+# held-out clade structure — leave-one-clade-out degenerates toward leave-one-strain-out. Derived from the
+# observed N=147 curve, which separates the regimes by a wide margin: 0.005 -> 27.2% singletons (69 clades
+# over 147 strains, ~2.1 strains/clade) vs 0.008 -> 14.3% (45 clades, ~3.3 strains/clade). It is a
+# STRUCTURE bound, not a bound on any scored metric.
+MAX_SINGLETON_FRACTION: float = 0.20
 
 
 @dataclass(frozen=True)
@@ -64,10 +73,13 @@ class ThresholdScore:
     variance_ratio: float  # intra-clade variance / inter-clade variance (smaller = tighter)
     satisfies_min_clades: bool
     satisfies_max_fraction: bool
+    singleton_fraction: float = 0.0
+    satisfies_max_singleton_fraction: bool = True
 
     @property
     def fully_satisfied(self) -> bool:
-        return self.satisfies_min_clades and self.satisfies_max_fraction
+        return (self.satisfies_min_clades and self.satisfies_max_fraction
+                and self.satisfies_max_singleton_fraction)
 
 
 def score_threshold(
@@ -90,12 +102,15 @@ def score_threshold(
             variance_ratio=float("nan"),
             satisfies_min_clades=False,
             satisfies_max_fraction=False,
+            singleton_fraction=0.0,
+            satisfies_max_singleton_fraction=False,
         )
 
     cluster_sizes = Counter(cluster_assignments.values())
     n_clades = len(cluster_sizes)
     max_clade_size = max(cluster_sizes.values())
     max_clade_fraction = max_clade_size / n
+    singleton_fraction = sum(1 for sz in cluster_sizes.values() if sz == 1) / n
 
     # Compute variance ratio
     intra_dists: list[float] = []
@@ -122,6 +137,8 @@ def score_threshold(
         variance_ratio=variance_ratio,
         satisfies_min_clades=n_clades >= MIN_CLADES,
         satisfies_max_fraction=max_clade_fraction < MAX_SINGLE_CLADE_FRACTION,
+        singleton_fraction=singleton_fraction,
+        satisfies_max_singleton_fraction=singleton_fraction <= MAX_SINGLETON_FRACTION,
     )
 
 
@@ -198,10 +215,8 @@ def main(argv: list[str] | None = None) -> int:
 
     from dna_decode.data.cohort import load_cohort
     from dna_decode.data.refseq import fasta_path
-    from dna_decode.eval.phylogeny import (
-        cluster_by_ani,
-        compute_mash_distances,
-    )
+    from dna_decode.eval.clonality import greedy_representative_clusters_from_matrix
+    from dna_decode.eval.phylogeny import compute_mash_distances
 
     cohort = load_cohort(args.cohort)
     drug_lower = args.drug.lower()
@@ -224,15 +239,17 @@ def main(argv: list[str] | None = None) -> int:
           f"(docker={args.use_docker})")
     dm = compute_mash_distances(strain_genomes, use_docker=args.use_docker)
 
+    # greedy-representative (chaining-resistant), NOT single-linkage cluster_by_ani -- see module docstring.
+    def _cluster(t: float) -> dict[str, int]:
+        return greedy_representative_clusters_from_matrix(dm, t)
+
     chosen, all_scores, fellback = pick_best_threshold(
-        dm.matrix,
-        dm.strain_ids,
-        cluster_at_threshold_fn=lambda t: cluster_by_ani(dm, threshold=t),
+        dm.matrix, dm.strain_ids, cluster_at_threshold_fn=_cluster,
     )
     print(f"[mash-cluster] chose threshold={chosen:.3f} "
           f"(fellback_to_default={fellback})")
 
-    final_assignments = cluster_by_ani(dm, threshold=chosen)
+    final_assignments = _cluster(chosen)
     clade_balance = per_clade_label_balance(final_assignments, labels_by_strain)
 
     # ---- JSON sidecar ----
@@ -249,14 +266,18 @@ def main(argv: list[str] | None = None) -> int:
         "fellback_to_default": fellback,
         "min_clades_required": MIN_CLADES,
         "max_single_clade_fraction": MAX_SINGLE_CLADE_FRACTION,
+        "max_singleton_fraction": MAX_SINGLETON_FRACTION,
+        "clustering_method": "greedy_representative_clusters_from_matrix (chaining-resistant)",
         "candidate_threshold_scores": [
             {
                 "threshold": s.threshold,
                 "n_clades": s.n_clades,
                 "max_clade_fraction": s.max_clade_fraction,
+                "singleton_fraction": s.singleton_fraction,
                 "variance_ratio": s.variance_ratio,
                 "satisfies_min_clades": s.satisfies_min_clades,
                 "satisfies_max_fraction": s.satisfies_max_fraction,
+                "satisfies_max_singleton_fraction": s.satisfies_max_singleton_fraction,
                 "fully_satisfied": s.fully_satisfied,
             }
             for s in all_scores
@@ -277,15 +298,17 @@ def main(argv: list[str] | None = None) -> int:
         "",
         "## Threshold-sweep scoring",
         "",
-        "| threshold | n_clades | max_clade_frac | variance_ratio | min_clades_ok | max_frac_ok | qualified |",
-        "|---:|---:|---:|---:|:---:|:---:|:---:|",
+        "| threshold | n_clades | max_clade_frac | singleton_frac | variance_ratio | min_clades_ok | "
+        "max_frac_ok | singleton_ok | qualified |",
+        "|---:|---:|---:|---:|---:|:---:|:---:|:---:|:---:|",
     ]
     for s in all_scores:
         lines.append(
             f"| {s.threshold:.3f} | {s.n_clades} | {s.max_clade_fraction:.3f} | "
-            f"{s.variance_ratio:.4f} | "
+            f"{s.singleton_fraction:.3f} | {s.variance_ratio:.4f} | "
             f"{'Y' if s.satisfies_min_clades else 'n'} | "
             f"{'Y' if s.satisfies_max_fraction else 'n'} | "
+            f"{'Y' if s.satisfies_max_singleton_fraction else 'n'} | "
             f"{'Y' if s.fully_satisfied else 'n'} |"
         )
     lines += ["", "## Per-clade R/S balance", "", "| clade_id | n | R | S | unknown | R_fraction |", "|---:|---:|---:|---:|---:|---:|"]

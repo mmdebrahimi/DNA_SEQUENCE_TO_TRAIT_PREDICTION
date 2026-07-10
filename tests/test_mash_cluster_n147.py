@@ -175,3 +175,90 @@ def test_per_clade_label_balance_handles_missing_strain():
     labels = {"a": 1}  # "b" missing
     balance = per_clade_label_balance(assignments, labels)
     assert balance[0] == {"R": 1, "S": 0, "unknown": 1, "n": 2}
+
+
+# ============================================================================================
+# Over-split guard (added 2026-07-10). The qualifying criteria previously bounded only ONE
+# degenerate end (a dominant clade). `variance_ratio = intra/inter` -> 0 as clusters -> singletons,
+# so MINIMIZING it is monotonically biased toward over-splitting; the coarse grid floor was the only
+# thing preventing selection of a near-singleton partition. These pin BOTH ends.
+# ============================================================================================
+
+def _singleton_heavy_assignments(n: int, n_singletons: int) -> dict[str, int]:
+    """`n_singletons` strains each alone; the rest share one clade."""
+    out = {f"s_{i}": i for i in range(n_singletons)}
+    for i in range(n_singletons, n):
+        out[f"s_{i}"] = n_singletons
+    return out
+
+
+def test_score_threshold_reports_singleton_fraction():
+    from scripts.mash_cluster_n147 import score_threshold
+
+    strain_ids = [f"s_{i}" for i in range(10)]
+    matrix = np.full((10, 10), 0.2, dtype=np.float32)
+    np.fill_diagonal(matrix, 0.0)
+    sc = score_threshold(matrix, _singleton_heavy_assignments(10, 3), strain_ids, 0.01)
+    assert sc.singleton_fraction == pytest.approx(0.3)
+
+
+def test_over_split_partition_fails_the_guard():
+    from scripts.mash_cluster_n147 import MAX_SINGLETON_FRACTION, score_threshold
+
+    strain_ids = [f"s_{i}" for i in range(10)]
+    matrix = np.full((10, 10), 0.2, dtype=np.float32)
+    np.fill_diagonal(matrix, 0.0)
+    sc = score_threshold(matrix, _singleton_heavy_assignments(10, 6), strain_ids, 0.001)
+    assert sc.singleton_fraction > MAX_SINGLETON_FRACTION
+    assert not sc.satisfies_max_singleton_fraction
+    assert not sc.fully_satisfied          # <-- would have been "qualified" before the guard
+
+
+def test_balanced_partition_passes_the_guard():
+    from scripts.mash_cluster_n147 import score_threshold
+
+    strain_ids = [f"s_{i}" for i in range(10)]
+    matrix = np.full((10, 10), 0.2, dtype=np.float32)
+    np.fill_diagonal(matrix, 0.0)
+    assignments = {f"s_{i}": i // 2 for i in range(10)}   # 5 clades of 2, no singletons
+    sc = score_threshold(matrix, assignments, strain_ids, 0.01)
+    assert sc.singleton_fraction == 0.0 and sc.satisfies_max_singleton_fraction
+
+
+def test_guard_prevents_the_extended_grid_from_choosing_a_near_singleton_partition():
+    """THE regression this guard exists for.
+
+    Without it, minimizing variance_ratio over the extended grid picks the finest rung — an almost-raw
+    partition. The synthetic cohort mirrors the real one: finer -> more singletons -> lower variance_ratio.
+    """
+    from scripts.mash_cluster_n147 import pick_best_threshold
+
+    n = 12
+    strain_ids = [f"s_{i}" for i in range(n)]
+    matrix = np.full((n, n), 0.20, dtype=np.float32)
+    for block in range(4):                                  # 4 tight blocks of 3
+        for i in range(block * 3, (block + 1) * 3):
+            for j in range(block * 3, (block + 1) * 3):
+                matrix[i, j] = 0.0 if i == j else 0.01
+
+    def cluster_fn(t: float) -> dict[str, int]:
+        if t <= 0.005:
+            return {sid: i for i, sid in enumerate(strain_ids)}      # all singletons
+        if t <= 0.05:
+            return {sid: i // 3 for i, sid in enumerate(strain_ids)}  # 4 clades of 3
+        return {sid: 0 for sid in strain_ids}                         # one blob
+
+    chosen, scores, fellback = pick_best_threshold(
+        matrix, strain_ids, cluster_fn, candidates=(0.005, 0.02, 0.30))
+    assert not fellback
+    assert chosen == 0.02                                   # the balanced rung, not the singleton rung
+    finest = next(s for s in scores if s.threshold == 0.005)
+    assert not finest.fully_satisfied                       # rejected by the over-split guard
+
+
+def test_candidate_grid_brackets_both_degenerate_ends():
+    from scripts.mash_cluster_n147 import CANDIDATE_THRESHOLDS
+
+    assert min(CANDIDATE_THRESHOLDS) <= 0.005   # fine enough to expose over-splitting
+    assert max(CANDIDATE_THRESHOLDS) >= 0.10    # coarse enough to expose the blob
+    assert 0.008 in CANDIDATE_THRESHOLDS and 0.010 in CANDIDATE_THRESHOLDS
