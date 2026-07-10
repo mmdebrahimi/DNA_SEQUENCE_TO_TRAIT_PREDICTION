@@ -7,11 +7,29 @@ drafts + tests the pure-logic helpers locally.
 
 Threshold sweep (per brainstorm B5):
   sweep [0.02, 0.03, 0.04, 0.05, 0.07, 0.10]
-  pick = first threshold satisfying ALL of:
+  pick = the threshold satisfying ALL of:
     - n_clades >= 3
     - max-clade fraction < 0.60 (no single clade dominates)
-    - intra-clade-vs-inter-clade variance ratio maximized (clades are tight + separated)
+    - intra-clade-vs-inter-clade variance ratio MINIMIZED (lower = clades tight + well separated).
+      NOTE: this docstring previously said "maximized"; the implementation and its tests MINIMIZE.
+      Corrected 2026-07-09.
   fallback = 0.05 (matches plan default, flagged in JSON sidecar)
+
+KNOWN DEFECTS (documented 2026-07-09, deliberately NOT fixed here -- the selection rule feeds downstream
+contracts, so the fix is surfaced for ratification. See
+`wiki/cipro_mash_clades_n147_threshold_diagnostic_2026-07-09.md`):
+  1. 0.02 is the GRID FLOOR and, on the real N=147 cohort, the ONLY qualifying rung -- so the chosen
+     threshold is a boundary artifact. It yields a 57.8%-largest clade, which makes leave-one-clade-out
+     CV effectively leave-58%-out. (0.015 would beat it at the 4th decimal if merely added.)
+  2. `variance_ratio` -> 0 as clusters -> singletons, so MINIMIZING it is monotonically biased toward
+     over-splitting. Extending the grid downward WITHOUT an over-split guard (max singleton fraction /
+     min clade size) selects 0.002 -> 101 clades, 56.5% singletons. The coarse grid is load-bearing by
+     accident; the qualifying criteria guard only against a dominant clade, never against over-splitting.
+  3. `cluster_by_ani` is single-linkage and CHAINS (at 0.015 it reports a 57.8% clade where
+     `clonality.greedy_representative_clusters_from_matrix` reports 31.3%). The greedy-representative
+     method is the chaining-resistant one the frozen lineage layer uses.
+  Also: a missing FASTA is WARN-and-skipped, so an incomplete refseq cache silently clusters a subset
+  (43 of 146 accessions were cached before the 2026-07-09 run fetched the rest).
 
 Outputs:
   wiki/cipro_mash_clades_n147_<DATE>.json  (machine-readable: clade per strain + scoring summary)
