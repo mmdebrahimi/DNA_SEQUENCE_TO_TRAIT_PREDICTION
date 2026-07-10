@@ -111,12 +111,23 @@ user authorizes + submits.** Ranked by (value × feasibility):
 | HF `*/plant-phenotype`, `EthnicErotic/*`, `genetics-phenotype-*` | not G→P data | no genotype side / NLP / sampling-defined |
 | `Solshine/Rice_Genotype_and_Phenotype` | real G+P but regime-2 | population-structure confound (closed embedding arm); GBLUP-only |
 
-## 6 · NEEDS-VERIFICATION (parked for a filter-free session)
+## 6 · Viral-hepatitis / influenza frontier — RESOLVED by direct fetch (2026-07-10)
 
-| Candidate | Why parked | To close |
-|---|---|---|
-| **Influenza NA** (oseltamivir/zanamivir IC50) | content-filter blocked viral-resistance search | check WHO GISRS antiviral-susceptibility release terms vs isolate-level-measured bar |
-| **HCV / HBV** (DAA / NRTI fold) | same filter; geno2pheno/HCV-GLUE are TOOLS | check HCV-GLUE / geno2pheno data-availability statements |
+These sat as NEEDS-VERIFICATION only because the biology-resistance **search** surface is policy-filtered.
+The lesson (`feedback_offline_cache_vs_unreachable_data`): a search filter is not a network wall — try the
+DIRECT fetch. Probed the actual data hosts by `curl` (bypasses the filter):
+
+| Candidate | Host reachable? | Verdict | Gate |
+|---|---|---|---|
+| **HCV** (DAA fold) — geno2pheno[HCV] | YES (HTTP 200) | **G1-circular NEGATIVE.** Its only `download` is "direct csv download" of the tool's OWN predictions (upload sequence → predicted resistance CSV). An interpretation TOOL, no isolate-level measured-phenotype table. | G1 |
+| **HCV** — HCV-GLUE | YES (HTTP 200) | GLUE sequence/typing framework (alignment + genotyping), not a measured-phenotype repository. | G1/not-a-label |
+| **HBV** (NRTI fold) — HBVdb | NO (HTTP 000) | Genuine NETWORK wall (SSL/host down across sessions), not a search-filter artifact. Even if up, HBVdb is a curated interpretation DB (likely G1). Parked as a real infra wall. | infra + G1 |
+| **Influenza NA** (oseltamivir/zanamivir IC50) | — | GISAID-access-gated by design (registration + DUA); WHO GISRS reports are aggregate, not free-public per-isolate. | G7/access |
+
+**Net: the free-independent-label frontier is now VERIFIED CLOSED** (not "search was blocked"). No free,
+public, isolate-level MEASURED-phenotype genotype↔phenotype source surfaced beyond the already-exploited
+Stanford family (HIVDB→HIV, CoV-RDB→SARS) + the bacterial AMR-Portal/BV-BRC/CRyPTIC tracks. Confirms the
+banked thesis: the only path to a new independent cell is **acquisition** (§4, user authority).
 
 ## 7 · Scattered-artifact index (mark current vs superseded)
 
