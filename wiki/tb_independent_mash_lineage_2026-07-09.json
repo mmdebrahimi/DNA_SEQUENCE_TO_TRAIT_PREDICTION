@@ -1,0 +1,708 @@
+{
+  "_schema": "tb-independent-mash-lineage-v1",
+  "run_date": "2026-07-09",
+  "cohort": "EBI AMR-Portal TB provenance-disjoint (leaked=0)",
+  "n_isolates_scored": 2845,
+  "n_isolates_clustered": 2845,
+  "n_isolates_missing_fasta": 0,
+  "mash": {
+    "image": "quay.io/biocontainers/mash:2.3--hb105d93_10",
+    "sketch_size": 10000,
+    "threads": 4
+  },
+  "pairwise_distance_summary": {
+    "median": 0.000633845,
+    "p75": 0.000840761,
+    "p99": 0.00214569,
+    "max": 1.0,
+    "n_pairs_ge_0.5": 1
+  },
+  "verdict": "MASH_GREEDY_COLLAPSE_NOT_APPLICABLE_TB",
+  "n_usable_rungs": 0,
+  "degeneracy_bounds": {
+    "max_largest_cluster_fraction": 0.2,
+    "max_discordant_isolate_fraction": 0.2,
+    "max_clusters_as_fraction_of_isolates": 0.5
+  },
+  "threshold_sweep": [
+    {
+      "threshold": 1e-05,
+      "n_clusters_total": 2501,
+      "structure": {
+        "n_clusters": 2501,
+        "largest_cluster_size": 59,
+        "largest_cluster_fraction": 0.0207,
+        "top3_fraction": 0.0422,
+        "n_singletons": 2380
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 2468,
+          "tp": 1048,
+          "fp": 52,
+          "tn": 1262,
+          "fn": 106,
+          "n_clusters_R": 1157,
+          "n_clusters_S": 1315,
+          "n_discordant": 25,
+          "n_cluster_abstain": 4,
+          "sens": 0.908,
+          "spec": 0.96,
+          "sens_ci95": [
+            0.89,
+            0.923
+          ],
+          "spec_ci95": [
+            0.948,
+            0.97
+          ],
+          "effective_lineage_n_R": 1157,
+          "effective_lineage_n_S": 1315,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.0673
+        },
+        "isoniazid": {
+          "n_scored": 2489,
+          "tp": 1150,
+          "fp": 41,
+          "tn": 1104,
+          "fn": 194,
+          "n_clusters_R": 1344,
+          "n_clusters_S": 1145,
+          "n_discordant": 9,
+          "n_cluster_abstain": 0,
+          "sens": 0.856,
+          "spec": 0.964,
+          "sens_ci95": [
+            0.836,
+            0.873
+          ],
+          "spec_ci95": [
+            0.952,
+            0.973
+          ],
+          "effective_lineage_n_R": 1344,
+          "effective_lineage_n_S": 1145,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.012
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 5e-05,
+      "n_clusters_total": 1631,
+      "structure": {
+        "n_clusters": 1631,
+        "largest_cluster_size": 212,
+        "largest_cluster_fraction": 0.0745,
+        "top3_fraction": 0.1627,
+        "n_singletons": 1413
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 1546,
+          "tp": 489,
+          "fp": 26,
+          "tn": 972,
+          "fn": 59,
+          "n_clusters_R": 552,
+          "n_clusters_S": 999,
+          "n_discordant": 77,
+          "n_cluster_abstain": 5,
+          "sens": 0.892,
+          "spec": 0.974,
+          "sens_ci95": [
+            0.864,
+            0.916
+          ],
+          "spec_ci95": [
+            0.962,
+            0.982
+          ],
+          "effective_lineage_n_R": 552,
+          "effective_lineage_n_S": 999,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.338
+        },
+        "isoniazid": {
+          "n_scored": 1556,
+          "tp": 532,
+          "fp": 22,
+          "tn": 858,
+          "fn": 144,
+          "n_clusters_R": 678,
+          "n_clusters_S": 880,
+          "n_discordant": 71,
+          "n_cluster_abstain": 2,
+          "sens": 0.787,
+          "spec": 0.975,
+          "sens_ci95": [
+            0.755,
+            0.816
+          ],
+          "spec_ci95": [
+            0.962,
+            0.983
+          ],
+          "effective_lineage_n_R": 678,
+          "effective_lineage_n_S": 880,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.2667
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 0.0001,
+      "n_clusters_total": 1089,
+      "structure": {
+        "n_clusters": 1089,
+        "largest_cluster_size": 601,
+        "largest_cluster_fraction": 0.2112,
+        "top3_fraction": 0.2889,
+        "n_singletons": 902
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 1004,
+          "tp": 243,
+          "fp": 16,
+          "tn": 705,
+          "fn": 40,
+          "n_clusters_R": 284,
+          "n_clusters_S": 721,
+          "n_discordant": 81,
+          "n_cluster_abstain": 1,
+          "sens": 0.859,
+          "spec": 0.978,
+          "sens_ci95": [
+            0.813,
+            0.894
+          ],
+          "spec_ci95": [
+            0.964,
+            0.986
+          ],
+          "effective_lineage_n_R": 284,
+          "effective_lineage_n_S": 721,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.5683
+        },
+        "isoniazid": {
+          "n_scored": 1000,
+          "tp": 246,
+          "fp": 9,
+          "tn": 635,
+          "fn": 110,
+          "n_clusters_R": 358,
+          "n_clusters_S": 644,
+          "n_discordant": 87,
+          "n_cluster_abstain": 2,
+          "sens": 0.691,
+          "spec": 0.986,
+          "sens_ci95": [
+            0.641,
+            0.737
+          ],
+          "spec_ci95": [
+            0.974,
+            0.993
+          ],
+          "effective_lineage_n_R": 358,
+          "effective_lineage_n_S": 644,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.5679
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 0.0002,
+      "n_clusters_total": 582,
+      "structure": {
+        "n_clusters": 582,
+        "largest_cluster_size": 933,
+        "largest_cluster_fraction": 0.3279,
+        "top3_fraction": 0.4587,
+        "n_singletons": 469
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 522,
+          "tp": 91,
+          "fp": 11,
+          "tn": 398,
+          "fn": 22,
+          "n_clusters_R": 113,
+          "n_clusters_S": 409,
+          "n_discordant": 58,
+          "n_cluster_abstain": 0,
+          "sens": 0.805,
+          "spec": 0.973,
+          "sens_ci95": [
+            0.723,
+            0.868
+          ],
+          "spec_ci95": [
+            0.952,
+            0.985
+          ],
+          "effective_lineage_n_R": 113,
+          "effective_lineage_n_S": 409,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.7623
+        },
+        "isoniazid": {
+          "n_scored": 523,
+          "tp": 66,
+          "fp": 0,
+          "tn": 384,
+          "fn": 73,
+          "n_clusters_R": 142,
+          "n_clusters_S": 386,
+          "n_discordant": 54,
+          "n_cluster_abstain": 5,
+          "sens": 0.475,
+          "spec": 1.0,
+          "sens_ci95": [
+            0.394,
+            0.557
+          ],
+          "spec_ci95": [
+            0.99,
+            1.0
+          ],
+          "effective_lineage_n_R": 142,
+          "effective_lineage_n_S": 386,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.7723
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 0.0003,
+      "n_clusters_total": 358,
+      "structure": {
+        "n_clusters": 358,
+        "largest_cluster_size": 1059,
+        "largest_cluster_fraction": 0.3722,
+        "top3_fraction": 0.5374,
+        "n_singletons": 267
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 317,
+          "tp": 38,
+          "fp": 8,
+          "tn": 254,
+          "fn": 17,
+          "n_clusters_R": 56,
+          "n_clusters_S": 263,
+          "n_discordant": 39,
+          "n_cluster_abstain": 2,
+          "sens": 0.691,
+          "spec": 0.969,
+          "sens_ci95": [
+            0.56,
+            0.797
+          ],
+          "spec_ci95": [
+            0.941,
+            0.984
+          ],
+          "effective_lineage_n_R": 56,
+          "effective_lineage_n_S": 263,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.8468
+        },
+        "isoniazid": {
+          "n_scored": 318,
+          "tp": 20,
+          "fp": 0,
+          "tn": 244,
+          "fn": 54,
+          "n_clusters_R": 75,
+          "n_clusters_S": 245,
+          "n_discordant": 38,
+          "n_cluster_abstain": 2,
+          "sens": 0.27,
+          "spec": 1.0,
+          "sens_ci95": [
+            0.182,
+            0.381
+          ],
+          "spec_ci95": [
+            0.985,
+            1.0
+          ],
+          "effective_lineage_n_R": 75,
+          "effective_lineage_n_S": 245,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.8441
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 0.0005,
+      "n_clusters_total": 160,
+      "structure": {
+        "n_clusters": 160,
+        "largest_cluster_size": 1091,
+        "largest_cluster_fraction": 0.3835,
+        "top3_fraction": 0.7814,
+        "n_singletons": 107
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 134,
+          "tp": 12,
+          "fp": 2,
+          "tn": 110,
+          "fn": 10,
+          "n_clusters_R": 25,
+          "n_clusters_S": 112,
+          "n_discordant": 23,
+          "n_cluster_abstain": 3,
+          "sens": 0.545,
+          "spec": 0.982,
+          "sens_ci95": [
+            0.347,
+            0.731
+          ],
+          "spec_ci95": [
+            0.937,
+            0.995
+          ],
+          "effective_lineage_n_R": 25,
+          "effective_lineage_n_S": 112,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.9109
+        },
+        "isoniazid": {
+          "n_scored": 131,
+          "tp": 3,
+          "fp": 0,
+          "tn": 100,
+          "fn": 28,
+          "n_clusters_R": 33,
+          "n_clusters_S": 100,
+          "n_discordant": 27,
+          "n_cluster_abstain": 2,
+          "sens": 0.097,
+          "spec": 1.0,
+          "sens_ci95": [
+            0.033,
+            0.249
+          ],
+          "spec_ci95": [
+            0.963,
+            1.0
+          ],
+          "effective_lineage_n_R": 33,
+          "effective_lineage_n_S": 100,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.9198
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 0.0007,
+      "n_clusters_total": 84,
+      "structure": {
+        "n_clusters": 84,
+        "largest_cluster_size": 2185,
+        "largest_cluster_fraction": 0.768,
+        "top3_fraction": 0.8724,
+        "n_singletons": 55
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 67,
+          "tp": 3,
+          "fp": 2,
+          "tn": 53,
+          "fn": 9,
+          "n_clusters_R": 13,
+          "n_clusters_S": 56,
+          "n_discordant": 15,
+          "n_cluster_abstain": 2,
+          "sens": 0.25,
+          "spec": 0.964,
+          "sens_ci95": [
+            0.089,
+            0.532
+          ],
+          "spec_ci95": [
+            0.877,
+            0.99
+          ],
+          "effective_lineage_n_R": 13,
+          "effective_lineage_n_S": 56,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.9606
+        },
+        "isoniazid": {
+          "n_scored": 65,
+          "tp": 1,
+          "fp": 0,
+          "tn": 45,
+          "fn": 19,
+          "n_clusters_R": 20,
+          "n_clusters_S": 45,
+          "n_discordant": 19,
+          "n_cluster_abstain": 0,
+          "sens": 0.05,
+          "spec": 1.0,
+          "sens_ci95": [
+            0.009,
+            0.236
+          ],
+          "spec_ci95": [
+            0.921,
+            1.0
+          ],
+          "effective_lineage_n_R": 20,
+          "effective_lineage_n_S": 45,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.9694
+        }
+      },
+      "degenerate": true
+    },
+    {
+      "threshold": 0.001,
+      "n_clusters_total": 43,
+      "structure": {
+        "n_clusters": 43,
+        "largest_cluster_size": 2572,
+        "largest_cluster_fraction": 0.904,
+        "top3_fraction": 0.9687,
+        "n_singletons": 25
+      },
+      "drugs": {
+        "rifampicin": {
+          "n_scored": 33,
+          "tp": 0,
+          "fp": 1,
+          "tn": 29,
+          "fn": 3,
+          "n_clusters_R": 4,
+          "n_clusters_S": 31,
+          "n_discordant": 8,
+          "n_cluster_abstain": 2,
+          "sens": 0.0,
+          "spec": 0.967,
+          "sens_ci95": [
+            0.0,
+            0.561
+          ],
+          "spec_ci95": [
+            0.833,
+            0.994
+          ],
+          "effective_lineage_n_R": 4,
+          "effective_lineage_n_S": 31,
+          "n_isolates": 2840,
+          "discordant_isolate_fraction": 0.982
+        },
+        "isoniazid": {
+          "n_scored": 33,
+          "tp": 0,
+          "fp": 0,
+          "tn": 22,
+          "fn": 11,
+          "n_clusters_R": 11,
+          "n_clusters_S": 22,
+          "n_discordant": 10,
+          "n_cluster_abstain": 0,
+          "sens": 0.0,
+          "spec": 1.0,
+          "sens_ci95": [
+            0.0,
+            0.259
+          ],
+          "spec_ci95": [
+            0.851,
+            1.0
+          ],
+          "effective_lineage_n_R": 11,
+          "effective_lineage_n_S": 22,
+          "n_isolates": 2842,
+          "discordant_isolate_fraction": 0.9831
+        }
+      },
+      "degenerate": true
+    }
+  ],
+  "granularity_matched": {
+    "rifampicin": {
+      "threshold": 0.0007,
+      "n_clusters_drug": 84,
+      "barcode_n_clusters": 110,
+      "degenerate": true,
+      "comparison_valid": false,
+      "mash": {
+        "n_scored": 67,
+        "tp": 3,
+        "fp": 2,
+        "tn": 53,
+        "fn": 9,
+        "n_clusters_R": 13,
+        "n_clusters_S": 56,
+        "n_discordant": 15,
+        "n_cluster_abstain": 2,
+        "sens": 0.25,
+        "spec": 0.964,
+        "sens_ci95": [
+          0.089,
+          0.532
+        ],
+        "spec_ci95": [
+          0.877,
+          0.99
+        ],
+        "effective_lineage_n_R": 13,
+        "effective_lineage_n_S": 56,
+        "n_isolates": 2840,
+        "discordant_isolate_fraction": 0.9606
+      },
+      "barcode": {
+        "sens": 0.444,
+        "spec": 0.979,
+        "n_clusters_R": 20,
+        "n_clusters_S": 47,
+        "n_discordant": 43,
+        "n_clusters_total": 110
+      }
+    },
+    "isoniazid": {
+      "threshold": 0.0007,
+      "n_clusters_drug": 84,
+      "barcode_n_clusters": 110,
+      "degenerate": true,
+      "comparison_valid": false,
+      "mash": {
+        "n_scored": 65,
+        "tp": 1,
+        "fp": 0,
+        "tn": 45,
+        "fn": 19,
+        "n_clusters_R": 20,
+        "n_clusters_S": 45,
+        "n_discordant": 19,
+        "n_cluster_abstain": 0,
+        "sens": 0.05,
+        "spec": 1.0,
+        "sens_ci95": [
+          0.009,
+          0.236
+        ],
+        "spec_ci95": [
+          0.921,
+          1.0
+        ],
+        "effective_lineage_n_R": 20,
+        "effective_lineage_n_S": 45,
+        "n_isolates": 2842,
+        "discordant_isolate_fraction": 0.9694
+      },
+      "barcode": {
+        "sens": 0.321,
+        "spec": 0.972,
+        "n_clusters_R": 30,
+        "n_clusters_S": 36,
+        "n_discordant": 44,
+        "n_clusters_total": 110
+      }
+    }
+  },
+  "finest_rung_raw_limit": {
+    "threshold": 1e-05,
+    "n_clusters_total": 2501,
+    "structure": {
+      "n_clusters": 2501,
+      "largest_cluster_size": 59,
+      "largest_cluster_fraction": 0.0207,
+      "top3_fraction": 0.0422,
+      "n_singletons": 2380
+    },
+    "drugs": {
+      "rifampicin": {
+        "n_scored": 2468,
+        "tp": 1048,
+        "fp": 52,
+        "tn": 1262,
+        "fn": 106,
+        "n_clusters_R": 1157,
+        "n_clusters_S": 1315,
+        "n_discordant": 25,
+        "n_cluster_abstain": 4,
+        "sens": 0.908,
+        "spec": 0.96,
+        "sens_ci95": [
+          0.89,
+          0.923
+        ],
+        "spec_ci95": [
+          0.948,
+          0.97
+        ],
+        "effective_lineage_n_R": 1157,
+        "effective_lineage_n_S": 1315,
+        "n_isolates": 2840,
+        "discordant_isolate_fraction": 0.0673
+      },
+      "isoniazid": {
+        "n_scored": 2489,
+        "tp": 1150,
+        "fp": 41,
+        "tn": 1104,
+        "fn": 194,
+        "n_clusters_R": 1344,
+        "n_clusters_S": 1145,
+        "n_discordant": 9,
+        "n_cluster_abstain": 0,
+        "sens": 0.856,
+        "spec": 0.964,
+        "sens_ci95": [
+          0.836,
+          0.873
+        ],
+        "spec_ci95": [
+          0.952,
+          0.973
+        ],
+        "effective_lineage_n_R": 1344,
+        "effective_lineage_n_S": 1145,
+        "n_isolates": 2842,
+        "discordant_isolate_fraction": 0.012
+      }
+    },
+    "degenerate": true
+  },
+  "barcode_reference": {
+    "rifampicin": {
+      "sens": 0.444,
+      "spec": 0.979,
+      "n_clusters_R": 20,
+      "n_clusters_S": 47,
+      "n_discordant": 43,
+      "n_clusters_total": 110
+    },
+    "isoniazid": {
+      "sens": 0.321,
+      "spec": 0.972,
+      "n_clusters_R": 30,
+      "n_clusters_S": 36,
+      "n_discordant": 44,
+      "n_clusters_total": 110
+    }
+  },
+  "headline_interpretation": "FALSIFIED: the deferred hypothesis that 'a finer Mash-collapse would tighten the independent TB lineage number' does NOT hold. Mash sens/spec vary MONOTONICALLY with the collapse threshold, and there is NO threshold at which the partition is both meaningfully collapsed and structurally sound. Fine rungs barely merge anything (1e-5 -> 2,501 clusters over 2,845 isolates) and simply reproduce the clonality-INFLATED raw number. Coarse rungs collapse into a blob: at 7e-4 a SINGLE cluster holds 77% of the cohort and 97% of isolates fall into mixed-label DISCORDANT clusters that are excluded, so the reported sens/spec is computed on a ~3% non-random residue. The cluster COUNT can be made to match the barcode's while the cluster STRUCTURE does not, which makes a granularity-matched comparison invalid here. Mechanism: M. tuberculosis is monomorphic and shows no lineage-scale gap at Mash resolution (pairwise median 6.3e-4, p75 8.4e-4), so any radius large enough to yield ~100 clusters exceeds most inter-lineage distances and one representative absorbs the cohort. The pinned Napier barcode -- a phylogeny-aware, marker-based partition -- is the CORRECT tool for TB, and its collapsed numbers (RIF 0.444/0.979, INH 0.321/0.972) STAND as the honest headline.",
+  "honesty": "GENUINELY INDEPENDENT (out-of-CRyPTIC-build): accession-level provenance-disjoint, measured phenotype, WHO catalogue applied UNCHANGED. The lineage-collapsed number is the honest headline; the raw per-isolate number is clonality-inflated. This run REFINES the clustering (Mash greedy-representative) vs the coarser pinned Napier barcode; it re-scores nothing.",
+  "scope_limits": "Callability unassessed (no regeno) -> determinant calls are a CONSERVATIVE lower bound. Assembly-available subset (not prevalence-preserving) -> status stays TB_SUBSET_PLUMBING. asm5 minimap2 VCFs miss some determinants. One anomalous pair has Mash distance >=0.5 (no shared hashes) -- a single divergent/low-quality assembly, not systematic."
+}

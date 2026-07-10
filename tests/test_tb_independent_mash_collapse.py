@@ -11,12 +11,16 @@ import numpy as np
 import pytest
 
 from scripts.tb_independent_mash_collapse import (
-    HEADLINE_THRESHOLD,
+    BARCODE_REFERENCE,
     SKETCH_SIZE,
     THRESHOLDS,
+    cluster_structure,
     collapse_at,
+    discordant_isolate_fraction,
+    granularity_matched_rung,
     load_results,
     parse_phylip_lower_triangle,
+    rung_is_degenerate,
 )
 
 # `mash triangle` relaxed-Phylip lower triangle, exactly as the container emits it
@@ -69,8 +73,28 @@ def test_sketch_size_is_fine_enough_for_monomorphic_tb():
     assert SKETCH_SIZE >= 10000
 
 
-def test_headline_threshold_is_in_the_sweep():
-    assert HEADLINE_THRESHOLD in THRESHOLDS
+def test_sweep_spans_raw_limit_to_barcode_granularity():
+    """The sweep must bracket BOTH degenerate ends, else the curve hides one of them.
+
+    Grounded in the real cohort: at 1e-5 Mash yields ~2501 clusters over 2845 isolates (~raw), at 1e-3 it
+    yields 43 (coarser than the barcode's ~110). A sweep that failed to bracket those would report a
+    threshold-dependent number as if it were threshold-independent.
+    """
+    assert min(THRESHOLDS) <= 1e-5
+    assert max(THRESHOLDS) >= 1e-3
+
+
+def test_granularity_matched_rung_picks_closest_cluster_count_to_barcode():
+    target = BARCODE_REFERENCE["rifampicin"]["n_clusters_total"]  # 110
+
+    def rung(thr, n_r, n_s, disc):
+        return {"threshold": thr, "n_clusters_total": n_r + n_s + disc,
+                "drugs": {"rifampicin": {"n_clusters_R": n_r, "n_clusters_S": n_s, "n_discordant": disc}}}
+
+    sweep = [rung(1e-5, 900, 900, 5), rung(3e-4, 40, 60, 8), rung(1e-3, 10, 20, 3)]
+    picked = granularity_matched_rung(sweep, "rifampicin")
+    assert picked["threshold"] == 3e-4  # 108 is nearest to 110
+    assert target == 110
 
 
 def _results(**per_strain):
@@ -151,6 +175,59 @@ def test_collapse_at_reports_wilson_ci_alongside_every_point():
     lo, hi = rif["sens_ci95"]
     assert 0.0 <= lo <= 1.0 and 0.0 <= hi <= 1.0
     assert lo < hi  # n=1 -> a wide, non-degenerate interval
+
+
+def test_cluster_structure_detects_a_blob():
+    """One representative absorbing the cohort must be visible as a structure metric."""
+    clusters = {f"s{i}": 0 for i in range(90)} | {f"t{i}": i + 1 for i in range(10)}
+    st = cluster_structure(clusters, n_isolates=100)
+    assert st["n_clusters"] == 11
+    assert st["largest_cluster_fraction"] == pytest.approx(0.90)
+    assert st["n_singletons"] == 10
+
+
+def test_discordant_isolate_fraction_counts_isolates_not_clusters():
+    """43 discordant CLUSTERS can hide 97% of ISOLATES — the isolate share is the honest metric."""
+    clusters = {"a": 0, "b": 0, "c": 0, "d": 1}
+    labels = {"a": "R", "b": "S", "c": "R", "d": "S"}  # cluster 0 is mixed -> 3 of 4 isolates excluded
+    assert discordant_isolate_fraction(clusters, labels) == pytest.approx(0.75)
+
+
+def test_rung_is_degenerate_on_blob():
+    rung = {
+        "n_clusters_total": 11,
+        "structure": {"largest_cluster_fraction": 0.77},
+        "drugs": {"rifampicin": {"discordant_isolate_fraction": 0.02}},
+    }
+    assert rung_is_degenerate(rung, n_isolates=100)
+
+
+def test_rung_is_degenerate_on_mass_discordance():
+    rung = {
+        "n_clusters_total": 11,
+        "structure": {"largest_cluster_fraction": 0.05},
+        "drugs": {"rifampicin": {"discordant_isolate_fraction": 0.97}},
+    }
+    assert rung_is_degenerate(rung, n_isolates=100)
+
+
+def test_rung_is_degenerate_when_barely_collapsed():
+    """~1 cluster per isolate IS the clonality-inflated raw view, not a lineage collapse."""
+    rung = {
+        "n_clusters_total": 88,
+        "structure": {"largest_cluster_fraction": 0.02},
+        "drugs": {"rifampicin": {"discordant_isolate_fraction": 0.01}},
+    }
+    assert rung_is_degenerate(rung, n_isolates=100)
+
+
+def test_rung_not_degenerate_when_balanced_and_collapsed():
+    rung = {
+        "n_clusters_total": 20,
+        "structure": {"largest_cluster_fraction": 0.10},
+        "drugs": {"rifampicin": {"discordant_isolate_fraction": 0.05}},
+    }
+    assert not rung_is_degenerate(rung, n_isolates=100)
 
 
 def test_load_results_parses_jsonl(tmp_path):
