@@ -156,8 +156,13 @@ def probe_one(row: dict, dets: dict, positions: set[int], max_pos: int) -> dict 
     rec: dict = {"uniqueid": row.get("UNIQUEID") or row.get("ENA_RUN_ACCESSION") or regeno_rel, "drugs": {}}
     for drug in DRUGS:
         dpos = sorted({d.pos for d in dets[drug]})
-        base = tb_amr.score_drug(drug, masked_calls, dets[drug])                       # today
-        aware = tb_amr.score_drug(drug, masked_calls, dets[drug], regeno_text=regeno_text)  # + callability
+        base = tb_amr.score_drug(drug, masked_calls, dets[drug])                       # masked-only (S-by-absence)
+        # The side-by-side needs the FROZEN absent-is-uncallable rule explicitly: the default is now the
+        # ratified fail-only rule (2026-07-10), so `flipped_S_to_ABSTAIN` would otherwise no longer measure
+        # the frozen rule. `would_abstain_fail_only_rule` (from classify_positions) is the ratified rule;
+        # keeping both explicit preserves the two-rule comparison this probe exists to report.
+        aware = tb_amr.score_drug(drug, masked_calls, dets[drug], regeno_text=regeno_text,
+                                  absent_is_uncallable=True)      # FROZEN rule, for the comparison
         states = classify_positions(regeno_text, dpos)
         rec["drugs"][drug] = {
             "call_without_callability": base.prediction,

@@ -69,14 +69,15 @@ def score_drug(
     determinants: list[Determinant],
     regeno_text: str | None = None,
     *,
-    absent_is_uncallable: bool = True,
+    absent_is_uncallable: bool = False,
 ) -> DrugCall:
     """Score one drug. A matched determinant short-circuits to R, so callability only affects S calls.
 
-    `absent_is_uncallable` (default True, behaviour UNCHANGED) forwards to
-    `tb_vcf.callable_positions`. Pass False for minos panel-VCFs, where a determinant position ABSENT from
-    the regeno VCF means "not a genotyping target", not "could not be called" -- under the default rule
-    100% of S-by-absence calls ABSTAIN (measured; see `tb_vcf.position_states`).
+    `absent_is_uncallable=False` (default — the **fail-only** rule, RATIFIED 2026-07-10) forwards to
+    `tb_vcf.callable_positions`: a determinant position merely ABSENT from the minos regeno VCF is "not a
+    genotyping target" (→ callable), and only a present-and-FAILED record ABSTAINs. Pass True for a
+    hypothetical all-sites VCF. NOTE: this only affects the regeno path; a masked-only call
+    (`regeno_text=None`) is S-by-absence with `callability_assessed=False` regardless.
     """
     matched = _matched_determinants(masked_calls, determinants)
     genes = tuple(sorted({d.gene for d in determinants}))
@@ -99,11 +100,11 @@ def score_drug(
     return DrugCall(drug, S, coverage_scope=genes, n_determinant_positions=len(positions))
 
 
-def score_rif(masked_calls, determinants, regeno_text=None, *, absent_is_uncallable=True) -> DrugCall:
+def score_rif(masked_calls, determinants, regeno_text=None, *, absent_is_uncallable=False) -> DrugCall:
     return score_drug("rifampicin", masked_calls, determinants, regeno_text,
                       absent_is_uncallable=absent_is_uncallable)
 
 
-def score_inh(masked_calls, determinants, regeno_text=None, *, absent_is_uncallable=True) -> DrugCall:
+def score_inh(masked_calls, determinants, regeno_text=None, *, absent_is_uncallable=False) -> DrugCall:
     return score_drug("isoniazid", masked_calls, determinants, regeno_text,
                       absent_is_uncallable=absent_is_uncallable)

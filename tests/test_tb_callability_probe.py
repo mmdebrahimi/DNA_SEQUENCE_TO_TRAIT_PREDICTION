@@ -60,7 +60,7 @@ def test_classify_positions_agrees_with_frozen_callable_positions():
 
     text = _vcf(_rec(100), _rec(200, filt="MIN_FRS"), _rec(300, gt="./."))
     positions = [100, 200, 300, 400]
-    frozen = tb_vcf.callable_positions(text, positions)
+    frozen = tb_vcf.callable_positions(text, positions, absent_is_uncallable=True)  # the frozen rule, explicit
     got = P.classify_positions(text, positions)
     assert got["present_pass"] == sum(1 for ok in frozen.values() if ok)
     # the frozen rule lumps the other three together
@@ -158,40 +158,42 @@ def test_position_states_returns_the_three_states():
     assert got == {100: tb_vcf.PRESENT_PASS, 200: tb_vcf.PRESENT_FAIL, 300: tb_vcf.ABSENT}
 
 
-def test_callable_positions_default_is_unchanged_absent_is_uncallable():
+def test_callable_positions_default_is_the_ratified_fail_only_rule():
+    """RATIFIED 2026-07-10: the DEFAULT now treats an absent position as callable."""
     from dna_decode.organism_rules import tb_vcf
 
     text = _vcf(_rec(100))
-    assert tb_vcf.callable_positions(text, [100, 300]) == {100: True, 300: False}
+    assert tb_vcf.callable_positions(text, [100, 300]) == {100: True, 300: True}   # 300 absent -> callable
 
 
-def test_callable_positions_absent_treated_callable_when_opted_in():
+def test_callable_positions_all_sites_rule_opt_in():
     from dna_decode.organism_rules import tb_vcf
 
     text = _vcf(_rec(100), _rec(200, filt="MIN_FRS"))
-    got = tb_vcf.callable_positions(text, [100, 200, 300], absent_is_uncallable=False)
-    assert got == {100: True, 200: False, 300: True}   # only the FAILED record is uncallable
+    got = tb_vcf.callable_positions(text, [100, 200, 300], absent_is_uncallable=True)
+    assert got == {100: True, 200: False, 300: False}   # opt-in: absent 300 back to uncallable
 
 
-def test_score_drug_default_abstains_on_an_absent_position():
-    """The frozen behaviour: absent -> ABSTAIN. This is what makes 100% of S calls abstain on minos VCFs."""
+def test_score_drug_default_returns_S_on_a_merely_absent_position():
+    """RATIFIED default: absent -> callable -> S (NOT ABSTAIN). This is why the frozen rule was rejected."""
     from dna_decode.data.tb_who_catalogue import Determinant
     from dna_decode.organism_rules import tb_amr
 
     det = Determinant(drug="rifampicin", gene="rpoB", variant="S450L", grade="1", tier="1",
                       chrom="NC_000962.3", pos=761155, ref="C", alt="T")
     call = tb_amr.score_drug("rifampicin", {}, [det], regeno_text=_vcf())   # position absent
-    assert call.prediction == "ABSTAIN" and call.n_uncallable_positions == 1
+    assert call.prediction == "S" and call.n_uncallable_positions == 0
 
 
-def test_score_drug_returns_S_under_the_fail_only_rule_when_position_merely_absent():
+def test_score_drug_all_sites_rule_abstains_on_absent_when_opted_in():
+    """The frozen all-sites rule is still reachable explicitly."""
     from dna_decode.data.tb_who_catalogue import Determinant
     from dna_decode.organism_rules import tb_amr
 
     det = Determinant(drug="rifampicin", gene="rpoB", variant="S450L", grade="1", tier="1",
                       chrom="NC_000962.3", pos=761155, ref="C", alt="T")
-    call = tb_amr.score_drug("rifampicin", {}, [det], regeno_text=_vcf(), absent_is_uncallable=False)
-    assert call.prediction == "S" and call.n_uncallable_positions == 0
+    call = tb_amr.score_drug("rifampicin", {}, [det], regeno_text=_vcf(), absent_is_uncallable=True)
+    assert call.prediction == "ABSTAIN" and call.n_uncallable_positions == 1
 
 
 def test_score_drug_still_abstains_under_fail_only_rule_on_a_real_failure():

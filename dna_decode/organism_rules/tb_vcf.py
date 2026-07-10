@@ -158,16 +158,22 @@ def position_states(regeno_text: str, positions) -> dict[int, str]:
     return states
 
 
-def callable_positions(regeno_text: str, positions, *, absent_is_uncallable: bool = True) -> dict[int, bool]:
+def callable_positions(regeno_text: str, positions, *, absent_is_uncallable: bool = False) -> dict[int, bool]:
     """{pos: callable?} from a regeno VCF. Callable iff a PASS record exists at pos with an explicit
     (non-`./.`) GT.
 
-    `absent_is_uncallable=True` (DEFAULT, behaviour UNCHANGED): a position ABSENT from the regeno VCF is
-    uncallable (conservative). Correct only for an all-sites VCF.
+    `absent_is_uncallable=False` (DEFAULT — the fail-only rule, **RATIFIED 2026-07-10**): an ABSENT position
+    is treated as callable, so ONLY a present-and-failed record marks uncallability. This is the correct rule
+    for the CRyPTIC / AMR-Portal **minos** panel-VCFs this module exclusively consumes (H37Rv-only; see
+    `position_states`): minos emits records only at variant-panel sites (~29% of the genome), so ABSENCE
+    means "not a genotyping target", NOT "could not be called". Ratification evidence:
+    `wiki/tb_callability_probe_2026-07-10.md` (the frozen absent-is-uncallable rule made 100% of S-by-absence
+    calls ABSTAIN — RIF 87/87, INH 80/80 — erasing specificity; the fail-only correction is RIF 5.8% /
+    INH 18.8%).
 
-    `absent_is_uncallable=False`: an ABSENT position is treated as callable, so ONLY a present-and-failed
-    record marks uncallability. This is the honest rule for minos panel-VCFs (see `position_states`).
-    Opt-in: it changes what an ABSTAIN means, so it is a ratification decision, never a silent default.
+    `absent_is_uncallable=True`: a position ABSENT from the regeno VCF is uncallable (conservative). Correct
+    only for an ALL-SITES VCF (a different variant caller than minos). Opt-in — pass it explicitly if a
+    future TB cohort supplies all-sites VCFs.
     """
     states = position_states(regeno_text, positions)
     if absent_is_uncallable:
@@ -176,10 +182,16 @@ def callable_positions(regeno_text: str, positions, *, absent_is_uncallable: boo
 
 
 def is_window_callable(regeno_text: str, lo: int, hi: int) -> bool:
-    """A determinant window [lo, hi] (inclusive) is callable iff EVERY position in it is callable."""
+    """A determinant WINDOW [lo, hi] is callable iff EVERY position in it is present + PASS.
+
+    Windows use the STRICT `absent_is_uncallable=True` rule (a gap anywhere in a contiguous span is a
+    coverage hole), independent of the discrete-position default. Not used by `tb_amr.score_drug` (which
+    scores discrete determinant positions under the ratified fail-only rule); retained for callers that
+    genuinely need contiguous-window coverage.
+    """
     if hi < lo:
         raise ValueError(f"window hi {hi} < lo {lo}")
-    flags = callable_positions(regeno_text, range(lo, hi + 1))
+    flags = callable_positions(regeno_text, range(lo, hi + 1), absent_is_uncallable=True)
     return all(flags.values())
 
 

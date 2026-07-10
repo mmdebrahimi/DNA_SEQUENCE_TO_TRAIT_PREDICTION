@@ -62,17 +62,31 @@ def test_no_gcp_format_key_is_read():
 
 # --- C3: callability from the regeno VCF ---------------------------------------------------------
 
-def test_callable_positions_ref_alt_nocall_absent():
+def test_callable_positions_all_sites_rule_absent_is_uncallable():
+    """The all-sites (frozen) rule, now opt-in via absent_is_uncallable=True."""
     regeno = _masked(
         _rec(761155, "C", "T", "PASS", "1/1"),   # alt call -> callable
         _rec(2155168, "C", ".", "PASS", "0/0"),  # explicit ref -> callable
         _rec(500, "A", "G", "PASS", "./."),       # no-call -> uncallable
     )
-    flags = tb_vcf.callable_positions(regeno, [761155, 2155168, 500, 999])
+    flags = tb_vcf.callable_positions(regeno, [761155, 2155168, 500, 999], absent_is_uncallable=True)
     assert flags[761155] is True
     assert flags[2155168] is True
-    assert flags[500] is False     # ./.
-    assert flags[999] is False     # absent from regeno
+    assert flags[500] is False     # ./.  -> present-fail
+    assert flags[999] is False     # absent -> uncallable UNDER THE ALL-SITES RULE
+
+
+def test_callable_positions_default_is_the_ratified_fail_only_rule():
+    """RATIFIED 2026-07-10: the DEFAULT treats an absent position as callable (minos panel-VCF);
+    only a present-and-failed record is uncallable."""
+    regeno = _masked(
+        _rec(761155, "C", "T", "PASS", "1/1"),   # present pass -> callable
+        _rec(500, "A", "G", "PASS", "./."),       # present no-call -> uncallable under BOTH rules
+    )
+    flags = tb_vcf.callable_positions(regeno, [761155, 500, 999])   # default (fail-only)
+    assert flags[761155] is True
+    assert flags[500] is False     # present-fail stays uncallable
+    assert flags[999] is True      # <-- absent is now CALLABLE (the ratified change)
 
 
 def test_window_callable_all_vs_one_nocall():
