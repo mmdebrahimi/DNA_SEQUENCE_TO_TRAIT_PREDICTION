@@ -127,17 +127,52 @@ def snv_components(pos: int, ref: str, alt: str) -> set[tuple[int, str, str]]:
     return {(pos, ref, alt)}
 
 
-def callable_positions(regeno_text: str, positions) -> dict[int, bool]:
-    """{pos: callable?} from a regeno VCF. Callable iff a PASS record exists at pos with an explicit
-    (non-`./.`) GT. A position ABSENT from the regeno VCF is uncallable (conservative)."""
+# Three position states. `callable_positions` collapses FAIL and ABSENT into one "uncallable", which is
+# NOT safe for minos panel-VCFs -- see `position_states`.
+PRESENT_PASS = "present_pass"
+PRESENT_FAIL = "present_fail"
+ABSENT = "absent"
+
+
+def position_states(regeno_text: str, positions) -> dict[int, str]:
+    """{pos: PRESENT_PASS | PRESENT_FAIL | ABSENT} -- the distinction `callable_positions` collapses.
+
+    MEASURED 2026-07-10 (`wiki/tb_callability_probe_2026-07-10.md`, 150 CRyPTIC isolates): the CRyPTIC
+    regenotyped VCFs come from **minos** (`##source=minos`), which emits records ONLY at sites in its
+    variant panel -- 28.7% of the genome, fragmented (rpoB RRDR 41.6%, katG 24.8% of positions carry a
+    record). So ABSENT overwhelmingly means "not a genotyping target", NOT "sequencing could not call it";
+    every determinant position that carried a record was PASS (425/425 on the probed isolate).
+
+    Treating ABSENT as uncallable therefore makes 100% of S-by-absence calls ABSTAIN (RIF 87/87, INH 80/80)
+    -- erasing specificity rather than tightening it. Only PRESENT_FAIL (a record exists and failed
+    MIN_DP / MIN_FRS / MIN_GCP, or carries a `./.` GT) is evidence of TRUE uncallability; measured at
+    RIF 5.8% [2.5-12.8] / INH 18.8% [11.7-28.7] of S calls.
+    """
     want = set(positions)
-    seen: dict[int, bool] = {p: False for p in want}
+    states: dict[int, str] = {p: ABSENT for p in want}
     for pos, _ref, _alt, filt, fmt, sample in _iter_records(regeno_text):
         if pos not in want:
             continue
         gt = _split_fmt(fmt, sample).get("GT", "")
-        seen[pos] = (filt == "PASS") and (gt not in _NOCALL)
-    return seen
+        states[pos] = PRESENT_PASS if (filt == "PASS") and (gt not in _NOCALL) else PRESENT_FAIL
+    return states
+
+
+def callable_positions(regeno_text: str, positions, *, absent_is_uncallable: bool = True) -> dict[int, bool]:
+    """{pos: callable?} from a regeno VCF. Callable iff a PASS record exists at pos with an explicit
+    (non-`./.`) GT.
+
+    `absent_is_uncallable=True` (DEFAULT, behaviour UNCHANGED): a position ABSENT from the regeno VCF is
+    uncallable (conservative). Correct only for an all-sites VCF.
+
+    `absent_is_uncallable=False`: an ABSENT position is treated as callable, so ONLY a present-and-failed
+    record marks uncallability. This is the honest rule for minos panel-VCFs (see `position_states`).
+    Opt-in: it changes what an ABSTAIN means, so it is a ratification decision, never a silent default.
+    """
+    states = position_states(regeno_text, positions)
+    if absent_is_uncallable:
+        return {p: st == PRESENT_PASS for p, st in states.items()}
+    return {p: st != PRESENT_FAIL for p, st in states.items()}
 
 
 def is_window_callable(regeno_text: str, lo: int, hi: int) -> bool:

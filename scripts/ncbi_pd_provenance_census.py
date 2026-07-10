@@ -49,54 +49,84 @@ def latest_metadata_url(group: str) -> str:
     return base + sorted(m)[-1]
 
 
+from dna_decode.data.pd_ast import parse_ast_phenotypes  # noqa: E402
+
+
 def is_ecosystem(*cells: str) -> bool:
     blob = " ".join(c for c in cells if c).lower()
     return any(tok in blob for tok in ECOSYSTEM)
 
 
-def census_one(group: str, drug: str, row_cap: int | None = None) -> dict:
+def census_group(group: str, drugs: list[str], row_cap: int | None = None) -> dict[str, dict]:
+    """Census MANY drugs in ONE pass over the group's PD metadata.
+
+    Streaming the (hundreds-of-MB) metadata once per drug was wasteful; the labels for every drug live in
+    the SAME `AST_phenotypes` cell. Returns {drug: result}.
+
+    The label is parsed by the canonical `dna_decode.data.pd_ast.parse_ast_phenotypes`, which strips the
+    quotes that wrap the field. The previous `f"{drug}=R" in ast.split(",")` test could never match a drug
+    at the FIRST or LAST position (the quote rode on that token) -- an under-count of +91 cipro / +62 cef
+    isolates over 120k E. coli rows. Under-counts only, so a `powered` verdict was never falsely claimed.
+    """
     url = latest_metadata_url(group)
-    tok_r, tok_s = f"{drug}=R", f"{drug}=S"
-    counts = {"other_R": 0, "other_S": 0, "eco_R": 0, "eco_S": 0, "rows": 0, "with_ast": 0}
-    other_centers: dict[str, int] = {}
-    with urllib.request.urlopen(url, timeout=300) as resp:
+    wanted = [d.lower() for d in drugs]
+    counts = {d: {"other_R": 0, "other_S": 0, "eco_R": 0, "eco_S": 0, "rows": 0, "with_ast": 0}
+              for d in wanted}
+    other_centers: dict[str, dict[str, int]] = {d: {} for d in wanted}
+    n_rows = 0
+    capped = False
+    with urllib.request.urlopen(url, timeout=300) as resp:  # noqa: S310 (trusted NCBI FTP-over-HTTPS)
         header = resp.readline().decode("utf-8", "replace").rstrip("\n").split("\t")
         idx = {name: header.index(name) for name in
                ("asm_acc", "AST_phenotypes", "bioproject_center", "collected_by", "sra_center")
                if name in header}
         ai, pi = idx.get("asm_acc"), idx.get("AST_phenotypes")
         if ai is None or pi is None:
-            return {"group": group, "drug": drug, "error": "missing asm_acc/AST_phenotypes columns"}
+            return {d: {"group": group, "drug": d, "error": "missing asm_acc/AST_phenotypes columns"}
+                    for d in wanted}
         for raw in resp:
-            counts["rows"] += 1
-            if row_cap and counts["rows"] > row_cap:
-                counts["capped"] = True
+            n_rows += 1
+            if row_cap and n_rows > row_cap:
+                capped = True
                 break
             cells = raw.decode("utf-8", "replace").rstrip("\n").split("\t")
             if len(cells) <= max(ai, pi):
                 continue
             acc, ast = cells[ai], cells[pi]
-            if not acc.startswith(("GCA_", "GCF_")) or not ast or ast == "NULL":
+            if not acc.startswith(("GCA_", "GCF_")):
                 continue
-            lab = 1 if tok_r in ast.split(",") else (0 if tok_s in ast.split(",") else None)
-            if lab is None:
+            labels = parse_ast_phenotypes(ast, wanted)
+            if not labels:
                 continue
-            counts["with_ast"] += 1
             prov = [cells[idx[c]] for c in ("bioproject_center", "collected_by", "sra_center")
                     if c in idx and len(cells) > idx[c]]
             eco = is_ecosystem(*prov)
             key = "eco" if eco else "other"
-            counts[f"{key}_{'R' if lab else 'S'}"] += 1
-            if not eco:
-                center = (cells[idx["bioproject_center"]] if "bioproject_center" in idx
-                          and len(cells) > idx["bioproject_center"] else "") or "(blank)"
-                other_centers[center] = other_centers.get(center, 0) + 1
-    nR, nS = counts["other_R"], counts["other_S"]
-    powered = nR >= MIN_PER_CLASS and nS >= MIN_PER_CLASS
-    top_centers = sorted(other_centers.items(), key=lambda kv: -kv[1])[:8]
-    return {"group": group, "drug": drug, **counts,
-            "other_total": nR + nS, "powered": powered,
-            "top_other_centers": top_centers}
+            center = (cells[idx["bioproject_center"]] if "bioproject_center" in idx
+                      and len(cells) > idx["bioproject_center"] else "") or "(blank)"
+            for drug, lab in labels.items():
+                counts[drug]["with_ast"] += 1
+                counts[drug][f"{key}_{lab}"] += 1
+                if not eco:
+                    other_centers[drug][center] = other_centers[drug].get(center, 0) + 1
+
+    out: dict[str, dict] = {}
+    for d in wanted:
+        c = counts[d]
+        c["rows"] = n_rows
+        if capped:
+            c["capped"] = True
+        nR, nS = c["other_R"], c["other_S"]
+        out[d] = {"group": group, "drug": d, **c,
+                  "other_total": nR + nS,
+                  "powered": nR >= MIN_PER_CLASS and nS >= MIN_PER_CLASS,
+                  "top_other_centers": sorted(other_centers[d].items(), key=lambda kv: -kv[1])[:8]}
+    return out
+
+
+def census_one(group: str, drug: str, row_cap: int | None = None) -> dict:
+    """Single-drug census (thin wrapper over `census_group`; kept for the existing CLI + tests)."""
+    return census_group(group, [drug], row_cap)[drug.lower()]
 
 
 def census_result_to_sidecar_row(result: dict, today: str, min_per_class: int) -> dict | None:

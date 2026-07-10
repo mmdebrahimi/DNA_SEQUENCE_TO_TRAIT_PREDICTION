@@ -261,32 +261,9 @@ def cells_by_group() -> dict[str, set[str]]:
     return out
 
 
-def parse_ast_phenotypes(field: str | None, wanted_drugs: set[str]) -> dict[str, str]:
-    """PD `AST_phenotypes` -> {drug: label} for wanted drugs, R/S only.
-
-    REAL format, verified against the live PD metadata (2026-07-10):
-        "ampicillin=ND,cefazolin=ND,ceftriaxone=R,ciprofloxacin=S,gentamicin=ND"
-    i.e. COMMA-separated and wrapped in literal double quotes. Two traps, both hit in this repo:
-      * the separator is a comma, NOT a semicolon (the `;` form appears only in the DERIVED
-        `candidates.tsv`, not in the source);
-      * the surrounding quotes ride on the FIRST and LAST tokens, so a naive `tok in ast.split(",")`
-        silently never matches a drug that happens to sit at either end of the list.
-    Values other than R/S (`ND` not-determined, `I`, `NS`) are DROPPED — the frozen decoder emits a
-    binary R/S call, so those isolates carry no unambiguous ground truth.
-    """
-    raw = (field or "").strip()
-    if not raw or raw == "NULL":
-        return {}
-    out: dict[str, str] = {}
-    for part in raw.replace(";", ",").split(","):
-        token = part.strip().strip('"').strip("'").strip()
-        if "=" not in token:
-            continue
-        drug, _, val = token.partition("=")
-        drug, val = drug.strip().lower(), val.strip().upper()
-        if drug in wanted_drugs and val in ("R", "S"):
-            out[drug] = val
-    return out
+# Canonical parser lives in dna_decode.data.pd_ast (shared with the provenance census, which had the
+# same quote/separator bug). Re-exported here so existing call sites + tests keep working.
+from dna_decode.data.pd_ast import parse_ast_phenotypes  # noqa: E402,F401
 
 
 def is_iso_date(d: str | None) -> bool:

@@ -20,25 +20,23 @@
       "other_R": 33,
       "other_S": 130,
       "powered": true,
-      "date": "2026-06-10",
-      "source_action_row": 60
+      "date": "2026-07-10"
     },
     {
       "organism": "Escherichia_coli_Shigella",
       "drug": "ceftriaxone",
-      "other_R": 1230,
+      "other_R": 1293,
       "other_S": 2767,
       "powered": true,
-      "date": "2026-06-12"
+      "date": "2026-07-10"
     },
     {
       "organism": "Escherichia_coli_Shigella",
       "drug": "ciprofloxacin",
-      "other_R": 1262,
-      "other_S": 3486,
+      "other_R": 1304,
+      "other_S": 3608,
       "powered": true,
-      "date": "2026-06-10",
-      "source_action_row": 65
+      "date": "2026-07-10"
     },
     {
       "organism": "Escherichia_coli_Shigella",
@@ -46,50 +44,47 @@
       "other_R": 798,
       "other_S": 3827,
       "powered": true,
-      "date": "2026-06-12"
+      "date": "2026-07-10"
     },
     {
       "organism": "Escherichia_coli_Shigella",
       "drug": "tetracycline",
-      "other_R": 1789,
-      "other_S": 2630,
+      "other_R": 1813,
+      "other_S": 2632,
       "powered": true,
-      "date": "2026-06-12"
+      "date": "2026-07-10"
     },
     {
       "organism": "Klebsiella",
       "drug": "ceftriaxone",
-      "other_R": 505,
-      "other_S": 410,
+      "other_R": 527,
+      "other_S": 411,
       "powered": true,
-      "date": "2026-06-10",
-      "source_action_row": 66
+      "date": "2026-07-10"
     },
     {
       "organism": "Klebsiella",
       "drug": "ciprofloxacin",
-      "other_R": 404,
-      "other_S": 277,
+      "other_R": 407,
+      "other_S": 294,
       "powered": true,
-      "date": "2026-06-10",
-      "source_action_row": 60
+      "date": "2026-07-10"
     },
     {
       "organism": "Klebsiella",
       "drug": "gentamicin",
-      "other_R": 317,
+      "other_R": 316,
       "other_S": 339,
       "powered": true,
-      "date": "2026-06-10",
-      "source_action_row": 66
+      "date": "2026-07-10"
     },
     {
       "organism": "Klebsiella",
       "drug": "meropenem",
-      "other_R": 236,
-      "other_S": 440,
+      "other_R": 262,
+      "other_S": 450,
       "powered": true,
-      "date": "2026-06-10"
+      "date": "2026-07-10"
     },
     {
       "organism": "Klebsiella",
@@ -97,17 +92,15 @@
       "other_R": 182,
       "other_S": 132,
       "powered": true,
-      "date": "2026-06-10",
-      "source_action_row": 66
+      "date": "2026-07-10"
     },
     {
       "organism": "Salmonella",
       "drug": "ciprofloxacin",
       "other_R": 4,
-      "other_S": 87,
+      "other_S": 100,
       "powered": false,
-      "date": "2026-06-10",
-      "source_action_row": 60
+      "date": "2026-07-10"
     },
     {
       "organism": "Salmonella",
@@ -115,15 +108,15 @@
       "other_R": 5,
       "other_S": 86,
       "powered": false,
-      "date": "2026-06-13"
+      "date": "2026-07-10"
     },
     {
       "organism": "Salmonella",
       "drug": "tetracycline",
-      "other_R": 4,
+      "other_R": 5,
       "other_S": 81,
       "powered": false,
-      "date": "2026-06-13"
+      "date": "2026-07-10"
     }
   ]
 }

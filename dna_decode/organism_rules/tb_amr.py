@@ -68,7 +68,16 @@ def score_drug(
     masked_calls: dict[int, tb_vcf.VariantCall],
     determinants: list[Determinant],
     regeno_text: str | None = None,
+    *,
+    absent_is_uncallable: bool = True,
 ) -> DrugCall:
+    """Score one drug. A matched determinant short-circuits to R, so callability only affects S calls.
+
+    `absent_is_uncallable` (default True, behaviour UNCHANGED) forwards to
+    `tb_vcf.callable_positions`. Pass False for minos panel-VCFs, where a determinant position ABSENT from
+    the regeno VCF means "not a genotyping target", not "could not be called" -- under the default rule
+    100% of S-by-absence calls ABSTAIN (measured; see `tb_vcf.position_states`).
+    """
     matched = _matched_determinants(masked_calls, determinants)
     genes = tuple(sorted({d.gene for d in determinants}))
     positions = sorted({d.pos for d in determinants})
@@ -81,7 +90,8 @@ def score_drug(
         return DrugCall(drug, S, coverage_scope=genes, n_determinant_positions=len(positions),
                         callability_assessed=False)
 
-    flags = tb_vcf.callable_positions(regeno_text, positions)
+    flags = tb_vcf.callable_positions(regeno_text, positions,
+                                      absent_is_uncallable=absent_is_uncallable)
     uncallable = [p for p, ok in flags.items() if not ok]
     if uncallable:
         return DrugCall(drug, ABSTAIN, coverage_scope=genes, n_determinant_positions=len(positions),
@@ -89,9 +99,11 @@ def score_drug(
     return DrugCall(drug, S, coverage_scope=genes, n_determinant_positions=len(positions))
 
 
-def score_rif(masked_calls, determinants, regeno_text=None) -> DrugCall:
-    return score_drug("rifampicin", masked_calls, determinants, regeno_text)
+def score_rif(masked_calls, determinants, regeno_text=None, *, absent_is_uncallable=True) -> DrugCall:
+    return score_drug("rifampicin", masked_calls, determinants, regeno_text,
+                      absent_is_uncallable=absent_is_uncallable)
 
 
-def score_inh(masked_calls, determinants, regeno_text=None) -> DrugCall:
-    return score_drug("isoniazid", masked_calls, determinants, regeno_text)
+def score_inh(masked_calls, determinants, regeno_text=None, *, absent_is_uncallable=True) -> DrugCall:
+    return score_drug("isoniazid", masked_calls, determinants, regeno_text,
+                      absent_is_uncallable=absent_is_uncallable)

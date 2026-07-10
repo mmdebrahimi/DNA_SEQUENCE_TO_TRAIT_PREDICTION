@@ -143,3 +143,63 @@ def test_r_calls_never_flip_because_score_drug_returns_R_before_checking_callabi
     assert rec["call_with_callability"] == "R"
     with pytest.raises(AssertionError):
         assert rec["flipped_S_to_ABSTAIN"]
+
+
+# ============================================================================================
+# Three-state callability landed in tb_vcf / tb_amr (2026-07-10). ADDITIVE: the default is the
+# frozen behaviour; `absent_is_uncallable=False` opts into the minos-correct rule.
+# ============================================================================================
+
+def test_position_states_returns_the_three_states():
+    from dna_decode.organism_rules import tb_vcf
+
+    text = _vcf(_rec(100), _rec(200, filt="MIN_DP"))
+    got = tb_vcf.position_states(text, [100, 200, 300])
+    assert got == {100: tb_vcf.PRESENT_PASS, 200: tb_vcf.PRESENT_FAIL, 300: tb_vcf.ABSENT}
+
+
+def test_callable_positions_default_is_unchanged_absent_is_uncallable():
+    from dna_decode.organism_rules import tb_vcf
+
+    text = _vcf(_rec(100))
+    assert tb_vcf.callable_positions(text, [100, 300]) == {100: True, 300: False}
+
+
+def test_callable_positions_absent_treated_callable_when_opted_in():
+    from dna_decode.organism_rules import tb_vcf
+
+    text = _vcf(_rec(100), _rec(200, filt="MIN_FRS"))
+    got = tb_vcf.callable_positions(text, [100, 200, 300], absent_is_uncallable=False)
+    assert got == {100: True, 200: False, 300: True}   # only the FAILED record is uncallable
+
+
+def test_score_drug_default_abstains_on_an_absent_position():
+    """The frozen behaviour: absent -> ABSTAIN. This is what makes 100% of S calls abstain on minos VCFs."""
+    from dna_decode.data.tb_who_catalogue import Determinant
+    from dna_decode.organism_rules import tb_amr
+
+    det = Determinant(drug="rifampicin", gene="rpoB", variant="S450L", grade="1", tier="1",
+                      chrom="NC_000962.3", pos=761155, ref="C", alt="T")
+    call = tb_amr.score_drug("rifampicin", {}, [det], regeno_text=_vcf())   # position absent
+    assert call.prediction == "ABSTAIN" and call.n_uncallable_positions == 1
+
+
+def test_score_drug_returns_S_under_the_fail_only_rule_when_position_merely_absent():
+    from dna_decode.data.tb_who_catalogue import Determinant
+    from dna_decode.organism_rules import tb_amr
+
+    det = Determinant(drug="rifampicin", gene="rpoB", variant="S450L", grade="1", tier="1",
+                      chrom="NC_000962.3", pos=761155, ref="C", alt="T")
+    call = tb_amr.score_drug("rifampicin", {}, [det], regeno_text=_vcf(), absent_is_uncallable=False)
+    assert call.prediction == "S" and call.n_uncallable_positions == 0
+
+
+def test_score_drug_still_abstains_under_fail_only_rule_on_a_real_failure():
+    from dna_decode.data.tb_who_catalogue import Determinant
+    from dna_decode.organism_rules import tb_amr
+
+    det = Determinant(drug="rifampicin", gene="rpoB", variant="S450L", grade="1", tier="1",
+                      chrom="NC_000962.3", pos=761155, ref="C", alt="T")
+    text = _vcf(_rec(761155, filt="MIN_DP"))
+    call = tb_amr.score_drug("rifampicin", {}, [det], regeno_text=text, absent_is_uncallable=False)
+    assert call.prediction == "ABSTAIN" and call.n_uncallable_positions == 1
