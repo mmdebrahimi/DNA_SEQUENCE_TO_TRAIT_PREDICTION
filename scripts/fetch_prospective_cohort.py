@@ -289,13 +289,24 @@ def parse_ast_phenotypes(field: str | None, wanted_drugs: set[str]) -> dict[str,
     return out
 
 
+def is_iso_date(d: str | None) -> bool:
+    """True only for a real `YYYY-MM-DD`-shaped date.
+
+    LOAD-BEARING: NCBI-PD writes the literal string `"NULL"` for a missing `sra_release_date`, and Python
+    compares strings lexicographically -- `"NULL" > "2026-06-13"` is True (0x4E > 0x32). A naive
+    `date <= lock` pre-filter therefore ADMITS every NULL row as if it were post-lock. Validate the shape
+    before ever comparing.
+    """
+    return bool(d) and len(d) >= 10 and d[:4].isdigit() and d[4] == "-" and d[7] == "-"
+
+
 def earliest_public_date(*dates: str | None) -> str | None:
     """The EARLIEST non-empty ISO date among the candidates (the conservative 'first public' bound).
 
     Prospective eligibility is fail-closed, so we take the earliest date any evidence supports. If none
     is available we return None, which `is_prospective_eligible` treats as INELIGIBLE.
     """
-    clean = sorted(d[:10] for d in dates if d and len(d) >= 10 and d[:4].isdigit())
+    clean = sorted(d[:10] for d in dates if is_iso_date(d))
     return clean[0] if clean else None
 
 
@@ -317,7 +328,8 @@ def fetch_live_ncbi_pd(lock_date: str, sleep: float, row_cap: int | None = None,
                        ) -> tuple[list[dict], dict, dict[str, str], dict[str, str]]:
     """PD accrual funnel. Same contract as `fetch_live`: a failure is RECORDED, never a silent zero."""
     all_rows: list[dict] = []
-    agg = {"pd_rows": 0, "with_ast_and_asm": 0, "prefilter_post_lock": 0,
+    agg = {"pd_rows": 0, "with_ast_and_asm": 0,
+           "sra_pre_lock_skipped": 0, "sra_post_lock": 0, "sra_undatable_resolved_by_assembly": 0,
            "resolved": 0, "eligible": 0, "excluded_pre_or_undatable": 0}
     group_status: dict[str, str] = {}
     group_filter: dict[str, str] = {}
@@ -351,13 +363,22 @@ def fetch_live_ncbi_pd(lock_date: str, sleep: float, row_cap: int | None = None,
                     continue
                 agg["with_ast_and_asm"] += 1
                 sra_rel = g("sra_release_date")
-                # cheap NECESSARY pre-filter: an isolate whose SRA was already public pre-lock can never
-                # be eligible (its earliest public date is <= that). Fail-closed on a missing date.
-                if not sra_rel or sra_rel[:10] <= lock_date:
-                    continue
-                agg["prefilter_post_lock"] += 1
+                # Cheap NECESSARY pre-filter. Three states, kept DISTINCT (see is_iso_date):
+                #   valid & <= lock  -> can never be eligible (earliest public date <= that) -> skip
+                #   valid &  > lock  -> candidate
+                #   undatable (NULL) -> candidate; the AUTHORITATIVE assembly release_date decides, and
+                #                       `is_prospective_eligible` is fail-closed if that is missing too.
+                if is_iso_date(sra_rel):
+                    if sra_rel[:10] <= lock_date:
+                        agg["sra_pre_lock_skipped"] += 1
+                        continue
+                    agg["sra_post_lock"] += 1
+                    sra_clean = sra_rel[:10]
+                else:
+                    agg["sra_undatable_resolved_by_assembly"] += 1
+                    sra_clean = None
                 candidates.append({"asm": asm, "biosample": g("biosample_acc"),
-                                   "sra_release_date": sra_rel[:10], "labels": labels})
+                                   "sra_release_date": sra_clean, "labels": labels})
 
             agg["pd_rows"] += n_rows
         except SourceUnavailable as e:

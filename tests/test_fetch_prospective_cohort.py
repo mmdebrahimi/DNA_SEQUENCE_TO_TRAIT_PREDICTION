@@ -358,7 +358,7 @@ def test_fetch_live_ncbi_pd_end_to_end_prefilter(monkeypatch):
 
     rows, agg, status, filt = F.fetch_live_ncbi_pd("2026-06-13", 0.0)
     assert status["Klebsiella"] == "ok" and filt["Klebsiella"] == "ncbi_pd_metadata"
-    assert agg["with_ast_and_asm"] == 2 and agg["prefilter_post_lock"] == 1
+    assert agg["with_ast_and_asm"] == 2 and agg["sra_post_lock"] == 1
     assert len(rows) == 1
     assert rows[0]["gca"] == "GCA_NEW" and rows[0]["label"] == "R"
     assert rows[0]["first_public_date"] == "2026-07-01"   # earliest of (sra 07-01, asm 07-02)
@@ -384,3 +384,47 @@ def test_main_row_cap_cannot_claim_accruing(monkeypatch, tmp_path):
     st = json.loads((tmp_path / "prospective_cohort_status.json").read_text())
     assert st["overall_status"] == "TRUNCATED_SMOKE_RUN"
     assert not (tmp_path / "prospective_cohort.tsv").exists()
+
+
+# ---------------------------------------------------------------- the "NULL" string-comparison trap
+
+def test_is_iso_date_rejects_the_literal_NULL_string():
+    """NCBI-PD writes 'NULL' for a missing date, and 'NULL' > '2026-06-13' lexicographically."""
+    assert not F.is_iso_date("NULL")
+    assert not F.is_iso_date("") and not F.is_iso_date(None)
+    assert not F.is_iso_date("2026")          # year-only
+    assert F.is_iso_date("2026-06-14")
+
+
+def test_null_would_pass_a_naive_lexicographic_prefilter():
+    """Pins WHY is_iso_date exists — the bug this guards against is silent, not an exception."""
+    assert "NULL" > "2026-06-13"               # the trap
+    assert not F.is_iso_date("NULL")           # the guard
+
+
+def test_earliest_public_date_ignores_NULL_and_uses_the_assembly_date():
+    assert F.earliest_public_date("NULL", "2013-07-01") == "2013-07-01"
+    assert F.earliest_public_date("NULL", None) is None
+
+
+def test_fetch_live_ncbi_pd_counts_the_three_sra_date_states(monkeypatch):
+    rows_tsv = [
+        "asm_acc\tAST_phenotypes\tsra_release_date\tbiosample_acc",
+        "GCA_PRE\tciprofloxacin=R\t2013-07-01\tSAMN1",    # valid pre-lock -> skipped outright
+        "GCA_POST\tciprofloxacin=R\t2026-07-01\tSAMN2",   # valid post-lock -> candidate
+        "GCA_NULL\tciprofloxacin=R\tNULL\tSAMN3",         # undatable -> assembly date decides
+    ]
+    monkeypatch.setattr(F, "cells_by_group", lambda: {"Klebsiella": {"ciprofloxacin"}})
+    monkeypatch.setattr(F, "_pd_metadata_lines", lambda g, timeout=600: iter(rows_tsv))
+    monkeypatch.setattr(F, "_ncbi_release",
+                        lambda acc: {"release_date": "2026-07-02" if acc == "GCA_POST" else "2013-07-01",
+                                     "biosample": ""})
+    monkeypatch.setattr(F.time, "sleep", lambda *_: None)
+
+    rows, agg, _s, _f = F.fetch_live_ncbi_pd("2026-06-13", 0.0)
+    assert agg["sra_pre_lock_skipped"] == 1
+    assert agg["sra_post_lock"] == 1
+    assert agg["sra_undatable_resolved_by_assembly"] == 1
+    # the NULL row's assembly predates the lock -> excluded; only the genuinely post-lock one survives
+    assert len(rows) == 1 and rows[0]["gca"] == "GCA_POST"
+    assert agg["excluded_pre_or_undatable"] == 1
