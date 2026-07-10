@@ -1,0 +1,31 @@
+{
+  "_schema": "prospective-cohort-fetch-status-v1",
+  "lock_date": "2026-06-13",
+  "source": "ncbi_pd",
+  "row_cap": null,
+  "overall_status": "OK",
+  "taxon_status": {
+    "Campylobacter": "ok",
+    "Escherichia_coli_Shigella": "ok",
+    "Klebsiella": "ok"
+  },
+  "taxon_filter_used": {
+    "Campylobacter": "ncbi_pd_metadata",
+    "Escherichia_coli_Shigella": "ncbi_pd_metadata",
+    "Klebsiella": "ncbi_pd_metadata"
+  },
+  "funnel": {
+    "pd_rows": 901520,
+    "with_ast_and_asm": 13423,
+    "sra_pre_lock_skipped": 9754,
+    "sra_post_lock": 0,
+    "sra_undatable_resolved_by_assembly": 3669,
+    "resolved": 3669,
+    "eligible": 0,
+    "excluded_pre_or_undatable": 3669
+  },
+  "n_eligible_rows": 0,
+  "cohort_tsv_written": true,
+  "coverage_caveat": "taxon_id_only filters MISS strain-level taxids (measured offline: 95.4% of 85,099 BV-BRC E. coli genomes carry taxon_id 562; the other 4.6% sit under strain taxids incl. the O157:H7 lineages). Where taxon_filter_used == 'taxon_id_only' the cohort is an UNDER-COUNT.",
+  "honesty": "A cohort TSV is written ONLY when overall_status == OK. '0 eligible' is a meaningful ACCRUING signal exclusively under OK \u2014 a dead/degraded source must never be reportable as a real zero."
+}
