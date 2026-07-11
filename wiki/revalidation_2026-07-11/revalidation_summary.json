@@ -1,0 +1,248 @@
+{
+  "_schema": "scored-cell-revalidation-v1",
+  "date": "2026-07-11",
+  "per_class": 15,
+  "note": "SECOND provenance-disjoint cohort per cell (genomes disjoint from the frozen cohort). Isolated from all frozen artifacts; NOT a report-card input.",
+  "cells": [
+    {
+      "group": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "registry_organism": "Campylobacter",
+      "n_selected": 4,
+      "fresh": {
+        "sens": 1.0,
+        "spec": 1.0,
+        "n_scored": 4
+      },
+      "frozen": {
+        "sens": 1.0,
+        "spec": 1.0,
+        "n_scored": 40,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": 0.0,
+        "d_spec": 0.0
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1479
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 1.0,
+        "spec": 0.933,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.967,
+        "spec": 0.967,
+        "n_scored": 60,
+        "date": "2026-06-12",
+        "file": "provenance_disjoint_validation_escherichia_coli_shigella_ceftr_2026-06-12.json"
+      },
+      "drift": {
+        "d_sens": 0.033,
+        "d_spec": -0.034
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1509
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 1.0,
+        "spec": 0.933,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.933,
+        "spec": 0.7,
+        "n_scored": 60,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_escherichia_coli_shigella_cipro_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": 0.067,
+        "d_spec": 0.233
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1509
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 0.8,
+        "spec": 1.0,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.9,
+        "spec": 1.0,
+        "n_scored": 60,
+        "date": "2026-06-12",
+        "file": "provenance_disjoint_validation_escherichia_coli_shigella_genta_2026-06-12.json"
+      },
+      "drift": {
+        "d_sens": -0.1,
+        "d_spec": 0.0
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1509
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "drug": "tetracycline",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 0.933,
+        "spec": 1.0,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.933,
+        "spec": 0.933,
+        "n_scored": 60,
+        "date": "2026-06-12",
+        "file": "provenance_disjoint_validation_escherichia_coli_shigella_tetra_2026-06-12.json"
+      },
+      "drift": {
+        "d_sens": 0.0,
+        "d_spec": 0.067
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1509
+    },
+    {
+      "group": "Klebsiella",
+      "drug": "ceftriaxone",
+      "registry_organism": "Klebsiella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 1.0,
+        "spec": 0.733,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 1.0,
+        "spec": 0.9,
+        "n_scored": 60,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": 0.0,
+        "d_spec": -0.167
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1499
+    },
+    {
+      "group": "Klebsiella",
+      "drug": "ciprofloxacin",
+      "registry_organism": "Klebsiella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 0.8,
+        "spec": 1.0,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.967,
+        "spec": 0.967,
+        "n_scored": 60,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_klebsiella_cipro_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": -0.167,
+        "d_spec": 0.033
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1509
+    },
+    {
+      "group": "Klebsiella",
+      "drug": "gentamicin",
+      "registry_organism": "Klebsiella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 1.0,
+        "spec": 0.933,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.933,
+        "spec": 0.933,
+        "n_scored": 60,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": 0.067,
+        "d_spec": 0.0
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1509
+    },
+    {
+      "group": "Klebsiella",
+      "drug": "meropenem",
+      "registry_organism": "Klebsiella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 0.929,
+        "spec": 0.8,
+        "n_scored": 29
+      },
+      "frozen": {
+        "sens": 0.467,
+        "spec": 0.9,
+        "n_scored": 60,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_klebsiella_merop_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": 0.462,
+        "d_spec": -0.1
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1508
+    },
+    {
+      "group": "Klebsiella",
+      "drug": "tetracycline",
+      "registry_organism": "Klebsiella",
+      "n_selected": 30,
+      "fresh": {
+        "sens": 0.667,
+        "spec": 0.933,
+        "n_scored": 30
+      },
+      "frozen": {
+        "sens": 0.8,
+        "spec": 0.967,
+        "n_scored": 60,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": -0.133,
+        "d_spec": -0.034
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1499
+    }
+  ]
+}
