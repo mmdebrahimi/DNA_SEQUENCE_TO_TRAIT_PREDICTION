@@ -5,30 +5,6 @@
   "note": "SECOND provenance-disjoint cohort per cell (genomes disjoint from the frozen cohort). Isolated from all frozen artifacts; NOT a report-card input.",
   "cells": [
     {
-      "group": "Campylobacter",
-      "drug": "ciprofloxacin",
-      "registry_organism": "Campylobacter",
-      "n_selected": 4,
-      "fresh": {
-        "sens": 1.0,
-        "spec": 1.0,
-        "n_scored": 4
-      },
-      "frozen": {
-        "sens": 1.0,
-        "spec": 1.0,
-        "n_scored": 40,
-        "date": "2026-06-10",
-        "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json"
-      },
-      "drift": {
-        "d_sens": 0.0,
-        "d_spec": 0.0
-      },
-      "cohort_disjoint_from_frozen": true,
-      "excluded_prior_accessions": 1479
-    },
-    {
       "group": "Escherichia_coli_Shigella",
       "drug": "ceftriaxone",
       "registry_organism": "Escherichia_coli_Shigella",
@@ -243,6 +219,30 @@
       },
       "cohort_disjoint_from_frozen": true,
       "excluded_prior_accessions": 1499
+    },
+    {
+      "group": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "registry_organism": "Campylobacter",
+      "n_selected": 28,
+      "fresh": {
+        "sens": 1.0,
+        "spec": 1.0,
+        "n_scored": 28
+      },
+      "frozen": {
+        "sens": 1.0,
+        "spec": 1.0,
+        "n_scored": 40,
+        "date": "2026-06-10",
+        "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json"
+      },
+      "drift": {
+        "d_sens": 0.0,
+        "d_spec": 0.0
+      },
+      "cohort_disjoint_from_frozen": true,
+      "excluded_prior_accessions": 1479
     }
   ]
 }

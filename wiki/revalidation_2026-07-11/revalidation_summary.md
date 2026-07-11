@@ -4,7 +4,6 @@ Each deployed cell re-scored on a SECOND provenance-disjoint cohort whose genome
 
 | cell | fresh sens/spec (n) | frozen sens/spec | Δsens | Δspec |
 |---|---|---|---:|---:|
-| Campylobacter × ciprofloxacin | 1.0/1.0 (4) | 1.0/1.0 | 0.0 | 0.0 |
 | Escherichia_coli_Shigella × ceftriaxone | 1.0/0.933 (30) | 0.967/0.967 | 0.033 | -0.034 |
 | Escherichia_coli_Shigella × ciprofloxacin | 1.0/0.933 (30) | 0.933/0.7 | 0.067 | 0.233 |
 | Escherichia_coli_Shigella × gentamicin | 0.8/1.0 (30) | 0.9/1.0 | -0.1 | 0.0 |
@@ -14,6 +13,7 @@ Each deployed cell re-scored on a SECOND provenance-disjoint cohort whose genome
 | Klebsiella × gentamicin | 1.0/0.933 (30) | 0.933/0.933 | 0.067 | 0.0 |
 | Klebsiella × meropenem | 0.929/0.8 (29) | 0.467/0.9 | 0.462 | -0.1 |
 | Klebsiella × tetracycline | 0.667/0.933 (30) | 0.8/0.967 | -0.133 | -0.034 |
+| Campylobacter × ciprofloxacin | 1.0/1.0 (28) | 1.0/1.0 | 0.0 | 0.0 |
 
 Frozen numbers from the committed `wiki/provenance_disjoint_validation_*.json`. A large Δ means the cell does NOT reproduce on fresh genomes — investigate before trusting the headline.
 

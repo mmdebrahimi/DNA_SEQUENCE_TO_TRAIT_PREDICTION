@@ -34,10 +34,14 @@ reproductions.
 
 ## Honest caveats
 
-1. **Campylobacter is underpowered (n=4), not a real re-validation.** `select_disjoint` REUSES an existing
-   `selected.tsv`, and the pre-launch smoke had written a `per_class=2` cohort for this cell, which the full
-   run reused. It reproduced (1.0/1.0) but on only 4 genomes. For a proper Campy number, delete
-   `data/raw/revalidation_2026-07-11/campylobacter_ciprofloxacin/selected.tsv` and re-run — ~1 cell, ~1 hr.
+1. **Campylobacter — RESOLVED 2026-07-11 (was n=4, now n=28).** The first pass scored Campy on only 4 genomes
+   because `select_disjoint` REUSES an existing `selected.tsv` and the pre-launch smoke had written a
+   `per_class=2` cohort for this cell. Re-run at `per_class=15` after deleting that file: a genuine fresh
+   disjoint cohort of **28 genomes (13R/15S)** — **fresh sens 1.0 / spec 1.0, exactly matching frozen
+   sens 1.0 / spec 1.0 (n=40), zero drift.** The R side is pool-limited to 13 (only 13 Campy cipro R genomes
+   are disjoint from the ~1,479 prior accessions — a genuine ecosystem-domination ceiling consistent with the
+   BV-BRC census, not a selector bug). So **all 10 SCORED cells are now properly re-validated on fresh
+   disjoint genomes.**
 2. **These are RAW (isolate-level) numbers, not clonality-collapsed.** The FRESH cohorts could themselves be
    clonally structured; the standing lineage-disclosure caveat still applies. The point proven is
    *reproduction on disjoint genomes*, not a lineage-independent number.
