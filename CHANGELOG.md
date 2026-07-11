@@ -3,9 +3,47 @@
 All notable changes to `dna_decode`. Format loosely follows [Keep a Changelog](https://keepachangelog.com/);
 this is a solo research-tool repo so the granularity is per-release-theme, not per-PR.
 
-## [Unreleased] — Evidence-Contract Registry + certification capstone + agent-discoverability + DNA-LLM probe (2026-06-26)
+## [Unreleased]
 
-Infrastructure + a research closeout; committed to `main`, not yet PyPI-published.
+_Nothing yet._
+
+## [0.7.0] — the multi-kingdom decoder fleet: viral + human-PGx + typing cells + genome-map browser (2026-07-11)
+
+First PyPI release since 0.6.4 (0.6.5 was an internal version bump, never published). The **frozen
+bacterial/viral/fungal AMR decoder surface (`amr_rules.py` + `calibrated_amr_rules.json`) is byte-unchanged
+from 0.6.4** — this release is purely additive, so every existing R/S call is identical. 310 commits since
+0.6.4; themed per-release, not per-PR.
+
+**Major additions since 0.6.4:**
+
+- **Typing-cell fleet** — new `dna-decode` subcommands: `plasmid` (Inc-replicon), `serotype` (E. coli O:H),
+  `resfinder` / `pointfinder` / `disinfinder` (independent cross-tool AMR checks), `mlst` (PubMLST ST),
+  `ktype` (Klebsiella K-antigen), `salmserovar` (Salmonella Kauffmann-White), `pneumoserotype` (S. pneumoniae
+  capsular — INDEPENDENT vs phenotypic Quellung, serogroup 0.939). Deterministic blastn callers, offline-safe degrade.
+- **Human pharmacogenomics (`dna-pgx`)** — CYP2C19 / CYP2C9 / VKORC1 + CYP2D6 (real short-read WGS, 5 PGP-UK
+  humans) + DPYD / NUDT15 / UGT1A1 / CYP4F2 / ABCG2; unified `dna-pgx --all` one-command 14-gene decode with drug
+  annotations; PGx trust-surface report card; independent functional-evidence + trio co-segregation QC.
+- **Viral expansion** — HIV-1 PI + INSTI + CAI classes (5 classes / 4 genes) with mutant-specific deconfounded
+  v0.1 catalogs (NRTI / PI / INSTI); SARS-CoV-2 Mpro cell (Stanford CoV-RDB). Validated against free, independent,
+  isolate-level wet-lab fold-change.
+- **Genome-map graphical browser** (`dna_decode/genome_map/browser.py` + `scripts/genome_map_browser.py`) —
+  self-contained HTML feature-track render with the evidence-tier honesty wall carried into the visual; a 5th
+  `virulence-determinant` overlay tier.
+- **Evidence-Contract Registry + certification capstone** — one test-enforced contract per shipped cell
+  (67 cells / 5 tracks); no aggregate verdict (anti-"trust-theater" guardrail). Agent-era discoverability
+  (`AGENTS.md`, quickstart / validation docs, CI green).
+- **ABO blood-group decoder** (O/A/B/AB, free-label validated 0.902 on openSNP); photic-sneeze + asparagus
+  single-locus falsification cells (both honestly fail vs the null baseline).
+- **Validation infrastructure** — provenance-disjoint + external-cohort re-validation arms, clonality/lineage
+  disclosure (Mash greedy-representative clustering), the prospective-lock accrual harness, a reproducibility
+  freeze + negative-results map, and a fresh-cohort re-validation (the decoder reproduces on unseen genomes
+  across all 10 SCORED cells).
+- **Negative results (characterized, not hidden)** — a protein LM (ESM2) does NOT beat the curated catalog on
+  antagonistically-selected AMR phenotypes (ESM2 peaks at 650M; below chance on HIV NNRTI), and the
+  DNA-LLM-via-functional-alphabet path is a soft-negative. The binding constraint remains labels, not compute.
+
+The 2026-06-26 infrastructure closeout that opened this release window (Evidence-Contract Registry +
+certification capstone + agent-discoverability + the non-neural DNA-LLM probe) is detailed below.
 
 - **Evidence-Contract Registry** (`dna_decode/data/cell_registry{,_vocab}.py`, `tests/test_cell_registry.py`):
   one checked-in, test-enforced contract per shipped cell so a new decoder cannot ship invisibly and
