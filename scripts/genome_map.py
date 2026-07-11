@@ -244,6 +244,9 @@ def main(argv=None) -> int:
         json.dumps(build_feature_table(gm), indent=2), encoding="utf-8")
     md = render_genome_summary_md(gm, gate_result, generated=today)
     (out_dir / f"genome_map_{sample_id}.md").write_text(md, encoding="utf-8")
+    from dna_decode.genome_map.browser import build_genome_map_html
+    (out_dir / f"genome_map_{sample_id}.html").write_text(
+        build_genome_map_html(gm, gate_result=gate_result, generated=today), encoding="utf-8")
 
     m = gm["metrics"]
     print(f"Wrote {out_dir} | overlay_status={gm['overlay_status']} "

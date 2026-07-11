@@ -84,8 +84,12 @@ logs/
 # Project-state scratch/working copies (stale duplicates of the live ledger; not history)
 /project_state/*-scratch.md
 
-# genome-map spike per-genome feature maps (large, regenerable via scripts/genome_map_spike.py)
+# genome-map per-genome output dirs (large, regenerable): the spike output + the single-genome CLI
+# (scripts/genome_map.py writes wiki/genome_map_<sample>_<date>/ with .json/.md/_table.json/.html).
+# The trailing slash matches DIRECTORIES only, so the tracked top-level genome_map_spike_verdict_*.{md,json}
+# + genome_map_tool_surface_*.json files are unaffected.
 wiki/genome_map_spike_*/
+wiki/genome_map_*/
 bash.exe.stackdump
 
 # ClinVar plain panels are large + regenerable; ship the gzipped GRCh38 panel only
