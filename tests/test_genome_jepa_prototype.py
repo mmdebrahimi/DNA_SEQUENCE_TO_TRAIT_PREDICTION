@@ -7,7 +7,16 @@ workhorse-gated falsifier) -- they verify the mechanism is correct.
 import sys
 from pathlib import Path
 
-import torch
+import pytest
+
+# CI installs the deterministic decoder + dev tools only (`.[dev]`) — NOT torch/the [ml] extra. A bare
+# module-level `import torch` therefore fails at COLLECTION (ModuleNotFoundError), which pytest treats as
+# a hard error → `Interrupted: 1 error during collection` → the whole job fails (exit 2). Guard it so the
+# module SKIPS cleanly when torch is absent, like the sibling ml-dependent test files. This must precede
+# BOTH the torch import and `import genome_jepa_prototype` (the script itself imports torch).
+pytest.importorskip("torch")
+
+import torch  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 import genome_jepa_prototype as gj  # noqa: E402
