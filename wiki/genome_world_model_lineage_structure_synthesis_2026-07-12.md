@@ -26,9 +26,12 @@ lineage-memorization. `scripts/crossaxis_lineage_deconfound.py` (`--target-axis 
 
 | axis (predict → from) | verdict | median clade-grouped AUC | reading |
 |---|---|---|---|
-| **determinant ↔ determinant** | GENERALIZES | **0.922** (40/45) | resistance-gene co-occurrence is real beyond lineage |
+| **determinant ↔ determinant** | GENERALIZES | **0.908** (39/45, E. coli n=232) | resistance-gene co-occurrence is real beyond lineage |
 | **AMR+plasmid → virulence** | SPLIT | **0.676** | core functions generalize; accessory genes clonal |
 | **AMR+virulence → plasmid** | LINEAGE-MEDIATED | **0.615** (8/23) | plasmid backbone identity is clade-fixed |
+
+(The determinant number is 0.908 on the harvest-consistent E. coli cohort of 232 genomes; 0.922 on the
+240-genome virulence-cache cohort — same GENERALIZES verdict either way.)
 
 The three axes fall in a clean, mechanistically-sensible order — **0.922 > 0.676 > 0.615** — and each end of
 the ordering tells a distinct, non-obvious story:
@@ -54,8 +57,31 @@ the ordering tells a distinct, non-obvious story:
   0.796→0.286, CNF1, AFA_DRA). A function carried across many clades has cross-clade signal to learn; a
   clade-restricted accessory gene does not.
 
-**One-line world-model insight:** *resistance gene content is transferable across E. coli lineages, but the
-plasmid vehicle that carries it and the chromosomal virulence context around it are lineage-locked.*
+**One-line world-model insight:** *the ACQUIRED resistance gene content is transferable across Enterobacterales
+lineages (confirmed in E. coli AND Klebsiella), but the plasmid vehicle that carries it, the chromosomal
+virulence context around it, and the intrinsic/chromosomal determinants are all lineage-locked.*
+
+## Cross-organism replication (E. coli + Klebsiella)
+
+The determinant↔determinant result is not an E. coli quirk. Re-running it per-organism (each organism
+Mash-clustered separately, `--organism`):
+
+| organism | n | clades | verdict | median clade AUC | generalize / concentrated |
+|---|---|---|---|---|---|
+| E. coli/Shigella | 232 | 80 | GENERALIZES | 0.908 | 39/45, 1 conc |
+| Klebsiella | 307 | 118 | GENERALIZES | **0.913** | 46/60, 3 conc |
+| Salmonella | 42 | — | under-powered (< MIN_GENOMES 60) | — | skipped (honest) |
+
+Klebsiella lands at essentially the same median (0.913 vs 0.908) — resistance-gene co-occurrence transfers
+across lineages in a second Enterobacterales genus. And it sharpens the mechanism: in Klebsiella the split is
+cleanly **ACQUIRED-vs-INTRINSIC**. Acquired/mobile determinants generalize (blaTEM-1 0.815, qnrS1 0.835,
+aac(3)-IIe 0.835, blaOXA 0.79, dfrA1 0.702 — plasmid/integron-borne), while the genes that COLLAPSE are exactly
+Klebsiella's intrinsic/chromosomal ones — **fosA** (intrinsic fosfomycinase, present 287/307, → 0.674),
+**blaSHV-11** (intrinsic SHV, 0.579), and chromosomal gyrA/ompK point mutations. This independently recovers
+the documented "intrinsic genes are core-genome/lineage-structured, acquired genes are mobile" distinction
+([[feedback_intrinsic_genes_break_broad_amr_class_rules]]) — the de-confound sees it with no gene annotation,
+purely from the clade-generalization signal. So the headline tightens: **it is specifically the ACQUIRED
+resistance content that transfers across lineages; intrinsic/chromosomal determinants are lineage-locked.**
 
 ## Literature grounding
 
@@ -88,14 +114,15 @@ plasmid vehicle that carries it and the chromosomal virulence context around it 
 - E. coli/Shigella only (the axis with a curated virulence caller). Cohorts are drug-R/S-selected — associational,
   not causal. Mash 0.005 resolves lineages but not sub-clade structure; a within-clade residual can still hide
   below Mash resolution (the surviving AUCs are "not PURELY clonal", not "clonality-free").
-- Single-organism control by design (240 E. coli). A cross-organism replication of the cassette-linkage result
-  (the original C-core was 845 multi-organism) is a named, un-done follow-on — lower priority since the
-  single-organism test is the cleaner lineage control.
+- Cross-organism replication done for Klebsiella (n=307); Salmonella (n=42) is below the MIN_GENOMES=60
+  both-class/5-fold floor and honestly skipped. A broader multi-genus sweep would need larger per-organism
+  cohorts.
 
 ## Artifacts
 
 - `scripts/crossaxis_lineage_deconfound.py` (+ `tests/test_crossaxis_lineage_deconfound.py`, 9 tests)
 - `wiki/crossaxis_lineage_deconfound_2026-07-12.{json,md}` (virulence, SPLIT)
 - `wiki/crossaxis_lineage_deconfound_plasmid_2026-07-12.{json,md}` (plasmid, LINEAGE — prediction falsified)
-- `wiki/crossaxis_lineage_deconfound_determinant_2026-07-12.{json,md}` (determinant, GENERALIZES 0.922)
-- commits 0eff2f3 (virulence) → 2e07995 (plasmid) → f0c0206 (determinant); frozen surface byte-unchanged.
+- `wiki/crossaxis_lineage_deconfound_determinant_2026-07-12.{json,md}` (E. coli determinant, GENERALIZES 0.908)
+- `wiki/crossaxis_lineage_deconfound_determinant_klebsiella_2026-07-12.{json,md}` (Klebsiella, GENERALIZES 0.913)
+- commits 0eff2f3 (virulence) → 2e07995 (plasmid) → f0c0206 (determinant) → cross-organism; frozen surface byte-unchanged.

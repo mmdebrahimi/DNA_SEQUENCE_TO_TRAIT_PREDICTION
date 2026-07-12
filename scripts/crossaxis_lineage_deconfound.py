@@ -116,22 +116,31 @@ def _get_clades(ec, idx, use_docker, thr_key=None):
     return thr, clusters, diag
 
 
-def run(use_docker=True, seed=SEED, target_axis="virulence"):
+def run(use_docker=True, seed=SEED, target_axis="virulence", organism=ORG):
     prefix, axis_label = TARGET_AXES[target_axis]
+    if target_axis == "virulence" and organism != ORG:
+        raise ValueError("the virulence axis is only wired for E. coli/Shigella (the curated VF caller); "
+                         "use --target-axis determinant|plasmid for other organisms.")
     idx = fasta_index()
     vir = ma.load_plasmid(REPO / "data" / "processed" / "virulence_axis_cache.json")
     plasmid = ma.load_plasmid(REPO / "data" / "processed" / "plasmid_axis_cache.json")
     acc_org_amr, acc_dets, _ = dcc.harvest()
-    ec = [a for a, v in vir.items() if v["organism"] == ORG and a in idx and a in plasmid]
+    # cohort = genomes OF THIS ORGANISM with an AMR-determinant set, a plasmid profile, and a cached FASTA.
+    ec = [a for a, o in acc_org_amr.items()
+          if o == organism and a in idx and a in plasmid and acc_dets.get(a)]
+    use_vir = vir if organism == ORG else None    # virulence axis only exists for E. coli
     thr, clusters, diag = _get_clades(ec, idx, use_docker)
     from collections import Counter
     n_clades = len(set(clusters.values()))
     largest = max(Counter(clusters.values()).values()) / len(clusters)
 
     # feature matrix over the SAME E. coli genomes (AMR + plasmid + virulence)
-    acc_org = {a: ORG for a in ec}
-    per = ma.build_joint(acc_org, acc_dets, plasmid, virulence=vir)
-    accs, X, names, nidx = per[ORG]
+    acc_org = {a: organism for a in ec}
+    per = ma.build_joint(acc_org, acc_dets, plasmid, virulence=use_vir)
+    if organism not in per:   # build_joint drops organisms below MIN_GENOMES (both-class/5-fold floor)
+        raise SystemExit(f"[under-powered] organism '{organism}' has {len(ec)} usable genomes "
+                         f"(< MIN_GENOMES={ma.MIN_GENOMES}); not enough for clade-grouped CV. Skipping.")
+    accs, X, names, nidx = per[organism]
     groups = np.array([clusters.get(a, -1) for a in accs])
     is_target = np.array([_is_target(n, prefix) for n in names])
     cross_axis_cols = np.flatnonzero(~is_target)   # for virulence/plasmid: the OTHER two axes
@@ -213,7 +222,7 @@ def run(use_docker=True, seed=SEED, target_axis="virulence"):
     }[target_axis]
     return {
         "artifact": "crossaxis_lineage_deconfound", "schema": "crossaxis-lineage-deconfound-v1",
-        "target_axis": target_axis, "axis_label": axis_label,
+        "target_axis": target_axis, "axis_label": axis_label, "organism": organism,
         "question": f"Does the E. coli non-{target_axis} -> {target_axis} cross-axis signal survive "
                     "leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
         "mash": {"n_genomes": len(ec), "threshold": thr, "n_clades": n_clades,
@@ -240,7 +249,7 @@ def run(use_docker=True, seed=SEED, target_axis="virulence"):
         "honest_caveats": [
             "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the "
             "cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
-            f"E. coli/Shigella only (the {target_axis} axis). Cohorts drug-R/S-selected. Associational.",
+            f"Organism = {organism} (the {target_axis} axis). Cohorts drug-R/S-selected. Associational.",
             "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades "
             "has cross-clade signal to learn; a clade-restricted accessory feature does not).",
         ],
@@ -275,11 +284,13 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--no-docker", action="store_true")
     ap.add_argument("--target-axis", choices=list(TARGET_AXES), default="virulence")
+    ap.add_argument("--organism", default=ORG, help="harvest organism key (e.g. klebsiella, salmonella)")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args(argv)
     today = _date.today().isoformat()
-    res = run(use_docker=not a.no_docker, target_axis=a.target_axis)
-    suffix = "" if a.target_axis == "virulence" else f"_{a.target_axis}"
+    res = run(use_docker=not a.no_docker, target_axis=a.target_axis, organism=a.organism)
+    org_tag = "" if a.organism == ORG else f"_{a.organism.split('_')[0]}"
+    suffix = ("" if a.target_axis == "virulence" else f"_{a.target_axis}") + org_tag
     out = a.out or (REPO / "wiki" / f"crossaxis_lineage_deconfound{suffix}_{today}.json")
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
     out.with_suffix(".md").write_text(render_md(res, today), encoding="utf-8")
