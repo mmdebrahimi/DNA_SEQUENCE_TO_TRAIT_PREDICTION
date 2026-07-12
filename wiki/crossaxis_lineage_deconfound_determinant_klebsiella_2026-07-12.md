@@ -2,7 +2,7 @@
 
 **Verdict: CROSS_AXIS_GENERALIZES_BEYOND_LINEAGE** — median clade-grouped AUC = 0.913 (vs naive 0.973); 46/60 AMR determinants still predicted at AUC >= 0.7 when their clade is held out.
 
-Mash: 307 E. coli genomes → 118 clades at threshold 0.005 (largest clade 0.254).
+Mash: 307 klebsiella genomes → 118 clades at threshold 0.005 (largest clade 0.254).
 
 Does the E. coli non-determinant -> determinant cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?
 

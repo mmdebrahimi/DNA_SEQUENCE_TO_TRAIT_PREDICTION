@@ -264,7 +264,8 @@ def render_md(res, generated):
          f"**Verdict: {res['verdict']}** — median clade-grouped AUC = {res['median_auc_clade_grouped']} "
          f"(vs naive {res['median_auc_naive']}); {res['n_genes_generalize']}/{res['n_genes']} {label}s "
          f"still predicted at AUC >= {res['prereg']['REAL_MIN']} when their clade is held out.", "",
-         f"Mash: {res['mash']['n_genomes']} E. coli genomes → {res['mash']['n_clades']} clades at threshold "
+         f"Mash: {res['mash']['n_genomes']} {res.get('organism','escherichia_coli_shigella')} genomes → "
+         f"{res['mash']['n_clades']} clades at threshold "
          f"{res['mash']['threshold']} (largest clade {res['mash']['largest_clade_frac']}).", "",
          f"{res['question']}", "",
          f"| {label} | n | AUC naive | **AUC clade-grouped** | drop | generalizes |",

@@ -3,27 +3,28 @@
   "schema": "crossaxis-lineage-deconfound-v1",
   "target_axis": "virulence",
   "axis_label": "virulence gene",
+  "organism": "escherichia_coli_shigella",
   "question": "Does the E. coli non-virulence -> virulence cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
   "mash": {
-    "n_genomes": 240,
+    "n_genomes": 232,
     "threshold": 0.005,
-    "n_clades": 85,
-    "largest_clade_frac": 0.342,
+    "n_clades": 80,
+    "largest_clade_frac": 0.353,
     "threshold_sweep": [
       {
         "threshold": 0.005,
-        "n_clades": 85,
-        "largest_clade_frac": 0.342
+        "n_clades": 80,
+        "largest_clade_frac": 0.353
       },
       {
         "threshold": 0.01,
         "n_clades": 46,
-        "largest_clade_frac": 0.392
+        "largest_clade_frac": 0.405
       },
       {
         "threshold": 0.02,
         "n_clades": 8,
-        "largest_clade_frac": 0.438
+        "largest_clade_frac": 0.453
       }
     ],
     "docker_image": "quay.io/biocontainers/mash:2.3--hb105d93_10"
@@ -36,68 +37,68 @@
   },
   "verdict": "SPLIT_COMMON_GENERALIZES_ACCESSORY_IS_LINEAGE",
   "prediction_outcome": "N/A (virulence axis: see verdict + prevalence_split)",
-  "median_auc_naive": 0.848,
-  "median_auc_clade_grouped": 0.676,
+  "median_auc_naive": 0.852,
+  "median_auc_clade_grouped": 0.663,
   "n_genes_generalize": 3,
   "n_genes": 6,
   "n_clade_concentrated": 0,
   "prevalence_split": {
-    "median_n_generalizing": 201.0,
+    "median_n_generalizing": 196.0,
     "median_n_lineage_only": 17.0,
     "clean_prevalence_split": true
   },
   "literature_convergence": "The ST131 literature (Johnson/Nicolas-Chanoine reviews; PMC3916147, PMC4135879, PMC8487868) holds that resistance<->virulence co-occurrence in E. coli is driven by CLONAL EXPANSION (vertical inheritance within lineage), with hlyA (HEMOLYSIN) specifically C2-clade-restricted and co-occurring with aac6Ib/blaCTX-M-15 WITHIN clade. This de-confound independently recovers that: HEMOLYSIN collapses HARDEST under leave-one-clade-out (0.796->0.286), i.e. it is the most lineage-restricted virulence marker \u2014 exactly the hlyA-in-C2 pattern. The high-prevalence core functions (fimbriae/siderophores/capsule) generalizing across clades is the novel, non-purely-clonal half.",
   "honest_caveats": [
     "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
-    "E. coli/Shigella only (the virulence axis). Cohorts drug-R/S-selected. Associational.",
+    "Organism = escherichia_coli_shigella (the virulence axis). Cohorts drug-R/S-selected. Associational.",
     "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades has cross-clade signal to learn; a clade-restricted accessory feature does not)."
   ],
   "per_gene": {
     "AFA_DRA": {
       "n_present": 17,
-      "auc_naive": 0.639,
-      "auc_clade_grouped": 0.459,
-      "drop": 0.18,
+      "auc_naive": 0.753,
+      "auc_clade_grouped": 0.429,
+      "drop": 0.324,
       "generalizes_beyond_lineage": false,
       "clade_concentrated": false
     },
     "CAPSULE_SERUM": {
-      "n_present": 224,
-      "auc_naive": 0.771,
-      "auc_clade_grouped": 0.763,
-      "drop": 0.008,
+      "n_present": 217,
+      "auc_naive": 0.776,
+      "auc_clade_grouped": 0.735,
+      "drop": 0.041,
       "generalizes_beyond_lineage": true,
       "clade_concentrated": false
     },
     "CNF1": {
       "n_present": 15,
-      "auc_naive": 0.917,
-      "auc_clade_grouped": 0.59,
-      "drop": 0.327,
+      "auc_naive": 0.911,
+      "auc_clade_grouped": 0.591,
+      "drop": 0.32,
       "generalizes_beyond_lineage": false,
       "clade_concentrated": false
     },
     "HEMOLYSIN": {
       "n_present": 24,
-      "auc_naive": 0.796,
-      "auc_clade_grouped": 0.286,
-      "drop": 0.51,
+      "auc_naive": 0.793,
+      "auc_clade_grouped": 0.347,
+      "drop": 0.447,
       "generalizes_beyond_lineage": false,
       "clade_concentrated": false
     },
     "P_FIMBRIAE": {
       "n_present": 111,
-      "auc_naive": 0.943,
+      "auc_naive": 0.95,
       "auc_clade_grouped": 0.901,
-      "drop": 0.041,
+      "drop": 0.049,
       "generalizes_beyond_lineage": true,
       "clade_concentrated": false
     },
     "SIDEROPHORES": {
-      "n_present": 201,
-      "auc_naive": 0.9,
-      "auc_clade_grouped": 0.867,
-      "drop": 0.033,
+      "n_present": 196,
+      "auc_naive": 0.913,
+      "auc_clade_grouped": 0.85,
+      "drop": 0.063,
       "generalizes_beyond_lineage": true,
       "clade_concentrated": false
     }

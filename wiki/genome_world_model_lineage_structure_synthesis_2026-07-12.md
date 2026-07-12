@@ -72,6 +72,11 @@ Mash-clustered separately, `--organism`):
 | Klebsiella | 307 | 118 | GENERALIZES | **0.913** | 46/60, 3 conc |
 | Salmonella | 42 | — | under-powered (< MIN_GENOMES 60) | — | skipped (honest) |
 
+The **plasmid axis also replicates** in Klebsiella: CROSS_AXIS_IS_LINEAGE_MEDIATED, median clade AUC 0.668
+(vs E. coli 0.615) — the surprising "plasmid vehicle is lineage-locked" result (the falsified mobility
+prediction) is Enterobacterales-general, not E. coli-specific. So in BOTH genera the ordering holds:
+determinant (generalizes) > plasmid (lineage-mediated).
+
 Klebsiella lands at essentially the same median (0.913 vs 0.908) — resistance-gene co-occurrence transfers
 across lineages in a second Enterobacterales genus. And it sharpens the mechanism: in Klebsiella the split is
 cleanly **ACQUIRED-vs-INTRINSIC**. Acquired/mobile determinants generalize (blaTEM-1 0.815, qnrS1 0.835,
