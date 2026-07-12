@@ -1,0 +1,95 @@
+{
+  "artifact": "crossaxis_lineage_deconfound",
+  "schema": "crossaxis-lineage-deconfound-v1",
+  "question": "Does the E. coli AMR+plasmid -> virulence cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
+  "mash": {
+    "n_genomes": 240,
+    "threshold": 0.005,
+    "n_clades": 85,
+    "largest_clade_frac": 0.342,
+    "threshold_sweep": [
+      {
+        "threshold": 0.005,
+        "n_clades": 85,
+        "largest_clade_frac": 0.342
+      },
+      {
+        "threshold": 0.01,
+        "n_clades": 46,
+        "largest_clade_frac": 0.392
+      },
+      {
+        "threshold": 0.02,
+        "n_clades": 8,
+        "largest_clade_frac": 0.438
+      }
+    ],
+    "docker_image": "quay.io/biocontainers/mash:2.3--hb105d93_10"
+  },
+  "prereg": {
+    "REAL_MIN": 0.7,
+    "CV_MIN": 10,
+    "clade_grouped_cv": "GroupKFold by Mash clade",
+    "seed": 0
+  },
+  "verdict": "SPLIT_COMMON_GENERALIZES_ACCESSORY_IS_LINEAGE",
+  "median_auc_naive": 0.848,
+  "median_auc_clade_grouped": 0.676,
+  "n_genes_generalize": 3,
+  "n_genes": 6,
+  "prevalence_split": {
+    "median_n_generalizing": 201.0,
+    "median_n_lineage_only": 17.0,
+    "clean_prevalence_split": true
+  },
+  "literature_convergence": "The ST131 literature (Johnson/Nicolas-Chanoine reviews; PMC3916147, PMC4135879, PMC8487868) holds that resistance<->virulence co-occurrence in E. coli is driven by CLONAL EXPANSION (vertical inheritance within lineage), with hlyA (HEMOLYSIN) specifically C2-clade-restricted and co-occurring with aac6Ib/blaCTX-M-15 WITHIN clade. This de-confound independently recovers that: HEMOLYSIN collapses HARDEST under leave-one-clade-out (0.796->0.286), i.e. it is the most lineage-restricted virulence marker \u2014 exactly the hlyA-in-C2 pattern. The high-prevalence core functions (fimbriae/siderophores/capsule) generalizing across clades is the novel, non-purely-clonal half.",
+  "honest_caveats": [
+    "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
+    "E. coli/Shigella only (the virulence axis). Cohorts drug-R/S-selected. Associational.",
+    "Generalization tracks PREVALENCE: the 3 generalizing functions are all high-prevalence (n>=111); the 3 lineage-only genes are all low-prevalence accessory markers (n<=24). A common function present across many clades has cross-clade signal to learn; a clade-restricted accessory gene does not."
+  ],
+  "per_gene": {
+    "AFA_DRA": {
+      "n_present": 17,
+      "auc_naive": 0.639,
+      "auc_clade_grouped": 0.459,
+      "drop": 0.18,
+      "generalizes_beyond_lineage": false
+    },
+    "CAPSULE_SERUM": {
+      "n_present": 224,
+      "auc_naive": 0.771,
+      "auc_clade_grouped": 0.763,
+      "drop": 0.008,
+      "generalizes_beyond_lineage": true
+    },
+    "CNF1": {
+      "n_present": 15,
+      "auc_naive": 0.917,
+      "auc_clade_grouped": 0.59,
+      "drop": 0.327,
+      "generalizes_beyond_lineage": false
+    },
+    "HEMOLYSIN": {
+      "n_present": 24,
+      "auc_naive": 0.796,
+      "auc_clade_grouped": 0.286,
+      "drop": 0.51,
+      "generalizes_beyond_lineage": false
+    },
+    "P_FIMBRIAE": {
+      "n_present": 111,
+      "auc_naive": 0.943,
+      "auc_clade_grouped": 0.901,
+      "drop": 0.041,
+      "generalizes_beyond_lineage": true
+    },
+    "SIDEROPHORES": {
+      "n_present": 201,
+      "auc_naive": 0.9,
+      "auc_clade_grouped": 0.867,
+      "drop": 0.033,
+      "generalizes_beyond_lineage": true
+    }
+  }
+}
