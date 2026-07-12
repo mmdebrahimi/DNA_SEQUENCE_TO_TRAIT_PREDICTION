@@ -1,0 +1,358 @@
+{
+  "artifact": "hiv_quantitative_calibration",
+  "schema": "hiv-quantitative-calibration-v1",
+  "question": "Does a split-conformal prediction interval on HIV fold-change achieve its nominal held-out coverage (is the quantitative decoder honestly calibrated)?",
+  "method": "split-conformal on the additive nested-CV OOF residuals (Family A harness); finite-sample quantile; coverage tested on a held-out residual half; averaged over 20 shuffles",
+  "label_source": "Stanford HIVDB PhenoSense fold-change (free, independent wet-lab)",
+  "prereg": {
+    "COVER_TOL": 0.05,
+    "PASS_FRACTION": 0.5,
+    "REPEATS": 20,
+    "targets": [
+      0.9,
+      0.8
+    ],
+    "N_MIN": 30,
+    "seed": 0
+  },
+  "verdict": "CALIBRATED_INTERVALS",
+  "n_powered": 24,
+  "n_calibrated_90": 24,
+  "fraction_calibrated": 1.0,
+  "honest_caveats": [
+    "Split-conformal gives MARGINAL coverage (not conditional on the mutation profile).",
+    "Censored folds ('>'/'<') kept at the numeric bound bias the tail slightly.",
+    "Reuses Family A's additive OOF (no interaction terms \u2014 A showed they don't help rank; the point estimate is the additive model's)."
+  ],
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; conformal per Vovk/Lei split-conformal",
+  "per_class": {
+    "NNRTI": {
+      "class": "NNRTI",
+      "per_drug": {
+        "EFV": {
+          "n": 2168,
+          "powered": true,
+          "r2_oof": 0.8443,
+          "cover_90": 0.8973,
+          "halfwidth_log10_90": 0.5468,
+          "fold_factor_90": 3.52,
+          "cover_80": 0.7925,
+          "halfwidth_log10_80": 0.4038,
+          "fold_factor_80": 2.53,
+          "calibrated_90": true
+        },
+        "NVP": {
+          "n": 2052,
+          "powered": true,
+          "r2_oof": 0.7746,
+          "cover_90": 0.9037,
+          "halfwidth_log10_90": 0.7853,
+          "fold_factor_90": 6.1,
+          "cover_80": 0.798,
+          "halfwidth_log10_80": 0.5918,
+          "fold_factor_80": 3.91,
+          "calibrated_90": true
+        },
+        "ETR": {
+          "n": 998,
+          "powered": true,
+          "r2_oof": 0.7273,
+          "cover_90": 0.8978,
+          "halfwidth_log10_90": 0.5566,
+          "fold_factor_90": 3.6,
+          "cover_80": 0.7935,
+          "halfwidth_log10_80": 0.4057,
+          "fold_factor_80": 2.55,
+          "calibrated_90": true
+        },
+        "RPV": {
+          "n": 311,
+          "powered": true,
+          "r2_oof": 0.642,
+          "cover_90": 0.9087,
+          "halfwidth_log10_90": 0.6893,
+          "fold_factor_90": 4.89,
+          "cover_80": 0.8003,
+          "halfwidth_log10_80": 0.5051,
+          "fold_factor_80": 3.2,
+          "calibrated_90": true
+        },
+        "DOR": {
+          "n": 130,
+          "powered": true,
+          "r2_oof": 0.8131,
+          "cover_90": 0.8931,
+          "halfwidth_log10_90": 0.6016,
+          "fold_factor_90": 4.0,
+          "cover_80": 0.8246,
+          "halfwidth_log10_80": 0.4123,
+          "fold_factor_80": 2.58,
+          "calibrated_90": true
+        },
+        "CompMutList": {
+          "n": 0,
+          "powered": false,
+          "note": "too few"
+        }
+      }
+    },
+    "NRTI": {
+      "class": "NRTI",
+      "per_drug": {
+        "3TC": {
+          "n": 1839,
+          "powered": true,
+          "r2_oof": 0.9098,
+          "cover_90": 0.8999,
+          "halfwidth_log10_90": 0.3278,
+          "fold_factor_90": 2.13,
+          "cover_80": 0.802,
+          "halfwidth_log10_80": 0.2655,
+          "fold_factor_80": 1.84,
+          "calibrated_90": true
+        },
+        "ABC": {
+          "n": 1731,
+          "powered": true,
+          "r2_oof": 0.8181,
+          "cover_90": 0.9016,
+          "halfwidth_log10_90": 0.2551,
+          "fold_factor_90": 1.8,
+          "cover_80": 0.8006,
+          "halfwidth_log10_80": 0.1921,
+          "fold_factor_80": 1.56,
+          "calibrated_90": true
+        },
+        "AZT": {
+          "n": 1853,
+          "powered": true,
+          "r2_oof": 0.7837,
+          "cover_90": 0.8981,
+          "halfwidth_log10_90": 0.685,
+          "fold_factor_90": 4.84,
+          "cover_80": 0.7948,
+          "halfwidth_log10_80": 0.4965,
+          "fold_factor_80": 3.14,
+          "calibrated_90": true
+        },
+        "D4T": {
+          "n": 1846,
+          "powered": true,
+          "r2_oof": 0.7296,
+          "cover_90": 0.9009,
+          "halfwidth_log10_90": 0.2278,
+          "fold_factor_90": 1.69,
+          "cover_80": 0.7953,
+          "halfwidth_log10_80": 0.1635,
+          "fold_factor_80": 1.46,
+          "calibrated_90": true
+        },
+        "DDI": {
+          "n": 1849,
+          "powered": true,
+          "r2_oof": 0.7136,
+          "cover_90": 0.9021,
+          "halfwidth_log10_90": 0.1937,
+          "fold_factor_90": 1.56,
+          "cover_80": 0.7986,
+          "halfwidth_log10_80": 0.1422,
+          "fold_factor_80": 1.39,
+          "calibrated_90": true
+        },
+        "TDF": {
+          "n": 1548,
+          "powered": true,
+          "r2_oof": 0.6177,
+          "cover_90": 0.9032,
+          "halfwidth_log10_90": 0.2924,
+          "fold_factor_90": 1.96,
+          "cover_80": 0.7946,
+          "halfwidth_log10_80": 0.1998,
+          "fold_factor_80": 1.58,
+          "calibrated_90": true
+        },
+        "CompMutList": {
+          "n": 0,
+          "powered": false,
+          "note": "too few"
+        }
+      }
+    },
+    "PI": {
+      "class": "PI",
+      "per_drug": {
+        "FPV": {
+          "n": 2052,
+          "powered": true,
+          "r2_oof": 0.8628,
+          "cover_90": 0.8964,
+          "halfwidth_log10_90": 0.4588,
+          "fold_factor_90": 2.88,
+          "cover_80": 0.8002,
+          "halfwidth_log10_80": 0.3438,
+          "fold_factor_80": 2.21,
+          "calibrated_90": true
+        },
+        "ATV": {
+          "n": 1505,
+          "powered": true,
+          "r2_oof": 0.8825,
+          "cover_90": 0.8983,
+          "halfwidth_log10_90": 0.4443,
+          "fold_factor_90": 2.78,
+          "cover_80": 0.8042,
+          "halfwidth_log10_80": 0.3352,
+          "fold_factor_80": 2.16,
+          "calibrated_90": true
+        },
+        "IDV": {
+          "n": 2098,
+          "powered": true,
+          "r2_oof": 0.8814,
+          "cover_90": 0.9036,
+          "halfwidth_log10_90": 0.4257,
+          "fold_factor_90": 2.67,
+          "cover_80": 0.7961,
+          "halfwidth_log10_80": 0.3183,
+          "fold_factor_80": 2.08,
+          "calibrated_90": true
+        },
+        "LPV": {
+          "n": 1807,
+          "powered": true,
+          "r2_oof": 0.9086,
+          "cover_90": 0.903,
+          "halfwidth_log10_90": 0.4265,
+          "fold_factor_90": 2.67,
+          "cover_80": 0.7955,
+          "halfwidth_log10_80": 0.3259,
+          "fold_factor_80": 2.12,
+          "calibrated_90": true
+        },
+        "NFV": {
+          "n": 2133,
+          "powered": true,
+          "r2_oof": 0.8676,
+          "cover_90": 0.902,
+          "halfwidth_log10_90": 0.4659,
+          "fold_factor_90": 2.92,
+          "cover_80": 0.7992,
+          "halfwidth_log10_80": 0.3519,
+          "fold_factor_80": 2.25,
+          "calibrated_90": true
+        },
+        "SQV": {
+          "n": 2084,
+          "powered": true,
+          "r2_oof": 0.873,
+          "cover_90": 0.9038,
+          "halfwidth_log10_90": 0.4842,
+          "fold_factor_90": 3.05,
+          "cover_80": 0.8011,
+          "halfwidth_log10_80": 0.3487,
+          "fold_factor_80": 2.23,
+          "calibrated_90": true
+        },
+        "TPV": {
+          "n": 1226,
+          "powered": true,
+          "r2_oof": 0.7203,
+          "cover_90": 0.8997,
+          "halfwidth_log10_90": 0.4542,
+          "fold_factor_90": 2.85,
+          "cover_80": 0.8004,
+          "halfwidth_log10_80": 0.3142,
+          "fold_factor_80": 2.06,
+          "calibrated_90": true
+        },
+        "DRV": {
+          "n": 993,
+          "powered": true,
+          "r2_oof": 0.8684,
+          "cover_90": 0.9003,
+          "halfwidth_log10_90": 0.427,
+          "fold_factor_90": 2.67,
+          "cover_80": 0.8041,
+          "halfwidth_log10_80": 0.3151,
+          "fold_factor_80": 2.07,
+          "calibrated_90": true
+        },
+        "CompMutList": {
+          "n": 0,
+          "powered": false,
+          "note": "too few"
+        }
+      }
+    },
+    "INI": {
+      "class": "INI",
+      "per_drug": {
+        "RAL": {
+          "n": 753,
+          "powered": true,
+          "r2_oof": 0.896,
+          "cover_90": 0.904,
+          "halfwidth_log10_90": 0.3542,
+          "fold_factor_90": 2.26,
+          "cover_80": 0.7993,
+          "halfwidth_log10_80": 0.2327,
+          "fold_factor_80": 1.71,
+          "calibrated_90": true
+        },
+        "EVG": {
+          "n": 754,
+          "powered": true,
+          "r2_oof": 0.8223,
+          "cover_90": 0.9086,
+          "halfwidth_log10_90": 0.4837,
+          "fold_factor_90": 3.05,
+          "cover_80": 0.8011,
+          "halfwidth_log10_80": 0.3547,
+          "fold_factor_80": 2.26,
+          "calibrated_90": true
+        },
+        "DTG": {
+          "n": 370,
+          "powered": true,
+          "r2_oof": 0.4594,
+          "cover_90": 0.8941,
+          "halfwidth_log10_90": 0.5474,
+          "fold_factor_90": 3.53,
+          "cover_80": 0.8054,
+          "halfwidth_log10_80": 0.3879,
+          "fold_factor_80": 2.44,
+          "calibrated_90": true
+        },
+        "BIC": {
+          "n": 287,
+          "powered": true,
+          "r2_oof": 0.4655,
+          "cover_90": 0.9094,
+          "halfwidth_log10_90": 0.4546,
+          "fold_factor_90": 2.85,
+          "cover_80": 0.7951,
+          "halfwidth_log10_80": 0.3113,
+          "fold_factor_80": 2.05,
+          "calibrated_90": true
+        },
+        "CAB": {
+          "n": 64,
+          "powered": true,
+          "r2_oof": 0.6137,
+          "cover_90": 0.9281,
+          "halfwidth_log10_90": 0.6703,
+          "fold_factor_90": 4.68,
+          "cover_80": 0.8094,
+          "halfwidth_log10_80": 0.3985,
+          "fold_factor_80": 2.5,
+          "calibrated_90": true
+        },
+        "CompMutList": {
+          "n": 0,
+          "powered": false,
+          "note": "too few"
+        }
+      }
+    }
+  }
+}
