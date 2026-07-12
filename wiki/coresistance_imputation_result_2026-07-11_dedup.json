@@ -1,0 +1,903 @@
+{
+  "artifact": "coresistance_imputation_world_model",
+  "schema": "coresistance-imputation-v1",
+  "question": "Can a genome's resistance to a drug CLASS be imputed from its OTHER-class determinants, within organism? (the 'predict the unobserved resistance profile' world-model payload)",
+  "substrate": "cached AMRFinder AMR determinants -> drug-CLASS presence (self-distillation); AMR-only (0/845 genomes carry VIRULENCE determinants -> no cross-axis; STRESS sparse)",
+  "prereg": {
+    "MIN_GENOMES": 60,
+    "MIN_SUPPORT": 10,
+    "PASS_FRACTION": 0.5,
+    "BOOT": 1000,
+    "seed": 0,
+    "imputable_rule": "held-out OOF-AUC 95% CI lower > 0.5 (5-fold stratified logistic on other classes)",
+    "deconfound": "within-organism + optional profile-dedup clonality proxy"
+  },
+  "deduped": true,
+  "verdict": "PASS_CORESISTANCE_IMPUTABLE",
+  "total_testable": 21,
+  "total_imputable": 18,
+  "fraction_imputable": 0.857,
+  "honest_caveats": [
+    "Cross-axis (virulence/stress) NOT available from cached AMR-only runs; AMR drug-class only.",
+    "Cohorts are drug-R/S-SELECTED -> the co-resistance structure reflects the curated cohorts.",
+    "Within-organism de-confounds species; dedup is a crude clonality proxy (Mash-collapse is the follow-on).",
+    "Class presence is DETERMINANT-implied (AMRFinder Class), not measured MIC per drug \u2014 a genotype axis.",
+    "Self-distillation from our own caller: associational, NOT causal."
+  ],
+  "per_organism": {
+    "klebsiella": {
+      "organism": "klebsiella",
+      "n_genomes": 59,
+      "n_classes": 17,
+      "n_testable": 8,
+      "n_imputable": 5,
+      "fraction_imputable": 0.625,
+      "note": "profile-deduped 307->59 genomes (clonality proxy)",
+      "per_class_imputation": {
+        "AMINOGLYCOSIDE": {
+          "auc": 0.8428,
+          "ci_lo": 0.7159,
+          "ci_hi": 0.9356,
+          "n_present": 46,
+          "imputable": true
+        },
+        "COLISTIN": {
+          "auc": 0.5729,
+          "ci_lo": 0.4011,
+          "ci_hi": 0.7422,
+          "n_present": 11,
+          "imputable": false
+        },
+        "MACROLIDE": {
+          "auc": 0.7907,
+          "ci_lo": 0.6666,
+          "ci_hi": 0.8963,
+          "n_present": 21,
+          "imputable": true
+        },
+        "NITROFURAN": {
+          "auc": 0.8014,
+          "ci_lo": 0.645,
+          "ci_hi": 0.9164,
+          "n_present": 38,
+          "imputable": true
+        },
+        "RIFAMYCIN": {
+          "auc": 0.5661,
+          "ci_lo": 0.3705,
+          "ci_hi": 0.7611,
+          "n_present": 13,
+          "imputable": false
+        },
+        "SULFONAMIDE": {
+          "auc": 0.8625,
+          "ci_lo": 0.7534,
+          "ci_hi": 0.9436,
+          "n_present": 40,
+          "imputable": true
+        },
+        "TETRACYCLINE": {
+          "auc": 0.9151,
+          "ci_lo": 0.8244,
+          "ci_hi": 0.9783,
+          "n_present": 45,
+          "imputable": true
+        },
+        "TRIMETHOPRIM": {
+          "auc": 0.6585,
+          "ci_lo": 0.4982,
+          "ci_hi": 0.7923,
+          "n_present": 38,
+          "imputable": false
+        }
+      },
+      "coresistance_network": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 8,
+            "lift": 1.28,
+            "p_given_target": 0.174
+          },
+          {
+            "det": "COLISTIN",
+            "cooc": 11,
+            "lift": 1.28,
+            "p_given_target": 0.239
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 21,
+            "lift": 1.28,
+            "p_given_target": 0.457
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 38,
+            "lift": 1.22,
+            "p_given_target": 0.826
+          },
+          {
+            "det": "RIFAMYCIN",
+            "cooc": 12,
+            "lift": 1.18,
+            "p_given_target": 0.261
+          }
+        ],
+        "COLISTIN": [
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 11,
+            "lift": 1.28,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 8,
+            "lift": 1.07,
+            "p_given_target": 0.727
+          },
+          {
+            "det": "FOSFOMYCIN",
+            "cooc": 11,
+            "lift": 1.04,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "BETA-LACTAM",
+            "cooc": 11,
+            "lift": 1.02,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 11,
+            "lift": 1.02,
+            "p_given_target": 1.0
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 20,
+            "lift": 1.4,
+            "p_given_target": 0.952
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 21,
+            "lift": 1.28,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 17,
+            "lift": 1.26,
+            "p_given_target": 0.81
+          },
+          {
+            "det": "NITROFURAN",
+            "cooc": 16,
+            "lift": 1.18,
+            "p_given_target": 0.762
+          },
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 18,
+            "lift": 1.12,
+            "p_given_target": 0.857
+          }
+        ],
+        "NITROFURAN": [
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 37,
+            "lift": 1.28,
+            "p_given_target": 0.974
+          },
+          {
+            "det": "RIFAMYCIN",
+            "cooc": 10,
+            "lift": 1.19,
+            "p_given_target": 0.263
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 16,
+            "lift": 1.18,
+            "p_given_target": 0.421
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 38,
+            "lift": 1.18,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 27,
+            "lift": 1.05,
+            "p_given_target": 0.711
+          }
+        ],
+        "RIFAMYCIN": [
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 12,
+            "lift": 1.36,
+            "p_given_target": 0.923
+          },
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 12,
+            "lift": 1.21,
+            "p_given_target": 0.923
+          },
+          {
+            "det": "NITROFURAN",
+            "cooc": 10,
+            "lift": 1.19,
+            "p_given_target": 0.769
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 10,
+            "lift": 1.19,
+            "p_given_target": 0.769
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 12,
+            "lift": 1.18,
+            "p_given_target": 0.923
+          }
+        ],
+        "SULFONAMIDE": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 8,
+            "lift": 1.48,
+            "p_given_target": 0.2
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 20,
+            "lift": 1.4,
+            "p_given_target": 0.5
+          },
+          {
+            "det": "RIFAMYCIN",
+            "cooc": 12,
+            "lift": 1.36,
+            "p_given_target": 0.3
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 38,
+            "lift": 1.22,
+            "p_given_target": 0.95
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 31,
+            "lift": 1.2,
+            "p_given_target": 0.775
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 8,
+            "lift": 1.31,
+            "p_given_target": 0.178
+          },
+          {
+            "det": "NITROFURAN",
+            "cooc": 37,
+            "lift": 1.28,
+            "p_given_target": 0.822
+          },
+          {
+            "det": "RIFAMYCIN",
+            "cooc": 12,
+            "lift": 1.21,
+            "p_given_target": 0.267
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 44,
+            "lift": 1.15,
+            "p_given_target": 0.978
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 18,
+            "lift": 1.12,
+            "p_given_target": 0.4
+          }
+        ],
+        "TRIMETHOPRIM": [
+          {
+            "det": "MACROLIDE",
+            "cooc": 17,
+            "lift": 1.26,
+            "p_given_target": 0.447
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 31,
+            "lift": 1.2,
+            "p_given_target": 0.816
+          },
+          {
+            "det": "RIFAMYCIN",
+            "cooc": 10,
+            "lift": 1.19,
+            "p_given_target": 0.263
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 33,
+            "lift": 1.11,
+            "p_given_target": 0.868
+          },
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 30,
+            "lift": 1.04,
+            "p_given_target": 0.789
+          }
+        ]
+      }
+    },
+    "escherichia_coli_shigella": {
+      "organism": "escherichia_coli_shigella",
+      "n_genomes": 106,
+      "n_classes": 18,
+      "n_testable": 12,
+      "n_imputable": 12,
+      "fraction_imputable": 1.0,
+      "note": "profile-deduped 240->106 genomes (clonality proxy)",
+      "per_class_imputation": {
+        "AMINOGLYCOSIDE": {
+          "auc": 0.8947,
+          "ci_lo": 0.8267,
+          "ci_hi": 0.9505,
+          "n_present": 80,
+          "imputable": true
+        },
+        "BETA-LACTAM": {
+          "auc": 0.768,
+          "ci_lo": 0.6317,
+          "ci_hi": 0.8759,
+          "n_present": 93,
+          "imputable": true
+        },
+        "FOSFOMYCIN": {
+          "auc": 0.6816,
+          "ci_lo": 0.591,
+          "ci_hi": 0.7821,
+          "n_present": 39,
+          "imputable": true
+        },
+        "FOSMIDOMYCIN": {
+          "auc": 0.6757,
+          "ci_lo": 0.565,
+          "ci_hi": 0.7945,
+          "n_present": 23,
+          "imputable": true
+        },
+        "MACROLIDE": {
+          "auc": 0.7454,
+          "ci_lo": 0.6429,
+          "ci_hi": 0.8365,
+          "n_present": 38,
+          "imputable": true
+        },
+        "MULTIDRUG": {
+          "auc": 0.7421,
+          "ci_lo": 0.6146,
+          "ci_hi": 0.8574,
+          "n_present": 18,
+          "imputable": true
+        },
+        "NITROFURAN": {
+          "auc": 0.6343,
+          "ci_lo": 0.501,
+          "ci_hi": 0.7492,
+          "n_present": 12,
+          "imputable": true
+        },
+        "PHENICOL": {
+          "auc": 0.742,
+          "ci_lo": 0.6389,
+          "ci_hi": 0.8389,
+          "n_present": 47,
+          "imputable": true
+        },
+        "QUINOLONE": {
+          "auc": 0.7931,
+          "ci_lo": 0.6913,
+          "ci_hi": 0.8856,
+          "n_present": 77,
+          "imputable": true
+        },
+        "SULFONAMIDE": {
+          "auc": 0.903,
+          "ci_lo": 0.843,
+          "ci_hi": 0.9539,
+          "n_present": 65,
+          "imputable": true
+        },
+        "TETRACYCLINE": {
+          "auc": 0.6637,
+          "ci_lo": 0.5538,
+          "ci_hi": 0.7631,
+          "n_present": 63,
+          "imputable": true
+        },
+        "TRIMETHOPRIM": {
+          "auc": 0.9147,
+          "ci_lo": 0.852,
+          "ci_hi": 0.9673,
+          "n_present": 60,
+          "imputable": true
+        }
+      },
+      "coresistance_network": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 9,
+            "lift": 1.33,
+            "p_given_target": 0.113
+          },
+          {
+            "det": "LINCOSAMIDE",
+            "cooc": 8,
+            "lift": 1.33,
+            "p_given_target": 0.1
+          },
+          {
+            "det": "STREPTOTHRICIN",
+            "cooc": 8,
+            "lift": 1.33,
+            "p_given_target": 0.1
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 63,
+            "lift": 1.28,
+            "p_given_target": 0.787
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 58,
+            "lift": 1.28,
+            "p_given_target": 0.725
+          }
+        ],
+        "BETA-LACTAM": [
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 58,
+            "lift": 1.1,
+            "p_given_target": 0.624
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 62,
+            "lift": 1.09,
+            "p_given_target": 0.667
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 36,
+            "lift": 1.08,
+            "p_given_target": 0.387
+          },
+          {
+            "det": "MULTIDRUG",
+            "cooc": 17,
+            "lift": 1.08,
+            "p_given_target": 0.183
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 73,
+            "lift": 1.08,
+            "p_given_target": 0.785
+          }
+        ],
+        "FOSFOMYCIN": [
+          {
+            "det": "MULTIDRUG",
+            "cooc": 11,
+            "lift": 1.66,
+            "p_given_target": 0.282
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 33,
+            "lift": 1.16,
+            "p_given_target": 0.846
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 16,
+            "lift": 1.14,
+            "p_given_target": 0.41
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 19,
+            "lift": 1.1,
+            "p_given_target": 0.487
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 22,
+            "lift": 1.0,
+            "p_given_target": 0.564
+          }
+        ],
+        "FOSMIDOMYCIN": [
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 17,
+            "lift": 1.24,
+            "p_given_target": 0.739
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 10,
+            "lift": 1.21,
+            "p_given_target": 0.435
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 12,
+            "lift": 1.18,
+            "p_given_target": 0.522
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 18,
+            "lift": 1.08,
+            "p_given_target": 0.783
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 15,
+            "lift": 1.06,
+            "p_given_target": 0.652
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "MULTIDRUG",
+            "cooc": 10,
+            "lift": 1.55,
+            "p_given_target": 0.263
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 32,
+            "lift": 1.49,
+            "p_given_target": 0.842
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 34,
+            "lift": 1.46,
+            "p_given_target": 0.895
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 22,
+            "lift": 1.31,
+            "p_given_target": 0.579
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 36,
+            "lift": 1.26,
+            "p_given_target": 0.947
+          }
+        ],
+        "MULTIDRUG": [
+          {
+            "det": "FOSFOMYCIN",
+            "cooc": 11,
+            "lift": 1.66,
+            "p_given_target": 0.611
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 10,
+            "lift": 1.55,
+            "p_given_target": 0.556
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 12,
+            "lift": 1.5,
+            "p_given_target": 0.667
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 18,
+            "lift": 1.38,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 12,
+            "lift": 1.18,
+            "p_given_target": 0.667
+          }
+        ],
+        "NITROFURAN": [
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 11,
+            "lift": 1.54,
+            "p_given_target": 0.917
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 10,
+            "lift": 1.47,
+            "p_given_target": 0.833
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 11,
+            "lift": 1.21,
+            "p_given_target": 0.917
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 8,
+            "lift": 1.09,
+            "p_given_target": 0.667
+          },
+          {
+            "det": "BETA-LACTAM",
+            "cooc": 11,
+            "lift": 1.04,
+            "p_given_target": 0.917
+          }
+        ],
+        "PHENICOL": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 9,
+            "lift": 2.26,
+            "p_given_target": 0.191
+          },
+          {
+            "det": "MULTIDRUG",
+            "cooc": 12,
+            "lift": 1.5,
+            "p_given_target": 0.255
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 38,
+            "lift": 1.43,
+            "p_given_target": 0.809
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 22,
+            "lift": 1.31,
+            "p_given_target": 0.468
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 42,
+            "lift": 1.23,
+            "p_given_target": 0.894
+          }
+        ],
+        "QUINOLONE": [
+          {
+            "det": "MULTIDRUG",
+            "cooc": 18,
+            "lift": 1.38,
+            "p_given_target": 0.234
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 34,
+            "lift": 1.23,
+            "p_given_target": 0.442
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 42,
+            "lift": 1.23,
+            "p_given_target": 0.545
+          },
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 8,
+            "lift": 1.22,
+            "p_given_target": 0.104
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 52,
+            "lift": 1.19,
+            "p_given_target": 0.675
+          }
+        ],
+        "SULFONAMIDE": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 9,
+            "lift": 1.63,
+            "p_given_target": 0.138
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 34,
+            "lift": 1.46,
+            "p_given_target": 0.523
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 53,
+            "lift": 1.44,
+            "p_given_target": 0.815
+          },
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 63,
+            "lift": 1.28,
+            "p_given_target": 0.969
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 34,
+            "lift": 1.18,
+            "p_given_target": 0.523
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "STREPTOTHRICIN",
+            "cooc": 8,
+            "lift": 1.68,
+            "p_given_target": 0.127
+          },
+          {
+            "det": "NITROFURAN",
+            "cooc": 11,
+            "lift": 1.54,
+            "p_given_target": 0.175
+          },
+          {
+            "det": "FOSMIDOMYCIN",
+            "cooc": 17,
+            "lift": 1.24,
+            "p_given_target": 0.27
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 28,
+            "lift": 1.24,
+            "p_given_target": 0.444
+          },
+          {
+            "det": "TRIMETHOPRIM",
+            "cooc": 42,
+            "lift": 1.18,
+            "p_given_target": 0.667
+          }
+        ],
+        "TRIMETHOPRIM": [
+          {
+            "det": "BLEOMYCIN",
+            "cooc": 9,
+            "lift": 1.77,
+            "p_given_target": 0.15
+          },
+          {
+            "det": "MACROLIDE",
+            "cooc": 32,
+            "lift": 1.49,
+            "p_given_target": 0.533
+          },
+          {
+            "det": "NITROFURAN",
+            "cooc": 10,
+            "lift": 1.47,
+            "p_given_target": 0.167
+          },
+          {
+            "det": "SULFONAMIDE",
+            "cooc": 53,
+            "lift": 1.44,
+            "p_given_target": 0.883
+          },
+          {
+            "det": "PHENICOL",
+            "cooc": 38,
+            "lift": 1.43,
+            "p_given_target": 0.633
+          }
+        ]
+      }
+    },
+    "campylobacter": {
+      "organism": "campylobacter",
+      "n_genomes": 20,
+      "n_classes": 7,
+      "n_testable": 0,
+      "n_imputable": 0,
+      "fraction_imputable": 0.0,
+      "note": "profile-deduped 100->20 genomes (clonality proxy)",
+      "per_class_imputation": {},
+      "coresistance_network": {}
+    },
+    "acinetobacter": {
+      "organism": "acinetobacter",
+      "n_genomes": 16,
+      "n_classes": 12,
+      "n_testable": 0,
+      "n_imputable": 0,
+      "fraction_imputable": 0.0,
+      "note": "profile-deduped 60->16 genomes (clonality proxy)",
+      "per_class_imputation": {},
+      "coresistance_network": {}
+    },
+    "salmonella": {
+      "organism": "salmonella",
+      "n_genomes": 22,
+      "n_classes": 12,
+      "n_testable": 1,
+      "n_imputable": 1,
+      "fraction_imputable": 1.0,
+      "note": "profile-deduped 60->22 genomes (clonality proxy)",
+      "per_class_imputation": {
+        "SULFONAMIDE": {
+          "auc": 0.7708,
+          "ci_lo": 0.5457,
+          "ci_hi": 0.9732,
+          "n_present": 12,
+          "imputable": true
+        }
+      },
+      "coresistance_network": {
+        "SULFONAMIDE": [
+          {
+            "det": "AMINOGLYCOSIDE",
+            "cooc": 12,
+            "lift": 1.29,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "QUINOLONE",
+            "cooc": 12,
+            "lift": 1.29,
+            "p_given_target": 1.0
+          },
+          {
+            "det": "BETA-LACTAM",
+            "cooc": 9,
+            "lift": 1.27,
+            "p_given_target": 0.75
+          },
+          {
+            "det": "TETRACYCLINE",
+            "cooc": 11,
+            "lift": 1.26,
+            "p_given_target": 0.917
+          }
+        ]
+      }
+    }
+  }
+}
