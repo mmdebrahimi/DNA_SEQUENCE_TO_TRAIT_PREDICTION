@@ -6,9 +6,17 @@ verdict `FAIL_ADDITIVE_SUFFICES` (`wiki/hiv_epistasis_result_2026-07-11.{json,md
 `tests/test_hiv_epistasis.py` 13/13; frozen surface `verify_lock` OK). Family **C EXECUTED** 2026-07-11
 (user ratified option 2, depth+breadth) → verdict `PASS_LINKAGE_STRUCTURE` (raw 143/144; clonality-corrected
 114/121 = 94.2%; `scripts/determinant_cooccurrence.py`; `tests/test_determinant_cooccurrence.py` 10/10;
-`wiki/determinant_cooccurrence_result_2026-07-11{,_dedup}.{json,md}`). Families B/D remain CANDIDATE.
-The A+C pair: additive suffices at the quantitative per-drug level (A), massive real joint linkage at the
-determinant level + phenotype→genotype inversion (C).
+`wiki/determinant_cooccurrence_result_2026-07-11{,_dedup}.{json,md}`).
+Family **B EXECUTED** 2026-07-11 (deep dive) → `CALIBRATED_INTERVALS` (24/24 HIV drug-cells;
+`scripts/hiv_quantitative_calibration.py`; 7 tests). Family **C-deep EXECUTED** → `PASS_CORESISTANCE_IMPUTABLE`
+(class-level imputation AUC 0.9–0.97; virulence cross-axis unavailable from AMR-only runs — Bakta sweep stays
+the Databricks follow-on; `scripts/coresistance_imputation.py`; 6 tests). Family **D EXECUTED** (risk-flagged)
+→ `FLAG_RECOVERS_BLINDSPOT` (deterministic position-novelty flag catches 60% of the HIV EFV catalog blind spot
+the learned rescue couldn't; `scripts/hiv_blindspot_position_novelty.py`; 7 tests). **ALL FOUR FAMILIES
+EXECUTED.** Synthesis: additive suffices quantitatively (A), massive real joint linkage + imputation (C/C-deep),
+the quantitative decoder is honestly calibrated (B), and a deterministic flag partially recovers the blind
+spot the learned approach can't (D) — five honest world-model findings, all from data in hand, no new
+labels/GPU/embeddings; frozen surface byte-unchanged throughout.
 
 ---
 
