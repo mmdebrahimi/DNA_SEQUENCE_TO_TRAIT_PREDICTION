@@ -60,9 +60,10 @@ def load_done():
 
 
 def _genes(vf_result) -> list[str]:
-    """Called virulence gene clusters (best-hit per cluster) — the clean gene-level virulence feature set."""
+    """CALLED virulence gene clusters only (per_cluster lists the best hit for EVERY cluster incl. non-called;
+    filter on `called` = cleared the identity/coverage thresholds) — the real per-genome virulence profile."""
     pc = vf_result.get("per_cluster") or {}
-    return sorted({k for k in pc})
+    return sorted(k for k, v in pc.items() if v.get("called"))
 
 
 def main(argv=None) -> int:
