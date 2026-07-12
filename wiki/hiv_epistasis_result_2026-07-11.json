@@ -1,0 +1,1038 @@
+{
+  "artifact": "hiv_epistasis_vs_additive",
+  "schema": "hiv-epistasis-v1",
+  "question": "Does a constrained pairwise-interaction model beat the additive mutation-presence baseline out-of-sample on Stanford HIVDB PhenoSense fold-change?",
+  "prereg": {
+    "MIN_MUTS": 10,
+    "MIN_COOC": 10,
+    "TOP_K_FOR_PAIRS": 40,
+    "MAX_PAIRS": 400,
+    "N_MIN": 30,
+    "CV_OUTER": 5,
+    "BOOT": 1000,
+    "PASS_FRACTION": 0.5,
+    "seed": 0,
+    "beat_rule": "paired bootstrap delta_rho (interaction-additive) 95% CI lower bound > 0",
+    "model": "ElasticNetCV(l1_ratio grid, inner cv=3) in StandardScaler pipeline; nested 5-fold OOF"
+  },
+  "label_source": "Stanford HIVDB PhenoSense fold-change (free, independent wet-lab; NOT Sierra interpretation)",
+  "verdict": "FAIL_ADDITIVE_SUFFICES",
+  "n_powered_cells": 24,
+  "n_ci_positive": 2,
+  "fraction_ci_positive": 0.083,
+  "ci_positive_cells": [
+    "NRTI:ABC",
+    "PI:NFV"
+  ],
+  "powered_cells": [
+    "NNRTI:EFV",
+    "NNRTI:NVP",
+    "NNRTI:ETR",
+    "NNRTI:RPV",
+    "NNRTI:DOR",
+    "NRTI:3TC",
+    "NRTI:ABC",
+    "NRTI:AZT",
+    "NRTI:D4T",
+    "NRTI:DDI",
+    "NRTI:TDF",
+    "PI:FPV",
+    "PI:ATV",
+    "PI:IDV",
+    "PI:LPV",
+    "PI:NFV",
+    "PI:SQV",
+    "PI:TPV",
+    "PI:DRV",
+    "INI:RAL",
+    "INI:EVG",
+    "INI:DTG",
+    "INI:BIC",
+    "INI:CAB"
+  ],
+  "honest_caveats": [
+    "A mechanism-FEATURE interaction model, NOT a sequence embedding (the closed 0-for-5 arm).",
+    "Censored folds ('>'/'<') kept at the numeric bound: rank-metric-safe, slightly biases R2.",
+    "Paired bootstrap on FIXED OOF predictions is the standard held-out paired test (mildly optimistic; disclosed).",
+    "Interactions constrained to top-K prevalent co-occurring (>=MIN_COOC) pairs + L1 \u2014 not the full O(p^2) space.",
+    "A FAIL ('additive suffices for HIV DR') is a valid world-model finding, not a bug."
+  ],
+  "citation": "Rhee et al. 2003 Nucleic Acids Res 31:298-303; dataset per HIVDB Terms of Use",
+  "per_class": {
+    "NNRTI": {
+      "class": "NNRTI",
+      "n_isolates": 2272,
+      "n_single_features": 426,
+      "n_interaction_candidates": 400,
+      "per_drug": {
+        "EFV": {
+          "drug_col": "EFV",
+          "n": 2168,
+          "powered": true,
+          "add_r2": 0.8443,
+          "int_r2": 0.8426,
+          "n_interaction_terms": 400,
+          "add_rho": 0.9108,
+          "int_rho": 0.9094,
+          "delta_rho": -0.0014,
+          "ci_lo": -0.0038,
+          "ci_hi": 0.001,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "41L:215Y",
+              "coef": -0.0277
+            },
+            {
+              "pair": "135T:70R",
+              "coef": 0.0181
+            },
+            {
+              "pair": "200A:179I",
+              "coef": -0.0175
+            },
+            {
+              "pair": "215Y:118I",
+              "coef": -0.0172
+            },
+            {
+              "pair": "215Y:196E",
+              "coef": -0.0169
+            },
+            {
+              "pair": "184V:103N",
+              "coef": 0.0157
+            }
+          ]
+        },
+        "NVP": {
+          "drug_col": "NVP",
+          "n": 2052,
+          "powered": true,
+          "add_r2": 0.7746,
+          "int_r2": 0.7899,
+          "n_interaction_terms": 400,
+          "add_rho": 0.873,
+          "int_rho": 0.862,
+          "delta_rho": -0.011,
+          "ci_lo": -0.0157,
+          "ci_hi": -0.0066,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "103N:181C",
+              "coef": -0.15
+            },
+            {
+              "pair": "293V:228H",
+              "coef": -0.0226
+            },
+            {
+              "pair": "184V:60I",
+              "coef": 0.0222
+            },
+            {
+              "pair": "122E:245E",
+              "coef": 0.0216
+            },
+            {
+              "pair": "41L:215Y",
+              "coef": -0.0205
+            },
+            {
+              "pair": "215Y:196E",
+              "coef": -0.0204
+            }
+          ]
+        },
+        "ETR": {
+          "drug_col": "ETR",
+          "n": 998,
+          "powered": true,
+          "add_r2": 0.7273,
+          "int_r2": 0.7216,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8338,
+          "int_rho": 0.8303,
+          "delta_rho": -0.0035,
+          "ci_lo": -0.0105,
+          "ci_hi": 0.0026,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "184V:215Y",
+              "coef": -0.0227
+            },
+            {
+              "pair": "184V:202V",
+              "coef": -0.0187
+            },
+            {
+              "pair": "200A:228H",
+              "coef": 0.0175
+            },
+            {
+              "pair": "272P:35I",
+              "coef": -0.0173
+            },
+            {
+              "pair": "200A:214L",
+              "coef": -0.0161
+            },
+            {
+              "pair": "135T:207E",
+              "coef": 0.0158
+            }
+          ]
+        },
+        "RPV": {
+          "drug_col": "RPV",
+          "n": 311,
+          "powered": true,
+          "add_r2": 0.642,
+          "int_r2": 0.6093,
+          "n_interaction_terms": 400,
+          "add_rho": 0.7486,
+          "int_rho": 0.7415,
+          "delta_rho": -0.0071,
+          "ci_lo": -0.0312,
+          "ci_hi": 0.0172,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "219Q:228H",
+              "coef": 0.0527
+            },
+            {
+              "pair": "286A:118I",
+              "coef": -0.0486
+            },
+            {
+              "pair": "286A:70R",
+              "coef": 0.0316
+            },
+            {
+              "pair": "215Y:181C",
+              "coef": -0.0257
+            },
+            {
+              "pair": "215Y:228H",
+              "coef": 0.0216
+            },
+            {
+              "pair": "103N:20R",
+              "coef": 0.0201
+            }
+          ]
+        },
+        "DOR": {
+          "drug_col": "DOR",
+          "n": 130,
+          "powered": true,
+          "add_r2": 0.8131,
+          "int_r2": 0.8128,
+          "n_interaction_terms": 400,
+          "add_rho": 0.7841,
+          "int_rho": 0.7831,
+          "delta_rho": -0.001,
+          "ci_lo": -0.0156,
+          "ci_hi": 0.011,
+          "ci_positive": false,
+          "top_interactions": []
+        },
+        "CompMutList": {
+          "drug_col": "CompMutList",
+          "n": 0,
+          "powered": false,
+          "note": "too few isolates"
+        }
+      }
+    },
+    "NRTI": {
+      "class": "NRTI",
+      "n_isolates": 1867,
+      "n_single_features": 325,
+      "n_interaction_candidates": 400,
+      "per_drug": {
+        "3TC": {
+          "drug_col": "3TC",
+          "n": 1839,
+          "powered": true,
+          "add_r2": 0.9098,
+          "int_r2": 0.9212,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8957,
+          "int_rho": 0.8962,
+          "delta_rho": 0.0005,
+          "ci_lo": -0.0017,
+          "ci_hi": 0.0026,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "184V:41L",
+              "coef": -0.0402
+            },
+            {
+              "pair": "184V:67N",
+              "coef": -0.0342
+            },
+            {
+              "pair": "184V:210W",
+              "coef": -0.0338
+            },
+            {
+              "pair": "184V:215Y",
+              "coef": -0.0314
+            },
+            {
+              "pair": "184V:118I",
+              "coef": -0.0232
+            },
+            {
+              "pair": "184V:83K",
+              "coef": 0.0166
+            }
+          ]
+        },
+        "ABC": {
+          "drug_col": "ABC",
+          "n": 1731,
+          "powered": true,
+          "add_r2": 0.8181,
+          "int_r2": 0.8396,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8988,
+          "int_rho": 0.9055,
+          "delta_rho": 0.0067,
+          "ci_lo": 0.0031,
+          "ci_hi": 0.0104,
+          "ci_positive": true,
+          "top_interactions": [
+            {
+              "pair": "184V:215Y",
+              "coef": -0.0827
+            },
+            {
+              "pair": "70R:219Q",
+              "coef": 0.0182
+            },
+            {
+              "pair": "215Y:74V",
+              "coef": -0.0171
+            },
+            {
+              "pair": "41L:215Y",
+              "coef": 0.0168
+            },
+            {
+              "pair": "215Y:210W",
+              "coef": 0.0146
+            },
+            {
+              "pair": "219Q:215F",
+              "coef": -0.011
+            }
+          ]
+        },
+        "AZT": {
+          "drug_col": "AZT",
+          "n": 1853,
+          "powered": true,
+          "add_r2": 0.7837,
+          "int_r2": 0.7987,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8822,
+          "int_rho": 0.8844,
+          "delta_rho": 0.0021,
+          "ci_lo": -0.0016,
+          "ci_hi": 0.0058,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "215Y:210W",
+              "coef": 0.1125
+            },
+            {
+              "pair": "41L:215Y",
+              "coef": 0.0855
+            },
+            {
+              "pair": "70R:219Q",
+              "coef": 0.0829
+            },
+            {
+              "pair": "184V:215Y",
+              "coef": -0.0687
+            },
+            {
+              "pair": "184V:70R",
+              "coef": -0.0588
+            },
+            {
+              "pair": "219Q:215F",
+              "coef": -0.0576
+            }
+          ]
+        },
+        "D4T": {
+          "drug_col": "D4T",
+          "n": 1846,
+          "powered": true,
+          "add_r2": 0.7296,
+          "int_r2": 0.7276,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8532,
+          "int_rho": 0.8508,
+          "delta_rho": -0.0024,
+          "ci_lo": -0.0074,
+          "ci_hi": 0.0025,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "196E:208Y",
+              "coef": 0.0156
+            },
+            {
+              "pair": "70R:219Q",
+              "coef": 0.0147
+            },
+            {
+              "pair": "41L:215Y",
+              "coef": 0.0136
+            },
+            {
+              "pair": "219Q:215F",
+              "coef": -0.012
+            },
+            {
+              "pair": "228H:215F",
+              "coef": 0.0109
+            },
+            {
+              "pair": "215Y:44D",
+              "coef": 0.0095
+            }
+          ]
+        },
+        "DDI": {
+          "drug_col": "DDI",
+          "n": 1849,
+          "powered": true,
+          "add_r2": 0.7136,
+          "int_r2": 0.7114,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8075,
+          "int_rho": 0.808,
+          "delta_rho": 0.0005,
+          "ci_lo": -0.0025,
+          "ci_hi": 0.0037,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "215Y:210W",
+              "coef": 0.01
+            },
+            {
+              "pair": "41L:215Y",
+              "coef": 0.0079
+            },
+            {
+              "pair": "215Y:44D",
+              "coef": 0.0064
+            },
+            {
+              "pair": "215Y:74V",
+              "coef": -0.0064
+            },
+            {
+              "pair": "122E:190A",
+              "coef": 0.0063
+            },
+            {
+              "pair": "228H:215F",
+              "coef": 0.006
+            }
+          ]
+        },
+        "TDF": {
+          "drug_col": "TDF",
+          "n": 1548,
+          "powered": true,
+          "add_r2": 0.6177,
+          "int_r2": 0.6275,
+          "n_interaction_terms": 400,
+          "add_rho": 0.7981,
+          "int_rho": 0.7991,
+          "delta_rho": 0.0009,
+          "ci_lo": -0.0073,
+          "ci_hi": 0.0096,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "70R:219Q",
+              "coef": 0.0359
+            },
+            {
+              "pair": "184V:215Y",
+              "coef": -0.0343
+            },
+            {
+              "pair": "135T:215F",
+              "coef": 0.0238
+            },
+            {
+              "pair": "219Q:215F",
+              "coef": -0.0233
+            },
+            {
+              "pair": "41L:215Y",
+              "coef": 0.0214
+            },
+            {
+              "pair": "41L:210W",
+              "coef": 0.02
+            }
+          ]
+        },
+        "CompMutList": {
+          "drug_col": "CompMutList",
+          "n": 0,
+          "powered": false,
+          "note": "too few isolates"
+        }
+      }
+    },
+    "PI": {
+      "class": "PI",
+      "n_isolates": 2171,
+      "n_single_features": 224,
+      "n_interaction_candidates": 400,
+      "per_drug": {
+        "FPV": {
+          "drug_col": "FPV",
+          "n": 2052,
+          "powered": true,
+          "add_r2": 0.8628,
+          "int_r2": 0.8665,
+          "n_interaction_terms": 400,
+          "add_rho": 0.9001,
+          "int_rho": 0.9006,
+          "delta_rho": 0.0005,
+          "ci_lo": -0.0023,
+          "ci_hi": 0.0034,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "46I:33F",
+              "coef": -0.0311
+            },
+            {
+              "pair": "54V:15V",
+              "coef": 0.0267
+            },
+            {
+              "pair": "36I:46L",
+              "coef": 0.0216
+            },
+            {
+              "pair": "84V:32I",
+              "coef": -0.0179
+            },
+            {
+              "pair": "41K:69K",
+              "coef": -0.0178
+            },
+            {
+              "pair": "41K:33F",
+              "coef": 0.017
+            }
+          ]
+        },
+        "ATV": {
+          "drug_col": "ATV",
+          "n": 1505,
+          "powered": true,
+          "add_r2": 0.8825,
+          "int_r2": 0.8804,
+          "n_interaction_terms": 400,
+          "add_rho": 0.9125,
+          "int_rho": 0.9115,
+          "delta_rho": -0.0011,
+          "ci_lo": -0.0039,
+          "ci_hi": 0.0015,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "84V:10F",
+              "coef": 0.0408
+            },
+            {
+              "pair": "36I:54V",
+              "coef": 0.0357
+            },
+            {
+              "pair": "36I:46I",
+              "coef": 0.0216
+            },
+            {
+              "pair": "63P:10I",
+              "coef": 0.0199
+            },
+            {
+              "pair": "82A:10F",
+              "coef": -0.0191
+            },
+            {
+              "pair": "13V:54V",
+              "coef": 0.0187
+            }
+          ]
+        },
+        "IDV": {
+          "drug_col": "IDV",
+          "n": 2098,
+          "powered": true,
+          "add_r2": 0.8814,
+          "int_r2": 0.8833,
+          "n_interaction_terms": 400,
+          "add_rho": 0.9123,
+          "int_rho": 0.9137,
+          "delta_rho": 0.0015,
+          "ci_lo": -0.0009,
+          "ci_hi": 0.0039,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "82A:84V",
+              "coef": -0.0436
+            },
+            {
+              "pair": "46I:54V",
+              "coef": -0.0311
+            },
+            {
+              "pair": "84V:37D",
+              "coef": 0.0204
+            },
+            {
+              "pair": "90M:20I",
+              "coef": 0.0202
+            },
+            {
+              "pair": "15V:82A",
+              "coef": 0.0164
+            },
+            {
+              "pair": "71V:20I",
+              "coef": 0.0161
+            }
+          ]
+        },
+        "LPV": {
+          "drug_col": "LPV",
+          "n": 1807,
+          "powered": true,
+          "add_r2": 0.9086,
+          "int_r2": 0.9093,
+          "n_interaction_terms": 400,
+          "add_rho": 0.9106,
+          "int_rho": 0.9107,
+          "delta_rho": 0.0002,
+          "ci_lo": -0.0021,
+          "ci_hi": 0.0022,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "82A:84V",
+              "coef": -0.0287
+            },
+            {
+              "pair": "46I:54V",
+              "coef": -0.0256
+            },
+            {
+              "pair": "36I:35D",
+              "coef": 0.0164
+            },
+            {
+              "pair": "71V:73S",
+              "coef": 0.0154
+            },
+            {
+              "pair": "54V:33F",
+              "coef": -0.0144
+            },
+            {
+              "pair": "93L:32I",
+              "coef": 0.0143
+            }
+          ]
+        },
+        "NFV": {
+          "drug_col": "NFV",
+          "n": 2133,
+          "powered": true,
+          "add_r2": 0.8676,
+          "int_r2": 0.8709,
+          "n_interaction_terms": 400,
+          "add_rho": 0.9087,
+          "int_rho": 0.9112,
+          "delta_rho": 0.0025,
+          "ci_lo": 0.0002,
+          "ci_hi": 0.005,
+          "ci_positive": true,
+          "top_interactions": [
+            {
+              "pair": "36I:35D",
+              "coef": 0.0353
+            },
+            {
+              "pair": "46I:33F",
+              "coef": -0.035
+            },
+            {
+              "pair": "82A:84V",
+              "coef": -0.0254
+            },
+            {
+              "pair": "90M:82A",
+              "coef": -0.0225
+            },
+            {
+              "pair": "90M:20I",
+              "coef": 0.0192
+            },
+            {
+              "pair": "71V:46I",
+              "coef": -0.0181
+            }
+          ]
+        },
+        "SQV": {
+          "drug_col": "SQV",
+          "n": 2084,
+          "powered": true,
+          "add_r2": 0.873,
+          "int_r2": 0.8698,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8929,
+          "int_rho": 0.8937,
+          "delta_rho": 0.0008,
+          "ci_lo": -0.0028,
+          "ci_hi": 0.0042,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "33F:32I",
+              "coef": -0.0323
+            },
+            {
+              "pair": "36I:35D",
+              "coef": 0.0288
+            },
+            {
+              "pair": "54V:20R",
+              "coef": 0.0251
+            },
+            {
+              "pair": "46I:82A",
+              "coef": -0.0194
+            },
+            {
+              "pair": "13V:43T",
+              "coef": 0.0188
+            },
+            {
+              "pair": "93L:71V",
+              "coef": -0.0182
+            }
+          ]
+        },
+        "TPV": {
+          "drug_col": "TPV",
+          "n": 1226,
+          "powered": true,
+          "add_r2": 0.7203,
+          "int_r2": 0.7058,
+          "n_interaction_terms": 400,
+          "add_rho": 0.7702,
+          "int_rho": 0.7578,
+          "delta_rho": -0.0124,
+          "ci_lo": -0.0269,
+          "ci_hi": 0.0028,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "54V:84V",
+              "coef": 0.0377
+            },
+            {
+              "pair": "35D:84V",
+              "coef": 0.0355
+            },
+            {
+              "pair": "63P:84V",
+              "coef": 0.0296
+            },
+            {
+              "pair": "84V:10F",
+              "coef": -0.0239
+            },
+            {
+              "pair": "33F:10V",
+              "coef": 0.0231
+            },
+            {
+              "pair": "54V:82A",
+              "coef": -0.023
+            }
+          ]
+        },
+        "DRV": {
+          "drug_col": "DRV",
+          "n": 993,
+          "powered": true,
+          "add_r2": 0.8684,
+          "int_r2": 0.8616,
+          "n_interaction_terms": 400,
+          "add_rho": 0.8205,
+          "int_rho": 0.8052,
+          "delta_rho": -0.0153,
+          "ci_lo": -0.0237,
+          "ci_hi": -0.0063,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "71V:32I",
+              "coef": 0.0271
+            },
+            {
+              "pair": "33F:46L",
+              "coef": 0.0253
+            },
+            {
+              "pair": "54V:15V",
+              "coef": 0.0246
+            },
+            {
+              "pair": "63P:32I",
+              "coef": 0.0227
+            },
+            {
+              "pair": "36I:46I",
+              "coef": 0.0192
+            },
+            {
+              "pair": "36I:10F",
+              "coef": 0.015
+            }
+          ]
+        },
+        "CompMutList": {
+          "drug_col": "CompMutList",
+          "n": 0,
+          "powered": false,
+          "note": "too few isolates"
+        }
+      }
+    },
+    "INI": {
+      "class": "INI",
+      "n_isolates": 861,
+      "n_single_features": 136,
+      "n_interaction_candidates": 259,
+      "per_drug": {
+        "RAL": {
+          "drug_col": "RAL",
+          "n": 753,
+          "powered": true,
+          "add_r2": 0.896,
+          "int_r2": 0.9064,
+          "n_interaction_terms": 259,
+          "add_rho": 0.8426,
+          "int_rho": 0.8516,
+          "delta_rho": 0.009,
+          "ci_lo": -0.0014,
+          "ci_hi": 0.0205,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "140S:148H",
+              "coef": 0.1995
+            },
+            {
+              "pair": "140S:148R",
+              "coef": 0.0493
+            },
+            {
+              "pair": "72V:97A",
+              "coef": 0.0338
+            },
+            {
+              "pair": "148R:138K",
+              "coef": 0.0305
+            },
+            {
+              "pair": "234V:140S",
+              "coef": -0.0253
+            },
+            {
+              "pair": "101I:155H",
+              "coef": 0.0216
+            }
+          ]
+        },
+        "EVG": {
+          "drug_col": "EVG",
+          "n": 754,
+          "powered": true,
+          "add_r2": 0.8223,
+          "int_r2": 0.8316,
+          "n_interaction_terms": 259,
+          "add_rho": 0.8801,
+          "int_rho": 0.8825,
+          "delta_rho": 0.0024,
+          "ci_lo": -0.0066,
+          "ci_hi": 0.0112,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "140S:148H",
+              "coef": 0.2014
+            },
+            {
+              "pair": "101I:155H",
+              "coef": 0.0469
+            },
+            {
+              "pair": "72V:138K",
+              "coef": -0.0373
+            },
+            {
+              "pair": "148R:138K",
+              "coef": 0.0361
+            },
+            {
+              "pair": "124A:92Q",
+              "coef": 0.0308
+            },
+            {
+              "pair": "101I:148H",
+              "coef": 0.0154
+            }
+          ]
+        },
+        "DTG": {
+          "drug_col": "DTG",
+          "n": 370,
+          "powered": true,
+          "add_r2": 0.4594,
+          "int_r2": 0.4156,
+          "n_interaction_terms": 259,
+          "add_rho": 0.5764,
+          "int_rho": 0.5703,
+          "delta_rho": -0.0062,
+          "ci_lo": -0.0511,
+          "ci_hi": 0.0386,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "140S:148H",
+              "coef": 0.1704
+            },
+            {
+              "pair": "124A:140S",
+              "coef": 0.0462
+            },
+            {
+              "pair": "72V:138K",
+              "coef": -0.04
+            },
+            {
+              "pair": "201I:140S",
+              "coef": -0.0344
+            },
+            {
+              "pair": "119P:122I",
+              "coef": 0.0342
+            },
+            {
+              "pair": "140S:148R",
+              "coef": 0.0321
+            }
+          ]
+        },
+        "BIC": {
+          "drug_col": "BIC",
+          "n": 287,
+          "powered": true,
+          "add_r2": 0.4655,
+          "int_r2": 0.4796,
+          "n_interaction_terms": 259,
+          "add_rho": 0.743,
+          "int_rho": 0.7454,
+          "delta_rho": 0.0024,
+          "ci_lo": -0.017,
+          "ci_hi": 0.0222,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "140S:148H",
+              "coef": 0.0439
+            },
+            {
+              "pair": "148H:138K",
+              "coef": -0.0336
+            },
+            {
+              "pair": "140S:138K",
+              "coef": -0.0336
+            },
+            {
+              "pair": "124A:101I",
+              "coef": -0.0224
+            },
+            {
+              "pair": "97A:74I",
+              "coef": -0.0183
+            },
+            {
+              "pair": "124A:50I",
+              "coef": -0.0163
+            }
+          ]
+        },
+        "CAB": {
+          "drug_col": "CAB",
+          "n": 64,
+          "powered": true,
+          "add_r2": 0.6137,
+          "int_r2": 0.5543,
+          "n_interaction_terms": 259,
+          "add_rho": 0.7396,
+          "int_rho": 0.6682,
+          "delta_rho": -0.0713,
+          "ci_lo": -0.1417,
+          "ci_hi": -0.0155,
+          "ci_positive": false,
+          "top_interactions": [
+            {
+              "pair": "140S:148H",
+              "coef": 0.261
+            },
+            {
+              "pair": "148R:138K",
+              "coef": 0.0798
+            }
+          ]
+        },
+        "CompMutList": {
+          "drug_col": "CompMutList",
+          "n": 0,
+          "powered": false,
+          "note": "too few isolates"
+        }
+      }
+    }
+  }
+}

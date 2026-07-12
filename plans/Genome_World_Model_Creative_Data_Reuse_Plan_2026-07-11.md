@@ -1,7 +1,9 @@
 # Genome world-model — creative data-reuse plan (2026-07-11)
 
 **Mode:** `/soraya decompose & --plan` (strategy + plan-first; STOPS for user ratification — no build started).
-**Author:** Soraya-J2. **Status:** CANDIDATE — awaiting user ratification before any `/project-init` or build.
+**Author:** Soraya-J2. **Status:** Family **A EXECUTED** 2026-07-11 (user ratified option 1, flagship-first) →
+verdict `FAIL_ADDITIVE_SUFFICES` (`wiki/hiv_epistasis_result_2026-07-11.{json,md}`; `scripts/hiv_epistasis.py`;
+`tests/test_hiv_epistasis.py` 13/13; frozen surface `verify_lock` OK). Families B/C/D remain CANDIDATE.
 
 ---
 
