@@ -22,7 +22,11 @@ on CRyPTIC RIF+INH, censoring-aware conformal); the "full multi-axis C" delivere
 — it's a blastn finder, not Bakta/GPU, on cached assemblies): `scripts/plasmid_axis_sweep.py` +
 `scripts/coresistance_multiaxis.py` → PASS_MULTIAXIS_LINKAGE (determinant × plasmid Inc-type; recovers
 sul2→IncQ1, Salmonella MDR→IncFIB, blaSHV→IncN). D-extension: the position-novelty flag is mutant-level-catalog
--specific (doesn't apply to position-based NRTI/PI/INSTI). Seven world-model findings total.
+-specific (doesn't apply to position-based NRTI/PI/INSTI). **VIRULENCE axis added 2026-07-12 (overnight,
+local blastn):** `scripts/virulence_axis_sweep.py` → the 3-axis multi-axis C (AMR × plasmid × virulence,
+`coresistance_multiaxis3_result_*`) → PASS_MULTIAXIS_LINKAGE; AMR+plasmid predicts virulence at AUC 0.79–0.95
+(likely lineage-mediated, caveated). Eight world-model findings total — all local/CPU, no new
+labels/GPU/embeddings, frozen surface byte-unchanged.
 
 ---
 
