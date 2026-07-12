@@ -76,11 +76,23 @@ def test_prereg_constants_frozen():
 
 
 def test_target_axes_registry():
-    # both cross-axes are wired to real coresistance_multiaxis prefixes.
+    # all three axes are wired to real coresistance_multiaxis prefixes.
     import coresistance_multiaxis as ma
-    assert set(mod.TARGET_AXES) == {"virulence", "plasmid"}
+    assert set(mod.TARGET_AXES) == {"virulence", "plasmid", "determinant"}
     assert mod.TARGET_AXES["virulence"][0] == ma.VIR_PREFIX
     assert mod.TARGET_AXES["plasmid"][0] == ma.REP_PREFIX
+    assert mod.TARGET_AXES["determinant"][0] is None   # un-prefixed AMR determinants
+
+
+def test_is_target_axis_membership():
+    import coresistance_multiaxis as ma
+    # determinant axis (prefix None) = anything NOT a plasmid:/vir: feature
+    assert mod._is_target("gyrA_S83L", None) is True
+    assert mod._is_target(ma.REP_PREFIX + "IncFII", None) is False
+    assert mod._is_target(ma.VIR_PREFIX + "hlyA", None) is False
+    # prefixed axes match only their own prefix
+    assert mod._is_target(ma.VIR_PREFIX + "hlyA", ma.VIR_PREFIX) is True
+    assert mod._is_target("gyrA_S83L", ma.VIR_PREFIX) is False
 
 
 @pytest.mark.skipif(not Path("D:/dna_decode_cache/refseq").exists(),

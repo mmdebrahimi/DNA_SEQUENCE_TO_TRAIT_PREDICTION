@@ -1,0 +1,417 @@
+{
+  "artifact": "crossaxis_lineage_deconfound",
+  "schema": "crossaxis-lineage-deconfound-v1",
+  "target_axis": "determinant",
+  "axis_label": "AMR determinant",
+  "question": "Does the E. coli non-determinant -> determinant cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
+  "mash": {
+    "n_genomes": 240,
+    "threshold": 0.005,
+    "n_clades": 85,
+    "largest_clade_frac": 0.342,
+    "threshold_sweep": [
+      {
+        "threshold": 0.005,
+        "n_clades": 85,
+        "largest_clade_frac": 0.342
+      },
+      {
+        "threshold": 0.01,
+        "n_clades": 46,
+        "largest_clade_frac": 0.392
+      },
+      {
+        "threshold": 0.02,
+        "n_clades": 8,
+        "largest_clade_frac": 0.438
+      }
+    ],
+    "docker_image": "quay.io/biocontainers/mash:2.3--hb105d93_10"
+  },
+  "prereg": {
+    "REAL_MIN": 0.7,
+    "CV_MIN": 10,
+    "clade_grouped_cv": "GroupKFold by Mash clade",
+    "seed": 0
+  },
+  "verdict": "CROSS_AXIS_GENERALIZES_BEYOND_LINEAGE",
+  "prediction_outcome": "N/A (virulence axis: see verdict + prevalence_split)",
+  "median_auc_naive": 0.97,
+  "median_auc_clade_grouped": 0.922,
+  "n_genes_generalize": 40,
+  "n_genes": 45,
+  "n_clade_concentrated": 1,
+  "prevalence_split": {
+    "median_n_generalizing": 47.0,
+    "median_n_lineage_only": 57.0,
+    "clean_prevalence_split": false
+  },
+  "literature_convergence": "The C-core finding (PASS_LINKAGE_STRUCTURE) showed AMR determinants co-occur in cassette blocks (integron sul1->aadA/dfrA, QRDR clusters) under a determinant-profile-DEDUP clonality proxy. This applies the STRONGER phylogenetic (Mash-clade leave-one-out) control: an integron cassette is itself a MOBILE unit, so co-cassette determinants should predict each other even across held-out clades (real cassette linkage); a collapse would mean the co-occurrence is clade-signature, not cassette-intrinsic.",
+  "honest_caveats": [
+    "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
+    "E. coli/Shigella only (the determinant axis). Cohorts drug-R/S-selected. Associational.",
+    "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades has cross-clade signal to learn; a clade-restricted accessory feature does not)."
+  ],
+  "per_gene": {
+    "aac(3)-IId": {
+      "n_present": 17,
+      "auc_naive": 0.899,
+      "auc_clade_grouped": 0.734,
+      "drop": 0.164,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aac(3)-IIe": {
+      "n_present": 54,
+      "auc_naive": 0.973,
+      "auc_clade_grouped": 0.881,
+      "drop": 0.092,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aac(6')-Ib-cr5": {
+      "n_present": 69,
+      "auc_naive": 0.994,
+      "auc_clade_grouped": 0.989,
+      "drop": 0.005,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aadA1": {
+      "n_present": 40,
+      "auc_naive": 0.956,
+      "auc_clade_grouped": 0.924,
+      "drop": 0.032,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aadA2": {
+      "n_present": 31,
+      "auc_naive": 0.969,
+      "auc_clade_grouped": 0.957,
+      "drop": 0.013,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aadA5": {
+      "n_present": 90,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.991,
+      "drop": 0.005,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aph(3'')-Ib": {
+      "n_present": 100,
+      "auc_naive": 0.999,
+      "auc_clade_grouped": 0.982,
+      "drop": 0.016,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aph(3')-Ia": {
+      "n_present": 23,
+      "auc_naive": 0.935,
+      "auc_clade_grouped": 0.737,
+      "drop": 0.198,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "aph(6)-Id": {
+      "n_present": 86,
+      "auc_naive": 0.982,
+      "auc_clade_grouped": 0.92,
+      "drop": 0.062,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "blaCMY-2": {
+      "n_present": 15,
+      "auc_naive": 0.805,
+      "auc_clade_grouped": 0.784,
+      "drop": 0.021,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "blaCTX-M-15": {
+      "n_present": 98,
+      "auc_naive": 0.957,
+      "auc_clade_grouped": 0.905,
+      "drop": 0.051,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "blaCTX-M-27": {
+      "n_present": 22,
+      "auc_naive": 0.933,
+      "auc_clade_grouped": 0.897,
+      "drop": 0.036,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "blaCTX-M-55": {
+      "n_present": 15,
+      "auc_naive": 0.86,
+      "auc_clade_grouped": 0.917,
+      "drop": -0.057,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "blaOXA-1": {
+      "n_present": 69,
+      "auc_naive": 0.987,
+      "auc_clade_grouped": 0.979,
+      "drop": 0.008,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "blaTEM": {
+      "n_present": 10,
+      "auc_naive": 0.692,
+      "auc_clade_grouped": 0.592,
+      "drop": 0.1,
+      "generalizes_beyond_lineage": false,
+      "clade_concentrated": false
+    },
+    "blaTEM-1": {
+      "n_present": 80,
+      "auc_naive": 0.862,
+      "auc_clade_grouped": 0.741,
+      "drop": 0.121,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "catA1": {
+      "n_present": 23,
+      "auc_naive": 0.89,
+      "auc_clade_grouped": 0.811,
+      "drop": 0.079,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "catB3": {
+      "n_present": 69,
+      "auc_naive": 0.988,
+      "auc_clade_grouped": 0.963,
+      "drop": 0.025,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "cmlA1": {
+      "n_present": 13,
+      "auc_naive": 0.996,
+      "auc_clade_grouped": 0.992,
+      "drop": 0.005,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "cyaA_S352T": {
+      "n_present": 31,
+      "auc_naive": 0.893,
+      "auc_clade_grouped": 0.727,
+      "drop": 0.166,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "dfrA1": {
+      "n_present": 15,
+      "auc_naive": 0.941,
+      "auc_clade_grouped": 0.758,
+      "drop": 0.183,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "dfrA12": {
+      "n_present": 27,
+      "auc_naive": 0.974,
+      "auc_clade_grouped": 0.97,
+      "drop": 0.004,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "dfrA14": {
+      "n_present": 27,
+      "auc_naive": 0.917,
+      "auc_clade_grouped": 0.843,
+      "drop": 0.073,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "dfrA17": {
+      "n_present": 94,
+      "auc_naive": 0.988,
+      "auc_clade_grouped": 0.978,
+      "drop": 0.01,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "estX-3": {
+      "n_present": 12,
+      "auc_naive": 0.986,
+      "auc_clade_grouped": 0.924,
+      "drop": 0.062,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "floR": {
+      "n_present": 19,
+      "auc_naive": 0.829,
+      "auc_clade_grouped": 0.715,
+      "drop": 0.113,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "gyrA_D87N": {
+      "n_present": 140,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.98,
+      "drop": 0.017,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "gyrA_S83L": {
+      "n_present": 159,
+      "auc_naive": 0.964,
+      "auc_clade_grouped": 0.964,
+      "drop": 0.0,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "mph(A)": {
+      "n_present": 98,
+      "auc_naive": 0.993,
+      "auc_clade_grouped": 0.994,
+      "drop": -0.0,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "mrx(A)": {
+      "n_present": 98,
+      "auc_naive": 0.996,
+      "auc_clade_grouped": 0.997,
+      "drop": -0.0,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "parC_E84V": {
+      "n_present": 77,
+      "auc_naive": 1.0,
+      "auc_clade_grouped": null,
+      "drop": null,
+      "generalizes_beyond_lineage": false,
+      "clade_concentrated": true
+    },
+    "parC_S80I": {
+      "n_present": 141,
+      "auc_naive": 0.998,
+      "auc_clade_grouped": 0.979,
+      "drop": 0.019,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "parE_I529L": {
+      "n_present": 88,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.848,
+      "drop": 0.148,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "parE_L416F": {
+      "n_present": 11,
+      "auc_naive": 0.97,
+      "auc_clade_grouped": 0.198,
+      "drop": 0.772,
+      "generalizes_beyond_lineage": false,
+      "clade_concentrated": false
+    },
+    "parE_S458A": {
+      "n_present": 33,
+      "auc_naive": 0.978,
+      "auc_clade_grouped": 0.711,
+      "drop": 0.267,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "ptsI_V25I": {
+      "n_present": 94,
+      "auc_naive": 0.998,
+      "auc_clade_grouped": 0.961,
+      "drop": 0.037,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "qnrS1": {
+      "n_present": 15,
+      "auc_naive": 0.816,
+      "auc_clade_grouped": 0.825,
+      "drop": -0.009,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "sat2": {
+      "n_present": 10,
+      "auc_naive": 0.97,
+      "auc_clade_grouped": 0.949,
+      "drop": 0.022,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "sul1": {
+      "n_present": 107,
+      "auc_naive": 0.955,
+      "auc_clade_grouped": 0.926,
+      "drop": 0.029,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "sul2": {
+      "n_present": 102,
+      "auc_naive": 0.98,
+      "auc_clade_grouped": 0.955,
+      "drop": 0.026,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "sul3": {
+      "n_present": 25,
+      "auc_naive": 0.996,
+      "auc_clade_grouped": 0.924,
+      "drop": 0.072,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "tet(A)": {
+      "n_present": 109,
+      "auc_naive": 0.851,
+      "auc_clade_grouped": 0.59,
+      "drop": 0.261,
+      "generalizes_beyond_lineage": false,
+      "clade_concentrated": false
+    },
+    "tet(B)": {
+      "n_present": 57,
+      "auc_naive": 0.872,
+      "auc_clade_grouped": 0.656,
+      "drop": 0.216,
+      "generalizes_beyond_lineage": false,
+      "clade_concentrated": false
+    },
+    "tet(M)": {
+      "n_present": 11,
+      "auc_naive": 0.99,
+      "auc_clade_grouped": 0.952,
+      "drop": 0.039,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    },
+    "uhpT_E350Q": {
+      "n_present": 111,
+      "auc_naive": 0.969,
+      "auc_clade_grouped": 0.913,
+      "drop": 0.055,
+      "generalizes_beyond_lineage": true,
+      "clade_concentrated": false
+    }
+  }
+}

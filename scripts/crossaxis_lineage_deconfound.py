@@ -88,8 +88,16 @@ def _auc(scores, labels):
 
 # target axis -> (feature-name prefix, human label). The complementary features (everything NOT this prefix)
 # are the predictors; a clade-grouped-CV-surviving AUC means the axis co-occurs across lineages, not just clonally.
+# prefix=None => the un-prefixed AMR determinant features (predict a determinant from the rest of the genome).
 TARGET_AXES = {"virulence": (ma.VIR_PREFIX, "virulence gene"),
-               "plasmid": (ma.REP_PREFIX, "plasmid replicon")}
+               "plasmid": (ma.REP_PREFIX, "plasmid replicon"),
+               "determinant": (None, "AMR determinant")}
+
+
+def _is_target(name, prefix):
+    if prefix is None:   # determinant axis = anything NOT a plasmid:/vir: feature
+        return not (name.startswith(ma.REP_PREFIX) or name.startswith(ma.VIR_PREFIX))
+    return name.startswith(prefix)
 CLADE_CACHE = REPO / "data" / "processed" / "ecoli_mash_clades.json"
 
 
@@ -125,33 +133,42 @@ def run(use_docker=True, seed=SEED, target_axis="virulence"):
     per = ma.build_joint(acc_org, acc_dets, plasmid, virulence=vir)
     accs, X, names, nidx = per[ORG]
     groups = np.array([clusters.get(a, -1) for a in accs])
-    is_target = np.array([n.startswith(prefix) for n in names])
-    nonvir = np.flatnonzero(~is_target)
+    is_target = np.array([_is_target(n, prefix) for n in names])
+    cross_axis_cols = np.flatnonzero(~is_target)   # for virulence/plasmid: the OTHER two axes
 
     per_gene = {}
+    n_splits = min(5, len(set(groups)))
     for j in np.flatnonzero(is_target):
         y = (X[:, j] > 0).astype(int)
         if min(int(y.sum()), len(y) - int(y.sum())) < CV_MIN:
             continue
+        # predictors: for the WITHIN-axis determinant question use the other determinants (leave-one-COLUMN-out);
+        # for the cross-axis virulence/plasmid questions use the other two axes.
+        pred_cols = (np.array([k for k in range(len(names)) if k != j]) if prefix is None
+                     else cross_axis_cols)
         clf = LogisticRegression(max_iter=2000, solver="liblinear")
-        # naive (random) KFold
-        naive = cross_val_predict(clf, X[:, nonvir], y,
+        naive = cross_val_predict(clf, X[:, pred_cols], y,
                                   cv=StratifiedKFold(5, shuffle=True, random_state=seed),
                                   method="predict_proba")[:, 1]
-        # clade-grouped KFold (leave-clades-out): a genome's clade is never in its training fold
-        n_splits = min(5, len(set(groups)))
-        grouped = cross_val_predict(clf, X[:, nonvir], y, groups=groups,
-                                    cv=GroupKFold(n_splits=n_splits), method="predict_proba")[:, 1]
         auc_naive = _auc(naive, y.astype(bool))
-        auc_clade = _auc(grouped, y.astype(bool))
-        per_gene[names[j].replace(prefix, "")] = {
-            "n_present": int(y.sum()), "auc_naive": round(auc_naive, 3),
-            "auc_clade_grouped": round(auc_clade, 3),
-            "drop": round(auc_naive - auc_clade, 3),
-            "generalizes_beyond_lineage": bool(auc_clade >= REAL_MIN)}
+        # clade-grouped (leave-clades-out): a genome's clade is never in training. A determinant whose positives
+        # all live in ONE clade produces an all-negative training fold -> it is lineage-restricted BY CONSTRUCTION.
+        rec = {"n_present": int(y.sum()), "auc_naive": round(auc_naive, 3)}
+        try:
+            grouped = cross_val_predict(clf, X[:, pred_cols], y, groups=groups,
+                                        cv=GroupKFold(n_splits=n_splits), method="predict_proba")[:, 1]
+            auc_clade = _auc(grouped, y.astype(bool))
+            rec.update(auc_clade_grouped=round(auc_clade, 3), drop=round(auc_naive - auc_clade, 3),
+                       generalizes_beyond_lineage=bool(auc_clade >= REAL_MIN), clade_concentrated=False)
+        except ValueError:   # degenerate single-class fold => positives concentrated in one clade
+            rec.update(auc_clade_grouped=None, drop=None, generalizes_beyond_lineage=False,
+                       clade_concentrated=True)
+        per_gene[names[j].replace(prefix, "") if prefix else names[j]] = rec
 
     scored = [m for m in per_gene.values()]
-    med_clade = float(np.median([m["auc_clade_grouped"] for m in scored])) if scored else None
+    clade_vals = [m["auc_clade_grouped"] for m in scored if m["auc_clade_grouped"] is not None]
+    n_concentrated = sum(1 for m in scored if m.get("clade_concentrated"))
+    med_clade = float(np.median(clade_vals)) if clade_vals else None
     med_naive = float(np.median([m["auc_naive"] for m in scored])) if scored else None
     gen = [m for m in scored if m["generalizes_beyond_lineage"]]
     nogen = [m for m in scored if not m["generalizes_beyond_lineage"]]
@@ -187,6 +204,12 @@ def run(use_docker=True, seed=SEED, target_axis="virulence"):
             "elements transfer horizontally between lineages, chromosomal islands do not. A clade-surviving AUC here "
             "is the horizontal-co-transfer signal; a collapse would mean the replicon is clade-fixed (vertically "
             "inherited on a stable backbone, e.g. the ST131 IncFII resistance plasmid)."),
+        "determinant": (
+            "The C-core finding (PASS_LINKAGE_STRUCTURE) showed AMR determinants co-occur in cassette blocks "
+            "(integron sul1->aadA/dfrA, QRDR clusters) under a determinant-profile-DEDUP clonality proxy. This "
+            "applies the STRONGER phylogenetic (Mash-clade leave-one-out) control: an integron cassette is itself a "
+            "MOBILE unit, so co-cassette determinants should predict each other even across held-out clades (real "
+            "cassette linkage); a collapse would mean the co-occurrence is clade-signature, not cassette-intrinsic."),
     }[target_axis]
     return {
         "artifact": "crossaxis_lineage_deconfound", "schema": "crossaxis-lineage-deconfound-v1",
@@ -211,6 +234,7 @@ def run(use_docker=True, seed=SEED, target_axis="virulence"):
         "median_auc_naive": round(med_naive, 3) if med_naive is not None else None,
         "median_auc_clade_grouped": round(med_clade, 3) if med_clade is not None else None,
         "n_genes_generalize": n_gen, "n_genes": len(scored),
+        "n_clade_concentrated": n_concentrated,
         "prevalence_split": prev_split,
         "literature_convergence": lit,
         "honest_caveats": [
@@ -236,9 +260,12 @@ def render_md(res, generated):
          f"{res['question']}", "",
          f"| {label} | n | AUC naive | **AUC clade-grouped** | drop | generalizes |",
          "|---|---|---|---|---|---|"]
-    for g, m in sorted(res["per_gene"].items(), key=lambda kv: -kv[1]["auc_clade_grouped"]):
-        L.append(f"| {g} | {m['n_present']} | {m['auc_naive']} | **{m['auc_clade_grouped']}** | {m['drop']} | "
-                 f"{'YES' if m['generalizes_beyond_lineage'] else 'no (lineage)'} |")
+    for g, m in sorted(res["per_gene"].items(),
+                       key=lambda kv: (kv[1]["auc_clade_grouped"] is None, -(kv[1]["auc_clade_grouped"] or 0))):
+        cg = "clade-concentrated" if m.get("clade_concentrated") else m["auc_clade_grouped"]
+        gen = ("no (clade-concentrated)" if m.get("clade_concentrated")
+               else ("YES" if m["generalizes_beyond_lineage"] else "no (lineage)"))
+        L.append(f"| {g} | {m['n_present']} | {m['auc_naive']} | **{cg}** | {m['drop']} | {gen} |")
     L += ["", f"## Literature / mechanism", f"- {res['literature_convergence']}",
           "", "## Honest caveats"] + [f"- {c}" for c in res["honest_caveats"]]
     return "\n".join(L)
