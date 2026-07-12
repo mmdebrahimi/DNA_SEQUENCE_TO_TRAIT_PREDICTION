@@ -1,0 +1,3132 @@
+{
+  "artifact": "determinant_cooccurrence_world_model",
+  "schema": "determinant-cooccurrence-v1",
+  "question": "Is there within-organism co-resistance LINKAGE (do a genome's other determinants predict a held-out determinant beyond base rates)? + the phenotype->genotype inversion.",
+  "substrate": "cached AMRFinder AMR-determinant calls across data/raw/*/amrfinder_runs (self-distillation)",
+  "prereg": {
+    "MIN_GENOMES": 60,
+    "MIN_SUPPORT": 10,
+    "CV_FOLDS": 5,
+    "BOOT": 1000,
+    "LINKED_AUC": 0.5,
+    "PASS_FRACTION": 0.5,
+    "MIN_COOC": 8,
+    "seed": 0,
+    "deconfound": "within-organism (species held constant) + optional profile-dedup clonality proxy",
+    "linked_rule": "held-out OOF-AUC 95% CI lower bound > 0.5 (5-fold stratified logistic on other determinants)"
+  },
+  "deduped": true,
+  "n_genomes_total": 845,
+  "verdict": "PASS_LINKAGE_STRUCTURE",
+  "total_testable": 121,
+  "total_linked": 114,
+  "fraction_linked": 0.942,
+  "honest_caveats": [
+    "Cohorts are DRUG-R/S-SELECTED (resistance-enriched) -> co-occurrence reflects the curated cohorts + selection, NOT a random population sample. Linkage is 'within these cohorts'.",
+    "Within-organism de-confounds SPECIES; --dedup-profiles is only a CRUDE clonality proxy (identical determinant sets). Full Mash-clonality correction is the follow-on (needs the assemblies + Docker).",
+    "AMRFinder point-mutation determinants (gyrA_S83L) are chromosomal/organism-specific; acquired genes (sul1, tet(A)) are mobile/plasmid. Linkage mixes both mechanisms.",
+    "A PASS (linkage exists) is the expected + valid finding \u2014 it demonstrates the world model captures real joint structure; a FAIL would mean within-organism conditional independence.",
+    "Self-distillation from our own AMRFinder caller: associational, NOT a causal claim."
+  ],
+  "per_organism": {
+    "klebsiella": {
+      "organism": "klebsiella",
+      "n_genomes": 235,
+      "n_determinants": 251,
+      "n_testable": 58,
+      "n_linked": 57,
+      "fraction_linked": 0.983,
+      "note": "profile-deduped 307->235 genomes (clonality proxy)",
+      "per_determinant": {
+        "aac(3)-IId": {
+          "auc": 0.7893,
+          "ci_lo": 0.6551,
+          "ci_hi": 0.8949,
+          "n_present": 18,
+          "linked": true
+        },
+        "aac(3)-IIe": {
+          "auc": 0.9478,
+          "ci_lo": 0.9109,
+          "ci_hi": 0.9772,
+          "n_present": 25,
+          "linked": true
+        },
+        "aac(3)-IVa": {
+          "auc": 0.9995,
+          "ci_lo": 0.9976,
+          "ci_hi": 1.0,
+          "n_present": 17,
+          "linked": true
+        },
+        "aac(6')-Ib": {
+          "auc": 0.9381,
+          "ci_lo": 0.8865,
+          "ci_hi": 0.9812,
+          "n_present": 45,
+          "linked": true
+        },
+        "aac(6')-Ib-cr5": {
+          "auc": 0.9763,
+          "ci_lo": 0.9501,
+          "ci_hi": 0.996,
+          "n_present": 42,
+          "linked": true
+        },
+        "aadA1": {
+          "auc": 0.8509,
+          "ci_lo": 0.7566,
+          "ci_hi": 0.931,
+          "n_present": 35,
+          "linked": true
+        },
+        "aadA2": {
+          "auc": 0.9711,
+          "ci_lo": 0.9459,
+          "ci_hi": 0.9901,
+          "n_present": 59,
+          "linked": true
+        },
+        "ampC-Kaer": {
+          "auc": 0.952,
+          "ci_lo": 0.8974,
+          "ci_hi": 0.9907,
+          "n_present": 10,
+          "linked": true
+        },
+        "aph(3'')-Ib": {
+          "auc": 0.9982,
+          "ci_lo": 0.9944,
+          "ci_hi": 1.0,
+          "n_present": 66,
+          "linked": true
+        },
+        "aph(3')-Ia": {
+          "auc": 0.7465,
+          "ci_lo": 0.6413,
+          "ci_hi": 0.8458,
+          "n_present": 25,
+          "linked": true
+        },
+        "aph(4)-Ia": {
+          "auc": 0.9995,
+          "ci_lo": 0.9976,
+          "ci_hi": 1.0,
+          "n_present": 17,
+          "linked": true
+        },
+        "aph(6)-Id": {
+          "auc": 0.9851,
+          "ci_lo": 0.9459,
+          "ci_hi": 1.0,
+          "n_present": 66,
+          "linked": true
+        },
+        "arr-3": {
+          "auc": 0.9502,
+          "ci_lo": 0.8844,
+          "ci_hi": 0.9978,
+          "n_present": 10,
+          "linked": true
+        },
+        "blaCTX-M-15": {
+          "auc": 0.9728,
+          "ci_lo": 0.9449,
+          "ci_hi": 0.9921,
+          "n_present": 76,
+          "linked": true
+        },
+        "blaKPC-2": {
+          "auc": 0.8641,
+          "ci_lo": 0.7582,
+          "ci_hi": 0.9552,
+          "n_present": 35,
+          "linked": true
+        },
+        "blaKPC-3": {
+          "auc": 0.8872,
+          "ci_lo": 0.781,
+          "ci_hi": 0.9695,
+          "n_present": 23,
+          "linked": true
+        },
+        "blaOXA": {
+          "auc": 0.8638,
+          "ci_lo": 0.782,
+          "ci_hi": 0.9353,
+          "n_present": 37,
+          "linked": true
+        },
+        "blaOXA-1": {
+          "auc": 0.9991,
+          "ci_lo": 0.9972,
+          "ci_hi": 1.0,
+          "n_present": 42,
+          "linked": true
+        },
+        "blaOXA-9": {
+          "auc": 0.946,
+          "ci_lo": 0.8619,
+          "ci_hi": 0.9919,
+          "n_present": 21,
+          "linked": true
+        },
+        "blaSHV": {
+          "auc": 0.6126,
+          "ci_lo": 0.4899,
+          "ci_hi": 0.7378,
+          "n_present": 24,
+          "linked": false
+        },
+        "blaSHV-1": {
+          "auc": 0.9284,
+          "ci_lo": 0.8918,
+          "ci_hi": 0.9592,
+          "n_present": 39,
+          "linked": true
+        },
+        "blaSHV-11": {
+          "auc": 0.81,
+          "ci_lo": 0.7493,
+          "ci_hi": 0.8632,
+          "n_present": 76,
+          "linked": true
+        },
+        "blaSHV-12": {
+          "auc": 0.9364,
+          "ci_lo": 0.8908,
+          "ci_hi": 0.9757,
+          "n_present": 51,
+          "linked": true
+        },
+        "blaSHV-28": {
+          "auc": 0.9658,
+          "ci_lo": 0.9121,
+          "ci_hi": 0.9971,
+          "n_present": 15,
+          "linked": true
+        },
+        "blaTEM": {
+          "auc": 0.795,
+          "ci_lo": 0.6651,
+          "ci_hi": 0.8991,
+          "n_present": 24,
+          "linked": true
+        },
+        "blaTEM-1": {
+          "auc": 0.8699,
+          "ci_lo": 0.8175,
+          "ci_hi": 0.9121,
+          "n_present": 84,
+          "linked": true
+        },
+        "catA1": {
+          "auc": 0.8265,
+          "ci_lo": 0.692,
+          "ci_hi": 0.9391,
+          "n_present": 26,
+          "linked": true
+        },
+        "catB3": {
+          "auc": 0.9877,
+          "ci_lo": 0.9607,
+          "ci_hi": 0.9997,
+          "n_present": 47,
+          "linked": true
+        },
+        "cmlA1": {
+          "auc": 0.9924,
+          "ci_lo": 0.9814,
+          "ci_hi": 1.0,
+          "n_present": 17,
+          "linked": true
+        },
+        "dfrA1": {
+          "auc": 0.8567,
+          "ci_lo": 0.7305,
+          "ci_hi": 0.9773,
+          "n_present": 11,
+          "linked": true
+        },
+        "dfrA12": {
+          "auc": 0.9923,
+          "ci_lo": 0.9785,
+          "ci_hi": 1.0,
+          "n_present": 48,
+          "linked": true
+        },
+        "dfrA14": {
+          "auc": 0.962,
+          "ci_lo": 0.9307,
+          "ci_hi": 0.9848,
+          "n_present": 56,
+          "linked": true
+        },
+        "dfrA50": {
+          "auc": 0.8784,
+          "ci_lo": 0.7942,
+          "ci_hi": 0.953,
+          "n_present": 19,
+          "linked": true
+        },
+        "estX-3": {
+          "auc": 0.9981,
+          "ci_lo": 0.9935,
+          "ci_hi": 1.0,
+          "n_present": 19,
+          "linked": true
+        },
+        "fosA": {
+          "auc": 0.8786,
+          "ci_lo": 0.7339,
+          "ci_hi": 0.998,
+          "n_present": 217,
+          "linked": true
+        },
+        "fosA5": {
+          "auc": 0.9982,
+          "ci_lo": 0.9933,
+          "ci_hi": 1.0,
+          "n_present": 10,
+          "linked": true
+        },
+        "gyrA_D87N": {
+          "auc": 0.9651,
+          "ci_lo": 0.9096,
+          "ci_hi": 1.0,
+          "n_present": 25,
+          "linked": true
+        },
+        "gyrA_S83F": {
+          "auc": 0.9977,
+          "ci_lo": 0.9923,
+          "ci_hi": 1.0,
+          "n_present": 20,
+          "linked": true
+        },
+        "gyrA_S83I": {
+          "auc": 0.9863,
+          "ci_lo": 0.9681,
+          "ci_hi": 0.9989,
+          "n_present": 78,
+          "linked": true
+        },
+        "gyrA_S83T": {
+          "auc": 0.9861,
+          "ci_lo": 0.968,
+          "ci_hi": 0.9984,
+          "n_present": 15,
+          "linked": true
+        },
+        "mph(A)": {
+          "auc": 0.9992,
+          "ci_lo": 0.9974,
+          "ci_hi": 1.0,
+          "n_present": 62,
+          "linked": true
+        },
+        "mrx(A)": {
+          "auc": 0.9935,
+          "ci_lo": 0.9813,
+          "ci_hi": 1.0,
+          "n_present": 61,
+          "linked": true
+        },
+        "ompK35_E42RfsTer47": {
+          "auc": 0.9998,
+          "ci_lo": 0.9989,
+          "ci_hi": 1.0,
+          "n_present": 54,
+          "linked": true
+        },
+        "ompK36_D135DGD": {
+          "auc": 0.9071,
+          "ci_lo": 0.817,
+          "ci_hi": 0.972,
+          "n_present": 22,
+          "linked": true
+        },
+        "oqxA": {
+          "auc": 0.9497,
+          "ci_lo": 0.916,
+          "ci_hi": 0.979,
+          "n_present": 195,
+          "linked": true
+        },
+        "oqxA11": {
+          "auc": 0.985,
+          "ci_lo": 0.9532,
+          "ci_hi": 1.0,
+          "n_present": 11,
+          "linked": true
+        },
+        "oqxB": {
+          "auc": 0.9688,
+          "ci_lo": 0.9469,
+          "ci_hi": 0.9874,
+          "n_present": 136,
+          "linked": true
+        },
+        "oqxB19": {
+          "auc": 0.968,
+          "ci_lo": 0.945,
+          "ci_hi": 0.9858,
+          "n_present": 43,
+          "linked": true
+        },
+        "oqxB25": {
+          "auc": 0.9437,
+          "ci_lo": 0.9027,
+          "ci_hi": 0.9764,
+          "n_present": 18,
+          "linked": true
+        },
+        "oqxB5": {
+          "auc": 0.9608,
+          "ci_lo": 0.9076,
+          "ci_hi": 0.9979,
+          "n_present": 12,
+          "linked": true
+        },
+        "parC_S80I": {
+          "auc": 0.9958,
+          "ci_lo": 0.9906,
+          "ci_hi": 0.9993,
+          "n_present": 93,
+          "linked": true
+        },
+        "qnrB1": {
+          "auc": 0.9098,
+          "ci_lo": 0.8175,
+          "ci_hi": 0.9814,
+          "n_present": 28,
+          "linked": true
+        },
+        "qnrS1": {
+          "auc": 0.8542,
+          "ci_lo": 0.7475,
+          "ci_hi": 0.9369,
+          "n_present": 28,
+          "linked": true
+        },
+        "sul1": {
+          "auc": 0.9618,
+          "ci_lo": 0.9318,
+          "ci_hi": 0.9865,
+          "n_present": 90,
+          "linked": true
+        },
+        "sul2": {
+          "auc": 0.9842,
+          "ci_lo": 0.9669,
+          "ci_hi": 0.9969,
+          "n_present": 70,
+          "linked": true
+        },
+        "sul3": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "ci_hi": 1.0,
+          "n_present": 21,
+          "linked": true
+        },
+        "tet(A)": {
+          "auc": 0.9333,
+          "ci_lo": 0.9013,
+          "ci_hi": 0.9621,
+          "n_present": 46,
+          "linked": true
+        },
+        "tet(D)": {
+          "auc": 0.7302,
+          "ci_lo": 0.5677,
+          "ci_hi": 0.8731,
+          "n_present": 20,
+          "linked": true
+        }
+      },
+      "lift_table": {
+        "fosA": [
+          {
+            "det": "aac(3)-IVa",
+            "cooc": 17,
+            "lift": 1.08,
+            "p_given_target": 0.078
+          },
+          {
+            "det": "aac(6')-Ib",
+            "cooc": 45,
+            "lift": 1.08,
+            "p_given_target": 0.207
+          },
+          {
+            "det": "aac(6')-Ib'",
+            "cooc": 8,
+            "lift": 1.08,
+            "p_given_target": 0.037
+          },
+          {
+            "det": "aph(4)-Ia",
+            "cooc": 17,
+            "lift": 1.08,
+            "p_given_target": 0.078
+          },
+          {
+            "det": "arr-2",
+            "cooc": 8,
+            "lift": 1.08,
+            "p_given_target": 0.037
+          },
+          {
+            "det": "blaOXA",
+            "cooc": 37,
+            "lift": 1.08,
+            "p_given_target": 0.171
+          }
+        ],
+        "oqxA": [
+          {
+            "det": "aac(3)-IVa",
+            "cooc": 17,
+            "lift": 1.21,
+            "p_given_target": 0.087
+          },
+          {
+            "det": "ampC-Kaer",
+            "cooc": 10,
+            "lift": 1.21,
+            "p_given_target": 0.051
+          },
+          {
+            "det": "aph(4)-Ia",
+            "cooc": 17,
+            "lift": 1.21,
+            "p_given_target": 0.087
+          },
+          {
+            "det": "blaOXA-48",
+            "cooc": 8,
+            "lift": 1.21,
+            "p_given_target": 0.041
+          },
+          {
+            "det": "blaSHV-28",
+            "cooc": 15,
+            "lift": 1.21,
+            "p_given_target": 0.077
+          },
+          {
+            "det": "ble",
+            "cooc": 9,
+            "lift": 1.21,
+            "p_given_target": 0.046
+          }
+        ],
+        "oqxB": [
+          {
+            "det": "aac(3)-IVa",
+            "cooc": 17,
+            "lift": 1.73,
+            "p_given_target": 0.125
+          },
+          {
+            "det": "ampC-Kaer",
+            "cooc": 10,
+            "lift": 1.73,
+            "p_given_target": 0.074
+          },
+          {
+            "det": "aph(4)-Ia",
+            "cooc": 17,
+            "lift": 1.73,
+            "p_given_target": 0.125
+          },
+          {
+            "det": "ble",
+            "cooc": 9,
+            "lift": 1.73,
+            "p_given_target": 0.066
+          },
+          {
+            "det": "cmlA1",
+            "cooc": 17,
+            "lift": 1.73,
+            "p_given_target": 0.125
+          },
+          {
+            "det": "estX-3",
+            "cooc": 19,
+            "lift": 1.73,
+            "p_given_target": 0.14
+          }
+        ],
+        "parC_S80I": [
+          {
+            "det": "aac(3)-IVa",
+            "cooc": 17,
+            "lift": 2.53,
+            "p_given_target": 0.183
+          },
+          {
+            "det": "aph(4)-Ia",
+            "cooc": 17,
+            "lift": 2.53,
+            "p_given_target": 0.183
+          },
+          {
+            "det": "ompK35_E42RfsTer47",
+            "cooc": 54,
+            "lift": 2.53,
+            "p_given_target": 0.581
+          },
+          {
+            "det": "gyrA_S83I",
+            "cooc": 76,
+            "lift": 2.46,
+            "p_given_target": 0.817
+          },
+          {
+            "det": "blaOXA-9",
+            "cooc": 20,
+            "lift": 2.41,
+            "p_given_target": 0.215
+          },
+          {
+            "det": "ompK36_D135DGD",
+            "cooc": 21,
+            "lift": 2.41,
+            "p_given_target": 0.226
+          }
+        ],
+        "sul1": [
+          {
+            "det": "arr-3",
+            "cooc": 10,
+            "lift": 2.61,
+            "p_given_target": 0.111
+          },
+          {
+            "det": "dfrA12",
+            "cooc": 48,
+            "lift": 2.61,
+            "p_given_target": 0.533
+          },
+          {
+            "det": "aadA2",
+            "cooc": 56,
+            "lift": 2.48,
+            "p_given_target": 0.622
+          },
+          {
+            "det": "ant(2'')-Ia",
+            "cooc": 8,
+            "lift": 2.32,
+            "p_given_target": 0.089
+          },
+          {
+            "det": "mph(A)",
+            "cooc": 55,
+            "lift": 2.32,
+            "p_given_target": 0.611
+          },
+          {
+            "det": "catA1",
+            "cooc": 23,
+            "lift": 2.31,
+            "p_given_target": 0.256
+          }
+        ],
+        "blaTEM-1": [
+          {
+            "det": "arr-3",
+            "cooc": 10,
+            "lift": 2.8,
+            "p_given_target": 0.119
+          },
+          {
+            "det": "qnrB1",
+            "cooc": 25,
+            "lift": 2.5,
+            "p_given_target": 0.298
+          },
+          {
+            "det": "aac(3)-IIe",
+            "cooc": 21,
+            "lift": 2.35,
+            "p_given_target": 0.25
+          },
+          {
+            "det": "tet(A)",
+            "cooc": 34,
+            "lift": 2.07,
+            "p_given_target": 0.405
+          },
+          {
+            "det": "aac(6')-Ib-cr5",
+            "cooc": 31,
+            "lift": 2.06,
+            "p_given_target": 0.369
+          },
+          {
+            "det": "catB3",
+            "cooc": 34,
+            "lift": 2.02,
+            "p_given_target": 0.405
+          }
+        ]
+      },
+      "phenotype_to_genotype_inversion": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "aph(6)-Id",
+            "n": 78
+          },
+          {
+            "det": "aph(3'')-Ib",
+            "n": 76
+          },
+          {
+            "det": "aadA2",
+            "n": 75
+          },
+          {
+            "det": "aac(6')-Ib",
+            "n": 58
+          },
+          {
+            "det": "aadA1",
+            "n": 44
+          },
+          {
+            "det": "aph(3')-Ia",
+            "n": 32
+          },
+          {
+            "det": "aac(3)-IIe",
+            "n": 31
+          },
+          {
+            "det": "aph(4)-Ia",
+            "n": 24
+          }
+        ],
+        "AMINOGLYCOSIDE/QUINOLONE": [
+          {
+            "det": "aac(6')-Ib-cr5",
+            "n": 48
+          },
+          {
+            "det": "aac(6')-Ib-cr",
+            "n": 1
+          }
+        ],
+        "BETA-LACTAM": [
+          {
+            "det": "blaTEM-1",
+            "n": 94
+          },
+          {
+            "det": "blaSHV-11",
+            "n": 91
+          },
+          {
+            "det": "blaCTX-M-15",
+            "n": 87
+          },
+          {
+            "det": "ompK35_E42RfsTer47",
+            "n": 72
+          },
+          {
+            "det": "blaSHV-12",
+            "n": 71
+          },
+          {
+            "det": "blaOXA-1",
+            "n": 48
+          },
+          {
+            "det": "blaSHV-1",
+            "n": 46
+          },
+          {
+            "det": "blaOXA",
+            "n": 46
+          }
+        ],
+        "BLEOMYCIN": [
+          {
+            "det": "ble",
+            "n": 9
+          },
+          {
+            "det": "bleO",
+            "n": 1
+          }
+        ],
+        "COLISTIN": [
+          {
+            "det": "crrB_L94M",
+            "n": 3
+          },
+          {
+            "det": "mgrB_I12HfsTer13",
+            "n": 3
+          },
+          {
+            "det": "crrB_S195N",
+            "n": 2
+          },
+          {
+            "det": "crrB_Q10L",
+            "n": 1
+          },
+          {
+            "det": "phoQ_D438N",
+            "n": 1
+          },
+          {
+            "det": "mgrB_C28Y",
+            "n": 1
+          },
+          {
+            "det": "mgrB_K3Ter",
+            "n": 1
+          },
+          {
+            "det": "pmrA_S42N",
+            "n": 1
+          }
+        ],
+        "FOSFOMYCIN": [
+          {
+            "det": "fosA",
+            "n": 287
+          },
+          {
+            "det": "fosA5",
+            "n": 12
+          },
+          {
+            "det": "fosA7",
+            "n": 9
+          },
+          {
+            "det": "fosA10",
+            "n": 5
+          }
+        ],
+        "LINCOSAMIDE/MACROLIDE": [
+          {
+            "det": "erm(42)",
+            "n": 1
+          }
+        ],
+        "LINCOSAMIDE/MACROLIDE/STREPTOGRAMIN": [
+          {
+            "det": "erm(B)",
+            "n": 3
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "mph(A)",
+            "n": 77
+          },
+          {
+            "det": "mrx(A)",
+            "n": 76
+          },
+          {
+            "det": "estX-3",
+            "n": 26
+          },
+          {
+            "det": "ere(A)",
+            "n": 4
+          },
+          {
+            "det": "mph(E)",
+            "n": 3
+          },
+          {
+            "det": "mph(B)",
+            "n": 1
+          }
+        ],
+        "MACROLIDE/STREPTOGRAMIN": [
+          {
+            "det": "msr(E)",
+            "n": 3
+          }
+        ],
+        "MULTIDRUG": [
+          {
+            "det": "ramR_Q11TfsTer42",
+            "n": 3
+          },
+          {
+            "det": "ramR_H103RfsTer15",
+            "n": 2
+          },
+          {
+            "det": "ramR_Q122Ter",
+            "n": 2
+          },
+          {
+            "det": "ramR_W95Ter",
+            "n": 2
+          },
+          {
+            "det": "ramR_V39RfsTer15",
+            "n": 2
+          },
+          {
+            "det": "ramR_Q23Ter",
+            "n": 1
+          },
+          {
+            "det": "ramR_W185Ter",
+            "n": 1
+          },
+          {
+            "det": "ramR_M101PfsTer61",
+            "n": 1
+          }
+        ],
+        "NITROFURAN": [
+          {
+            "det": "nfsB_V167GfsTer7",
+            "n": 2
+          },
+          {
+            "det": "nfsB_V60RfsTer57",
+            "n": 1
+          },
+          {
+            "det": "nfsB_E26Ter",
+            "n": 1
+          }
+        ],
+        "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE": [
+          {
+            "det": "oqxA",
+            "n": 259
+          },
+          {
+            "det": "oqxB",
+            "n": 184
+          },
+          {
+            "det": "oqxR_D95E",
+            "n": 4
+          },
+          {
+            "det": "oqxR_V113I",
+            "n": 3
+          },
+          {
+            "det": "oqxR_V96AfsTer5",
+            "n": 1
+          },
+          {
+            "det": "oqxR_K88NfsTer34",
+            "n": 1
+          }
+        ],
+        "PHENICOL": [
+          {
+            "det": "catB3",
+            "n": 53
+          },
+          {
+            "det": "catA1",
+            "n": 31
+          },
+          {
+            "det": "cmlA1",
+            "n": 24
+          },
+          {
+            "det": "catA2",
+            "n": 8
+          },
+          {
+            "det": "cmlA5",
+            "n": 8
+          },
+          {
+            "det": "floR",
+            "n": 7
+          },
+          {
+            "det": "catB",
+            "n": 5
+          },
+          {
+            "det": "floR2",
+            "n": 2
+          }
+        ],
+        "PHENICOL/QUINOLONE": [
+          {
+            "det": "oqxB19",
+            "n": 55
+          },
+          {
+            "det": "oqxB25",
+            "n": 23
+          },
+          {
+            "det": "oqxB5",
+            "n": 14
+          },
+          {
+            "det": "oqxA11",
+            "n": 14
+          },
+          {
+            "det": "oqxA10",
+            "n": 9
+          },
+          {
+            "det": "oqxA3",
+            "n": 7
+          },
+          {
+            "det": "oqxB14",
+            "n": 5
+          },
+          {
+            "det": "oqxB32",
+            "n": 4
+          }
+        ],
+        "QUINOLONE": [
+          {
+            "det": "parC_S80I",
+            "n": 113
+          },
+          {
+            "det": "gyrA_S83I",
+            "n": 97
+          },
+          {
+            "det": "gyrA_S83T",
+            "n": 38
+          },
+          {
+            "det": "qnrB1",
+            "n": 34
+          },
+          {
+            "det": "qnrS1",
+            "n": 32
+          },
+          {
+            "det": "gyrA_D87N",
+            "n": 32
+          },
+          {
+            "det": "gyrA_S83F",
+            "n": 20
+          },
+          {
+            "det": "gyrA_S83Y",
+            "n": 10
+          }
+        ],
+        "RIFAMYCIN": [
+          {
+            "det": "arr-2",
+            "n": 10
+          },
+          {
+            "det": "arr-3",
+            "n": 10
+          },
+          {
+            "det": "arr",
+            "n": 4
+          }
+        ],
+        "STREPTOTHRICIN": [
+          {
+            "det": "sat2",
+            "n": 1
+          }
+        ],
+        "SULFONAMIDE": [
+          {
+            "det": "sul1",
+            "n": 108
+          },
+          {
+            "det": "sul2",
+            "n": 82
+          },
+          {
+            "det": "sul3",
+            "n": 28
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "tet(A)",
+            "n": 52
+          },
+          {
+            "det": "tet(D)",
+            "n": 24
+          },
+          {
+            "det": "ramR_A19V",
+            "n": 5
+          },
+          {
+            "det": "tet(G)",
+            "n": 2
+          },
+          {
+            "det": "tet(B)",
+            "n": 2
+          },
+          {
+            "det": "rpsJ_V57L",
+            "n": 1
+          },
+          {
+            "det": "ramR_T162I",
+            "n": 1
+          },
+          {
+            "det": "tet(M)",
+            "n": 1
+          }
+        ],
+        "TRIMETHOPRIM": [
+          {
+            "det": "dfrA14",
+            "n": 64
+          },
+          {
+            "det": "dfrA12",
+            "n": 61
+          },
+          {
+            "det": "dfrA50",
+            "n": 21
+          },
+          {
+            "det": "dfrA1",
+            "n": 12
+          },
+          {
+            "det": "dfrA30",
+            "n": 5
+          },
+          {
+            "det": "dfrA27",
+            "n": 3
+          },
+          {
+            "det": "dfrA17",
+            "n": 3
+          },
+          {
+            "det": "dfrA19",
+            "n": 3
+          }
+        ]
+      }
+    },
+    "escherichia_coli_shigella": {
+      "organism": "escherichia_coli_shigella",
+      "n_genomes": 163,
+      "n_determinants": 167,
+      "n_testable": 42,
+      "n_linked": 39,
+      "fraction_linked": 0.929,
+      "note": "profile-deduped 240->163 genomes (clonality proxy)",
+      "per_determinant": {
+        "aac(3)-IId": {
+          "auc": 0.8179,
+          "ci_lo": 0.7006,
+          "ci_hi": 0.9214,
+          "n_present": 17,
+          "linked": true
+        },
+        "aac(3)-IIe": {
+          "auc": 0.9032,
+          "ci_lo": 0.8459,
+          "ci_hi": 0.9506,
+          "n_present": 28,
+          "linked": true
+        },
+        "aac(6')-Ib-cr5": {
+          "auc": 0.99,
+          "ci_lo": 0.9745,
+          "ci_hi": 1.0,
+          "n_present": 43,
+          "linked": true
+        },
+        "aadA1": {
+          "auc": 0.9363,
+          "ci_lo": 0.8772,
+          "ci_hi": 0.9816,
+          "n_present": 30,
+          "linked": true
+        },
+        "aadA2": {
+          "auc": 0.9682,
+          "ci_lo": 0.9272,
+          "ci_hi": 0.9978,
+          "n_present": 24,
+          "linked": true
+        },
+        "aadA5": {
+          "auc": 0.9913,
+          "ci_lo": 0.9783,
+          "ci_hi": 1.0,
+          "n_present": 53,
+          "linked": true
+        },
+        "aph(3'')-Ib": {
+          "auc": 0.9981,
+          "ci_lo": 0.9939,
+          "ci_hi": 1.0,
+          "n_present": 68,
+          "linked": true
+        },
+        "aph(3')-Ia": {
+          "auc": 0.8378,
+          "ci_lo": 0.7096,
+          "ci_hi": 0.9462,
+          "n_present": 15,
+          "linked": true
+        },
+        "aph(6)-Id": {
+          "auc": 0.9857,
+          "ci_lo": 0.9589,
+          "ci_hi": 1.0,
+          "n_present": 67,
+          "linked": true
+        },
+        "blaCMY-2": {
+          "auc": 0.7047,
+          "ci_lo": 0.4723,
+          "ci_hi": 0.8982,
+          "n_present": 12,
+          "linked": false
+        },
+        "blaCTX-M-15": {
+          "auc": 0.9205,
+          "ci_lo": 0.8733,
+          "ci_hi": 0.9616,
+          "n_present": 68,
+          "linked": true
+        },
+        "blaCTX-M-27": {
+          "auc": 0.8536,
+          "ci_lo": 0.6911,
+          "ci_hi": 0.9879,
+          "n_present": 10,
+          "linked": true
+        },
+        "blaCTX-M-55": {
+          "auc": 0.8547,
+          "ci_lo": 0.7099,
+          "ci_hi": 0.9928,
+          "n_present": 11,
+          "linked": true
+        },
+        "blaOXA-1": {
+          "auc": 0.9837,
+          "ci_lo": 0.9436,
+          "ci_hi": 1.0,
+          "n_present": 43,
+          "linked": true
+        },
+        "blaTEM": {
+          "auc": 0.585,
+          "ci_lo": 0.364,
+          "ci_hi": 0.7836,
+          "n_present": 10,
+          "linked": false
+        },
+        "blaTEM-1": {
+          "auc": 0.7942,
+          "ci_lo": 0.7205,
+          "ci_hi": 0.8648,
+          "n_present": 71,
+          "linked": true
+        },
+        "catA1": {
+          "auc": 0.7889,
+          "ci_lo": 0.6762,
+          "ci_hi": 0.8919,
+          "n_present": 18,
+          "linked": true
+        },
+        "catB3": {
+          "auc": 0.9827,
+          "ci_lo": 0.9624,
+          "ci_hi": 0.998,
+          "n_present": 42,
+          "linked": true
+        },
+        "cyaA_S352T": {
+          "auc": 0.7955,
+          "ci_lo": 0.7039,
+          "ci_hi": 0.8755,
+          "n_present": 27,
+          "linked": true
+        },
+        "dfrA1": {
+          "auc": 0.9046,
+          "ci_lo": 0.8053,
+          "ci_hi": 0.9749,
+          "n_present": 14,
+          "linked": true
+        },
+        "dfrA12": {
+          "auc": 0.992,
+          "ci_lo": 0.9792,
+          "ci_hi": 0.9997,
+          "n_present": 20,
+          "linked": true
+        },
+        "dfrA14": {
+          "auc": 0.8736,
+          "ci_lo": 0.7709,
+          "ci_hi": 0.9559,
+          "n_present": 23,
+          "linked": true
+        },
+        "dfrA17": {
+          "auc": 0.983,
+          "ci_lo": 0.9558,
+          "ci_hi": 0.9985,
+          "n_present": 57,
+          "linked": true
+        },
+        "floR": {
+          "auc": 0.8077,
+          "ci_lo": 0.6931,
+          "ci_hi": 0.9045,
+          "n_present": 15,
+          "linked": true
+        },
+        "gyrA_D87N": {
+          "auc": 0.9911,
+          "ci_lo": 0.979,
+          "ci_hi": 1.0,
+          "n_present": 92,
+          "linked": true
+        },
+        "gyrA_S83L": {
+          "auc": 0.9638,
+          "ci_lo": 0.9312,
+          "ci_hi": 0.9885,
+          "n_present": 109,
+          "linked": true
+        },
+        "mph(A)": {
+          "auc": 0.9903,
+          "ci_lo": 0.9698,
+          "ci_hi": 1.0,
+          "n_present": 62,
+          "linked": true
+        },
+        "mrx(A)": {
+          "auc": 0.9928,
+          "ci_lo": 0.9761,
+          "ci_hi": 1.0,
+          "n_present": 62,
+          "linked": true
+        },
+        "parC_E84V": {
+          "auc": 0.9987,
+          "ci_lo": 0.9954,
+          "ci_hi": 1.0,
+          "n_present": 36,
+          "linked": true
+        },
+        "parC_S80I": {
+          "auc": 0.9909,
+          "ci_lo": 0.9733,
+          "ci_hi": 1.0,
+          "n_present": 94,
+          "linked": true
+        },
+        "parE_I529L": {
+          "auc": 0.9909,
+          "ci_lo": 0.9788,
+          "ci_hi": 0.9989,
+          "n_present": 46,
+          "linked": true
+        },
+        "parE_L416F": {
+          "auc": 0.9379,
+          "ci_lo": 0.8526,
+          "ci_hi": 0.9944,
+          "n_present": 10,
+          "linked": true
+        },
+        "parE_S458A": {
+          "auc": 0.9548,
+          "ci_lo": 0.9178,
+          "ci_hi": 0.9832,
+          "n_present": 31,
+          "linked": true
+        },
+        "ptsI_V25I": {
+          "auc": 0.9966,
+          "ci_lo": 0.9904,
+          "ci_hi": 1.0,
+          "n_present": 51,
+          "linked": true
+        },
+        "qnrS1": {
+          "auc": 0.6874,
+          "ci_lo": 0.4906,
+          "ci_hi": 0.8726,
+          "n_present": 15,
+          "linked": false
+        },
+        "sat2": {
+          "auc": 0.9719,
+          "ci_lo": 0.9255,
+          "ci_hi": 1.0,
+          "n_present": 10,
+          "linked": true
+        },
+        "sul1": {
+          "auc": 0.9212,
+          "ci_lo": 0.8619,
+          "ci_hi": 0.9674,
+          "n_present": 69,
+          "linked": true
+        },
+        "sul2": {
+          "auc": 0.956,
+          "ci_lo": 0.9222,
+          "ci_hi": 0.9836,
+          "n_present": 69,
+          "linked": true
+        },
+        "sul3": {
+          "auc": 0.9874,
+          "ci_lo": 0.9646,
+          "ci_hi": 1.0,
+          "n_present": 15,
+          "linked": true
+        },
+        "tet(A)": {
+          "auc": 0.7508,
+          "ci_lo": 0.6709,
+          "ci_hi": 0.8279,
+          "n_present": 65,
+          "linked": true
+        },
+        "tet(B)": {
+          "auc": 0.7948,
+          "ci_lo": 0.7112,
+          "ci_hi": 0.8719,
+          "n_present": 47,
+          "linked": true
+        },
+        "uhpT_E350Q": {
+          "auc": 0.9463,
+          "ci_lo": 0.8995,
+          "ci_hi": 0.981,
+          "n_present": 66,
+          "linked": true
+        }
+      },
+      "lift_table": {
+        "gyrA_S83L": [
+          {
+            "det": "gyrA_D87N",
+            "cooc": 92,
+            "lift": 1.5,
+            "p_given_target": 0.844
+          },
+          {
+            "det": "parC_E84V",
+            "cooc": 36,
+            "lift": 1.5,
+            "p_given_target": 0.33
+          },
+          {
+            "det": "parE_L416F",
+            "cooc": 10,
+            "lift": 1.5,
+            "p_given_target": 0.092
+          },
+          {
+            "det": "parE_S458A",
+            "cooc": 31,
+            "lift": 1.5,
+            "p_given_target": 0.284
+          },
+          {
+            "det": "parC_S80I",
+            "cooc": 93,
+            "lift": 1.48,
+            "p_given_target": 0.853
+          },
+          {
+            "det": "aac(6')-Ib-cr5",
+            "cooc": 42,
+            "lift": 1.46,
+            "p_given_target": 0.385
+          }
+        ],
+        "parC_S80I": [
+          {
+            "det": "aac(6')-Ib-cr5",
+            "cooc": 43,
+            "lift": 1.73,
+            "p_given_target": 0.457
+          },
+          {
+            "det": "parC_E84V",
+            "cooc": 36,
+            "lift": 1.73,
+            "p_given_target": 0.383
+          },
+          {
+            "det": "parE_S458A",
+            "cooc": 31,
+            "lift": 1.73,
+            "p_given_target": 0.33
+          },
+          {
+            "det": "gyrA_D87N",
+            "cooc": 91,
+            "lift": 1.72,
+            "p_given_target": 0.968
+          },
+          {
+            "det": "blaOXA-1",
+            "cooc": 42,
+            "lift": 1.69,
+            "p_given_target": 0.447
+          },
+          {
+            "det": "catB3",
+            "cooc": 41,
+            "lift": 1.69,
+            "p_given_target": 0.436
+          }
+        ],
+        "gyrA_D87N": [
+          {
+            "det": "parC_E84V",
+            "cooc": 36,
+            "lift": 1.77,
+            "p_given_target": 0.391
+          },
+          {
+            "det": "parE_L416F",
+            "cooc": 10,
+            "lift": 1.77,
+            "p_given_target": 0.109
+          },
+          {
+            "det": "parE_S458A",
+            "cooc": 31,
+            "lift": 1.77,
+            "p_given_target": 0.337
+          },
+          {
+            "det": "aac(6')-Ib-cr5",
+            "cooc": 42,
+            "lift": 1.73,
+            "p_given_target": 0.457
+          },
+          {
+            "det": "blaOXA-1",
+            "cooc": 42,
+            "lift": 1.73,
+            "p_given_target": 0.457
+          },
+          {
+            "det": "catB3",
+            "cooc": 41,
+            "lift": 1.73,
+            "p_given_target": 0.446
+          }
+        ],
+        "blaTEM-1": [
+          {
+            "det": "aac(3)-IId",
+            "cooc": 16,
+            "lift": 2.16,
+            "p_given_target": 0.225
+          },
+          {
+            "det": "dfrA14",
+            "cooc": 20,
+            "lift": 2.0,
+            "p_given_target": 0.282
+          },
+          {
+            "det": "aph(3')-Ia",
+            "cooc": 13,
+            "lift": 1.99,
+            "p_given_target": 0.183
+          },
+          {
+            "det": "floR",
+            "cooc": 11,
+            "lift": 1.68,
+            "p_given_target": 0.155
+          },
+          {
+            "det": "catA1",
+            "cooc": 13,
+            "lift": 1.66,
+            "p_given_target": 0.183
+          },
+          {
+            "det": "dfrA12",
+            "cooc": 14,
+            "lift": 1.61,
+            "p_given_target": 0.197
+          }
+        ],
+        "sul1": [
+          {
+            "det": "aadA5",
+            "cooc": 50,
+            "lift": 2.23,
+            "p_given_target": 0.725
+          },
+          {
+            "det": "dfrA17",
+            "cooc": 51,
+            "lift": 2.11,
+            "p_given_target": 0.739
+          },
+          {
+            "det": "aac(3)-IId",
+            "cooc": 15,
+            "lift": 2.08,
+            "p_given_target": 0.217
+          },
+          {
+            "det": "mph(A)",
+            "cooc": 51,
+            "lift": 1.94,
+            "p_given_target": 0.739
+          },
+          {
+            "det": "mrx(A)",
+            "cooc": 51,
+            "lift": 1.94,
+            "p_given_target": 0.739
+          },
+          {
+            "det": "catB3",
+            "cooc": 29,
+            "lift": 1.63,
+            "p_given_target": 0.42
+          }
+        ],
+        "sul2": [
+          {
+            "det": "aph(3'')-Ib",
+            "cooc": 60,
+            "lift": 2.08,
+            "p_given_target": 0.87
+          },
+          {
+            "det": "aph(6)-Id",
+            "cooc": 58,
+            "lift": 2.04,
+            "p_given_target": 0.841
+          },
+          {
+            "det": "dfrA14",
+            "cooc": 19,
+            "lift": 1.95,
+            "p_given_target": 0.275
+          },
+          {
+            "det": "sat2",
+            "cooc": 8,
+            "lift": 1.89,
+            "p_given_target": 0.116
+          },
+          {
+            "det": "aph(3')-Ia",
+            "cooc": 11,
+            "lift": 1.73,
+            "p_given_target": 0.159
+          },
+          {
+            "det": "catA1",
+            "cooc": 13,
+            "lift": 1.71,
+            "p_given_target": 0.188
+          }
+        ]
+      },
+      "phenotype_to_genotype_inversion": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "aph(3'')-Ib",
+            "n": 100
+          },
+          {
+            "det": "aadA5",
+            "n": 90
+          },
+          {
+            "det": "aph(6)-Id",
+            "n": 86
+          },
+          {
+            "det": "aac(3)-IIe",
+            "n": 54
+          },
+          {
+            "det": "aadA1",
+            "n": 40
+          },
+          {
+            "det": "aadA2",
+            "n": 31
+          },
+          {
+            "det": "aph(3')-Ia",
+            "n": 23
+          },
+          {
+            "det": "aac(3)-IId",
+            "n": 17
+          }
+        ],
+        "AMINOGLYCOSIDE/QUINOLONE": [
+          {
+            "det": "aac(6')-Ib-cr5",
+            "n": 69
+          },
+          {
+            "det": "aac(6')-Ib-cr",
+            "n": 1
+          }
+        ],
+        "BETA-LACTAM": [
+          {
+            "det": "blaCTX-M-15",
+            "n": 98
+          },
+          {
+            "det": "blaTEM-1",
+            "n": 80
+          },
+          {
+            "det": "blaOXA-1",
+            "n": 69
+          },
+          {
+            "det": "blaCTX-M-27",
+            "n": 22
+          },
+          {
+            "det": "blaCTX-M-55",
+            "n": 15
+          },
+          {
+            "det": "blaCMY-2",
+            "n": 15
+          },
+          {
+            "det": "blaTEM",
+            "n": 10
+          },
+          {
+            "det": "blaCTX-M-1",
+            "n": 7
+          }
+        ],
+        "BLEOMYCIN": [
+          {
+            "det": "bleO",
+            "n": 8
+          },
+          {
+            "det": "ble",
+            "n": 7
+          }
+        ],
+        "COLISTIN": [
+          {
+            "det": "mcr-1.1",
+            "n": 4
+          },
+          {
+            "det": "pmrB_C84Y",
+            "n": 1
+          },
+          {
+            "det": "mcr-3.2",
+            "n": 1
+          },
+          {
+            "det": "pmrB_T156M",
+            "n": 1
+          }
+        ],
+        "FOSFOMYCIN": [
+          {
+            "det": "uhpT_E350Q",
+            "n": 111
+          },
+          {
+            "det": "ptsI_V25I",
+            "n": 94
+          },
+          {
+            "det": "fosA",
+            "n": 1
+          },
+          {
+            "det": "fosA3",
+            "n": 1
+          }
+        ],
+        "FOSMIDOMYCIN": [
+          {
+            "det": "cyaA_S352T",
+            "n": 31
+          }
+        ],
+        "LINCOSAMIDE": [
+          {
+            "det": "lnu(F)",
+            "n": 2
+          }
+        ],
+        "LINCOSAMIDE/MACROLIDE/STREPTOGRAMIN": [
+          {
+            "det": "erm(B)",
+            "n": 7
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "mrx(A)",
+            "n": 98
+          },
+          {
+            "det": "mph(A)",
+            "n": 98
+          },
+          {
+            "det": "estX-3",
+            "n": 12
+          },
+          {
+            "det": "mef(B)",
+            "n": 6
+          },
+          {
+            "det": "acrB_R717L",
+            "n": 1
+          },
+          {
+            "det": "mph(B)",
+            "n": 1
+          },
+          {
+            "det": "mph(E)",
+            "n": 1
+          },
+          {
+            "det": "estX",
+            "n": 1
+          }
+        ],
+        "MACROLIDE/STREPTOGRAMIN": [
+          {
+            "det": "msr(E)",
+            "n": 1
+          }
+        ],
+        "MULTIDRUG": [
+          {
+            "det": "marR_S3N",
+            "n": 7
+          },
+          {
+            "det": "soxS_A12S",
+            "n": 4
+          },
+          {
+            "det": "acrR_V29YfsTer44",
+            "n": 2
+          },
+          {
+            "det": "soxR_R20H",
+            "n": 1
+          },
+          {
+            "det": "acrR_C205Ter",
+            "n": 1
+          },
+          {
+            "det": "soxR_G121D",
+            "n": 1
+          },
+          {
+            "det": "acrR_V19WfsTer54",
+            "n": 1
+          },
+          {
+            "det": "acrR_L89TerfsTer0",
+            "n": 1
+          }
+        ],
+        "NITROFURAN": [
+          {
+            "det": "nfsA_G126R",
+            "n": 4
+          },
+          {
+            "det": "nfsA_G131D",
+            "n": 2
+          },
+          {
+            "det": "nfsA_W212Ter",
+            "n": 1
+          },
+          {
+            "det": "nfsA_N135KfsTer2",
+            "n": 1
+          },
+          {
+            "det": "nfsA_I129NfsTer6",
+            "n": 1
+          },
+          {
+            "det": "nfsA_Q113Ter",
+            "n": 1
+          },
+          {
+            "det": "nfsA_L43FfsTer3",
+            "n": 1
+          },
+          {
+            "det": "nfsA_Q26Ter",
+            "n": 1
+          }
+        ],
+        "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE": [
+          {
+            "det": "oqxA",
+            "n": 1
+          },
+          {
+            "det": "oqxB",
+            "n": 1
+          }
+        ],
+        "PHENICOL": [
+          {
+            "det": "catB3",
+            "n": 69
+          },
+          {
+            "det": "catA1",
+            "n": 23
+          },
+          {
+            "det": "floR",
+            "n": 19
+          },
+          {
+            "det": "cmlA1",
+            "n": 13
+          },
+          {
+            "det": "catA2",
+            "n": 1
+          },
+          {
+            "det": "cmlA5",
+            "n": 1
+          }
+        ],
+        "QUINOLONE": [
+          {
+            "det": "gyrA_S83L",
+            "n": 159
+          },
+          {
+            "det": "parC_S80I",
+            "n": 141
+          },
+          {
+            "det": "gyrA_D87N",
+            "n": 140
+          },
+          {
+            "det": "parE_I529L",
+            "n": 88
+          },
+          {
+            "det": "parC_E84V",
+            "n": 77
+          },
+          {
+            "det": "parE_S458A",
+            "n": 33
+          },
+          {
+            "det": "qnrS1",
+            "n": 15
+          },
+          {
+            "det": "parE_L416F",
+            "n": 11
+          }
+        ],
+        "RIFAMYCIN": [
+          {
+            "det": "arr-3",
+            "n": 3
+          },
+          {
+            "det": "arr-2",
+            "n": 1
+          }
+        ],
+        "STREPTOTHRICIN": [
+          {
+            "det": "sat2",
+            "n": 10
+          }
+        ],
+        "SULFONAMIDE": [
+          {
+            "det": "sul1",
+            "n": 107
+          },
+          {
+            "det": "sul2",
+            "n": 102
+          },
+          {
+            "det": "sul3",
+            "n": 25
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "tet(A)",
+            "n": 109
+          },
+          {
+            "det": "tet(B)",
+            "n": 57
+          },
+          {
+            "det": "tet(M)",
+            "n": 11
+          },
+          {
+            "det": "tet(D)",
+            "n": 3
+          }
+        ],
+        "TRIMETHOPRIM": [
+          {
+            "det": "dfrA17",
+            "n": 94
+          },
+          {
+            "det": "dfrA14",
+            "n": 27
+          },
+          {
+            "det": "dfrA12",
+            "n": 27
+          },
+          {
+            "det": "dfrA1",
+            "n": 15
+          },
+          {
+            "det": "dfrA8",
+            "n": 3
+          },
+          {
+            "det": "dfrA25",
+            "n": 2
+          },
+          {
+            "det": "dfrA5",
+            "n": 2
+          },
+          {
+            "det": "dfrA27",
+            "n": 2
+          }
+        ]
+      }
+    },
+    "campylobacter": {
+      "organism": "campylobacter",
+      "n_genomes": 37,
+      "n_determinants": 25,
+      "n_testable": 3,
+      "n_linked": 0,
+      "fraction_linked": 0.0,
+      "note": "profile-deduped 100->37 genomes (clonality proxy)",
+      "per_determinant": {
+        "blaOXA-193": {
+          "auc": 0.4618,
+          "ci_lo": 0.2849,
+          "ci_hi": 0.6726,
+          "n_present": 20,
+          "linked": false
+        },
+        "gyrA_T86I": {
+          "auc": 0.3191,
+          "ci_lo": 0.1602,
+          "ci_hi": 0.5119,
+          "n_present": 17,
+          "linked": false
+        },
+        "tet(O)": {
+          "auc": 0.5658,
+          "ci_lo": 0.3773,
+          "ci_hi": 0.762,
+          "n_present": 19,
+          "linked": false
+        }
+      },
+      "lift_table": {
+        "blaOXA-193": [
+          {
+            "det": "blaOXA-61_G-57T",
+            "cooc": 8,
+            "lift": 1.64,
+            "p_given_target": 0.4
+          },
+          {
+            "det": "gyrA_T86I",
+            "cooc": 10,
+            "lift": 1.09,
+            "p_given_target": 0.5
+          },
+          {
+            "det": "tet(O)",
+            "cooc": 11,
+            "lift": 1.07,
+            "p_given_target": 0.55
+          }
+        ],
+        "tet(O)": [
+          {
+            "det": "gyrA_T86I",
+            "cooc": 10,
+            "lift": 1.15,
+            "p_given_target": 0.526
+          },
+          {
+            "det": "blaOXA-193",
+            "cooc": 11,
+            "lift": 1.07,
+            "p_given_target": 0.579
+          }
+        ],
+        "gyrA_T86I": [
+          {
+            "det": "tet(O)",
+            "cooc": 10,
+            "lift": 1.15,
+            "p_given_target": 0.588
+          },
+          {
+            "det": "blaOXA-193",
+            "cooc": 10,
+            "lift": 1.09,
+            "p_given_target": 0.588
+          }
+        ]
+      },
+      "phenotype_to_genotype_inversion": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "aph(3')-IIIa",
+            "n": 9
+          },
+          {
+            "det": "aadE-Cc",
+            "n": 3
+          },
+          {
+            "det": "aad9",
+            "n": 2
+          },
+          {
+            "det": "ant(6)-Ia",
+            "n": 2
+          },
+          {
+            "det": "aph(2'')-Ig",
+            "n": 1
+          },
+          {
+            "det": "rpsL_K43R",
+            "n": 1
+          }
+        ],
+        "BETA-LACTAM": [
+          {
+            "det": "blaOXA-193",
+            "n": 71
+          },
+          {
+            "det": "blaOXA-61_G-57T",
+            "n": 18
+          },
+          {
+            "det": "blaOXA",
+            "n": 4
+          },
+          {
+            "det": "blaOXA-461",
+            "n": 3
+          },
+          {
+            "det": "blaOXA-591",
+            "n": 3
+          },
+          {
+            "det": "blaOXA-592",
+            "n": 2
+          },
+          {
+            "det": "blaOXA-460",
+            "n": 2
+          },
+          {
+            "det": "blaOXA-449",
+            "n": 1
+          }
+        ],
+        "LINCOSAMIDE": [
+          {
+            "det": "lnu(C)",
+            "n": 1
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "rplV_A103V",
+            "n": 5
+          },
+          {
+            "det": "23S_A2075G",
+            "n": 1
+          },
+          {
+            "det": "23S_A2074T",
+            "n": 1
+          }
+        ],
+        "QUINOLONE": [
+          {
+            "det": "gyrA_T86I",
+            "n": 50
+          }
+        ],
+        "STREPTOTHRICIN": [
+          {
+            "det": "sat4",
+            "n": 2
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "tet(O)",
+            "n": 52
+          },
+          {
+            "det": "tet(O/M/O)",
+            "n": 1
+          }
+        ]
+      }
+    },
+    "acinetobacter": {
+      "organism": "acinetobacter",
+      "n_genomes": 36,
+      "n_determinants": 81,
+      "n_testable": 13,
+      "n_linked": 13,
+      "fraction_linked": 1.0,
+      "note": "profile-deduped 60->36 genomes (clonality proxy)",
+      "per_determinant": {
+        "ant(2'')-Ia": {
+          "auc": 0.8395,
+          "ci_lo": 0.6952,
+          "ci_hi": 0.9556,
+          "n_present": 18,
+          "linked": true
+        },
+        "aph(3'')-Ib": {
+          "auc": 0.9783,
+          "ci_lo": 0.9257,
+          "ci_hi": 1.0,
+          "n_present": 17,
+          "linked": true
+        },
+        "aph(3')-Ia": {
+          "auc": 0.7397,
+          "ci_lo": 0.5432,
+          "ci_hi": 0.9236,
+          "n_present": 15,
+          "linked": true
+        },
+        "aph(3')-VIa": {
+          "auc": 0.8763,
+          "ci_lo": 0.7057,
+          "ci_hi": 1.0,
+          "n_present": 13,
+          "linked": true
+        },
+        "aph(6)-Id": {
+          "auc": 0.9443,
+          "ci_lo": 0.8452,
+          "ci_hi": 1.0,
+          "n_present": 17,
+          "linked": true
+        },
+        "blaOXA-23": {
+          "auc": 0.8921,
+          "ci_lo": 0.7718,
+          "ci_hi": 0.9861,
+          "n_present": 15,
+          "linked": true
+        },
+        "blaOXA-69": {
+          "auc": 0.9498,
+          "ci_lo": 0.8618,
+          "ci_hi": 1.0,
+          "n_present": 13,
+          "linked": true
+        },
+        "mph(E)": {
+          "auc": 0.9808,
+          "ci_lo": 0.9259,
+          "ci_hi": 1.0,
+          "n_present": 10,
+          "linked": true
+        },
+        "msr(E)": {
+          "auc": 0.9808,
+          "ci_lo": 0.9259,
+          "ci_hi": 1.0,
+          "n_present": 10,
+          "linked": true
+        },
+        "parC_S84L": {
+          "auc": 0.7745,
+          "ci_lo": 0.5455,
+          "ci_hi": 0.9556,
+          "n_present": 25,
+          "linked": true
+        },
+        "sul1": {
+          "auc": 0.8715,
+          "ci_lo": 0.7083,
+          "ci_hi": 0.9875,
+          "n_present": 12,
+          "linked": true
+        },
+        "sul2": {
+          "auc": 0.7812,
+          "ci_lo": 0.6042,
+          "ci_hi": 0.9351,
+          "n_present": 24,
+          "linked": true
+        },
+        "tet(B)": {
+          "auc": 0.8945,
+          "ci_lo": 0.7163,
+          "ci_hi": 1.0,
+          "n_present": 11,
+          "linked": true
+        }
+      },
+      "lift_table": {
+        "parC_S84L": [
+          {
+            "det": "blaOXA-66",
+            "cooc": 8,
+            "lift": 1.44,
+            "p_given_target": 0.32
+          },
+          {
+            "det": "aph(3')-VIa",
+            "cooc": 12,
+            "lift": 1.33,
+            "p_given_target": 0.48
+          },
+          {
+            "det": "mph(E)",
+            "cooc": 9,
+            "lift": 1.3,
+            "p_given_target": 0.36
+          },
+          {
+            "det": "msr(E)",
+            "cooc": 9,
+            "lift": 1.3,
+            "p_given_target": 0.36
+          },
+          {
+            "det": "aac(3)-Ia",
+            "cooc": 8,
+            "lift": 1.28,
+            "p_given_target": 0.32
+          },
+          {
+            "det": "blaOXA-23",
+            "cooc": 13,
+            "lift": 1.25,
+            "p_given_target": 0.52
+          }
+        ],
+        "sul2": [
+          {
+            "det": "ant(2'')-Ia",
+            "cooc": 14,
+            "lift": 1.17,
+            "p_given_target": 0.583
+          },
+          {
+            "det": "aph(6)-Id",
+            "cooc": 13,
+            "lift": 1.15,
+            "p_given_target": 0.542
+          },
+          {
+            "det": "aph(3')-Ia",
+            "cooc": 11,
+            "lift": 1.1,
+            "p_given_target": 0.458
+          },
+          {
+            "det": "tet(B)",
+            "cooc": 8,
+            "lift": 1.09,
+            "p_given_target": 0.333
+          },
+          {
+            "det": "aph(3'')-Ib",
+            "cooc": 12,
+            "lift": 1.06,
+            "p_given_target": 0.5
+          },
+          {
+            "det": "aph(3')-VIa",
+            "cooc": 9,
+            "lift": 1.04,
+            "p_given_target": 0.375
+          }
+        ],
+        "ant(2'')-Ia": [
+          {
+            "det": "aph(3')-VIa",
+            "cooc": 12,
+            "lift": 1.85,
+            "p_given_target": 0.667
+          },
+          {
+            "det": "blaOXA-69",
+            "cooc": 10,
+            "lift": 1.54,
+            "p_given_target": 0.556
+          },
+          {
+            "det": "sul2",
+            "cooc": 14,
+            "lift": 1.17,
+            "p_given_target": 0.778
+          },
+          {
+            "det": "aph(3')-Ia",
+            "cooc": 8,
+            "lift": 1.07,
+            "p_given_target": 0.444
+          },
+          {
+            "det": "blaOXA-23",
+            "cooc": 8,
+            "lift": 1.07,
+            "p_given_target": 0.444
+          },
+          {
+            "det": "ant(3'')-IIa",
+            "cooc": 18,
+            "lift": 1.0,
+            "p_given_target": 1.0
+          }
+        ],
+        "aph(3'')-Ib": [
+          {
+            "det": "blaOXA-66",
+            "cooc": 8,
+            "lift": 2.12,
+            "p_given_target": 0.471
+          },
+          {
+            "det": "aph(6)-Id",
+            "cooc": 16,
+            "lift": 1.99,
+            "p_given_target": 0.941
+          },
+          {
+            "det": "tet(B)",
+            "cooc": 9,
+            "lift": 1.73,
+            "p_given_target": 0.529
+          },
+          {
+            "det": "parC_S84L",
+            "cooc": 13,
+            "lift": 1.1,
+            "p_given_target": 0.765
+          },
+          {
+            "det": "sul2",
+            "cooc": 12,
+            "lift": 1.06,
+            "p_given_target": 0.706
+          },
+          {
+            "det": "ant(3'')-IIa",
+            "cooc": 17,
+            "lift": 1.0,
+            "p_given_target": 1.0
+          }
+        ],
+        "aph(6)-Id": [
+          {
+            "det": "blaOXA-66",
+            "cooc": 8,
+            "lift": 2.12,
+            "p_given_target": 0.471
+          },
+          {
+            "det": "aph(3'')-Ib",
+            "cooc": 16,
+            "lift": 1.99,
+            "p_given_target": 0.941
+          },
+          {
+            "det": "tet(B)",
+            "cooc": 10,
+            "lift": 1.93,
+            "p_given_target": 0.588
+          },
+          {
+            "det": "sul2",
+            "cooc": 13,
+            "lift": 1.15,
+            "p_given_target": 0.765
+          },
+          {
+            "det": "parC_S84L",
+            "cooc": 12,
+            "lift": 1.02,
+            "p_given_target": 0.706
+          },
+          {
+            "det": "ant(3'')-IIa",
+            "cooc": 17,
+            "lift": 1.0,
+            "p_given_target": 1.0
+          }
+        ],
+        "aph(3')-Ia": [
+          {
+            "det": "blaOXA-69",
+            "cooc": 9,
+            "lift": 1.66,
+            "p_given_target": 0.6
+          },
+          {
+            "det": "blaOXA-23",
+            "cooc": 10,
+            "lift": 1.6,
+            "p_given_target": 0.667
+          },
+          {
+            "det": "parC_S84L",
+            "cooc": 12,
+            "lift": 1.15,
+            "p_given_target": 0.8
+          },
+          {
+            "det": "sul2",
+            "cooc": 11,
+            "lift": 1.1,
+            "p_given_target": 0.733
+          },
+          {
+            "det": "ant(2'')-Ia",
+            "cooc": 8,
+            "lift": 1.07,
+            "p_given_target": 0.533
+          },
+          {
+            "det": "gyrA_S81L",
+            "cooc": 14,
+            "lift": 1.02,
+            "p_given_target": 0.933
+          }
+        ]
+      },
+      "phenotype_to_genotype_inversion": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "ant(3'')-IIa",
+            "n": 60
+          },
+          {
+            "det": "ant(2'')-Ia",
+            "n": 31
+          },
+          {
+            "det": "aph(3'')-Ib",
+            "n": 28
+          },
+          {
+            "det": "aph(6)-Id",
+            "n": 22
+          },
+          {
+            "det": "aph(3')-Ia",
+            "n": 22
+          },
+          {
+            "det": "aph(3')-VIa",
+            "n": 18
+          },
+          {
+            "det": "aac(3)-Ia",
+            "n": 13
+          },
+          {
+            "det": "aadA1",
+            "n": 12
+          }
+        ],
+        "BETA-LACTAM": [
+          {
+            "det": "blaOXA-23",
+            "n": 19
+          },
+          {
+            "det": "blaOXA-58",
+            "n": 19
+          },
+          {
+            "det": "blaOXA-69",
+            "n": 17
+          },
+          {
+            "det": "blaADC-79",
+            "n": 15
+          },
+          {
+            "det": "blaADC-76",
+            "n": 12
+          },
+          {
+            "det": "blaOXA-68",
+            "n": 12
+          },
+          {
+            "det": "blaOXA-66",
+            "n": 11
+          },
+          {
+            "det": "blaOXA-100",
+            "n": 11
+          }
+        ],
+        "COLISTIN": [
+          {
+            "det": "pmrB_T232I",
+            "n": 1
+          },
+          {
+            "det": "pmrB_S17R",
+            "n": 1
+          },
+          {
+            "det": "pmrA_E8D",
+            "n": 1
+          }
+        ],
+        "EFFLUX": [
+          {
+            "det": "adeS_R152K",
+            "n": 1
+          },
+          {
+            "det": "adeR_P116L",
+            "n": 1
+          },
+          {
+            "det": "adeS_H189Y",
+            "n": 1
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "mph(E)",
+            "n": 19
+          }
+        ],
+        "MACROLIDE/STREPTOGRAMIN": [
+          {
+            "det": "msr(E)",
+            "n": 19
+          }
+        ],
+        "PHENICOL": [
+          {
+            "det": "floR",
+            "n": 3
+          },
+          {
+            "det": "catA1",
+            "n": 2
+          },
+          {
+            "det": "catB8",
+            "n": 1
+          },
+          {
+            "det": "cmlA1",
+            "n": 1
+          }
+        ],
+        "QUINOLONE": [
+          {
+            "det": "gyrA_S81L",
+            "n": 56
+          },
+          {
+            "det": "parC_S84L",
+            "n": 40
+          },
+          {
+            "det": "parC_S84F",
+            "n": 1
+          },
+          {
+            "det": "parC_E88K",
+            "n": 1
+          }
+        ],
+        "STREPTOTHRICIN": [
+          {
+            "det": "sat2",
+            "n": 2
+          }
+        ],
+        "SULFONAMIDE": [
+          {
+            "det": "sul2",
+            "n": 36
+          },
+          {
+            "det": "sul1",
+            "n": 25
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "tet(B)",
+            "n": 15
+          },
+          {
+            "det": "tet(39)",
+            "n": 13
+          },
+          {
+            "det": "tet(A)",
+            "n": 8
+          }
+        ],
+        "TRIMETHOPRIM": [
+          {
+            "det": "dfrA16",
+            "n": 8
+          },
+          {
+            "det": "dfrA44",
+            "n": 7
+          },
+          {
+            "det": "dfrA1",
+            "n": 2
+          },
+          {
+            "det": "dfrA7",
+            "n": 1
+          }
+        ]
+      }
+    },
+    "salmonella": {
+      "organism": "salmonella",
+      "n_genomes": 28,
+      "n_determinants": 52,
+      "n_testable": 5,
+      "n_linked": 5,
+      "fraction_linked": 1.0,
+      "note": "profile-deduped 60->28 genomes (clonality proxy)",
+      "per_determinant": {
+        "aadA1": {
+          "auc": 0.9,
+          "ci_lo": 0.7187,
+          "ci_hi": 1.0,
+          "n_present": 10,
+          "linked": true
+        },
+        "blaTEM-1": {
+          "auc": 0.8889,
+          "ci_lo": 0.7466,
+          "ci_hi": 0.9848,
+          "n_present": 10,
+          "linked": true
+        },
+        "gyrA_D87Y": {
+          "auc": 0.9583,
+          "ci_lo": 0.8663,
+          "ci_hi": 1.0,
+          "n_present": 12,
+          "linked": true
+        },
+        "sul1": {
+          "auc": 0.8594,
+          "ci_lo": 0.6577,
+          "ci_hi": 1.0,
+          "n_present": 12,
+          "linked": true
+        },
+        "tet(A)": {
+          "auc": 0.7923,
+          "ci_lo": 0.6166,
+          "ci_hi": 0.9375,
+          "n_present": 15,
+          "linked": true
+        }
+      },
+      "lift_table": {
+        "tet(A)": [
+          {
+            "det": "sul1",
+            "cooc": 11,
+            "lift": 1.71,
+            "p_given_target": 0.733
+          },
+          {
+            "det": "aadA1",
+            "cooc": 9,
+            "lift": 1.68,
+            "p_given_target": 0.6
+          },
+          {
+            "det": "aph(3')-Ia",
+            "cooc": 8,
+            "lift": 1.66,
+            "p_given_target": 0.533
+          },
+          {
+            "det": "gyrA_D87Y",
+            "cooc": 10,
+            "lift": 1.56,
+            "p_given_target": 0.667
+          }
+        ],
+        "gyrA_D87Y": [
+          {
+            "det": "aadA1",
+            "cooc": 9,
+            "lift": 2.1,
+            "p_given_target": 0.75
+          },
+          {
+            "det": "sul1",
+            "cooc": 10,
+            "lift": 1.94,
+            "p_given_target": 0.833
+          },
+          {
+            "det": "tet(A)",
+            "cooc": 10,
+            "lift": 1.56,
+            "p_given_target": 0.833
+          }
+        ],
+        "sul1": [
+          {
+            "det": "aadA1",
+            "cooc": 9,
+            "lift": 2.1,
+            "p_given_target": 0.75
+          },
+          {
+            "det": "gyrA_D87Y",
+            "cooc": 10,
+            "lift": 1.94,
+            "p_given_target": 0.833
+          },
+          {
+            "det": "tet(A)",
+            "cooc": 11,
+            "lift": 1.71,
+            "p_given_target": 0.917
+          }
+        ],
+        "aadA1": [
+          {
+            "det": "gyrA_D87Y",
+            "cooc": 9,
+            "lift": 2.1,
+            "p_given_target": 0.9
+          },
+          {
+            "det": "sul1",
+            "cooc": 9,
+            "lift": 2.1,
+            "p_given_target": 0.9
+          },
+          {
+            "det": "tet(A)",
+            "cooc": 9,
+            "lift": 1.68,
+            "p_given_target": 0.9
+          }
+        ],
+        "blaTEM-1": []
+      },
+      "phenotype_to_genotype_inversion": {
+        "AMINOGLYCOSIDE": [
+          {
+            "det": "aadA1",
+            "n": 17
+          },
+          {
+            "det": "aph(3')-Ia",
+            "n": 13
+          },
+          {
+            "det": "aph(4)-Ia",
+            "n": 12
+          },
+          {
+            "det": "aac(3)-IVa",
+            "n": 12
+          },
+          {
+            "det": "aph(3'')-Ib",
+            "n": 10
+          },
+          {
+            "det": "aph(6)-Id",
+            "n": 10
+          },
+          {
+            "det": "aadA2",
+            "n": 4
+          },
+          {
+            "det": "ant(2'')-Ia",
+            "n": 3
+          }
+        ],
+        "BETA-LACTAM": [
+          {
+            "det": "blaTEM-1",
+            "n": 11
+          },
+          {
+            "det": "blaCTX-M-65",
+            "n": 11
+          },
+          {
+            "det": "blaCTX-M",
+            "n": 2
+          },
+          {
+            "det": "blaCMY-2",
+            "n": 1
+          },
+          {
+            "det": "blaDHA",
+            "n": 1
+          },
+          {
+            "det": "blaCMY-4",
+            "n": 1
+          },
+          {
+            "det": "blaNDM-1",
+            "n": 1
+          }
+        ],
+        "BLEOMYCIN": [
+          {
+            "det": "ble",
+            "n": 3
+          },
+          {
+            "det": "bleO",
+            "n": 2
+          }
+        ],
+        "FOSFOMYCIN": [
+          {
+            "det": "fosA7",
+            "n": 5
+          },
+          {
+            "det": "fosA3",
+            "n": 5
+          }
+        ],
+        "MACROLIDE": [
+          {
+            "det": "mph(E)",
+            "n": 1
+          }
+        ],
+        "MACROLIDE/STREPTOGRAMIN": [
+          {
+            "det": "msr(E)",
+            "n": 1
+          }
+        ],
+        "MULTIDRUG": [
+          {
+            "det": "ramR_Q11Ter",
+            "n": 2
+          },
+          {
+            "det": "ramR_I21TerfsTer0",
+            "n": 1
+          },
+          {
+            "det": "ramR_T18P",
+            "n": 1
+          },
+          {
+            "det": "ramR_Q19Ter",
+            "n": 1
+          }
+        ],
+        "PHENICOL": [
+          {
+            "det": "floR",
+            "n": 13
+          },
+          {
+            "det": "cmlA1",
+            "n": 1
+          },
+          {
+            "det": "cmlA5",
+            "n": 1
+          }
+        ],
+        "QUINOLONE": [
+          {
+            "det": "gyrA_D87Y",
+            "n": 19
+          },
+          {
+            "det": "qnrB19",
+            "n": 5
+          },
+          {
+            "det": "gyrA_S83F",
+            "n": 4
+          },
+          {
+            "det": "parC_S80I",
+            "n": 3
+          },
+          {
+            "det": "gyrA_S83Y",
+            "n": 3
+          },
+          {
+            "det": "qnrS1",
+            "n": 1
+          },
+          {
+            "det": "qnrS2",
+            "n": 1
+          },
+          {
+            "det": "gyrA_D87G",
+            "n": 1
+          }
+        ],
+        "SULFONAMIDE": [
+          {
+            "det": "sul1",
+            "n": 20
+          },
+          {
+            "det": "sul2",
+            "n": 5
+          },
+          {
+            "det": "sul3",
+            "n": 2
+          }
+        ],
+        "TETRACYCLINE": [
+          {
+            "det": "tet(A)",
+            "n": 26
+          },
+          {
+            "det": "tet(B)",
+            "n": 9
+          },
+          {
+            "det": "tet(M)",
+            "n": 1
+          }
+        ],
+        "TRIMETHOPRIM": [
+          {
+            "det": "dfrA14",
+            "n": 11
+          },
+          {
+            "det": "dfrA12",
+            "n": 2
+          }
+        ]
+      }
+    }
+  }
+}

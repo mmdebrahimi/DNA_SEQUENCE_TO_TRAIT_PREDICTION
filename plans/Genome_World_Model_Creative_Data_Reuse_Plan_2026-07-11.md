@@ -3,7 +3,12 @@
 **Mode:** `/soraya decompose & --plan` (strategy + plan-first; STOPS for user ratification — no build started).
 **Author:** Soraya-J2. **Status:** Family **A EXECUTED** 2026-07-11 (user ratified option 1, flagship-first) →
 verdict `FAIL_ADDITIVE_SUFFICES` (`wiki/hiv_epistasis_result_2026-07-11.{json,md}`; `scripts/hiv_epistasis.py`;
-`tests/test_hiv_epistasis.py` 13/13; frozen surface `verify_lock` OK). Families B/C/D remain CANDIDATE.
+`tests/test_hiv_epistasis.py` 13/13; frozen surface `verify_lock` OK). Family **C EXECUTED** 2026-07-11
+(user ratified option 2, depth+breadth) → verdict `PASS_LINKAGE_STRUCTURE` (raw 143/144; clonality-corrected
+114/121 = 94.2%; `scripts/determinant_cooccurrence.py`; `tests/test_determinant_cooccurrence.py` 10/10;
+`wiki/determinant_cooccurrence_result_2026-07-11{,_dedup}.{json,md}`). Families B/D remain CANDIDATE.
+The A+C pair: additive suffices at the quantitative per-drug level (A), massive real joint linkage at the
+determinant level + phenotype→genotype inversion (C).
 
 ---
 
