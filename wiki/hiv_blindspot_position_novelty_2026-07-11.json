@@ -1,0 +1,85 @@
+{
+  "artifact": "hiv_blindspot_position_novelty",
+  "schema": "hiv-blindspot-position-novelty-v1",
+  "question": "Do catalog-MISSED resistant HIV isolates carry an uncatalogued mutation at a KNOWN DRM position (a deterministic position-novelty flag can catch), or is the resistance elsewhere?",
+  "flag": "position_novel = a non-WT AA at a catalogued DRM position whose specific substitution is NOT catalogued (a 'catalog call may be incomplete' self-awareness flag, not a resistance predictor)",
+  "label_source": "Stanford HIVDB PhenoSense fold-change (free, independent wet-lab)",
+  "prereg": {
+    "SENS_MIN": 0.3,
+    "LIFT_MIN": 1.2,
+    "fold_cutoff": 3.0,
+    "verdict_rule": "FLAG_RECOVERS_BLINDSPOT iff median(sens)>=SENS_MIN AND median(lift)>=LIFT_MIN"
+  },
+  "verdict": "FLAG_RECOVERS_BLINDSPOT",
+  "median_flag_sens_on_blindspot": 0.604,
+  "median_lift": 3.98,
+  "honest_caveats": [
+    "RISK-FLAGGED family: the LEARNED/likelihood blind-spot rescue is a CLOSED negative (ESM below chance; blind spot is pocket-mediated per the ddG probe). This tests only the DETERMINISTIC position-novelty angle.",
+    "A BLINDSPOT_NOT_POSITION_LOCAL verdict CONFIRMS the closed negative (out-of-catalog resistance is not at known positions) \u2014 a valid finding, not a failure to build.",
+    "The flag is a self-awareness DIAGNOSTIC ('catalog may be incomplete here'), NOT a resistance call.",
+    "fold>=3 is the illustrative NNRTI cutoff (not a per-drug clinical breakpoint)."
+  ],
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303",
+  "per_drug": {
+    "efavirenz": {
+      "drug": "efavirenz",
+      "n_catalog_negative": 1111,
+      "n_blindspot_true_R": 53,
+      "n_catneg_true_S": 1058,
+      "flag_sens_on_blindspot": 0.604,
+      "flag_fp_on_catneg_S": 0.105,
+      "base_R_rate_catneg": 0.048,
+      "flag_R_rate": 0.224,
+      "lift": 4.691,
+      "powered": true
+    },
+    "nevirapine": {
+      "drug": "nevirapine",
+      "n_catalog_negative": 1089,
+      "n_blindspot_true_R": 99,
+      "n_catneg_true_S": 990,
+      "flag_sens_on_blindspot": 0.515,
+      "flag_fp_on_catneg_S": 0.077,
+      "base_R_rate_catneg": 0.091,
+      "flag_R_rate": 0.402,
+      "lift": 4.417,
+      "powered": true
+    },
+    "etravirine": {
+      "drug": "etravirine",
+      "n_catalog_negative": 440,
+      "n_blindspot_true_R": 32,
+      "n_catneg_true_S": 408,
+      "flag_sens_on_blindspot": 0.688,
+      "flag_fp_on_catneg_S": 0.132,
+      "base_R_rate_catneg": 0.073,
+      "flag_R_rate": 0.289,
+      "lift": 3.98,
+      "powered": true
+    },
+    "rilpivirine": {
+      "drug": "rilpivirine",
+      "n_catalog_negative": 126,
+      "n_blindspot_true_R": 21,
+      "n_catneg_true_S": 105,
+      "flag_sens_on_blindspot": 0.571,
+      "flag_fp_on_catneg_S": 0.267,
+      "base_R_rate_catneg": 0.167,
+      "flag_R_rate": 0.3,
+      "lift": 1.8,
+      "powered": true
+    },
+    "doravirine": {
+      "drug": "doravirine",
+      "n_catalog_negative": 37,
+      "n_blindspot_true_R": 21,
+      "n_catneg_true_S": 16,
+      "flag_sens_on_blindspot": 0.714,
+      "flag_fp_on_catneg_S": 0.375,
+      "base_R_rate_catneg": 0.568,
+      "flag_R_rate": 0.714,
+      "lift": 1.259,
+      "powered": true
+    }
+  }
+}
