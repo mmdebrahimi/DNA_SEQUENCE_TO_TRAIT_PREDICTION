@@ -1,0 +1,50 @@
+{
+  "artifact": "tb_mic_calibration",
+  "schema": "tb-mic-calibration-v1",
+  "question": "Do split-conformal intervals on CRyPTIC BMD-MIC (RIF/INH) achieve nominal held-out coverage on resolved MICs (a calibrated quantitative TB decoder)?",
+  "substrate": "CRyPTIC reuse-table measured BMD-MIC (wet-lab, NOT G1-circular BV-BRC) + WHO grade-1/2 determinant presence from VARIANTS.parquet (frozen tb_amr matcher)",
+  "prereg": {
+    "MIN_SUPPORT": 10,
+    "COVER_TOL": 0.05,
+    "REPEATS": 20,
+    "target": 0.9,
+    "N_MIN": 30,
+    "seed": 0,
+    "censoring": "conformal quantile set on RESOLVED MICs only; censored scored for consistency"
+  },
+  "verdict": "CALIBRATED_MIC_INTERVALS",
+  "honest_caveats": [
+    "CRyPTIC MIC is end-censored (RIF 58% / INH 36% <=/> values) \u2014 coverage is on the RESOLVED subset (mid-ladder-enriched), censored isolates scored only for consistency.",
+    "Features = WHO grade-1/2 determinant presence (the catalogue that defines R/S) -> the point model explains R/S better than the exact MIC rung; the conformal WIDTH honestly reflects that.",
+    "Split-conformal gives MARGINAL (not per-genotype) coverage; measured wet-lab MIC, in-distribution vs the WHO catalogue (not independent)."
+  ],
+  "citation": "CRyPTIC Consortium 2022; WHO TB mutation catalogue v2 (2023)",
+  "per_drug": {
+    "rifampicin": {
+      "n": 12097,
+      "n_resolved": 5012,
+      "n_censored": 7085,
+      "n_determinant_features": 17,
+      "powered": true,
+      "r2_oof_resolved": 0.42,
+      "cover_resolved_90": 0.9035,
+      "halfwidth_log2": 1.65,
+      "interval_fold_factor": 3.14,
+      "consistency_censored": 0.8388,
+      "calibrated": true
+    },
+    "isoniazid": {
+      "n": 12068,
+      "n_resolved": 7669,
+      "n_censored": 4399,
+      "n_determinant_features": 5,
+      "powered": true,
+      "r2_oof_resolved": 0.7661,
+      "cover_resolved_90": 0.9057,
+      "halfwidth_log2": 1.834,
+      "interval_fold_factor": 3.56,
+      "consistency_censored": 0.9041,
+      "calibrated": true
+    }
+  }
+}
