@@ -17,6 +17,12 @@ EXECUTED.** Synthesis: additive suffices quantitatively (A), massive real joint 
 the quantitative decoder is honestly calibrated (B), and a deterministic flag partially recovers the blind
 spot the learned approach can't (D) — five honest world-model findings, all from data in hand, no new
 labels/GPU/embeddings; frozen surface byte-unchanged throughout.
+**EXTENSIONS 2026-07-12:** B extended to MEASURED MIC (`scripts/tb_mic_calibration.py` → CALIBRATED_MIC_INTERVALS
+on CRyPTIC RIF+INH, censoring-aware conformal); the "full multi-axis C" delivered LOCALLY (no Databricks/Kaggle
+— it's a blastn finder, not Bakta/GPU, on cached assemblies): `scripts/plasmid_axis_sweep.py` +
+`scripts/coresistance_multiaxis.py` → PASS_MULTIAXIS_LINKAGE (determinant × plasmid Inc-type; recovers
+sul2→IncQ1, Salmonella MDR→IncFIB, blaSHV→IncN). D-extension: the position-novelty flag is mutant-level-catalog
+-specific (doesn't apply to position-based NRTI/PI/INSTI). Seven world-model findings total.
 
 ---
 
