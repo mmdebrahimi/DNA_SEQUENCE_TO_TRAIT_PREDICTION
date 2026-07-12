@@ -25,6 +25,8 @@ from datetime import date as _date
 from pathlib import Path
 
 import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
@@ -36,6 +38,7 @@ VIRULENCE_CACHE = REPO / "data" / "processed" / "virulence_axis_cache.json"
 MIN_GENOMES = dcc.MIN_GENOMES
 MIN_SUPPORT = dcc.MIN_SUPPORT
 PASS_FRACTION = 0.5
+CV_MIN = 10               # min per-class count for a 5-fold cross-axis-only imputation
 SEED = 0
 REP_PREFIX = "plasmid:"   # namespace Inc-type features so they never collide with determinant tokens
 VIR_PREFIX = "vir:"       # namespace virulence-gene features (2nd cross-axis)
@@ -114,6 +117,22 @@ def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, virulence_cache=None, dedup=Fal
         n_test = len(per_feat)
         n_link = sum(1 for v in per_feat.values() if v["imputable"])
         tot_test += n_test; tot_link += n_link
+        # CROSS-AXIS-ONLY (honest): predict each virulence feature from NON-virulence (AMR+plasmid) features
+        # ONLY -> isolates the true resistance/plasmid->virulence signal from virulence-virulence PAI clustering.
+        # A high AUC here means resistance profile predicts virulence (likely lineage-mediated; see caveats).
+        cross_axis_only = {}
+        vir_j = [j for j in testable if names[j].startswith(VIR_PREFIX)]
+        if vir_j:
+            nonvir_cols = np.array([k for k in range(len(names)) if not names[k].startswith(VIR_PREFIX)])
+            for j in vir_j:
+                y = (Xd[:, j] > 0).astype(int)
+                if min(int(y.sum()), len(y) - int(y.sum())) < CV_MIN:
+                    continue
+                oof = cross_val_predict(LogisticRegression(max_iter=2000, solver="liblinear"),
+                                        Xd[:, nonvir_cols], y,
+                                        cv=StratifiedKFold(5, shuffle=True, random_state=seed),
+                                        method="predict_proba")[:, 1]
+                cross_axis_only[names[j].replace(VIR_PREFIX, "")] = round(dcc._auc(oof, y.astype(bool)), 3)
         # lift: determinant -> cross-axis feature (which resistance rides which plasmid / virulence context)
         cross_names = [n for n in names if _is_cross(n)]
         det_targets = [n for n, c in Counter({names[j]: int(support[j]) for j in testable
@@ -125,7 +144,8 @@ def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, virulence_cache=None, dedup=Fal
                         "n_virulence": sum(1 for n in cross_names if n.startswith(VIR_PREFIX)),
                         "n_testable": n_test, "n_imputable": n_link,
                         "fraction_imputable": round(n_link / n_test, 3) if n_test else 0.0,
-                        "note": note, "per_feature": per_feat, "determinant_to_plasmid_lift": cross_lift}
+                        "note": note, "per_feature": per_feat, "determinant_to_plasmid_lift": cross_lift,
+                        "virulence_from_amr_plasmid_only_auc": cross_axis_only}
     frac = (tot_link / tot_test) if tot_test else 0.0
     verdict = ("PASS_MULTIAXIS_LINKAGE" if (tot_test and frac >= PASS_FRACTION)
                else ("FAIL_AXES_INDEPENDENT" if tot_test else "NO_TESTABLE"))
@@ -145,6 +165,9 @@ def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, virulence_cache=None, dedup=Fal
             "Plasmid axis is Enterobacterales-only; virulence axis is E. coli/Shigella-only (VirulenceFinder DB).",
             "PlasmidFinder / VirulenceFinder PRESENCE is a genotype axis (blastn), not a wet content readout.",
             "Cohorts are drug-R/S-selected; within-organism de-confound + dedup clonality proxy; associational.",
+            "The cross-axis AMR+plasmid->virulence signal (AUC ~0.79-0.95 in E. coli) is likely LINEAGE-mediated "
+            "(specific STs, e.g. ExPEC ST131, carry both particular CTX-M plasmids AND UPEC virulence PAIs); "
+            "within-organism controls species but not sub-lineage. Mash-clade collapse is the proper control.",
         ],
         "n_plasmid_genomes": len(plasmid), "n_virulence_genomes": len(virulence),
         "per_organism": results,
@@ -171,6 +194,12 @@ def render_md(res, generated):
                 terms = ", ".join(f"{x['det'].replace('plasmid:','').replace('vir:','VIR/')}(lift {x['lift']})"
                                   for x in rows)
                 L.append(f"- **{det}** → {terms}")
+    L += ["", "## Cross-axis-only: does AMR+plasmid predict VIRULENCE? (excludes virulence-virulence PAI clustering)"]
+    for r in res["per_organism"].values():
+        cao = r.get("virulence_from_amr_plasmid_only_auc") or {}
+        if cao:
+            terms = ", ".join(f"{g} {a}" for g, a in sorted(cao.items(), key=lambda kv: -kv[1]))
+            L.append(f"- **{r['organism']}** (AMR+plasmid → virulence-gene AUC): {terms}")
     L += ["", "## Honest caveats"] + [f"- {c}" for c in res["honest_caveats"]]
     return "\n".join(L)
 
