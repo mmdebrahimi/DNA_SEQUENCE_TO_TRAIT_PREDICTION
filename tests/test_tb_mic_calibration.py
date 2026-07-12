@@ -69,3 +69,17 @@ def test_run_from_cache_real():
 
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+def test_panel_drug_code_covers_full_cryptic_panel():
+    # the panel extension must carry all 12 drugs with WHO grade-1/2 determinants (RFB excluded: no catalogue entry).
+    assert len(tm.PANEL_DRUG_CODE) == 12
+    assert {"rifampicin", "isoniazid", "ethambutol", "levofloxacin", "moxifloxacin", "ethionamide",
+            "bedaquiline", "delamanid", "linezolid", "clofazimine", "amikacin", "kanamycin"} == set(tm.PANEL_DRUG_CODE)
+    assert "rifabutin" not in tm.PANEL_DRUG_CODE          # reuse MIC exists but no catalogue drug -> excluded
+    assert tm.PANEL_DRUG_CODE["ethambutol"] == "EMB" and tm.PANEL_DRUG_CODE["bedaquiline"] == "BDQ"
+
+
+def test_informative_threshold_frozen():
+    # `informative` = model beats the marginal MIC (R2>0.05); guards the coverage-valid-!=-informative honesty rail.
+    assert tm.INFORMATIVE_R2 == 0.05

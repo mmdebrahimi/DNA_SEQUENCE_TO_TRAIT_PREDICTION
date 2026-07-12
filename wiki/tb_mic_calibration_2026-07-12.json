@@ -1,7 +1,8 @@
 {
   "artifact": "tb_mic_calibration",
   "schema": "tb-mic-calibration-v1",
-  "question": "Do split-conformal intervals on CRyPTIC BMD-MIC (RIF/INH) achieve nominal held-out coverage on resolved MICs (a calibrated quantitative TB decoder)?",
+  "n_drugs": 2,
+  "question": "Do split-conformal intervals on CRyPTIC BMD-MIC (2 drugs) achieve nominal held-out coverage on resolved MICs (a calibrated quantitative TB decoder)?",
   "substrate": "CRyPTIC reuse-table measured BMD-MIC (wet-lab, NOT G1-circular BV-BRC) + WHO grade-1/2 determinant presence from VARIANTS.parquet (frozen tb_amr matcher)",
   "prereg": {
     "MIN_SUPPORT": 10,
@@ -13,7 +14,12 @@
     "censoring": "conformal quantile set on RESOLVED MICs only; censored scored for consistency"
   },
   "verdict": "CALIBRATED_MIC_INTERVALS",
+  "n_powered": 2,
+  "n_calibrated": 2,
+  "n_informative": 2,
+  "informative_note": "conformal COVERAGE holds even for a useless model (the interval widens to the marginal MIC spread); n_informative counts drugs whose determinant model actually beats the mean (R2>0) \u2014 those are the cells where the interval carries genotype signal.",
   "honest_caveats": [
+    "COVERAGE-VALID != INFORMATIVE: none hit ~0.90 coverage but their determinant model does NOT beat the marginal MIC (R2<=0.05), so the interval is just the marginal spread (few WHO grade-1/2 determinants clear MIN_SUPPORT + resistance is rare). See `informative`.",
     "CRyPTIC MIC is end-censored (RIF 58% / INH 36% <=/> values) \u2014 coverage is on the RESOLVED subset (mid-ladder-enriched), censored isolates scored only for consistency.",
     "Features = WHO grade-1/2 determinant presence (the catalogue that defines R/S) -> the point model explains R/S better than the exact MIC rung; the conformal WIDTH honestly reflects that.",
     "Split-conformal gives MARGINAL (not per-genotype) coverage; measured wet-lab MIC, in-distribution vs the WHO catalogue (not independent)."
@@ -31,7 +37,8 @@
       "halfwidth_log2": 1.65,
       "interval_fold_factor": 3.14,
       "consistency_censored": 0.8388,
-      "calibrated": true
+      "calibrated": true,
+      "informative": true
     },
     "isoniazid": {
       "n": 12068,
@@ -44,7 +51,8 @@
       "halfwidth_log2": 1.834,
       "interval_fold_factor": 3.56,
       "consistency_censored": 0.9041,
-      "calibrated": true
+      "calibrated": true,
+      "informative": true
     }
   }
 }

@@ -33,6 +33,18 @@ CHROM = "NC_000962.3"
 DRUG_CATALOGUE_NAME = {
     "rifampicin": "Rifampicin", "rif": "Rifampicin",
     "isoniazid": "Isoniazid", "inh": "Isoniazid",
+    # CRyPTIC panel extension (2026-07-12) — reuse-table code / lowercase name -> catalogue `drug` value.
+    "ethambutol": "Ethambutol", "emb": "Ethambutol",
+    "levofloxacin": "Levofloxacin", "lev": "Levofloxacin",
+    "moxifloxacin": "Moxifloxacin", "mxf": "Moxifloxacin",
+    "amikacin": "Amikacin", "ami": "Amikacin", "amk": "Amikacin",
+    "kanamycin": "Kanamycin", "kan": "Kanamycin",
+    "ethionamide": "Ethionamide", "eth": "Ethionamide",
+    "bedaquiline": "Bedaquiline", "bdq": "Bedaquiline",
+    "delamanid": "Delamanid", "dlm": "Delamanid",
+    "linezolid": "Linezolid", "lzd": "Linezolid",
+    "clofazimine": "Clofazimine", "cfz": "Clofazimine",
+    # (Rifabutin has a reuse-table MIC column but NO separate catalogue drug entry -> no grade-1/2 determinants.)
 }
 
 

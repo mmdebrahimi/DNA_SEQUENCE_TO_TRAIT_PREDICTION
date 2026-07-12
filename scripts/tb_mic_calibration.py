@@ -57,8 +57,19 @@ MIN_SUPPORT = 10
 COVER_TOL = 0.05
 REPEATS = 20
 TARGET = 0.90
+INFORMATIVE_R2 = 0.05   # a cell is INFORMATIVELY calibrated iff its determinant model meaningfully beats the
+#                         marginal MIC (R2 > 5%); a near-0 R2 hits nominal coverage via a marginal-width interval.
 SEED = 0
 _DEFAULT_CACHE = REPO / "data" / "processed" / "tb_mic_features_cache.json"
+_PANEL_CACHE = REPO / "data" / "processed" / "tb_mic_panel_features_cache.json"
+
+# Full CRyPTIC first/second-line panel (reuse-table code) that ALSO has WHO grade-1/2 determinants.
+# Rifabutin (RFB) has a reuse MIC column but no separate catalogue drug -> excluded (no determinants).
+PANEL_DRUG_CODE = {
+    "rifampicin": "RIF", "isoniazid": "INH", "ethambutol": "EMB", "levofloxacin": "LEV",
+    "moxifloxacin": "MXF", "amikacin": "AMI", "kanamycin": "KAN", "ethionamide": "ETH",
+    "bedaquiline": "BDQ", "delamanid": "DLM", "linezolid": "LZD", "clofazimine": "CFZ",
+}
 
 
 def parse_mic(s: str):
@@ -80,22 +91,24 @@ def parse_mic(s: str):
     return math.log2(v), kind
 
 
-def build_features(dump: Path, reuse: Path, cache: Path, force=False):
+def build_features(dump: Path, reuse: Path, cache: Path, force=False, drug_code=None):
     """{drug: {uid: [det_symbol,...]}} + {drug: {uid: mic_string}} — cached (streams VARIANTS.parquet once)."""
+    drug_code = drug_code or DRUG_CODE
     if cache.exists() and not force:
         d = json.loads(cache.read_text(encoding="utf-8"))
         return d["features"], d["mics"]
     import csv
     tb_who_catalogue.verify_pins()
-    dets = {drug: tb_who_catalogue.load_determinants(drug) for drug in DRUG_CODE}
+    dets = {drug: tb_who_catalogue.load_determinants(drug) for drug in drug_code}
     wanted = {d.pos for drug in dets for d in dets[drug]}
     targets = {}
     for drug in dets:
         targets.update(indel_determinant_targets(dets[drug]))
-    print(f"[tb-mic] streaming VARIANTS.parquet for {len(wanted)} determinant positions ...", flush=True)
+    print(f"[tb-mic] streaming VARIANTS.parquet for {len(wanted)} determinant positions "
+          f"across {len(drug_code)} drugs ...", flush=True)
     calls, indel_hits = load_calls_by_strain(dump / "VARIANTS.parquet", wanted, targets)
     # per-isolate matched determinant SYMBOLS per drug (reuse the frozen matcher)
-    features = {drug: {} for drug in DRUG_CODE}
+    features = {drug: {} for drug in drug_code}
     for drug, ds in dets.items():
         for uid, c in calls.items():
             matched = tb_amr._matched_determinants(c, ds)
@@ -103,20 +116,20 @@ def build_features(dump: Path, reuse: Path, cache: Path, force=False):
             if syms:
                 features[drug][uid] = syms
     # MIC strings per drug from the reuse table
-    mics = {drug: {} for drug in DRUG_CODE}
+    mics = {drug: {} for drug in drug_code}
     with open(reuse, encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
             uid = (r.get("UNIQUEID") or "").strip()
             if not uid:
                 continue
-            for drug, code in DRUG_CODE.items():
+            for drug, code in drug_code.items():
                 v = (r.get(f"{code}_MIC") or "").strip()
                 if v and v.upper() != "NA":
                     mics[drug][uid] = v
     cache.parent.mkdir(parents=True, exist_ok=True)
     cache.write_text(json.dumps({"features": features, "mics": mics}), encoding="utf-8")
-    print(f"[tb-mic] cached features for {len(mics['rifampicin'])} RIF / {len(mics['isoniazid'])} INH MIC isolates",
-          flush=True)
+    print(f"[tb-mic] cached features for {len(drug_code)} drugs: "
+          + ", ".join(f"{c}={len(mics[d])}" for d, c in drug_code.items()), flush=True)
     return features, mics
 
 
@@ -166,35 +179,55 @@ def calibrate_drug(feat_syms: dict, mic_strings: dict, seed=SEED):
             consistent += 1
         elif kinds[i] == "right" and hi >= y[i]:
             consistent += 1
+    r2 = round(he._r2(y[res_idx], oof[res_idx]), 4)
     return {
         "n": len(uids), "n_resolved": n_res, "n_censored": int(len(cens_idx)),
         "n_determinant_features": len(vocab), "powered": True,
-        "r2_oof_resolved": round(he._r2(y[res_idx], oof[res_idx]), 4),
+        "r2_oof_resolved": r2,
         "cover_resolved_90": round(cover_resolved, 4),
         "halfwidth_log2": round(q, 3), "interval_fold_factor": round(2 ** q, 2),
         "consistency_censored": round(consistent / len(cens_idx), 4) if len(cens_idx) else None,
         "calibrated": bool(abs(cover_resolved - TARGET) <= COVER_TOL),
+        # HONESTY: conformal coverage holds even for a USELESS model (the interval just widens to the marginal
+        # MIC spread). `informative` = the determinant model actually beats predicting the mean (R2 > 0) -> the
+        # interval reflects real determinant->MIC signal, not just the marginal distribution.
+        "informative": bool(r2 > INFORMATIVE_R2),
     }
 
 
-def run(dump: Path, reuse: Path, cache: Path, force=False, seed=SEED):
-    features, mics = build_features(dump, reuse, cache, force=force)
-    per_drug = {drug: calibrate_drug(features.get(drug, {}), mics.get(drug, {}), seed) for drug in DRUG_CODE}
+def run(dump: Path, reuse: Path, cache: Path, force=False, seed=SEED, drug_code=None):
+    drug_code = drug_code or DRUG_CODE
+    features, mics = build_features(dump, reuse, cache, force=force, drug_code=drug_code)
+    per_drug = {drug: calibrate_drug(features.get(drug, {}), mics.get(drug, {}), seed) for drug in drug_code}
     powered = [m for m in per_drug.values() if m.get("powered")]
     calibrated_all = powered and all(m["calibrated"] for m in powered)
+    n_informative = sum(1 for m in powered if m.get("informative"))
     verdict = ("CALIBRATED_MIC_INTERVALS" if calibrated_all
                else ("MIC_CENSORING_OR_MODEL_DOMINATES" if powered else "NO_POWERED_DRUGS"))
     return {
         "artifact": "tb_mic_calibration", "schema": "tb-mic-calibration-v1",
-        "question": "Do split-conformal intervals on CRyPTIC BMD-MIC (RIF/INH) achieve nominal held-out "
-                    "coverage on resolved MICs (a calibrated quantitative TB decoder)?",
+        "n_drugs": len(drug_code),
+        "question": f"Do split-conformal intervals on CRyPTIC BMD-MIC ({len(drug_code)} drugs) achieve nominal "
+                    "held-out coverage on resolved MICs (a calibrated quantitative TB decoder)?",
         "substrate": "CRyPTIC reuse-table measured BMD-MIC (wet-lab, NOT G1-circular BV-BRC) + WHO grade-1/2 "
                      "determinant presence from VARIANTS.parquet (frozen tb_amr matcher)",
         "prereg": {"MIN_SUPPORT": MIN_SUPPORT, "COVER_TOL": COVER_TOL, "REPEATS": REPEATS, "target": TARGET,
                    "N_MIN": he.N_MIN, "seed": seed,
                    "censoring": "conformal quantile set on RESOLVED MICs only; censored scored for consistency"},
         "verdict": verdict,
+        "n_powered": len(powered), "n_calibrated": sum(1 for m in powered if m["calibrated"]),
+        "n_informative": n_informative,
+        "informative_note": ("conformal COVERAGE holds even for a useless model (the interval widens to the "
+                             "marginal MIC spread); n_informative counts drugs whose determinant model actually "
+                             "beats the mean (R2>0) — those are the cells where the interval carries genotype signal."),
         "honest_caveats": [
+            "COVERAGE-VALID != INFORMATIVE: "
+            + (", ".join(f"{d} (R2={m['r2_oof_resolved']})" for d, m in per_drug.items()
+                         if m.get("powered") and not m.get("informative"))
+               or "none")
+            + f" hit ~0.90 coverage but their determinant model does NOT beat the marginal MIC (R2<={INFORMATIVE_R2}), "
+            "so the interval is just the marginal spread (few WHO grade-1/2 determinants clear MIN_SUPPORT + "
+            "resistance is rare). See `informative`.",
             "CRyPTIC MIC is end-censored (RIF 58% / INH 36% <=/> values) — coverage is on the RESOLVED subset "
             "(mid-ladder-enriched), censored isolates scored only for consistency.",
             "Features = WHO grade-1/2 determinant presence (the catalogue that defines R/S) -> the point model "
@@ -214,15 +247,16 @@ def render_md(res, generated):
          "`cover_resolved_90` = held-out coverage on RESOLVED (uncensored) MICs (target 0.90). "
          "`interval_fold_factor` = MIC within ×/÷ this factor (2^halfwidth). `consistency_censored` = fraction "
          "of censored isolates whose interval respects the censoring bound.", "",
-         "| drug | n | resolved | censored | dets | R2(res) | **cover_90** | MIC ± | consistency | calibrated |",
-         "|---|---|---|---|---|---|---|---|---|---|"]
+         "| drug | n | resolved | censored | dets | R2(res) | **cover_90** | MIC ± | consistency | calibrated | informative |",
+         "|---|---|---|---|---|---|---|---|---|---|---|"]
     for drug, m in res["per_drug"].items():
         if not m.get("powered"):
-            L.append(f"| {drug} | {m.get('n')} | — | — | — | — | {m.get('note','')} | — | — | — |")
+            L.append(f"| {drug} | {m.get('n')} | — | — | — | — | {m.get('note','')} | — | — | — | — |")
             continue
         L.append(f"| {drug} | {m['n']} | {m['n_resolved']} | {m['n_censored']} | {m['n_determinant_features']} | "
                  f"{m['r2_oof_resolved']} | **{m['cover_resolved_90']}** | ×/÷{m['interval_fold_factor']} | "
-                 f"{m['consistency_censored']} | {'YES' if m['calibrated'] else 'no'} |")
+                 f"{m['consistency_censored']} | {'YES' if m['calibrated'] else 'no'} | "
+                 f"{'YES' if m.get('informative') else 'no (interval≈marginal)'} |")
     L += ["", "## Honest caveats"] + [f"- {c}" for c in res["honest_caveats"]]
     L += ["", f"Citation: {res['citation']}."]
     return "\n".join(L)
@@ -232,16 +266,21 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dump-dir", type=Path, default=DEFAULT_DUMP)
     ap.add_argument("--reuse-csv", type=Path, default=DEFAULT_REUSE)
-    ap.add_argument("--cache", type=Path, default=_DEFAULT_CACHE)
+    ap.add_argument("--cache", type=Path, default=None)
+    ap.add_argument("--panel", action="store_true",
+                    help="calibrate the FULL CRyPTIC drug panel (12 drugs), not just RIF+INH")
     ap.add_argument("--force-stream", action="store_true")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args(argv)
-    if not a.cache.exists() and not (a.dump_dir / "VARIANTS.parquet").exists():
+    drug_code = PANEL_DRUG_CODE if a.panel else DRUG_CODE
+    cache = a.cache or (_PANEL_CACHE if a.panel else _DEFAULT_CACHE)
+    if not cache.exists() and not (a.dump_dir / "VARIANTS.parquet").exists():
         print(f"ERROR: no feature cache and VARIANTS.parquet absent under {a.dump_dir}", file=sys.stderr)
         return 2
     today = _date.today().isoformat()
-    res = run(a.dump_dir, a.reuse_csv, a.cache, force=a.force_stream)
-    out = a.out or (REPO / "wiki" / f"tb_mic_calibration_{today}.json")
+    res = run(a.dump_dir, a.reuse_csv, cache, force=a.force_stream, drug_code=drug_code)
+    tag = "_panel" if a.panel else ""
+    out = a.out or (REPO / "wiki" / f"tb_mic_calibration{tag}_{today}.json")
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
     out.with_suffix(".md").write_text(render_md(res, today), encoding="utf-8")
     print(render_md(res, today))
