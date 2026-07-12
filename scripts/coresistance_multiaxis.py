@@ -32,11 +32,17 @@ sys.path.insert(0, str(REPO / "scripts"))
 import determinant_cooccurrence as dcc  # noqa: E402
 
 PLASMID_CACHE = REPO / "data" / "processed" / "plasmid_axis_cache.json"
+VIRULENCE_CACHE = REPO / "data" / "processed" / "virulence_axis_cache.json"
 MIN_GENOMES = dcc.MIN_GENOMES
 MIN_SUPPORT = dcc.MIN_SUPPORT
 PASS_FRACTION = 0.5
 SEED = 0
 REP_PREFIX = "plasmid:"   # namespace Inc-type features so they never collide with determinant tokens
+VIR_PREFIX = "vir:"       # namespace virulence-gene features (2nd cross-axis)
+
+
+def _is_cross(name: str) -> bool:
+    return name.startswith(REP_PREFIX) or name.startswith(VIR_PREFIX)
 
 
 def load_plasmid(cache: Path):
@@ -44,8 +50,9 @@ def load_plasmid(cache: Path):
     return {acc: v for acc, v in d.items()}
 
 
-def build_joint(acc_org, acc_dets, plasmid):
-    """Per organism -> (accs, feature matrix over determinants + plasmid:replicon, names, is_replicon mask)."""
+def build_joint(acc_org, acc_dets, plasmid, virulence=None):
+    """Per organism -> (accs, feature matrix over determinants + plasmid:replicon [+ vir:gene], names)."""
+    virulence = virulence or {}
     per_org = {}
     orgs = [o for o, n in Counter(acc_org.values()).most_common() if n >= MIN_GENOMES]
     for org in orgs:
@@ -56,6 +63,8 @@ def build_joint(acc_org, acc_dets, plasmid):
         for a in accs:
             s = set(acc_dets.get(a, set()))
             s |= {REP_PREFIX + r for r in plasmid[a]["replicons"]}
+            if a in virulence:
+                s |= {VIR_PREFIX + g for g in virulence[a]["virulence_genes"]}
             feats[a] = s
         counts = Counter()
         for a in accs:
@@ -70,17 +79,18 @@ def build_joint(acc_org, acc_dets, plasmid):
     return per_org
 
 
-def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, dedup=False, boot=dcc.BOOT, seed=SEED):
-    acc_org_amr, acc_dets, _ = dcc.harvest(acc_dets_repo)
+def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, virulence_cache=None, dedup=False, boot=dcc.BOOT, seed=SEED):
+    acc_dets_org, acc_dets, _ = dcc.harvest(acc_dets_repo)
     plasmid = load_plasmid(cache)
-    # organism from the plasmid cache (Enterobacterales), fall back to AMR harvest
+    virulence = load_plasmid(virulence_cache) if (virulence_cache and Path(virulence_cache).exists()) else {}
+    # organism from the plasmid cache (Enterobacterales)
     acc_org = {a: plasmid[a]["organism"] for a in plasmid}
-    per_org = build_joint(acc_org, acc_dets, plasmid)
+    per_org = build_joint(acc_org, acc_dets, plasmid, virulence=virulence)
 
     results = {}
     tot_test = tot_link = 0
     for org, (accs, X, names, nidx) in per_org.items():
-        is_rep = np.array([n.startswith(REP_PREFIX) for n in names])
+        is_rep = np.array([_is_cross(n) for n in names])   # cross-axis (plasmid: OR vir:)
         support = X.sum(axis=0)
         testable = [j for j in range(len(names))
                     if MIN_SUPPORT <= int(support[j]) <= len(accs) - MIN_SUPPORT]
@@ -100,18 +110,19 @@ def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, dedup=False, boot=dcc.BOOT, see
             r = dcc.linkage_for_determinant(Xd, j, seed=seed, boot=boot)
             if r:
                 per_feat[names[j]] = {"auc": r["auc"], "ci_lo": r["ci_lo"], "imputable": r["linked"],
-                                      "is_replicon": bool(is_rep[j])}
+                                      "is_cross_axis": bool(is_rep[j])}
         n_test = len(per_feat)
         n_link = sum(1 for v in per_feat.values() if v["imputable"])
         tot_test += n_test; tot_link += n_link
-        # lift: determinant -> replicon (which resistance rides which backbone)
-        rep_names = [n for n in names if n.startswith(REP_PREFIX)]
+        # lift: determinant -> cross-axis feature (which resistance rides which plasmid / virulence context)
+        cross_names = [n for n in names if _is_cross(n)]
         det_targets = [n for n, c in Counter({names[j]: int(support[j]) for j in testable
                                               if not is_rep[j]}).most_common(8)]
-        lift = dcc.lift_table(Xd, names, nidx, det_targets, min_cooc=dcc.MIN_COOC, top=5)
-        # keep only replicon partners in the lift (the cross-axis map)
-        cross_lift = {t: [x for x in rows if x["det"].startswith(REP_PREFIX)][:4] for t, rows in lift.items()}
-        results[org] = {"organism": org, "n_genomes": Xd.shape[0], "n_replicons": len(rep_names),
+        lift = dcc.lift_table(Xd, names, nidx, det_targets, min_cooc=dcc.MIN_COOC, top=6)
+        cross_lift = {t: [x for x in rows if _is_cross(x["det"])][:5] for t, rows in lift.items()}
+        results[org] = {"organism": org, "n_genomes": Xd.shape[0],
+                        "n_replicons": sum(1 for n in cross_names if n.startswith(REP_PREFIX)),
+                        "n_virulence": sum(1 for n in cross_names if n.startswith(VIR_PREFIX)),
                         "n_testable": n_test, "n_imputable": n_link,
                         "fraction_imputable": round(n_link / n_test, 3) if n_test else 0.0,
                         "note": note, "per_feature": per_feat, "determinant_to_plasmid_lift": cross_lift}
@@ -120,41 +131,45 @@ def run(acc_dets_repo=REPO, cache=PLASMID_CACHE, dedup=False, boot=dcc.BOOT, see
                else ("FAIL_AXES_INDEPENDENT" if tot_test else "NO_TESTABLE"))
     return {
         "artifact": "coresistance_multiaxis", "schema": "coresistance-multiaxis-v1",
-        "question": "Do AMR determinants and plasmid Inc-types co-occur / impute each other, within organism? "
-                    "(which resistance rides which plasmid backbone)",
-        "substrate": "AMR determinants (AMRFinder) + plasmid Inc-replicons (PlasmidFinder blastn, local sweep) "
-                     "over Enterobacterales cohort genomes",
+        "question": "Do AMR determinants, plasmid Inc-types, and (E. coli) virulence genes co-occur / impute "
+                    "each other, within organism? (which resistance rides which plasmid backbone / virulence context)",
+        "substrate": "AMR determinants (AMRFinder) + plasmid Inc-replicons (PlasmidFinder) "
+                     + ("+ virulence genes (VirulenceFinder, E. coli) " if virulence else "")
+                     + "blastn local sweeps over Enterobacterales cohort genomes",
+        "axes": ["amr_determinant", "plasmid_inc_type"] + (["virulence_gene"] if virulence else []),
         "prereg": {"MIN_GENOMES": MIN_GENOMES, "MIN_SUPPORT": MIN_SUPPORT, "PASS_FRACTION": PASS_FRACTION,
                    "BOOT": boot, "seed": seed, "deconfound": "within-organism + optional dedup clonality proxy"},
         "deduped": dedup, "verdict": verdict,
         "total_testable": tot_test, "total_imputable": tot_link, "fraction_imputable": round(frac, 3),
         "honest_caveats": [
-            "Plasmid axis is Enterobacterales-only (enterobacteriales.fsa); other organisms excluded.",
-            "PlasmidFinder replicon PRESENCE is a genotype axis (blastn), not a wet plasmid-content readout.",
+            "Plasmid axis is Enterobacterales-only; virulence axis is E. coli/Shigella-only (VirulenceFinder DB).",
+            "PlasmidFinder / VirulenceFinder PRESENCE is a genotype axis (blastn), not a wet content readout.",
             "Cohorts are drug-R/S-selected; within-organism de-confound + dedup clonality proxy; associational.",
         ],
-        "n_plasmid_genomes": len(plasmid),
+        "n_plasmid_genomes": len(plasmid), "n_virulence_genomes": len(virulence),
         "per_organism": results,
     }
 
 
 def render_md(res, generated):
-    L = [f"# Multi-axis co-resistance — AMR determinant × plasmid Inc-type ({generated})", "",
+    L = [f"# Multi-axis co-resistance — AMR determinant × plasmid Inc-type × virulence ({generated})", "",
          f"**Verdict: {res['verdict']}** — {res['total_imputable']}/{res['total_testable']} within-organism "
-         f"features (determinant OR Inc-type) impute from the joint set (fraction {res['fraction_imputable']}; "
-         f"bar {res['prereg']['PASS_FRACTION']}). {'(deduped)' if res['deduped'] else '(raw)'}", "",
-         f"{res['question']} Substrate: {res['substrate']}.", "",
-         "| organism | genomes | Inc-types | testable | **imputable** | frac | note |",
-         "|---|---|---|---|---|---|---|"]
+         f"features (determinant / Inc-type / virulence gene) impute from the joint set "
+         f"(fraction {res['fraction_imputable']}; bar {res['prereg']['PASS_FRACTION']}). "
+         f"{'(deduped)' if res['deduped'] else '(raw)'}", "",
+         f"Axes: {', '.join(res.get('axes', []))}. {res['question']} Substrate: {res['substrate']}.", "",
+         "| organism | genomes | Inc-types | vir genes | testable | **imputable** | frac | note |",
+         "|---|---|---|---|---|---|---|---|"]
     for r in res["per_organism"].values():
-        L.append(f"| {r['organism']} | {r['n_genomes']} | {r['n_replicons']} | {r['n_testable']} | "
-                 f"**{r['n_imputable']}** | {r['fraction_imputable']} | {r.get('note') or ''} |")
-    L += ["", "## Which resistance rides which plasmid backbone (determinant → Inc-type, by lift)"]
+        L.append(f"| {r['organism']} | {r['n_genomes']} | {r['n_replicons']} | {r.get('n_virulence', 0)} | "
+                 f"{r['n_testable']} | **{r['n_imputable']}** | {r['fraction_imputable']} | {r.get('note') or ''} |")
+    L += ["", "## Which resistance rides which plasmid backbone / virulence context (determinant → cross-axis, by lift)"]
     for r in res["per_organism"].values():
         L.append(f"### {r['organism']}")
         for det, rows in r["determinant_to_plasmid_lift"].items():
             if rows:
-                terms = ", ".join(f"{x['det'].replace('plasmid:','')}(lift {x['lift']})" for x in rows)
+                terms = ", ".join(f"{x['det'].replace('plasmid:','').replace('vir:','VIR/')}(lift {x['lift']})"
+                                  for x in rows)
                 L.append(f"- **{det}** → {terms}")
     L += ["", "## Honest caveats"] + [f"- {c}" for c in res["honest_caveats"]]
     return "\n".join(L)
@@ -165,6 +180,8 @@ def main(argv=None) -> int:
     ap.add_argument("--dedup-profiles", action="store_true")
     ap.add_argument("--boot", type=int, default=None)
     ap.add_argument("--cache", type=Path, default=PLASMID_CACHE)
+    ap.add_argument("--virulence-cache", type=Path, default=VIRULENCE_CACHE,
+                    help="optional virulence-axis cache (folded in if present)")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args(argv)
     if not a.cache.exists():
@@ -172,7 +189,7 @@ def main(argv=None) -> int:
               file=sys.stderr)
         return 2
     today = _date.today().isoformat()
-    res = run(cache=a.cache, dedup=a.dedup_profiles, boot=a.boot or dcc.BOOT)
+    res = run(cache=a.cache, virulence_cache=a.virulence_cache, dedup=a.dedup_profiles, boot=a.boot or dcc.BOOT)
     tag = "_dedup" if a.dedup_profiles else ""
     out = a.out or (REPO / "wiki" / f"coresistance_multiaxis_result_{today}{tag}.json")
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
