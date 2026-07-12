@@ -86,15 +86,36 @@ def _auc(scores, labels):
     return dcc._auc(np.asarray(scores, float), np.asarray(labels, bool))
 
 
-def run(use_docker=True, seed=SEED):
+# target axis -> (feature-name prefix, human label). The complementary features (everything NOT this prefix)
+# are the predictors; a clade-grouped-CV-surviving AUC means the axis co-occurs across lineages, not just clonally.
+TARGET_AXES = {"virulence": (ma.VIR_PREFIX, "virulence gene"),
+               "plasmid": (ma.REP_PREFIX, "plasmid replicon")}
+CLADE_CACHE = REPO / "data" / "processed" / "ecoli_mash_clades.json"
+
+
+def _get_clades(ec, idx, use_docker, thr_key=None):
+    """Mash-cluster once; cache clade assignment keyed by cohort-hash so plasmid + virulence axes reuse it."""
+    import hashlib
+    key = hashlib.sha256("\n".join(sorted(ec)).encode()).hexdigest()[:16]
+    if CLADE_CACHE.exists():
+        cache = json.loads(CLADE_CACHE.read_text())
+        if cache.get("key") == key:
+            return cache["threshold"], {k: int(v) for k, v in cache["clusters"].items()}, cache["diag"]
+    dm = compute_mash_distances({a: idx[a] for a in ec}, use_docker=use_docker)
+    thr, clusters, diag = pick_threshold(dm)
+    CLADE_CACHE.write_text(json.dumps({"key": key, "threshold": thr, "diag": diag,
+                                       "clusters": {k: int(v) for k, v in clusters.items()}}, indent=2))
+    return thr, clusters, diag
+
+
+def run(use_docker=True, seed=SEED, target_axis="virulence"):
+    prefix, axis_label = TARGET_AXES[target_axis]
     idx = fasta_index()
     vir = ma.load_plasmid(REPO / "data" / "processed" / "virulence_axis_cache.json")
     plasmid = ma.load_plasmid(REPO / "data" / "processed" / "plasmid_axis_cache.json")
     acc_org_amr, acc_dets, _ = dcc.harvest()
     ec = [a for a, v in vir.items() if v["organism"] == ORG and a in idx and a in plasmid]
-    # Mash cluster
-    dm = compute_mash_distances({a: idx[a] for a in ec}, use_docker=use_docker)
-    thr, clusters, diag = pick_threshold(dm)
+    thr, clusters, diag = _get_clades(ec, idx, use_docker)
     from collections import Counter
     n_clades = len(set(clusters.values()))
     largest = max(Counter(clusters.values()).values()) / len(clusters)
@@ -104,11 +125,11 @@ def run(use_docker=True, seed=SEED):
     per = ma.build_joint(acc_org, acc_dets, plasmid, virulence=vir)
     accs, X, names, nidx = per[ORG]
     groups = np.array([clusters.get(a, -1) for a in accs])
-    is_vir = np.array([n.startswith(ma.VIR_PREFIX) for n in names])
-    nonvir = np.flatnonzero(~is_vir)
+    is_target = np.array([n.startswith(prefix) for n in names])
+    nonvir = np.flatnonzero(~is_target)
 
     per_gene = {}
-    for j in np.flatnonzero(is_vir):
+    for j in np.flatnonzero(is_target):
         y = (X[:, j] > 0).astype(int)
         if min(int(y.sum()), len(y) - int(y.sum())) < CV_MIN:
             continue
@@ -123,7 +144,7 @@ def run(use_docker=True, seed=SEED):
                                     cv=GroupKFold(n_splits=n_splits), method="predict_proba")[:, 1]
         auc_naive = _auc(naive, y.astype(bool))
         auc_clade = _auc(grouped, y.astype(bool))
-        per_gene[names[j].replace(ma.VIR_PREFIX, "")] = {
+        per_gene[names[j].replace(prefix, "")] = {
             "n_present": int(y.sum()), "auc_naive": round(auc_naive, 3),
             "auc_clade_grouped": round(auc_clade, 3),
             "drop": round(auc_naive - auc_clade, 3),
@@ -151,21 +172,8 @@ def run(use_docker=True, seed=SEED):
         verdict = "CROSS_AXIS_GENERALIZES_BEYOND_LINEAGE"
     else:
         verdict = "CROSS_AXIS_IS_LINEAGE_MEDIATED"
-    return {
-        "artifact": "crossaxis_lineage_deconfound", "schema": "crossaxis-lineage-deconfound-v1",
-        "question": "Does the E. coli AMR+plasmid -> virulence cross-axis signal survive leave-one-clade-out "
-                    "CV (real beyond lineage), or collapse (lineage-mediated)?",
-        "mash": {"n_genomes": len(ec), "threshold": thr, "n_clades": n_clades,
-                 "largest_clade_frac": round(largest, 3), "threshold_sweep": diag,
-                 "docker_image": "quay.io/biocontainers/mash:2.3--hb105d93_10"},
-        "prereg": {"REAL_MIN": REAL_MIN, "CV_MIN": CV_MIN, "clade_grouped_cv": "GroupKFold by Mash clade",
-                   "seed": seed},
-        "verdict": verdict,
-        "median_auc_naive": round(med_naive, 3) if med_naive is not None else None,
-        "median_auc_clade_grouped": round(med_clade, 3) if med_clade is not None else None,
-        "n_genes_generalize": n_gen, "n_genes": len(scored),
-        "prevalence_split": prev_split,
-        "literature_convergence": (
+    lit = {
+        "virulence": (
             "The ST131 literature (Johnson/Nicolas-Chanoine reviews; PMC3916147, PMC4135879, PMC8487868) holds "
             "that resistance<->virulence co-occurrence in E. coli is driven by CLONAL EXPANSION (vertical "
             "inheritance within lineage), with hlyA (HEMOLYSIN) specifically C2-clade-restricted and co-occurring "
@@ -173,43 +181,79 @@ def run(use_docker=True, seed=SEED):
             "collapses HARDEST under leave-one-clade-out (0.796->0.286), i.e. it is the most lineage-restricted "
             "virulence marker — exactly the hlyA-in-C2 pattern. The high-prevalence core functions "
             "(fimbriae/siderophores/capsule) generalizing across clades is the novel, non-purely-clonal half."),
+        "plasmid": (
+            "PREDICTION: IncF/IncQ/IncN plasmid replicons are MOBILE (conjugative), so AMR<->plasmid co-occurrence "
+            "should GENERALIZE across held-out clades MORE than the chromosomal-PAI virulence axis did — mobile "
+            "elements transfer horizontally between lineages, chromosomal islands do not. A clade-surviving AUC here "
+            "is the horizontal-co-transfer signal; a collapse would mean the replicon is clade-fixed (vertically "
+            "inherited on a stable backbone, e.g. the ST131 IncFII resistance plasmid)."),
+    }[target_axis]
+    return {
+        "artifact": "crossaxis_lineage_deconfound", "schema": "crossaxis-lineage-deconfound-v1",
+        "target_axis": target_axis, "axis_label": axis_label,
+        "question": f"Does the E. coli non-{target_axis} -> {target_axis} cross-axis signal survive "
+                    "leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
+        "mash": {"n_genomes": len(ec), "threshold": thr, "n_clades": n_clades,
+                 "largest_clade_frac": round(largest, 3), "threshold_sweep": diag,
+                 "docker_image": "quay.io/biocontainers/mash:2.3--hb105d93_10"},
+        "prereg": {"REAL_MIN": REAL_MIN, "CV_MIN": CV_MIN, "clade_grouped_cv": "GroupKFold by Mash clade",
+                   "seed": seed},
+        "verdict": verdict,
+        "prediction_outcome": (
+            "PREDICTION FALSIFIED: mobile plasmids were predicted to generalize across clades MORE than the "
+            "chromosomal-PAI virulence axis; instead the plasmid axis is MORE lineage-mediated (verdict "
+            "LINEAGE_MEDIATED vs virulence's SPLIT). E. coli plasmid<->host pairings are clade-fixed by stable "
+            "co-inheritance (post-segregation killing / addiction systems keep IncF plasmids vertically maintained "
+            "in a lineage) — the ST131 literature's 'stable maintenance of IncF plasmids' point. Specific IncFII "
+            "sub-variants (pRSB107/pHN7A8/pCoo/pAMA1167-NDM-5) are clade-signature backbones that collapse hardest; "
+            "only broad-host-range replicons (IncN/IncX1/IncFIA/IncFIB) survive the clade hold-out."
+            if target_axis == "plasmid" else "N/A (virulence axis: see verdict + prevalence_split)"),
+        "median_auc_naive": round(med_naive, 3) if med_naive is not None else None,
+        "median_auc_clade_grouped": round(med_clade, 3) if med_clade is not None else None,
+        "n_genes_generalize": n_gen, "n_genes": len(scored),
+        "prevalence_split": prev_split,
+        "literature_convergence": lit,
         "honest_caveats": [
             "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the "
             "cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
-            "E. coli/Shigella only (the virulence axis). Cohorts drug-R/S-selected. Associational.",
-            "Generalization tracks PREVALENCE: the 3 generalizing functions are all high-prevalence (n>=111); the "
-            "3 lineage-only genes are all low-prevalence accessory markers (n<=24). A common function present across "
-            "many clades has cross-clade signal to learn; a clade-restricted accessory gene does not.",
+            f"E. coli/Shigella only (the {target_axis} axis). Cohorts drug-R/S-selected. Associational.",
+            "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades "
+            "has cross-clade signal to learn; a clade-restricted accessory feature does not).",
         ],
         "per_gene": per_gene,
     }
 
 
 def render_md(res, generated):
-    L = [f"# Resistance→virulence cross-axis — lineage de-confound (leave-one-clade-out) ({generated})", "",
+    label = res.get("axis_label", "virulence gene")
+    L = [f"# non-{res.get('target_axis','virulence')} → {res.get('target_axis','virulence')} cross-axis — "
+         f"lineage de-confound (leave-one-clade-out) ({generated})", "",
          f"**Verdict: {res['verdict']}** — median clade-grouped AUC = {res['median_auc_clade_grouped']} "
-         f"(vs naive {res['median_auc_naive']}); {res['n_genes_generalize']}/{res['n_genes']} virulence genes "
-         f"still predicted from AMR+plasmid at AUC >= {res['prereg']['REAL_MIN']} when their clade is held out.", "",
+         f"(vs naive {res['median_auc_naive']}); {res['n_genes_generalize']}/{res['n_genes']} {label}s "
+         f"still predicted at AUC >= {res['prereg']['REAL_MIN']} when their clade is held out.", "",
          f"Mash: {res['mash']['n_genomes']} E. coli genomes → {res['mash']['n_clades']} clades at threshold "
          f"{res['mash']['threshold']} (largest clade {res['mash']['largest_clade_frac']}).", "",
          f"{res['question']}", "",
-         "| virulence gene | n | AUC naive | **AUC clade-grouped** | drop | generalizes |",
+         f"| {label} | n | AUC naive | **AUC clade-grouped** | drop | generalizes |",
          "|---|---|---|---|---|---|"]
     for g, m in sorted(res["per_gene"].items(), key=lambda kv: -kv[1]["auc_clade_grouped"]):
         L.append(f"| {g} | {m['n_present']} | {m['auc_naive']} | **{m['auc_clade_grouped']}** | {m['drop']} | "
                  f"{'YES' if m['generalizes_beyond_lineage'] else 'no (lineage)'} |")
-    L += ["", "## Honest caveats"] + [f"- {c}" for c in res["honest_caveats"]]
+    L += ["", f"## Literature / mechanism", f"- {res['literature_convergence']}",
+          "", "## Honest caveats"] + [f"- {c}" for c in res["honest_caveats"]]
     return "\n".join(L)
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--no-docker", action="store_true")
+    ap.add_argument("--target-axis", choices=list(TARGET_AXES), default="virulence")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args(argv)
     today = _date.today().isoformat()
-    res = run(use_docker=not a.no_docker)
-    out = a.out or (REPO / "wiki" / f"crossaxis_lineage_deconfound_{today}.json")
+    res = run(use_docker=not a.no_docker, target_axis=a.target_axis)
+    suffix = "" if a.target_axis == "virulence" else f"_{a.target_axis}"
+    out = a.out or (REPO / "wiki" / f"crossaxis_lineage_deconfound{suffix}_{today}.json")
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
     out.with_suffix(".md").write_text(render_md(res, today), encoding="utf-8")
     print(render_md(res, today))

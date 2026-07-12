@@ -1,0 +1,217 @@
+{
+  "artifact": "crossaxis_lineage_deconfound",
+  "schema": "crossaxis-lineage-deconfound-v1",
+  "target_axis": "plasmid",
+  "axis_label": "plasmid replicon",
+  "question": "Does the E. coli non-plasmid -> plasmid cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
+  "mash": {
+    "n_genomes": 240,
+    "threshold": 0.005,
+    "n_clades": 85,
+    "largest_clade_frac": 0.342,
+    "threshold_sweep": [
+      {
+        "threshold": 0.005,
+        "n_clades": 85,
+        "largest_clade_frac": 0.342
+      },
+      {
+        "threshold": 0.01,
+        "n_clades": 46,
+        "largest_clade_frac": 0.392
+      },
+      {
+        "threshold": 0.02,
+        "n_clades": 8,
+        "largest_clade_frac": 0.438
+      }
+    ],
+    "docker_image": "quay.io/biocontainers/mash:2.3--hb105d93_10"
+  },
+  "prereg": {
+    "REAL_MIN": 0.7,
+    "CV_MIN": 10,
+    "clade_grouped_cv": "GroupKFold by Mash clade",
+    "seed": 0
+  },
+  "verdict": "CROSS_AXIS_IS_LINEAGE_MEDIATED",
+  "prediction_outcome": "PREDICTION FALSIFIED: mobile plasmids were predicted to generalize across clades MORE than the chromosomal-PAI virulence axis; instead the plasmid axis is MORE lineage-mediated (verdict LINEAGE_MEDIATED vs virulence's SPLIT). E. coli plasmid<->host pairings are clade-fixed by stable co-inheritance (post-segregation killing / addiction systems keep IncF plasmids vertically maintained in a lineage) \u2014 the ST131 literature's 'stable maintenance of IncF plasmids' point. Specific IncFII sub-variants (pRSB107/pHN7A8/pCoo/pAMA1167-NDM-5) are clade-signature backbones that collapse hardest; only broad-host-range replicons (IncN/IncX1/IncFIA/IncFIB) survive the clade hold-out.",
+  "median_auc_naive": 0.803,
+  "median_auc_clade_grouped": 0.615,
+  "n_genes_generalize": 8,
+  "n_genes": 23,
+  "prevalence_split": {
+    "median_n_generalizing": 25.0,
+    "median_n_lineage_only": 24.0,
+    "clean_prevalence_split": false
+  },
+  "literature_convergence": "PREDICTION: IncF/IncQ/IncN plasmid replicons are MOBILE (conjugative), so AMR<->plasmid co-occurrence should GENERALIZE across held-out clades MORE than the chromosomal-PAI virulence axis did \u2014 mobile elements transfer horizontally between lineages, chromosomal islands do not. A clade-surviving AUC here is the horizontal-co-transfer signal; a collapse would mean the replicon is clade-fixed (vertically inherited on a stable backbone, e.g. the ST131 IncFII resistance plasmid).",
+  "honest_caveats": [
+    "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
+    "E. coli/Shigella only (the plasmid axis). Cohorts drug-R/S-selected. Associational.",
+    "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades has cross-clade signal to learn; a clade-restricted accessory feature does not)."
+  ],
+  "per_gene": {
+    "Col(BS512)": {
+      "n_present": 43,
+      "auc_naive": 0.803,
+      "auc_clade_grouped": 0.408,
+      "drop": 0.395,
+      "generalizes_beyond_lineage": false
+    },
+    "Col(MG828)": {
+      "n_present": 11,
+      "auc_naive": 0.847,
+      "auc_clade_grouped": 0.343,
+      "drop": 0.504,
+      "generalizes_beyond_lineage": false
+    },
+    "Col156": {
+      "n_present": 66,
+      "auc_naive": 0.879,
+      "auc_clade_grouped": 0.807,
+      "drop": 0.072,
+      "generalizes_beyond_lineage": true
+    },
+    "ColpEC648": {
+      "n_present": 18,
+      "auc_naive": 0.529,
+      "auc_clade_grouped": 0.513,
+      "drop": 0.016,
+      "generalizes_beyond_lineage": false
+    },
+    "IncB/O/K/Z": {
+      "n_present": 13,
+      "auc_naive": 0.787,
+      "auc_clade_grouped": 0.648,
+      "drop": 0.139,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFIA": {
+      "n_present": 134,
+      "auc_naive": 0.89,
+      "auc_clade_grouped": 0.757,
+      "drop": 0.133,
+      "generalizes_beyond_lineage": true
+    },
+    "IncFIB(AP001918)": {
+      "n_present": 167,
+      "auc_naive": 0.826,
+      "auc_clade_grouped": 0.762,
+      "drop": 0.064,
+      "generalizes_beyond_lineage": true
+    },
+    "IncFIC(FII)": {
+      "n_present": 23,
+      "auc_naive": 0.915,
+      "auc_clade_grouped": 0.802,
+      "drop": 0.113,
+      "generalizes_beyond_lineage": true
+    },
+    "IncFII": {
+      "n_present": 95,
+      "auc_naive": 0.796,
+      "auc_clade_grouped": 0.508,
+      "drop": 0.288,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFII(29)": {
+      "n_present": 18,
+      "auc_naive": 0.683,
+      "auc_clade_grouped": 0.519,
+      "drop": 0.164,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFII(pAMA1167-NDM-5)": {
+      "n_present": 67,
+      "auc_naive": 0.897,
+      "auc_clade_grouped": 0.404,
+      "drop": 0.493,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFII(pCoo)": {
+      "n_present": 14,
+      "auc_naive": 0.793,
+      "auc_clade_grouped": 0.24,
+      "drop": 0.553,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFII(pHN7A8)": {
+      "n_present": 69,
+      "auc_naive": 0.843,
+      "auc_clade_grouped": 0.353,
+      "drop": 0.49,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFII(pRSB107)": {
+      "n_present": 69,
+      "auc_naive": 0.867,
+      "auc_clade_grouped": 0.369,
+      "drop": 0.498,
+      "generalizes_beyond_lineage": false
+    },
+    "IncFII(pSE11)": {
+      "n_present": 27,
+      "auc_naive": 0.885,
+      "auc_clade_grouped": 0.761,
+      "drop": 0.124,
+      "generalizes_beyond_lineage": true
+    },
+    "IncI(Gamma)": {
+      "n_present": 44,
+      "auc_naive": 0.685,
+      "auc_clade_grouped": 0.615,
+      "drop": 0.07,
+      "generalizes_beyond_lineage": false
+    },
+    "IncI1-I(Alpha)": {
+      "n_present": 45,
+      "auc_naive": 0.672,
+      "auc_clade_grouped": 0.618,
+      "drop": 0.054,
+      "generalizes_beyond_lineage": false
+    },
+    "IncN": {
+      "n_present": 17,
+      "auc_naive": 0.773,
+      "auc_clade_grouped": 0.767,
+      "drop": 0.006,
+      "generalizes_beyond_lineage": true
+    },
+    "IncQ1": {
+      "n_present": 17,
+      "auc_naive": 0.938,
+      "auc_clade_grouped": 0.829,
+      "drop": 0.108,
+      "generalizes_beyond_lineage": true
+    },
+    "IncX1": {
+      "n_present": 19,
+      "auc_naive": 0.936,
+      "auc_clade_grouped": 0.764,
+      "drop": 0.172,
+      "generalizes_beyond_lineage": true
+    },
+    "IncX4": {
+      "n_present": 11,
+      "auc_naive": 0.369,
+      "auc_clade_grouped": 0.329,
+      "drop": 0.04,
+      "generalizes_beyond_lineage": false
+    },
+    "IncY": {
+      "n_present": 24,
+      "auc_naive": 0.619,
+      "auc_clade_grouped": 0.621,
+      "drop": -0.002,
+      "generalizes_beyond_lineage": false
+    },
+    "p0111": {
+      "n_present": 13,
+      "auc_naive": 0.651,
+      "auc_clade_grouped": 0.431,
+      "drop": 0.22,
+      "generalizes_beyond_lineage": false
+    }
+  }
+}

@@ -94,3 +94,4 @@ bash.exe.stackdump
 
 # ClinVar plain panels are large + regenerable; ship the gzipped GRCh38 panel only
 data/clinvar/*.tsv
+data/processed/ecoli_mash_clades.json

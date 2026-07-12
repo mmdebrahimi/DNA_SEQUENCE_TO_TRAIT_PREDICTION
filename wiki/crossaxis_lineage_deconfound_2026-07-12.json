@@ -1,7 +1,9 @@
 {
   "artifact": "crossaxis_lineage_deconfound",
   "schema": "crossaxis-lineage-deconfound-v1",
-  "question": "Does the E. coli AMR+plasmid -> virulence cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
+  "target_axis": "virulence",
+  "axis_label": "virulence gene",
+  "question": "Does the E. coli non-virulence -> virulence cross-axis signal survive leave-one-clade-out CV (real beyond lineage), or collapse (lineage-mediated)?",
   "mash": {
     "n_genomes": 240,
     "threshold": 0.005,
@@ -46,7 +48,7 @@
   "honest_caveats": [
     "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
     "E. coli/Shigella only (the virulence axis). Cohorts drug-R/S-selected. Associational.",
-    "Generalization tracks PREVALENCE: the 3 generalizing functions are all high-prevalence (n>=111); the 3 lineage-only genes are all low-prevalence accessory markers (n<=24). A common function present across many clades has cross-clade signal to learn; a clade-restricted accessory gene does not."
+    "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades has cross-clade signal to learn; a clade-restricted accessory feature does not)."
   ],
   "per_gene": {
     "AFA_DRA": {

@@ -75,6 +75,14 @@ def test_prereg_constants_frozen():
     assert mod.ORG == "escherichia_coli_shigella"
 
 
+def test_target_axes_registry():
+    # both cross-axes are wired to real coresistance_multiaxis prefixes.
+    import coresistance_multiaxis as ma
+    assert set(mod.TARGET_AXES) == {"virulence", "plasmid"}
+    assert mod.TARGET_AXES["virulence"][0] == ma.VIR_PREFIX
+    assert mod.TARGET_AXES["plasmid"][0] == ma.REP_PREFIX
+
+
 @pytest.mark.skipif(not Path("D:/dna_decode_cache/refseq").exists(),
                     reason="needs the D: refseq cache + Docker Mash")
 def test_fasta_index_finds_ecoli():
