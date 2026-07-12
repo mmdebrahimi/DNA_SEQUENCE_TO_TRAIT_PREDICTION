@@ -1,0 +1,1164 @@
+{
+  "artifact": "coresistance_multiaxis",
+  "schema": "coresistance-multiaxis-v1",
+  "question": "Do AMR determinants and plasmid Inc-types co-occur / impute each other, within organism? (which resistance rides which plasmid backbone)",
+  "substrate": "AMR determinants (AMRFinder) + plasmid Inc-replicons (PlasmidFinder blastn, local sweep) over Enterobacterales cohort genomes",
+  "prereg": {
+    "MIN_GENOMES": 60,
+    "MIN_SUPPORT": 10,
+    "PASS_FRACTION": 0.5,
+    "BOOT": 1000,
+    "seed": 0,
+    "deconfound": "within-organism + optional dedup clonality proxy"
+  },
+  "deduped": false,
+  "verdict": "PASS_MULTIAXIS_LINKAGE",
+  "total_testable": 163,
+  "total_imputable": 160,
+  "fraction_imputable": 0.982,
+  "honest_caveats": [
+    "Plasmid axis is Enterobacterales-only (enterobacteriales.fsa); other organisms excluded.",
+    "PlasmidFinder replicon PRESENCE is a genotype axis (blastn), not a wet plasmid-content readout.",
+    "Cohorts are drug-R/S-selected; within-organism de-confound + dedup clonality proxy; associational."
+  ],
+  "n_plasmid_genomes": 618,
+  "per_organism": {
+    "klebsiella": {
+      "organism": "klebsiella",
+      "n_genomes": 307,
+      "n_replicons": 62,
+      "n_testable": 81,
+      "n_imputable": 81,
+      "fraction_imputable": 1.0,
+      "note": null,
+      "per_feature": {
+        "aac(3)-IId": {
+          "auc": 0.9097,
+          "ci_lo": 0.8225,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aac(3)-IIe": {
+          "auc": 0.957,
+          "ci_lo": 0.9243,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aac(3)-IVa": {
+          "auc": 0.9996,
+          "ci_lo": 0.9982,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aac(6')-Ib": {
+          "auc": 0.9654,
+          "ci_lo": 0.9312,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aac(6')-Ib-cr5": {
+          "auc": 0.9813,
+          "ci_lo": 0.9608,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aadA1": {
+          "auc": 0.9249,
+          "ci_lo": 0.8818,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aadA2": {
+          "auc": 0.9754,
+          "ci_lo": 0.9539,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "ampC-Kaer": {
+          "auc": 0.9921,
+          "ci_lo": 0.9828,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(3'')-Ib": {
+          "auc": 0.9973,
+          "ci_lo": 0.9924,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(3')-Ia": {
+          "auc": 0.8252,
+          "ci_lo": 0.7263,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(4)-Ia": {
+          "auc": 0.9996,
+          "ci_lo": 0.9982,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(6)-Id": {
+          "auc": 0.9991,
+          "ci_lo": 0.9975,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "arr-2": {
+          "auc": 0.9737,
+          "ci_lo": 0.9376,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "arr-3": {
+          "auc": 0.933,
+          "ci_lo": 0.8562,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaCTX-M-15": {
+          "auc": 0.9655,
+          "ci_lo": 0.9381,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaKPC-2": {
+          "auc": 0.9109,
+          "ci_lo": 0.8353,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaKPC-3": {
+          "auc": 0.9295,
+          "ci_lo": 0.8406,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaOXA": {
+          "auc": 0.9,
+          "ci_lo": 0.8407,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaOXA-1": {
+          "auc": 0.9997,
+          "ci_lo": 0.9988,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaOXA-9": {
+          "auc": 0.9423,
+          "ci_lo": 0.8779,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaSHV": {
+          "auc": 0.6979,
+          "ci_lo": 0.56,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaSHV-1": {
+          "auc": 0.9439,
+          "ci_lo": 0.9123,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaSHV-11": {
+          "auc": 0.8154,
+          "ci_lo": 0.7604,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaSHV-12": {
+          "auc": 0.9604,
+          "ci_lo": 0.9269,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaSHV-28": {
+          "auc": 0.9854,
+          "ci_lo": 0.9617,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaTEM": {
+          "auc": 0.8227,
+          "ci_lo": 0.7097,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaTEM-1": {
+          "auc": 0.8912,
+          "ci_lo": 0.8505,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "catA1": {
+          "auc": 0.8858,
+          "ci_lo": 0.8016,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "catB3": {
+          "auc": 0.9903,
+          "ci_lo": 0.9725,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "cmlA1": {
+          "auc": 0.9954,
+          "ci_lo": 0.9883,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA1": {
+          "auc": 0.8331,
+          "ci_lo": 0.7059,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA12": {
+          "auc": 0.9953,
+          "ci_lo": 0.9876,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA14": {
+          "auc": 0.9714,
+          "ci_lo": 0.9455,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA50": {
+          "auc": 0.9746,
+          "ci_lo": 0.9247,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "estX-3": {
+          "auc": 0.9981,
+          "ci_lo": 0.9939,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "fosA": {
+          "auc": 0.893,
+          "ci_lo": 0.7774,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "fosA5": {
+          "auc": 0.9992,
+          "ci_lo": 0.9966,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_D87N": {
+          "auc": 0.9812,
+          "ci_lo": 0.9347,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_S83F": {
+          "auc": 0.9949,
+          "ci_lo": 0.9864,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_S83I": {
+          "auc": 0.9891,
+          "ci_lo": 0.9742,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_S83T": {
+          "auc": 0.9972,
+          "ci_lo": 0.9933,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_S83Y": {
+          "auc": 0.7933,
+          "ci_lo": 0.5752,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "mph(A)": {
+          "auc": 0.9981,
+          "ci_lo": 0.9956,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "mrx(A)": {
+          "auc": 0.9958,
+          "ci_lo": 0.9891,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "ompK35_E42RfsTer47": {
+          "auc": 0.9984,
+          "ci_lo": 0.9962,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "ompK36_D135DGD": {
+          "auc": 0.9552,
+          "ci_lo": 0.9083,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "oqxA": {
+          "auc": 0.9582,
+          "ci_lo": 0.9195,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "oqxA11": {
+          "auc": 0.9927,
+          "ci_lo": 0.9807,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "oqxB": {
+          "auc": 0.9784,
+          "ci_lo": 0.9633,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "oqxB19": {
+          "auc": 0.9746,
+          "ci_lo": 0.9584,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "oqxB25": {
+          "auc": 0.9715,
+          "ci_lo": 0.9437,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "oqxB5": {
+          "auc": 0.9566,
+          "ci_lo": 0.8965,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "parC_S80I": {
+          "auc": 0.9965,
+          "ci_lo": 0.9927,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "plasmid:Col440I": {
+          "auc": 0.8138,
+          "ci_lo": 0.7211,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:Col440II": {
+          "auc": 0.8632,
+          "ci_lo": 0.7349,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:ColRNAI": {
+          "auc": 0.9443,
+          "ci_lo": 0.9167,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncC": {
+          "auc": 0.9303,
+          "ci_lo": 0.8635,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIA(HI1)": {
+          "auc": 0.7913,
+          "ci_lo": 0.6651,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIA(pBK30683)": {
+          "auc": 0.9294,
+          "ci_lo": 0.8571,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIB(K)": {
+          "auc": 0.9174,
+          "ci_lo": 0.8836,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIB(K)(pCAV1099-114)": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIB(pKPHS1)": {
+          "auc": 0.9931,
+          "ci_lo": 0.9782,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIB(pQil)": {
+          "auc": 0.9699,
+          "ci_lo": 0.9455,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(K)": {
+          "auc": 0.8991,
+          "ci_lo": 0.8604,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(Yp)": {
+          "auc": 0.9562,
+          "ci_lo": 0.8945,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(pKP91)": {
+          "auc": 0.8633,
+          "ci_lo": 0.7761,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncHI1B(pNDM-MAR)": {
+          "auc": 0.9348,
+          "ci_lo": 0.8477,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncI2(Delta)": {
+          "auc": 0.9871,
+          "ci_lo": 0.9699,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncN": {
+          "auc": 0.8246,
+          "ci_lo": 0.7066,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncR": {
+          "auc": 0.8691,
+          "ci_lo": 0.8101,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncX3": {
+          "auc": 0.9609,
+          "ci_lo": 0.9125,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:RepB": {
+          "auc": 0.9694,
+          "ci_lo": 0.9273,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:repB": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:repB(R1701)": {
+          "auc": 0.9075,
+          "ci_lo": 0.8609,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "qnrB1": {
+          "auc": 0.9407,
+          "ci_lo": 0.8762,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "qnrS1": {
+          "auc": 0.8978,
+          "ci_lo": 0.8135,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sul1": {
+          "auc": 0.9752,
+          "ci_lo": 0.9518,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sul2": {
+          "auc": 0.9888,
+          "ci_lo": 0.9778,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sul3": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "tet(A)": {
+          "auc": 0.9654,
+          "ci_lo": 0.9455,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "tet(D)": {
+          "auc": 0.8678,
+          "ci_lo": 0.7655,
+          "imputable": true,
+          "is_replicon": false
+        }
+      },
+      "determinant_to_plasmid_lift": {
+        "fosA": [],
+        "oqxA": [],
+        "oqxB": [],
+        "parC_S80I": [
+          {
+            "det": "plasmid:IncI2(Delta)",
+            "cooc": 24,
+            "lift": 2.72,
+            "p_given_target": 0.212
+          }
+        ],
+        "sul1": [],
+        "gyrA_S83I": [
+          {
+            "det": "plasmid:IncI2(Delta)",
+            "cooc": 24,
+            "lift": 3.16,
+            "p_given_target": 0.247
+          }
+        ],
+        "blaTEM-1": [],
+        "blaSHV-11": [
+          {
+            "det": "plasmid:IncN",
+            "cooc": 13,
+            "lift": 2.19,
+            "p_given_target": 0.143
+          },
+          {
+            "det": "plasmid:IncHI1B(pNDM-MAR)",
+            "cooc": 11,
+            "lift": 2.06,
+            "p_given_target": 0.121
+          },
+          {
+            "det": "plasmid:IncFIB(K)(pCAV1099-114)",
+            "cooc": 20,
+            "lift": 1.78,
+            "p_given_target": 0.22
+          }
+        ]
+      }
+    },
+    "escherichia_coli_shigella": {
+      "organism": "escherichia_coli_shigella",
+      "n_genomes": 240,
+      "n_replicons": 55,
+      "n_testable": 68,
+      "n_imputable": 65,
+      "fraction_imputable": 0.956,
+      "note": null,
+      "per_feature": {
+        "aac(3)-IId": {
+          "auc": 0.8343,
+          "ci_lo": 0.6947,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aac(3)-IIe": {
+          "auc": 0.9723,
+          "ci_lo": 0.9507,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aac(6')-Ib-cr5": {
+          "auc": 0.9931,
+          "ci_lo": 0.9827,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aadA1": {
+          "auc": 0.958,
+          "ci_lo": 0.9205,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aadA2": {
+          "auc": 0.9704,
+          "ci_lo": 0.9228,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aadA5": {
+          "auc": 0.995,
+          "ci_lo": 0.986,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(3'')-Ib": {
+          "auc": 0.9988,
+          "ci_lo": 0.9967,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(3')-Ia": {
+          "auc": 0.9044,
+          "ci_lo": 0.8377,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(6)-Id": {
+          "auc": 0.9856,
+          "ci_lo": 0.9617,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaCMY-2": {
+          "auc": 0.827,
+          "ci_lo": 0.6376,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaCTX-M-15": {
+          "auc": 0.9658,
+          "ci_lo": 0.9421,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaCTX-M-27": {
+          "auc": 0.9406,
+          "ci_lo": 0.8684,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaCTX-M-55": {
+          "auc": 0.9138,
+          "ci_lo": 0.8139,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaOXA-1": {
+          "auc": 0.988,
+          "ci_lo": 0.9621,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaTEM": {
+          "auc": 0.5604,
+          "ci_lo": 0.3442,
+          "imputable": false,
+          "is_replicon": false
+        },
+        "blaTEM-1": {
+          "auc": 0.8969,
+          "ci_lo": 0.8473,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "catA1": {
+          "auc": 0.8718,
+          "ci_lo": 0.7899,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "catB3": {
+          "auc": 0.9887,
+          "ci_lo": 0.9724,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "cmlA1": {
+          "auc": 0.9864,
+          "ci_lo": 0.9537,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "cyaA_S352T": {
+          "auc": 0.8666,
+          "ci_lo": 0.8012,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA1": {
+          "auc": 0.9185,
+          "ci_lo": 0.8289,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA12": {
+          "auc": 0.9946,
+          "ci_lo": 0.9877,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA14": {
+          "auc": 0.9393,
+          "ci_lo": 0.8734,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA17": {
+          "auc": 0.9899,
+          "ci_lo": 0.9686,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "estX-3": {
+          "auc": 0.9507,
+          "ci_lo": 0.8947,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "floR": {
+          "auc": 0.865,
+          "ci_lo": 0.7696,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_D87N": {
+          "auc": 0.9961,
+          "ci_lo": 0.9893,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_S83L": {
+          "auc": 0.9723,
+          "ci_lo": 0.9493,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "mph(A)": {
+          "auc": 0.9933,
+          "ci_lo": 0.9802,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "mrx(A)": {
+          "auc": 0.996,
+          "ci_lo": 0.9871,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "parC_E84V": {
+          "auc": 0.9998,
+          "ci_lo": 0.9992,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "parC_S80I": {
+          "auc": 0.989,
+          "ci_lo": 0.9751,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "parE_I529L": {
+          "auc": 0.9982,
+          "ci_lo": 0.9945,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "parE_L416F": {
+          "auc": 0.9845,
+          "ci_lo": 0.9615,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "parE_S458A": {
+          "auc": 0.9693,
+          "ci_lo": 0.9452,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "plasmid:Col(BS512)": {
+          "auc": 0.8075,
+          "ci_lo": 0.7083,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:Col(MG828)": {
+          "auc": 0.8765,
+          "ci_lo": 0.7899,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:Col156": {
+          "auc": 0.9199,
+          "ci_lo": 0.8802,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:ColpEC648": {
+          "auc": 0.6878,
+          "ci_lo": 0.5493,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncB/O/K/Z": {
+          "auc": 0.7787,
+          "ci_lo": 0.5868,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIA": {
+          "auc": 0.9058,
+          "ci_lo": 0.8635,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIB(AP001918)": {
+          "auc": 0.8891,
+          "ci_lo": 0.8448,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFIC(FII)": {
+          "auc": 0.998,
+          "ci_lo": 0.9936,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII": {
+          "auc": 0.8905,
+          "ci_lo": 0.8481,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(29)": {
+          "auc": 0.7445,
+          "ci_lo": 0.6245,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(pAMA1167-NDM-5)": {
+          "auc": 0.9991,
+          "ci_lo": 0.9968,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(pCoo)": {
+          "auc": 0.6416,
+          "ci_lo": 0.4316,
+          "imputable": false,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(pHN7A8)": {
+          "auc": 0.9818,
+          "ci_lo": 0.9584,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(pRSB107)": {
+          "auc": 0.9996,
+          "ci_lo": 0.9985,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncFII(pSE11)": {
+          "auc": 0.9619,
+          "ci_lo": 0.912,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncI(Gamma)": {
+          "auc": 0.9952,
+          "ci_lo": 0.9849,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncI1-I(Alpha)": {
+          "auc": 0.9992,
+          "ci_lo": 0.9971,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncN": {
+          "auc": 0.736,
+          "ci_lo": 0.5847,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncQ1": {
+          "auc": 0.9501,
+          "ci_lo": 0.9061,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncX1": {
+          "auc": 0.8924,
+          "ci_lo": 0.8066,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:IncX4": {
+          "auc": 0.3426,
+          "ci_lo": 0.2362,
+          "imputable": false,
+          "is_replicon": true
+        },
+        "plasmid:IncY": {
+          "auc": 0.7035,
+          "ci_lo": 0.5984,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "plasmid:p0111": {
+          "auc": 0.7137,
+          "ci_lo": 0.5796,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "ptsI_V25I": {
+          "auc": 0.9987,
+          "ci_lo": 0.9956,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "qnrS1": {
+          "auc": 0.8222,
+          "ci_lo": 0.6669,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sat2": {
+          "auc": 0.9778,
+          "ci_lo": 0.9439,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sul1": {
+          "auc": 0.9581,
+          "ci_lo": 0.9227,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sul2": {
+          "auc": 0.9789,
+          "ci_lo": 0.9593,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "sul3": {
+          "auc": 0.9976,
+          "ci_lo": 0.9933,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "tet(A)": {
+          "auc": 0.8473,
+          "ci_lo": 0.7951,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "tet(B)": {
+          "auc": 0.86,
+          "ci_lo": 0.8,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "tet(M)": {
+          "auc": 0.9694,
+          "ci_lo": 0.9122,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "uhpT_E350Q": {
+          "auc": 0.9637,
+          "ci_lo": 0.9346,
+          "imputable": true,
+          "is_replicon": false
+        }
+      },
+      "determinant_to_plasmid_lift": {
+        "gyrA_S83L": [],
+        "parC_S80I": [],
+        "gyrA_D87N": [],
+        "uhpT_E350Q": [
+          {
+            "det": "plasmid:Col156",
+            "cooc": 58,
+            "lift": 1.9,
+            "p_given_target": 0.523
+          }
+        ],
+        "tet(A)": [
+          {
+            "det": "plasmid:IncN",
+            "cooc": 13,
+            "lift": 1.68,
+            "p_given_target": 0.119
+          }
+        ],
+        "sul1": [],
+        "sul2": [
+          {
+            "det": "plasmid:IncQ1",
+            "cooc": 17,
+            "lift": 2.35,
+            "p_given_target": 0.167
+          }
+        ],
+        "aph(3'')-Ib": [
+          {
+            "det": "plasmid:IncQ1",
+            "cooc": 17,
+            "lift": 2.4,
+            "p_given_target": 0.17
+          }
+        ]
+      }
+    },
+    "salmonella": {
+      "organism": "salmonella",
+      "n_genomes": 60,
+      "n_replicons": 25,
+      "n_testable": 14,
+      "n_imputable": 14,
+      "fraction_imputable": 1.0,
+      "note": null,
+      "per_feature": {
+        "aac(3)-IVa": {
+          "auc": 0.9826,
+          "ci_lo": 0.9411,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aadA1": {
+          "auc": 0.9535,
+          "ci_lo": 0.8475,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(3'')-Ib": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(3')-Ia": {
+          "auc": 0.9427,
+          "ci_lo": 0.8386,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(4)-Ia": {
+          "auc": 0.9826,
+          "ci_lo": 0.9411,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "aph(6)-Id": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaCTX-M-65": {
+          "auc": 0.9824,
+          "ci_lo": 0.9499,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "blaTEM-1": {
+          "auc": 0.9425,
+          "ci_lo": 0.8693,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "dfrA14": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "floR": {
+          "auc": 0.9427,
+          "ci_lo": 0.8229,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "gyrA_D87Y": {
+          "auc": 0.9615,
+          "ci_lo": 0.8768,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "plasmid:IncFIB(pN55391)": {
+          "auc": 1.0,
+          "ci_lo": 1.0,
+          "imputable": true,
+          "is_replicon": true
+        },
+        "sul1": {
+          "auc": 0.9463,
+          "ci_lo": 0.8275,
+          "imputable": true,
+          "is_replicon": false
+        },
+        "tet(A)": {
+          "auc": 0.9163,
+          "ci_lo": 0.8394,
+          "imputable": true,
+          "is_replicon": false
+        }
+      },
+      "determinant_to_plasmid_lift": {
+        "tet(A)": [
+          {
+            "det": "plasmid:IncFIB(pN55391)",
+            "cooc": 16,
+            "lift": 2.17,
+            "p_given_target": 0.615
+          }
+        ],
+        "sul1": [
+          {
+            "det": "plasmid:IncFIB(pN55391)",
+            "cooc": 16,
+            "lift": 2.82,
+            "p_given_target": 0.8
+          }
+        ],
+        "gyrA_D87Y": [
+          {
+            "det": "plasmid:IncFIB(pN55391)",
+            "cooc": 17,
+            "lift": 3.16,
+            "p_given_target": 0.895
+          }
+        ],
+        "aadA1": [
+          {
+            "det": "plasmid:IncFIB(pN55391)",
+            "cooc": 16,
+            "lift": 3.32,
+            "p_given_target": 0.941
+          }
+        ],
+        "aph(3')-Ia": [
+          {
+            "det": "plasmid:IncFIB(pN55391)",
+            "cooc": 11,
+            "lift": 2.99,
+            "p_given_target": 0.846
+          }
+        ],
+        "floR": [],
+        "aac(3)-IVa": [],
+        "aph(4)-Ia": []
+      }
+    }
+  }
+}
