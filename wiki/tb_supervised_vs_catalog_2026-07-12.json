@@ -1,0 +1,39 @@
+{
+  "artifact": "tb_supervised_vs_catalog",
+  "schema": "tb-supervised-vs-catalog-v1",
+  "date": "2026-07-12",
+  "drug": "rifampicin",
+  "gene": "rpoB",
+  "cohort_n": 8955,
+  "R": 3448,
+  "n_features": 72,
+  "n_lineages": 81,
+  "catalog_negative_n": 5654,
+  "catalog_negative_R": 290,
+  "results": {
+    "plain_5fold": {
+      "overall_auroc": 0.9632,
+      "blind_spot": {
+        "n": 5654,
+        "R": 290,
+        "auroc": 0.6605,
+        "burden": 0.393,
+        "null": 0.5021,
+        "pass": true
+      }
+    },
+    "leave_lineage_out": {
+      "overall_auroc": 0.9489,
+      "blind_spot": {
+        "n": 5654,
+        "R": 290,
+        "auroc": 0.5101,
+        "burden": 0.393,
+        "null": 0.5025,
+        "pass": false
+      }
+    }
+  },
+  "verdict": "IN_DISTRIBUTION_ONLY",
+  "honest_note": "Bacterial analog of the HIV test: supervised on ALL rpoB variants (not just WHO grade-1/2) vs the WHO catalogue, free CRyPTIC measured phenotype, de-confounded by LEAVE-ONE-LINEAGE-OUT (barcode lineage). A leave-lineage-out blind-spot PASS = the technique transfers to bacteria; a collapse from plain-5fold to leave-lineage-out = it learned lineage not mechanism (the user's caveat). rpoB-only target-gene scope; efflux/promoter/copy-number resistance is invisible to point-variant features."
+}
