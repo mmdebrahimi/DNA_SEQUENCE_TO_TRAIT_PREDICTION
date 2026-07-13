@@ -1,0 +1,175 @@
+{
+  "artifact": "innovate_genome_world_model",
+  "date": "2026-07-13",
+  "candidates": [
+    {
+      "id": "g9-interventional",
+      "operator": "G9",
+      "claim": "Build/validate the genome world model on INTERVENTIONAL (edit->measure) data \u2014 DMS + marker-transfer fold-change \u2014 because observational isolate data is phylogeny-confounded BY CONSTRUCTION; the catalog wins precisely because each entry encodes interventional (site-directed) knowledge.",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g9_interventional_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "inferred"
+      ],
+      "evidence": [
+        "[grounded] ProteinGym ESM2-650M median Spearman 0.484 on interventional DMS",
+        "[grounded] embeddings 0-for-5 on OBSERVATIONAL isolate data (de-confounded)",
+        "[inferred] the observational-vs-interventional split is the deepest explanation of the same-way failure"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g8-residual-detector",
+      "operator": "G8",
+      "claim": "Turn the de-confounding machinery INTO the product: a phylogeny-removed RESIDUAL-SIGNAL detector that reports which genome regions carry mechanism signal BEYOND lineage (parents: DEAD-END-A embeddings-learn-phylogeny x ASSET-5 Mash-clade de-confounding).",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g8_residual_detector_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded"
+      ],
+      "evidence": [
+        "[grounded] crossaxis determinant clade-grouped AUC 0.908 (signal survives phylogeny removal)",
+        "[grounded] naive AUC 0.975 vs clade-grouped 0.908 => most-but-not-all signal is beyond lineage"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g5-catalog-extension",
+      "operator": "G5",
+      "claim": "Relax 'the model must BEAT the catalog' -> the learned arm's job is to EXTEND the catalog: find its blind spots (catalog-negative resistant cases) and propose candidate new entries \u2014 an active catalog-CURATION loop, not a competitor.",
+      "input_frame": "original",
+      "relaxed_constraint": "must-beat-catalog (not a hard law)",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g5_catalog_extension_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded"
+      ],
+      "evidence": [
+        "[grounded] 53 catalog-negative resistant HIV NNRTI isolates (blind spots exist)",
+        "[grounded] learned scorer ties catalog only on blind-spot subset (AUROC 0.449) => it cannot BEAT, but the blind-spot SET is real work"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g1-federation",
+      "operator": "G1",
+      "claim": "Reframe the 'genome world model' as a FEDERATION of de-confounded deterministic cells + calibrated abstention + the genome-map honesty layer \u2014 a composed, auditable system \u2014 NOT a single monolithic learned model.",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g1_federation_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "inferred"
+      ],
+      "evidence": [
+        "[grounded] 10 provenance-disjoint SCORED cells already exist, lineage-disclosed",
+        "[grounded] genome-map honesty report + calibrated abstention already shipped",
+        "[inferred] composition-with-abstention is a different PRODUCT than a monolith (necessary-condition test only)"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "control-monolith-scaling",
+      "operator": "G5",
+      "claim": "CONTROL (tempting-but-wrong): scale the whole-genome/protein embedding to 3B/15B to finally learn the mechanism where 650M failed.",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_monolith_scaling_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded"
+      ],
+      "evidence": [
+        "[grounded] ProteinGym ESM2 median 650M=0.484 > 3B=0.467 > 15B=0.438 (bigger REGRESSES)"
+      ],
+      "verdict": "killed",
+      "result": {
+        "verdict": "killed",
+        "reason": "executed via gated runner",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g9-objective-swap",
+      "operator": "G9",
+      "claim": "The catalog blind spot is an OBJECTIVE problem, not capacity: likelihood/exchangeability scorers (ESM, BLOSUM62) call conservative substitutions benign by construction, so a model trained to predict FUNCTIONAL CHANGE on interventional DMS at the exact conserved DRM sites could fill the blind spot.",
+      "input_frame": "original",
+      "kill_test": null,
+      "evidence_tags": [
+        "grounded",
+        "speculative"
+      ],
+      "evidence": [
+        "[grounded] BLOSUM62 ties ESM on DRM ranking (mid-rank 4.5 vs 4.0) => likelihood objective is the shared blind spot",
+        "[speculative] a function-trained objective at those sites separates them (UNTESTED \u2014 no committed function-DMS overlap)"
+      ],
+      "verdict": "unfalsified",
+      "result": {
+        "verdict": "unfalsified",
+        "reason": "named-only: no well-formed kill-test",
+        "executed": false,
+        "valid": false
+      }
+    },
+    {
+      "id": "g5-sim-label",
+      "operator": "G5",
+      "claim": "Relax 'labels must be FREE wet-lab' -> use computational structure-based ddG / docking predicted fold-change as a WEAK bootstrap label to seed census cells that lack a free wet-lab label (independent-but-simulated, not free-observed).",
+      "input_frame": "original",
+      "relaxed_constraint": "labels-must-be-free-wetlab (not a hard law)",
+      "kill_test": null,
+      "evidence_tags": [
+        "grounded",
+        "speculative"
+      ],
+      "evidence": [
+        "[grounded] DMS (a measured interventional label) already works in-repo",
+        "[speculative] COMPUTATIONAL ddG correlates with real fold-change above a usable threshold (UNTESTED \u2014 no committed ddG artifact)"
+      ],
+      "verdict": "unfalsified",
+      "result": {
+        "verdict": "unfalsified",
+        "reason": "named-only: no well-formed kill-test",
+        "executed": false,
+        "valid": false
+      }
+    }
+  ]
+}
