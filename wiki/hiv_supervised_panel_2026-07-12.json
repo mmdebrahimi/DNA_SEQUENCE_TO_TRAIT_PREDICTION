@@ -1,0 +1,371 @@
+{
+  "artifact": "hiv_supervised_panel",
+  "schema": "hiv-supervised-panel-v1",
+  "date": "2026-07-12",
+  "question": "Is the supervised blind-spot rescue GENERAL across the HIV RT drug panel (deployment split = leave-one-study-out), or an EFV quirk?",
+  "pass_bar": "leave-study-out blind-spot AUROC >= 0.65 AND > burden AND null < 0.55",
+  "n_drugs": 11,
+  "n_powered": 11,
+  "n_testable_blindspot": 11,
+  "n_pass_deployment_split": 8,
+  "verdict": "GENERAL_RESCUE",
+  "honest_caveats": [
+    "NNRTI cutoff = illustrative fold>=3 (class primary metric is cutoff-free AUC); NRTI = validated per-drug lower cutoffs. The headline is the supervised-vs-catalog+null DELTA at a fixed cutoff.",
+    "NRTI catalog is POSITION-based (any major-position mutation) -> its 'blind spot' is smaller/different from the NNRTI mutant-level catalog; a NRTI blind-spot subset can be small/underpowered.",
+    "Same scope as the EFV result: supervised needs training labels; in-distribution to the Stanford knowledge base; the leave-study-out split is the deployment-relevant generalization test."
+  ],
+  "per_drug": [
+    {
+      "drug": "EFV",
+      "powered": true,
+      "n": 4222,
+      "R": 2258,
+      "cutoff": 3.0,
+      "catalog_negative_n": 1883,
+      "catalog_negative_R": 201,
+      "patient_grouped": {
+        "overall_auroc": 0.9565,
+        "blind_spot": {
+          "n": 1883,
+          "R": 201,
+          "auroc": 0.8243,
+          "burden": 0.3986,
+          "null": 0.5024,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9545,
+        "blind_spot": {
+          "n": 1883,
+          "R": 201,
+          "auroc": 0.8102,
+          "burden": 0.3986,
+          "null": 0.5042,
+          "pass": true
+        }
+      },
+      "class": "NNRTI"
+    },
+    {
+      "drug": "NVP",
+      "powered": true,
+      "n": 4170,
+      "R": 2481,
+      "cutoff": 3.0,
+      "catalog_negative_n": 1976,
+      "catalog_negative_R": 348,
+      "patient_grouped": {
+        "overall_auroc": 0.9475,
+        "blind_spot": {
+          "n": 1976,
+          "R": 348,
+          "auroc": 0.7274,
+          "burden": 0.5071,
+          "null": 0.5009,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9474,
+        "blind_spot": {
+          "n": 1976,
+          "R": 348,
+          "auroc": 0.7276,
+          "burden": 0.5071,
+          "null": 0.4991,
+          "pass": true
+        }
+      },
+      "class": "NNRTI"
+    },
+    {
+      "drug": "ETR",
+      "powered": true,
+      "n": 2002,
+      "R": 739,
+      "cutoff": 3.0,
+      "catalog_negative_n": 786,
+      "catalog_negative_R": 118,
+      "patient_grouped": {
+        "overall_auroc": 0.8909,
+        "blind_spot": {
+          "n": 786,
+          "R": 118,
+          "auroc": 0.8674,
+          "burden": 0.3099,
+          "null": 0.5017,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.883,
+        "blind_spot": {
+          "n": 786,
+          "R": 118,
+          "auroc": 0.8692,
+          "burden": 0.3099,
+          "null": 0.5003,
+          "pass": true
+        }
+      },
+      "class": "NNRTI"
+    },
+    {
+      "drug": "RPV",
+      "powered": true,
+      "n": 829,
+      "R": 380,
+      "cutoff": 3.0,
+      "catalog_negative_n": 364,
+      "catalog_negative_R": 103,
+      "patient_grouped": {
+        "overall_auroc": 0.8505,
+        "blind_spot": {
+          "n": 364,
+          "R": 103,
+          "auroc": 0.8296,
+          "burden": 0.3821,
+          "null": 0.5013,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8425,
+        "blind_spot": {
+          "n": 364,
+          "R": 103,
+          "auroc": 0.8301,
+          "burden": 0.3821,
+          "null": 0.5009,
+          "pass": true
+        }
+      },
+      "class": "NNRTI"
+    },
+    {
+      "drug": "DOR",
+      "powered": true,
+      "n": 322,
+      "R": 217,
+      "cutoff": 3.0,
+      "catalog_negative_n": 97,
+      "catalog_negative_R": 54,
+      "patient_grouped": {
+        "overall_auroc": 0.8155,
+        "blind_spot": {
+          "n": 97,
+          "R": 54,
+          "auroc": 0.7485,
+          "burden": 0.6214,
+          "null": 0.4961,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.7982,
+        "blind_spot": {
+          "n": 97,
+          "R": 54,
+          "auroc": 0.7192,
+          "burden": 0.6214,
+          "null": 0.4961,
+          "pass": true
+        }
+      },
+      "class": "NNRTI"
+    },
+    {
+      "drug": "3TC",
+      "powered": true,
+      "n": 5161,
+      "R": 3441,
+      "cutoff": 5.0,
+      "catalog_negative_n": 924,
+      "catalog_negative_R": 11,
+      "patient_grouped": {
+        "overall_auroc": 0.967,
+        "blind_spot": {
+          "n": 924,
+          "R": 11,
+          "auroc": 0.7358,
+          "burden": 0.2679,
+          "null": 0.507,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9671,
+        "blind_spot": {
+          "n": 924,
+          "R": 11,
+          "auroc": 0.7797,
+          "burden": 0.2679,
+          "null": 0.5047,
+          "pass": true
+        }
+      },
+      "class": "NRTI"
+    },
+    {
+      "drug": "ABC",
+      "powered": true,
+      "n": 4878,
+      "R": 3171,
+      "cutoff": 2.0,
+      "catalog_negative_n": 874,
+      "catalog_negative_R": 19,
+      "patient_grouped": {
+        "overall_auroc": 0.8844,
+        "blind_spot": {
+          "n": 874,
+          "R": 19,
+          "auroc": 0.5772,
+          "burden": 0.318,
+          "null": 0.5074,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8894,
+        "blind_spot": {
+          "n": 874,
+          "R": 19,
+          "auroc": 0.6862,
+          "burden": 0.318,
+          "null": 0.5127,
+          "pass": true
+        }
+      },
+      "class": "NRTI"
+    },
+    {
+      "drug": "AZT",
+      "powered": true,
+      "n": 5104,
+      "R": 2487,
+      "cutoff": 3.0,
+      "catalog_negative_n": 944,
+      "catalog_negative_R": 17,
+      "patient_grouped": {
+        "overall_auroc": 0.9272,
+        "blind_spot": {
+          "n": 944,
+          "R": 17,
+          "auroc": 0.6434,
+          "burden": 0.3491,
+          "null": 0.503,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9304,
+        "blind_spot": {
+          "n": 944,
+          "R": 17,
+          "auroc": 0.6858,
+          "burden": 0.3491,
+          "null": 0.4978,
+          "pass": true
+        }
+      },
+      "class": "NRTI"
+    },
+    {
+      "drug": "D4T",
+      "powered": true,
+      "n": 4993,
+      "R": 2092,
+      "cutoff": 1.5,
+      "catalog_negative_n": 897,
+      "catalog_negative_R": 58,
+      "patient_grouped": {
+        "overall_auroc": 0.8349,
+        "blind_spot": {
+          "n": 897,
+          "R": 58,
+          "auroc": 0.4738,
+          "burden": 0.3784,
+          "null": 0.5044,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8155,
+        "blind_spot": {
+          "n": 897,
+          "R": 58,
+          "auroc": 0.4971,
+          "burden": 0.3784,
+          "null": 0.5044,
+          "pass": false
+        }
+      },
+      "class": "NRTI"
+    },
+    {
+      "drug": "DDI",
+      "powered": true,
+      "n": 5041,
+      "R": 2660,
+      "cutoff": 1.5,
+      "catalog_negative_n": 914,
+      "catalog_negative_R": 71,
+      "patient_grouped": {
+        "overall_auroc": 0.797,
+        "blind_spot": {
+          "n": 914,
+          "R": 71,
+          "auroc": 0.5743,
+          "burden": 0.3903,
+          "null": 0.4985,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8029,
+        "blind_spot": {
+          "n": 914,
+          "R": 71,
+          "auroc": 0.5771,
+          "burden": 0.3903,
+          "null": 0.4995,
+          "pass": false
+        }
+      },
+      "class": "NRTI"
+    },
+    {
+      "drug": "TDF",
+      "powered": true,
+      "n": 4328,
+      "R": 1518,
+      "cutoff": 1.5,
+      "catalog_negative_n": 719,
+      "catalog_negative_R": 19,
+      "patient_grouped": {
+        "overall_auroc": 0.8938,
+        "blind_spot": {
+          "n": 719,
+          "R": 19,
+          "auroc": 0.593,
+          "burden": 0.5684,
+          "null": 0.4973,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8997,
+        "blind_spot": {
+          "n": 719,
+          "R": 19,
+          "auroc": 0.6206,
+          "burden": 0.5684,
+          "null": 0.5058,
+          "pass": false
+        }
+      },
+      "class": "NRTI"
+    }
+  ]
+}
