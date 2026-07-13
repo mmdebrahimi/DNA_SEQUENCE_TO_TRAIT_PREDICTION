@@ -1,0 +1,489 @@
+{
+  "artifact": "data_source_census_tree_of_life",
+  "schema": "data-source-census-v1",
+  "date": "2026-07-13",
+  "question": "What NEW free, independent, isolate-level genotype->phenotype label sources exist across every family of life to seed new decoder cells?",
+  "method": "8 parallel kingdom scouts (WebSearch+WebFetch), each screening candidates against the decoder winning regime (curated target-site catalog + free/independent/isolate-level/wet-lab label) and the 8 rejection gates",
+  "gate_legend": {
+    "G1": "circular label (from a genome tool)",
+    "G2": "study==class",
+    "G3": "sampling-defined label",
+    "G4": "surveillance domination",
+    "G5": "assembly/access attrition",
+    "G6": "measurement censoring at breakpoint",
+    "G7": "provenance not separable",
+    "G8": "dedup/clonality collapses balance"
+  },
+  "meta_finding": "Across nearly EVERY kingdom the curated catalog (regime fit) exists but the FREE+INDEPENDENT+ISOLATE-LEVEL label is the binding constraint - reconfirms the project north star ('labels not models') across the tree of life. The two label archetypes that clear the gates: (a) a measured MIC/EC50/bioassay INDEPENDENT of the catalog, or (b) DMS (molecular-property regime).",
+  "candidates": [
+    {
+      "rank": 1,
+      "kingdom": "Bacteria",
+      "organism": "Mycobacterium tuberculosis",
+      "phenotype": "second-line + new drugs (bedaquiline, linezolid, moxifloxacin/levofloxacin, amikacin, kanamycin, ethionamide, clofazimine, delamanid)",
+      "source": "CRyPTIC compendium",
+      "urls": [
+        "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3001721",
+        "https://zenodo.org/records/15679886"
+      ],
+      "label_type": "wet-lab broth-microdilution MIC (UKMYC plate) + ECOFF",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "12,289 WGS+13-drug MIC (Zenodo superset 21,570)",
+      "gates": [
+        "G6-minor(ECOFF provided)",
+        "G8(TB monomorphic; Napier-barcode collapse already in-repo)"
+      ],
+      "regime_fit": "STRONG - WHO catalogue v2 already pinned in repo; same VCF pipeline as shipped RIF/INH",
+      "verdict": "IMMEDIATE - lowest-friction new cells; same substrate + pipeline as shipped TB RIF/INH"
+    },
+    {
+      "rank": 2,
+      "kingdom": "Virus",
+      "organism": "Cytomegalovirus (CMV)",
+      "phenotype": "ganciclovir (UL97), foscarnet/cidofovir (UL54), letermovir (UL56)",
+      "source": "Chou recombinant-phenotyping catalog (published tables)",
+      "urls": [
+        "https://pubmed.ncbi.nlm.nih.gov/?term=cytomegalovirus+UL97+UL54+drug+resistance+mutations+phenotype+recombinant"
+      ],
+      "label_type": "wet-lab EC50 fold-change via MARKER TRANSFER into lab strain - INDEPENDENT of any algorithm (clears G1)",
+      "free": true,
+      "isolate_level": false,
+      "est_n": "~hundreds of characterized mutations across 3 genes (per-mutation, not per-isolate)",
+      "gates": [
+        "G1-CLEAN(recombinant phenotyping, not rules-engine)",
+        "per-mutation not per-clinical-isolate"
+      ],
+      "regime_fit": "STRONG - curated RAS catalog + independent wet-lab fold-change; drops into existing HIV/SARS harness",
+      "verdict": "TOP VIRAL - matches the project exact validated pattern (catalog scored vs fold-change); build first among viral"
+    },
+    {
+      "rank": 3,
+      "kingdom": "Bacteria",
+      "organism": "Neisseria gonorrhoeae",
+      "phenotype": "ceftriaxone/cefixime/azithromycin/ciprofloxacin/penicillin/tetracycline",
+      "source": "Euro-GASP + Pathogenwatch Ngo",
+      "urls": [
+        "https://pathogen.watch",
+        "https://www.thelancet.com/journals/lanmic/article/PIIS2666-5247(23)00370-1/fulltext",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9280306/"
+      ],
+      "label_type": "wet-lab MIC (agar dilution + Etest), EUCAST breakpoints",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "~2,100-3,239 isolates/yr WGS+MIC (Euro-GASP surveys); several thousand aggregated",
+      "gates": [
+        "G4(Euro-centric; pool WHO-GASP+US-GISP)",
+        "G8(clonal complexes; dedup needed)"
+      ],
+      "regime_fit": "STRONG - Pathogenwatch curated penA/mtrR/gyrA/23S/rpsJ catalog + published genotype->MIC tables",
+      "verdict": "HIGH - true wet-lab MIC + downloadable ENA assemblies + mature curated catalog"
+    },
+    {
+      "rank": 3.5,
+      "kingdom": "Animalia (human)",
+      "organism": "human proteins (BRCA1, PTEN, TP53, TPMT, MSH2, +200)",
+      "phenotype": "protein function/abundance (variant effect)",
+      "source": "MaveDB / ProteinGym DMS",
+      "urls": [
+        "https://www.mavedb.org",
+        "https://proteingym.org/"
+      ],
+      "label_type": "DMS functional score (wet-lab MAVE) - G1-CLEAN by construction (direct measurement)",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "MaveDB 7M+ variant effects; ProteinGym 217 DMS / 2.5M subs",
+      "gates": [
+        "G1-CLEAN",
+        "G6-minor(score noise-threshold)",
+        "MOLECULAR-PROPERTY REGIME(ESM can win; catalog less natural - project G2P boundary lesson)"
+      ],
+      "regime_fit": "cleanest free+independent+wet-lab variant-level; but molecular-property not organismal-drug regime",
+      "verdict": "CLEANEST LABEL of all - but molecular-property regime (learned-scorer territory, not deterministic catalog); already partly in-repo (ProteinGym)"
+    },
+    {
+      "rank": 4,
+      "kingdom": "Protozoa",
+      "organism": "Plasmodium falciparum",
+      "phenotype": "sulfadoxine-pyrimethamine (dhfr N51I/C59R/S108N/I164L; dhps A437G/K540E/A581G)",
+      "source": "MalariaGEN Pf7/Pf8 (genotype) + WWARN SP Molecular Surveyor (independent phenotype)",
+      "urls": [
+        "https://www.malariagen.net/resource/34/",
+        "https://www.iddo.org/wwarn/tools-surveyors/sp-molecular-surveyor"
+      ],
+      "label_type": "clinical treatment outcome (day-28/42) + in-vitro pyrimethamine IC50 - INDEPENDENT of Pf7 inferred label",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "16,203 (Pf7)/33,325 (Pf8) genotyped; paired genotype+outcome ~thousands",
+      "gates": [
+        "G1-AVOIDED iff use WWARN outcome/IC50 NOT Pf7 inferred status",
+        "G4(Africa-heavy)",
+        "G8(dhfr-sextuple sweeps E.Africa)",
+        "G6(IC50 censoring if IC50 arm)"
+      ],
+      "regime_fit": "EXCELLENT - cleanest curated enzyme active-site catalog in protozoa after Kelch13",
+      "verdict": "TOP PROTOZOA - free genotype at scale + independent WWARN phenotype; cost = building genotype<->outcome linkage"
+    },
+    {
+      "rank": 5,
+      "kingdom": "Fungi",
+      "organism": "Aspergillus fumigatus",
+      "phenotype": "azole (itraconazole/voriconazole/posaconazole) - CYP51A TR34/L98H, TR46/Y121F/T289A",
+      "source": "poolable free WGS+MIC studies",
+      "urls": [
+        "https://journals.asm.org/doi/10.1128/mbio.00536-15",
+        "https://www.medrxiv.org/content/10.1101/2025.07.04.25330042.full.pdf"
+      ],
+      "label_type": "wet-lab EUCAST/CLSI broth-microdilution MIC",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "per-study 24-276; largest recent ~182 clinical WGS+MIC (accessions unverified)",
+      "gates": [
+        "G4(TR34/L98H clonal sweeps, India over-rep)",
+        "G8(environmental clonal lineages)",
+        "G5(some reads-only)"
+      ],
+      "regime_fit": "EXCELLENT - FunResDB + FungAMR + MARDy provide CYP51A catalog; TR-mechanism is target-site/promoter",
+      "verdict": "TOP FUNGAL - closest to a FREE fungal MIC label (CYP51A surveillance is genome-rich); pool per-study SRA + supp MIC"
+    },
+    {
+      "rank": 6,
+      "kingdom": "Virus",
+      "organism": "Influenza A",
+      "phenotype": "baloxavir (PA I38T/M/F + novel L106R)",
+      "source": "deep mutational scanning (DMS) of PA + focus-reduction EC50",
+      "urls": [
+        "https://pubmed.ncbi.nlm.nih.gov/?term=influenza+baloxavir+PA+I38+resistance+phenotype"
+      ],
+      "label_type": "DMS genotype->fold-change (dense, independent, free-in-supplement)",
+      "free": true,
+      "isolate_level": false,
+      "est_n": "DMS library (engineered, not clinical isolates)",
+      "gates": [
+        "engineered-library not isolate-level",
+        "G8 N/A"
+      ],
+      "regime_fit": "HIGH via DMS - small protein target ideal for mutant-level catalog",
+      "verdict": "HIGH via DMS - the modern PhenoSense-analog for small viral targets"
+    },
+    {
+      "rank": 6.5,
+      "kingdom": "Invertebrate (nematode)",
+      "organism": "Haemonchus contortus + STH (hookworm/Ascaris/Trichuris)",
+      "phenotype": "benzimidazole (isotype-1 beta-tubulin F167Y/E198A/F200Y/Q134H)",
+      "source": "SRA/ENA amplicon + paper supplements; WormBase ParaSite refs",
+      "urls": [
+        "https://parasite.wormbase.org",
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12444184/"
+      ],
+      "label_type": "wet-lab bioassay - Egg Hatch Assay / Larval Development Assay EC50 / FECRT - INDEPENDENT of marker (clears G1)",
+      "free": true,
+      "isolate_level": "MIXED(mostly pooled larvae; some single-worm)",
+      "est_n": "dozens of studies, 10s-100s each; no consolidated table",
+      "gates": [
+        "G8(pooled-larvae collapse in common design)",
+        "G6(LDA EC50 dose-censoring)",
+        "G5-minor(single amplicon)"
+      ],
+      "regime_fit": "BEST invertebrate - mature curated catalog (167/198/200/134) + free independent wet-lab bioassay + single target gene",
+      "verdict": "TRUE AMR ANALOG (new kingdom) - clears G1/G3; needs data-engineering (single-worm subset / harvest supplements)"
+    },
+    {
+      "rank": 7,
+      "kingdom": "Bacteria",
+      "organism": "Streptococcus pneumoniae",
+      "phenotype": "penicillin/ceftriaxone/macrolide",
+      "source": "GPS (Global Pneumococcal Sequencing)",
+      "urls": [
+        "https://www.microbiologyresearch.org/content/global-pneumococcal-sequencing-collection",
+        "https://www.nature.com/articles/s41467-025-64018-5"
+      ],
+      "label_type": "MIXED - much MIC is PBP-type-DERIVED in silico (G1); measured-MIC reference subset exists",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "~20,924 genomes; measured-MIC subset thousands",
+      "gates": [
+        "G1-LIVE(PBP->MIC lookup = the circular label to avoid)",
+        "G8(GPSC/serotype sweeps)"
+      ],
+      "regime_fit": "GOOD for measured subset - curated pbp1A/2B/2X + ermB/mefA catalog",
+      "verdict": "CONDITIONAL - decoder-ready ONLY after filtering to wet-lab-MIC records (de-circularize)"
+    },
+    {
+      "rank": 8,
+      "kingdom": "Fungi",
+      "organism": "Candida glabrata (Nakaseomyces glabratus)",
+      "phenotype": "echinocandin (FKS1/FKS2) + azole (ERG11/PDR1)",
+      "source": "free WGS+susceptibility collections",
+      "urls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC9662024/",
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6287553/"
+      ],
+      "label_type": "wet-lab MIC (YeastOne/CLSI)",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "97-isolate + 51-isolate + 229 public genomes",
+      "gates": [
+        "G6(echinocandin/azole MIC often <=/>= censored; operator-aware primitive exists)",
+        "G8(ST-structured)"
+      ],
+      "regime_fit": "GOOD - FKS1/FKS2 echinocandin is a clean target-site catalog; azole is efflux/PDR1-driven (weaker)",
+      "verdict": "STRONG label density; echinocandin/FKS is the cleaner cell (azole confounded by efflux)"
+    },
+    {
+      "rank": 9,
+      "kingdom": "Protozoa",
+      "organism": "Plasmodium falciparum",
+      "phenotype": "piperaquine (plasmepsin2/3 amplification + pfcrt novel mutations)",
+      "source": "Pf7/Pf8 (CNV) + PSA in-vitro (Amato/Witkowski 2017)",
+      "urls": [
+        "https://apps.malariagen.net/apps/pf7/"
+      ],
+      "label_type": "in-vitro piperaquine survival assay (%survival) + clinical DHA-PPQ day-42 failure",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "hundreds (GMS/Cambodia)",
+      "gates": [
+        "G4-heavy(GMS-only)",
+        "G8-heavy(KEL1/PLA1 clonal co-amplified)"
+      ],
+      "regime_fit": "GOOD but primary determinant is copy-number amplification (not point mutation)",
+      "verdict": "CNV-driven + narrow geography; secondary to SP"
+    },
+    {
+      "rank": 10,
+      "kingdom": "Plant (weed)",
+      "organism": "Lolium / Alopecurus / Ambrosia",
+      "phenotype": "herbicide target-site (ALS Pro197/Trp574, ACCase Ile1781/Asp2078, EPSPS Pro106, PSII Ser264, PPO dGly210)",
+      "source": "Tranel catalog (rule) + Lolium Chile dose-response + Blackgrass PacBio pools",
+      "urls": [
+        "https://www.mdpi.com/2223-7747/8/10/382",
+        "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2020.553948/full",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10214753/"
+      ],
+      "label_type": "whole-plant dose-response bioassay (independent) + amplicon genotyping; weedscience.org = catalog/ontology only (aggregate counts, no paired table)",
+      "free": true,
+      "isolate_level": "MOSTLY POOL/POPULATION",
+      "est_n": "Lolium small-N populations; Blackgrass >100 individuals/pool many populations",
+      "gates": [
+        "G8-DOMINANT(pooled populations, not isolates)",
+        "G1(many TSR-diagnostic papers CALL resistance from the mutation)",
+        "G5(seq availability unverified)"
+      ],
+      "regime_fit": "STRONG catalog (Murphy&Tranel 2019 = the rule); clean pairing rare (Lolium bioassay-first is cleanest)",
+      "verdict": "CATALOG=ROBUST, LABELS=POOLED - needs single-plant genotype+bioassay-first pairs (rare); herbicide dominant gate is G8"
+    },
+    {
+      "rank": 11,
+      "kingdom": "Bacteria",
+      "organism": "Helicobacter pylori",
+      "phenotype": "clarithromycin (23S A2142G/A2143G), levofloxacin (gyrA)",
+      "source": "scattered ENA BioProjects",
+      "urls": [
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4079918/"
+      ],
+      "label_type": "wet-lab MIC (agar dilution/Etest)",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "SMALL/fragmented - studies 20-52 strains each; no compendium",
+      "gates": [
+        "G5(assembly attrition; many PCR/biopsy-only)",
+        "G4(single-center cohorts)"
+      ],
+      "regime_fit": "EXCELLENT catalog (cleanest single-SNP 23S) but N is the blocker",
+      "verdict": "CATALOG-CLEAN, N-BLOCKED - would need to aggregate many small BioProjects"
+    },
+    {
+      "rank": 12,
+      "kingdom": "Virus",
+      "organism": "Monkeypox (MPXV)",
+      "phenotype": "tecovirimat (F13L/VP37)",
+      "source": "CDC 2022-outbreak cohort",
+      "urls": [
+        "https://pubmed.ncbi.nlm.nih.gov/?term=monkeypox+MPXV+tecovirimat+F13L+resistance"
+      ],
+      "label_type": "CPE-assay measured resistance - genuinely isolate-level + independent",
+      "free": "UNCERTAIN(CDC-held linkage)",
+      "isolate_level": true,
+      "est_n": "124 isolates/68 patients; 96 phenotypically-R; 11 known+13 novel F13L",
+      "gates": [
+        "G3/G4(resistance concentrated in immunocompromised multi-course patients)",
+        "data-availability of paired table UNVERIFIED"
+      ],
+      "regime_fit": "emerging F13L catalog",
+      "verdict": "MEDIUM - only isolate-level+measured viral find, but small-N + access-uncertain + G3"
+    },
+    {
+      "rank": 13,
+      "kingdom": "Invertebrate (insect)",
+      "organism": "Anopheles / Aedes / ag pests",
+      "phenotype": "pyrethroid (Vgsc kdr L1014F/S, N1575Y), OP/carbamate (ace-1 G119S), dieldrin (Rdl)",
+      "source": "MalariaGEN Ag1000G (genotype) / VectorBase PopBio (paired) / APRD (case registry)",
+      "urls": [
+        "https://www.malariagen.net/resource/27/",
+        "https://vectorbase.org",
+        "https://www.pesticideresistance.org/"
+      ],
+      "label_type": "WHO tube / CDC bottle bioassay - POPULATION-level %mortality; Ag1000G is genotype-ONLY (specimen destroyed for WGS)",
+      "free": true,
+      "isolate_level": false,
+      "est_n": "Ag1000G thousands (genotype-only); PopBio >21k pheno + >17k geno (cohort-level)",
+      "gates": [
+        "G3(population/sampling-defined bioassay)",
+        "G8(genotype+phenotype joined only at cohort node)",
+        "G4(surveillance-driven)"
+      ],
+      "regime_fit": "catalog strong (kdr/ace-1/Rdl) but NO per-individual genotype<->phenotype",
+      "verdict": "STRUCTURAL G3/G8 - Ag1000G has individuals but no phenotype; PopBio pairs only at cohort resolution (ecological regression, not isolate cell)"
+    },
+    {
+      "rank": 14,
+      "kingdom": "Bacteria",
+      "organism": "Enterococcus faecium/faecalis",
+      "phenotype": "vancomycin (vanA/vanB), linezolid (23S/optrA/cfr)",
+      "source": "NCBI-PD / BV-BRC AST",
+      "urls": [
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11158013/"
+      ],
+      "label_type": "often GENE-DERIVED (van presence = mechanism, near-tautological); measured MIC in AST fields",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "thousands (NCBI-PD)",
+      "gates": [
+        "G1-STRONG(vanco-R approx vanA/vanB presence; catalog IS the label)",
+        "G8(hospital lineages)"
+      ],
+      "regime_fit": "catalog trivially exists; genotype->phenotype is gene-presence identity (low to learn)",
+      "verdict": "LOW novelty for vanco; linezolid (23S + acquired) is the more interesting sub-cell"
+    },
+    {
+      "rank": 15,
+      "kingdom": "Fungi",
+      "organism": "Candida parapsilosis/albicans/tropicalis",
+      "phenotype": "azole (ERG11)",
+      "source": "fragmented small studies",
+      "urls": [
+        "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11620501/"
+      ],
+      "label_type": "wet-lab MIC, fragmented",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "small (e.g. 35R+7S C. parapsilosis)",
+      "gates": [
+        "G5(assembly attrition; many single-isolate announcements)",
+        "ERG11+efflux+CNV multi-factorial"
+      ],
+      "regime_fit": "MODERATE - azole-R multi-factorial (ERG11+CDR/MDR+UPC2/TAC1) dilutes target-site fit",
+      "verdict": "MODERATE - real but scattered; CNV + efflux weaken target-site-only decoder"
+    },
+    {
+      "rank": 16,
+      "kingdom": "Animalia (livestock/companion)",
+      "organism": "cattle/pig/chicken/dog",
+      "phenotype": "Mendelian single-gene (coat-color, MDR1/ABCB1 ivermectin sensitivity)",
+      "source": "OMIA",
+      "urls": [
+        "https://omia.org",
+        "https://vgl.ucdavis.edu/test/multidrug-sensitivity-mdr1"
+      ],
+      "label_type": "observed Mendelian phenotype per-animal + OMIA curation",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "~340 variant-mapped traits; small N per trait",
+      "gates": [
+        "G8(breeds approx clonal lineages; clonality-inflation trap)",
+        "G3(MDR1 freq swings 100x referral-vs-clinical)",
+        "G1-lite(if scoring OMIA class vs observed)"
+      ],
+      "regime_fit": "strong single-gene catalog + observed phenotype",
+      "verdict": "REAL catalog+label but G8 breed-clonality; use OBSERVED trait not OMIA class; small N"
+    },
+    {
+      "rank": 96,
+      "kingdom": "Animalia (human)",
+      "organism": "human",
+      "phenotype": "pharmacogenomics (CYP2D6/2C19 metabolizer) / ClinVar pathogenicity",
+      "source": "REJECTED - PharmGKB/CPIC catalog-circular; ClinVar G1-severe",
+      "urls": [
+        "https://cpicpgx.org",
+        "https://www.ncbi.nlm.nih.gov/clinvar"
+      ],
+      "label_type": "CPIC diplotype->phenotype IS the catalog (G1); measured metabolizer phenotype is G5 access-gated (dbGaP/biobank); ClinVar embeds undisclosed computational evidence",
+      "free": "catalog-yes/label-no",
+      "isolate_level": true,
+      "est_n": "CYP2D6 163 star alleles; ClinVar millions",
+      "gates": [
+        "G1-circular(CPIC)/G1-severe(ClinVar)",
+        "G5(independent metabolizer label access-gated)"
+      ],
+      "regime_fit": "richest catalog but label-blocked",
+      "verdict": "REJECT for free label - catalog decoder-ready but independent label is access-gated (acquisition path, not plug-in)"
+    },
+    {
+      "rank": 97,
+      "kingdom": "Virus",
+      "organism": "HCV / HBV",
+      "phenotype": "DAA (NS3/NS5A/NS5B RAS) / NA (RT rtM204V)",
+      "source": "REJECTED - geno2pheno/HCV-GLUE/HBVdb are G1 rules engines",
+      "urls": [
+        "https://hcv.geno2pheno.org",
+        "https://hbv.geno2pheno.org"
+      ],
+      "label_type": "algorithm-derived interpretation (G1 circular); independent replicon EC50 scattered in DAA-development supplements, no free compiled set",
+      "free": true,
+      "isolate_level": false,
+      "est_n": "no free compiled isolate-level genotype-phenotype set",
+      "gates": [
+        "G1-SEVERE(public DBs are the catalog own interpretation)",
+        "G7(independent fold-change scattered)"
+      ],
+      "regime_fit": "catalog exists but free label is algorithm-derived",
+      "verdict": "LOW on the KEY criterion - no free independent phenotype set (unlike HIV PhenoSense)"
+    },
+    {
+      "rank": 98,
+      "kingdom": "Protozoa",
+      "organism": "P. vivax / Leishmania / Trichomonas / Trypanosoma",
+      "phenotype": "various",
+      "source": "REJECTED",
+      "urls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10812985/",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC5522705/"
+      ],
+      "label_type": "mixed",
+      "free": true,
+      "isolate_level": true,
+      "est_n": "varies (Trichomonas N=95 paired MLC verified)",
+      "gates": [
+        "P.vivax: no reliable genotype->CQ correlation (G1/G3)",
+        "Leishmania: aneuploidy/CNV no catalog + treatment-failure != resistance",
+        "Trichomonas: honest label but NO curated catalog + G5 repetitive genome"
+      ],
+      "regime_fit": "NONE/POOR - regime mismatch or label confound",
+      "verdict": "REJECT - no curated catalog or label-phenotype decoupling"
+    },
+    {
+      "rank": 99,
+      "kingdom": "Archaea",
+      "organism": "(domain-wide)",
+      "phenotype": "any",
+      "source": "TRUTHFUL NEGATIVE",
+      "urls": [
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC10723403/",
+        "https://www.sciencedirect.com/science/article/pii/S1198743X14610600"
+      ],
+      "label_type": "none at usable scale - existing archaeal data is gene-knockout/transposon fitness (wrong regime) or taxon-descriptive traits (G3/G7 confounded)",
+      "free": true,
+      "isolate_level": false,
+      "est_n": "~0 archaeal DMS in ProteinGym/MaveDB (inferred, needs CSV check)",
+      "gates": [
+        "G3(trait approx niche/taxon)",
+        "G7(OGT-from-genome = predicting phylogeny)",
+        "no-catalog",
+        "no-AST-breakpoints"
+      ],
+      "regime_fit": "NONE - no archaeal analog of WHO-TB/CARD/HIVDB catalog",
+      "verdict": "CLOSED NEGATIVE - only regime-compatible path is ACQUIRING a single archaeal extremophile-protein DMS"
+    }
+  ]
+}
