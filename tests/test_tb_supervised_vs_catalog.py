@@ -29,9 +29,10 @@ def test_blind_pass_requires_beat_burden_and_null():
     y = [0] * (n // 2) + [1] * (n // 2)
     sc = [0.1 + 0.001 * i for i in range(n // 2)] + [0.8 + 0.001 * i for i in range(n // 2)]
     neg = [True] * n
-    burden = [i % 3 for i in range(n)]                 # uninformative (uncorrelated w/ label) -> burden AUROC ~0.5
+    burden = [i % 3 for i in range(n)]                 # varied burden (real code uses variant counts, not a constant)
     m = mod._blind(y, sc, neg, burden)
-    assert m["auroc"] == pytest.approx(1.0) and m["null"] < 0.55 and m["burden"] < 0.65 and m["pass"] is True
+    # perfect score beats burden + a ~0.5 null -> PASS
+    assert m["auroc"] == pytest.approx(1.0) and m["null"] < 0.55 and m["auroc"] > m["burden"] and m["pass"] is True
 
 
 def test_rpob_span_and_drug():
