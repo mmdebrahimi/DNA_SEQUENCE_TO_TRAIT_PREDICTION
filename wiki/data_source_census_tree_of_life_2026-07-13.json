@@ -472,18 +472,16 @@
         "https://pmc.ncbi.nlm.nih.gov/articles/PMC10723403/",
         "https://www.sciencedirect.com/science/article/pii/S1198743X14610600"
       ],
-      "label_type": "none at usable scale - existing archaeal data is gene-knockout/transposon fitness (wrong regime) or taxon-descriptive traits (G3/G7 confounded)",
+      "label_type": "AMR/isolate label: none at usable scale (gene-knockout/transposon fitness = wrong regime; taxon-descriptive traits = G3/G7 confounded). DMS: VERIFIED 2 archaeal DMS already in ProteinGym.",
       "free": true,
       "isolate_level": false,
-      "est_n": "~0 archaeal DMS in ProteinGym/MaveDB (inferred, needs CSV check)",
+      "est_n": "VERIFIED 2026-07-13 against vendored ProteinGym v1.3 CSV: exactly 2 archaeal DMS assays, both Saccharolobus (Sulfolobus) solfataricus (SACS2) -> DN7A_SACS2_Tsuboyama_2023 (Sso7d stability, ESM2-650M rho 0.337) + TRPC_SACS2_Chan_2017 (indole-3-glycerol-P synthase, rho 0.653). Thermotoga/Thermus/Aquifex look-alikes correctly excluded as bacteria.",
       "gates": [
-        "G3(trait approx niche/taxon)",
-        "G7(OGT-from-genome = predicting phylogeny)",
-        "no-catalog",
-        "no-AST-breakpoints"
+        "AMR side: G3(trait approx niche/taxon), G7(OGT-from-genome = predicting phylogeny), no-catalog, no-AST-breakpoints",
+        "DMS side: G1-CLEAN (2 assays exist) but molecular-property regime + tiny N"
       ],
-      "regime_fit": "NONE - no archaeal analog of WHO-TB/CARD/HIVDB catalog",
-      "verdict": "CLOSED NEGATIVE - only regime-compatible path is ACQUIRING a single archaeal extremophile-protein DMS"
+      "regime_fit": "AMR: NONE (no archaeal WHO-TB/CARD/HIVDB analog). DMS: regime-compatible substrate ALREADY EXISTS in-repo (2 SACS2 assays), just tiny.",
+      "verdict": "AMR/isolate = CLOSED NEGATIVE. DMS = NOT a total void (2 archaeal SACS2 assays already in ProteinGym); molecular-property path is present but N tiny -> low-priority DMS extension, NOT an acquisition-only gap."
     }
   ]
 }
