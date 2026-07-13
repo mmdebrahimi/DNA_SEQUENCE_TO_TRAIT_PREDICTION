@@ -1,0 +1,58 @@
+{
+  "artifact": "hiv_supervised_deployability",
+  "schema": "hiv-supervised-deployability-v1",
+  "date": "2026-07-12",
+  "drug": "EFV",
+  "cutoff_fold": 3.0,
+  "seed": 0,
+  "in_distribution_prior": {
+    "blind_spot_auroc": 0.889,
+    "note": "plain 5-fold CV, no patient grouping"
+  },
+  "cohort": {
+    "n": 4222,
+    "R": 2258,
+    "patients": 3138,
+    "studies": 84,
+    "non_B": 291,
+    "catalog_negative_n": 1883
+  },
+  "results": {
+    "A_patient_grouped": {
+      "overall_auroc": 0.9565,
+      "blind_spot": {
+        "n": 1883,
+        "R": 201,
+        "auroc": 0.8243,
+        "burden": 0.3986,
+        "null": 0.5024,
+        "pass": true
+      }
+    },
+    "B_leave_study_out": {
+      "overall_auroc": 0.9545,
+      "blind_spot": {
+        "n": 1883,
+        "R": 201,
+        "auroc": 0.8102,
+        "burden": 0.3986,
+        "null": 0.5042,
+        "pass": true
+      }
+    },
+    "C_cross_subtype_trainB_testNonB": {
+      "n_test_nonB": 291,
+      "overall_auroc": 0.8771,
+      "blind_spot": {
+        "n": 146,
+        "R": 30,
+        "auroc": 0.6978,
+        "burden": 0.4589,
+        "null": 0.4977,
+        "pass": true
+      }
+    }
+  },
+  "verdict": "DEPLOYABLE_HOLDS_OOD",
+  "honest_note": "Compares the 0.889 in-distribution blind-spot AUROC against (A) patient-grouped de-leaking, (B) leave-one-study-out OOD (the deployment test), (C) cross-subtype. The blind-spot subsets in (C) are small (non-B=~291 total) -> often single-class/underpowered, reported as such. The load-bearing numbers are (A) [is 0.889 patient-leakage?] and (B) [does it survive predicting a new study?]."
+}
