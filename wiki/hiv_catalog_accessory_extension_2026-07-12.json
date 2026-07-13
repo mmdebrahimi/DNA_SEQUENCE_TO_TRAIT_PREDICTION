@@ -1,0 +1,315 @@
+{
+  "artifact": "hiv_catalog_accessory_extension",
+  "schema": "hiv-accessory-ext-v1",
+  "date": "2026-07-12",
+  "cutoff": 3.0,
+  "accessory_set": [
+    "A98G",
+    "E138K",
+    "E138Q",
+    "E138R",
+    "F227C",
+    "F227L",
+    "G190C",
+    "H221C",
+    "H221Y",
+    "K101E",
+    "K101H",
+    "K101Q",
+    "K103H",
+    "K103S",
+    "K238N",
+    "K238T",
+    "L234I",
+    "M230I",
+    "P225H",
+    "V106I",
+    "V108I",
+    "V179D",
+    "V179E",
+    "Y181V",
+    "Y318F"
+  ],
+  "n_accessory": 25,
+  "candidates": [
+    {
+      "token": "K103S",
+      "pos": 103,
+      "aa": "S",
+      "coef": 2.731,
+      "carriers": 82
+    },
+    {
+      "token": "V179D",
+      "pos": 179,
+      "aa": "D",
+      "coef": 2.259,
+      "carriers": 82
+    },
+    {
+      "token": "K101H",
+      "pos": 101,
+      "aa": "H",
+      "coef": 2.135,
+      "carriers": 73
+    },
+    {
+      "token": "K101E",
+      "pos": 101,
+      "aa": "E",
+      "coef": 1.909,
+      "carriers": 254
+    },
+    {
+      "token": "M230I",
+      "pos": 230,
+      "aa": "I",
+      "coef": 1.864,
+      "carriers": 11
+    },
+    {
+      "token": "G190C",
+      "pos": 190,
+      "aa": "C",
+      "coef": 1.76,
+      "carriers": 7
+    },
+    {
+      "token": "V179E",
+      "pos": 179,
+      "aa": "E",
+      "coef": 1.603,
+      "carriers": 44
+    },
+    {
+      "token": "A98G",
+      "pos": 98,
+      "aa": "G",
+      "coef": 1.519,
+      "carriers": 266
+    },
+    {
+      "token": "F227L",
+      "pos": 227,
+      "aa": "L",
+      "coef": 1.458,
+      "carriers": 76
+    },
+    {
+      "token": "K101Q",
+      "pos": 101,
+      "aa": "Q",
+      "coef": 1.355,
+      "carriers": 169
+    },
+    {
+      "token": "F227C",
+      "pos": 227,
+      "aa": "C",
+      "coef": 1.346,
+      "carriers": 37
+    },
+    {
+      "token": "L234I",
+      "pos": 234,
+      "aa": "I",
+      "coef": 1.306,
+      "carriers": 21
+    },
+    {
+      "token": "K103H",
+      "pos": 103,
+      "aa": "H",
+      "coef": 1.275,
+      "carriers": 6
+    },
+    {
+      "token": "E138Q",
+      "pos": 138,
+      "aa": "Q",
+      "coef": 1.169,
+      "carriers": 39
+    },
+    {
+      "token": "K238T",
+      "pos": 238,
+      "aa": "T",
+      "coef": 1.024,
+      "carriers": 66
+    },
+    {
+      "token": "Y318F",
+      "pos": 318,
+      "aa": "F",
+      "coef": 0.95,
+      "carriers": 37
+    },
+    {
+      "token": "H221Y",
+      "pos": 221,
+      "aa": "Y",
+      "coef": 0.949,
+      "carriers": 258
+    },
+    {
+      "token": "V106I",
+      "pos": 106,
+      "aa": "I",
+      "coef": 0.898,
+      "carriers": 165
+    },
+    {
+      "token": "V108I",
+      "pos": 108,
+      "aa": "I",
+      "coef": 0.83,
+      "carriers": 345
+    },
+    {
+      "token": "H221C",
+      "pos": 221,
+      "aa": "C",
+      "coef": 0.659,
+      "carriers": 11
+    },
+    {
+      "token": "K238N",
+      "pos": 238,
+      "aa": "N",
+      "coef": 0.651,
+      "carriers": 13
+    },
+    {
+      "token": "E138R",
+      "pos": 138,
+      "aa": "R",
+      "coef": 0.626,
+      "carriers": 6
+    },
+    {
+      "token": "P225H",
+      "pos": 225,
+      "aa": "H",
+      "coef": 0.58,
+      "carriers": 85
+    },
+    {
+      "token": "E138K",
+      "pos": 138,
+      "aa": "K",
+      "coef": 0.539,
+      "carriers": 132
+    },
+    {
+      "token": "Y181V",
+      "pos": 181,
+      "aa": "V",
+      "coef": 0.526,
+      "carriers": 23
+    }
+  ],
+  "per_drug": {
+    "EFV": {
+      "powered": true,
+      "n": 4222,
+      "catalog": {
+        "sens": 0.911,
+        "spec": 0.8564,
+        "bal_acc": 0.8837,
+        "n": 4222
+      },
+      "catalog_plus_accessory": {
+        "sens": 0.9446,
+        "spec": 0.8004,
+        "bal_acc": 0.8725,
+        "n": 4222
+      },
+      "delta_bal_acc": -0.0112
+    },
+    "NVP": {
+      "powered": true,
+      "n": 4170,
+      "catalog": {
+        "sens": 0.8597,
+        "spec": 0.9639,
+        "bal_acc": 0.9118,
+        "n": 4170
+      },
+      "catalog_plus_accessory": {
+        "sens": 0.8964,
+        "spec": 0.9242,
+        "bal_acc": 0.9103,
+        "n": 4170
+      },
+      "delta_bal_acc": -0.0015
+    },
+    "ETR": {
+      "powered": true,
+      "n": 2002,
+      "catalog": {
+        "sens": 0.8403,
+        "spec": 0.5289,
+        "bal_acc": 0.6846,
+        "n": 2002
+      },
+      "catalog_plus_accessory": {
+        "sens": 0.8931,
+        "spec": 0.4759,
+        "bal_acc": 0.6845,
+        "n": 2002
+      },
+      "delta_bal_acc": -0.0001
+    },
+    "RPV": {
+      "powered": true,
+      "n": 829,
+      "catalog": {
+        "sens": 0.7289,
+        "spec": 0.5813,
+        "bal_acc": 0.6551,
+        "n": 829
+      },
+      "catalog_plus_accessory": {
+        "sens": 0.8237,
+        "spec": 0.4855,
+        "bal_acc": 0.6546,
+        "n": 829
+      },
+      "delta_bal_acc": -0.0005
+    },
+    "DOR": {
+      "powered": true,
+      "n": 322,
+      "catalog": {
+        "sens": 0.7512,
+        "spec": 0.4095,
+        "bal_acc": 0.5803,
+        "n": 322
+      },
+      "catalog_plus_accessory": {
+        "sens": 0.8525,
+        "spec": 0.2571,
+        "bal_acc": 0.5548,
+        "n": 322
+      },
+      "delta_bal_acc": -0.0255
+    }
+  },
+  "pooled": {
+    "catalog": {
+      "sens": 0.8644,
+      "spec": 0.7828,
+      "bal_acc": 0.8236,
+      "n": 11545
+    },
+    "catalog_plus_accessory": {
+      "sens": 0.9078,
+      "spec": 0.7274,
+      "bal_acc": 0.8176,
+      "n": 11545
+    },
+    "delta_bal_acc": -0.006
+  },
+  "improves": false,
+  "honest_note": "Accessory set derived from the supervised model (coef>=0.5 at known NNRTI positions, >=5 carriers, catalog-negative), VALIDATED on leave-study-out. It is an ADDITIVE extension \u2014 the validated NNRTI_RT_MAJOR_DRMS is unchanged. Adds SENSITIVITY (catches blind-spot resistants) at a small specificity cost; the trade-off is reported per drug + pooled."
+}
