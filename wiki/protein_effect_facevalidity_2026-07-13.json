@@ -1,0 +1,31 @@
+{
+  "artifact": "protein_effect_facevalidity",
+  "schema": "protein-effect-facevalidity-v1",
+  "date": "2026-07-13",
+  "question": "Does the rung-2 predictor's ESM2-650M damage rank agree with real E. coli DMS effects (zero-shot FACE-VALIDITY, not prospective validation)?",
+  "primary_anchor": "ARGR_ECOLI_Tsuboyama_2023_1AOY",
+  "primary_spearman": 0.4965,
+  "honest_framing": "ZERO-SHOT benchmark face-validity: WT + homologs likely in ESM pretraining; DMS effect labels are NOT, so the Spearman is a fair effect-RANKING test on a known family, but not prospective performance on a novel protein. Stability (ARGR) is the clean rung-2 anchor; BLAT is a flagged fitness/selection caveat, NOT support for general molecular-function scoring.",
+  "results": [
+    {
+      "assay": "ARGR_ECOLI_Tsuboyama_2023_1AOY",
+      "available": true,
+      "category": "Stability",
+      "flagged_caveat": false,
+      "n_mutations": 1287,
+      "seq_len": 69,
+      "spearman_neg_damage_vs_dms": 0.4965,
+      "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
+    },
+    {
+      "assay": "BLAT_ECOLX_Deng_2012",
+      "available": true,
+      "category": "OrganismalFitness",
+      "flagged_caveat": true,
+      "n_mutations": 4996,
+      "seq_len": 286,
+      "spearman_neg_damage_vs_dms": 0.5281,
+      "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
+    }
+  ]
+}
