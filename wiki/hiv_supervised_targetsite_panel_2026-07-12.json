@@ -1,0 +1,425 @@
+{
+  "artifact": "hiv_supervised_targetsite_panel",
+  "schema": "hiv-supervised-targetsite-panel-v1",
+  "date": "2026-07-12",
+  "question": "Does the supervised blind-spot rescue extend from RT to the PI (protease) + INSTI (integrase) genes (deployment split = leave-one-study-out)?",
+  "cutoff": 3.0,
+  "pass_bar": "leave-study-out blind-spot >= 0.65 AND > burden AND null < 0.55",
+  "n_drugs": 13,
+  "n_powered": 13,
+  "n_testable": 12,
+  "n_pass_deployment_split": 7,
+  "verdict": "GENERALIZES_TO_TARGETSITE_GENES",
+  "honest_caveats": [
+    "PI + INSTI catalogs are POSITION-based -> blind spot = no major-position mutation (like NRTI). Cutoff = illustrative fold>=3 (no per-drug clinical PI/INSTI cutoff in-repo); headline is the supervised-vs-catalog+null DELTA.",
+    "2nd-gen INSTIs (DTG/BIC/CAB) have few resistant isolates -> often under-powered, reported honestly.",
+    "Supervised needs the free label to train; in-distribution to the Stanford knowledge base; leave-study-out is the deployment-relevant generalization test."
+  ],
+  "per_drug": [
+    {
+      "drug": "FPV",
+      "powered": true,
+      "n": 3948,
+      "R": 1903,
+      "catalog_negative_n": 1054,
+      "catalog_negative_R": 3,
+      "patient_grouped": {
+        "overall_auroc": 0.9684,
+        "blind_spot": {
+          "n": 1054,
+          "R": 3,
+          "auroc": 0.8484,
+          "burden": 0.6224,
+          "null": 0.5123,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9645,
+        "blind_spot": {
+          "n": 1054,
+          "R": 3,
+          "auroc": 0.8303,
+          "burden": 0.6224,
+          "null": 0.5109,
+          "pass": true
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "ATV",
+      "powered": true,
+      "n": 2851,
+      "R": 1741,
+      "catalog_negative_n": 720,
+      "catalog_negative_R": 2,
+      "patient_grouped": {
+        "overall_auroc": 0.9768,
+        "blind_spot": {
+          "n": 720,
+          "R": 2,
+          "auroc": 0.9401,
+          "burden": 0.5982,
+          "null": 0.5092,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9732,
+        "blind_spot": {
+          "n": 720,
+          "R": 2,
+          "auroc": 0.977,
+          "burden": 0.5982,
+          "null": 0.4802,
+          "pass": true
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "IDV",
+      "powered": true,
+      "n": 4093,
+      "R": 2299,
+      "catalog_negative_n": 1136,
+      "catalog_negative_R": 11,
+      "patient_grouped": {
+        "overall_auroc": 0.9784,
+        "blind_spot": {
+          "n": 1136,
+          "R": 11,
+          "auroc": 0.7788,
+          "burden": 0.6636,
+          "null": 0.49,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9782,
+        "blind_spot": {
+          "n": 1136,
+          "R": 11,
+          "auroc": 0.7502,
+          "burden": 0.6636,
+          "null": 0.5031,
+          "pass": true
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "LPV",
+      "powered": true,
+      "n": 3532,
+      "R": 2078,
+      "catalog_negative_n": 910,
+      "catalog_negative_R": 3,
+      "patient_grouped": {
+        "overall_auroc": 0.9851,
+        "blind_spot": {
+          "n": 910,
+          "R": 3,
+          "auroc": 0.9129,
+          "burden": 0.6349,
+          "null": 0.4873,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9843,
+        "blind_spot": {
+          "n": 910,
+          "R": 3,
+          "auroc": 0.8931,
+          "burden": 0.6349,
+          "null": 0.4964,
+          "pass": true
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "NFV",
+      "powered": true,
+      "n": 4165,
+      "R": 2659,
+      "catalog_negative_n": 1150,
+      "catalog_negative_R": 36,
+      "patient_grouped": {
+        "overall_auroc": 0.9779,
+        "blind_spot": {
+          "n": 1150,
+          "R": 36,
+          "auroc": 0.8019,
+          "burden": 0.6166,
+          "null": 0.5032,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9768,
+        "blind_spot": {
+          "n": 1150,
+          "R": 36,
+          "auroc": 0.7509,
+          "burden": 0.6166,
+          "null": 0.5021,
+          "pass": true
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "SQV",
+      "powered": true,
+      "n": 4153,
+      "R": 1932,
+      "catalog_negative_n": 1130,
+      "catalog_negative_R": 3,
+      "patient_grouped": {
+        "overall_auroc": 0.9708,
+        "blind_spot": {
+          "n": 1130,
+          "R": 3,
+          "auroc": 0.4794,
+          "burden": 0.3688,
+          "null": 0.5386,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9675,
+        "blind_spot": {
+          "n": 1130,
+          "R": 3,
+          "auroc": 0.6279,
+          "burden": 0.3688,
+          "null": 0.5379,
+          "pass": false
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "TPV",
+      "powered": true,
+      "n": 2459,
+      "R": 733,
+      "catalog_negative_n": 607,
+      "catalog_negative_R": 2,
+      "patient_grouped": {
+        "overall_auroc": 0.9296,
+        "blind_spot": {
+          "n": 607,
+          "R": 2,
+          "auroc": 0.1711,
+          "burden": 0.7376,
+          "null": 0.4715,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9203,
+        "blind_spot": {
+          "n": 607,
+          "R": 2,
+          "auroc": 0.0215,
+          "burden": 0.7376,
+          "null": 0.4773,
+          "pass": false
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "DRV",
+      "powered": true,
+      "n": 1661,
+      "R": 550,
+      "catalog_negative_n": 586,
+      "catalog_negative_R": 0,
+      "patient_grouped": {
+        "overall_auroc": 0.9671,
+        "blind_spot": {
+          "n": 586,
+          "R": 0,
+          "auroc": null,
+          "burden": null,
+          "null": null,
+          "pass": false,
+          "note": "degenerate (single-class blind-spot test set)"
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9638,
+        "blind_spot": {
+          "n": 586,
+          "R": 0,
+          "auroc": null,
+          "burden": null,
+          "null": null,
+          "pass": false,
+          "note": "degenerate (single-class blind-spot test set)"
+        }
+      },
+      "class": "PI"
+    },
+    {
+      "drug": "RAL",
+      "powered": true,
+      "n": 1690,
+      "R": 712,
+      "catalog_negative_n": 844,
+      "catalog_negative_R": 59,
+      "patient_grouped": {
+        "overall_auroc": 0.9608,
+        "blind_spot": {
+          "n": 844,
+          "R": 59,
+          "auroc": 0.8891,
+          "burden": 0.2623,
+          "null": 0.4945,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9668,
+        "blind_spot": {
+          "n": 844,
+          "R": 59,
+          "auroc": 0.8923,
+          "burden": 0.2623,
+          "null": 0.4958,
+          "pass": true
+        }
+      },
+      "class": "INSTI"
+    },
+    {
+      "drug": "EVG",
+      "powered": true,
+      "n": 1639,
+      "R": 814,
+      "catalog_negative_n": 831,
+      "catalog_negative_R": 112,
+      "patient_grouped": {
+        "overall_auroc": 0.9472,
+        "blind_spot": {
+          "n": 831,
+          "R": 112,
+          "auroc": 0.8699,
+          "burden": 0.2522,
+          "null": 0.4983,
+          "pass": true
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.9632,
+        "blind_spot": {
+          "n": 831,
+          "R": 112,
+          "auroc": 0.8995,
+          "burden": 0.2522,
+          "null": 0.4979,
+          "pass": true
+        }
+      },
+      "class": "INSTI"
+    },
+    {
+      "drug": "DTG",
+      "powered": true,
+      "n": 968,
+      "R": 231,
+      "catalog_negative_n": 329,
+      "catalog_negative_R": 9,
+      "patient_grouped": {
+        "overall_auroc": 0.8783,
+        "blind_spot": {
+          "n": 329,
+          "R": 9,
+          "auroc": 0.501,
+          "burden": 0.4977,
+          "null": 0.4992,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8769,
+        "blind_spot": {
+          "n": 329,
+          "R": 9,
+          "auroc": 0.3616,
+          "burden": 0.4977,
+          "null": 0.5056,
+          "pass": false
+        }
+      },
+      "class": "INSTI"
+    },
+    {
+      "drug": "BIC",
+      "powered": true,
+      "n": 639,
+      "R": 127,
+      "catalog_negative_n": 201,
+      "catalog_negative_R": 2,
+      "patient_grouped": {
+        "overall_auroc": 0.861,
+        "blind_spot": {
+          "n": 201,
+          "R": 2,
+          "auroc": 0.3543,
+          "burden": 0.5829,
+          "null": 0.5226,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8483,
+        "blind_spot": {
+          "n": 201,
+          "R": 2,
+          "auroc": 0.0402,
+          "burden": 0.5829,
+          "null": 0.5245,
+          "pass": false
+        }
+      },
+      "class": "INSTI"
+    },
+    {
+      "drug": "CAB",
+      "powered": true,
+      "n": 492,
+      "R": 203,
+      "catalog_negative_n": 121,
+      "catalog_negative_R": 5,
+      "patient_grouped": {
+        "overall_auroc": 0.8926,
+        "blind_spot": {
+          "n": 121,
+          "R": 5,
+          "auroc": 0.5905,
+          "burden": 0.5664,
+          "null": 0.4828,
+          "pass": false
+        }
+      },
+      "leave_study_out": {
+        "overall_auroc": 0.8778,
+        "blind_spot": {
+          "n": 121,
+          "R": 5,
+          "auroc": 0.45,
+          "burden": 0.5664,
+          "null": 0.4948,
+          "pass": false
+        }
+      },
+      "class": "INSTI"
+    }
+  ]
+}
