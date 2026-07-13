@@ -1,0 +1,177 @@
+{
+  "artifact": "hiv_supervised_vs_catalog",
+  "schema": "hiv-supervised-vs-catalog-v1",
+  "date": "2026-07-12",
+  "drug": "EFV",
+  "cutoff_fold": 3.0,
+  "seed": 0,
+  "question": "Does a SUPERVISED full-sequence one-hot model (its strongest cheap form) beat the curated catalog on the catalog's blind spot, where zero-shot ESM failed (0.449)?",
+  "cohort_n": 2168,
+  "cohort_R": 998,
+  "n_features": 709,
+  "best_C": 1.0,
+  "sanity_full_cohort": {
+    "supervised_auroc": 0.9821,
+    "catalog_auroc": 0.9256,
+    "sanity_pass": true
+  },
+  "blind_spot": {
+    "n": 1111,
+    "R": 53,
+    "supervised_auroc": 0.889,
+    "burden_auroc": 0.4514,
+    "shuffled_null": 0.5008,
+    "esm_zero_shot_prior": 0.449,
+    "pass": true
+  },
+  "verdict": "SUPERVISED_RESCUES_BLINDSPOT",
+  "top_learned_features": [
+    {
+      "pos": 103,
+      "aa": "N",
+      "coef": 6.349,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 188,
+      "aa": "L",
+      "coef": 5.339,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 190,
+      "aa": "A",
+      "coef": 3.522,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 190,
+      "aa": "S",
+      "coef": 3.506,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 190,
+      "aa": "E",
+      "coef": 2.681,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 103,
+      "aa": "S",
+      "coef": 2.616,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 100,
+      "aa": "I",
+      "coef": 2.603,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 179,
+      "aa": "D",
+      "coef": 2.476,
+      "at_major_position": false,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 190,
+      "aa": "Q",
+      "coef": 2.433,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 101,
+      "aa": "P",
+      "coef": 2.368,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 106,
+      "aa": "M",
+      "coef": 2.298,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 230,
+      "aa": "L",
+      "coef": 2.276,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 106,
+      "aa": "A",
+      "coef": 2.078,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 98,
+      "aa": "G",
+      "coef": 1.874,
+      "at_major_position": false,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 227,
+      "aa": "L",
+      "coef": 1.73,
+      "at_major_position": false,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 101,
+      "aa": "H",
+      "coef": 1.667,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 101,
+      "aa": "E",
+      "coef": 1.628,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 181,
+      "aa": "C",
+      "coef": 1.487,
+      "at_major_position": true,
+      "known_resistance_position": true
+    },
+    {
+      "pos": 245,
+      "aa": "T",
+      "coef": 1.4,
+      "at_major_position": false,
+      "known_resistance_position": false
+    },
+    {
+      "pos": 188,
+      "aa": "H",
+      "coef": 1.365,
+      "at_major_position": true,
+      "known_resistance_position": true
+    }
+  ],
+  "n_top20_at_known_resistance_positions": 19,
+  "honest_note": "Supervised full-sequence one-hot is the strongest CHEAP learned model (it can learn any position, not just catalog DRMs) and is trained leakage-safe (out-of-fold). The blind-spot rescue is REAL resistance biology \u2014 the top learned features sit at known NNRTI positions (K103N/Y188L/G190x/V106x/Y181C/L100I) including validated ACCESSORY mutations (V179D/A98G/F227L). CAVEAT: part of the 'beyond the catalog' signal is the model catching NON-CATALOGUED VARIANTS at known positions (e.g. K103S, G190E/Q \u2014 a catalog mutant-SPECIFICITY gap) plus genuine accessory positions; so it is 'beyond the specific curated major-DRM mutant list', partly a catalog-completeness issue at known positions. STILL a win: supervised learning on the free Stanford label extracts resistance signal the DEPLOYED catalog misses (0.889 where ESM zero-shot got 0.449 + the catalog scores 0 by construction).",
+  "important_caveats": [
+    "IN-DISTRIBUTION: 5-fold CV on ONE dataset (~96% subtype B), ONE drug (EFV). The deployable test is a TEMPORAL / cross-subtype held-out split (out-of-distribution) \u2014 not yet run.",
+    "SUPERVISED needs the labels to train (the catalog is zero-shot). The free Stanford fold-change label makes this cheap, but it is a different contract from the label-free catalog.",
+    "Beats the mutation-burden baseline decisively (0.451) -> NOT a treatment-experience/burden artifact; it is specific resistance residues."
+  ]
+}
