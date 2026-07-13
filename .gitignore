@@ -96,3 +96,4 @@ bash.exe.stackdump
 data/clinvar/*.tsv
 data/processed/ecoli_mash_clades.json
 data/processed/protein_effect_cache/
+data/processed/gene_lookup_cache/
