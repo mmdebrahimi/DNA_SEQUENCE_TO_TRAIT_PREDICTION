@@ -33,9 +33,15 @@ from dna_decode.protein_effect import predictor as P  # noqa: E402
 
 DMS_DIR = Path("D:/dna_decode_cache/proteingym/pg_dms/DMS_ProteinGym_substitutions")
 CACHE_DIR = REPO / "data" / "processed" / "protein_effect_cache"
-# (assay file stem, category, is-flagged-caveat)
+# (assay file stem, category, is-flagged-caveat). The clean rung-2 anchor = a MINI-PANEL of E. coli STABILITY
+# domains (Tsuboyama 2023 mega-scale stability set — small, fast, molecular-function). BLAT is a SEPARATE
+# flagged fitness/selection caveat example (antibiotic pressure — not molecular-function evidence).
 ASSAYS = [
     ("ARGR_ECOLI_Tsuboyama_2023_1AOY", "Stability", False),
+    ("FECA_ECOLI_Tsuboyama_2023_2D1U", "Stability", False),
+    ("NUSA_ECOLI_Tsuboyama_2023_1WCL", "Stability", False),
+    ("RFAH_ECOLI_Tsuboyama_2023_2LCL", "Stability", False),
+    ("YAIA_ECOLI_Tsuboyama_2023_2KVT", "Stability", False),
     ("BLAT_ECOLX_Deng_2012", "OrganismalFitness", True),
 ]
 
@@ -105,14 +111,21 @@ def main(argv=None):
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args(argv)
     results = [run_assay(*x) for x in ASSAYS]
-    primary = next((r for r in results if r.get("available") and not r.get("flagged_caveat")), None)
+    stability = [r for r in results if r.get("available") and not r.get("flagged_caveat")
+                 and r.get("spearman_neg_damage_vs_dms") is not None]
+    stab_vals = sorted(r["spearman_neg_damage_vs_dms"] for r in stability)
+    median_stability = (stab_vals[len(stab_vals) // 2] if len(stab_vals) % 2
+                        else round((stab_vals[len(stab_vals) // 2 - 1] + stab_vals[len(stab_vals) // 2]) / 2, 4)) \
+        if stab_vals else None
     res = {
         "artifact": "protein_effect_facevalidity", "schema": "protein-effect-facevalidity-v1",
         "date": str(_date.today()),
         "question": "Does the rung-2 predictor's ESM2-650M damage rank agree with real E. coli DMS effects "
                     "(zero-shot FACE-VALIDITY, not prospective validation)?",
-        "primary_anchor": primary["assay"] if primary else None,
-        "primary_spearman": primary.get("spearman_neg_damage_vs_dms") if primary else None,
+        "n_stability_assays": len(stability),
+        "median_stability_spearman": median_stability,
+        "stability_spearman_range": [stab_vals[0], stab_vals[-1]] if stab_vals else None,
+        "esm2_650m_proteingym_stability_benchmark": 0.523,
         "honest_framing": ("ZERO-SHOT benchmark face-validity: WT + homologs likely in ESM pretraining; DMS "
                            "effect labels are NOT, so the Spearman is a fair effect-RANKING test on a known "
                            "family, but not prospective performance on a novel protein. Stability (ARGR) is "
@@ -129,8 +142,9 @@ def main(argv=None):
         flag = "  [FLAGGED caveat: fitness/selection, not molecular-function evidence]" if r["flagged_caveat"] else ""
         print(f"  {r['assay']} ({r['category']}, n={r['n_mutations']}): spearman={r['spearman_neg_damage_vs_dms']}"
               f"{flag}")
-    print(f"\nPRIMARY (stability) anchor: {res['primary_anchor']} spearman={res['primary_spearman']} "
-          f"(vs ProteinGym ESM2-650M ~0.52 stability)")
+    print(f"\nMINI-PANEL median over {res['n_stability_assays']} E. coli STABILITY assays: "
+          f"spearman={res['median_stability_spearman']} (range {res['stability_spearman_range']}) "
+          f"vs ProteinGym ESM2-650M stability benchmark 0.523")
     print(f"[wrote {out}]")
     return 0
 

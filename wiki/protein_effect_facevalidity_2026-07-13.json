@@ -3,8 +3,13 @@
   "schema": "protein-effect-facevalidity-v1",
   "date": "2026-07-13",
   "question": "Does the rung-2 predictor's ESM2-650M damage rank agree with real E. coli DMS effects (zero-shot FACE-VALIDITY, not prospective validation)?",
-  "primary_anchor": "ARGR_ECOLI_Tsuboyama_2023_1AOY",
-  "primary_spearman": 0.4965,
+  "n_stability_assays": 5,
+  "median_stability_spearman": 0.4819,
+  "stability_spearman_range": [
+    0.3472,
+    0.5348
+  ],
+  "esm2_650m_proteingym_stability_benchmark": 0.523,
   "honest_framing": "ZERO-SHOT benchmark face-validity: WT + homologs likely in ESM pretraining; DMS effect labels are NOT, so the Spearman is a fair effect-RANKING test on a known family, but not prospective performance on a novel protein. Stability (ARGR) is the clean rung-2 anchor; BLAT is a flagged fitness/selection caveat, NOT support for general molecular-function scoring.",
   "results": [
     {
@@ -15,6 +20,46 @@
       "n_mutations": 1287,
       "seq_len": 69,
       "spearman_neg_damage_vs_dms": 0.4965,
+      "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
+    },
+    {
+      "assay": "FECA_ECOLI_Tsuboyama_2023_2D1U",
+      "available": true,
+      "category": "Stability",
+      "flagged_caveat": false,
+      "n_mutations": 1219,
+      "seq_len": 72,
+      "spearman_neg_damage_vs_dms": 0.5348,
+      "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
+    },
+    {
+      "assay": "NUSA_ECOLI_Tsuboyama_2023_1WCL",
+      "available": true,
+      "category": "Stability",
+      "flagged_caveat": false,
+      "n_mutations": 1306,
+      "seq_len": 69,
+      "spearman_neg_damage_vs_dms": 0.4819,
+      "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
+    },
+    {
+      "assay": "RFAH_ECOLI_Tsuboyama_2023_2LCL",
+      "available": true,
+      "category": "Stability",
+      "flagged_caveat": false,
+      "n_mutations": 969,
+      "seq_len": 55,
+      "spearman_neg_damage_vs_dms": 0.3472,
+      "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
+    },
+    {
+      "assay": "YAIA_ECOLI_Tsuboyama_2023_2KVT",
+      "available": true,
+      "category": "Stability",
+      "flagged_caveat": false,
+      "n_mutations": 928,
+      "seq_len": 52,
+      "spearman_neg_damage_vs_dms": 0.4293,
       "interpretation": "positive = ESM damage rank agrees with the experimental effect direction; compare to ProteinGym ESM2-650M ~0.49 median / ~0.52 stability"
     },
     {
