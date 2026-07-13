@@ -144,6 +144,37 @@ uv run dna-decode pathotype path/to/assembly.fna --sample-id MY_STRAIN
 uv run dna-decode amr --drug ciprofloxacin --genome-fasta X.fna --organism Klebsiella_pneumoniae
 ```
 
+### Visual decoder (offline HTML views)
+
+A legibility layer that renders the decoder's outputs + findings as self-contained HTML (no server, no
+CDN, opens offline). Read-only over committed artifacts; the frozen decoder surface is untouched. The
+honesty rails carry into the pixels — the network is associational-not-causal (the leave-one-clade-out
+de-confound is drawn as solid vs. dashed edges), the protein heatmap is a zero-shot molecular rank (not a
+resistance call; catalog markers sit on a separate axis), and a phenotype claim renders only behind the
+determinant coordinate-join wall. Four views, unified by a semantic-zoom hub (genome → network → protein):
+
+```bash
+# V1 — AMR-determinant co-occurrence network (force-directed; de-confound = node border / edge dash)
+uv run python scripts/network_browser.py --cooc wiki/determinant_cooccurrence_result_2026-07-11.json \
+  --organism escherichia_coli_shigella --crossaxis wiki/crossaxis_lineage_deconfound_determinant_2026-07-12.json \
+  --out wiki/network_ecoli.html
+
+# V2 — circular genome ring (Circos/Proksee-style) from a genome-map JSON
+uv run python scripts/circular_genome_map.py wiki/genome_map_spike_2026-06-19/genome_map_GCA_002180195.1.json \
+  --out wiki/circular_ecoli.html
+
+# V3 — protein damage heatmap (dms-viz-style; ESM molecular rank, catalog DRMs on a separate axis)
+uv run python scripts/protein_heatmap.py --cache data/processed/hiv_rt_esm650m_masked_marginals.json \
+  --seq-file rt.fasta --title "HIV-1 RT" --markers K103N,Y181C,M184V --out wiki/heatmap_rt.html
+
+# V4 — unified hub: auto-discovers the generated view HTMLs and links them by scale
+uv run python scripts/build_viz_hub.py --dir wiki --out wiki/index_visual_decoder.html
+```
+
+Modules: `dna_decode/viz/{network_adapter,network_browser,protein_heatmap,hub}.py` +
+`dna_decode/genome_map/{browser,circular_browser}.py` (linear + circular share the tier styles + honesty
+banner). Open `wiki/index_visual_decoder.html` in a browser as the entry point.
+
 Full capability table + validation provenance: **[Shipped decoders](#shipped-decoders-v040--two-interpretable-e-coli-genometrait-tools)** below. The rest of this README is project history (how the tool was arrived at).
 
 ---
