@@ -1,6 +1,8 @@
 {
- "schema": "hiv-nnrti-supervised-complement-v1",
+ "schema": "hiv-supervised-complement-v1",
+ "drug_class": "NNRTI",
  "date": "2026-07-12",
+ "gene": "RT",
  "drug_trained": "EFV",
  "cutoff_fold": 3.0,
  "solver": "liblinear-logistic-L2",
@@ -9,12 +11,11 @@
  "n_train": 4222,
  "n_features": 1063,
  "intercept": -1.8022,
- "feature_key": "<pos><aa> of a NON-WT RT residue (e.g. '103N'); risk = sigmoid(intercept + sum coef)",
+ "feature_key": "<pos><aa> of a NON-WT residue (e.g. '103N'); risk = sigmoid(intercept + sum coef)",
  "deployability": {
-  "leave_study_out_blindspot_auroc": 0.81,
-  "patient_grouped_blindspot_auroc": 0.824
+  "leave_study_out_blindspot_auroc": 0.81
  },
- "honest_scope": "Blind-spot RANKING complement for NNRTI (trained on EFV, the richest label). NOT a hard R/S rule; complements \u2014 does not replace \u2014 the deployed catalog. In-distribution to the Stanford knowledge base; supervised (needs the free label to have been trained).",
+ "honest_scope": "Blind-spot RANKING complement for NNRTI (trained on EFV). NOT a hard R/S rule; complements \u2014 does not replace \u2014 the deployed catalog. In-distribution to Stanford; supervised (needs the free label to have been trained).",
  "weights": {
   "1H": 0.22917,
   "1L": -0.22136,
