@@ -1,0 +1,179 @@
+{
+  "artifact": "integrated_query_demo",
+  "schema": "integrated-query-demo-v1",
+  "date": "2026-07-13",
+  "headline": "A single query returns BOTH the molecular effect (universal ESM rank) and the known AMR phenotype (catalog lookup). K103N is the load-bearing example: ESM rates it molecularly benign/uncertain, yet the catalog knows it is a major NNRTI resistance mutation \u2014 the rungs DISAGREE, which is precisely why the curated catalog is irreplaceable for antagonistically-selected resistance (a chemically-innocent substitution that confers resistance).",
+  "hiv_queries": [
+    {
+      "artifact": "integrated_mutation_query",
+      "schema": "integrated-mutation-query-v1",
+      "query": {
+        "organism": "HIV-1",
+        "gene": "RT",
+        "mutation": "K103N"
+      },
+      "molecular_effect_rung2": {
+        "damage_llr": -0.4685,
+        "position_percentile": 0.6316,
+        "direction_hint": "uncertain",
+        "sequence_change": {
+          "wt_residue": "K",
+          "position": 103,
+          "mut_residue": "N",
+          "length": 560,
+          "certain": true
+        }
+      },
+      "known_phenotype_rung3": {
+        "catalog": "Stanford HIVDB major-DRM catalog (in-repo dna_decode.data.hiv_amr)",
+        "is_known_resistance_mutation": true,
+        "determinant": [
+          "RT:K103N"
+        ],
+        "resistant_drugs": [
+          "delavirdine",
+          "doravirine",
+          "efavirenz",
+          "etravirine",
+          "nevirapine",
+          "rilpivirine"
+        ],
+        "caveat": "v0 catalogs are CLASS-level for NNRTI/position-based for NRTI/PI/INSTI \u2014 a known-DRM call may over-call per-drug differential resistance (e.g. K103N spares ETR/RPV)."
+      },
+      "honest_framing": "The molecular rung is a UNIVERSAL zero-shot ESM rank score (~0.49-0.52 Spearman face-validity on stability DMS); the phenotype rung is a CATALOG lookup (present only where a curated mutation-level catalog exists). A molecular-effect score is NOT a resistance call and a catalog hit is NOT a molecular-effect claim \u2014 they are reported as two separate, honestly-labelled ranks.",
+      "molecular_caveat": "damage_llr is a zero-shot ESM2-650M RANK score (logP(wt)-logP(mut); higher = more damaging), NOT a per-mutation probability and NOT a resistant/susceptible or phenotype call. Accuracy ceiling is the ProteinGym benchmark (~0.49 Spearman median / ~0.52 on stability assays) \u2014 a zero-shot FACE-VALIDITY level; the protein is likely in ESM's pretraining set, so this is face-validity, not prospective validation. Scope: rung-2 molecular function (stability/activity), NOT rung-4 cellular phenotype."
+    },
+    {
+      "artifact": "integrated_mutation_query",
+      "schema": "integrated-mutation-query-v1",
+      "query": {
+        "organism": "HIV-1",
+        "gene": "RT",
+        "mutation": "L100I"
+      },
+      "molecular_effect_rung2": {
+        "damage_llr": 0.6164,
+        "position_percentile": 0.1053,
+        "direction_hint": "likely-tolerated",
+        "sequence_change": {
+          "wt_residue": "L",
+          "position": 100,
+          "mut_residue": "I",
+          "length": 560,
+          "certain": true
+        }
+      },
+      "known_phenotype_rung3": {
+        "catalog": "Stanford HIVDB major-DRM catalog (in-repo dna_decode.data.hiv_amr)",
+        "is_known_resistance_mutation": true,
+        "determinant": [
+          "RT:L100I"
+        ],
+        "resistant_drugs": [
+          "delavirdine",
+          "doravirine",
+          "efavirenz",
+          "etravirine",
+          "nevirapine",
+          "rilpivirine"
+        ],
+        "caveat": "v0 catalogs are CLASS-level for NNRTI/position-based for NRTI/PI/INSTI \u2014 a known-DRM call may over-call per-drug differential resistance (e.g. K103N spares ETR/RPV)."
+      },
+      "honest_framing": "The molecular rung is a UNIVERSAL zero-shot ESM rank score (~0.49-0.52 Spearman face-validity on stability DMS); the phenotype rung is a CATALOG lookup (present only where a curated mutation-level catalog exists). A molecular-effect score is NOT a resistance call and a catalog hit is NOT a molecular-effect claim \u2014 they are reported as two separate, honestly-labelled ranks.",
+      "molecular_caveat": "damage_llr is a zero-shot ESM2-650M RANK score (logP(wt)-logP(mut); higher = more damaging), NOT a per-mutation probability and NOT a resistant/susceptible or phenotype call. Accuracy ceiling is the ProteinGym benchmark (~0.49 Spearman median / ~0.52 on stability assays) \u2014 a zero-shot FACE-VALIDITY level; the protein is likely in ESM's pretraining set, so this is face-validity, not prospective validation. Scope: rung-2 molecular function (stability/activity), NOT rung-4 cellular phenotype."
+    },
+    {
+      "artifact": "integrated_mutation_query",
+      "schema": "integrated-mutation-query-v1",
+      "query": {
+        "organism": "HIV-1",
+        "gene": "RT",
+        "mutation": "Y181C"
+      },
+      "molecular_effect_rung2": {
+        "damage_llr": 1.5456,
+        "position_percentile": 0.9474,
+        "direction_hint": "likely-deleterious",
+        "sequence_change": {
+          "wt_residue": "Y",
+          "position": 181,
+          "mut_residue": "C",
+          "length": 560,
+          "certain": true
+        }
+      },
+      "known_phenotype_rung3": {
+        "catalog": "Stanford HIVDB major-DRM catalog (in-repo dna_decode.data.hiv_amr)",
+        "is_known_resistance_mutation": true,
+        "determinant": [
+          "RT:Y181C"
+        ],
+        "resistant_drugs": [
+          "delavirdine",
+          "doravirine",
+          "efavirenz",
+          "etravirine",
+          "nevirapine",
+          "rilpivirine"
+        ],
+        "caveat": "v0 catalogs are CLASS-level for NNRTI/position-based for NRTI/PI/INSTI \u2014 a known-DRM call may over-call per-drug differential resistance (e.g. K103N spares ETR/RPV)."
+      },
+      "honest_framing": "The molecular rung is a UNIVERSAL zero-shot ESM rank score (~0.49-0.52 Spearman face-validity on stability DMS); the phenotype rung is a CATALOG lookup (present only where a curated mutation-level catalog exists). A molecular-effect score is NOT a resistance call and a catalog hit is NOT a molecular-effect claim \u2014 they are reported as two separate, honestly-labelled ranks.",
+      "molecular_caveat": "damage_llr is a zero-shot ESM2-650M RANK score (logP(wt)-logP(mut); higher = more damaging), NOT a per-mutation probability and NOT a resistant/susceptible or phenotype call. Accuracy ceiling is the ProteinGym benchmark (~0.49 Spearman median / ~0.52 on stability assays) \u2014 a zero-shot FACE-VALIDITY level; the protein is likely in ESM's pretraining set, so this is face-validity, not prospective validation. Scope: rung-2 molecular function (stability/activity), NOT rung-4 cellular phenotype."
+    },
+    {
+      "artifact": "integrated_mutation_query",
+      "schema": "integrated-mutation-query-v1",
+      "query": {
+        "organism": "HIV-1",
+        "gene": "RT",
+        "mutation": "M184V"
+      },
+      "molecular_effect_rung2": {
+        "damage_llr": 2.9084,
+        "position_percentile": 0.1579,
+        "direction_hint": "likely-tolerated",
+        "sequence_change": {
+          "wt_residue": "M",
+          "position": 184,
+          "mut_residue": "V",
+          "length": 560,
+          "certain": true
+        }
+      },
+      "known_phenotype_rung3": {
+        "catalog": "Stanford HIVDB major-DRM catalog (in-repo dna_decode.data.hiv_amr)",
+        "is_known_resistance_mutation": true,
+        "determinant": [
+          "RT:M184V"
+        ],
+        "resistant_drugs": [
+          "abacavir",
+          "didanosine",
+          "lamivudine",
+          "stavudine",
+          "tenofovir",
+          "zidovudine"
+        ],
+        "caveat": "v0 catalogs are CLASS-level for NNRTI/position-based for NRTI/PI/INSTI \u2014 a known-DRM call may over-call per-drug differential resistance (e.g. K103N spares ETR/RPV)."
+      },
+      "honest_framing": "The molecular rung is a UNIVERSAL zero-shot ESM rank score (~0.49-0.52 Spearman face-validity on stability DMS); the phenotype rung is a CATALOG lookup (present only where a curated mutation-level catalog exists). A molecular-effect score is NOT a resistance call and a catalog hit is NOT a molecular-effect claim \u2014 they are reported as two separate, honestly-labelled ranks.",
+      "molecular_caveat": "damage_llr is a zero-shot ESM2-650M RANK score (logP(wt)-logP(mut); higher = more damaging), NOT a per-mutation probability and NOT a resistant/susceptible or phenotype call. Accuracy ceiling is the ProteinGym benchmark (~0.49 Spearman median / ~0.52 on stability assays) \u2014 a zero-shot FACE-VALIDITY level; the protein is likely in ESM's pretraining set, so this is face-validity, not prospective validation. Scope: rung-2 molecular function (stability/activity), NOT rung-4 cellular phenotype."
+    }
+  ],
+  "ecoli_fallback": {
+    "query": {
+      "organism": "Escherichia coli",
+      "gene": "gyrA",
+      "mutation": "S83L"
+    },
+    "known_phenotype_rung3": {
+      "catalog": null,
+      "is_known_resistance_mutation": null,
+      "determinant": null,
+      "resistant_drugs": null,
+      "caveat": "no in-repo mutation-level AMR catalog for organism='Escherichia coli' gene='gyrA'. Bacterial (e.g. E. coli) resistance point mutations resolve via AMRFinder on a FULL GENOME (the deterministic decoder) \u2014 not a single-mutation-string lookup."
+    },
+    "note": "molecular rung would need --gene gyrA (UniProt fetch + ESM); shown here for the rung-3 fallback"
+  }
+}

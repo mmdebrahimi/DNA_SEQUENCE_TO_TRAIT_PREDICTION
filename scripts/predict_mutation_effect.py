@@ -44,6 +44,10 @@ def main(argv=None):
     ap.add_argument("--organism-id", default=G.ECOLI_K12["organism_id"],
                     help="UniProt organism_id for --gene (default 83333 = E. coli K-12)")
     ap.add_argument("--mutation", required=True, help="single substitution, e.g. A123V (1-based)")
+    ap.add_argument("--phenotype-organism", default=None,
+                    help="also emit the rung-3 known-AMR-phenotype (e.g. 'HIV-1', 'M. tuberculosis'); routed by "
+                         "organism+gene to the in-repo mutation-level catalog, honest fallback otherwise")
+    ap.add_argument("--phenotype-gene", default=None, help="gene for rung-3 routing (RT/PR/IN/gyrA/...); defaults to --gene")
     ap.add_argument("--cache", default=None, help="masked-marginal cache JSON (reuse across mutations of one protein)")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args(argv)
@@ -64,6 +68,13 @@ def main(argv=None):
     if gene_rec is not None:
         out["gene_resolution"] = {k: gene_rec[k] for k in ("gene", "accession", "organism", "reviewed",
                                                            "protein_name", "provenance")}
+    if a.phenotype_organism:
+        from dna_decode.protein_effect import integration as IQ
+        p_gene = a.phenotype_gene or a.gene or ""
+        out["known_phenotype_rung3"] = IQ.known_phenotype(a.mutation, gene=p_gene,
+                                                          organism=a.phenotype_organism)
+        out["rung_note"] = ("molecular_effect is a UNIVERSAL zero-shot ESM rank; known_phenotype_rung3 is a "
+                            "catalog lookup — a molecular score is NOT a resistance call and vice-versa.")
     txt = json.dumps(out, indent=2)
     if a.out:
         a.out.write_text(txt, encoding="utf-8")
