@@ -17,13 +17,25 @@ WIKI = REPO / "wiki"
 
 _METHOD = {"blosum62_deterministic": "blosum", "esm2_zeroshot": "esm2", "alphamissense_learned": "am"}
 
+# ProteinGym DMS_id = GENE_SPECIES_Author_Year; map the species code (2nd token).
+_SPECIES = {"HUMAN": "human", "YEAST": "yeast", "ARATH": "Arabidopsis", "MOUSE": "mouse", "CHICK": "chicken",
+            "ECOLI": "E. coli", "ECOLX": "E. coli", "BACSU": "B. subtilis", "PSEAI": "P. aeruginosa",
+            "SARS2": "SARS-CoV-2", "CHLRE": "C. reinhardtii", "RHOTO": "R. toruloides"}
+# rough kingdom grouping for ordering / narrative
+_KINGDOM = {"human": "eukaryote", "yeast": "eukaryote", "Arabidopsis": "eukaryote", "mouse": "eukaryote",
+            "chicken": "eukaryote", "C. reinhardtii": "eukaryote", "R. toruloides": "eukaryote",
+            "E. coli": "bacterium", "B. subtilis": "bacterium", "P. aeruginosa": "bacterium",
+            "SARS-CoV-2": "virus"}
+
 
 def _organism(dms_id: str) -> str:
-    if dms_id.endswith("_HUMAN") or "_HUMAN_" in dms_id:
-        return "human"
-    if "ECOL" in dms_id:
-        return "E. coli"
-    return "?"
+    parts = dms_id.split("_")
+    code = parts[1] if len(parts) > 1 else ""
+    return _SPECIES.get(code, code.lower() or "?")
+
+
+def _kingdom(org: str) -> str:
+    return _KINGDOM.get(org, "?")
 
 
 def main() -> int:
@@ -43,7 +55,8 @@ def main() -> int:
         r[m] = rho
         r["n"] = d.get("n_single_variants_scored", r["n"])
 
-    ordered = sorted(rows.values(), key=lambda r: (r["organism"], -(r.get("am") or r.get("esm2") or r.get("blosum") or 0)))
+    ordered = sorted(rows.values(), key=lambda r: (_kingdom(r["organism"]), r["organism"],
+                                                    -(r.get("am") or r.get("esm2") or r.get("blosum") or 0)))
     # markdown
     lines = [f"# Forward variant-effect method leaderboard ({_date.today().isoformat()})", "",
              "Per-protein Spearman(prediction, measured DMS) across the three forward-cell methods. AlphaMissense "
@@ -55,7 +68,7 @@ def main() -> int:
     def cell(v):
         return f"{v:.3f}" if isinstance(v, (int, float)) else "—"
     for r in ordered:
-        gene = re.split(r"_HUMAN|_ECOL", r["dms_id"])[0]
+        gene = r["dms_id"].split("_")[0]
         lines.append(f"| {gene} ({r['dms_id']}) | {r['organism']} | {r['n']} | "
                      f"{cell(r['blosum'])} | {cell(r['esm2'])} | {cell(r['am'])} |")
     lines += ["", "Learned-vs-deterministic lift (where both present):"]
@@ -71,8 +84,12 @@ def main() -> int:
     (WIKI / f"forward_method_leaderboard_{_date.today().isoformat()}.json").write_text(
         json.dumps({"generated": _date.today().isoformat(), "proteins": ordered}, indent=2), encoding="utf-8")
     print("\n".join(lines))
-    print(f"\n[leaderboard] {len(ordered)} proteins across {sum(1 for r in ordered if r['organism']=='human')} human "
-          f"+ {sum(1 for r in ordered if r['organism']=='E. coli')} E. coli")
+    from collections import Counter
+    by_org = Counter(r["organism"] for r in ordered)
+    by_king = Counter(_kingdom(r["organism"]) for r in ordered)
+    print(f"\n[leaderboard] {len(ordered)} proteins across {len(by_org)} organisms "
+          f"({', '.join(f'{n} {o}' for o, n in by_org.most_common())}); "
+          f"kingdoms: {', '.join(f'{n} {k}' for k, n in by_king.most_common())}")
     return 0
 
 

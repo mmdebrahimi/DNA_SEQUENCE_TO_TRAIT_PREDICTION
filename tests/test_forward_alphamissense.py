@@ -47,10 +47,17 @@ def test_predict_effect_alphamissense_missing_variant_raises():
 
 
 def test_leaderboard_classifiers():
-    from scripts.forward_leaderboard import _METHOD, _organism
+    from scripts.forward_leaderboard import _METHOD, _kingdom, _organism
     assert _organism("PTEN_HUMAN_Mighell_2018") == "human"
     assert _organism("BLAT_ECOLX_Stiffler_2015") == "E. coli"
     assert _organism("CCDB_ECOLI_Tripathi_2016") == "E. coli"
+    assert _organism("RL40A_YEAST_Mavor_2016") == "yeast"
+    assert _organism("SR43C_ARATH_Tsuboyama_2023_2N88") == "Arabidopsis"
+    assert _organism("SPG1_SARS2_x") == "SARS-CoV-2"
+    assert _organism("FOO_ZZZZZ_x") == "zzzzz"          # unknown code -> lowercased fallback
+    # kingdom grouping
+    assert _kingdom("human") == _kingdom("yeast") == _kingdom("Arabidopsis") == "eukaryote"
+    assert _kingdom("E. coli") == "bacterium"
     assert _METHOD["blosum62_deterministic"] == "blosum"
     assert _METHOD["esm2_zeroshot"] == "esm2"
     assert _METHOD["alphamissense_learned"] == "am"

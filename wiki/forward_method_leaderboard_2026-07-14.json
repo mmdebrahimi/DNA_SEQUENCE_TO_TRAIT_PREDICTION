@@ -74,6 +74,22 @@
       "am": null
     },
     {
+      "dms_id": "SR43C_ARATH_Tsuboyama_2023_2N88",
+      "organism": "Arabidopsis",
+      "n": 889,
+      "blosum": 0.2135,
+      "esm2": 0.5889,
+      "am": null
+    },
+    {
+      "dms_id": "MBD11_ARATH_Tsuboyama_2023_6ACV",
+      "organism": "Arabidopsis",
+      "n": 1155,
+      "blosum": 0.1956,
+      "esm2": null,
+      "am": null
+    },
+    {
       "dms_id": "CP2C9_HUMAN_Amorosi_2021_abundance",
       "organism": "human",
       "n": 6370,
@@ -104,6 +120,30 @@
       "blosum": 0.1635,
       "esm2": null,
       "am": 0.4157
+    },
+    {
+      "dms_id": "RL40A_YEAST_Mavor_2016",
+      "organism": "yeast",
+      "n": 1253,
+      "blosum": 0.2371,
+      "esm2": 0.5179,
+      "am": null
+    },
+    {
+      "dms_id": "BBC1_YEAST_Tsuboyama_2023_1TG0",
+      "organism": "yeast",
+      "n": 1084,
+      "blosum": 0.0727,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "THO1_YEAST_Tsuboyama_2023_2WQG",
+      "organism": "yeast",
+      "n": 656,
+      "blosum": 0.057,
+      "esm2": null,
+      "am": null
     }
   ]
 }
