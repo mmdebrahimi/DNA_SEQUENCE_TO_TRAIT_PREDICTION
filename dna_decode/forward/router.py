@@ -57,7 +57,7 @@ def catalogue_call(gene: str, mutation: str, resistance_keys: set[str]) -> tuple
 
 def predict_edit(gene: str, mutation: str, *, regime: str | None = None, drug: str | None = None,
                  protein_seq: str | None = None, method: str = "blosum62", esm_table: dict | None = None,
-                 resistance_keys: set[str] | None = None,
+                 am_table: dict | None = None, resistance_keys: set[str] | None = None,
                  phenotype: str = "molecular fitness (DMS-measured)",
                  determinant_locus: bool = False, molecular_predictor: bool = False,
                  organismal: bool = False) -> dict:
@@ -82,7 +82,7 @@ def predict_edit(gene: str, mutation: str, *, regime: str | None = None, drug: s
 
     if regime == REGIME_B:
         pred = predict_effect(protein_seq or "", mutation, protein=gene, phenotype_axis=phenotype,
-                              method=method, esm_table=esm_table)
+                              method=method, esm_table=esm_table, am_table=am_table)
         return {**base, "prediction": pred.predicted_effect, "raw_score": pred.raw_score,
                 "predictor": f"{method}_DMS_validated", "confidence": pred.confidence,
                 "abstain": False, "notes": pred.notes}

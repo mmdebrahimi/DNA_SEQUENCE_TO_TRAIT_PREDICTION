@@ -7,6 +7,11 @@ Scope (per the project's G2P regime boundary, feedback_g2p_decoder_regime_bounda
   Regime B (edit changes protein molecular fitness/stability) -> THIS module (DMS-validated variant effect).
   Regime C (organism-level polygenic trait)   -> closed negative; abstain.
 """
+from .am_scorer import (  # noqa: F401
+    am_table_for_mutants,
+    am_tier,
+    load_am_for_uniprot,
+)
 from .genome_edit import (  # noqa: F401
     GenomeEditPrediction,
     cds_point_edit,

@@ -110,7 +110,7 @@ _ESM_DAMAGING = -5.0
 def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    phenotype_axis: str = "molecular fitness (DMS-measured)",
                    method: str = "blosum62", regime: str = "B_molecular",
-                   esm_table: dict | None = None) -> ForwardPrediction:
+                   esm_table: dict | None = None, am_table: dict | None = None) -> ForwardPrediction:
     """Forward edit -> predicted phenotype effect for ONE point mutation on ONE protein.
 
     - method="blosum62" (default): deterministic substitution severity — no model, no network.
@@ -166,8 +166,17 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
             effect, conf = "damaging", "medium"
         else:
             effect, conf = "uncertain", "low"
+    elif method == "alphamissense":
+        from .am_scorer import am_tier
+        if am_table is None or mutation not in am_table:
+            raise ValueError(f"method='alphamissense' needs am_table with {mutation!r} "
+                             f"(human-proteome only; variant not AlphaMissense-covered)")
+        am = am_table[mutation]                 # AM pathogenicity in [0,1]; higher = damaging
+        score = 1.0 - am                        # flip so higher = benign/preserved (BLOSUM/ESM sign)
+        effect = am_tier(am)
+        conf = "medium" if effect != "uncertain" else "low"
     else:
-        raise NotImplementedError(f"method {method!r} not supported; use 'blosum62' or 'esm2'")
+        raise NotImplementedError(f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense'")
 
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,

@@ -67,7 +67,7 @@ def spearman(xs: list[float], ys: list[float]) -> float:
 
 
 def run(dms_id: str, protein_label: str, phenotype_axis: str,
-        method: str = "blosum62", esm_table: dict | None = None) -> dict:
+        method: str = "blosum62", esm_table: dict | None = None, am_table: dict | None = None) -> dict:
     seq = load_target_seq(dms_id)
     path = DMS_DIR / f"{dms_id}.csv"
     pred_scores: list[float] = []
@@ -89,11 +89,13 @@ def run(dms_id: str, protein_label: str, phenotype_axis: str,
                 continue
             try:
                 p = predict_effect(seq, mut, protein=protein_label, phenotype_axis=phenotype_axis,
-                                   method=method, esm_table=esm_table)
+                                   method=method, esm_table=esm_table, am_table=am_table)
             except ValueError as e:
                 if "WT mismatch" in str(e):
                     wt_mismatch += 1
                     continue
+                if "not AlphaMissense-covered" in str(e):
+                    continue                 # variant not AM-covered -> skip (reported via match count)
                 raise
             pred_scores.append(p.raw_score)
             dms_scores.append(dms)
@@ -119,7 +121,8 @@ def run(dms_id: str, protein_label: str, phenotype_axis: str,
         "protein": protein_label,
         "dms_id": dms_id,
         "phenotype_axis": phenotype_axis,
-        "method": ("blosum62_deterministic" if method == "blosum62" else f"{method}_zeroshot"),
+        "method": {"blosum62": "blosum62_deterministic", "esm2": "esm2_zeroshot",
+                   "alphamissense": "alphamissense_learned"}.get(method, method),
         "n_single_variants_scored": n,
         "n_multi_mutant_skipped": n_multi,
         "n_wt_mismatch": wt_mismatch,          # MUST be 0 — else a coordinate/frame error
@@ -165,16 +168,29 @@ def main(argv=None) -> int:
     ap.add_argument("--dms-id", default="BLAT_ECOLX_Stiffler_2015")
     ap.add_argument("--protein", default="TEM-1 beta-lactamase (BLAT_ECOLX)")
     ap.add_argument("--phenotype", default="ampicillin growth fitness (10-2500 ug/mL; DMS-measured)")
-    ap.add_argument("--method", default="blosum62", choices=["blosum62", "esm2"])
+    ap.add_argument("--method", default="blosum62", choices=["blosum62", "esm2", "alphamissense"])
     ap.add_argument("--model", default="facebook/esm2_t33_650M_UR50D", help="ESM2 HF model id (--method esm2)")
+    ap.add_argument("--uniprot", default=None, help="UniProt accession (--method alphamissense)")
+    ap.add_argument("--offset", type=int, default=0, help="DMS->UniProt position offset (--method alphamissense)")
     a = ap.parse_args(argv)
     if not (DMS_DIR / f"{a.dms_id}.csv").exists():
         print(f"ERROR: DMS assay {a.dms_id}.csv not found under {DMS_DIR}", file=sys.stderr)
         return 2
-    esm_table = None
+    esm_table = am_table = None
     if a.method == "esm2":
         esm_table = _build_or_load_esm_table(load_target_seq(a.dms_id), a.dms_id, a.model)
-    res = run(a.dms_id, a.protein, a.phenotype, method=a.method, esm_table=esm_table)
+    elif a.method == "alphamissense":
+        if not a.uniprot:
+            print("ERROR: --method alphamissense requires --uniprot <accession>", file=sys.stderr)
+            return 2
+        from dna_decode.forward.am_scorer import am_table_for_mutants, load_am_for_uniprot
+        am_tsv = PG / "am_filtered.tsv"
+        am_by_variant = load_am_for_uniprot(am_tsv, a.uniprot)
+        mutants = [r["mutant"] for r in csv.DictReader(open(DMS_DIR / f"{a.dms_id}.csv", encoding="utf-8"))]
+        am_table = am_table_for_mutants(am_by_variant, a.offset, mutants)
+        print(f"[tem1-forward] AlphaMissense: {len(am_by_variant)} AM variants for {a.uniprot}; "
+              f"{len(am_table)} of the assay's mutants covered")
+    res = run(a.dms_id, a.protein, a.phenotype, method=a.method, esm_table=esm_table, am_table=am_table)
     suffix = "" if a.method == "blosum62" else f"_{a.method}"
     out = REPO / "wiki" / f"tem1_forward_cell_{a.dms_id.lower()}{suffix}_{_date.today().isoformat()}.json"
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
