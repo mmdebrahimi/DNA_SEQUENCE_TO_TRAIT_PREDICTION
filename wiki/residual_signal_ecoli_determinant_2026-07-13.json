@@ -1,0 +1,483 @@
+{
+  "meta": {
+    "axis_label": "AMR determinant",
+    "organism": "escherichia_coli_shigella",
+    "source_verdict": "CROSS_AXIS_GENERALIZES_BEYOND_LINEAGE",
+    "median_auc_naive": 0.975,
+    "median_auc_clade_grouped": 0.908,
+    "mash_threshold": 0.005,
+    "n_clades": 80,
+    "largest_clade_frac": 0.353,
+    "n_features": 45
+  },
+  "per_feature": [
+    {
+      "feature_id": "mrx(A)",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 98,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.997,
+      "drop": 0.0
+    },
+    {
+      "feature_id": "cmlA1",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 13,
+      "auc_naive": 0.996,
+      "auc_clade_grouped": 0.993,
+      "drop": 0.003
+    },
+    {
+      "feature_id": "mph(A)",
+      "tier": "generalizes",
+      "family": "tet/macrolide",
+      "n_present": 98,
+      "auc_naive": 0.993,
+      "auc_clade_grouped": 0.992,
+      "drop": 0.001
+    },
+    {
+      "feature_id": "aac(6')-Ib-cr5",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 69,
+      "auc_naive": 0.994,
+      "auc_clade_grouped": 0.99,
+      "drop": 0.005
+    },
+    {
+      "feature_id": "aadA5",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 90,
+      "auc_naive": 0.996,
+      "auc_clade_grouped": 0.988,
+      "drop": 0.008
+    },
+    {
+      "feature_id": "blaOXA-1",
+      "tier": "generalizes",
+      "family": "beta-lactam",
+      "n_present": 69,
+      "auc_naive": 0.987,
+      "auc_clade_grouped": 0.98,
+      "drop": 0.007
+    },
+    {
+      "feature_id": "aph(3'')-Ib",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 100,
+      "auc_naive": 0.999,
+      "auc_clade_grouped": 0.978,
+      "drop": 0.02
+    },
+    {
+      "feature_id": "dfrA17",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 94,
+      "auc_naive": 0.989,
+      "auc_clade_grouped": 0.977,
+      "drop": 0.012
+    },
+    {
+      "feature_id": "sat2",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 10,
+      "auc_naive": 0.981,
+      "auc_clade_grouped": 0.977,
+      "drop": 0.004
+    },
+    {
+      "feature_id": "gyrA_D87N",
+      "tier": "generalizes",
+      "family": "QRDR",
+      "n_present": 140,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.976,
+      "drop": 0.02
+    },
+    {
+      "feature_id": "parC_S80I",
+      "tier": "generalizes",
+      "family": "QRDR",
+      "n_present": 141,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.976,
+      "drop": 0.021
+    },
+    {
+      "feature_id": "tet(M)",
+      "tier": "generalizes",
+      "family": "tet/macrolide",
+      "n_present": 11,
+      "auc_naive": 0.984,
+      "auc_clade_grouped": 0.972,
+      "drop": 0.012
+    },
+    {
+      "feature_id": "dfrA12",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 27,
+      "auc_naive": 0.993,
+      "auc_clade_grouped": 0.97,
+      "drop": 0.022
+    },
+    {
+      "feature_id": "gyrA_S83L",
+      "tier": "generalizes",
+      "family": "QRDR",
+      "n_present": 159,
+      "auc_naive": 0.968,
+      "auc_clade_grouped": 0.962,
+      "drop": 0.006
+    },
+    {
+      "feature_id": "sul2",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 102,
+      "auc_naive": 0.978,
+      "auc_clade_grouped": 0.957,
+      "drop": 0.021
+    },
+    {
+      "feature_id": "aadA2",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 31,
+      "auc_naive": 0.964,
+      "auc_clade_grouped": 0.955,
+      "drop": 0.009
+    },
+    {
+      "feature_id": "catB3",
+      "tier": "generalizes",
+      "family": "phenicol",
+      "n_present": 69,
+      "auc_naive": 0.984,
+      "auc_clade_grouped": 0.953,
+      "drop": 0.031
+    },
+    {
+      "feature_id": "ptsI_V25I",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 94,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.94,
+      "drop": 0.058
+    },
+    {
+      "feature_id": "sul1",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 107,
+      "auc_naive": 0.957,
+      "auc_clade_grouped": 0.931,
+      "drop": 0.025
+    },
+    {
+      "feature_id": "uhpT_E350Q",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 111,
+      "auc_naive": 0.968,
+      "auc_clade_grouped": 0.915,
+      "drop": 0.053
+    },
+    {
+      "feature_id": "estX-3",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 12,
+      "auc_naive": 0.982,
+      "auc_clade_grouped": 0.91,
+      "drop": 0.072
+    },
+    {
+      "feature_id": "aadA1",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 40,
+      "auc_naive": 0.952,
+      "auc_clade_grouped": 0.909,
+      "drop": 0.043
+    },
+    {
+      "feature_id": "aph(6)-Id",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 86,
+      "auc_naive": 0.981,
+      "auc_clade_grouped": 0.907,
+      "drop": 0.074
+    },
+    {
+      "feature_id": "sul3",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 25,
+      "auc_naive": 0.997,
+      "auc_clade_grouped": 0.907,
+      "drop": 0.09
+    },
+    {
+      "feature_id": "blaCTX-M-15",
+      "tier": "generalizes",
+      "family": "beta-lactam",
+      "n_present": 98,
+      "auc_naive": 0.963,
+      "auc_clade_grouped": 0.899,
+      "drop": 0.064
+    },
+    {
+      "feature_id": "blaCTX-M-55",
+      "tier": "generalizes",
+      "family": "beta-lactam",
+      "n_present": 15,
+      "auc_naive": 0.854,
+      "auc_clade_grouped": 0.898,
+      "drop": -0.044
+    },
+    {
+      "feature_id": "blaCTX-M-27",
+      "tier": "generalizes",
+      "family": "beta-lactam",
+      "n_present": 22,
+      "auc_naive": 0.947,
+      "auc_clade_grouped": 0.896,
+      "drop": 0.051
+    },
+    {
+      "feature_id": "aac(3)-IIe",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 54,
+      "auc_naive": 0.975,
+      "auc_clade_grouped": 0.868,
+      "drop": 0.107
+    },
+    {
+      "feature_id": "parE_I529L",
+      "tier": "generalizes",
+      "family": "QRDR",
+      "n_present": 88,
+      "auc_naive": 0.998,
+      "auc_clade_grouped": 0.852,
+      "drop": 0.146
+    },
+    {
+      "feature_id": "qnrS1",
+      "tier": "generalizes",
+      "family": "quinolone-plasmid",
+      "n_present": 15,
+      "auc_naive": 0.851,
+      "auc_clade_grouped": 0.824,
+      "drop": 0.027
+    },
+    {
+      "feature_id": "blaCMY-2",
+      "tier": "generalizes",
+      "family": "beta-lactam",
+      "n_present": 15,
+      "auc_naive": 0.81,
+      "auc_clade_grouped": 0.819,
+      "drop": -0.009
+    },
+    {
+      "feature_id": "catA1",
+      "tier": "generalizes",
+      "family": "phenicol",
+      "n_present": 23,
+      "auc_naive": 0.892,
+      "auc_clade_grouped": 0.817,
+      "drop": 0.076
+    },
+    {
+      "feature_id": "dfrA14",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 27,
+      "auc_naive": 0.933,
+      "auc_clade_grouped": 0.811,
+      "drop": 0.121
+    },
+    {
+      "feature_id": "aph(3')-Ia",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 23,
+      "auc_naive": 0.922,
+      "auc_clade_grouped": 0.809,
+      "drop": 0.113
+    },
+    {
+      "feature_id": "blaTEM-1",
+      "tier": "generalizes",
+      "family": "beta-lactam",
+      "n_present": 80,
+      "auc_naive": 0.855,
+      "auc_clade_grouped": 0.744,
+      "drop": 0.111
+    },
+    {
+      "feature_id": "floR",
+      "tier": "generalizes",
+      "family": "other",
+      "n_present": 19,
+      "auc_naive": 0.84,
+      "auc_clade_grouped": 0.736,
+      "drop": 0.105
+    },
+    {
+      "feature_id": "aac(3)-IId",
+      "tier": "generalizes",
+      "family": "aminoglycoside",
+      "n_present": 17,
+      "auc_naive": 0.896,
+      "auc_clade_grouped": 0.72,
+      "drop": 0.176
+    },
+    {
+      "feature_id": "tet(B)",
+      "tier": "generalizes",
+      "family": "tet/macrolide",
+      "n_present": 57,
+      "auc_naive": 0.883,
+      "auc_clade_grouped": 0.715,
+      "drop": 0.168
+    },
+    {
+      "feature_id": "dfrA1",
+      "tier": "generalizes",
+      "family": "sulfa/trimethoprim",
+      "n_present": 15,
+      "auc_naive": 0.901,
+      "auc_clade_grouped": 0.708,
+      "drop": 0.193
+    },
+    {
+      "feature_id": "parE_S458A",
+      "tier": "lineage_mediated",
+      "family": "QRDR",
+      "n_present": 33,
+      "auc_naive": 0.968,
+      "auc_clade_grouped": 0.682,
+      "drop": 0.285
+    },
+    {
+      "feature_id": "blaTEM",
+      "tier": "lineage_mediated",
+      "family": "beta-lactam",
+      "n_present": 10,
+      "auc_naive": 0.745,
+      "auc_clade_grouped": 0.605,
+      "drop": 0.14
+    },
+    {
+      "feature_id": "tet(A)",
+      "tier": "lineage_mediated",
+      "family": "tet/macrolide",
+      "n_present": 109,
+      "auc_naive": 0.844,
+      "auc_clade_grouped": 0.579,
+      "drop": 0.265
+    },
+    {
+      "feature_id": "cyaA_S352T",
+      "tier": "lineage_mediated",
+      "family": "other",
+      "n_present": 31,
+      "auc_naive": 0.877,
+      "auc_clade_grouped": 0.56,
+      "drop": 0.317
+    },
+    {
+      "feature_id": "parE_L416F",
+      "tier": "lineage_mediated",
+      "family": "QRDR",
+      "n_present": 11,
+      "auc_naive": 0.987,
+      "auc_clade_grouped": 0.245,
+      "drop": 0.742
+    },
+    {
+      "feature_id": "parC_E84V",
+      "tier": "lineage_mediated",
+      "family": "QRDR",
+      "n_present": 77,
+      "auc_naive": 1.0,
+      "auc_clade_grouped": null,
+      "drop": null
+    }
+  ],
+  "tier_counts": {
+    "generalizes": 39,
+    "lineage_mediated": 6,
+    "untested": 0
+  },
+  "family_rollup": {
+    "other": {
+      "generalizes": 7,
+      "lineage_mediated": 1,
+      "untested": 0,
+      "total": 8
+    },
+    "tet/macrolide": {
+      "generalizes": 3,
+      "lineage_mediated": 1,
+      "untested": 0,
+      "total": 4
+    },
+    "aminoglycoside": {
+      "generalizes": 9,
+      "lineage_mediated": 0,
+      "untested": 0,
+      "total": 9
+    },
+    "beta-lactam": {
+      "generalizes": 6,
+      "lineage_mediated": 1,
+      "untested": 0,
+      "total": 7
+    },
+    "sulfa/trimethoprim": {
+      "generalizes": 7,
+      "lineage_mediated": 0,
+      "untested": 0,
+      "total": 7
+    },
+    "QRDR": {
+      "generalizes": 4,
+      "lineage_mediated": 3,
+      "untested": 0,
+      "total": 7
+    },
+    "phenicol": {
+      "generalizes": 2,
+      "lineage_mediated": 0,
+      "untested": 0,
+      "total": 2
+    },
+    "quinolone-plasmid": {
+      "generalizes": 1,
+      "lineage_mediated": 0,
+      "untested": 0,
+      "total": 1
+    }
+  },
+  "honest_caveats": [
+    "A residual-signal tier is a SIGNAL-PROVENANCE statement, NOT a phenotype prediction \u2014 the report says WHERE de-confounded mechanism signal lives, never R/S.",
+    "GENERALIZES = association survives leave-one-clade-out CV (real signal beyond lineage). LINEAGE_MEDIATED = clade-concentrated: MAY be clonal population structure, not a real linkage.",
+    "De-confounding quality is bounded by the Mash-clade partition (threshold + largest-clade fraction in meta); a coarse partition under-removes lineage.",
+    "Mash-clade collapse is the proper lineage control; a within-lineage-surviving AUC means the cross-link is not PURELY clonal co-inheritance (but sub-clade structure below Mash resolution remains).",
+    "Organism = escherichia_coli_shigella (the determinant axis). Cohorts drug-R/S-selected. Associational.",
+    "Generalization tracks PREVALENCE of the target feature (a common feature present across many clades has cross-clade signal to learn; a clade-restricted accessory feature does not)."
+  ]
+}

@@ -22,20 +22,11 @@ import json
 from pathlib import Path
 
 # --- lineage-status vocabulary (the de-confound signal) -------------------------------------------
-GENERALIZES = "generalizes"
-LINEAGE_MEDIATED = "lineage_mediated"
-UNTESTED = "untested"
-
-
-def _lineage_status(entry: dict | None) -> str:
-    """Map one cross-axis per_gene record -> a node lineage_status."""
-    if not entry:
-        return UNTESTED
-    if entry.get("clade_concentrated"):
-        return LINEAGE_MEDIATED
-    if entry.get("generalizes_beyond_lineage"):
-        return GENERALIZES
-    return LINEAGE_MEDIATED  # tested, drops below the bar under clade-grouping -> clonally driven
+# Canonical home is dna_decode.eval.residual_detector (the g8 product); re-exported here so the network
+# browser draws the SAME tiers (solid/dashed/dotted borders) the residual-signal report classifies.
+from ..eval.residual_detector import (  # noqa: E402,F401
+    GENERALIZES, LINEAGE_MEDIATED, UNTESTED, classify_residual as _lineage_status,
+)
 
 
 def build_graph(cooc_path: str | Path, organism: str,
