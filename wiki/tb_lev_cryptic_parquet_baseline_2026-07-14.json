@@ -1,0 +1,72 @@
+{
+  "drug": "levofloxacin",
+  "rule_status": "deterministic",
+  "n_isolates": 7773,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.333,
+    "spec": 0.997,
+    "tp": 15,
+    "fp": 1,
+    "tn": 298,
+    "fn": 30,
+    "sens_wilson_ci": [
+      0.214,
+      0.479
+    ],
+    "spec_wilson_ci": [
+      0.981,
+      0.999
+    ],
+    "n_clusters_R": 45,
+    "n_clusters_S": 299,
+    "n_discordant": 45,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 38
+  },
+  "raw": {
+    "tp": 961,
+    "fp": 107,
+    "tn": 6488,
+    "fn": 217,
+    "sens": 0.816,
+    "spec": 0.984
+  },
+  "effective_lineage_n": {
+    "R": 45,
+    "S": 299
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      1178,
+      45
+    ],
+    "S": [
+      6595,
+      299
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 7620,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 0,
+    "exact_cryptic_targets": 0,
+    "complex_delins_unmapped": 0,
+    "isolates_with_indel_hit": 0,
+    "snv_to_R_flips": 0,
+    "flips_true_positive": 0,
+    "flips_false_positive": 0
+  },
+  "raw_snv_only": {
+    "tp": 961,
+    "fp": 107,
+    "tn": 6488,
+    "fn": 217,
+    "sens": 0.816,
+    "spec": 0.984
+  }
+}

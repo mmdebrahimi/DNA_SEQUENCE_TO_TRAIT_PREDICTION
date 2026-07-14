@@ -1,0 +1,72 @@
+{
+  "drug": "ethionamide",
+  "rule_status": "deterministic",
+  "n_isolates": 8251,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.083,
+    "spec": 1.0,
+    "tp": 4,
+    "fp": 0,
+    "tn": 301,
+    "fn": 44,
+    "sens_wilson_ci": [
+      0.033,
+      0.196
+    ],
+    "spec_wilson_ci": [
+      0.987,
+      1.0
+    ],
+    "n_clusters_R": 48,
+    "n_clusters_S": 301,
+    "n_discordant": 51,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 47
+  },
+  "raw": {
+    "tp": 758,
+    "fp": 117,
+    "tn": 6945,
+    "fn": 431,
+    "sens": 0.638,
+    "spec": 0.983
+  },
+  "effective_lineage_n": {
+    "R": 48,
+    "S": 301
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      1189,
+      48
+    ],
+    "S": [
+      7062,
+      301
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 8070,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 731,
+    "exact_cryptic_targets": 729,
+    "complex_delins_unmapped": 2,
+    "isolates_with_indel_hit": 50,
+    "snv_to_R_flips": 32,
+    "flips_true_positive": 17,
+    "flips_false_positive": 15
+  },
+  "raw_snv_only": {
+    "tp": 741,
+    "fp": 102,
+    "tn": 6960,
+    "fn": 448,
+    "sens": 0.623,
+    "spec": 0.986
+  }
+}

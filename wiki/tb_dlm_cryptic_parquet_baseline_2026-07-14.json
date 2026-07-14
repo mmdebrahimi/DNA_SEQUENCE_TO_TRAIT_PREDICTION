@@ -1,0 +1,72 @@
+{
+  "drug": "delamanid",
+  "rule_status": "deterministic",
+  "n_isolates": 8094,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.0,
+    "spec": 1.0,
+    "tp": 0,
+    "fp": 0,
+    "tn": 386,
+    "fn": 5,
+    "sens_wilson_ci": [
+      0.0,
+      0.434
+    ],
+    "spec_wilson_ci": [
+      0.99,
+      1.0
+    ],
+    "n_clusters_R": 5,
+    "n_clusters_S": 386,
+    "n_discordant": 21,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 1
+  },
+  "raw": {
+    "tp": 5,
+    "fp": 1,
+    "tn": 8008,
+    "fn": 80,
+    "sens": 0.059,
+    "spec": 1.0
+  },
+  "effective_lineage_n": {
+    "R": 5,
+    "S": 386
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      85,
+      5
+    ],
+    "S": [
+      8009,
+      386
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 7913,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 190,
+    "exact_cryptic_targets": 190,
+    "complex_delins_unmapped": 0,
+    "isolates_with_indel_hit": 0,
+    "snv_to_R_flips": 0,
+    "flips_true_positive": 0,
+    "flips_false_positive": 0
+  },
+  "raw_snv_only": {
+    "tp": 5,
+    "fp": 1,
+    "tn": 8008,
+    "fn": 80,
+    "sens": 0.059,
+    "spec": 1.0
+  }
+}

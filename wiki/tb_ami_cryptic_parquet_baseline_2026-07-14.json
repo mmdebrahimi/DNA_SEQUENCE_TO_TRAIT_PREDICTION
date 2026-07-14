@@ -1,0 +1,72 @@
+{
+  "drug": "amikacin",
+  "rule_status": "deterministic",
+  "n_isolates": 8972,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.263,
+    "spec": 1.0,
+    "tp": 10,
+    "fp": 0,
+    "tn": 366,
+    "fn": 28,
+    "sens_wilson_ci": [
+      0.15,
+      0.42
+    ],
+    "spec_wilson_ci": [
+      0.99,
+      1.0
+    ],
+    "n_clusters_R": 38,
+    "n_clusters_S": 366,
+    "n_discordant": 36,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 29
+  },
+  "raw": {
+    "tp": 476,
+    "fp": 35,
+    "tn": 8340,
+    "fn": 121,
+    "sens": 0.797,
+    "spec": 0.996
+  },
+  "effective_lineage_n": {
+    "R": 38,
+    "S": 366
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      597,
+      38
+    ],
+    "S": [
+      8375,
+      366
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 8778,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 0,
+    "exact_cryptic_targets": 0,
+    "complex_delins_unmapped": 0,
+    "isolates_with_indel_hit": 0,
+    "snv_to_R_flips": 0,
+    "flips_true_positive": 0,
+    "flips_false_positive": 0
+  },
+  "raw_snv_only": {
+    "tp": 476,
+    "fp": 35,
+    "tn": 8340,
+    "fn": 121,
+    "sens": 0.797,
+    "spec": 0.996
+  }
+}

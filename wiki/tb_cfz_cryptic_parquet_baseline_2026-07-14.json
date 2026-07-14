@@ -1,0 +1,72 @@
+{
+  "drug": "clofazimine",
+  "rule_status": "deterministic",
+  "n_isolates": 7762,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.0,
+    "spec": 1.0,
+    "tp": 0,
+    "fp": 0,
+    "tn": 359,
+    "fn": 6,
+    "sens_wilson_ci": [
+      0.0,
+      0.39
+    ],
+    "spec_wilson_ci": [
+      0.989,
+      1.0
+    ],
+    "n_clusters_R": 6,
+    "n_clusters_S": 359,
+    "n_discordant": 24,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 6
+  },
+  "raw": {
+    "tp": 1,
+    "fp": 13,
+    "tn": 7643,
+    "fn": 105,
+    "sens": 0.009,
+    "spec": 0.998
+  },
+  "effective_lineage_n": {
+    "R": 6,
+    "S": 359
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      106,
+      6
+    ],
+    "S": [
+      7656,
+      359
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 7602,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 142,
+    "exact_cryptic_targets": 140,
+    "complex_delins_unmapped": 2,
+    "isolates_with_indel_hit": 14,
+    "snv_to_R_flips": 14,
+    "flips_true_positive": 1,
+    "flips_false_positive": 13
+  },
+  "raw_snv_only": {
+    "tp": 0,
+    "fp": 0,
+    "tn": 7656,
+    "fn": 106,
+    "sens": 0.0,
+    "spec": 1.0
+  }
+}
