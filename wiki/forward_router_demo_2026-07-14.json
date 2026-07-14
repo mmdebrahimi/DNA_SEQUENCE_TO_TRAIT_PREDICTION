@@ -1,0 +1,87 @@
+{
+  "demo": "forward_edit_router",
+  "regimes_routed": {
+    "A_determinant": "WHO TB catalogue (R/S)",
+    "B_molecular": "ESM2 DMS predictor",
+    "C_organismal": "ABSTAIN"
+  },
+  "regime_A_source": "real_who_catalogue",
+  "results": {
+    "regime_A": {
+      "source": "real_who_catalogue",
+      "n_determinant_keys": 21,
+      "hit": {
+        "gene": "rpoB",
+        "mutation": "S450L",
+        "drug": "rifampicin",
+        "regime": "A_determinant",
+        "routing_reason": null,
+        "prediction": "R",
+        "predictor": "determinant_catalogue",
+        "confidence": "high",
+        "abstain": false,
+        "notes": [
+          "matches a catalogued resistance determinant"
+        ]
+      },
+      "miss": {
+        "gene": "rpoB",
+        "mutation": "A286V",
+        "drug": "rifampicin",
+        "regime": "A_determinant",
+        "routing_reason": null,
+        "prediction": "S",
+        "predictor": "determinant_catalogue",
+        "confidence": "medium",
+        "abstain": false,
+        "notes": [
+          "not a catalogued resistance determinant (susceptible-by-absence; callability unassessed)"
+        ]
+      }
+    },
+    "regime_B": {
+      "benign_example": {
+        "gene": "blaTEM-1",
+        "mutation": "E210K",
+        "drug": null,
+        "regime": "B_molecular",
+        "routing_reason": null,
+        "prediction": "preserved",
+        "raw_score": 2.6921199560165405,
+        "predictor": "esm2_DMS_validated",
+        "confidence": "medium",
+        "abstain": false,
+        "notes": []
+      },
+      "damaging_example": {
+        "gene": "blaTEM-1",
+        "mutation": "P181R",
+        "drug": null,
+        "regime": "B_molecular",
+        "routing_reason": null,
+        "prediction": "damaging",
+        "raw_score": -13.781812899047509,
+        "predictor": "esm2_DMS_validated",
+        "confidence": "medium",
+        "abstain": false,
+        "notes": []
+      }
+    },
+    "regime_C": {
+      "gene": "acs (acetate growth rate)",
+      "mutation": "X100Y",
+      "drug": null,
+      "regime": "C_organismal",
+      "routing_reason": null,
+      "prediction": "ABSTAIN",
+      "predictor": "none",
+      "confidence": "low",
+      "abstain": true,
+      "notes": [
+        "organism-level polygenic trait \u2014 closed-negative regime; abstaining"
+      ]
+    }
+  },
+  "honesty": "One entry point auto-routes an edit to the correct regime predictor. Resistance edits go to the determinant catalogue (never the likelihood predictor \u2014 resistance-conservativeness finding); organismal traits abstain (closed negative). Regime B is the DMS-validated molecular predictor.",
+  "status": "ROUTER_DEMO_OK"
+}

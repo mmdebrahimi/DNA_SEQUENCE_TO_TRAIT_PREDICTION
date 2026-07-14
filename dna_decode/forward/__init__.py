@@ -13,6 +13,16 @@ from .genome_edit import (  # noqa: F401
     predict_genome_edit,
     translate_codon,
 )
+from .router import (  # noqa: F401
+    REGIME_A,
+    REGIME_B,
+    REGIME_C,
+    REGIME_UNKNOWN,
+    catalogue_call,
+    classify_edit,
+    predict_edit,
+    variant_key,
+)
 from .variant_effect import (  # noqa: F401
     ForwardPrediction,
     blosum62_score,
