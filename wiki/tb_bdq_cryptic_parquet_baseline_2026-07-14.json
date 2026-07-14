@@ -1,0 +1,72 @@
+{
+  "drug": "bedaquiline",
+  "rule_status": "deterministic",
+  "n_isolates": 8535,
+  "n_uncallable_abstain": 0,
+  "status": "WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE",
+  "honesty": "In-distribution knowledge-baseline: the WHO catalogue was built partly from CRyPTIC. NOT independent validation \u2014 see the separate post-2023 gold-set arm.",
+  "lineage_collapsed": {
+    "sens": 0.0,
+    "spec": 0.938,
+    "tp": 0,
+    "fp": 25,
+    "tn": 381,
+    "fn": 5,
+    "sens_wilson_ci": [
+      0.0,
+      0.434
+    ],
+    "spec_wilson_ci": [
+      0.911,
+      0.958
+    ],
+    "n_clusters_R": 5,
+    "n_clusters_S": 406,
+    "n_discordant": 17,
+    "n_cluster_abstain": 0,
+    "n_clusters_mixed_prediction": 9
+  },
+  "raw": {
+    "tp": 13,
+    "fp": 77,
+    "tn": 8387,
+    "fn": 58,
+    "sens": 0.183,
+    "spec": 0.991
+  },
+  "effective_lineage_n": {
+    "R": 5,
+    "S": 406
+  },
+  "raw_to_lineage_shrinkage": {
+    "R": [
+      71,
+      5
+    ],
+    "S": [
+      8464,
+      406
+    ]
+  },
+  "source": "CRyPTIC Zenodo VARIANTS.parquet (genomic SNV + exact indel-determinant match)",
+  "callability_assessed": false,
+  "n_with_inscope_calls": 8348,
+  "indel_matching": {
+    "enabled": true,
+    "indel_determinants": 784,
+    "exact_cryptic_targets": 774,
+    "complex_delins_unmapped": 10,
+    "isolates_with_indel_hit": 70,
+    "snv_to_R_flips": 70,
+    "flips_true_positive": 9,
+    "flips_false_positive": 61
+  },
+  "raw_snv_only": {
+    "tp": 4,
+    "fp": 16,
+    "tn": 8448,
+    "fn": 67,
+    "sens": 0.056,
+    "spec": 0.998
+  }
+}
