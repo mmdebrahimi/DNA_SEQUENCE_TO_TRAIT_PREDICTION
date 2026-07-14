@@ -1,0 +1,24 @@
+{
+  "cell": "tem1_forward_variant_effect",
+  "protein": "CYP2C9 (P11712)",
+  "dms_id": "CP2C9_HUMAN_Amorosi_2021_abundance",
+  "phenotype_axis": "human DMS",
+  "method": "blosum62_deterministic",
+  "n_single_variants_scored": 6370,
+  "n_multi_mutant_skipped": 0,
+  "n_wt_mismatch": 0,
+  "spearman_pred_vs_dms": 0.333,
+  "sign_expectation": "positive (conservative substitution -> preserved ampicillin fitness)",
+  "nonsense_mean_dms": null,
+  "overall_mean_dms": 0.6866,
+  "polarity_ok": true,
+  "nonsense_anchor_available": false,
+  "coarse_confusion_on_dms_bin": {
+    "tp": 1184,
+    "fp": 477,
+    "tn": 2708,
+    "fn": 2001
+  },
+  "honesty": "Regime-B molecular-fitness forward predictor; deterministic BLOSUM62 baseline. Validated per-variant on FREE independent DMS. NOT an organism-level predictor (Regime C abstains); for clinical-resistance calls use the Regime-A determinant catalogue.",
+  "status": "FORWARD_CELL_DMS_VALIDATED"
+}

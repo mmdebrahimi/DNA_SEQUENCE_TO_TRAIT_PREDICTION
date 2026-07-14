@@ -1,0 +1,24 @@
+{
+  "cell": "tem1_forward_variant_effect",
+  "protein": "MSH2 (P43246)",
+  "dms_id": "MSH2_HUMAN_Jia_2020",
+  "phenotype_axis": "human DMS",
+  "method": "alphamissense_learned",
+  "n_single_variants_scored": 16749,
+  "n_multi_mutant_skipped": 0,
+  "n_wt_mismatch": 0,
+  "spearman_pred_vs_dms": 0.4157,
+  "sign_expectation": "positive (conservative substitution -> preserved ampicillin fitness)",
+  "nonsense_mean_dms": null,
+  "overall_mean_dms": 2.8612,
+  "polarity_ok": true,
+  "nonsense_anchor_available": false,
+  "coarse_confusion_on_dms_bin": {
+    "tp": 4944,
+    "fp": 68,
+    "tn": 2278,
+    "fn": 9459
+  },
+  "honesty": "Regime-B molecular-fitness forward predictor; deterministic BLOSUM62 baseline. Validated per-variant on FREE independent DMS. NOT an organism-level predictor (Regime C abstains); for clinical-resistance calls use the Regime-A determinant catalogue.",
+  "status": "FORWARD_CELL_DMS_VALIDATED"
+}

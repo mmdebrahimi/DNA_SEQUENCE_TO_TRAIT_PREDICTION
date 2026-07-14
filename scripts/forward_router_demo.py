@@ -96,6 +96,33 @@ def main() -> int:
         results["regime_B"] = {"status": "unavailable (D: cache absent)"}
         out_lines.append("[B molecular ] blaTEM-1 M69L -> UNAVAILABLE (D: cache absent)")
 
+    # --- Regime B (HUMAN): AlphaMissense predictor -------------------------------------------------
+    try:
+        from dna_decode.forward import am_table_for_mutants, load_am_for_uniprot
+        pten_ref = Path("D:/dna_decode_cache/proteingym/pg_reference.csv")
+        pseq = next((r["target_seq"] for r in csv.DictReader(open(pten_ref, encoding="utf-8"))
+                     if r["DMS_id"] == "PTEN_HUMAN_Mighell_2018"), None) if pten_ref.exists() else None
+        am_tsv = Path("D:/dna_decode_cache/proteingym/am_filtered.tsv")
+        if pseq and am_tsv.exists():
+            dms = Path("D:/dna_decode_cache/proteingym/pg_dms/DMS_ProteinGym_substitutions/PTEN_HUMAN_Mighell_2018.csv")
+            muts = [r["mutant"] for r in csv.DictReader(open(dms, encoding="utf-8"))]
+            am_table = am_table_for_mutants(load_am_for_uniprot(am_tsv, "P60484"), 0, muts)
+            # pick the highest-AM (pathogenic) + lowest-AM (benign) real PTEN variant
+            path_mut = max(am_table, key=am_table.get)
+            ben_mut = min(am_table, key=am_table.get)
+            hp = predict_edit("PTEN", path_mut, regime=REGIME_B, protein_seq=pseq, method="alphamissense",
+                              am_table=am_table, phenotype="PTEN function (human)")
+            hb = predict_edit("PTEN", ben_mut, regime=REGIME_B, protein_seq=pseq, method="alphamissense",
+                              am_table=am_table, phenotype="PTEN function (human)")
+            results["regime_B_human_am"] = {"pathogenic": hp, "benign": hb}
+            out_lines.append(f"[B molecular*] PTEN {path_mut} (human, AlphaMissense) -> {hp['prediction']} "
+                             f"(AM {round(1 - hp['raw_score'], 3)}, {hp['predictor']})")
+            out_lines.append(f"[B molecular*] PTEN {ben_mut} (human, AlphaMissense) -> {hb['prediction']} "
+                             f"(AM {round(1 - hb['raw_score'], 3)})")
+    except Exception as e:
+        results["regime_B_human_am"] = {"status": f"unavailable ({type(e).__name__})"}
+        out_lines.append(f"[B molecular*] PTEN (human, AlphaMissense) -> UNAVAILABLE ({type(e).__name__})")
+
     # --- Regime C: organismal -> abstain -----------------------------------------------------------
     c = predict_edit("acs (acetate growth rate)", "X100Y", regime=REGIME_C)
     results["regime_C"] = c

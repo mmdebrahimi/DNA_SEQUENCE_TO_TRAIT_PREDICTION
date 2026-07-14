@@ -46,5 +46,15 @@ def test_predict_effect_alphamissense_missing_variant_raises():
         predict_effect("", "V133A", method="alphamissense")
 
 
+def test_leaderboard_classifiers():
+    from scripts.forward_leaderboard import _METHOD, _organism
+    assert _organism("PTEN_HUMAN_Mighell_2018") == "human"
+    assert _organism("BLAT_ECOLX_Stiffler_2015") == "E. coli"
+    assert _organism("CCDB_ECOLI_Tripathi_2016") == "E. coli"
+    assert _METHOD["blosum62_deterministic"] == "blosum"
+    assert _METHOD["esm2_zeroshot"] == "esm2"
+    assert _METHOD["alphamissense_learned"] == "am"
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))

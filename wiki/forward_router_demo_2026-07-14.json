@@ -67,6 +67,34 @@
         "notes": []
       }
     },
+    "regime_B_human_am": {
+      "pathogenic": {
+        "gene": "PTEN",
+        "mutation": "K13F",
+        "drug": null,
+        "regime": "B_molecular",
+        "routing_reason": null,
+        "prediction": "damaging",
+        "raw_score": 0.0,
+        "predictor": "alphamissense_DMS_validated",
+        "confidence": "medium",
+        "abstain": false,
+        "notes": []
+      },
+      "benign": {
+        "gene": "PTEN",
+        "mutation": "T2A",
+        "drug": null,
+        "regime": "B_molecular",
+        "routing_reason": null,
+        "prediction": "preserved",
+        "raw_score": 0.9501,
+        "predictor": "alphamissense_DMS_validated",
+        "confidence": "medium",
+        "abstain": false,
+        "notes": []
+      }
+    },
     "regime_C": {
       "gene": "acs (acetate growth rate)",
       "mutation": "X100Y",

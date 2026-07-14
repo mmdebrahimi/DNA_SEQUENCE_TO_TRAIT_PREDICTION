@@ -1,0 +1,109 @@
+{
+  "generated": "2026-07-14",
+  "proteins": [
+    {
+      "dms_id": "BLAT_ECOLX_Stiffler_2015",
+      "organism": "E. coli",
+      "n": 4996,
+      "blosum": 0.3465,
+      "esm2": 0.7315,
+      "am": null
+    },
+    {
+      "dms_id": "CCDB_ECOLI_Tripathi_2016",
+      "organism": "E. coli",
+      "n": 1663,
+      "blosum": 0.2482,
+      "esm2": 0.5115,
+      "am": null
+    },
+    {
+      "dms_id": "BLAT_ECOLX_Firnberg_2014",
+      "organism": "E. coli",
+      "n": 4783,
+      "blosum": 0.3385,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "BLAT_ECOLX_Deng_2012",
+      "organism": "E. coli",
+      "n": 4996,
+      "blosum": 0.3055,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "IF1_ECOLI_Kelsic_2016",
+      "organism": "E. coli",
+      "n": 1367,
+      "blosum": 0.1823,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "MLAC_ECOLI_MacRae_2023",
+      "organism": "E. coli",
+      "n": 4007,
+      "blosum": 0.1823,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "DYR_ECOLI_Nguyen_2023",
+      "organism": "E. coli",
+      "n": 2916,
+      "blosum": 0.1518,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "DYR_ECOLI_Thompson_2019",
+      "organism": "E. coli",
+      "n": 2363,
+      "blosum": 0.1507,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "ENVZ_ECOLI_Ghose_2023",
+      "organism": "E. coli",
+      "n": 1121,
+      "blosum": 0.1011,
+      "esm2": null,
+      "am": null
+    },
+    {
+      "dms_id": "CP2C9_HUMAN_Amorosi_2021_abundance",
+      "organism": "human",
+      "n": 6370,
+      "blosum": 0.333,
+      "esm2": null,
+      "am": 0.5983
+    },
+    {
+      "dms_id": "TPMT_HUMAN_Matreyek_2018",
+      "organism": "human",
+      "n": 3648,
+      "blosum": 0.2399,
+      "esm2": null,
+      "am": 0.5581
+    },
+    {
+      "dms_id": "PTEN_HUMAN_Mighell_2018",
+      "organism": "human",
+      "n": 7260,
+      "blosum": 0.1824,
+      "esm2": 0.5185,
+      "am": 0.5395
+    },
+    {
+      "dms_id": "MSH2_HUMAN_Jia_2020",
+      "organism": "human",
+      "n": 16749,
+      "blosum": 0.1635,
+      "esm2": null,
+      "am": 0.4157
+    }
+  ]
+}
