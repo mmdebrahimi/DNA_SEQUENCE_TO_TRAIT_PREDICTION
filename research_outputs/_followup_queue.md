@@ -1,18 +1,19 @@
 # Research Follow-up Queue (V1.5 invocation)
 <!-- queue-schema: 0.1 -->
 
-> Last updated 2026-06-22 (label-acquisition epoch: noncircular-label-sources shortlist added; 4 acquisition decisions surfaced). Stale-days threshold: 30. Source memos scanned: 7.
+> Last updated 2026-07-14 (marine acquisition-path epoch: 3 verified/named Vibrio genome+measured-AST accessions added for the Hamid data-request email; appended to the 2026-06-22 label-acquisition epoch). Stale-days threshold: 30.
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
+> NOTE (2026-07-14): this update APPENDED the 3 marine-vibrio rows to the top of Active + bumped counts; the prior 25 rows are preserved verbatim (no full 38-memo re-aggregation was run — that is deferred).
 
 ## Summary
 
-- Source memos scanned: 6
+- Source memos scanned (this + prior epoch): 7
 - Schema-drift memos (skipped): 0
-- Total raw candidate rows extracted: 25
-- Unique candidates after dedup: 25
-- Active candidates (≤ 30 days old): 25
+- Total raw candidate rows extracted: 28
+- Unique candidates after dedup: 28
+- Active candidates (≤ 30 days old): 28
 - Stale candidates (> 30 days old): 0
 - Cross-flavor candidates (public + internal): 0
 
@@ -33,6 +34,9 @@ Full shortlist + gate-screening: `research_outputs/noncircular-label-sources-202
 
 | Claim | Numeric value | Units | Locator(s) | Candidate use / Verification needed | Confidence | Sources | Problem-anchor(s) | Notes |
 |---|---:|---|---|---|---|---|---|---|
+| Korean seafood *V. parahaemolyticus* genome+MIC set (marine acquisition-path candidate) | PRJNA1254427 | accession | https://pmc.ncbi.nlm.nih.gov/articles/PMC12300810/ | **Candidate use:** the single best marine "ask Hamid to grab this" — deposited assemblies + CLSI MIC incl. ciprofloxacin/tetracycline/ceftazidime (drops straight into the decoder). **Verification needed:** confirm exactly how many of the 10 have a downloadable assembly AND a cipro/tet MIC. | medium | marine-vibrio-genome-mic-accessions-2026-07-14 | pin exact accessions for a marine-biology postdoc data-request email | Marine acquisition path (Hamid); small N (10 paired) but clean + mechanism-matched |
+| Canadian imported-shrimp *Vibrio* (3 species) genome+disk-AST set | PRJNA645603 | accession | https://journals.asm.org/doi/10.1128/mra.01014-21 | **Candidate use:** small multi-species (V. alginolyticus/cholerae/parahaemolyticus) with measured Kirby-Bauer disk AST. **Verification needed:** disk-zone→R/S mapping + whether MICs (not just zones) are available. | high | marine-vibrio-genome-mic-accessions-2026-07-14 | pin exact accessions for a marine-biology postdoc data-request email | Marine acquisition path; 4 paired isolates |
+| Aquacultured-seafood AMR *Vibrio* SRA sets (largest marine pool IF AST is paired) | PRJNA699735 / PRJNA1107692 / PRJNA1155317 | accession | https://www.sciencedirect.com/science/article/pii/S0740002025000991 | **Candidate use:** potentially the biggest usable marine pool. **Verification needed:** open the paper supplement — is there a per-isolate MEASURED MIC/disk table, or only genome-predicted resistance genes? (the load-bearing check). | medium | marine-vibrio-genome-mic-accessions-2026-07-14 | pin exact accessions for a marine-biology postdoc data-request email | Marine acquisition path; per-isolate measured-AST pairing UNVERIFIED |
 | EnteroBase pathotype labels are derived from BlastFrost gene-presence calls (same markers v0 deterministic resolver would track) | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC9393565/ | **Candidate use:** treat EnteroBase pathotype labels as STRUCTURALLY circular with the v0 deterministic resolver; do NOT use EnteroBase pathotype field as the primary independent-label substrate for H1. EnteroBase remains usable for cohort assembly + MLST clonal-lineage context, but the pathotype label itself fails the independence test. **Verification needed:** confirm with EnteroBase maintainers (Mark Achtman group, Warwick) whether a parallel "manually annotated pathotype" field exists alongside the BlastFrost-derived field, and what fraction of records carry it. | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI (gates architecture-fork lock for the deterministic multilabel cluster resolver + abstention v0 CLI) | Load-bearing for H1 (label-independence) on the dna_decode pathotype project |
 | Horesh 2021 curated 10,146-genome collection: pathotype assignment uses HYBRID (ariba + VirulenceFinder DB + isolation source refinement) — NOT purely independent | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC8208696/ | **Candidate use:** Horesh 2021 is the largest publication-extracted-metadata candidate substrate (~5,000+ usable strains across DEC pathotypes); the "isolation source refinement" step adds an independent component that pure EnteroBase BlastFrost labels lack. **Verification needed:** open the Horesh 2021 supplementary metadata file (File F1) and audit per-record whether each pathotype label has a documented isolation-source basis vs gene-rule-only basis. Estimate the independent-label fraction; target H1 floor ≥70%. | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI | Largest curated paired-WGS+publication-metadata source identified |
 | Horesh 2021 pathotype representation: EPEC ≈ 3% + ETEC ≈ 2% of 10,146 genomes ≈ 304 EPEC + 203 ETEC strains | 3,2 | percent (EPEC,ETEC) | https://pmc.ncbi.nlm.nih.gov/articles/PMC8208696/ | **Candidate use:** confirms H2 cohort floor (N≥50 each pathotype) is achievable for EPEC + ETEC from Horesh 2021 alone. UPEC/ExPEC counts likely much higher given ST131 + ST73 + ST95 dominance. **Verification needed:** retrieve explicit EAEC + EHEC/STEC + UPEC + ExPEC + commensal per-class counts from Horesh 2021 supplementary; verify EAEC count meets N≥50 floor (the EP-2 distributed-mechanism warning shot applies to EAEC). | high | ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | E. coli pathotype labeled-genome substrate survey for an open-source pathotype prediction CLI | H2 per-class floor feasibility check |

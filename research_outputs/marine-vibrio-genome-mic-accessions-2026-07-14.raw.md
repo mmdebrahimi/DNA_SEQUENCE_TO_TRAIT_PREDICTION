@@ -1,0 +1,37 @@
+# Marine / aquaculture bacteria — genome + measured-AST datasets: exact accessions (raw research, 2026-07-14)
+
+> Captured 2026-07-14. Source: Claude Code (`/research` orchestrator, run by hand). Topic: "pin exact accessions for marine/aquaculture bacterial datasets with paired genome + measured antibiotic susceptibility (for a data-request email to a marine-biology postdoc)". Slug: marine-vibrio-genome-mic-accessions-2026-07-14.
+> Web search via Claude Code WebSearch + WebFetch, single-pass. NOTE: a content-filter false-positive blocked most resistance-phrased search queries mid-run (a known recurring issue); the two primary accession rows were nonetheless fetch-verified verbatim. Aeromonas/Piscirickettsia + the large-N reference resources could not be freshly fetched this run — flagged in Honest gaps.
+
+## Audit table (verbatim, all candidate rows)
+
+| Claim / quantity | Numeric value | Units | Source title | Authors / org | Year | Section / table / figure | Stable URL | Access date | Quoted excerpt (≤25 words) | Extraction rationale | Source type | Confidence |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| BioProject for Korean seafood *V. parahaemolyticus* with genome assemblies | PRJNA1254427 (BioSamples SAMN48128082–SAMN48128091) | accession | Antibiotic Resistance and Characteristics of *Vibrio parahaemolyticus* Isolated from Seafood Distributed in South Korea 2021–2022 | (South Korea seafood surveillance) / PMC12300810 | 2024/25 | Data availability | https://pmc.ncbi.nlm.nih.gov/articles/PMC12300810/ | 2026-07-14 | "genome assemblies ... deposited in the NCBI database under BioProject accession number PRJNA1254427, with associated BioSample accession numbers SAMN48128082 to SAMN48128091" | Verbatim accession fetch-verified; assemblies deposited | peer-reviewed | high |
+| Isolates in PRJNA1254427 with BOTH WGS AND lab-measured MIC | 10 (of 17 MIC-tested) | isolates | (same as above) | PMC12300810 | 2024/25 | Methods / Results | https://pmc.ncbi.nlm.nih.gov/articles/PMC12300810/ | 2026-07-14 | "MIC method in accordance with the Clinical and Laboratory Standards Institute (CLSI) guidelines" | 17 isolates MIC-tested (CLSI); WGS on the 10 resistant → 10 paired genome+MIC | peer-reviewed | high |
+| Antibiotics measured in PRJNA1254427 (maps to decoder mechanisms) | qualitative | — | (same as above) | PMC12300810 | 2024/25 | Methods | https://pmc.ncbi.nlm.nih.gov/articles/PMC12300810/ | 2026-07-14 | "gentamicin, streptomycin, ampicillin ... ceftazidime, cefepime, meropenem, ciprofloxacin ... chloramphenicol, colistin, nalidixic acid, and tetracycline" | Includes ciprofloxacin (gyrA/parC QRDR) + tetracycline + ceftazidime — the decoder's exact mechanisms | peer-reviewed | high |
+| BioProject for Canadian imported-shrimp *Vibrio* with phenotypic AST | PRJNA645603 | accession | Whole-Genome Sequences of *Vibrio* Species from Warm-Water Shrimps Imported into Canada | / ASM Microbiology Resource Announcements (mra.01014-21) | 2021 | Data availability / Table 1 | https://journals.asm.org/doi/10.1128/mra.01014-21 | 2026-07-14 | "antimicrobial resistance (AMR) profiles determined by the Kirby-Bauer disk diffusion method" | Fetch-verified; measured disk-diffusion AST paired to WGS | peer-reviewed | high |
+| Isolates in PRJNA645603 with BOTH WGS AND measured AST | 4 | isolates | (same as above) | mra.01014-21 | 2021 | Table 1 | https://journals.asm.org/doi/10.1128/mra.01014-21 | 2026-07-14 | "The antibiotic susceptibility test results showed resistance to up to nine different antibiotics" | 4 isolates (V. alginolyticus / V. cholerae / 2× V. parahaemolyticus) with per-isolate disk AST | peer-reviewed | high |
+| BioProjects for aquacultured-seafood AMR *Vibrio* (SRA reads) | PRJNA699735; PRJNA1107692; PRJNA1155317 | accession | Association of antimicrobial resistant *Vibrio* ... with aquacultured seafood | / ScienceDirect S0740002025000991 | 2025 | Data availability | https://www.sciencedirect.com/science/article/pii/S0740002025000991 | 2026-07-14 | "Raw Illumina reads were uploaded to the Sequence Read Archive (SRA) under bioprojects: PRJNA699735, PRJNA1107692 and PRJNA1155317" | Named in search result; per-isolate MEASURED-AST pairing NOT individually fetch-verified this run | peer-reviewed | medium |
+| BioProject for foodborne *Vibrio* blaCTX-M-14 clade | PRJNA622672 | accession | Genomic mining of *V. parahaemolyticus* (BMC Genomics) | / referenced unpublished study | 2024 | Cited clade | https://pmc.ncbi.nlm.nih.gov/articles/PMC12300810/ | 2026-07-14 | "unpublished study on the occurrence ... of blaCTX-M-14 among foodborne Vibrio spp. (PRJNA622672)" | Unpublished; genome+measured-AST pairing unverified | peer-reviewed (cited) | low |
+| Pathogenwatch hosts a public *Vibrio cholerae* genome collection | qualitative | — | Pathogenwatch | Centre for Genomic Pathogen Surveillance / Wellcome Sanger | — | Collections | https://pathogen.watch/ | 2026-07-14 | (page JS-rendered; not fetch-verified this run) | Known public resource (V. cholerae collection + AMR annotation); confirm the exact collection URL before citing | database | low |
+| NCBI Pathogen Detection includes *Vibrio* taxgroups with `AST_phenotypes` | qualitative | — | NCBI Pathogen Detection | NCBI | — | Isolates browser | https://www.ncbi.nlm.nih.gov/pathogens/ | 2026-07-14 | (page JS-rendered; not fetch-verified this run) | Same source shape the decoder already uses for E. coli/Klebsiella; Vibrio taxgroups carry measured AST for a subset | database | low |
+
+## Highest-confidence rows (top 5)
+
+1. **PRJNA1254427** (row 1–3) — the single best "ask for this" accession: real, deposited assemblies + **CLSI MIC measured** including **ciprofloxacin, tetracycline, ceftazidime** (the decoder's exact mechanisms). 10 isolates with paired genome+MIC. Fetch-verified verbatim.
+2. **PRJNA645603** (row 4–5) — verified Canadian imported-shrimp *Vibrio* (3 species) with **measured disk-diffusion AST**. 4 paired isolates. Small but clean + multi-species.
+3. Antibiotic list for PRJNA1254427 — confirms cipro + tet coverage (drops straight into the existing decoder).
+4. Aquacultured-seafood BioProjects (PRJNA699735 / PRJNA1107692 / PRJNA1155317) — larger read sets; need per-isolate AST-pairing confirmation.
+5. NCBI-PD Vibrio taxgroups — the scalable public anchor + the exact data shape to show Hamid.
+
+## Low-confidence rows
+
+- PRJNA622672 (unpublished; pairing unverified).
+- Pathogenwatch V. cholerae collection + NCBI-PD Vibrio taxgroups — named from domain knowledge; **not fetch-verified this run** (JS-rendered pages). Confirm URLs before use.
+
+## Honest gaps
+
+- **Aeromonas salmonicida / A. hydrophila, Piscirickettsia salmonis, and other aquaculture-pathogen** measured-AST + genome accessions could NOT be retrieved this run — every resistance-phrased search query tripped a content-filter false-positive (a documented recurring issue). These datasets very likely exist (heavy antibiotic use in salmon/shrimp farming); a follow-up run on an unblocked channel (or a direct Google Scholar check) should pin them.
+- **No LARGE-N (>50) measured-MIC Vibrio genome set was located** this run. The two verified sets are small (10 and 4 paired isolates) — clean but small. This *strengthens* the case for asking Hamid for his lab's own unpublished collection, which would likely be larger.
+- Pathogenwatch + NCBI-PD were not freshly fetch-verified (JS pages); named as known resources only.
