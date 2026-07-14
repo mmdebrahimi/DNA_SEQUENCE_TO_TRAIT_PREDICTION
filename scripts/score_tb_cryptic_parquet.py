@@ -152,38 +152,39 @@ def load_labels(reuse_csv: Path, code: str) -> dict[str, str]:
     return labels
 
 
-def run(drug: str, dump_dir: Path, reuse_csv: Path, max_isolates: int = 0, match_indels: bool = True) -> dict:
-    code = DRUG_CODE[drug]
-    tb_who_catalogue.verify_pins()
+def _prep_drug(drug: str, match_indels: bool):
+    """Load a drug's determinants + derive its determinant positions + indel targets (no parquet I/O)."""
     dets = tb_who_catalogue.load_determinants(drug)
-    barcode = tb_lineage_barcode.load_barcode()
     det_pos = {d.pos for d in dets}
-    wanted = det_pos | barcode_positions(barcode)
     indel_dets = [d for d in dets if len(d.ref) != len(d.alt)]
     targets = indel_determinant_targets(dets) if match_indels else {}
     n_complex = len(indel_dets) - len({who_indel_to_cryptic_string(d.pos, d.ref, d.alt) for d in indel_dets
                                        if who_indel_to_cryptic_string(d.pos, d.ref, d.alt)})
-    print(f"[tb-cryptic-parquet] {drug}: {len(dets)} determinant rows ({len(det_pos)} positions) + "
-          f"{len(wanted) - len(det_pos)} barcode positions")
-    print(f"[tb-cryptic-parquet] indel determinants: {len(indel_dets)} -> {len(targets)} exact CRyPTIC "
-          f"targets ({n_complex} complex delins unmapped); indel matching={'ON' if match_indels else 'OFF'}")
+    return dets, det_pos, indel_dets, targets, n_complex
 
-    labels = load_labels(reuse_csv, code)
-    print(f"[tb-cryptic-parquet] {len(labels):,} measured HIGH-quality {code} labels")
-    calls, indel_hits = load_calls_by_strain(dump_dir / "VARIANTS.parquet", wanted, targets)
 
-    # Restrict to isolates that HAVE a measured label; an absent isolate in `calls` = no in-scope variants
-    # (all-reference at determinant+barcode positions) -> empty calls (susceptible-by-absence, callability
-    # unassessed). Cap for a smoke subset if requested.
+def _score_drug_from_calls(drug, dets, indel_dets, targets, n_complex, barcode, labels,
+                           calls, indel_hits, max_isolates, match_indels) -> dict:
+    """Score ONE drug from a (possibly SHARED, multi-drug) calls + indel_hits set.
+
+    `calls` may carry positions for OTHER drugs — harmless, `score_drug` only matches this drug's
+    determinants. `indel_hits` may carry OTHER drugs' indel strings — so we intersect with THIS drug's
+    `targets` keys before flipping S->R (in single-drug mode that intersection is a no-op)."""
     label_uids = list(labels)
     if max_isolates:
         label_uids = label_uids[:max_isolates]
-    cohort_calls = {uid: calls.get(uid, {}) for uid in label_uids}
+    # Filter the (possibly shared, multi-drug) calls down to THIS drug's in-scope positions
+    # (determinant ∪ barcode), so multi-drug scoring is byte-identical to single-drug `run`
+    # (whose stream already kept only these positions) — n_with_inscope_calls + clustering match.
+    wanted = {d.pos for d in dets} | barcode_positions(barcode)
+    cohort_calls = {uid: {p: c for p, c in (calls.get(uid) or {}).items() if p in wanted}
+                    for uid in label_uids}
     cohort_labels = {uid: labels[uid] for uid in label_uids}
 
-    # SNV-only prediction (the prior lower bound), then OR in exact indel-determinant hits.
+    # SNV-only prediction (the prior lower bound), then OR in exact indel-determinant hits FOR THIS DRUG.
     snv_preds = {uid: tb_amr.score_drug(drug, c, dets).prediction for uid, c in cohort_calls.items()}
-    indel_R = {uid for uid in label_uids if indel_hits.get(uid)}
+    target_keys = set(targets)
+    indel_R = {uid for uid in label_uids if (indel_hits.get(uid) or set()) & target_keys}
     preds = {uid: ("R" if (snv_preds[uid] == "R" or uid in indel_R) else snv_preds[uid]) for uid in label_uids}
     # audit the marginal effect: isolates flipped S->R purely by an indel determinant, split by truth
     flips = [uid for uid in label_uids if snv_preds[uid] == "S" and uid in indel_R]
@@ -201,7 +202,7 @@ def run(drug: str, dump_dir: Path, reuse_csv: Path, max_isolates: int = 0, match
         "indel_determinants": len(indel_dets),
         "exact_cryptic_targets": len(targets),
         "complex_delins_unmapped": n_complex,
-        "isolates_with_indel_hit": sum(1 for uid in label_uids if indel_hits.get(uid)),
+        "isolates_with_indel_hit": len(indel_R),
         "snv_to_R_flips": len(flips),
         "flips_true_positive": flip_tp,
         "flips_false_positive": flip_fp,
@@ -212,25 +213,59 @@ def run(drug: str, dump_dir: Path, reuse_csv: Path, max_isolates: int = 0, match
     return res
 
 
-def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--drug", default="rifampicin", choices=list(DRUG_CODE))
-    ap.add_argument("--dump-dir", type=Path, default=DEFAULT_DUMP)
-    ap.add_argument("--reuse-csv", type=Path, default=DEFAULT_REUSE)
-    ap.add_argument("--max", type=int, default=0, help="cap isolates (0=all; >0 => TB_SUBSET_PLUMBING)")
-    ap.add_argument("--no-indels", action="store_true", help="SNV-only (the prior lower-bound behavior)")
-    a = ap.parse_args(argv)
-    if not (a.dump_dir / "VARIANTS.parquet").exists():
-        print(f"ERROR: VARIANTS.parquet not found under {a.dump_dir}", file=sys.stderr)
-        return 2
-    if not a.reuse_csv.exists():
-        print(f"ERROR: reuse table not found at {a.reuse_csv}", file=sys.stderr)
-        return 2
-    res = run(a.drug, a.dump_dir, a.reuse_csv, a.max, match_indels=not a.no_indels)
-    code = DRUG_CODE[a.drug]
-    out = REPO / "wiki" / f"tb_{code.lower()}_cryptic_parquet_baseline_{_date.today().isoformat()}.json"
+def run(drug: str, dump_dir: Path, reuse_csv: Path, max_isolates: int = 0, match_indels: bool = True) -> dict:
+    code = DRUG_CODE[drug]
+    tb_who_catalogue.verify_pins()
+    barcode = tb_lineage_barcode.load_barcode()
+    dets, det_pos, indel_dets, targets, n_complex = _prep_drug(drug, match_indels)
+    wanted = det_pos | barcode_positions(barcode)
+    print(f"[tb-cryptic-parquet] {drug}: {len(dets)} determinant rows ({len(det_pos)} positions) + "
+          f"{len(wanted) - len(det_pos)} barcode positions")
+    print(f"[tb-cryptic-parquet] indel determinants: {len(indel_dets)} -> {len(targets)} exact CRyPTIC "
+          f"targets ({n_complex} complex delins unmapped); indel matching={'ON' if match_indels else 'OFF'}")
+
+    labels = load_labels(reuse_csv, code)
+    print(f"[tb-cryptic-parquet] {len(labels):,} measured HIGH-quality {code} labels")
+    calls, indel_hits = load_calls_by_strain(dump_dir / "VARIANTS.parquet", wanted, targets)
+    return _score_drug_from_calls(drug, dets, indel_dets, targets, n_complex, barcode, labels,
+                                  calls, indel_hits, max_isolates, match_indels)
+
+
+def run_multi(drugs: list[str], dump_dir: Path, reuse_csv: Path, max_isolates: int = 0,
+              match_indels: bool = True) -> dict[str, dict]:
+    """Score MULTIPLE drugs in ONE parquet pass: union every drug's determinant positions (+ the shared
+    barcode positions) + union their indel targets, stream VARIANTS.parquet once, then score each drug
+    from the shared calls. Result is identical to per-drug `run` (verified by test_multi_matches_single)."""
+    tb_who_catalogue.verify_pins()
+    barcode = tb_lineage_barcode.load_barcode()
+    prep = {drug: _prep_drug(drug, match_indels) for drug in drugs}
+    union_wanted: set[int] = set(barcode_positions(barcode))
+    union_targets: dict[str, object] = {}
+    for drug, (dets, det_pos, indel_dets, targets, n_complex) in prep.items():
+        union_wanted |= det_pos
+        union_targets.update(targets)     # membership-only in the stream; per-drug intersection at scoring
+    print(f"[tb-cryptic-parquet] MULTI: {len(drugs)} drugs -> union {len(union_wanted)} positions + "
+          f"{len(union_targets)} indel targets; ONE parquet pass")
+    calls, indel_hits = load_calls_by_strain(dump_dir / "VARIANTS.parquet", union_wanted, union_targets)
+    results: dict[str, dict] = {}
+    for drug in drugs:
+        dets, det_pos, indel_dets, targets, n_complex = prep[drug]
+        labels = load_labels(reuse_csv, DRUG_CODE[drug])
+        print(f"[tb-cryptic-parquet] scoring {drug}: {len(labels):,} {DRUG_CODE[drug]} labels, "
+              f"{len(dets)} determinants ({len(targets)} indel targets)")
+        results[drug] = _score_drug_from_calls(drug, dets, indel_dets, targets, n_complex, barcode,
+                                               labels, calls, indel_hits, max_isolates, match_indels)
+    return results
+
+
+# drugs whose CRyPTIC-parquet baseline already shipped (2026-07-14) — the 'all-remaining' complement
+_ALREADY_SCORED = {"rifampicin", "isoniazid", "moxifloxacin", "bedaquiline"}
+
+
+def _write_and_report(drug: str, res: dict) -> Path:
+    out = REPO / "wiki" / f"tb_{DRUG_CODE[drug].lower()}_cryptic_parquet_baseline_{_date.today().isoformat()}.json"
     out.write_text(json.dumps(res, indent=2, default=str), encoding="utf-8")
-    print(f"status={res['status']}  n_isolates={res['n_isolates']}  "
+    print(f"[{drug}] status={res['status']}  n_isolates={res['n_isolates']}  "
           f"n_with_inscope_calls={res.get('n_with_inscope_calls')}")
     im = res.get("indel_matching", {})
     print(f"  indel matching: {im.get('isolates_with_indel_hit')} isolates hit | "
@@ -242,7 +277,45 @@ def main(argv=None) -> int:
     if lc:
         print(f"  lineage-collapsed: sens={lc['sens']} spec={lc['spec']} "
               f"(R-lineages={lc['n_clusters_R']} S-lineages={lc['n_clusters_S']} discordant={lc['n_discordant']})")
-    print(f"artifact -> {out}")
+    print(f"  artifact -> {out}")
+    return out
+
+
+def _resolve_drugs(spec: str) -> list[str]:
+    if spec == "all":
+        return list(DRUG_CODE)
+    if spec == "all-remaining":
+        return [d for d in DRUG_CODE if d not in _ALREADY_SCORED]
+    drugs = [d.strip() for d in spec.split(",") if d.strip()]
+    bad = [d for d in drugs if d not in DRUG_CODE]
+    if bad:
+        raise SystemExit(f"ERROR: unknown drug(s) {bad}; choices: {list(DRUG_CODE)}")
+    return drugs
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--drug", default="rifampicin", choices=list(DRUG_CODE))
+    ap.add_argument("--drugs", default=None,
+                    help="comma list, or 'all' / 'all-remaining' — score MANY drugs in ONE parquet pass")
+    ap.add_argument("--dump-dir", type=Path, default=DEFAULT_DUMP)
+    ap.add_argument("--reuse-csv", type=Path, default=DEFAULT_REUSE)
+    ap.add_argument("--max", type=int, default=0, help="cap isolates (0=all; >0 => TB_SUBSET_PLUMBING)")
+    ap.add_argument("--no-indels", action="store_true", help="SNV-only (the prior lower-bound behavior)")
+    a = ap.parse_args(argv)
+    if not (a.dump_dir / "VARIANTS.parquet").exists():
+        print(f"ERROR: VARIANTS.parquet not found under {a.dump_dir}", file=sys.stderr)
+        return 2
+    if not a.reuse_csv.exists():
+        print(f"ERROR: reuse table not found at {a.reuse_csv}", file=sys.stderr)
+        return 2
+    if a.drugs:
+        drugs = _resolve_drugs(a.drugs)
+        results = run_multi(drugs, a.dump_dir, a.reuse_csv, a.max, match_indels=not a.no_indels)
+        for drug in drugs:
+            _write_and_report(drug, results[drug])
+        return 0
+    _write_and_report(a.drug, run(a.drug, a.dump_dir, a.reuse_csv, a.max, match_indels=not a.no_indels))
     return 0
 
 

@@ -5,7 +5,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.score_tb_cryptic_parquet import (  # noqa: E402
-    DRUG_CODE, indel_determinant_targets, load_labels, parse_cryptic_variant, who_indel_to_cryptic_string,
+    DRUG_CODE, _resolve_drugs, _score_drug_from_calls, indel_determinant_targets, load_labels,
+    parse_cryptic_variant, who_indel_to_cryptic_string,
 )
 from dna_decode.data.tb_who_catalogue import DRUG_CATALOGUE_NAME, Determinant  # noqa: E402
 from dna_decode.organism_rules import tb_amr, tb_vcf  # noqa: E402
@@ -33,6 +34,67 @@ def test_reuse_codes_are_uppercase_2to3_letter():
     # reuse-table phenotype-column prefixes are 2-3 uppercase letters (RIF/INH/MXF/BDQ/...)
     for code in DRUG_CODE.values():
         assert code.isupper() and 2 <= len(code) <= 3, f"unexpected reuse code shape: {code!r}"
+
+
+# --- single-parquet-pass multi-drug mode (2026-07-14): score many drugs in ONE stream ---------------
+def test_resolve_drugs():
+    assert _resolve_drugs("all") == list(DRUG_CODE)
+    # 'all-remaining' excludes the 4 already-scored (RIF/INH/MXF/BDQ)
+    rem = _resolve_drugs("all-remaining")
+    assert set(rem) == set(DRUG_CODE) - {"rifampicin", "isoniazid", "moxifloxacin", "bedaquiline"}
+    assert "moxifloxacin" not in rem and "levofloxacin" in rem
+    assert _resolve_drugs("levofloxacin,amikacin") == ["levofloxacin", "amikacin"]
+    assert _resolve_drugs(" linezolid , ethambutol ") == ["linezolid", "ethambutol"]
+    import pytest
+    with pytest.raises(SystemExit):
+        _resolve_drugs("not_a_drug")
+
+
+def test_multi_matches_single_scoring_from_shared_calls():
+    """The load-bearing multi-drug claim: scoring drug A from a SHARED calls+indel_hits set (carrying
+    OTHER drugs' positions + indel strings) is BYTE-IDENTICAL to scoring A from a clean per-drug set —
+    foreign positions are filtered, foreign indel strings are intersected out."""
+    det_snv = Determinant("Rifampicin", "rpoB", "rpoB_p.Ser450Leu", "1) Assoc w R", "1",
+                          "NC_000962.3", 100, "C", "T")
+    det_indel = Determinant("Rifampicin", "rpoB", "rpoB_p.Xdup", "1) Assoc w R", "1",
+                            "NC_000962.3", 200, "A", "ATTC")   # -> "200_ins_ttc"
+    dets = [det_snv, det_indel]
+    indel_dets = [det_indel]
+    targets = indel_determinant_targets(dets)                  # {"200_ins_ttc": det_indel}
+    assert "200_ins_ttc" in targets
+    labels = {"iso1": "R", "iso2": "S", "iso3": "R"}
+    # one shared lineage SNP (pos 500) so all 3 isolates form ONE non-singleton cluster (else score_cohort
+    # returns the BLOCKED-no-lineage dict). pos 500 is a barcode position -> survives the wanted-filter.
+    from dna_decode.data.tb_lineage_barcode import BarcodeSNP
+    barcode = [BarcodeSNP(pos=500, lineage="lineage4", allele="G")]
+    bc = lambda: tb_vcf.VariantCall(500, "A", "G", "1/1")      # noqa: E731
+
+    # SHARED: iso1 has A's SNV(100) + a FOREIGN pos 300; iso3 relies on A's indel + a FOREIGN indel string
+    calls_shared = {
+        "iso1": {100: tb_vcf.VariantCall(100, "C", "T", "1/1"), 300: tb_vcf.VariantCall(300, "C", "G", "1/1"),
+                 500: bc()},
+        "iso2": {300: tb_vcf.VariantCall(300, "C", "G", "1/1"), 500: bc()},
+        "iso3": {500: bc()},
+    }
+    indel_hits_shared = {"iso3": {"200_ins_ttc", "400_ins_g"}, "iso1": {"400_ins_g"}}
+
+    # CLEAN: only A's positions + the barcode pos / only A's indel string
+    calls_clean = {"iso1": {100: tb_vcf.VariantCall(100, "C", "T", "1/1"), 500: bc()},
+                   "iso2": {500: bc()}, "iso3": {500: bc()}}
+    indel_hits_clean = {"iso3": {"200_ins_ttc"}}
+
+    kw = dict(drug="rifampicin", dets=dets, indel_dets=indel_dets, targets=targets, n_complex=0,
+              barcode=barcode, labels=labels, max_isolates=0, match_indels=True)
+    res_shared = _score_drug_from_calls(calls=calls_shared, indel_hits=indel_hits_shared, **kw)
+    res_clean = _score_drug_from_calls(calls=calls_clean, indel_hits=indel_hits_clean, **kw)
+
+    assert res_shared == res_clean                             # full equivalence
+    # sanity: iso1 R via SNV, iso3 R via indel, iso2 S -> perfect on this toy set
+    assert res_clean["raw"]["sens"] == 1.0 and res_clean["raw"]["spec"] == 1.0
+    # foreign indel "400_ins_g" did NOT flip iso1 (it is not one of A's targets)
+    assert res_shared["indel_matching"]["isolates_with_indel_hit"] == 1     # only iso3
+    # all 3 carry the barcode pos 500 -> all in-scope; the FOREIGN pos 300 was filtered (proven by ==)
+    assert res_shared["n_with_inscope_calls"] == 3
 
 
 def test_parse_cryptic_variant_snv():
