@@ -40,7 +40,20 @@ from scripts.score_tb_cryptic import score_cohort  # noqa: E402
 DEFAULT_DUMP = Path("D:/dna_decode_cache/data files donwload/lotsa SMILES")
 DEFAULT_REUSE = Path("D:/dna_decode_cache/data files donwload/CRyPTIC TB MIC compendium/"
                      "CRyPTIC_reuse_table_20240917.csv")
-DRUG_CODE = {"rifampicin": "RIF", "isoniazid": "INH"}
+# drug -> CRyPTIC reuse-table phenotype-column code. First-line (RIF/INH) shipped; the rest are the
+# SECOND-LINE + new-drug extension (2026-07-14) — each key is a DRUG_CATALOGUE_NAME key AND has a
+# `<code>_BINARY_PHENOTYPE` column verified present in CRyPTIC_reuse_table_20240917.csv. The scorer
+# (tb_amr.score_drug) is already drug-generic; this map is the only thing that gated second-line.
+DRUG_CODE = {
+    "rifampicin": "RIF", "isoniazid": "INH",           # first-line (shipped)
+    "ethambutol": "EMB",                                 # first-line companion
+    "moxifloxacin": "MXF", "levofloxacin": "LEV",        # fluoroquinolones (gyrA/gyrB)
+    "amikacin": "AMI", "kanamycin": "KAN",               # aminoglycosides (rrs/eis)
+    "ethionamide": "ETH",                                # ethA/inhA
+    "bedaquiline": "BDQ", "clofazimine": "CFZ",          # Rv0678/atpE/pepQ (cross-resistant)
+    "delamanid": "DLM",                                  # ddn/fbiA-C/fgd1
+    "linezolid": "LZD",                                  # rplC/rrl
+}
 
 _SNV_RE = re.compile(r"^(\d+)([acgt])>([acgt])$")
 _INDEL_RE = re.compile(r"^(\d+)_(del|ins)_([acgt]+)$")

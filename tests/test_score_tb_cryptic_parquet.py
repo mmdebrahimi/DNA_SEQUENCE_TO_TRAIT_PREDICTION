@@ -5,10 +5,34 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.score_tb_cryptic_parquet import (  # noqa: E402
-    indel_determinant_targets, load_labels, parse_cryptic_variant, who_indel_to_cryptic_string,
+    DRUG_CODE, indel_determinant_targets, load_labels, parse_cryptic_variant, who_indel_to_cryptic_string,
 )
-from dna_decode.data.tb_who_catalogue import Determinant  # noqa: E402
+from dna_decode.data.tb_who_catalogue import DRUG_CATALOGUE_NAME, Determinant  # noqa: E402
 from dna_decode.organism_rules import tb_amr, tb_vcf  # noqa: E402
+
+
+# --- second-line extension (2026-07-14): DRUG_CODE now spans first- + second-line + new drugs ------
+def test_drug_code_covers_second_line():
+    # the second-line + new-drug reuse-table codes are wired (the only thing that gated second-line)
+    expected = {"moxifloxacin": "MXF", "levofloxacin": "LEV", "amikacin": "AMI", "kanamycin": "KAN",
+                "ethionamide": "ETH", "bedaquiline": "BDQ", "clofazimine": "CFZ", "delamanid": "DLM",
+                "linezolid": "LZD", "ethambutol": "EMB"}
+    for drug, code in expected.items():
+        assert DRUG_CODE.get(drug) == code, f"{drug} should map to reuse code {code}"
+    # first-line still intact
+    assert DRUG_CODE["rifampicin"] == "RIF" and DRUG_CODE["isoniazid"] == "INH"
+
+
+def test_drug_code_keys_are_catalogue_names():
+    # every DRUG_CODE key MUST be a DRUG_CATALOGUE_NAME key, else load_determinants(drug) KeyErrors
+    for drug in DRUG_CODE:
+        assert drug in DRUG_CATALOGUE_NAME, f"{drug} is in DRUG_CODE but not DRUG_CATALOGUE_NAME"
+
+
+def test_reuse_codes_are_uppercase_2to3_letter():
+    # reuse-table phenotype-column prefixes are 2-3 uppercase letters (RIF/INH/MXF/BDQ/...)
+    for code in DRUG_CODE.values():
+        assert code.isupper() and 2 <= len(code) <= 3, f"unexpected reuse code shape: {code!r}"
 
 
 def test_parse_cryptic_variant_snv():
