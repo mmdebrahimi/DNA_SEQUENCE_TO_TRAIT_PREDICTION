@@ -15,7 +15,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 WIKI = REPO / "wiki"
 
-_METHOD = {"blosum62_deterministic": "blosum", "esm2_zeroshot": "esm2", "alphamissense_learned": "am"}
+_METHOD = {"blosum62_deterministic": "blosum", "esm2_zeroshot": "esm2", "alphamissense_learned": "am",
+           "esm_if_structure": "esm_if"}
 
 # ProteinGym DMS_id = GENE_SPECIES_Author_Year; map the species code (2nd token).
 _SPECIES = {"HUMAN": "human", "YEAST": "yeast", "ARATH": "Arabidopsis", "MOUSE": "mouse", "CHICK": "chicken",
@@ -51,7 +52,8 @@ def main() -> int:
         if not dms or not m or rho is None:
             continue
         r = rows.setdefault(dms, {"dms_id": dms, "organism": _organism(dms),
-                                  "n": d.get("n_single_variants_scored"), "blosum": None, "esm2": None, "am": None})
+                                  "n": d.get("n_single_variants_scored"), "blosum": None, "esm2": None,
+                                  "am": None, "esm_if": None})
         r[m] = rho
         r["n"] = d.get("n_single_variants_scored", r["n"])
 
@@ -63,20 +65,20 @@ def main() -> int:
              "is human-only (bacterial cells show `—`); ESM2 runs on both but is only populated where a table was "
              "built. Higher = better; the learned methods (ESM2 / AlphaMissense) beat deterministic BLOSUM where "
              "run.", "",
-             "| protein (assay) | organism | n | BLOSUM62 | ESM2-650M | AlphaMissense |",
-             "|---|---|---:|---:|---:|---:|"]
+             "| protein (assay) | organism | n | BLOSUM62 | ESM2-650M | AlphaMissense | ESM-IF |",
+             "|---|---|---:|---:|---:|---:|---:|"]
     def cell(v):
         return f"{v:.3f}" if isinstance(v, (int, float)) else "—"
     for r in ordered:
         gene = r["dms_id"].split("_")[0]
         lines.append(f"| {gene} ({r['dms_id']}) | {r['organism']} | {r['n']} | "
-                     f"{cell(r['blosum'])} | {cell(r['esm2'])} | {cell(r['am'])} |")
+                     f"{cell(r['blosum'])} | {cell(r['esm2'])} | {cell(r['am'])} | {cell(r['esm_if'])} |")
     lines += ["", "Learned-vs-deterministic lift (where both present):"]
     for r in ordered:
         if isinstance(r["blosum"], (int, float)):
-            best = max([x for x in (r["esm2"], r["am"]) if isinstance(x, (int, float))], default=None)
+            best = max([x for x in (r["esm2"], r["am"], r["esm_if"]) if isinstance(x, (int, float))], default=None)
             if best is not None:
-                which = "AM" if r["am"] == best else "ESM2"
+                which = "AM" if r["am"] == best else ("ESM-IF" if r["esm_if"] == best else "ESM2")
                 lines.append(f"- {r['dms_id']}: {which} {best:.3f} − BLOSUM {r['blosum']:.3f} = **+{best - r['blosum']:.3f}**")
 
     md = "\n".join(lines) + "\n"

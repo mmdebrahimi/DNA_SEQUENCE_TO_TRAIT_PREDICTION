@@ -18,6 +18,12 @@ from .genome_edit import (  # noqa: F401
     predict_genome_edit,
     translate_codon,
 )
+from .structure_scorer import (  # noqa: F401
+    StructureMethodUnavailable,
+    alphafold_pdb_url,
+    esm_if_tier,
+    esm_if_variant_table,
+)
 from .router import (  # noqa: F401
     REGIME_A,
     REGIME_B,

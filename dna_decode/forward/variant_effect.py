@@ -110,7 +110,8 @@ _ESM_DAMAGING = -5.0
 def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    phenotype_axis: str = "molecular fitness (DMS-measured)",
                    method: str = "blosum62", regime: str = "B_molecular",
-                   esm_table: dict | None = None, am_table: dict | None = None) -> ForwardPrediction:
+                   esm_table: dict | None = None, am_table: dict | None = None,
+                   esm_if_table: dict | None = None) -> ForwardPrediction:
     """Forward edit -> predicted phenotype effect for ONE point mutation on ONE protein.
 
     - method="blosum62" (default): deterministic substitution severity — no model, no network.
@@ -175,8 +176,17 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
         score = 1.0 - am                        # flip so higher = benign/preserved (BLOSUM/ESM sign)
         effect = am_tier(am)
         conf = "medium" if effect != "uncertain" else "low"
+    elif method == "esm_if":
+        from .structure_scorer import esm_if_tier
+        if esm_if_table is None or mutation not in esm_if_table:
+            raise ValueError(f"method='esm_if' needs esm_if_table with {mutation!r} "
+                             f"(structure-based; build via structure_scorer.esm_if_variant_table)")
+        score = esm_if_table[mutation]          # ESM-IF conditional-LL delta; higher = structure-compatible
+        effect = esm_if_tier(score)
+        conf = "medium" if effect != "uncertain" else "low"
     else:
-        raise NotImplementedError(f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense'")
+        raise NotImplementedError(
+            f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense' / 'esm_if'")
 
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,

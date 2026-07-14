@@ -7,7 +7,8 @@
       "n": 4996,
       "blosum": 0.3465,
       "esm2": 0.7315,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "CCDB_ECOLI_Tripathi_2016",
@@ -15,7 +16,8 @@
       "n": 1663,
       "blosum": 0.2482,
       "esm2": 0.5115,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "BLAT_ECOLX_Firnberg_2014",
@@ -23,7 +25,8 @@
       "n": 4783,
       "blosum": 0.3385,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "BLAT_ECOLX_Deng_2012",
@@ -31,7 +34,8 @@
       "n": 4996,
       "blosum": 0.3055,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "IF1_ECOLI_Kelsic_2016",
@@ -39,7 +43,8 @@
       "n": 1367,
       "blosum": 0.1823,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "MLAC_ECOLI_MacRae_2023",
@@ -47,7 +52,8 @@
       "n": 4007,
       "blosum": 0.1823,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "DYR_ECOLI_Nguyen_2023",
@@ -55,7 +61,8 @@
       "n": 2916,
       "blosum": 0.1518,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "DYR_ECOLI_Thompson_2019",
@@ -63,7 +70,8 @@
       "n": 2363,
       "blosum": 0.1507,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "ENVZ_ECOLI_Ghose_2023",
@@ -71,7 +79,8 @@
       "n": 1121,
       "blosum": 0.1011,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "SR43C_ARATH_Tsuboyama_2023_2N88",
@@ -79,7 +88,8 @@
       "n": 889,
       "blosum": 0.2135,
       "esm2": 0.5889,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "MBD11_ARATH_Tsuboyama_2023_6ACV",
@@ -87,7 +97,8 @@
       "n": 1155,
       "blosum": 0.1956,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "CP2C9_HUMAN_Amorosi_2021_abundance",
@@ -95,7 +106,8 @@
       "n": 6370,
       "blosum": 0.333,
       "esm2": null,
-      "am": 0.5983
+      "am": 0.5983,
+      "esm_if": null
     },
     {
       "dms_id": "TPMT_HUMAN_Matreyek_2018",
@@ -103,7 +115,8 @@
       "n": 3648,
       "blosum": 0.2399,
       "esm2": null,
-      "am": 0.5581
+      "am": 0.5581,
+      "esm_if": null
     },
     {
       "dms_id": "PTEN_HUMAN_Mighell_2018",
@@ -111,7 +124,8 @@
       "n": 7260,
       "blosum": 0.1824,
       "esm2": 0.5185,
-      "am": 0.5395
+      "am": 0.5395,
+      "esm_if": null
     },
     {
       "dms_id": "MSH2_HUMAN_Jia_2020",
@@ -119,7 +133,8 @@
       "n": 16749,
       "blosum": 0.1635,
       "esm2": null,
-      "am": 0.4157
+      "am": 0.4157,
+      "esm_if": null
     },
     {
       "dms_id": "RL40A_YEAST_Mavor_2016",
@@ -127,7 +142,8 @@
       "n": 1253,
       "blosum": 0.2371,
       "esm2": 0.5179,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "BBC1_YEAST_Tsuboyama_2023_1TG0",
@@ -135,7 +151,8 @@
       "n": 1084,
       "blosum": 0.0727,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     },
     {
       "dms_id": "THO1_YEAST_Tsuboyama_2023_2WQG",
@@ -143,7 +160,8 @@
       "n": 656,
       "blosum": 0.057,
       "esm2": null,
-      "am": null
+      "am": null,
+      "esm_if": null
     }
   ]
 }
