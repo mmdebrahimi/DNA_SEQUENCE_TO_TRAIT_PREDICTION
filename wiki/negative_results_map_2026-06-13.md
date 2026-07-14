@@ -33,6 +33,8 @@ regime.
 | MIC-continuous (graded resistance) | not-feasible | G1 (91% of BV-BRC MIC is XGBoost-from-genome), G6 (~70% breakpoint-censored), G8 (within-R exact N=6) | ledger action 91 (`project_state/dna-decode-2026-05-11.md`); probe 2026-06-13 |
 | AMR grid — Salmonella tet/gent | underpowered, infeasible | G4 (ecosystem-dominated: tet 4871R ecosystem → 4R disjoint) | ledger action 79; `wiki/provdisjoint_census_results.json` |
 | AMR grid — Acinetobacter/Pseudomonas/Klebsiella-class broad expansion | intrinsic-gene degeneracy | (mechanism ceiling — intrinsic class-genes over-call, spec→0) | `~/.claude/...memory/feedback_intrinsic_genes_break_broad_amr_class_rules.md` |
+| Cross-organism catalog transfer (g8r2 — "zero target labels" bypass) | label-wall NOT bypassed + already-built | (not a new label gate — the naive unchanged transfer FAILS per-organism on threshold/content, so target labels are still needed to calibrate) | `wiki/wider_amr_transferability_synthesis_2026-06-08.md` (Campylobacter/Salmonella cipro FAIL: TUNING/CONTENT); `wiki/innovate_round2_frontier_closeout_2026-07-13.md` |
+| Self-supervised catalog (g5r2 — train an effect-predictor on the catalog itself) | no negative class / circular where one exists | (not a new label gate — 3/4 cells are all-positive DRM sets; WHO-TB grades ARE distilled phenotype → self-prediction is circular) | `wiki/innovate_round2_frontier_closeout_2026-07-13.md` (HIV/SARS/fungal all-positive; WHO 457 R-assoc / 550 benign / 47,139 uncertain) |
 
 ## What SURVIVED (the shipped product, and why it cleared the gates)
 
