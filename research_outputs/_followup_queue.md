@@ -5,15 +5,15 @@
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
-> NOTE (2026-07-14): this update APPENDED the 3 marine-vibrio rows to the top of Active + bumped counts; the prior 25 rows are preserved verbatim (no full 38-memo re-aggregation was run — that is deferred).
+> NOTE (2026-07-14): this update APPENDED 3 marine-vibrio + 2 immunogenicity + 4 immunogenicity-rescope (vaccine seroprotection + AAV NAb) rows to the top of Active + bumped counts; the prior rows are preserved verbatim (no full re-aggregation was run — that is deferred).
 
 ## Summary
 
-- Source memos scanned (this + prior epoch): 7
+- Source memos scanned (this + prior epoch): 10
 - Schema-drift memos (skipped): 0
-- Total raw candidate rows extracted: 28
-- Unique candidates after dedup: 28
-- Active candidates (≤ 30 days old): 28
+- Total raw candidate rows extracted: 34
+- Unique candidates after dedup: 34
+- Active candidates (≤ 30 days old): 34
 - Stale candidates (> 30 days old): 0
 - Cross-flavor candidates (public + internal): 0
 
@@ -34,6 +34,10 @@ Full shortlist + gate-screening: `research_outputs/noncircular-label-sources-202
 
 | Claim | Numeric value | Units | Locator(s) | Candidate use / Verification needed | Confidence | Sources | Problem-anchor(s) | Notes |
 |---|---:|---|---|---|---|---|---|---|
+| Vaccine seroprotection: per-pathogen correlates of protection EXIST (measles PRN ≥120 mIU/mL direct-fetch high; HepB 10 mIU/mL, flu HAI 1:40, tetanus/diphtheria 0.1 IU/mL, pneumo 0.35 μg/mL, meningo hSBA 1:4) | 120 | mIU/mL (measles) | https://academic.oup.com/jid/article/221/10/1576/5610904 | **Candidate use:** the framing answer if the threshold question meant vaccines — established numeric correlates, pathogen-by-pathogen (contrast: ADA has none). **Verification needed:** measles is direct-fetch high; the rest (HepB/flu/tetanus/etc.) are medium via search-summary → direct authoritative re-fetch to reach high. | high | vaccine-seroprotection-titer-thresholds-2026-07-14 | in-vivo immunogenicity clinical threshold (re-scope: vaccines) | OFF-PROJECT topic; re-scope 1 of the immunogenicity-threshold research |
+| AAV gene-therapy eligibility: NO universal NAb threshold (mirrors ADA) — Roctavian binary Detected/ineligible, Zolgensma ~1:50 lab-specific, etranacogene permissive to ~678; real cohort median NAb 58 (9–3440), seroprev 47.8% | 58 | NAb titer (median) | https://pmc.ncbi.nlm.nih.gov/articles/PMC12441693/ | **Candidate use:** the framing answer if the threshold question meant gene therapy — no universal cutoff, program/vector/dose/assay-specific. **Verification needed:** median-58/seroprev-47.8% are direct-fetch high; titer cutoffs are program-specific (read against each trial's protocol). | high | aav-gene-therapy-preexisting-nab-eligibility-2026-07-14 | in-vivo immunogenicity clinical threshold (re-scope: AAV gene therapy) | OFF-PROJECT topic; re-scope 2 of the immunogenicity-threshold research |
+| In-vivo immunogenicity: no single universal clinical threshold; nearest anchor is ADA ~100 ng/mL "may be associated with clinical events" (= FDA min assay sensitivity) | 100 | ng/mL | https://www.fda.gov/media/119788/download | **Candidate use:** the closest quantitative answer to "in-vivo immunogenicity clinical threshold" — an analytical sensitivity target, not a clinical action cutoff. **Verification needed:** direct FDA-PDF re-fetch (404'd this run; carried at medium via search-summary + Frontiers-2024 corroboration). | medium | in-vivo-immunogenicity-clinical-threshold-2026-07-14 | in-vivo immunogenicity clinical threshold | OFF-PROJECT topic (therapeutic-protein ADA, not genome-decoding); queued for provenance-completeness |
+| Clinically significant ADA has no universal numeric cutoff — determined product-by-product (PK/PD/efficacy/safety) | qualitative | — | https://pmc.ncbi.nlm.nih.gov/articles/PMC11682980/ | **Candidate use:** the correct framing answer if the threshold question resurfaces. **Verification needed:** none (definitional, direct-fetched verbatim). | high | in-vivo-immunogenicity-clinical-threshold-2026-07-14 | in-vivo immunogenicity clinical threshold | OFF-PROJECT topic; framing anchor |
 | Korean seafood *V. parahaemolyticus* genome+MIC set (marine acquisition-path candidate) | PRJNA1254427 | accession | https://pmc.ncbi.nlm.nih.gov/articles/PMC12300810/ | **Candidate use:** the single best marine "ask Hamid to grab this" — deposited assemblies + CLSI MIC incl. ciprofloxacin/tetracycline/ceftazidime (drops straight into the decoder). **Verification needed:** confirm exactly how many of the 10 have a downloadable assembly AND a cipro/tet MIC. | medium | marine-vibrio-genome-mic-accessions-2026-07-14 | pin exact accessions for a marine-biology postdoc data-request email | Marine acquisition path (Hamid); small N (10 paired) but clean + mechanism-matched |
 | Canadian imported-shrimp *Vibrio* (3 species) genome+disk-AST set | PRJNA645603 | accession | https://journals.asm.org/doi/10.1128/mra.01014-21 | **Candidate use:** small multi-species (V. alginolyticus/cholerae/parahaemolyticus) with measured Kirby-Bauer disk AST. **Verification needed:** disk-zone→R/S mapping + whether MICs (not just zones) are available. | high | marine-vibrio-genome-mic-accessions-2026-07-14 | pin exact accessions for a marine-biology postdoc data-request email | Marine acquisition path; 4 paired isolates |
 | Aquacultured-seafood AMR *Vibrio* SRA sets (largest marine pool IF AST is paired) | PRJNA699735 / PRJNA1107692 / PRJNA1155317 | accession | https://www.sciencedirect.com/science/article/pii/S0740002025000991 | **Candidate use:** potentially the biggest usable marine pool. **Verification needed:** open the paper supplement — is there a per-isolate MEASURED MIC/disk table, or only genome-predicted resistance genes? (the load-bearing check). | medium | marine-vibrio-genome-mic-accessions-2026-07-14 | pin exact accessions for a marine-biology postdoc data-request email | Marine acquisition path; per-isolate measured-AST pairing UNVERIFIED |
