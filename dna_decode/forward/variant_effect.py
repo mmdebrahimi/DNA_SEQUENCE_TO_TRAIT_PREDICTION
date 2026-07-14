@@ -102,11 +102,20 @@ class ForwardPrediction:
         }
 
 
+# ESM2 zero-shot delta (logP(alt)-logP(wt)) tiers — its own scale (benign ~ >= -1; damaging << 0)
+_ESM_PRESERVED = -1.0
+_ESM_DAMAGING = -5.0
+
+
 def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    phenotype_axis: str = "molecular fitness (DMS-measured)",
-                   method: str = "blosum62", regime: str = "B_molecular") -> ForwardPrediction:
+                   method: str = "blosum62", regime: str = "B_molecular",
+                   esm_table: dict | None = None) -> ForwardPrediction:
     """Forward edit -> predicted phenotype effect for ONE point mutation on ONE protein.
 
+    - method="blosum62" (default): deterministic substitution severity — no model, no network.
+    - method="esm2": learned ESM2 zero-shot delta from a precomputed `esm_table`
+      (dna_decode/forward/esm_scorer.esm2_logp_table) — pass the table so the model runs ONCE per protein.
     - Verifies the WT residue matches `protein_seq[pos-1]` (1-based) — a coordinate/frame error fails LOUDLY
       (the same discipline as the HIV/TB reference-integrity gates), never a silent wrong call.
     - Regime C (organismal-polygenic) -> abstain by construction (closed negative).
@@ -132,20 +141,33 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
     else:
         notes.append("no protein sequence supplied — WT residue not verified against a reference")
 
-    if method != "blosum62":
-        raise NotImplementedError(f"method {method!r} not wired yet; blosum62 is the deterministic baseline "
-                                  f"(ESM2 zero-shot is the drop-in upgrade via scripts/esm_zeroshot_dms.py)")
-    score = blosum62_score(wt, alt)
-
-    if alt in ("*", "X"):
-        effect, conf = "damaging", "high"
-        notes.append("nonsense/stop substitution — truncation, maximally damaging")
-    elif score >= _PRESERVED_AT:
-        effect, conf = "preserved", "medium"
-    elif score <= _DAMAGING_BELOW:
-        effect, conf = "damaging", "medium"
+    if method == "blosum62":
+        score = blosum62_score(wt, alt)
+        if alt in ("*", "X"):
+            effect, conf = "damaging", "high"
+            notes.append("nonsense/stop substitution — truncation, maximally damaging")
+        elif score >= _PRESERVED_AT:
+            effect, conf = "preserved", "medium"
+        elif score <= _DAMAGING_BELOW:
+            effect, conf = "damaging", "medium"
+        else:
+            effect, conf = "uncertain", "low"
+    elif method == "esm2":
+        from .esm_scorer import esm2_delta
+        if esm_table is None:
+            raise ValueError("method='esm2' requires esm_table= (build once via esm_scorer.esm2_logp_table)")
+        score = esm2_delta(esm_table, wt, pos, alt)
+        if alt in ("*", "X"):
+            effect, conf = "damaging", "high"
+            notes.append("nonsense/stop substitution — truncation, maximally damaging")
+        elif score >= _ESM_PRESERVED:
+            effect, conf = "preserved", "medium"
+        elif score <= _ESM_DAMAGING:
+            effect, conf = "damaging", "medium"
+        else:
+            effect, conf = "uncertain", "low"
     else:
-        effect, conf = "uncertain", "low"
+        raise NotImplementedError(f"method {method!r} not supported; use 'blosum62' or 'esm2'")
 
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,

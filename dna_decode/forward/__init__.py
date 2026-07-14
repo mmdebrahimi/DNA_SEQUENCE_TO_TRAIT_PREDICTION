@@ -7,9 +7,17 @@ Scope (per the project's G2P regime boundary, feedback_g2p_decoder_regime_bounda
   Regime B (edit changes protein molecular fitness/stability) -> THIS module (DMS-validated variant effect).
   Regime C (organism-level polygenic trait)   -> closed negative; abstain.
 """
+from .genome_edit import (  # noqa: F401
+    GenomeEditPrediction,
+    cds_point_edit,
+    predict_genome_edit,
+    translate_codon,
+)
 from .variant_effect import (  # noqa: F401
     ForwardPrediction,
     blosum62_score,
     parse_mutation,
     predict_effect,
 )
+
+# esm_scorer is imported lazily (torch/transformers) — not re-exported at package import time.

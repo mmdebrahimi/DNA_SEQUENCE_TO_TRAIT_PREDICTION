@@ -66,7 +66,8 @@ def spearman(xs: list[float], ys: list[float]) -> float:
     return num / (dx * dy) if dx and dy else float("nan")
 
 
-def run(dms_id: str, protein_label: str, phenotype_axis: str) -> dict:
+def run(dms_id: str, protein_label: str, phenotype_axis: str,
+        method: str = "blosum62", esm_table: dict | None = None) -> dict:
     seq = load_target_seq(dms_id)
     path = DMS_DIR / f"{dms_id}.csv"
     pred_scores: list[float] = []
@@ -87,7 +88,8 @@ def run(dms_id: str, protein_label: str, phenotype_axis: str) -> dict:
             except (TypeError, ValueError):
                 continue
             try:
-                p = predict_effect(seq, mut, protein=protein_label, phenotype_axis=phenotype_axis)
+                p = predict_effect(seq, mut, protein=protein_label, phenotype_axis=phenotype_axis,
+                                   method=method, esm_table=esm_table)
             except ValueError as e:
                 if "WT mismatch" in str(e):
                     wt_mismatch += 1
@@ -117,7 +119,7 @@ def run(dms_id: str, protein_label: str, phenotype_axis: str) -> dict:
         "protein": protein_label,
         "dms_id": dms_id,
         "phenotype_axis": phenotype_axis,
-        "method": "blosum62_deterministic",
+        "method": ("blosum62_deterministic" if method == "blosum62" else f"{method}_zeroshot"),
         "n_single_variants_scored": n,
         "n_multi_mutant_skipped": n_multi,
         "n_wt_mismatch": wt_mismatch,          # MUST be 0 — else a coordinate/frame error
@@ -139,17 +141,42 @@ def run(dms_id: str, protein_label: str, phenotype_axis: str) -> dict:
     return res
 
 
+def _build_or_load_esm_table(seq: str, dms_id: str, model: str) -> dict:
+    """ESM2 masked-marginal {pos:{aa:logp}} table for `seq`, cached to D: (build is the slow CPU step)."""
+    import json as _json
+    cache_dir = Path("D:/dna_decode_cache/esm")
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    tag = model.split("/")[-1]
+    cache = cache_dir / f"{tag}__{dms_id}.json"
+    if cache.exists():
+        raw = _json.loads(cache.read_text(encoding="utf-8"))
+        print(f"[tem1-forward] loaded cached ESM table {cache.name} ({len(raw)} positions)")
+        return {int(k): v for k, v in raw.items()}
+    from dna_decode.forward.esm_scorer import esm2_logp_table
+    print(f"[tem1-forward] building ESM masked-marginal table ({len(seq)} positions, model={tag}, CPU) ...")
+    table = esm2_logp_table(seq, model_name=model)
+    cache.write_text(_json.dumps({str(k): v for k, v in table.items()}), encoding="utf-8")
+    print(f"[tem1-forward] wrote ESM table cache -> {cache}")
+    return table
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--dms-id", default="BLAT_ECOLX_Stiffler_2015")
     ap.add_argument("--protein", default="TEM-1 beta-lactamase (BLAT_ECOLX)")
     ap.add_argument("--phenotype", default="ampicillin growth fitness (10-2500 ug/mL; DMS-measured)")
+    ap.add_argument("--method", default="blosum62", choices=["blosum62", "esm2"])
+    ap.add_argument("--model", default="facebook/esm2_t33_650M_UR50D", help="ESM2 HF model id (--method esm2)")
     a = ap.parse_args(argv)
     if not (DMS_DIR / f"{a.dms_id}.csv").exists():
         print(f"ERROR: DMS assay {a.dms_id}.csv not found under {DMS_DIR}", file=sys.stderr)
         return 2
-    res = run(a.dms_id, a.protein, a.phenotype)
-    out = REPO / "wiki" / f"tem1_forward_cell_{a.dms_id.lower()}_{_date.today().isoformat()}.json"
+    esm_table = None
+    if a.method == "esm2":
+        esm_table = _build_or_load_esm_table(load_target_seq(a.dms_id), a.dms_id, a.model)
+    res = run(a.dms_id, a.protein, a.phenotype, method=a.method, esm_table=esm_table)
+    suffix = "" if a.method == "blosum62" else f"_{a.method}"
+    out = REPO / "wiki" / f"tem1_forward_cell_{a.dms_id.lower()}{suffix}_{_date.today().isoformat()}.json"
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print(f"[tem1-forward] {a.dms_id}: n={res['n_single_variants_scored']} "
           f"wt_mismatch={res['n_wt_mismatch']} | Spearman(BLOSUM,DMS)={res['spearman_pred_vs_dms']} "
