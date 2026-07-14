@@ -1,0 +1,24 @@
+{
+  "cell": "tem1_forward_variant_effect",
+  "protein": "TEM-1 beta-lactamase (BLAT_ECOLX)",
+  "dms_id": "BLAT_ECOLX_Firnberg_2014",
+  "phenotype_axis": "ampicillin growth fitness (10-2500 ug/mL; DMS-measured)",
+  "method": "blosum62_deterministic",
+  "n_single_variants_scored": 4783,
+  "n_multi_mutant_skipped": 0,
+  "n_wt_mismatch": 0,
+  "spearman_pred_vs_dms": 0.3385,
+  "sign_expectation": "positive (conservative substitution -> preserved ampicillin fitness)",
+  "nonsense_mean_dms": null,
+  "overall_mean_dms": 0.5096,
+  "polarity_ok": true,
+  "nonsense_anchor_available": false,
+  "coarse_confusion_on_dms_bin": {
+    "tp": 883,
+    "fp": 328,
+    "tn": 2058,
+    "fn": 1514
+  },
+  "honesty": "Regime-B molecular-fitness forward predictor; deterministic BLOSUM62 baseline. Validated per-variant on FREE independent DMS. NOT an organism-level predictor (Regime C abstains); for clinical-resistance calls use the Regime-A determinant catalogue.",
+  "status": "FORWARD_CELL_DMS_VALIDATED"
+}
