@@ -1,0 +1,47 @@
+{
+  "demo": "blatem_genome_end_to_end",
+  "cds_source": "PZ538321.1 (E. coli class A beta-lactamase, NCBI)",
+  "cds_len_nt": 861,
+  "translation_matches_dms_target": true,
+  "dms_id": "BLAT_ECOLX_Stiffler_2015",
+  "method": "esm2_zeroshot (cached table)",
+  "single_nt_edits_enumerated": 2574,
+  "consequence_counts": {
+    "silent": 614,
+    "missense": 1874,
+    "nonsense": 86
+  },
+  "missense_edits_matching_a_dms_variant": 1715,
+  "spearman_esm_vs_measured_dms_on_single_nt_accessible_set": 0.7611,
+  "examples": {
+    "benign": {
+      "aa_mutation": "E210K",
+      "esm_score": 2.692,
+      "dms_score": 0.233,
+      "nt_edit": "G628A",
+      "codon": "GAG>AAG"
+    },
+    "damaging": {
+      "aa_mutation": "P181R",
+      "esm_score": -13.782,
+      "dms_score": -3.555,
+      "nt_edit": "C542G",
+      "codon": "CCT>CGT"
+    },
+    "nonsense": {
+      "nt_edit": "C10T",
+      "codon": "CAA>TAA",
+      "aa_mutation": "Q4*",
+      "esm_score": -20.0
+    },
+    "silent": {
+      "nt_edit": "T6C",
+      "codon": "AGT>AGC",
+      "aa_pos": 2,
+      "aa": "S",
+      "consequence": "silent"
+    }
+  },
+  "honesty": "Real blaTEM CDS (translation byte-identical to the DMS protein). Single-nucleotide-accessible missense subset only (a point edit cannot reach codon-distant AAs \u2014 that is the honest natural mutation set). ESM2 cached table; cross-checked vs measured DMS.",
+  "status": "GENOME_PATH_REAL_SURFACE_VALIDATED"
+}

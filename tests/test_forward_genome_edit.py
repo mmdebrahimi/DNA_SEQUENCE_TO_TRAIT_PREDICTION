@@ -73,5 +73,19 @@ def test_predict_effect_esm2_mock_table():
         predict_effect(seq, "K2R", method="esm2")
 
 
+def test_committed_real_blatem_cds_translates_to_286aa():
+    """The committed real blaTEM CDS (PZ538321.1) translates to the 286-aa TEM-1 protein (offline, no D:).
+    Pins the real coordinate frame the genome demo depends on."""
+    from dna_decode.forward import translate_codon
+    fasta = Path(__file__).resolve().parent.parent / "data" / "forward_ref" / "blatem_3349172526.fna"
+    if not fasta.exists():
+        pytest.skip("real blaTEM CDS fixture not present")
+    cds = "".join(ln.strip() for ln in fasta.read_text(encoding="utf-8").splitlines()
+                  if not ln.startswith(">")).upper()
+    assert len(cds) == 861                                   # 286 codons + stop
+    prot = "".join(translate_codon(cds[i:i + 3]) for i in range(0, len(cds) - 2, 3)).rstrip("*")
+    assert len(prot) == 286 and prot.startswith("MSIQHFRVALIPFFAAFCLPVFA") and prot.endswith("GASLIKHW")
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
