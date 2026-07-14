@@ -1,0 +1,112 @@
+{
+  "artifact": "innovate_genome_world_model_round2",
+  "date": "2026-07-13",
+  "note": "Round-2 /innovate: hunt a concretely novel MECHANISM (round 1 reframed the product). Thesis: the curated catalog is ALREADY an interventional edit->effect knowledge base. UNSTAMPED \u2014 engine stamps via --run-ledger.",
+  "candidates": [
+    {
+      "id": "g1r2-generative-catalog",
+      "operator": "G1",
+      "claim": "Make the curated catalog GENERATIVE: predict the phenotype effect of an UNSEEN edit by interpolating across a site's already-catalogued substitutions (any non-WT substitution at a multiply-catalogued resistance site tends to confer resistance) \u2014 this directly serves 'guess the phenotype of a minor modification', the original north-star framing, and turns a lookup table into a predictor.",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_round2_2026_07_13.py::test_g1r2_generative_catalog_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "inferred"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner (--run-ledger)",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g8r2-cross-organism-transfer",
+      "operator": "G8",
+      "claim": "Cross the tree-of-life census with the federation: a target-site catalog is PROTEIN-FAMILY-level, not organism-level, so a validated catalog TRANSFERS to a new organism with ZERO new labels \u2014 the fastest way to add census cells (bypasses the label wall for mechanism-conserved targets).",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_round2_2026_07_13.py::test_g8r2_cross_organism_transfer_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "inferred"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner (--run-ledger)",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g9r2-interventional-kb",
+      "operator": "G9",
+      "claim": "Abduce WHY the catalog beats learned models: not because it is curated, but because each entry is a background-INDEPENDENT interventional (edit->effect) statement that transfers across genetic backgrounds where an observational correlation cannot. Design consequence: BUILD the genome world model as a catalog-shaped interventional KB, and seed every new cell from interventional experiments (DMS / marker-transfer), never from observational isolate mining.",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_round2_2026_07_13.py::test_g9r2_interventional_kb_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "inferred"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner (--run-ledger)",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g5r2-self-supervised-catalog",
+      "operator": "G5",
+      "claim": "Relax 'a learned world model needs external phenotype labels' -> train a generative effect-predictor SELF-SUPERVISED on the catalog's own edit->effect entries: the pooled cross-cell catalog is thousands of interventional statements across organisms, which IS a training set for 'predict the effect of an edit' \u2014 no new wet-lab label required.",
+      "input_frame": "g9r2-interventional-kb",
+      "relaxed_constraint": "learned-world-model-needs-external-labels (not a hard law)",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_round2_2026_07_13.py::test_g5r2_self_supervised_catalog_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "speculative"
+      ],
+      "verdict": "survived",
+      "result": {
+        "verdict": "survived",
+        "reason": "executed via gated runner (--run-ledger)",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "control-genewide-interpolation",
+      "operator": "G1",
+      "claim": "CONTROL (tempting-but-wrong): gene-wide interpolation \u2014 ANY mutation ANYWHERE in the gene predicts effect, so the generative catalog can extrapolate freely across the whole protein.",
+      "input_frame": "original",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_round2_2026_07_13.py::test_control_genewide_interpolation_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded"
+      ],
+      "verdict": "killed",
+      "result": {
+        "verdict": "killed",
+        "reason": "executed via gated runner (--run-ledger)",
+        "executed": true,
+        "valid": true
+      }
+    }
+  ]
+}
