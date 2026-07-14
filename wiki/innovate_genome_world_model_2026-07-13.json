@@ -53,21 +53,48 @@
       }
     },
     {
-      "id": "g5-catalog-extension",
+      "id": "g5-naive-additive",
       "operator": "G5",
-      "claim": "Relax 'the model must BEAT the catalog' -> the learned arm's job is to EXTEND the catalog: find its blind spots (catalog-negative resistant cases) and propose candidate new entries \u2014 an active catalog-CURATION loop, not a competitor.",
+      "claim": "NAIVE g5 (KILLED by a deeper kill-test 2026-07-13): extend the catalog with an ADDITIVE accessory-mutation rule and it will net-IMPROVE the decoder.",
       "input_frame": "original",
       "relaxed_constraint": "must-beat-catalog (not a hard law)",
       "kill_test": {
         "kind": "test-exit-0",
-        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g5_catalog_extension_falsified -q"
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g5_naive_additive_falsified -q"
       },
       "evidence_tags": [
         "grounded"
       ],
       "evidence": [
-        "[grounded] 53 catalog-negative resistant HIV NNRTI isolates (blind spots exist)",
-        "[grounded] learned scorer ties catalog only on blind-spot subset (AUROC 0.449) => it cannot BEAT, but the blind-spot SET is real work"
+        "[grounded] catalog+accessory improves=false on committed leave-study-out HIV data (delta_bal_acc -0.006; sens 0.864->0.908 but spec 0.783->0.727)",
+        "[grounded] the shallow blind-spots-exist precondition could not distinguish this \u2014 the deeper net-improvement test does"
+      ],
+      "verdict": "killed",
+      "result": {
+        "verdict": "killed",
+        "reason": "executed via gated runner",
+        "executed": true,
+        "valid": true
+      }
+    },
+    {
+      "id": "g5-selfaware-flag",
+      "operator": "G5",
+      "claim": "REFINED g5 (SURVIVOR): the catalog-extension's real value is a SELF-AWARENESS position-novelty FLAG ('the catalog call may be incomplete here'), NOT a sensitivity-boosting additive rule \u2014 because adding accessory mutations trades away specificity.",
+      "input_frame": "g5-naive-additive",
+      "relaxed_constraint": "must-beat-catalog (not a hard law)",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "python -m pytest innovate_killtests/test_innovate_killtests_2026_07_13.py::test_g5_selfaware_flag_falsified -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "inferred"
+      ],
+      "evidence": [
+        "[grounded] position-novelty flag verdict FLAG_RECOVERS_BLINDSPOT, median lift 3.98, median sens-on-blindspot 0.604 (committed)",
+        "[grounded] 53 catalog-negative resistant HIV isolates exist (the flag has real blind spots to flag)",
+        "[inferred] a self-awareness flag improves TRUST without the spec cost that killed the additive rule"
       ],
       "verdict": "survived",
       "result": {

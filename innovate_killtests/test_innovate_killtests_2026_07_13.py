@@ -55,6 +55,32 @@ def test_g5_catalog_extension_falsified():
         "HAS blind spots a learned curator could extend (the idea's precondition holds)")
 
 
+def test_g5_naive_additive_falsified():
+    """DEEPER g5 kill-test (anti-theater hardening 2026-07-13). The NAIVE g5 form — 'extend the catalog
+    with an ADDITIVE accessory rule and it will net-IMPROVE' — DEAD iff, on committed leave-study-out
+    HIV data, catalog+accessory does NOT net-improve balanced accuracy. The shallow precondition test
+    (blind spots exist) could not see this. Committed: improves=false (delta_bal_acc -0.006; sens up but
+    spec down) => this test PASSES => the naive additive-rule form is correctly KILLED."""
+    d = json.loads((REPO / "wiki/hiv_catalog_accessory_extension_2026-07-12.json").read_text(encoding="utf-8"))
+    improves = bool(d["improves"])
+    assert improves is False, (
+        "NOT falsified: catalog+accessory net-improves balanced accuracy -> the naive additive-rule "
+        "extension WOULD help (committed data would have to show improves=true)")
+
+
+def test_g5_selfaware_flag_falsified():
+    """DEEPER g5 kill-test (the SURVIVING refinement). The refined g5 form — 'the catalog-extension's
+    value is a SELF-AWARENESS position-novelty FLAG (catalog may be incomplete here), not a sensitivity
+    additive rule' — DEAD iff that flag does NOT recover the blind spot on committed data. Committed:
+    verdict FLAG_RECOVERS_BLINDSPOT with median lift 3.98 => this test FAILS => the self-awareness-flag
+    form SURVIVES (an executed, valid kill-test did not kill it)."""
+    d = json.loads((REPO / "wiki/hiv_blindspot_position_novelty_2026-07-11.json").read_text(encoding="utf-8"))
+    recovers = (d.get("verdict") == "FLAG_RECOVERS_BLINDSPOT") and float(d.get("median_lift", 0)) > 1.0
+    assert not recovers, (
+        f"NOT falsified: position-novelty flag recovers the blind spot (verdict={d.get('verdict')}, "
+        f"lift={d.get('median_lift')}) -> the self-awareness-flag form of g5 holds on committed data")
+
+
 def test_g1_federation_falsified():
     """g1-federation DEAD iff there are too few independent SCORED cells to compose a federation.
     Precondition: >=3 provenance-disjoint independently-validated cells exist. Falsified iff < 3.
