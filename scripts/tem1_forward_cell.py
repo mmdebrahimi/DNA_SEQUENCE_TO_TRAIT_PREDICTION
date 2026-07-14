@@ -179,7 +179,7 @@ def main(argv=None) -> int:
     out = REPO / "wiki" / f"tem1_forward_cell_{a.dms_id.lower()}{suffix}_{_date.today().isoformat()}.json"
     out.write_text(json.dumps(res, indent=2), encoding="utf-8")
     print(f"[tem1-forward] {a.dms_id}: n={res['n_single_variants_scored']} "
-          f"wt_mismatch={res['n_wt_mismatch']} | Spearman(BLOSUM,DMS)={res['spearman_pred_vs_dms']} "
+          f"wt_mismatch={res['n_wt_mismatch']} | Spearman({res['method']},DMS)={res['spearman_pred_vs_dms']} "
           f"| polarity_ok={res['polarity_ok']} | status={res['status']}")
     print(f"  nonsense_mean_dms={res['nonsense_mean_dms']} vs overall={res['overall_mean_dms']} "
           f"(nonsense should be lower)")

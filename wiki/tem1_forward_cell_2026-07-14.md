@@ -30,12 +30,33 @@ reference (a mismatch is a coordinate/frame error and is COUNTED, never silently
 **Reproducible ~0.31–0.35 across 3 independent TEM-1 assays**, positive direction confirmed, zero
 coordinate-frame errors. folA/DHFR is lower (0.151) — a harder landscape for pure substitution severity.
 
+## UPDATE 2026-07-14 — both named next-lifts LANDED (ESM2 method + genome-level path)
+
+**Lift 1 — ESM2-650M learned upgrade (DONE).** `dna_decode/forward/esm_scorer.py::esm2_logp_table` runs the
+650M model once per protein (masked-marginals, CPU, cached to D:) → `predict_effect(method="esm2", esm_table=)`.
+Real result on the same 4,996-variant TEM-1 Stiffler DMS:
+
+| method | Spearman(pred, DMS) | n | WT-mismatch | "preserved" precision |
+|---|---:|---:|---:|---:|
+| BLOSUM62 (deterministic) | +0.347 | 4,996 | 0 | 0.74 |
+| **ESM2-650M zero-shot** | **+0.732** | 4,996 | 0 | **0.90** (546 TP / 62 FP) |
+
+**+0.385 absolute lift — more than double the deterministic baseline.** (0.73 is high even for ESM because
+TEM-1 β-lactamase is a favorable, deep, well-studied assay; the published ProteinGym *median* is ~0.49.)
+
+**Lift 2 — genome-level edit (DONE).** `dna_decode/forward/genome_edit.py::predict_genome_edit(cds, nt_pos,
+ref, alt)` lifts the INPUT from a protein mutation (`M69L`) to a real nucleotide edit in a CDS → codon →
+AA change → the Regime-B predictor, classified **silent / missense / nonsense**. Standard genetic code;
+REF-base coordinate gate + a DOUBLE check (translated WT AA vs the protein reference) both fail loudly.
+Validated by the genetic-code unit tests (real translation logic, not mocks).
+
 ## Honest scope (the project's hard-won rails, applied)
 
-1. **This is the DETERMINISTIC baseline.** BLOSUM62, no GPU / no network — the project's strong-baseline
-   finding (BLOSUM62 ties/beats naive learned use in several contexts). **ESM2-650M zero-shot is the drop-in
-   upgrade** (`scripts/esm_zeroshot_dms.py`, published median ~0.49 on ProteinGym; ~0.4–0.5 on BLAT_ECOLX);
-   AlphaMissense higher. `predict_effect(..., method=)` is the seam — the module is ESM-ready.
+1. **Two methods, both DMS-validated.** BLOSUM62 (deterministic, no GPU/network — strong baseline +0.347)
+   and ESM2-650M (learned, +0.732). `predict_effect(..., method=)` selects; AlphaMissense would be a further
+   drop-in. The learned model earns a large real lift here — the fitness-aligned molecular regime is exactly
+   where it should (contrast: on the antagonistic clinical-resistance direction ESM fails, per the
+   resistance-conservativeness finding — that direction stays with the Regime-A catalogue).
 2. **Regime B only.** This predicts MOLECULAR fitness (enzyme activity/stability). It is NOT an
    organism-level polygenic predictor — `regime="C_organismal"` → `abstain=True` by construction (the
    closed-negative regime; embeddings 0-for-5 de-confounded).
@@ -53,9 +74,9 @@ a reproducible honest number and free per-variant labels. Two of the three G2P r
 forward path: Regime A (determinant catalogue, run forward) + Regime B (this cell). Regime C stays an honest
 abstention.
 
-**Next lifts (named, not done):** wire ESM2-650M as `method="esm2"` (the published ~0.4–0.5 upgrade);
-extend the E. coli panel (CcdB, IF1, folA already cached); connect the genome level (nucleotide edit → codon
-→ this predictor via the existing `interp/mutagenesis.py` ISM engine) so the input is a genome edit, not a
-protein mutation. Frozen decoder surface (`amr_rules` / `calibrated_amr_rules` / `mic_tiers` /
+**Next lifts (updated 2026-07-14):** ~~ESM2-650M~~ **DONE (+0.732)**; ~~genome-level path~~ **DONE**
+(`predict_genome_edit`). Remaining: extend the E. coli panel (CcdB, IF1, folA already cached); wire a REAL
+blaTEM nucleotide CDS end-to-end through `predict_genome_edit` (the codon engine is unit-test-validated; a
+real-CDS demo is the honest next real-surface touch); optional AlphaMissense method. Frozen decoder surface (`amr_rules` / `calibrated_amr_rules` / `mic_tiers` /
 `shipped_decoder_surface` / `cohort_manifest`) byte-unchanged (`verify_lock OK`); `dna_decode/forward` is a
 NEW non-frozen package.
