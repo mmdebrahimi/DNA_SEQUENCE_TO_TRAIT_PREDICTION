@@ -67,9 +67,11 @@ def esm_if_variant_table(pdb_path: Path, wt_seq: str, mutants, chain: str = "A")
     coords, native = ifold.util.extract_coords_from_structure(structure)
 
     def ll(seq: str) -> float:
-        # average per-residue conditional log-likelihood of `seq` given the backbone
-        loss, _ = ifold.util.score_sequence(model, alphabet, coords, seq)
-        return -float(loss)
+        # score_sequence returns the average per-token LOG-LIKELIHOOD (higher = better) — do NOT negate.
+        # Sign validated against the real Kaggle ESM-IF run (2026-07-15, PTEN Spearman +0.479); an earlier
+        # draft negated this, which would have flipped the correlation sign.
+        ll_fullseq, _ = ifold.util.score_sequence(model, alphabet, coords, seq)
+        return float(ll_fullseq)
 
     base = ll(wt_seq)
     table: dict[str, float] = {}

@@ -1,0 +1,14 @@
+{
+  "cell": "esm_if_forward_kaggle",
+  "dms_id": "PTEN_HUMAN_Mighell_2018",
+  "protein": "PTEN (P60484)",
+  "method": "esm_if_structure",
+  "n_single_variants_scored": 7260,
+  "n_wt_mismatch": 0,
+  "spearman_pred_vs_dms": 0.4789,
+  "structure_source": "AlphaFold AF-P60484-F1-model_v6.pdb",
+  "device": "cuda",
+  "elapsed_s": 2493.9,
+  "run_host": "Kaggle T4 (emanueleebrahimi/esm-if-pten-forward)",
+  "honesty": "Real ESM-IF (esm_if1_gvp4_t16_142M_UR50) conditional-LL on the AlphaFold structure; full 7260 PTEN variants, WT-mismatch=0."
+}
