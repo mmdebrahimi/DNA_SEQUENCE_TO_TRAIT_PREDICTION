@@ -70,7 +70,24 @@ dose." Memo: `wiki/forward_dosage_sweep_*.md`.
   per-variant tier is a coarse read of a continuous score.
 - Every coordinate is checked: a WT-vs-reference or REF-base mismatch fails loudly, never a silent wrong call.
 
-## Run
+## CLI (`dna-decode forward` / `dna-forward`)
+
+The forward cell is a first-class command in the shipped tool (v0 = BLOSUM62, deterministic + wheel-only —
+no network, no GPU; the same offline-safe posture as the blastn decoders):
+
+```bash
+dna-decode forward --mutation M69L --protein-seq MSIQHFRVALIPFFAAFCLPVFA...   # instant BLOSUM62
+dna-decode forward --mutation S83L --protein-fasta gyrA.faa --protein gyrA --json
+dna-forward       --mutation A2L  --protein-seq <seq>                          # same, direct entry
+dna-decode list   # forward now appears with its DMS validation numbers
+```
+
+The WT-coordinate gate fails loudly (exit 2) on a residue/frame mismatch — never a silent wrong call. The
+learned methods (ESM2/AlphaMissense/ESM-IF) beat BLOSUM everywhere but need a precomputed score table (they
+run the model ONCE per protein), so they stay in the Python API (`predict_effect(..., method="esm2",
+esm_table=...)`). **Scope: molecular fitness RANK, not clinical resistance — use `dna-decode amr` for R/S.**
+
+## Run (scripts — validation harnesses)
 
 ```bash
 uv run python scripts/tem1_forward_cell.py --dms-id <assay> [--method blosum62|esm2|alphamissense]

@@ -75,6 +75,10 @@ TRAITS = {
         "summary": "HUMAN pharmacogenomics (--gene): CYP2C19 / CYP2C9 diplotype + CPIC metabolizer phenotype, or VKORC1 warfarin sensitivity, from a phased VCF (GRCh38) -- the first human cells",
         "validation": "deterministic VCF->defining-SNP->star-allele->diplotype->CPIC phenotype. GeT-RM consensus concordance on real 1000G (caller independent of the consensus tools): CYP2C19 core 72/72, CYP2C9 core 73/73. CALLING independently validatable; PHENOTYPE faithful-to-CPIC (ref tool PharmCAT). v0 core SNP set; non-core star -> CYP2C19 withholds (sentinel), CYP2C9 mis-calls *1 (sentinel=v0.1). VKORC1 = single-SNP rs9923231 (minus-strand). NOT a clinical tool",
     },
+    "forward": {
+        "summary": "FORWARD variant-effect (--mutation M69L --protein-seq/--protein-fasta): a protein point mutation -> predicted MOLECULAR-phenotype change (Regime B, enzyme fitness/stability) - the edit->effect complement to `amr`. v0 CLI = BLOSUM62 (deterministic, offline); learned methods (ESM2/AlphaMissense/ESM-IF) via the Python API",
+        "validation": "per-variant vs measured Deep Mutational Scanning (ProteinGym): ESM2-650M Spearman TEM-1 0.732 / PTEN 0.518, AlphaMissense(human) 0.539, BLOSUM62 weaker (0.35/0.18) but instant+offline; calibrated-magnitude dosage head coverage 10/10 organisms. Regime B molecular fitness RANK, NOT clinical resistance (use `amr` for R/S)",
+    },
 }
 
 
@@ -123,6 +127,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pgx":
         from dna_decode.pgx.cli import main as pgx_main
         return pgx_main(rest)
+    if trait == "forward":
+        from dna_decode.forward.cli import main as forward_main
+        return forward_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
