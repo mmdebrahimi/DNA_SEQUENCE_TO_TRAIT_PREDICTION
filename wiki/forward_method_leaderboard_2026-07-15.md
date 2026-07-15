@@ -1,4 +1,4 @@
-# Forward variant-effect method leaderboard (2026-07-14)
+# Forward variant-effect method leaderboard (2026-07-15)
 
 Per-protein Spearman(prediction, measured DMS) across the three forward-cell methods. AlphaMissense is human-only (bacterial cells show `—`); ESM2 runs on both but is only populated where a table was built. Higher = better; the learned methods (ESM2 / AlphaMissense) beat deterministic BLOSUM where run.
 
@@ -17,7 +17,7 @@ Per-protein Spearman(prediction, measured DMS) across the three forward-cell met
 | MBD11 (MBD11_ARATH_Tsuboyama_2023_6ACV) | Arabidopsis | 1155 | 0.196 | — | — | — |
 | CP2C9 (CP2C9_HUMAN_Amorosi_2021_abundance) | human | 6370 | 0.333 | — | 0.598 | — |
 | TPMT (TPMT_HUMAN_Matreyek_2018) | human | 3648 | 0.240 | — | 0.558 | — |
-| PTEN (PTEN_HUMAN_Mighell_2018) | human | 7260 | 0.182 | 0.518 | 0.539 | — |
+| PTEN (PTEN_HUMAN_Mighell_2018) | human | 7260 | 0.182 | 0.518 | 0.539 | 0.479 |
 | MSH2 (MSH2_HUMAN_Jia_2020) | human | 16749 | 0.164 | — | 0.416 | — |
 | RL40A (RL40A_YEAST_Mavor_2016) | yeast | 1253 | 0.237 | 0.518 | — | — |
 | BBC1 (BBC1_YEAST_Tsuboyama_2023_1TG0) | yeast | 1084 | 0.073 | — | — | — |

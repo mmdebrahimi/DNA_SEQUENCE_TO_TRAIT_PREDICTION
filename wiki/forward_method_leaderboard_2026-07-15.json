@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-14",
+  "generated": "2026-07-15",
   "proteins": [
     {
       "dms_id": "BLAT_ECOLX_Stiffler_2015",
@@ -125,7 +125,7 @@
       "blosum": 0.1824,
       "esm2": 0.5185,
       "am": 0.5395,
-      "esm_if": null
+      "esm_if": 0.4789
     },
     {
       "dms_id": "MSH2_HUMAN_Jia_2020",
