@@ -1,0 +1,137 @@
+{
+  "cell": "forward_dosage_sweep",
+  "target_coverage": 0.8,
+  "repeats": 15,
+  "n_proteins_scored": 10,
+  "n_calibrated": 10,
+  "n_informative": 7,
+  "organisms": [
+    "Arabidopsis",
+    "E. coli",
+    "human",
+    "yeast"
+  ],
+  "rows": [
+    {
+      "assay": "BLAT_ECOLX_Stiffler_2015",
+      "organism": "E. coli",
+      "method": "esm2",
+      "n": 4996,
+      "coverage": 0.8006,
+      "narrowing": 0.3012,
+      "point_spearman": 0.7257,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "CCDB_ECOLI_Tripathi_2016",
+      "organism": "E. coli",
+      "method": "esm2",
+      "n": 1663,
+      "coverage": 0.817,
+      "narrowing": -0.3133,
+      "point_spearman": 0.4922,
+      "calibrated": true,
+      "informative": false,
+      "verdict": "CALIBRATED_UNINFORMATIVE"
+    },
+    {
+      "assay": "IF1_ECOLI_Kelsic_2016",
+      "organism": "E. coli",
+      "method": "blosum62",
+      "n": 1367,
+      "coverage": 0.7982,
+      "narrowing": -0.1652,
+      "point_spearman": 0.1764,
+      "calibrated": true,
+      "informative": false,
+      "verdict": "CALIBRATED_UNINFORMATIVE"
+    },
+    {
+      "assay": "PTEN_HUMAN_Mighell_2018",
+      "organism": "human",
+      "method": "esm2",
+      "n": 7260,
+      "coverage": 0.8025,
+      "narrowing": 0.1295,
+      "point_spearman": 0.5173,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "TPMT_HUMAN_Matreyek_2018",
+      "organism": "human",
+      "method": "alphamissense",
+      "n": 3648,
+      "coverage": 0.8092,
+      "narrowing": 0.1753,
+      "point_spearman": 0.5651,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "CP2C9_HUMAN_Amorosi_2021_abundance",
+      "organism": "human",
+      "method": "alphamissense",
+      "n": 6370,
+      "coverage": 0.8041,
+      "narrowing": 0.1901,
+      "point_spearman": 0.6025,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "MSH2_HUMAN_Jia_2020",
+      "organism": "human",
+      "method": "alphamissense",
+      "n": 16749,
+      "coverage": 0.8014,
+      "narrowing": 0.0999,
+      "point_spearman": 0.4149,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "RL40A_YEAST_Mavor_2016",
+      "organism": "yeast",
+      "method": "esm2",
+      "n": 1253,
+      "coverage": 0.8259,
+      "narrowing": 0.088,
+      "point_spearman": 0.5296,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "SR43C_ARATH_Tsuboyama_2023_2N88",
+      "organism": "Arabidopsis",
+      "method": "esm2",
+      "n": 889,
+      "coverage": 0.7907,
+      "narrowing": 0.2358,
+      "point_spearman": 0.5857,
+      "calibrated": true,
+      "informative": true,
+      "verdict": "CALIBRATED_DOSAGE"
+    },
+    {
+      "assay": "MBD11_ARATH_Tsuboyama_2023_6ACV",
+      "organism": "Arabidopsis",
+      "method": "blosum62",
+      "n": 1155,
+      "coverage": 0.7944,
+      "narrowing": -0.0,
+      "point_spearman": 0.1681,
+      "calibrated": true,
+      "informative": false,
+      "verdict": "CALIBRATED_UNINFORMATIVE"
+    }
+  ],
+  "finding": "Split-conformal coverage holds across every organism (the guarantee); interval NARROWING (informativeness) tracks the method's rank quality \u2014 the dosage head generalizes as a calibrated magnitude modality across the tree of life."
+}
