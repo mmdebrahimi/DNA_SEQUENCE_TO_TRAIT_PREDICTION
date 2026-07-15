@@ -12,6 +12,12 @@ from .am_scorer import (  # noqa: F401
     am_tier,
     load_am_for_uniprot,
 )
+from .dosage import (  # noqa: F401
+    DosageResult,
+    conformal_q,
+    dosage_intervals,
+    evaluate_dosage,
+)
 from .genome_edit import (  # noqa: F401
     GenomeEditPrediction,
     cds_point_edit,

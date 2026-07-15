@@ -1,0 +1,17 @@
+{
+  "cell": "forward_dosage_head",
+  "assay": "PTEN_HUMAN_Mighell_2018",
+  "score_method": "alphamissense",
+  "n_variants": 7260,
+  "target_coverage": 0.8,
+  "repeats": 20,
+  "mean_held_out_coverage": 0.7993,
+  "mean_interval_halfwidth": 1.2825,
+  "mean_interval_narrowing_vs_marginal": 0.2015,
+  "mean_point_spearman": 0.5337,
+  "calibrated": true,
+  "informative": true,
+  "verdict": "CALIBRATED_DOSAGE",
+  "honesty": "Split-conformal coverage is guaranteed even for a useless model (interval widens to the marginal); the narrowing>0 gate is what shows the score actually pins the DMS magnitude. conformal_q verified byte-equal to J2's hiv_quantitative_calibration._conformal_q.",
+  "interval_units": "DMS score units; interval = calibrated_point +/- halfwidth"
+}
