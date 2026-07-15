@@ -1,0 +1,136 @@
+{
+  "cell": "pre_resistance_base_rate_census",
+  "council_decision_under_test": "Pursue test (escape/pre-resistance forecaster)",
+  "substrate": "HIV mutant-level catalogues (NNRTI-RT + CAI-capsid) x HIVDB isolate panels",
+  "honest_scope": "Part B is an aa-level UPPER BOUND on intermediate-carriers (isolate exact codon unknown at aa resolution); upper bound <5 => decisive NO-GO",
+  "part_A_accessibility": {
+    "n_drms_total": 28,
+    "n_drms_ref_ok": 28,
+    "n_single_nt_accessible": 19,
+    "accessibility_fraction": 0.6786,
+    "expectation": ">=0.90 confirms self-validation is vacuous (single-nt by construction)",
+    "confirmed_vacuous": false,
+    "n_multi_step_drms": 9,
+    "multi_step_drms": [
+      "G190Q",
+      "G190S",
+      "K101P",
+      "V106M",
+      "Y181A",
+      "Y181I",
+      "Y188L",
+      "K70H",
+      "K70S"
+    ]
+  },
+  "part_B_intermediate_carriers": {
+    "n_scan_positions": 6,
+    "n_intermediate_carriers_meaningful": 231,
+    "n_carriers_broad_any_nonwt_nonR": 441,
+    "pass_threshold": 5,
+    "per_position": {
+      "RT190": {
+        "status": "scanned",
+        "dataset": "NNRTI_DataSet.txt",
+        "closer_intermediate_aas": [
+          "C",
+          "F",
+          "H",
+          "I",
+          "K",
+          "L",
+          "N",
+          "P",
+          "R",
+          "T",
+          "W",
+          "Y"
+        ],
+        "n_isolates_carrying_closer_intermediate": 3
+      },
+      "RT181": {
+        "status": "scanned",
+        "dataset": "NNRTI_DataSet.txt",
+        "closer_intermediate_aas": [
+          "D",
+          "E",
+          "F",
+          "G",
+          "K",
+          "L",
+          "M",
+          "N",
+          "P",
+          "R",
+          "S",
+          "T",
+          "V"
+        ],
+        "n_isolates_carrying_closer_intermediate": 15
+      },
+      "RT106": {
+        "status": "scanned",
+        "dataset": "NNRTI_DataSet.txt",
+        "closer_intermediate_aas": [
+          "I",
+          "K",
+          "L",
+          "R",
+          "T"
+        ],
+        "n_isolates_carrying_closer_intermediate": 85
+      },
+      "RT101": {
+        "status": "scanned",
+        "dataset": "NNRTI_DataSet.txt",
+        "closer_intermediate_aas": [
+          "A",
+          "H",
+          "L",
+          "Q",
+          "R",
+          "S",
+          "T"
+        ],
+        "n_isolates_carrying_closer_intermediate": 141
+      },
+      "CA70": {
+        "status": "scanned",
+        "dataset": "CAI_DataSet.txt",
+        "closer_intermediate_aas": [
+          "A",
+          "C",
+          "D",
+          "F",
+          "G",
+          "I",
+          "L",
+          "P",
+          "Q",
+          "T",
+          "W",
+          "Y"
+        ],
+        "n_isolates_carrying_closer_intermediate": 0
+      },
+      "RT188": {
+        "status": "scanned",
+        "dataset": "NNRTI_DataSet.txt",
+        "closer_intermediate_aas": [
+          "F",
+          "I",
+          "M",
+          "P",
+          "Q",
+          "R",
+          "S",
+          "V",
+          "W"
+        ],
+        "n_isolates_carrying_closer_intermediate": 2
+      }
+    }
+  },
+  "verdict": "GO",
+  "interpretation": "Accessibility 67.9% of catalogued DRMs are single-nt from resistance by construction; only 9 multi-step DRM(s) leave room for a 'closer intermediate'. Meaningful intermediate-carriers found: 231 (broad non-WT-at-DRM-position carriers: 441). Verdict GO at the >=5 bar."
+}
