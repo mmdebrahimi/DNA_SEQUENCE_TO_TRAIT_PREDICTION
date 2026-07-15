@@ -1,0 +1,30 @@
+{
+  "cell": "pre_resistance_predictive_backtest",
+  "council_question": "Do v(N) one-nt-away flags predict v(N+1)-added DRMs above the base rate?",
+  "substrate": "WHO M. tuberculosis catalogue v1(2021) -> v2(2023), protein substitutions, CHANGES-vs-ver1 diff",
+  "scope": "protein single-substitution mutations only (codon concept defined); non-coding/rRNA excluded",
+  "counts": {
+    "protein_substitutions_parsed": 23065,
+    "v1_R_positions": 145,
+    "v2_added_R_total": 97,
+    "v2_added_R_at_v1R_position": 43
+  },
+  "ceiling": {
+    "fraction_v2_added_at_a_known_v1R_position": 0.4433,
+    "reading": "the MAX a one-nt-from-known-codon forecaster could catch; the rest are new positions/mechanisms unreachable by construction"
+  },
+  "enrichment_test_position_matched_fisher": {
+    "v2added_flagged": 31,
+    "v2added_total_at_v1R": 43,
+    "test_rate": 0.7209,
+    "background_flagged": 1342,
+    "background_total": 2405,
+    "base_rate": 0.558,
+    "enrichment_ratio": 1.292,
+    "fisher_p_one_sided": 0.02226,
+    "powered_min10": true,
+    "material_ge2x_and_p05": false
+  },
+  "verdict": "FAIL",
+  "interpretation": "Of 97 v2-added resistance protein-substitutions, 43 (44%) fall at a position that already had a v1 resistance allele (the forecaster's structural ceiling). Among substitutions at those known resistance codons, v2-added ones are one-nt-adjacent to the v1-R allele at rate 0.721 vs a position-matched base rate 0.558 (enrichment 1.29x, Fisher p=0.02226). Verdict FAIL."
+}
