@@ -60,7 +60,15 @@ functional Bil-7 sits at 117.
 accession ("may contain mutations in additional flowering time genes or in unsampled regulatory regions").
 The cell caps FRI-route confidence at MEDIUM for exactly this class of case (cf. its Lz-0 anchor).
 
-## Still missing: the allele side
+## STATUS UPDATE 2026-07-16 — Table S3 arrived; this label is now the BACKUP, not the primary
+
+Table S3 landed (browser fetch) and it carries **its own `FT16_mean` column**, so the cell was scored
+directly off S3 — this AraPheno copy was **not needed** for the scoring run. It stays committed as an
+independent cross-check of the same phenotype (AraPheno FT16 n=1,123 vs S3's 854 phenotyped) and because it
+is the *scriptable* route to the label; S3 is browser-only. See `../zhang2020/README.md` +
+`wiki/flowering_tables3_score_2026-07-16.md`.
+
+## Superseded: the allele side (now solved)
 
 These ~14 article-text anchors are **not a scoring set** — only **one** (Bil-7) is late, so a constant-`early`
 null scores 12/13 and cannot be beaten. Scoring needs the per-accession FRI allele for all 1,016 accessions:

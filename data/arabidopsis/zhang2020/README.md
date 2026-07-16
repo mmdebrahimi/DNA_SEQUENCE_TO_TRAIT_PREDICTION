@@ -1,19 +1,51 @@
-# Zhang & Jiménez-Gómez 2020 — FRIGIDA natural variation
+# Zhang & Jiménez-Gómez 2020 — FRIGIDA natural variation (the flowering cell's substrate)
 
-Source of the per-accession FRI allele calls needed to **score** the flowering-habit cell
-(`dna_decode/organism_rules/arabidopsis_flowering.py`). Until the table below lands, that cell is
-**faithful-to-catalogue but NOT SCORED**.
+**Table S3 is here, and the flowering cell is now SCORED on it** (N=854 phenotyped of 1,017) —
+see `wiki/flowering_tables3_score_2026-07-16.md` and `scripts/flowering_tables3_score.py`.
 
 | | |
 |---|---|
 | paper | *Functional analysis of FRIGIDA using naturally occurring variation in Arabidopsis thaliana* |
-| journal | The Plant Journal (2020) · doi **10.1111/tpj.14716** · PMID 32022960 |
+| journal | The Plant Journal 103:154-165 (2020) · doi **10.1111/tpj.14716** · PMID 32022960 |
 | open access | **YES** — Unpaywall `is_oa: true`, `oa_status: hybrid` |
+| **licence** | **CC-BY 4.0** (Crossref: `creativecommons.org/licenses/by/4.0/`, content-version `vor`, delay 0) |
 
-## The article PDF — free, scripted, no browser (this works)
+**The licence is why the supplements are committed here.** CC-BY permits redistribution with attribution,
+and these files are *browser-only* (below) — so committing them is what makes the scoring reproducible for
+anyone else. Cite the paper (see `CITATION` in the scorer) with any reuse.
 
-Wiley's Cloudflare 403s every scripted request, but the Max Planck repository holds the
-**publisher version** and its REST API serves it plainly:
+## What's committed
+
+| file | contents | used for |
+|---|---|---|
+| **`tpj14716-sup-0012-TableS3.tsv`** | **allele id + FRI status + FT16 per accession** (1,017 rows) | **the scored substrate** |
+| `tpj14716-sup-0010-TableS1.xlsx` | the 171 FRI variants × 1,016 accessions genotype matrix (`prot_change`, REF, ALT, `funct_consequ`) | **v0.1 genome-mode input** (not yet used) |
+| `tpj14716-sup-0011-TableS2.xlsx` | variant comparison with previous works | — |
+| `tpj14716-sup-0003-figs3.pdf` | % functional/non-functional FRI per STRUCTURE group, Fisher's test | evidence for the population-structure confound the scorer corrects for |
+| `tpj14716-sup-0013-DataS1.docx` | DNA sequences of all cloned FRI alleles | v0.1 reference material |
+| `tpj14716-sup-0014-DataS2.docx` | ClustalW alignment of cloned alleles | v0.1 reference material |
+
+*Not committed:* the article PDF (gitignored — it's one API call away, below).
+
+## Table S3 columns
+
+`accession_id`, `cloned`, **`deleterious_allele`** (TRUE/FALSE — the FRI functional call), `allele_group`
+(a001…a103), `name`, `CS_number`, `count` (**mislabeled — it holds the country code**), `latitude`,
+`longitude`, **`group`** (STRUCTURE population group), **`FT16_mean`** (days to first flower, long days 16 °C).
+
+**Two traps, both live:**
+1. **Missing FT16 is the string `NA`, not blank** — 163 of 1,017 (16%). A naive `float()` crashes; a naive
+   truthiness check *passes it through*. The dropout is **not random**: only 9.8% of dropped accessions carry
+   a deleterious FRI vs a 24% base rate, so functional-FRI (late-candidate) accessions are preferentially
+   unphenotyped. `phenotype_attrition()` reports this.
+2. **`group` is `NA` for 130 accessions** — all of which also lack FT16, so they vanish from scoring anyway.
+
+`load_table_s3()` verifies the file against the paper's own stated counts (1,017 rows / 245 deleterious /
+103 allele groups) and **refuses to score** on a mismatch.
+
+## The article PDF — free, scripted, no browser
+
+Wiley's Cloudflare 403s every scripted request, but the Max Planck repository serves the publisher version:
 
 ```bash
 # handle 21.11116/0000-0007-03AB-5 -> pubman item_3252572 -> component file_3252619
@@ -21,38 +53,25 @@ curl -L -o zhang_tpj14716_publisher.pdf \
   https://pure.mpg.de/rest/items/item_3252572/component/file_3252619/content
 ```
 
-596,981 bytes. **Gitignored** — regenerable in one call, and we don't redistribute a publisher binary.
+596,981 bytes. Gitignored — regenerable in one call.
 
-## The supplementary tables — browser required (this is the open item)
+## The supplements — browser-only (a real capability boundary)
 
-The PuRe record has **exactly one component** (the PDF above). **No supplements are deposited there**, and
-Wiley 403s `downloadSupplement` like everything else. So a human with a browser is genuinely required:
+PuRe holds **exactly one component** (the article PDF); no supplements are deposited. Wiley 403s
+`downloadSupplement` like everything else — **bot-blocking, not a paywall** (the paper is OA/CC-BY). A human
+with a browser gets them free from the article's *Supporting Information* section; that's how these arrived.
+See [[feedback_buildable_from_literature_but_scorable_only_behind_paywall]].
 
-> `https://onlinelibrary.wiley.com/doi/10.1111/tpj.14716` → **Supporting Information** → download **Table S3**.
+**Which table is which** (from the PDF's own caption list — an earlier draft named Table S1 as the
+per-accession mapping, sourced from a search-engine summary, and was **wrong**):
 
-**403 here is bot-blocking, not a paywall** — the paper is OA and a human gets the file free. See
-[[feedback_buildable_from_literature_but_scorable_only_behind_paywall]].
+- **Table S1** = *variants* in the FRI locus (the 171 mutations) — not per-accession phenotype
+- **Table S3** = *"Allele id and flowering time for each accession"* — the scored substrate
 
-## Which table (corrected 2026-07-16 — read this before fetching)
+## Result summary
 
-Straight from the PDF's own Supporting-Information caption list — **not** from a search summary:
-
-| file | actual contents | want? |
-|---|---|---|
-| Table S1 | Variants found in the FRI locus (the 171 mutations) | no |
-| Table S2 | Variant comparison with previous works | no |
-| **Table S3** | **"Allele id and flowering time for each accession"** | **YES** |
-| Data S1 / S2 | FRI allele DNA sequences / ClustalW alignment | no |
-
-An earlier draft of the acquisition ask named **Table S1** as the per-accession mapping. That came from a
-search-engine summary and was **wrong**; S1 is the variant list. The PDF settles it.
-
-**Bonus:** S3 carries **allele id AND flowering time** in one file — both the join key and the label. So
-scoring may not need the free AraPheno DTF1 values at all (`scripts/flowering_arapheno_spotcheck.py`
-currently fetches those and joins by accession).
-
-## Once Table S3 is in hand
-
-Point the spot-check at it. Note the null-baseline gate is load-bearing: the AraPheno-median split already
-produced `DEGENERATE_NO_LABEL_VARIATION` once — the cell went 4/5 while a constant-`early` predictor went
-5/5. A score is only meaningful on a set where both classes are actually observed.
+Pooled accuracy **0.733** vs a 0.502 constant-predictor null — but the honest figure is the
+**population-structure-weighted 0.710 vs its own 0.676 null (+3.4 pp)**, because FRI genotype correlates
+with ancestry. The rule is strongly predictive in one direction only (FRI loss → early, 93.9%) and weak in
+the other (FRI intact → late, 65.8%): functional FRI is **necessary but not sufficient**, exactly as the
+cell's two-locus rule says. Full detail + all caveats: `wiki/flowering_tables3_score_2026-07-16.md`.
