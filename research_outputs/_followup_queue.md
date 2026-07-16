@@ -158,3 +158,22 @@ hybrid IDENTITY (*13/*36/*68). 5 decisions surfaced; NOT a promotion list — hu
 | 3 | Validate against benchmark anchors NA12878=*68 / NA24631=*36 / HG01161=*13 | fetchable GIAB/1000G CRAMs (the remote-CRAM tooling dna_decode already proved) → real-surface identity test | confirm CRAM reachability + current PharmVar truth per anchor |
 | 4 | Set the accuracy bar at the field ceiling (Cyrius 96.5%/99.3%; beats Aldy 86.8%) | target ≥90% hybrid-identity concordance to be worth shipping over presence-only | derive the hybrid-only-subset bar, don't assume the full-diplotype number |
 | 5 | Accept the *36 embedded-exon-9 gene-conversion blind spot as a documented residual | a pure conversion yields no CN change → needs read-level PSV base-counting, not depth alone | confirm whether read-level PSV allele-fraction is required (raises build cost) |
+
+## Path-B free-substrate probe (2026-07-16, from free-genotype-paired-phenotype-substrates)
+
+_The VOI-menu path-B probe: does a FREE unexploited genotype-paired phenotype substrate clear the label wall
+AND fit the deterministic curated-catalog paradigm? **Verdict: NO — wall confirmed; A is the only new-capability
+lever.** CONVERGES with prior queue epochs (rows 49-58 PGS ancestry-portability; rows 64-68 + 93-113 non-AMR
+substrate surveys) — B re-derived the already-characterized wall via a cleaner regime-fit lens._
+
+| # | Decision | Candidate use | Verification needed |
+|---|---|---|---|
+| B-1 | Build the visible-pigmentation cell (HIrisPlex-S 41-SNP curated catalog + openSNP free cohort) | The ONE reachable free curated-catalog cell (the tractable form of "DNA→appearance"; from the D scoping) | DNA-11 human-cell lane coordination + application-framing authority call (benign visible-trait genetics, NOT forensic) |
+| B-2 | Draft the A label-acquisition target-list — SHARPENED target | B confirmed A is the only new-capability lever; target is NOT "more phenotype data" (abundant/PGS-owned/ancestry-confounded) but MECHANISM-RESOLVED / curated-causal-locus labels | User go-ahead (draft reversible; acquisition = money + authority) |
+| B-3 | Deterministic flowering-time decoder (FLC/FRI curated loci, AraPheno 1135 acc) | Possible curated-locus EUKARYOTIC cell where the embedding failed (0-for-5) — open, not a found substrate | Confirm a curated causal-locus catalog exists + is deterministically decodable (untested) |
+
+Regime-fit key: free phenotype data is abundant (PGS Catalog 5,022 scores/656 traits; yeast 1011×223;
+AraPheno 1135) but lives in the polygenic/ancestry-confounded regime (PGS accuracy 24-51% of European in
+non-EUR = the project's own 0-for-5 lineage confound) + is already PGS-Catalog-owned with no edge to beat.
+Only curated-causal-locus traits fit the winning paradigm. Full memo:
+`research_outputs/free-genotype-paired-phenotype-substrates-2026-07-16.md`.
