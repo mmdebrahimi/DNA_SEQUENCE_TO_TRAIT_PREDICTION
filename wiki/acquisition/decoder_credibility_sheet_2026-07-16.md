@@ -35,9 +35,23 @@ decodable rather than guessing.
 - **We publish the number that makes us look worse.** TB raw sens is 0.920; the clonality-corrected number is
   0.444, and *that* is our headline, because 2,845 isolates collapse to ~67 lineages and raw counts one vote
   per isolate.
-- **We record negative results.** Genomic foundation-model embeddings failed under de-confounding on every
-  substrate we tried (0-for-5, across the bacterial→eukaryote boundary) — documented, not buried. A learned
-  variant scorer (ESM2) scored *below chance* on drug resistance where the curated catalogue hits 0.926.
+- **We record negative results — and the scope of each is exact.** **ZERO-SHOT / frozen** genomic-FM
+  embeddings failed under de-confounding on every substrate tried (0-for-5, across the bacterial→eukaryote
+  boundary); zero-shot ESM2 scored *below chance* where the curated catalogue hits 0.926. **That negative is
+  about zero-shot embeddings — it is NOT a verdict on learned models.**
+- **The shipped architecture is a HYBRID, not a rules purist.** A **supervised** sequence model *rescues the
+  catalogue's structural blind spot* (catalogue-negative resistant isolates): **0.81 leave-STUDY-out**
+  (deployable) vs **0.449** for zero-shot ESM on the same gap; **GENERAL_RESCUE** across 8/11 HIV RT drugs
+  (all 5 NNRTIs). Catalogue fold-in was tested and **rejected** (hard rules trade sens for spec, −0.006
+  bal-acc) — the value is the continuous weighting, so it ships as an **offline complement**:
+  `dna_decode/data/hiv_supervised_complement.py` + 3 committed model JSONs. Deterministic rule leads +
+  abstains; learned layer covers its blind spot.
+- **The regime boundary is the real finding** (`wiki/supervised_learned_layer_synthesis_2026-07-12.md`):
+  supervised rescue works where resistance is **CONVERGENT** (HIV — same mutations recur across the
+  phylogeny) and fails where it is **CLONALLY CONFOUNDED** (TB RIF — plain 5-fold said 0.66, but
+  leave-one-lineage-out revealed **0.51 = chance**; it had learned lineage, so we did not ship it).
+  **The de-confounded split is the whole ballgame** — and the HIV win is trustworthy *because* it survived
+  the equivalent de-confound that killed the TB one.
 - **Cells abstain by design** when a mechanism isn't gene-decodable (efflux/regulatory/intrinsic), rather than
   over-calling.
 - **Frozen + reproducible:** the deployed rule surface is sha256-pinned and byte-verified on every run; a

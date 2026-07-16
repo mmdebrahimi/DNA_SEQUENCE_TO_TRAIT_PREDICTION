@@ -63,10 +63,39 @@ Anyone can claim a high accuracy number. Here's the one we *don't* hide:
 
 We do the same everywhere: we correct for it, we show the uncertainty range, and we let the ugly number lead.
 
-**And we publish our failures.** We tried the fashionable approach — the big AI "foundation models" everyone
-is excited about — on **five different problems**. It failed **all five times**. We wrote up exactly why and
-moved on, rather than quietly dropping it. In one test, the AI model performed **worse than random guessing**
-at the very task where our boring rule-based catalogue scored 93%.
+**And we publish our failures — including the ones that turned into wins.**
+
+We tried the fashionable shortcut first: take a big pre-trained AI "foundation model" **off the shelf**, don't
+train it on anything, just ask it. That failed on **five different problems**, every time. In one case it did
+**worse than random guessing** at a task where our boring rulebook scored 93%. We wrote up exactly why instead
+of quietly dropping it.
+
+**But that's not the whole story, and the rest of it matters more.**
+
+The rulebook has a real blind spot: some samples are resistant with **no catalogued mutation at all**. The
+rulebook simply cannot see them. So we did the thing the shortcut skipped — we **properly trained** a model on
+HIV, the one problem where we have thousands of real lab measurements to learn from.
+
+**It worked.** It catches the cases the rulebook structurally misses, and it holds up when tested on studies
+it never saw. (Concretely: **0.81** on that held-out test — where the off-the-shelf AI managed 0.449, barely
+better than a coin flip.)
+
+**So what actually ships is a hybrid**, not a rulebook purist:
+
+> **The rulebook leads** — explainable, checkable, abstains when unsure.
+> **The learned model rides alongside it**, covering the rulebook's blind spot.
+
+We also found **where that stops working**, which is the genuinely interesting bit:
+
+- **It works for HIV** — a fast-mutating virus where the same resistance mutations keep arising independently.
+  There's a real pattern to learn.
+- **It fails for tuberculosis** — a slow, clonal bacterium. There, the model *looked* like it worked (0.66),
+  but it was really just **recognising family trees**. Hide the families and it dropped to **0.51 — a coin
+  flip**. We caught that, and did not ship it.
+
+That last one is the whole method in miniature: **the honest test is the one that hides what the model could
+memorise.** Ordinary testing said "ship it." The honest test said "this is a lineage-memoriser." We believe the
+HIV result *precisely because* it survived the same kind of test that killed the TB one.
 
 If someone shows you a genomics tool with one big impressive accuracy number and no caveats, that's the thing
 to be suspicious of — not this.
