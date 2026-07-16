@@ -79,6 +79,10 @@ TRAITS = {
         "summary": "FORWARD variant-effect (--mutation M69L --protein-seq/--protein-fasta): a protein point mutation -> predicted MOLECULAR-phenotype change (Regime B, enzyme fitness/stability) - the edit->effect complement to `amr`. v0 CLI = BLOSUM62 (deterministic, offline); learned methods (ESM2/AlphaMissense/ESM-IF) via the Python API",
         "validation": "per-variant vs measured Deep Mutational Scanning (ProteinGym): ESM2-650M Spearman TEM-1 0.732 / PTEN 0.518, AlphaMissense(human) 0.539, BLOSUM62 weaker (0.35/0.18) but instant+offline; calibrated-magnitude dosage head coverage 10/10 organisms. Regime B molecular fitness RANK, NOT clinical resistance (use `amr` for R/S)",
     },
+    "pigment": {
+        "summary": "HUMAN visible-trait pigmentation (--genotypes rsID=GT,...): v0 = IrisPlex EYE colour (6 curated SNPs -> P(blue)/P(intermediate)/P(brown) + call) - the deterministic curated-catalog form of 'DNA->appearance'. Benign visible-trait genetics, NOT a forensic tool",
+        "validation": "deterministic multinomial-logistic Walsh-2011 IrisPlex coefficients (curated, provenance brianbhsu/eye-color; re-verify vs Walsh Table = v0.1); reference-integrity biology-checked (HERC2 GG->blue, AA->brown). Eye pigmentation AUC ~0.9 (HIrisPlex-S lit). Hair/skin (full 41-SNP) + VCF input + openSNP scoring = v0.1 follow-ons",
+    },
 }
 
 
@@ -130,6 +134,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "forward":
         from dna_decode.forward.cli import main as forward_main
         return forward_main(rest)
+    if trait == "pigment":
+        from dna_decode.pigment.cli import main as pigment_main
+        return pigment_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
