@@ -313,6 +313,81 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     ("finder", "disinfinder", "bacteria", "biocide/disinfectant resistance genes (DisinFinder)", "ABSTAIN"),
 ]
 
+# --- Non-AMR trait cells (route dna-<trait>). Registered SEPARATELY from _TYPING_FINDER because each has an
+# --- individually-earned tier, and collapsing them into the shared faithful-to-tool default would overstate
+# --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
+# --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
+_TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="typing:arabidopsis:flowering", track="typing", route="dna-flowering",
+        organism="Arabidopsis_thaliana", target="flowering",
+        claim="flowering HABIT (winter-annual/late vs summer-annual/early) from FRI + FLC allele calls; "
+              "a two-locus AND, NOT quantitative days-to-flower",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="fri_route_scored_in_distribution_structure_confounded",
+        validation_slice=(
+            "Zhang & Jimenez-Gomez 2020 Table S3, N=854 phenotyped of 1,017 (scripts/flowering_tables3_score.py). "
+            "Pooled acc 0.733 vs 0.502 null — but the HONEST figure is the population-structure-weighted "
+            "0.710 vs its own 0.676 null (+3.4pp; 7/9 ancestry groups beat their null, central_europe LOSES). "
+            "FRI-ROUTE ONLY: S3 carries no FLC, so only the weaker MEDIUM-confidence route is tested; the "
+            "distinctive FLC route (Da(1)-12 class) is UNTESTED. Directional: FRI-LoF->early 93.9% (strong), "
+            "FRI-functional->late 65.8% (weak) = necessary-not-sufficient"),
+        label_provenance=(
+            "FT16_mean (days to first flower, long days 16C) from 1001 Genomes via the paper's Table S3 "
+            "(CC-BY 4.0); FRI status = the paper's own `deleterious_allele` call. IN-DISTRIBUTION: the cell's "
+            "catalogue and this label both trace to the same literature — NOT an independent validation"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/flowering_tables3_score.py", incoming_data_gate="G2, G8",
+        demotion_rule=(
+            "the +3.4pp within-ancestry gain is the real claim; if a structure-aware re-score or an FLC-"
+            "resolved run drops it to <=0, demote to NOT_CENSUSED. 16% of S3 lacks FT16 with NON-RANDOM "
+            "dropout (9.8% deleterious among dropped vs 24% base rate) — a re-score on the full set may move "
+            "it. NB the gate tags are BY ANALOGY: G2 is defined on source-study/submitter and G8 on Mash "
+            "lineages, whereas the confounding grouping variable here is the STRUCTURE ancestry group — same "
+            "shape (label confounded with a grouping variable; correcting for it collapses one group to a "
+            "single class and shrinks the advantage), different variable"),
+    ),
+    CellContract(
+        cell_id="typing:human:pigment", track="typing", route="dna-pigment",
+        organism="human", target="pigment",
+        claim="IrisPlex eye-colour probability (blue/intermediate/brown) from 6 curated SNP genotypes",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="faithful_to_published_irisplex_model_not_scored",
+        validation_slice=(
+            "reproduces the published IrisPlex multinomial model (coefficients transcribed verbatim) and its "
+            "reference anchors (rs12913832 GG -> blue 0.984; AA -> brown 0.846) via reference_integrity_ok(). "
+            "NOT SCORED against measured phenotypes: the openSNP scoring run is still blocked on the host "
+            "being down. Faithful-to-tool, not validated"),
+        label_provenance="IrisPlex published model coefficients (Walsh et al.); no measured-phenotype cohort scored yet",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule=(
+            "European-ancestry-derived model; predictive accuracy is known to degrade off that ancestry and "
+            "intermediate is the weakest class. A measured-phenotype score (openSNP) would move this to a real "
+            "tier — in either direction"),
+    ),
+    CellContract(
+        cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
+        organism="any", target="forward",
+        claim="BLOSUM62 exchangeability score for a protein substitution — a molecular-property PRIOR, "
+              "explicitly NOT a phenotype call",
+        evidence_tier=EvidenceTier.NOT_CENSUSED,
+        claim_status="prior_only_no_phenotype_claim",
+        validation_slice=(
+            "NONE — v0 emits a substitution-matrix score and makes no phenotype claim, so there is nothing to "
+            "score. Registered so it cannot ship invisibly. The measured project finding is that "
+            "exchangeability scorers are BLIND to antagonistically-selected resistance (ESM2 0.454 = below "
+            "chance vs catalogue 0.926; BLOSUM62 ranks real DRMs 4.0/19) — this cell must never be read as a "
+            "resistance predictor"),
+        label_provenance="BLOSUM62 substitution matrix; no phenotype labels involved",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/resistance_conservativeness_probe.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "if a future version emits a phenotype call rather than a prior, it needs a real validation slice "
+            "before leaving NOT_CENSUSED — see the closed zero-shot negatives"),
+    ),
+]
+
 
 # --- Mendelian (germline pathogenicity) cell (route dna-clinvar). Curated ClinVar catalog decoder. ---
 _MENDELIAN_CONTRACTS: list[CellContract] = [
@@ -368,9 +443,9 @@ def _typing_finder_contracts() -> list[CellContract]:
 
 
 def cells() -> list[CellContract]:
-    """Every v0.1 cell contract (AMR projection + viral + PGx + typing/finder)."""
+    """Every v0.1 cell contract (AMR projection + viral + PGx + HLA + Mendelian + typing/finder + traits)."""
     return (_amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _hla_contracts()
-            + list(_MENDELIAN_CONTRACTS) + _typing_finder_contracts())
+            + list(_MENDELIAN_CONTRACTS) + _typing_finder_contracts() + list(_TRAIT_CONTRACTS))
 
 
 def by_cell_id() -> dict[str, CellContract]:
