@@ -1,0 +1,98 @@
+{
+  "cell": "arabidopsis_flowering_arapheno_spotcheck",
+  "status": "SPOT_CHECK_NOT_SCORED",
+  "verdict": "DEGENERATE_NO_LABEL_VARIATION",
+  "null_baseline": {
+    "constant_predictor": "early",
+    "n_null_agree": 5,
+    "n_cell_agree": 4,
+    "n": 5,
+    "observed_classes_present": [
+      "early"
+    ],
+    "reading": "the joined set carries only ONE observed class -> a constant predictor attains 5/5 by construction and the cell's 4/5 is NOT evidence of anything. Reporting an agreement RATE here would be meaningless."
+  },
+  "why_not_scored": "a real score needs a per-accession FRI/FLC allele mapping for a powered cohort. It EXISTS (Zhang 2020 Plant J Table S1 = 1016 accessions; Shindo 2005 = 176; Werner 2005 = 145) but every FREE route is walled: PMC=CAPTCHA, OUP=abstract-only, bioRxiv-supp=figures-only, Wiley=HTTP 402 Payment Required (MONEY gate, not paid), no CSV/repo mirror. So only the catalog's own literature-known accessions could be joined => N is an anecdote, not a cohort.",
+  "measured_source": {
+    "db": "AraPheno (1001 Genomes)",
+    "phenotype": "DTF1 (days to visible flowering buds from sowing)",
+    "url": "https://arapheno.1001genomes.org/rest/phenotype/703/values.csv",
+    "n_accessions_in_file": 934
+  },
+  "threshold_discipline": {
+    "rule": "early/late split = MEDIAN of the measured DTF1 distribution (derived, not asserted)",
+    "median_days": 61.25
+  },
+  "n_joined": 5,
+  "n_agree": 4,
+  "checks": [
+    {
+      "accession": "Col-0",
+      "fri_allele": "Col",
+      "flc_allele": "Col",
+      "predicted_habit": "summer_annual_early",
+      "predicted": "early",
+      "confidence": "medium",
+      "measured_days_to_flower": 28.0,
+      "observed": "early",
+      "agree": true
+    },
+    {
+      "accession": "Van-0",
+      "fri_allele": "Sf-2",
+      "flc_allele": "Van-0",
+      "predicted_habit": "summer_annual_early",
+      "predicted": "early",
+      "confidence": "high",
+      "measured_days_to_flower": 27.0,
+      "observed": "early",
+      "agree": true
+    },
+    {
+      "accession": "Bur-0",
+      "fri_allele": "Sf-2",
+      "flc_allele": "Bur-0",
+      "predicted_habit": "summer_annual_early",
+      "predicted": "early",
+      "confidence": "high",
+      "measured_days_to_flower": 54.25,
+      "observed": "early",
+      "agree": true
+    },
+    {
+      "accession": "Sf-2",
+      "fri_allele": "Sf-2",
+      "flc_allele": "Col",
+      "predicted_habit": "winter_annual_late",
+      "predicted": "late",
+      "confidence": "high",
+      "measured_days_to_flower": 40.0,
+      "observed": "early",
+      "agree": false
+    },
+    {
+      "accession": "Wil-2",
+      "fri_allele": "Wil-2",
+      "flc_allele": "Col",
+      "predicted_habit": "summer_annual_early",
+      "predicted": "early",
+      "confidence": "medium",
+      "measured_days_to_flower": 36.0,
+      "observed": "early",
+      "agree": true
+    }
+  ],
+  "misses": [
+    {
+      "accession": "Sf-2",
+      "fri_allele": "Sf-2",
+      "flc_allele": "Col",
+      "predicted_habit": "winter_annual_late",
+      "predicted": "late",
+      "confidence": "high",
+      "measured_days_to_flower": 40.0,
+      "observed": "early",
+      "agree": false
+    }
+  ]
+}
