@@ -1,6 +1,28 @@
 # ASK #1 — the flowering supplementary table (the smallest, highest-VOI request)
 
-**Status: DRAFT. Sending is the user's action — Soraya does not send.**
+> ## ⚠️ CORRECTION 2026-07-16 — THIS EMAIL IS PROBABLY UNNECESSARY. TRY THE BROWSER FIRST.
+>
+> **The paper is OPEN ACCESS.** An Unpaywall lookup on the DOI returns **`is_oa: True`, `oa_status: hybrid`**,
+> with a publisher OA PDF (`.../doi/pdfdirect/10.1111/tpj.14716`) and an MPG repository copy
+> (`http://hdl.handle.net/21.11116/0000-0007-03AB-5`).
+>
+> **The earlier "HTTP 402 Payment Required → money gate" conclusion in this file's first draft was WRONG.**
+> Two compounding errors: (a) the 402 came from the `/doi/full/` *HTML* route, not the OA PDF route; and
+> (b) `pdfdirect` returns **403 = BOT-BLOCKING**, which is not a payment wall — a human in a browser gets it
+> free. Europe PMC's `isOpenAccess: N` was also misleading: it tracks *PMC deposit*, not OA status.
+>
+> **Do this first (2 min, free, no favour owed):**
+> 1. Open `https://onlinelibrary.wiley.com/doi/10.1111/tpj.14716` in a browser →
+>    **Supporting Information** → download **Table S1**.
+> 2. Fallbacks: the OA PDF `https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/tpj.14716`, or the MPG
+>    repository copy at the handle above (JS-rendered — browser only).
+>
+> **Only if the SI itself turns out to be genuinely unavailable** does the email below become the move.
+>
+> **Reusable rule:** an HTTP 402/403 from `curl`/WebFetch is **not** evidence of a paywall — publishers
+> bot-block. **Check Unpaywall by DOI (`is_oa`) before ever calling something a money gate.**
+
+**Status: DRAFT — DEMOTED TO FALLBACK by the correction above. Sending is the user's action; Soraya does not send.**
 
 ## What this unblocks
 
