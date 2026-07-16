@@ -6,6 +6,9 @@
 !/data/fungal_ref/
 # Exception: committed Arabidopsis Path-B phenotype labels (small public AraPheno CSVs)
 !/data/arabidopsis/
+# ...but NOT the Zhang 2020 publisher PDF: redistributing a publisher-version binary is a
+# licence question we don't need to take on, and it is one API call away. See that dir's README.
+/data/arabidopsis/zhang2020/*.pdf
 # Exception: committed public influenza N1 NA reference + real field alleles for the antiviral (4th-kingdom)
 # real-data test (tiny GenBank CDS). Same class as fungal_ref.
 !/data/antiviral_ref/

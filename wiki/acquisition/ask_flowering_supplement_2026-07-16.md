@@ -11,11 +11,34 @@
 > (b) `pdfdirect` returns **403 = BOT-BLOCKING**, which is not a payment wall — a human in a browser gets it
 > free. Europe PMC's `isOpenAccess: N` was also misleading: it tracks *PMC deposit*, not OA status.
 >
-> **Do this first (2 min, free, no favour owed):**
-> 1. Open `https://onlinelibrary.wiley.com/doi/10.1111/tpj.14716` in a browser →
->    **Supporting Information** → download **Table S1**.
-> 2. Fallbacks: the OA PDF `https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/tpj.14716`, or the MPG
->    repository copy at the handle above (JS-rendered — browser only).
+> ## ⚠️ CORRECTION #2 (same day) — THE TARGET IS **TABLE S3**, NOT TABLE S1.
+>
+> I fetched the **publisher-version PDF free** from the MPG repository REST API (no browser, no paywall:
+> handle → `item_3252572` → `component/file_3252619/content`; saved at
+> `data/arabidopsis/zhang2020/zhang_tpj14716_publisher.pdf`). Its own Supporting-Information caption list
+> settles what each file actually is:
+>
+> | file | actual contents |
+> |---|---|
+> | Table S1 | **Variants found in the FRI locus** — the 171 mutations. **NOT the per-accession mapping.** |
+> | Table S2 | Variant comparison with previous works |
+> | **Table S3** | **"Allele id and flowering time for each accession"** ← **THE FILE WE NEED** |
+> | Data S1/S2 | FRI allele DNA sequences / ClustalW alignment |
+>
+> My earlier "Table S1 = 1,016 accessions × FRI allele" came from a **search-engine summary** and was wrong.
+> **Bonus:** S3 carries **allele id AND flowering time**, so scoring may not need AraPheno at all — the join
+> key and the label ship in one file.
+>
+> **Do this (2 min, free, no favour owed) — a BROWSER is genuinely required:**
+> 1. Open `https://onlinelibrary.wiley.com/doi/10.1111/tpj.14716` → **Supporting Information** →
+>    download **Table S3** (and S1 too if it's one bundled file — no harm).
+> 2. Save it anywhere; hand Soraya the path.
+>
+> **Why a human must do this step:** Wiley's Cloudflare returns **403 to every scripted request** — article
+> HTML, `pdfdirect`, and `downloadSupplement` alike — even with a full browser User-Agent. That is
+> **bot-blocking, not a paywall** (the paper is OA). The MPG repository holds **only** the article PDF (one
+> component, no supplements), so there is no non-browser route to S3. This is a real capability boundary,
+> not an unexplored option.
 >
 > **Only if the SI itself turns out to be genuinely unavailable** does the email below become the move.
 >
