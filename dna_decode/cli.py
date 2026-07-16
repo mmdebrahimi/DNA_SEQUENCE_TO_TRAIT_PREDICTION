@@ -79,6 +79,10 @@ TRAITS = {
         "summary": "FORWARD variant-effect (--mutation M69L --protein-seq/--protein-fasta): a protein point mutation -> predicted MOLECULAR-phenotype change (Regime B, enzyme fitness/stability) - the edit->effect complement to `amr`. v0 CLI = BLOSUM62 (deterministic, offline); learned methods (ESM2/AlphaMissense/ESM-IF) via the Python API",
         "validation": "per-variant vs measured Deep Mutational Scanning (ProteinGym): ESM2-650M Spearman TEM-1 0.732 / PTEN 0.518, AlphaMissense(human) 0.539, BLOSUM62 weaker (0.35/0.18) but instant+offline; calibrated-magnitude dosage head coverage 10/10 organisms. Regime B molecular fitness RANK, NOT clinical resistance (use `amr` for R/S)",
     },
+    "flowering": {
+        "summary": "PLANT trait — Arabidopsis thaliana flowering HABIT (--fri/--flc allele calls): summer-annual-early vs winter-annual-late (vernalization-requiring), from the curated FRI/FLC causal loci. The deterministic counterpart to the CLOSED-NEGATIVE flowering EMBEDDING test (which learned lineage, not mechanism)",
+        "validation": "deterministic curated-causal-allele rule (late iff functional FRI AND strong FLC; FLC is downstream so a weak/null FLC calls early regardless of FRI). Literature-anchored (Johanson 2000 FRI / Michaels 2003 PNAS weak-FLC / Werner 2005 FRI-independent); reference-integrity biology-checked incl. the Da(1)-12 anchor a naive FRI-only rule mis-calls. PARTIAL: FRI/FLC ~40-70% of long-day variation -> HABIT/direction only, NOT days-to-flower; FRI-route confidence capped by the Lz-0 counterexample. v0 = allele-call input; genome-mode = v0.1",
+    },
     "pigment": {
         "summary": "HUMAN visible-trait pigmentation (--genotypes rsID=GT,...): v0 = IrisPlex EYE colour (6 curated SNPs -> P(blue)/P(intermediate)/P(brown) + call) - the deterministic curated-catalog form of 'DNA->appearance'. Benign visible-trait genetics, NOT a forensic tool",
         "validation": "deterministic multinomial-logistic Walsh-2011 IrisPlex coefficients (curated, provenance brianbhsu/eye-color; re-verify vs Walsh Table = v0.1); reference-integrity biology-checked (HERC2 GG->blue, AA->brown). Eye pigmentation AUC ~0.9 (HIrisPlex-S lit). Hair/skin (full 41-SNP) + VCF input + openSNP scoring = v0.1 follow-ons",
@@ -137,6 +141,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pigment":
         from dna_decode.pigment.cli import main as pigment_main
         return pigment_main(rest)
+    if trait == "flowering":
+        from dna_decode.organism_rules.flowering_cli import main as flowering_main
+        return flowering_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

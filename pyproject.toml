@@ -56,6 +56,7 @@ dna-pathotype = "dna_decode.pathotype.cli:main"
 dna-amr = "dna_decode.amr.cli:main"
 dna-forward = "dna_decode.forward.cli:main"    # forward variant-effect (edit -> molecular phenotype)
 dna-pigment = "dna_decode.pigment.cli:main"    # visible-trait pigmentation (v0 = IrisPlex eye colour)
+dna-flowering = "dna_decode.organism_rules.flowering_cli:main"   # Arabidopsis flowering habit (FRI/FLC)
 dna-plasmid = "dna_decode.plasmid.cli:main"
 dna-serotype = "dna_decode.serotype.cli:main"
 dna-resfinder = "dna_decode.resfinder.cli:main"
