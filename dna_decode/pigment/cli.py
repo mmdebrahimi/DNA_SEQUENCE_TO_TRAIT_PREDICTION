@@ -34,9 +34,11 @@ def main(argv=None) -> int:
         description="Visible-trait pigmentation decoder (v0 = IrisPlex eye colour, 6 SNPs, deterministic).",
         epilog="scope: benign visible-trait genetics, NOT a forensic/surveillance tool.",
     )
-    ap.add_argument("--genotypes", required=True,
-                    help="comma-separated rsID=GT for the 6 IrisPlex SNPs (rs12913832, rs1800407, rs12896399, "
-                         "rs16891982, rs1393350, rs12203592), e.g. rs12913832=GG,rs1800407=TT,...")
+    src = ap.add_mutually_exclusive_group(required=True)
+    src.add_argument("--genotypes",
+                     help="comma-separated rsID=GT for the 6 IrisPlex SNPs (rs12913832, rs1800407, rs12896399, "
+                          "rs16891982, rs1393350, rs12203592), e.g. rs12913832=GG,rs1800407=TT,...")
+    src.add_argument("--vcf", help="a genome VCF (.vcf/.vcf.gz); the 6 IrisPlex SNPs are extracted by rsID")
     ap.add_argument("--allow-missing", action="store_true",
                     help="impute a missing non-HERC2 SNP as x=0 + cap confidence low (biased; use knowingly)")
     ap.add_argument("--json", action="store_true", help="emit the result as JSON")
@@ -45,8 +47,15 @@ def main(argv=None) -> int:
     from dna_decode.pigment import MissingGenotypeError, predict_eye_color
 
     try:
-        genos = _parse_genotypes(args.genotypes)
+        if args.vcf:
+            from dna_decode.pigment.vcf_input import genotypes_from_vcf
+            genos = genotypes_from_vcf(args.vcf)
+        else:
+            genos = _parse_genotypes(args.genotypes)
         res = predict_eye_color(genos, allow_missing=args.allow_missing)
+    except FileNotFoundError as e:
+        print(f"error: cannot read --vcf: {e}", file=sys.stderr)
+        return 2
     except (ValueError, MissingGenotypeError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
