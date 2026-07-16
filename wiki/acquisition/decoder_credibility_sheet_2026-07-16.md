@@ -3,6 +3,11 @@
 *One page. Every number below is machine-generated from a committed artifact in the repo — no aggregate
 "X% accurate" claim, because the honest answer is per-cell. Research use only; not a clinical tool.*
 
+> **Audience: technical** (bioinformatician / clinical microbiologist / PI). For a non-specialist reader — a
+> lab manager, an admin who gates data access, or anyone deciding whether this is worth a meeting — send
+> **`decoder_credibility_sheet_PLAIN_2026-07-16.md`** instead (same facts + numbers, no jargon). When in
+> doubt, send **both**: the plain sheet first, this one as the appendix.
+
 ## What it is
 
 An **open-source, deterministic genotype→phenotype decoder**. Point it at a genome (or a VCF) and it calls
