@@ -22,6 +22,31 @@ WHY THIS IS A NON-FROZEN organism_rules CELL: the rule is a multi-locus AND with
 shape the frozen count/OR `amr_rules.DRUG_RULE` engine cannot express (same reason the TMP-SMX `sul AND dfr`
 overlay and the TB cell live outside it). The frozen decoder surface is untouched.
 
+VALIDATED (both routes, 2026-07-16/17 — the rule's shape is measured, not asserted):
+    FRI route  — Zhang 2020 Table S3, N=854 (`scripts/flowering_tables3_score.py`). The honest figure is
+                 the population-structure-weighted 0.710 vs its own 0.676 null (+3.4pp), NOT the pooled
+                 0.733-vs-0.502: FRI genotype tracks ancestry, so pooled accuracy partly measures "can you
+                 recognise a central European accession?". Directional: FRI-LoF->early 93.9% (strong) but
+                 FRI-functional->late only 65.8% (weak) — functional FRI is NECESSARY, NOT SUFFICIENT,
+                 which is exactly what the AND below says and why the FLC route matters.
+    FLC route  — the distinctive claim, validated on n=106 (`scripts/flowering_flc_route_test.py`) by
+                 joining measured FLC EXPRESSION (AraPheno phenotype 29, Atwell 2010) to S3. ALL FOUR
+                 cells of the AND call their majority correctly:
+                     functional + strong -> 85% late   (LATE  ✓)
+                     functional + weak   -> 39% late   (EARLY ✓)  <- the Da(1)-12 class, 46pp separation
+                     lof + strong        -> 17% late   (EARLY ✓)  <- the Lz-0 class: REAL but 1/6 = RARE,
+                                                                     which JUSTIFIES the MEDIUM cap below
+                     lof + weak          -> 10% late   (EARLY ✓)
+                 FLC earns its place: net +5 calls fixed (14 rescued / 9 broken) on the 70 functional-FRI
+                 accessions a FRI-only rule calls ALL late; **within-ancestry 0.803 vs FRI-only 0.767 vs
+                 null 0.751 — the FLC route roughly TRIPLES the within-ancestry advantage.**
+                 CAVEAT that travels with that number: the gain RIDES ON THE THRESHOLD (q30 +0.066 / q50
+                 +0.047 / q60 +0.000 / q70 -0.085), holding only in the biologically plausible low-quantile
+                 range (weak FLC alleles are RARE — Werner 2005 — which a median split cannot represent).
+                 And FLC expression is a PROXY for allele status, not the same measurement.
+    The premise (FRI drives FLC) is confirmed too: median FLC 1.265 with functional FRI vs 0.164 with
+    FRI-LoF — a 7.7x ratio.
+
 HONEST SCOPE (load-bearing):
   - PARTIAL. FRI/FLC explains ~40-70% of long-day flowering-time variation; the rest is polygenic +
     environment (photoperiod, vernalization, temperature). This decodes the HABIT / DIRECTION
