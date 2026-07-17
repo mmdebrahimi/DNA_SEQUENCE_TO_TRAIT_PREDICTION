@@ -1,0 +1,22 @@
+{
+  "schema": "forward-esm-proteingym-v1",
+  "method": "esm",
+  "date": "2026-07-17",
+  "question": "is the shipped forward default (blosum62) 'modest' across ALL of ProteinGym, or just on the 2 proteins the cell quotes?",
+  "n_scored": 194,
+  "abs_spearman": {
+    "min": 0.0116,
+    "q25": 0.328,
+    "median": 0.49275,
+    "q75": 0.5878,
+    "max": 0.7383,
+    "mean": 0.4394
+  },
+  "reference_2_proteins": {
+    "TEM-1": 0.3465,
+    "PTEN": 0.182
+  },
+  "n_above_0.3": 153,
+  "n_below_0.15": 21,
+  "note": "blosum62 is a signed severity score; the cell reports |rho| per protein. This measures the shipped default's rank quality at scale -- ESM (the learned method) is separately ~0.49 median on ProteinGym and beats blosum everywhere (the cell already says so)."
+}

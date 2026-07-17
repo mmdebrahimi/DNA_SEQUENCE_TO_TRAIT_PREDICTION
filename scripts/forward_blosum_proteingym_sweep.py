@@ -27,6 +27,11 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from dna_decode.forward.variant_effect import blosum62_score  # noqa: E402
+import json as _json
+ESM_DIR = Path("D:/dna_decode_cache/esm")
+def _load_esm(dms_id):
+    q = ESM_DIR / f"esm2_t33_650M_UR50D__{dms_id}.json"
+    return {int(k): v for k, v in _json.loads(q.read_text(encoding="utf-8")).items()} if q.exists() else None
 from scripts.forward_inverse_proteingym_sweep import DMS_DIR, REF, AMINO_ACIDS  # noqa: E402
 
 
@@ -55,7 +60,7 @@ def _spearman(x: list[float], y: list[float]) -> float:
     return num / den if den else 0.0
 
 
-def score_one(row: dict) -> dict:
+def score_one(row: dict, method: str = "blosum62") -> dict:
     dms_csv = DMS_DIR / f"{row['DMS_id']}.csv"
     base = {"dms_id": row["DMS_id"], "taxon": row.get("taxon", "")}
     if not dms_csv.exists():
@@ -77,10 +82,22 @@ def score_one(row: dict) -> dict:
                 continue
             if target[pos - 1] != wt:
                 continue
-            sev.append(blosum62_score(wt, alt))     # the forward cell's OWN blosum62 method
+            sev.append((wt, alt, pos))              # defer scoring until we know the method
             meas.append(val)
     if len(sev) < 200:
         return {**base, "status": "UNDERPOWERED", "n": len(sev)}
+    if method == "esm":
+        esm = _load_esm(row["DMS_id"])
+        if esm is None:
+            return {**base, "status": "NO_ESM_TABLE", "n": len(sev)}
+        pairs = [(esm[pos][alt] - esm[pos][wt], m) for (wt, alt, pos), m in zip(sev, meas)
+                 if esm.get(pos) and wt in esm[pos] and alt in esm[pos]]
+        if len(pairs) < 200:
+            return {**base, "status": "UNDERPOWERED_AFTER_ESM_FILTER", "n": len(pairs)}
+        rho = _spearman([a for a, _ in pairs], [b for _, b in pairs])
+        return {**base, "status": "SCORED", "n": len(pairs),
+                "spearman": round(rho, 4), "abs_spearman": round(abs(rho), 4)}
+    sev = [blosum62_score(wt, alt) for (wt, alt, pos) in sev]   # the forward cell's OWN blosum62 method
     # abs(spearman) -- blosum severity is signed opposite to fitness in some assays; the cell reports |rho|
     rho = _spearman(sev, meas)
     return {**base, "status": "SCORED", "n": len(sev),
@@ -124,7 +141,10 @@ def main() -> int:
     ap.add_argument("--out-dir", type=Path, default=REPO / "wiki")
     ap.add_argument("--checkpoint", type=Path,
                     default=REPO / "data" / "processed" / "forward_blosum_proteingym.jsonl")
+    ap.add_argument("--method", choices=["blosum62", "esm"], default="blosum62")
     args = ap.parse_args()
+    if args.method == "esm" and args.checkpoint.name == "forward_blosum_proteingym.jsonl":
+        args.checkpoint = args.checkpoint.with_name("forward_esm_proteingym.jsonl")
     if not REF.exists() or not DMS_DIR.exists():
         print("[fwd-blosum] SUBSTRATE UNAVAILABLE (D: not mounted?)", file=sys.stderr)
         return 2
@@ -143,7 +163,7 @@ def main() -> int:
     with args.checkpoint.open("a", encoding="utf-8") as ck:
         for i, row in enumerate(todo, 1):
             try:
-                res = score_one(row)
+                res = score_one(row, args.method)
             except Exception as exc:
                 res = {"dms_id": row["DMS_id"], "status": "ERROR", "error": f"{type(exc).__name__}: {exc}"}
             ck.write(json.dumps(res) + "\n")
@@ -155,7 +175,7 @@ def main() -> int:
     scored = [r for r in done.values() if r["status"] == "SCORED"]
     rhos = sorted(r["abs_spearman"] for r in scored)
     rep = {
-        "schema": "forward-blosum-proteingym-v1", "date": date.today().isoformat(),
+        "schema": f"forward-{args.method}-proteingym-v1", "method": args.method, "date": date.today().isoformat(),
         "question": ("is the shipped forward default (blosum62) 'modest' across ALL of ProteinGym, or just "
                      "on the 2 proteins the cell quotes?"),
         "n_scored": len(scored),
@@ -172,7 +192,7 @@ def main() -> int:
                  "shipped default's rank quality at scale -- ESM (the learned method) is separately ~0.49 "
                  "median on ProteinGym and beats blosum everywhere (the cell already says so)."),
     }
-    stem = f"forward_blosum_proteingym_{rep['date']}"
+    stem = f"forward_{args.method}_proteingym_{rep['date']}"
     (args.out_dir / f"{stem}.json").write_text(json.dumps(rep, indent=2), encoding="utf-8")
     (args.out_dir / f"{stem}.md").write_text(render_md(rep), encoding="utf-8")
     s = rep["abs_spearman"]

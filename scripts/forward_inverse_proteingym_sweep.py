@@ -42,7 +42,9 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from scripts.forward_inverse_deployable import TARGET_PCTS, random_null, rank_inverse  # noqa: E402
-from scripts.forward_inverse_roundtrip import Candidate, assay_degeneracy, blosum_score  # noqa: E402
+from scripts.forward_inverse_roundtrip import (  # noqa: E402
+    Candidate, assay_degeneracy, blosum_score, esm_score)
+import json as _json
 
 PG = Path("D:/dna_decode_cache/proteingym")
 DMS_DIR = PG / "pg_dms" / "DMS_ProteinGym_substitutions"
@@ -50,6 +52,14 @@ REF = PG / "pg_reference.csv"
 AMINO_ACIDS = set("ACDEFGHIKLMNPQRSTVWY")
 MATERIAL_MARGIN = 0.25
 TOP_K = 5
+ESM_DIR = Path("D:/dna_decode_cache/esm")
+
+
+def _load_esm(dms_id):
+    p = ESM_DIR / f"esm2_t33_650M_UR50D__{dms_id}.json"
+    if not p.exists():
+        return None
+    return {int(k): v for k, v in _json.loads(p.read_text(encoding="utf-8")).items()}
 
 
 def load_reference() -> list[dict]:
@@ -81,7 +91,7 @@ def build_candidates(target: str, dms_csv: Path) -> tuple[list[Candidate], int]:
     return cands, dropped
 
 
-def score_one(row: dict, null: dict) -> dict:
+def score_one(row: dict, null: dict, method: str = "blosum62") -> dict:
     dms_csv = DMS_DIR / f"{row['DMS_id']}.csv"
     base = {"dms_id": row["DMS_id"], "taxon": row.get("taxon", ""),
             "organism": row.get("source_organism", ""), "seq_len": row.get("seq_len", "")}
@@ -97,7 +107,17 @@ def score_one(row: dict, null: dict) -> dict:
         return {**base, "status": "DEGENERATE_CENSORED_ASSAY", "n_candidates": len(cands),
                 "mode_share": deg["mode_share"], "n_distinct": deg["n_distinct_values"]}
 
-    e = rank_inverse(cands, blosum_score, TARGET_PCTS, TOP_K, diverse=True)
+    if method == "esm":
+        esm = _load_esm(row["DMS_id"])
+        if esm is None:
+            return {**base, "status": "NO_ESM_TABLE", "n_candidates": len(cands)}
+        cands = [c for c in cands if esm.get(c.pos) and c.wt in esm[c.pos] and c.alt in esm[c.pos]]
+        if len(cands) < 200 or len({c.pos for c in cands}) < 20:
+            return {**base, "status": "UNDERPOWERED_AFTER_ESM_FILTER", "n_candidates": len(cands)}
+        scorer = lambda c: esm_score(esm, c)   # noqa: E731
+    else:
+        scorer = blosum_score
+    e = rank_inverse(cands, scorer, TARGET_PCTS, TOP_K, diverse=True)
     e_bok = e["mean_pct_err_best_of_k"]
     null_bok = null["mean_pct_err_best_of_k"]
     margin = (null_bok - e_bok) / null_bok if null_bok else 0.0
@@ -114,12 +134,20 @@ def score_one(row: dict, null: dict) -> dict:
 
 def render_md(rep: dict) -> str:
     q = rep["margin_quartiles"]
+    method = rep.get("method", "blosum62")
+    is_esm = method == "esm"
+    if rep["n_scored"] == 0:
+        return chr(10).join([f"# ProteinGym inverse sweep ({method}) - {rep[chr(39)+'date'+chr(39)]}", "", f"No assays scored (status: {rep[chr(39)+'status_counts'+chr(39)]}).", ""])
+
+    mat = rep.get("beats_null_material_rate") or 0.0
+    verdict = ("the LEARNED oracle generalizes: materially beats guessing on "
+               if is_esm else "the wheel-only default is materially better than guessing on only ")
     L = [
-        f"# Does the SHIPPED (blosum62) rank inverse generalize? — ProteinGym N=200 ({rep['date']})",
+        f"# Does the {'LEARNED (ESM)' if is_esm else 'SHIPPED (blosum62)'} rank inverse generalize? "
+        f"— ProteinGym N={rep['n_scored']} ({rep['date']})",
         "",
-        f"**No, not usefully. On {rep['n_scored']} scored ProteinGym assays the wheel-only default is "
-        f"materially better than guessing on only {rep['n_beats_null_material']} "
-        f"({rep['beats_null_material_rate']:.1%}), and often WORSE.**",
+        f"**On {rep['n_scored']} scored ProteinGym assays, {verdict}{rep['n_beats_null_material']} "
+        f"({mat:.1%}).**",
         "",
         "Tonight's inverse-design generalization rested on FOUR proteins and reported the rank inverse "
         "beating the no-oracle null 4/4. That 4/4 was **ESM** (the learned method, GPU-only). The shipped "
@@ -181,6 +209,7 @@ def main() -> int:
     ap.add_argument("--checkpoint", type=Path,
                     default=REPO / "data" / "processed" / "proteingym_inverse_sweep.jsonl")
     ap.add_argument("--limit", type=int, default=0, help="score only the first N assays (0 = all; smoke)")
+    ap.add_argument("--method", choices=["blosum62", "esm"], default="blosum62")
     args = ap.parse_args()
 
     if not REF.exists() or not DMS_DIR.exists():
@@ -192,6 +221,8 @@ def main() -> int:
         ref = ref[: args.limit]
     null = random_null(TARGET_PCTS, TOP_K)
 
+    if args.method == "esm" and args.checkpoint.name == "proteingym_inverse_sweep.jsonl":
+        args.checkpoint = args.checkpoint.with_name("proteingym_inverse_sweep_esm.jsonl")
     args.checkpoint.parent.mkdir(parents=True, exist_ok=True)
     done = {}
     if args.checkpoint.exists():
@@ -205,7 +236,7 @@ def main() -> int:
     with args.checkpoint.open("a", encoding="utf-8") as ck:
         for i, row in enumerate(todo, 1):
             try:
-                res = score_one(row, null)
+                res = score_one(row, null, args.method)
             except Exception as exc:  # a single malformed assay must not kill the sweep
                 res = {"dms_id": row["DMS_id"], "status": "ERROR", "error": f"{type(exc).__name__}: {exc}"}
             ck.write(json.dumps(res) + "\n")
@@ -238,7 +269,7 @@ def main() -> int:
         "question": ("does the SHIPPED wheel-only (blosum62) rank inverse beat the no-oracle null across "
                      "the whole ProteinGym substitution benchmark? (N=217, the deployability question at "
                      "scale)"),
-        "method": "blosum62 (the shipped CLI default; NOT ESM -- this bounds what ships, not the ceiling)",
+        "method": args.method,
         "material_margin": MATERIAL_MARGIN,
         "null": null,
         "status_counts": status_counts,
@@ -264,7 +295,7 @@ def main() -> int:
             "censored assays EXCLUDED (they flatter the metric); coordinate-mismatched variants dropped.",
         ],
     }
-    stem = f"proteingym_inverse_sweep_{rep['date']}"
+    stem = f"proteingym_inverse_sweep_{'esm_' if args.method=='esm' else ''}{rep['date']}"
     (args.out_dir / f"{stem}.json").write_text(json.dumps(rep, indent=2), encoding="utf-8")
     (args.out_dir / f"{stem}.md").write_text(render_md(rep), encoding="utf-8")
 

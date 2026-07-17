@@ -116,7 +116,7 @@ def test_every_proposal_ships_its_evidence_and_scope():
     assert d["regime"] == "B_molecular"
     assert d["research_use_only"] is True
     # the 4/4 was ESM; the shipped default is honestly bounded separately (N=200 blosum62 = 13.5% material)
-    assert "4/4" in d["evidence"]["esm_rank_inverse_beats_null"]
+    assert "72.9%" in d["evidence"]["esm_rank_inverse_beats_null_at_scale"]   # measured at scale (N=188)
     assert "13.5%" in d["evidence"]["shipped_blosum62_default_beats_null_at_scale"]
     assert len(d["does_not_support"]) == len(UNSUPPORTED_CLAIMS)
 

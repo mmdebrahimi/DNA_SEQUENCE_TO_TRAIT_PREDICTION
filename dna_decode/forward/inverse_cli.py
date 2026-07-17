@@ -88,7 +88,7 @@ def main(argv=None) -> int:
     print(f"\n  RANK ONLY — this does NOT support:")
     for c in UNSUPPORTED_CLAIMS:
         print(f"    - {c}")
-    print(f"  evidence: ESM (learned) beats a no-oracle null on {EVIDENCE['esm_rank_inverse_beats_null']}. "
+    print(f"  evidence: ESM (learned) beats a no-oracle null on {EVIDENCE['esm_rank_inverse_beats_null_at_scale']}. "
           f"The shipped blosum62 DEFAULT beats it {EVIDENCE['shipped_blosum62_default_beats_null_at_scale']}."
           f"\n  -> run scripts/forward_inverse_deployable.py on a DMS assay for YOUR protein before trusting "
           f"the default; see {EVIDENCE['artifact']}")

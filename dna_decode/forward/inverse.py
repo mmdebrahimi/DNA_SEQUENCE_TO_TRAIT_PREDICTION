@@ -64,17 +64,19 @@ VALIDATED_PROTEINS = ("TEM-1 beta-lactamase (E. coli)", "PTEN (human)", "RL40A/u
 EVIDENCE = {
     "validated_on": "ProteinGym DMS (measured wet-lab per-variant fitness)",
     "validated_proteins": list(VALIDATED_PROTEINS),
-    # HONESTY: the 4/4 was the LEARNED method (ESM) on 4 hand-picked proteins. The SHIPPED CLI default is
-    # blosum62 -- and at scale (N=200 ProteinGym, wiki/proteingym_inverse_sweep_2026-07-17.md) blosum62 is
-    # materially better than a random pick on only 13.5% of proteins, has any positive edge on 59%, and is
-    # frequently WORSE than guessing. Do NOT let the shipped default inherit the learned method's number.
-    "esm_rank_inverse_beats_null": "4/4 hand-picked proteins (LEARNED method; needs a GPU per protein)",
+    # HONESTY (both numbers measured AT SCALE now, not on a hand-picked handful). The LEARNED method (ESM)
+    # is the strong ceiling; the SHIPPED CLI default (blosum62, no GPU) is the weak floor. Never let the
+    # default inherit the learned number, and never let the learned ceiling hide that the default is weak.
+    "esm_rank_inverse_beats_null_at_scale": ("72.9% materially / 93.6% any-edge over N=188 ProteinGym assays "
+                                             "(LEARNED method, ESM2-650M, needs a GPU or a precomputed "
+                                             "table). Tonight's 4/4 on 4 hand-picked proteins GENERALIZES"),
     "shipped_blosum62_default_beats_null_at_scale": ("13.5% materially / 59% any-edge over N=200 ProteinGym "
                                                      "assays -- often WORSE than random. The wheel-only "
-                                                     "default is NOT a reliable design tool on its own"),
+                                                     "default is NOT a reliable design tool on its own; use "
+                                                     "method='esm' with a precomputed table for reliability"),
     "typical_error_top5": "~2-5 percentile points ON THE PROTEINS WHERE IT WORKS (not the average)",
-    "artifact": "wiki/proteingym_inverse_sweep_2026-07-17.md (blosum62 N=200) + "
-                "wiki/forward_inverse_deployable_2026-07-17.md (esm N=4)",
+    "artifact": "wiki/esm_at_scale_2026-07-17.md (the side-by-side) + "
+                "wiki/proteingym_inverse_sweep{,_esm}_2026-07-17.md",
 }
 UNSUPPORTED_CLAIMS = (
     "a MAGNITUDE / dose / fold-change for a proposed edit -- the calibrator needed for that requires the "
