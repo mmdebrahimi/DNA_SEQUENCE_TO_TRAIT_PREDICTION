@@ -1,0 +1,40 @@
+{
+  "schema": "forward-inverse-multiedit-v1",
+  "date": "2026-07-17",
+  "question": "does the multi-edit inverse extension (cooc-multiedit-inverse) earn a build?",
+  "substrate": {
+    "dms_id": "SR43C_ARATH_Tsuboyama_2023_2N88",
+    "n_single": 889,
+    "n_multi": 694,
+    "orders_present": [
+      2
+    ],
+    "single_range": [
+      -3.969,
+      1.019
+    ],
+    "multi_range": [
+      -3.966,
+      0.551
+    ],
+    "note": "the ONLY multi-mutant assay in the cache -> n=1 substrate, doubles only"
+  },
+  "Q1_reach": {
+    "claim_tested": "multi-edits reach effects no single edit reaches (the extension's motivation)",
+    "n_multi_outside_single_range": 0,
+    "fraction": 0.0,
+    "verdict": "NOT_MOTIVATED",
+    "why": "doubles span a range strictly INSIDE the singles' -- the assay is bounded (a protein cannot be more unfolded than unfolded), so effect RANGE is set by the assay floor/ceiling, not by how many edits you stack. Stacking saturates; it does not extend."
+  },
+  "Q2_additivity": {
+    "claim_tested": "sum(single effects) predicts the double's measured effect",
+    "n_doubles_with_both_singles_measured": 694,
+    "spearman_additive_vs_measured": 0.8038,
+    "mae_additive": 1.626,
+    "mae_predict_median_null": 1.5679,
+    "additive_beats_null": false
+  },
+  "Q3_moot_for_what_shipped": "`dna-decode inverse` takes a RANK target, and a percentile is defined relative to the candidate pool -- so every rank target is reachable by a single edit BY CONSTRUCTION. 'Unreachable target' is a MAGNITUDE concept, and the magnitude inverse is not deployable.",
+  "verdict": "MULTIEDIT_EXTENSION_NOT_WARRANTED",
+  "honest_scope": "n=1 substrate (SR43C doubles). This does NOT prove multi-edits never extend reach in any assay -- it shows the extension's stated motivation is FALSE where it can be checked, which is enough to not build it on that motivation. A build would need a substrate where Q1 comes back MOTIVATED."
+}
