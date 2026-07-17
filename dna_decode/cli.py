@@ -189,10 +189,15 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="dna-decode",
         description="Unified DNA trait decoder — deterministic, interpretable, mechanism-feature based.",
-        epilog="traits: " + ", ".join(TRAITS) + ".  `dna-decode list` for validation status.",
+        epilog=(f"{len(TRAITS)} traits: " + ", ".join(TRAITS) + f".  {len(ANALYSES)} analyses: "
+                + ", ".join(ANALYSES) + ".  Run `dna-decode list` for every command + its validation "
+                "status. Zero-setup decodes (no Docker/BLAST/downloads): `forward`, `inverse`, "
+                "`flowering`, and `amr --drug <hiv/fungal drug> --observed ...`."),
     )
     ap.add_argument("--version", action="version", version=f"dna-decode {_version()}")
-    sub = ap.add_subparsers(dest="trait", metavar="{amr,pathotype,list}")
+    # metavar was hardcoded "{amr,pathotype,list}" -- a lie: it hid 16 of the 19 commands from the usage
+    # line, the first thing `dna-decode --help` shows. Honest placeholder; the full set is in the body + epilog.
+    sub = ap.add_subparsers(dest="trait", metavar="<command>")
     # Register thin pass-through subparsers; real arg parsing happens in each decoder's main().
     for name, meta in TRAITS.items():
         sub.add_parser(name, add_help=False, help=meta["summary"])

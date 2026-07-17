@@ -19,7 +19,14 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 > guardrails, and run `dna-decode list` for the authoritative supported-trait + validation surface.
 > Quickstart: [`docs/quickstart.md`](docs/quickstart.md) · Validation tiers: [`docs/validation.md`](docs/validation.md).
 
-## What it decodes (v0.5.0)
+## What it decodes (v0.8.0)
+
+> **Fastest way to see it work — zero setup, no Docker/BLAST/downloads, seconds on a bare `pip install`:**
+> `dna-decode amr --drug efavirenz --observed RT:K103N` (HIV R/S) · `dna-decode forward --mutation S2L
+> --protein-seq MSIQ...` (edit→effect) · `dna-decode inverse --protein-seq MSIQ... --target-percentile
+> 0.05` (effect→edit) · `dna-decode flowering --fri Col --flc Col` (a plant trait). Full on-ramp:
+> [`docs/quickstart.md`](docs/quickstart.md).
+
 
 | Tool | Trait | Validation |
 |---|---|---|
