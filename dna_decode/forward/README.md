@@ -60,6 +60,37 @@ Key finding: **interval narrowing (dosage-informativeness) is DISTINCT from rank
 rank moderately (CcdB-ESM2 Spearman 0.49) yet NOT narrow the magnitude interval. "Ranks well" ≠ "pins the
 dose." Memo: `wiki/forward_dosage_sweep_*.md`.
 
+## The INVERSE (`dna-decode inverse` / `dna_decode.forward.inverse`) — effect → edit
+
+The forward cell answers *edit → effect*. The inverse answers *effect → edit*, which is what a design loop
+wants — using this cell as **label-free ground truth** (no phenotype label is ever consulted, which is how it
+dodges the project's label wall).
+
+```python
+from dna_decode.forward.inverse import propose_edits
+r = propose_edits(protein_seq, target_percentile=0.05, top_k=5, cds=cds_seq)  # the 5% most damaging
+```
+
+**It RANKS. It does not dose.** The narrowness is measured, not modest:
+
+| question | verdict | why |
+|---|---|---|
+| hit a target **effect** (dose) | **not deployable** | needs a score→effect calibrator fit on the **target protein's own DMS** — and if you have that you already know every effect. Calibrators cannot transfer: the assays share no scale (CcdB's whole range [−9.00,−2.00] sits below TEM-1's minimum −3.56 — impossible *by construction*). The conformal interval is informative **0/6** splits: it brackets while proving nothing (coverage holds even for a useless model). |
+| hit a target **percentile** (rank) | **ships** | needs no calibrator, no DMS, no label. **Beats an exact no-oracle null 4/4** proteins, ~2–5 percentile pts at top-5. |
+
+Three rails that ship inside every call (`does_not_support`, `evidence`, `notes`):
+
+- **`propose k, assay k, keep the best`** — top-1 is ~4× worse than best-of-5.
+- **`blosum62` is often the right answer, not a fallback** — the learned oracle earns its keep on only
+  **3/4** proteins, and **utility does not track forward rank** (PTEN 0.5185 earns it; RL40A 0.5190 does
+  not) → check per protein.
+- **one edit per residue by default** — BLOSUM62 takes only **7 distinct scores** over 1,874 real blaTEM
+  candidates (largest tie group 383), so a plain window returns *k shots at the same residue*. Diversity was
+  measured free for ESM and **better** for BLOSUM (up to −0.07 pct pts).
+
+Harnesses: `scripts/forward_inverse_{roundtrip,sweep,deployable}.py` →
+`wiki/forward_inverse_*_2026-07-1{6,7}.md`.
+
 ## Honest scope (hard-won rails)
 
 - **Regime B molecular only.** This predicts enzyme fitness/stability — NOT organism-level polygenic traits
