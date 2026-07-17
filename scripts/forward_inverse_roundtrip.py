@@ -152,6 +152,39 @@ def single_nt_accessible(target: str, cds: str) -> set[str]:
     return out
 
 
+# ---- assay degeneracy gate (a censored assay makes BOTH inverse metrics meaningless) ---------------------
+
+# A DMS assay that is heavily binned/censored cannot be a target space: if most variants share one measured
+# value, then (a) most "quantile targets" ARE that value, so any ceiling variant hits them trivially and the
+# magnitude margin is FLATTERED; and (b) percentile is ill-defined, so the rank metric is undefined. This is
+# not hypothetical -- CCDB_ECOLI_Tripathi_2016 has 8 distinct values over 1,663 variants with 79.3% at the
+# -2.00 ceiling. Gate on the DATA, report INAPPLICABLE, and never let it score.
+MAX_MODE_SHARE = 0.25       # >25% of variants at one value -> the target grid collapses onto it
+MIN_DISTINCT_VALUES = 20    # fewer distinct levels than targets -> "percentile" is a step function
+
+
+def assay_degeneracy(values: list[float]) -> dict:
+    """Is this measured distribution usable as an inverse-design target space?"""
+    from collections import Counter
+
+    n = len(values)
+    counts = Counter(values)
+    mode, mode_n = counts.most_common(1)[0] if counts else (None, 0)
+    mode_share = mode_n / n if n else 1.0
+    n_distinct = len(counts)
+    degenerate = mode_share > MAX_MODE_SHARE or n_distinct < MIN_DISTINCT_VALUES
+    return {
+        "n": n, "n_distinct_values": n_distinct,
+        "mode_value": mode, "mode_share": round(mode_share, 4),
+        "degenerate": degenerate,
+        "reason": (f"censored/binned assay: {mode_share:.1%} of variants share the value {mode} "
+                   f"({n_distinct} distinct levels). Quantile targets collapse onto the mode (flattering "
+                   f"any magnitude margin) and percentile is ill-defined. NOT an inverse-design target "
+                   f"space -- this is a property of the ASSAY, not of the oracle."
+                   if degenerate else "usable: effect values are well spread"),
+    }
+
+
 # ---- scoring (drives the DEPLOYED forward cell's scorers) -------------------------------------------------
 
 def esm_score(esm: dict[int, dict[str, float]], c: Candidate) -> float | None:

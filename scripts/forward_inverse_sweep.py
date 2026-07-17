@@ -39,6 +39,7 @@ if str(REPO) not in sys.path:
 from scripts.forward_inverse_roundtrip import (  # noqa: E402
     Candidate,
     SubstrateError,
+    assay_degeneracy,
     blosum_score,
     empirical_null,
     esm_score,
@@ -87,6 +88,30 @@ def build_candidates(target: str, dms: dict[str, float], cds: str | None) -> tup
     return out, space
 
 
+def _spearman(x: list[float], y: list[float]) -> float:
+    """Rank correlation, computed ON THE SWEEP'S OWN CANDIDATE POOL.
+
+    The committed leaderboard Spearman was measured on a DIFFERENT variant subset (all DMS variants incl.
+    nonsense; the sweep excludes nonsense and, for blaTEM, restricts to single-nt-reachable edits). Quoting
+    it beside a sweep verdict would compare two different pools. Compute it here instead.
+    """
+    def rk(v: list[float]) -> list[int]:
+        order = sorted(range(len(v)), key=lambda i: v[i])
+        r = [0] * len(v)
+        for j, i in enumerate(order):
+            r[i] = j
+        return r
+
+    if len(x) < 3:
+        return 0.0
+    rx, ry = rk(x), rk(y)
+    n = len(x)
+    mx, my = sum(rx) / n, sum(ry) / n
+    num = sum((a - mx) * (b - my) for a, b in zip(rx, ry))
+    den = (sum((a - mx) ** 2 for a in rx) * sum((b - my) ** 2 for b in ry)) ** 0.5
+    return num / den if den else 0.0
+
+
 def sweep_one(assay: dict, n_targets: int, n_splits: int, top_k: int) -> dict:
     cds_path = (REPO / assay["cds"]) if assay["cds"] else None
     target, dms, esm, cds = load_substrate(assay["dms_id"], cds_path)
@@ -94,6 +119,12 @@ def sweep_one(assay: dict, n_targets: int, n_splits: int, top_k: int) -> dict:
     positions = sorted({c.pos for c in cands})
     if len(cands) < 200 or len(positions) < 20:
         return {**assay, "status": "UNDERPOWERED", "n_candidates": len(cands), "n_positions": len(positions)}
+
+    # DEGENERACY GATE (before any scoring): a censored assay FLATTERS the margin rather than failing loudly.
+    deg = assay_degeneracy([c.measured for c in cands])
+    if deg["degenerate"]:
+        return {**assay, "status": "DEGENERATE_CENSORED_ASSAY", "candidate_space": space,
+                "n_candidates": len(cands), "degeneracy": deg}
 
     targets = list(statistics.quantiles([c.measured for c in cands], n=n_targets))
     per_split = []
@@ -117,6 +148,9 @@ def sweep_one(assay: dict, n_targets: int, n_splits: int, top_k: int) -> dict:
 
     e, b, n = agg("esm2"), agg("blosum62"), agg("empirical_null")
     span = max(c.measured for c in cands) - min(c.measured for c in cands)
+    pool = [(esm_score(esm, c), c.measured) for c in cands]
+    pool = [(s, m) for s, m in pool if s is not None]
+    fwd_rank = _spearman([s for s, _ in pool], [m for _, m in pool])
 
     # TWO DIFFERENT QUESTIONS -- one verdict conflates them, and conflating them MISLABELS CcdB
     # (esm 0.09 vs null 0.39 = the inverse works superbly) as "no discriminating power" merely because a
@@ -165,6 +199,7 @@ def sweep_one(assay: dict, n_targets: int, n_splits: int, top_k: int) -> dict:
         **assay, "status": "SCORED", "candidate_space": space,
         "n_candidates": len(cands), "n_positions": len(positions), "n_splits": len(per_split),
         "measured_effect_span": round(span, 3),
+        "forward_rank_on_pool": round(fwd_rank, 4),
         "esm2_best_of_k": e, "blosum62_best_of_k": b, "empirical_null_best_of_k": n,
         "esm2_top1": agg("esm2", "mean_abs_err_top1"),
         # Absolute |err| is NOT comparable across proteins -- effect spans differ >10x (RL40A 0.75 vs
@@ -188,9 +223,10 @@ def render_md(rep: dict) -> str:
     L = [
         f"# Does the molecular inverse generalize? — cross-protein boundary map ({rep['date']})",
         "",
-        f"**Inverse design WORKS on {h['inverse_design_works_beats_null']} proteins. "
+        f"**Inverse design WORKS on {h['inverse_design_works_beats_null']} usable proteins. "
         f"The LEARNED oracle earns its keep on {h['learned_oracle_earns_keep_beats_blosum']}. "
-        f"Magnitude is certifiable on {h['magnitude_certifiable']}.**",
+        f"Magnitude is certifiable on {h['magnitude_certifiable']}.** "
+        f"(A 5th assay, CcdB, is EXCLUDED as censored — see finding 4.)",
         "",
         "The blaTEM falsifier passed at +53%. That was **one protein**. This runs the identical falsifier",
         "across every protein with a cached ESM2 table — E. coli x2, human, yeast, Arabidopsis.",
@@ -230,14 +266,21 @@ def render_md(rep: dict) -> str:
         "",
         "The natural assumption is that a better forward ranker inverts better. It is **false**:",
         "",
-        "| protein | forward Spearman | earns its keep vs BLOSUM? |",
+        "| protein | forward rank (same pool) | earns its keep vs BLOSUM? |",
         "|---|---:|---|",
-        "| PTEN | **0.518** | **yes — 6/6 paired wins, +33.1%** |",
-        "| CcdB | **0.5115** | **no — 2/6 paired wins, +12.5%** |",
+        "| PTEN | **0.5185** | **yes — 6/6 paired wins, +33.1%** |",
+        "| RL40A | **0.5190** | **no — 3/6 paired wins, +26.9%** |",
         "",
-        "Near-identical rank quality, opposite verdicts. So you cannot read a leaderboard Spearman and",
-        "conclude the oracle will be useful for design on that protein — it must be measured per protein.",
-        "*(n=5: this falsifies the assumption; it does not establish what the real predictor is.)*",
+        "A rank difference of **0.0005**, opposite verdicts. So you cannot read a Spearman and conclude the",
+        "oracle will be useful for design on that protein — it must be measured per protein.",
+        "*(n=4: this falsifies the assumption; it does not establish what the real predictor is.)*",
+        "",
+        "> **Correction, kept on the record.** The first version of this finding used **CcdB** (0.5115, fails)",
+        "> as the counterexample. CcdB is a **censored assay** — 79.3% of its variants tie at the −2.00",
+        "> ceiling — so it is now excluded and that pairing was an artifact. The finding **survived**",
+        "> re-anchoring to RL40A, an even tighter pair on a clean assay. Both ranks are recomputed on each",
+        "> sweep's *own* candidate pool rather than quoted from the leaderboard, which measured a different",
+        "> variant subset.",
         "",
         "### 3. Selection quality and magnitude certifiability are ORTHOGONAL — measured in both directions",
         "",
@@ -250,6 +293,14 @@ def render_md(rep: dict) -> str:
         "*pins the dose ≠ selects well*. They are independent axes, so a design tool must report both — and",
         "an interval that merely **brackets** the target proves nothing, because split-conformal coverage",
         "holds even for a useless model.",
+        "",
+        "### 4. A censored assay FLATTERS the metric — it does not fail loudly",
+        "",
+        "**CcdB is excluded**, and how it was caught matters. With 79.3% of its 1,663 variants tied at the",
+        "−2.00 ceiling (8 distinct levels total), most quantile targets collapse *onto* that ceiling, so any",
+        "ceiling variant hits them trivially. Ungated, CcdB posted the **best err/span in the entire sweep**",
+        "(0.0128, +77.1% vs null) — it looked like the strongest result rather than an unusable one. The",
+        "degeneracy gate now runs **before** scoring and reports `DEGENERATE_CENSORED_ASSAY`.",
         "",
         "## Scope",
         "",
@@ -309,8 +360,19 @@ def main() -> int:
                         "representative: on most proteins a 1992 substitution matrix proposes edits as "
                         "well as ESM2-650M does."),
             "orthogonality": ("selection quality and magnitude certifiability are ORTHOGONAL, measured in "
-                              "BOTH directions: blaTEM selects best yet certifies NO magnitude (0/6); "
-                              "PTEN certifies magnitude 6/6 yet does NOT beat BLOSUM at selection."),
+                              "BOTH directions: blaTEM selects best (+52.9% vs BLOSUM) yet certifies NO "
+                              "magnitude (0/6 informative); PTEN certifies magnitude 6/6."),
+            "utility_does_not_track_rank": ("PTEN forward-rank 0.5185 -> the oracle EARNS ITS KEEP (6/6 "
+                                            "paired wins); RL40A forward-rank 0.5190 -> it does NOT (3/6). "
+                                            "A rank difference of 0.0005 with opposite verdicts: you cannot "
+                                            "read a Spearman and conclude the oracle will be useful for "
+                                            "design on that protein. (An earlier version of this finding "
+                                            "used CcdB as the counterexample; CcdB is now EXCLUDED as a "
+                                            "censored assay, and the finding survives on the clean pair.)"),
+            "degeneracy_gate": ("a censored/binned assay is EXCLUDED, not scored. It would otherwise be "
+                                "FLATTERED, not caught: CcdB (79.3% of variants at the -2.00 ceiling, 8 "
+                                "distinct levels) scored the BEST err/span in the sweep (0.0128, +77.1% vs "
+                                "null) purely because most quantile targets collapse onto that ceiling."),
         },
         "scope_caveat": ("only blaTEM has a committed CDS -> only it is restricted to the single-nt-"
                          "accessible (real genome-edit) space; the rest use the full DMS variant set "
@@ -328,9 +390,14 @@ def main() -> int:
           f"{'vs null':>8s} {'win':>4s} {'vs blos':>8s} {'win':>4s} {'inform':>6s}  verdict")
     for r in rows:
         if r["status"] != "SCORED":
-            print(f"  {r['protein']:22s} {r['organism']:12s} {'':>5s} {r['status']}")
+            extra = ""
+            if r["status"] == "DEGENERATE_CENSORED_ASSAY":
+                d = r["degeneracy"]
+                extra = f"  ({d['mode_share']:.0%} of variants at {d['mode_value']}, " \
+                        f"{d['n_distinct_values']} distinct levels)"
+            print(f"  {r['protein']:22s} {r['organism']:12s} {r['status']}{extra}")
             continue
-        sp = f"{r['esm2_spearman']:.2f}" if r["esm2_spearman"] else "  - "
+        sp = f"{r['forward_rank_on_pool']:.2f}"
         tag = {"PASS_LEARNED_ORACLE_EARNS_KEEP": "ORACLE EARNS KEEP",
                "PASS_INVERSE_WORKS_BUT_BLOSUM_SUFFICES": "works, BLOSUM suffices",
                "FAIL_NO_DISCRIMINATING_POWER_VS_NULL": "FAIL vs null"}[r["verdict"]]

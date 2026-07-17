@@ -1,6 +1,6 @@
 # Does the molecular inverse generalize? — cross-protein boundary map (2026-07-17)
 
-**Inverse design WORKS on 4/5 proteins. The LEARNED oracle earns its keep on 3/5. Magnitude is certifiable on 2/5.**
+**Inverse design WORKS on 3/4 usable proteins. The LEARNED oracle earns its keep on 3/4. Magnitude is certifiable on 2/4.** (A 5th assay, CcdB, is EXCLUDED as censored — see finding 4.)
 
 The blaTEM falsifier passed at +53%. That was **one protein**. This runs the identical falsifier
 across every protein with a cached ESM2 table — E. coli x2, human, yeast, Arabidopsis.
@@ -10,7 +10,6 @@ across every protein with a cached ESM2 table — E. coli x2, human, yeast, Arab
 | protein | organism | fwd rank | esm err/span | vs null | win | vs BLOSUM | win | interval | verdict |
 |---|---|---:|---:|---:|:-:|---:|:-:|:-:|---|
 | TEM-1 beta-lactamase | E. coli | 0.73 | 0.0307 | +58.9% | 6/6 | +52.9% | 6/6 | 0/6 | **oracle earns keep** |
-| CcdB toxin | E. coli | 0.51 | 0.0128 | +77.1% | 6/6 | +12.5% | 2/6 | 0/6 | works, *BLOSUM suffices* |
 | PTEN | human | 0.52 | 0.0262 | +49.3% | 6/6 | +33.1% | 6/6 | 6/6 | **oracle earns keep** |
 | RL40A (ubiquitin) | yeast | — | 0.0408 | +41.1% | 5/6 | +26.9% | 3/6 | 0/6 | **FAIL vs null** |
 | SR43C | Arabidopsis | — | 0.0355 | +50.0% | 6/6 | +57.4% | 6/6 | 4/6 | **oracle earns keep** |
@@ -23,9 +22,9 @@ all three methods face the identical partition on each split.*
 
 ### 1. Inverse SELECTION generalizes; the LEARNED oracle does NOT
 
-4/5 proteins beat the no-oracle null — the inverse lands ~2x
+3/4 proteins beat the no-oracle null — the inverse lands ~2x
 closer to a target than guessing (err/span 1.3–4.1% vs the null's 5.2–7.5%). But only
-3/5 beat **BLOSUM62**. On CcdB the 1992 substitution
+3/4 beat **BLOSUM62**. On CcdB the 1992 substitution
 matrix ties ESM2-650M (2/6 paired wins, +12.5%); on RL40A it is a coin flip (3/6).
 **The blaTEM PASS was not representative.** Where BLOSUM suffices that is an *engineering win*, not
 a failure: no GPU, no model, no precomputed table — just run the matrix.
@@ -34,14 +33,21 @@ a failure: no GPU, no model, no precomputed table — just run the matrix.
 
 The natural assumption is that a better forward ranker inverts better. It is **false**:
 
-| protein | forward Spearman | earns its keep vs BLOSUM? |
+| protein | forward rank (same pool) | earns its keep vs BLOSUM? |
 |---|---:|---|
-| PTEN | **0.518** | **yes — 6/6 paired wins, +33.1%** |
-| CcdB | **0.5115** | **no — 2/6 paired wins, +12.5%** |
+| PTEN | **0.5185** | **yes — 6/6 paired wins, +33.1%** |
+| RL40A | **0.5190** | **no — 3/6 paired wins, +26.9%** |
 
-Near-identical rank quality, opposite verdicts. So you cannot read a leaderboard Spearman and
-conclude the oracle will be useful for design on that protein — it must be measured per protein.
-*(n=5: this falsifies the assumption; it does not establish what the real predictor is.)*
+A rank difference of **0.0005**, opposite verdicts. So you cannot read a Spearman and conclude the
+oracle will be useful for design on that protein — it must be measured per protein.
+*(n=4: this falsifies the assumption; it does not establish what the real predictor is.)*
+
+> **Correction, kept on the record.** The first version of this finding used **CcdB** (0.5115, fails)
+> as the counterexample. CcdB is a **censored assay** — 79.3% of its variants tie at the −2.00
+> ceiling — so it is now excluded and that pairing was an artifact. The finding **survived**
+> re-anchoring to RL40A, an even tighter pair on a clean assay. Both ranks are recomputed on each
+> sweep's *own* candidate pool rather than quoted from the leaderboard, which measured a different
+> variant subset.
 
 ### 3. Selection quality and magnitude certifiability are ORTHOGONAL — measured in both directions
 
@@ -54,6 +60,14 @@ This project already knew *ranks well ≠ pins the dose* (CcdB). The sweep shows
 *pins the dose ≠ selects well*. They are independent axes, so a design tool must report both — and
 an interval that merely **brackets** the target proves nothing, because split-conformal coverage
 holds even for a useless model.
+
+### 4. A censored assay FLATTERS the metric — it does not fail loudly
+
+**CcdB is excluded**, and how it was caught matters. With 79.3% of its 1,663 variants tied at the
+−2.00 ceiling (8 distinct levels total), most quantile targets collapse *onto* that ceiling, so any
+ceiling variant hits them trivially. Ungated, CcdB posted the **best err/span in the entire sweep**
+(0.0128, +77.1% vs null) — it looked like the strongest result rather than an unusable one. The
+degeneracy gate now runs **before** scoring and reports `DEGENERATE_CENSORED_ASSAY`.
 
 ## Scope
 

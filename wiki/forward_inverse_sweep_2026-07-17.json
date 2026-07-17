@@ -5,12 +5,14 @@
   "material_margin_bar": 0.25,
   "test": "PAIRED per-split comparison (esm2/blosum62/null face the IDENTICAL partition on each split): a win must sweep every paired split AND clear the 25% material margin. An unpaired range test would discard the pairing and is far too conservative.",
   "headline": {
-    "n_scored": 5,
-    "inverse_design_works_beats_null": "4/5",
-    "learned_oracle_earns_keep_beats_blosum": "3/5",
-    "magnitude_certifiable": "2/5",
+    "n_scored": 4,
+    "inverse_design_works_beats_null": "3/4",
+    "learned_oracle_earns_keep_beats_blosum": "3/4",
+    "magnitude_certifiable": "2/4",
     "finding": "inverse SELECTION generalizes -- it beats the no-oracle null broadly. The LEARNED oracle earning its keep over BLOSUM62 does NOT. The blaTEM PASS is not representative: on most proteins a 1992 substitution matrix proposes edits as well as ESM2-650M does.",
-    "orthogonality": "selection quality and magnitude certifiability are ORTHOGONAL, measured in BOTH directions: blaTEM selects best yet certifies NO magnitude (0/6); PTEN certifies magnitude 6/6 yet does NOT beat BLOSUM at selection."
+    "orthogonality": "selection quality and magnitude certifiability are ORTHOGONAL, measured in BOTH directions: blaTEM selects best (+52.9% vs BLOSUM) yet certifies NO magnitude (0/6 informative); PTEN certifies magnitude 6/6.",
+    "utility_does_not_track_rank": "PTEN forward-rank 0.5185 -> the oracle EARNS ITS KEEP (6/6 paired wins); RL40A forward-rank 0.5190 -> it does NOT (3/6). A rank difference of 0.0005 with opposite verdicts: you cannot read a Spearman and conclude the oracle will be useful for design on that protein. (An earlier version of this finding used CcdB as the counterexample; CcdB is now EXCLUDED as a censored assay, and the finding survives on the clean pair.)",
+    "degeneracy_gate": "a censored/binned assay is EXCLUDED, not scored. It would otherwise be FLATTERED, not caught: CcdB (79.3% of variants at the -2.00 ceiling, 8 distinct levels) scored the BEST err/span in the sweep (0.0128, +77.1% vs null) purely because most quantile targets collapse onto that ceiling."
   },
   "scope_caveat": "only blaTEM has a committed CDS -> only it is restricted to the single-nt-accessible (real genome-edit) space; the rest use the full DMS variant set (protein-level). Within a protein every method faces the SAME pool, so each verdict is valid; cross-protein margins must carry `candidate_space`.",
   "assays": [
@@ -26,6 +28,7 @@
       "n_positions": 263,
       "n_splits": 6,
       "measured_effect_span": 3.788,
+      "forward_rank_on_pool": 0.7658,
       "esm2_best_of_k": {
         "mean": 0.1164,
         "min": 0.0903,
@@ -77,56 +80,17 @@
       "protein": "CcdB toxin",
       "esm2_spearman": 0.5115,
       "cds": null,
-      "status": "SCORED",
+      "status": "DEGENERATE_CENSORED_ASSAY",
       "candidate_space": "all_DMS_variants_protein_level_no_CDS",
       "n_candidates": 1663,
-      "n_positions": 100,
-      "n_splits": 6,
-      "measured_effect_span": 7.0,
-      "esm2_best_of_k": {
-        "mean": 0.0898,
-        "min": 0.0513,
-        "max": 0.1026
-      },
-      "blosum62_best_of_k": {
-        "mean": 0.1026,
-        "min": 0.0769,
-        "max": 0.1282
-      },
-      "empirical_null_best_of_k": {
-        "mean": 0.3926,
-        "min": 0.3685,
-        "max": 0.4025
-      },
-      "esm2_top1": {
-        "mean": 0.188,
-        "min": 0.0769,
-        "max": 0.4103
-      },
-      "esm2_err_over_span": 0.0128,
-      "null_err_over_span": 0.0561,
-      "margin_vs_null": 0.7713,
-      "margin_vs_blosum": 0.1248,
-      "paired_vs_null": {
-        "wins": 6,
-        "n": 6,
-        "mean_delta": 0.3028,
-        "worst_delta": 0.2659,
-        "sweeps": true
-      },
-      "paired_vs_blosum": {
-        "wins": 2,
-        "n": 6,
-        "mean_delta": 0.0128,
-        "worst_delta": -0.0257,
-        "sweeps": false
-      },
-      "beats_null": true,
-      "beats_blosum": false,
-      "blosum_beats_null": true,
-      "verdict": "PASS_INVERSE_WORKS_BUT_BLOSUM_SUFFICES",
-      "informative_interval_splits": "0/6",
-      "magnitude_certifiable": false
+      "degeneracy": {
+        "n": 1663,
+        "n_distinct_values": 8,
+        "mode_value": -2.0,
+        "mode_share": 0.7925,
+        "degenerate": true,
+        "reason": "censored/binned assay: 79.3% of variants share the value -2.0 (8 distinct levels). Quantile targets collapse onto the mode (flattering any magnitude margin) and percentile is ill-defined. NOT an inverse-design target space -- this is a property of the ASSAY, not of the oracle."
+      }
     },
     {
       "dms_id": "PTEN_HUMAN_Mighell_2018",
@@ -140,6 +104,7 @@
       "n_positions": 403,
       "n_splits": 6,
       "measured_effect_span": 8.573,
+      "forward_rank_on_pool": 0.5185,
       "esm2_best_of_k": {
         "mean": 0.2246,
         "min": 0.1785,
@@ -197,6 +162,7 @@
       "n_positions": 75,
       "n_splits": 6,
       "measured_effect_span": 0.748,
+      "forward_rank_on_pool": 0.519,
       "esm2_best_of_k": {
         "mean": 0.0305,
         "min": 0.0144,
@@ -254,6 +220,7 @@
       "n_positions": 48,
       "n_splits": 6,
       "measured_effect_span": 4.988,
+      "forward_rank_on_pool": 0.5889,
       "esm2_best_of_k": {
         "mean": 0.1773,
         "min": 0.1516,

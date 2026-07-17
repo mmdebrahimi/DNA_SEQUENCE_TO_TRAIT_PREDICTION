@@ -47,7 +47,7 @@ def test_build_candidates_excludes_nonsense():
 
 
 @pytest.mark.parametrize("field", ["beats_null", "beats_blosum", "paired_vs_null", "paired_vs_blosum",
-                                   "esm2_err_over_span", "magnitude_certifiable"])
+                                   "esm2_err_over_span", "magnitude_certifiable", "forward_rank_on_pool"])
 def test_scored_rows_carry_the_decomposed_verdict_fields(field):
     """REGRESSION PIN. A single collapsed verdict MISLABELLED CcdB as 'no discriminating power' when its
     inverse in fact beat the null by +77% -- it merely failed to beat BLOSUM. Q1 and Q2 must stay split,
@@ -65,9 +65,13 @@ def test_scored_rows_carry_the_decomposed_verdict_fields(field):
 
 
 def test_the_committed_sweep_records_the_rank_falsification():
-    """The pre-registered question's answer: PTEN (0.518) and CcdB (0.5115) have near-identical forward
-    rank and OPPOSITE Q2 verdicts -> inverse utility does not track rank. Pin it so a re-run that quietly
-    loses the counterexample is caught."""
+    """The pre-registered question's answer: PTEN (0.5185) and RL40A (0.5190) have near-identical forward
+    rank ON THE SAME POOL and OPPOSITE Q2 verdicts -> inverse utility does not track rank.
+
+    HISTORY (kept deliberately): the first version of this finding used CcdB as the counterexample. CcdB
+    turned out to be a CENSORED assay (79.3% of variants tied at the -2.00 ceiling) and is now excluded,
+    so that pairing was an artifact. The finding SURVIVED re-anchoring to RL40A -- an even tighter pair
+    (0.0005 apart) on a non-degenerate assay. Pin it so a re-run that quietly loses it is caught."""
     import json
     from pathlib import Path
 
@@ -75,6 +79,10 @@ def test_the_committed_sweep_records_the_rank_falsification():
     if not art.exists():
         pytest.skip("sweep artifact not present")
     rows = {r["dms_id"]: r for r in json.loads(art.read_text(encoding="utf-8"))["assays"]}
-    pten, ccdb = rows["PTEN_HUMAN_Mighell_2018"], rows["CCDB_ECOLI_Tripathi_2016"]
-    assert abs(pten["esm2_spearman"] - ccdb["esm2_spearman"]) < 0.02      # near-identical rank...
-    assert pten["beats_blosum"] != ccdb["beats_blosum"]                   # ...opposite utility
+    pten, rl40a = rows["PTEN_HUMAN_Mighell_2018"], rows["RL40A_YEAST_Mavor_2016"]
+    assert pten["status"] == rl40a["status"] == "SCORED"
+    # near-identical forward rank, measured on each sweep's own pool...
+    assert abs(pten["forward_rank_on_pool"] - rl40a["forward_rank_on_pool"]) < 0.01
+    # ...opposite utility verdict
+    assert pten["beats_blosum"] is True
+    assert rl40a["beats_blosum"] is False
