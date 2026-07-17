@@ -125,6 +125,20 @@ def phenotype_attrition(rows: list[dict]) -> dict:
     }
 
 
+FRI_SOURCES = ("s3_column", "putative", "curated")
+
+
+def predict_with_status(fri: str) -> str:
+    """Run the DEPLOYED cell given an FRI status. Shared by every --fri-source."""
+    habit = call_flowering_habit(fri, "functional").habit
+    try:
+        return {"winter_annual_late": "late", "summer_annual_early": "early"}[habit]
+    except KeyError:
+        raise ScoringError(
+            f"cell returned habit={habit!r} for FRI={fri}/FLC=functional -- the scorer only maps "
+            f"winter_annual_late/summer_annual_early. An ABSTAIN cannot be scored as a class.") from None
+
+
 def predict(row: dict) -> str:
     """Run the DEPLOYED cell on one accession. FLC is unobserved in S3 -> passed explicitly as functional.
 
@@ -165,7 +179,7 @@ def confusion(pairs: list[tuple[str, str]]) -> dict:
     }
 
 
-def _directional(rows: list[dict], threshold: float) -> dict:
+def _directional(rows: list[dict], threshold: float, fri_calls: dict[str, str] | None = None) -> dict:
     """Split the rule into its two directions -- the diagnostic that says WHY sens and spec diverge.
 
     A near-perfect sensitivity with a coin-flip specificity is the signature this project has learned to
@@ -175,11 +189,14 @@ def _directional(rows: list[dict], threshold: float) -> dict:
     make that call rather than take our word.
     """
     ft = lambda r: float(r["FT16_mean"])  # noqa: E731
-    lof = [r for r in rows if _is_deleterious(r)]
-    fun = [r for r in rows if not _is_deleterious(r)]
+    _lof = (lambda r: _is_deleterious(r)) if fri_calls is None else (
+        lambda r: fri_calls.get(r["accession_id"]) == "lof")
+    lof = [r for r in rows if _lof(r)]
+    fun = [r for r in rows if not _lof(r)]
     fp = sorted(ft(r) for r in fun if ft(r) <= threshold)
     lof_early = sum(1 for r in lof if ft(r) <= threshold)
     fun_late = sum(1 for r in fun if ft(r) > threshold)
+    del _lof
     return {
         "negative_direction": {
             "rule": "FRI loss-of-function -> early",
@@ -206,8 +223,21 @@ def _directional(rows: list[dict], threshold: float) -> dict:
     }
 
 
-def score(all_rows: list[dict], *, quantile: str = "median") -> dict:
+def score(all_rows: list[dict], *, quantile: str = "median", fri_calls: dict[str, str] | None = None) -> dict:
+    """`fri_calls` (accession_id -> 'lof'|'functional'|'unknown') overrides S3's own deleterious_allele
+    column with a call made BY US from Table S1's variants. An 'unknown' accession is DROPPED from scoring
+    (the cell abstains) rather than defaulted to functional -- and the count is reported."""
     rows = [r for r in all_rows if _has_phenotype(r)]      # gate 5: reported by phenotype_attrition()
+    n_abstained = 0
+    if fri_calls is not None:
+        kept = []
+        for r in rows:
+            st = fri_calls.get(r["accession_id"])
+            if st is None or st == "unknown":
+                n_abstained += 1
+                continue
+            kept.append(r)
+        rows = kept
     values = [float(r["FT16_mean"]) for r in rows]
     if quantile == "median":
         threshold, cut_desc = statistics.median(values), "FT16 > cohort median"
@@ -219,7 +249,8 @@ def score(all_rows: list[dict], *, quantile: str = "median") -> dict:
     by_group: dict[str, list[tuple[str, str]]] = defaultdict(list)
     for r in rows:
         observed = "late" if float(r["FT16_mean"]) > threshold else "early"
-        pair = (predict(r), observed)
+        pred = predict(r) if fri_calls is None else predict_with_status(fri_calls[r["accession_id"]])
+        pair = (pred, observed)
         pooled.append(pair)
         by_group[r["group"].strip() or "NA"].append(pair)
 
@@ -252,7 +283,8 @@ def score(all_rows: list[dict], *, quantile: str = "median") -> dict:
     return {
         "threshold_days": round(threshold, 3), "cut": cut_desc,
         "pooled": p, "by_structure_group": groups, "group_weighted": group_weighted,
-        "directional": _directional(rows, threshold),
+        "directional": _directional(rows, threshold, fri_calls),
+        "n_abstained_unknown_fri": n_abstained,
         "verdict": (
             "DEGENERATE_NO_LABEL_VARIATION" if p["degenerate"]
             else "SCORED_BEATS_NULL" if beats_null

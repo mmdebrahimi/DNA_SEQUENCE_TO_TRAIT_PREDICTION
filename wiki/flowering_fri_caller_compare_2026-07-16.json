@@ -1,0 +1,141 @@
+{
+  "schema": "flowering-fri-caller-compare-v1",
+  "date": "2026-07-16",
+  "caller": "dna_decode/organism_rules/arabidopsis_fri_caller.py",
+  "caller_reproduces_source_column": {
+    "verdict": "PASS",
+    "agree": 1009,
+    "disagree": 0,
+    "claim": "the `putative` rule, run over Table S1's variant matrix, reproduces Table S3's own `deleterious_allele` column exactly -- so the caller is verified against the source's answer, and the cell can now call FRI from variants instead of being handed it"
+  },
+  "sources": {
+    "s3_column": {
+      "n": 854,
+      "abstained": 0,
+      "accuracy": 0.7330210772833724,
+      "null": 0.5023419203747073,
+      "sensitivity": 0.9670588235294117,
+      "specificity": 0.5011655011655012,
+      "tp": 411,
+      "fp": 214,
+      "tn": 215,
+      "fn": 14,
+      "group_weighted_accuracy": 0.7104819526379198,
+      "group_weighted_null": 0.6757344778168712
+    },
+    "putative": {
+      "n": 847,
+      "abstained": 7,
+      "accuracy": 0.731995277449823,
+      "null": 0.5029515938606848,
+      "sensitivity": 0.9667458432304038,
+      "specificity": 0.5,
+      "tp": 407,
+      "fp": 213,
+      "tn": 213,
+      "fn": 14,
+      "group_weighted_accuracy": 0.7094579991672162,
+      "group_weighted_null": 0.6746703483522897
+    },
+    "curated": {
+      "n": 847,
+      "abstained": 7,
+      "accuracy": 0.7414403778040142,
+      "null": 0.5029515938606848,
+      "sensitivity": 0.9667458432304038,
+      "specificity": 0.5187793427230047,
+      "tp": 407,
+      "fp": 205,
+      "tn": 221,
+      "fn": 14,
+      "group_weighted_accuracy": 0.7161562740106523,
+      "group_weighted_null": 0.6746703483522897
+    },
+    "circular": {
+      "n": 847,
+      "abstained": 7,
+      "accuracy": 0.7449822904368358,
+      "null": 0.5029515938606848,
+      "sensitivity": 0.9667458432304038,
+      "specificity": 0.5258215962441315,
+      "tp": 407,
+      "fp": 202,
+      "tn": 224,
+      "fn": 14,
+      "group_weighted_accuracy": 0.7199441527985311,
+      "group_weighted_null": 0.6746703483522897
+    }
+  },
+  "curated_delta": {
+    "verified_substitutions": [
+      "L276R",
+      "L294F"
+    ],
+    "n_accessions_flipped": 9,
+    "n_flipped_phenotyped": 8,
+    "flipped": [
+      {
+        "name": "Tottarp-2",
+        "allele": "a016",
+        "ft16": "43.75"
+      },
+      {
+        "name": "Est",
+        "allele": "a016",
+        "ft16": "45.5"
+      },
+      {
+        "name": "Litva",
+        "allele": "a016",
+        "ft16": "47.5"
+      },
+      {
+        "name": "Wa-1",
+        "allele": "a016",
+        "ft16": "41.75"
+      },
+      {
+        "name": "Wil-2",
+        "allele": "a016",
+        "ft16": "48"
+      },
+      {
+        "name": "B\u00e51-2",
+        "allele": "a089",
+        "ft16": "45.25"
+      },
+      {
+        "name": "B\u00e54-1",
+        "allele": "a089",
+        "ft16": "NA"
+      },
+      {
+        "name": "B\u00e55-1",
+        "allele": "a089",
+        "ft16": "65.5"
+      },
+      {
+        "name": "Wil-1",
+        "allele": "a016",
+        "ft16": "58.75"
+      }
+    ],
+    "accuracy_delta": 0.009445100354191216,
+    "specificity_delta": 0.018779342723004744,
+    "sensitivity_delta": 0.0
+  },
+  "circularity": {
+    "verdict": "CURATED_GAIN_IS_NOT_QUOTABLE_AS_VALIDATION",
+    "why": "the paper states a016/a060/a089 were 'selected because their association with early flowering in Figure 1', and Figure 1 is built on the SAME FT16 phenotype scored here. L294F/L276R were therefore chosen BECAUSE their carriers are early in this data: the curated rule's gain on FT16 is guaranteed by construction, not earned.",
+    "independent_support_for_curated": "the transgenic assay in a common null background (Figs 3-6: flowering time + FRI/FLC expression + GFP localisation + western blot) -- an experiment independent of FT16. THAT is the curated rule's justification; this score is not.",
+    "control": {
+      "rule": "circular = curated + a060 (Van-0), the allele selected the SAME way and then REFUTED",
+      "mechanistically_correct": false,
+      "paper_verdict_on_a060": "'the FRI-Van-0 (a060) allele delayed flowering time in the transgenic lines, indicating that this allele is functional'",
+      "accuracy": 0.7449822904368358,
+      "accuracy_vs_curated": 0.0035419126328216644,
+      "scores_better_than_curated": true,
+      "lesson": "if the mechanistically-WRONG rule scores BETTER, then score-on-this-data cannot adjudicate the curation -- which is exactly why the experiment, not the number, is the warrant. 1 of the paper's 3 data-selected candidates was refuted by experiment: the selection was not self-confirming, and neither is ours."
+    }
+  }
+}
