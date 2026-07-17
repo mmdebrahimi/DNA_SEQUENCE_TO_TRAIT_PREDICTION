@@ -430,7 +430,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim_status="dms_measured_rank_validated_regime_b_only",
         validation_slice=(
             "per-variant Spearman vs measured ProteinGym DMS fitness. CLI default `blosum62` (deterministic, "
-            "wheel-only): TEM-1 0.3465 (n=4996) / PTEN 0.182 -- REAL but modest. Python-API `esm2` "
+            "wheel-only): TEM-1 0.3465 (n=4996) / PTEN 0.182 -- REAL but modest, and at SCALE (N=209 "
+            "ProteinGym, wiki/forward_blosum_proteingym_2026-07-17.md) the shipped blosum62 default is "
+            "|Spearman| MEDIAN 0.20 -- so TEM-1's 0.35 is top-13% (27/209 reach 0.30), NOT typical. "
+            "Python-API `esm2` "
             "(ESM2-650M masked-marginal): TEM-1 **0.7315** / PTEN 0.518 / CcdB 0.5115; `alphamissense` PTEN "
             "0.539 (human-only). Genome-level nucleotide-edit path validated end-to-end on a real blaTEM CDS: "
             "**Spearman 0.7611** over 1,715 real single-nt-accessible variants "
