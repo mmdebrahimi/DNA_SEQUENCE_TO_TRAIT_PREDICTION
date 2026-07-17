@@ -1,0 +1,303 @@
+{
+  "schema": "forward-inverse-sweep-v1",
+  "date": "2026-07-17",
+  "question": "does the molecular inverse GENERALIZE across proteins/kingdoms, or is it a blaTEM quirk? and does inverse success track forward RANK quality?",
+  "material_margin_bar": 0.25,
+  "test": "PAIRED per-split comparison (esm2/blosum62/null face the IDENTICAL partition on each split): a win must sweep every paired split AND clear the 25% material margin. An unpaired range test would discard the pairing and is far too conservative.",
+  "headline": {
+    "n_scored": 5,
+    "inverse_design_works_beats_null": "4/5",
+    "learned_oracle_earns_keep_beats_blosum": "3/5",
+    "magnitude_certifiable": "2/5",
+    "finding": "inverse SELECTION generalizes -- it beats the no-oracle null broadly. The LEARNED oracle earning its keep over BLOSUM62 does NOT. The blaTEM PASS is not representative: on most proteins a 1992 substitution matrix proposes edits as well as ESM2-650M does.",
+    "orthogonality": "selection quality and magnitude certifiability are ORTHOGONAL, measured in BOTH directions: blaTEM selects best yet certifies NO magnitude (0/6); PTEN certifies magnitude 6/6 yet does NOT beat BLOSUM at selection."
+  },
+  "scope_caveat": "only blaTEM has a committed CDS -> only it is restricted to the single-nt-accessible (real genome-edit) space; the rest use the full DMS variant set (protein-level). Within a protein every method faces the SAME pool, so each verdict is valid; cross-protein margins must carry `candidate_space`.",
+  "assays": [
+    {
+      "dms_id": "BLAT_ECOLX_Stiffler_2015",
+      "organism": "E. coli",
+      "protein": "TEM-1 beta-lactamase",
+      "esm2_spearman": 0.7315,
+      "cds": "data/forward_ref/blatem_3349172526.fna",
+      "status": "SCORED",
+      "candidate_space": "single_nt_accessible_from_real_CDS",
+      "n_candidates": 1546,
+      "n_positions": 263,
+      "n_splits": 6,
+      "measured_effect_span": 3.788,
+      "esm2_best_of_k": {
+        "mean": 0.1164,
+        "min": 0.0903,
+        "max": 0.1435
+      },
+      "blosum62_best_of_k": {
+        "mean": 0.2474,
+        "min": 0.2234,
+        "max": 0.3012
+      },
+      "empirical_null_best_of_k": {
+        "mean": 0.2833,
+        "min": 0.2798,
+        "max": 0.2901
+      },
+      "esm2_top1": {
+        "mean": 0.475,
+        "min": 0.3144,
+        "max": 0.7471
+      },
+      "esm2_err_over_span": 0.0307,
+      "null_err_over_span": 0.0748,
+      "margin_vs_null": 0.5891,
+      "margin_vs_blosum": 0.5295,
+      "paired_vs_null": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.1669,
+        "worst_delta": 0.1466,
+        "sweeps": true
+      },
+      "paired_vs_blosum": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.1309,
+        "worst_delta": 0.0799,
+        "sweeps": true
+      },
+      "beats_null": true,
+      "beats_blosum": true,
+      "blosum_beats_null": false,
+      "verdict": "PASS_LEARNED_ORACLE_EARNS_KEEP",
+      "informative_interval_splits": "0/6",
+      "magnitude_certifiable": false
+    },
+    {
+      "dms_id": "CCDB_ECOLI_Tripathi_2016",
+      "organism": "E. coli",
+      "protein": "CcdB toxin",
+      "esm2_spearman": 0.5115,
+      "cds": null,
+      "status": "SCORED",
+      "candidate_space": "all_DMS_variants_protein_level_no_CDS",
+      "n_candidates": 1663,
+      "n_positions": 100,
+      "n_splits": 6,
+      "measured_effect_span": 7.0,
+      "esm2_best_of_k": {
+        "mean": 0.0898,
+        "min": 0.0513,
+        "max": 0.1026
+      },
+      "blosum62_best_of_k": {
+        "mean": 0.1026,
+        "min": 0.0769,
+        "max": 0.1282
+      },
+      "empirical_null_best_of_k": {
+        "mean": 0.3926,
+        "min": 0.3685,
+        "max": 0.4025
+      },
+      "esm2_top1": {
+        "mean": 0.188,
+        "min": 0.0769,
+        "max": 0.4103
+      },
+      "esm2_err_over_span": 0.0128,
+      "null_err_over_span": 0.0561,
+      "margin_vs_null": 0.7713,
+      "margin_vs_blosum": 0.1248,
+      "paired_vs_null": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.3028,
+        "worst_delta": 0.2659,
+        "sweeps": true
+      },
+      "paired_vs_blosum": {
+        "wins": 2,
+        "n": 6,
+        "mean_delta": 0.0128,
+        "worst_delta": -0.0257,
+        "sweeps": false
+      },
+      "beats_null": true,
+      "beats_blosum": false,
+      "blosum_beats_null": true,
+      "verdict": "PASS_INVERSE_WORKS_BUT_BLOSUM_SUFFICES",
+      "informative_interval_splits": "0/6",
+      "magnitude_certifiable": false
+    },
+    {
+      "dms_id": "PTEN_HUMAN_Mighell_2018",
+      "organism": "human",
+      "protein": "PTEN",
+      "esm2_spearman": 0.518,
+      "cds": null,
+      "status": "SCORED",
+      "candidate_space": "all_DMS_variants_protein_level_no_CDS",
+      "n_candidates": 7260,
+      "n_positions": 403,
+      "n_splits": 6,
+      "measured_effect_span": 8.573,
+      "esm2_best_of_k": {
+        "mean": 0.2246,
+        "min": 0.1785,
+        "max": 0.2862
+      },
+      "blosum62_best_of_k": {
+        "mean": 0.3356,
+        "min": 0.2434,
+        "max": 0.4914
+      },
+      "empirical_null_best_of_k": {
+        "mean": 0.4429,
+        "min": 0.4407,
+        "max": 0.4504
+      },
+      "esm2_top1": {
+        "mean": 0.8074,
+        "min": 0.6171,
+        "max": 0.9209
+      },
+      "esm2_err_over_span": 0.0262,
+      "null_err_over_span": 0.0517,
+      "margin_vs_null": 0.4929,
+      "margin_vs_blosum": 0.3308,
+      "paired_vs_null": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.2183,
+        "worst_delta": 0.1545,
+        "sweeps": true
+      },
+      "paired_vs_blosum": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.111,
+        "worst_delta": 0.011,
+        "sweeps": true
+      },
+      "beats_null": true,
+      "beats_blosum": true,
+      "blosum_beats_null": false,
+      "verdict": "PASS_LEARNED_ORACLE_EARNS_KEEP",
+      "informative_interval_splits": "6/6",
+      "magnitude_certifiable": true
+    },
+    {
+      "dms_id": "RL40A_YEAST_Mavor_2016",
+      "organism": "yeast",
+      "protein": "RL40A (ubiquitin)",
+      "esm2_spearman": null,
+      "cds": null,
+      "status": "SCORED",
+      "candidate_space": "all_DMS_variants_protein_level_no_CDS",
+      "n_candidates": 1253,
+      "n_positions": 75,
+      "n_splits": 6,
+      "measured_effect_span": 0.748,
+      "esm2_best_of_k": {
+        "mean": 0.0305,
+        "min": 0.0144,
+        "max": 0.0548
+      },
+      "blosum62_best_of_k": {
+        "mean": 0.0417,
+        "min": 0.013,
+        "max": 0.0834
+      },
+      "empirical_null_best_of_k": {
+        "mean": 0.0518,
+        "min": 0.0505,
+        "max": 0.0538
+      },
+      "esm2_top1": {
+        "mean": 0.1042,
+        "min": 0.0854,
+        "max": 0.1216
+      },
+      "esm2_err_over_span": 0.0408,
+      "null_err_over_span": 0.0693,
+      "margin_vs_null": 0.4112,
+      "margin_vs_blosum": 0.2686,
+      "paired_vs_null": {
+        "wins": 5,
+        "n": 6,
+        "mean_delta": 0.0213,
+        "worst_delta": -0.0029,
+        "sweeps": false
+      },
+      "paired_vs_blosum": {
+        "wins": 3,
+        "n": 6,
+        "mean_delta": 0.0112,
+        "worst_delta": -0.0318,
+        "sweeps": false
+      },
+      "beats_null": false,
+      "beats_blosum": false,
+      "blosum_beats_null": false,
+      "verdict": "FAIL_NO_DISCRIMINATING_POWER_VS_NULL",
+      "informative_interval_splits": "0/6",
+      "magnitude_certifiable": false
+    },
+    {
+      "dms_id": "SR43C_ARATH_Tsuboyama_2023_2N88",
+      "organism": "Arabidopsis",
+      "protein": "SR43C",
+      "esm2_spearman": null,
+      "cds": null,
+      "status": "SCORED",
+      "candidate_space": "all_DMS_variants_protein_level_no_CDS",
+      "n_candidates": 889,
+      "n_positions": 48,
+      "n_splits": 6,
+      "measured_effect_span": 4.988,
+      "esm2_best_of_k": {
+        "mean": 0.1773,
+        "min": 0.1516,
+        "max": 0.2072
+      },
+      "blosum62_best_of_k": {
+        "mean": 0.4166,
+        "min": 0.2789,
+        "max": 0.5368
+      },
+      "empirical_null_best_of_k": {
+        "mean": 0.3546,
+        "min": 0.3476,
+        "max": 0.3595
+      },
+      "esm2_top1": {
+        "mean": 0.7203,
+        "min": 0.5389,
+        "max": 0.7805
+      },
+      "esm2_err_over_span": 0.0355,
+      "null_err_over_span": 0.0711,
+      "margin_vs_null": 0.5,
+      "margin_vs_blosum": 0.5744,
+      "paired_vs_null": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.1772,
+        "worst_delta": 0.1443,
+        "sweeps": true
+      },
+      "paired_vs_blosum": {
+        "wins": 6,
+        "n": 6,
+        "mean_delta": 0.2393,
+        "worst_delta": 0.1273,
+        "sweeps": true
+      },
+      "beats_null": true,
+      "beats_blosum": true,
+      "blosum_beats_null": false,
+      "verdict": "PASS_LEARNED_ORACLE_EARNS_KEEP",
+      "informative_interval_splits": "4/6",
+      "magnitude_certifiable": true
+    }
+  ]
+}

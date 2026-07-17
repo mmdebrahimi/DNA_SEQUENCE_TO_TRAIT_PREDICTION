@@ -97,19 +97,28 @@ def load_cds(path: Path) -> str:
                    if not ln.startswith(">")).upper()
 
 
-def load_substrate() -> tuple[str, dict[str, float], dict[int, dict[str, float]], str]:
+def load_substrate(dms_id: str = DMS_ID, cds_fasta: Path | None = None):
+    """Load (target protein, {mutant: measured}, esm_table, cds_or_None) for one DMS assay.
+
+    `cds_fasta=None` -> no CDS, so the candidate space is the full DMS variant set (protein-level design)
+    rather than the single-nt-reachable subset (genome editing). The caller must SAY which it used; the
+    two are different questions and only the blaTEM assay has a committed CDS in this repo.
+    """
     if not PG.exists():
         raise SubstrateError(f"ProteinGym cache {PG} not found (external D: drive not mounted?)")
-    if not ESM_TABLE.exists():
-        raise SubstrateError(f"cached ESM table {ESM_TABLE} missing")
-    cds_fasta = REPO / "data" / "forward_ref" / "blatem_3349172526.fna"
-    if not cds_fasta.exists():
-        raise SubstrateError(f"real blaTEM CDS {cds_fasta} missing")
+    esm_path = Path(f"D:/dna_decode_cache/esm/esm2_t33_650M_UR50D__{dms_id}.json")
+    if not esm_path.exists():
+        raise SubstrateError(f"cached ESM table {esm_path} missing")
+    if cds_fasta is not None and not cds_fasta.exists():
+        raise SubstrateError(f"CDS {cds_fasta} missing")
 
-    target = next(r["target_seq"] for r in csv.DictReader((PG / "pg_reference.csv").open(encoding="utf-8"))
-                  if r["DMS_id"] == DMS_ID)
+    try:
+        target = next(r["target_seq"] for r in csv.DictReader((PG / "pg_reference.csv").open(encoding="utf-8"))
+                      if r["DMS_id"] == dms_id)
+    except StopIteration:
+        raise SubstrateError(f"{dms_id} not in pg_reference.csv") from None
     dms: dict[str, float] = {}
-    with (PG / "pg_dms" / "DMS_ProteinGym_substitutions" / f"{DMS_ID}.csv").open(encoding="utf-8") as fh:
+    with (PG / "pg_dms" / "DMS_ProteinGym_substitutions" / f"{dms_id}.csv").open(encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
             m = (r.get("mutant") or "").strip()
             if ":" in m:                     # multi-mutants are out of the single-edit inverse's scope
@@ -118,8 +127,8 @@ def load_substrate() -> tuple[str, dict[str, float], dict[int, dict[str, float]]
                 dms[m] = float(r["DMS_score"])
             except (TypeError, ValueError, KeyError):
                 pass
-    esm = {int(k): v for k, v in json.loads(ESM_TABLE.read_text(encoding="utf-8")).items()}
-    return target, dms, esm, load_cds(cds_fasta)
+    esm = {int(k): v for k, v in json.loads(esm_path.read_text(encoding="utf-8")).items()}
+    return target, dms, esm, (load_cds(cds_fasta) if cds_fasta is not None else None)
 
 
 def single_nt_accessible(target: str, cds: str) -> set[str]:
@@ -371,7 +380,7 @@ def main() -> int:
     args = ap.parse_args()
 
     try:
-        target, dms, esm, cds = load_substrate()
+        target, dms, esm, cds = load_substrate(DMS_ID, REPO / "data" / "forward_ref" / "blatem_3349172526.fna")
     except SubstrateError as e:
         print(f"[inverse-roundtrip] SUBSTRATE UNAVAILABLE: {e}", file=sys.stderr)
         return 2

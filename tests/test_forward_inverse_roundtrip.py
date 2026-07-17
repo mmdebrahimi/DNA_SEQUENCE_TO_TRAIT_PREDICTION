@@ -155,9 +155,12 @@ def test_real_blatem_accessible_set_matches_the_committed_demo_scale():
     """The committed blatem_genome_demo reported 1,715 single-nt-accessible DMS variants; this falsifier
     scores the ~1.5k of them that are single-mutant + in-frame. Pin the scale so a parser regression that
     silently halves the candidate space is caught."""
-    from scripts.forward_inverse_roundtrip import load_substrate
+    from pathlib import Path
 
-    target, dms, esm, cds = load_substrate()
+    from scripts.forward_inverse_roundtrip import REPO, load_substrate
+
+    target, dms, esm, cds = load_substrate(cds_fasta=REPO / "data" / "forward_ref" / "blatem_3349172526.fna")
+    assert cds is not None
     acc = single_nt_accessible(target, cds)
     scored = [m for m in dms if m in acc]
     assert 1400 <= len(scored) <= 1800, len(scored)
