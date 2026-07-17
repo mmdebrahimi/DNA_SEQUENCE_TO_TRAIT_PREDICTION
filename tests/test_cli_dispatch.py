@@ -69,10 +69,30 @@ def test_pathotype_delegation_passes_argv():
 def test_traits_registry_matches_console_entries():
     # TRAITS = the deterministic DECODERS (each a console entry). ANALYSES compose them and are kept
     # OUT of TRAITS so this decoder-registry contract is stable.
+    #
+    # This pin is deliberately hand-maintained: adding a decoder must be a CONSCIOUS act, touching the
+    # console entry + TRAITS + this pin + a cell_registry evidence contract. It is not a formality --
+    # forward/pigment/flowering (added 2026-07-16) reached the CLI while this pin and the registry both
+    # still said they did not exist, and the two guards are what surfaced it.
     assert set(uni.TRAITS) == {"amr", "pathotype", "plasmid", "serotype", "resfinder", "pointfinder",
-                               "disinfinder", "mlst", "ktype", "salmserovar", "pneumoserotype", "pgx"}
+                               "disinfinder", "mlst", "ktype", "salmserovar", "pneumoserotype", "pgx",
+                               "forward", "pigment", "flowering"}
     assert set(uni.ANALYSES) == {"concordance", "profile", "coloc"}
     assert not (set(uni.TRAITS) & set(uni.ANALYSES))   # disjoint namespaces
+
+
+def test_every_trait_has_an_evidence_contract():
+    """The two registries must AGREE: a trait routable from the unified CLI needs a trust-surface contract.
+
+    Without this, the pin above and the cell_registry coverage guard could drift apart -- each satisfied
+    while a decoder ships invisibly through the gap between them. (clinvar/hla are console entries but not
+    dna-decode TRAITS, so they are covered by their own registry tests, not this one.)
+    """
+    from dna_decode.data.cell_registry import cells
+
+    contracted = {c.target for c in cells()} | {c.route.removeprefix("dna-") for c in cells()}
+    missing = {t for t in uni.TRAITS if t not in contracted}
+    assert not missing, f"CLI traits with no cell_registry evidence contract: {sorted(missing)}"
 
 
 if __name__ == "__main__":
