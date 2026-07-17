@@ -1,0 +1,182 @@
+{
+  "schema": "flowering-flc-route-v1",
+  "date": "2026-07-17",
+  "question": "does the flowering cell's DISTINCTIVE claim -- the two-locus AND's FLC route -- hold? The Table S3 run could only test the FRI route (S3 has no FLC).",
+  "verdict": "FLC_ROUTE_VALIDATED_ADDS_OVER_FRI_ONLY",
+  "substrate": {
+    "n_joined": 106,
+    "citations": {
+      "fri_status_and_flowering_time": "Zhang L & Jimenez-Gomez JM (2020) Plant Journal 103:154-165, doi:10.1111/tpj.14716, Table S3 (CC-BY 4.0)",
+      "flc_expression": "Atwell S et al. (2010) Nature 465:627-631 -- FLC expression, via AraPheno phenotype 29 (https://arapheno.1001genomes.org/rest/phenotype/29/values.csv)"
+    },
+    "ft16_cut_days": 61.0,
+    "flc_expr_cut": 0.857,
+    "honest_mapping": "the cell wants an ALLELE status; AraPheno gives measured FLC EXPRESSION. Expression is a downstream PROXY for allele strength (a weak/null allele yields low steady-state mRNA -- how Michaels 2003 defined the weak alleles) but is NOT the same measurement"
+  },
+  "rule_cells": [
+    {
+      "fri": "functional",
+      "flc": "strong",
+      "n": 47,
+      "n_late": 40,
+      "pct_late": 0.8511,
+      "cell_calls": "late",
+      "call_correct_for_majority": true,
+      "is_lz0_class": false,
+      "is_da112_class": false
+    },
+    {
+      "fri": "functional",
+      "flc": "weak",
+      "n": 23,
+      "n_late": 9,
+      "pct_late": 0.3913,
+      "cell_calls": "early",
+      "call_correct_for_majority": true,
+      "is_lz0_class": false,
+      "is_da112_class": true
+    },
+    {
+      "fri": "lof",
+      "flc": "strong",
+      "n": 6,
+      "n_late": 1,
+      "pct_late": 0.1667,
+      "cell_calls": "early",
+      "call_correct_for_majority": true,
+      "is_lz0_class": true,
+      "is_da112_class": false
+    },
+    {
+      "fri": "lof",
+      "flc": "weak",
+      "n": 30,
+      "n_late": 3,
+      "pct_late": 0.1,
+      "cell_calls": "early",
+      "call_correct_for_majority": true,
+      "is_lz0_class": false,
+      "is_da112_class": false
+    }
+  ],
+  "does_flc_add": {
+    "stratum": "functional-FRI accessions (a FRI-only rule calls ALL of them LATE)",
+    "n_functional_fri": 70,
+    "pct_late_when_flc_strong": 0.8511,
+    "pct_late_when_flc_weak": 0.3913,
+    "n_rescued_by_flc": 14,
+    "n_broken_by_flc": 9,
+    "net_calls_fixed": 5,
+    "accuracy_two_locus": 0.8113207547169812,
+    "accuracy_fri_only": 0.7641509433962265,
+    "accuracy_delta": 0.0472,
+    "null_accuracy": 0.5
+  },
+  "threshold_sensitivity": [
+    {
+      "flc_quantile": 0.2,
+      "flc_cut": 0.131,
+      "acc_two_locus": 0.7924528301886793,
+      "acc_fri_only": 0.7641509433962265,
+      "delta": 0.0283
+    },
+    {
+      "flc_quantile": 0.3,
+      "flc_cut": 0.25,
+      "acc_two_locus": 0.8301886792452831,
+      "acc_fri_only": 0.7641509433962265,
+      "delta": 0.066
+    },
+    {
+      "flc_quantile": 0.4,
+      "flc_cut": 0.462,
+      "acc_two_locus": 0.8113207547169812,
+      "acc_fri_only": 0.7641509433962265,
+      "delta": 0.0472
+    },
+    {
+      "flc_quantile": 0.5,
+      "flc_cut": 0.858,
+      "acc_two_locus": 0.8113207547169812,
+      "acc_fri_only": 0.7641509433962265,
+      "delta": 0.0472
+    },
+    {
+      "flc_quantile": 0.6,
+      "flc_cut": 1.193,
+      "acc_two_locus": 0.7641509433962265,
+      "acc_fri_only": 0.7641509433962265,
+      "delta": 0.0
+    },
+    {
+      "flc_quantile": 0.7,
+      "flc_cut": 1.513,
+      "acc_two_locus": 0.6792452830188679,
+      "acc_fri_only": 0.7641509433962265,
+      "delta": -0.0849
+    }
+  ],
+  "population_structure": {
+    "by_group": {
+      "admixed": {
+        "n": 11,
+        "scorable": true,
+        "acc_two_locus": 0.8181818181818182,
+        "acc_fri_only": 0.7272727272727273,
+        "null": 0.8181818181818182,
+        "delta": 0.0909
+      },
+      "central_europe": {
+        "n": 21,
+        "scorable": true,
+        "acc_two_locus": 0.7142857142857143,
+        "acc_fri_only": 0.5238095238095238,
+        "null": 0.6190476190476191,
+        "delta": 0.1905
+      },
+      "germany": {
+        "n": 15,
+        "scorable": true,
+        "acc_two_locus": 0.7333333333333333,
+        "acc_fri_only": 0.7333333333333333,
+        "null": 0.6666666666666666,
+        "delta": 0.0
+      },
+      "north_sweden": {
+        "n": 11,
+        "scorable": false,
+        "reason": "one class only"
+      },
+      "south_sweden": {
+        "n": 20,
+        "scorable": true,
+        "acc_two_locus": 0.75,
+        "acc_fri_only": 0.85,
+        "null": 0.9,
+        "delta": -0.1
+      },
+      "western_europe": {
+        "n": 16,
+        "scorable": true,
+        "acc_two_locus": 1.0,
+        "acc_fri_only": 1.0,
+        "null": 0.75,
+        "delta": 0.0
+      }
+    },
+    "group_weighted": {
+      "n_groups": 5,
+      "mean_acc_two_locus": 0.8032,
+      "mean_acc_fri_only": 0.7669,
+      "mean_null": 0.7508,
+      "mean_delta": 0.0363
+    },
+    "note": "the S3 run measured this confound: a +23pp pooled advantage collapsed to +3.4pp within ancestry. Reported here for the same reason -- FRI genotype tracks ancestry."
+  },
+  "scope_limits": [
+    "IN-DISTRIBUTION: the cell's catalogue and both label sources trace to the same literature.",
+    "FLC expression is a PROXY for allele status (see honest_mapping).",
+    "n=105 -- the join of S3 (1,017) with AraPheno FLC (167).",
+    "HABIT/direction only, not days-to-flower."
+  ]
+}
