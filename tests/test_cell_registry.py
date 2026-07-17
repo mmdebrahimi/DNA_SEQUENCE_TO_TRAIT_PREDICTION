@@ -192,3 +192,36 @@ def test_pgx_genes_single_source():
     """M1: the manifest's PGx set derives from the importable PGX_GENES constant, not a copied literal."""
     from dna_decode.data.cell_registry import cli_routable_manifest
     assert cli_routable_manifest()["dna-pgx"] == set(PGX_GENES)
+
+
+# ------------------------- contract-vs-evidence (added 2026-07-16 after a real mis-registration) ----------
+
+def test_forward_cell_is_registered_as_dms_measured_not_unvalidated():
+    """REGRESSION PIN. The forward cell shipped for a day registered as NOT_CENSUSED / 'prior_only_no_
+    phenotype_claim' / 'validation_slice: NONE'. That was FALSE: the cell is validated per-variant against
+    measured ProteinGym DMS (blaTEM genome-edit Spearman 0.7611 over 1,715 real single-nt variants). The
+    contract was written from memory instead of from the cell -- under-claiming a validated cell is as much
+    a trust-surface falsehood as over-claiming an unvalidated one."""
+    c = by_cell_id()["finder:any:forward"]
+    assert c.evidence_tier is EvidenceTier.INDEPENDENT_MEASURED
+    assert "0.7611" in c.validation_slice          # the real blaTEM genome-edit number
+    assert "proteingym" in c.label_provenance.lower()
+    # ...and the scope rails that make the number honest must survive any future edit:
+    assert "RANK" in c.demotion_rule                    # rank != magnitude
+    assert "REGIME B ONLY" in c.demotion_rule           # never a resistance predictor
+    assert "blosum62" in c.demotion_rule                # the CLI default is not the headline
+
+
+def test_every_wiki_artifact_a_contract_cites_actually_exists():
+    """ANTI-DRIFT. A contract that cites its evidence by filename must cite a file that EXISTS -- otherwise
+    the trust surface points at nothing and no one notices. Generalizes the mis-registration above: the fix
+    for 'written from memory' is 'the evidence must resolve'."""
+    import re
+
+    missing = []
+    for c in cells():
+        for field in (c.validation_slice, c.label_provenance, c.demotion_rule):
+            for ref in re.findall(r"wiki/[\w./-]+\.(?:json|md)", field or ""):
+                if not (REPO / ref).exists():
+                    missing.append(f"{c.cell_id} -> {ref}")
+    assert not missing, f"contracts cite non-existent evidence artifacts: {missing}"

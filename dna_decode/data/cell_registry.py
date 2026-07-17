@@ -369,22 +369,38 @@ _TRAIT_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
         organism="any", target="forward",
-        claim="BLOSUM62 exchangeability score for a protein substitution — a molecular-property PRIOR, "
-              "explicitly NOT a phenotype call",
-        evidence_tier=EvidenceTier.NOT_CENSUSED,
-        claim_status="prior_only_no_phenotype_claim",
+        claim="molecular-effect RANK for a protein/CDS edit (Regime B: enzyme fitness/stability), with a "
+              "conformal dosage interval — NEVER a clinical-resistance call (that routes to Regime A)",
+        # DMS is a FREE, INDEPENDENT, per-variant WET-LAB measurement -- the molecular analogue of HIV
+        # PhenoSense, and (as forward/README says) the one place this project's label wall does not bind.
+        # The predictor never sees the label, so this is measured-independent, not faithful-to-tool.
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
+        claim_status="dms_measured_rank_validated_regime_b_only",
         validation_slice=(
-            "NONE — v0 emits a substitution-matrix score and makes no phenotype claim, so there is nothing to "
-            "score. Registered so it cannot ship invisibly. The measured project finding is that "
-            "exchangeability scorers are BLIND to antagonistically-selected resistance (ESM2 0.454 = below "
-            "chance vs catalogue 0.926; BLOSUM62 ranks real DRMs 4.0/19) — this cell must never be read as a "
-            "resistance predictor"),
-        label_provenance="BLOSUM62 substitution matrix; no phenotype labels involved",
+            "per-variant Spearman vs measured ProteinGym DMS fitness. CLI default `blosum62` (deterministic, "
+            "wheel-only): TEM-1 0.3465 (n=4996) / PTEN 0.182 -- REAL but modest. Python-API `esm2` "
+            "(ESM2-650M masked-marginal): TEM-1 **0.7315** / PTEN 0.518 / CcdB 0.5115; `alphamissense` PTEN "
+            "0.539 (human-only). Genome-level nucleotide-edit path validated end-to-end on a real blaTEM CDS: "
+            "**Spearman 0.7611** over 1,715 real single-nt-accessible variants "
+            "(wiki/blatem_genome_demo_2026-07-14.json). Dosage head: conformal coverage calibrated 10/10 "
+            "proteins, informative 7/10 (wiki/forward_dosage_sweep_2026-07-15.md)"),
+        label_provenance=(
+            "ProteinGym deep-mutational-scanning assays (free, published wet-lab per-variant fitness; "
+            "BLAT_ECOLX_Stiffler_2015 + Firnberg_2014 + Deng_2012 + Jacquier_2013, PTEN_HUMAN_Mighell_2018, "
+            "CCDB_ECOLI_Tripathi_2016, RL40A_YEAST, SR43C_ARATH). The predictor never sees the label"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
         falsifier_ref="scripts/resistance_conservativeness_probe.py", incoming_data_gate="n/a",
         demotion_rule=(
-            "if a future version emits a phenotype call rather than a prior, it needs a real validation slice "
-            "before leaving NOT_CENSUSED — see the closed zero-shot negatives"),
+            "SCOPE IS THE CLAIM, and it is narrow in three ways. (1) The validated quantity is a RANK "
+            "correlation per protein -- 'ranks well' != 'pins the dose' (measured: CcdB-ESM2 ranks 0.49 yet "
+            "does NOT narrow its magnitude interval), so a magnitude claim needs the dosage head's own "
+            "informative flag, not the Spearman. (2) REGIME B ONLY: this must NEVER be read as a resistance "
+            "predictor -- on antagonistically-selected resistance the same class of scorer is BELOW CHANCE "
+            "(ESM2 0.454 vs the curated catalogue's 0.926; BLOSUM62 ranks real DRMs 4.0/19), which is why "
+            "the router sends determinant hits to Regime A and organism-polygenic edits to ABSTAIN. (3) The "
+            "shipped CLI default is blosum62 at 0.35/0.18, NOT the 0.73 headline -- the learned methods need "
+            "a precomputed score table and stay in the Python API. Demote if a DMS re-score drops the rank "
+            "materially, or if any path emits an organism-level or clinical call"),
     ),
 ]
 
