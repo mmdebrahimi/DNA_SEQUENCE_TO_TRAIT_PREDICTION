@@ -1,0 +1,261 @@
+{
+  "schema": "flowering-tables3-score-v1",
+  "date": "2026-07-16",
+  "cell": "dna_decode/organism_rules/arabidopsis_flowering.py",
+  "cell_reference_integrity_ok": true,
+  "substrate": {
+    "source": "data/arabidopsis/zhang2020/tpj14716-sup-0012-TableS3.tsv",
+    "citation": "Zhang L & Jimenez-Gomez JM (2020) Functional analysis of FRIGIDA using naturally occurring variation in Arabidopsis thaliana. The Plant Journal 103:154-165. doi:10.1111/tpj.14716. Table S3, CC-BY 4.0.",
+    "n_accessions_scored": 854,
+    "phenotype_attrition": {
+      "n_total": 1017,
+      "n_phenotyped": 854,
+      "n_dropped_no_ft16": 163,
+      "dropped_fraction": 0.16027531956735497,
+      "deleterious_rate_overall": 0.24090462143559488,
+      "deleterious_rate_among_dropped": 0.09815950920245399,
+      "dropout_is_genotype_skewed": true,
+      "note": "163 of 1017 accessions have FT16_mean='NA' and cannot be scored. The dropout is NOT random wrt genotype: 9.8% of dropped accessions carry a deleterious FRI vs 24.1% overall -- i.e. FUNCTIONAL-FRI (late-candidate) accessions are preferentially unphenotyped. This shifts the class balance the null baseline is computed against."
+    },
+    "phenotype": "FT16_mean (days to first flower, long days 16C) -- the paper's own phenotype"
+  },
+  "scope_limits": [
+    "FRI-ROUTE ONLY: Table S3 has no FLC status, so the cell's two-locus AND collapses to its FRI route -- the weaker, MEDIUM-confidence one. The FLC route (the cell's distinctive claim, the Da(1)-12 class) is NOT tested by this run.",
+    "FLC assumed functional for every accession. Documented-rare, not absent; every FLC-route accession present is a guaranteed miss.",
+    "HABIT/direction call, not quantitative days-to-flower. The paper reports FRI/FLC explains only part of long-day variation; the residue is polygenic + environmental.",
+    "163 of 1017 accessions have FT16_mean='NA' and cannot be scored. The dropout is NOT random wrt genotype: 9.8% of dropped accessions carry a deleterious FRI vs 24.1% overall -- i.e. FUNCTIONAL-FRI (late-candidate) accessions are preferentially unphenotyped. This shifts the class balance the null baseline is computed against.",
+    "IN-DISTRIBUTION, NOT INDEPENDENT: the cell's catalogue and this label both trace to the same literature. This measures faithfulness of the rule to the paper's own data -- it is NOT an out-of-distribution validation."
+  ],
+  "main": {
+    "threshold_days": 70.25,
+    "cut": "FT16 > cohort median",
+    "pooled": {
+      "n": 854,
+      "tp": 411,
+      "fp": 214,
+      "tn": 215,
+      "fn": 14,
+      "n_observed_late": 425,
+      "n_observed_early": 429,
+      "accuracy": 0.7330210772833724,
+      "sensitivity": 0.9670588235294117,
+      "specificity": 0.5011655011655012,
+      "null_accuracy": 0.5023419203747073,
+      "null_call": "early",
+      "degenerate": false
+    },
+    "by_structure_group": {
+      "admixed": {
+        "n": 112,
+        "tp": 41,
+        "fp": 32,
+        "tn": 37,
+        "fn": 2,
+        "n_observed_late": 43,
+        "n_observed_early": 69,
+        "accuracy": 0.6964285714285714,
+        "sensitivity": 0.9534883720930233,
+        "specificity": 0.5362318840579711,
+        "null_accuracy": 0.6160714285714286,
+        "null_call": "early",
+        "degenerate": false,
+        "scorable": true
+      },
+      "asia": {
+        "n": 55,
+        "tp": 29,
+        "fp": 24,
+        "tn": 2,
+        "fn": 0,
+        "n_observed_late": 29,
+        "n_observed_early": 26,
+        "accuracy": 0.5636363636363636,
+        "sensitivity": 1.0,
+        "specificity": 0.07692307692307693,
+        "null_accuracy": 0.5272727272727272,
+        "null_call": "late",
+        "degenerate": false,
+        "scorable": true
+      },
+      "central_europe": {
+        "n": 157,
+        "tp": 42,
+        "fp": 48,
+        "tn": 65,
+        "fn": 2,
+        "n_observed_late": 44,
+        "n_observed_early": 113,
+        "accuracy": 0.6815286624203821,
+        "sensitivity": 0.9545454545454546,
+        "specificity": 0.5752212389380531,
+        "null_accuracy": 0.7197452229299363,
+        "null_call": "early",
+        "degenerate": false,
+        "scorable": true
+      },
+      "germany": {
+        "n": 79,
+        "tp": 22,
+        "fp": 14,
+        "tn": 43,
+        "fn": 0,
+        "n_observed_late": 22,
+        "n_observed_early": 57,
+        "accuracy": 0.8227848101265823,
+        "sensitivity": 1.0,
+        "specificity": 0.7543859649122807,
+        "null_accuracy": 0.7215189873417721,
+        "null_call": "early",
+        "degenerate": false,
+        "scorable": true
+      },
+      "italy_balkan_caucasus": {
+        "n": 66,
+        "tp": 46,
+        "fp": 18,
+        "tn": 1,
+        "fn": 1,
+        "n_observed_late": 47,
+        "n_observed_early": 19,
+        "accuracy": 0.7121212121212122,
+        "sensitivity": 0.9787234042553191,
+        "specificity": 0.05263157894736842,
+        "null_accuracy": 0.7121212121212122,
+        "null_call": "late",
+        "degenerate": false,
+        "scorable": true
+      },
+      "north_sweden": {
+        "n": 47,
+        "tp": 47,
+        "fp": 0,
+        "tn": 0,
+        "fn": 0,
+        "n_observed_late": 47,
+        "n_observed_early": 0,
+        "accuracy": 1.0,
+        "sensitivity": 1.0,
+        "specificity": null,
+        "null_accuracy": 1.0,
+        "null_call": "late",
+        "degenerate": true,
+        "scorable": false
+      },
+      "relict": {
+        "n": 22,
+        "tp": 15,
+        "fp": 6,
+        "tn": 1,
+        "fn": 0,
+        "n_observed_late": 15,
+        "n_observed_early": 7,
+        "accuracy": 0.7272727272727273,
+        "sensitivity": 1.0,
+        "specificity": 0.14285714285714285,
+        "null_accuracy": 0.6818181818181818,
+        "null_call": "late",
+        "degenerate": false,
+        "scorable": true
+      },
+      "south_sweden": {
+        "n": 132,
+        "tp": 105,
+        "fp": 16,
+        "tn": 7,
+        "fn": 4,
+        "n_observed_late": 109,
+        "n_observed_early": 23,
+        "accuracy": 0.8484848484848485,
+        "sensitivity": 0.963302752293578,
+        "specificity": 0.30434782608695654,
+        "null_accuracy": 0.8257575757575758,
+        "null_call": "late",
+        "degenerate": false,
+        "scorable": true
+      },
+      "spain": {
+        "n": 94,
+        "tp": 47,
+        "fp": 41,
+        "tn": 5,
+        "fn": 1,
+        "n_observed_late": 48,
+        "n_observed_early": 46,
+        "accuracy": 0.5531914893617021,
+        "sensitivity": 0.9791666666666666,
+        "specificity": 0.10869565217391304,
+        "null_accuracy": 0.5106382978723404,
+        "null_call": "late",
+        "degenerate": false,
+        "scorable": true
+      },
+      "western_europe": {
+        "n": 90,
+        "tp": 17,
+        "fp": 15,
+        "tn": 54,
+        "fn": 4,
+        "n_observed_late": 21,
+        "n_observed_early": 69,
+        "accuracy": 0.7888888888888889,
+        "sensitivity": 0.8095238095238095,
+        "specificity": 0.782608695652174,
+        "null_accuracy": 0.7666666666666667,
+        "null_call": "early",
+        "degenerate": false,
+        "scorable": true
+      }
+    },
+    "group_weighted": {
+      "n_groups_scorable": 9,
+      "n_groups_unscorable": 1,
+      "mean_accuracy": 0.7104819526379198,
+      "mean_null_accuracy": 0.6757344778168712,
+      "n_groups_beating_null": 7
+    },
+    "directional": {
+      "negative_direction": {
+        "rule": "FRI loss-of-function -> early",
+        "n": 229,
+        "n_correct": 215,
+        "precision": 0.9388646288209607,
+        "mean_ft16": 49.91502911222708
+      },
+      "positive_direction": {
+        "rule": "FRI functional -> late",
+        "n": 625,
+        "n_correct": 411,
+        "precision": 0.6576,
+        "mean_ft16": 83.456666667248
+      },
+      "false_positive_spread": {
+        "n": 214,
+        "ft16_min": 32.0,
+        "ft16_median": 59.25,
+        "ft16_max": 70.25,
+        "threshold": 70.25,
+        "clustered_at_threshold": false
+      }
+    },
+    "verdict": "SCORED_BEATS_NULL"
+  },
+  "threshold_sensitivity": {
+    "note": "Does the verdict ride on the median cut? Re-scored at the upper tertile.",
+    "tertile": {
+      "threshold_days": 86.25,
+      "pooled_accuracy": 0.5796252927400468,
+      "pooled_null_accuracy": 0.6697892271662763,
+      "verdict": "FAILS_NULL_BASELINE"
+    }
+  },
+  "headline": {
+    "pooled_accuracy": 0.7330210772833724,
+    "pooled_null_accuracy": 0.5023419203747073,
+    "sensitivity": 0.9670588235294117,
+    "specificity": 0.5011655011655012,
+    "structure_group_weighted_accuracy": 0.7104819526379198,
+    "structure_group_weighted_null": 0.6757344778168712,
+    "groups_beating_null": "7/9",
+    "verdict": "SCORED_BEATS_NULL"
+  }
+}
