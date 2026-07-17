@@ -119,6 +119,20 @@ def test_every_proposal_ships_its_evidence_and_scope():
     assert len(d["does_not_support"]) == len(UNSUPPORTED_CLAIMS)
 
 
+def test_every_call_says_it_is_not_gated_for_the_users_protein():
+    """The measured finding is that utility does NOT transfer by rank (PTEN 0.5185 yes / RL40A 0.5190 no),
+    so a user running this on their own protein has NO evidence it works there. Saying '4/4 proteins'
+    without saying WHICH four would imply a transfer the data denies."""
+    r = propose_edits(TEM1_HEAD, 0.5, top_k=3)
+    assert r.gated_for_this_protein is False
+    note = next((n for n in r.notes if "NOT GATED" in n), None)
+    assert note is not None, r.notes
+    assert "PTEN" in note and "RL40A" in note          # names the counterexample, not just a hedge
+    d = r.as_dict()
+    assert d["gated_for_this_protein"] is False
+    assert len(d["evidence"]["validated_proteins"]) == 4
+
+
 def test_best_of_k_guidance_ships_with_every_call():
     """Top-1 is ~4x worse than best-of-5; a user who assays only the first proposal must be told."""
     r = propose_edits(TEM1_HEAD, 0.5, top_k=5)

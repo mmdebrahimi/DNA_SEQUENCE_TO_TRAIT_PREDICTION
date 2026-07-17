@@ -56,8 +56,14 @@ AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
 BASES = "ACGT"
 
 # Measured evidence that ships with every call, so a proposal cannot be read as more than it is.
+# The EXACT proteins the evidence was earned on. A user's protein is almost never one of these, and the
+# measured finding is that utility does NOT transfer by rank (PTEN 0.5185 earns its keep; RL40A 0.5190 does
+# not) -- so "not gated for YOUR protein" is a real caveat, not boilerplate, and it ships per call.
+VALIDATED_PROTEINS = ("TEM-1 beta-lactamase (E. coli)", "PTEN (human)", "RL40A/ubiquitin (yeast)",
+                      "SR43C (Arabidopsis)")
 EVIDENCE = {
     "validated_on": "ProteinGym DMS (measured wet-lab per-variant fitness), 4 proteins / 4 kingdoms",
+    "validated_proteins": list(VALIDATED_PROTEINS),
     "rank_inverse_beats_no_oracle_null": "4/4 usable proteins",
     "learned_oracle_beats_blosum62": "3/4 -- blosum62 is often the right answer, not a fallback",
     "typical_error_top5": "~2-5 percentile points",
@@ -100,6 +106,7 @@ class InverseProposal:
     n_candidates: int
     proposals: list[ProposedEdit] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
+    gated_for_this_protein: bool = False
 
     def as_dict(self) -> dict:
         return {
@@ -109,6 +116,7 @@ class InverseProposal:
             "candidate_space": self.candidate_space, "n_candidates": self.n_candidates,
             "proposals": [p.as_dict() for p in self.proposals],
             "evidence": dict(EVIDENCE),
+            "gated_for_this_protein": self.gated_for_this_protein,
             "does_not_support": list(UNSUPPORTED_CLAIMS),
             "notes": self.notes,
             "research_use_only": True,
@@ -225,6 +233,12 @@ def propose_edits(protein_seq: str, target_percentile: float, *, top_k: int = 5,
             f"quantized here, so the pick within the tie group is arbitrary. Diversity is measured "
             f"free-to-beneficial precisely because it escapes ties; treat the k proposals as "
             f"interchangeable draws from the tie group, not a ranking among themselves")
+    notes.append(
+        "NOT GATED FOR YOUR PROTEIN: the 4/4 evidence was earned on " + ", ".join(VALIDATED_PROTEINS) +
+        ". Inverse utility does NOT transfer by rank quality (measured: PTEN forward-rank 0.5185 earns its "
+        "keep while RL40A 0.5190 does not — a gap of 0.0005, opposite verdicts), so a good Spearman on your "
+        "protein does not license skipping the check. To gate it, run scripts/forward_inverse_deployable.py "
+        "on a DMS assay for YOUR protein")
     notes += [
         "measured guidance: assay all k proposals and keep the best. Single-shot (top-1) is ~4x worse than "
         "best-of-5 -- the loop assumes you can measure what it proposes",
