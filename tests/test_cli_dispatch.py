@@ -76,7 +76,7 @@ def test_traits_registry_matches_console_entries():
     # still said they did not exist, and the two guards are what surfaced it.
     assert set(uni.TRAITS) == {"amr", "pathotype", "plasmid", "serotype", "resfinder", "pointfinder",
                                "disinfinder", "mlst", "ktype", "salmserovar", "pneumoserotype", "pgx",
-                               "forward", "pigment", "flowering"}
+                               "forward", "pigment", "flowering", "inverse"}
     assert set(uni.ANALYSES) == {"concordance", "profile", "coloc"}
     assert not (set(uni.TRAITS) & set(uni.ANALYSES))   # disjoint namespaces
 

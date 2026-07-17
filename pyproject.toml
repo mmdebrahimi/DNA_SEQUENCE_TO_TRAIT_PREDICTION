@@ -55,6 +55,7 @@ dna-decode = "dna_decode.cli:main"          # unified entry — dispatches to th
 dna-pathotype = "dna_decode.pathotype.cli:main"
 dna-amr = "dna_decode.amr.cli:main"
 dna-forward = "dna_decode.forward.cli:main"    # forward variant-effect (edit -> molecular phenotype)
+dna-inverse = "dna_decode.forward.inverse_cli:main"    # inverse design (effect -> edit); ranks, never doses
 dna-pigment = "dna_decode.pigment.cli:main"    # visible-trait pigmentation (v0 = IrisPlex eye colour)
 dna-flowering = "dna_decode.organism_rules.flowering_cli:main"   # Arabidopsis flowering habit (FRI/FLC)
 dna-plasmid = "dna_decode.plasmid.cli:main"

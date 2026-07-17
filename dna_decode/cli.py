@@ -79,6 +79,10 @@ TRAITS = {
         "summary": "FORWARD variant-effect (--mutation M69L --protein-seq/--protein-fasta): a protein point mutation -> predicted MOLECULAR-phenotype change (Regime B, enzyme fitness/stability) - the edit->effect complement to `amr`. v0 CLI = BLOSUM62 (deterministic, offline); learned methods (ESM2/AlphaMissense/ESM-IF) via the Python API",
         "validation": "per-variant vs measured Deep Mutational Scanning (ProteinGym): ESM2-650M Spearman TEM-1 0.732 / PTEN 0.518, AlphaMissense(human) 0.539, BLOSUM62 weaker (0.35/0.18) but instant+offline; calibrated-magnitude dosage head coverage 10/10 organisms. Regime B molecular fitness RANK, NOT clinical resistance (use `amr` for R/S)",
     },
+    "inverse": {
+        "summary": "INVERSE design (--protein-seq/--protein-fasta --target-percentile 0.05 [--cds-fasta]): effect -> EDIT. Proposes the edits at a target percentile of predicted molecular damage, using the DMS-validated forward oracle as LABEL-FREE ground truth (no phenotype label consulted). The effect->edit complement to `forward`",
+        "validation": "graded NON-circularly against MEASURED wet-lab DMS (calibrate on held-out positions; grade on the proposed variant's measured value, never the model's re-score): beats an exact no-oracle null on 4/4 usable proteins across 4 kingdoms, ~2-5 percentile points at top-5. RANKS, NEVER DOSES -- the magnitude version needs a calibrator fit on the TARGET protein's own DMS (which would make the inverse unnecessary; and calibrators cannot transfer -- the assays share no scale), and its conformal interval is uninformative even where it brackets. The learned oracle beats plain BLOSUM62 on only 3/4, so the blosum62 default is often right, not a fallback; utility does NOT track forward rank (PTEN 0.5185 earns keep, RL40A 0.5190 does not) -> per-protein check required. Regime B molecular fitness only, NOT clinical resistance (use `amr`)",
+    },
     "flowering": {
         "summary": "PLANT trait — Arabidopsis thaliana flowering HABIT (--fri/--flc allele calls): summer-annual-early vs winter-annual-late (vernalization-requiring), from the curated FRI/FLC causal loci. The deterministic counterpart to the CLOSED-NEGATIVE flowering EMBEDDING test (which learned lineage, not mechanism)",
         "validation": "deterministic curated-causal-allele rule (late iff functional FRI AND strong FLC; FLC is downstream so a weak/null FLC calls early regardless of FRI). Literature-anchored (Johanson 2000 FRI / Michaels 2003 PNAS weak-FLC / Werner 2005 FRI-independent); reference-integrity biology-checked incl. the Da(1)-12 anchor a naive FRI-only rule mis-calls. PARTIAL: FRI/FLC ~40-70% of long-day variation -> HABIT/direction only, NOT days-to-flower; FRI-route confidence capped by the Lz-0 counterexample. v0 = allele-call input; genome-mode = v0.1",
@@ -138,6 +142,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "forward":
         from dna_decode.forward.cli import main as forward_main
         return forward_main(rest)
+    if trait == "inverse":
+        from dna_decode.forward.inverse_cli import main as inverse_main
+        return inverse_main(rest)
     if trait == "pigment":
         from dna_decode.pigment.cli import main as pigment_main
         return pigment_main(rest)

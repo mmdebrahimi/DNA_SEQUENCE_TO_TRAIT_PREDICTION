@@ -348,6 +348,42 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "single class and shrinks the advantage), different variable"),
     ),
     CellContract(
+        cell_id="finder:any:inverse", track="finder", route="dna-decode-inverse",
+        organism="any", target="inverse",
+        claim="proposes the edits at a target PERCENTILE of predicted molecular damage (Regime B) using the "
+              "DMS-validated forward oracle as label-free ground truth -- a RANK, never a dose",
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
+        claim_status="dms_measured_rank_inverse_regime_b_only",
+        validation_slice=(
+            "graded NON-circularly against MEASURED wet-lab ProteinGym DMS -- calibrate/select on disjoint "
+            "POSITION splits, grade on the proposed variant's measured value, never the model's own "
+            "re-score (the generating model grading its own proposals measures self-consistency). "
+            "Beats an exact closed-form no-oracle null on **4/4 usable proteins across 4 kingdoms** "
+            "(E. coli/human/yeast/Arabidopsis), ~2-5 percentile points at top-5. A 5th assay (CcdB) is "
+            "EXCLUDED as censored (79.3% of variants tied at its ceiling -> percentile undefined). The "
+            "magnitude round-trip separately PASSES on blaTEM (+53.0%, 6/6 paired splits) but is NOT "
+            "deployable -- see demotion_rule. wiki/forward_inverse_{roundtrip,sweep,deployable}"
+            "_2026-07-1{6,7}.md"),
+        label_provenance=("ProteinGym DMS assays (free, published wet-lab per-variant fitness). The oracle "
+                          "never sees a label; labels are used ONLY to grade the proposals"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/forward_inverse_deployable.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "FOUR rails, each measured. (1) IT RANKS, IT DOES NOT DOSE -- a magnitude claim needs a "
+            "score->effect calibrator fit on the TARGET protein's own DMS (which would make the inverse "
+            "unnecessary), and calibrators CANNOT transfer: the assays share no scale (CcdB's whole range "
+            "[-9.00,-2.00] lies below TEM-1's minimum -3.56), so cross-protein magnitude is impossible by "
+            "construction. The conformal interval is informative 0/6 splits on blaTEM -- it brackets while "
+            "proving nothing, since coverage holds even for a useless model. (2) The LEARNED oracle earns "
+            "its keep over plain BLOSUM62 on only 3/4, so the blosum62 default is often correct rather "
+            "than a fallback -- and utility does NOT track forward rank (PTEN 0.5185 earns keep, RL40A "
+            "0.5190 does not), so a good Spearman does not license skipping the per-protein check. "
+            "(3) REGIME B ONLY -- never clinical resistance, where this scorer class is BELOW CHANCE "
+            "(0.454 vs the catalogue's 0.926). (4) top-1 is ~4x worse than best-of-5: the claim is "
+            "'propose k, assay k, keep the best', not 'propose 1 and trust it'. Demote if a re-run stops "
+            "beating the null on a majority of usable assays"),
+    ),
+    CellContract(
         cell_id="typing:human:pigment", track="typing", route="dna-pigment",
         organism="human", target="pigment",
         claim="IrisPlex eye-colour probability (blue/intermediate/brown) from 6 curated SNP genotypes",

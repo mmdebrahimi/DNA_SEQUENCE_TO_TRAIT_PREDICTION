@@ -73,9 +73,16 @@ def _percentile_of(sorted_vals: list[float], v: float) -> float:
     return lo / len(sorted_vals)
 
 
-def rank_inverse(cands, score_of, targets: list[float], top_k: int) -> dict:
+def rank_inverse(cands, score_of, targets: list[float], top_k: int, diverse: bool = False) -> dict:
     """NO calibration, NO DMS: order by score, take the variant at score-percentile p, and ask what
-    percentile it truly occupies. Every method faces the identical pool."""
+    percentile it truly occupies. Every method faces the identical pool.
+
+    `diverse=True` picks at most ONE edit per residue. This matters because BLOSUM62 is heavily quantized
+    -- 1,874 blaTEM candidates take only 7 distinct scores, the largest tie group holding 383 -- so the
+    plain window returns k edits from one tie group, ordered by position, i.e. k shots at the SAME residue
+    (D48Y, D48V, L49H, L49P, N50I). For a loop that assays k proposals that wastes k-1 of them. Whether
+    diversity COSTS accuracy is measured, not assumed.
+    """
     scored = [(c, score_of(c)) for c in cands]
     scored = [(c, s) for c, s in scored if s is not None]
     by_score = sorted(scored, key=lambda cs: cs[1])          # ascending score == ascending predicted effect
@@ -85,14 +92,33 @@ def rank_inverse(cands, score_of, targets: list[float], top_k: int) -> dict:
     rows = []
     for p in targets:
         idx = min(n - 1, max(0, int(round(p * (n - 1)))))
-        window = by_score[max(0, idx - top_k // 2): max(0, idx - top_k // 2) + top_k]
+        if diverse:
+            # walk outward from idx, taking the first edit at each unseen residue
+            window, seen = [], set()
+            for off in range(n):
+                for j in (idx - off, idx + off) if off else (idx,):
+                    if 0 <= j < n and by_score[j][0].pos not in seen:
+                        seen.add(by_score[j][0].pos)
+                        window.append(by_score[j])
+                        if len(window) == top_k:
+                            break
+                if len(window) == top_k:
+                    break
+        else:
+            window = by_score[max(0, idx - top_k // 2): max(0, idx - top_k // 2) + top_k]
+        # top-1 is the SINGLE best proposal = the variant AT the target index. NOT window[0]: the plain
+        # window starts top_k//2 slots BELOW idx, so reading window[0] silently reports a worse variant
+        # as the top-1 (it inflated PTEN's top-1 from 0.1270 to 0.2142 before this was caught).
         top1_pct = _percentile_of(measured_sorted, by_score[idx][0].measured)
         errs = [abs(_percentile_of(measured_sorted, c.measured) - p) for c, _ in window]
         rows.append({"target_pct": round(p, 3), "proposed": by_score[idx][0].mutant,
+                     "n_distinct_positions": len({c.pos for c, _ in window}),
                      "landed_pct_top1": round(top1_pct, 4),
                      "abs_pct_err_top1": round(abs(top1_pct - p), 4),
                      "abs_pct_err_best_of_k": round(min(errs), 4)})
-    return {"n_scored": n,
+    return {"n_scored": n, "diverse": diverse,
+            "mean_distinct_positions_per_proposal": round(
+                statistics.fmean(r["n_distinct_positions"] for r in rows), 2),
             "mean_pct_err_top1": round(statistics.fmean(r["abs_pct_err_top1"] for r in rows), 4),
             "mean_pct_err_best_of_k": round(statistics.fmean(r["abs_pct_err_best_of_k"] for r in rows), 4),
             "per_target": rows}
@@ -221,11 +247,19 @@ def main() -> int:
             continue
         e = rank_inverse(cands, lambda c: esm_score(esm, c), TARGET_PCTS, args.top_k)
         b = rank_inverse(cands, blosum_score, TARGET_PCTS, args.top_k)
+        # Does one-edit-per-residue diversity COST accuracy? Measure it rather than assume.
+        e_div = rank_inverse(cands, lambda c: esm_score(esm, c), TARGET_PCTS, args.top_k, diverse=True)
+        b_div = rank_inverse(cands, blosum_score, TARGET_PCTS, args.top_k, diverse=True)
         m_null = (null["mean_pct_err_best_of_k"] - e["mean_pct_err_best_of_k"]) / null["mean_pct_err_best_of_k"]
         m_blos = ((b["mean_pct_err_best_of_k"] - e["mean_pct_err_best_of_k"]) / b["mean_pct_err_best_of_k"]
                   if b["mean_pct_err_best_of_k"] else 0.0)
         rows.append({**a, "status": "SCORED", "candidate_space": space, "n_candidates": len(cands),
                      "esm2": e, "blosum62": b,
+                     "esm2_diverse": e_div, "blosum62_diverse": b_div,
+                     "diversity_cost_pct_pts_esm": round(
+                         e_div["mean_pct_err_best_of_k"] - e["mean_pct_err_best_of_k"], 4),
+                     "diversity_cost_pct_pts_blosum": round(
+                         b_div["mean_pct_err_best_of_k"] - b["mean_pct_err_best_of_k"], 4),
                      "margin_vs_null": round(m_null, 4), "margin_vs_blosum": round(m_blos, 4),
                      "beats_null": m_null >= MATERIAL_MARGIN,
                      "beats_blosum": m_blos >= MATERIAL_MARGIN,
@@ -287,6 +321,13 @@ def main() -> int:
         print(f"  {r['protein']:22s} {r['organism']:12s} {r['esm2']['mean_pct_err_top1']:9.4f} "
               f"{r['esm2']['mean_pct_err_best_of_k']:8.4f} {r['blosum62']['mean_pct_err_best_of_k']:9.4f} "
               f"{r['margin_vs_null']:+8.1%} {r['margin_vs_blosum']:+8.1%}  {tag}")
+    print(f"\n  DIVERSITY (one edit per residue) -- does it cost accuracy?")
+    print(f"  {'protein':22s} {'positions/5 plain':>18s} {'positions/5 diverse':>20s} "
+          f"{'esm cost':>9s} {'blos cost':>10s}  (percentile pts)")
+    for r in scored:
+        print(f"  {r['protein']:22s} {r['esm2']['mean_distinct_positions_per_proposal']:18.2f} "
+              f"{r['esm2_diverse']['mean_distinct_positions_per_proposal']:20.2f} "
+              f"{r['diversity_cost_pct_pts_esm']:+9.4f} {r['diversity_cost_pct_pts_blosum']:+10.4f}")
     print(f"\n  RANK inverse works (beats null):        {n_works}/{len(scored)}")
     print(f"  LEARNED oracle earns its keep:         {n_earns}/{len(scored)}")
     print(f"  -> {args.out_dir / (stem + '.json')}")
