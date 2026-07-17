@@ -1,0 +1,55 @@
+{
+  "schema": "proteingym-inverse-sweep-v1",
+  "date": "2026-07-17",
+  "question": "does the SHIPPED wheel-only (blosum62) rank inverse beat the no-oracle null across the whole ProteinGym substitution benchmark? (N=217, the deployability question at scale)",
+  "method": "blosum62 (the shipped CLI default; NOT ESM -- this bounds what ships, not the ceiling)",
+  "material_margin": 0.25,
+  "null": {
+    "mean_pct_err_top1": 0.325,
+    "mean_pct_err_best_of_k": 0.0922
+  },
+  "status_counts": {
+    "SCORED": 200,
+    "UNDERPOWERED": 12,
+    "DEGENERATE_CENSORED_ASSAY": 5
+  },
+  "n_scored": 200,
+  "n_beats_null_material": 27,
+  "beats_null_material_rate": 0.135,
+  "n_beats_null_any_edge": 118,
+  "beats_null_any_edge_rate": 0.59,
+  "margin_quartiles": {
+    "min": -0.8124,
+    "q25": -0.1443,
+    "median": 0.07050000000000001,
+    "q75": 0.1931,
+    "max": 0.4685
+  },
+  "by_taxon": {
+    "Human": {
+      "n": 88,
+      "beats": 12,
+      "beats_rate": 0.136
+    },
+    "Prokaryote": {
+      "n": 44,
+      "beats": 3,
+      "beats_rate": 0.068
+    },
+    "Eukaryote": {
+      "n": 38,
+      "beats": 6,
+      "beats_rate": 0.158
+    },
+    "Virus": {
+      "n": 30,
+      "beats": 6,
+      "beats_rate": 0.2
+    }
+  },
+  "honest_scope": [
+    "blosum62 ONLY -- the shipped default. ESM (the learned ceiling) needs a GPU per protein this host lacks; tonight's 4-protein sweep showed the learned oracle beats blosum on only 3/4, so this is a floor, not the ceiling.",
+    "RANK/percentile inverse only (the deployable form). It ranks; it does not dose.",
+    "censored assays EXCLUDED (they flatter the metric); coordinate-mismatched variants dropped."
+  ]
+}

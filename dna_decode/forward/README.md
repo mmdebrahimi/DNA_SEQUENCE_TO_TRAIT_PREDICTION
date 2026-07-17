@@ -76,7 +76,7 @@ r = propose_edits(protein_seq, target_percentile=0.05, top_k=5, cds=cds_seq)  # 
 | question | verdict | why |
 |---|---|---|
 | hit a target **effect** (dose) | **not deployable** | needs a score→effect calibrator fit on the **target protein's own DMS** — and if you have that you already know every effect. Calibrators cannot transfer: the assays share no scale (CcdB's whole range [−9.00,−2.00] sits below TEM-1's minimum −3.56 — impossible *by construction*). The conformal interval is informative **0/6** splits: it brackets while proving nothing (coverage holds even for a useless model). |
-| hit a target **percentile** (rank) | **ships** | needs no calibrator, no DMS, no label. **Beats an exact no-oracle null 4/4** proteins, ~2–5 percentile pts at top-5. |
+| hit a target **percentile** (rank) | **ships** | needs no calibrator, no DMS, no label. **ESM** beats an exact no-oracle null 4/4 hand-picked proteins (~2–5 pct pts at top-5). **But the shipped `blosum62` default does NOT generalize** — N=200 ProteinGym: material on only **13.5%**, often worse than guessing (`wiki/proteingym_inverse_sweep_2026-07-17.md`). So: cheap first pass by default; ESM (GPU) for reliability; gate per protein. |
 
 Three rails that ship inside every call (`does_not_support`, `evidence`, `notes`):
 

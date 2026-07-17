@@ -115,21 +115,23 @@ def test_every_proposal_ships_its_evidence_and_scope():
     d = propose_edits(TEM1_HEAD, 0.5).as_dict()
     assert d["regime"] == "B_molecular"
     assert d["research_use_only"] is True
-    assert d["evidence"]["rank_inverse_beats_no_oracle_null"] == "4/4 usable proteins"
+    # the 4/4 was ESM; the shipped default is honestly bounded separately (N=200 blosum62 = 13.5% material)
+    assert "4/4" in d["evidence"]["esm_rank_inverse_beats_null"]
+    assert "13.5%" in d["evidence"]["shipped_blosum62_default_beats_null_at_scale"]
     assert len(d["does_not_support"]) == len(UNSUPPORTED_CLAIMS)
 
 
-def test_every_call_says_it_is_not_gated_for_the_users_protein():
-    """The measured finding is that utility does NOT transfer by rank (PTEN 0.5185 yes / RL40A 0.5190 no),
-    so a user running this on their own protein has NO evidence it works there. Saying '4/4 proteins'
-    without saying WHICH four would imply a transfer the data denies."""
-    r = propose_edits(TEM1_HEAD, 0.5, top_k=3)
-    assert r.gated_for_this_protein is False
+def test_the_blosum62_default_call_warns_it_is_the_weak_default_at_scale():
+    """The shipped default is blosum62, and at N=200 ProteinGym it is materially useful on only 13.5% of
+    proteins (often worse than guessing). Every default call must SAY that, quantified -- so a user cannot
+    read the ESM 4/4 headline onto their own protein via the wheel-only default."""
+    r = propose_edits(TEM1_HEAD, 0.5, top_k=3)               # method defaults to blosum62
     note = next((n for n in r.notes if "NOT GATED" in n), None)
     assert note is not None, r.notes
-    assert "PTEN" in note and "RL40A" in note          # names the counterexample, not just a hedge
+    assert "13.5%" in note and "WEAK default" in note        # quantified, not a vague hedge
     d = r.as_dict()
     assert d["gated_for_this_protein"] is False
+    assert "13.5%" in d["evidence"]["shipped_blosum62_default_beats_null_at_scale"]
     assert len(d["evidence"]["validated_proteins"]) == 4
 
 

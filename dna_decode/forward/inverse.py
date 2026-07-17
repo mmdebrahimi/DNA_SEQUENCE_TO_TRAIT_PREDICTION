@@ -62,12 +62,19 @@ BASES = "ACGT"
 VALIDATED_PROTEINS = ("TEM-1 beta-lactamase (E. coli)", "PTEN (human)", "RL40A/ubiquitin (yeast)",
                       "SR43C (Arabidopsis)")
 EVIDENCE = {
-    "validated_on": "ProteinGym DMS (measured wet-lab per-variant fitness), 4 proteins / 4 kingdoms",
+    "validated_on": "ProteinGym DMS (measured wet-lab per-variant fitness)",
     "validated_proteins": list(VALIDATED_PROTEINS),
-    "rank_inverse_beats_no_oracle_null": "4/4 usable proteins",
-    "learned_oracle_beats_blosum62": "3/4 -- blosum62 is often the right answer, not a fallback",
-    "typical_error_top5": "~2-5 percentile points",
-    "artifact": "wiki/forward_inverse_deployable_2026-07-17.md",
+    # HONESTY: the 4/4 was the LEARNED method (ESM) on 4 hand-picked proteins. The SHIPPED CLI default is
+    # blosum62 -- and at scale (N=200 ProteinGym, wiki/proteingym_inverse_sweep_2026-07-17.md) blosum62 is
+    # materially better than a random pick on only 13.5% of proteins, has any positive edge on 59%, and is
+    # frequently WORSE than guessing. Do NOT let the shipped default inherit the learned method's number.
+    "esm_rank_inverse_beats_null": "4/4 hand-picked proteins (LEARNED method; needs a GPU per protein)",
+    "shipped_blosum62_default_beats_null_at_scale": ("13.5% materially / 59% any-edge over N=200 ProteinGym "
+                                                     "assays -- often WORSE than random. The wheel-only "
+                                                     "default is NOT a reliable design tool on its own"),
+    "typical_error_top5": "~2-5 percentile points ON THE PROTEINS WHERE IT WORKS (not the average)",
+    "artifact": "wiki/proteingym_inverse_sweep_2026-07-17.md (blosum62 N=200) + "
+                "wiki/forward_inverse_deployable_2026-07-17.md (esm N=4)",
 }
 UNSUPPORTED_CLAIMS = (
     "a MAGNITUDE / dose / fold-change for a proposed edit -- the calibrator needed for that requires the "
@@ -233,12 +240,19 @@ def propose_edits(protein_seq: str, target_percentile: float, *, top_k: int = 5,
             f"quantized here, so the pick within the tie group is arbitrary. Diversity is measured "
             f"free-to-beneficial precisely because it escapes ties; treat the k proposals as "
             f"interchangeable draws from the tie group, not a ranking among themselves")
-    notes.append(
-        "NOT GATED FOR YOUR PROTEIN: the 4/4 evidence was earned on " + ", ".join(VALIDATED_PROTEINS) +
-        ". Inverse utility does NOT transfer by rank quality (measured: PTEN forward-rank 0.5185 earns its "
-        "keep while RL40A 0.5190 does not — a gap of 0.0005, opposite verdicts), so a good Spearman on your "
-        "protein does not license skipping the check. To gate it, run scripts/forward_inverse_deployable.py "
-        "on a DMS assay for YOUR protein")
+    if method == "blosum62":
+        notes.append(
+            "NOT GATED FOR YOUR PROTEIN + this is the WEAK default: at scale (N=200 ProteinGym) the "
+            "blosum62 rank inverse beats a random pick MATERIALLY on only 13.5% of proteins and is often "
+            "WORSE than guessing. The 4/4 headline was ESM (a GPU method) on 4 hand-picked proteins. So "
+            "treat these proposals as a cheap FIRST PASS, not a validated ranking, and run "
+            "scripts/forward_inverse_deployable.py on a DMS assay for YOUR protein before trusting them.")
+    else:
+        notes.append(
+            "NOT GATED FOR YOUR PROTEIN: the 4/4 ESM evidence was earned on " + ", ".join(VALIDATED_PROTEINS) +
+            ". Inverse utility does NOT transfer by rank quality (PTEN forward-rank 0.5185 earns its keep "
+            "while RL40A 0.5190 does not — a gap of 0.0005, opposite verdicts), so a good Spearman does not "
+            "license skipping the per-protein check (scripts/forward_inverse_deployable.py on your DMS).")
     notes += [
         "measured guidance: assay all k proposals and keep the best. Single-shot (top-1) is ~4x worse than "
         "best-of-5 -- the loop assumes you can measure what it proposes",
