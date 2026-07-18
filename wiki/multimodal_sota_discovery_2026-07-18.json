@@ -1,0 +1,72 @@
+{
+  "generated": "2026-07-18",
+  "n_assays": 95,
+  "our_2way_median": 0.5304,
+  "our_3way_median": 0.5411,
+  "baseline": "our ESM2+ProSST 2-way (rank-avg of precomputed columns)",
+  "report_paired_vs_2way": [
+    {
+      "model": "three_way",
+      "n": 95,
+      "median_self": 0.5411,
+      "median_delta_vs_2way": 0.0081,
+      "win_vs_2way": "59/95",
+      "sign_p": 0.0235,
+      "beats_2way": true
+    },
+    {
+      "model": "VenusREM",
+      "n": 95,
+      "median_self": 0.5309,
+      "median_delta_vs_2way": -0.011,
+      "win_vs_2way": "39/95",
+      "sign_p": 0.1002,
+      "beats_2way": false
+    },
+    {
+      "model": "ESCOTT",
+      "n": 95,
+      "median_self": 0.5049,
+      "median_delta_vs_2way": -0.0287,
+      "win_vs_2way": "26/95",
+      "sign_p": 0.0,
+      "beats_2way": false
+    },
+    {
+      "model": "S3F_MSA",
+      "n": 95,
+      "median_self": 0.5027,
+      "median_delta_vs_2way": -0.0161,
+      "win_vs_2way": "33/95",
+      "sign_p": 0.0038,
+      "beats_2way": false
+    },
+    {
+      "model": "SaProt_650M_AF2",
+      "n": 95,
+      "median_self": 0.4988,
+      "median_delta_vs_2way": -0.0299,
+      "win_vs_2way": "32/95",
+      "sign_p": 0.0019,
+      "beats_2way": false
+    },
+    {
+      "model": "ProtSSN_ensemble",
+      "n": 95,
+      "median_self": 0.4749,
+      "median_delta_vs_2way": -0.045,
+      "win_vs_2way": "13/95",
+      "sign_p": 0.0,
+      "beats_2way": false
+    },
+    {
+      "model": "MSA_Transformer_ensemble",
+      "n": 95,
+      "median_self": 0.4456,
+      "median_delta_vs_2way": -0.0689,
+      "win_vs_2way": "19/95",
+      "sign_p": 0.0,
+      "beats_2way": false
+    }
+  ]
+}
