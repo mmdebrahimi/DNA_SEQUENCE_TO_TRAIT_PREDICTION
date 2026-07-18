@@ -518,7 +518,7 @@
 ---
 
 ## [plan_file: ProSST_Structure_Scorer_Hybrid_Plan/] 2026-07-18
-**Status:** candidate
+**Status:** executed
 **Summary:** Build a ProSST structure scorer (fed by free AlphaFold structures, reusing the existing `fetch_alphafold_pdb`) that emits a `{mutation: score}` table into the already-built `rank_average_hybrid` slot — closing the structure modality path (the biggest measured lever, ESM2+ProSST +0.05) and validating whether our own ProSST reproduces ProteinGym's ProSST-2048 column then realizes the per-category lift.
 **Key decisions:**
 - Reuse `fetch_alphafold_pdb` + `StructureMethodUnavailable` + the `esm_if` table-fed seam pattern; new `prosst_scorer.py` mirrors `structure_scorer.py`.
