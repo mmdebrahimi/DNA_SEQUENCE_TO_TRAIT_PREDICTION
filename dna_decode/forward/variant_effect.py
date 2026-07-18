@@ -158,6 +158,74 @@ def rank_average_hybrid(tables: list[dict[str, float]]) -> dict[str, float]:
     return {k: summed[i] / denom for i, k in enumerate(keys)}
 
 
+def esm_pos_table_to_variant_table(pos_table: dict[int, dict[str, float]], protein_seq: str) -> dict[str, float]:
+    """Convert an ESM2 masked-marginal `{pos: {aa: log-prob}}` table (esm_scorer.esm2_logp_table) into a
+    `{'wt{pos}alt': logP(alt)-logP(wt)}` variant table (higher=preserved) over the protein's saturation set —
+    the shape `rank_average_hybrid` / `predict_variant_hybrid` consume."""
+    out: dict[str, float] = {}
+    for pos, col in pos_table.items():
+        if pos < 1 or pos > len(protein_seq):
+            continue
+        wt = protein_seq[pos - 1].upper()
+        if wt not in col:
+            continue
+        base = col[wt]
+        for alt, lp in col.items():
+            if alt != wt and alt in _AA:
+                out[f"{wt}{pos}{alt}"] = lp - base
+    return out
+
+
+def predict_variant_hybrid(protein_seq: str, mutation: str, *, esm_table: dict, prosst_table: dict,
+                           extra_tables: list[dict] | None = None, protein: str = "protein",
+                           phenotype_axis: str = "molecular fitness (DMS-measured)") -> ForwardPrediction:
+    """The VALIDATED deployable predictor: rank a mutation in the protein's saturation context with the
+    ESM2 (+) ProSST hybrid (`wiki/prosst_lift_2026-07-18.md`: +0.067 vs ESM2 alone, win 93%, N=56, sign-p 1e-11).
+
+    - `esm_table`: EITHER a `{mutation: score}` table OR an ESM2 `{pos: {aa: logp}}` table (auto-converted).
+    - `prosst_table`: a `{mutation: score}` table (from `prosst_scorer.prosst_variant_table`).
+    - `extra_tables`: optional further modality tables (e.g. a GEMME column) to go 3-way.
+
+    Returns a ForwardPrediction whose `raw_score` is the combined normalized rank in [0,1] (higher=preserved)
+    and whose notes carry the mutation's **percentile** among the protein's ranked variants (how damaging
+    relative to all possible substitutions) + the honest scope. RANKS, does not dose. Coordinate-checked.
+    """
+    wt, pos, alt = parse_mutation(mutation)
+    if protein_seq:
+        if pos > len(protein_seq):
+            raise ValueError(f"position {pos} beyond protein length {len(protein_seq)} for {mutation!r}")
+        ref = protein_seq[pos - 1].upper()
+        if ref != wt:
+            raise ValueError(f"WT mismatch for {mutation!r}: protein has {ref!r} at position {pos}, mutation "
+                             f"asserts {wt!r} (coordinate/frame error — refusing to score)")
+    # normalize the ESM input (pos->aa tables auto-convert to a variant table)
+    esm_variant = esm_table
+    if esm_table and isinstance(next(iter(esm_table)), int):
+        esm_variant = esm_pos_table_to_variant_table(esm_table, protein_seq)
+    tables = [esm_variant, prosst_table, *(extra_tables or [])]
+    combined = rank_average_hybrid(tables)
+    if mutation not in combined:
+        raise ValueError(f"{mutation!r} not present in all modality tables (the hybrid ranks only the shared "
+                         f"candidate set; ensure every table covers this variant)")
+    score = combined[mutation]
+    # percentile: fraction of the protein's variants LESS preserved than this one (0=most damaging, 1=most preserved)
+    vals = sorted(combined.values())
+    below = sum(1 for v in vals if v < score)
+    percentile = round(below / (len(vals) - 1), 4) if len(vals) > 1 else 0.5
+    if score >= _HYB_PRESERVED:
+        effect, conf = "preserved", "medium"
+    elif score <= _HYB_DAMAGING:
+        effect, conf = "damaging", "medium"
+    else:
+        effect, conf = "uncertain", "low"
+    notes = [f"ESM2+ProSST hybrid (validated +0.067 vs ESM2, N=56); rank among {len(vals)} variants "
+             f"of this protein; percentile {percentile} (0=most damaging, 1=most preserved)",
+             "RANKS within THIS protein's saturation set — not a cross-protein dose or a clinical call"]
+    return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", "hybrid_esm2_prosst",
+                             raw_score=score, predicted_effect=effect, confidence=conf,
+                             phenotype_axis=phenotype_axis, abstain=False, notes=notes)
+
+
 def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    phenotype_axis: str = "molecular fitness (DMS-measured)",
                    method: str = "blosum62", regime: str = "B_molecular",

@@ -57,7 +57,8 @@ def catalogue_call(gene: str, mutation: str, resistance_keys: set[str]) -> tuple
 
 def predict_edit(gene: str, mutation: str, *, regime: str | None = None, drug: str | None = None,
                  protein_seq: str | None = None, method: str = "blosum62", esm_table: dict | None = None,
-                 am_table: dict | None = None, resistance_keys: set[str] | None = None,
+                 am_table: dict | None = None, prosst_table: dict | None = None,
+                 resistance_keys: set[str] | None = None,
                  phenotype: str = "molecular fitness (DMS-measured)",
                  determinant_locus: bool = False, molecular_predictor: bool = False,
                  organismal: bool = False) -> dict:
@@ -81,10 +82,19 @@ def predict_edit(gene: str, mutation: str, *, regime: str | None = None, drug: s
                 "confidence": "high" if call == "R" else "medium", "abstain": False, "notes": [why]}
 
     if regime == REGIME_B:
-        pred = predict_effect(protein_seq or "", mutation, protein=gene, phenotype_axis=phenotype,
-                              method=method, esm_table=esm_table, am_table=am_table)
+        # prefer the VALIDATED ESM2+ProSST hybrid when both per-protein tables are supplied
+        # (wiki/prosst_lift_2026-07-18.md: +0.067 vs ESM2 alone); else fall through to the single method.
+        if esm_table is not None and prosst_table is not None:
+            from .variant_effect import predict_variant_hybrid
+            pred = predict_variant_hybrid(protein_seq or "", mutation, esm_table=esm_table,
+                                          prosst_table=prosst_table, protein=gene, phenotype_axis=phenotype)
+            predictor = "hybrid_esm2_prosst_DMS_validated"
+        else:
+            pred = predict_effect(protein_seq or "", mutation, protein=gene, phenotype_axis=phenotype,
+                                  method=method, esm_table=esm_table, am_table=am_table)
+            predictor = f"{method}_DMS_validated"
         return {**base, "prediction": pred.predicted_effect, "raw_score": pred.raw_score,
-                "predictor": f"{method}_DMS_validated", "confidence": pred.confidence,
+                "predictor": predictor, "confidence": pred.confidence,
                 "abstain": False, "notes": pred.notes}
 
     # Regime C or unknown -> abstain (honest)
