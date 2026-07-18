@@ -37,11 +37,32 @@ Per-protein Spearman(prediction, measured DMS). Learned methods beat determinist
 | `esm2` | universal (bacteria+eukaryote) | ESM2-650M masked-marginal | 0.518 | **0.732** |
 | `alphamissense` | **human only** | AM pathogenicity (1−AM) | **0.539** | — |
 | `esm_if` | structure-based | inverse-folding conditional-LL (Kaggle T4) | 0.479 | — |
+| `hybrid` | modality rank-combine | rank-average of ≥2 oriented score tables | — | — |
 
 Tree-of-life: ESM2 lifts BLOSUM by +0.28–0.39 on E.coli / human / yeast / Arabidopsis. AlphaMissense is
 human-proteome-only. **Structure (ESM-IF 0.479) does NOT beat sequence (ESM2 0.518) on PTEN** — the
 "+structure" margin doesn't materialize here (consistent with ProteinGym; the structure tier is led by
 ProSST/SaProt, not ESM-IF). Full leaderboard: `wiki/forward_method_leaderboard_*.md`.
+
+## The modality-hybrid ceiling (`method="hybrid"` / `rank_average_hybrid`)
+
+ESM2-650M is the sequence baseline at scale (ProteinGym median |Spearman| **0.49**). **Scale is a dead end**
+(3B/15B *regress*, paired). The headroom is **MODALITY**, and a **naive rank-average of orthogonal
+modalities** beats ESM2-650M paired on 84–90% of proteins (`wiki/forward_modality_hybrid_2026-07-17.md`,
+N=95 structure+MSA-available assays):
+
+| hybrid | modality | median | Δ vs ESM2 | win-rate |
+|---|---|---:|---:|---:|
+| `ESM2+GEMME+ProSST` | seq⊕evo⊕struct | **0.547** | +0.056 | **90.5%** |
+| `ESM2+ProSST` | seq⊕struct | 0.530 | +0.050 | 87.4% |
+| `ESM2+GEMME` | seq⊕evo | 0.500 | +0.022 | 84.2% |
+
+The signature is **win-rate, not median**: `ESM2+GEMME` beats ESM2 on 84% of proteins *even though GEMME
+alone loses to ESM2* (−0.010) — two individually-≈ESM2 signals combine to beat it. **Orthogonality is the
+condition**: ESM+AlphaMissense (both sequence-ish) gave no paired lift; ESM (sequence) + GEMME (explicit
+evolution) does. `rank_average_hybrid([table_a, table_b, …])` is the deployable primitive — it **RANKS,
+never doses** (no label/calibrator), the same deployability class as the inverse. Each table maps
+mutation→score oriented higher=preserved; the combine is over the shared candidate set.
 
 ## Genome-level edit (`predict_genome_edit`)
 

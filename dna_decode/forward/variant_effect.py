@@ -106,12 +106,64 @@ class ForwardPrediction:
 _ESM_PRESERVED = -1.0
 _ESM_DAMAGING = -5.0
 
+# Hybrid rank thresholds — normalized combined rank in [0,1], higher = more preserved
+_HYB_PRESERVED = 0.66
+_HYB_DAMAGING = 0.33
+
+
+def _midranks(vals: list[float]) -> list[float]:
+    """Mid-ranks (ties share the average rank) — the documented tie-order trap."""
+    order = sorted(range(len(vals)), key=lambda i: vals[i])
+    r = [0.0] * len(vals)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and vals[order[j + 1]] == vals[order[i]]:
+            j += 1
+        mid = (i + j) / 2.0
+        for k in range(i, j + 1):
+            r[order[k]] = mid
+        i = j + 1
+    return r
+
+
+def rank_average_hybrid(tables: list[dict[str, float]]) -> dict[str, float]:
+    """Combine >=2 per-protein variant-effect score tables into ONE label-free rank score per variant.
+
+    Each input table maps mutation -> a raw score already oriented so **higher = more preserved** (the
+    BLOSUM/ESM2 sign). The combine is a **rank-average** over the intersection of variants: within each table
+    the variants are mid-ranked, ranks are averaged across tables, and the result is normalized to [0,1]
+    (higher = more preserved). This is the deployable form of the modality-hybrid finding
+    (`wiki/forward_modality_hybrid_2026-07-17.md`): a naive rank-average of orthogonal modalities
+    (sequence ESM2 (+) evolution GEMME (+) structure ProSST) beats ESM2-650M on 84-90% of ProteinGym proteins.
+
+    It RANKS — it does not dose. No label, no calibrator, no fitting: the same deployability class as the
+    inverse cell. Raises on <2 tables or an empty variant intersection.
+    """
+    if len(tables) < 2:
+        raise ValueError("rank_average_hybrid needs >=2 score tables (one per modality)")
+    shared = set(tables[0])
+    for t in tables[1:]:
+        shared &= set(t)
+    if not shared:
+        raise ValueError("no variant is present in all score tables — nothing to combine")
+    keys = sorted(shared)
+    n = len(keys)
+    summed = [0.0] * n
+    for t in tables:
+        ranks = _midranks([t[k] for k in keys])
+        for i, rk in enumerate(ranks):
+            summed[i] += rk
+    denom = (n - 1) * len(tables) if n > 1 else 1.0
+    return {k: summed[i] / denom for i, k in enumerate(keys)}
+
 
 def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    phenotype_axis: str = "molecular fitness (DMS-measured)",
                    method: str = "blosum62", regime: str = "B_molecular",
                    esm_table: dict | None = None, am_table: dict | None = None,
-                   esm_if_table: dict | None = None) -> ForwardPrediction:
+                   esm_if_table: dict | None = None,
+                   hybrid_tables: list[dict] | None = None) -> ForwardPrediction:
     """Forward edit -> predicted phenotype effect for ONE point mutation on ONE protein.
 
     - method="blosum62" (default): deterministic substitution severity — no model, no network.
@@ -184,9 +236,26 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
         score = esm_if_table[mutation]          # ESM-IF conditional-LL delta; higher = structure-compatible
         effect = esm_if_tier(score)
         conf = "medium" if effect != "uncertain" else "low"
+    elif method == "hybrid":
+        if not hybrid_tables or len(hybrid_tables) < 2:
+            raise ValueError("method='hybrid' needs hybrid_tables= (>=2 per-protein score tables, one per "
+                             "modality, each oriented higher=preserved)")
+        combined = rank_average_hybrid(hybrid_tables)
+        if mutation not in combined:
+            raise ValueError(f"method='hybrid': {mutation!r} not present in all modality tables "
+                             f"(rank-hybrid scores only the shared candidate set)")
+        score = combined[mutation]              # normalized combined rank in [0,1]; higher = preserved
+        if score >= _HYB_PRESERVED:
+            effect, conf = "preserved", "medium"
+        elif score <= _HYB_DAMAGING:
+            effect, conf = "damaging", "medium"
+        else:
+            effect, conf = "uncertain", "low"
+        notes.append("hybrid = rank-average of orthogonal modalities; RANKS, does not dose "
+                     "(wiki/forward_modality_hybrid_2026-07-17.md)")
     else:
         raise NotImplementedError(
-            f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense' / 'esm_if'")
+            f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense' / 'esm_if' / 'hybrid'")
 
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,

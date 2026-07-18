@@ -66,5 +66,46 @@ def test_spearman_pure():
     assert spearman([1.0], [2.0]) != spearman([1.0], [2.0]) or True  # n<3 -> nan (no crash)
 
 
+# ---- modality-hybrid (wiki/forward_modality_hybrid_2026-07-17.md) ----------------------------------------
+
+from dna_decode.forward.variant_effect import rank_average_hybrid  # noqa: E402
+
+
+def test_rank_average_hybrid_combines_over_the_shared_variant_set():
+    seq  = {"A1G": 0.1, "A1L": 0.5, "A1W": 0.9}
+    evo  = {"A1G": 0.2, "A1L": 0.4, "A1W": 0.8, "A1V": 0.3}   # A1V absent from seq -> dropped
+    out = rank_average_hybrid([seq, evo])
+    assert set(out) == {"A1G", "A1L", "A1W"}                  # intersection only
+    assert out["A1W"] > out["A1L"] > out["A1G"]               # concordant -> preserved order preserved
+    assert 0.0 <= min(out.values()) and max(out.values()) <= 1.0
+    assert round(out["A1G"], 6) == 0.0 and round(out["A1W"], 6) == 1.0
+
+
+def test_rank_average_hybrid_needs_two_tables_and_a_nonempty_overlap():
+    with pytest.raises(ValueError, match=">=2"):
+        rank_average_hybrid([{"A1G": 0.1}])
+    with pytest.raises(ValueError, match="no variant"):
+        rank_average_hybrid([{"A1G": 0.1}, {"A1L": 0.2}])
+
+
+def test_predict_effect_hybrid_ranks_and_flags_no_dose():
+    seq = {"A1G": -3.0, "A1L": 0.0, "A1W": 2.0}
+    evo = {"A1G": -2.0, "A1L": 0.5, "A1W": 1.0}
+    p = predict_effect("A", "A1W", method="hybrid", hybrid_tables=[seq, evo])
+    assert p.predicted_effect == "preserved" and p.regime == "B_molecular"
+    assert 0.0 <= p.raw_score <= 1.0
+    assert any("RANKS, does not dose" in n for n in p.notes)
+    d = predict_effect("A", "A1G", method="hybrid", hybrid_tables=[seq, evo])
+    assert d.predicted_effect == "damaging"
+
+
+def test_predict_effect_hybrid_refuses_bad_inputs():
+    with pytest.raises(ValueError, match="hybrid_tables"):
+        predict_effect("A", "A1W", method="hybrid", hybrid_tables=[{"A1W": 1.0}])   # <2 tables
+    with pytest.raises(ValueError, match="not present in all"):
+        predict_effect("A", "A1V", method="hybrid",
+                       hybrid_tables=[{"A1W": 1.0, "A1G": 0.0}, {"A1W": 0.9, "A1G": 0.1}])
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
