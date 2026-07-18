@@ -131,8 +131,26 @@ pays for its heavier infra (AlphaFold structure) *only* on stability/expression 
 N is 15–30 (directional; win-rate is the more robust signal than the point Δ), and Binding is under-powered
 here (N=7).
 
+## The run-time evolution pipeline (built 2026-07-17)
+
+The deployable evolution component of the hybrid: `dna_decode/forward/msa_evolution.py` — **MSA → reweight →
+per-variant score table → `rank_average_hybrid`**. `site_independent_table(msa_path)` reproduces
+ProteinGym's own `Site_Independent` column at **Spearman 0.89–0.99** across 4 real proteins
+(`scripts/msa_evolution_validate.py`; correctness proven, not asserted).
+
+**But an R2 pre-build scan reshaped it:** the *cheap* pure-Python evolution model is the FLOOR — it does NOT
+lift ESM2 in the hybrid (Site-Independent+ESM2 −0.003, win 47%, p=0.68). The lift needs GEMME-grade
+coevolution (+0.022) or MSA-Transformer (+0.013); EVmutation is a marginal +0.005. So "evolution is the
+*cheap* universal move" is only half true — evolution lifts universally, but the lift lives in real
+coevolution infra. The module therefore ships the **reusable pipeline with a PLUGGABLE evolution model**
+(`evolution_table_from_scores` accepts a precomputed GEMME/MSA-T table); site-independent is the built-in,
+validated-correct floor. The best lift-per-infra upgrade is **MSA-Transformer** (single forward pass, reuses
+the ESM2 Kaggle-T4 path); GEMME is the max lift but Windows-hostile.
+
 ## Shipped
 
+- `dna_decode/forward/msa_evolution.py` — MSA→evolution-score pipeline (site-independent floor +
+  pluggable-model adapter), validated to reproduce ProteinGym's `Site_Independent` at 0.89–0.99.
 - `dna_decode/forward/variant_effect.py::rank_average_hybrid` — pure, label-free rank-average of ≥2
   precomputed score tables (the deployable form of finding 3); `predict_effect(..., method="hybrid",
   hybrid_tables=[...])`.

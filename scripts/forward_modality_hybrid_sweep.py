@@ -65,6 +65,9 @@ HYBRIDS = {
     "HYB_ESM2+MSA_T":        (BASELINE, "MSA_Transformer_ensemble"),
     "HYB_ESM2+SaProt":       (BASELINE, "SaProt_650M_AF2"),
     "HYB_GEMME+ProSST":      ("GEMME", "ProSST-2048"),
+    # R2 framing scan: do the CHEAP pure-Python-computable evolution models also lift?
+    "HYB_ESM2+SiteIndep":    (BASELINE, "Site_Independent"),
+    "HYB_ESM2+EVmutation":   (BASELINE, "EVmutation"),
 }
 HYB3 = {"HYB_ESM2+GEMME+ProSST": (BASELINE, "GEMME", "ProSST-2048")}
 

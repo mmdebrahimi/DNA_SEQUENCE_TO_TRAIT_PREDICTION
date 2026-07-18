@@ -76,6 +76,32 @@ phenotype-dependent, which makes the infra choice data-driven —
 So `ESM2+GEMME` is the universal MSA-only upgrade; add ProSST (structure) **only for stability/expression**
 targets. Evolution alone (GEMME) barely helps any single category — its value is only in the hybrid.
 
+### The run-time evolution pipeline (`msa_evolution.py`) — scaffold + a measured floor-vs-upgrade wall
+
+`dna_decode/forward/msa_evolution.py` is the deployable evolution component of the hybrid: **MSA → reweight →
+per-variant score table → `rank_average_hybrid`**. `site_independent_table(msa_path)` parses an a2m MSA
+(uppercase=match columns, lowercase=query inserts → unscorable), computes weighted site-independent log-odds
+(higher=preserved), and emits a `{mutation: score}` table. Validated on real ProteinGym MSAs: my
+site-independent **reproduces ProteinGym's own `Site_Independent` column at Spearman 0.89–0.99** across 4
+proteins (`scripts/msa_evolution_validate.py`).
+
+**The measured wall (R2 scan, `scripts/forward_modality_hybrid_sweep.py`):** the *cheap* pure-Python
+evolution model is the **FLOOR — it does not lift ESM2 in the hybrid.**
+
+| evolution model | hybrid Δ vs ESM2 | win | lifts? | infra |
+|---|---:|---:|:--:|---|
+| Site-Independent (this module) | −0.003 | 47% | ❌ | pure-Python (built) |
+| EVmutation | +0.005 | 62% | ~ | Potts fit (pure-Python, heavy) |
+| MSA-Transformer | +0.013 | 66% | ✅ | model fwd-pass (Kaggle T4) |
+| GEMME | +0.022 | 84% | ✅ | JET2/R/Java (external tool) |
+
+So this module ships the **reusable pipeline with a PLUGGABLE evolution model**:
+`evolution_table_from_scores(precomputed)` accepts ANY `{mutation: score}` table (a GEMME / MSA-Transformer
+run), and site-independent is the built-in floor. **Swap the model, keep the pipe.** "Evolution is the cheap
+universal move" is only half true — evolution lifts universally, but the lift needs GEMME-grade coevolution,
+not a profile model. The best lift-per-infra upgrade is **MSA-Transformer** (a single forward pass, reuses
+the ESM2 Kaggle-T4 path); GEMME is the max lift but Windows-hostile.
+
 ## Genome-level edit (`predict_genome_edit`)
 
 Lifts the input from a protein mutation to a real **nucleotide edit in a CDS**: base substitution → codon →
