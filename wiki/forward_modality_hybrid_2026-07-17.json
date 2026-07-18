@@ -440,5 +440,252 @@
       "sign_test_p": 0.0,
       "beats_baseline": false
     }
-  ]
+  ],
+  "by_category": {
+    "OrganismalFitness": {
+      "n_assays": 30,
+      "reportable": true,
+      "baseline_median": 0.4289,
+      "candidates": {
+        "ProSST-2048": {
+          "n_paired": 30,
+          "median_delta": -0.0132,
+          "win_rate": 0.367,
+          "sign_test_p": 0.20049
+        },
+        "SaProt_650M_AF2": {
+          "n_paired": 30,
+          "median_delta": 0.0123,
+          "win_rate": 0.567,
+          "sign_test_p": 0.58466
+        },
+        "GEMME": {
+          "n_paired": 30,
+          "median_delta": -0.0184,
+          "win_rate": 0.367,
+          "sign_test_p": 0.20049
+        },
+        "MSA_Transformer_ensemble": {
+          "n_paired": 30,
+          "median_delta": -0.0521,
+          "win_rate": 0.333,
+          "sign_test_p": 0.09874
+        },
+        "HYB_ESM2+GEMME": {
+          "n_paired": 30,
+          "median_delta": 0.017,
+          "win_rate": 0.767,
+          "sign_test_p": 0.00522
+        },
+        "HYB_ESM2+ProSST": {
+          "n_paired": 30,
+          "median_delta": 0.0225,
+          "win_rate": 0.8,
+          "sign_test_p": 0.00143
+        },
+        "HYB_ESM2+GEMME+ProSST": {
+          "n_paired": 30,
+          "median_delta": 0.0315,
+          "win_rate": 0.867,
+          "sign_test_p": 6e-05
+        }
+      }
+    },
+    "Stability": {
+      "n_assays": 23,
+      "reportable": true,
+      "baseline_median": 0.5252,
+      "candidates": {
+        "ProSST-2048": {
+          "n_paired": 23,
+          "median_delta": 0.0685,
+          "win_rate": 0.783,
+          "sign_test_p": 0.01062
+        },
+        "SaProt_650M_AF2": {
+          "n_paired": 23,
+          "median_delta": 0.0111,
+          "win_rate": 0.565,
+          "sign_test_p": 0.67764
+        },
+        "GEMME": {
+          "n_paired": 23,
+          "median_delta": -0.0097,
+          "win_rate": 0.391,
+          "sign_test_p": 0.40487
+        },
+        "MSA_Transformer_ensemble": {
+          "n_paired": 23,
+          "median_delta": -0.0213,
+          "win_rate": 0.348,
+          "sign_test_p": 0.21004
+        },
+        "HYB_ESM2+GEMME": {
+          "n_paired": 23,
+          "median_delta": 0.0222,
+          "win_rate": 0.739,
+          "sign_test_p": 0.03469
+        },
+        "HYB_ESM2+ProSST": {
+          "n_paired": 23,
+          "median_delta": 0.0527,
+          "win_rate": 0.87,
+          "sign_test_p": 0.00049
+        },
+        "HYB_ESM2+GEMME+ProSST": {
+          "n_paired": 23,
+          "median_delta": 0.0526,
+          "win_rate": 0.826,
+          "sign_test_p": 0.0026
+        }
+      }
+    },
+    "Activity": {
+      "n_assays": 20,
+      "reportable": true,
+      "baseline_median": 0.5278,
+      "candidates": {
+        "ProSST-2048": {
+          "n_paired": 20,
+          "median_delta": -0.0049,
+          "win_rate": 0.45,
+          "sign_test_p": 0.8238
+        },
+        "SaProt_650M_AF2": {
+          "n_paired": 20,
+          "median_delta": 0.017,
+          "win_rate": 0.6,
+          "sign_test_p": 0.50344
+        },
+        "GEMME": {
+          "n_paired": 20,
+          "median_delta": 0.0008,
+          "win_rate": 0.5,
+          "sign_test_p": 1.0
+        },
+        "MSA_Transformer_ensemble": {
+          "n_paired": 20,
+          "median_delta": 0.0078,
+          "win_rate": 0.55,
+          "sign_test_p": 0.8238
+        },
+        "HYB_ESM2+GEMME": {
+          "n_paired": 20,
+          "median_delta": 0.0348,
+          "win_rate": 0.9,
+          "sign_test_p": 0.0004
+        },
+        "HYB_ESM2+ProSST": {
+          "n_paired": 20,
+          "median_delta": 0.0423,
+          "win_rate": 0.85,
+          "sign_test_p": 0.00258
+        },
+        "HYB_ESM2+GEMME+ProSST": {
+          "n_paired": 20,
+          "median_delta": 0.057,
+          "win_rate": 0.95,
+          "sign_test_p": 4e-05
+        }
+      }
+    },
+    "Expression": {
+      "n_assays": 15,
+      "reportable": true,
+      "baseline_median": 0.4933,
+      "candidates": {
+        "ProSST-2048": {
+          "n_paired": 15,
+          "median_delta": 0.1037,
+          "win_rate": 0.933,
+          "sign_test_p": 0.00098
+        },
+        "SaProt_650M_AF2": {
+          "n_paired": 15,
+          "median_delta": 0.0298,
+          "win_rate": 0.933,
+          "sign_test_p": 0.00098
+        },
+        "GEMME": {
+          "n_paired": 15,
+          "median_delta": -0.0103,
+          "win_rate": 0.467,
+          "sign_test_p": 1.0
+        },
+        "MSA_Transformer_ensemble": {
+          "n_paired": 15,
+          "median_delta": 0.0024,
+          "win_rate": 0.6,
+          "sign_test_p": 0.60724
+        },
+        "HYB_ESM2+GEMME": {
+          "n_paired": 15,
+          "median_delta": 0.0338,
+          "win_rate": 1.0,
+          "sign_test_p": 6e-05
+        },
+        "HYB_ESM2+ProSST": {
+          "n_paired": 15,
+          "median_delta": 0.1007,
+          "win_rate": 1.0,
+          "sign_test_p": 6e-05
+        },
+        "HYB_ESM2+GEMME+ProSST": {
+          "n_paired": 15,
+          "median_delta": 0.0965,
+          "win_rate": 1.0,
+          "sign_test_p": 6e-05
+        }
+      }
+    },
+    "Binding": {
+      "n_assays": 7,
+      "reportable": false,
+      "baseline_median": 0.3301,
+      "candidates": {
+        "ProSST-2048": {
+          "n_paired": 7,
+          "median_delta": 0.037,
+          "win_rate": 0.857,
+          "sign_test_p": 0.125
+        },
+        "SaProt_650M_AF2": {
+          "n_paired": 7,
+          "median_delta": 0.0001,
+          "win_rate": 0.571,
+          "sign_test_p": 1.0
+        },
+        "GEMME": {
+          "n_paired": 7,
+          "median_delta": -0.0072,
+          "win_rate": 0.429,
+          "sign_test_p": 1.0
+        },
+        "MSA_Transformer_ensemble": {
+          "n_paired": 7,
+          "median_delta": -0.0064,
+          "win_rate": 0.286,
+          "sign_test_p": 0.45312
+        },
+        "HYB_ESM2+GEMME": {
+          "n_paired": 7,
+          "median_delta": 0.0118,
+          "win_rate": 1.0,
+          "sign_test_p": 0.01562
+        },
+        "HYB_ESM2+ProSST": {
+          "n_paired": 7,
+          "median_delta": 0.0619,
+          "win_rate": 1.0,
+          "sign_test_p": 0.01562
+        },
+        "HYB_ESM2+GEMME+ProSST": {
+          "n_paired": 7,
+          "median_delta": 0.0577,
+          "win_rate": 1.0,
+          "sign_test_p": 0.01562
+        }
+      }
+    }
+  }
 }

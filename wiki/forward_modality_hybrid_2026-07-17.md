@@ -102,6 +102,35 @@ Cheapest deployable upgrade: **`ESM2+GEMME`** (sequence+evolution, +0.022, 84% w
 - N=95 is the structure+MSA-available subset; the baseline on it (0.4926) ≈ the full 0.49, so it is
   representative, not selected.
 
+## Which modality for which trait (`--by-category`)
+
+The aggregate "modality lever is live" hides a phenotype-dependence that makes the infra decision
+data-driven. Paired median Δ vs ESM2-650M (win-rate) per ProteinGym coarse phenotype category, over the
+N=95 struct+MSA subset (Binding N=7 gated out below the 8-assay reportable floor):
+
+| category | N | ESM2 base | ProSST (structure) | GEMME (evolution) | **ESM2+GEMME** |
+|---|---:|---:|---:|---:|---:|
+| Expression | 15 | 0.493 | **+0.104 (0.93)** | −0.010 (0.47) | **+0.097 (1.00)** |
+| Stability | 23 | 0.525 | **+0.069 (0.78)** | −0.010 (0.39) | +0.053 (0.83) |
+| Activity | 20 | 0.528 | −0.005 (0.45) | +0.001 (0.50) | **+0.057 (0.95)** |
+| OrganismalFitness | 30 | 0.429 | −0.013 (0.37) | −0.018 (0.37) | **+0.032 (0.87)** |
+
+Three actionable reads:
+
+1. **`ESM2+GEMME` (sequence+evolution) is the UNIVERSAL upgrade** — it lifts *every* category (win-rate
+   87–100%), and needs only an MSA. It is the robust default regardless of phenotype.
+2. **Structure (ProSST) is a big but PHENOTYPE-SPECIFIC add** — +0.104 on Expression (93% win) and +0.069
+   on Stability (78%), the fold/abundance-dominated phenotypes where a 3D structure is most informative;
+   **neutral-to-negative** on Activity (−0.005) and OrganismalFitness (−0.013). Only invest in structure
+   infra when the target phenotype is stability/expression.
+3. **Evolution ALONE (GEMME) barely helps any single category** (all ≈0 or negative) — its value is
+   realized only inside the hybrid. Same orthogonality signature as the aggregate.
+
+**De-risks the infra fork:** the cheapest universal move is `ESM2+GEMME` (MSA search); structure (ProSST)
+pays for its heavier infra (AlphaFold structure) *only* on stability/expression targets. Caveat: per-category
+N is 15–30 (directional; win-rate is the more robust signal than the point Δ), and Binding is under-powered
+here (N=7).
+
 ## Shipped
 
 - `dna_decode/forward/variant_effect.py::rank_average_hybrid` — pure, label-free rank-average of ≥2

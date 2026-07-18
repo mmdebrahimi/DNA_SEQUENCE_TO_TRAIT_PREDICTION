@@ -41,8 +41,14 @@ if str(REPO) not in sys.path:
 from scripts.forward_blosum_proteingym_sweep import _spearman  # noqa: E402  (mid-rank Spearman)
 
 ZS_DIR = Path("D:/dna_decode_cache/proteingym/pg_zeroshot")
+REF_CSV = Path("D:/dna_decode_cache/proteingym/pg_reference.csv")
 MIN_N = 20                       # shared non-NaN variants for a valid per-assay Spearman
+MIN_ASSAYS_PER_CATEGORY = 8      # below this a per-category paired median is too thin to report
 BASELINE = "ESM2_650M"
+
+# The candidates whose per-phenotype-category behaviour answers "which modality for which trait".
+CATEGORY_CANDIDATES = ["ProSST-2048", "SaProt_650M_AF2", "GEMME", "MSA_Transformer_ensemble",
+                       "HYB_ESM2+GEMME", "HYB_ESM2+ProSST", "HYB_ESM2+GEMME+ProSST"]
 
 # Curated model set, grouped by modality. Every name is a real column in pg_zeroshot/*.csv.
 MODELS = {
@@ -153,6 +159,52 @@ def sign_test_p(wins: int, losses: int) -> float:
     return min(1.0, 2 * tail)
 
 
+def load_categories(ref_csv: Path) -> dict[str, str]:
+    """DMS_id -> ProteinGym coarse phenotype category (Activity/Binding/Expression/Stability/OrganismalFitness)."""
+    if not ref_csv.exists():
+        return {}
+    with ref_csv.open(encoding="utf-8") as fh:
+        return {row["DMS_id"]: row.get("coarse_selection_type", "") for row in csv.DictReader(fh)}
+
+
+def paired_in_subset(per_assay: dict, model: str, dms_ids: set[str]) -> dict:
+    """Paired deltas abs_spearman(model) - abs_spearman(BASELINE) over the given assay subset."""
+    deltas = []
+    for dms_id in dms_ids:
+        m = per_assay.get(dms_id, {})
+        if model in m and BASELINE in m:
+            deltas.append(m[model] - m[BASELINE])
+    wins = sum(1 for d in deltas if d > 1e-9)
+    losses = sum(1 for d in deltas if d < -1e-9)
+    return {
+        "n_paired": len(deltas),
+        "median_delta": round(statistics.median(deltas), 4) if deltas else None,
+        "win_rate": round(wins / len(deltas), 3) if deltas else None,
+        "sign_test_p": round(sign_test_p(wins, losses), 5) if deltas else None,
+    }
+
+
+def by_category(per_assay: dict, categories: dict[str, str]) -> dict:
+    """Per-phenotype-category paired lift of each modality candidate vs ESM2-650M -- 'which modality for
+    which trait'. Only categories with >= MIN_ASSAYS_PER_CATEGORY scored assays are reported."""
+    cats: dict[str, set[str]] = {}
+    for dms_id in per_assay:
+        c = categories.get(dms_id, "")
+        if c and BASELINE in per_assay[dms_id]:
+            cats.setdefault(c, set()).add(dms_id)
+    out = {}
+    for cat, ids in sorted(cats.items(), key=lambda kv: -len(kv[1])):
+        base_vals = [per_assay[i][BASELINE] for i in ids]
+        row = {"n_assays": len(ids),
+               "reportable": len(ids) >= MIN_ASSAYS_PER_CATEGORY,
+               "baseline_median": round(statistics.median(base_vals), 4) if base_vals else None,
+               "candidates": {}}
+        for model in CATEGORY_CANDIDATES:
+            row["candidates"][model] = paired_in_subset(per_assay, model, ids)
+        out[cat] = row
+    return out
+
+
 def paired_vs_baseline(per_assay: dict, model: str) -> dict:
     """Paired deltas abs_spearman(model) - abs_spearman(BASELINE) over assays where both are valid."""
     deltas = []
@@ -177,6 +229,9 @@ def paired_vs_baseline(per_assay: dict, model: str) -> dict:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--zs-dir", default=str(ZS_DIR))
+    ap.add_argument("--ref-csv", default=str(REF_CSV))
+    ap.add_argument("--by-category", action="store_true",
+                    help="also break the modality lift down by phenotype category (which modality for which trait)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args(argv)
 
@@ -245,6 +300,10 @@ def main(argv=None) -> int:
         "top_beaters": beats[:8],
         "report": sorted(report, key=lambda r: -(r["median_abs_spearman"] or -9)),
     }
+    if args.by_category:
+        cats = load_categories(Path(args.ref_csv))
+        summary["by_category"] = by_category(per_assay, cats)
+
     out = Path(args.out) if args.out else REPO / "wiki" / f"forward_modality_hybrid_{date.today().isoformat()}.json"
     out.write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(f"baseline {BASELINE} median abs-Spearman = {summary['baseline_median_abs_spearman']} "
@@ -254,6 +313,18 @@ def main(argv=None) -> int:
     for b in beats[:8]:
         print(f"  {b['model']:26s} median={b['median_abs_spearman']}  "
               f"delta={b['median_delta']:+}  win={b['win_rate']}  p={b['sign_test_p']}  N={b['n_paired']}")
+    if args.by_category and "by_category" in summary:
+        print("\n== which modality for which trait (paired median delta vs ESM2-650M) ==")
+        show = ["ProSST-2048", "GEMME", "HYB_ESM2+GEMME+ProSST"]
+        print(f"{'category':20s} {'N':>3} {'baseline':>8}  " + "  ".join(f"{m[:14]:>14}" for m in show))
+        for cat, row in summary["by_category"].items():
+            if not row["reportable"]:
+                continue
+            cells = []
+            for m in show:
+                c = row["candidates"][m]
+                cells.append(f"{c['median_delta']:+.4f}({c['win_rate']})" if c["median_delta"] is not None else "     -")
+            print(f"{cat:20s} {row['n_assays']:>3} {row['baseline_median']:>8}  " + "  ".join(f"{x:>14}" for x in cells))
     print(f"wrote {out}")
     return 0
 

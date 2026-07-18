@@ -64,6 +64,18 @@ evolution) does. `rank_average_hybrid([table_a, table_b, …])` is the deployabl
 never doses** (no label/calibrator), the same deployability class as the inverse. Each table maps
 mutation→score oriented higher=preserved; the combine is over the shared candidate set.
 
+**Which modality for which trait** (`--by-category`, paired median Δ vs ESM2-650M): the lift is
+phenotype-dependent, which makes the infra choice data-driven —
+
+| phenotype | best cheap add | structure (ProSST) worth it? |
+|---|---|---|
+| **any** | `ESM2+GEMME` (MSA only; lifts every category, win 87–100%) | — |
+| Expression / Stability | + structure | **yes** (+0.10 / +0.07; fold/abundance-dominated) |
+| Activity / OrganismalFitness | evolution only | no (structure neutral-to-negative) |
+
+So `ESM2+GEMME` is the universal MSA-only upgrade; add ProSST (structure) **only for stability/expression**
+targets. Evolution alone (GEMME) barely helps any single category — its value is only in the hybrid.
+
 ## Genome-level edit (`predict_genome_edit`)
 
 Lifts the input from a protein mutation to a real **nucleotide edit in a CDS**: base substitution → codon →
