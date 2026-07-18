@@ -163,6 +163,7 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    method: str = "blosum62", regime: str = "B_molecular",
                    esm_table: dict | None = None, am_table: dict | None = None,
                    esm_if_table: dict | None = None, prosst_table: dict | None = None,
+                   gemme_table: dict | None = None,
                    hybrid_tables: list[dict] | None = None) -> ForwardPrediction:
     """Forward edit -> predicted phenotype effect for ONE point mutation on ONE protein.
 
@@ -244,6 +245,14 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
         score = prosst_table[mutation]          # ProSST log-ratio; higher = structure-compatible = preserved
         effect = prosst_tier(score)
         conf = "medium" if effect != "uncertain" else "low"
+    elif method == "gemme":
+        from .gemme_scorer import gemme_tier
+        if gemme_table is None or mutation not in gemme_table:
+            raise ValueError(f"method='gemme' needs gemme_table with {mutation!r} "
+                             f"(evolution model; build via gemme_scorer.gemme_table_from_column / run_gemme)")
+        score = gemme_table[mutation]           # GEMME conservation score (higher = preserved)
+        effect = gemme_tier(score)
+        conf = "medium" if effect != "uncertain" else "low"
     elif method == "hybrid":
         if not hybrid_tables or len(hybrid_tables) < 2:
             raise ValueError("method='hybrid' needs hybrid_tables= (>=2 per-protein score tables, one per "
@@ -264,7 +273,7 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
     else:
         raise NotImplementedError(
             f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense' / 'esm_if' / "
-            f"'prosst' / 'hybrid'")
+            f"'prosst' / 'gemme' / 'hybrid'")
 
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,

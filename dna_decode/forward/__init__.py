@@ -35,6 +35,11 @@ from .prosst_scorer import (  # noqa: F401
     prosst_variant_table,
     quantize_structure,
 )
+from .gemme_scorer import (  # noqa: F401
+    GemmeUnavailable,
+    gemme_table_from_column,
+    gemme_tier,
+)
 from .router import (  # noqa: F401
     REGIME_A,
     REGIME_B,

@@ -95,6 +95,16 @@ a random head → reproduction 0.013→1.0), and the canonical `ss_input_ids` wi
 CLS/EOS strip, `idx=pos-1`). Ran locally because the ProSST transformer forward needs only `transformers`+torch
 (NOT `torch_geometric`, which is only for the quantizer) + ProteinGym's pre-quantized tokens.
 
+**The 3-way `ESM2+ProSST+GEMME` does NOT beat the 2-way overall** (`wiki/three_way_lift_2026-07-18.md`, N=56):
+adding GEMME (evolution) on top of ESM2+ProSST is **+0.0035, win 31/56 = 55%, sign-p 0.50 (n.s.)** — the
+structure hybrid already captures the lift. It's **phenotype-conditional**: GEMME helps Activity (+0.018) /
+OrganismalFitness (+0.015) but hurts Stability (−0.011, the biggest bucket → aggregate cancels to ~0). So the
+**2-way is the sweet spot; add GEMME only for evolution-favorable (activity/fitness) cells, never stability.**
+GEMME ships as a seam (`gemme_scorer.py`): `gemme_table_from_column` adapts a precomputed column (canonical,
+GEMME is 0-parameter deterministic) NOW; `run_gemme` (JET2/R/Java, Windows-hostile) is deferred for novel
+proteins. R2: the 3-way validation did NOT need the GEMME install — the N-ary `rank_average_hybrid` +
+GEMME's deterministic precomputed column sufficed.
+
 So `ESM2+GEMME` is the universal MSA-only upgrade; add ProSST (structure) **only for stability/expression**
 targets. Evolution alone (GEMME) barely helps any single category — its value is only in the hybrid.
 
