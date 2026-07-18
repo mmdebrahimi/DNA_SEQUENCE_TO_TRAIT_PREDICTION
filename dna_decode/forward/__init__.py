@@ -61,3 +61,5 @@ from .variant_effect import (  # noqa: F401
 )
 
 # esm_scorer is imported lazily (torch/transformers) — not re-exported at package import time.
+
+from .deploy import predict_hybrid_from_sequence  # noqa: F401,E402

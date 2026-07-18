@@ -61,9 +61,29 @@ ProSST → hybrid. A sequence-only input goes through ColabFold to a structure f
   one-off deploy, not a high-throughput screen (use a Linux/GPU host with real multiprocessing for volume).
 - Frozen decoder surface byte-unchanged (`verify_lock OK`).
 
+## One-call orchestrator + the fully-local proof (polish, 2026-07-18)
+
+The pieces are now a **single call**: `dna_decode.forward.predict_hybrid_from_sequence(seq, mutation, …)` →
+computes whichever of ESM2 / ProSST tables aren't supplied → the validated `predict_variant_hybrid`. It
+returns a `ForwardPrediction` with the mutation's **percentile** among the protein's saturation set (0=most
+damaging, 1=most preserved).
+
+- **ESM2 is fully local too** — `esm_scorer.esm2_logp_table(seq)` (masked-marginal, CPU) reproduces the
+  cached GPU table to **~0.01 log-prob** (GRB2 pos1–3), so ESM2-local == the reference. Combined with the
+  byte-exact local ProSST quantize, the WHOLE hybrid runs locally (no GPU, no Kaggle) end to end.
+- **Real-surface end-to-end (GRB2, one call, self-quantized structure + ESM2):** the lab's **most-damaging**
+  mutation `L175Y` → **damaging, percentile 0.047** (bottom 5%); the lab's **most-tolerated** `T211K` →
+  **preserved, percentile 0.995** (top 0.5%). The one-call novel-protein predictor gets both extremes right.
+- Cost note: computing ESM2 from scratch is L masked forward passes (minutes on CPU for a few-hundred-aa
+  protein) — pay it once per protein; then query many mutations against the cached tables.
+
 ## Shipped
 
 - `dna_decode/forward/prosst_scorer.py::quantize_structure` — the local `SSTPredictor` quantize + the serial
   shim + the repo-absent `StructureMethodUnavailable` signal.
+- `dna_decode/forward/variant_effect.py::predict_variant_hybrid` + `esm_pos_table_to_variant_table` — the
+  saturation-context hybrid predictor + the ESM pos→variant adapter; `router.predict_edit` routes Regime B to
+  the hybrid when both tables are present.
+- `dna_decode/forward/deploy.py::predict_hybrid_from_sequence` — the one-call novel-protein orchestrator.
 - `scripts/prosst_quantize.py` — thin CLI (`--expect` verifies against known tokens).
-- 13 seam tests green (the two "quantizer always absent" tests updated to the repo-absent contract).
+- 40 forward tests green (seam + convenience + orchestrator).
