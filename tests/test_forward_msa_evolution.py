@@ -88,5 +88,13 @@ def test_empty_msa_raises(tmp_path):
         parse_a2m(p)
 
 
+def test_max_rows_bounds_the_read(tmp_path):
+    # SYNTH has focus + s2 + s3 + s4 = 4 records; max_rows=2 keeps focus + 1 homolog (OOM guard)
+    _, _, all_cols = parse_a2m(_write(tmp_path))
+    assert len(all_cols) == 4
+    _, focus_raw, capped = parse_a2m(_write(tmp_path), max_rows=2)
+    assert len(capped) == 2 and focus_raw == "MKtAY"        # focus always first; homologs truncated
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))

@@ -27,9 +27,14 @@ AA = "ACDEFGHIKLMNPQRSTVWY"
 AA_SET = frozenset(AA)
 
 
-def parse_a2m(path: str | Path) -> tuple[str, str, list[str]]:
+def parse_a2m(path: str | Path, max_rows: int | None = None) -> tuple[str, str, list[str]]:
     """Return (focus_name, focus_raw, match_column_sequences). Each match-column sequence keeps only the
-    match columns (uppercase + '-' in the alignment), so all are the same length as the focus's match set."""
+    match columns (uppercase + '-' in the alignment), so all are the same length as the focus's match set.
+
+    `max_rows` bounds how many sequences are READ (the focus + up to max_rows-1 homologs) -- some MSAs have
+    100k+ rows and loading them all is GB-scale memory (it OOM-killed the 2026-07-17 MSA-T run). A caller
+    that subsamples anyway (e.g. MSA-Transformer at depth 128) should pass an oversample cap here. Rows are
+    ordered by significance (closest homologs first), so the cap keeps the most informative homologs."""
     name, buf, records = None, "", []
     with open(path, encoding="utf-8") as fh:
         for line in fh:
@@ -37,6 +42,9 @@ def parse_a2m(path: str | Path) -> tuple[str, str, list[str]]:
             if line.startswith(">"):
                 if name is not None:
                     records.append((name, buf))
+                    if max_rows is not None and len(records) >= max_rows:
+                        name = None
+                        break
                 name, buf = line[1:], ""
             else:
                 buf += line.strip()

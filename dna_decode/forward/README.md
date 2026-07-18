@@ -96,11 +96,32 @@ evolution model is the **FLOOR — it does not lift ESM2 in the hybrid.**
 | GEMME | +0.022 | 84% | ✅ | JET2/R/Java (external tool) |
 
 So this module ships the **reusable pipeline with a PLUGGABLE evolution model**:
-`evolution_table_from_scores(precomputed)` accepts ANY `{mutation: score}` table (a GEMME / MSA-Transformer
-run), and site-independent is the built-in floor. **Swap the model, keep the pipe.** "Evolution is the cheap
-universal move" is only half true — evolution lifts universally, but the lift needs GEMME-grade coevolution,
-not a profile model. The best lift-per-infra upgrade is **MSA-Transformer** (a single forward pass, reuses
-the ESM2 Kaggle-T4 path); GEMME is the max lift but Windows-hostile.
+`evolution_table_from_scores(precomputed)` accepts ANY `{mutation: score}` table, and site-independent is the
+built-in floor. **Swap the model, keep the pipe.** "Evolution is the cheap universal move" is only half true —
+evolution lifts universally, but the lift needs GEMME-grade coevolution, not a profile model.
+
+**The lifting model IS BUILT — `msa_transformer.py`** (`msa_transformer_table(msa_path)`, local CPU, no
+Kaggle: `esm_msa1b_t12_100M_UR50S` is only 100M params). Validated
+(`wiki/msa_transformer_lift_2026-07-17.md`): our own MSA-Transformer **reproduces ProteinGym's
+`MSA_Transformer` column at Spearman 0.88** (scorer correct) and, fed through `rank_average_hybrid`,
+**reproduces the phenotype-conditional lift** — it helps **Activity/function** (only category with a positive
+median, +0.011) but not the structure-dominated Stability/Expression. So the deployment rule is
+**phenotype-conditional routing**, not "add evolution everywhere":
+
+| target phenotype | best modality add |
+|---|---|
+| Activity / function | `ESM2 + MSA-Transformer` (evolution) |
+| Stability / Expression | `ESM2 + ProSST` (structure) |
+
+```python
+from dna_decode.forward.msa_transformer import msa_transformer_table
+from dna_decode.forward.variant_effect import rank_average_hybrid
+evo = msa_transformer_table(msa_path)                    # the LIFTING coevolution model (torch + fair-esm)
+hybrid = rank_average_hybrid([esm2_table, evo])          # ESM2 (+) MSA-Transformer, ranked (activity cells)
+```
+
+GEMME is the max lift but Windows-hostile (JET2/R/Java). `parse_a2m(max_rows=…)` bounds memory — some MSAs
+have 100k+ rows and loading them whole OOM-kills the run.
 
 **The MSA-search half (`msa_fetch.py`) — novel proteins.** `site_independent_table` needs an MSA; for a
 protein with none on disk, `msa_fetch.fetch_msa(sequence)` gets one from the free **ColabFold MMseqs2 API**
