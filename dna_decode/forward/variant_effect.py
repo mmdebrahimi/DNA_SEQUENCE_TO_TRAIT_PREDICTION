@@ -162,7 +162,7 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                    phenotype_axis: str = "molecular fitness (DMS-measured)",
                    method: str = "blosum62", regime: str = "B_molecular",
                    esm_table: dict | None = None, am_table: dict | None = None,
-                   esm_if_table: dict | None = None,
+                   esm_if_table: dict | None = None, prosst_table: dict | None = None,
                    hybrid_tables: list[dict] | None = None) -> ForwardPrediction:
     """Forward edit -> predicted phenotype effect for ONE point mutation on ONE protein.
 
@@ -236,6 +236,14 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
         score = esm_if_table[mutation]          # ESM-IF conditional-LL delta; higher = structure-compatible
         effect = esm_if_tier(score)
         conf = "medium" if effect != "uncertain" else "low"
+    elif method == "prosst":
+        from .prosst_scorer import prosst_tier
+        if prosst_table is None or mutation not in prosst_table:
+            raise ValueError(f"method='prosst' needs prosst_table with {mutation!r} "
+                             f"(structure-based; build via prosst_scorer.prosst_variant_table)")
+        score = prosst_table[mutation]          # ProSST log-ratio; higher = structure-compatible = preserved
+        effect = prosst_tier(score)
+        conf = "medium" if effect != "uncertain" else "low"
     elif method == "hybrid":
         if not hybrid_tables or len(hybrid_tables) < 2:
             raise ValueError("method='hybrid' needs hybrid_tables= (>=2 per-protein score tables, one per "
@@ -255,7 +263,8 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
                      "(wiki/forward_modality_hybrid_2026-07-17.md)")
     else:
         raise NotImplementedError(
-            f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense' / 'esm_if' / 'hybrid'")
+            f"method {method!r} not supported; use 'blosum62' / 'esm2' / 'alphamissense' / 'esm_if' / "
+            f"'prosst' / 'hybrid'")
 
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,

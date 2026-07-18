@@ -30,6 +30,11 @@ from .structure_scorer import (  # noqa: F401
     esm_if_tier,
     esm_if_variant_table,
 )
+from .prosst_scorer import (  # noqa: F401
+    prosst_tier,
+    prosst_variant_table,
+    quantize_structure,
+)
 from .router import (  # noqa: F401
     REGIME_A,
     REGIME_B,

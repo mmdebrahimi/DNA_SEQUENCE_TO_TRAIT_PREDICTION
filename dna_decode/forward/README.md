@@ -37,6 +37,7 @@ Per-protein Spearman(prediction, measured DMS). Learned methods beat determinist
 | `esm2` | universal (bacteria+eukaryote) | ESM2-650M masked-marginal | 0.518 | **0.732** |
 | `alphamissense` | **human only** | AM pathogenicity (1−AM) | **0.539** | — |
 | `esm_if` | structure-based | inverse-folding conditional-LL (Kaggle T4) | 0.479 | — |
+| `prosst` | structure-based (strong) | ProSST quantized-structure LM log-ratio | — | — |
 | `hybrid` | modality rank-combine | rank-average of ≥2 oriented score tables | — | — |
 
 Tree-of-life: ESM2 lifts BLOSUM by +0.28–0.39 on E.coli / human / yeast / Arabidopsis. AlphaMissense is
@@ -72,6 +73,18 @@ phenotype-dependent, which makes the infra choice data-driven —
 | **any** | `ESM2+GEMME` (MSA only; lifts every category, win 87–100%) | — |
 | Expression / Stability | + structure | **yes** (+0.10 / +0.07; fold/abundance-dominated) |
 | Activity / OrganismalFitness | evolution only | no (structure neutral-to-negative) |
+
+**The structure path is BUILT (seam) — `prosst_scorer.py`.** ProSST (`AI4Protein/ProSST-2048`) is the strong
+structure model (ProteinGym structure-tier leader, zero-shot 0.504; our sweep `ESM2+ProSST` +0.05 win 87% —
+the biggest single modality lever, and it beats the underperforming `esm_if`/ESM-IF 0.479). `prosst_scorer`
+mirrors `structure_scorer`: `prosst_variant_table(wt_seq, mutants, structure_tokens=... | pdb_path=...)` →
+`{mutation: score}` (log-ratio, higher=preserved), fed into `rank_average_hybrid`; `predict_effect(method=
+'prosst', prosst_table=...)` for a single variant. Reuses `fetch_alphafold_pdb` (free AlphaFold structures).
+DEPS: the transformer needs `transformers` (installed) + `trust_remote_code`; the `PdbQuantizer` needs
+`prosst` + `torch_geometric` (absent on this host — same wall as ESM-IF), so pass ProteinGym's PRE-QUANTIZED
+`structure_tokens` (transformer-only) or run the quantizer on Kaggle. **Seam complete + mock-tested; the real
+reproduce-the-column-then-lift validation (`scripts/prosst_lift.py`) runs on Kaggle** (`plans/ProSST_
+Structure_Scorer_Hybrid_Plan/`, Step 6 — deferred/attended, same posture as the ESM-IF Kaggle run).
 
 So `ESM2+GEMME` is the universal MSA-only upgrade; add ProSST (structure) **only for stability/expression**
 targets. Evolution alone (GEMME) barely helps any single category — its value is only in the hybrid.

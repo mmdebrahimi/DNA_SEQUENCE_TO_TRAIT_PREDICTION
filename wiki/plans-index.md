@@ -516,3 +516,14 @@
 **Status:** as-built (v0.1 shipped 2026-06-26) — `dna_decode/data/cell_registry{,_vocab}.py` + `tests/test_cell_registry.py` (15 tests). **67 cells across 5 tracks** {amr 25 (projected verbatim from frozen surface via `canonical_cell_key`), viral 29 (HIV-1 26 + SARS-CoV-2 3 — the CLI-routable-but-surface-absent invisibility gap), pgx 3, typing 6, finder 4}; `CellContract` carries `track`+`route` (brainstorm C2 split); `cli_routable_manifest()` derived LIVE from the CLI drug/gene/TRAIT catalogs (brainstorm C1 per-route manifest, drift-proof); `build_validation_report_card.py` now reads its AMR grid from `cell_registry.surface_index()` (brainstorm C3 — == frozen surface by construction, 0 card-behavior change). Coverage + consistency + no-numeric-confidence guards green; frozen AMR surface byte-unchanged; 0 regressions. **DEFERRED:** TB-cell (script-only, not a `--drug` route); folding viral/pgx/typing INTO the card's rendered grid (the card stays AMR-only display).
 
 ---
+
+## [plan_file: ProSST_Structure_Scorer_Hybrid_Plan/] 2026-07-18
+**Status:** candidate
+**Summary:** Build a ProSST structure scorer (fed by free AlphaFold structures, reusing the existing `fetch_alphafold_pdb`) that emits a `{mutation: score}` table into the already-built `rank_average_hybrid` slot — closing the structure modality path (the biggest measured lever, ESM2+ProSST +0.05) and validating whether our own ProSST reproduces ProteinGym's ProSST-2048 column then realizes the per-category lift.
+**Key decisions:**
+- Reuse `fetch_alphafold_pdb` + `StructureMethodUnavailable` + the `esm_if` table-fed seam pattern; new `prosst_scorer.py` mirrors `structure_scorer.py`.
+- Validate reproduction of ProteinGym's `ProSST-2048` column (Spearman >= 0.70) as the PRIMARY bar, then the per-category hybrid lift as secondary (honest-limit framing per the MSA-T lesson: report final n; powered evidence = the N=95 sweep).
+- Recommend pre-quantized ProteinGym structures + masked-marginal scoring (transformer-only, avoids torch_geometric; matches ProteinGym's protocol to reproduce +0.05).
+- Real forward runs on Kaggle T4 (structure stack, same posture as ESM-IF); gain is small (+0.05 on one cell) — nice-to-have flagged against the labels-not-models north star.
+
+---
