@@ -291,3 +291,18 @@
 - The map faithfully surfaced real biology (the tandem blaTEM-20 array) — a concrete demonstration of the tool's exploration value beyond a flat determinant verdict.
 
 **This is the achievable, label-free form of the north star** ("DNA → what its parts do") — an honest evidence-tiered function/QC map, explicitly NOT a learned phenotype predictor (that arm remains a closed negative). GO = invest further (catalog integration gated on this verdict).
+
+## [plan_file: technical-plan.md (ProSST_Structure_Scorer_Hybrid_Plan)] Executed 2026-07-18
+**Mode:** sequential (7-step plan; Steps 1-5,7 implemented, Step 6 = attended Kaggle real-run DEFERRED per plan) | **Result:** 6/7 steps completed (Step 6 deferred by design)
+**PRs:** N/A — committed directly to main (5a08fa7), this session's lane
+**Salience:** HIGH
+**Modules:** dna_decode/forward/prosst_scorer.py, dna_decode/forward/variant_effect.py (predict_effect method='prosst'), scripts/prosst_lift.py, tests/ (10 new)
+**Notable:** Shipped a ProSST structure-scorer SEAM for the forward variant-effect cell. 33 forward tests → 50 final (10 new prosst), 0 regressions. Frozen-surface `verify_lock` OK — no frozen decoder file touched. Step 6 (real quantitative +0.05 lift number) is the attended Kaggle real-run, deferred.
+**Corrections:** none
+**Reversals:** none
+**Discoveries:**
+- **`transformers` is installed + the ProSST model is now cached on D:** — so the pre-quantized-token scoring path may run LOCALLY on CPU. Only `PdbQuantizer`/`torch_geometric` (the PDB→structure-token step) is blocked on this host. Step 6 might NOT need Kaggle if structure tokens are supplied pre-quantized. Follow-up: probe the CPU-local path before booking a Kaggle GPU session.
+- **A verify-in-batch catch:** the input-validation guard ran AFTER the lazy `_load_prosst` call, so a bad-input call DOWNLOADED the ProSST model (49s wasted) before failing. Fixed by moving the guard before model-load. Captured as a cross-project memory (guard-before-lazy-heavy-load).
+**Lesson:** ProSST is the biggest measured modality lever on the forward cell (+0.05, orthogonal seq⊕struct), but it is a SMALL gain on ONE cell — the project's binding constraint is LABELS not models. Ship it as a deployable nice-to-have seam, not a north-star move; do NOT scale effort here expecting an outsized return. Validate input BEFORE any lazy heavy-model load so bad calls fail in ms, not after a multi-second download.
+
+---
