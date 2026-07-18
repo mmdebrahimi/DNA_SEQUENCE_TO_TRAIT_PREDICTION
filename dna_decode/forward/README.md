@@ -100,25 +100,24 @@ So this module ships the **reusable pipeline with a PLUGGABLE evolution model**:
 built-in floor. **Swap the model, keep the pipe.** "Evolution is the cheap universal move" is only half true —
 evolution lifts universally, but the lift needs GEMME-grade coevolution, not a profile model.
 
-**The lifting model IS BUILT — `msa_transformer.py`** (`msa_transformer_table(msa_path)`, local CPU, no
-Kaggle: `esm_msa1b_t12_100M_UR50S` is only 100M params). Validated
-(`wiki/msa_transformer_lift_2026-07-17.md`): our own MSA-Transformer **reproduces ProteinGym's
-`MSA_Transformer` column at Spearman 0.87** (scorer correct — the deployable pipeline works end-to-end). Fed
-through `rank_average_hybrid` it gives a **non-uniform, phenotype-dependent** lift (Activity +0.011 /
-Stability −0.013 at N=40, but noisy at small per-category n — see the artifact's honest-limit note; the
-*clean, powered* per-category evidence is the N=95 precomputed-column sweep). The deployment rule is
-**phenotype-conditional routing** (grounded in that sweep), not "add evolution everywhere":
-
-| target phenotype | best modality add |
-|---|---|
-| Activity / function | `ESM2 + MSA-Transformer` (evolution) |
-| Stability / Expression | `ESM2 + ProSST` (structure — ProSST +0.10 on Expression ≫ MSA-T) |
+**A lifting model is BUILT but the FAST form does not deliver the lift — `msa_transformer.py`**
+(`msa_transformer_table(msa_path)`, local CPU, no Kaggle: `esm_msa1b_t12_100M_UR50S` is 100M params).
+Validated over N=66 (`wiki/msa_transformer_lift_2026-07-17.md`): our own MSA-Transformer **reproduces
+ProteinGym's `MSA_Transformer` column at Spearman 0.84** (scorer correct) — **but fed through
+`rank_average_hybrid` the ESM2 (+) our-MSA-T hybrid does NOT lift** (aggregate median Δ +0.0008, win
+34/66 ≈ 52%). The fast **wt-marginal / depth-128** form rank-tracks ProteinGym's **masked-marginal /
+depth-384 ensemble** but loses the complementarity that makes the +0.013 lift — the same "cheap version is a
+correct-but-non-lifting scorer" shape as the site-independent floor. So `msa_transformer_table` ships as the
+honest **fast baseline + interface**, not the realized lift; the +0.013 evolution lift remains a property of
+ProteinGym-grade masked-marginal MSA-T (the N=95 precomputed-column sweep). The **phenotype routing** rule
+(evolution→activity, structure→stability) is grounded in *that* sweep, not this fast run (whose per-category
+signal is noisy/absent — Stability even flips positive by n=22).
 
 ```python
 from dna_decode.forward.msa_transformer import msa_transformer_table
 from dna_decode.forward.variant_effect import rank_average_hybrid
-evo = msa_transformer_table(msa_path)                    # the LIFTING coevolution model (torch + fair-esm)
-hybrid = rank_average_hybrid([esm2_table, evo])          # ESM2 (+) MSA-Transformer, ranked (activity cells)
+evo = msa_transformer_table(msa_path)                    # fast MSA-T (torch+fair-esm); correct scorer, no lift
+hybrid = rank_average_hybrid([esm2_table, evo])          # to LIFT, feed a masked-marginal MSA-T or GEMME table
 ```
 
 GEMME is the max lift but Windows-hostile (JET2/R/Java). `parse_a2m(max_rows=…)` bounds memory — some MSAs
