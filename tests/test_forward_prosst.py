@@ -21,8 +21,12 @@ from dna_decode.forward.variant_effect import predict_effect, rank_average_hybri
 
 # ---- the unavailable-signal (this host has no prosst / torch_geometric) -----------------------------------
 
-def test_quantize_structure_raises_when_prosst_absent():
-    with pytest.raises(StructureMethodUnavailable, match="quantizer unavailable"):
+def test_quantize_structure_raises_when_repo_absent(monkeypatch):
+    # the local quantizer works when the cloned repo is present ($PROSST_REPO); point it at a bogus dir to
+    # exercise the unavailable-signal offline (the real quantize is validated by scripts/prosst_quantize).
+    import dna_decode.forward.prosst_scorer as ps
+    monkeypatch.setattr(ps, "PROSST_REPO", "/no/such/prosst/repo")
+    with pytest.raises(StructureMethodUnavailable, match="repo not found"):
         quantize_structure("nonexistent.pdb")
 
 
@@ -151,9 +155,12 @@ def test_prosst_variant_table_scores_and_skips_via_fake_bundle():
     assert prosst_scorer._BUNDLE == {}
 
 
-def test_prosst_variant_table_pdb_path_quantizes_and_raises_when_absent():
-    # structure_tokens omitted + pdb_path given: reaches quantize_structure (no prosst stack) -> unavailable
-    with pytest.raises(StructureMethodUnavailable, match="quantizer unavailable"):
+def test_prosst_variant_table_pdb_path_quantizes_and_raises_when_repo_absent(monkeypatch):
+    # structure_tokens omitted + pdb_path given: reaches quantize_structure; with the repo pointed away it
+    # raises the unavailable-signal (the real self-quantize path is validated by scripts/prosst_quantize).
+    import dna_decode.forward.prosst_scorer as ps
+    monkeypatch.setattr(ps, "PROSST_REPO", "/no/such/prosst/repo")
+    with pytest.raises(StructureMethodUnavailable, match="repo not found"):
         prosst_variant_table("WA", ["W1A"], pdb_path="nonexistent.pdb", model_bundle=_fake_bundle())
 
 

@@ -21,6 +21,8 @@ the AlphaFold DB by UniProt via the shared `fetch_alphafold_pdb`.
 """
 from __future__ import annotations
 
+import os
+import sys
 from pathlib import Path
 
 # Reuse the AlphaFold fetch + the shared unavailable-signal from the ESM-IF structure module.
@@ -73,22 +75,59 @@ def _load_prosst(vocab: int = 2048):
     return _BUNDLE[vocab]
 
 
-def quantize_structure(pdb_path: str | Path, vocab: int = 2048) -> list[int]:
-    """PDB backbone -> per-residue ProSST structure-token sequence via `prosst.structure.quantizer`.
+# The ProSST quantizer repo (cloned; bundles the GVP AE.pt + {vocab}.joblib checkpoints).
+PROSST_REPO = os.environ.get("PROSST_REPO", "D:/prosst_repo")
 
-    Needs the `prosst` package (+ torch_geometric for the GVP encoder). Raises StructureMethodUnavailable
-    when absent — on ProteinGym use the PRE-QUANTIZED tokens (pass them to `prosst_variant_table`) to skip
-    this heavy step entirely.
+
+class _SerialPool:
+    """Drop-in for pathos Pool/ThreadPool that runs in-process — the repo's Windows multiprocessing `spawn`
+    deadlocks/EOFErrors on this host, and a single PDB needs no parallelism."""
+    def __init__(self, *a, **k):
+        pass
+    def map(self, f, *iters):
+        return list(map(f, *iters))
+    imap = imap_unordered = map
+    def close(self):
+        pass
+    join = terminate = restart = clear = close
+
+
+def quantize_structure(pdb_path: str | Path, vocab: int = 2048) -> list[int]:
+    """PDB backbone -> per-residue ProSST structure-token list (the novel-protein deploy path).
+
+    Runs LOCALLY (validated on this Windows/CPU host, 2026-07-18: self-quantized GRB2 == ProteinGym's
+    pre-quantized tokens 217/217) via the cloned ProSST repo (`$PROSST_REPO`) + three shims: a pure-python
+    `torch_scatter` package, biotite 1.x's renamed `filter_backbone`, and serial pathos + `num_workers=0`
+    (Windows `spawn` is unusable). Raises StructureMethodUnavailable if the repo/`torch_geometric` are absent
+    — on ProteinGym you can skip this and pass the PRE-QUANTIZED `structure_tokens=` directly instead.
     """
-    try:
-        from prosst.structure.quantizer import PdbQuantizer
-    except Exception as e:  # ModuleNotFoundError: prosst / torch_geometric
+    repo = Path(PROSST_REPO)
+    if not (repo / "prosst" / "structure" / "get_sst_seq.py").exists():
         raise StructureMethodUnavailable(
-            f"ProSST structure quantizer unavailable ({type(e).__name__}: {e}) — needs `prosst` + "
-            f"`torch_geometric` (Linux/GPU). On ProteinGym pass pre-quantized `structure_tokens=` instead.") from e
-    processor = PdbQuantizer(structure_vocab_size=vocab)
-    result = processor(str(pdb_path), return_residue_seq=False)
-    return list(result)
+            f"ProSST quantizer repo not found at {repo} — clone https://github.com/ai4protein/ProSST to "
+            f"$PROSST_REPO (bundles the GVP AE.pt + {vocab}.joblib), or pass pre-quantized structure_tokens=.")
+    if str(repo) not in sys.path:
+        sys.path.insert(0, str(repo))
+    try:
+        import pathos.multiprocessing as _mp
+        import pathos.threading as _th
+        _mp.Pool = _mp.ProcessPool = _SerialPool          # patch BEFORE the repo binds them at import
+        _th.ThreadPool = _SerialPool
+        from prosst.structure.get_sst_seq import SSTPredictor   # needs torch_geometric + the torch_scatter shim
+    except Exception as e:
+        raise StructureMethodUnavailable(
+            f"ProSST quantizer stack unavailable ({type(e).__name__}: {e}) — needs torch_geometric + the "
+            f"torch_scatter shim + biotite; or pass pre-quantized structure_tokens=.") from e
+    predictor = SSTPredictor(structure_vocab_size=vocab, num_processes=0, num_threads=1)  # 0 => no spawn
+    res = predictor.predict_from_pdb(str(pdb_path))
+    rec = res[0] if isinstance(res, list) else res
+    if not isinstance(rec, dict):
+        return list(rec)
+    suffix = f"{vocab}_sst_seq"                            # key may be prefixed by the cluster-model path
+    key = next((k for k in rec if str(k).endswith(suffix)), None)
+    if key is None:
+        raise KeyError(f"no '*{suffix}' key in quantizer result (keys: {list(rec)})")
+    return list(rec[key])
 
 
 def prosst_variant_table(wt_seq: str, mutants, *, structure_tokens: list[int] | None = None,
