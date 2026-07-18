@@ -26,20 +26,26 @@ pipeline is validated end-to-end on real proteins.
 
 | phenotype | n | median Δ (hybrid − ESM2) | win-rate |
 |---|---:|---:|---:|
-| **Activity** | 16 | **+0.0112** | 9/16 |
-| Stability | 9 | −0.0125 | 4/9 |
-| Expression | 4 | −0.0007 | 2/4 |
-| OrganismalFitness | 4 | −0.0541 | 1/4 |
+| Activity | 16 | **+0.0112** | 9/16 |
+| Stability | 11 | −0.0125 | 5/11 |
+| Expression | 6 | **+0.0146** | 4/6 |
+| OrganismalFitness | 5 | −0.0539 | 1/5 |
 | Binding | 2 | −0.0090 | 1/2 |
 
-(N=35 scored; overall median Δ −0.008, win 17/35.) **Activity is the only category with a POSITIVE median
-lift; every other category is flat-to-negative.** The aggregate ≈0 is a **category-mix artifact, not a null**
-— MSA-Transformer (an evolution model) helps activity/function but not the structure-dominated phenotypes.
-The **direction** independently reproduces the per-category modality rule
-(`forward_modality_hybrid_2026-07-17.md`: evolution → activity, structure → stability), now with our own
-end-to-end pipeline rather than ProteinGym's precomputed columns. **Honest limit:** per-category n's are
-small and the win-rates are noisy (the crisp Stability-0/5 of an n=26 snapshot softened to 4/9 by n=35) — the
-own-model run confirms the *direction* + the *scorer*, not a new independent significance.
+(N=40 scored; overall median Δ −0.004, win 20/40 = exactly 50%.) The aggregate ≈0 is a **category-mix
+artifact, not a null** — the lift is not uniform across phenotypes. The direction is **partially** consistent
+with the per-category modality rule (`forward_modality_hybrid_2026-07-17.md`: evolution → activity, structure
+→ stability): **Activity is positive (+0.011) and Stability is negative (−0.013), as predicted** — but
+**Expression is positive (+0.015), which the rule did not predict**, and OrganismalFitness is negative.
+
+**Honest limit (this run watched the finding get NOISIER, not cleaner, as n grew — reported here, not the
+prettier intermediate):** at n=26 Activity was the *only* positive category (Stability 0/5); by n=40
+Expression had flipped positive and Stability softened to 5/11. Per-category n's are small and the win-rates
+are noisy. So the own-model run **does NOT cleanly reproduce the per-category split** — it confirms the
+**scorer** (0.87 vs ProteinGym's column) and the **aggregate category-mix picture** (no uniform lift), and is
+directionally consistent on the two best-powered categories (Activity+, Stability−). The **clean,
+powered** per-category evidence remains the N=95 precomputed-column sweep (+0.013, p=0.002); this local run is
+underpowered and should not be read as an independent per-category confirmation.
 
 ## Honest scope
 

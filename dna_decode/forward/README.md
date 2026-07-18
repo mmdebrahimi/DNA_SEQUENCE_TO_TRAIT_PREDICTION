@@ -103,15 +103,16 @@ evolution lifts universally, but the lift needs GEMME-grade coevolution, not a p
 **The lifting model IS BUILT — `msa_transformer.py`** (`msa_transformer_table(msa_path)`, local CPU, no
 Kaggle: `esm_msa1b_t12_100M_UR50S` is only 100M params). Validated
 (`wiki/msa_transformer_lift_2026-07-17.md`): our own MSA-Transformer **reproduces ProteinGym's
-`MSA_Transformer` column at Spearman 0.88** (scorer correct) and, fed through `rank_average_hybrid`,
-**reproduces the phenotype-conditional lift** — it helps **Activity/function** (only category with a positive
-median, +0.011) but not the structure-dominated Stability/Expression. So the deployment rule is
-**phenotype-conditional routing**, not "add evolution everywhere":
+`MSA_Transformer` column at Spearman 0.87** (scorer correct — the deployable pipeline works end-to-end). Fed
+through `rank_average_hybrid` it gives a **non-uniform, phenotype-dependent** lift (Activity +0.011 /
+Stability −0.013 at N=40, but noisy at small per-category n — see the artifact's honest-limit note; the
+*clean, powered* per-category evidence is the N=95 precomputed-column sweep). The deployment rule is
+**phenotype-conditional routing** (grounded in that sweep), not "add evolution everywhere":
 
 | target phenotype | best modality add |
 |---|---|
 | Activity / function | `ESM2 + MSA-Transformer` (evolution) |
-| Stability / Expression | `ESM2 + ProSST` (structure) |
+| Stability / Expression | `ESM2 + ProSST` (structure — ProSST +0.10 on Expression ≫ MSA-T) |
 
 ```python
 from dna_decode.forward.msa_transformer import msa_transformer_table
