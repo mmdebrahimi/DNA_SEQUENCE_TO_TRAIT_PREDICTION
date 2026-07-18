@@ -102,6 +102,25 @@ universal move" is only half true — evolution lifts universally, but the lift 
 not a profile model. The best lift-per-infra upgrade is **MSA-Transformer** (a single forward pass, reuses
 the ESM2 Kaggle-T4 path); GEMME is the max lift but Windows-hostile.
 
+**The MSA-search half (`msa_fetch.py`) — novel proteins.** `site_independent_table` needs an MSA; for a
+protein with none on disk, `msa_fetch.fetch_msa(sequence)` gets one from the free **ColabFold MMseqs2 API**
+(no local UniRef/BFD DB — the disk-tight-host route), and `evolution_table_for_sequence(seq)` chains
+fetch → score in one call. So the evolution component runs on **any sequence**, not just cached ProteinGym
+proteins.
+
+```python
+from dna_decode.forward.msa_fetch import evolution_table_for_sequence
+from dna_decode.forward.variant_effect import rank_average_hybrid
+evo = evolution_table_for_sequence(protein_seq)          # network MSA search (cached forever per sequence)
+hybrid = rank_average_hybrid([esm2_table, evo])          # ESM2 (+) evolution, ranked
+```
+
+**Etiquette:** the ColabFold API is a free shared community resource — the fetcher is **cache-first** (one
+search per unique sequence, cached to disk) and single-query; never batch/loop it (run MMseqs2 locally for
+volume). `offline_ok=True` raises on a cache miss instead of touching the network (CI / airgapped).
+Real-surface validated: a live fetch of ubiquitin → 9655-homolog a3m → site-independent scores that rank
+K48P (−6.2, severe) ≫ L8I (−2.4, mild).
+
 ## Genome-level edit (`predict_genome_edit`)
 
 Lifts the input from a protein mutation to a real **nucleotide edit in a CDS**: base substitution → codon →
