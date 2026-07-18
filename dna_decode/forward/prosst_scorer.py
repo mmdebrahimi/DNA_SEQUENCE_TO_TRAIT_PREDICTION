@@ -61,6 +61,14 @@ def _load_prosst(vocab: int = 2048):
     name = prosst_model_name(vocab)
     model = AutoModelForMaskedLM.from_pretrained(name, trust_remote_code=True, revision=PROSST_REVISION)
     tokenizer = AutoTokenizer.from_pretrained(name, trust_remote_code=True, revision=PROSST_REVISION)
+    # The ProSST checkpoint OMITS cls.predictions.decoder.weight, expecting it tied to the input embeddings.
+    # Newer `transformers` no longer auto-ties it (the config uses a legacy tie key), so it loads RANDOM ->
+    # garbage logits (reproduction ~0). Force-tie it (verified: CASP3 reproduction 0.013 -> 1.0). See
+    # LESSONS_LEARNED 2026-07-18.
+    try:
+        model.cls.predictions.decoder.weight = model.get_input_embeddings().weight
+    except AttributeError:
+        pass   # a future ProSST variant may name the head differently; leave as-loaded
     _BUNDLE[vocab] = (model.eval(), tokenizer)
     return _BUNDLE[vocab]
 
@@ -106,14 +114,15 @@ def prosst_variant_table(wt_seq: str, mutants, *, structure_tokens: list[int] | 
         raise ValueError(f"structure tokens ({len(structure_tokens)}) != sequence length ({len(wt_seq)}) "
                          f"— quantizer/sequence mismatch")
 
-    enc = tokenizer(wt_seq, return_tensors="pt")
-    # ss_input_ids align to the tokenized residues; ProSST offsets structure tokens after the AA special
-    # tokens. Pad the CLS/EOS positions with 0 so ss length matches input_ids (finalized on the Kaggle run).
-    ss = torch.tensor([[0, *structure_tokens, 0]][: enc["input_ids"].shape[1]], dtype=torch.long)
+    enc = tokenizer([wt_seq], return_tensors="pt")
+    # ss_input_ids: ProSST's canonical wiring (zero_shot/proteingym_benchmark.py) shifts each structure
+    # token +3 (past <pad>/<cls>/<eos>) and wraps with <cls>=1 / <eos>=2, matching the AA tokenization.
+    ss = torch.tensor([[1, *[t + 3 for t in structure_tokens], 2]], dtype=torch.long)
     with torch.no_grad():
         logits = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"],
                        ss_input_ids=ss).logits
-    lp = torch.log_softmax(logits[0].float(), dim=-1)      # (L+special, vocab); residue i at token index i+1
+    # strip CLS/EOS so residue at 1-based pos maps to 0-based index pos-1 (canonical slice logits[:, 1:-1])
+    lp = torch.log_softmax(logits[0, 1:-1].float(), dim=-1)
 
     vocab_map = tokenizer.get_vocab()
     table: dict[str, float] = {}
@@ -124,8 +133,7 @@ def prosst_variant_table(wt_seq: str, mutants, *, structure_tokens: list[int] | 
         wt, pos, alt = m[0], int(m[1:-1]), m[-1]
         if pos > len(wt_seq) or wt_seq[pos - 1] != wt or wt not in _AA or alt not in _AA:
             continue
-        ti = pos                                           # CLS at index 0 -> residue pos is token index pos
-        table[m] = float(lp[ti, vocab_map[alt]] - lp[ti, vocab_map[wt]])
+        table[m] = float(lp[pos - 1, vocab_map[alt]] - lp[pos - 1, vocab_map[wt]])
     return table
 
 

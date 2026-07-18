@@ -93,12 +93,14 @@ def score_protein(dms: str, row: dict, structure_dir: Path | None, vocab: int) -
         return {"dms": dms, "status": "SUBSTRATE_MISSING"}
     wt_seq = row["target_seq"].strip().upper()
 
-    # pre-quantized tokens (transformer-only) preferred; else fetch + quantize (needs torch_geometric)
+    # pre-quantized tokens (transformer-only) preferred; else fetch + quantize (needs torch_geometric).
+    # ProteinGym pre-quantized structures ship as {DMS_id}.fasta (header + comma-separated int tokens).
     tokens = None
     if structure_dir:
-        tf = structure_dir / f"{uniprot}.json"
+        tf = structure_dir / f"{dms}.fasta"
         if tf.exists():
-            tokens = json.loads(tf.read_text(encoding="utf-8"))
+            line = next(l for l in tf.read_text(encoding="utf-8").splitlines() if not l.startswith(">"))
+            tokens = [int(x) for x in line.strip().split(",")]
     if tokens is None:
         pdb = fetch_alphafold_pdb(uniprot, STRUCT_CACHE)
         tokens = quantize_structure(pdb, vocab)

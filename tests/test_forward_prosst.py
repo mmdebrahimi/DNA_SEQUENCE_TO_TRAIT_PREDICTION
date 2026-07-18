@@ -110,7 +110,8 @@ class _FakeModel:
 class _FakeTokenizer:
     def __call__(self, seq, return_tensors="pt"):
         import torch
-        L = len(seq) + 2                                        # CLS + residues + EOS
+        s = seq[0] if isinstance(seq, (list, tuple)) else seq   # real HF tokenizer takes [sequence]
+        L = len(s) + 2                                          # CLS + residues + EOS
         return {"input_ids": torch.zeros((1, L), dtype=torch.long),
                 "attention_mask": torch.ones((1, L), dtype=torch.long)}
 

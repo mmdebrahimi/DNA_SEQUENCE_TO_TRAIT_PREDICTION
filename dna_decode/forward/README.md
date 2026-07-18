@@ -82,9 +82,18 @@ mirrors `structure_scorer`: `prosst_variant_table(wt_seq, mutants, structure_tok
 'prosst', prosst_table=...)` for a single variant. Reuses `fetch_alphafold_pdb` (free AlphaFold structures).
 DEPS: the transformer needs `transformers` (installed) + `trust_remote_code`; the `PdbQuantizer` needs
 `prosst` + `torch_geometric` (absent on this host — same wall as ESM-IF), so pass ProteinGym's PRE-QUANTIZED
-`structure_tokens` (transformer-only) or run the quantizer on Kaggle. **Seam complete + mock-tested; the real
-reproduce-the-column-then-lift validation (`scripts/prosst_lift.py`) runs on Kaggle** (`plans/ProSST_
-Structure_Scorer_Hybrid_Plan/`, Step 6 — deferred/attended, same posture as the ESM-IF Kaggle run).
+`structure_tokens` (transformer-only) or run the quantizer on Kaggle.
+
+**VALIDATED (Step-6 run, 2026-07-18, `wiki/prosst_lift_2026-07-18.md`, N=56, LOCAL CPU — no Kaggle):** our
+own ProSST reproduces ProteinGym's `ProSST-2048` column at **Spearman 1.0** (scorer exact) and
+`ESM2 + our-ProSST` beats ESM2 paired by median **+0.067, win 52/56 = 93%, sign-p 1e-11**, positive on EVERY
+phenotype (Expression +0.103 / Stability +0.089 largest — structure-dominated, as predicted; median hybrid
+|Spearman| 0.594 vs ESM2 0.515). **This is the inverse of the fast-MSA-T evolution path** (reproduced its
+column but did NOT lift): structure both reproduces AND lifts, powered. Two bugs fixed by verify-in-batch: the
+checkpoint omits the MLM decoder weight → **force-tie it to the input embeddings** (newer `transformers` loads
+a random head → reproduction 0.013→1.0), and the canonical `ss_input_ids` wiring (+3 shift, `[1,…,2]` wrap,
+CLS/EOS strip, `idx=pos-1`). Ran locally because the ProSST transformer forward needs only `transformers`+torch
+(NOT `torch_geometric`, which is only for the quantizer) + ProteinGym's pre-quantized tokens.
 
 So `ESM2+GEMME` is the universal MSA-only upgrade; add ProSST (structure) **only for stability/expression**
 targets. Evolution alone (GEMME) barely helps any single category — its value is only in the hybrid.
