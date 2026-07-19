@@ -79,16 +79,46 @@ def leakage_verdict(tuning_acc_to_bs: dict[str, str | None], cohort_biosamples: 
     }
 
 
+def _acc_base(accession: str) -> str:
+    """Assembly accession without its version suffix (GCA_002180135.1 -> GCA_002180135)."""
+    return accession.split(".")[0]
+
+
+def assembly_overlap_verdict(bs_to_assemblies: dict[str, list[str]],
+                             tuning_accessions) -> dict:
+    """RESOLUTION-FREE leakage check: a cohort BioSample whose assembly accession-base
+    matches a tuning GCA/GCF accession-base is the SAME physical isolate (a leak).
+
+    This complements `leakage_verdict` (which resolves tuning accession -> BioSample via
+    Entrez). Under NCBI throttling a large fraction of tuning accessions fail to resolve,
+    and the resolution-dependent check then CANNOT see whether those tuning isolates are in
+    the cohort — a blind spot that silently under-catches leaks (observed 2026-07-18 on the
+    AR Isolate Bank cohort: this check caught 9 leaks the BioSample check missed). It needs
+    NO network (both inputs are already computed by preflight) and cannot be throttled.
+    """
+    tun_base = {_acc_base(a) for a in tuning_accessions}
+    overlap = sorted({bs for bs, gcas in bs_to_assemblies.items()
+                      if any(_acc_base(g) in tun_base for g in gcas)})
+    return {"overlap_biosamples": overlap, "n_tuning_assembly_bases": len(tun_base),
+            "fail_overlap": bool(overlap), "passed": not overlap}
+
+
 def overall_verdict(leakage: dict, availability: dict, mic_open: bool | None,
-                    manifest_incomplete: bool = False, allow_degraded: bool = False) -> dict:
+                    manifest_incomplete: bool = False, allow_degraded: bool = False,
+                    assembly_overlap: dict | None = None) -> dict:
     """Combine the signals into a PASS/FAIL with reasons.
 
     An INCOMPLETE leakage manifest fails closed (cannot prove disjointness) unless
     `allow_degraded` — mirrors `provenance_disjoint_validate.py`'s fail-closed posture.
+    `assembly_overlap` (optional, resolution-free) fails closed on any base-accession match
+    even when the resolution-dependent leakage check is throttle-blinded.
     """
     reasons: list[str] = []
     if leakage["fail_overlap"]:
         reasons.append(f"BioSample overlap with tuning: {leakage['overlap_biosamples']}")
+    if assembly_overlap and assembly_overlap["fail_overlap"]:
+        reasons.append("assembly-level leak (resolution-free, throttle-proof): cohort "
+                       f"assemblies match tuning GCAs for {assembly_overlap['overlap_biosamples']}")
     if leakage["fail_unresolved"]:
         reasons.append(f"unresolved tuning fraction {leakage['unresolved_fraction']} "
                        f"> {leakage['unresolved_threshold']}")
@@ -139,10 +169,14 @@ def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
     tuning_acc_to_bs = {a: resolver.assembly_to_biosample(a) for a in tuning_accs}
     leakage = leakage_verdict(tuning_acc_to_bs, set(cohort_biosamples))
 
+    # (b') RESOLUTION-FREE assembly-base leakage check — throttle-proof complement to (b).
+    assembly_overlap = assembly_overlap_verdict(bs_to_assemblies, tuning_accs)
+
     resolver.save_cache()
 
     verdict = overall_verdict(leakage, availability, mic_open,
-                              manifest_incomplete=manifest.incomplete, allow_degraded=allow_degraded)
+                              manifest_incomplete=manifest.incomplete, allow_degraded=allow_degraded,
+                              assembly_overlap=assembly_overlap)
     artifact = {
         "_schema": "external-preflight-v1",
         "date": _date.today().isoformat(),
@@ -155,6 +189,7 @@ def preflight(project: str, cohort_name: str, *, mic_open: bool | None,
         "n_cohort_biosamples": len(cohort_biosamples),
         "assembly_availability": availability,
         "leakage": leakage,
+        "assembly_overlap": assembly_overlap,
         "mic_open": mic_open,
         "manifest_complete": not manifest.incomplete,
         "manifest_degraded": bool(manifest.incomplete and allow_degraded),

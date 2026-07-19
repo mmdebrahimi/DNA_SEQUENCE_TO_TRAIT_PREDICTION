@@ -79,6 +79,47 @@ def test_leakage_empty_tuning_set():
 
 
 # --------------------------------------------------------------------------- #
+# assembly_overlap_verdict (resolution-free, throttle-proof)
+# --------------------------------------------------------------------------- #
+def test_assembly_overlap_catches_base_match():
+    # SAMN1's assembly base (GCA_9) matches a tuning GCA base despite a different version.
+    v = pf.assembly_overlap_verdict(
+        {"SAMN1": ["GCA_9.1"], "SAMN2": ["GCA_5.2"], "SAMN3": []},
+        tuning_accessions={"GCA_9.3", "GCA_7.1"})
+    assert v["fail_overlap"] is True
+    assert v["overlap_biosamples"] == ["SAMN1"]
+    assert v["passed"] is False
+
+
+def test_assembly_overlap_disjoint_passes():
+    v = pf.assembly_overlap_verdict(
+        {"SAMN1": ["GCA_1.1"], "SAMN2": ["GCA_2.1"]},
+        tuning_accessions={"GCA_9.1"})
+    assert v["fail_overlap"] is False and v["passed"] is True and v["overlap_biosamples"] == []
+
+
+def test_assembly_overlap_empty_inputs():
+    assert pf.assembly_overlap_verdict({}, set())["passed"] is True
+    assert pf.assembly_overlap_verdict({"SAMN1": []}, {"GCA_1.1"})["passed"] is True
+
+
+def test_overall_fail_on_assembly_overlap_when_biosample_check_blind():
+    # BioSample check PASSES (disjoint resolved) but the resolution-free assembly check
+    # catches a leak the throttled resolution missed -> overall FAIL.
+    good = _good_leakage()
+    asm = pf.assembly_overlap_verdict({"SAMN_leak": ["GCA_9.1"]}, {"GCA_9.2"})
+    out = pf.overall_verdict(good, _avail(3), mic_open=True, assembly_overlap=asm)
+    assert out["verdict"] == "FAIL"
+    assert any("assembly-level leak" in r for r in out["reasons"])
+
+
+def test_overall_backward_compat_without_assembly_overlap():
+    # Omitting assembly_overlap (default None) preserves the prior PASS behavior.
+    out = pf.overall_verdict(_good_leakage(), _avail(3), mic_open=True)
+    assert out["verdict"] == "PASS" and out["reasons"] == []
+
+
+# --------------------------------------------------------------------------- #
 # overall_verdict
 # --------------------------------------------------------------------------- #
 def _good_leakage():
