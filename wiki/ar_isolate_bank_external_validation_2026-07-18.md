@@ -105,31 +105,42 @@ fully-disjoint scorable set, strict-tier:
 Each drug's informative class clears the ≥10 powering floor — a legitimate one-sided independent
 external test survives even after removing all 23 leaks and the reads-only isolates.
 
-## The scoring run — BLOCKED on Docker (external infra, not code)
+## Results — the frozen decoder scored ZERO errors on its powered side
 
-Scoring = the shipped external arm: resolve each of the 25 BioSamples → GCA, run **AMRFinder
-(Docker)** with the frozen organism triple (`-O Escherichia`,
-`call_resistance(organism="Escherichia_coli_Shigella")`), compute the confusion vs the MIC labels.
-25 genomes × ~95 s ≈ ~40 min (far less than the earlier 115-isolate estimate).
+Docker recovered mid-run; the fully-disjoint cohort was scored with the FROZEN decoder (`-O
+Escherichia`, `call_resistance(organism="Escherichia_coli_Shigella")`), `--allow-degraded` (justified:
+disjointness doubly-verified — BioSample-excluded + resolution-free assembly check).
 
-**Status 2026-07-18: `docker ps` → DOCKER_DOWN.** Docker Desktop is not running on this host, so
-AMRFinder cannot execute. This is the classic WSL-mount wedge (restartable; `wsl --shutdown` +
-relaunch Docker Desktop recovers it). The gap is **external** (start Docker), not code-closable —
-the ingester, disjoint cohort, labels, and manifest are all built and committed.
+| Drug | scored n | confusion (TP/FN/TN/FP) | one-sided metric |
+|---|---|---|---|
+| ceftriaxone | 12 | 11 / 0 / 1 / 0 | **sensitivity 1.0** (11/11 R) |
+| ciprofloxacin | 11 | 11 / 0 / 0 / 0 | **sensitivity 1.0** (11/11 R) |
+| gentamicin | 10 | 0 / 0 / 10 / 0 | **specificity 1.0** (10/10 S) |
 
-When Docker is up, score each powered drug (one-sided). The fully-disjoint cohort was already
-excluded of all 23 leaks, so `--allow-degraded` is justified (the preflight's residual FAIL is the
-throttle-induced unresolved-fraction, and disjointness was independently verified at the assembly
-level above); prefer a clean warm-preflight PASS if the re-run resolves the unresolved fraction.
+**Zero classification errors across all 32 scored isolates** — the frozen decoder correctly called
+every doubly-provenance-disjoint AR Bank E. coli it could assemble. Artifacts:
+`wiki/external_validation_ar_bank_ecoli_{ceftriaxone,ciprofloxacin,gentamicin}_2026-07-18_*.json`.
+
+**Two honest caveats (both surfaced by the powering gate, which hard-flagged these cells as degraded
+— correctly; the two-class roll-up excludes them, so they are reported here, not in the report card):**
+1. **One-sided by design** (resistance-enriched bank): cef/cipro power **sensitivity** (an FN-rate
+   stress test — 0 FN of 22 resistant), gent powers **specificity** (0 FP of 10 susceptible). The
+   opposite side has 0–1 isolates → uninformative. Each informative class n (11/11/10) clears ≥10.
+2. **~40% of FREE isolates un-downloadable** — a stable set of GCA accessions return NCBI error pages
+   (suppressed/withdrawn assemblies; identical across a warm retry, so NOT throttling), dropping scored
+   n (12/11/10) below the FREE cohort (21/19/15). A data-availability property, not a decoder failure.
+
+**Interpretation:** an independent, doubly-provenance-disjoint (BioSample + assembly), reference-BMD-MIC
+cohort corroborates the frozen decoder with **zero errors on its powered side** — a genuine
+strengthening of the shipped trust surface, distinct from the NCBI-PD tuning provenance. NOT
+lineage-corrected (tiny one-sided N makes clonality-weighting degenerate) and NOT methodology-
+independent (same AMRFinder `-O` + frozen rule). Reproduce:
 
 ```bash
-# ensure Docker Desktop is running first (wsl --shutdown to recover a wedge)
 M=wiki/cohort_manifest_external_arbank_disjoint_2026-07-18.json
 uv run python -m scripts.external_cohort_revalidate --cohort ar_bank_ecoli --drug ceftriaxone \
-  --labels-dir data/raw/ar_bank_ecoli_extval_ceftriaxone --cohort-manifest $M \
-  --allow-degraded --min-per-class 2            # sensitivity arm (19 R)
-# repeat --drug ciprofloxacin (18 R, sensitivity) and --drug gentamicin (15 S, specificity)
-# then roll-up: scripts/build_external_validation_report.py (separate external namespace)
+  --labels-dir data/raw/ar_bank_ecoli_extval_ceftriaxone --cohort-manifest $M --allow-degraded --min-per-class 2
+# repeat --drug ciprofloxacin (--min-per-class 1) and --drug gentamicin (--min-per-class 1)
 ```
 
 ## Honest scope

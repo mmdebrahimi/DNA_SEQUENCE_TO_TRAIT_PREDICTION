@@ -1,0 +1,68 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-07-18",
+  "run_id": "2026-07-18",
+  "cohort": "ar_bank_ecoli",
+  "organism": "Escherichia_coli_Shigella",
+  "amrfinder_organism": "Escherichia",
+  "registry_organism": "Escherichia_coli_Shigella",
+  "drug": "ceftriaxone",
+  "evidence_tier": "external_clinical",
+  "independence_tier": "external clinical cohort \u2014 different country / lab / AST method than the decoder's US-NCBI-PD tuning provenance; clonality/lineage disclosed in the roll-up. NOT the same as methodology-independent: comparability rests on the same AMRFinder -O + DRUG_RULE.",
+  "strict": {
+    "n_scored": 12,
+    "tp": 11,
+    "fp": 0,
+    "tn": 1,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": 1.0,
+    "spec": 1.0,
+    "n_excluded_no_assembly": 55
+  },
+  "relaxed": {
+    "n_scored": 12,
+    "tp": 11,
+    "fp": 0,
+    "tn": 1,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": 1.0,
+    "spec": 1.0,
+    "n_excluded_no_assembly": 55
+  },
+  "buckets": {
+    "drug": "ceftriaxone",
+    "breakpoint_version": "CLSI 2024 + EUCAST 14.0 (E. coli)",
+    "buckets": {
+      "CENSORED_HIGH_R": 68,
+      "HIGH_R": 6,
+      "CENSORED_HIGH_S": 2,
+      "CENSORED_EXCLUDED": 15
+    },
+    "n_total": 91,
+    "n_strict": 76,
+    "n_relaxed": 76
+  },
+  "leakage_control": "BioSample-level preflight: DEGRADED; 55 reads-only BioSamples excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": true,
+    "degraded": true,
+    "reasons": [
+      "strict scored S 1 < min_per_class 2 (underpowered)",
+      "indeterminate fraction 0.4286 > 0.2 (of 21 attempted-FREE)"
+    ],
+    "n_attempted_free": 21,
+    "n_indeterminate": 9,
+    "indeterminate_fraction": 0.4286,
+    "scored_R": 11,
+    "scored_S": 1,
+    "min_per_class": 2,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict"
+}
