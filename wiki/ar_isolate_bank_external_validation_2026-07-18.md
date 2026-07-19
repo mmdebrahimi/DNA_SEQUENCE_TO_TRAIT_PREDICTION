@@ -79,10 +79,11 @@ unresolved, the BioSample-level check *could not see* whether those tuning isola
 cohort. A complementary **resolution-free** check — cohort assembly accession-base ∩ tuning GCA
 accession-base (needs no Entrez resolution, cannot be throttled) — found **9 ADDITIONAL leaks** the
 BioSample preflight structurally missed. So the fail-closed behavior was doubly right: forcing a
-"pass" would have let those 9 same-assembly isolates leak in. **Recommended hardening:**
-`external_cohort_preflight` should add this direct cohort-assembly-base ∩ tuning-GCA-base test
-alongside the resolution-dependent one (surfaced here, not yet applied — it touches the shared arm
-used by Oxford too).
+"pass" would have let those 9 same-assembly isolates leak in. **Hardening APPLIED (commit 9a536b3):**
+`external_cohort_preflight.assembly_overlap_verdict` now runs this direct cohort-assembly-base ∩
+tuning-GCA-base test (resolution-free, throttle-proof, reusing data the preflight already computes),
+folded into `overall_verdict` backward-compatibly. It strengthens every external cohort (Oxford + AR
+Bank + future); 24/24 preflight tests green.
 
 **Full leaked set = 14 (BioSample) + 9 (assembly) = 23**, excluded via the new
 `build_ar_bank_labels.py --exclude-biosamples`. The rebuilt cohort is disjoint at BOTH the BioSample
