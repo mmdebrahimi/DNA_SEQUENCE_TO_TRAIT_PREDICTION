@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import date as _date
 from pathlib import Path
@@ -81,6 +82,10 @@ def main() -> int:
     ap.add_argument("--out-root", default="data/raw")
     ap.add_argument("--wiki-dir", default="wiki")
     ap.add_argument("--limit", type=int, default=None, help="cap isolates (smoke)")
+    ap.add_argument("--exclude-biosamples", default=None,
+                    help="path to a file of BioSamples to DROP (one per line or comma-sep) — the "
+                         "leakage-overlap set surfaced by external_cohort_preflight; keeps the cohort "
+                         "provenance-disjoint from the decoder's tuning set")
     ap.add_argument("--offline-ok", action="store_true", help="use cache only; skip network misses")
     ap.add_argument("--details-json", default=None,
                     help="optional: write/reuse parsed details here to avoid re-fetch")
@@ -105,6 +110,15 @@ def main() -> int:
             dj.write_text(json.dumps([{**d.__dict__} for d in details], indent=2), encoding="utf-8")
     print(f"  {len(details)} isolates with BioSample + MIC parsed")
 
+    excluded: set[str] = set()
+    if a.exclude_biosamples:
+        txt = Path(a.exclude_biosamples).read_text(encoding="utf-8")
+        excluded = {t.strip() for t in re.split(r"[,\s]+", txt) if t.strip()}
+        before = len(details)
+        details = [d for d in details if d.biosample not in excluded]
+        print(f"  leakage exclusion: dropped {before - len(details)} of {len(excluded)} listed "
+              f"BioSamples -> {len(details)} disjoint isolates")
+
     manifest: list[dict] = []
     for drug in drugs:
         canon = canonical_drug(drug)
@@ -128,6 +142,7 @@ def main() -> int:
     man_path.write_text(json.dumps(
         {"_schema": "external-cohort-manifest-v1", "run_id": a.run_id, "project": a.cohort,
          "source": "cdc_fda_ar_isolate_bank", "organism_filter": list(needles or []),
+         "leakage_excluded": sorted(excluded), "n_leakage_excluded": len(excluded),
          "date": _date.today().isoformat(), "rows": manifest,
          "biosamples": sorted({r["biosample"] for r in manifest})}, indent=2), encoding="utf-8")
     print(f"manifest -> {man_path} ({len(manifest)} rows, "

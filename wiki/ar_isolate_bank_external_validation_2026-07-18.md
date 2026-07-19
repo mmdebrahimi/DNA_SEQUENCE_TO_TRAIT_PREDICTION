@@ -61,31 +61,74 @@ This is the honest framing to carry into the roll-up — not a forced two-class 
 cannot provide. (It also generalizes: for a well-powered *both-class* external cohort, pursue the
 gonorrhoeae/Euro-GASP set, whose resistance is not curation-enriched.)
 
-## Provenance-disjointness (preflight)
+## Provenance-disjointness — the gate worked, and a methodological catch
 
-<!-- PREFLIGHT_VERDICT -->
-The exact-set BioSample-level preflight (`external_cohort_preflight.py --cohort-manifest …`) resolves
-the 114 cohort BioSamples + the decoder's tuning accessions and fails closed on any overlap. **Verdict:
-pending the run's completion — filled on landing.** AR Bank isolates are curated CDC outbreak isolates;
-some may also sit in the NCBI-PD tuning pull, in which case the preflight flags + excludes them by
-construction (that is the gate working, not a failure of the premise).
+The exact-set BioSample-level preflight (`external_cohort_preflight.py --cohort-manifest …`) FAILED
+closed on the full 114-isolate cohort — correctly — for two reasons:
 
-## The scoring run (the remaining attended step)
+1. **14 confirmed same-isolate leaks.** 14 AR Bank E. coli BioSamples are ALSO in the decoder's
+   tuning set (expected: CDC deposits AR Bank isolates into NCBI-PD, which the frozen cells tuned on).
+   This is the GCA-vs-BioSample same-isolate overlap that accession-string matching misses — the
+   BioSample-level gate caught it.
+2. **40.6% of the 1509 tuning accessions unresolved** to BioSamples — a transient NCBI-throttling
+   artifact during the run (1508/1509 are proper GCA/GCF, so it is NOT structural; the resolver
+   caches successes and a warm re-run would retry the failures).
 
-Scoring = the shipped external arm: resolve each BioSample → GCA, run **AMRFinder (Docker)** with the
-frozen organism triple (`-O Escherichia`, `call_resistance(organism="Escherichia_coli_Shigella")`),
-compute the confusion vs the MIC labels. ~115 genomes × ~95 s AMRFinder ≈ a multi-hour CPU run
-(Docker; mind the documented WSL-mount wedge — restartable, `wsl --shutdown` recovery).
+**The catch (and a preflight-hardening insight):** because 40% of the tuning GCAs were throttle-
+unresolved, the BioSample-level check *could not see* whether those tuning isolates matched the
+cohort. A complementary **resolution-free** check — cohort assembly accession-base ∩ tuning GCA
+accession-base (needs no Entrez resolution, cannot be throttled) — found **9 ADDITIONAL leaks** the
+BioSample preflight structurally missed. So the fail-closed behavior was doubly right: forcing a
+"pass" would have let those 9 same-assembly isolates leak in. **Recommended hardening:**
+`external_cohort_preflight` should add this direct cohort-assembly-base ∩ tuning-GCA-base test
+alongside the resolution-dependent one (surfaced here, not yet applied — it touches the shared arm
+used by Oxford too).
+
+**Full leaked set = 14 (BioSample) + 9 (assembly) = 23**, excluded via the new
+`build_ar_bank_labels.py --exclude-biosamples`. The rebuilt cohort is disjoint at BOTH the BioSample
+and assembly level (`wiki/cohort_manifest_external_arbank_disjoint_2026-07-18.json`, 91 BioSamples;
+`leakage_excluded` recorded in the manifest).
+
+## The scorable disjoint cohort
+
+Only 25 of the 91 fully-disjoint isolates have a downloadable assembly (66 are reads-only /
+ASSEMBLY-REQUIRED — AR Bank deposits SRA reads but not always an assembled GCA). The FREE ∩
+fully-disjoint scorable set, strict-tier:
+
+| Drug | R | S | Powered side (informative n) |
+|---|---|---|---|
+| ceftriaxone | 19 | 2 | **SENSITIVITY** (n=19 ✓) |
+| ciprofloxacin | 18 | 1 | **SENSITIVITY** (n=18 ✓) |
+| gentamicin | 0 | 15 | **SPECIFICITY** (n=15 ✓) |
+
+Each drug's informative class clears the ≥10 powering floor — a legitimate one-sided independent
+external test survives even after removing all 23 leaks and the reads-only isolates.
+
+## The scoring run — BLOCKED on Docker (external infra, not code)
+
+Scoring = the shipped external arm: resolve each of the 25 BioSamples → GCA, run **AMRFinder
+(Docker)** with the frozen organism triple (`-O Escherichia`,
+`call_resistance(organism="Escherichia_coli_Shigella")`), compute the confusion vs the MIC labels.
+25 genomes × ~95 s ≈ ~40 min (far less than the earlier 115-isolate estimate).
+
+**Status 2026-07-18: `docker ps` → DOCKER_DOWN.** Docker Desktop is not running on this host, so
+AMRFinder cannot execute. This is the classic WSL-mount wedge (restartable; `wsl --shutdown` +
+relaunch Docker Desktop recovers it). The gap is **external** (start Docker), not code-closable —
+the ingester, disjoint cohort, labels, and manifest are all built and committed.
+
+When Docker is up, score each powered drug (one-sided). The fully-disjoint cohort was already
+excluded of all 23 leaks, so `--allow-degraded` is justified (the preflight's residual FAIL is the
+throttle-induced unresolved-fraction, and disjointness was independently verified at the assembly
+level above); prefer a clean warm-preflight PASS if the re-run resolves the unresolved fraction.
 
 ```bash
-# 1) preflight (disjointness/availability) — DONE above
-# 2) score each powered drug (one-sided; --min-per-class documents the pilot)
+# ensure Docker Desktop is running first (wsl --shutdown to recover a wedge)
+M=wiki/cohort_manifest_external_arbank_disjoint_2026-07-18.json
 uv run python -m scripts.external_cohort_revalidate --cohort ar_bank_ecoli --drug ceftriaxone \
-  --labels-dir data/raw/ar_bank_ecoli_extval_ceftriaxone \
-  --preflight-json wiki/external_preflight_ar_bank_ecoli_2026-07-18.json \
-  --cohort-manifest wiki/cohort_manifest_external_arbank_2026-07-18.json --min-per-class 2
-# repeat --drug ciprofloxacin (sensitivity) and --drug gentamicin (specificity, --min-per-class 10 on S)
-# 3) roll-up: scripts/build_external_validation_report.py (separate external namespace)
+  --labels-dir data/raw/ar_bank_ecoli_extval_ceftriaxone --cohort-manifest $M \
+  --allow-degraded --min-per-class 2            # sensitivity arm (19 R)
+# repeat --drug ciprofloxacin (18 R, sensitivity) and --drug gentamicin (15 S, specificity)
+# then roll-up: scripts/build_external_validation_report.py (separate external namespace)
 ```
 
 ## Honest scope
