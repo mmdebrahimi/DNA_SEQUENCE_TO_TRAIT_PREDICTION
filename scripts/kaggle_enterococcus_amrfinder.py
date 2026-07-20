@@ -82,9 +82,20 @@ def process(biosample):
     env = f"{ENVP}/bin"
     try:
         sh(f"{env}/prefetch -O {d} {srr}", timeout=1800)
-        sh(f"{env}/fasterq-dump --split-files -O {d} {d}/{srr}/{srr}.sra", timeout=1800)
-        r1, r2 = f"{d}/{srr}_1.fastq", f"{d}/{srr}_2.fastq"
-        reads = f"{r1},{r2}" if os.path.exists(r2) else r1
+        # --split-3: paired -> {srr}_1/_2.fastq; SINGLE-end -> {srr}.fastq (NO _1 suffix).
+        # The old --split-files + hardcoded {srr}_1.fastq silently missed single-end runs (fasterq
+        # writes {srr}.fastq for those) -> skesa got a nonexistent file -> CalledProcessError. The
+        # AR-Bank E. faecium S-side block (SAMN15040xxx) is largely single-end, so this gutted the S class.
+        sh(f"{env}/fasterq-dump --split-3 -O {d} {d}/{srr}/{srr}.sra", timeout=1800)
+        r1, r2, single = f"{d}/{srr}_1.fastq", f"{d}/{srr}_2.fastq", f"{d}/{srr}.fastq"
+        if os.path.exists(r1) and os.path.exists(r2):
+            reads = f"{r1},{r2}"           # paired
+        elif os.path.exists(single):
+            reads = single                 # single-end ({srr}.fastq)
+        elif os.path.exists(r1):
+            reads = r1                      # unpaired _1 fallback
+        else:
+            raise FileNotFoundError(f"fasterq-dump produced no FASTQ for {srr} in {d}")
         sh(f"{env}/skesa --reads {reads} --cores 4 --memory 12 --contigs_out {d}/contigs.fasta",
            timeout=2400)
         sh(f"{env}/amrfinder -n {d}/contigs.fasta -O Enterococcus_faecium -o {out_tsv}", timeout=900)
