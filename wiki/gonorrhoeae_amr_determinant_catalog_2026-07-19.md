@@ -3,7 +3,9 @@
 **Date:** 2026-07-19 (cell BUILT 2026-07-20) · **Status:** CATALOG SOURCED + **CELL BUILT + real-symbol-
 validated** (`dna_decode/organism_rules/neisseria_amr.py`, commits 115b6cb + b1e017c); the 94-genome
 measured-MIC SCORING is the remaining step (Kaggle-native AMRFinder). · **Purpose:** the determinant→
-phenotype catalog + rules to score the AR Bank's 94 gonococcal isolates. · **Grounding:** Pathogenwatch
+phenotype catalog + rules to score the AR Bank's 52 gonococcal isolates (an earlier note said "94" — that
+conflated an early genus census; the full AR Bank enumerate is 1087 = the site's exact count, of which 52
+are N. gonorrhoeae, verified 2026-07-20). · **Grounding:** Pathogenwatch
 community catalog + AMRFinderPlus + Eyre 2017 + WHO 2016 reference panel. Frozen decoder surface untouched.
 
 ## Cell build status (2026-07-20)
@@ -109,7 +111,8 @@ from AMRFinder's `Class`/`Subclass` alone (which can't express the multi-gene AN
 
 ## Compute note
 
-94 gonococcal genomes >> the ~50-genome local-Docker threshold (the Klebsiella run wedged repeatedly at
+52 gonococcal genomes ~= the ~50-genome local-Docker threshold (~26 FREE after assembly-availability, so
+borderline local-doable per drug; the Klebsiella run wedged repeatedly at
 63). Per the captured lesson, **run AMRFinder on the Kaggle-native-bioconda path** (`ncbi-amrfinderplus`,
 no Docker) → pull `main.tsv` → apply the gono catalog locally. Don't babysit local Docker for this one.
 

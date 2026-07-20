@@ -36,7 +36,8 @@ not an acquisition — and it feeds infrastructure the project already built.
 ## Live cohort
 
 Enumeration across the 34 panels: **1087 unique-BioSample isolates**, all with WGS —
-E. coli 115 · Klebsiella 157 · Pseudomonas 140 · Staphylococcus 138 · **N. gonorrhoeae 94** ·
+E. coli 115 · Klebsiella 157 · Pseudomonas 140 · Staphylococcus 138 · **N. gonorrhoeae 52** (an earlier
+draft said "94" — a genus-census error; verified 52 on 2026-07-20, total enumerate 1087 = site exact) ·
 Candida 85 (incl. *C. auris*, our fungal cell) · Acinetobacter 68 · Enterobacter 50 · Salmonella 24 …
 
 ## KEY FINDING — the curated bank is resistance-enriched → per drug, ONE class is powered
