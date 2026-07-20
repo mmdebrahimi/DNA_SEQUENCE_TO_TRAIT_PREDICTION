@@ -47,6 +47,25 @@ read-mapping (`assemble_sra_cohort --method map --erg11-ref Cauris_FKS1_cds.fna`
 runs SRR26666757/776/783/804/795/808). When the FKS1 consensuses land, re-run the scorer to fold them in;
 expect FKS1 HS1 mutations (S639F/P/Y) in the R isolates → R, giving a powered two-sided result.
 
+## Update (R-side accruing) — uncatalogued-variant disclosure + a candidate blind spot
+
+`scripts/ar_bank_caur_micafungin_finalize.py` combines the assembled S + SRA-mapped R and — applying the
+ERG11 clade-IV lineage-marker lesson from earlier today to the echinocandin target — records the **raw**
+FKS1 substitutions (catalogued + uncatalogued) for BOTH R and S, then classifies each uncatalogued variant:
+
+- **R-only** uncatalogued variant → `CANDIDATE_BLIND_SPOT` (possible determinant OR R-lineage marker; needs
+  independent evidence — **NOT auto-added to the catalog**, exactly the over-call the ERG11 lesson warns against).
+- present in any **S** isolate → `BENIGN_POLYMORPHISM` / `LINEAGE_MARKER` (non-discriminative, not causal).
+
+Current partial (1R/8S — 1 of 6 R landed, rest SRA-accruing): spec **1.00** (8/8 S correct), sens 0.0 (the
+one R scored S). The lone R (**SAMN38094230**, MIC>8) carries FKS1 **W691L** — a clean, full-length,
+non-canonical variant (S639/F635/R1354 all WT; 0 consensus gaps) that the catalog does not list → flagged
+`CANDIDATE_BLIND_SPOT`. Two S-only variants (L1572I, I1817V) are correctly flagged `BENIGN_POLYMORPHISM`.
+**Verdict deferred to the full R set:** if the other 5 R carry canonical S639F/P/Y the catalog works and
+W691L is an isolate-specific quirk; if they share W691L / other non-hotspot variants, that is a genuine FKS1
+catalog blind spot (the echinocandin analogue of the distributed-mechanism tet failure). Not concluded on
+n=1.
+
 ## Scope
 
 - CURATED_NONFROZEN (fungal FKS1 echinocandin catalog); genotype = BLAST FKS1 (annotated GSC1) target-site;
