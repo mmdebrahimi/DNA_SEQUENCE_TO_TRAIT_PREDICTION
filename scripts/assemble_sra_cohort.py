@@ -40,13 +40,106 @@ def _read_cohort(tsv: Path) -> list[dict]:
     return list(csv.DictReader(tsv.read_text(encoding="utf-8").splitlines(), delimiter="\t"))
 
 
-def fetch_reads(run: str, reads_dir: Path, sra_image: str, timeout: float) -> tuple[Path, Path]:
-    """prefetch + fasterq-dump <run> -> reads_dir/<run>_1.fastq, _2.fastq. Returns the pair."""
+def _find_existing_reads(reads_dir: Path, run: str) -> tuple[Path, Path] | None:
+    """Return an already-downloaded paired-FASTQ pair (uncompressed OR gz) if present, else None.
+
+    Lets a run fetched by EITHER path (a prior Docker fasterq-dump -> `.fastq`, or a prior ENA
+    download -> `.fastq.gz`) be reused without re-downloading — the map/assemble tools accept both.
+    """
+    for suffix in (".fastq", ".fastq.gz"):
+        r1 = reads_dir / f"{run}_1{suffix}"
+        r2 = reads_dir / f"{run}_2{suffix}"
+        if r1.exists() and r1.stat().st_size > 0 and r2.exists() and r2.stat().st_size > 0:
+            return r1, r2
+    return None
+
+
+ENA_FILEREPORT = ("https://www.ebi.ac.uk/ena/portal/api/filereport"
+                  "?accession={run}&result=read_run&fields=fastq_ftp&format=tsv")
+
+
+def _ena_fastq_urls(run: str, timeout: float) -> list[str]:
+    """Query the ENA filereport API for <run> -> list of https FASTQ URLs (paired _1/_2 only)."""
+    import urllib.request
+
+    req = urllib.request.Request(ENA_FILEREPORT.format(run=run),
+                                 headers={"User-Agent": "dna_decode/assemble_sra_cohort"})
+    with urllib.request.urlopen(req, timeout=min(timeout, 120)) as resp:
+        text = resp.read().decode("utf-8")
+    lines = [ln for ln in text.splitlines() if ln.strip()]
+    if len(lines) < 2:
+        raise FileNotFoundError(f"ENA filereport returned no read_run rows for {run}")
+    header = lines[0].split("\t")
+    if "fastq_ftp" not in header:
+        raise FileNotFoundError(f"ENA filereport missing fastq_ftp column for {run}: {header}")
+    fi = header.index("fastq_ftp")
+    cells = lines[1].split("\t")
+    ftp_field = cells[fi] if fi < len(cells) else ""
+    if not ftp_field.strip():
+        raise FileNotFoundError(f"ENA has no public FASTQ for {run} (fastq_ftp empty)")
+    # keep only the paired _1/_2 members (drop the unpaired SRRxxxxxxx.fastq.gz if present)
+    urls = ["https://" + u for u in ftp_field.split(";")
+            if u.strip() and ("_1.fastq" in u or "_2.fastq" in u)]
+    urls.sort()  # _1 before _2
+    if len(urls) != 2:
+        raise FileNotFoundError(
+            f"ENA did not return a paired _1/_2 FASTQ set for {run} (got {len(urls)}: {ftp_field})")
+    return urls
+
+
+def _download(url: str, dest: Path, timeout: float, retries: int = 3) -> None:
+    """Stream <url> to <dest> (via a .part temp + atomic rename). Own retry loop for network blips."""
+    import urllib.request
+
+    last = None
+    for attempt in range(1, retries + 1):
+        part = dest.with_suffix(dest.suffix + ".part")
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "dna_decode/assemble_sra_cohort"})
+            with urllib.request.urlopen(req, timeout=min(timeout, 300)) as resp, open(part, "wb") as fh:
+                shutil.copyfileobj(resp, fh, length=1 << 20)  # 1 MiB chunks
+            if part.stat().st_size == 0:
+                raise IOError(f"downloaded 0 bytes from {url}")
+            part.replace(dest)
+            return
+        except Exception as e:  # noqa: BLE001 — network failures are the retry target
+            last = e
+            part.unlink(missing_ok=True)
+            if attempt < retries:
+                time.sleep(5 * attempt)
+    raise IOError(f"ENA download failed after {retries} attempts: {url} ({str(last)[:120]})")
+
+
+def fetch_reads_ena(run: str, reads_dir: Path, timeout: float) -> tuple[Path, Path]:
+    """ENA-DIRECT: download <run> paired FASTQs over https (NO Docker) -> reads_dir/<run>_{1,2}.fastq.gz.
+
+    The durable path: bypasses the sra-tools-in-Docker prefetch that repeatedly crashes Docker Desktop on
+    this host (container churn -> WSL2 D:-mount corruption). Only the downstream minimap2/SKESA/SPAdes map
+    step still uses Docker, and those accept gzipped FASTQ natively. gz files are ~7x smaller on the wire
+    than the fasterq-dump-uncompressed output, so this is also faster to fetch.
+    """
     reads_dir.mkdir(parents=True, exist_ok=True)
+    existing = _find_existing_reads(reads_dir, run)
+    if existing:
+        return existing
+    urls = _ena_fastq_urls(run, timeout)
+    r1 = reads_dir / f"{run}_1.fastq.gz"
+    r2 = reads_dir / f"{run}_2.fastq.gz"
+    _download(urls[0], r1, timeout)
+    _download(urls[1], r2, timeout)
+    if not (r1.exists() and r2.exists()):
+        raise FileNotFoundError(f"ENA-direct fetch did not produce paired FASTQs for {run} in {reads_dir}")
+    return r1, r2
+
+
+def fetch_reads(run: str, reads_dir: Path, sra_image: str, timeout: float) -> tuple[Path, Path]:
+    """prefetch + fasterq-dump <run> -> reads_dir/<run>_1.fastq, _2.fastq (Docker sra-tools). Returns pair."""
+    reads_dir.mkdir(parents=True, exist_ok=True)
+    existing = _find_existing_reads(reads_dir, run)
+    if existing:
+        return existing
     r1 = reads_dir / f"{run}_1.fastq"
     r2 = reads_dir / f"{run}_2.fastq"
-    if r1.exists() and r2.exists():
-        return r1, r2
     mounts = {str(reads_dir): "/work"}
     # prefetch into /work/<run>/<run>.sra, then fasterq-dump it
     docker_runner.run(sra_image, ["prefetch", "-O", "/work", run],
@@ -143,6 +236,9 @@ def main(argv=None):
                     help="augmented cohort TSV with genome_fasta column (default <cohort>.assembled.tsv)")
     ap.add_argument("--method", choices=["map", "assemble"], default="map",
                     help="map = targeted ERG11 read-mapping+consensus (fast, default); assemble = full WGS")
+    ap.add_argument("--fetch-method", choices=["ena", "sra"], default="ena",
+                    help="ena = ENA-direct https FASTQ download (durable, no Docker for fetch; default); "
+                         "sra = sra-tools prefetch+fasterq-dump in Docker (legacy; crashes Docker on churn)")
     ap.add_argument("--erg11-ref",
                     default="data/fungal_ref/Cauris_ERG11_cds.fna",
                     help="ERG11 CDS reference for --method map")
@@ -188,8 +284,11 @@ def main(argv=None):
             if attempt > 1:
                 print(f"{tag}: retry {attempt-1}/{a.retries} after transient error", flush=True)
                 time.sleep(10 * attempt)  # back off (lets a hiccuping daemon recover)
-            print(f"{tag}: fetching reads...", flush=True)
-            r1, r2 = fetch_reads(run, reads_root / run, a.sra_image, a.fetch_timeout)
+            print(f"{tag}: fetching reads ({a.fetch_method})...", flush=True)
+            if a.fetch_method == "ena":
+                r1, r2 = fetch_reads_ena(run, reads_root / run, a.fetch_timeout)
+            else:
+                r1, r2 = fetch_reads(run, reads_root / run, a.sra_image, a.fetch_timeout)
             print(f"{tag}: {a.method} ({a.assembler if a.method=='assemble' else 'minimap2+samtools'})...",
                   flush=True)
             if a.method == "map":
