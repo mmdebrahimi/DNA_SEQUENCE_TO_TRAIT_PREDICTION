@@ -1,8 +1,37 @@
 # AR Bank C. auris micafungin (FKS1) — echinocandin arm: reference verified + S-side clean, R-side SRA-accruing
 
-**Date:** 2026-07-20 · **Status:** S-side SCORED clean (8/8), R-side SRA-accruing (UNDERPOWERED until R lands)
+**Date:** 2026-07-20 · **Status:** ✅ **POWERED — SCORED_ENDORSED** (5R/8S, sens 0.60, spec 1.00, acc 0.846)
 · **Cell:** `dna_decode/data/fungal_amr` FKS1 echinocandin catalog (NON-FROZEN) via `fungal_erg11_caller`
 (gene-agnostic) · **Frozen surface:** byte-unchanged (verify_lock OK).
+
+## POWERED RESULT (5R/8S) + the uncatalogued-variant findings
+
+All 6 R were pursued via SRA read-mapping; 5 landed (the 6th, SRR26666804 @ 3.4 GB, deferred on host-disk
+I/O — not needed for powering). The per-R FKS1 target-site calls:
+
+| R isolate | FKS1 variant | catalog call | interpretation |
+|---|---|---|---|
+| SAMN38094192 | **S639P** | R ✓ | canonical HS1 — caught |
+| SAMN38094212 | **S639Y** | R ✓ | canonical HS1 — caught |
+| SAMN38094223 | **S639F** | R ✓ | canonical HS1 — caught |
+| SAMN38094197 | **F635C** | S (miss) | **substitution at a CATALOGUED HOTSPOT position** (F635); catalog lists only `F635del` → defensible catalog-completion candidate |
+| SAMN38094230 | **W691L** | S (miss) | non-hotspot position; only 1 R carries it → isolate-specific, NOT a systematic blind spot |
+
+**Determinant-scan TRANSFERS to the echinocandin target: sens 0.60, spec 1.00 (8/8 S correct), POWERED,
+SCORED_ENDORSED.** 3/5 R caught cleanly via canonical S639 substitutions (S639F/P/Y) — the catalog works on
+the dominant FKS1 HS1 mechanism.
+
+**Two misses, honestly distinct** (both DISCLOSED, neither auto-added — the ERG11 clade-IV over-call rail):
+- **F635C** (SAMN38094197) is the stronger finding: F635 IS a documented HS1 hotspot, but the catalog only
+  encodes the *deletion* `F635del`, so the *substitution* F635C slips through. Treating any F635 substitution
+  as resistance (not just the del) would lift sens 0.60 → 0.80 — a defensible catalog completion, flagged for
+  independent review, NOT auto-applied on n=1.
+- **W691L** (SAMN38094230) is a non-hotspot variant carried by a single R → the "candidate blind spot" from
+  the n=1 partial resolves as **isolate-specific**, not a mechanism the catalog systematically misses.
+
+The distinction is the whole point of the uncatalogued-variant disclosure: it surfaced BOTH, and let the
+hotspot-vs-non-hotspot position separate a real catalog gap (F635C) from an isolate quirk (W691L) — instead
+of silently scoring both R as S.
 
 ## Why this arm
 

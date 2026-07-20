@@ -11,28 +11,28 @@
   "label_source": "ar_bank_MIC_cdc_tentative_breakpoint (micafungin >=4 -> R)",
   "genotype_source": "BLAST FKS1 (annotated GSC1) target-site; assembled S + SRA-read-mapped R FKS1 consensus (assemble_sra_cohort --method map)",
   "binary": {
-    "n_scored": 10,
-    "tp": 1,
+    "n_scored": 13,
+    "tp": 3,
     "fp": 0,
     "tn": 8,
-    "fn": 1,
+    "fn": 2,
     "abstain": 0,
-    "acc": 0.9,
-    "sens": 0.5,
+    "acc": 0.846,
+    "sens": 0.6,
     "spec": 1.0
   },
-  "n_R": 2,
+  "n_R": 5,
   "n_S": 8,
   "n_indeterminate": 0,
   "sens_wilson95": [
-    0.09452865480086614,
-    0.9054713451991339
+    0.23071993220883708,
+    0.8823817688407467
   ],
   "spec_wilson95": [
     0.6755843804891231,
     1.0
   ],
-  "powered": false,
+  "powered": true,
   "spec_floor": 0.85,
   "uncatalogued_fks1_variants": {
     "L1572I": {
@@ -50,6 +50,13 @@
       ],
       "interpretation": "BENIGN_POLYMORPHISM (present only in susceptible isolate(s) -> not a resistance determinant)"
     },
+    "F635C": {
+      "in_R": [
+        "SAMN38094197"
+      ],
+      "in_S": [],
+      "interpretation": "CANDIDATE_BLIND_SPOT (R-only, uncatalogued -> possible determinant OR R-lineage marker; needs independent evidence, NOT auto-added to catalog)"
+    },
     "W691L": {
       "in_R": [
         "SAMN38094230"
@@ -59,6 +66,6 @@
     }
   },
   "catalog_note": "uncatalogued FKS1 variants are DISCLOSED, never auto-added to the catalog (1-isolate, no independent causal evidence = the ERG11 clade IV over-call trap).",
-  "headline": "UNDERPOWERED",
+  "headline": "SCORED_ENDORSED",
   "frozen_surface_changed": false
 }
