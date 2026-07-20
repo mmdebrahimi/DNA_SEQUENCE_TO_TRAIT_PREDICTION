@@ -1,9 +1,24 @@
 # N. gonorrhoeae AMR determinant catalog — sourced, for the new gonococcal cell
 
-**Date:** 2026-07-19 · **Status:** CATALOG FOUND + sourced (research deliverable; the cell BUILD is the
-next step) · **Purpose:** the determinant→phenotype catalog needed to score the AR Bank's 94 gonococcal
-isolates against the (new) gonococcal decoder · **Grounding:** Pathogenwatch community catalog + AMRFinderPlus
-+ Eyre 2017 + WHO 2016 reference panel (sources below). Frozen E. coli/Klebsiella decoder surface untouched.
+**Date:** 2026-07-19 (cell BUILT 2026-07-20) · **Status:** CATALOG SOURCED + **CELL BUILT + real-symbol-
+validated** (`dna_decode/organism_rules/neisseria_amr.py`, commits 115b6cb + b1e017c); the 94-genome
+measured-MIC SCORING is the remaining step (Kaggle-native AMRFinder). · **Purpose:** the determinant→
+phenotype catalog + rules to score the AR Bank's 94 gonococcal isolates. · **Grounding:** Pathogenwatch
+community catalog + AMRFinderPlus + Eyre 2017 + WHO 2016 reference panel. Frozen decoder surface untouched.
+
+## Cell build status (2026-07-20)
+
+The gonococcal cell was NOT a new file — `organism_rules/neisseria_amr.py` already existed (cipro gyrA
+QRDR + tet tet(M)). It was EXTENDED (non-duplicating) to the full AR Bank panel: `call_ng_azithromycin`
+(23S A2045G/C2597T → R, mtrR accessory), `call_ng_ceftriaxone`/`call_ng_cefixime` (any curated penA point
+→ R, ponA/porB/mtrR accessory), `call_ng_penicillin` (blaTEM → R, chromosomal accessory), `call_ng_gentamicin`
+(**ABSTAIN** — no determinant), + a `call_ng_amr(drug, symbols)` dispatcher. **R3 real-surface validated:**
+ran AMRFinder `-O Neisseria_gonorrhoeae` on a real gono genome (AR#0165, GCA_042036815.1) — this CAUGHT a
+bug (a hard-coded penA codon set missed real mosaic positions 504/510) now fixed to match any curated penA
+point; the full real symbol vector is pinned in `test_ng_real_amrfinder_symbols_AR0165` (12 tests green).
+**Remaining:** wire an AR-Bank-gono scorer (route to `call_ng_amr` instead of the frozen `call_resistance`)
++ run the 94 genomes via Kaggle-native AMRFinder → measured-MIC one-sided validation (spec≥0.85 falsifier
+per drug, like the cipro/tet rules).
 
 ## The two-layer answer (mirrors the E. coli/Klebsiella cells)
 
