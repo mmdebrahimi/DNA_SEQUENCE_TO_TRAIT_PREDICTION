@@ -1,0 +1,67 @@
+{
+  "_schema": "ar-bank-gono-validation-v1",
+  "date": "2026-07-20",
+  "run_id": "2026-07-20",
+  "cohort": "ar_bank_gono",
+  "organism": "Neisseria gonorrhoeae",
+  "amrfinder_organism": "Neisseria_gonorrhoeae",
+  "registry_organism": "Neisseria gonorrhoeae",
+  "drug": "cefixime",
+  "evidence_tier": "external_clinical_curated_nonfrozen",
+  "independence_tier": "CDC AR Isolate Bank measured BMD-MIC, provenance-disjoint (BioSample + resolution-free assembly-base) vs the tuning cohorts; genotype = AMRFinderPlus -O Neisseria_gonorrhoeae determinant calls; NOT methodology-independent (the rule is curated from Pathogenwatch 485.toml + literature).",
+  "strict": {
+    "n_scored": 23,
+    "tp": 20,
+    "fp": 3,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.87,
+    "sens": 1.0,
+    "spec": 0.0,
+    "n_excluded_no_assembly": 3
+  },
+  "relaxed": {
+    "n_scored": 23,
+    "tp": 20,
+    "fp": 3,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.87,
+    "sens": 1.0,
+    "spec": 0.0,
+    "n_excluded_no_assembly": 3
+  },
+  "buckets": {
+    "drug": "cefixime",
+    "label_source": "ar_bank_INT_cdc_gonococcal_breakpoints",
+    "n_total": 50,
+    "n_R": 42,
+    "n_S": 8
+  },
+  "leakage_control": "BioSample+assembly-level preflight: DEGRADED; 3 reads-only excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": false,
+    "degraded": true,
+    "reasons": [
+      "indeterminate fraction 0.5106 > 0.2 (of 47 attempted-FREE)"
+    ],
+    "n_attempted_free": 47,
+    "n_indeterminate": 24,
+    "indeterminate_fraction": 0.5106,
+    "scored_R": 20,
+    "scored_S": 3,
+    "min_per_class": 1,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "penA mosaic/ESC PBP2 substitution -> cefixime R (ponA/porB/mtrR accessory; ESC-R is subtle/reduced-susceptibility -> validate spec on measured MIC)",
+  "spec_floor": 0.85,
+  "frozen_surface_changed": false
+}

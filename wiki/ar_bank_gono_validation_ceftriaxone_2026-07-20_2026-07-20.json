@@ -1,0 +1,68 @@
+{
+  "_schema": "ar-bank-gono-validation-v1",
+  "date": "2026-07-20",
+  "run_id": "2026-07-20",
+  "cohort": "ar_bank_gono",
+  "organism": "Neisseria gonorrhoeae",
+  "amrfinder_organism": "Neisseria_gonorrhoeae",
+  "registry_organism": "Neisseria gonorrhoeae",
+  "drug": "ceftriaxone",
+  "evidence_tier": "external_clinical_curated_nonfrozen",
+  "independence_tier": "CDC AR Isolate Bank measured BMD-MIC, provenance-disjoint (BioSample + resolution-free assembly-base) vs the tuning cohorts; genotype = AMRFinderPlus -O Neisseria_gonorrhoeae determinant calls; NOT methodology-independent (the rule is curated from Pathogenwatch 485.toml + literature).",
+  "strict": {
+    "n_scored": 25,
+    "tp": 0,
+    "fp": 25,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.0,
+    "sens": null,
+    "spec": 0.0,
+    "n_excluded_no_assembly": 3
+  },
+  "relaxed": {
+    "n_scored": 25,
+    "tp": 0,
+    "fp": 25,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.0,
+    "sens": null,
+    "spec": 0.0,
+    "n_excluded_no_assembly": 3
+  },
+  "buckets": {
+    "drug": "ceftriaxone",
+    "label_source": "ar_bank_INT_cdc_gonococcal_breakpoints",
+    "n_total": 52,
+    "n_R": 2,
+    "n_S": 50
+  },
+  "leakage_control": "BioSample+assembly-level preflight: DEGRADED; 3 reads-only excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": true,
+    "degraded": true,
+    "reasons": [
+      "strict scored R 0 < min_per_class 1 (underpowered)",
+      "indeterminate fraction 0.4898 > 0.2 (of 49 attempted-FREE)"
+    ],
+    "n_attempted_free": 49,
+    "n_indeterminate": 24,
+    "indeterminate_fraction": 0.4898,
+    "scored_R": 0,
+    "scored_S": 25,
+    "min_per_class": 1,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "penA mosaic/ESC PBP2 substitution -> ceftriaxone R (ponA/porB/mtrR accessory; ESC-R is subtle/reduced-susceptibility -> validate spec on measured MIC)",
+  "spec_floor": 0.85,
+  "frozen_surface_changed": false
+}
