@@ -21,6 +21,53 @@ _QRDR_RE = re.compile(r"^(gyrA|parC)_([A-Z])(\d+)([A-Z*])$")
 _QRDR_CODONS = {"gyrA": frozenset({83, 87}), "parC": frozenset({80, 84})}
 _TET_RE = re.compile(r"^tet\(")
 
+# Glycopeptide van clusters. The RESISTANCE DETERMINANT is the D-Ala-D-X ligase — the BARE `van<letter>`
+# symbol (vanA, vanB, vanD, vanM, ...); the accessory genes carry a cluster suffix (vanH-A / vanX-A /
+# vanR-A / vanS-A / vanY-A / vanZ-A). Match the ligase (no suffix).
+_VAN_LIGASE_RE = re.compile(r"^van([A-N])$")
+# Ligase cluster-type -> teicoplanin phenotype. vanA/vanD/vanM = high-level, teico-R; vanB/vanC/vanG/vanN =
+# teico-SUSCEPTIBLE (the classic vanA-vs-vanB glycopeptide split). vanE is teico-S; vanL rare, treat teico-S.
+_TEICO_R_LIGASES = frozenset({"A", "D", "M"})
+# Regulator genes of the two-component induction system (any cluster suffix). Their ABSENCE alongside
+# present structural van genes = a vancomycin-VARIABLE enterococcus (VVE): operon present but non-expressed
+# -> phenotypically susceptible. Disclosed (not hard-coded into the call) — the genotype is resistance-capable.
+_VAN_REGULATOR_RE = re.compile(r"^van[RS]-")
+_VAN_STRUCTURAL_RE = re.compile(r"^van[HXY]-")
+
+
+def _van_ligases(symbols: list[str]) -> list[str]:
+    return [s.strip() for s in symbols if _VAN_LIGASE_RE.match((s or "").strip())]
+
+
+def _van_expression_note(symbols: list[str]) -> str | None:
+    """Flag potential non-expression (VVE): structural van genes present but regulator (vanR/vanS) absent."""
+    syms = [(s or "").strip() for s in symbols]
+    has_struct = any(_VAN_STRUCTURAL_RE.match(s) for s in syms)
+    has_reg = any(_VAN_REGULATOR_RE.match(s) for s in syms)
+    if has_struct and not has_reg:
+        return ("POSSIBLE_NON_EXPRESSION_VVE: structural van genes present but vanR/vanS regulator absent -> "
+                "operon may be non-induced (vancomycin-variable enterococcus); genotype is resistance-CAPABLE")
+    return None
+
+
+def call_efm_vancomycin(symbols: list[str]) -> dict:
+    """Any acquired van ligase (vanA/B/D/M/...) -> R (standard determinant convention). VVE disclosed."""
+    ligases = _van_ligases(symbols)
+    return {"prediction": "R" if ligases else "S", "matched_van_ligases": ligases,
+            "expression_note": _van_expression_note(symbols),
+            "rule": "any acquired van ligase (vanA/vanB/vanD/vanM/...) -> R; VVE non-expression disclosed",
+            "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local"}
+
+
+def call_efm_teicoplanin(symbols: list[str]) -> dict:
+    """vanA/vanD/vanM ligase -> teico-R; vanB/vanC/vanG/vanN only -> teico-S (vanA-vs-vanB split)."""
+    ligases = _van_ligases(symbols)
+    teico_r = [g for g in ligases if _VAN_LIGASE_RE.match(g).group(1) in _TEICO_R_LIGASES]
+    return {"prediction": "R" if teico_r else "S", "matched_teico_r_ligases": teico_r,
+            "all_van_ligases": ligases, "expression_note": _van_expression_note(symbols),
+            "rule": "vanA/vanD/vanM -> teicoplanin-R; vanB/vanC/vanG/vanN alone -> teicoplanin-S",
+            "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local"}
+
 
 def call_efm_ciprofloxacin(symbols: list[str]) -> dict:
     hits = [s.strip() for s in symbols

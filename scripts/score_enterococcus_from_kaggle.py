@@ -31,6 +31,9 @@ SPEC_FLOOR = 0.85
 DRUGS = {
     "doxycycline": ("data/raw/ar_bank_enterococcus_faecium_extval_doxycycline", EFM.call_efm_tetracycline),
     "levofloxacin": ("data/raw/ar_bank_enterococcus_faecium_extval_levofloxacin", EFM.call_efm_ciprofloxacin),
+    # Same AMRFinder run per isolate -> two more powerable glycopeptide cells (van clusters):
+    "vancomycin": ("data/raw/ar_bank_enterococcus_faecium_extval_vancomycin", EFM.call_efm_vancomycin),
+    "teicoplanin": ("data/raw/ar_bank_enterococcus_faecium_extval_teicoplanin", EFM.call_efm_teicoplanin),
 }
 
 
