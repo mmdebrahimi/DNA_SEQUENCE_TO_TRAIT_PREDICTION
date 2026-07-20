@@ -1,0 +1,2643 @@
+{
+  "_schema": "external-cohort-manifest-v1",
+  "run_id": "arbank_gono_2026-07-20",
+  "project": "ar_bank_gono",
+  "source": "cdc_fda_ar_isolate_bank",
+  "organism_filter": [
+    "gonorrhoeae"
+  ],
+  "label_source": "ar_bank_INT_cdc_gonococcal_breakpoints",
+  "leakage_excluded": [],
+  "n_leakage_excluded": 0,
+  "date": "2026-07-20",
+  "rows": [
+    {
+      "biosample": "SAMEA3165236",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165238",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165239",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165241",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165243",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165245",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165246",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165247",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165249",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165250",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165252",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165254",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165256",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165257",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165258",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165262",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165264",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165266",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165268",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165269",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165270",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165272",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165275",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165279",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165280",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165282",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165283",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165286",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165287",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165290",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165291",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165292",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165293",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165296",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165298",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165299",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165771",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165772",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233712",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233713",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332250",
+      "drug": "azithromycin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332251",
+      "drug": "azithromycin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165236",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165238",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165239",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165241",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165243",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165245",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165246",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165247",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165249",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165250",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165252",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165254",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165256",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165257",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165258",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165262",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165264",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165266",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165268",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165269",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165270",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165272",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165275",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165279",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165280",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165282",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165283",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165286",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165287",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165290",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165291",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165292",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165293",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165296",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165298",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165299",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165648",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165649",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165653",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165655",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165656",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165657",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165659",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165668",
+      "drug": "cefixime",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165771",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165772",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233712",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233713",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332250",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332251",
+      "drug": "cefixime",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165236",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165238",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165239",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165241",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165243",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165245",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165246",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165247",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165249",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165250",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165252",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165254",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165256",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165257",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165258",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165262",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165264",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165266",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165268",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165269",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165270",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165272",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165275",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165279",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165280",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165282",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165283",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165286",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165287",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165290",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165291",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165292",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165293",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165296",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165298",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165299",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165648",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165649",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165651",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165653",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165655",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165656",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165657",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165659",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165660",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165668",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165771",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165772",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233712",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233713",
+      "drug": "ceftriaxone",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332250",
+      "drug": "ceftriaxone",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332251",
+      "drug": "ceftriaxone",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165236",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165238",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165239",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165241",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165243",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165245",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165246",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165247",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165249",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165250",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165252",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165254",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165256",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165257",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165258",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165262",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165264",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165266",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165268",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165269",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165270",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165272",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165275",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165279",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165280",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165282",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165283",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165286",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165287",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165290",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165291",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165292",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165293",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165296",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165298",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165299",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165648",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165649",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165651",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165653",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165655",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165656",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165657",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165659",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165660",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165668",
+      "drug": "ciprofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165771",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165772",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233712",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233713",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332250",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332251",
+      "drug": "ciprofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165236",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165238",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165239",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165241",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165243",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165245",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165246",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165247",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165249",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165250",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165252",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165254",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165256",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165257",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165258",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165262",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165264",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165266",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165268",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165269",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165270",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165272",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165275",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165279",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165280",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165282",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165283",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165286",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165287",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165290",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165291",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165292",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165293",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165296",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165298",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165299",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165648",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165651",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165657",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165660",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165771",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165772",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233712",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233713",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332250",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332251",
+      "drug": "penicillin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165236",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165238",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165239",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165241",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165243",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165245",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165246",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165249",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165250",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165252",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165254",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165257",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165258",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165262",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165264",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165266",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165268",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165269",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165270",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165272",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165275",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165279",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165280",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165282",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165283",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165286",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165287",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165290",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165291",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165292",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165293",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165296",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165298",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165299",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165648",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165653",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165656",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165657",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165771",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3165772",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233712",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMEA3233713",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332250",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    },
+    {
+      "biosample": "SAMN35332251",
+      "drug": "tetracycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true,
+      "label_source": "ar_bank_INT",
+      "conflict_status": "ok"
+    }
+  ],
+  "biosamples": [
+    "SAMEA3165236",
+    "SAMEA3165238",
+    "SAMEA3165239",
+    "SAMEA3165241",
+    "SAMEA3165243",
+    "SAMEA3165245",
+    "SAMEA3165246",
+    "SAMEA3165247",
+    "SAMEA3165249",
+    "SAMEA3165250",
+    "SAMEA3165252",
+    "SAMEA3165254",
+    "SAMEA3165256",
+    "SAMEA3165257",
+    "SAMEA3165258",
+    "SAMEA3165262",
+    "SAMEA3165264",
+    "SAMEA3165266",
+    "SAMEA3165268",
+    "SAMEA3165269",
+    "SAMEA3165270",
+    "SAMEA3165272",
+    "SAMEA3165275",
+    "SAMEA3165279",
+    "SAMEA3165280",
+    "SAMEA3165282",
+    "SAMEA3165283",
+    "SAMEA3165286",
+    "SAMEA3165287",
+    "SAMEA3165290",
+    "SAMEA3165291",
+    "SAMEA3165292",
+    "SAMEA3165293",
+    "SAMEA3165296",
+    "SAMEA3165298",
+    "SAMEA3165299",
+    "SAMEA3165648",
+    "SAMEA3165649",
+    "SAMEA3165651",
+    "SAMEA3165653",
+    "SAMEA3165655",
+    "SAMEA3165656",
+    "SAMEA3165657",
+    "SAMEA3165659",
+    "SAMEA3165660",
+    "SAMEA3165668",
+    "SAMEA3165771",
+    "SAMEA3165772",
+    "SAMEA3233712",
+    "SAMEA3233713",
+    "SAMN35332250",
+    "SAMN35332251"
+  ]
+}
