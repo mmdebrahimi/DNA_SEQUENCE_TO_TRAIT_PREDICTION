@@ -1,0 +1,936 @@
+{
+  "_schema": "external-cohort-manifest-v1",
+  "run_id": "arbank_staph_disjoint_2026-07-20",
+  "project": "ar_bank_staphylococcus_aureus",
+  "source": "cdc_fda_ar_isolate_bank",
+  "organism_filter": [
+    "Staphylococcus aureus"
+  ],
+  "label_source": "ar_bank_INT_cdc",
+  "leakage_excluded": [
+    "SAMN04901606",
+    "SAMN04901609",
+    "SAMN04901610",
+    "SAMN04901612",
+    "SAMN04901613",
+    "SAMN04901616",
+    "SAMN04901617",
+    "SAMN04901618",
+    "SAMN07291554",
+    "SAMN07291555",
+    "SAMN07291558",
+    "SAMN07291560",
+    "SAMN07291562",
+    "SAMN07291564",
+    "SAMN07291566"
+  ],
+  "date": "2026-07-20",
+  "rows": [
+    {
+      "biosample": "SAMN07291556",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291557",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291559",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291561",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291563",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291565",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291567",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291568",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291569",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291570",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291571",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291572",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291573",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291574",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291575",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291576",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291577",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291578",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291579",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291580",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291581",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291582",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291583",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291584",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN07291585",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN47875814",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN47875815",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN04901605",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN04901607",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN04901608",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN04901611",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN04901614",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN04901615",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953993",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953994",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953995",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953996",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953997",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953998",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953999",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954000",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954001",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954002",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953831",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953832",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953833",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953834",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953835",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953836",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953837",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953838",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953839",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953840",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953841",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953842",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953843",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953844",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953845",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953846",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953851",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953852",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953853",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953854",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953855",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953856",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953857",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953858",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953859",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953860",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953861",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953863",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953864",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953865",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953866",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953867",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953868",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953869",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953870",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953871",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953872",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953873",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953874",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11953875",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412170",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412171",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412172",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412173",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412174",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412175",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412176",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412177",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412178",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412179",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412180",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412181",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412182",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412183",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412184",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412185",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412186",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412187",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412188",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412189",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412190",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412191",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412192",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412193",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412194",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412195",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412196",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412197",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412198",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13412199",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    }
+  ],
+  "biosamples": [
+    "SAMN04901605",
+    "SAMN04901607",
+    "SAMN04901608",
+    "SAMN04901611",
+    "SAMN04901614",
+    "SAMN04901615",
+    "SAMN07291556",
+    "SAMN07291557",
+    "SAMN07291559",
+    "SAMN07291561",
+    "SAMN07291563",
+    "SAMN07291565",
+    "SAMN07291567",
+    "SAMN07291568",
+    "SAMN07291569",
+    "SAMN07291570",
+    "SAMN07291571",
+    "SAMN07291572",
+    "SAMN07291573",
+    "SAMN07291574",
+    "SAMN07291575",
+    "SAMN07291576",
+    "SAMN07291577",
+    "SAMN07291578",
+    "SAMN07291579",
+    "SAMN07291580",
+    "SAMN07291581",
+    "SAMN07291582",
+    "SAMN07291583",
+    "SAMN07291584",
+    "SAMN07291585",
+    "SAMN11953831",
+    "SAMN11953832",
+    "SAMN11953833",
+    "SAMN11953834",
+    "SAMN11953835",
+    "SAMN11953836",
+    "SAMN11953837",
+    "SAMN11953838",
+    "SAMN11953839",
+    "SAMN11953840",
+    "SAMN11953841",
+    "SAMN11953842",
+    "SAMN11953843",
+    "SAMN11953844",
+    "SAMN11953845",
+    "SAMN11953846",
+    "SAMN11953851",
+    "SAMN11953852",
+    "SAMN11953853",
+    "SAMN11953854",
+    "SAMN11953855",
+    "SAMN11953856",
+    "SAMN11953857",
+    "SAMN11953858",
+    "SAMN11953859",
+    "SAMN11953860",
+    "SAMN11953861",
+    "SAMN11953863",
+    "SAMN11953864",
+    "SAMN11953865",
+    "SAMN11953866",
+    "SAMN11953867",
+    "SAMN11953868",
+    "SAMN11953869",
+    "SAMN11953870",
+    "SAMN11953871",
+    "SAMN11953872",
+    "SAMN11953873",
+    "SAMN11953874",
+    "SAMN11953875",
+    "SAMN11953993",
+    "SAMN11953994",
+    "SAMN11953995",
+    "SAMN11953996",
+    "SAMN11953997",
+    "SAMN11953998",
+    "SAMN11953999",
+    "SAMN11954000",
+    "SAMN11954001",
+    "SAMN11954002",
+    "SAMN13412170",
+    "SAMN13412171",
+    "SAMN13412172",
+    "SAMN13412173",
+    "SAMN13412174",
+    "SAMN13412175",
+    "SAMN13412176",
+    "SAMN13412177",
+    "SAMN13412178",
+    "SAMN13412179",
+    "SAMN13412180",
+    "SAMN13412181",
+    "SAMN13412182",
+    "SAMN13412183",
+    "SAMN13412184",
+    "SAMN13412185",
+    "SAMN13412186",
+    "SAMN13412187",
+    "SAMN13412188",
+    "SAMN13412189",
+    "SAMN13412190",
+    "SAMN13412191",
+    "SAMN13412192",
+    "SAMN13412193",
+    "SAMN13412194",
+    "SAMN13412195",
+    "SAMN13412196",
+    "SAMN13412197",
+    "SAMN13412198",
+    "SAMN13412199",
+    "SAMN47875814",
+    "SAMN47875815"
+  ]
+}

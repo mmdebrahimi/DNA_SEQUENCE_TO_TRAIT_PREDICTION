@@ -1,0 +1,61 @@
+{
+  "_schema": "external-preflight-v1",
+  "date": "2026-07-20",
+  "project": "CDC_AR_ISOLATE_BANK",
+  "cohort_name": "ar_bank_enterococcus_faecium",
+  "mode": "exact_set",
+  "scored_gate": true,
+  "verdict": "FAIL",
+  "reasons": [
+    "unresolved tuning fraction 0.4056 > 0.05",
+    "no FREE (assembly-resolvable) BioSamples \u2014 free pilot N is zero"
+  ],
+  "n_cohort_biosamples": 17,
+  "assembly_availability": {
+    "n_biosamples": 17,
+    "n_free": 0,
+    "n_assembly_required": 17,
+    "free": [],
+    "assembly_required": [
+      "SAMN11953784",
+      "SAMN11954004",
+      "SAMN11954006",
+      "SAMN11954007",
+      "SAMN11954008",
+      "SAMN11954010",
+      "SAMN11954011",
+      "SAMN15040082",
+      "SAMN15040086",
+      "SAMN15040088",
+      "SAMN15040089",
+      "SAMN15040091",
+      "SAMN15040093",
+      "SAMN15040101",
+      "SAMN15040102",
+      "SAMN15040105",
+      "SAMN15040106"
+    ]
+  },
+  "leakage": {
+    "n_tuning": 1509,
+    "n_resolved": 897,
+    "n_unresolved": 612,
+    "unresolved_fraction": 0.4056,
+    "unresolved_threshold": 0.05,
+    "overlap_biosamples": [],
+    "fail_overlap": false,
+    "fail_unresolved": true,
+    "passed": false
+  },
+  "assembly_overlap": {
+    "overlap_biosamples": [],
+    "n_tuning_assembly_bases": 1509,
+    "fail_overlap": false,
+    "passed": true
+  },
+  "mic_open": true,
+  "manifest_complete": true,
+  "manifest_degraded": false,
+  "manifest_warnings": [],
+  "manifest_n_cohorts": 43
+}
