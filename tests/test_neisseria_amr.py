@@ -67,16 +67,32 @@ def test_ng_penicillin_blaTEM_primary():
 
 
 def test_ng_esc_penA_mosaic():
-    # penA ESC-associated substitutions -> R for both ceftriaxone + cefixime
-    for sym in ("penA_A501V", "penA_G545S", "penA_I312M", "penA_mosaic_60.001"):
+    # AMRFinder emits only resistance-curated penA point mutations (all Subclass=CEPHALOSPORIN), incl the
+    # real mosaic positions 504/510 an earlier hard-coded codon set missed -> match ANY penA point.
+    for sym in ("penA_G545S", "penA_I312M", "penA_V316T", "penA_F504L", "penA_A510V", "penA_N512Y",
+                "penA_mosaic_60.001"):
         assert call_ng_ceftriaxone([sym])["prediction"] == "R", sym
         assert call_ng_cefixime([sym])["prediction"] == "R", sym
-    # a non-ESC penA codon does NOT trigger; wild-type -> S
-    assert call_ng_ceftriaxone(["penA_A100V"])["prediction"] == "S"
     assert call_ng_ceftriaxone([])["prediction"] == "S"
-    # ponA/porB/mtrR are accessory
-    r = call_ng_ceftriaxone(["ponA_L421P", "porB_G120K"])
+    # ponA/porB/mtrR are accessory (do NOT flip the call alone)
+    r = call_ng_ceftriaxone(["ponA_L421P", "porB1b_G120K", "mtrR_A-53del"])
     assert r["prediction"] == "S" and r["accessory_ponA_porB_mtr"]
+
+
+def test_ng_real_amrfinder_symbols_AR0165():
+    """R3 real-surface pin: the ACTUAL AMRFinder -O Neisseria_gonorrhoeae output for AR Bank #0165
+    (GCA_042036815.1). gyrA S91F/D95G -> cipro R; penA mosaic set -> ESC R; no 23S -> azithro S;
+    no blaTEM -> penicillin S (chromosomal accessory only); gentamicin abstains."""
+    syms = ["ponA_L421P", "pbp2", "penA_A510V", "penA_F504L", "penA_G545S", "penA_I312M",
+            "penA_N512Y", "penA_V316T", "mtrR_A-53del", "folP_R228S", "rpsJ_V57M",
+            "porB1b_A121N", "porB1b_G120K", "gyrA_D95G", "gyrA_S91F", "parC_S87R"]
+    assert call_ng_amr("ciprofloxacin", syms)["prediction"] == "R"     # gyrA QRDR
+    assert call_ng_amr("ceftriaxone", syms)["prediction"] == "R"       # penA mosaic
+    assert call_ng_amr("cefixime", syms)["prediction"] == "R"
+    assert call_ng_amr("azithromycin", syms)["prediction"] == "S"      # no 23S mutation on this isolate
+    assert call_ng_amr("penicillin", syms)["prediction"] == "S"        # no blaTEM (chromosomal accessory)
+    assert call_ng_amr("tetracycline", syms)["prediction"] == "S"      # rpsJ V57M accessory-only, no tet(M)
+    assert call_ng_amr("gentamicin", syms)["prediction"] == "INDETERMINATE"
 
 
 def test_ng_gentamicin_abstains():

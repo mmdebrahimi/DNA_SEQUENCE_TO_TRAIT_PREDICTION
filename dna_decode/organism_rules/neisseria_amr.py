@@ -102,21 +102,19 @@ DRUG_GEN = "gentamicin"
 # BOTH the gonococcal WHO-2016 coordinates (A2045G / C2597T) and the E. coli-equivalent coordinates
 # (A2059G / C2611T) that some callers emit.
 _23S_AZM_MUTS = ("A2045G", "C2597T", "A2059G", "C2611T")
-# penA mosaic / ESC-associated PBP2 substitution codons (mosaic penA-34/60 + non-mosaic A501x). Any of
-# these -> decreased ESC susceptibility / R (the primary cephalosporin determinant).
-_PENA_ESC_CODONS = frozenset({311, 312, 316, 483, 501, 512, 542, 545})
-_PENA_POINT_RE = re.compile(r"^penA_([A-Z])(\d+)([A-Z*])$")
+# penA PBP2 determinant. AMRFinderPlus (-O Neisseria_gonorrhoeae) reports ONLY resistance-CURATED penA
+# point mutations, each tagged Subclass=CEPHALOSPORIN (verified on real output: penA_I312M/V316T/F504L/
+# A510V/N512Y/G545S). So we match ANY penA point mutation (gene-level style, like tet(M)) rather than a
+# hard-coded codon list -- a partial codon set silently missed real mosaic positions 504/510 (R3 catch).
+_PENA_POINT_RE = re.compile(r"^penA_[A-Z]\d+[A-Z*]$")
 
 
 def _penA_esc_hits(symbols: list[str]) -> list[str]:
-    """penA point-mutation symbols at an ESC-associated codon (mosaic or A501x); also a bare mosaic tag."""
+    """Any curated penA point mutation (AMRFinder emits only ESC/penicillin-relevant ones) or a mosaic tag."""
     out = []
     for s in symbols:
         t = (s or "").strip()
-        m = _PENA_POINT_RE.match(t)
-        if m and int(m.group(2)) in _PENA_ESC_CODONS:
-            out.append(t)
-        elif t.startswith("penA") and "mosaic" in t.lower():
+        if _PENA_POINT_RE.match(t) or (t.startswith("penA") and "mosaic" in t.lower()):
             out.append(t)
     return out
 
