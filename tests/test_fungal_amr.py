@@ -53,6 +53,33 @@ def test_unknown_drug_indeterminate():
     assert c.prediction == "INDETERMINATE"
 
 
+def test_causal_marker_is_high_confidence():
+    c = call_from_observed_substitutions("fluconazole", {"ERG11": {"Y132F"}})
+    assert c.prediction == "R" and c.confidence == "HIGH"
+    assert c.lineage_only_determinants == ()
+
+
+def test_clade_iv_haplotype_only_is_low_confidence():
+    # K177R/N335S/E343D is the C. auris clade IV ERG11 background haplotype: non-discriminative
+    # (identical genotype in an R + an S isolate on the AR Bank). R call preserved (sensitivity) but LOW.
+    c = call_from_observed_substitutions("fluconazole", {"ERG11": {"K177R", "N335S", "E343D"}})
+    assert c.prediction == "R"                       # sensitivity preserved -- no missed resistance
+    assert c.confidence == "LOW_LINEAGE_ONLY"
+    assert set(c.lineage_only_determinants) == {"ERG11:K177R", "ERG11:N335S", "ERG11:E343D"}
+    assert "lineage-associated" in c.caveat.lower()
+
+
+def test_causal_plus_lineage_stays_high():
+    # a genuine causal marker present -> HIGH even if clade-background markers also present
+    c = call_from_observed_substitutions("fluconazole", {"ERG11": {"Y132F", "E343D"}})
+    assert c.prediction == "R" and c.confidence == "HIGH"
+
+
+def test_susceptible_confidence_is_na():
+    c = call_from_observed_substitutions("fluconazole", {"ERG11": set()})
+    assert c.prediction == "S" and c.confidence == "NA"
+
+
 if __name__ == "__main__":
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for fn in fns:

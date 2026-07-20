@@ -59,6 +59,26 @@ FUNGAL_RESISTANCE_MUTATIONS: dict[str, dict[str, set[str]]] = {
     },
 }
 
+# Lineage / clade-background markers: catalogued substitutions that CO-SEGREGATE with a resistant clade
+# but do NOT independently discriminate R from S. An R call driven ONLY by these is LOW-confidence
+# ("lineage-associated, mechanism-unconfirmed") rather than a mechanism-attributable R.
+# C. auris clade IV ERG11 haplotype K177R/N335S/E343D: the AR-Bank re-validation (2026-07-20) found the
+# IDENTICAL haplotype in a fluconazole-R isolate (SAMN11570381) AND a fluconazole-S isolate (SAMN10139552)
+# -- same genotype, opposite phenotype -> +1 TP and +1 FP -> zero net discrimination. The originating
+# S. Africa outbreak paper (PMC10521600) reported these in clade IV R isolates but had no clade IV S
+# control; SAMN10139552 is that control. They stay in the catalog (preserve sensitivity -- clade IV is
+# often genuinely R) but a haplotype-only call is flagged LOW confidence. See
+# wiki/ar_bank_caur_powered_validation_*.  The fungal analogue of the documented QRDR-vs-lineage confound.
+FUNGAL_LINEAGE_MARKERS: dict[str, dict[str, set[str]]] = {
+    "fluconazole": {"ERG11": {"K177R", "N335S", "E343D"}},
+}
+
+
+def lineage_markers_for(drug: str) -> dict[str, set[str]]:
+    """gene -> lineage/clade-background substitution set (non-discriminative) for a fungal drug."""
+    return FUNGAL_LINEAGE_MARKERS.get(drug.lower(), {})
+
+
 # Mechanisms NOT detectable by a target-site-mutation scan (the fungal analogue of the bacterial
 # efflux/porin/regulatory blind spot). A SUSCEPTIBLE call cannot rule these out.
 FUNGAL_UNDETECTABLE_MECHANISMS = sorted({
@@ -125,6 +145,8 @@ class FungalCall:
     undetectable_mechanisms: list[str]
     rule: str
     caveat: str
+    confidence: str = "NA"     # HIGH (causal marker) / LOW_LINEAGE_ONLY (clade-background only) / NA (S/indet)
+    lineage_only_determinants: tuple[str, ...] = ()   # the clade-background hits that drove a LOW call
 
 
 def call_from_observed_substitutions(drug: str, observed: dict[str, set[str]]) -> FungalCall:
@@ -138,15 +160,30 @@ def call_from_observed_substitutions(drug: str, observed: dict[str, set[str]]) -
     if drug.lower() not in FUNGAL_RESISTANCE_MUTATIONS:
         return FungalCall("INDETERMINATE", drug, [], [], "fungal_target_mutation_v0",
                           f"no catalog for {drug!r}")
-    hits = []
+    lineage = lineage_markers_for(drug)
+    hits, causal_hits, lineage_hits = [], [], []
     for gene, subs in resistance_mutations_for(drug).items():
+        lin_g = lineage.get(gene, set())
         for s in observed.get(gene, set()):
             if s in subs:
-                hits.append(f"{gene}:{s}")
+                tag = f"{gene}:{s}"
+                hits.append(tag)
+                (lineage_hits if s in lin_g else causal_hits).append(tag)
     pred = "R" if hits else "S"
+    # Confidence: causal marker present -> HIGH; R driven ONLY by clade-background haplotype -> LOW.
+    if pred == "S":
+        confidence = "NA"
+    elif causal_hits:
+        confidence = "HIGH"
+    else:
+        confidence = "LOW_LINEAGE_ONLY"
     undetectable = FUNGAL_UNDETECTABLE_MECHANISMS if pred == "S" else []
     caveat = (f"deterministic target-site call ({FUNGAL_DRUG_CLASS.get(drug.lower(), '?')}). "
               "Hand-curated catalog (no AMRFinder-equivalent for fungi). "
               + ("An S call cannot rule out efflux/aneuploidy-mediated resistance "
-                 f"({', '.join(FUNGAL_UNDETECTABLE_MECHANISMS)})." if pred == "S" else ""))
-    return FungalCall(pred, drug, sorted(hits), undetectable, "fungal_target_mutation_v0", caveat)
+                 f"({', '.join(FUNGAL_UNDETECTABLE_MECHANISMS)})." if pred == "S" else "")
+              + (f"R driven only by clade-background marker(s) {sorted(lineage_hits)} "
+                 "(lineage-associated, mechanism-unconfirmed; non-discriminative within the clade)."
+                 if confidence == "LOW_LINEAGE_ONLY" else ""))
+    return FungalCall(pred, drug, sorted(hits), undetectable, "fungal_target_mutation_v0", caveat,
+                      confidence=confidence, lineage_only_determinants=tuple(sorted(lineage_hits)))
