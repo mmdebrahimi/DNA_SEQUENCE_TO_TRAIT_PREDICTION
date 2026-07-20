@@ -1,0 +1,236 @@
+{
+  "_schema": "external-cohort-manifest-v1",
+  "run_id": "arbank_enterococcus_faecium_2026-07-20",
+  "project": "ar_bank_enterococcus_faecium",
+  "source": "cdc_fda_ar_isolate_bank",
+  "organism_filter": [
+    "Enterococcus faecium"
+  ],
+  "label_source": "ar_bank_INT_cdc",
+  "leakage_excluded": [],
+  "date": "2026-07-20",
+  "rows": [
+    {
+      "biosample": "SAMN11953784",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954004",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954006",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954007",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954008",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954010",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954011",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040086",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040089",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040091",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040093",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040101",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040105",
+      "drug": "levofloxacin",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040106",
+      "drug": "levofloxacin",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954004",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954006",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954008",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954010",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11954011",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040082",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040086",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040088",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040089",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040091",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040093",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040101",
+      "drug": "doxycycline",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040102",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040105",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN15040106",
+      "drug": "doxycycline",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    }
+  ],
+  "biosamples": [
+    "SAMN11953784",
+    "SAMN11954004",
+    "SAMN11954006",
+    "SAMN11954007",
+    "SAMN11954008",
+    "SAMN11954010",
+    "SAMN11954011",
+    "SAMN15040082",
+    "SAMN15040086",
+    "SAMN15040088",
+    "SAMN15040089",
+    "SAMN15040091",
+    "SAMN15040093",
+    "SAMN15040101",
+    "SAMN15040102",
+    "SAMN15040105",
+    "SAMN15040106"
+  ]
+}
