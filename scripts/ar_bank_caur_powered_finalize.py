@@ -111,6 +111,14 @@ def main() -> int:
     low_conf = [r for r in combined if r.get("confidence") == "LOW_LINEAGE_ONLY"]
     lineage_fp = [r for r in low_conf if r["label"] == "S"]
     lineage_tp = [r for r in low_conf if r["label"] == "R"]
+
+    # HIGH-confidence (mechanism-attributable) subset: exclude the clade-background-only LOW calls.
+    hi = [r for r in combined if r.get("confidence") != "LOW_LINEAGE_ONLY"
+          and str(r["prediction"]).upper() in ("R", "S")]
+    hi_scored = [(r["prediction"], r["y"]) for r in hi]
+    hi_conf = _conf(hi_scored)
+    hi_R = hi_conf["tp"] + hi_conf["fn"]
+    hi_S = hi_conf["tn"] + hi_conf["fp"]
     scored = [(r["prediction"], r["y"]) for r in combined if str(r["prediction"]).upper() in ("R", "S")]
     conf = _conf(scored)
     n_R = conf["tp"] + conf["fn"]
@@ -143,6 +151,12 @@ def main() -> int:
                         "(sensitivity) but flagged LOW_LINEAGE_ONLY. Fungal analogue of the QRDR-vs-lineage "
                         "confound."),
         },
+        "high_confidence_subset": {
+            "note": ("mechanism-attributable calls only (Y132F/K143R/F126L causal markers); the clade IV "
+                     "haplotype-only isolates abstain to LOW_LINEAGE_ONLY and are excluded here."),
+            "binary": hi_conf, "n_R": hi_R, "n_S": hi_S,
+            "sens_wilson95": wilson_ci(hi_conf["tp"], hi_R), "spec_wilson95": wilson_ci(hi_conf["tn"], hi_S),
+        },
         "frozen_surface_changed": False,
     }
     outdir = Path("data/raw/ar_bank_caur_extval_fluconazole")
@@ -151,6 +165,9 @@ def main() -> int:
     out.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
     print(f"\nRESULT C. auris fluconazole (POWERED): n={len(scored)} ({n_R}R/{n_S}S) acc={conf['acc']} "
           f"sens={conf['sens']} spec={conf['spec']} indet={n_indet} -> {artifact['headline']}")
+    print(f"  HIGH-confidence (mechanism-attributable) subset: n={hi_conf['n_scored']} ({hi_R}R/{hi_S}S) "
+          f"acc={hi_conf['acc']} sens={hi_conf['sens']} spec={hi_conf['spec']} "
+          f"(excluded {len(low_conf)} clade-IV-haplotype-only: {len(lineage_tp)}R-TP + {len(lineage_fp)}S-FP)")
     print(f"  artifact: {out}")
     return 0 if powered else 1
 

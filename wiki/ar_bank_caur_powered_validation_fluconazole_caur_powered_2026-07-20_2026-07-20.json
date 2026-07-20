@@ -1,0 +1,82 @@
+{
+  "_schema": "ar-bank-caur-powered-validation-v1",
+  "date": "2026-07-20",
+  "run_id": "caur_powered_2026-07-20",
+  "organism": "Candida auris",
+  "drug": "fluconazole",
+  "gene": "ERG11",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "label_source": "ar_bank_MIC_cdc_tentative_breakpoint (fluconazole >=32 -> R)",
+  "genotype_source": "BLAST ERG11 target-site; 8 isolates from downloadable assembly + 5 fluconazole-S from SRA-read-mapped ERG11 consensus (assemble_sra_cohort --method map)",
+  "independence_tier": "CDC AR Isolate Bank measured MIC; provenance-disjoint (0 overlap vs the fungal G1 tuning cohort); NOT methodology-independent (rule is the curated ERG11 catalog).",
+  "binary": {
+    "n_scored": 12,
+    "tp": 5,
+    "fp": 2,
+    "tn": 5,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.833,
+    "sens": 1.0,
+    "spec": 0.714
+  },
+  "n_R": 5,
+  "n_S": 7,
+  "n_indeterminate": 0,
+  "n_assembled": 8,
+  "n_sra_mapped": 4,
+  "sens_wilson95": [
+    0.5655085052479191,
+    1.0
+  ],
+  "spec_wilson95": [
+    0.35892909014821267,
+    0.9177828342909844
+  ],
+  "powered": true,
+  "spec_floor": 0.85,
+  "headline": "SCORED_NOT_ENDORSED",
+  "lineage_marker_disclosure": {
+    "clade_iv_haplotype": [
+      "ERG11:K177R",
+      "ERG11:N335S",
+      "ERG11:E343D"
+    ],
+    "n_low_confidence_R": 3,
+    "low_confidence_R_that_are_FP": [
+      "SAMN10139552",
+      "SAMN46817483"
+    ],
+    "low_confidence_R_that_are_TP": [
+      "SAMN11570381"
+    ],
+    "finding": "clade IV ERG11 haplotype is non-discriminative (identical genotype in >=1 R + >=1 S isolate) -> +TP and +FP wash -> lineage marker, not causal. R calls preserved (sensitivity) but flagged LOW_LINEAGE_ONLY. Fungal analogue of the QRDR-vs-lineage confound."
+  },
+  "high_confidence_subset": {
+    "note": "mechanism-attributable calls only (Y132F/K143R/F126L causal markers); the clade IV haplotype-only isolates abstain to LOW_LINEAGE_ONLY and are excluded here.",
+    "binary": {
+      "n_scored": 9,
+      "tp": 4,
+      "fp": 0,
+      "tn": 5,
+      "fn": 0,
+      "abstain": 0,
+      "acc": 1.0,
+      "sens": 1.0,
+      "spec": 1.0
+    },
+    "n_R": 4,
+    "n_S": 5,
+    "sens_wilson95": [
+      0.5100999795960008,
+      1.0
+    ],
+    "spec_wilson95": [
+      0.5655085052479191,
+      1.0
+    ]
+  },
+  "frozen_surface_changed": false
+}
