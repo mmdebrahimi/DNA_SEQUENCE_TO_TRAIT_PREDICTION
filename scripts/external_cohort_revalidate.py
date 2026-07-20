@@ -78,6 +78,45 @@ def real_predictor(drug: str, own_runs: Path, gcache: Path, reuse_glob: str,
     return predict
 
 
+def parse_determinant_symbols(main_tsv: Path) -> list[str]:
+    """Read an AMRFinderPlus main.tsv -> the list of determinant symbols (the 'Element symbol' column;
+    'Gene symbol' on older AMRFinder). These feed the organism_rules `call_<org>_amr(drug, symbols)`
+    rules (POINT mutations like gyrA_S91F + acquired genes like tet(M)/blaTEM). Empty if the file is
+    absent/empty."""
+    import csv
+    if not main_tsv.exists():
+        return []
+    out: list[str] = []
+    with main_tsv.open(encoding="utf-8", newline="") as fh:
+        for row in csv.DictReader(fh, delimiter="\t"):
+            sym = (row.get("Element symbol") or row.get("Gene symbol")
+                   or row.get("amr_element_symbol") or "").strip()
+            if sym:
+                out.append(sym)
+    return out
+
+
+def rule_predictor(drug: str, own_runs: Path, gcache: Path, reuse_glob: str, rule_fn,
+                   amrfinder_organism: str) -> Predict:
+    """Like `real_predictor`, but instead of the frozen `call_resistance` it parses the AMRFinder
+    determinant symbols and applies a NON-FROZEN organism rule `rule_fn(drug, symbols) -> {"prediction": ...}`
+    (e.g. `organism_rules.neisseria_amr.call_ng_amr`). Reuses a cached AMRFinder dir if present (so a
+    Kaggle-produced main.tsv scores without re-running Docker), else downloads+runs with -O
+    `amrfinder_organism`. A missing run or an ABSTAIN rule -> INDETERMINATE (excluded from sens/spec)."""
+    from scripts.organism_drug_validate import _run_dir, ensure_run
+
+    def predict(gca: str) -> str:
+        mt = _run_dir(gca, own_runs, reuse_glob)
+        if mt is None:
+            ensure_run(gca, own_runs, gcache, amrfinder_organism, reuse_glob)
+            mt = _run_dir(gca, own_runs, reuse_glob)
+        if mt is None:
+            return "INDETERMINATE"
+        return rule_fn(drug, parse_determinant_symbols(mt / "main.tsv"))["prediction"]
+
+    return predict
+
+
 def predict_records(free_genomes: dict[str, str], labels: dict[str, str],
                     predict: Predict) -> tuple[list[dict], int]:
     """ONE predict() call per FREE strain -> per-strain records (the Step-5 substrate).
