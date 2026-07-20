@@ -1,0 +1,271 @@
+{
+  "_schema": "external-cohort-manifest-v1",
+  "run_id": "arbank_caur_2026-07-20",
+  "project": "ar_bank_caur",
+  "source": "cdc_fda_ar_isolate_bank",
+  "organism_filter": [
+    "auris"
+  ],
+  "label_source": "ar_bank_MIC_cdc_tentative_breakpoint",
+  "date": "2026-07-20",
+  "rows": [
+    {
+      "biosample": "SAMN05379608",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN18754596",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379609",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379610",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379620",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379621",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379624",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379577",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN18754597",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379594",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN05379619",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN11570381",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13294115",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN13294127",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN18754592",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN18754593",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN18754594",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN18754595",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN10139552",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN46817484",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN46817483",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN46817482",
+      "drug": "fluconazole",
+      "label": "S",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN46817481",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094230",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094242",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094223",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094201",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN33578714",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094204",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094197",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094212",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    },
+    {
+      "biosample": "SAMN38094192",
+      "drug": "fluconazole",
+      "label": "R",
+      "strict": true,
+      "relaxed": true
+    }
+  ],
+  "biosamples": [
+    "SAMN05379577",
+    "SAMN05379594",
+    "SAMN05379608",
+    "SAMN05379609",
+    "SAMN05379610",
+    "SAMN05379619",
+    "SAMN05379620",
+    "SAMN05379621",
+    "SAMN05379624",
+    "SAMN10139552",
+    "SAMN11570381",
+    "SAMN13294115",
+    "SAMN13294127",
+    "SAMN18754592",
+    "SAMN18754593",
+    "SAMN18754594",
+    "SAMN18754595",
+    "SAMN18754596",
+    "SAMN18754597",
+    "SAMN33578714",
+    "SAMN38094192",
+    "SAMN38094197",
+    "SAMN38094201",
+    "SAMN38094204",
+    "SAMN38094212",
+    "SAMN38094223",
+    "SAMN38094230",
+    "SAMN38094242",
+    "SAMN46817481",
+    "SAMN46817482",
+    "SAMN46817483",
+    "SAMN46817484"
+  ]
+}
