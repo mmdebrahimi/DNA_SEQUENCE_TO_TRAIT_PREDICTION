@@ -112,6 +112,20 @@ def test_build_artifact_schema():
     assert art["strict"]["n_scored"] == 10 and art["relaxed"]["n_scored"] == 14
 
 
+def test_build_artifact_organism_override():
+    """The organism triple is parameterizable (Klebsiella etc.) but E. coli stays the default."""
+    art = ecr.build_artifact("ar_bank_kleb", "ceftriaxone", strict={}, relaxed={}, buckets={},
+                             leakage_control="x", amrfinder_organism="Klebsiella_pneumoniae",
+                             registry_organism="Klebsiella")
+    assert art["amrfinder_organism"] == "Klebsiella_pneumoniae"
+    assert art["registry_organism"] == "Klebsiella"
+    assert art["organism"] == "Klebsiella"
+    # default is still E. coli (backward-compatible)
+    d = ecr.build_artifact("oxford", "ciprofloxacin", strict={}, relaxed={}, buckets={},
+                           leakage_control="x")
+    assert d["amrfinder_organism"] == "Escherichia" and d["registry_organism"] == "Escherichia_coli_Shigella"
+
+
 # --------------------------------------------------------------------------- #
 # smoke_predict (fail-fast before the full loop)
 # --------------------------------------------------------------------------- #

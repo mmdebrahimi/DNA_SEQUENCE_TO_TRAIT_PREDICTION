@@ -51,12 +51,17 @@ INDEPENDENCE_TIER = (
 Predict = Callable[[str], str]
 
 
-def real_predictor(drug: str, own_runs: Path, gcache: Path, reuse_glob: str) -> Predict:
+def real_predictor(drug: str, own_runs: Path, gcache: Path, reuse_glob: str,
+                   amrfinder_organism: str = AMRFINDER_ORGANISM,
+                   registry_organism: str = REGISTRY_ORGANISM) -> Predict:
     """Build the real predict(gca) -> prediction using the SHIPPED toolchain.
 
     Mirrors provenance_disjoint_validate: reuse an AMRFinder cache dir if present,
     else download+run via ensure_run, then apply the frozen call_resistance with the
     pinned organism. Network + Docker; exercised only in the manual full run.
+
+    The organism triple defaults to the frozen E. coli cell's values; pass the target
+    organism's VERBATIM triple (read from its frozen provdisjoint cell) for Klebsiella etc.
     """
     from dna_decode.eval.amr_rules import call_resistance
     from scripts.organism_drug_validate import _run_dir, ensure_run
@@ -64,11 +69,11 @@ def real_predictor(drug: str, own_runs: Path, gcache: Path, reuse_glob: str) -> 
     def predict(gca: str) -> str:
         mt = _run_dir(gca, own_runs, reuse_glob)
         if mt is None:
-            ensure_run(gca, own_runs, gcache, AMRFINDER_ORGANISM, reuse_glob)
+            ensure_run(gca, own_runs, gcache, amrfinder_organism, reuse_glob)
             mt = _run_dir(gca, own_runs, reuse_glob)
         if mt is None:
             return "INDETERMINATE"
-        return call_resistance(mt / "main.tsv", drug, organism=REGISTRY_ORGANISM)["prediction"]
+        return call_resistance(mt / "main.tsv", drug, organism=registry_organism)["prediction"]
 
     return predict
 
@@ -164,16 +169,18 @@ def powering_gate(strict_conf: dict, n_attempted_free: int, n_indeterminate: int
 def build_artifact(cohort: str, drug: str, *, strict: dict, relaxed: dict, buckets: dict,
                    leakage_control: str, degraded: bool = False,
                    powering: dict | None = None, run_degraded: bool = False,
-                   run_id: str | None = None) -> dict:
+                   run_id: str | None = None,
+                   amrfinder_organism: str = AMRFINDER_ORGANISM,
+                   registry_organism: str = REGISTRY_ORGANISM) -> dict:
     """Assemble the external-validation-v1 artifact (separate namespace)."""
     return {
         "_schema": "external-validation-v1",
         "date": _date.today().isoformat(),
         "run_id": run_id,
         "cohort": cohort,
-        "organism": REGISTRY_ORGANISM,
-        "amrfinder_organism": AMRFINDER_ORGANISM,
-        "registry_organism": REGISTRY_ORGANISM,
+        "organism": registry_organism,
+        "amrfinder_organism": amrfinder_organism,
+        "registry_organism": registry_organism,
         "drug": drug,
         "evidence_tier": EVIDENCE_TIER,
         "independence_tier": INDEPENDENCE_TIER,
@@ -248,6 +255,12 @@ def main() -> int:
                          "BioSamples subset of the manifest (required for a live run)")
     ap.add_argument("--run-id", default=_date.today().isoformat(),
                     help="run id stamped into the artifact + filename for run-scoped roll-up")
+    ap.add_argument("--amrfinder-organism", default=AMRFINDER_ORGANISM,
+                    help="AMRFinder -O organism (VERBATIM from the target's frozen provdisjoint cell; "
+                         f"default {AMRFINDER_ORGANISM})")
+    ap.add_argument("--registry-organism", default=REGISTRY_ORGANISM,
+                    help="call_resistance organism= (VERBATIM from the target's frozen cell; "
+                         f"default {REGISTRY_ORGANISM})")
     a = ap.parse_args()
 
     preflight = json.loads(Path(a.preflight_json).read_text(encoding="utf-8")) if a.preflight_json else None
@@ -281,7 +294,9 @@ def main() -> int:
     own_runs = base / "amrfinder_runs"
     gcache = base / "refseq"
     reuse_glob = f"data/raw/{a.cohort}_*/amrfinder_runs"
-    predict = real_predictor(a.drug, own_runs, gcache, reuse_glob)
+    predict = real_predictor(a.drug, own_runs, gcache, reuse_glob,
+                             amrfinder_organism=a.amrfinder_organism,
+                             registry_organism=a.registry_organism)
 
     # Fail-fast smoke: one strain through the live path before the full loop.
     if not a.skip_smoke:
@@ -313,7 +328,9 @@ def main() -> int:
     artifact = build_artifact(a.cohort, a.drug, strict=strict_conf, relaxed=relaxed_conf,
                               buckets=buckets, leakage_control=leakage_control,
                               degraded=not (preflight and preflight.get("verdict") == "PASS"),
-                              powering=pg, run_degraded=pg["degraded"], run_id=a.run_id)
+                              powering=pg, run_degraded=pg["degraded"], run_id=a.run_id,
+                              amrfinder_organism=a.amrfinder_organism,
+                              registry_organism=a.registry_organism)
 
     base.mkdir(parents=True, exist_ok=True)
     (base / "selected_strict.tsv").write_text(
