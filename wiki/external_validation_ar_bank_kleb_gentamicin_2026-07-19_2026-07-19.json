@@ -1,0 +1,69 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-07-19",
+  "run_id": "2026-07-19",
+  "cohort": "ar_bank_kleb",
+  "organism": "Klebsiella",
+  "amrfinder_organism": "Klebsiella_pneumoniae",
+  "registry_organism": "Klebsiella",
+  "drug": "gentamicin",
+  "evidence_tier": "external_clinical",
+  "independence_tier": "external clinical cohort \u2014 different country / lab / AST method than the decoder's US-NCBI-PD tuning provenance; clonality/lineage disclosed in the roll-up. NOT the same as methodology-independent: comparability rests on the same AMRFinder -O + DRUG_RULE.",
+  "strict": {
+    "n_scored": 9,
+    "tp": 0,
+    "fp": 1,
+    "tn": 8,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.889,
+    "sens": null,
+    "spec": 0.889,
+    "n_excluded_no_assembly": 29
+  },
+  "relaxed": {
+    "n_scored": 9,
+    "tp": 0,
+    "fp": 1,
+    "tn": 8,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 0.889,
+    "sens": null,
+    "spec": 0.889,
+    "n_excluded_no_assembly": 29
+  },
+  "buckets": {
+    "drug": "gentamicin",
+    "breakpoint_version": "CLSI 2024 + EUCAST 14.0 (E. coli)",
+    "buckets": {
+      "CENSORED_HIGH_S": 18,
+      "HIGH_S": 29,
+      "AMBIGUOUS": 12,
+      "BORDERLINE": 14,
+      "CENSORED_EXCLUDED": 76
+    },
+    "n_total": 149,
+    "n_strict": 47,
+    "n_relaxed": 47
+  },
+  "leakage_control": "BioSample-level preflight: DEGRADED; 29 reads-only BioSamples excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": true,
+    "degraded": true,
+    "reasons": [
+      "strict scored R 0 < min_per_class 1 (underpowered)",
+      "indeterminate fraction 0.5 > 0.2 (of 18 attempted-FREE)"
+    ],
+    "n_attempted_free": 18,
+    "n_indeterminate": 9,
+    "indeterminate_fraction": 0.5,
+    "scored_R": 0,
+    "scored_S": 9,
+    "min_per_class": 1,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict"
+}

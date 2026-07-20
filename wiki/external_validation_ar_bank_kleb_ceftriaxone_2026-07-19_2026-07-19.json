@@ -1,0 +1,68 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-07-19",
+  "run_id": "2026-07-19",
+  "cohort": "ar_bank_kleb",
+  "organism": "Klebsiella",
+  "amrfinder_organism": "Klebsiella_pneumoniae",
+  "registry_organism": "Klebsiella",
+  "drug": "ceftriaxone",
+  "evidence_tier": "external_clinical",
+  "independence_tier": "external clinical cohort \u2014 different country / lab / AST method than the decoder's US-NCBI-PD tuning provenance; clonality/lineage disclosed in the roll-up. NOT the same as methodology-independent: comparability rests on the same AMRFinder -O + DRUG_RULE.",
+  "strict": {
+    "n_scored": 31,
+    "tp": 31,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": 1.0,
+    "spec": null,
+    "n_excluded_no_assembly": 82
+  },
+  "relaxed": {
+    "n_scored": 31,
+    "tp": 31,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": 1.0,
+    "spec": null,
+    "n_excluded_no_assembly": 82
+  },
+  "buckets": {
+    "drug": "ceftriaxone",
+    "breakpoint_version": "CLSI 2024 + EUCAST 14.0 (E. coli)",
+    "buckets": {
+      "CENSORED_HIGH_R": 138,
+      "HIGH_R": 3,
+      "CENSORED_EXCLUDED": 6,
+      "AMBIGUOUS": 2
+    },
+    "n_total": 149,
+    "n_strict": 141,
+    "n_relaxed": 141
+  },
+  "leakage_control": "BioSample-level preflight: DEGRADED; 82 reads-only BioSamples excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": true,
+    "degraded": true,
+    "reasons": [
+      "strict scored S 0 < min_per_class 1 (underpowered)",
+      "indeterminate fraction 0.4746 > 0.2 (of 59 attempted-FREE)"
+    ],
+    "n_attempted_free": 59,
+    "n_indeterminate": 28,
+    "indeterminate_fraction": 0.4746,
+    "scored_R": 31,
+    "scored_S": 0,
+    "min_per_class": 1,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict"
+}
