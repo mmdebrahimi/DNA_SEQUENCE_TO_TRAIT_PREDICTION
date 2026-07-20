@@ -68,6 +68,14 @@ resource (Pf7/Pf8) is label-inferred.
 1. **NARMS overlap probe** — cheapest highest-VOI: does NARMS add measured-MIC E. coli/Salmonella/
    Campylobacter/Enterococcus isolates NOT already in the NCBI-PD / BV-BRC footprint? (a metadata-join
    count, no download). If yes → the biggest deterministic-decoder expansion available.
+   **ACCESS CONFIRMED (2026-07-20 probe):** NARMS is reachable, NOT a paywall/DUA wall — WGS is public on
+   ENA/NCBI (e.g. `PRJNA292668`, Campylobacter; more NARMS BioProjects exist), and an FDA CVM integrated
+   NARMS MIC data file is directly downloadable (`https://www.fda.gov/media/79976/download`, HTTP 200). The
+   remaining work is the actual **overlap join** (parse the FDA MIC file → isolate accessions → diff against
+   the project's 744-accession `cohort_manifest.py` footprint → count net-new measured-MIC isolates per
+   organism). **CAVEAT (the load-bearing risk):** NARMS isolates flow INTO NCBI-PD (the same source the 10
+   frozen SCORED cells came from), so the overlap could be large — the net-new count is the whole question,
+   and it needs the real join, not a guess. This is a clean scoped next-run task (fetch FDA file + manifest diff).
 2. **CDC AR-Bank non-Enterobacterales panels** — reuse the existing AR-Bank scraper for the Pseudomonas /
    Acinetobacter / N. gonorrhoeae / Aspergillus / drug-R Candida panels (measured MIC + BioSample already
    scrapeable). Nearly-free given current infra.
