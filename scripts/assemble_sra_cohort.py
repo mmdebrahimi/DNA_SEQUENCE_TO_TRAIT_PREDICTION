@@ -132,6 +132,38 @@ def fetch_reads_ena(run: str, reads_dir: Path, timeout: float) -> tuple[Path, Pa
     return r1, r2
 
 
+def _subsample_gz(src: Path, dst: Path, n_reads: int) -> Path:
+    """Write the first n_reads records of a gzipped FASTQ to dst (pure Python, NO Docker).
+
+    For a single-copy target locus (ERG11 / FKS1) a few million read-pairs give ample depth, so mapping a
+    subsample keeps minimap2's SAM small enough to finish quickly — the full-WGS SAM write to the USB cache
+    is the map bottleneck (minimap2 -ax sr emits every read, mapped or not). Idempotent: reuse an existing dst.
+    """
+    import gzip
+
+    if dst.exists() and dst.stat().st_size > 0:
+        return dst
+    limit = n_reads * 4  # FASTQ = 4 lines/record
+    tmp = dst.with_suffix(dst.suffix + ".part")
+    with gzip.open(src, "rt") as fin, gzip.open(tmp, "wt") as fout:
+        for i, line in enumerate(fin):
+            if i >= limit:
+                break
+            fout.write(line)
+    tmp.replace(dst)
+    return dst
+
+
+def subsample_pair(r1: Path, r2: Path, n_reads: int) -> tuple[Path, Path]:
+    """Subsample a paired FASTQ set to n_reads each -> <run>_1.subN.fastq.gz. n_reads<=0 -> passthrough."""
+    if n_reads <= 0:
+        return r1, r2
+    def _sub(p: Path) -> Path:
+        stem = p.name.replace(".fastq.gz", "").replace(".fastq", "")
+        return _subsample_gz(p, p.parent / f"{stem}.sub{n_reads}.fastq.gz", n_reads)
+    return _sub(r1), _sub(r2)
+
+
 def fetch_reads(run: str, reads_dir: Path, sra_image: str, timeout: float) -> tuple[Path, Path]:
     """prefetch + fasterq-dump <run> -> reads_dir/<run>_1.fastq, _2.fastq (Docker sra-tools). Returns pair."""
     reads_dir.mkdir(parents=True, exist_ok=True)
@@ -243,6 +275,10 @@ def main(argv=None):
                     default="data/fungal_ref/Cauris_ERG11_cds.fna",
                     help="ERG11 CDS reference for --method map")
     ap.add_argument("--min-depth", type=int, default=3, help="min read depth for consensus base (map mode)")
+    ap.add_argument("--subsample-reads", type=int, default=0,
+                    help="(map mode) map only the first N read-pairs per isolate (0 = all). For a single-copy "
+                         "target locus a few million pairs give ample depth + keep the SAM small/fast. "
+                         "Recommended ~2000000 for ERG11/FKS1 read-mapping.")
     ap.add_argument("--assembler", choices=["skesa", "spades"], default="skesa",
                     help="(assemble mode) skesa = fast isolate assembler (default); spades = thorough multi-K")
     ap.add_argument("--sra-image", default=SRA_IMAGE)
@@ -289,6 +325,9 @@ def main(argv=None):
                 r1, r2 = fetch_reads_ena(run, reads_root / run, a.fetch_timeout)
             else:
                 r1, r2 = fetch_reads(run, reads_root / run, a.sra_image, a.fetch_timeout)
+            if a.method == "map" and a.subsample_reads > 0:
+                print(f"{tag}: subsampling to {a.subsample_reads} read-pairs...", flush=True)
+                r1, r2 = subsample_pair(r1, r2, a.subsample_reads)
             print(f"{tag}: {a.method} ({a.assembler if a.method=='assemble' else 'minimap2+samtools'})...",
                   flush=True)
             if a.method == "map":
