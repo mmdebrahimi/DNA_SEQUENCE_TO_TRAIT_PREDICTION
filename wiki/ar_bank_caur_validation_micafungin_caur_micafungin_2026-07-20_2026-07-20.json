@@ -1,0 +1,37 @@
+{
+  "_schema": "ar-bank-caur-validation-v1",
+  "date": "2026-07-20",
+  "run_id": "caur_micafungin_2026-07-20",
+  "organism": "Candida auris",
+  "drug": "micafungin",
+  "gene": "FKS1",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "label_source": "ar_bank_MIC_cdc_tentative_breakpoint (micafungin >=4.0 -> R)",
+  "independence_tier": "CDC AR Isolate Bank measured MIC; provenance-disjoint (0 overlap vs the fungal G1 tuning cohort); genotype = BLAST FKS1 target-site; phenotype = CDC MIC. NOT methodology-independent (rule is the curated FKS1 catalog).",
+  "binary": {
+    "n_scored": 8,
+    "tp": 0,
+    "fp": 0,
+    "tn": 8,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": null,
+    "spec": 1.0
+  },
+  "n_R": 0,
+  "n_S": 8,
+  "n_indeterminate": 0,
+  "n_excluded_no_assembly": 24,
+  "sens_wilson95": null,
+  "spec_wilson95": [
+    0.6755843804891231,
+    1.0
+  ],
+  "powered": false,
+  "spec_floor": 0.85,
+  "headline": "UNDERPOWERED",
+  "frozen_surface_changed": false
+}
