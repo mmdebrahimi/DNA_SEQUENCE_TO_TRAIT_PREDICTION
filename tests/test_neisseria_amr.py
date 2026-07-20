@@ -9,13 +9,15 @@ from dna_decode.organism_rules.neisseria_amr import (  # noqa: E402
 )
 
 
-def test_ng_tet_tetM_only():
-    # tet(M) (high-level) -> R; rpsJ V57M is accessory-only (low-level, over-calls -> excluded from the call)
+def test_ng_tet_v01_chromosomal_promoted():
+    # v0.1 (AR-Bank-validated): tet(M) OR chromosomal rpsJ_V57M/mtrR -> R (gono tet-R is chromosomal-dominant)
     assert call_ng_tetracycline(["tet(M)"])["prediction"] == "R"
     assert call_ng_tetracycline(["tet(M)_1"])["prediction"] == "R"       # startswith tet(M)
     r = call_ng_tetracycline(["rpsJ_V57M"])
-    assert r["prediction"] == "S" and r["accessory_rpsJ_V57M"] == ["rpsJ_V57M"]
+    assert r["prediction"] == "R" and r["matched_rpsJ_V57M"] == ["rpsJ_V57M"]   # v0.1: rpsJ promoted
+    assert call_ng_tetracycline(["mtrR_A-53del"])["prediction"] == "R"          # v0.1: mtrR promoted
     assert call_ng_tetracycline([])["prediction"] == "S"
+    assert call_ng_tetracycline(["gyrA_S91F"])["prediction"] == "S"             # unrelated gene -> S
     assert call_ng_tetracycline(["tet(M)", "rpsJ_V57M"])["prediction"] == "R"
 
 
@@ -57,26 +59,39 @@ def test_ng_azithromycin_23S_primary():
     assert call_ng_azithromycin(["23S_C2597T", "mtrR_mosaic"])["prediction"] == "R"
 
 
-def test_ng_penicillin_blaTEM_primary():
+def test_ng_penicillin_v01_chromosomal_promoted():
     assert call_ng_penicillin(["blaTEM-1"])["prediction"] == "R"
     assert call_ng_penicillin(["blaTEM-135"])["prediction"] == "R"
-    # chromosomal penA/mtrR/ponA/porB are accessory-only
+    # v0.1 (AR-Bank-validated): chromosomal penA/mtrR PROMOTED to primary (gono pen-R is chromosomal-dominant)
     r = call_ng_penicillin(["penA_A501V", "mtrR_G45D", "ponA_L421P"])
-    assert r["prediction"] == "S" and r["accessory_chromosomal"]
+    assert r["prediction"] == "R" and r["matched_penA"] and r["matched_mtr"]
+    assert call_ng_penicillin(["mtrR_A-53del"])["prediction"] == "R"       # mtrR alone -> R
+    assert call_ng_penicillin(["penA_G545S"])["prediction"] == "R"         # penA point -> R
     assert call_ng_penicillin([])["prediction"] == "S"
+    assert call_ng_penicillin(["gyrA_S91F"])["prediction"] == "S"          # unrelated -> S
 
 
-def test_ng_esc_penA_mosaic():
-    # AMRFinder emits only resistance-curated penA point mutations (all Subclass=CEPHALOSPORIN), incl the
-    # real mosaic positions 504/510 an earlier hard-coded codon set missed -> match ANY penA point.
+def test_ng_cefixime_broad_penA():
+    # cefixime v0: any curated penA mosaic point -> R (cefixime MIC raised by common mosaic penA)
     for sym in ("penA_G545S", "penA_I312M", "penA_V316T", "penA_F504L", "penA_A510V", "penA_N512Y",
                 "penA_mosaic_60.001"):
-        assert call_ng_ceftriaxone([sym])["prediction"] == "R", sym
         assert call_ng_cefixime([sym])["prediction"] == "R", sym
-    assert call_ng_ceftriaxone([])["prediction"] == "S"
-    # ponA/porB/mtrR are accessory (do NOT flip the call alone)
-    r = call_ng_ceftriaxone(["ponA_L421P", "porB1b_G120K", "mtrR_A-53del"])
+    assert call_ng_cefixime([])["prediction"] == "S"
+    r = call_ng_cefixime(["ponA_L421P", "porB1b_G120K", "mtrR_A-53del"])   # accessory only -> S
     assert r["prediction"] == "S" and r["accessory_ponA_porB_mtr"]
+
+
+def test_ng_ceftriaxone_v01_A501_specific():
+    # v0.1: ceftriaxone-R requires the SPECIFIC high-level penA Ala501 marker (A501P/T/V), NOT any penA point.
+    for sym in ("penA_A501P", "penA_A501T", "penA_A501V"):
+        assert call_ng_ceftriaxone([sym])["prediction"] == "R", sym
+    # the reduced-susceptibility mosaic markers (A510V/F504L/G545S/etc) -> ceftriaxone S (they raise cefixime,
+    # not ceftriaxone, MIC) -- this is what lifted spec 0.0 -> correct on the AR Bank
+    for sym in ("penA_A510V", "penA_F504L", "penA_G545S", "penA_I312M", "penA_V316T", "penA_N512Y"):
+        assert call_ng_ceftriaxone([sym])["prediction"] == "S", sym
+    assert call_ng_ceftriaxone([])["prediction"] == "S"
+    # a real AR#0165-style full-mosaic-minus-A501 vector -> S
+    assert call_ng_ceftriaxone(["penA_A510V", "penA_F504L", "penA_G545S", "ponA_L421P", "mtrR_A-53del"])["prediction"] == "S"
 
 
 def test_ng_real_amrfinder_symbols_AR0165():
@@ -87,11 +102,11 @@ def test_ng_real_amrfinder_symbols_AR0165():
             "penA_N512Y", "penA_V316T", "mtrR_A-53del", "folP_R228S", "rpsJ_V57M",
             "porB1b_A121N", "porB1b_G120K", "gyrA_D95G", "gyrA_S91F", "parC_S87R"]
     assert call_ng_amr("ciprofloxacin", syms)["prediction"] == "R"     # gyrA QRDR
-    assert call_ng_amr("ceftriaxone", syms)["prediction"] == "R"       # penA mosaic
-    assert call_ng_amr("cefixime", syms)["prediction"] == "R"
+    assert call_ng_amr("cefixime", syms)["prediction"] == "R"          # mosaic penA raises cefixime MIC
+    assert call_ng_amr("ceftriaxone", syms)["prediction"] == "S"       # v0.1: A510V (not A501) -> ceftriaxone S
     assert call_ng_amr("azithromycin", syms)["prediction"] == "S"      # no 23S mutation on this isolate
-    assert call_ng_amr("penicillin", syms)["prediction"] == "S"        # no blaTEM (chromosomal accessory)
-    assert call_ng_amr("tetracycline", syms)["prediction"] == "S"      # rpsJ V57M accessory-only, no tet(M)
+    assert call_ng_amr("penicillin", syms)["prediction"] == "R"        # v0.1: chromosomal penA/mtrR promoted
+    assert call_ng_amr("tetracycline", syms)["prediction"] == "R"      # v0.1: chromosomal rpsJ_V57M/mtrR promoted
     assert call_ng_amr("gentamicin", syms)["prediction"] == "INDETERMINATE"
 
 
@@ -102,7 +117,8 @@ def test_ng_gentamicin_abstains():
 
 
 def test_ng_dispatch():
-    assert call_ng_amr("ceftriaxone", ["penA_G545S"])["prediction"] == "R"
+    assert call_ng_amr("ceftriaxone", ["penA_A501P"])["prediction"] == "R"   # v0.1: A501-class -> ceftriaxone R
+    assert call_ng_amr("ceftriaxone", ["penA_G545S"])["prediction"] == "S"   # v0.1: non-A501 mosaic -> S
     assert call_ng_amr("azithromycin", ["23S_A2045G"])["prediction"] == "R"
     assert call_ng_amr("ciprofloxacin", ["gyrA_S91F"])["prediction"] == "R"
     assert call_ng_amr("gentamicin", [])["prediction"] == "INDETERMINATE"

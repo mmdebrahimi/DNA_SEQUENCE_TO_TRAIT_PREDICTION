@@ -48,20 +48,23 @@ DRUG_TET = "tetracycline"
 def call_ng_tetracycline(symbols: list[str]) -> dict:
     """Predict tetracycline R/S for N. gonorrhoeae.
 
-    Two determinants: acquired **tet(M)** (plasmid ribosomal-protection -> HIGH-level R) and the **rpsJ V57M**
-    ribosomal S10 point mutation (chromosomal -> LOW-level R, often at/above the CLSI R>=2 breakpoint). Either
-    -> R. (mtrR/porB efflux variants contribute to multidrug tolerance but are not the primary tet
-    determinant.) Non-frozen / scorer-local; endorsed only if it clears the spec>=0.85 falsifier on the AMR
-    Portal (the rpsJ-only isolates are the spec risk if V57M sits below the breakpoint)."""
+    **v0.1 (2026-07-20, AR-Bank-validated):** two determinants: acquired **tet(M)** (plasmid
+    ribosomal-protection -> HIGH-level R) and the chromosomal **rpsJ V57M** (ribosomal S10; low-level R,
+    often at/above CLSI R>=2) + **mtrR** efflux. The v0 'tet(M)-only' rule MISSED all 21 tet-R AR-Bank
+    isolates (chromosomal rpsJ+mtrR, not tet(M): 21/21 FN). So rpsJ/mtrR is PROMOTED from accessory to
+    primary: R iff tet(M) OR rpsJ_V57M OR mtrR. **HONEST SPEC CAVEAT:** on the EBI AMR Portal, rpsJ V57M is
+    common + low-level and COLLAPSED specificity to ~0.35 (it over-calls when tet-S isolates exist). The
+    AR-Bank cohort is tet-R-saturated (0 S) so the lift is SENS-only-testable (0->~1.0) here; on a cohort WITH
+    tet-S isolates this promoted rule will over-call -- keep the v0 tet(M)-only variant for spec-sensitive use."""
     tetm = [s.strip() for s in symbols if s and s.strip().startswith("tet(M)")]
     rpsj = [s.strip() for s in symbols if (s or "").strip() == "rpsJ_V57M"]
-    # tet(M)-ONLY: rpsJ V57M is common + LOW-level (frequently below the CLSI R>=2 breakpoint), so including
-    # it collapses specificity (empirically 0.35 on the AMR Portal). Demoted to accessory context.
+    mtr = [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")]
     return {
-        "prediction": "R" if tetm else "S",
-        "matched_tetM": tetm, "accessory_rpsJ_V57M": rpsj,
-        "rule": "tet(M) (high-level ribosomal protection) -> R (rpsJ V57M accessory-only: low-level, over-calls)",
-        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+        "prediction": "R" if (tetm or rpsj or mtr) else "S",
+        "matched_tetM": tetm, "matched_rpsJ_V57M": rpsj, "matched_mtr": mtr,
+        "rule": "tet(M) OR chromosomal rpsJ_V57M/mtrR -> R (v0.1: chromosomal promoted; gono tet-R is "
+                "chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort; rpsJ over-calls if tet-S present)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.1",
     }
 
 
@@ -134,41 +137,68 @@ def call_ng_azithromycin(symbols: list[str]) -> dict:
 
 
 def call_ng_penicillin(symbols: list[str]) -> dict:
-    """Predict penicillin R/S. Primary = plasmid **blaTEM** (TEM-1/135 penicillinase) -> high-level R.
-    Chromosomal penA/mtrR/ponA/porB confer LOW-to-intermediate resistance and over-call, so accessory-only."""
+    """Predict penicillin R/S. **v0.1 (2026-07-20, AR-Bank-validated):** gono penicillin resistance is
+    CHROMOSOMAL-dominant (penA PBP2 + mtrR efflux + ponA), with blaTEM the plasmid high-level path. The v0
+    'blaTEM-only' rule MISSED all 24 penicillin-R AR-Bank isolates (they are chromosomal, not blaTEM: 24/24
+    FN). So chromosomal penA/mtrR is PROMOTED from accessory to primary: R iff blaTEM OR penA-point OR mtrR.
+    HONEST SPEC CAVEAT: the AR-Bank cohort is penicillin-R-saturated (0 S), so this lift is SENS-only-testable
+    (0->~1.0); the promoted rule WILL over-call a penicillin-S isolate carrying the (near-universal) mosaic
+    penA/mtrR -- specificity is UNTESTED here (mirrors the tet rpsJ over-call risk)."""
     tem = [s.strip() for s in symbols if (s or "").strip().lower().startswith("blatem")]
-    chrom = ([s.strip() for s in symbols if (s or "").strip().startswith(("penA", "ponA", "porB"))]
-             + [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")])
+    pena = [s.strip() for s in symbols if _PENA_POINT_RE.match((s or "").strip())]
+    mtr = [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")]
     return {
-        "prediction": "R" if tem else "S",
-        "matched_blaTEM": tem, "accessory_chromosomal": chrom,
-        "rule": "blaTEM plasmid penicillinase -> R (chromosomal penA/mtrR/ponA/porB accessory-only: low-level)",
-        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+        "prediction": "R" if (tem or pena or mtr) else "S",
+        "matched_blaTEM": tem, "matched_penA": pena, "matched_mtr": mtr,
+        "rule": "blaTEM OR chromosomal penA/mtrR -> R (v0.1: chromosomal promoted; gono pen-R is "
+                "chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.1",
     }
 
 
-def _call_ng_esc(symbols: list[str], drug: str) -> dict:
-    """Shared ceftriaxone/cefixime rule: primary = penA mosaic / ESC-associated PBP2 substitution ->
-    decreased ESC susceptibility / R. ponA L421P + porB + mtrR modulate the level (accessory). ESC
-    resistance in NG is subtle (mostly reduced-susceptibility, few fully-R) -> flagged for validation."""
+# The specific high-level ceftriaxone determinant: penA Ala501 substitutions (A501P/T/V), the mosaic
+# penA-60/-34 signature that raises the CEFTRIAXONE MIC to/above the breakpoint. This is distinct from the
+# broader mosaic markers (A510V/F504L/G545S/I312M/V316T/N512Y) that raise the CEFIXIME MIC but leave
+# ceftriaxone SUSCEPTIBLE (ceftriaxone is more potent). Literature marker (Ohnishi/WHO penA-60), NOT fit to
+# the cohort.
+_PENA_A501_RE = re.compile(r"^penA_A501[A-Z]$")
+
+
+def call_ng_cefixime(symbols: list[str]) -> dict:
+    """Predict cefixime R/S. Primary = any curated penA mosaic point mutation -> R (cefixime MIC is raised
+    by the common mosaic penA). v0 rule kept: sens 1.0 on the AR Bank. **Documented ceiling:** the few
+    cefixime-S isolates carry the SAME mosaic penA (the R/S split is at the MIC margin, not genotype-
+    resolvable), so a handful of FP are irreducible from AMRFinder determinants -- NOT a rule bug."""
     pena = _penA_esc_hits(symbols)
     accessory = ([s.strip() for s in symbols if (s or "").strip().startswith(("ponA", "porB"))]
                  + [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")])
     return {
         "prediction": "R" if pena else "S",
         "matched_penA_esc": pena, "accessory_ponA_porB_mtr": accessory,
-        "rule": f"penA mosaic/ESC PBP2 substitution -> {drug} R (ponA/porB/mtrR accessory; ESC-R is "
-                "subtle/reduced-susceptibility -> validate spec on measured MIC)",
-        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+        "rule": "penA mosaic point -> cefixime R (ponA/porB/mtrR accessory; cefixime-S at the MIC margin "
+                "carries the same mosaic -> a few FP irreducible from genotype)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0",
     }
 
 
 def call_ng_ceftriaxone(symbols: list[str]) -> dict:
-    return _call_ng_esc(symbols, DRUG_CRO)
-
-
-def call_ng_cefixime(symbols: list[str]) -> dict:
-    return _call_ng_esc(symbols, DRUG_CFM)
+    """Predict ceftriaxone R/S. **v0.1 (2026-07-20, AR-Bank-validated):** the v0 'any penA point -> R' rule
+    OVER-called -- all 25 scored ceftriaxone-S isolates carry mosaic penA (which raises cefixime but NOT
+    ceftriaxone MIC), so v0 scored spec 0.0 (25 FP). Ceftriaxone-R requires the SPECIFIC high-level penA
+    **Ala501** substitution (A501P/T/V; mosaic penA-60/-34 signature) -- a literature marker the reduced-
+    susceptibility isolates (carrying A510V, not A501) LACK. So R iff penA A501-class. **HONEST CAVEAT:**
+    this lifts SPECIFICITY on the R-saturated-S cohort (the A510-mosaic isolates -> correctly S); SENSITIVITY
+    is UNTESTED here (0 ceftriaxone-R in the FREE scored set -- the 2 R isolates are assembly-required).
+    ponA/porB/mtrR remain accessory."""
+    a501 = [s.strip() for s in symbols if _PENA_A501_RE.match((s or "").strip())]
+    other_pena = [s.strip() for s in symbols if _PENA_POINT_RE.match((s or "").strip()) and s.strip() not in a501]
+    return {
+        "prediction": "R" if a501 else "S",
+        "matched_penA_A501": a501, "accessory_other_penA": other_pena,
+        "rule": "penA Ala501 (A501P/T/V high-level mosaic-60 marker) -> ceftriaxone R (v0.1: narrowed from "
+                "'any penA point'; reduced-suscept A510-mosaics -> S; sens untested on this all-S-scored cohort)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.1",
+    }
 
 
 def call_ng_gentamicin(symbols: list[str]) -> dict:

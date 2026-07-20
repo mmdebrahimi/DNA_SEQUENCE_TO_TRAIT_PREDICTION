@@ -42,9 +42,9 @@ def test_rule_predictor_applies_call_ng_amr(tmp_path, monkeypatch):
         raise AssertionError("ensure_run should not run when _run_dir resolves")
     monkeypatch.setattr("scripts.organism_drug_validate.ensure_run", _boom)
 
-    predict_cro = ecr.rule_predictor("ceftriaxone", tmp_path / "o", tmp_path / "g", "glob",
+    predict_cfm = ecr.rule_predictor("cefixime", tmp_path / "o", tmp_path / "g", "glob",
                                      call_ng_amr, "Neisseria_gonorrhoeae")
-    assert predict_cro("GCA_x") == "R"        # penA mosaic -> cef R
+    assert predict_cfm("GCA_x") == "R"        # penA mosaic (G545S) -> cefixime R (ceftriaxone v0.1 would be S)
     predict_cip = ecr.rule_predictor("ciprofloxacin", tmp_path / "o", tmp_path / "g", "glob",
                                      call_ng_amr, "Neisseria_gonorrhoeae")
     assert predict_cip("GCA_x") == "R"        # gyrA S91F -> cipro R
@@ -70,7 +70,8 @@ def test_real_cached_ar0165_main_tsv():
     syms = ecr.parse_determinant_symbols(_REAL_AR0165)
     assert "gyrA_S91F" in syms and any(s.startswith("penA_") for s in syms)
     assert call_ng_amr("ciprofloxacin", syms)["prediction"] == "R"
-    assert call_ng_amr("ceftriaxone", syms)["prediction"] == "R"
+    assert call_ng_amr("cefixime", syms)["prediction"] == "R"            # mosaic penA -> cefixime R
+    assert call_ng_amr("ceftriaxone", syms)["prediction"] == "S"         # v0.1: A510V (not A501) -> ceftriaxone S
     assert call_ng_amr("azithromycin", syms)["prediction"] == "S"
     assert call_ng_amr("gentamicin", syms)["prediction"] == "INDETERMINATE"
 

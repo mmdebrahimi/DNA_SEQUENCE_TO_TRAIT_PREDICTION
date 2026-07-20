@@ -1,0 +1,68 @@
+{
+  "_schema": "ar-bank-gono-validation-v1",
+  "date": "2026-07-20",
+  "run_id": "gono_v01_2026-07-20",
+  "cohort": "ar_bank_gono",
+  "organism": "Neisseria gonorrhoeae",
+  "amrfinder_organism": "Neisseria_gonorrhoeae",
+  "registry_organism": "Neisseria gonorrhoeae",
+  "drug": "penicillin",
+  "evidence_tier": "external_clinical_curated_nonfrozen",
+  "independence_tier": "CDC AR Isolate Bank measured BMD-MIC, provenance-disjoint (BioSample + resolution-free assembly-base) vs the tuning cohorts; genotype = AMRFinderPlus -O Neisseria_gonorrhoeae determinant calls; NOT methodology-independent (the rule is curated from Pathogenwatch 485.toml + literature).",
+  "strict": {
+    "n_scored": 24,
+    "tp": 24,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": 1.0,
+    "spec": null,
+    "n_excluded_no_assembly": 3
+  },
+  "relaxed": {
+    "n_scored": 24,
+    "tp": 24,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": 1.0,
+    "sens": 1.0,
+    "spec": null,
+    "n_excluded_no_assembly": 3
+  },
+  "buckets": {
+    "drug": "penicillin",
+    "label_source": "ar_bank_INT_cdc_gonococcal_breakpoints",
+    "n_total": 46,
+    "n_R": 46,
+    "n_S": 0
+  },
+  "leakage_control": "BioSample+assembly-level preflight: DEGRADED; 3 reads-only excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": true,
+    "degraded": true,
+    "reasons": [
+      "strict scored S 0 < min_per_class 1 (underpowered)",
+      "indeterminate fraction 0.4419 > 0.2 (of 43 attempted-FREE)"
+    ],
+    "n_attempted_free": 43,
+    "n_indeterminate": 19,
+    "indeterminate_fraction": 0.4419,
+    "scored_R": 24,
+    "scored_S": 0,
+    "min_per_class": 1,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "rule_text": "blaTEM OR chromosomal penA/mtrR -> R (v0.1: chromosomal promoted; gono pen-R is chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort)",
+  "spec_floor": 0.85,
+  "frozen_surface_changed": false
+}
