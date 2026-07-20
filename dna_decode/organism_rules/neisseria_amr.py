@@ -79,3 +79,129 @@ def call_ng_ciprofloxacin(symbols: list[str]) -> dict:
         "rule": "gyrA QRDR (Ser91/Asp95) point mutation -> R (parC accessory-only)",
         "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
     }
+
+
+# --------------------------------------------------------------------------------------------------
+# Extension 2026-07-20: the remaining AR-Bank gonococcal panel drugs (azithromycin / ceftriaxone /
+# cefixime / penicillin) + an explicit gentamicin ABSTAIN. Determinants sourced from the Pathogenwatch
+# N. gonorrhoeae AMR library (`data/gono_catalogue/485.toml`, sha256 00f44d16..., taxid 485) +
+# `wiki/gonorrhoeae_amr_determinant_catalog_2026-07-19.md`. Same NON-FROZEN / scorer-local posture as
+# the cipro/tet rules; primary high-level determinant -> R, low-level chromosomal determinants demoted
+# to accessory (same over-call discipline that keeps rpsJ/parC out of the binary call). Endorsed only
+# if each clears the spec>=0.85 falsifier on an independent measured-MIC cohort (AR Bank / AMR Portal).
+# --------------------------------------------------------------------------------------------------
+
+DRUG_AZM = "azithromycin"
+DRUG_CRO = "ceftriaxone"
+DRUG_CFM = "cefixime"
+DRUG_PEN = "penicillin"
+DRUG_GEN = "gentamicin"
+
+# High-level macrolide determinant: 23S rRNA peptidyl-transferase mutations. The 4 rDNA copies collapse
+# in short-read assemblies, so a call is consensus-base dependent (a known sensitivity caveat). Accept
+# BOTH the gonococcal WHO-2016 coordinates (A2045G / C2597T) and the E. coli-equivalent coordinates
+# (A2059G / C2611T) that some callers emit.
+_23S_AZM_MUTS = ("A2045G", "C2597T", "A2059G", "C2611T")
+# penA mosaic / ESC-associated PBP2 substitution codons (mosaic penA-34/60 + non-mosaic A501x). Any of
+# these -> decreased ESC susceptibility / R (the primary cephalosporin determinant).
+_PENA_ESC_CODONS = frozenset({311, 312, 316, 483, 501, 512, 542, 545})
+_PENA_POINT_RE = re.compile(r"^penA_([A-Z])(\d+)([A-Z*])$")
+
+
+def _penA_esc_hits(symbols: list[str]) -> list[str]:
+    """penA point-mutation symbols at an ESC-associated codon (mosaic or A501x); also a bare mosaic tag."""
+    out = []
+    for s in symbols:
+        t = (s or "").strip()
+        m = _PENA_POINT_RE.match(t)
+        if m and int(m.group(2)) in _PENA_ESC_CODONS:
+            out.append(t)
+        elif t.startswith("penA") and "mosaic" in t.lower():
+            out.append(t)
+    return out
+
+
+def call_ng_azithromycin(symbols: list[str]) -> dict:
+    """Predict azithromycin R/S. Primary = 23S rRNA A2045G/C2597T (WHO coords; = A2059G/C2611T E. coli)
+    -> high-level macrolide R. mtrR mosaic / promoter (`a-57del`) efflux variants raise MIC but are
+    LOW-level and over-call, so they are accessory-only (same demotion as rpsJ for tet)."""
+    hits_23s = [s.strip() for s in symbols if any(mut in (s or "") for mut in _23S_AZM_MUTS)]
+    mtr = [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")]
+    return {
+        "prediction": "R" if hits_23s else "S",
+        "matched_23S": hits_23s, "accessory_mtr": mtr,
+        "rule": "23S rRNA A2045G/C2597T (macrolide target) -> R (mtrR efflux accessory-only: low-level, over-calls)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+    }
+
+
+def call_ng_penicillin(symbols: list[str]) -> dict:
+    """Predict penicillin R/S. Primary = plasmid **blaTEM** (TEM-1/135 penicillinase) -> high-level R.
+    Chromosomal penA/mtrR/ponA/porB confer LOW-to-intermediate resistance and over-call, so accessory-only."""
+    tem = [s.strip() for s in symbols if (s or "").strip().lower().startswith("blatem")]
+    chrom = ([s.strip() for s in symbols if (s or "").strip().startswith(("penA", "ponA", "porB"))]
+             + [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")])
+    return {
+        "prediction": "R" if tem else "S",
+        "matched_blaTEM": tem, "accessory_chromosomal": chrom,
+        "rule": "blaTEM plasmid penicillinase -> R (chromosomal penA/mtrR/ponA/porB accessory-only: low-level)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+    }
+
+
+def _call_ng_esc(symbols: list[str], drug: str) -> dict:
+    """Shared ceftriaxone/cefixime rule: primary = penA mosaic / ESC-associated PBP2 substitution ->
+    decreased ESC susceptibility / R. ponA L421P + porB + mtrR modulate the level (accessory). ESC
+    resistance in NG is subtle (mostly reduced-susceptibility, few fully-R) -> flagged for validation."""
+    pena = _penA_esc_hits(symbols)
+    accessory = ([s.strip() for s in symbols if (s or "").strip().startswith(("ponA", "porB"))]
+                 + [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")])
+    return {
+        "prediction": "R" if pena else "S",
+        "matched_penA_esc": pena, "accessory_ponA_porB_mtr": accessory,
+        "rule": f"penA mosaic/ESC PBP2 substitution -> {drug} R (ponA/porB/mtrR accessory; ESC-R is "
+                "subtle/reduced-susceptibility -> validate spec on measured MIC)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local",
+    }
+
+
+def call_ng_ceftriaxone(symbols: list[str]) -> dict:
+    return _call_ng_esc(symbols, DRUG_CRO)
+
+
+def call_ng_cefixime(symbols: list[str]) -> dict:
+    return _call_ng_esc(symbols, DRUG_CFM)
+
+
+def call_ng_gentamicin(symbols: list[str]) -> dict:
+    """Gentamicin has NO validated gonococcal genetic determinant (an alternative/newer agent; absent from
+    the Pathogenwatch 485.toml catalogue and the literature). A determinant rule cannot decode it, so this
+    ABSTAINS (INDETERMINATE) rather than calling a vacuous S-by-absence. The external scorer excludes
+    INDETERMINATE from sens/spec (honest non-coverage, mirroring the fungal/antiviral abstainers)."""
+    return {
+        "prediction": "INDETERMINATE",
+        "rule": "no validated gonococcal gentamicin determinant -> ABSTAIN (not decodable)",
+        "rule_status": "ABSTAIN_NO_DETERMINANT", "rule_scope": "scorer_local",
+    }
+
+
+_NG_DISPATCH = {
+    DRUG: call_ng_ciprofloxacin, "ciprofloxacin": call_ng_ciprofloxacin,
+    DRUG_TET: call_ng_tetracycline,
+    DRUG_AZM: call_ng_azithromycin,
+    DRUG_CRO: call_ng_ceftriaxone,
+    DRUG_CFM: call_ng_cefixime,
+    DRUG_PEN: call_ng_penicillin,
+    DRUG_GEN: call_ng_gentamicin,
+}
+
+
+def call_ng_amr(drug: str, symbols: list[str]) -> dict:
+    """Dispatch to the per-drug gonococcal rule for the AR-Bank panel (azithromycin / cefixime /
+    ceftriaxone / ciprofloxacin / gentamicin / penicillin / tetracycline). An unsupported drug ABSTAINS
+    (INDETERMINATE) rather than guessing."""
+    fn = _NG_DISPATCH.get((drug or "").strip().lower())
+    if fn is None:
+        return {"prediction": "INDETERMINATE", "rule": f"no gonococcal rule for {drug!r} -> ABSTAIN",
+                "rule_status": "ABSTAIN_UNSUPPORTED_DRUG", "rule_scope": "scorer_local"}
+    return fn(symbols)
