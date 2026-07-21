@@ -18,6 +18,30 @@ The 2026-05-11 `/project-init` flagged "decode any DNA" as RESEARCH-PROGRAM (unb
 
 ---
 
+## Regime-first lens — the axis for "every life form" (added 2026-07-21)
+
+The phase ladder below is organized by **organism/kingdom** (microbe → non-AMR → multimodal → eukaryote → human). That ordering is fine as a milestone spine, but it is NOT the axis that decides whether a cell will *work*. The decisive axis — earned across the whole project — is the phenotype's **REGIME**, not its kingdom. "Every life form" is achievable as an **ever-growing federated SUITE of honest per-cell decoders**, extended by regime-reachability, NOT one universal learned model.
+
+| Regime | Who wins | Free + near-term? | Confound | Human example |
+|---|---|---|---|---|
+| **R1 — curated determinant catalog** | DETERMINISTIC rule (the shipped AMR decoders) | Yes, where a clean mechanism-level catalog exists | Clonality/lineage (disclose via cluster-weighting) | Single-gene pharmacogenomics (TPMT, DPYD, CYP2D6); Mendelian single-gene |
+| **R2 — molecular property, fitness-aligned** | LEARNED (the `forward` cell: ESM2+ProSST(+GEMME) hybrid) | **Yes — already live on human proteins** | **NONE by construction** (designed mutant library, no population axis) | Protein variant effect (BRCA1, PTEN, TP53 DMS) |
+| **R3 — organism-polygenic trait** | NEITHER (embeddings 0-for-4 under de-confounding) | No — HIGH-RISK trap | Population structure IS the signal (pooled acc is fake) | Height, disease risk, most biobank phenotypes |
+
+**Consequences that override kingdom-ordering when choosing the next cell:**
+- The molecular regime (R2) is **species-agnostic** — a protein is a protein. The `forward` cell therefore **already decodes human** (ProteinGym is full of human assays); "human" is not a distant Phase-6 milestone in R2, it is *already true*. Widening it is free (see MaveDB below).
+- R1 human cells (pharmacogenomics, Mendelian single-gene) are the **same deterministic-catalog architecture as AMR**, just a new kingdom — reachable free, and NOT the circular/paid biobank trap.
+- R3 (biobank polygenic traits — UK Biobank / All of Us / TOPMed) is **paid + controlled + maximally confounded + circular-labelled** (ClinVar-derived). It is the LAST step, not the first, and only with strict within-ancestry-vs-own-null scoring baked in. Do NOT headline it.
+- The binding constraint for "every life form" is **labels via CIRCULARITY + CONFOUND**, not scale. Screen every candidate source against the 8 rejection gates + the population-structure confound BEFORE building.
+
+**Free near-term moves under this lens (both reversible, no money, no confound):**
+1. **R2 widen — MaveDB.** CC0, human-heavy, upstream superset of ProteinGym. Highest-VOI use = a **leakage-free prospective validation tier** for the frozen hybrid (MaveDB assays published after ProteinGym's cutoff, deduped) + on-demand targeted human-gene cells. Scoping: `wiki/mavedb_forward_cell_scoping_2026-07-21.md`. NOT a wholesale re-ingest (overlap + loses curation).
+2. **R1 human catalog cell — pharmacogenomics.** PharmGKB/CPIC single-gene, mechanism-clean, free, non-circular (validation set separate from the catalog). Same architecture as the AMR decoders.
+
+This lens does not replace the phase ladder — it tells you WHICH phase/cell is actually reachable next, and warns which are traps. See project memory `feedback_g2p_decoder_regime_boundary` + `feedback_population_structure_is_the_clonality_analogue`.
+
+---
+
 ## Phase ladder (current → long-horizon)
 
 Each phase has:
