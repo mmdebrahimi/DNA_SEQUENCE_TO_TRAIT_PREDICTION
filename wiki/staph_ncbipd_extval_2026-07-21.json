@@ -1,0 +1,92 @@
+{
+  "_schema": "ncbipd-extval-v1",
+  "date": "2026-07-21",
+  "organism": "Staphylococcus aureus",
+  "cell": "staph_amr (NON-FROZEN)",
+  "cohort_dir": "data/raw/staph_ncbipd_extval",
+  "independence": "provenance-disjoint (frozen accessions excluded) but NOT methodology-independent",
+  "clonality_caveat": "RAW is clonality-inflated; lineage-collapse (Mash) is the follow-up",
+  "results": {
+    "ciprofloxacin": {
+      "drug": "ciprofloxacin",
+      "rule": "gyrA (Ser84/Ser85/Glu88) OR grlA/parC (Ser80/Glu84) QRDR point mutation -> R",
+      "binary": {
+        "n_scored": 82,
+        "tp": 22,
+        "fp": 2,
+        "tn": 58,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.976,
+        "sens": 1.0,
+        "spec": 0.967
+      },
+      "n_R": 22,
+      "n_S": 60,
+      "sens_wilson95": [
+        0.8513404742740388,
+        1.0
+      ],
+      "spec_wilson95": [
+        0.8863601247107462,
+        0.9908108735098498
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 59,
+        "tp": 17,
+        "fp": 1,
+        "tn": 41,
+        "fn": 0,
+        "n_clusters_R": 17,
+        "n_clusters_S": 42,
+        "n_discordant": 1,
+        "n_cluster_abstain": 0,
+        "sens": 1.0,
+        "spec": 0.976
+      }
+    },
+    "rifampin": {
+      "drug": "rifampin",
+      "rule": "any AMRFinder rpoB RRDR resistance point mutation -> R",
+      "binary": {
+        "n_scored": 109,
+        "tp": 7,
+        "fp": 2,
+        "tn": 99,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.972,
+        "sens": 0.875,
+        "spec": 0.98
+      },
+      "n_R": 8,
+      "n_S": 101,
+      "sens_wilson95": [
+        0.5291051942301386,
+        0.9775830911367038
+      ],
+      "spec_wilson95": [
+        0.930652470326113,
+        0.9945527917072783
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 81,
+        "tp": 6,
+        "fp": 1,
+        "tn": 73,
+        "fn": 1,
+        "n_clusters_R": 7,
+        "n_clusters_S": 74,
+        "n_discordant": 0,
+        "n_cluster_abstain": 0,
+        "sens": 0.857,
+        "spec": 0.986
+      }
+    }
+  },
+  "frozen_surface_changed": false
+}

@@ -27,11 +27,28 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+import re  # noqa: E402
+
 from dna_decode.eval.clonality import cluster_weighted_confusion  # noqa: E402
 from dna_decode.organism_rules import campylobacter_amr as CJ  # noqa: E402
 from dna_decode.organism_rules import neisseria_amr as NG  # noqa: E402
+from dna_decode.organism_rules import pneumo_amr as PN  # noqa: E402
+from dna_decode.organism_rules import staphylococcus_amr as SA  # noqa: E402
 from scripts.amr_portal_score_independent import wilson_ci  # noqa: E402
 from scripts.independent_cohort_validate import _conf  # noqa: E402
+
+
+def _pneumo(drug):
+    """Adapter: pneumo_amr.call_drug takes normalized gene tokens (its rule keys are 'ermb'/'mefa'/'tetm'
+    with no parens), but NCBI-PD emits `erm(B)`/`tet(M)` -> strip non-alphanumerics so the substring match
+    fires. Returns the scorer's {'prediction','rule'} dict; out-of-scope drug -> INDETERMINATE."""
+    def call(symbols):
+        norm = [re.sub(r"[^a-z0-9]", "", (s or "").lower()) for s in symbols]
+        c = PN.call_drug(drug, norm)
+        if c is None:
+            return {"prediction": "INDETERMINATE", "rule": f"pneumo {drug} out of v0 scope"}
+        return {"prediction": c.prediction, "rule": f"pneumo {drug}: {'|'.join(c.rule_tokens)} gene-presence -> R"}
+    return call
 
 SPEC_FLOOR = 0.85
 MIN_PER_CLASS = 5
@@ -45,6 +62,12 @@ ORGANISMS = {
     }),
     "campylobacter": ("Campylobacter", "data/raw/campy_ncbipd_extval", {
         "tetracycline": CJ.call_cj_tetracycline, "gentamicin": CJ.call_cj_gentamicin,
+    }),
+    "staph": ("Staphylococcus aureus", "data/raw/staph_ncbipd_extval", {
+        "ciprofloxacin": SA.call_sa_ciprofloxacin, "rifampin": SA.call_sa_rifampicin,
+    }),
+    "pneumo": ("Streptococcus pneumoniae", "data/raw/pneumo_ncbipd_extval", {
+        "erythromycin": _pneumo("erythromycin"), "tetracycline": _pneumo("tetracycline"),
     }),
 }
 

@@ -1,0 +1,92 @@
+{
+  "_schema": "ncbipd-extval-v1",
+  "date": "2026-07-21",
+  "organism": "Streptococcus pneumoniae",
+  "cell": "pneumo_amr (NON-FROZEN)",
+  "cohort_dir": "data/raw/pneumo_ncbipd_extval",
+  "independence": "provenance-disjoint (frozen accessions excluded) but NOT methodology-independent",
+  "clonality_caveat": "RAW is clonality-inflated; lineage-collapse (Mash) is the follow-up",
+  "results": {
+    "erythromycin": {
+      "drug": "erythromycin",
+      "rule": "pneumo erythromycin: ermb|mefa|msrd gene-presence -> R",
+      "binary": {
+        "n_scored": 113,
+        "tp": 42,
+        "fp": 2,
+        "tn": 68,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.973,
+        "sens": 0.977,
+        "spec": 0.971
+      },
+      "n_R": 43,
+      "n_S": 70,
+      "sens_wilson95": [
+        0.8794073213878312,
+        0.9958830188225801
+      ],
+      "spec_wilson95": [
+        0.9016755648760818,
+        0.9921295531061937
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 74,
+        "tp": 21,
+        "fp": 2,
+        "tn": 51,
+        "fn": 0,
+        "n_clusters_R": 21,
+        "n_clusters_S": 53,
+        "n_discordant": 1,
+        "n_cluster_abstain": 0,
+        "sens": 1.0,
+        "spec": 0.962
+      }
+    },
+    "tetracycline": {
+      "drug": "tetracycline",
+      "rule": "pneumo tetracycline: tetm|teto gene-presence -> R",
+      "binary": {
+        "n_scored": 113,
+        "tp": 10,
+        "fp": 0,
+        "tn": 103,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "n_R": 10,
+      "n_S": 103,
+      "sens_wilson95": [
+        0.7224598312333834,
+        1.0
+      ],
+      "spec_wilson95": [
+        0.9640439678926562,
+        1.0
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 75,
+        "tp": 9,
+        "fp": 0,
+        "tn": 66,
+        "fn": 0,
+        "n_clusters_R": 9,
+        "n_clusters_S": 66,
+        "n_discordant": 0,
+        "n_cluster_abstain": 0,
+        "sens": 1.0,
+        "spec": 1.0
+      }
+    }
+  },
+  "frozen_surface_changed": false
+}
