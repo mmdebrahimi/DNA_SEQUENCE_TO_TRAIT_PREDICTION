@@ -32,7 +32,20 @@
         0.9812771240324999
       ],
       "powered": true,
-      "headline": "SCORED_ENDORSED"
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 97,
+        "tp": 52,
+        "fp": 3,
+        "tn": 42,
+        "fn": 0,
+        "n_clusters_R": 52,
+        "n_clusters_S": 45,
+        "n_discordant": 1,
+        "n_cluster_abstain": 0,
+        "sens": 1.0,
+        "spec": 0.933
+      }
     },
     "gentamicin": {
       "drug": "gentamicin",
@@ -59,7 +72,20 @@
         0.9999999999999999
       ],
       "powered": true,
-      "headline": "SCORED_ENDORSED"
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 97,
+        "tp": 20,
+        "fp": 0,
+        "tn": 77,
+        "fn": 0,
+        "n_clusters_R": 20,
+        "n_clusters_S": 77,
+        "n_discordant": 1,
+        "n_cluster_abstain": 0,
+        "sens": 1.0,
+        "spec": 1.0
+      }
     }
   },
   "frozen_surface_changed": false

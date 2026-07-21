@@ -27,6 +27,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from dna_decode.eval.clonality import cluster_weighted_confusion  # noqa: E402
 from dna_decode.organism_rules import campylobacter_amr as CJ  # noqa: E402
 from dna_decode.organism_rules import neisseria_amr as NG  # noqa: E402
 from scripts.amr_portal_score_independent import wilson_ci  # noqa: E402
@@ -52,10 +53,22 @@ def score_cell(name: str, cohort_dir: str, drugs: dict) -> dict:
     labels = {r["biosample"]: r for r in csv.DictReader(open(f"{cohort_dir}/cohort.tsv"), delimiter="\t")}
     dets = {r["biosample"]: [s for s in (r["determinants"] or "").split(";") if s]
             for r in csv.DictReader(open(f"{cohort_dir}/determinants.tsv"), delimiter="\t")}
-    print(f"{name}: {len(labels)} NCBI-PD isolates (provenance-disjoint; frozen accessions excluded)")
+    # NCBI-PD SNP clusters (biosample -> PDS); NULL -> a unique singleton lineage. No Mash/Docker needed.
+    clusters, _sing = {}, [10 ** 7]
+    cpath = Path(f"{cohort_dir}/clusters.tsv")
+    if cpath.exists():
+        for r in csv.DictReader(open(cpath), delimiter="\t"):
+            pds = r.get("PDS_acc") or "NULL"
+            if pds and pds != "NULL":
+                clusters[r["biosample"]] = hash(pds) % (10 ** 6)
+            else:
+                _sing[0] += 1
+                clusters[r["biosample"]] = _sing[0]
+    print(f"{name}: {len(labels)} NCBI-PD isolates (provenance-disjoint; frozen accessions excluded)"
+          + (f"; {len(clusters)} SNP-clustered -> lineage-collapse ON" if clusters else ""))
     results = {}
     for drug, fn in drugs.items():
-        scored = []
+        scored, preds, labs = [], {}, {}
         for bs, row in labels.items():
             rs = row.get(drug, "")
             if rs not in ("R", "S"):
@@ -63,6 +76,7 @@ def score_cell(name: str, cohort_dir: str, drugs: dict) -> dict:
             pred = fn(dets.get(bs, []))["prediction"]
             if str(pred).upper() in ("R", "S"):
                 scored.append((pred, 1 if rs == "R" else 0))
+                preds[bs], labs[bs] = pred, rs
         conf = _conf(scored)
         n_R, n_S = conf["tp"] + conf["fn"], conf["tn"] + conf["fp"]
         powered = n_R >= MIN_PER_CLASS and n_S >= MIN_PER_CLASS
@@ -72,11 +86,20 @@ def score_cell(name: str, cohort_dir: str, drugs: dict) -> dict:
                         and conf["spec"] >= SPEC_FLOOR and (conf["sens"] is None or conf["sens"] >= 0.5))
         headline = ("DEGENERATE_NOT_ENDORSED" if degenerate else "SCORED_ENDORSED" if endorsed
                     else "UNDERPOWERED" if not powered else "SCORED_NOT_ENDORSED")
+        # lineage-collapsed (clonality-corrected) — one vote per SNP cluster; mixed clusters = DISCORDANT
+        lineage = None
+        if clusters and preds:
+            clus = {bs: clusters[bs] for bs in preds if bs in clusters}
+            lineage = cluster_weighted_confusion({bs: preds[bs] for bs in clus},
+                                                 {bs: labs[bs] for bs in clus}, clus)
         results[drug] = {"drug": drug, "rule": fn(["_probe_"])["rule"], "binary": conf,
                          "n_R": n_R, "n_S": n_S, "sens_wilson95": wilson_ci(conf["tp"], n_R),
-                         "spec_wilson95": wilson_ci(conf["tn"], n_S), "powered": powered, "headline": headline}
+                         "spec_wilson95": wilson_ci(conf["tn"], n_S), "powered": powered,
+                         "headline": headline, "lineage_collapsed": lineage}
+        lstr = (f" | LINEAGE sens={lineage.get('sens')} spec={lineage.get('spec')} "
+                f"discordant={lineage.get('n_discordant')}") if lineage else ""
         print(f"  {drug:14s}: n={conf['n_scored']:3d} ({n_R}R/{n_S}S) acc={conf['acc']} "
-              f"sens={conf['sens']} spec={conf['spec']} -> {headline}")
+              f"sens={conf['sens']} spec={conf['spec']} -> {headline}{lstr}")
     return results
 
 

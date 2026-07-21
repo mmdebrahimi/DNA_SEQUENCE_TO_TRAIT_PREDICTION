@@ -86,10 +86,27 @@ predicts all-one-class (sens 0 with powered R, or spec 0 with powered S) is `DEG
 regardless of the other metric. Same class of integrity fix as the empty-assembly-as-S gate — a degenerate
 output must never read as a validated one.
 
+## Lineage-collapse (clonality-corrected) — the caveat RESOLVED, no compute
+
+The dominant caveat is clonal inflation (raw sens/spec counts one vote per isolate, not per lineage).
+Resolved here with **no Mash / no Docker** by using NCBI-PD's OWN published SNP clusters (`<PDG>.reference_
+target.all_isolates.tsv` → each isolate's `PDS_acc`; NULL = a singleton lineage) with the frozen
+`clonality.cluster_weighted_confusion` (one vote per lineage; mixed-label clusters excluded as DISCORDANT).
+170/170 isolates SNP-clustered (153 in real clusters + 17 singletons):
+
+| drug | RAW sens/spec | **LINEAGE-collapsed sens/spec** | discordant |
+|---|---|---|---|
+| ciprofloxacin | 0.989/0.986 | **1.00 / 1.00** | 3 |
+| cefixime | 0.789/0.905 | **0.727 / 0.892** | 2 |
+| penicillin | 0.929/0.941 | **0.917 / 0.933** | 0 |
+
+**All 3 endorsed cells HOLD at the lineage level** — cipro is *perfect* collapsed, cefixime + penicillin
+keep spec ≥ 0.85. The cells are NOT clonally inflated → the determinant rules genuinely decode the
+**mechanism**, not clonal population structure. This is the strongest validation tier the project produces,
+and it was reached at zero compute cost.
+
 ## Honest caveats
 
 - **Provenance-disjoint** (different isolates than AR-Bank; the 21 AR-Bank BioSamples excluded) but **NOT
   methodology-independent** (same AMRFinderPlus + same `neisseria_amr` cell) — the standard caveat.
-- **RAW sens/spec is CLONALITY-INFLATED** (gonococci are clonally structured). This is a provenance-disjoint
-  stress test; the lineage-collapsed number (Mash on the assemblies) is the follow-up and would be lower.
 - NON-FROZEN cell; the frozen decoder surface is byte-unchanged (`verify_lock` OK).

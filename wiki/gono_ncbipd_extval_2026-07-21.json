@@ -1,14 +1,11 @@
 {
-  "_schema": "gono-ncbipd-extval-v1",
+  "_schema": "ncbipd-extval-v1",
   "date": "2026-07-21",
   "organism": "Neisseria gonorrhoeae",
-  "cell": "neisseria_amr (NON-FROZEN)",
-  "cohort_source": "NCBI Pathogen Detection PDG000000032.673 (measured AST + NCBI AMRFinderPlus calls)",
-  "n_isolates": 170,
-  "independence": "provenance-disjoint from the AR-Bank isolates (different isolates/BioSamples); NOT methodology-independent (same AMRFinderPlus + same neisseria_amr cell).",
-  "clonality_caveat": "RAW sens/spec is clonality-inflated (gonococci clonally structured); lineage-collapse (Mash on assemblies) is the follow-up.",
-  "spec_floor": 0.85,
-  "min_per_class": 5,
+  "cell": "gono_amr (NON-FROZEN)",
+  "cohort_dir": "data/raw/gono_ncbipd_extval",
+  "independence": "provenance-disjoint (frozen accessions excluded) but NOT methodology-independent",
+  "clonality_caveat": "RAW is clonality-inflated; lineage-collapse (Mash) is the follow-up",
   "results": {
     "ciprofloxacin": {
       "drug": "ciprofloxacin",
@@ -35,7 +32,20 @@
         0.9974371413556695
       ],
       "powered": true,
-      "headline": "SCORED_ENDORSED"
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 82,
+        "tp": 50,
+        "fp": 0,
+        "tn": 32,
+        "fn": 0,
+        "n_clusters_R": 50,
+        "n_clusters_S": 32,
+        "n_discordant": 3,
+        "n_cluster_abstain": 0,
+        "sens": 1.0,
+        "spec": 1.0
+      }
     },
     "cefixime": {
       "drug": "cefixime",
@@ -62,7 +72,20 @@
         0.9424198097225024
       ],
       "powered": true,
-      "headline": "SCORED_ENDORSED"
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 85,
+        "tp": 8,
+        "fp": 8,
+        "tn": 66,
+        "fn": 3,
+        "n_clusters_R": 11,
+        "n_clusters_S": 74,
+        "n_discordant": 2,
+        "n_cluster_abstain": 0,
+        "sens": 0.727,
+        "spec": 0.892
+      }
     },
     "ceftriaxone": {
       "drug": "ceftriaxone",
@@ -89,7 +112,20 @@
         0.9713915665321776
       ],
       "powered": false,
-      "headline": "UNDERPOWERED"
+      "headline": "UNDERPOWERED",
+      "lineage_collapsed": {
+        "n_scored": 89,
+        "tp": 0,
+        "fp": 8,
+        "tn": 79,
+        "fn": 2,
+        "n_clusters_R": 2,
+        "n_clusters_S": 87,
+        "n_discordant": 0,
+        "n_cluster_abstain": 0,
+        "sens": 0.0,
+        "spec": 0.908
+      }
     },
     "azithromycin": {
       "drug": "azithromycin",
@@ -116,7 +152,20 @@
         1.0
       ],
       "powered": true,
-      "headline": "DEGENERATE_NOT_ENDORSED"
+      "headline": "DEGENERATE_NOT_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 77,
+        "tp": 0,
+        "fp": 0,
+        "tn": 35,
+        "fn": 42,
+        "n_clusters_R": 42,
+        "n_clusters_S": 35,
+        "n_discordant": 1,
+        "n_cluster_abstain": 0,
+        "sens": 0.0,
+        "spec": 1.0
+      }
     },
     "penicillin": {
       "drug": "penicillin",
@@ -143,7 +192,20 @@
         0.9895398693548358
       ],
       "powered": true,
-      "headline": "SCORED_ENDORSED"
+      "headline": "SCORED_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 27,
+        "tp": 11,
+        "fp": 1,
+        "tn": 14,
+        "fn": 1,
+        "n_clusters_R": 12,
+        "n_clusters_S": 15,
+        "n_discordant": 0,
+        "n_cluster_abstain": 0,
+        "sens": 0.917,
+        "spec": 0.933
+      }
     },
     "tetracycline": {
       "drug": "tetracycline",
@@ -170,7 +232,20 @@
         1.0
       ],
       "powered": true,
-      "headline": "SCORED_NOT_ENDORSED"
+      "headline": "SCORED_NOT_ENDORSED",
+      "lineage_collapsed": {
+        "n_scored": 51,
+        "tp": 11,
+        "fp": 0,
+        "tn": 21,
+        "fn": 19,
+        "n_clusters_R": 30,
+        "n_clusters_S": 21,
+        "n_discordant": 1,
+        "n_cluster_abstain": 0,
+        "sens": 0.367,
+        "spec": 1.0
+      }
     }
   },
   "frozen_surface_changed": false

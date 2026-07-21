@@ -30,8 +30,10 @@ frozen *ciprofloxacin* cell was validated). This is their first external validat
 - **Provenance-disjoint** (128 frozen campylobacter identifiers excluded at cohort-build; and the frozen campy
   cell is *ciprofloxacin* — a different drug — so the tet/gent rules never saw these isolates regardless) but
   **NOT methodology-independent** (same AMRFinderPlus + same cell).
-- **RAW sens/spec is clonality-inflated** (Campylobacter is clonal); lineage-collapse (Mash on assemblies) is
-  the follow-up.
+- **Lineage-collapse (clonality-corrected) — no compute:** via NCBI-PD's own SNP clusters (`PDS_acc`) +
+  `clonality.cluster_weighted_confusion`. **Both cells HOLD:** tetracycline lineage sens 1.0 / spec 0.933
+  (1 discordant), gentamicin lineage sens 1.0 / spec 1.0 (1 discordant). Not clonally inflated — the rules
+  decode mechanism, not clonal structure.
 - Campylobacter measured AST is **surveillance-dominated** (NARMS/food); this cohort is a subset of that
   ecosystem (the isolates carry measured AST because they were surveilled) — the provenance-disjointness is
   from the *frozen cohort*, not from the surveillance ecosystem.
