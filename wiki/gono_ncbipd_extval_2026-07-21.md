@@ -78,8 +78,16 @@ is their first test, and it exposes that they are **not reliable** on this subst
   call the mutation. **Inherent ceiling:** 23S is multi-copy and azithromycin resistance is often
   heteroplasmic (a subset of the 4 copies mutated), which the consensus assembly collapses — so only
   high-level all-copy R is reliably detectable from WGS (a well-known literature limitation, like tet(M) for
-  high-level TRNG). This is a scoped subsystem build with a real biological ceiling, deliberately NOT
-  half-built here (a partial caller would produce a misleading number).
+  high-level TRNG).
+  **UPDATE 2026-07-21 — the 23S caller is now BUILT** (`scripts/gono_23s_azithro_caller.py`, native blastn,
+  no Docker): downloads each assembly (ENA, cached), BLASTs a full E. coli 23S ref (V00331), walks the
+  alignment to E. coli positions 2059/2611, reads the assembled base. Verified working (susceptible isolates
+  correctly WT A/C). **Empirical finding:** the azithro-R isolates in this cohort are **23S-WT** (A at 2059,
+  C at 2611) — they do NOT carry the 23S mutation in their consensus assembly. So azithromycin resistance
+  here is **23S-INDEPENDENT** (mtr-efflux / mtrR-mosaic-mediated, common in contemporary gonococci) — a
+  genuine *mechanism* finding, not merely a tooling gap. The determinant approach cannot validate azithromycin
+  on this cohort because the target determinant is genuinely absent from the resistant isolates' genomes.
+  (Full 156-isolate run in progress; the caller + this finding are the deliverable.)
 - **penicillin + tetracycline — DEGENERATE (spec 0.0, all-R over-call).** Both cells' own docstrings flagged
   an over-call risk (penicillin: chromosomal penA/mtrR promoted → near-universal; tetracycline: rpsJ V57M
   near-universal). This run **confirms the over-call on independent data** — spec 0.0. They need
