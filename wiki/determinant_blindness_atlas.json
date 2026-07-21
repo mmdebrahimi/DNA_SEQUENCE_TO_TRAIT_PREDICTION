@@ -1,0 +1,115 @@
+{
+  "_schema": "determinant-blindness-atlas-v1",
+  "date": "2026-07-21",
+  "n_cells": 12,
+  "cells": [
+    {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "azithromycin",
+      "n_R": 110,
+      "n_invisible": 110,
+      "invisible_fraction": 1.0,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 110
+    },
+    {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "ceftriaxone",
+      "n_R": 2,
+      "n_invisible": 2,
+      "invisible_fraction": 1.0,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 2
+    },
+    {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "tetracycline",
+      "n_R": 34,
+      "n_invisible": 23,
+      "invisible_fraction": 0.676,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 23
+    },
+    {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "cefixime",
+      "n_R": 19,
+      "n_invisible": 4,
+      "invisible_fraction": 0.211,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 4
+    },
+    {
+      "organism": "Staphylococcus aureus",
+      "drug": "rifampin",
+      "n_R": 8,
+      "n_invisible": 1,
+      "invisible_fraction": 0.125,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 1
+    },
+    {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "penicillin",
+      "n_R": 14,
+      "n_invisible": 1,
+      "invisible_fraction": 0.071,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 1
+    },
+    {
+      "organism": "Campylobacter",
+      "drug": "gentamicin",
+      "n_R": 31,
+      "n_invisible": 1,
+      "invisible_fraction": 0.032,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 1
+    },
+    {
+      "organism": "Streptococcus pneumoniae",
+      "drug": "erythromycin",
+      "n_R": 43,
+      "n_invisible": 1,
+      "invisible_fraction": 0.023,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 1
+    },
+    {
+      "organism": "Neisseria gonorrhoeae",
+      "drug": "ciprofloxacin",
+      "n_R": 94,
+      "n_invisible": 1,
+      "invisible_fraction": 0.011,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 1
+    },
+    {
+      "organism": "Campylobacter",
+      "drug": "tetracycline",
+      "n_R": 66,
+      "n_invisible": 0,
+      "invisible_fraction": 0.0,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 0
+    },
+    {
+      "organism": "Staphylococcus aureus",
+      "drug": "ciprofloxacin",
+      "n_R": 22,
+      "n_invisible": 0,
+      "invisible_fraction": 0.0,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 0
+    },
+    {
+      "organism": "Streptococcus pneumoniae",
+      "drug": "tetracycline",
+      "n_R": 10,
+      "n_invisible": 0,
+      "invisible_fraction": 0.0,
+      "n_truly_invisible": 0,
+      "n_rule_limited": 0
+    }
+  ]
+}
