@@ -87,7 +87,16 @@ is their first test, and it exposes that they are **not reliable** on this subst
   here is **23S-INDEPENDENT** (mtr-efflux / mtrR-mosaic-mediated, common in contemporary gonococci) — a
   genuine *mechanism* finding, not merely a tooling gap. The determinant approach cannot validate azithromycin
   on this cohort because the target determinant is genuinely absent from the resistant isolates' genomes.
-  (Full 156-isolate run in progress; the caller + this finding are the deliverable.)
+  **DEFINITIVE (full 156-isolate run):** **0 of 110** azithro-R isolates carry any 23S mutation (and 0/46 S)
+  — the caller's spec is **1.00** (0 FP among 46 S, confirming it reads the positions correctly) and sens is
+  **0.00** because *not a single R isolate* has A2059G/C2611T. So azithromycin resistance across this entire
+  cohort is **100% 23S-independent** — mtr-efflux / mtrR-mosaic-mediated (the dominant contemporary
+  gonococcal azithro-R mechanism per recent literature), NOT the classic 23S. **Forward path:** an
+  mtr-based rule is the mechanism-appropriate next step, but mtr markers (mtrR promoter/mosaic, mtrCDE) are
+  near-universal in resistant *and* susceptible gonococci, so it needs the same acquired-marker-narrowing
+  discipline as cefixime v0.1 / penicillin v0.2 (and may still lack a clean separator — the cumulative-mtr
+  case). The 23S caller (native blastn, cached, re-runnable) is the durable deliverable + the finding that
+  the classic determinant is absent.
 - **penicillin + tetracycline — DEGENERATE (spec 0.0, all-R over-call).** Both cells' own docstrings flagged
   an over-call risk (penicillin: chromosomal penA/mtrR promoted → near-universal; tetracycline: rpsJ V57M
   near-universal). This run **confirms the over-call on independent data** — spec 0.0. They need

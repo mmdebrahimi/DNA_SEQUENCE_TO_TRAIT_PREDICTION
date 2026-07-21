@@ -1,0 +1,28 @@
+{
+  "_schema": "gono-23s-azithro-v1",
+  "date": "2026-07-21",
+  "caller": "native blastn E.coli-23S(V00331) vs assembly @ E.coli 2059/2611",
+  "binary": {
+    "n_scored": 156,
+    "tp": 0,
+    "fp": 0,
+    "tn": 46,
+    "fn": 110,
+    "abstain": 0,
+    "acc": 0.295,
+    "sens": 0.0,
+    "spec": 1.0
+  },
+  "n_R": 110,
+  "n_S": 46,
+  "n_missing": 0,
+  "sens_wilson95": [
+    0.0,
+    0.03374513358912735
+  ],
+  "spec_wilson95": [
+    0.9229238226702192,
+    1.0
+  ],
+  "ceiling": "23S multi-copy heteroplasmy -> only high-level all-copy R reliably WGS-detectable"
+}
