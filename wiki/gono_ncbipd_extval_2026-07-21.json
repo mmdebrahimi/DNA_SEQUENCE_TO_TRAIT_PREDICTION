@@ -1,0 +1,177 @@
+{
+  "_schema": "gono-ncbipd-extval-v1",
+  "date": "2026-07-21",
+  "organism": "Neisseria gonorrhoeae",
+  "cell": "neisseria_amr (NON-FROZEN)",
+  "cohort_source": "NCBI Pathogen Detection PDG000000032.673 (measured AST + NCBI AMRFinderPlus calls)",
+  "n_isolates": 170,
+  "independence": "provenance-disjoint from the AR-Bank isolates (different isolates/BioSamples); NOT methodology-independent (same AMRFinderPlus + same neisseria_amr cell).",
+  "clonality_caveat": "RAW sens/spec is clonality-inflated (gonococci clonally structured); lineage-collapse (Mash on assemblies) is the follow-up.",
+  "spec_floor": 0.85,
+  "min_per_class": 5,
+  "results": {
+    "ciprofloxacin": {
+      "drug": "ciprofloxacin",
+      "rule": "gyrA QRDR (Ser91/Asp95) point mutation -> R (parC accessory-only)",
+      "binary": {
+        "n_scored": 163,
+        "tp": 93,
+        "fp": 1,
+        "tn": 68,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.988,
+        "sens": 0.989,
+        "spec": 0.986
+      },
+      "n_R": 94,
+      "n_S": 69,
+      "sens_wilson95": [
+        0.9421756818388973,
+        0.9981196526609477
+      ],
+      "spec_wilson95": [
+        0.9223669266494263,
+        0.9974371413556695
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED"
+    },
+    "cefixime": {
+      "drug": "cefixime",
+      "rule": "penA mosaic-34 core {I312M,V316T,N512Y,G545S} >=3 -> cefixime R (v0.1: narrowed from 'any penA ESC point'; partial-mosaic A510V/F504L reduced-suscept -> S; non-mosaic high-MIC path not caught -> sens ceiling)",
+      "binary": {
+        "n_scored": 166,
+        "tp": 15,
+        "fp": 14,
+        "tn": 133,
+        "fn": 4,
+        "abstain": 0,
+        "acc": 0.892,
+        "sens": 0.789,
+        "spec": 0.905
+      },
+      "n_R": 19,
+      "n_S": 147,
+      "sens_wilson95": [
+        0.5666528575973392,
+        0.9149246150840843
+      ],
+      "spec_wilson95": [
+        0.8464872291845366,
+        0.9424198097225024
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED"
+    },
+    "ceftriaxone": {
+      "drug": "ceftriaxone",
+      "rule": "penA Ala501 (A501P/T/V high-level mosaic-60 marker) -> ceftriaxone R (v0.1: narrowed from 'any penA point'; reduced-suscept A510-mosaics -> S; sens untested on this all-S-scored cohort)",
+      "binary": {
+        "n_scored": 169,
+        "tp": 0,
+        "fp": 9,
+        "tn": 158,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.935,
+        "sens": 0.0,
+        "spec": 0.946
+      },
+      "n_R": 2,
+      "n_S": 167,
+      "sens_wilson95": [
+        0.0,
+        0.6576280471103807
+      ],
+      "spec_wilson95": [
+        0.9007613517266072,
+        0.9713915665321776
+      ],
+      "powered": false,
+      "headline": "UNDERPOWERED"
+    },
+    "azithromycin": {
+      "drug": "azithromycin",
+      "rule": "23S rRNA A2045G/C2597T (macrolide target) -> R (mtrR efflux accessory-only: low-level, over-calls)",
+      "binary": {
+        "n_scored": 156,
+        "tp": 0,
+        "fp": 0,
+        "tn": 46,
+        "fn": 110,
+        "abstain": 0,
+        "acc": 0.295,
+        "sens": 0.0,
+        "spec": 1.0
+      },
+      "n_R": 110,
+      "n_S": 46,
+      "sens_wilson95": [
+        0.0,
+        0.03374513358912735
+      ],
+      "spec_wilson95": [
+        0.9229238226702192,
+        1.0
+      ],
+      "powered": true,
+      "headline": "DEGENERATE_NOT_ENDORSED"
+    },
+    "penicillin": {
+      "drug": "penicillin",
+      "rule": "blaTEM OR chromosomal penA/mtrR -> R (v0.1: chromosomal promoted; gono pen-R is chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort)",
+      "binary": {
+        "n_scored": 31,
+        "tp": 14,
+        "fp": 17,
+        "tn": 0,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.452,
+        "sens": 1.0,
+        "spec": 0.0
+      },
+      "n_R": 14,
+      "n_S": 17,
+      "sens_wilson95": [
+        0.7846829880728186,
+        1.0
+      ],
+      "spec_wilson95": [
+        0.0,
+        0.18432366037156456
+      ],
+      "powered": true,
+      "headline": "DEGENERATE_NOT_ENDORSED"
+    },
+    "tetracycline": {
+      "drug": "tetracycline",
+      "rule": "tet(M) OR chromosomal rpsJ_V57M/mtrR -> R (v0.1: chromosomal promoted; gono tet-R is chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort; rpsJ over-calls if tet-S present)",
+      "binary": {
+        "n_scored": 60,
+        "tp": 34,
+        "fp": 26,
+        "tn": 0,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.567,
+        "sens": 1.0,
+        "spec": 0.0
+      },
+      "n_R": 34,
+      "n_S": 26,
+      "sens_wilson95": [
+        0.8984820937803899,
+        1.0
+      ],
+      "spec_wilson95": [
+        0.0,
+        0.12873304380462175
+      ],
+      "powered": true,
+      "headline": "DEGENERATE_NOT_ENDORSED"
+    }
+  },
+  "frozen_surface_changed": false
+}
