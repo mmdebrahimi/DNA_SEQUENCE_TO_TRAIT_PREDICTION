@@ -1,27 +1,27 @@
 {
   "schema": "certification-capstone-v0",
-  "analysis_date": "2026-07-07",
+  "analysis_date": "2026-07-17",
   "what_this_is": "A thin presentation layer over existing milestone evidence \u2014 NOT a clinical tool, NOT a new gate, NOT an aggregate verdict. Each cell + card keeps its own honest tier.",
   "no_aggregate_verdict": true,
   "aggregate_verdict_disclaimer": "Cells span 6 honest tiers; an aggregate pass/fail would certify the weakest cell as strongly as the strongest. No such field exists by design.",
   "registry_census": {
-    "total_cells": 75,
+    "total_cells": 84,
     "by_track": {
       "amr": 25,
       "viral": 29,
-      "pgx": 9,
+      "pgx": 14,
       "hla": 1,
       "mendelian": 1,
-      "typing": 6,
-      "finder": 4
+      "typing": 8,
+      "finder": 6
     },
     "by_evidence_tier": {
       "near_independent": 21,
-      "faithful_to_tool": 12,
+      "faithful_to_tool": 13,
       "no_free_source": 11,
-      "independent_measured": 25,
+      "independent_measured": 27,
       "not_censused": 1,
-      "knowledge_baseline": 5
+      "knowledge_baseline": 11
     },
     "not_censused_cells": [
       "viral:HIV-1:delavirdine"
