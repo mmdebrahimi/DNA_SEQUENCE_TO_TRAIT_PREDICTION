@@ -26,7 +26,17 @@ def _fmt(x):
     return "—" if x is None else (f"{x:.3f}" if isinstance(x, (int, float)) else str(x))
 
 
+def _load_blindness() -> dict:
+    """(organism, drug) -> invisible_fraction from the determinant-blindness atlas, if built."""
+    p = Path("wiki/determinant_blindness_atlas.json")
+    if not p.exists():
+        return {}
+    atlas = json.loads(p.read_text(encoding="utf-8"))
+    return {(c["organism"], c["drug"]): c["invisible_fraction"] for c in atlas.get("cells", [])}
+
+
 def main() -> int:
+    blindness = _load_blindness()
     rows = []
     for path in ARTIFACTS:
         art = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -40,6 +50,7 @@ def main() -> int:
                 "raw_sens": b.get("sens"), "raw_spec": b.get("spec"),
                 "lin_sens": lin.get("sens"), "lin_spec": lin.get("spec"),
                 "lin_discordant": lin.get("n_discordant"),
+                "invisible_fraction": blindness.get((org, drug)),
                 "verdict": r.get("headline"),
             })
     rows.sort(key=lambda x: (x["organism"], x["drug"]))
@@ -61,8 +72,8 @@ def main() -> int:
         f"**{len(endorsed)} of {len(rows)} cells SCORED_ENDORSED** across "
         f"{len({r['organism'] for r in rows})} organisms.",
         "",
-        "| organism | drug | n (R/S) | raw sens/spec | **lineage sens/spec** | discordant | verdict |",
-        "|---|---|---|---|---|---|---|",
+        "| organism | drug | n (R/S) | raw sens/spec | **lineage sens/spec** | disc. | blind. | verdict |",
+        "|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
         mark = "✅ " if r["verdict"] == "SCORED_ENDORSED" else ""
@@ -70,10 +81,15 @@ def main() -> int:
             f"| {r['organism']} | {r['drug']} | {r['n']} ({r['n_R']}R/{r['n_S']}S) | "
             f"{_fmt(r['raw_sens'])}/{_fmt(r['raw_spec'])} | "
             f"**{_fmt(r['lin_sens'])}/{_fmt(r['lin_spec'])}** | {_fmt(r['lin_discordant'])} | "
-            f"{mark}{r['verdict']} |")
+            f"{_fmt(r['invisible_fraction'])} | {mark}{r['verdict']} |")
     lines += [
         "",
         "## Notes",
+        "- **`blind.` = determinant-invisible fraction** (`wiki/determinant_blindness_atlas.md`): of the "
+        "measured-R isolates, the fraction the cell calls non-R because no rule-firing catalog determinant is "
+        "present. A cell can be SCORED_ENDORSED (spec holds) yet highly blind (e.g. gono tetracycline spec "
+        "1.0 but 0.68 invisible — high-level TRNG only). It is a DESCRIPTIVE honesty column, not a metric the "
+        "endorsement gate uses.",
         "- **Lineage-collapse is no-compute** — NCBI-PD publishes per-isolate SNP clusters "
         "(`<PDG>.reference_target.all_isolates.tsv` → `PDS_acc`), collapsed via "
         "`clonality.cluster_weighted_confusion` (no Mash/Docker). Every endorsed cell HOLDS at the lineage "

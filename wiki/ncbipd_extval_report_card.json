@@ -15,6 +15,7 @@
       "lin_sens": 1.0,
       "lin_spec": 1.0,
       "lin_discordant": 1,
+      "invisible_fraction": 0.032,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -28,6 +29,7 @@
       "lin_sens": 1.0,
       "lin_spec": 0.933,
       "lin_discordant": 1,
+      "invisible_fraction": 0.0,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -41,6 +43,7 @@
       "lin_sens": 0.0,
       "lin_spec": 1.0,
       "lin_discordant": 1,
+      "invisible_fraction": 1.0,
       "verdict": "DEGENERATE_NOT_ENDORSED"
     },
     {
@@ -54,6 +57,7 @@
       "lin_sens": 0.727,
       "lin_spec": 0.892,
       "lin_discordant": 2,
+      "invisible_fraction": 0.211,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -67,6 +71,7 @@
       "lin_sens": 0.0,
       "lin_spec": 0.908,
       "lin_discordant": 0,
+      "invisible_fraction": 1.0,
       "verdict": "UNDERPOWERED"
     },
     {
@@ -80,6 +85,7 @@
       "lin_sens": 1.0,
       "lin_spec": 1.0,
       "lin_discordant": 3,
+      "invisible_fraction": 0.011,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -93,6 +99,7 @@
       "lin_sens": 0.917,
       "lin_spec": 0.933,
       "lin_discordant": 0,
+      "invisible_fraction": 0.071,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -106,6 +113,7 @@
       "lin_sens": 0.367,
       "lin_spec": 1.0,
       "lin_discordant": 1,
+      "invisible_fraction": 0.676,
       "verdict": "SCORED_NOT_ENDORSED"
     },
     {
@@ -119,6 +127,7 @@
       "lin_sens": 1.0,
       "lin_spec": 0.976,
       "lin_discordant": 1,
+      "invisible_fraction": 0.0,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -132,6 +141,7 @@
       "lin_sens": 0.857,
       "lin_spec": 0.986,
       "lin_discordant": 0,
+      "invisible_fraction": 0.125,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -145,6 +155,7 @@
       "lin_sens": 1.0,
       "lin_spec": 0.962,
       "lin_discordant": 1,
+      "invisible_fraction": 0.023,
       "verdict": "SCORED_ENDORSED"
     },
     {
@@ -158,6 +169,7 @@
       "lin_sens": 1.0,
       "lin_spec": 1.0,
       "lin_discordant": 0,
+      "invisible_fraction": 0.0,
       "verdict": "SCORED_ENDORSED"
     }
   ]
