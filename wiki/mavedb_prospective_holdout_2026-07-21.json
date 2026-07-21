@@ -1,0 +1,832 @@
+{
+  "_schema": "mavedb-prospective-holdout-v1",
+  "date": "2026-07-21",
+  "proteingym_genes": 178,
+  "mavedb_page_cap": 100,
+  "n_fetched": 100,
+  "n_held_out": 86,
+  "n_human": 58,
+  "cutoff": "2024-01-01",
+  "n_post_cutoff": 37,
+  "scorer_proof": "BLOSUM62 (CPU); ESM2+ProSST hybrid = Kaggle follow-up",
+  "score_direction_caveat": "MaveDB does not standardize functional-score direction per assay; raw Spearman SIGN is uninterpretable without per-assay direction metadata; |Spearman| reported as a harness proof only",
+  "manifest": [
+    {
+      "urn": "urn:mavedb:00000062-b-1",
+      "gene": "CYP2C19",
+      "organism": "Homo sapiens",
+      "n_variants": 121,
+      "published": "2021-04-15",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000062-a-1",
+      "gene": "CYP2C9",
+      "organism": "Homo sapiens",
+      "n_variants": 109,
+      "published": "2021-04-15",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000107-a-1",
+      "gene": "PSAT1",
+      "organism": "Homo sapiens",
+      "n_variants": 200,
+      "published": "2022-10-20",
+      "post_cutoff": false,
+      "license": "CC BY-NC-SA 4.0"
+    },
+    {
+      "urn": "urn:mavedb:00000107-b-1",
+      "gene": "PSAT1",
+      "organism": "Homo sapiens",
+      "n_variants": 1914,
+      "published": "2023-04-21",
+      "post_cutoff": false,
+      "license": "CC BY-NC-SA 4.0"
+    },
+    {
+      "urn": "urn:mavedb:00000113-a-3",
+      "gene": "APP",
+      "organism": "Homo sapiens",
+      "n_variants": 751,
+      "published": "2023-05-18",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000113-a-2",
+      "gene": "APP",
+      "organism": "Homo sapiens",
+      "n_variants": 763,
+      "published": "2023-05-18",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000113-a-1",
+      "gene": "APP",
+      "organism": "Homo sapiens",
+      "n_variants": 37,
+      "published": "2023-05-18",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000639-0-1",
+      "gene": "ABLIM2 (R14S;R16S)",
+      "organism": "Homo sapiens",
+      "n_variants": 1457,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000639-a-1",
+      "gene": "ABLIM2 (R14S;R16S)",
+      "organism": "Homo sapiens",
+      "n_variants": 1457,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000639-a-2",
+      "gene": "ABLIM2 (R14S;R16S)",
+      "organism": "Homo sapiens",
+      "n_variants": 1457,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000324-0-1",
+      "gene": "ALX4",
+      "organism": "Homo sapiens",
+      "n_variants": 1726,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000324-a-1",
+      "gene": "ALX4",
+      "organism": "Homo sapiens",
+      "n_variants": 1726,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000324-a-2",
+      "gene": "ALX4",
+      "organism": "Homo sapiens",
+      "n_variants": 1726,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000385-0-1",
+      "gene": "APBB3",
+      "organism": "Homo sapiens",
+      "n_variants": 590,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000385-a-2",
+      "gene": "APBB3",
+      "organism": "Homo sapiens",
+      "n_variants": 590,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000385-a-1",
+      "gene": "APBB3",
+      "organism": "Homo sapiens",
+      "n_variants": 590,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000360-0-1",
+      "gene": "ATP7B",
+      "organism": "Homo sapiens",
+      "n_variants": 1444,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000360-a-2",
+      "gene": "ATP7B",
+      "organism": "Homo sapiens",
+      "n_variants": 1444,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000360-a-1",
+      "gene": "ATP7B",
+      "organism": "Homo sapiens",
+      "n_variants": 1444,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000657-a-1",
+      "gene": "ASPA",
+      "organism": "Homo sapiens",
+      "n_variants": 6152,
+      "published": "2023-08-02",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000657-b-1",
+      "gene": "ASPA",
+      "organism": "Homo sapiens",
+      "n_variants": 6156,
+      "published": "2023-08-02",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000676-a-1",
+      "gene": "ABL1 SH3 domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1141,
+      "published": "2024-05-16",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000678-a-1",
+      "gene": "ABLIM3 Zinc finger, LIM-type domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1141,
+      "published": "2024-05-16",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000677-a-1",
+      "gene": "ABLIM3 Zinc finger, LIM-type domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1161,
+      "published": "2024-05-16",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000679-a-1",
+      "gene": "ADARB1 Double-stranded RNA-binding domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1221,
+      "published": "2024-05-16",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000681-a-1",
+      "gene": "ADAR Z-alpha domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1261,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000680-a-1",
+      "gene": "ADAR Z-alpha domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1301,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000682-a-1",
+      "gene": "ADNP Homeobox domain",
+      "organism": "Homo sapiens",
+      "n_variants": 821,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000683-a-1",
+      "gene": "AHI1 SH3 domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1141,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000684-a-1",
+      "gene": "ALX1 Homeobox domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1121,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000685-a-1",
+      "gene": "ALX3 Homeobox domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1121,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000686-a-1",
+      "gene": "ALX4 Homeobox domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1121,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000687-a-1",
+      "gene": "ANK1 Death domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1601,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000688-a-1",
+      "gene": "ANK2 Death domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1601,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000689-a-1",
+      "gene": "ANK3 Death domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1561,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000690-a-1",
+      "gene": "ANKS1B Sterile alpha motif domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1241,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000691-a-1",
+      "gene": "ANKS6 Sterile alpha motif domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1261,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000692-a-1",
+      "gene": "ARAF Raf-like Ras-binding domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1381,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000693-a-1",
+      "gene": "ARHGEF28 Protein kinase C-like, phorbol ester/diacylglycerol-binding domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1001,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000694-a-1",
+      "gene": "ARID2 DNA-binding RFX-type winged-helix domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1601,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000695-a-1",
+      "gene": "ARK2C Zinc finger, RING-type domain",
+      "organism": "Homo sapiens",
+      "n_variants": 861,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000696-a-1",
+      "gene": "ARX Homeobox domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1121,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000697-a-1",
+      "gene": "AR Zinc finger, nuclear hormone receptor-type domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1521,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000698-a-1",
+      "gene": "ASB14 SOCS box domain",
+      "organism": "Homo sapiens",
+      "n_variants": 821,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000699-a-1",
+      "gene": "ASPM IQ motif, EF-hand binding site domain",
+      "organism": "Homo sapiens",
+      "n_variants": 381,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000700-a-1",
+      "gene": "ASZ1 Sterile alpha motif domain",
+      "organism": "Homo sapiens",
+      "n_variants": 1241,
+      "published": "2024-05-17",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-c-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-f-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-d-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-b-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-g-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-a-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-e-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001234-h-1",
+      "gene": "TP53",
+      "organism": "Homo sapiens",
+      "n_variants": 2314,
+      "published": "2025-05-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001255-a-1",
+      "gene": "AIRE codon-optimized DNA sequence",
+      "organism": "Homo sapiens",
+      "n_variants": 10837,
+      "published": "2025-11-08",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001255-a-2",
+      "gene": "AIRE codon-optimized DNA sequence",
+      "organism": "Homo sapiens",
+      "n_variants": 10837,
+      "published": "2025-11-16",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001257-0-1",
+      "gene": "ADSL",
+      "organism": "Homo sapiens",
+      "n_variants": 8901,
+      "published": "2025-12-03",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00001281-a-2",
+      "gene": "PRKN cDNA",
+      "organism": "Homo sapiens",
+      "n_variants": 9176,
+      "published": "2026-06-28",
+      "post_cutoff": true,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000082-a-1",
+      "gene": "Bovine S-arrestin",
+      "organism": "Bos taurus",
+      "n_variants": 404,
+      "published": "2021-10-26",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000121-0-1",
+      "gene": "30S ribosomal protein S15",
+      "organism": "Geobacillus stearothermophilus",
+      "n_variants": 1389,
+      "published": "2023-07-03",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000121-a-2",
+      "gene": "30S ribosomal protein S15",
+      "organism": "Geobacillus stearothermophilus",
+      "n_variants": 1389,
+      "published": "2023-07-03",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000121-a-1",
+      "gene": "30S ribosomal protein S15",
+      "organism": "Geobacillus stearothermophilus",
+      "n_variants": 1389,
+      "published": "2023-07-03",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000147-0-1",
+      "gene": "50S ribosomal protein L20",
+      "organism": "Aquifex aeolicus VF5",
+      "n_variants": 1665,
+      "published": "2023-07-03",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000147-a-1",
+      "gene": "50S ribosomal protein L20",
+      "organism": "Aquifex aeolicus VF5",
+      "n_variants": 1665,
+      "published": "2023-07-03",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000147-a-2",
+      "gene": "50S ribosomal protein L20",
+      "organism": "Aquifex aeolicus VF5",
+      "n_variants": 1665,
+      "published": "2023-07-03",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000239-0-1",
+      "gene": "2HBB_con",
+      "organism": "artificial sequences",
+      "n_variants": 1014,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000239-a-1",
+      "gene": "2HBB_con",
+      "organism": "artificial sequences",
+      "n_variants": 1014,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000239-a-2",
+      "gene": "2HBB_con",
+      "organism": "artificial sequences",
+      "n_variants": 1014,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000246-0-1",
+      "gene": "2J6K_con",
+      "organism": "artificial sequences",
+      "n_variants": 1193,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000246-a-1",
+      "gene": "2J6K_con",
+      "organism": "artificial sequences",
+      "n_variants": 1193,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000246-a-2",
+      "gene": "2J6K_con",
+      "organism": "artificial sequences",
+      "n_variants": 1193,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000281-0-1",
+      "gene": "A0A0H3JVL4_STAAW",
+      "organism": "Staphylococcus aureus subsp. aureus MW2",
+      "n_variants": 2919,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000281-a-2",
+      "gene": "A0A0H3JVL4_STAAW",
+      "organism": "Staphylococcus aureus subsp. aureus MW2",
+      "n_variants": 2919,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000281-a-1",
+      "gene": "A0A0H3JVL4_STAAW",
+      "organism": "Staphylococcus aureus subsp. aureus MW2",
+      "n_variants": 2919,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000402-0-1",
+      "gene": "Addiction module toxin, HicA family",
+      "organism": "Burkholderia pseudomallei K96243",
+      "n_variants": 3427,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000402-a-2",
+      "gene": "Addiction module toxin, HicA family",
+      "organism": "Burkholderia pseudomallei K96243",
+      "n_variants": 3427,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000402-a-1",
+      "gene": "Addiction module toxin, HicA family",
+      "organism": "Burkholderia pseudomallei K96243",
+      "n_variants": 3427,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000441-0-1",
+      "gene": "anti-CRISPR AcrIF7",
+      "organism": "Pseudomonas aeruginosa",
+      "n_variants": 3941,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000441-a-2",
+      "gene": "anti-CRISPR AcrIF7",
+      "organism": "Pseudomonas aeruginosa",
+      "n_variants": 3941,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000441-a-1",
+      "gene": "anti-CRISPR AcrIF7",
+      "organism": "Pseudomonas aeruginosa",
+      "n_variants": 3941,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000252-0-1",
+      "gene": "ArsR family transcriptional regulator",
+      "organism": "Rhodopseudomonas palustris CGA009",
+      "n_variants": 2833,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000252-a-2",
+      "gene": "ArsR family transcriptional regulator",
+      "organism": "Rhodopseudomonas palustris CGA009",
+      "n_variants": 2833,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000252-a-1",
+      "gene": "ArsR family transcriptional regulator",
+      "organism": "Rhodopseudomonas palustris CGA009",
+      "n_variants": 2833,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000292-0-1",
+      "gene": "Asr4154 protein",
+      "organism": "Nostoc sp. PCC 7120 = FACHB-418",
+      "n_variants": 2230,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000292-a-1",
+      "gene": "Asr4154 protein",
+      "organism": "Nostoc sp. PCC 7120 = FACHB-418",
+      "n_variants": 2230,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    },
+    {
+      "urn": "urn:mavedb:00000292-a-2",
+      "gene": "Asr4154 protein",
+      "organism": "Nostoc sp. PCC 7120 = FACHB-418",
+      "n_variants": 2230,
+      "published": "2023-07-04",
+      "post_cutoff": false,
+      "license": "CC0"
+    }
+  ],
+  "blosum_scoring_proof": [
+    {
+      "urn": "urn:mavedb:00000062-b-1",
+      "n_missense": 121,
+      "spearman": 0.3575,
+      "abs_spearman": 0.3575,
+      "gene": "CYP2C19",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000062-a-1",
+      "n_missense": 106,
+      "spearman": 0.2901,
+      "abs_spearman": 0.2901,
+      "gene": "CYP2C9",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000107-a-1",
+      "n_missense": 197,
+      "spearman": 0.2956,
+      "abs_spearman": 0.2956,
+      "gene": "PSAT1",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000107-b-1",
+      "n_missense": 1914,
+      "spearman": 0.3317,
+      "abs_spearman": 0.3317,
+      "gene": "PSAT1",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000113-a-3",
+      "n_missense": 751,
+      "spearman": 0.1924,
+      "abs_spearman": 0.1924,
+      "gene": "APP",
+      "organism": "Homo sapiens"
+    }
+  ],
+  "frozen_surface_changed": false
+}
