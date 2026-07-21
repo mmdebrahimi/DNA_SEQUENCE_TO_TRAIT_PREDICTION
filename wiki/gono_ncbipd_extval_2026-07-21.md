@@ -66,11 +66,20 @@ the sens/spec is on the same cohort that informed the narrowing.
 The other 4 gonococcal cells were NEVER AR-Bank-validated (that run scored only cipro + cefixime); this run
 is their first test, and it exposes that they are **not reliable** on this substrate:
 
-- **azithromycin — DEGENERATE (sens 0.0): a DATA GAP, not a cell bug.** The cell keys on 23S rRNA mutations
-  (A2045G/C2611T…), but NCBI-PD's published AMRFinder calls **do not include 23S rRNA point mutations at all**
-  (0/110 azithro-R isolates carry any 23S marker). The determinant the cell needs is absent from the input.
-  Validating azithromycin requires a 23S-aware caller on the assemblies (a separate build) — not fixable
-  from NCBI-PD's published calls.
+- **azithromycin — DEGENERATE (sens 0.0): needs a CUSTOM 23S caller (diagnosed 2026-07-21, follow-up #4).**
+  The cell keys on 23S rRNA mutations (A2045G/C2611T…). Two-level diagnosis: (1) NCBI-PD's published AMRFinder
+  calls omit 23S rRNA (0/110 azithro-R carry any 23S marker); (2) **AMRFinderPlus ITSELF does not call gono
+  23S rRNA point mutations** — verified on our own AR-Bank `-O Neisseria_gonorrhoeae` run: its determinant
+  classes are all protein/promoter (PBP2, GyrA, S10/RpsJ, FolP, PonA, MtrR, ParC, RpoB), with the "macrolide"
+  keyword appearing only in the multi-drug `mtrR` efflux description, never as an actual 23S rRNA call. 23S is
+  a 4-copy rRNA gene that AMRFinder's protein-centric method doesn't handle for gonococcus. **So azithromycin
+  requires a custom 23S BLAST-caller subsystem** (native `blastn` is available — no Docker): BLAST a
+  gonococcal 23S rRNA reference vs each assembly, map to the resistance positions (E. coli 2059 / gono 2045),
+  call the mutation. **Inherent ceiling:** 23S is multi-copy and azithromycin resistance is often
+  heteroplasmic (a subset of the 4 copies mutated), which the consensus assembly collapses — so only
+  high-level all-copy R is reliably detectable from WGS (a well-known literature limitation, like tet(M) for
+  high-level TRNG). This is a scoped subsystem build with a real biological ceiling, deliberately NOT
+  half-built here (a partial caller would produce a misleading number).
 - **penicillin + tetracycline — DEGENERATE (spec 0.0, all-R over-call).** Both cells' own docstrings flagged
   an over-call risk (penicillin: chromosomal penA/mtrR promoted → near-universal; tetracycline: rpsJ V57M
   near-universal). This run **confirms the over-call on independent data** — spec 0.0. They need
