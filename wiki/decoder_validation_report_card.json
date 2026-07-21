@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-07-10",
+  "date": "2026-07-21",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -148,6 +148,7 @@
       "fp": 0,
       "tn": 20,
       "fn": 0,
+      "invisible_fraction": 0.0,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json",
       "lineage": {
@@ -234,6 +235,7 @@
       "fp": 1,
       "tn": 29,
       "fn": 1,
+      "invisible_fraction": 0.033,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_escherichia_coli_shigella_ceftr_2026-06-12.json",
       "lineage": {
@@ -296,6 +298,7 @@
       "fp": 9,
       "tn": 21,
       "fn": 2,
+      "invisible_fraction": 0.067,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_escherichia_coli_shigella_cipro_2026-06-10.json",
       "lineage": {
@@ -358,6 +361,7 @@
       "fp": 0,
       "tn": 30,
       "fn": 3,
+      "invisible_fraction": 0.1,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_escherichia_coli_shigella_genta_2026-06-12.json",
       "lineage": {
@@ -420,6 +424,7 @@
       "fp": 2,
       "tn": 28,
       "fn": 2,
+      "invisible_fraction": 0.067,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_escherichia_coli_shigella_tetra_2026-06-12.json",
       "lineage": {
@@ -500,6 +505,7 @@
       "fp": 3,
       "tn": 27,
       "fn": 0,
+      "invisible_fraction": 0.0,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json",
       "lineage": {
@@ -562,6 +568,7 @@
       "fp": 1,
       "tn": 29,
       "fn": 1,
+      "invisible_fraction": 0.033,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_cipro_2026-06-10.json",
       "lineage": {
@@ -624,6 +631,7 @@
       "fp": 2,
       "tn": 28,
       "fn": 2,
+      "invisible_fraction": 0.067,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json",
       "lineage": {
@@ -686,6 +694,7 @@
       "fp": 3,
       "tn": 27,
       "fn": 16,
+      "invisible_fraction": 0.533,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_merop_2026-06-10.json",
       "lineage": {
@@ -748,6 +757,7 @@
       "fp": 1,
       "tn": 29,
       "fn": 6,
+      "invisible_fraction": 0.2,
       "tier": "provenance-disjoint (different submitter/lab/country); NOT methodology-independent (most submitters use CLSI broth microdilution)",
       "file": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json",
       "lineage": {

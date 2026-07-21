@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-07-10
+# Decoder-suite provenance-disjoint validation report card — 2026-07-21
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -28,35 +28,37 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 
 ## Cells
 
-| organism | drug | state | acc | sens | spec | n | detail |
-|---|---|---|---|---|---|---|---|
-| acinetobacter | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@1) — rule refuses expression-driven R it cannot decode |
-| campylobacter | ciprofloxacin | `SCORED` | 1.0 | 1.0 | 1.0 | 40 | TP20 FP0 TN20 FN0 |
-| candida_auris | caspofungin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_fks1; no free isolate-level AST source (structural non-cell) |
-| candida_auris | fluconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_erg11; no free isolate-level AST source (structural non-cell) |
-| candida_auris | micafungin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_fks1; no free isolate-level AST source (structural non-cell) |
-| candida_auris | voriconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | fungal_erg11; no free isolate-level AST source (structural non-cell) |
-| escherichia_coli_shigella | ceftriaxone | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | TP29 FP1 TN29 FN1 |
-| escherichia_coli_shigella | ciprofloxacin | `SCORED` | 0.817 | 0.933 | 0.7 | 60 | TP28 FP9 TN21 FN2 |
-| escherichia_coli_shigella | gentamicin | `SCORED` | 0.95 | 0.9 | 1.0 | 60 | TP27 FP0 TN30 FN3 |
-| escherichia_coli_shigella | tetracycline | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | TP28 FP2 TN28 FN2 |
-| influenza_a | oseltamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
-| influenza_a | peramivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
-| influenza_a | zanamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
-| klebsiella | ceftriaxone | `SCORED` | 0.95 | 1.0 | 0.9 | 60 | TP30 FP3 TN27 FN0 |
-| klebsiella | ciprofloxacin | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | TP29 FP1 TN29 FN1 |
-| klebsiella | gentamicin | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | TP28 FP2 TN28 FN2 |
-| klebsiella | meropenem | `SCORED` | 0.683 | 0.467 | 0.9 | 60 | TP14 FP3 TN27 FN16 |
-| klebsiella | tetracycline | `SCORED` | 0.883 | 0.8 | 0.967 | 60 | TP24 FP1 TN29 FN6 |
-| plasmodium_falciparum | artemisinin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
-| plasmodium_falciparum | artesunate | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
-| plasmodium_falciparum | chloroquine | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_pfcrt; no free isolate-level AST source (structural non-cell) |
-| plasmodium_falciparum | dihydroartemisinin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
-| pseudomonas_aeruginosa | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@3) — rule refuses expression-driven R it cannot decode |
-| salmonella | ciprofloxacin | `UNDERPOWERED` | — | — | — | — | censused 4R/100S provenance-disjoint (< MIN/class) — surveillance-dominated |
-| salmonella | gentamicin | `UNDERPOWERED` | — | — | — | — | censused 5R/86S provenance-disjoint (< MIN/class) — surveillance-dominated |
-| salmonella | tetracycline | `UNDERPOWERED` | — | — | — | — | censused 5R/81S provenance-disjoint (< MIN/class) — surveillance-dominated |
-| staphylococcus_aureus | oxacillin | `LABEL_CONFOUNDED` | — | — | — | — | phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate) |
+`blind.` = determinant-invisible fraction (of the scored measured-R, the fraction the cell calls non-R = FN/(TP+FN) = 1−sens) — the honest 'how much resistance this cell structurally misses'; DESCRIPTIVE, not an endorsement input. The truly-invisible vs rule-limited split is in `wiki/determinant_blindness_atlas.md` (NCBI-PD cells).
+
+| organism | drug | state | acc | sens | spec | n | blind. | detail |
+|---|---|---|---|---|---|---|---|---|
+| acinetobacter | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@1) — rule refuses expression-driven R it cannot decode |
+| campylobacter | ciprofloxacin | `SCORED` | 1.0 | 1.0 | 1.0 | 40 | 0.0 | TP20 FP0 TN20 FN0 |
+| candida_auris | caspofungin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | fungal_fks1; no free isolate-level AST source (structural non-cell) |
+| candida_auris | fluconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | fungal_erg11; no free isolate-level AST source (structural non-cell) |
+| candida_auris | micafungin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | fungal_fks1; no free isolate-level AST source (structural non-cell) |
+| candida_auris | voriconazole | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | fungal_erg11; no free isolate-level AST source (structural non-cell) |
+| escherichia_coli_shigella | ceftriaxone | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | 0.033 | TP29 FP1 TN29 FN1 |
+| escherichia_coli_shigella | ciprofloxacin | `SCORED` | 0.817 | 0.933 | 0.7 | 60 | 0.067 | TP28 FP9 TN21 FN2 |
+| escherichia_coli_shigella | gentamicin | `SCORED` | 0.95 | 0.9 | 1.0 | 60 | 0.1 | TP27 FP0 TN30 FN3 |
+| escherichia_coli_shigella | tetracycline | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | 0.067 | TP28 FP2 TN28 FN2 |
+| influenza_a | oseltamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
+| influenza_a | peramivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
+| influenza_a | zanamivir | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | influenza_na; no free isolate-level AST source (structural non-cell) |
+| klebsiella | ceftriaxone | `SCORED` | 0.95 | 1.0 | 0.9 | 60 | 0.0 | TP30 FP3 TN27 FN0 |
+| klebsiella | ciprofloxacin | `SCORED` | 0.967 | 0.967 | 0.967 | 60 | 0.033 | TP29 FP1 TN29 FN1 |
+| klebsiella | gentamicin | `SCORED` | 0.933 | 0.933 | 0.933 | 60 | 0.067 | TP28 FP2 TN28 FN2 |
+| klebsiella | meropenem | `SCORED` | 0.683 | 0.467 | 0.9 | 60 | 0.533 | TP14 FP3 TN27 FN16 |
+| klebsiella | tetracycline | `SCORED` | 0.883 | 0.8 | 0.967 | 60 | 0.2 | TP24 FP1 TN29 FN6 |
+| plasmodium_falciparum | artemisinin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
+| plasmodium_falciparum | artesunate | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
+| plasmodium_falciparum | chloroquine | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | pf_pfcrt; no free isolate-level AST source (structural non-cell) |
+| plasmodium_falciparum | dihydroartemisinin | `NO_FREE_PHENOTYPE_SOURCE` | — | — | — | — | — | pf_kelch13; no free isolate-level AST source (structural non-cell) |
+| pseudomonas_aeruginosa | meropenem | `ABSTAINS_BY_DESIGN` | — | — | — | — | — | registry verdict EXPRESSION_FLOOR (broad@3) — rule refuses expression-driven R it cannot decode |
+| salmonella | ciprofloxacin | `UNDERPOWERED` | — | — | — | — | — | censused 4R/100S provenance-disjoint (< MIN/class) — surveillance-dominated |
+| salmonella | gentamicin | `UNDERPOWERED` | — | — | — | — | — | censused 5R/86S provenance-disjoint (< MIN/class) — surveillance-dominated |
+| salmonella | tetracycline | `UNDERPOWERED` | — | — | — | — | — | censused 5R/81S provenance-disjoint (< MIN/class) — surveillance-dominated |
+| staphylococcus_aureus | oxacillin | `LABEL_CONFOUNDED` | — | — | — | — | — | phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate) |
 
 ## Lineage disclosure (clonality-corrected)
 

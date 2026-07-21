@@ -31,6 +31,21 @@ def test_scored_state():
     assert c["state"] == "SCORED" and c["acc"] == 0.97 and c["n"] == 60
 
 
+def test_invisible_fraction_from_metrics():
+    # fn / (tp + fn) = 1 - sens
+    assert mod.invisible_fraction_from_metrics({"tp": 29, "fn": 1}) == round(1 / 30, 3)
+    assert mod.invisible_fraction_from_metrics({"tp": 11, "fn": 23}) == round(23 / 34, 3)  # gono-tet shape
+    assert mod.invisible_fraction_from_metrics({"tp": 20, "fn": 0}) == 0.0  # fully visible
+    assert mod.invisible_fraction_from_metrics({"tp": 0, "fn": 0}) is None  # no measured-R scored
+    assert mod.invisible_fraction_from_metrics({"tp": None, "fn": None}) is None  # missing counts
+
+
+def test_scored_cell_carries_invisible_fraction():
+    key = ("klebsiella", "ciprofloxacin")
+    c = mod.classify(key, {key: _scored_cell()}, {}, {})  # tp=29 fn=1 -> 1/30
+    assert c["invisible_fraction"] == round(1 / 30, 3)
+
+
 def test_powered_unscored_state():
     key = ("klebsiella", "ceftriaxone")
     census = {key: {"organism": "Klebsiella", "drug": "ceftriaxone", "other_R": 505, "other_S": 410, "powered": True}}

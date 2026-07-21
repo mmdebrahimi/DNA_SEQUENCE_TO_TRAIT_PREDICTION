@@ -64,6 +64,20 @@ LINEAGE_SIDECAR = "provdisjoint_lineage_metrics.json"
 _key = canonical_cell_key
 
 
+def invisible_fraction_from_metrics(metrics: dict) -> float | None:
+    """Determinant-invisible fraction for a SCORED cell = of the measured-R isolates the cell SCORED (not
+    abstained), the fraction it calls non-R (fn / (tp + fn) = 1 − sens). The honest 'how much resistance
+    this cell structurally misses' number, DESCRIPTIVE (not an endorsement input). None when no measured-R
+    was scored. NOTE: the truly-invisible vs rule-limited split (per-isolate determinants) is available only
+    in the NCBI-PD atlas (`wiki/determinant_blindness_atlas.*`); the frozen provdisjoint JSONs store only the
+    confusion counts, so this is the aggregate fraction."""
+    tp, fn = metrics.get("tp"), metrics.get("fn")
+    if tp is None or fn is None:
+        return None
+    denom = tp + fn
+    return round(fn / denom, 3) if denom else None
+
+
 def load_scored() -> dict:
     cells = {}
     for f in sorted(glob.glob(str(WIKI / "provenance_disjoint_validation_*.json"))):
@@ -162,6 +176,7 @@ def classify(key, scored, census, registry, surface=None) -> dict:
         return {"state": "SCORED",
                 "acc": m.get("acc"), "sens": m.get("sens"), "spec": m.get("spec"), "n": m.get("n_scored"),
                 "tp": m.get("tp"), "fp": m.get("fp"), "tn": m.get("tn"), "fn": m.get("fn"),
+                "invisible_fraction": invisible_fraction_from_metrics(m),
                 "tier": scored[key].get("independence_tier", PROV_TIER), "file": scored[key].get("_file")}
     if key in registry and str(registry[key].get("verdict", "")).upper() == "EXPRESSION_FLOOR":
         return {"state": "ABSTAINS_BY_DESIGN",
@@ -269,14 +284,21 @@ def main() -> int:
         if s in counts:
             L.append(f"| `{s}` | {counts[s]} |")
     L.append("\n## Cells\n")
-    L.append("| organism | drug | state | acc | sens | spec | n | detail |\n|---|---|---|---|---|---|---|---|")
+    L.append("`blind.` = determinant-invisible fraction (of the scored measured-R, the fraction the cell "
+             "calls non-R = FN/(TP+FN) = 1−sens) — the honest 'how much resistance this cell structurally "
+             "misses'; DESCRIPTIVE, not an endorsement input. The truly-invisible vs rule-limited split is "
+             "in `wiki/determinant_blindness_atlas.md` (NCBI-PD cells).\n")
+    L.append("| organism | drug | state | acc | sens | spec | n | blind. | detail |"
+             "\n|---|---|---|---|---|---|---|---|---|")
     for k, c in rows:
         org, drug = k
         if c["state"] == "SCORED":
+            inv = c.get("invisible_fraction")
             L.append(f"| {org} | {drug} | `SCORED` | {c.get('acc')} | {c.get('sens')} | {c.get('spec')} | "
-                     f"{c.get('n')} | TP{c.get('tp')} FP{c.get('fp')} TN{c.get('tn')} FN{c.get('fn')} |")
+                     f"{c.get('n')} | {'—' if inv is None else inv} | "
+                     f"TP{c.get('tp')} FP{c.get('fp')} TN{c.get('tn')} FN{c.get('fn')} |")
         else:
-            L.append(f"| {org} | {drug} | `{c['state']}` | — | — | — | — | {c.get('note','')} |")
+            L.append(f"| {org} | {drug} | `{c['state']}` | — | — | — | — | — | {c.get('note','')} |")
     # ---- Lineage disclosure (clonality-corrected) ----
     scored_rows = [(k, c) for k, c in rows if c["state"] == "SCORED"]
     L.append("\n## Lineage disclosure (clonality-corrected)\n")

@@ -35,7 +35,9 @@ def test_parse_determinant_symbols_synthetic(tmp_path):
 def test_rule_predictor_applies_call_ng_amr(tmp_path, monkeypatch):
     mt_dir = tmp_path / "run"
     mt_dir.mkdir()
-    _write_main_tsv(mt_dir / "main.tsv", ["gyrA_S91F", "penA_G545S"])
+    # cefixime v0.1 needs >=3 of the mosaic-penA-34 core {I312M,V316T,N512Y,G545S}; a single penA_G545S
+    # (a shared allele) no longer fires R — that narrowing fixed the v0 spec-0.0 over-call.
+    _write_main_tsv(mt_dir / "main.tsv", ["gyrA_S91F", "penA_I312M", "penA_V316T", "penA_G545S"])
     # monkeypatch the run-dir resolver so no Docker/network fires; ensure_run must NOT be called
     monkeypatch.setattr("scripts.organism_drug_validate._run_dir", lambda gca, own, glob: mt_dir)
     def _boom(*a, **k):
@@ -44,7 +46,7 @@ def test_rule_predictor_applies_call_ng_amr(tmp_path, monkeypatch):
 
     predict_cfm = ecr.rule_predictor("cefixime", tmp_path / "o", tmp_path / "g", "glob",
                                      call_ng_amr, "Neisseria_gonorrhoeae")
-    assert predict_cfm("GCA_x") == "R"        # penA mosaic (G545S) -> cefixime R (ceftriaxone v0.1 would be S)
+    assert predict_cfm("GCA_x") == "R"        # penA mosaic-34 core (>=3) -> cefixime R
     predict_cip = ecr.rule_predictor("ciprofloxacin", tmp_path / "o", tmp_path / "g", "glob",
                                      call_ng_amr, "Neisseria_gonorrhoeae")
     assert predict_cip("GCA_x") == "R"        # gyrA S91F -> cipro R
