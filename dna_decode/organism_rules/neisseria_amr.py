@@ -48,23 +48,24 @@ DRUG_TET = "tetracycline"
 def call_ng_tetracycline(symbols: list[str]) -> dict:
     """Predict tetracycline R/S for N. gonorrhoeae.
 
-    **v0.1 (2026-07-20, AR-Bank-validated):** two determinants: acquired **tet(M)** (plasmid
-    ribosomal-protection -> HIGH-level R) and the chromosomal **rpsJ V57M** (ribosomal S10; low-level R,
-    often at/above CLSI R>=2) + **mtrR** efflux. The v0 'tet(M)-only' rule MISSED all 21 tet-R AR-Bank
-    isolates (chromosomal rpsJ+mtrR, not tet(M): 21/21 FN). So rpsJ/mtrR is PROMOTED from accessory to
-    primary: R iff tet(M) OR rpsJ_V57M OR mtrR. **HONEST SPEC CAVEAT:** on the EBI AMR Portal, rpsJ V57M is
-    common + low-level and COLLAPSED specificity to ~0.35 (it over-calls when tet-S isolates exist). The
-    AR-Bank cohort is tet-R-saturated (0 S) so the lift is SENS-only-testable (0->~1.0) here; on a cohort WITH
-    tet-S isolates this promoted rule will over-call -- keep the v0 tet(M)-only variant for spec-sensitive use."""
+    **v0.2 (2026-07-21, NCBI-PD-externally-validated):** narrowed to **tet(M)** (plasmid
+    ribosomal-protection -> HIGH-level TRNG) ONLY. The v0.1 rule promoted the chromosomal rpsJ_V57M + mtrR to
+    primary (to catch the R-saturated AR-Bank cohort's 21/21 chromosomal tet-R) but its OWN docstring warned
+    'rpsJ over-calls when tet-S isolates exist, spec UNTESTED'. On the NCBI-PD cohort (34R/26S) that prediction
+    came true: rpsJ_V57M is in 34/34 R AND 10/26 S -> the promoted rule scored spec 0.0 (all-R over-call). So
+    v0.2 uses the clean high-level plasmid marker: tet(M) -> R (spec 1.00 / sens 0.324 on NCBI-PD). **HONEST
+    SENS CEILING:** chromosomal low-level tet-R (rpsJ + mtrR + penB cumulative, MIC 2-4) is NOT cleanly
+    determinant-separable from tet-S (which carries the same near-universal markers) -> ~68% of tet-R is not
+    catchable from AMRFinder determinants. This is a genuine multi-locus-cumulative ceiling, not a rule bug."""
     tetm = [s.strip() for s in symbols if s and s.strip().startswith("tet(M)")]
-    rpsj = [s.strip() for s in symbols if (s or "").strip() == "rpsJ_V57M"]
-    mtr = [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")]
     return {
-        "prediction": "R" if (tetm or rpsj or mtr) else "S",
-        "matched_tetM": tetm, "matched_rpsJ_V57M": rpsj, "matched_mtr": mtr,
-        "rule": "tet(M) OR chromosomal rpsJ_V57M/mtrR -> R (v0.1: chromosomal promoted; gono tet-R is "
-                "chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort; rpsJ over-calls if tet-S present)",
-        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.1",
+        "prediction": "R" if tetm else "S",
+        "matched_tetM": tetm,
+        "rule": "tet(M) (plasmid, HIGH-level TRNG) -> R (v0.2: narrowed from the v0.1 chromosomal-promoted "
+                "rule, which over-called to spec 0.0 on the NCBI-PD cohort -- the v0.1 docstring's predicted "
+                "failure once tet-S isolates existed; chromosomal low-level tet-R (rpsJ_V57M + mtrR + penB "
+                "cumulative) is NOT cleanly determinant-separable -> disclosed sens ceiling ~0.32)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.2",
     }
 
 
@@ -137,22 +138,24 @@ def call_ng_azithromycin(symbols: list[str]) -> dict:
 
 
 def call_ng_penicillin(symbols: list[str]) -> dict:
-    """Predict penicillin R/S. **v0.1 (2026-07-20, AR-Bank-validated):** gono penicillin resistance is
-    CHROMOSOMAL-dominant (penA PBP2 + mtrR efflux + ponA), with blaTEM the plasmid high-level path. The v0
-    'blaTEM-only' rule MISSED all 24 penicillin-R AR-Bank isolates (they are chromosomal, not blaTEM: 24/24
-    FN). So chromosomal penA/mtrR is PROMOTED from accessory to primary: R iff blaTEM OR penA-point OR mtrR.
-    HONEST SPEC CAVEAT: the AR-Bank cohort is penicillin-R-saturated (0 S), so this lift is SENS-only-testable
-    (0->~1.0); the promoted rule WILL over-call a penicillin-S isolate carrying the (near-universal) mosaic
-    penA/mtrR -- specificity is UNTESTED here (mirrors the tet rpsJ over-call risk)."""
+    """Predict penicillin R/S. **v0.2 (2026-07-21, NCBI-PD-externally-validated):** the v0.1 rule promoted
+    the chromosomal penA-point + mtrR to primary (to catch the R-saturated AR-Bank cohort's 24/24 chromosomal
+    pen-R) but WARNED specificity was untested + it would over-call the near-universal mosaic penA/mtrR. On
+    the NCBI-PD cohort (14R/17S) that came true -> spec 0.0 (all-R over-call). v0.2 narrows to the two SPECIFIC
+    literature determinants: **blaTEM** (plasmid penicillinase = PPNG high-level; 8/14 R, 0/17 S -- clean) OR
+    **ponA_L421P** (chromosomal PBP1 acylation defect; 9/14 R, 1/17 S). Combined: sens 0.929 / spec 0.941 on
+    NCBI-PD. **HONEST SENS CEILING:** the ~1-2 penicillin-R without blaTEM or ponA_L421P are cumulative-
+    chromosomal (penA+mtrR+penB together) and not cleanly determinant-separable. penA-point/mtrR are DROPPED
+    from the binary call (they are lineage-linked near-universal markers, not penicillin-specific)."""
     tem = [s.strip() for s in symbols if (s or "").strip().lower().startswith("blatem")]
-    pena = [s.strip() for s in symbols if _PENA_POINT_RE.match((s or "").strip())]
-    mtr = [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")]
+    ponA = [s.strip() for s in symbols if (s or "").strip() == "ponA_L421P"]
     return {
-        "prediction": "R" if (tem or pena or mtr) else "S",
-        "matched_blaTEM": tem, "matched_penA": pena, "matched_mtr": mtr,
-        "rule": "blaTEM OR chromosomal penA/mtrR -> R (v0.1: chromosomal promoted; gono pen-R is "
-                "chromosomal-dominant; spec untested on the R-saturated AR-Bank cohort)",
-        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.1",
+        "prediction": "R" if (tem or ponA) else "S",
+        "matched_blaTEM": tem, "matched_ponA_L421P": ponA,
+        "rule": "blaTEM (plasmid penicillinase, PPNG) OR ponA_L421P (chromosomal PBP1) -> R (v0.2: narrowed "
+                "from the v0.1 'penA/mtrR promoted' rule that over-called to spec 0.0 on the NCBI-PD cohort "
+                "-- penA-point/mtrR are near-universal; blaTEM(0 FP)+ponA_L421P(1 FP) give sens 0.93/spec 0.94)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.2",
     }
 
 

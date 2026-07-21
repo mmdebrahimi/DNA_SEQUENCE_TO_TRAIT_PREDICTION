@@ -26,8 +26,30 @@ allele, not a renumbered G545S).
 | **cefixime** (v0.1) | 166 | 19R/147S | 0.789 | **0.905** | 0.892 | **SCORED_ENDORSED** ✅ |
 | ceftriaxone | 169 | 2R/167S | — (2R) | 0.946 | 0.935 | UNDERPOWERED (spec confirmed) |
 | azithromycin | 156 | 110R/46S | 0.0 | 1.0 | 0.295 | **DEGENERATE** (data gap — see below) |
-| penicillin | 31 | 14R/17S | 1.0 | 0.0 | 0.452 | **DEGENERATE** (over-call) |
-| tetracycline | 60 | 34R/26S | 1.0 | 0.0 | 0.567 | **DEGENERATE** (over-call) |
+| **penicillin (v0.2)** | 31 | 14R/17S | 0.929 | 0.941 | 0.935 | **SCORED_ENDORSED** ✅ (narrowed — see below) |
+| tetracycline (v0.2) | 60 | 34R/26S | 0.324 | 1.000 | 0.617 | SCORED_NOT_ENDORSED (honest partial — see below) |
+
+## penicillin + tetracycline v0.2 — narrowed to the clean plasmid markers (the v0.1 over-call fix)
+
+The first run showed penicillin + tetracycline calling **all-R (spec 0.0)** — a DEGENERATE over-call. This
+was the **predicted failure of their v0.1 rules**: those were validated on an R-saturated AR-Bank cohort
+(0 S isolates) and their own docstrings warned "spec untested; the promoted chromosomal markers (penA-point,
+mtrR, rpsJ_V57M) will over-call once S isolates exist." The NCBI-PD cohort has S isolates, so the warning came
+true. **v0.2 narrows each to the SPECIFIC literature determinants:**
+
+- **penicillin v0.2 = blaTEM OR ponA_L421P.** blaTEM (plasmid penicillinase, PPNG high-level) is 8/14 R, **0/17
+  S — clean**; ponA_L421P (chromosomal PBP1 acylation defect) is 9/14 R, 1/17 S. Combined: **sens 0.929 /
+  spec 0.941 → SCORED_ENDORSED.** The near-universal penA-point + mtrR (lineage-linked, not penicillin-causal)
+  are DROPPED from the binary call.
+- **tetracycline v0.2 = tet(M) only.** tet(M) (plasmid, high-level TRNG) is 11/34 R, **0/26 S — clean** →
+  **spec 1.00, sens 0.324.** Honest partial: it cleanly IDs high-level TRNG but the chromosomal low-level
+  tet-R (rpsJ_V57M + mtrR + penB cumulative, MIC 2-4) is **not cleanly determinant-separable** from tet-S
+  (same near-universal markers) → a ~68% sens ceiling that is a real multi-locus-cumulative property, not a
+  rule bug. Not endorsed (low sens), but no longer a *misleading* all-R over-call.
+
+Both markers are **literature determinants** (penicillinase, PBP1, TRNG plasmid) — not cohort-mined — so this
+mirrors the cefixime v0.1 posture (derived-informed-by-cohort + literature-grounded). Mild optimism caveat:
+the sens/spec is on the same cohort that informed the narrowing.
 
 ## The two confirmations (the headline)
 

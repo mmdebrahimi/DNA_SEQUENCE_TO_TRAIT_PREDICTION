@@ -9,15 +9,16 @@ from dna_decode.organism_rules.neisseria_amr import (  # noqa: E402
 )
 
 
-def test_ng_tet_v01_chromosomal_promoted():
-    # v0.1 (AR-Bank-validated): tet(M) OR chromosomal rpsJ_V57M/mtrR -> R (gono tet-R is chromosomal-dominant)
+def test_ng_tet_v02_tetM_highlevel_only():
+    # v0.2 (NCBI-PD-validated): tet(M) high-level TRNG ONLY. The v0.1 rpsJ/mtrR promotion over-called
+    # (spec 0.0 on NCBI-PD: rpsJ_V57M in 34/34 R AND 10/26 S). Narrowed to the clean plasmid marker.
     assert call_ng_tetracycline(["tet(M)"])["prediction"] == "R"
     assert call_ng_tetracycline(["tet(M)_1"])["prediction"] == "R"       # startswith tet(M)
-    r = call_ng_tetracycline(["rpsJ_V57M"])
-    assert r["prediction"] == "R" and r["matched_rpsJ_V57M"] == ["rpsJ_V57M"]   # v0.1: rpsJ promoted
-    assert call_ng_tetracycline(["mtrR_A-53del"])["prediction"] == "R"          # v0.1: mtrR promoted
+    # v0.2: the chromosomal markers no longer confer R on their own (they over-called)
+    assert call_ng_tetracycline(["rpsJ_V57M"])["prediction"] == "S"      # was R in v0.1 -> now S (over-call fix)
+    assert call_ng_tetracycline(["mtrR_A-53del"])["prediction"] == "S"   # was R in v0.1 -> now S
     assert call_ng_tetracycline([])["prediction"] == "S"
-    assert call_ng_tetracycline(["gyrA_S91F"])["prediction"] == "S"             # unrelated gene -> S
+    assert call_ng_tetracycline(["gyrA_S91F"])["prediction"] == "S"      # unrelated gene -> S
     assert call_ng_tetracycline(["tet(M)", "rpsJ_V57M"])["prediction"] == "R"
 
 
@@ -59,16 +60,17 @@ def test_ng_azithromycin_23S_primary():
     assert call_ng_azithromycin(["23S_C2597T", "mtrR_mosaic"])["prediction"] == "R"
 
 
-def test_ng_penicillin_v01_chromosomal_promoted():
+def test_ng_penicillin_v02_specific_determinants():
+    # v0.2 (NCBI-PD-validated): blaTEM (PPNG penicillinase) OR ponA_L421P (PBP1). The v0.1 penA-point/mtrR
+    # promotion over-called (spec 0.0 on NCBI-PD: those markers are near-universal). Narrowed to specifics.
     assert call_ng_penicillin(["blaTEM-1"])["prediction"] == "R"
     assert call_ng_penicillin(["blaTEM-135"])["prediction"] == "R"
-    # v0.1 (AR-Bank-validated): chromosomal penA/mtrR PROMOTED to primary (gono pen-R is chromosomal-dominant)
-    r = call_ng_penicillin(["penA_A501V", "mtrR_G45D", "ponA_L421P"])
-    assert r["prediction"] == "R" and r["matched_penA"] and r["matched_mtr"]
-    assert call_ng_penicillin(["mtrR_A-53del"])["prediction"] == "R"       # mtrR alone -> R
-    assert call_ng_penicillin(["penA_G545S"])["prediction"] == "R"         # penA point -> R
+    assert call_ng_penicillin(["ponA_L421P"])["prediction"] == "R"        # chromosomal PBP1 -> R
+    # v0.2: penA-point + mtrR no longer confer R on their own (they over-called; lineage-linked not causal)
+    assert call_ng_penicillin(["penA_G545S"])["prediction"] == "S"        # was R in v0.1 -> now S (over-call fix)
+    assert call_ng_penicillin(["mtrR_A-53del"])["prediction"] == "S"      # was R in v0.1 -> now S
     assert call_ng_penicillin([])["prediction"] == "S"
-    assert call_ng_penicillin(["gyrA_S91F"])["prediction"] == "S"          # unrelated -> S
+    assert call_ng_penicillin(["gyrA_S91F"])["prediction"] == "S"         # unrelated -> S
 
 
 def test_ng_cefixime_v01_mosaic34_core():
@@ -102,17 +104,17 @@ def test_ng_ceftriaxone_v01_A501_specific():
 
 def test_ng_real_amrfinder_symbols_AR0165():
     """R3 real-surface pin: the ACTUAL AMRFinder -O Neisseria_gonorrhoeae output for AR Bank #0165
-    (GCA_042036815.1). gyrA S91F/D95G -> cipro R; penA mosaic set -> ESC R; no 23S -> azithro S;
-    no blaTEM -> penicillin S (chromosomal accessory only); gentamicin abstains."""
+    (GCA_042036815.1). gyrA S91F/D95G -> cipro R; penA mosaic-34 core -> cefixime R; ponA_L421P ->
+    penicillin R (v0.2); rpsJ_V57M but NO tet(M) -> tetracycline S (v0.2 over-call fix); gentamicin abstains."""
     syms = ["ponA_L421P", "pbp2", "penA_A510V", "penA_F504L", "penA_G545S", "penA_I312M",
             "penA_N512Y", "penA_V316T", "mtrR_A-53del", "folP_R228S", "rpsJ_V57M",
             "porB1b_A121N", "porB1b_G120K", "gyrA_D95G", "gyrA_S91F", "parC_S87R"]
     assert call_ng_amr("ciprofloxacin", syms)["prediction"] == "R"     # gyrA QRDR
-    assert call_ng_amr("cefixime", syms)["prediction"] == "R"          # mosaic penA raises cefixime MIC
+    assert call_ng_amr("cefixime", syms)["prediction"] == "R"          # mosaic-34 core (I312M/V316T/N512Y/G545S)
     assert call_ng_amr("ceftriaxone", syms)["prediction"] == "S"       # v0.1: A510V (not A501) -> ceftriaxone S
     assert call_ng_amr("azithromycin", syms)["prediction"] == "S"      # no 23S mutation on this isolate
-    assert call_ng_amr("penicillin", syms)["prediction"] == "R"        # v0.1: chromosomal penA/mtrR promoted
-    assert call_ng_amr("tetracycline", syms)["prediction"] == "R"      # v0.1: chromosomal rpsJ_V57M/mtrR promoted
+    assert call_ng_amr("penicillin", syms)["prediction"] == "R"        # v0.2: ponA_L421P (chromosomal PBP1) -> R
+    assert call_ng_amr("tetracycline", syms)["prediction"] == "S"      # v0.2: rpsJ_V57M but no tet(M) -> S
     assert call_ng_amr("gentamicin", syms)["prediction"] == "INDETERMINATE"
 
 
