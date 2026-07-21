@@ -39,6 +39,11 @@ def push(code_py: str, slug: str, gpu: bool, internet: bool) -> int:
             "language": "python", "kernel_type": "script",
             "is_private": True, "enable_gpu": bool(gpu), "enable_internet": bool(internet),
         }
+        if gpu:
+            # enable_gpu alone provisions a Tesla P100 (CC 6.0) that Kaggle's current torch (CC 7.0+)
+            # cannot run ("no kernel image available"). Pin the T4. See memory
+            # reference_kaggle_headless_gpu_kernels.
+            meta["machine_shape"] = "NvidiaTeslaT4"
         (tdp / "kernel-metadata.json").write_text(json.dumps(meta, indent=2))
         print(f"pushing {kid} (gpu={gpu} internet={internet}, code={code_name})...")
         res = api.kernels_push(str(tdp))
