@@ -1,0 +1,103 @@
+"""GENERIC no-compute external validation of NON-FROZEN organism cells on NCBI Pathogen Detection.
+
+The gonococcus run (2026-07-21) discovered that NCBI-PD publishes its OWN AMRFinderPlus calls (the
+`AMR_genotypes` field, point mutations included) for every organism it covers, and the isolates have
+downloadable assemblies -> external validation of any determinant-based cell is a pure metadata JOIN + score,
+OFFLINE, no Docker/Kaggle/assembly. This is the REUSABLE substrate: point it at any organism's cohort +
+determinants (built from `<PDG>.amr.metadata.tsv`) + its NON-FROZEN cell.
+
+Each organism config: the cell module's per-drug call functions. Score vs measured AST; DEGENERATE guard
+(a cell predicting all-one-class is never endorsed even at spec/sens 1.0).
+
+  uv run python scripts/score_ncbipd_extval.py --organism campylobacter
+  uv run python scripts/score_ncbipd_extval.py --organism gono
+
+HONEST CAVEATS (same as any cell): provenance-disjoint (frozen accessions excluded at cohort-build) but NOT
+methodology-independent (same AMRFinderPlus + same cell); RAW sens/spec is CLONALITY-INFLATED (lineage
+collapse via Mash on the assemblies is the follow-up).
+"""
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import sys
+from datetime import date as _date
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from dna_decode.organism_rules import campylobacter_amr as CJ  # noqa: E402
+from dna_decode.organism_rules import neisseria_amr as NG  # noqa: E402
+from scripts.amr_portal_score_independent import wilson_ci  # noqa: E402
+from scripts.independent_cohort_validate import _conf  # noqa: E402
+
+SPEC_FLOOR = 0.85
+MIN_PER_CLASS = 5
+
+# organism -> (display name, cohort dir, {drug: call function})
+ORGANISMS = {
+    "gono": ("Neisseria gonorrhoeae", "data/raw/gono_ncbipd_extval", {
+        "ciprofloxacin": NG.call_ng_ciprofloxacin, "cefixime": NG.call_ng_cefixime,
+        "ceftriaxone": NG.call_ng_ceftriaxone, "azithromycin": NG.call_ng_azithromycin,
+        "penicillin": NG.call_ng_penicillin, "tetracycline": NG.call_ng_tetracycline,
+    }),
+    "campylobacter": ("Campylobacter", "data/raw/campy_ncbipd_extval", {
+        "tetracycline": CJ.call_cj_tetracycline, "gentamicin": CJ.call_cj_gentamicin,
+    }),
+}
+
+
+def score_cell(name: str, cohort_dir: str, drugs: dict) -> dict:
+    labels = {r["biosample"]: r for r in csv.DictReader(open(f"{cohort_dir}/cohort.tsv"), delimiter="\t")}
+    dets = {r["biosample"]: [s for s in (r["determinants"] or "").split(";") if s]
+            for r in csv.DictReader(open(f"{cohort_dir}/determinants.tsv"), delimiter="\t")}
+    print(f"{name}: {len(labels)} NCBI-PD isolates (provenance-disjoint; frozen accessions excluded)")
+    results = {}
+    for drug, fn in drugs.items():
+        scored = []
+        for bs, row in labels.items():
+            rs = row.get(drug, "")
+            if rs not in ("R", "S"):
+                continue
+            pred = fn(dets.get(bs, []))["prediction"]
+            if str(pred).upper() in ("R", "S"):
+                scored.append((pred, 1 if rs == "R" else 0))
+        conf = _conf(scored)
+        n_R, n_S = conf["tp"] + conf["fn"], conf["tn"] + conf["fp"]
+        powered = n_R >= MIN_PER_CLASS and n_S >= MIN_PER_CLASS
+        degenerate = ((n_R >= MIN_PER_CLASS and conf["sens"] == 0.0)
+                      or (n_S >= MIN_PER_CLASS and conf["spec"] == 0.0))
+        endorsed = bool(powered and not degenerate and conf["spec"] is not None
+                        and conf["spec"] >= SPEC_FLOOR and (conf["sens"] is None or conf["sens"] >= 0.5))
+        headline = ("DEGENERATE_NOT_ENDORSED" if degenerate else "SCORED_ENDORSED" if endorsed
+                    else "UNDERPOWERED" if not powered else "SCORED_NOT_ENDORSED")
+        results[drug] = {"drug": drug, "rule": fn(["_probe_"])["rule"], "binary": conf,
+                         "n_R": n_R, "n_S": n_S, "sens_wilson95": wilson_ci(conf["tp"], n_R),
+                         "spec_wilson95": wilson_ci(conf["tn"], n_S), "powered": powered, "headline": headline}
+        print(f"  {drug:14s}: n={conf['n_scored']:3d} ({n_R}R/{n_S}S) acc={conf['acc']} "
+              f"sens={conf['sens']} spec={conf['spec']} -> {headline}")
+    return results
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--organism", choices=list(ORGANISMS), required=True)
+    a = ap.parse_args()
+    name, cohort_dir, drugs = ORGANISMS[a.organism]
+    results = score_cell(name, cohort_dir, drugs)
+    artifact = {
+        "_schema": "ncbipd-extval-v1", "date": _date.today().isoformat(), "organism": name,
+        "cell": f"{a.organism}_amr (NON-FROZEN)", "cohort_dir": cohort_dir,
+        "independence": "provenance-disjoint (frozen accessions excluded) but NOT methodology-independent",
+        "clonality_caveat": "RAW is clonality-inflated; lineage-collapse (Mash) is the follow-up",
+        "results": results, "frozen_surface_changed": False,
+    }
+    out = Path(f"wiki/{a.organism}_ncbipd_extval_{_date.today().isoformat()}.json")
+    out.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
+    print(f"artifact: {out}")
+    return 0 if any(r["powered"] for r in results.values()) else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

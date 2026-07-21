@@ -1,0 +1,66 @@
+{
+  "_schema": "ncbipd-extval-v1",
+  "date": "2026-07-21",
+  "organism": "Campylobacter",
+  "cell": "campylobacter_amr (NON-FROZEN)",
+  "cohort_dir": "data/raw/campy_ncbipd_extval",
+  "independence": "provenance-disjoint (frozen accessions excluded) but NOT methodology-independent",
+  "clonality_caveat": "RAW is clonality-inflated; lineage-collapse (Mash) is the follow-up",
+  "results": {
+    "tetracycline": {
+      "drug": "tetracycline",
+      "rule": "tet(O)-family ribosomal protection -> R",
+      "binary": {
+        "n_scored": 121,
+        "tp": 66,
+        "fp": 3,
+        "tn": 52,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.975,
+        "sens": 1.0,
+        "spec": 0.945
+      },
+      "n_R": 66,
+      "n_S": 55,
+      "sens_wilson95": [
+        0.9449955327483907,
+        1.0
+      ],
+      "spec_wilson95": [
+        0.8514670569551007,
+        0.9812771240324999
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED"
+    },
+    "gentamicin": {
+      "drug": "gentamicin",
+      "rule": "true gentamicin enzyme aph(2'')/aac(3)/aac(6')-aph -> R (aad9/spw non-gent excluded)",
+      "binary": {
+        "n_scored": 121,
+        "tp": 30,
+        "fp": 0,
+        "tn": 90,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.992,
+        "sens": 0.968,
+        "spec": 1.0
+      },
+      "n_R": 31,
+      "n_S": 90,
+      "sens_wilson95": [
+        0.8380554282383037,
+        0.9942829259130554
+      ],
+      "spec_wilson95": [
+        0.9590629315783191,
+        0.9999999999999999
+      ],
+      "powered": true,
+      "headline": "SCORED_ENDORSED"
+    }
+  },
+  "frozen_surface_changed": false
+}
