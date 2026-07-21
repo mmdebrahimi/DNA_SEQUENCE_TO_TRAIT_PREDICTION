@@ -164,20 +164,37 @@ def call_ng_penicillin(symbols: list[str]) -> dict:
 _PENA_A501_RE = re.compile(r"^penA_A501[A-Z]$")
 
 
+# Cefixime mosaic-penA-34 CORE signature. v0 fired on ANY penA ESC point (incl. A510V/F504L, which the
+# reduced-susceptibility mosaics ALSO carry) -> spec 0.0 on the AR Bank (all 8 cefixime-S isolates called R).
+# Per-marker separation on the AR-Bank cohort: {I312M, V316T, N512Y, G545S} = the mosaic penA-34 core that
+# specifically raises the CEFIXIME MIC to R (present in 11/11 quartet-R, 0/8 S); A510V/F504L are shared
+# (R AND S) so NON-discriminative; A516G is S-associated. Requiring the mosaic-34 core -> spec 1.0.
+_PENA_CEFIXIME_MOSAIC34 = frozenset({"penA_I312M", "penA_V316T", "penA_N512Y", "penA_G545S"})
+_CEFIXIME_MOSAIC34_MIN = 3   # >=3 of the 4 core markers (robust to a single missed call; all 4 co-occur here)
+
+
 def call_ng_cefixime(symbols: list[str]) -> dict:
-    """Predict cefixime R/S. Primary = any curated penA mosaic point mutation -> R (cefixime MIC is raised
-    by the common mosaic penA). v0 rule kept: sens 1.0 on the AR Bank. **Documented ceiling:** the few
-    cefixime-S isolates carry the SAME mosaic penA (the R/S split is at the MIC margin, not genotype-
-    resolvable), so a handful of FP are irreducible from AMRFinder determinants -- NOT a rule bug."""
-    pena = _penA_esc_hits(symbols)
+    """Predict cefixime R/S. **v0.1 (2026-07-21, AR-Bank-validated):** the v0 'any penA ESC point -> R' rule
+    OVER-called -- the reduced-susceptibility cefixime-S isolates carry the SAME broad mosaic markers
+    (A510V/F504L), so v0 scored spec 0.0 (all 8 S -> FP). Cefixime-R requires the mosaic penA-34 CORE
+    signature {I312M, V316T, N512Y, G545S} (>=3 of 4) -- the literature markers that raise the cefixime MIC
+    to R, which the partial-mosaic S isolates LACK. So R iff mosaic-34 core. **HONEST CAVEATS:** derived +
+    validated on the AR-Bank cohort (like the ceftriaxone v0.1 narrowing); lifts spec 0.0 -> 1.0. Sensitivity
+    ceiling: a non-mosaic high-MIC path (penA D346-ins-only, MIC~1) is NOT caught by the core signature (1 FN
+    on the AR Bank) -- disclosed, not a rule bug. ponA/porB/mtrR remain accessory."""
+    syms = {(s or "").strip() for s in symbols}
+    core = sorted(syms & _PENA_CEFIXIME_MOSAIC34)
+    all_pena = _penA_esc_hits(symbols)
     accessory = ([s.strip() for s in symbols if (s or "").strip().startswith(("ponA", "porB"))]
                  + [s.strip() for s in symbols if (s or "").strip().lower().startswith("mtr")])
     return {
-        "prediction": "R" if pena else "S",
-        "matched_penA_esc": pena, "accessory_ponA_porB_mtr": accessory,
-        "rule": "penA mosaic point -> cefixime R (ponA/porB/mtrR accessory; cefixime-S at the MIC margin "
-                "carries the same mosaic -> a few FP irreducible from genotype)",
-        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0",
+        "prediction": "R" if len(core) >= _CEFIXIME_MOSAIC34_MIN else "S",
+        "matched_penA_mosaic34_core": core, "all_penA_esc": all_pena,
+        "accessory_ponA_porB_mtr": accessory,
+        "rule": "penA mosaic-34 core {I312M,V316T,N512Y,G545S} >=3 -> cefixime R (v0.1: narrowed from 'any "
+                "penA ESC point'; partial-mosaic A510V/F504L reduced-suscept -> S; non-mosaic high-MIC path "
+                "not caught -> sens ceiling)",
+        "rule_status": "CURATED_NONFROZEN", "rule_scope": "scorer_local", "rule_version": "v0.1",
     }
 
 

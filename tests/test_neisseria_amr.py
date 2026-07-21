@@ -71,14 +71,20 @@ def test_ng_penicillin_v01_chromosomal_promoted():
     assert call_ng_penicillin(["gyrA_S91F"])["prediction"] == "S"          # unrelated -> S
 
 
-def test_ng_cefixime_broad_penA():
-    # cefixime v0: any curated penA mosaic point -> R (cefixime MIC raised by common mosaic penA)
-    for sym in ("penA_G545S", "penA_I312M", "penA_V316T", "penA_F504L", "penA_A510V", "penA_N512Y",
-                "penA_mosaic_60.001"):
-        assert call_ng_cefixime([sym])["prediction"] == "R", sym
+def test_ng_cefixime_v01_mosaic34_core():
+    # v0.1 (AR-Bank-validated): cefixime-R requires the mosaic penA-34 CORE {I312M,V316T,N512Y,G545S}
+    # (>=3 of 4), NOT any penA ESC point. Fixes v0's spec 0.0 (partial-mosaic S isolates were all FP).
+    # R: full mosaic-34 quartet (the AR-Bank R signature)
+    R = call_ng_cefixime(["penA_I312M", "penA_V316T", "penA_N512Y", "penA_G545S", "penA_A510V", "penA_F504L"])
+    assert R["prediction"] == "R" and len(R["matched_penA_mosaic34_core"]) == 4
+    # S: the partial-mosaic reduced-susceptibility signature (A510V/F504L/A516G) -> S (was v0's FP)
+    S = call_ng_cefixime(["penA_A510V", "penA_F504L", "penA_A516G", "penA_D346DD"])
+    assert S["prediction"] == "S", "partial mosaic must NOT be called cefixime-R (v0 spec-0.0 bug)"
+    # a single shared marker alone is NOT enough (< 3 core)
+    assert call_ng_cefixime(["penA_A510V"])["prediction"] == "S"
     assert call_ng_cefixime([])["prediction"] == "S"
-    r = call_ng_cefixime(["ponA_L421P", "porB1b_G120K", "mtrR_A-53del"])   # accessory only -> S
-    assert r["prediction"] == "S" and r["accessory_ponA_porB_mtr"]
+    acc = call_ng_cefixime(["ponA_L421P", "porB1b_G120K", "mtrR_A-53del"])   # accessory only -> S
+    assert acc["prediction"] == "S" and acc["accessory_ponA_porB_mtr"]
 
 
 def test_ng_ceftriaxone_v01_A501_specific():
@@ -123,7 +129,8 @@ def test_ng_dispatch():
     assert call_ng_amr("ciprofloxacin", ["gyrA_S91F"])["prediction"] == "R"
     assert call_ng_amr("gentamicin", [])["prediction"] == "INDETERMINATE"
     assert call_ng_amr("meropenem", [])["prediction"] == "INDETERMINATE"   # unsupported drug -> abstain
-    assert call_ng_amr("CEFIXIME", ["penA_A501P"])["prediction"] == "R"     # case-insensitive
+    # case-insensitive dispatch; v0.1 cefixime needs the mosaic-34 core (>=3 of I312M/V316T/N512Y/G545S)
+    assert call_ng_amr("CEFIXIME", ["penA_I312M", "penA_V316T", "penA_N512Y"])["prediction"] == "R"
 
 
 def test_ng_new_rules_nonfrozen_scoped():

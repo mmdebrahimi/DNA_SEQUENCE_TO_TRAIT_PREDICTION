@@ -47,3 +47,36 @@ doxycycline (8R/7S) on the next run.
 **Scope:** first Enterococcus validation, a NEW organism cell. NON-FROZEN; the frozen decoder surface is
 untouched. The cell's determinant rule is validated (perfect accuracy); only the S-class powering is pending
 the re-run.
+
+## Re-run result (2026-07-21) — single-end fix worked, but a SECOND wall + a scorer integrity bug
+
+The single-end-fixed kernel assembled **16/17** (was 7/17) — the `--split-3` fix stopped the crashes.
+**But verify-in-batch caught a false victory:** the recovered `SAMN15040xxx` block produces **empty
+AMRFinder TSVs (0–1 determinants; 294-byte header-only files)** — a real E. faecium assembly yields 13–24
+determinants (even susceptible isolates carry intrinsic genes like `aac(6')-Ii`). The assemblies FAILED.
+
+**Root cause:** those SRA runs are **shallow** (58k–445k reads; both PAIRED and SINGLE) → SKESA produces
+fragmented/empty contigs → AMRFinder finds nothing. 0/9 have downloadable GCA assemblies (SRA-reads-only).
+A **data-quality wall on the S-side block**, distinct from the (now-fixed) single-end crash.
+
+**Scorer integrity bug (fixed):** the scorer was scoring these empty assemblies as **S-by-absence** (no van
+gene → S), manufacturing a false `SCORED_ENDORSED` — vancomycin sens cratered to 0.2 (the block's R isolates
+scored S because their assemblies were empty), and the doxycycline "endorsement" was inflated by
+empty-assembly S isolates right by accident. Fixed via `MIN_DETERMINANTS_FOR_VALID_ASSEMBLY = 3`: an isolate
+with < 3 total determinants is `INDETERMINATE_ASSEMBLY_FAILED`, **excluded from scoring**, never
+S-by-absence. An empty assembly is not a susceptible isolate.
+
+**Honest re-scored result** (9 empty assemblies gated out; scored only the 7 with real assemblies):
+
+| drug | n | R/S | sens | spec | verdict |
+|---|---|---|---|---|---|
+| doxycycline | 5 | 5R/0S | 1.00 | — | UNDERPOWERED |
+| levofloxacin | 7 | 6R/1S | 1.00 | 1.00 | UNDERPOWERED |
+| vancomycin | 7 | 2R/5S | 1.00 | 0.80 | UNDERPOWERED |
+| teicoplanin | 7 | 2R/5S | 1.00 | 0.80 | UNDERPOWERED |
+
+The **determinant rules are correct** (perfect sens on every real assembly; the earlier vanco sens 0.2 was
+100% the empty-assembly artifact). Enterococcus stays **UNDERPOWERED** — the S-side block is unrecoverable
+from shallow reads. **Forward lever (speculative):** a SPAdes-instead-of-SKESA kernel retry (more sensitive
+on low coverage; SAMN15040089 has 445k paired reads that *should* assemble). Uncertain payoff; not run yet.
+The scorer integrity gate is the durable win — it stops any empty assembly ever masquerading as susceptible.

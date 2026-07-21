@@ -1,0 +1,933 @@
+{
+  "_schema": "ar-bank-gono-kaggle-validation-v1",
+  "date": "2026-07-21",
+  "run_id": "gono_kaggle_2026-07-21",
+  "organism": "Neisseria gonorrhoeae",
+  "rule_status": "CURATED_NONFROZEN",
+  "rule_scope": "scorer_local",
+  "not_in_shipped_surface": true,
+  "genotype_source": "Kaggle-native bioconda SRA-assembly (skesa) + AMRFinderPlus -O Neisseria_gonorrhoeae; local Docker-wedge path bypassed",
+  "label_source": "ar_bank_INT_cdc (S/I/R; I excluded)",
+  "independence_tier": "CDC AR Isolate Bank measured S/I/R; NON-FROZEN curated cell (hand rule, not tuned on any cohort -> no tuning-leak); NOT methodology-independent.",
+  "results": {
+    "cefixime": {
+      "drug": "cefixime",
+      "gene_rule": "penA mosaic-34 core {I312M,V316T,N512Y,G545S} >=3 -> cefixime R (v0.1: narrowed from 'any penA ESC point'; partial-mosaic A510V/F504L reduced-suscept -> S; non-mosaic high-MIC path not caught -> sens ceiling)",
+      "binary": {
+        "n_scored": 20,
+        "tp": 11,
+        "fp": 0,
+        "tn": 8,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.95,
+        "sens": 0.917,
+        "spec": 1.0
+      },
+      "n_R": 12,
+      "n_S": 8,
+      "n_missing_assembly": 1,
+      "sens_wilson95": [
+        0.6461140782014047,
+        0.9851352905492264
+      ],
+      "spec_wilson95": [
+        0.6755843804891231,
+        1.0
+      ],
+      "powered": true,
+      "spec_floor": 0.85,
+      "headline": "SCORED_ENDORSED",
+      "records": [
+        {
+          "biosample": "SAMEA3165241",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "folP_R228S",
+            "parC_S87R",
+            "rpsJ_V57M",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165247",
+          "prediction": "S",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "rpsJ_V57M",
+            "mtrR_G45D",
+            "penA_D346DD",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165249",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "mtrR_A-53del",
+            "parC_S87R",
+            "rpsJ_V57M",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "folP_R228S",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165250",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "ponA_L421P",
+            "parC_S87R",
+            "rpsJ_V57M",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "mtrR_A-53del",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165270",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "folP_R228S",
+            "mtrR_A-53del",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "parC_S87R",
+            "rpsJ_V57M"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165272",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "mtrR_A-53del",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165275",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "rpsJ_V57M",
+            "mtrR_A-53del",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165292",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "ponA_L421P",
+            "folP_R228S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165293",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "ponA_L421P",
+            "folP_R228S",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165296",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "folP_R228S",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165648",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "porB1b_A121D",
+            "porB1b_G120K",
+            "ponA_L421P",
+            "mtrR_A-53del",
+            "folP_R228S",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "penA_P551L",
+            "rpoB_H553N",
+            "rpsJ_V57M",
+            "rplD_G70D"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165649",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "folP_R228S",
+            "mtrD_K823E",
+            "mtrR_A39T",
+            "23S_C2611T"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165653",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrD_K823E",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165655",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrR_A39T",
+            "mtrD_K823E",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "folP_R228S",
+            "23S_C2611T"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165656",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "23S_A2059G",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "folP_R228S",
+            "mtrD_K823E",
+            "mtrR_G45D",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "porB1b_A121S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165657",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "ponA_L421P",
+            "rpsJ_V57M",
+            "rplD_G70D",
+            "rpoB_H553N",
+            "folP_R228S",
+            "mtrR_A-53del",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "penA_P551L",
+            "porB1b_A121D",
+            "porB1b_G120K"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165659",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrR_A39T",
+            "mtrD_K823E",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "23S_C2611T",
+            "folP_R228S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165668",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrR_A39T",
+            "mtrD_K823E",
+            "folP_R228S",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "23S_C2611T"
+          ]
+        },
+        {
+          "biosample": "SAMN35332250",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "ponA_L421P",
+            "pbp2",
+            "penA_A311V",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_T483S",
+            "penA_V316T",
+            "folP_R228S",
+            "mtrR_A-53del",
+            "gyrA_D95A",
+            "gyrA_S91F",
+            "rpsJ_V57M",
+            "porB1b_A121D",
+            "porB1b_G120K",
+            "parC_S87R"
+          ]
+        },
+        {
+          "biosample": "SAMN35332251",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "gyrA_S91F",
+            "norM_C-104T",
+            "blaTEM-1",
+            "parC_S87N",
+            "pbp2",
+            "penA_A311V",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_T483S",
+            "penA_V316T",
+            "ponA_L421P",
+            "rpsJ_V57M",
+            "folP_R228S",
+            "mtrD_R714H",
+            "mtrR_A-53del"
+          ]
+        }
+      ]
+    },
+    "ciprofloxacin": {
+      "drug": "ciprofloxacin",
+      "gene_rule": "gyrA QRDR (Ser91/Asp95) point mutation -> R (parC accessory-only)",
+      "binary": {
+        "n_scored": 20,
+        "tp": 11,
+        "fp": 0,
+        "tn": 9,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "n_R": 11,
+      "n_S": 9,
+      "n_missing_assembly": 1,
+      "sens_wilson95": [
+        0.7411599827511859,
+        1.0
+      ],
+      "spec_wilson95": [
+        0.7008472464490407,
+        1.0
+      ],
+      "powered": true,
+      "spec_floor": 0.85,
+      "headline": "SCORED_ENDORSED",
+      "records": [
+        {
+          "biosample": "SAMEA3165241",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "folP_R228S",
+            "parC_S87R",
+            "rpsJ_V57M",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165247",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "rpsJ_V57M",
+            "mtrR_G45D",
+            "penA_D346DD",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165249",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "mtrR_A-53del",
+            "parC_S87R",
+            "rpsJ_V57M",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "folP_R228S",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165250",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "ponA_L421P",
+            "parC_S87R",
+            "rpsJ_V57M",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "mtrR_A-53del",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165270",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "folP_R228S",
+            "mtrR_A-53del",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "parC_S87R",
+            "rpsJ_V57M"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165272",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "mtrR_A-53del",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165275",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "rpsJ_V57M",
+            "mtrR_A-53del",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165292",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "ponA_L421P",
+            "folP_R228S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165293",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "ponA_L421P",
+            "folP_R228S",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165296",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "parC_S87R",
+            "rpsJ_V57M",
+            "gyrA_D95G",
+            "gyrA_S91F",
+            "mtrR_A-53del",
+            "folP_R228S",
+            "pbp2",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_V316T",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "ponA_L421P"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165648",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "porB1b_A121D",
+            "porB1b_G120K",
+            "ponA_L421P",
+            "mtrR_A-53del",
+            "folP_R228S",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "penA_P551L",
+            "rpoB_H553N",
+            "rpsJ_V57M",
+            "rplD_G70D"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165649",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "folP_R228S",
+            "mtrD_K823E",
+            "mtrR_A39T",
+            "23S_C2611T"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165653",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrD_K823E",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "porB1b_A121N",
+            "porB1b_G120K",
+            "folP_R228S",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165655",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrR_A39T",
+            "mtrD_K823E",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "folP_R228S",
+            "23S_C2611T"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165656",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "23S_A2059G",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "folP_R228S",
+            "mtrD_K823E",
+            "mtrR_G45D",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "porB1b_A121S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165657",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "ponA_L421P",
+            "rpsJ_V57M",
+            "rplD_G70D",
+            "rpoB_H553N",
+            "folP_R228S",
+            "mtrR_A-53del",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "penA_P551L",
+            "porB1b_A121D",
+            "porB1b_G120K"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165659",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrR_A39T",
+            "mtrD_K823E",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "23S_C2611T",
+            "folP_R228S"
+          ]
+        },
+        {
+          "biosample": "SAMEA3165668",
+          "prediction": "S",
+          "label": "S",
+          "y": 0,
+          "symbols": [
+            "mtrR_A39T",
+            "mtrD_K823E",
+            "folP_R228S",
+            "rpsJ_V57M",
+            "rpoB_H553N",
+            "penA_A510V",
+            "penA_A516G",
+            "penA_D346DD",
+            "penA_F504L",
+            "23S_C2611T"
+          ]
+        },
+        {
+          "biosample": "SAMN35332250",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "ponA_L421P",
+            "pbp2",
+            "penA_A311V",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_T483S",
+            "penA_V316T",
+            "folP_R228S",
+            "mtrR_A-53del",
+            "gyrA_D95A",
+            "gyrA_S91F",
+            "rpsJ_V57M",
+            "porB1b_A121D",
+            "porB1b_G120K",
+            "parC_S87R"
+          ]
+        },
+        {
+          "biosample": "SAMN35332251",
+          "prediction": "R",
+          "label": "R",
+          "y": 1,
+          "symbols": [
+            "gyrA_S91F",
+            "norM_C-104T",
+            "blaTEM-1",
+            "parC_S87N",
+            "pbp2",
+            "penA_A311V",
+            "penA_A510V",
+            "penA_F504L",
+            "penA_G545S",
+            "penA_I312M",
+            "penA_N512Y",
+            "penA_T483S",
+            "penA_V316T",
+            "ponA_L421P",
+            "rpsJ_V57M",
+            "folP_R228S",
+            "mtrD_R714H",
+            "mtrR_A-53del"
+          ]
+        }
+      ]
+    }
+  },
+  "frozen_surface_changed": false
+}

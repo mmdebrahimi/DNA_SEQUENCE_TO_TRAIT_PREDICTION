@@ -45,18 +45,35 @@ def _find_tsv(amr_dir: Path, biosample: str) -> Path | None:
     return None
 
 
+# Assembly-quality floor: a genuine E. faecium assembly yields many determinants (13-24 in the good
+# isolates here, incl. intrinsic aac(6')-Ii even in susceptible strains). An assembly that produces
+# FEWER than this is a FAILED/empty assembly (single-end SKESA on the SAMN15040xxx block emitted 0-1
+# determinants = header-only TSVs). Such an isolate MUST be INDETERMINATE (assembly_failed), NOT scored
+# S-by-absence -- else an empty assembly masquerades as susceptible + inflates specificity. The floor is
+# deliberately low (an isolate can be genuinely determinant-light) but 0-2 = the empty-assembly signature.
+MIN_DETERMINANTS_FOR_VALID_ASSEMBLY = 3
+
+
 def score_drug(drug: str, labels_dir: str, call_fn, amr_dir: Path, min_per_class: int) -> dict:
     labels = _read_selected(Path(labels_dir) / "selected_strict.tsv")
-    records, n_missing = [], 0
+    records, n_missing, n_assembly_failed = [], 0, 0
     for bs, rs in sorted(labels.items()):
         tsv = _find_tsv(amr_dir, bs)
         if tsv is None:
             n_missing += 1
             continue
         symbols = parse_determinant_symbols(tsv)
+        if len(symbols) < MIN_DETERMINANTS_FOR_VALID_ASSEMBLY:
+            # empty/failed assembly -> INDETERMINATE, not S-by-absence
+            n_assembly_failed += 1
+            records.append({"biosample": bs, "prediction": "INDETERMINATE_ASSEMBLY_FAILED",
+                            "label": rs, "y": 1 if rs == "R" else 0, "symbols": symbols,
+                            "n_determinants": len(symbols)})
+            continue
         pred = call_fn(symbols)["prediction"]
         records.append({"biosample": bs, "prediction": pred, "label": rs,
-                        "y": 1 if rs == "R" else 0, "symbols": symbols})
+                        "y": 1 if rs == "R" else 0, "symbols": symbols,
+                        "n_determinants": len(symbols)})
     scored = [(r["prediction"], r["y"]) for r in records if str(r["prediction"]).upper() in ("R", "S")]
     conf = _conf(scored)
     n_R = conf["tp"] + conf["fn"]
@@ -66,6 +83,7 @@ def score_drug(drug: str, labels_dir: str, call_fn, amr_dir: Path, min_per_class
     return {
         "drug": drug, "gene_rule": call_fn(["_probe_"])["rule"], "binary": conf,
         "n_R": n_R, "n_S": n_S, "n_missing_assembly": n_missing,
+        "n_assembly_failed": n_assembly_failed,
         "sens_wilson95": wilson_ci(conf["tp"], n_R), "spec_wilson95": wilson_ci(conf["tn"], n_S),
         "powered": powered, "spec_floor": SPEC_FLOOR,
         "headline": "SCORED_ENDORSED" if endorsed else ("UNDERPOWERED" if not powered else "SCORED_NOT_ENDORSED"),
@@ -94,7 +112,8 @@ def main() -> int:
         results[drug] = r
         c = r["binary"]
         print(f"  {drug}: n={c['n_scored']} ({r['n_R']}R/{r['n_S']}S) acc={c['acc']} "
-              f"sens={c['sens']} spec={c['spec']} missing={r['n_missing_assembly']} -> {r['headline']}")
+              f"sens={c['sens']} spec={c['spec']} missing={r['n_missing_assembly']} "
+              f"asm_failed={r['n_assembly_failed']} -> {r['headline']}")
 
     artifact = {
         "_schema": "ar-bank-efm-kaggle-validation-v1", "date": _date.today().isoformat(),
