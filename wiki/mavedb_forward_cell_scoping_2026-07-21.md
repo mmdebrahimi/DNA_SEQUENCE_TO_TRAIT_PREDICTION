@@ -58,6 +58,15 @@ a train/test split. MaveDB is the raw upstream superset. So:
   curation, and the substitution-only cell can't consume the non-substitution assays that are MaveDB's true
   additive content.
 
+## UPDATE 2026-07-21 — ProSST-hybrid prospective is DATA-WALLED on MaveDB (correction)
+The earlier note "the deployed ESM2+ProSST hybrid on the manifest is the Kaggle follow-up" is FALSIFIED by a
+pre-bar framing check: only 42/84 held-out assays have a UniProt id, and only 12/84 have a target sequence
+length-matching the canonical structure (the rest are fragments/constructs). ProSST requires
+structure-length == sequence-length, so the hybrid cannot be prospectively scored on MaveDB except on a tiny
+non-comparable ~12-assay slice. The structure tier's +0.067 lift stays established IN-DISTRIBUTION on
+ProteinGym; it is out of prospective reach here. The SEQUENCE-tier prospective result (ESM2 0.503 + 90%
+BLOSUM beat) is the deployable prospective number. Full diagnosis: `wiki/prosst_hybrid_holdout_datawall_2026-07-21.md`.
+
 ## Concrete first step (if the user picks lane R2)
 `scripts/mavedb_prospective_holdout.py`: search score-sets → filter `publishedDate >= <ProteinGym cutoff>` +
 `organismName == Homo sapiens` (or any) + `category == protein_coding` → dedup vs
