@@ -124,11 +124,29 @@ def build_manifest(score_sets: list[dict], pg_symbols: set[str], cutoff: str | N
     return out
 
 
-def _fetch_score_sets(limit: int) -> list[dict]:
-    req = urllib.request.Request(f"{API}/score-sets/search", data=b"{}",
+def _fetch_page(offset: int) -> list[dict]:
+    req = urllib.request.Request(f"{API}/score-sets/search",
+                                 data=json.dumps({"offset": offset}).encode(),
                                  headers={"Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=45) as r:
-        return json.loads(r.read().decode("utf-8", "replace")).get("scoreSets", [])[:limit]
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read().decode("utf-8", "replace")).get("scoreSets", [])
+
+
+def _fetch_score_sets(limit: int, all_pages: bool = False) -> list[dict]:
+    """Fetch score sets. Single page ([:limit], the old default) OR, with all_pages, paginate the whole
+    catalog via `offset` (the search endpoint caps a page at 100; `limit`>100 -> 422, so offset is the only
+    pagination lever). Stops on the first short page."""
+    if not all_pages:
+        return _fetch_page(0)[:limit]
+    out, offset = [], 0
+    while True:
+        page = _fetch_page(offset)
+        out.extend(page)
+        if len(page) < 100:
+            return out
+        offset += 100
+        if offset > 100_000:  # safety backstop
+            return out
 
 
 def score_assay_blosum(urn: str) -> dict:
@@ -162,14 +180,16 @@ def score_assay_blosum(urn: str) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--limit", type=int, default=100, help="MaveDB search page cap (endpoint max ~100)")
+    ap.add_argument("--all-pages", action="store_true",
+                    help="paginate the WHOLE MaveDB catalog via offset (not just the first 100-record page)")
     ap.add_argument("--cutoff", default="2024-01-01", help="temporal overlay: flag assays published >= this")
     ap.add_argument("--score", type=int, default=0, help="download+BLOSUM-score up to N held-out assays (proof)")
     a = ap.parse_args()
 
     pg = proteingym_gene_symbols()
     print(f"ProteinGym benchmark gene symbols: {len(pg)}")
-    score_sets = _fetch_score_sets(a.limit)
-    print(f"MaveDB score sets fetched (page cap {a.limit}): {len(score_sets)}")
+    score_sets = _fetch_score_sets(a.limit, all_pages=a.all_pages)
+    print(f"MaveDB score sets fetched ({'ALL pages' if a.all_pages else f'page cap {a.limit}'}): {len(score_sets)}")
     manifest = build_manifest(score_sets, pg, a.cutoff)
     n_human = sum(1 for m in manifest if m["organism"] == "Homo sapiens")
     n_post = sum(1 for m in manifest if m["post_cutoff"])
@@ -194,7 +214,10 @@ def main() -> int:
                                      "|Spearman| reported as a harness proof only",
            "manifest": manifest, "blosum_scoring_proof": scored,
            "frozen_surface_changed": False}
-    out = Path(f"wiki/mavedb_prospective_holdout_{_date.today().isoformat()}.json")
+    # NAMESPACE the full-catalog run so it does NOT clobber the single-page manifest (which carries the
+    # committed blosum_scoring_proof the paired-comparison artifact reads) — the shared-key-overwrite trap.
+    tag = "_full" if a.all_pages else ""
+    out = Path(f"wiki/mavedb_prospective_holdout{tag}_{_date.today().isoformat()}.json")
     out.write_text(json.dumps(art, indent=2), encoding="utf-8")
     print(f"artifact: {out}")
     return 0
