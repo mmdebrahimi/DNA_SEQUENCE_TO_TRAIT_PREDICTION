@@ -122,6 +122,17 @@ def _hiv_card_drugs() -> dict[str, dict]:
     return {c["drug"]: c for c in card.get("cells", []) if c.get("drug")}
 
 
+# HIV drugs that are NOT_CENSUSED for a DURABLE reason (no free label will ever appear), NOT pending work.
+# delavirdine is a WITHDRAWN first-gen NNRTI absent from ALL Stanford PhenoSense datasets (only EFV/NVP/ETR/RPV/DOR
+# present — verified 0/9 HIV datasets 2026-07-22). We KEEP it NOT_CENSUSED (the C1 anti-overclaim guardrail + its
+# regression pin: a no-card-row drug must never claim to be measured; whether it should move to NO_FREE_SOURCE is a
+# tiering decision left to the user) but ANNOTATE the reason so it is not misread as an open TODO.
+HIV_NOT_CENSUSED_DURABLE_REASON = {
+    "delavirdine": "withdrawn first-gen NNRTI absent from Stanford PhenoSense (0/9 datasets, 2026-07-22) — "
+                   "no free fold-change label will appear; not pending work",
+}
+
+
 def _viral_contracts() -> list[CellContract]:
     from dna_decode.data.hiv_amr import all_supported_hiv_drugs
     from dna_decode.data.sarscov2_amr import all_supported_sarscov2_drugs
@@ -133,7 +144,9 @@ def _viral_contracts() -> list[CellContract]:
             # CLI-routable but NOT in the validation report card (e.g. delavirdine) -> NOT_CENSUSED, never measured
             tier, status, vocab, native = (EvidenceTier.NOT_CENSUSED, "cli_routable_not_validated",
                                            AbstentionVocab.NOT_CENSUSED, "NOT_CENSUSED")
-            vslice = "CLI-routable; NOT in the HIV report card (uncensused)"
+            reason = HIV_NOT_CENSUSED_DURABLE_REASON.get(d)
+            vslice = (f"CLI-routable; NOT in the HIV report card (uncensused) — {reason}" if reason
+                      else "CLI-routable; NOT in the HIV report card (uncensused)")
             falsifier = "none"
         elif (row.get("n") or 0) >= HIV_UNDERPOWERED_N:
             tier, status, vocab, native = (EvidenceTier.INDEPENDENT_MEASURED, "independent_wetlab_validated",
