@@ -42,6 +42,18 @@ AM standalone on the FULL ClinVar set (AM's real deployment — needs no DMS): T
    ESM2+ProSST hybrid is the shipped `predict_effect(method='hybrid')` decoder — this validates the ACTUAL
    deployed forward cell on clinical labels, not a proxy.
 
+## Independent confirmation (a second label source, on Kaggle GPU)
+
+This ClinVar + DMS-joined result CONVERGES with the earlier `wiki/esm_am_ensemble_paired_2026-07-09.md`
+(Kaggle Tesla T4), which asked the same deployable question on a DIFFERENT clinical-label source — **humsavar**
+pathogenic-vs-benign, 7 proteins (incl. MSH2, ESM2-650M AUROC 0.786): (a) **AlphaMissense wins** (median 0.823
+vs ESM 0.706, 6/7); (b) the **ESM+AM ensemble does NOT beat the best single predictor** (paired median −0.002 at
+650M) — the same "the combination doesn't win" shape as the TP53 hybrid here (0.918 < ESM2 0.927); (c) **scaling
+650M→3B is a net regression** (mean paired −0.021). Two independent clinical-label sources (ClinVar-DMS-joined
+here; humsavar there) → the SAME deployable conclusion: **AlphaMissense is the deployable clinical winner; a
+learned combination/bigger model does not add.** A fresh Kaggle AM/hybrid run for "the deployable number" would
+be redundant — it is already established on GPU + on-host.
+
 ## Honest rails
 
 - **Tier = in-distribution clinical, NOT held-out.** AM/ESM2/ProSST all saw these proteins in training. BUT
