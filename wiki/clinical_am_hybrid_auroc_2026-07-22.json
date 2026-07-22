@@ -1,0 +1,68 @@
+{
+  "_schema": "clinical-am-hybrid-auroc-v1",
+  "date": "2026-07-22",
+  "question": "Place the deployable LEARNED decoder (AlphaMissense; ESM2+ProSST hybrid) between the BLOSUM floor and the DMS ceiling on the actionable-human-gene ClinVar joins.",
+  "am_source": "AlphaMissense_aa_substitutions (Cheng 2023; CC BY-NC-SA; precomputed, no GPU) via D: cache",
+  "hybrid_source": "shipped predict_effect(method='hybrid') = rank-avg(ESM2-650M, ProSST-2048 on AlphaFold v6)",
+  "tier": "in_distribution_clinical (proteins seen in AM/ESM2/ProSST training; ClinVar labels independent of the DMS-fitness tuning)",
+  "hybrid_ran": true,
+  "results": [
+    {
+      "gene": "TP53",
+      "uniprot": "P04637",
+      "urn": "urn:mavedb:00001234-a-1",
+      "n_dms": 2314,
+      "n_clinvar": 263,
+      "n_am": 7467,
+      "am_full_clinvar": {
+        "n": 263,
+        "n_path": 173,
+        "n_benign": 90,
+        "am_auroc": 0.986
+      },
+      "comparable_set": {
+        "n_joined": 261,
+        "n_path": 171,
+        "n_benign": 90,
+        "auroc_applicable": true,
+        "dms_ceiling_auroc": 0.9957,
+        "blosum_floor_auroc": 0.7068,
+        "am_auroc": 0.9858,
+        "n_wt_consistent": 261,
+        "n_hybrid": 261,
+        "esm2_auroc": 0.9273,
+        "prosst_auroc": 0.8525,
+        "hybrid_auroc": 0.9182
+      }
+    },
+    {
+      "gene": "MSH2",
+      "uniprot": "P43246",
+      "urn": "urn:mavedb:00000050-a-1",
+      "n_dms": 16749,
+      "n_clinvar": 301,
+      "n_am": 17746,
+      "am_full_clinvar": {
+        "n": 299,
+        "n_path": 64,
+        "n_benign": 235,
+        "am_auroc": 0.9362
+      },
+      "comparable_set": {
+        "n_joined": 297,
+        "n_path": 64,
+        "n_benign": 233,
+        "auroc_applicable": true,
+        "dms_ceiling_auroc": 0.9549,
+        "blosum_floor_auroc": 0.8317,
+        "am_auroc": 0.9358,
+        "n_wt_consistent": 297,
+        "n_hybrid": 297,
+        "esm2_auroc": 0.9207,
+        "prosst_auroc": 0.9152,
+        "hybrid_auroc": 0.9374
+      }
+    }
+  ],
+  "frozen_surface_changed": false
+}
