@@ -1,0 +1,32 @@
+{
+  "_schema": "mavedb-full-esm2-merged-v1",
+  "date": "2026-07-22",
+  "shards": [
+    "mavedb-full-esm2-sharda",
+    "mavedb-full-esm2-shardb"
+  ],
+  "model": "facebook/esm2_t33_650M_UR50D",
+  "n_scored": 2383,
+  "median_abs_spearman": 0.4778,
+  "median_abs_shuffled": 0.0194,
+  "median_human": 0.492,
+  "n_human": 978,
+  "per_gene_top": {
+    "MAGI3": 0.786,
+    "RSP5": 0.752,
+    "Autolysin": 0.752,
+    "WWTR1": 0.748,
+    "TP63": 0.743,
+    "EHEE_rd2_0487": 0.739,
+    "EHEE_rd2_0840": 0.734,
+    "ERI1": 0.733,
+    "NCF1": 0.733,
+    "NEDD4": 0.732,
+    "EHEE_rd1_0101": 0.728,
+    "TAB3": 0.72,
+    "HNRNPUL1": 0.718,
+    "SHROOM4": 0.716,
+    "HHH_rd1_0197": 0.716
+  },
+  "n_genes": 842
+}
