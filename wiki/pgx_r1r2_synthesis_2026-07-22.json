@@ -1,0 +1,130 @@
+{
+  "_schema": "pgx-r1r2-synthesis-v1",
+  "date": "2026-07-22",
+  "gene": "CYP2C9",
+  "finding": "PROPERTY-MISMATCH: free CYP2C9 DMS is ABUNDANCE; *2/*3 are activity defects (stable) -> abundance R2 does NOT corroborate the activity-based R1 clinical function. Only *11 (destabilizing) concords. R1xR2 corroboration is property-specific.",
+  "cyp2c19_excluded": "core alleles non-missense (*2 splice / *3 stop / *17 promoter)",
+  "assays": [
+    {
+      "urn": "urn:mavedb:00000095-b-1",
+      "title": "CYP2C9 abundance scores as measured by VAMP-seq",
+      "readout": "abundance (VAMP-seq)",
+      "n_missense": 6559,
+      "lower_is_damaging": true,
+      "n_star_scored": 5,
+      "n_star_damaging": 1,
+      "per_allele": [
+        {
+          "star": "*2",
+          "variant": "R144C",
+          "cpic_function": "decreased (activity 0.5)",
+          "in_assay": true,
+          "dms_score": 0.95,
+          "percentile": 0.769,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*3",
+          "variant": "I359L",
+          "cpic_function": "no function (activity 0.0)",
+          "in_assay": true,
+          "dms_score": 0.782,
+          "percentile": 0.525,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*5",
+          "variant": "D360E",
+          "cpic_function": "no function",
+          "in_assay": false
+        },
+        {
+          "star": "*8",
+          "variant": "R150H",
+          "cpic_function": "decreased",
+          "in_assay": true,
+          "dms_score": 0.739,
+          "percentile": 0.482,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*9",
+          "variant": "H251R",
+          "cpic_function": "decreased",
+          "in_assay": true,
+          "dms_score": 1.009,
+          "percentile": 0.856,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*11",
+          "variant": "R335W",
+          "cpic_function": "decreased/no function",
+          "in_assay": true,
+          "dms_score": 0.244,
+          "percentile": 0.15,
+          "in_damaging_tail": true
+        }
+      ]
+    },
+    {
+      "urn": "urn:mavedb:00000095-a-1",
+      "title": "CYP2C9 activity scores as measured by Click-seq",
+      "readout": "abundance (VAMP-seq)",
+      "n_missense": 6273,
+      "lower_is_damaging": true,
+      "n_star_scored": 4,
+      "n_star_damaging": 1,
+      "per_allele": [
+        {
+          "star": "*2",
+          "variant": "R144C",
+          "cpic_function": "decreased (activity 0.5)",
+          "in_assay": true,
+          "dms_score": 0.834,
+          "percentile": 0.711,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*3",
+          "variant": "I359L",
+          "cpic_function": "no function (activity 0.0)",
+          "in_assay": true,
+          "dms_score": 0.445,
+          "percentile": 0.449,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*5",
+          "variant": "D360E",
+          "cpic_function": "no function",
+          "in_assay": false
+        },
+        {
+          "star": "*8",
+          "variant": "R150H",
+          "cpic_function": "decreased",
+          "in_assay": true,
+          "dms_score": 0.732,
+          "percentile": 0.635,
+          "in_damaging_tail": false
+        },
+        {
+          "star": "*9",
+          "variant": "H251R",
+          "cpic_function": "decreased",
+          "in_assay": false
+        },
+        {
+          "star": "*11",
+          "variant": "R335W",
+          "cpic_function": "decreased/no function",
+          "in_assay": true,
+          "dms_score": 0.108,
+          "percentile": 0.194,
+          "in_damaging_tail": true
+        }
+      ]
+    }
+  ]
+}
