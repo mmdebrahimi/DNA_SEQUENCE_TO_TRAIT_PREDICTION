@@ -1,0 +1,12 @@
+{
+  "_schema": "mavedb-esm-vs-blosum-paired-v1",
+  "n_paired": 84,
+  "median_esm": 0.503,
+  "median_blosum": 0.2213,
+  "median_paired_delta": 0.2802,
+  "mean_paired_delta": 0.2519,
+  "esm_wins": 76,
+  "ties": 0,
+  "losses": 8,
+  "sign_test_p_two_sided": 5.0213888745341685e-15
+}

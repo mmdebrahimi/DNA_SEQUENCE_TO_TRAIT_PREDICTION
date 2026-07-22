@@ -826,6 +826,654 @@
       "abs_spearman": 0.1924,
       "gene": "APP",
       "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000113-a-2",
+      "n_missense": 0,
+      "spearman": null,
+      "note": "too few missense (<10)",
+      "gene": "APP",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000113-a-1",
+      "n_missense": 0,
+      "spearman": null,
+      "note": "too few missense (<10)",
+      "gene": "APP",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000639-0-1",
+      "n_missense": 1254,
+      "spearman": 0.207,
+      "abs_spearman": 0.207,
+      "gene": "ABLIM2 (R14S;R16S)",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000639-a-1",
+      "n_missense": 1254,
+      "spearman": 0.2184,
+      "abs_spearman": 0.2184,
+      "gene": "ABLIM2 (R14S;R16S)",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000639-a-2",
+      "n_missense": 1254,
+      "spearman": 0.202,
+      "abs_spearman": 0.202,
+      "gene": "ABLIM2 (R14S;R16S)",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000324-0-1",
+      "n_missense": 903,
+      "spearman": 0.2235,
+      "abs_spearman": 0.2235,
+      "gene": "ALX4",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000324-a-1",
+      "n_missense": 903,
+      "spearman": 0.2504,
+      "abs_spearman": 0.2504,
+      "gene": "ALX4",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000324-a-2",
+      "n_missense": 903,
+      "spearman": 0.2114,
+      "abs_spearman": 0.2114,
+      "gene": "ALX4",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000385-0-1",
+      "n_missense": 571,
+      "spearman": 0.1755,
+      "abs_spearman": 0.1755,
+      "gene": "APBB3",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000385-a-2",
+      "n_missense": 571,
+      "spearman": 0.1681,
+      "abs_spearman": 0.1681,
+      "gene": "APBB3",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000385-a-1",
+      "n_missense": 571,
+      "spearman": 0.1831,
+      "abs_spearman": 0.1831,
+      "gene": "APBB3",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000360-0-1",
+      "n_missense": 1367,
+      "spearman": 0.2447,
+      "abs_spearman": 0.2447,
+      "gene": "ATP7B",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000360-a-2",
+      "n_missense": 1367,
+      "spearman": 0.2587,
+      "abs_spearman": 0.2587,
+      "gene": "ATP7B",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000360-a-1",
+      "n_missense": 1367,
+      "spearman": 0.2753,
+      "abs_spearman": 0.2753,
+      "gene": "ATP7B",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000657-a-1",
+      "n_missense": 5843,
+      "spearman": 0.2738,
+      "abs_spearman": 0.2738,
+      "gene": "ASPA",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000657-b-1",
+      "n_missense": 5842,
+      "spearman": -0.2737,
+      "abs_spearman": 0.2737,
+      "gene": "ASPA",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000676-a-1",
+      "n_missense": 1036,
+      "spearman": 0.324,
+      "abs_spearman": 0.324,
+      "gene": "ABL1 SH3 domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000678-a-1",
+      "n_missense": 1065,
+      "spearman": 0.2154,
+      "abs_spearman": 0.2154,
+      "gene": "ABLIM3 Zinc finger, LIM-type domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000677-a-1",
+      "n_missense": 1079,
+      "spearman": 0.3195,
+      "abs_spearman": 0.3195,
+      "gene": "ABLIM3 Zinc finger, LIM-type domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000679-a-1",
+      "n_missense": 1121,
+      "spearman": 0.2915,
+      "abs_spearman": 0.2915,
+      "gene": "ADARB1 Double-stranded RNA-binding domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000681-a-1",
+      "n_missense": 1147,
+      "spearman": 0.2411,
+      "abs_spearman": 0.2411,
+      "gene": "ADAR Z-alpha domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000680-a-1",
+      "n_missense": 1199,
+      "spearman": 0.3304,
+      "abs_spearman": 0.3304,
+      "gene": "ADAR Z-alpha domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000682-a-1",
+      "n_missense": 736,
+      "spearman": 0.1469,
+      "abs_spearman": 0.1469,
+      "gene": "ADNP Homeobox domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000683-a-1",
+      "n_missense": 1036,
+      "spearman": 0.2777,
+      "abs_spearman": 0.2777,
+      "gene": "AHI1 SH3 domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000684-a-1",
+      "n_missense": 1060,
+      "spearman": 0.2372,
+      "abs_spearman": 0.2372,
+      "gene": "ALX1 Homeobox domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000685-a-1",
+      "n_missense": 1014,
+      "spearman": 0.198,
+      "abs_spearman": 0.198,
+      "gene": "ALX3 Homeobox domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000686-a-1",
+      "n_missense": 1031,
+      "spearman": 0.2403,
+      "abs_spearman": 0.2403,
+      "gene": "ALX4 Homeobox domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000687-a-1",
+      "n_missense": 1428,
+      "spearman": 0.3277,
+      "abs_spearman": 0.3277,
+      "gene": "ANK1 Death domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000688-a-1",
+      "n_missense": 1309,
+      "spearman": 0.2857,
+      "abs_spearman": 0.2857,
+      "gene": "ANK2 Death domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000689-a-1",
+      "n_missense": 1413,
+      "spearman": 0.3,
+      "abs_spearman": 0.3,
+      "gene": "ANK3 Death domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000690-a-1",
+      "n_missense": 1143,
+      "spearman": 0.3131,
+      "abs_spearman": 0.3131,
+      "gene": "ANKS1B Sterile alpha motif domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000691-a-1",
+      "n_missense": 1163,
+      "spearman": 0.3529,
+      "abs_spearman": 0.3529,
+      "gene": "ANKS6 Sterile alpha motif domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000692-a-1",
+      "n_missense": 1154,
+      "spearman": 0.2993,
+      "abs_spearman": 0.2993,
+      "gene": "ARAF Raf-like Ras-binding domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000693-a-1",
+      "n_missense": 949,
+      "spearman": 0.2688,
+      "abs_spearman": 0.2688,
+      "gene": "ARHGEF28 Protein kinase C-like, phorbol ester/diacylglycerol-binding domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000694-a-1",
+      "n_missense": 1338,
+      "spearman": 0.2133,
+      "abs_spearman": 0.2133,
+      "gene": "ARID2 DNA-binding RFX-type winged-helix domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000695-a-1",
+      "n_missense": 787,
+      "spearman": 0.2609,
+      "abs_spearman": 0.2609,
+      "gene": "ARK2C Zinc finger, RING-type domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000696-a-1",
+      "n_missense": 1058,
+      "spearman": 0.2135,
+      "abs_spearman": 0.2135,
+      "gene": "ARX Homeobox domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000697-a-1",
+      "n_missense": 1022,
+      "spearman": 0.2831,
+      "abs_spearman": 0.2831,
+      "gene": "AR Zinc finger, nuclear hormone receptor-type domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000698-a-1",
+      "n_missense": 689,
+      "spearman": 0.0994,
+      "abs_spearman": 0.0994,
+      "gene": "ASB14 SOCS box domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000699-a-1",
+      "n_missense": 320,
+      "spearman": 0.2604,
+      "abs_spearman": 0.2604,
+      "gene": "ASPM IQ motif, EF-hand binding site domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000700-a-1",
+      "n_missense": 1144,
+      "spearman": 0.3192,
+      "abs_spearman": 0.3192,
+      "gene": "ASZ1 Sterile alpha motif domain",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-c-1",
+      "n_missense": 2314,
+      "spearman": 0.1616,
+      "abs_spearman": 0.1616,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-f-1",
+      "n_missense": 2314,
+      "spearman": 0.1802,
+      "abs_spearman": 0.1802,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-d-1",
+      "n_missense": 2314,
+      "spearman": 0.1812,
+      "abs_spearman": 0.1812,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-b-1",
+      "n_missense": 2314,
+      "spearman": 0.1537,
+      "abs_spearman": 0.1537,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-g-1",
+      "n_missense": 2314,
+      "spearman": 0.1831,
+      "abs_spearman": 0.1831,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-a-1",
+      "n_missense": 2314,
+      "spearman": 0.167,
+      "abs_spearman": 0.167,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-e-1",
+      "n_missense": 2314,
+      "spearman": 0.1909,
+      "abs_spearman": 0.1909,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001234-h-1",
+      "n_missense": 2314,
+      "spearman": 0.1492,
+      "abs_spearman": 0.1492,
+      "gene": "TP53",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001255-a-1",
+      "n_missense": 9790,
+      "spearman": 0.0318,
+      "abs_spearman": 0.0318,
+      "gene": "AIRE codon-optimized DNA sequence",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001255-a-2",
+      "n_missense": 9790,
+      "spearman": 0.0318,
+      "abs_spearman": 0.0318,
+      "gene": "AIRE codon-optimized DNA sequence",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001257-0-1",
+      "n_missense": 8432,
+      "spearman": 0.2554,
+      "abs_spearman": 0.2554,
+      "gene": "ADSL",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00001281-a-2",
+      "n_missense": 8751,
+      "spearman": 0.1378,
+      "abs_spearman": 0.1378,
+      "gene": "PRKN cDNA",
+      "organism": "Homo sapiens"
+    },
+    {
+      "urn": "urn:mavedb:00000082-a-1",
+      "n_missense": 399,
+      "spearman": -0.0547,
+      "abs_spearman": 0.0547,
+      "gene": "Bovine S-arrestin",
+      "organism": "Bos taurus"
+    },
+    {
+      "urn": "urn:mavedb:00000121-0-1",
+      "n_missense": 1195,
+      "spearman": 0.1091,
+      "abs_spearman": 0.1091,
+      "gene": "30S ribosomal protein S15",
+      "organism": "Geobacillus stearothermophilus"
+    },
+    {
+      "urn": "urn:mavedb:00000121-a-2",
+      "n_missense": 1195,
+      "spearman": 0.1122,
+      "abs_spearman": 0.1122,
+      "gene": "30S ribosomal protein S15",
+      "organism": "Geobacillus stearothermophilus"
+    },
+    {
+      "urn": "urn:mavedb:00000121-a-1",
+      "n_missense": 1195,
+      "spearman": 0.1132,
+      "abs_spearman": 0.1132,
+      "gene": "30S ribosomal protein S15",
+      "organism": "Geobacillus stearothermophilus"
+    },
+    {
+      "urn": "urn:mavedb:00000147-0-1",
+      "n_missense": 1121,
+      "spearman": 0.2259,
+      "abs_spearman": 0.2259,
+      "gene": "50S ribosomal protein L20",
+      "organism": "Aquifex aeolicus VF5"
+    },
+    {
+      "urn": "urn:mavedb:00000147-a-1",
+      "n_missense": 1121,
+      "spearman": 0.2975,
+      "abs_spearman": 0.2975,
+      "gene": "50S ribosomal protein L20",
+      "organism": "Aquifex aeolicus VF5"
+    },
+    {
+      "urn": "urn:mavedb:00000147-a-2",
+      "n_missense": 1121,
+      "spearman": 0.1899,
+      "abs_spearman": 0.1899,
+      "gene": "50S ribosomal protein L20",
+      "organism": "Aquifex aeolicus VF5"
+    },
+    {
+      "urn": "urn:mavedb:00000239-0-1",
+      "n_missense": 872,
+      "spearman": 0.1608,
+      "abs_spearman": 0.1608,
+      "gene": "2HBB_con",
+      "organism": "artificial sequences"
+    },
+    {
+      "urn": "urn:mavedb:00000239-a-1",
+      "n_missense": 872,
+      "spearman": 0.2078,
+      "abs_spearman": 0.2078,
+      "gene": "2HBB_con",
+      "organism": "artificial sequences"
+    },
+    {
+      "urn": "urn:mavedb:00000239-a-2",
+      "n_missense": 872,
+      "spearman": 0.2327,
+      "abs_spearman": 0.2327,
+      "gene": "2HBB_con",
+      "organism": "artificial sequences"
+    },
+    {
+      "urn": "urn:mavedb:00000246-0-1",
+      "n_missense": 1026,
+      "spearman": 0.2028,
+      "abs_spearman": 0.2028,
+      "gene": "2J6K_con",
+      "organism": "artificial sequences"
+    },
+    {
+      "urn": "urn:mavedb:00000246-a-1",
+      "n_missense": 1026,
+      "spearman": 0.1814,
+      "abs_spearman": 0.1814,
+      "gene": "2J6K_con",
+      "organism": "artificial sequences"
+    },
+    {
+      "urn": "urn:mavedb:00000246-a-2",
+      "n_missense": 1026,
+      "spearman": 0.229,
+      "abs_spearman": 0.229,
+      "gene": "2J6K_con",
+      "organism": "artificial sequences"
+    },
+    {
+      "urn": "urn:mavedb:00000281-0-1",
+      "n_missense": 1271,
+      "spearman": 0.2359,
+      "abs_spearman": 0.2359,
+      "gene": "A0A0H3JVL4_STAAW",
+      "organism": "Staphylococcus aureus subsp. aureus MW2"
+    },
+    {
+      "urn": "urn:mavedb:00000281-a-2",
+      "n_missense": 1271,
+      "spearman": 0.2189,
+      "abs_spearman": 0.2189,
+      "gene": "A0A0H3JVL4_STAAW",
+      "organism": "Staphylococcus aureus subsp. aureus MW2"
+    },
+    {
+      "urn": "urn:mavedb:00000281-a-1",
+      "n_missense": 1271,
+      "spearman": 0.2616,
+      "abs_spearman": 0.2616,
+      "gene": "A0A0H3JVL4_STAAW",
+      "organism": "Staphylococcus aureus subsp. aureus MW2"
+    },
+    {
+      "urn": "urn:mavedb:00000402-0-1",
+      "n_missense": 1178,
+      "spearman": 0.2219,
+      "abs_spearman": 0.2219,
+      "gene": "Addiction module toxin, HicA family",
+      "organism": "Burkholderia pseudomallei K96243"
+    },
+    {
+      "urn": "urn:mavedb:00000402-a-2",
+      "n_missense": 1178,
+      "spearman": 0.2483,
+      "abs_spearman": 0.2483,
+      "gene": "Addiction module toxin, HicA family",
+      "organism": "Burkholderia pseudomallei K96243"
+    },
+    {
+      "urn": "urn:mavedb:00000402-a-1",
+      "n_missense": 1178,
+      "spearman": 0.2391,
+      "abs_spearman": 0.2391,
+      "gene": "Addiction module toxin, HicA family",
+      "organism": "Burkholderia pseudomallei K96243"
+    },
+    {
+      "urn": "urn:mavedb:00000441-0-1",
+      "n_missense": 1215,
+      "spearman": 0.2173,
+      "abs_spearman": 0.2173,
+      "gene": "anti-CRISPR AcrIF7",
+      "organism": "Pseudomonas aeruginosa"
+    },
+    {
+      "urn": "urn:mavedb:00000441-a-2",
+      "n_missense": 1215,
+      "spearman": 0.2688,
+      "abs_spearman": 0.2688,
+      "gene": "anti-CRISPR AcrIF7",
+      "organism": "Pseudomonas aeruginosa"
+    },
+    {
+      "urn": "urn:mavedb:00000441-a-1",
+      "n_missense": 1215,
+      "spearman": 0.2159,
+      "abs_spearman": 0.2159,
+      "gene": "anti-CRISPR AcrIF7",
+      "organism": "Pseudomonas aeruginosa"
+    },
+    {
+      "urn": "urn:mavedb:00000252-0-1",
+      "n_missense": 1195,
+      "spearman": 0.2208,
+      "abs_spearman": 0.2208,
+      "gene": "ArsR family transcriptional regulator",
+      "organism": "Rhodopseudomonas palustris CGA009"
+    },
+    {
+      "urn": "urn:mavedb:00000252-a-2",
+      "n_missense": 1195,
+      "spearman": 0.2203,
+      "abs_spearman": 0.2203,
+      "gene": "ArsR family transcriptional regulator",
+      "organism": "Rhodopseudomonas palustris CGA009"
+    },
+    {
+      "urn": "urn:mavedb:00000252-a-1",
+      "n_missense": 1195,
+      "spearman": 0.2448,
+      "abs_spearman": 0.2448,
+      "gene": "ArsR family transcriptional regulator",
+      "organism": "Rhodopseudomonas palustris CGA009"
+    },
+    {
+      "urn": "urn:mavedb:00000292-0-1",
+      "n_missense": 985,
+      "spearman": 0.1413,
+      "abs_spearman": 0.1413,
+      "gene": "Asr4154 protein",
+      "organism": "Nostoc sp. PCC 7120 = FACHB-418"
+    },
+    {
+      "urn": "urn:mavedb:00000292-a-1",
+      "n_missense": 985,
+      "spearman": 0.1684,
+      "abs_spearman": 0.1684,
+      "gene": "Asr4154 protein",
+      "organism": "Nostoc sp. PCC 7120 = FACHB-418"
+    },
+    {
+      "urn": "urn:mavedb:00000292-a-2",
+      "n_missense": 985,
+      "spearman": 0.1552,
+      "abs_spearman": 0.1552,
+      "gene": "Asr4154 protein",
+      "organism": "Nostoc sp. PCC 7120 = FACHB-418"
     }
   ],
   "frozen_surface_changed": false
