@@ -73,3 +73,14 @@ def test_render_plan_unknown_is_honest(tmp_path):
     f.write_text("nonsense\n", encoding="utf-8")
     out = render_decode_plan(f)
     assert "No decoder recognizes" in out
+
+
+def test_protein_plan_shows_forward_capability_hint(tmp_path):
+    # slice 2 seam: when the forward route applies, the router surfaces which learned methods run HERE
+    f = tmp_path / "p.fasta"
+    f.write_text(">P\nMEEPQSDPSVEPP\n", encoding="utf-8")
+    out = render_decode_plan(f)
+    assert "forward:" in out
+    assert "--capabilities" in out
+    # blosum62 is always runnable, so it must appear in the runnable list
+    assert "blosum62" in out

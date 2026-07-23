@@ -147,12 +147,31 @@ def render_decode_plan(path: str | Path) -> str:
         lines.append("  (Sniff is content-based: VCF header, or the FASTA residue alphabet.)")
         return "\n".join(lines)
     lines.append(f"  {len(decs)} applicable decoder(s):")
+    has_forward = False
     for d in decs:
         tier = _tier_for(d.track, d.route)
         tier_s = f"  [tier: {tier}]" if tier else ""
         lines.append(f"  - {d.route:20s} {d.what}{tier_s}")
         lines.append(f"      run: {d.example}")
+        if d.route == "dna-forward":
+            has_forward = True
+    if has_forward:
+        lines.append("")
+        lines.append(f"  forward: {_forward_capability_hint()}")
     lines.append("")
     lines.append("  Honest scope: each decoder emits its own trust surface + abstains when out-of-scope; run "
                  "`dna-decode list` for per-trait validation status.")
     return "\n".join(lines)
+
+
+def _forward_capability_hint() -> str:
+    """One-line hint: which learned variant-effect methods THIS host can run (deployability, cheap probe)."""
+    try:
+        from dna_decode.forward.capabilities import runnable_methods, strongest_runnable
+        rm = runnable_methods()
+        runnable = [m for m in ("hybrid", "prosst", "esm2", "gemme", "blosum62") if rm.get(m, (False,))[0]]
+        strongest = strongest_runnable()
+        return (f"learned methods runnable here: {', '.join(runnable)} (strongest: {strongest}). "
+                f"`dna-decode forward --capabilities` for the full preflight; `--method auto` uses the strongest.")
+    except Exception:
+        return "run `dna-decode forward --capabilities` to see which learned methods this host can run."
