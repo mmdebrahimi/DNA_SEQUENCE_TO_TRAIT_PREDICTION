@@ -139,12 +139,12 @@ def esm2_deltas(seq, variants, tok, model, device, mask_id, aa_ids, torch):
             for wt, pos, mut in variants}
 
 
-def prosst_deltas(seq, variants, structure_tokens, model, tokenizer, torch):
-    ss = torch.tensor([[1, *[t + 3 for t in structure_tokens], 2]], dtype=torch.long)
+def prosst_deltas(seq, variants, structure_tokens, model, tokenizer, torch, device="cpu"):
+    ss = torch.tensor([[1, *[t + 3 for t in structure_tokens], 2]], dtype=torch.long).to(device)
     enc = tokenizer([seq], return_tensors="pt")
     with torch.no_grad():
-        logits = model(input_ids=enc["input_ids"], attention_mask=enc["attention_mask"],
-                       ss_input_ids=ss).logits
+        logits = model(input_ids=enc["input_ids"].to(device),
+                       attention_mask=enc["attention_mask"].to(device), ss_input_ids=ss).logits
     lp = torch.log_softmax(logits[0, 1:-1].float(), dim=-1)
     vocab = tokenizer.get_vocab()
     return {(wt, pos, mut): float(lp[pos-1, vocab[mut]] - lp[pos-1, vocab[wt]]) for wt, pos, mut in variants}
@@ -163,11 +163,36 @@ def main():
 
     pmodel = AutoModelForMaskedLM.from_pretrained(PROSST_MODEL, trust_remote_code=True)
     ptok = AutoTokenizer.from_pretrained(PROSST_MODEL, trust_remote_code=True)
-    try:                                             # CRITICAL: tie the omitted decoder weight
-        pmodel.cls.predictions.decoder.weight = pmodel.get_input_embeddings().weight
-    except AttributeError:
-        pass
-    pmodel = pmodel.eval()
+    # CRITICAL: the ProSST checkpoint OMITS cls.predictions.decoder.weight -> it loads RANDOM -> garbage
+    # logits (median |rho| ~0.04, the 2026-07-23 run-1 failure). Plain attribute assignment did NOT stick
+    # under Kaggle's newer "Materializing param" lazy-load path, so ALSO copy in-place, then VERIFY loudly.
+    emb = pmodel.get_input_embeddings().weight
+    dec = None
+    for path in ("cls.predictions.decoder", "lm_head.decoder", "cls.predictions"):
+        obj = pmodel
+        try:
+            for part in path.split("."):
+                obj = getattr(obj, part)
+            if hasattr(obj, "weight"):
+                dec = obj
+                break
+        except AttributeError:
+            continue
+    if dec is None:
+        print("PROSST_TIE: FAILED - no decoder module found; ProSST scores will be GARBAGE")
+    else:
+        try:
+            dec.weight = emb                                  # reference tie
+        except Exception as e:
+            print("PROSST_TIE: assignment failed", type(e).__name__)
+        try:
+            with torch.no_grad():                             # in-place copy (works even if assignment didn't stick)
+                dec.weight.data.copy_(emb.data)
+        except Exception as e:
+            print("PROSST_TIE: copy failed", type(e).__name__)
+        same = bool((dec.weight.data - emb.data).abs().max().item() == 0.0)
+        print("PROSST_TIE: decoder==embeddings ->", same)
+    pmodel = pmodel.to(device).eval()
 
     results, skipped = [], {"fetch": 0, "align": 0, "too_few": 0}
     for urn, meta in MANIFEST.items():
@@ -190,7 +215,7 @@ def main():
         if len(variants) < 20:
             skipped["too_few"] += 1; print("  " + urn + " SKIP too_few " + str(len(variants))); continue
         ed = esm2_deltas(seq, variants, etok, emodel, device, mask_id, aa_ids, torch)
-        pd = prosst_deltas(seq, variants, toks, pmodel, ptok, torch)
+        pd = prosst_deltas(seq, variants, toks, pmodel, ptok, torch, device)
         e_scores = [ed[v] for v in variants]; p_scores = [pd[v] for v in variants]
         er = midrank(e_scores); pr = midrank(p_scores)
         hyb = [er[i] + pr[i] for i in range(len(variants))]   # rank-average (both higher=preserved)
@@ -204,6 +229,11 @@ def main():
     def med(key):
         v = [r[key] for r in results if r[key] == r[key]]
         return float(np.median(v)) if v else float("nan")
+
+    # DEGENERATE-ProSST GUARD: run-1 (2026-07-23) silently reported ProSST median 0.04 because the omitted
+    # decoder weight loaded RANDOM. ProSST is the ProteinGym structure-tier leader (~0.50 zero-shot), so a
+    # near-zero median means the model is BROKEN, not the biology. Flag it in the artifact, loudly.
+    prosst_degenerate = bool(results) and med("prosst") < 0.10
     # paired: hybrid vs best-single, per assay
     wins = sum(1 for r in results if r["hybrid"] >= max(r["esm2"], r["prosst"]))
     me, mp, mh = med("esm2"), med("prosst"), med("hybrid")
@@ -211,9 +241,13 @@ def main():
     print("median |Spearman|: ESM2=" + ("%.4f" % me) + "  ProSST=" + ("%.4f" % mp) + "  HYBRID=" + ("%.4f" % mh))
     print("hybrid >= best-single on " + str(wins) + "/" + str(len(results)) + " assays  | skipped " + str(skipped))
     print("comparators: ESM2-full-holdout 0.478 | AM 0.502")
+    if prosst_degenerate:
+        print("*** PROSST_DEGENERATE: median " + ("%.4f" % mp) + " < 0.10 -- the structure model is BROKEN "
+              "(check PROSST_TIE above); the HYBRID number is INVALID, do NOT publish it. ***")
     out = {"_schema": "mavedb-holdout-hybrid-v1", "esm_model": ESM_MODEL, "prosst_model": PROSST_MODEL,
            "n_manifest": len(MANIFEST), "n_scored": len(results),
            "median_esm2": me, "median_prosst": mp, "median_hybrid": mh,
+           "prosst_degenerate": prosst_degenerate,
            "hybrid_wins_vs_best_single": wins, "skipped": skipped,
            "comparators": {"esm2_full_holdout": 0.478, "am_holdout": 0.502}, "results": results}
     json.dump(out, open("/kaggle/working/mavedb_holdout_hybrid_result.json", "w"), indent=2)
