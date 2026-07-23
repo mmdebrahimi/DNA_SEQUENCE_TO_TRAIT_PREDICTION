@@ -458,12 +458,12 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "the benchmark the methods were tuned against): on MaveDB assays whose gene is NOT in "
             "ProteinGym, esm2 median |Spearman| **0.478** over 2383 held-out assays (0.492 on 978 human; "
             "wiki/mavedb_full_esm2_2026-07-22.md), and alphamissense **0.502** over 57 held-out human "
-            "assays (wiki/mavedb_am_holdout_2026-07-23.json). Held-out MODALITY comparison at scale (N=38 "
+            "assays (wiki/mavedb_am_holdout_2026-07-23.json). Held-out MODALITY comparison at scale (N=76 "
             "structurally-aligned, Kaggle T4, wiki/mavedb_holdout_hybrid_2026-07-23.md): ProSST (structure) "
-            "median **0.601** > esm2 0.519, and the ESM2+ProSST `hybrid` BEATS BOTH components PAIRED "
-            "(34/38 vs esm2 +0.060; 26/38 vs ProSST +0.006) -- read the PAIRED delta, NOT the medians "
-            "(ProSST's median exceeds the hybrid's while losing paired: the difference-of-medians trap). "
-            "So the deployable METHOD RANKING on held-out data is hybrid ~ prosst > esm2 > alphamissense "
+            "median **0.596** > esm2 0.538, and the ESM2+ProSST `hybrid` (median 0.602) BEATS BOTH "
+            "components PAIRED (70/76 vs esm2 +0.063; 52/76 vs ProSST +0.011, sign-test p=0.0009 -- "
+            "SIGNIFICANT, confirmed by doubling N from 38; read the PAIRED delta, not the medians). "
+            "So the deployable METHOD RANKING on held-out data is hybrid > prosst > esm2 > alphamissense "
             "> blosum62, while the CLI default stays blosum62 because it is the only wheel-only, "
             "no-model, no-structure option"),
         label_provenance=(

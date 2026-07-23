@@ -2,11 +2,11 @@
   "_schema": "mavedb-holdout-hybrid-v1",
   "esm_model": "facebook/esm2_t33_650M_UR50D",
   "prosst_model": "AI4Protein/ProSST-2048",
-  "n_manifest": 38,
-  "n_scored": 38,
-  "median_esm2": 0.51895,
-  "median_prosst": 0.6014,
-  "median_hybrid": 0.5858000000000001,
+  "n_manifest": 76,
+  "n_scored": 76,
+  "median_esm2": 0.5376,
+  "median_prosst": 0.5962000000000001,
+  "median_hybrid": 0.6022000000000001,
   "prosst_degenerate": false,
   "struct_sensitivity_check": {
     "urn": "urn:mavedb:00000002-a-1",
@@ -15,7 +15,7 @@
     "spearman_real_vs_shuffled_tokens": 0.4147
   },
   "transformers_pin": "5.13.0",
-  "hybrid_wins_vs_best_single": 22,
+  "hybrid_wins_vs_best_single": 46,
   "skipped": {
     "fetch": 0,
     "align": 0,
@@ -329,16 +329,321 @@
       "esm2": 0.5575,
       "prosst": 0.4648,
       "hybrid": 0.556
+    },
+    {
+      "urn": "urn:mavedb:00000890-a-1",
+      "gene": "MAP2K5",
+      "n": 1788,
+      "esm2": 0.4277,
+      "prosst": 0.5687,
+      "hybrid": 0.5616
+    },
+    {
+      "urn": "urn:mavedb:00000958-a-1",
+      "gene": "PDZRN3",
+      "n": 1550,
+      "esm2": 0.6285,
+      "prosst": 0.6267,
+      "hybrid": 0.6678
+    },
+    {
+      "urn": "urn:mavedb:00000789-a-1",
+      "gene": "DVL1",
+      "n": 1187,
+      "esm2": 0.3599,
+      "prosst": 0.4661,
+      "hybrid": 0.4475
+    },
+    {
+      "urn": "urn:mavedb:00000948-a-1",
+      "gene": "PARD3",
+      "n": 1650,
+      "esm2": 0.6166,
+      "prosst": 0.724,
+      "hybrid": 0.7115
+    },
+    {
+      "urn": "urn:mavedb:00001062-a-1",
+      "gene": "SNTA1",
+      "n": 1312,
+      "esm2": 0.678,
+      "prosst": 0.7339,
+      "hybrid": 0.7527
+    },
+    {
+      "urn": "urn:mavedb:00001150-a-1",
+      "gene": "YBX2",
+      "n": 1091,
+      "esm2": 0.5796,
+      "prosst": 0.6237,
+      "hybrid": 0.6398
+    },
+    {
+      "urn": "urn:mavedb:00000767-a-1",
+      "gene": "DLG3",
+      "n": 1729,
+      "esm2": 0.5377,
+      "prosst": 0.621,
+      "hybrid": 0.601
+    },
+    {
+      "urn": "urn:mavedb:00000836-a-1",
+      "gene": "GRIP1",
+      "n": 1290,
+      "esm2": 0.4941,
+      "prosst": 0.609,
+      "hybrid": 0.6177
+    },
+    {
+      "urn": "urn:mavedb:00001149-a-1",
+      "gene": "YBX1",
+      "n": 1729,
+      "esm2": 0.7009,
+      "prosst": 0.746,
+      "hybrid": 0.7535
+    },
+    {
+      "urn": "urn:mavedb:00000737-a-1",
+      "gene": "CRYBA1",
+      "n": 1666,
+      "esm2": 0.52,
+      "prosst": 0.7045,
+      "hybrid": 0.6847
+    },
+    {
+      "urn": "urn:mavedb:00000742-a-1",
+      "gene": "CRYGA",
+      "n": 1679,
+      "esm2": 0.5086,
+      "prosst": 0.5415,
+      "hybrid": 0.5788
+    },
+    {
+      "urn": "urn:mavedb:00000908-a-1",
+      "gene": "MPP3",
+      "n": 1512,
+      "esm2": 0.6282,
+      "prosst": 0.7082,
+      "hybrid": 0.7214
+    },
+    {
+      "urn": "urn:mavedb:00000947-a-1",
+      "gene": "PARD3B",
+      "n": 1626,
+      "esm2": 0.3774,
+      "prosst": 0.4823,
+      "hybrid": 0.4584
+    },
+    {
+      "urn": "urn:mavedb:00001131-a-1",
+      "gene": "USH1C",
+      "n": 1255,
+      "esm2": 0.6093,
+      "prosst": 0.7311,
+      "hybrid": 0.715
+    },
+    {
+      "urn": "urn:mavedb:00000386-0-1",
+      "gene": "ITCH",
+      "n": 613,
+      "esm2": 0.5606,
+      "prosst": 0.5381,
+      "hybrid": 0.594
+    },
+    {
+      "urn": "urn:mavedb:00000739-a-1",
+      "gene": "CRYBB1",
+      "n": 1603,
+      "esm2": 0.3843,
+      "prosst": 0.4046,
+      "hybrid": 0.4197
+    },
+    {
+      "urn": "urn:mavedb:00000743-a-1",
+      "gene": "CRYGB",
+      "n": 1650,
+      "esm2": 0.4006,
+      "prosst": 0.4327,
+      "hybrid": 0.4729
+    },
+    {
+      "urn": "urn:mavedb:00001102-a-1",
+      "gene": "TFG",
+      "n": 1596,
+      "esm2": 0.3705,
+      "prosst": 0.5149,
+      "hybrid": 0.4836
+    },
+    {
+      "urn": "urn:mavedb:00000324-0-1",
+      "gene": "ALX4",
+      "n": 903,
+      "esm2": 0.5274,
+      "prosst": 0.5352,
+      "hybrid": 0.5542
+    },
+    {
+      "urn": "urn:mavedb:00000803-a-1",
+      "gene": "FADD",
+      "n": 1632,
+      "esm2": 0.5997,
+      "prosst": 0.701,
+      "hybrid": 0.7341
+    },
+    {
+      "urn": "urn:mavedb:00001151-a-1",
+      "gene": "YBX3",
+      "n": 1633,
+      "esm2": 0.6441,
+      "prosst": 0.6689,
+      "hybrid": 0.6908
+    },
+    {
+      "urn": "urn:mavedb:00000740-a-1",
+      "gene": "CRYBB2",
+      "n": 1309,
+      "esm2": 0.5,
+      "prosst": 0.4674,
+      "hybrid": 0.5261
+    },
+    {
+      "urn": "urn:mavedb:00000877-a-1",
+      "gene": "LCP1",
+      "n": 1537,
+      "esm2": 0.5965,
+      "prosst": 0.4634,
+      "hybrid": 0.5548
+    },
+    {
+      "urn": "urn:mavedb:00000891-a-1",
+      "gene": "MAP3K20",
+      "n": 1479,
+      "esm2": 0.6676,
+      "prosst": 0.598,
+      "hybrid": 0.6669
+    },
+    {
+      "urn": "urn:mavedb:00000256-0-1",
+      "gene": "SQSTM1",
+      "n": 847,
+      "esm2": 0.7029,
+      "prosst": 0.7604,
+      "hybrid": 0.7969
+    },
+    {
+      "urn": "urn:mavedb:00000738-a-1",
+      "gene": "CRYBA4",
+      "n": 1362,
+      "esm2": 0.5375,
+      "prosst": 0.5896,
+      "hybrid": 0.6471
+    },
+    {
+      "urn": "urn:mavedb:00000792-a-1",
+      "gene": "ELF5",
+      "n": 1427,
+      "esm2": 0.7025,
+      "prosst": 0.6572,
+      "hybrid": 0.7226
+    },
+    {
+      "urn": "urn:mavedb:00000878-a-1",
+      "gene": "LDB3",
+      "n": 1565,
+      "esm2": 0.6943,
+      "prosst": 0.7851,
+      "hybrid": 0.7799
+    },
+    {
+      "urn": "urn:mavedb:00001107-a-1",
+      "gene": "TNNC2",
+      "n": 1544,
+      "esm2": 0.4791,
+      "prosst": 0.4684,
+      "hybrid": 0.4919
+    },
+    {
+      "urn": "urn:mavedb:00000186-0-1",
+      "gene": "NPHP1",
+      "n": 1117,
+      "esm2": 0.6522,
+      "prosst": 0.6579,
+      "hybrid": 0.6871
+    },
+    {
+      "urn": "urn:mavedb:00000439-0-1",
+      "gene": "FYN",
+      "n": 1116,
+      "esm2": 0.6647,
+      "prosst": 0.7115,
+      "hybrid": 0.7129
+    },
+    {
+      "urn": "urn:mavedb:00000715-a-1",
+      "gene": "CASK",
+      "n": 1536,
+      "esm2": 0.6801,
+      "prosst": 0.7636,
+      "hybrid": 0.7686
+    },
+    {
+      "urn": "urn:mavedb:00000791-a-1",
+      "gene": "ELF3",
+      "n": 1453,
+      "esm2": 0.5476,
+      "prosst": 0.5441,
+      "hybrid": 0.5794
+    },
+    {
+      "urn": "urn:mavedb:00000812-a-1",
+      "gene": "FLI1",
+      "n": 1376,
+      "esm2": 0.4215,
+      "prosst": 0.5348,
+      "hybrid": 0.525
+    },
+    {
+      "urn": "urn:mavedb:00000976-a-1",
+      "gene": "POU4F1",
+      "n": 1509,
+      "esm2": 0.595,
+      "prosst": 0.5469,
+      "hybrid": 0.6034
+    },
+    {
+      "urn": "urn:mavedb:00000747-a-1",
+      "gene": "CRYGD",
+      "n": 1454,
+      "esm2": 0.2799,
+      "prosst": 0.362,
+      "hybrid": 0.35
+    },
+    {
+      "urn": "urn:mavedb:00000748-a-1",
+      "gene": "CRYGS",
+      "n": 1402,
+      "esm2": 0.3838,
+      "prosst": 0.3702,
+      "hybrid": 0.4021
+    },
+    {
+      "urn": "urn:mavedb:00000799-a-1",
+      "gene": "ERG",
+      "n": 1527,
+      "esm2": 0.4729,
+      "prosst": 0.5812,
+      "hybrid": 0.5714
     }
   ],
   "paired": {
-    "n": 38,
-    "hybrid_gt_esm2": 34,
-    "hybrid_gt_prosst": 26,
-    "prosst_gt_esm2": 30,
-    "median_delta_hybrid_minus_esm2": 0.0601,
-    "median_delta_hybrid_minus_prosst": 0.0058,
-    "median_delta_prosst_minus_esm2": 0.052
+    "n": 76,
+    "hybrid_gt_esm2": 70,
+    "hybrid_gt_prosst": 52,
+    "prosst_gt_esm2": 58,
+    "median_delta_hybrid_minus_esm2": 0.0627,
+    "median_delta_hybrid_minus_prosst": 0.0111,
+    "median_delta_prosst_minus_esm2": 0.0516,
+    "hybrid_gt_prosst_sign_test_p": 0.000881
   },
-  "note_medians_vs_paired": "medians are over DIFFERENT assays -> not a lift; the PAIRED per-assay delta is the correct statistic. ProSST median (0.6014) > hybrid median (0.5858) yet the hybrid BEATS ProSST paired 26/38 (+0.0058) -- the documented difference-of-medians trap."
+  "note_medians_vs_paired": "at N=76 the hybrid median (0.6022) edges ProSST (0.5962) AND wins paired 52/76 (p=0.0009) -- unlike N=38 where ProSST median exceeded the hybrid while losing paired (the difference-of-medians trap). More N resolved the tension: the hybrid genuinely beats ProSST."
 }

@@ -1,74 +1,68 @@
 # Full leakage-free ESM2+ProSST hybrid at scale — held-out MaveDB (2026-07-23)
 
-**Status:** ✅ the Kaggle-GPU piece the data hunt named, LANDED after a 4-run debugging arc. First at-scale,
+**Status:** ✅ the Kaggle-GPU piece the data hunt named, LANDED and then WIDENED. First at-scale,
 **leakage-free** run of the shipped ESM2-650M + ProSST-2048 modality hybrid on held-out MaveDB DMS assays
-(genes NOT in the ProteinGym benchmark the hybrid was tuned on). Frozen AMR surface byte-unchanged (READ-only).
+(genes NOT in the ProteinGym benchmark the hybrid was tuned on). N grown 38 → **76** to test whether the
+hybrid's small margin over ProSST was real. Frozen AMR surface byte-unchanged (READ-only).
 
-## Result (Kaggle T4, N=38 held-out human assays)
+## Result (Kaggle T4, N=76 held-out human assays)
 
 | Decoder | median \|Spearman\| |
 |---|---|
-| ESM2-650M (sequence) | 0.519 |
-| **ProSST-2048 (structure)** | **0.601** |
-| **ESM2+ProSST hybrid** | 0.586 |
+| ESM2-650M (sequence) | 0.538 |
+| ProSST-2048 (structure) | 0.596 |
+| **ESM2+ProSST hybrid** | **0.602** |
 
 Comparators: ESM2 full holdout **0.478** · AlphaMissense held-out **0.502** (`wiki/mavedb_am_holdout_2026-07-23`).
 
-**PAIRED per-assay (the correct statistic — medians are over different assays, not a lift):**
+**PAIRED per-assay (the correct statistic):**
 
-| Comparison | paired wins | median paired delta |
-|---|---|---|
-| **hybrid > ESM2** | **34/38 (89%)** | **+0.060** |
-| **hybrid > ProSST** | **26/38 (68%)** | **+0.006** |
-| ProSST > ESM2 | 30/38 (79%) | +0.052 |
+| Comparison | paired wins | median paired delta | sign-test p |
+|---|---|---|---|
+| **hybrid > ESM2** | **70/76 (92%)** | **+0.063** | — |
+| **hybrid > ProSST** | **52/76 (68%)** | **+0.011** | **0.0009** |
+| ProSST > ESM2 | 58/76 (76%) | +0.052 | — |
 
 ## Findings
 
-1. **The hybrid beats BOTH components paired** — 34/38 vs ESM2 (+0.060) and 26/38 vs ProSST (+0.006). This
-   CONFIRMS the ProteinGym modality-hybrid finding on a **leakage-free** held-out set at scale: a naive
-   rank-average of orthogonal modalities (sequence ⊕ structure) beats either alone.
-2. **Do not read the medians as a lift.** ProSST's median (0.601) is *above* the hybrid's (0.586), yet the
-   hybrid **wins paired** — the medians are computed over different assays. This is exactly the
-   difference-of-medians trap the project documented before (`feedback_paired_comparison_not_difference_of_medians`);
-   the paired delta is authoritative. The hybrid's margin over ProSST is real but **small** (+0.006).
-3. **Structure is the stronger single modality here** — ProSST 0.601 beats ESM2 0.519 (30/38 paired). It also
-   beats every prior held-out number in the project (ESM2 0.478, AM 0.502), making ProSST the strongest
-   single deployable predictor measured so far on held-out DMS fitness.
-4. **Structure conditioning is verified, not assumed** — the in-run self-check scored one assay with REAL vs
-   SHUFFLED structure tokens: correlation **0.4147** (≪ 1.0), proving `ss_input_ids` genuinely reaches the
-   model and changes scores.
-
-## The 4-run debugging arc (why the first three numbers were never published)
-
-| Run | fix applied | ProSST median | verdict |
-|---|---|---|---|
-| 1 | — | 0.041 | decoder weight loaded RANDOM (`MISSING \| newly initialized`) |
-| 2 | force-tie (verified True) | 0.053 | tie was NOT the cause |
-| 3 | + pinned ProSST remote-code revision | 0.082 | revision was NOT the cause |
-| **4** | **+ pinned transformers==5.13.0** | **0.601** | ✅ **the library version WAS the cause** |
-
-- A `prosst_degenerate` guard (median < 0.10 → stamp artifact + print "hybrid number is INVALID, do NOT
-  publish") blocked runs 1–3 from ever being reported as a result. Without it, 0.34 would have shipped twice.
-- The decisive diagnostic was **local**: the SAME gene + structure tokens (MTHFR) scored Spearman **0.4025**
-  locally, proving ProSST worked and isolating the fault to the Kaggle path.
-- Root cause: `trust_remote_code` runs the model repo's own `modeling_prosst.py` against the INSTALLED
-  transformers; Kaggle's newer transformers broke that interaction (structure conditioning not applied).
-  Pinning transformers to the local working version (5.13.0) fixed it. Note torch still differs
-  (2.10.0+cu128 Kaggle vs 2.12.1 local) and is evidently not load-bearing.
+1. **The hybrid beats BOTH components paired, and beating ProSST is now statistically significant** — 52/76
+   wins over the structure model, one-sided sign-test **p = 0.0009**. At the first N=38 run this margin was
+   +0.006 (26/38, borderline); doubling N confirmed it is **real, not noise**. This is the decisive answer
+   to "is the naive rank-average hybrid genuinely better than its strongest single component, or a wash?" —
+   genuinely better, on a leakage-free held-out set.
+2. **The difference-of-medians tension resolved with more N.** At N=38, ProSST's *median* (0.601) exceeded
+   the hybrid's (0.586) even though the hybrid won paired — the documented difference-of-medians trap. At
+   N=76 the hybrid median (0.602) now *also* edges ProSST (0.596), so median and paired agree. The paired
+   statistic was right at N=38; the median caught up. (Lesson reaffirmed:
+   `feedback_paired_comparison_not_difference_of_medians`.)
+3. **Ranking on held-out DMS fitness: hybrid > ProSST > ESM2 > AlphaMissense > ESM2-full-holdout > BLOSUM.**
+   Structure (ProSST 0.596) is the strongest single modality; the sequence⊕structure hybrid is the best
+   overall. This CONFIRMS the ProteinGym modality-hybrid finding on data the methods never saw.
+4. **Structure conditioning verified, not assumed** — the in-run self-check scores one assay with REAL vs
+   SHUFFLED structure tokens: correlation **0.4147** (≪ 1.0), proving `ss_input_ids` reaches the model.
 
 ## Honest scope
 
-- **N=38** held-out human assays: gene NOT in ProteinGym, UniProt + AlphaFold available, seq ≤ 1022 (ESM2
-  context), non-giant structure, and **verified sequence identity ≥0.95** between the assay sequence and the
-  AlphaFold structure at the MaveDB offset (7 genuinely misaligned assays were dropped — PSD95 0.06, OSTF1
-  0.05, AβB42 0.12, HNRNPUL1 0.09, KRAS 0.89, HECTD1 0.92, NKX3-1 0.93).
-- Structure tokens were quantized LOCALLY (the `torch_geometric` path) and sliced to the assay region
-  `tokens[offset:offset+L]`; only pre-quantized tokens shipped to Kaggle.
-- |Spearman| is direction-robust (MaveDB does not standardize per-assay score direction).
+- **N=76** held-out human assays: gene NOT in ProteinGym, UniProt + AlphaFold, seq ≤ 1022, non-giant
+  structure, and **verified sequence identity ≥ 0.95** between the assay sequence and the AlphaFold structure
+  at the MaveDB offset (all 76 ≥ 0.958). The identity gate now runs at manifest BUILD time
+  (`build_holdout_hybrid_manifest.struct_identity`), before quantize — a length fit is not an alignment.
+- Structure tokens quantized LOCALLY and sliced to the assay region `tokens[offset:offset+L]`; only
+  pre-quantized tokens shipped to Kaggle (no `torch_geometric` on Kaggle).
 - The hybrid is an equal-weight rank-average — no fitting, no calibration (the deployability class of the
   shipped `rank_average_hybrid`).
+- |Spearman| is direction-robust (MaveDB does not standardize per-assay score direction).
 
-Reproduce: `scripts/build_holdout_hybrid_manifest.py` (manifest + local quantize) →
+## The debugging arc that produced the first number (kept for the record)
+
+The first run of this pipeline took 4 attempts because ProSST scored ~0.04–0.08 (chance) on Kaggle while
+scoring 0.60 locally. Root cause: `trust_remote_code` runs the model repo's `modeling_prosst.py` against the
+**installed** transformers, and Kaggle's newer transformers broke structure conditioning; pinning
+`transformers==5.13.0` fixed it (the decoder-tie and remote-code-revision fixes were verified-correct and NOT
+the cause). A `prosst_degenerate` guard (median < 0.10 → "INVALID, do NOT publish") blocked the three broken
+runs from ever being reported. Full arc + the three failed-run artifacts (`*_run1/2/3`) retained as evidence.
+Reusable lesson: `feedback_trust_remote_code_library_version_drift`.
+
+Reproduce: `scripts/build_holdout_hybrid_manifest.py` (manifest + local quantize + identity gate) →
 `notebooks/mavedb_holdout_hybrid_kaggle.py` (inject manifest, push via `scripts/kaggle_push_poll.py --gpu`).
-Artifacts: `wiki/mavedb_holdout_hybrid_2026-07-23.json` (with computed paired stats) + the three failed-run
-artifacts kept as evidence (`*_run1_broken_prosst`, `*_run2_tied_still_degenerate`, `*_run3_pinned_still_degenerate`).
+Artifact: `wiki/mavedb_holdout_hybrid_2026-07-23.json` (N=76, with computed paired stats + sign test).
