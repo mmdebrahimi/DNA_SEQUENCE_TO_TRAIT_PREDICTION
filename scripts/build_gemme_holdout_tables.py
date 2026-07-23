@@ -10,7 +10,12 @@ MSA (cached, single-query etiquette), run GEMME in Docker, keep the GEMME score 
 single-missense variants (ASSAY-LOCAL numbering, the same the manifest/Kaggle use). Checkpointed per protein
 to wiki/gemme_holdout_tables.json (restartable). GEMME work dirs go to D: (C: is disk-tight).
 
-  MSYS_NO_PATHCONV=1 uv run python scripts/build_gemme_holdout_tables.py --limit 30
+  MSYS_NO_PATHCONV=1 uv run python scripts/build_gemme_holdout_tables.py --limit 90
+
+Restartable: checkpoints per protein, skips already-done urns -> safe to re-run after any stop. STOP a
+background run via the harness TaskStop (its task id), NOT `taskkill //IM python.exe` -- taskkill races a
+`run_in_background` uv process (it kept checkpointing 17->29 after a taskkill on 2026-07-23) AND blindly
+kills unrelated python. See feedback_nohup_ghost_and_uv_with_concurrency.
 
 Frozen AMR surface byte-unchanged (READ-only).
 """
