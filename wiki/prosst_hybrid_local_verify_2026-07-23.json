@@ -1,0 +1,17 @@
+{
+  "verdict": "WALL_CLOSED",
+  "uniprot": "P61024",
+  "gene": "CKS1B",
+  "reproduction_match": 1.0,
+  "reproduction_ok": true,
+  "n_tokens_compared": 79,
+  "prosst_logratio_stdev": 2.1972,
+  "prosst_nondegenerate": true,
+  "n_mutants_scored": 15,
+  "with_esm": false,
+  "n_shared_with_esm2": 0,
+  "hybrid_example": null,
+  "vocab": 2048,
+  "date": "2026-07-23",
+  "deps": "torch_geometric + torch_scatter shim + biotite + pathos + AI4Protein/ProSST repo (D:)"
+}

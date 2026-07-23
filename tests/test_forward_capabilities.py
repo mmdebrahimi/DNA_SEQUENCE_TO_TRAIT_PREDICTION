@@ -13,14 +13,14 @@ from dna_decode.forward.capabilities import (
     METHOD_STRENGTH,
 )
 
-ALL = {"torch": True, "transformers": True, "prosst": True, "docker": True}
-NONE = {"torch": False, "transformers": False, "prosst": False, "docker": False}
-ESM_ONLY = {"torch": True, "transformers": True, "prosst": False, "docker": False}
+ALL = {"torch": True, "transformers": True, "torch_geometric": True, "prosst_repo": True, "docker": True}
+NONE = {"torch": False, "transformers": False, "torch_geometric": False, "prosst_repo": False, "docker": False}
+ESM_ONLY = {"torch": True, "transformers": True, "torch_geometric": False, "prosst_repo": False, "docker": False}
 
 
-def test_probe_returns_the_four_keys():
+def test_probe_returns_the_expected_keys():
     caps = probe_capabilities()
-    assert set(caps) == {"torch", "transformers", "prosst", "docker"}
+    assert set(caps) == {"torch", "transformers", "torch_geometric", "prosst_repo", "docker"}
     assert all(isinstance(v, bool) for v in caps.values())
 
 
@@ -31,24 +31,26 @@ def test_blosum_always_runnable():
 
 def test_esm2_needs_torch_and_transformers():
     assert runnable_methods(ESM_ONLY)["esm2"][0] is True
-    assert runnable_methods({"torch": True, "transformers": False, "prosst": False, "docker": False})["esm2"][0] is False
+    assert runnable_methods({**NONE, "torch": True})["esm2"][0] is False   # transformers missing
     assert runnable_methods(NONE)["esm2"][0] is False
 
 
-def test_prosst_needs_esm_deps_plus_prosst_lib():
+def test_prosst_needs_esm_deps_plus_geometric_and_repo():
     assert runnable_methods(ALL)["prosst"][0] is True
-    assert runnable_methods(ESM_ONLY)["prosst"][0] is False  # prosst lib missing
+    assert runnable_methods(ESM_ONLY)["prosst"][0] is False                       # no torch_geometric/repo
+    assert runnable_methods({**ALL, "prosst_repo": False})["prosst"][0] is False   # repo absent
+    assert runnable_methods({**ALL, "torch_geometric": False})["prosst"][0] is False  # geometric absent
 
 
 def test_gemme_needs_docker():
-    assert runnable_methods({"torch": False, "transformers": False, "prosst": False, "docker": True})["gemme"][0] is True
+    assert runnable_methods({**NONE, "docker": True})["gemme"][0] is True
     assert runnable_methods(NONE)["gemme"][0] is False
 
 
 def test_hybrid_needs_two_of_three():
     assert runnable_methods(ALL)["hybrid"][0] is True                       # esm2+prosst+gemme
     assert runnable_methods(ESM_ONLY)["hybrid"][0] is False                 # only esm2
-    assert runnable_methods({"torch": True, "transformers": True, "prosst": False, "docker": True})["hybrid"][0] is True  # esm2+gemme
+    assert runnable_methods({**ESM_ONLY, "docker": True})["hybrid"][0] is True  # esm2+gemme
 
 
 def test_strongest_runnable_orders_by_strength():

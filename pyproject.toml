@@ -101,6 +101,20 @@ forward = [
     "transformers>=5",
 ]
 
+# ProSST STRUCTURE quantizer stack (the --method prosst/hybrid path that scores from a raw 3D structure).
+# Composes with [forward] (install BOTH: `uv sync --extra forward --extra prosst`). These are the reliably
+# pip-able parts; the quantizer ALSO needs (manual, one-time): (1) the cloned AI4Protein/ProSST repo at
+# $PROSST_REPO (default D:/prosst_repo) — it bundles the GVP AE.pt + {vocab}.joblib checkpoints; and (2) a
+# torch_scatter usable with your torch (recent torch_geometric uses torch-native scatter, so a pure-python
+# shim suffices on Windows/CPU). Verified end-to-end on this host 2026-07-23: local quantize reproduces the
+# committed manifest's reference tokens 79/79 (wiki/prosst_hybrid_local_verify_2026-07-23.json). ProSST's
+# transformer-only path (pre-quantized structure_tokens=) needs only [forward] — no torch_geometric.
+prosst = [
+    "torch_geometric>=2.5",
+    "biotite>=1.0",
+    "pathos>=0.3",
+]
+
 # Heavy foundation-model stack — ONLY for the embedding/foundation-model track
 # (a closed 0-for-4 negative; NOT the shipped deterministic decoder). Multi-GB +
 # platform-specific (triton). `uv sync --extra ml` to populate. Split out 2026-06-24

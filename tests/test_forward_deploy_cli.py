@@ -16,8 +16,8 @@ from dna_decode.forward.deploy import predict_effect_deployable
 import dna_decode.forward.cli as fcli
 
 SEQ = "MKVLAAGGWY"                      # 10-aa toy protein
-ALL = {"torch": True, "transformers": True, "prosst": True, "docker": True}
-NONE = {"torch": False, "transformers": False, "prosst": False, "docker": False}
+ALL = {"torch": True, "transformers": True, "torch_geometric": True, "prosst_repo": True, "docker": True}
+NONE = {"torch": False, "transformers": False, "torch_geometric": False, "prosst_repo": False, "docker": False}
 
 
 def _cheap_esm_table(seq):

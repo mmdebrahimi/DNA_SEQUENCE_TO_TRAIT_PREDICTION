@@ -12,7 +12,9 @@ Docker), so calling it costs nothing and never triggers a model download.
 from __future__ import annotations
 
 import importlib.util
+import os
 import shutil
+from pathlib import Path
 
 # The ordering IS the strength ranking (measured, wiki/mavedb_holdout_hybrid_2026-07-23.md):
 # hybrid ~ prosst > esm2 > alphamissense >> blosum62. `auto` picks the strongest RUNNABLE one.
@@ -21,8 +23,8 @@ METHOD_STRENGTH = ["hybrid", "prosst", "esm2", "gemme", "alphamissense", "blosum
 # per-method install hint shown when a method is NOT runnable
 _INSTALL_HINT = {
     "esm2": "pip install 'dna-decode[forward]'  (torch + transformers>=5)",
-    "prosst": ("pip install 'dna-decode[forward]' + torch_geometric + torch_scatter + the AI4Protein/ProSST "
-               "repo (structure quantizer; heavy/platform-specific)  (+ a structure: --uniprot / --pdb)"),
+    "prosst": ("pip install 'dna-decode[forward,prosst]' + clone AI4Protein/ProSST to $PROSST_REPO "
+               "(structure quantizer)  (+ a structure: --uniprot / --pdb)"),
     "gemme": "install Docker Desktop (image elodielaine/gemme:gemme)  (+ an MSA: --msa)",
     "hybrid": "needs >=2 of {esm2, prosst, gemme} runnable",
     "alphamissense": "supply --am-table (precomputed AlphaMissense scores)",
@@ -36,12 +38,23 @@ def _has(mod: str) -> bool:
         return False
 
 
+def _prosst_repo_present() -> bool:
+    """The ProSST quantizer is a CLONED repo (not a pip package) at $PROSST_REPO; detect its entrypoint."""
+    repo = Path(os.environ.get("PROSST_REPO", "D:/prosst_repo"))
+    return (repo / "prosst" / "structure" / "get_sst_seq.py").exists()
+
+
 def probe_capabilities() -> dict:
-    """Detect the heavy dependencies present on this host. Cheap: no imports of torch, no Docker calls."""
+    """Detect the heavy dependencies present on this host. Cheap: no imports of torch, no Docker calls.
+
+    `prosst` is the FULL structure-quantizer stack (torch_geometric + the cloned AI4Protein/ProSST repo),
+    NOT a pip package — the transformer-only path (pre-quantized tokens) needs only torch+transformers.
+    """
     return {
         "torch": _has("torch"),
         "transformers": _has("transformers"),
-        "prosst": _has("prosst"),
+        "torch_geometric": _has("torch_geometric"),
+        "prosst_repo": _prosst_repo_present(),
         "docker": shutil.which("docker") is not None,
     }
 
@@ -54,7 +67,8 @@ def runnable_methods(caps: dict | None = None) -> dict:
     """
     caps = caps if caps is not None else probe_capabilities()
     esm2_ok = caps["torch"] and caps["transformers"]
-    prosst_ok = esm2_ok and caps["prosst"]
+    # prosst FULL path = esm2 deps + torch_geometric + the cloned quantizer repo
+    prosst_ok = esm2_ok and caps.get("torch_geometric", False) and caps.get("prosst_repo", False)
     gemme_ok = caps["docker"]
     n_hybrid = sum([esm2_ok, prosst_ok, gemme_ok])
     hybrid_ok = n_hybrid >= 2
@@ -90,8 +104,8 @@ def render_capabilities(caps: dict | None = None) -> str:
     rm = runnable_methods(caps)
     lines = ["forward variant-effect - capability preflight", ""]
     lines.append("  installed dependencies:")
-    for dep in ("torch", "transformers", "prosst", "docker"):
-        lines.append(f"    {'YES' if caps[dep] else 'no ':>4}  {dep}")
+    for dep in ("torch", "transformers", "torch_geometric", "prosst_repo", "docker"):
+        lines.append(f"    {'YES' if caps.get(dep) else 'no ':>4}  {dep}")
     lines.append("")
     lines.append("  runnable methods (strongest first):")
     for m in METHOD_STRENGTH:
