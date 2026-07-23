@@ -166,6 +166,7 @@ def _delegate(trait: str, rest: list[str]) -> int:
 # Cross-decoder ANALYSES (compose the decoders; NOT new traits/DBs — kept out of TRAITS so the
 # decoder registry contract stays the 5-decoder set).
 ANALYSES = {
+    "decode": "ROUTER: point at any file (FASTA/VCF) -> which decoders apply + the exact command for each",
     "concordance": "AMR cross-tool concordance (AMRFinder vs ResFinder acquired-gene calls)",
     "profile": "unified genome profile - run all assembly-FASTA decoders in one report",
     "coloc": "resistance-gene x plasmid co-localization (is this acquired AMR gene plasmid-borne?)",
@@ -218,6 +219,17 @@ def main(argv=None) -> int:
         return 0
     if trait == "list":
         return _print_list()
+    if trait == "decode":
+        # input-aware router: `dna-decode decode <file>` -> which decoders apply + the exact commands.
+        rest = argv[1:]
+        if not rest or rest[0] in ("-h", "--help"):
+            print("usage: dna-decode decode <input.fasta|input.vcf>\n"
+                  "  Detects the input kind (nucleotide/protein FASTA or VCF) and lists every applicable\n"
+                  "  decoder with its claim, honest tier, and the exact command to run.")
+            return 0
+        from dna_decode.decode_router import render_decode_plan
+        print(render_decode_plan(rest[0]))
+        return 0
     if trait not in TRAITS and trait not in ANALYSES:
         ap.error(f"unknown subcommand {trait!r}; traits: {', '.join(TRAITS)}; "
                  f"analyses: {', '.join(ANALYSES)} (or `list`)")
