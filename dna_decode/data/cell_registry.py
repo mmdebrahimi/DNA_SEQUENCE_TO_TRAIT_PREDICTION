@@ -465,7 +465,11 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "SIGNIFICANT, confirmed by doubling N from 38; read the PAIRED delta, not the medians). "
             "So the deployable METHOD RANKING on held-out data is hybrid > prosst > esm2 > alphamissense "
             "> blosum62, while the CLI default stays blosum62 because it is the only wheel-only, "
-            "no-model, no-structure option"),
+            "no-model, no-structure option. ADDING EVOLUTION (the GEMME 3rd modality via the finalized "
+            "Docker toolchain, TEM-1 0.719): on the held-out GEMME-covered subset (N=25) the 3-way "
+            "ESM2+GEMME+ProSST beats the 2-way 21/25 (sign-p=0.0005) + beats GEMME-alone 22/25 -- adding "
+            "evolution LIFTS the hybrid, and the three modalities (sequence/evolution/structure) are "
+            "complementary (wiki/gemme_threeway_holdout_2026-07-23.md)"),
         label_provenance=(
             "ProteinGym deep-mutational-scanning assays (free, published wet-lab per-variant fitness; "
             "BLAT_ECOLX_Stiffler_2015 + Firnberg_2014 + Deng_2012 + Jacquier_2013, PTEN_HUMAN_Mighell_2018, "

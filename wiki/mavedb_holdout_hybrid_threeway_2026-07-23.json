@@ -16,15 +16,19 @@
   },
   "transformers_pin": "5.13.0",
   "threeway": {
-    "n_gemme_covered": 13,
-    "median_esm2": 0.3855,
-    "median_prosst": 0.4106,
-    "median_gemme": 0.5084,
-    "median_hybrid2": 0.4229,
-    "median_hybrid3": 0.4977,
-    "paired_hybrid3_gt_hybrid2": 10,
-    "paired_hybrid3_gt_gemme": 11,
-    "paired_gemme_gt_hybrid2": 3
+    "n_gemme_covered": 25,
+    "median_esm2": 0.5125,
+    "median_prosst": 0.5687,
+    "median_gemme": 0.5562,
+    "median_hybrid2": 0.5752,
+    "median_hybrid3": 0.5929,
+    "paired_hybrid3_gt_hybrid2": 21,
+    "paired_hybrid3_gt_gemme": 22,
+    "paired_gemme_gt_hybrid2": 6,
+    "sign_p_hybrid3_gt_hybrid2": 0.000455,
+    "sign_p_hybrid3_gt_gemme": 7.8e-05,
+    "median_delta_hybrid3_minus_hybrid2": 0.0177,
+    "note": "N=25 GEMME-covered (up from N=13 in the first 3-way run); adding evolution lifts the hybrid DECISIVELY: 3-way>2-way 21/25 sign-p=0.00046 (was 10/13 p=0.046) -- doubling the GEMME set tightened the p ~100x, direction held (84% win). 3-way beats BOTH 2-way and GEMME-alone; GEMME contributes orthogonal signal (GEMME-alone>2-way only 6/25). Within-subset comparison; the covered subset is less-hard than the N=13 one (2-way baseline 0.575 vs 0.423)."
   },
   "hybrid_wins_vs_best_single": 53,
   "skipped": {
@@ -383,7 +387,9 @@
       "esm2": 0.5125,
       "prosst": 0.6135,
       "hybrid": 0.5964,
-      "has_gemme": false
+      "gemme": 0.5747,
+      "hybrid3": 0.6087,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00001106-a-1",
@@ -392,7 +398,9 @@
       "esm2": 0.5697,
       "prosst": 0.6623,
       "hybrid": 0.6636,
-      "has_gemme": false
+      "gemme": 0.6579,
+      "hybrid3": 0.6826,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000107-b-1",
@@ -412,7 +420,9 @@
       "esm2": 0.4277,
       "prosst": 0.5687,
       "hybrid": 0.5616,
-      "has_gemme": false
+      "gemme": 0.4815,
+      "hybrid3": 0.5851,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000958-a-1",
@@ -421,7 +431,9 @@
       "esm2": 0.6285,
       "prosst": 0.6267,
       "hybrid": 0.6678,
-      "has_gemme": false
+      "gemme": 0.6446,
+      "hybrid3": 0.6897,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000789-a-1",
@@ -430,7 +442,9 @@
       "esm2": 0.3599,
       "prosst": 0.4661,
       "hybrid": 0.4475,
-      "has_gemme": false
+      "gemme": 0.4883,
+      "hybrid3": 0.4791,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000948-a-1",
@@ -439,7 +453,9 @@
       "esm2": 0.6166,
       "prosst": 0.724,
       "hybrid": 0.7115,
-      "has_gemme": false
+      "gemme": 0.6422,
+      "hybrid3": 0.7069,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00001062-a-1",
@@ -448,7 +464,9 @@
       "esm2": 0.678,
       "prosst": 0.7339,
       "hybrid": 0.7527,
-      "has_gemme": false
+      "gemme": 0.731,
+      "hybrid3": 0.7653,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00001150-a-1",
@@ -457,7 +475,9 @@
       "esm2": 0.5796,
       "prosst": 0.6237,
       "hybrid": 0.6398,
-      "has_gemme": false
+      "gemme": 0.5893,
+      "hybrid3": 0.6682,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000767-a-1",
@@ -466,7 +486,9 @@
       "esm2": 0.5377,
       "prosst": 0.621,
       "hybrid": 0.601,
-      "has_gemme": false
+      "gemme": 0.6122,
+      "hybrid3": 0.6224,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000836-a-1",
@@ -475,7 +497,9 @@
       "esm2": 0.4941,
       "prosst": 0.609,
       "hybrid": 0.6177,
-      "has_gemme": false
+      "gemme": 0.6397,
+      "hybrid3": 0.6505,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00001149-a-1",
@@ -484,7 +508,9 @@
       "esm2": 0.7009,
       "prosst": 0.746,
       "hybrid": 0.7535,
-      "has_gemme": false
+      "gemme": 0.6868,
+      "hybrid3": 0.768,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000737-a-1",
@@ -493,7 +519,9 @@
       "esm2": 0.52,
       "prosst": 0.7045,
       "hybrid": 0.6847,
-      "has_gemme": false
+      "gemme": 0.6446,
+      "hybrid3": 0.7046,
+      "has_gemme": true
     },
     {
       "urn": "urn:mavedb:00000742-a-1",

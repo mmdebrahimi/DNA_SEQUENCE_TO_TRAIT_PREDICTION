@@ -22,23 +22,28 @@ proteins and shipped as a **Kaggle dataset** (mirroring the ProSST pre-quantized
 hybrid notebook loads them and computes the **3-way ESM2+GEMME+ProSST rank-average** where GEMME covers every
 scored variant, comparing 2-way vs 3-way PAIRED on that subset.
 
-**Result (N=13 GEMME-covered held-out proteins; 4 of 17 had partial variant coverage → excluded):**
+**Result — N GROWN 13 → 25 (29 GEMME tables shipped; 25 with full variant coverage). The larger run
+CONFIRMS + TIGHTENS the finding ~100×.**
 
-| Decoder | median \|Spearman\| (on this subset) |
+| Decoder | median \|Spearman\| (N=25 subset) |
 |---|---|
-| ESM2 | 0.386 |
-| ProSST | 0.411 |
-| GEMME | 0.508 |
-| **2-way (ESM2+ProSST)** | 0.423 |
-| **3-way (ESM2+GEMME+ProSST)** | **0.498** |
+| ESM2 | (subset) |
+| GEMME | 0.556 |
+| **2-way (ESM2+ProSST)** | 0.575 |
+| **3-way (ESM2+GEMME+ProSST)** | **0.593** |
 
 **PAIRED (the correct statistic):**
 
-| Comparison | paired wins | sign-test p |
+| Comparison | N=13 (first run) | **N=25 (larger run)** |
 |---|---|---|
-| **3-way > 2-way** | **10/13** | **0.046** |
-| **3-way > GEMME-alone** | **11/13** | **0.011** |
-| GEMME-alone > 2-way | 3/13 | — |
+| **3-way > 2-way** | 10/13, p=0.046 | **21/25, p=0.00046** |
+| **3-way > GEMME-alone** | 11/13, p=0.011 | **22/25, p=8e-05** |
+| GEMME-alone > 2-way | 3/13 | 6/25 |
+
+Doubling the GEMME set took the 3-way-beats-2-way result from *marginal* (p=0.046) to *highly significant*
+(p=0.00046) — the direction held (84% win, 21/25) and the p dropped ~100×. The median lift is +0.018.
+(The N=25 covered subset is less-hard than the N=13 one — 2-way baseline 0.575 vs 0.423 — because more
+higher-signal proteins are included; the within-subset comparison is what matters.)
 
 ## Findings
 
@@ -49,9 +54,10 @@ scored variant, comparing 2-way vs 3-way PAIRED on that subset.
    3/13 (its higher median is inflated by a few big wins, e.g. MLH1 2-way 0.375 → 3-way 0.523). Yet the 3-way
    beats BOTH the 2-way AND GEMME-alone significantly — evolution adds information the sequence+structure pair
    misses. The three modalities (sequence ⊕ evolution ⊕ structure) are complementary.
-3. **The lift is modest, N is small — reported honestly.** N=13 with p=0.046 is marginally significant, not
-   overwhelming; the median delta (+0.015) is small because a few low-signal proteins (CXCR4 0.05, RAS 0.15,
-   MTHFR) are where GEMME slightly hurts. The direction is clear and significant; the magnitude is modest.
+3. **The lift is modest in magnitude but now HIGHLY significant.** The median delta is +0.018 (small — a few
+   low-signal proteins like CXCR4 0.05, RAS 0.15 are where GEMME slightly hurts), but at N=25 the direction is
+   decisive (21/25, p=0.00046). The larger run (user-directed "toward the full 90 to tighten the p-value")
+   did exactly that: the first N=13 run was marginal (p=0.046); doubling the GEMME set confirmed it at p<0.001.
 
 ## Honest scope
 
