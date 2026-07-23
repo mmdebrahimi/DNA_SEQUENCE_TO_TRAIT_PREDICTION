@@ -44,6 +44,7 @@ import json
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date as _date
@@ -57,6 +58,24 @@ from scripts.mavedb_prospective_holdout import parse_hgvs_pro, proteingym_gene_s
 MAVEDB = "https://api.mavedb.org/api/v1"
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 CLINVAR_CACHE = Path("D:/dna_decode_cache/clinvar/eutils")
+import os  # noqa: E402
+_NCBI_KEY = os.environ.get("NCBI_API_KEY", "")
+
+
+def _eutils_get(url: str, tries: int = 5) -> str:
+    """GET an NCBI E-utilities URL with 429/5xx exponential backoff (the rate-limit that killed the census).
+    Appends an api_key if NCBI_API_KEY is set (lifts the limit 3->10 req/s). PURE-ish (network + sleep)."""
+    if _NCBI_KEY and "api_key=" not in url:
+        url += ("&" if "?" in url else "?") + f"api_key={_NCBI_KEY}"
+    for attempt in range(tries):
+        try:
+            with urllib.request.urlopen(url, timeout=60) as r:
+                return r.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 502, 503) and attempt < tries - 1:
+                time.sleep(1.5 * (2 ** attempt))  # 1.5, 3, 6, 12s
+                continue
+            raise
 
 _AA3 = {"Ala": "A", "Arg": "R", "Asn": "N", "Asp": "D", "Cys": "C", "Gln": "Q", "Glu": "E", "Gly": "G",
         "His": "H", "Ile": "I", "Leu": "L", "Lys": "K", "Met": "M", "Phe": "F", "Pro": "P", "Ser": "S",
@@ -157,19 +176,18 @@ def fetch_clinvar_missense(gene: str, use_cache: bool = True) -> dict[tuple[str,
 
     def esearch(term: str) -> list[str]:
         q = urllib.parse.urlencode({"db": "clinvar", "term": term, "retmax": 500, "retmode": "json"})
-        with urllib.request.urlopen(f"{EUTILS}/esearch.fcgi?{q}", timeout=60) as r:
-            return json.loads(r.read().decode())["esearchresult"].get("idlist", [])
+        return json.loads(_eutils_get(f"{EUTILS}/esearch.fcgi?{q}"))["esearchresult"].get("idlist", [])
 
     def esummary(ids: list[str]) -> dict:
         q = urllib.parse.urlencode({"db": "clinvar", "id": ",".join(ids), "retmode": "json"})
-        with urllib.request.urlopen(f"{EUTILS}/esummary.fcgi?{q}", timeout=60) as r:
-            return json.loads(r.read().decode())["result"]
+        return json.loads(_eutils_get(f"{EUTILS}/esummary.fcgi?{q}"))["result"]
 
     labels: dict[tuple[str, int, str], str] = {}
     for sig, tag in (("pathogenic", "PATH"), ("benign", "BENIGN")):
         term = (f'{gene}[gene] AND "missense variant"[molecular consequence] '
                 f'AND "{sig}"[clinical significance]')
         ids = esearch(term)
+        time.sleep(0.4)
         for i in range(0, min(len(ids), 500), 100):
             for uid, rec in esummary(ids[i:i + 100]).items():
                 if uid == "uids":
@@ -181,7 +199,7 @@ def fetch_clinvar_missense(gene: str, use_cache: bool = True) -> dict[tuple[str,
                 wt3, pos, alt3 = m.group(1), int(m.group(2)), m.group(3)
                 if wt3 in _AA3 and alt3 in _AA3:
                     labels[(_AA3[wt3], pos, _AA3[alt3])] = tag
-            time.sleep(0.34)  # NCBI 3 req/s courtesy limit
+            time.sleep(0.5)  # NCBI courtesy pacing (< 3 req/s without an api_key)
     if use_cache:
         cache.parent.mkdir(parents=True, exist_ok=True)
         cache.write_text(json.dumps({json.dumps(list(k)): v for k, v in labels.items()}), encoding="utf-8")
