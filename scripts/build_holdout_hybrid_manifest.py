@@ -41,14 +41,37 @@ MAX_STRUCT = 1400   # cap the FULL-protein AlphaFold structure size -- a domain 
                     # protein (OBSCN ~7900aa, HECTD1 ~2600aa) makes ProSST quantize wedge; skip those.
 
 
-def _pdb_residue_count(pdb_path: Path) -> int:
-    """Count CA atoms (= residues) in an AlphaFold PDB -- a cheap size guard before the slow quantize."""
-    n = 0
+MIN_STRUCT_IDENTITY = 0.95   # assay seq must MATCH the AlphaFold structure at the offset, not merely fit by length
+
+_A3 = {"ALA": "A", "ARG": "R", "ASN": "N", "ASP": "D", "CYS": "C", "GLN": "Q", "GLU": "E", "GLY": "G",
+       "HIS": "H", "ILE": "I", "LEU": "L", "LYS": "K", "MET": "M", "PHE": "F", "PRO": "P", "SER": "S",
+       "THR": "T", "TRP": "W", "TYR": "Y", "VAL": "V"}
+
+
+def _pdb_ca_sequence(pdb_path: Path) -> str:
+    """Per-residue 1-letter sequence from an AlphaFold PDB's CA atoms (order = residue order)."""
+    out = []
     with open(pdb_path, encoding="utf-8", errors="replace") as fh:
         for ln in fh:
             if ln.startswith("ATOM") and ln[12:16].strip() == "CA":
-                n += 1
-    return n
+                out.append(_A3.get(ln[17:20].strip(), "X"))
+    return "".join(out)
+
+
+def _pdb_residue_count(pdb_path: Path) -> int:
+    """Count CA atoms (= residues) in an AlphaFold PDB -- a cheap size guard before the slow quantize."""
+    return len(_pdb_ca_sequence(pdb_path))
+
+
+def struct_identity(assay_seq_str: str, pdb_path: Path, offset: int) -> float:
+    """Fraction of positions where the assay sequence matches the structure's residues at [offset:offset+L].
+    A LENGTH match is not an alignment -- run-3's manifest carried 7 assays that fit by length but encoded a
+    different region (PSD95 0.06, OSTF1 0.05, AB42 0.12), which feeds ProSST a mismatched structure. PURE."""
+    ps = _pdb_ca_sequence(pdb_path)
+    region = ps[offset:offset + len(assay_seq_str)]
+    if len(region) != len(assay_seq_str) or not region:
+        return 0.0
+    return sum(1 for a, b in zip(assay_seq_str, region) if a == b) / len(region)
 
 _AA3TO1 = {"Ala": "A", "Arg": "R", "Asn": "N", "Asp": "D", "Cys": "C", "Gln": "Q", "Glu": "E", "Gly": "G",
            "His": "H", "Ile": "I", "Leu": "L", "Lys": "K", "Met": "M", "Phe": "F", "Pro": "P", "Ser": "S",
@@ -124,6 +147,11 @@ def main() -> int:
             if nres > MAX_STRUCT:
                 print(f"  {g:12s} SKIP giant structure ({up}, {nres} residues > {MAX_STRUCT})", flush=True)
                 continue
+            # SEQUENCE-IDENTITY GATE (before the slow quantize): a length fit is NOT an alignment.
+            ident = struct_identity(seq, pdb, off)
+            if ident < MIN_STRUCT_IDENTITY:
+                print(f"  {g:12s} SKIP misaligned (identity {ident:.2f} < {MIN_STRUCT_IDENTITY})", flush=True)
+                continue
             toks_full = struct_tokens(up)   # cached per uniprot on D:
             if not toks_full:
                 print(f"  {g:12s} SKIP quantize failed ({up})", flush=True)
@@ -134,7 +162,8 @@ def main() -> int:
                       f"(full={len(toks_full)})", flush=True)
                 continue
             manifest[urn] = {"gene": g, "uniprot": up, "offset": off, "seq_len": len(seq),
-                             "n_tokens": len(sliced), "structure_tokens": sliced}
+                             "n_tokens": len(sliced), "structure_tokens": sliced,
+                             "struct_identity": round(ident, 3)}
             MANIFEST.write_text(json.dumps(manifest), encoding="utf-8")   # checkpoint every gene (restartable)
             print(f"  {g:12s} OK  len={len(seq)} off={off} tokens={len(sliced)}  [{len(manifest)} total]", flush=True)
         except Exception as e:  # noqa: BLE001
