@@ -164,6 +164,59 @@ def render_decode_plan(path: str | Path) -> str:
     return "\n".join(lines)
 
 
+# --- decode --run: actually RUN the auto-runnable decoders for the input kind ---------------------------
+# Auto-run policy: a decoder is auto-run only when it needs NO extra required arg beyond the file AND its
+# path is offline-safe (or degrades cleanly). The rest are REPORTED with the exact command + why they were
+# not auto-run (need a --mutation / --gene / a standalone script). Honest: never guess a required parameter.
+
+def _default_runner(trait: str, argv: list[str]) -> int:
+    """Delegate to the unified CLI's decoder dispatch (injectable so tests never shell out)."""
+    from dna_decode.cli import _delegate
+    return _delegate(trait, argv)
+
+
+def run_decode_plan(path: str | Path, *, runner=None, sample_id: str | None = None) -> int:
+    """Detect the input kind and RUN the auto-runnable decoders (report the rest). Returns an exit code
+    (0 = every auto-run decoder succeeded; non-zero = at least one auto-run decoder failed)."""
+    runner = runner or _default_runner
+    p = Path(path)
+    kind = detect_input_kind(p)
+    sample_id = sample_id or p.stem
+    labels = {"vcf_human": "human VCF", "protein_fasta": "protein FASTA",
+              "nucleotide_fasta": "nucleotide FASTA (genome / CDS)", "unknown": "unrecognized"}
+    print(f"dna-decode: input '{p.name}' detected as {labels.get(kind, kind)} -- running applicable decoders\n")
+
+    rc = 0
+    if kind == "nucleotide_fasta":
+        # the genome decoders are exactly what `profile` auto-runs, offline-safe (a missing DB/blastn/Docker
+        # marks just that section unavailable). Reuse it rather than re-implement the per-decoder run.
+        print(f"=== genome profile (pathotype + plasmid + serotype + resfinder + pointfinder + amr) ===")
+        rc = runner("profile", [str(p), "--sample-id", sample_id]) or rc
+        print("\n  note: sections needing blastn / a DB / Docker show 'unavailable' offline -- install the "
+              "tool/DB or run the per-decoder command from `dna-decode decode` to enable them.")
+
+    elif kind == "protein_fasta":
+        print("=== inverse design (effect -> candidate edits; blosum62, offline) ===")
+        rc = runner("inverse", ["--protein-fasta", str(p), "--target-percentile", "0.05", "--top-k", "5"]) or rc
+        print("\n=== forward (edit -> effect): NOT auto-run -- needs a specific --mutation ===")
+        print(f"  run: dna-decode forward --mutation <M69L> --protein-fasta {p.name}  "
+              f"(add --method auto for the strongest learned method this host can run)")
+
+    elif kind == "vcf_human":
+        print("  human VCF decoders need an explicit target -- not auto-run (never guess a gene):")
+        print(f"  - dna-decode pgx --gene CYP2C19 --vcf {p.name}   (also CYP2C9 / VKORC1)")
+        print(f"  - dna-clinvar --vcf {p.name}                     (curated ClinVar calls; standalone script)")
+        print(f"  - dna-hla     --vcf {p.name}                     (HLA typing; standalone script)")
+
+    else:
+        print("  No decoder recognizes this input kind. Supported: a nucleotide/protein FASTA, or a VCF.")
+        return 0
+
+    print("\n  Honest scope: each decoder emits its own trust surface + abstains when out-of-scope; "
+          "`dna-decode decode <file>` (no --run) lists every applicable command.")
+    return rc
+
+
 def _forward_capability_hint() -> str:
     """One-line hint: which learned variant-effect methods THIS host can run (deployability, cheap probe)."""
     try:

@@ -24,14 +24,17 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 Have a file and don't know which of the ~20 decoders apply? Ask the router:
 
 ```
-dna-decode decode my_genome.fna     # -> the applicable decoders + the exact command for each
-dna-decode decode my_protein.fasta  # -> forward (edit->effect) / inverse (effect->edit)
-dna-decode decode my_sample.vcf     # -> pgx / clinvar / hla (human)
+dna-decode decode my_genome.fna         # -> the applicable decoders + the exact command for each
+dna-decode decode my_protein.fasta      # -> forward (edit->effect) / inverse (effect->edit)
+dna-decode decode my_sample.vcf         # -> pgx / clinvar / hla (human)
+dna-decode decode my_genome.fna --run   # -> actually RUN the auto-runnable decoders, one report
 ```
 
 It sniffs the input kind (nucleotide/protein FASTA or VCF), lists every applicable decoder with its
-one-line claim + honest evidence tier, and prints the command to run each. `dna-decode list` is the full
-per-trait validation surface; `dna-decode profile <genome>` auto-runs every genome decoder in one report.
+one-line claim + honest evidence tier, and prints the command to run each. Add **`--run`** to execute the
+auto-runnable decoders in one report (genome -> the `profile` suite; protein -> `inverse`), reporting the
+ones that need a specific parameter (`--mutation` / `--gene`) instead of guessing. `dna-decode list` is the
+full per-trait validation surface.
 
 ## What it decodes (v0.8.0)
 

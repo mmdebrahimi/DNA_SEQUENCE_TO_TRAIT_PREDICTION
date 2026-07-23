@@ -4,7 +4,9 @@ Pure file-sniff + grounded table + registry read. No network, no decoder executi
 """
 from __future__ import annotations
 
-from dna_decode.decode_router import detect_input_kind, applicable_decoders, render_decode_plan, DECODERS
+from dna_decode.decode_router import (
+    detect_input_kind, applicable_decoders, render_decode_plan, run_decode_plan, DECODERS,
+)
 
 
 def test_detect_vcf(tmp_path):
@@ -73,6 +75,81 @@ def test_render_plan_unknown_is_honest(tmp_path):
     f.write_text("nonsense\n", encoding="utf-8")
     out = render_decode_plan(f)
     assert "No decoder recognizes" in out
+
+
+class _RecordRunner:
+    """Injectable runner: records (trait, argv) calls instead of executing a real decoder."""
+    def __init__(self, rc=0):
+        self.calls = []
+        self.rc = rc
+
+    def __call__(self, trait, argv):
+        self.calls.append((trait, argv))
+        return self.rc
+
+
+def test_run_protein_invokes_inverse(tmp_path):
+    f = tmp_path / "p.fasta"
+    f.write_text(">P\nMEEPQSDPSVEPP\n", encoding="utf-8")
+    r = _RecordRunner()
+    rc = run_decode_plan(f, runner=r)
+    assert rc == 0
+    traits = [t for t, _ in r.calls]
+    assert "inverse" in traits          # inverse auto-runs offline
+    assert "forward" not in traits      # forward needs a --mutation -> report-only, not run
+    inv_argv = next(a for t, a in r.calls if t == "inverse")
+    assert "--protein-fasta" in inv_argv and "--target-percentile" in inv_argv
+
+
+def test_run_nucleotide_delegates_to_profile(tmp_path):
+    f = tmp_path / "g.fna"
+    f.write_text(">c\nATGAGCATTCAACAT\n", encoding="utf-8")
+    r = _RecordRunner()
+    run_decode_plan(f, runner=r)
+    traits = [t for t, _ in r.calls]
+    assert traits == ["profile"]                       # reuse profile, no per-decoder re-run
+    assert "--sample-id" in r.calls[0][1]
+
+
+def test_run_vcf_is_report_only(tmp_path):
+    f = tmp_path / "s.vcf"
+    f.write_text("##fileformat=VCFv4.2\n#CHROM\tPOS\tID\tREF\tALT\n10\t1\t.\tC\tT\n", encoding="utf-8")
+    r = _RecordRunner()
+    rc = run_decode_plan(f, runner=r)
+    assert rc == 0
+    assert r.calls == []                               # never auto-guess a --gene
+
+
+def test_run_unknown_is_honest_and_runs_nothing(tmp_path):
+    f = tmp_path / "x.txt"
+    f.write_text("nonsense\n", encoding="utf-8")
+    r = _RecordRunner()
+    rc = run_decode_plan(f, runner=r)
+    assert rc == 0 and r.calls == []
+
+
+def test_run_propagates_nonzero_exit(tmp_path):
+    f = tmp_path / "p.fasta"
+    f.write_text(">P\nMEEPQSDPSVEPP\n", encoding="utf-8")
+    r = _RecordRunner(rc=3)
+    assert run_decode_plan(f, runner=r) == 3           # an auto-run decoder's failure surfaces
+
+
+def test_cli_decode_run_flag_calls_runner(tmp_path, monkeypatch):
+    # the unified CLI's `decode <file> --run` must route to run_decode_plan
+    import dna_decode.cli as uni
+    import dna_decode.decode_router as router
+    seen = {}
+
+    def _stub(p, **k):
+        seen["path"] = str(p)
+        return 0
+
+    monkeypatch.setattr(router, "run_decode_plan", _stub)
+    f = tmp_path / "p.fasta"
+    f.write_text(">P\nMEEPQSDPSVEPP\n", encoding="utf-8")
+    rc = uni.main(["decode", str(f), "--run"])
+    assert rc == 0 and seen["path"] == str(f)
 
 
 def test_protein_plan_shows_forward_capability_hint(tmp_path):

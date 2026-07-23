@@ -220,15 +220,26 @@ def main(argv=None) -> int:
     if trait == "list":
         return _print_list()
     if trait == "decode":
-        # input-aware router: `dna-decode decode <file>` -> which decoders apply + the exact commands.
+        # input-aware router: `dna-decode decode <file>` -> which decoders apply + the exact commands;
+        # `dna-decode decode <file> --run` -> actually RUN the auto-runnable ones + report the rest.
         rest = argv[1:]
         if not rest or rest[0] in ("-h", "--help"):
-            print("usage: dna-decode decode <input.fasta|input.vcf>\n"
+            print("usage: dna-decode decode <input.fasta|input.vcf> [--run]\n"
                   "  Detects the input kind (nucleotide/protein FASTA or VCF) and lists every applicable\n"
-                  "  decoder with its claim, honest tier, and the exact command to run.")
+                  "  decoder with its claim, honest tier, and the exact command to run.\n"
+                  "  --run: actually run the auto-runnable decoders (genome -> profile; protein -> inverse)\n"
+                  "         and report the ones that need a specific parameter (--mutation / --gene).")
             return 0
+        do_run = "--run" in rest
+        files = [a for a in rest if not a.startswith("-")]
+        if not files:
+            print("error: decode needs an input file", file=sys.stderr)
+            return 2
+        if do_run:
+            from dna_decode.decode_router import run_decode_plan
+            return run_decode_plan(files[0])
         from dna_decode.decode_router import render_decode_plan
-        print(render_decode_plan(rest[0]))
+        print(render_decode_plan(files[0]))
         return 0
     if trait not in TRAITS and trait not in ANALYSES:
         ap.error(f"unknown subcommand {trait!r}; traits: {', '.join(TRAITS)}; "
