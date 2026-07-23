@@ -88,8 +88,13 @@ def main(argv=None) -> int:
             print(f"  note: {n}")
     if not seq:
         print("  note: no protein sequence supplied — WT residue NOT verified against a reference")
-    print("  [BLOSUM62 = deterministic substitution severity; learned methods (ESM2/AlphaMissense/ESM-IF) "
-          "beat it but are API-only — see dna_decode/forward/README.md]")
+    print("  [BLOSUM62 = deterministic substitution severity. It is the WEAKEST measured method — and the "
+          "size of that gap is the point: |Spearman| median 0.20 at ProteinGym scale (N=209) vs ESM2 0.478 "
+          "on held-out MaveDB (N=2383). Different sets, but ~2.5x.]")
+    print("  [measured ranking (wiki/mavedb_holdout_hybrid_2026-07-23.md): ESM2+ProSST hybrid ~ ProSST > "
+          "ESM2 > AlphaMissense >> blosum62. blosum62 stays the CLI default ONLY because it is the sole "
+          "wheel-only / no-model / no-structure option; if you can install deps, use the Python API "
+          "(predict_effect method='hybrid'/'prosst'/'esm2') — dna_decode/forward/README.md]")
     print("  [scope: molecular fitness rank, NOT clinical resistance — use `dna-decode amr` for R/S]")
     return 0
 
