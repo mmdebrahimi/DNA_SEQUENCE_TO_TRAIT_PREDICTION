@@ -20,8 +20,9 @@ METHOD_STRENGTH = ["hybrid", "prosst", "esm2", "gemme", "alphamissense", "blosum
 
 # per-method install hint shown when a method is NOT runnable
 _INSTALL_HINT = {
-    "esm2": "pip install torch transformers",
-    "prosst": "pip install torch transformers prosst  (+ a structure: --uniprot / --pdb)",
+    "esm2": "pip install 'dna-decode[forward]'  (torch + transformers>=5)",
+    "prosst": ("pip install 'dna-decode[forward]' + torch_geometric + torch_scatter + the AI4Protein/ProSST "
+               "repo (structure quantizer; heavy/platform-specific)  (+ a structure: --uniprot / --pdb)"),
     "gemme": "install Docker Desktop (image elodielaine/gemme:gemme)  (+ an MSA: --msa)",
     "hybrid": "needs >=2 of {esm2, prosst, gemme} runnable",
     "alphamissense": "supply --am-table (precomputed AlphaMissense scores)",

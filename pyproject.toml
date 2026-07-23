@@ -87,6 +87,20 @@ dev = [
     "ruff>=0.4",
 ]
 
+# Deployable FORWARD variant-effect stack (Regime B — the DMS-VALIDATED learned frontier, NOT the closed
+# embedding track). `pip install dna-decode[forward]` makes `dna-decode forward --method esm2` runnable.
+# transformers PINNED >=5: ProSST's trust_remote_code modeling file + the ESM2 masked-marginal path were
+# validated on transformers 5.13 (the version-drift lesson — ProSST silently degrades on a mismatched
+# transformers). This is INTENTIONALLY INCOMPATIBLE with the [ml] extra's `transformers<5` pin: [ml] is the
+# closed-negative DNABERT-2/NT embedding track (4.x remote files); [forward] is the deployable variant-effect
+# track (5.x). Install ONE, not both. ProSST's STRUCTURE quantizer additionally needs torch_geometric +
+# torch_scatter + the AI4Protein/ProSST repo (heavy, platform-specific) — install those manually for
+# `--method prosst/hybrid`; esm2 needs only this extra. GEMME = Docker; AlphaMissense = a precomputed table.
+forward = [
+    "torch>=2.2",
+    "transformers>=5",
+]
+
 # Heavy foundation-model stack — ONLY for the embedding/foundation-model track
 # (a closed 0-for-4 negative; NOT the shipped deterministic decoder). Multi-GB +
 # platform-specific (triton). `uv sync --extra ml` to populate. Split out 2026-06-24
@@ -153,6 +167,15 @@ line-length = 100
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B"]
 ignore = ["E501"]  # line-too-long handled by formatter
+
+# The [ml] and [forward] extras pin INCOMPATIBLE transformers majors (<5 for the closed-negative
+# DNABERT-2/NT embedding track; >=5 for the deployable ESM2/ProSST variant-effect track). Declaring them
+# as conflicting lets uv resolve each independently instead of failing to co-resolve every extra into one
+# lockfile. Install ONE of {ml, forward}, never both.
+[tool.uv]
+conflicts = [
+    [{ extra = "ml" }, { extra = "forward" }],
+]
 
 # CUDA 11.8 torch wheel index for the local Windows + GTX 860M (Maxwell, compute
 # cap 5.0). Maxwell is deprecated in CUDA 12.x; cu118 is the supported path.

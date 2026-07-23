@@ -71,11 +71,14 @@ def test_no_degrade_raises():
     raise AssertionError("expected RuntimeError under --no-degrade")
 
 
-def test_prosst_needs_structure_input_even_with_deps():
-    # deps present but NO structure supplied -> prosst not computable -> degrade
+def test_prosst_needs_structure_input_even_with_deps(monkeypatch):
+    # deps present but NO structure supplied -> prosst not computable -> degrade. The fallback is esm2
+    # (deps present); monkeypatch its heavy compute so the test stays hermetic (no torch in the default env).
+    monkeypatch.setattr(deploy, "_esm2_logp_table", lambda seq, **k: _cheap_esm_table(seq))
     d = predict_effect_deployable(SEQ, "M1L", method="prosst", caps=ALL, degrade=True)
     assert d["degraded"] is True
     assert "structure" in d["degrade_reason"]
+    assert d["method_used"] == "esm2"   # fell back to the strongest computable (esm2), not prosst
 
 
 def test_hybrid_with_two_supplied_tables(monkeypatch):
