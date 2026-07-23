@@ -1,0 +1,73 @@
+"""Offline tests for the forward capability preflight (dna_decode/forward/capabilities.py).
+
+Pure: no torch import, no Docker call, no model download. Capabilities are probed via find_spec/which and
+the runnable-method logic is tested against injected `caps` dicts so the result is host-independent.
+"""
+from __future__ import annotations
+
+from dna_decode.forward.capabilities import (
+    probe_capabilities,
+    runnable_methods,
+    strongest_runnable,
+    render_capabilities,
+    METHOD_STRENGTH,
+)
+
+ALL = {"torch": True, "transformers": True, "prosst": True, "docker": True}
+NONE = {"torch": False, "transformers": False, "prosst": False, "docker": False}
+ESM_ONLY = {"torch": True, "transformers": True, "prosst": False, "docker": False}
+
+
+def test_probe_returns_the_four_keys():
+    caps = probe_capabilities()
+    assert set(caps) == {"torch", "transformers", "prosst", "docker"}
+    assert all(isinstance(v, bool) for v in caps.values())
+
+
+def test_blosum_always_runnable():
+    for caps in (ALL, NONE, ESM_ONLY):
+        assert runnable_methods(caps)["blosum62"][0] is True
+
+
+def test_esm2_needs_torch_and_transformers():
+    assert runnable_methods(ESM_ONLY)["esm2"][0] is True
+    assert runnable_methods({"torch": True, "transformers": False, "prosst": False, "docker": False})["esm2"][0] is False
+    assert runnable_methods(NONE)["esm2"][0] is False
+
+
+def test_prosst_needs_esm_deps_plus_prosst_lib():
+    assert runnable_methods(ALL)["prosst"][0] is True
+    assert runnable_methods(ESM_ONLY)["prosst"][0] is False  # prosst lib missing
+
+
+def test_gemme_needs_docker():
+    assert runnable_methods({"torch": False, "transformers": False, "prosst": False, "docker": True})["gemme"][0] is True
+    assert runnable_methods(NONE)["gemme"][0] is False
+
+
+def test_hybrid_needs_two_of_three():
+    assert runnable_methods(ALL)["hybrid"][0] is True                       # esm2+prosst+gemme
+    assert runnable_methods(ESM_ONLY)["hybrid"][0] is False                 # only esm2
+    assert runnable_methods({"torch": True, "transformers": True, "prosst": False, "docker": True})["hybrid"][0] is True  # esm2+gemme
+
+
+def test_strongest_runnable_orders_by_strength():
+    assert strongest_runnable(ALL) == "hybrid"
+    assert strongest_runnable(ESM_ONLY) == "esm2"
+    assert strongest_runnable(NONE) == "blosum62"
+
+
+def test_strength_ranking_is_ordered_and_complete():
+    assert METHOD_STRENGTH[0] == "hybrid" and METHOD_STRENGTH[-1] == "blosum62"
+    for m in ("hybrid", "prosst", "esm2", "gemme", "alphamissense", "blosum62"):
+        assert m in METHOD_STRENGTH
+
+
+def test_render_is_ascii_and_names_the_preflight():
+    out = render_capabilities(ALL)
+    assert "capability preflight" in out
+    assert "runnable methods" in out
+    assert all(ord(c) < 128 for c in out)   # no console mojibake on Windows cp1252
+    # an unrunnable method shows an install hint
+    out2 = render_capabilities(NONE)
+    assert "pip install" in out2

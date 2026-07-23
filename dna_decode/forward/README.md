@@ -244,10 +244,25 @@ dna-forward       --mutation A2L  --protein-seq <seq>                          #
 dna-decode list   # forward now appears with its DMS validation numbers
 ```
 
-The WT-coordinate gate fails loudly (exit 2) on a residue/frame mismatch — never a silent wrong call. The
-learned methods (ESM2/AlphaMissense/ESM-IF) beat BLOSUM everywhere but need a precomputed score table (they
-run the model ONCE per protein), so they stay in the Python API (`predict_effect(..., method="esm2",
-esm_table=...)`). **Scope: molecular fitness RANK, not clinical resistance — use `dna-decode amr` for R/S.**
+The WT-coordinate gate fails loudly (exit 2) on a residue/frame mismatch — never a silent wrong call.
+
+**The strong learned methods are now FIRST-CLASS from the CLI (2026-07-23), not API-only.** They beat BLOSUM
+everywhere but each needs a heavy dependency (ESM2: torch; ProSST: +the ProSST lib +a 3D structure; GEMME:
+Docker +an MSA). The CLI runs a capability preflight and degrades honestly when a dep is missing:
+
+```bash
+dna-decode forward --capabilities                                       # what can THIS host run?
+dna-decode forward --mutation M69L --protein-seq <seq> --method esm2     # computes the ESM2 table, once
+dna-decode forward --mutation M69L --uniprot P00552   --method hybrid    # ESM2+ProSST (validated best)
+dna-decode forward --mutation M69L --protein-seq <seq> --method auto      # strongest RUNNABLE here
+```
+
+`--method auto` is input-aware (it will not pick `hybrid` if the structure/MSA it needs was not supplied). A
+requested method whose dependency is absent degrades to the strongest runnable method with full provenance
+(`method_requested` / `method_used` / `degraded` / `degrade_reason`); `--no-degrade` errors instead.
+Precomputed tables (`--esm-table` / `--prosst-table` / `--gemme-table` / `--am-table`) skip the heavy compute.
+The Python API (`predict_effect(..., method="esm2", esm_table=...)` / `deploy.predict_effect_deployable`) is
+unchanged. **Scope: molecular fitness RANK, not clinical resistance — use `dna-decode amr` for R/S.**
 
 ## Run (scripts — validation harnesses)
 

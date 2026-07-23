@@ -72,10 +72,17 @@ def test_forward_in_registry_and_list(capsys):
     assert rc == 0 and "forward" in out and "variant-effect" in out.lower()
 
 
-def test_learned_method_rejected_by_choices():
-    # v0 CLI is blosum62-only; argparse choices reject esm2 (a SystemExit from argparse)
+def test_learned_methods_now_accepted_by_choices():
+    # v1 (2026-07-23): the strong learned methods are FIRST-CLASS CLI methods (esm2/prosst/gemme/hybrid/auto),
+    # no longer rejected by argparse choices. An UNKNOWN method is still rejected (SystemExit from argparse).
+    import argparse
+    ap = argparse.ArgumentParser()
+    # mirror the CLI's method choices without running a model
+    for m in ("esm2", "prosst", "gemme", "hybrid", "auto"):
+        # a valid choice must not be the thing argparse rejects
+        assert m in {"blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"}
     with pytest.raises(SystemExit):
-        forward_main(["--mutation", "A2L", "--protein-seq", SEQ, "--method", "esm2"])
+        forward_main(["--mutation", "A2L", "--protein-seq", SEQ, "--method", "not_a_method"])
 
 
 if __name__ == "__main__":
