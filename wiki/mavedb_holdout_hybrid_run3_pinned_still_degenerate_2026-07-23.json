@@ -1,0 +1,327 @@
+{
+  "_schema": "mavedb-holdout-hybrid-v1",
+  "esm_model": "facebook/esm2_t33_650M_UR50D",
+  "prosst_model": "AI4Protein/ProSST-2048",
+  "n_manifest": 38,
+  "n_scored": 38,
+  "median_esm2": 0.51895,
+  "median_prosst": 0.08185,
+  "median_hybrid": 0.40125,
+  "prosst_degenerate": true,
+  "hybrid_wins_vs_best_single": 5,
+  "skipped": {
+    "fetch": 0,
+    "align": 0,
+    "too_few": 0
+  },
+  "comparators": {
+    "esm2_full_holdout": 0.478,
+    "am_holdout": 0.502
+  },
+  "results": [
+    {
+      "urn": "urn:mavedb:00000002-a-1",
+      "gene": "HYAP65",
+      "n": 203,
+      "esm2": 0.7097,
+      "prosst": 0.1256,
+      "hybrid": 0.5599
+    },
+    {
+      "urn": "urn:mavedb:00000046-a-1",
+      "gene": "CD86",
+      "n": 511,
+      "esm2": 0.3797,
+      "prosst": 0.074,
+      "hybrid": 0.2903
+    },
+    {
+      "urn": "urn:mavedb:00000049-a-1",
+      "gene": "MTHFR",
+      "n": 12464,
+      "esm2": 0.3189,
+      "prosst": 0.0689,
+      "hybrid": 0.2656
+    },
+    {
+      "urn": "urn:mavedb:00000001-a-4",
+      "gene": "UBE2I",
+      "n": 2872,
+      "esm2": 0.4571,
+      "prosst": 0.1109,
+      "hybrid": 0.3918
+    },
+    {
+      "urn": "urn:mavedb:00001246-a-1",
+      "gene": "STK11",
+      "n": 6021,
+      "esm2": 0.2866,
+      "prosst": 0.0651,
+      "hybrid": 0.2398
+    },
+    {
+      "urn": "urn:mavedb:00001199-a-1",
+      "gene": "CYP2C19",
+      "n": 7830,
+      "esm2": 0.6823,
+      "prosst": 0.0872,
+      "hybrid": 0.5342
+    },
+    {
+      "urn": "urn:mavedb:00001275-a-1",
+      "gene": "RHODOPSIN",
+      "n": 6900,
+      "esm2": 0.1908,
+      "prosst": 0.0369,
+      "hybrid": 0.1518
+    },
+    {
+      "urn": "urn:mavedb:00001275-a-2",
+      "gene": "HUMAN",
+      "n": 6611,
+      "esm2": 0.2753,
+      "prosst": 0.0419,
+      "hybrid": 0.2181
+    },
+    {
+      "urn": "urn:mavedb:00000048-c-1",
+      "gene": "CXCR4",
+      "n": 531,
+      "esm2": 0.111,
+      "prosst": 0.0746,
+      "hybrid": 0.0339
+    },
+    {
+      "urn": "urn:mavedb:00000095-b-1",
+      "gene": "CYP2C9",
+      "n": 6370,
+      "esm2": 0.6345,
+      "prosst": 0.0758,
+      "hybrid": 0.4915
+    },
+    {
+      "urn": "urn:mavedb:00000108-0-1",
+      "gene": "HMBS",
+      "n": 5963,
+      "esm2": 0.3855,
+      "prosst": 0.0128,
+      "hybrid": 0.2618
+    },
+    {
+      "urn": "urn:mavedb:00000657-b-1",
+      "gene": "ASPA",
+      "n": 5842,
+      "esm2": 0.466,
+      "prosst": 0.0464,
+      "hybrid": 0.357
+    },
+    {
+      "urn": "urn:mavedb:00000272-0-1",
+      "gene": "PTK6",
+      "n": 1193,
+      "esm2": 0.6403,
+      "prosst": 0.3144,
+      "hybrid": 0.6411
+    },
+    {
+      "urn": "urn:mavedb:00001218-a-1",
+      "gene": "MLH1",
+      "n": 4802,
+      "esm2": 0.0532,
+      "prosst": 0.0958,
+      "hybrid": 0.1215
+    },
+    {
+      "urn": "urn:mavedb:00000066-a-1",
+      "gene": "GDI1",
+      "n": 4795,
+      "esm2": 0.1692,
+      "prosst": 0.018,
+      "hybrid": 0.1301
+    },
+    {
+      "urn": "urn:mavedb:00000300-0-1",
+      "gene": "DNAJB2",
+      "n": 1234,
+      "esm2": 0.5768,
+      "prosst": 0.1238,
+      "hybrid": 0.468
+    },
+    {
+      "urn": "urn:mavedb:00000067-a-1",
+      "gene": "TECR",
+      "n": 4050,
+      "esm2": 0.1502,
+      "prosst": 0.0126,
+      "hybrid": 0.1094
+    },
+    {
+      "urn": "urn:mavedb:00000393-0-1",
+      "gene": "LASP1",
+      "n": 1080,
+      "esm2": 0.6275,
+      "prosst": 0.2313,
+      "hybrid": 0.5846
+    },
+    {
+      "urn": "urn:mavedb:00000329-0-1",
+      "gene": "RASA1",
+      "n": 1137,
+      "esm2": 0.6099,
+      "prosst": 0.1708,
+      "hybrid": 0.5389
+    },
+    {
+      "urn": "urn:mavedb:00000057-b-1",
+      "gene": "RAS",
+      "n": 3135,
+      "esm2": 0.1206,
+      "prosst": 0.0265,
+      "hybrid": 0.1002
+    },
+    {
+      "urn": "urn:mavedb:00000440-0-1",
+      "gene": "DNAJA3",
+      "n": 1231,
+      "esm2": 0.6887,
+      "prosst": 0.1771,
+      "hybrid": 0.5712
+    },
+    {
+      "urn": "urn:mavedb:00000055-b-1",
+      "gene": "NUDT15",
+      "n": 2934,
+      "esm2": 0.526,
+      "prosst": 0.0037,
+      "hybrid": 0.3962
+    },
+    {
+      "urn": "urn:mavedb:00001249-a-1",
+      "gene": "ALPHA-SYNUCLEIN",
+      "n": 2725,
+      "esm2": 0.1675,
+      "prosst": 0.1502,
+      "hybrid": 0.2279
+    },
+    {
+      "urn": "urn:mavedb:00000444-0-1",
+      "gene": "LYN",
+      "n": 1120,
+      "esm2": 0.5944,
+      "prosst": 0.1853,
+      "hybrid": 0.5409
+    },
+    {
+      "urn": "urn:mavedb:00000304-0-1",
+      "gene": "DNAJA1",
+      "n": 1233,
+      "esm2": 0.6278,
+      "prosst": 0.202,
+      "hybrid": 0.5356
+    },
+    {
+      "urn": "urn:mavedb:00000043-a-1",
+      "gene": "MPL",
+      "n": 562,
+      "esm2": 0.1169,
+      "prosst": 0.0187,
+      "hybrid": 0.0595
+    },
+    {
+      "urn": "urn:mavedb:00000404-0-1",
+      "gene": "HCK",
+      "n": 1120,
+      "esm2": 0.5886,
+      "prosst": 0.2183,
+      "hybrid": 0.5613
+    },
+    {
+      "urn": "urn:mavedb:00000207-0-1",
+      "gene": "PRPF40A",
+      "n": 1196,
+      "esm2": 0.6105,
+      "prosst": 0.0505,
+      "hybrid": 0.4283
+    },
+    {
+      "urn": "urn:mavedb:00000151-0-1",
+      "gene": "LCK",
+      "n": 1083,
+      "esm2": 0.6351,
+      "prosst": 0.187,
+      "hybrid": 0.5737
+    },
+    {
+      "urn": "urn:mavedb:00000438-0-1",
+      "gene": "H1-0",
+      "n": 1325,
+      "esm2": 0.3224,
+      "prosst": 0.2133,
+      "hybrid": 0.3718
+    },
+    {
+      "urn": "urn:mavedb:00000431-0-1",
+      "gene": "UBB",
+      "n": 1364,
+      "esm2": 0.5254,
+      "prosst": 0.2514,
+      "hybrid": 0.4981
+    },
+    {
+      "urn": "urn:mavedb:00000164-0-1",
+      "gene": "CPA2",
+      "n": 1365,
+      "esm2": 0.4849,
+      "prosst": 0.2441,
+      "hybrid": 0.5125
+    },
+    {
+      "urn": "urn:mavedb:00000258-0-1",
+      "gene": "CBX7",
+      "n": 931,
+      "esm2": 0.6153,
+      "prosst": 0.0872,
+      "hybrid": 0.4998
+    },
+    {
+      "urn": "urn:mavedb:00000183-0-1",
+      "gene": "BTK",
+      "n": 1102,
+      "esm2": 0.6899,
+      "prosst": 0.1464,
+      "hybrid": 0.5823
+    },
+    {
+      "urn": "urn:mavedb:00000043-a-2",
+      "gene": "S505N",
+      "n": 562,
+      "esm2": 0.2963,
+      "prosst": 0.0059,
+      "hybrid": 0.2102
+    },
+    {
+      "urn": "urn:mavedb:00000906-a-1",
+      "gene": "MPDZ",
+      "n": 1790,
+      "esm2": 0.5125,
+      "prosst": 0.0765,
+      "hybrid": 0.3896
+    },
+    {
+      "urn": "urn:mavedb:00001106-a-1",
+      "gene": "TJP2",
+      "n": 1796,
+      "esm2": 0.5697,
+      "prosst": 0.0329,
+      "hybrid": 0.4142
+    },
+    {
+      "urn": "urn:mavedb:00000107-b-1",
+      "gene": "PSAT1",
+      "n": 1914,
+      "esm2": 0.5575,
+      "prosst": 0.0374,
+      "hybrid": 0.4063
+    }
+  ]
+}

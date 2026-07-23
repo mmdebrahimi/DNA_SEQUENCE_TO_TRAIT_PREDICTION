@@ -14,7 +14,19 @@ at scale? Comparators: ESM2-alone full holdout 0.478 (wiki/mavedb_full_esm2_2026
 Kaggle: enable_gpu (PIN T4) + enable_internet=True. ProSST force-ties the omitted decoder weight (critical --
 else garbage logits). Structure tokens are assay-region-sliced (tokens[offset:offset+L]) upstream.
 """
-import csv, io, json, sys, urllib.request
+import csv, io, json, subprocess, sys, urllib.request
+
+# Pin transformers to the LOCAL version that scores ProSST correctly (MTHFR Spearman 0.40). Runs 1-3 were
+# degenerate on Kaggle with the remote code pinned and the decoder tie verified, so the library itself is the
+# remaining variable: a newer transformers can silently DROP an unexpected forward kwarg -> `ss_input_ids`
+# (the structure conditioning) never reaches ProSST -> sequence-only, degenerate scores.
+TRANSFORMERS_PIN = "5.13.0"
+try:
+    subprocess.run([sys.executable, "-m", "pip", "install", "-q", f"transformers=={TRANSFORMERS_PIN}"],
+                   check=False, timeout=900)
+except Exception as _e:
+    print("pip pin failed:", _e)
+
 import numpy as np
 
 try:
@@ -157,9 +169,12 @@ def prosst_deltas(seq, variants, structure_tokens, model, tokenizer, torch, devi
 
 def main():
     import torch
+    import transformers
     from transformers import AutoModelForMaskedLM, AutoTokenizer
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("=== ESM2+ProSST hybrid | device=" + device + " | " + str(len(MANIFEST)) + " held-out assays ===")
+    print("VERSIONS: transformers=" + transformers.__version__ + " torch=" + torch.__version__
+          + " (local working: transformers=5.13.0 torch=2.12.1)")
 
     etok = AutoTokenizer.from_pretrained(ESM_MODEL)
     emodel = AutoModelForMaskedLM.from_pretrained(ESM_MODEL).to(device).eval()
@@ -200,6 +215,35 @@ def main():
         same = bool((dec.weight.data - emb.data).abs().max().item() == 0.0)
         print("PROSST_TIE: decoder==embeddings ->", same)
     pmodel = pmodel.to(device).eval()
+
+    # ---- STRUCTURE-SENSITIVITY SELF-CHECK (the decisive diagnostic) -------------------------------------
+    # Score ONE assay with the REAL structure tokens vs SHUFFLED tokens. ProSST is sequence+structure, so a
+    # real structure must change the scores. If the two are ~identical, `ss_input_ids` is being IGNORED (the
+    # kwarg silently dropped) -> that, not biology, is why runs 1-3 were degenerate. Cheap + definitive.
+    struct_check = None
+    try:
+        _urn0 = next(iter(MANIFEST)); _m0 = MANIFEST[_urn0]
+        _got0 = fetch_assay(_urn0)
+        if _got0:
+            _seq0, _dms0 = _got0
+            _toks0 = _m0["structure_tokens"]
+            if len(_seq0) == len(_toks0):
+                _vars0 = [(m[0], int(m[1:-1]), m[-1]) for m in list(_dms0)[:400]
+                          if 1 <= int(m[1:-1]) <= len(_seq0) and m[0] in AA and m[-1] in AA
+                          and _seq0[int(m[1:-1])-1] == m[0]][:300]
+                if len(_vars0) >= 20:
+                    _real = prosst_deltas(_seq0, _vars0, _toks0, pmodel, ptok, torch, device)
+                    _shuf = list(_toks0); np.random.default_rng(0).shuffle(_shuf)
+                    _rand = prosst_deltas(_seq0, _vars0, _shuf, pmodel, ptok, torch, device)
+                    _a = [_real[v] for v in _vars0]; _b = [_rand[v] for v in _vars0]
+                    _corr = spearman(_a, _b)
+                    struct_check = {"urn": _urn0, "gene": _m0.get("gene"), "n": len(_vars0),
+                                    "spearman_real_vs_shuffled_tokens": round(float(_corr), 4)}
+                    print("STRUCT_SENSITIVITY: real-vs-shuffled-token score corr = " + ("%.4f" % _corr)
+                          + ("  -> STRUCTURE IGNORED (ss_input_ids dropped)" if _corr > 0.98
+                             else "  -> structure IS being used"))
+    except Exception as e:
+        print("STRUCT_SENSITIVITY check failed:", type(e).__name__, str(e)[:80])
 
     results, skipped = [], {"fetch": 0, "align": 0, "too_few": 0}
     for urn, meta in MANIFEST.items():
@@ -254,7 +298,8 @@ def main():
     out = {"_schema": "mavedb-holdout-hybrid-v1", "esm_model": ESM_MODEL, "prosst_model": PROSST_MODEL,
            "n_manifest": len(MANIFEST), "n_scored": len(results),
            "median_esm2": me, "median_prosst": mp, "median_hybrid": mh,
-           "prosst_degenerate": prosst_degenerate,
+           "prosst_degenerate": prosst_degenerate, "struct_sensitivity_check": struct_check,
+           "transformers_pin": TRANSFORMERS_PIN,
            "hybrid_wins_vs_best_single": wins, "skipped": skipped,
            "comparators": {"esm2_full_holdout": 0.478, "am_holdout": 0.502}, "results": results}
     json.dump(out, open("/kaggle/working/mavedb_holdout_hybrid_result.json", "w"), indent=2)
