@@ -1,0 +1,877 @@
+{
+  "_schema": "mavedb-holdout-hybrid-v2",
+  "esm_model": "facebook/esm2_t33_650M_UR50D",
+  "prosst_model": "AI4Protein/ProSST-2048",
+  "n_manifest": 90,
+  "n_scored": 90,
+  "median_esm2": 0.53245,
+  "median_prosst": 0.5931,
+  "median_hybrid": 0.6022000000000001,
+  "prosst_degenerate": false,
+  "struct_sensitivity_check": {
+    "urn": "urn:mavedb:00000002-a-1",
+    "gene": "HYAP65",
+    "n": 203,
+    "spearman_real_vs_shuffled_tokens": 0.4147
+  },
+  "transformers_pin": "5.13.0",
+  "threeway": {
+    "n_gemme_covered": 13,
+    "median_esm2": 0.3855,
+    "median_prosst": 0.4106,
+    "median_gemme": 0.5084,
+    "median_hybrid2": 0.4229,
+    "median_hybrid3": 0.4977,
+    "paired_hybrid3_gt_hybrid2": 10,
+    "paired_hybrid3_gt_gemme": 11,
+    "paired_gemme_gt_hybrid2": 3
+  },
+  "hybrid_wins_vs_best_single": 53,
+  "skipped": {
+    "fetch": 0,
+    "align": 0,
+    "too_few": 0
+  },
+  "comparators": {
+    "esm2_full_holdout": 0.478,
+    "am_holdout": 0.502
+  },
+  "results": [
+    {
+      "urn": "urn:mavedb:00000002-a-1",
+      "gene": "HYAP65",
+      "n": 203,
+      "esm2": 0.7097,
+      "prosst": 0.7607,
+      "hybrid": 0.7718,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000046-a-1",
+      "gene": "CD86",
+      "n": 511,
+      "esm2": 0.3797,
+      "prosst": 0.2383,
+      "hybrid": 0.3459,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000049-a-1",
+      "gene": "MTHFR",
+      "n": 12464,
+      "esm2": 0.3189,
+      "prosst": 0.3742,
+      "hybrid": 0.3894,
+      "gemme": 0.2461,
+      "hybrid3": 0.3587,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000001-a-4",
+      "gene": "UBE2I",
+      "n": 2872,
+      "esm2": 0.4571,
+      "prosst": 0.4106,
+      "hybrid": 0.4557,
+      "gemme": 0.5084,
+      "hybrid3": 0.4977,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00001246-a-1",
+      "gene": "STK11",
+      "n": 6021,
+      "esm2": 0.2866,
+      "prosst": 0.3677,
+      "hybrid": 0.3699,
+      "gemme": 0.3967,
+      "hybrid3": 0.398,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00001199-a-1",
+      "gene": "CYP2C19",
+      "n": 7830,
+      "esm2": 0.6823,
+      "prosst": 0.6755,
+      "hybrid": 0.7408,
+      "gemme": 0.6814,
+      "hybrid3": 0.7481,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00001275-a-1",
+      "gene": "RHODOPSIN",
+      "n": 6900,
+      "esm2": 0.1908,
+      "prosst": 0.2321,
+      "hybrid": 0.2381,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001275-a-2",
+      "gene": "HUMAN",
+      "n": 6611,
+      "esm2": 0.2753,
+      "prosst": 0.3178,
+      "hybrid": 0.334,
+      "gemme": 0.3012,
+      "hybrid3": 0.3405,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000048-c-1",
+      "gene": "CXCR4",
+      "n": 531,
+      "esm2": 0.111,
+      "prosst": 0.0124,
+      "hybrid": 0.0517,
+      "gemme": 0.0018,
+      "hybrid3": 0.0292,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000095-b-1",
+      "gene": "CYP2C9",
+      "n": 6370,
+      "esm2": 0.6345,
+      "prosst": 0.6257,
+      "hybrid": 0.6822,
+      "gemme": 0.6179,
+      "hybrid3": 0.6842,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000108-0-1",
+      "gene": "HMBS",
+      "n": 5963,
+      "esm2": 0.3855,
+      "prosst": 0.3706,
+      "hybrid": 0.4229,
+      "gemme": 0.4192,
+      "hybrid3": 0.4404,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000657-b-1",
+      "gene": "ASPA",
+      "n": 5842,
+      "esm2": 0.466,
+      "prosst": 0.4978,
+      "hybrid": 0.5439,
+      "gemme": 0.5126,
+      "hybrid3": 0.5662,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000272-0-1",
+      "gene": "PTK6",
+      "n": 1193,
+      "esm2": 0.6403,
+      "prosst": 0.7256,
+      "hybrid": 0.7121,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001218-a-1",
+      "gene": "MLH1",
+      "n": 4802,
+      "esm2": 0.0532,
+      "prosst": 0.5358,
+      "hybrid": 0.3754,
+      "gemme": 0.5515,
+      "hybrid3": 0.5227,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000066-a-1",
+      "gene": "GDI1",
+      "n": 4795,
+      "esm2": 0.1692,
+      "prosst": 0.2009,
+      "hybrid": 0.2061,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000300-0-1",
+      "gene": "DNAJB2",
+      "n": 1234,
+      "esm2": 0.5768,
+      "prosst": 0.5944,
+      "hybrid": 0.6099,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000067-a-1",
+      "gene": "TECR",
+      "n": 4050,
+      "esm2": 0.1502,
+      "prosst": 0.1498,
+      "hybrid": 0.1695,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000393-0-1",
+      "gene": "LASP1",
+      "n": 1080,
+      "esm2": 0.6275,
+      "prosst": 0.742,
+      "hybrid": 0.7167,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000329-0-1",
+      "gene": "RASA1",
+      "n": 1137,
+      "esm2": 0.6099,
+      "prosst": 0.714,
+      "hybrid": 0.7231,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000057-b-1",
+      "gene": "RAS",
+      "n": 3135,
+      "esm2": 0.1206,
+      "prosst": 0.1735,
+      "hybrid": 0.1543,
+      "gemme": 0.1106,
+      "hybrid3": 0.1433,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000440-0-1",
+      "gene": "DNAJA3",
+      "n": 1231,
+      "esm2": 0.6887,
+      "prosst": 0.7055,
+      "hybrid": 0.7167,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000055-b-1",
+      "gene": "NUDT15",
+      "n": 2934,
+      "esm2": 0.526,
+      "prosst": 0.541,
+      "hybrid": 0.5752,
+      "gemme": 0.5562,
+      "hybrid3": 0.5929,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00001249-a-1",
+      "gene": "ALPHA-SYNUCLEIN",
+      "n": 2725,
+      "esm2": 0.1675,
+      "prosst": 0.3975,
+      "hybrid": 0.3029,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000444-0-1",
+      "gene": "LYN",
+      "n": 1120,
+      "esm2": 0.5944,
+      "prosst": 0.7058,
+      "hybrid": 0.6931,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000304-0-1",
+      "gene": "DNAJA1",
+      "n": 1233,
+      "esm2": 0.6278,
+      "prosst": 0.6587,
+      "hybrid": 0.6642,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000043-a-1",
+      "gene": "MPL",
+      "n": 562,
+      "esm2": 0.1169,
+      "prosst": 0.1203,
+      "hybrid": 0.1346,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000404-0-1",
+      "gene": "HCK",
+      "n": 1120,
+      "esm2": 0.5886,
+      "prosst": 0.7341,
+      "hybrid": 0.6958,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000207-0-1",
+      "gene": "PRPF40A",
+      "n": 1196,
+      "esm2": 0.6105,
+      "prosst": 0.7302,
+      "hybrid": 0.7471,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000151-0-1",
+      "gene": "LCK",
+      "n": 1083,
+      "esm2": 0.6351,
+      "prosst": 0.6971,
+      "hybrid": 0.6965,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000438-0-1",
+      "gene": "H1-0",
+      "n": 1325,
+      "esm2": 0.3224,
+      "prosst": 0.6096,
+      "hybrid": 0.5059,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000431-0-1",
+      "gene": "UBB",
+      "n": 1364,
+      "esm2": 0.5254,
+      "prosst": 0.6084,
+      "hybrid": 0.611,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000164-0-1",
+      "gene": "CPA2",
+      "n": 1365,
+      "esm2": 0.4849,
+      "prosst": 0.6787,
+      "hybrid": 0.6292,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000258-0-1",
+      "gene": "CBX7",
+      "n": 931,
+      "esm2": 0.6153,
+      "prosst": 0.7205,
+      "hybrid": 0.7004,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000183-0-1",
+      "gene": "BTK",
+      "n": 1102,
+      "esm2": 0.6899,
+      "prosst": 0.722,
+      "hybrid": 0.7255,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000043-a-2",
+      "gene": "S505N",
+      "n": 562,
+      "esm2": 0.2963,
+      "prosst": 0.3503,
+      "hybrid": 0.3522,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000906-a-1",
+      "gene": "MPDZ",
+      "n": 1790,
+      "esm2": 0.5125,
+      "prosst": 0.6135,
+      "hybrid": 0.5964,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001106-a-1",
+      "gene": "TJP2",
+      "n": 1796,
+      "esm2": 0.5697,
+      "prosst": 0.6623,
+      "hybrid": 0.6636,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000107-b-1",
+      "gene": "PSAT1",
+      "n": 1914,
+      "esm2": 0.5575,
+      "prosst": 0.4648,
+      "hybrid": 0.556,
+      "gemme": 0.5312,
+      "hybrid3": 0.5713,
+      "has_gemme": true
+    },
+    {
+      "urn": "urn:mavedb:00000890-a-1",
+      "gene": "MAP2K5",
+      "n": 1788,
+      "esm2": 0.4277,
+      "prosst": 0.5687,
+      "hybrid": 0.5616,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000958-a-1",
+      "gene": "PDZRN3",
+      "n": 1550,
+      "esm2": 0.6285,
+      "prosst": 0.6267,
+      "hybrid": 0.6678,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000789-a-1",
+      "gene": "DVL1",
+      "n": 1187,
+      "esm2": 0.3599,
+      "prosst": 0.4661,
+      "hybrid": 0.4475,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000948-a-1",
+      "gene": "PARD3",
+      "n": 1650,
+      "esm2": 0.6166,
+      "prosst": 0.724,
+      "hybrid": 0.7115,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001062-a-1",
+      "gene": "SNTA1",
+      "n": 1312,
+      "esm2": 0.678,
+      "prosst": 0.7339,
+      "hybrid": 0.7527,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001150-a-1",
+      "gene": "YBX2",
+      "n": 1091,
+      "esm2": 0.5796,
+      "prosst": 0.6237,
+      "hybrid": 0.6398,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000767-a-1",
+      "gene": "DLG3",
+      "n": 1729,
+      "esm2": 0.5377,
+      "prosst": 0.621,
+      "hybrid": 0.601,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000836-a-1",
+      "gene": "GRIP1",
+      "n": 1290,
+      "esm2": 0.4941,
+      "prosst": 0.609,
+      "hybrid": 0.6177,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001149-a-1",
+      "gene": "YBX1",
+      "n": 1729,
+      "esm2": 0.7009,
+      "prosst": 0.746,
+      "hybrid": 0.7535,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000737-a-1",
+      "gene": "CRYBA1",
+      "n": 1666,
+      "esm2": 0.52,
+      "prosst": 0.7045,
+      "hybrid": 0.6847,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000742-a-1",
+      "gene": "CRYGA",
+      "n": 1679,
+      "esm2": 0.5086,
+      "prosst": 0.5415,
+      "hybrid": 0.5788,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000908-a-1",
+      "gene": "MPP3",
+      "n": 1512,
+      "esm2": 0.6282,
+      "prosst": 0.7082,
+      "hybrid": 0.7214,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000947-a-1",
+      "gene": "PARD3B",
+      "n": 1626,
+      "esm2": 0.3774,
+      "prosst": 0.4823,
+      "hybrid": 0.4584,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001131-a-1",
+      "gene": "USH1C",
+      "n": 1255,
+      "esm2": 0.6093,
+      "prosst": 0.7311,
+      "hybrid": 0.715,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000386-0-1",
+      "gene": "ITCH",
+      "n": 613,
+      "esm2": 0.5606,
+      "prosst": 0.5381,
+      "hybrid": 0.594,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000739-a-1",
+      "gene": "CRYBB1",
+      "n": 1603,
+      "esm2": 0.3843,
+      "prosst": 0.4046,
+      "hybrid": 0.4197,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000743-a-1",
+      "gene": "CRYGB",
+      "n": 1650,
+      "esm2": 0.4006,
+      "prosst": 0.4327,
+      "hybrid": 0.4729,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001102-a-1",
+      "gene": "TFG",
+      "n": 1596,
+      "esm2": 0.3705,
+      "prosst": 0.5149,
+      "hybrid": 0.4836,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000324-0-1",
+      "gene": "ALX4",
+      "n": 903,
+      "esm2": 0.5274,
+      "prosst": 0.5352,
+      "hybrid": 0.5542,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000803-a-1",
+      "gene": "FADD",
+      "n": 1632,
+      "esm2": 0.5997,
+      "prosst": 0.701,
+      "hybrid": 0.7341,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001151-a-1",
+      "gene": "YBX3",
+      "n": 1633,
+      "esm2": 0.6441,
+      "prosst": 0.6689,
+      "hybrid": 0.6908,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000740-a-1",
+      "gene": "CRYBB2",
+      "n": 1309,
+      "esm2": 0.5,
+      "prosst": 0.4674,
+      "hybrid": 0.5261,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000877-a-1",
+      "gene": "LCP1",
+      "n": 1537,
+      "esm2": 0.5965,
+      "prosst": 0.4634,
+      "hybrid": 0.5548,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000891-a-1",
+      "gene": "MAP3K20",
+      "n": 1479,
+      "esm2": 0.6676,
+      "prosst": 0.598,
+      "hybrid": 0.6669,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000256-0-1",
+      "gene": "SQSTM1",
+      "n": 847,
+      "esm2": 0.7029,
+      "prosst": 0.7604,
+      "hybrid": 0.7969,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000738-a-1",
+      "gene": "CRYBA4",
+      "n": 1362,
+      "esm2": 0.5375,
+      "prosst": 0.5896,
+      "hybrid": 0.6471,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000792-a-1",
+      "gene": "ELF5",
+      "n": 1427,
+      "esm2": 0.7025,
+      "prosst": 0.6572,
+      "hybrid": 0.7226,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000878-a-1",
+      "gene": "LDB3",
+      "n": 1565,
+      "esm2": 0.6943,
+      "prosst": 0.7851,
+      "hybrid": 0.7799,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001107-a-1",
+      "gene": "TNNC2",
+      "n": 1544,
+      "esm2": 0.4791,
+      "prosst": 0.4684,
+      "hybrid": 0.4919,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000186-0-1",
+      "gene": "NPHP1",
+      "n": 1117,
+      "esm2": 0.6522,
+      "prosst": 0.6579,
+      "hybrid": 0.6871,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000439-0-1",
+      "gene": "FYN",
+      "n": 1116,
+      "esm2": 0.6647,
+      "prosst": 0.7115,
+      "hybrid": 0.7129,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000715-a-1",
+      "gene": "CASK",
+      "n": 1536,
+      "esm2": 0.6801,
+      "prosst": 0.7636,
+      "hybrid": 0.7686,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000791-a-1",
+      "gene": "ELF3",
+      "n": 1453,
+      "esm2": 0.5476,
+      "prosst": 0.5441,
+      "hybrid": 0.5794,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000812-a-1",
+      "gene": "FLI1",
+      "n": 1376,
+      "esm2": 0.4215,
+      "prosst": 0.5348,
+      "hybrid": 0.525,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000976-a-1",
+      "gene": "POU4F1",
+      "n": 1509,
+      "esm2": 0.595,
+      "prosst": 0.5469,
+      "hybrid": 0.6034,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000747-a-1",
+      "gene": "CRYGD",
+      "n": 1454,
+      "esm2": 0.2799,
+      "prosst": 0.362,
+      "hybrid": 0.35,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000748-a-1",
+      "gene": "CRYGS",
+      "n": 1402,
+      "esm2": 0.3838,
+      "prosst": 0.3702,
+      "hybrid": 0.4021,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000799-a-1",
+      "gene": "ERG",
+      "n": 1527,
+      "esm2": 0.4729,
+      "prosst": 0.5812,
+      "hybrid": 0.5714,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000802-a-1",
+      "gene": "ETS1",
+      "n": 1479,
+      "esm2": 0.6351,
+      "prosst": 0.7538,
+      "hybrid": 0.7645,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000999-a-1",
+      "gene": "PYCARD",
+      "n": 1460,
+      "esm2": 0.586,
+      "prosst": 0.5653,
+      "hybrid": 0.6364,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001017-a-1",
+      "gene": "RIPK2",
+      "n": 1347,
+      "esm2": 0.3426,
+      "prosst": 0.5482,
+      "hybrid": 0.5128,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001135-a-1",
+      "gene": "VCP",
+      "n": 1503,
+      "esm2": 0.4108,
+      "prosst": 0.6311,
+      "hybrid": 0.5805,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000745-a-1",
+      "gene": "CRYGC",
+      "n": 1280,
+      "esm2": 0.5247,
+      "prosst": 0.627,
+      "hybrid": 0.6427,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000790-a-1",
+      "gene": "DVL3",
+      "n": 1500,
+      "esm2": 0.3857,
+      "prosst": 0.5843,
+      "hybrid": 0.5526,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000819-a-1",
+      "gene": "FRMPD4",
+      "n": 1451,
+      "esm2": 0.5712,
+      "prosst": 0.7444,
+      "hybrid": 0.7208,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000733-a-1",
+      "gene": "CKS1B",
+      "n": 1481,
+      "esm2": 0.2216,
+      "prosst": 0.5032,
+      "hybrid": 0.4017,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000824-a-1",
+      "gene": "GABPA",
+      "n": 1463,
+      "esm2": 0.6553,
+      "prosst": 0.6615,
+      "hybrid": 0.7213,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000866-a-1",
+      "gene": "KDM1A",
+      "n": 1484,
+      "esm2": 0.5716,
+      "prosst": 0.5918,
+      "hybrid": 0.6548,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000979-a-1",
+      "gene": "POU5F1",
+      "n": 1298,
+      "esm2": 0.3588,
+      "prosst": 0.407,
+      "hybrid": 0.4098,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00000970-a-1",
+      "gene": "POU3F1",
+      "n": 1445,
+      "esm2": 0.5835,
+      "prosst": 0.6114,
+      "hybrid": 0.6279,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001084-a-1",
+      "gene": "STOX1",
+      "n": 1426,
+      "esm2": 0.4921,
+      "prosst": 0.5878,
+      "hybrid": 0.5874,
+      "has_gemme": false
+    },
+    {
+      "urn": "urn:mavedb:00001085-a-1",
+      "gene": "STOX2",
+      "n": 1457,
+      "esm2": 0.3788,
+      "prosst": 0.5067,
+      "hybrid": 0.4919,
+      "has_gemme": false
+    }
+  ]
+}
