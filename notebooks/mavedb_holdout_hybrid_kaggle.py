@@ -245,6 +245,18 @@ def main():
     except Exception as e:
         print("STRUCT_SENSITIVITY check failed:", type(e).__name__, str(e)[:80])
 
+    # GEMME evolution modality (the 3rd modality) -- computed LOCALLY via Docker and shipped as a Kaggle
+    # dataset (GEMME needs JET2/R/MUSCLE which Kaggle can't run). {urn: {"table": {mutation: score}}}.
+    GEMME = {}
+    for cand in ("/kaggle/input/gemme-holdout-tables/gemme_holdout_tables.json",
+                 "gemme_holdout_tables.json"):
+        try:
+            GEMME = json.load(open(cand)); print("loaded GEMME tables: " + str(len(GEMME)) + " proteins"); break
+        except Exception:
+            continue
+    if not GEMME:
+        print("GEMME tables NOT found -- 3-way disabled, running 2-way only")
+
     results, skipped = [], {"fetch": 0, "align": 0, "too_few": 0}
     for urn, meta in MANIFEST.items():
         try:
@@ -269,13 +281,26 @@ def main():
         pd = prosst_deltas(seq, variants, toks, pmodel, ptok, torch, device)
         e_scores = [ed[v] for v in variants]; p_scores = [pd[v] for v in variants]
         er = midrank(e_scores); pr = midrank(p_scores)
-        hyb = [er[i] + pr[i] for i in range(len(variants))]   # rank-average (both higher=preserved)
+        hyb = [er[i] + pr[i] for i in range(len(variants))]   # 2-way rank-average (both higher=preserved)
         rho_e = abs(spearman(e_scores, ys)); rho_p = abs(spearman(p_scores, ys)); rho_h = abs(spearman(hyb, ys))
         r = {"urn": urn, "gene": meta.get("gene"), "n": len(variants),
              "esm2": round(rho_e, 4), "prosst": round(rho_p, 4), "hybrid": round(rho_h, 4)}
+        # 3-WAY: if GEMME covers every scored variant of this assay, add the evolution modality.
+        gt = (GEMME.get(urn) or {}).get("table") or {}
+        gvars = [v for v in variants if ("%s%d%s" % v) in gt]
+        if gvars and len(gvars) == len(variants):
+            g_scores = [gt["%s%d%s" % v] for v in variants]
+            gr = midrank(g_scores)
+            hyb3 = [er[i] + pr[i] + gr[i] for i in range(len(variants))]  # 3-way rank-average
+            rho_g = abs(spearman(g_scores, ys)); rho_h3 = abs(spearman(hyb3, ys))
+            r["gemme"] = round(rho_g, 4); r["hybrid3"] = round(rho_h3, 4); r["has_gemme"] = True
+        else:
+            r["has_gemme"] = False
         results.append(r)
+        _g = ("  GEMME=%.3f HYB3=%.3f" % (r.get("gemme", float('nan')), r.get("hybrid3", float('nan')))) \
+            if r["has_gemme"] else ""
         print("  " + urn + " " + str(meta.get("gene"))[:12] + " n=" + str(len(variants))
-              + "  ESM2=" + ("%.3f" % rho_e) + " ProSST=" + ("%.3f" % rho_p) + " HYBRID=" + ("%.3f" % rho_h))
+              + "  ESM2=" + ("%.3f" % rho_e) + " ProSST=" + ("%.3f" % rho_p) + " HYBRID=" + ("%.3f" % rho_h) + _g)
 
     def med(key):
         v = [r[key] for r in results if r[key] == r[key]]
@@ -295,11 +320,34 @@ def main():
     if prosst_degenerate:
         print("*** PROSST_DEGENERATE: median " + ("%.4f" % mp) + " < 0.10 -- the structure model is BROKEN "
               "(check PROSST_TIE above); the HYBRID number is INVALID, do NOT publish it. ***")
-    out = {"_schema": "mavedb-holdout-hybrid-v1", "esm_model": ESM_MODEL, "prosst_model": PROSST_MODEL,
+
+    # 3-WAY (ESM2+GEMME+ProSST) vs 2-way -- computed ONLY on the GEMME-covered subset (paired, apples-to-apples).
+    threeway = None
+    sub = [r for r in results if r.get("has_gemme")]
+    if len(sub) >= 5:
+        def submed(key): return float(np.median([r[key] for r in sub if r[key] == r[key]]))
+        w_h3_h2 = sum(1 for r in sub if r["hybrid3"] > r["hybrid"])   # 3-way beats 2-way?
+        w_h3_g = sum(1 for r in sub if r["hybrid3"] > r["gemme"])
+        w_g_h2 = sum(1 for r in sub if r["gemme"] > r["hybrid"])
+        threeway = {"n_gemme_covered": len(sub), "median_esm2": submed("esm2"), "median_prosst": submed("prosst"),
+                    "median_gemme": submed("gemme"), "median_hybrid2": submed("hybrid"),
+                    "median_hybrid3": submed("hybrid3"),
+                    "paired_hybrid3_gt_hybrid2": w_h3_h2, "paired_hybrid3_gt_gemme": w_h3_g,
+                    "paired_gemme_gt_hybrid2": w_g_h2}
+        print("\n=== 3-WAY on the GEMME-covered subset (N=" + str(len(sub)) + ") ===")
+        print("median |Spearman|: ESM2=" + ("%.4f" % submed("esm2")) + " GEMME=" + ("%.4f" % submed("gemme"))
+              + " ProSST=" + ("%.4f" % submed("prosst")) + " | 2way=" + ("%.4f" % submed("hybrid"))
+              + " 3way=" + ("%.4f" % submed("hybrid3")))
+        print("paired: 3way>2way " + str(w_h3_h2) + "/" + str(len(sub)) + " | 3way>GEMME " + str(w_h3_g)
+              + "/" + str(len(sub)) + " | GEMME>2way " + str(w_g_h2) + "/" + str(len(sub)))
+    else:
+        print("\n3-WAY: GEMME covered only " + str(len(sub)) + " assays (need >=5) -- skipped")
+
+    out = {"_schema": "mavedb-holdout-hybrid-v2", "esm_model": ESM_MODEL, "prosst_model": PROSST_MODEL,
            "n_manifest": len(MANIFEST), "n_scored": len(results),
            "median_esm2": me, "median_prosst": mp, "median_hybrid": mh,
            "prosst_degenerate": prosst_degenerate, "struct_sensitivity_check": struct_check,
-           "transformers_pin": TRANSFORMERS_PIN,
+           "transformers_pin": TRANSFORMERS_PIN, "threeway": threeway,
            "hybrid_wins_vs_best_single": wins, "skipped": skipped,
            "comparators": {"esm2_full_holdout": 0.478, "am_holdout": 0.502}, "results": results}
     json.dump(out, open("/kaggle/working/mavedb_holdout_hybrid_result.json", "w"), indent=2)

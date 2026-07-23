@@ -26,7 +26,7 @@ def _api():
     return api
 
 
-def push(code_py: str, slug: str, gpu: bool, internet: bool) -> int:
+def push(code_py: str, slug: str, gpu: bool, internet: bool, dataset: str | None = None) -> int:
     api = _api()
     user = api.get_config_value("username") or "emanueleebrahimi"
     kid = f"{user}/{slug}"
@@ -39,6 +39,9 @@ def push(code_py: str, slug: str, gpu: bool, internet: bool) -> int:
             "language": "python", "kernel_type": "script",
             "is_private": True, "enable_gpu": bool(gpu), "enable_internet": bool(internet),
         }
+        if dataset:
+            # attach a dataset (e.g. the precomputed GEMME tables) at /kaggle/input/<slug>/
+            meta["dataset_sources"] = [dataset if "/" in dataset else f"{user}/{dataset}"]
         if gpu:
             # enable_gpu alone provisions a Tesla P100 (CC 6.0) that Kaggle's current torch (CC 7.0+)
             # cannot run ("no kernel image available"). Pin the T4. See memory
@@ -76,11 +79,12 @@ def main() -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("push"); p.add_argument("code_py"); p.add_argument("slug")
     p.add_argument("--gpu", action="store_true"); p.add_argument("--no-internet", action="store_true")
+    p.add_argument("--dataset", default=None, help="attach a Kaggle dataset slug at /kaggle/input/<slug>/")
     s = sub.add_parser("status"); s.add_argument("slug")
     q = sub.add_parser("pull"); q.add_argument("slug"); q.add_argument("dest")
     a = ap.parse_args()
     if a.cmd == "push":
-        return push(a.code_py, a.slug, a.gpu, not a.no_internet)
+        return push(a.code_py, a.slug, a.gpu, not a.no_internet, a.dataset)
     if a.cmd == "status":
         return status(a.slug)
     if a.cmd == "pull":
