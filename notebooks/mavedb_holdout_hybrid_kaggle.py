@@ -28,6 +28,11 @@ MAXLEN = 1022
 BATCH = 16
 ESM_MODEL = "facebook/esm2_t33_650M_UR50D"
 PROSST_MODEL = "AI4Protein/ProSST-2048"
+# PIN the ProSST remote-code revision. Run 2 (2026-07-23) had a VERIFIED decoder tie yet still scored ~0.05:
+# `trust_remote_code` with revision=None tracks main, and the Kaggle log showed "A new version of ...
+# modeling_prosst.py was downloaded" -- i.e. Kaggle pulled NEWER remote code than the local snapshot that
+# scores MTHFR at Spearman 0.40. Pinning to the known-good local revision is the fix.
+PROSST_REVISION = "e94ffee7846d7f55c1bf5efa8ec7372a336ac4b8"
 
 # {urn: {gene, uniprot, offset, seq_len, n_tokens, structure_tokens:[...]}} -- injected at push time.
 MANIFEST = json.loads(r'''__MANIFEST_JSON__''')
@@ -161,8 +166,10 @@ def main():
     mask_id = etok.mask_token_id
     aa_ids = {aa: etok.convert_tokens_to_ids(aa) for aa in AA}
 
-    pmodel = AutoModelForMaskedLM.from_pretrained(PROSST_MODEL, trust_remote_code=True)
-    ptok = AutoTokenizer.from_pretrained(PROSST_MODEL, trust_remote_code=True)
+    pmodel = AutoModelForMaskedLM.from_pretrained(PROSST_MODEL, trust_remote_code=True,
+                                                  revision=PROSST_REVISION)
+    ptok = AutoTokenizer.from_pretrained(PROSST_MODEL, trust_remote_code=True, revision=PROSST_REVISION)
+    print("PROSST_REVISION pinned:", PROSST_REVISION)
     # CRITICAL: the ProSST checkpoint OMITS cls.predictions.decoder.weight -> it loads RANDOM -> garbage
     # logits (median |rho| ~0.04, the 2026-07-23 run-1 failure). Plain attribute assignment did NOT stick
     # under Kaggle's newer "Materializing param" lazy-load path, so ALSO copy in-place, then VERIFY loudly.
