@@ -102,3 +102,4 @@ data/processed/ecoli_mash_clades.json
 data/processed/protein_effect_cache/
 data/processed/gene_lookup_cache/
 notebooks/*_filled.py
+wiki/gemme_holdout_tables.json
