@@ -1,0 +1,415 @@
+{
+  "_schema": "mavedb-am-holdout-v1",
+  "date": "2026-07-23",
+  "task": "AlphaMissense pathogenicity vs held-out MaveDB DMS fitness (|Spearman|), offset-aligned",
+  "comparator_esm2": {
+    "median_abs_spearman": 0.478,
+    "median_human": 0.492,
+    "source": "wiki/mavedb_full_esm2_2026-07-22 (2383 assays / 978 human)"
+  },
+  "leakage_note": "AM is NOT sequence-held-out (proteome-wide training); the DMS-FITNESS labels ARE independent of AM training. ESM2 is zero-shot. Full leakage-free ESM2+ProSST hybrid at scale = Kaggle follow-up.",
+  "n_scored": 57,
+  "am_median_abs_spearman": 0.5022,
+  "results": [
+    {
+      "gene": "HYAP65",
+      "uniprot": "P46937",
+      "urn": "urn:mavedb:00000002-a-1",
+      "n": 203,
+      "abs_spearman": 0.7058
+    },
+    {
+      "gene": "CD86",
+      "uniprot": "P42081",
+      "urn": "urn:mavedb:00000046-a-1",
+      "n": 511,
+      "abs_spearman": 0.4207
+    },
+    {
+      "gene": "MTHFR",
+      "uniprot": "P42898",
+      "urn": "urn:mavedb:00000049-a-1",
+      "n": 12464,
+      "abs_spearman": 0.2774
+    },
+    {
+      "gene": "UBE2I",
+      "uniprot": "P63279",
+      "urn": "urn:mavedb:00000001-a-4",
+      "n": 2872,
+      "abs_spearman": 0.5344
+    },
+    {
+      "gene": "TSC2",
+      "uniprot": "P49815",
+      "urn": "urn:mavedb:00001267-0-2",
+      "n": 8946,
+      "abs_spearman": 0.4705
+    },
+    {
+      "gene": "STK11",
+      "uniprot": "Q15831",
+      "urn": "urn:mavedb:00001246-a-1",
+      "n": 6021,
+      "abs_spearman": 0.3716
+    },
+    {
+      "gene": "CPOX",
+      "uniprot": "P36551",
+      "urn": "urn:mavedb:00001282-a-1",
+      "n": 7446,
+      "abs_spearman": 0.4266
+    },
+    {
+      "gene": "CYP2C19",
+      "uniprot": "P33261",
+      "urn": "urn:mavedb:00001199-a-1",
+      "n": 7830,
+      "abs_spearman": 0.6757
+    },
+    {
+      "gene": "HECTD1",
+      "uniprot": "Q9ULT8",
+      "urn": "urn:mavedb:00000392-0-1",
+      "n": 1250,
+      "abs_spearman": 0.5954
+    },
+    {
+      "gene": "RHODOPSIN",
+      "uniprot": "P08100",
+      "urn": "urn:mavedb:00001275-a-1",
+      "n": 6572,
+      "abs_spearman": 0.2936
+    },
+    {
+      "gene": "HUMAN",
+      "uniprot": "P08100",
+      "urn": "urn:mavedb:00001275-a-2",
+      "n": 6611,
+      "abs_spearman": 0.3346
+    },
+    {
+      "gene": "CXCR4",
+      "uniprot": "P61073",
+      "urn": "urn:mavedb:00000048-c-1",
+      "n": 531,
+      "abs_spearman": 0.0255
+    },
+    {
+      "gene": "CYP2C9",
+      "uniprot": "P11712",
+      "urn": "urn:mavedb:00000095-b-1",
+      "n": 6370,
+      "abs_spearman": 0.5983
+    },
+    {
+      "gene": "HMBS",
+      "uniprot": "P08397",
+      "urn": "urn:mavedb:00000108-0-1",
+      "n": 5963,
+      "abs_spearman": 0.451
+    },
+    {
+      "gene": "ASPA",
+      "uniprot": "P45381",
+      "urn": "urn:mavedb:00000657-b-1",
+      "n": 5842,
+      "abs_spearman": 0.5189
+    },
+    {
+      "gene": "NDUFAF6",
+      "uniprot": "Q330K2",
+      "urn": "urn:mavedb:00000663-a-1",
+      "n": 209,
+      "abs_spearman": 0.04
+    },
+    {
+      "gene": "PTK6",
+      "uniprot": "Q13882",
+      "urn": "urn:mavedb:00000272-0-1",
+      "n": 1193,
+      "abs_spearman": 0.5562
+    },
+    {
+      "gene": "MLH1",
+      "uniprot": "P40692",
+      "urn": "urn:mavedb:00001218-a-1",
+      "n": 4802,
+      "abs_spearman": 0.5153
+    },
+    {
+      "gene": "GDI1",
+      "uniprot": "P31150",
+      "urn": "urn:mavedb:00000066-a-1",
+      "n": 4365,
+      "abs_spearman": 0.2102
+    },
+    {
+      "gene": "DNAJB2",
+      "uniprot": "P25686",
+      "urn": "urn:mavedb:00000300-0-1",
+      "n": 1234,
+      "abs_spearman": 0.4695
+    },
+    {
+      "gene": "TECR",
+      "uniprot": "Q9NZ01",
+      "urn": "urn:mavedb:00000067-a-1",
+      "n": 3756,
+      "abs_spearman": 0.158
+    },
+    {
+      "gene": "LASP1",
+      "uniprot": "Q14847",
+      "urn": "urn:mavedb:00000393-0-1",
+      "n": 1080,
+      "abs_spearman": 0.4667
+    },
+    {
+      "gene": "RASA1",
+      "uniprot": "P20936",
+      "urn": "urn:mavedb:00000329-0-1",
+      "n": 1137,
+      "abs_spearman": 0.5297
+    },
+    {
+      "gene": "RAS",
+      "uniprot": "P01112",
+      "urn": "urn:mavedb:00000057-b-1",
+      "n": 3135,
+      "abs_spearman": 0.1583
+    },
+    {
+      "gene": "DNAJA3",
+      "uniprot": "Q96EY1",
+      "urn": "urn:mavedb:00000440-0-1",
+      "n": 1231,
+      "abs_spearman": 0.4007
+    },
+    {
+      "gene": "NUDT15",
+      "uniprot": "Q9NV35",
+      "urn": "urn:mavedb:00000055-b-1",
+      "n": 2934,
+      "abs_spearman": 0.6018
+    },
+    {
+      "gene": "OSTF1",
+      "uniprot": "Q92882",
+      "urn": "urn:mavedb:00000220-0-1",
+      "n": 57,
+      "abs_spearman": 0.5163
+    },
+    {
+      "gene": "ALPHA-SYNUCLEIN",
+      "uniprot": "P37840",
+      "urn": "urn:mavedb:00001249-a-1",
+      "n": 2585,
+      "abs_spearman": 0.2777
+    },
+    {
+      "gene": "LYN",
+      "uniprot": "P07948",
+      "urn": "urn:mavedb:00000444-0-1",
+      "n": 1120,
+      "abs_spearman": 0.5807
+    },
+    {
+      "gene": "NKX3-1",
+      "uniprot": "Q99801",
+      "urn": "urn:mavedb:00000298-0-1",
+      "n": 1082,
+      "abs_spearman": 0.5022
+    },
+    {
+      "gene": "DNAJA1",
+      "uniprot": "P31689",
+      "urn": "urn:mavedb:00000304-0-1",
+      "n": 1233,
+      "abs_spearman": 0.2914
+    },
+    {
+      "gene": "MPL",
+      "uniprot": "P40238",
+      "urn": "urn:mavedb:00000043-a-1",
+      "n": 562,
+      "abs_spearman": 0.1546
+    },
+    {
+      "gene": "HCK",
+      "uniprot": "P08631",
+      "urn": "urn:mavedb:00000404-0-1",
+      "n": 1120,
+      "abs_spearman": 0.5779
+    },
+    {
+      "gene": "PRPF40A",
+      "uniprot": "O75400",
+      "urn": "urn:mavedb:00000207-0-1",
+      "n": 1196,
+      "abs_spearman": 0.539
+    },
+    {
+      "gene": "LCK",
+      "uniprot": "P06239",
+      "urn": "urn:mavedb:00000151-0-1",
+      "n": 1083,
+      "abs_spearman": 0.6014
+    },
+    {
+      "gene": "H1-0",
+      "uniprot": "P07305",
+      "urn": "urn:mavedb:00000438-0-1",
+      "n": 1325,
+      "abs_spearman": 0.3343
+    },
+    {
+      "gene": "UBB",
+      "uniprot": "P0CG47",
+      "urn": "urn:mavedb:00000431-0-1",
+      "n": 1307,
+      "abs_spearman": 0.5009
+    },
+    {
+      "gene": "CPA2",
+      "uniprot": "P48052",
+      "urn": "urn:mavedb:00000164-0-1",
+      "n": 1365,
+      "abs_spearman": 0.3673
+    },
+    {
+      "gene": "CBX7",
+      "uniprot": "O95931",
+      "urn": "urn:mavedb:00000258-0-1",
+      "n": 931,
+      "abs_spearman": 0.5063
+    },
+    {
+      "gene": "A\u039242",
+      "uniprot": "P05067",
+      "urn": "urn:mavedb:00000058-a-1",
+      "n": 796,
+      "abs_spearman": 0.1478
+    },
+    {
+      "gene": "HNRNPUL1",
+      "uniprot": "Q9BUJ2",
+      "urn": "urn:mavedb:00000221-0-1",
+      "n": 73,
+      "abs_spearman": 0.3456
+    },
+    {
+      "gene": "BTK",
+      "uniprot": "Q06187",
+      "urn": "urn:mavedb:00000183-0-1",
+      "n": 1102,
+      "abs_spearman": 0.6517
+    },
+    {
+      "gene": "S505N",
+      "uniprot": "P40238",
+      "urn": "urn:mavedb:00000043-a-2",
+      "n": 543,
+      "abs_spearman": 0.4541
+    },
+    {
+      "gene": "SCRIB",
+      "uniprot": "Q14160",
+      "urn": "urn:mavedb:00001043-a-1",
+      "n": 1779,
+      "abs_spearman": 0.6696
+    },
+    {
+      "gene": "MPDZ",
+      "uniprot": "O75970",
+      "urn": "urn:mavedb:00000906-a-1",
+      "n": 1790,
+      "abs_spearman": 0.4817
+    },
+    {
+      "gene": "TJP2",
+      "uniprot": "Q9UDY2",
+      "urn": "urn:mavedb:00001106-a-1",
+      "n": 1796,
+      "abs_spearman": 0.5597
+    },
+    {
+      "gene": "PSAT1",
+      "uniprot": "Q9Y617",
+      "urn": "urn:mavedb:00000107-b-1",
+      "n": 1914,
+      "abs_spearman": 0.5672
+    },
+    {
+      "gene": "MAP2K5",
+      "uniprot": "Q13163",
+      "urn": "urn:mavedb:00000890-a-1",
+      "n": 1788,
+      "abs_spearman": 0.5205
+    },
+    {
+      "gene": "PDZRN3",
+      "uniprot": "Q9UPQ7",
+      "urn": "urn:mavedb:00000958-a-1",
+      "n": 1550,
+      "abs_spearman": 0.6373
+    },
+    {
+      "gene": "DVL1",
+      "uniprot": "O14640",
+      "urn": "urn:mavedb:00000789-a-1",
+      "n": 1187,
+      "abs_spearman": 0.3949
+    },
+    {
+      "gene": "PARD3",
+      "uniprot": "Q8TEW0",
+      "urn": "urn:mavedb:00000948-a-1",
+      "n": 1650,
+      "abs_spearman": 0.504
+    },
+    {
+      "gene": "SNTA1",
+      "uniprot": "Q13424",
+      "urn": "urn:mavedb:00001062-a-1",
+      "n": 1312,
+      "abs_spearman": 0.5626
+    },
+    {
+      "gene": "YBX2",
+      "uniprot": "Q9Y2T7",
+      "urn": "urn:mavedb:00001150-a-1",
+      "n": 1091,
+      "abs_spearman": 0.5441
+    },
+    {
+      "gene": "SORBS1",
+      "uniprot": "Q9BX66",
+      "urn": "urn:mavedb:00000363-0-1",
+      "n": 1155,
+      "abs_spearman": 0.5292
+    },
+    {
+      "gene": "DLG3",
+      "uniprot": "Q92796",
+      "urn": "urn:mavedb:00000767-a-1",
+      "n": 1729,
+      "abs_spearman": 0.5164
+    },
+    {
+      "gene": "GRIP1",
+      "uniprot": "Q9Y3R0",
+      "urn": "urn:mavedb:00000836-a-1",
+      "n": 1290,
+      "abs_spearman": 0.4736
+    },
+    {
+      "gene": "YBX1",
+      "uniprot": "P67809",
+      "urn": "urn:mavedb:00001149-a-1",
+      "n": 1729,
+      "abs_spearman": 0.5849
+    }
+  ],
+  "frozen_surface_changed": false
+}
