@@ -40,6 +40,11 @@ from dna_decode.data.sarscov2_amr import (
     call_sarscov2_observed,
     gene_for_sarscov2_drug,
 )
+from dna_decode.data.hcmv_amr import (
+    all_supported_hcmv_drugs,
+    call_hcmv_observed,
+    genes_for_hcmv_drug,
+)
 from dna_decode.data.hiv_amr import (
     all_supported_hiv_drugs,
     call_hiv_observed,
@@ -324,6 +329,32 @@ def _sarscov2_main(args) -> int:
     return _emit_target_site(rec, call, sample_id, args)
 
 
+def _hcmv_main(args) -> int:
+    """HCMV target-site decoder branch — the first herpesvirus cell (GCV/valGCV/CDV/FOS via UL97+UL54,
+    letermovir via UL56). v0 is WHEEL-ONLY `--observed UL97:M460V,UL54:F412L[,UL56:C325W]` (genome-FASTA mode
+    = v0.1, needs committed UL97/UL54/UL56 CDS references + a BLAST caller, mirroring the SARS-CoV-2 path).
+    Validated IN-DISTRIBUTION vs the measured recombinant fold-change the catalog is curated from."""
+    if args.organism == "Escherichia":            # relabel the bacterial default on this path
+        args.organism = "HCMV"
+    genes = genes_for_hcmv_drug(args.drug)         # (UL97, UL54) / (UL54,) / (UL56,)
+    gene_hint = ",".join(f"{g}:SUB" for g in genes)
+    if args.observed is not None:
+        call = call_hcmv_observed(args.drug, _parse_observed(args.observed))
+        sample_id = args.sample_id or "observed"
+        prov = {"mode": "observed-substitutions", "observed": args.observed, "genes": list(genes)}
+    elif args.genome_fasta is not None:
+        print(f"ERROR: HCMV genome-FASTA mode is v0.1 (needs committed {'/'.join(genes)} CDS references + a "
+              f"BLAST caller). Use --observed {gene_hint} for a wheel-only call.", file=sys.stderr)
+        return 3
+    else:
+        print(f"ERROR: HCMV drug needs --observed {gene_hint} (e.g. UL97:M460V,UL54:F412L).", file=sys.stderr)
+        return 2
+    rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
+                              caller_name="dna_decode-hcmv-target-mutation-v0",
+                              source="Chou recombinant-phenotyping catalog (validate vs measured fold-change)")
+    return _emit_target_site(rec, call, sample_id, args)
+
+
 def _run_amrfinder_for_genome(fasta: Path, sample_id: str, out_root: Path, db: Path,
                               organism: str = "Escherichia") -> Path:
     """Genome mode: lazily import the repo's AMRFinder Docker runner (not in the wheel).
@@ -353,7 +384,8 @@ def main(argv=None) -> int:
     ap.add_argument("--drug", required=True,
                     choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
                                    | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
-                                   | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs())),
+                                   | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs())
+                                   | set(all_supported_hcmv_drugs())),
                     metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), "
                                          "antimalarial (BLAST-Pfkelch13 engine), or antiviral "
                                          "(BLAST-influenza-NA engine) drug")
@@ -435,6 +467,13 @@ def main(argv=None) -> int:
                   file=sys.stderr)
             return 2
         return _sarscov2_main(args)
+
+    if args.drug in all_supported_hcmv_drugs():
+        if args.amrfinder_run is not None:
+            print("ERROR: --amrfinder-run is bacterial-only; HCMV drugs use --observed GENE:SUB[,...] "
+                  "(e.g. UL97:M460V,UL54:F412L)", file=sys.stderr)
+            return 2
+        return _hcmv_main(args)
 
     if args.observed is not None:
         print("ERROR: --observed is fungal-only; bacterial drugs use --amrfinder-run or --genome-fasta",
