@@ -165,6 +165,29 @@ packages = ["dna_decode"]
 "wiki/hiv_decoder_report_card.json" = "dna_decode/report_cards/hiv_decoder_report_card.json"
 "wiki/tb_report_card.json" = "dna_decode/report_cards/tb_report_card.json"
 
+# SDIST size reduction (2026-07-23). Hatchling's DEFAULT sdist ships every VCS-tracked file — for this
+# research repo that meant ~8.4 MB of wiki/ (9.2 MB uncompressed), data/, scripts/, tests/, project_state/,
+# plans/ etc. that a source build does NOT need (the wheel was already lean at ~0.6 MB — just the package).
+# This allowlist ships ONLY what a `pip install` from source requires: the package, the build/metadata files,
+# docs, and the 4 trust-surface cards the wheel force-includes above (a source build re-runs that copy, so
+# those 4 wiki/ files MUST be present — the rest of wiki/ must not). Research artifacts live in the git repo,
+# not the distributed sdist.
+[tool.hatch.build.targets.sdist]
+include = [
+    "dna_decode",
+    "pyproject.toml",
+    "README.md",
+    "CHANGELOG.md",
+    "LESSONS_LEARNED.md",
+    "AGENTS.md",
+    "LICENSE*",
+    "docs",
+    "wiki/amr_portal_independent_report_card.json",
+    "wiki/decoder_validation_report_card.json",
+    "wiki/hiv_decoder_report_card.json",
+    "wiki/tb_report_card.json",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
