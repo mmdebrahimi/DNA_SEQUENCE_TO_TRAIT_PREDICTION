@@ -1,6 +1,6 @@
 # DNA_SEQUENCE_TO_TRAIT_PREDICTION
 
-<!-- amr engine spans bacteria + M. tuberculosis + fungi + viruses (HIV / SARS-CoV-2 / influenza), routed by --drug; each cell carries its own honesty tier. -->
+<!-- amr engine spans bacteria + M. tuberculosis + fungi + viruses (HIV / SARS-CoV-2 / influenza / HCMV herpesvirus), routed by --drug; each cell carries its own honesty tier. -->
 **`dna-decode` — a deterministic, interpretable genome→trait decoder.** Give it a genome (bacterial,
 fungal, mycobacterial, or viral); it returns a phenotype call (antibiotic / antiviral / antifungal
 resistance R/S, or E. coli pathotype) **plus the exact genes/mutations that drove the call** + its own
@@ -82,6 +82,7 @@ each kingdom keeps a **namespace-separate** standing report card so the tiers ca
 | **M. tuberculosis** | rifampicin (`rpoB`) + isoniazid (`katG`/`inhA`) — WHO-2023 catalogue rule | EBI AMR Portal measured AST, **N≈2,845**: RIF acc **0.937**, INH **0.914** | independent, measured (`wiki/tb_report_card.md`) |
 | **Virus — HIV-1** | NNRTI / NRTI / PI / INSTI / CAI (RT · protease · integrase · capsid) | Stanford HIVDB **PhenoSense** wet-lab fold-change (NNRTI EFV AUC **0.962**) | free, independent, isolate-level wet-lab label (`wiki/hiv_decoder_report_card.md`) |
 | **Virus — SARS-CoV-2** | nirmatrelvir / ensitrelvir (Mpro / 3CLpro) | Stanford CoV-RDB fold-change — **in-distribution, underpowered** (37R/5S) | knowledge baseline, honestly labelled (`wiki/sarscov2_mpro_validation_result_2026-06-23.md`) |
+| **Virus — HCMV** (herpesvirus, **new**) | ganciclovir / valganciclovir / cidofovir / foscarnet / letermovir (UL97 / UL54 / UL56) | Chou recombinant-phenotyping fold-change — **in-distribution** (catalog curated from it) | first herpesvirus cell; independent number = v0.1 (`wiki/hcmv_cell_v0_2026-07-23.md`) |
 | **Fungus — C. auris** | fluconazole / voriconazole / caspofungin / micafungin (ERG11 / FKS1) | de-confounded WGS+MIC cohort, sens 1.0 across clades; spec label-limited | kingdom-jump, G1-validated (`wiki/fungal_ep7_g1_closeout_2026-06-08.md`) |
 
 The bacterial 6-drug deployed surface is under a **reproducibility freeze**
