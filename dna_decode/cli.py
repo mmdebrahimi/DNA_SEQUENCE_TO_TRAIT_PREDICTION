@@ -91,6 +91,10 @@ TRAITS = {
         "summary": "HUMAN visible-trait pigmentation (--genotypes rsID=GT,...): v0 = IrisPlex EYE colour (6 curated SNPs -> P(blue)/P(intermediate)/P(brown) + call) - the deterministic curated-catalog form of 'DNA->appearance'. Benign visible-trait genetics, NOT a forensic tool",
         "validation": "deterministic multinomial-logistic Walsh-2011 IrisPlex coefficients (curated, provenance brianbhsu/eye-color; re-verify vs Walsh Table = v0.1); reference-integrity biology-checked (HERC2 GG->blue, AA->brown). Eye pigmentation AUC ~0.9 (HIrisPlex-S lit). Hair/skin (full 41-SNP) + VCF input + openSNP scoring = v0.1 follow-ons",
     },
+    "phage": {
+        "summary": "BACTERIOPHAGE genome/lineage -> host-RECEPTOR class (--lineage <genus> wheel-only, or --genome-fasta X.fna via genome-homology transfer): the first non-AMR, non-host-organism cell (a virus-of-bacteria host-tropism axis). RBP-variable clades (T-even/Drexlerviridae) abstain by design",
+        "validation": "KNOWLEDGE_BASELINE / in-distribution: receptor catalogue curated VERBATIM from the BASEL collection (Maffei 2021 PLOS Biology 3001424; FREE MEASURED receptors via >50 single-gene K-12 mutant + EOP assays). Real leave-one-out on 29 clade-conserved BASEL phages = 27/27 = 1.000, 0 mis-calls, 2 honest INDETERMINATE abstentions; 39 RBP-variable phages excluded = the tractability boundary. Receptor-CLASS only, NOT the full host-range matrix; independence closed for v0 (wiki/phage_receptor_cell_v0_2026-07-24)",
+    },
 }
 
 
@@ -151,6 +155,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)
+    if trait == "phage":
+        from dna_decode.phage.cli import main as phage_main
+        return phage_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

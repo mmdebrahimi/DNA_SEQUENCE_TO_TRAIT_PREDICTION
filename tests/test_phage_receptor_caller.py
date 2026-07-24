@@ -1,4 +1,4 @@
-"""Offline tests for the phage receptor caller (scripts/phage_receptor_caller.py).
+"""Offline tests for the phage receptor caller (dna_decode/phage/receptor_caller.py).
 
 No real BLAST: the db-fasta relabelling + exclusion, the leave-one-out accounting (via a stubbed
 call), the manifest->receptor loader (via the catalog lineage lookup), and the no-blastn INDETERMINATE
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import scripts.phage_receptor_caller as caller
+import dna_decode.phage.receptor_caller as caller
 
 
 def _write_fna(p: Path, seqs: dict[str, str]) -> None:

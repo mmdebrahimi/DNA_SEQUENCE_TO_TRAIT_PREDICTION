@@ -433,6 +433,28 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "tier — in either direction"),
     ),
     CellContract(
+        cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
+        organism="bacteriophage", target="phage",
+        claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "
+              "(genome-homology transfer) or NCBI lineage (catalogue lookup) — the first non-AMR cell",
+        # labels are wet-lab-MEASURED (single-gene mutant + EOP assays), but scored IN-DISTRIBUTION (catalogue
+        # curated from + validated on the same BASEL collection) -> knowledge baseline, not independent.
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="in_distribution_basel_catalogue_leave_one_out",
+        validation_slice=(
+            "real leave-one-out on 29 clade-conserved BASEL phages = 27/27 called correct = 1.000, 0 mis-calls, "
+            "2 honest INDETERMINATE abstentions (lone NfrA phage + a divergent LPS_core phage); 39 RBP-variable "
+            "phages (T-even/Drexlerviridae) excluded = the documented tractability boundary. Receptor-CLASS only"),
+        label_provenance=(
+            "BASEL collection experimentally-determined receptors (Maffei 2021 PLOS Biology 3001424; >50 "
+            "single-gene E. coli K-12 mutant + EOP host-range assays; CC-BY)"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/build_phage_receptor_report.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "a held-out phage set with measured receptors would move this from KNOWLEDGE_BASELINE to a real "
+            "independent tier; RBP-variable clades stay excluded (receptor is receptor-binding-protein-determined)"),
+    ),
+    CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
         organism="any", target="forward",
         claim="molecular-effect RANK for a protein/CDS edit (Regime B: enzyme fitness/stability), with a "

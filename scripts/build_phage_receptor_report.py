@@ -15,7 +15,7 @@ import argparse
 import json
 from pathlib import Path
 
-from scripts.phage_receptor_caller import _load_manifest, leave_one_out
+from dna_decode.phage.receptor_caller import _load_manifest, leave_one_out
 
 MANIFEST = "data/phage_ref/basel_manifest.tsv"
 GENOME_DIR = "data/phage_ref/basel"
@@ -102,7 +102,7 @@ def _md(d: dict) -> str:
 ```bash
 uv run python scripts/build_phage_receptor_report.py
 # or just the number:
-uv run python -c "from scripts.phage_receptor_caller import _load_manifest, leave_one_out; \\
+uv run python -c "from dna_decode.phage.receptor_caller import _load_manifest, leave_one_out; \\
 r=leave_one_out(*_load_manifest('data/phage_ref/basel_manifest.tsv','data/phage_ref/basel')); \\
 print(r.accuracy, r.per_receptor)"
 ```
