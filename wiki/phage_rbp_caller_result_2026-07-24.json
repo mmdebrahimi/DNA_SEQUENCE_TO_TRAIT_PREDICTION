@@ -1,0 +1,89 @@
+{
+  "cell": "phage_receptor_class_RBP_level",
+  "date": "2026-07-24",
+  "method": "RBP tail-fiber protein k-mer (k=4) nearest-neighbour transfer, leave-one-out",
+  "source": "LBNL Phage Datasheets (measured receptor + RBP annotation)",
+  "n_rbp_phages": 164,
+  "n_receptor_classes": 12,
+  "overall_called": 160,
+  "overall_correct": 156,
+  "overall_accuracy": 0.975,
+  "rbp_variable_called": 102,
+  "rbp_variable_correct": 98,
+  "rbp_variable_accuracy": 0.9607843137254902,
+  "rbp_variable_classes": [
+    "FadL",
+    "FhuA",
+    "OmpA",
+    "OmpC",
+    "OmpF",
+    "TolC",
+    "Tsx",
+    "YncD"
+  ],
+  "per_receptor_correct_called": {
+    "Tsx": [
+      35,
+      35
+    ],
+    "OmpA": [
+      9,
+      12
+    ],
+    "OmpC": [
+      18,
+      18
+    ],
+    "OmpF": [
+      8,
+      8
+    ],
+    "FadL": [
+      0,
+      1
+    ],
+    "BtuB": [
+      39,
+      39
+    ],
+    "FhuA": [
+      22,
+      22
+    ],
+    "YncD": [
+      4,
+      4
+    ],
+    "TolC": [
+      2,
+      2
+    ],
+    "LamB": [
+      4,
+      4
+    ],
+    "LptD": [
+      9,
+      9
+    ],
+    "LPS_core": [
+      6,
+      6
+    ]
+  },
+  "receptor_distribution": {
+    "Tsx": 35,
+    "OmpA": 12,
+    "OmpC": 18,
+    "OmpF": 8,
+    "FadL": 1,
+    "BtuB": 40,
+    "FhuA": 22,
+    "YncD": 4,
+    "TolC": 2,
+    "LamB": 6,
+    "LptD": 10,
+    "LPS_core": 6
+  },
+  "comparison": "the v0 GENOME-homology caller scored 0/N on Tsx/OmpC/FhuA/OmpA/OmpF/FadL/TolC (independent run); RBP-homology recovers them because receptor is RBP-determined, not backbone-determined."
+}
