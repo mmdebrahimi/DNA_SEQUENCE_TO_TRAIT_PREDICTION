@@ -46,11 +46,10 @@ def test_cli_multi_gene_observed(capsys):
     assert {x["symbol"] for x in d["determinants"]} == {"UL97", "UL54"}
 
 
-def test_cli_genome_mode_is_v01(capsys, tmp_path):
-    g = tmp_path / "x.fna"
-    g.write_text(">c\nACGT\n")
-    rc, _ = _run(["--drug", "letermovir", "--genome-fasta", str(g)], capsys)
-    assert rc == 3          # HCMV genome-FASTA mode deferred to v0.1
+def test_cli_genome_mode_wired_file_not_found(capsys, tmp_path):
+    # genome-FASTA mode is now WIRED (v0.1 stub removed) -> a missing genome is a clean rc 2, not the old rc 3.
+    rc, _ = _run(["--drug", "letermovir", "--genome-fasta", str(tmp_path / "nope.fna")], capsys)
+    assert rc == 2
 
 
 def test_cli_amrfinder_run_rejected(capsys, tmp_path):

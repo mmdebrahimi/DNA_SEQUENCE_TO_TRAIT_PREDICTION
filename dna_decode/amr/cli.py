@@ -343,9 +343,19 @@ def _hcmv_main(args) -> int:
         sample_id = args.sample_id or "observed"
         prov = {"mode": "observed-substitutions", "observed": args.observed, "genes": list(genes)}
     elif args.genome_fasta is not None:
-        print(f"ERROR: HCMV genome-FASTA mode is v0.1 (needs committed {'/'.join(genes)} CDS references + a "
-              f"BLAST caller). Use --observed {gene_hint} for a wheel-only call.", file=sys.stderr)
-        return 3
+        if not args.genome_fasta.exists():
+            print(f"ERROR: genome FASTA not found: {args.genome_fasta}", file=sys.stderr)
+            return 2
+        sample_id = args.sample_id or args.genome_fasta.stem
+        try:
+            from scripts.hcmv_caller import call_hcmv_target   # repo-only; needs BLAST+
+        except ImportError as e:
+            print(f"ERROR: HCMV genome mode needs scripts/hcmv_caller + BLAST+ ({e}). "
+                  f"Use --observed {gene_hint} for a wheel-only call.", file=sys.stderr)
+            return 3
+        call = call_hcmv_target(str(args.genome_fasta), args.drug)
+        sample_id = args.sample_id or args.genome_fasta.stem
+        prov = {"mode": "blast-hcmv-target", "genes": list(genes), "ref": "Merlin NC_006273.2"}
     else:
         print(f"ERROR: HCMV drug needs --observed {gene_hint} (e.g. UL97:M460V,UL54:F412L).", file=sys.stderr)
         return 2

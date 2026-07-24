@@ -164,6 +164,7 @@ packages = ["dna_decode"]
 "wiki/decoder_validation_report_card.json" = "dna_decode/report_cards/decoder_validation_report_card.json"
 "wiki/hiv_decoder_report_card.json" = "dna_decode/report_cards/hiv_decoder_report_card.json"
 "wiki/tb_report_card.json" = "dna_decode/report_cards/tb_report_card.json"
+"wiki/hcmv_decoder_report_card.json" = "dna_decode/report_cards/hcmv_decoder_report_card.json"
 
 # SDIST size reduction (2026-07-23). Hatchling's DEFAULT sdist ships every VCS-tracked file — for this
 # research repo that meant ~8.4 MB of wiki/ (9.2 MB uncompressed), data/, scripts/, tests/, project_state/,

@@ -62,6 +62,7 @@ _CAVEAT = {
 
 # drugs whose validation lives on the SARS-CoV-2 in-distribution surface (separate card namespace)
 _SARSCOV2_DRUGS = {"nirmatrelvir", "ensitrelvir", "lufotrelvir"}
+_HCMV_DRUGS = {"ganciclovir", "valganciclovir", "cidofovir", "foscarnet", "letermovir"}
 
 
 @lru_cache(maxsize=None)
@@ -114,6 +115,7 @@ def _pick_bacterial_cell(cells: list[dict], d: str, organism: str | None):
 _HIV_GENUS = {"hiv", "hiv-1", "hiv1"}
 _TB_GENUS = {"mycobacterium", "m.tuberculosis", "mtb", "tuberculosis"}
 _SARS_GENUS = {"sars-cov-2", "sarscov2", "sars", "betacoronavirus"}
+_HCMV_GENUS = {"hcmv", "cmv", "cytomegalovirus", "human betaherpesvirus 5", "betaherpesvirus", "human herpesvirus 5"}
 
 _MISMATCH_CAVEAT = ("drug recognised in another organism's namespace but the requested organism does NOT "
                     "match it -- refusing to lend that cell's evidence (no fabricated tier; see evidence_cell)")
@@ -227,6 +229,15 @@ def lookup_trust(drug: str, organism: str | None = None) -> dict:
                         headline="in-distribution (CoV-RDB), underpowered", cell=f"SARS-CoV-2|{d}",
                         requested_cell=req)
         rejected = rejected or (f"SARS-CoV-2|{d}", "wiki/sarscov2_mpro_validation_result_2026-06-23.md")
+
+    # 5b. HCMV — in-distribution knowledge baseline (herpesvirus; catalog curated from Chou recombinant
+    # fold-change; NO free held-out per-isolate phenotype exists -> independent is a CLOSED negative). Guarded.
+    if d in _HCMV_DRUGS:
+        if _compatible(_HCMV_GENUS):
+            return _rec(IN_DISTRIBUTION, "wiki/hcmv_decoder_report_card.md",
+                        headline="in-distribution (Chou recombinant fold-change); independent = closed (no free held-out)",
+                        cell=f"HCMV|{d}", requested_cell=req)
+        rejected = rejected or (f"HCMV|{d}", "wiki/hcmv_decoder_report_card.md")
 
     # 6. shipped-surface structural fallback (no card cell yet)
     try:
