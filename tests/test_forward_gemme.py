@@ -40,9 +40,13 @@ def test_gemme_tier_thresholds():
     assert gemme_tier(-2.0) == "uncertain"
 
 
-def test_run_gemme_raises_when_toolchain_absent():
-    # this host has no JET2/R -> GemmeUnavailable (never a silent wrong call)
-    with pytest.raises(GemmeUnavailable, match="GEMME toolchain"):
+def test_run_gemme_raises_when_toolchain_absent(monkeypatch):
+    # toolchain absent -> GemmeUnavailable (never a silent wrong call). FORCE the absent condition by
+    # patching shutil.which -> None so this is deterministic on ANY host (a Docker-present host would
+    # otherwise skip the guard and hit a FileNotFoundError reading the nonexistent MSA).
+    import dna_decode.forward.gemme_scorer as gs
+    monkeypatch.setattr(gs.shutil, "which", lambda _cmd: None)
+    with pytest.raises(GemmeUnavailable, match="Docker"):
         run_gemme("some.a3m", "MKAY")
 
 
