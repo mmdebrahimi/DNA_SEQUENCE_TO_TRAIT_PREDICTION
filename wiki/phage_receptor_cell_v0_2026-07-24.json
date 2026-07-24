@@ -1,0 +1,313 @@
+{
+  "cell": "phage_receptor_class",
+  "date": "2026-07-24",
+  "axis": "bacteriophage host-receptor class (first non-AMR, non-host-organism cell)",
+  "substrate": "BASEL E. coli phage collection (Maffei 2021 PLOS Biology 3001424; GenBank MZ501046-MZ501113)",
+  "label_source": "experimentally-determined receptors (>50 single-gene K-12 mutants + EOP host-range), CC-BY",
+  "method": "genome-homology receptor TRANSFER (nearest-BLAST-neighbour inherits its receptor)",
+  "tier": "IN_DISTRIBUTION",
+  "independence": "closed for v0 - labels are clade-derived from the same BASEL Results the catalog is curated from; an INDEPENDENT number needs a held-out phage set with measured receptors",
+  "scope": "RECEPTOR-CLASS only (NOT the full phage x strain host-range matrix, which is polygenic/intractable from genome alone); clade-conserved clades only",
+  "n_genomes_total": 68,
+  "n_labelled": 29,
+  "n_excluded_rbp_variable": 39,
+  "labelled_per_receptor": {
+    "ECA": 12,
+    "NfrA": 1,
+    "LptD": 2,
+    "LPS_core": 5,
+    "BtuB": 9
+  },
+  "loo_overall_accuracy": 1.0,
+  "loo_n_called": 27,
+  "loo_n_total": 29,
+  "loo_n_indeterminate": 2,
+  "loo_n_miscall": 0,
+  "loo_per_receptor_correct_called": {
+    "ECA": [
+      12,
+      12
+    ],
+    "LptD": [
+      2,
+      2
+    ],
+    "LPS_core": [
+      4,
+      4
+    ],
+    "BtuB": [
+      9,
+      9
+    ]
+  },
+  "predictions": [
+    {
+      "phage": "MZ501048.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501093.1",
+      "status": "CALLED",
+      "pident": 97.841,
+      "correct": true
+    },
+    {
+      "phage": "MZ501049.1",
+      "true": "NfrA",
+      "predicted": null,
+      "nearest": null,
+      "status": "INDETERMINATE",
+      "pident": null,
+      "correct": false
+    },
+    {
+      "phage": "MZ501051.1",
+      "true": "LptD",
+      "predicted": "LptD",
+      "nearest": "MZ501087.1",
+      "status": "CALLED",
+      "pident": 90.003,
+      "correct": true
+    },
+    {
+      "phage": "MZ501054.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501082.1",
+      "status": "CALLED",
+      "pident": 97.195,
+      "correct": true
+    },
+    {
+      "phage": "MZ501055.1",
+      "true": "LPS_core",
+      "predicted": "LPS_core",
+      "nearest": "MZ501064.1",
+      "status": "CALLED",
+      "pident": 92.193,
+      "correct": true
+    },
+    {
+      "phage": "MZ501058.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501075.1",
+      "status": "CALLED",
+      "pident": 95.987,
+      "correct": true
+    },
+    {
+      "phage": "MZ501060.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501102.1",
+      "status": "CALLED",
+      "pident": 97.818,
+      "correct": true
+    },
+    {
+      "phage": "MZ501061.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501094.1",
+      "status": "CALLED",
+      "pident": 96.912,
+      "correct": true
+    },
+    {
+      "phage": "MZ501062.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501054.1",
+      "status": "CALLED",
+      "pident": 96.855,
+      "correct": true
+    },
+    {
+      "phage": "MZ501064.1",
+      "true": "LPS_core",
+      "predicted": "LPS_core",
+      "nearest": "MZ501055.1",
+      "status": "CALLED",
+      "pident": 92.194,
+      "correct": true
+    },
+    {
+      "phage": "MZ501072.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501076.1",
+      "status": "CALLED",
+      "pident": 97.567,
+      "correct": true
+    },
+    {
+      "phage": "MZ501073.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501054.1",
+      "status": "CALLED",
+      "pident": 96.265,
+      "correct": true
+    },
+    {
+      "phage": "MZ501074.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501103.1",
+      "status": "CALLED",
+      "pident": 91.995,
+      "correct": true
+    },
+    {
+      "phage": "MZ501075.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501105.1",
+      "status": "CALLED",
+      "pident": 90.547,
+      "correct": true
+    },
+    {
+      "phage": "MZ501076.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501072.1",
+      "status": "CALLED",
+      "pident": 97.567,
+      "correct": true
+    },
+    {
+      "phage": "MZ501078.1",
+      "true": "LPS_core",
+      "predicted": "LPS_core",
+      "nearest": "MZ501081.1",
+      "status": "CALLED",
+      "pident": 92.827,
+      "correct": true
+    },
+    {
+      "phage": "MZ501081.1",
+      "true": "LPS_core",
+      "predicted": "LPS_core",
+      "nearest": "MZ501078.1",
+      "status": "CALLED",
+      "pident": 92.827,
+      "correct": true
+    },
+    {
+      "phage": "MZ501082.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501054.1",
+      "status": "CALLED",
+      "pident": 97.195,
+      "correct": true
+    },
+    {
+      "phage": "MZ501083.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501082.1",
+      "status": "CALLED",
+      "pident": 98.127,
+      "correct": true
+    },
+    {
+      "phage": "MZ501086.1",
+      "true": "LPS_core",
+      "predicted": null,
+      "nearest": null,
+      "status": "INDETERMINATE",
+      "pident": null,
+      "correct": false
+    },
+    {
+      "phage": "MZ501087.1",
+      "true": "LptD",
+      "predicted": "LptD",
+      "nearest": "MZ501051.1",
+      "status": "CALLED",
+      "pident": 90.003,
+      "correct": true
+    },
+    {
+      "phage": "MZ501093.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501048.1",
+      "status": "CALLED",
+      "pident": 97.841,
+      "correct": true
+    },
+    {
+      "phage": "MZ501094.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501060.1",
+      "status": "CALLED",
+      "pident": 97.714,
+      "correct": true
+    },
+    {
+      "phage": "MZ501102.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501093.1",
+      "status": "CALLED",
+      "pident": 96.661,
+      "correct": true
+    },
+    {
+      "phage": "MZ501103.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501074.1",
+      "status": "CALLED",
+      "pident": 91.995,
+      "correct": true
+    },
+    {
+      "phage": "MZ501105.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501072.1",
+      "status": "CALLED",
+      "pident": 96.48,
+      "correct": true
+    },
+    {
+      "phage": "MZ501108.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501076.1",
+      "status": "CALLED",
+      "pident": 87.741,
+      "correct": true
+    },
+    {
+      "phage": "MZ501109.1",
+      "true": "BtuB",
+      "predicted": "BtuB",
+      "nearest": "MZ501076.1",
+      "status": "CALLED",
+      "pident": 97.909,
+      "correct": true
+    },
+    {
+      "phage": "MZ501111.1",
+      "true": "ECA",
+      "predicted": "ECA",
+      "nearest": "MZ501083.1",
+      "status": "CALLED",
+      "pident": 97.538,
+      "correct": true
+    }
+  ],
+  "excluded_clades": [
+    "Tequatrovirus/Straboviridae (T-even: OmpC/FadL/Tsx vary by RBP)",
+    "Drexlerviridae (FhuA/BtuB/YncD/TolC vary)",
+    "Siphoviridae Dhillonvirus/Nonagvirus/Seuratvirus (LptD/FhuA/LamB vary)"
+  ],
+  "honest_reading": "receptor-class TRANSFERS reliably along genome homology within clade-conserved clades (0 mis-calls); the caller ABSTAINS (INDETERMINATE) rather than mis-transfer when a phage has no reference homolog (e.g. the lone NfrA phage). The 100% is on the clade-conserved subset BY CONSTRUCTION - it validates the pipeline + abstention + catalog self-consistency, not a solved RBP->receptor map. RBP-variable clades are the documented tractability boundary."
+}

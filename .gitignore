@@ -106,3 +106,8 @@ data/processed/protein_effect_cache/
 data/processed/gene_lookup_cache/
 notebooks/*_filled.py
 wiki/gemme_holdout_tables.json
+
+# BASEL phage manifest (labels; small) is committed for the phage-receptor cell; the 68 whole-genome
+# FASTAs (~7MB) are regenerable via scripts/fetch_basel_genomes.py, so they stay ignored.
+!/data/phage_ref/
+/data/phage_ref/basel/
