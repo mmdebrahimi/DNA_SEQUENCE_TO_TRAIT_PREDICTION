@@ -36,7 +36,7 @@ auto-runnable decoders in one report (genome -> the `profile` suite; protein -> 
 ones that need a specific parameter (`--mutation` / `--gene`) instead of guessing. `dna-decode list` is the
 full per-trait validation surface.
 
-## What it decodes (v0.8.0)
+## What it decodes (v0.9.0)
 
 > **Fastest way to see it work — zero setup, no Docker/BLAST/downloads, seconds on a bare `pip install`:**
 > `dna-decode amr --drug efavirenz --observed RT:K103N` (HIV R/S) · `dna-decode forward --mutation S2L
