@@ -1,4 +1,16 @@
 <!-- memo-schema: 0.4 -->
+# [CORRECTED 2026-07-24] Cross-lab RBP test set — the DATA-BLOCKED verdict was WRONG
+
+> **CORRECTION:** this memo originally concluded the cross-lab RBP number was DATA-BLOCKED. That was an
+> under-search error — it MISSED the **phageReceptor** database (Zhang et al., Bioinformatics 2020; Peng
+> lab, Hunan U), surfaced by a user-relayed DeepSeek pointer. phageReceptor has 37 E. coli phages with
+> OMP-class receptors (24 independent of LBNL/classic). The cross-lab number WAS computed:
+> **0.364 (4/11 called)** — see wiki/phage_rbp_crosslab_result_2026-07-24.md. The Kaneko-vocab-mismatch
+> finding below still stands, but it was not the whole picture. Lesson: an absence-of-evidence verdict
+> needs a wider search than I ran.
+
+---
+
 # Cross-lab independent RBP receptor test set for E. coli phages (research memo, 2026-07-24)
 
 > Topic (verbatim): "cross-lab independent RBP number". Source: Claude Code `/research` orchestrator (run by hand). Slug: cross-lab-phage-receptor-rbp-dataset-2026-07-24.

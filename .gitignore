@@ -114,3 +114,5 @@ wiki/gemme_holdout_tables.json
 # LBNL Phage Datasheets independent-test genomes (regenerable via scripts/lbnl_independent_validate.py
 # + git clone github.com/mjohnson11/PhageDataSheets); the small manifest is committed.
 /data/phage_ref/lbnl/
+# phageReceptor cross-lab test genomes (regenerable via scripts/phagereceptor_crosslab_validate.py)
+/data/phage_ref/phagereceptor_genomes/

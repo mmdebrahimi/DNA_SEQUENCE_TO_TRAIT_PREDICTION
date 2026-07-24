@@ -1,0 +1,253 @@
+{
+  "cell": "phage_receptor_class_RBP_crosslab",
+  "date": "2026-07-24",
+  "reference": "committed LBNL RBP reference (data/phage_ref/rbp_reference.faa)",
+  "test_source": "phageReceptor DB (Zhang et al. Bioinformatics 2020; Peng lab, Hunan U) \u2014 INDEPENDENT of LBNL + BASEL",
+  "independence": "different lab, literature-curated measured receptors; classic model phages + LBNL-name overlaps (M1,T1) excluded",
+  "n_test": 24,
+  "n_called": 11,
+  "n_correct": 4,
+  "n_no_genome": 2,
+  "n_no_tail_fiber": 2,
+  "n_indeterminate": 9,
+  "crosslab_accuracy": 0.36363636363636365,
+  "per_receptor_correct_called": {
+    "OmpC": [
+      1,
+      4
+    ],
+    "OmpA": [
+      2,
+      2
+    ],
+    "OmpF": [
+      0,
+      2
+    ],
+    "Tsx": [
+      1,
+      1
+    ],
+    "FadL": [
+      0,
+      1
+    ],
+    "FhuA": [
+      0,
+      1
+    ]
+  },
+  "predictions": [
+    {
+      "phage": "Enterobacteria phage Bp7",
+      "true": "OmpC",
+      "predicted": "OmpC",
+      "nearest": "Bas40",
+      "similarity": 1.0,
+      "status": "CALLED",
+      "correct": true,
+      "n_tail_fiber": 8
+    },
+    {
+      "phage": "Enterobacteria phage K3",
+      "true": "OmpA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 6
+    },
+    {
+      "phage": "Enterobacteria phage Mi",
+      "true": "OmpA",
+      "predicted": "OmpA",
+      "nearest": "M1",
+      "similarity": 0.817,
+      "status": "CALLED",
+      "correct": true,
+      "n_tail_fiber": 8
+    },
+    {
+      "phage": "Enterobacteria phage Ox2",
+      "true": "OmpA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 6
+    },
+    {
+      "phage": "Enterobacteria phage PA-2",
+      "true": "OmpC",
+      "predicted": null,
+      "status": "NO_GENOME",
+      "correct": false
+    },
+    {
+      "phage": "Enterobacteria phage TuIa",
+      "true": "OmpF",
+      "predicted": "OmpC",
+      "nearest": "TP3",
+      "similarity": 0.555,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 8
+    },
+    {
+      "phage": "Enterobacteria phage TuIb",
+      "true": "OmpC",
+      "predicted": null,
+      "status": "NO_GENOME",
+      "correct": false
+    },
+    {
+      "phage": "Enterobacteria phage mEp237",
+      "true": "FhuA",
+      "predicted": null,
+      "status": "NO_TAIL_FIBER",
+      "correct": false
+    },
+    {
+      "phage": "Enterobacteria phage phi80",
+      "true": "FhuA",
+      "predicted": null,
+      "status": "NO_TAIL_FIBER",
+      "correct": false
+    },
+    {
+      "phage": "Enterobacteria phage vB_EcoM_IME281",
+      "true": "OmpF",
+      "predicted": "Tsx",
+      "nearest": "NpJ",
+      "similarity": 0.867,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 11
+    },
+    {
+      "phage": "Enterobacteria phage vB_EcoM_IME339",
+      "true": "Tsx",
+      "predicted": "Tsx",
+      "nearest": "NpJ",
+      "similarity": 0.867,
+      "status": "CALLED",
+      "correct": true,
+      "n_tail_fiber": 11
+    },
+    {
+      "phage": "Enterobacteria phage vB_EcoM_IME340",
+      "true": "OmpA",
+      "predicted": "OmpA",
+      "nearest": "CM8m1",
+      "similarity": 0.747,
+      "status": "CALLED",
+      "correct": true,
+      "n_tail_fiber": 8
+    },
+    {
+      "phage": "Enterobacteria phage vB_EcoM_IME341",
+      "true": "FadL",
+      "predicted": "OmpF",
+      "nearest": "K20",
+      "similarity": 0.63,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 8
+    },
+    {
+      "phage": "Enterobacteria phage vB_EcoS_IME18",
+      "true": "FhuA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 3
+    },
+    {
+      "phage": "Enterobacterial phage mEp213",
+      "true": "FhuA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 2
+    },
+    {
+      "phage": "Escherichia phage AR1",
+      "true": "OmpC",
+      "predicted": "Tsx",
+      "nearest": "NpJ",
+      "similarity": 0.867,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 11
+    },
+    {
+      "phage": "Escherichia phage PP01",
+      "true": "OmpC",
+      "predicted": "Tsx",
+      "nearest": "NpJ",
+      "similarity": 0.867,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 11
+    },
+    {
+      "phage": "Escherichia phage vB_EcoP_24B",
+      "true": "OmpA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 3
+    },
+    {
+      "phage": "Escherichia virus 933W",
+      "true": "FadL",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 3
+    },
+    {
+      "phage": "Escherichia virus HK022",
+      "true": "FhuA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 2
+    },
+    {
+      "phage": "Escherichia virus N15",
+      "true": "FhuA",
+      "predicted": "LamB",
+      "nearest": "NpO",
+      "similarity": 0.097,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 2
+    },
+    {
+      "phage": "Escherichia virus TLS",
+      "true": "TolC",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 2
+    },
+    {
+      "phage": "Phage 434",
+      "true": "OmpC",
+      "predicted": "LamB",
+      "nearest": "Lambda",
+      "similarity": 0.676,
+      "status": "CALLED",
+      "correct": false,
+      "n_tail_fiber": 3
+    },
+    {
+      "phage": "Phage mEp167",
+      "true": "FhuA",
+      "predicted": null,
+      "status": "INDETERMINATE",
+      "correct": false,
+      "n_tail_fiber": 1
+    }
+  ],
+  "honest_scope": "CROSS-LAB (LBNL reference vs phageReceptor test labels). RBP extracted by 'tail fiber' product annotation (imperfect \u2014 a phage may carry several tail fibers; best match taken). phageReceptor receptors mapped from descriptive names to OMP classes. This is the genuinely cross-lab RBP number the within-LBNL LOO (0.975) could not be."
+}

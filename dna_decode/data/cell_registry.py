@@ -447,7 +447,9 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "the classes the v0 catalogue COVERS (BtuB/LPS_core/LptD/ECA/NfrA) = 25/29 called = 0.862 (BtuB 22/26, "
             "LPS_core 3/3). In-distribution LOO on the 29 clade-conserved BASEL phages = 27/27. Overall independent "
             "= 25/86=0.291 because v0 does NOT model the RBP-variable classes (Tsx/OmpC/FhuA/OmpA/... 60+ phages) — "
-            "out of v0 scope (the RBP-caller target), not a catalogue error"),
+            "out of v0 scope (the RBP-caller target), not a catalogue error. RBP-level caller (--rbp-fasta): "
+            "within-LBNL LOO 0.975 BUT cross-lab (phageReceptor, Zhang 2020, independent) only 0.364 (4/11) — the "
+            "within-study number does NOT generalize; T4-like phages mis-transfer to Tsx relatives (wiki/phage_rbp_crosslab_result_2026-07-24)"),
         label_provenance=(
             "BASEL catalogue (Maffei 2021 PLOS Biology 3001424) for the rule; INDEPENDENT test labels from LBNL "
             "Phage Datasheets (Moriniere et al.; measured on K-12 BW25113)"),
