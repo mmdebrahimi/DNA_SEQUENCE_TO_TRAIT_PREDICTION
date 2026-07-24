@@ -19,6 +19,9 @@
 # Exception: committed public SARS-CoV-2 Mpro (nsp5) reference for the genome-mode caller integrity gate
 # (tiny NCBI CDS, NC_045512.2:10055-10972). Same class as fungal_ref/antiviral_ref/hiv_ref.
 !/data/sarscov2_ref/
+# HCMV UL97/UL54/UL56 in-frame CDS references for the herpesvirus cell's genome-FASTA mode
+# (Merlin NC_006273.2; integrity-gated). Same class as fungal_ref/antiviral_ref/hiv_ref/sarscov2_ref.
+!/data/hcmv_ref/
 # Exception: committed public horse coat-colour validation TSV (Sarcidano 2022 PMC9558981 Table 3;
 # functional MC1R/ASIP genotype x visually-observed colour; tiny, non-circular). Same class as *_ref.
 !/data/horse/
