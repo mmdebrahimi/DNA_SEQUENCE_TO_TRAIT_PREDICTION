@@ -45,3 +45,12 @@ same-receptor neighbour -> honest miss).
 git clone --depth 1 https://github.com/mjohnson11/PhageDataSheets.git
 uv run --with biopython python scripts/rbp_receptor_validate.py --repo PhageDataSheets/Ecoli_phages
 ```
+
+## Miss verification against the paper's QC flag (2026-07-24)
+
+Cross-checked the 4 RBP-caller misses against the Phage Datasheets per-phage QC flag (sound/incoherent):
+- M1 (OmpA->Tsx) + Ox4 (OmpA->OmpF): the paper's OWN flag = `incoherent` (ambiguous) — not a silent error.
+- T2 (FadL->OmpA): the ONLY FadL phage — a singleton with no same-receptor neighbour (sim 0.234).
+- RB49 (OmpA->Tsx): a genuine hard case — RBP k-mer crosses receptor within genus Krischvirus (QC `sound`).
+The 4 abstentions (Lambda/NpO LamB, NpD BtuB, Bas14 LptD) are correct NON-guesses on divergent RBPs.
+=> the 0.961 on RBP-variable classes is honest: errors align with the data's own ambiguity, not silent failure.
