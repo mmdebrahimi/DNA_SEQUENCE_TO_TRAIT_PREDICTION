@@ -57,6 +57,40 @@ def test_leave_one_out_accounting(tmp_path, monkeypatch):
     assert res.per_receptor["BtuB"] == [0, 2]       # 0 correct / 2 called
 
 
+def test_labeled_manifest_reads_measured_receptor_column(tmp_path):
+    gdir = tmp_path / "g"; gdir.mkdir()
+    for acc in ("P1", "P2"):
+        _write_fna(gdir / f"{acc}.fna", {acc: "ACGT"})
+    man = tmp_path / "indep.tsv"
+    man.write_text("accession\tphage\treceptor\nP1\tphageA\tOmpF\nP2\tphageB\tTonB_dep\n", encoding="utf-8")
+    # measured receptor comes from the COLUMN (independent), with an optional vocab map
+    refs, rec = caller._load_labeled_manifest(str(man), str(gdir), receptor_map={"TonB_dep": "FhuA"})
+    assert rec == {"P1": "OmpF", "P2": "FhuA"}   # P2 mapped from the study's vocab to ours
+    assert set(refs) == {"P1", "P2"}
+
+
+def test_independent_validate_scores_heldout_vs_reference(tmp_path, monkeypatch):
+    # reference (BASEL-labelled) + a held-out test set with a measured receptor column
+    for name in ("refA", "testB"):
+        (tmp_path / name).mkdir()
+    _write_fna(tmp_path / "refA" / "MZ1.fna", {"MZ1": "ACGT"})
+    ref_man = tmp_path / "ref.tsv"
+    ref_man.write_text("accession\tphage_name\tgenus\tfamily\nMZ1\tRef\tVequintavirus\tunclassified\n", encoding="utf-8")
+    _write_fna(tmp_path / "testB" / "IN1.fna", {"IN1": "ACGT"})
+    _write_fna(tmp_path / "testB" / "IN2.fna", {"IN2": "ACGT"})
+    test_man = tmp_path / "test.tsv"
+    test_man.write_text("accession\treceptor\nIN1\tECA\nIN2\tOmpC\n", encoding="utf-8")
+
+    # stub the transfer: everything predicts ECA -> IN1 correct (ECA), IN2 wrong (OmpC)
+    monkeypatch.setattr(caller, "call_receptor",
+                        lambda q, r, rec, **kw: caller.ReceptorCall("CALLED", "ECA", "MZ1", 99.0, 100.0))
+    res = caller.independent_validate(str(ref_man), str(tmp_path / "refA"),
+                                      str(test_man), str(tmp_path / "testB"))
+    assert res.n_total == 2 and res.n_called == 2 and res.n_correct == 1
+    assert res.accuracy == 0.5
+    assert res.per_receptor["ECA"] == [1, 1] and res.per_receptor["OmpC"] == [0, 1]
+
+
 def test_load_manifest_attaches_receptor_via_lineage(tmp_path):
     gdir = tmp_path / "genomes"; gdir.mkdir()
     # two genomes: one Tequatrovirus (OmpC), one uncatalogued genus (dropped)

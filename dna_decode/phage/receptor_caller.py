@@ -194,6 +194,74 @@ def _load_manifest(manifest_tsv: str | Path, genome_dir: str | Path) -> tuple[di
     return refs, receptors
 
 
+def _load_labeled_manifest(manifest_tsv: str | Path, genome_dir: str | Path,
+                           receptor_col: str = "receptor",
+                           receptor_map: dict[str, str] | None = None) -> tuple[dict[str, str], dict[str, str]]:
+    """Load an INDEPENDENT test manifest whose receptor label is a COLUMN (a MEASURED receptor), NOT
+    inferred from the catalogue. This is the loader for a held-out set (e.g. the 2026 Moriniere benchmark):
+    the receptor comes from the study's own measurement, so scoring against it is genuinely independent.
+
+    `receptor_map` optionally renames the study's receptor vocabulary onto this catalogue's classes
+    (e.g. their 19 receptor classes -> our class names). A receptor with no mapping AND not already a
+    known class is kept verbatim (it simply won't match any reference label -> counted as a miss, honestly).
+    """
+    refs: dict[str, str] = {}
+    receptors: dict[str, str] = {}
+    gdir = Path(genome_dir)
+    with open(manifest_tsv, "r", encoding="utf-8", errors="replace") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        idx = {c: i for i, c in enumerate(header)}
+        if "accession" not in idx or receptor_col not in idx:
+            raise ValueError(f"manifest must have 'accession' and {receptor_col!r} columns; got {header}")
+        for line in fh:
+            parts = line.rstrip("\n").split("\t")
+            if len(parts) <= max(idx["accession"], idx[receptor_col]):
+                continue
+            acc = parts[idx["accession"]].strip()
+            raw = parts[idx[receptor_col]].strip()
+            if not acc or not raw:
+                continue
+            fna = gdir / f"{acc}.fna"
+            if not fna.exists():
+                continue
+            receptor = (receptor_map or {}).get(raw, raw)
+            refs[acc] = str(fna)
+            receptors[acc] = receptor
+    return refs, receptors
+
+
+def independent_validate(ref_manifest: str | Path, ref_dir: str | Path,
+                         test_manifest: str | Path, test_dir: str | Path,
+                         *, receptor_map: dict[str, str] | None = None,
+                         blastn_bin: str | None = None) -> LOOResult:
+    """Score a HELD-OUT test set against the reference catalogue's genome set (NO leave-one-out — the
+    test phages are not in the reference). For each test phage: transfer the nearest reference phage's
+    receptor, compare to the test phage's OWN MEASURED receptor. This is the genuine independence number
+    that would move the cell's tier off IN_DISTRIBUTION.
+
+    ref_* : the BASEL 2021 reference (catalogue-labelled). test_* : the independent set with a measured
+    `receptor` column. Returns an LOOResult (reused shape; `accuracy` = independent transfer accuracy).
+    """
+    ref_refs, ref_receptors = _load_manifest(ref_manifest, ref_dir)
+    test_refs, test_receptors = _load_labeled_manifest(test_manifest, test_dir, receptor_map=receptor_map)
+    res = LOOResult()
+    for label, true_receptor in test_receptors.items():
+        res.n_total += 1
+        call = call_receptor(test_refs[label], ref_refs, ref_receptors, blastn_bin=blastn_bin)
+        correct = call.status == "CALLED" and call.predicted_receptor == true_receptor
+        if call.status == "CALLED":
+            res.n_called += 1
+            bucket = res.per_receptor.setdefault(true_receptor, [0, 0])
+            bucket[1] += 1
+            if correct:
+                res.n_correct += 1
+                bucket[0] += 1
+        res.predictions.append({
+            "phage": label, "true": true_receptor, "predicted": call.predicted_receptor,
+            "nearest": call.nearest_label, "status": call.status, "correct": bool(correct)})
+    return res
+
+
 if __name__ == "__main__":  # pragma: no cover - thin CLI
     import argparse
     import json
