@@ -38,6 +38,28 @@ table + genomes land, the independent number is one call away.**
 4. The tier moves IN_DISTRIBUTION → INDEPENDENT (LBNL benchmark = different lab, different host prep, not in
    the BASEL catalogue provenance) once that number lands.
 
+## Follow-on (3) — RBP-level caller for the mixed clades — shares THIS wall (`blocked:external`)
+
+The other named follow-on (an RBP-level caller to REPLACE abstention on the RBP-variable clades — T-even
+Straboviridae/Tequatrovirus, the non-Augustepiccard Drexlerviridae; 26 phages in the BASEL set) is blocked on
+the SAME external data, plus two more walls. Feasibility probe (2026-07-24):
+
+1. **No ground-truth labels (the killer, = the independence wall).** The 26 mixed-clade BASEL phages have NO
+   reachable per-phage receptor label — the catalogue excludes them by design (RBP-variable) and the
+   per-Bas## receptor is not in a downloadable table (the paper reports T-even receptors at subfamily level:
+   OmpC/Tsx/FadL, without resolving each isolate). An RBP caller CANNOT be VALIDATED without these labels →
+   building it unvalidated would violate validate-or-abstain. The reachable per-phage mixed-clade labels are
+   exactly what the 2026 Morinière benchmark provides (193 phages, RBP-domain-resolved) — **the same unblock**.
+2. **RBP-detection infra.** `tblastn` is absent from this host's partial BLAST+ install (only blastn +
+   makeblastdb); protein-RBP-vs-genome extraction needs it, or a phage gene-caller (Pharokka/PHANOTATE + DB).
+3. **The RBP -> receptor map is the research frontier** (the 2026 benchmark needed AlphaFold3 + deep learning
+   + 1,050 genetic screens). A v0 catalogue can't express it.
+
+**So both phage follow-ons (independence + RBP caller) are one external dataset away** — the 2026 benchmark v2
+Data Availability. The v0 CLI already ABSTAINS correctly + informatively on the mixed clades
+(`--lineage Tequatrovirus` -> "receptor varies within Tequatrovirus by RBP") — the honest behavior until the
+label set lands. No unvalidatable RBP scaffold was built (that would be motion, not signal).
+
 ## What was NOT done (honesty)
 
 - No fabricated independent number. The 2025 OOD-boundary run was deliberately NOT reported as an
