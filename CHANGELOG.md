@@ -7,6 +7,35 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 _Nothing yet._
 
+## [0.9.0] — the usable-tool productization layer: input router + deployable strong-method variant-effect (2026-07-23)
+
+Purely **additive** — the **frozen AMR decoder surface (`amr_rules.py` + `calibrated_amr_rules.json` +
+`mic_tiers.py` + `shipped_decoder_surface.py`) is byte-unchanged from 0.8.1**, so every existing R/S call is
+identical. This release turns the ~20-decoder fleet into a coherently *usable* tool and makes the
+DMS-validated learned variant-effect frontier runnable, not just validated.
+
+**Additions:**
+
+- **`dna-decode decode <file>` — input-aware router.** Sniffs the input kind (nucleotide/protein FASTA or
+  VCF) and lists every applicable decoder with its one-line claim, honest evidence tier (read live from the
+  cell registry), and the exact command to run — the missing "I have a file, which decoders apply?" entry.
+  It surfaces the 5 previously-orphaned cells (pgx/clinvar/hla/coloc/profile).
+- **`dna-decode decode <file> --run`** — actually *runs* the auto-runnable decoders in one report (genome →
+  the `profile` suite; protein → `inverse`), reporting the ones that need a specific parameter
+  (`--mutation` / `--gene`) rather than guessing it.
+- **Deployable strong-method variant-effect from the CLI.** `dna-decode forward` gains `--method
+  esm2/prosst/gemme/hybrid/auto` + `--capabilities` (a preflight of which learned methods this host can
+  run) + honest graceful degradation with provenance (`method_requested`/`method_used`/`degraded`). The
+  strong methods (ESM2 / ProSST / GEMME / the validated ESM2+ProSST hybrid) were API-only.
+- **Packaging extras for the learned frontier.** `pip install 'dna-decode[forward]'` (torch + transformers)
+  for ESM2; `[forward,prosst]` (+ torch_geometric + biotite + pathos, plus a one-time AI4Protein/ProSST repo
+  clone) for the structure quantizer. `[forward]` intentionally pins `transformers>=5` and is declared as a
+  uv conflict with the closed-negative `[ml]` embedding extra (`transformers<5`). ProSST's local quantizer
+  verified on this host: a raw AlphaFold PDB re-quantizes to the reference structure tokens 79/79.
+
+**Unchanged:** the frozen AMR/viral/fungal R/S surface, every evidence-contract, and all prior validation
+numbers. No breaking changes.
+
 ## [0.7.0] — the multi-kingdom decoder fleet: viral + human-PGx + typing cells + genome-map browser (2026-07-11)
 
 First PyPI release since 0.6.4 (0.6.5 was an internal version bump, never published). The **frozen
