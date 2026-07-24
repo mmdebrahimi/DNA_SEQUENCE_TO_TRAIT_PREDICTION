@@ -56,3 +56,20 @@ def test_routes_through_unified_cli(capsys):
 def test_scope_rail_present(capsys):
     pcli.main(["--lineage", "Vequintavirus"])
     assert "receptor-CLASS only" in capsys.readouterr().out
+
+
+def test_rbp_fasta_path_calls_mixed_clade_receptor(tmp_path, capsys):
+    # pull one reference RBP protein into a query fasta -> --rbp-fasta calls its receptor (offline, wheel-only)
+    from dna_decode.phage.rbp_caller import DEFAULT_RBP_REFERENCE
+    label = receptor = None; seq = []
+    for line in open(DEFAULT_RBP_REFERENCE, encoding="utf-8"):
+        if line.startswith(";"): continue
+        if line.startswith(">"):
+            if label: break
+            label, _, receptor = line[1:].strip().partition("|")
+        elif label: seq.append(line.strip())
+    q = tmp_path / "rbp.faa"; q.write_text(f">q\n{''.join(seq)}\n", encoding="utf-8")
+    rc = pcli.main(["--rbp-fasta", str(q), "--json"])
+    import json
+    out = json.loads(capsys.readouterr().out)
+    assert rc == 0 and out["status"] == "CALLED" and out["receptor"] == receptor

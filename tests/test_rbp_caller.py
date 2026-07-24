@@ -44,3 +44,30 @@ def test_leave_one_out_rbp_accounting():
     assert res.n_total == 4 and res.n_called == 4 and res.n_correct == 4
     assert res.accuracy == 1.0
     assert res.per_receptor["Tsx"] == [2, 2] and res.per_receptor["OmpC"] == [2, 2]
+
+
+def test_load_committed_rbp_reference():
+    # the committed MIT-attributed reference is loadable + self-consistent
+    km, rec = rc.load_rbp_reference()
+    assert len(km) >= 100 and len(set(rec.values())) >= 10
+    from dna_decode.data.phage_receptor import is_receptor_class
+    assert all(is_receptor_class(r) for r in rec.values())
+
+
+def test_call_rbp_from_protein_roundtrip(tmp_path):
+    # take one reference RBP protein back out of the .faa and confirm it calls its own receptor
+    faa = rc.DEFAULT_RBP_REFERENCE
+    label = receptor = None
+    seq = []
+    with open(faa, encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith(";"):
+                continue
+            if line.startswith(">"):
+                if label:
+                    break
+                label, _, receptor = line[1:].strip().partition("|")
+            elif label:
+                seq.append(line.strip())
+    call = rc.call_rbp_from_protein("".join(seq))
+    assert call.status == "CALLED" and call.predicted_receptor == receptor

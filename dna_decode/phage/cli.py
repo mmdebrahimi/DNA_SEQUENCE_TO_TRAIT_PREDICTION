@@ -69,6 +69,36 @@ def _genome_result(genome_fasta: str, manifest: str, genome_dir: str) -> dict:
             "n_reference_phages": len(refs), "reason_if_indeterminate": call.reason or None}
 
 
+def _read_first_protein(fasta: str) -> str | None:
+    seq = []
+    started = False
+    with open(fasta, "r", encoding="utf-8", errors="replace") as fh:
+        for line in fh:
+            if line.startswith(">"):
+                if started:
+                    break
+                started = True
+                continue
+            if started:
+                seq.append(line.strip())
+    return "".join(seq) or None
+
+
+def _rbp_result(rbp_fasta: str) -> dict:
+    from dna_decode.phage.rbp_caller import call_rbp_from_protein
+    if not Path(rbp_fasta).exists():
+        return {"mode": "rbp", "status": "ERROR", "receptor": None,
+                "reason": f"cannot read --rbp-fasta: {rbp_fasta}"}
+    prot = _read_first_protein(rbp_fasta)
+    if not prot:
+        return {"mode": "rbp", "status": "ERROR", "receptor": None,
+                "reason": "no protein sequence found in --rbp-fasta"}
+    call = call_rbp_from_protein(prot)
+    return {"mode": "rbp", "status": call.status, "receptor": call.predicted_receptor,
+            "nearest_reference": call.nearest_phage, "similarity": call.similarity,
+            "method": "rbp_kmer_transfer_v0", "reason": call.reason}
+
+
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     ap = argparse.ArgumentParser(
@@ -81,6 +111,9 @@ def main(argv=None) -> int:
                           "Tequintavirus,Demerecviridae) -> catalogue receptor lookup (wheel-only, offline)")
     src.add_argument("--genome-fasta",
                      help="a phage genome FASTA -> genome-homology receptor transfer vs a reference set (needs blastn)")
+    src.add_argument("--rbp-fasta",
+                     help="a phage tail-fiber RECEPTOR-BINDING-PROTEIN FASTA -> RBP k-mer transfer (wheel-only, "
+                          "offline; covers the RBP-variable mixed clades Tsx/OmpC/FhuA/OmpA that --lineage abstains on)")
     ap.add_argument("--reference-manifest", default=_DEFAULT_MANIFEST,
                     help=f"labelled reference manifest TSV (default {_DEFAULT_MANIFEST})")
     ap.add_argument("--reference-dir", default=_DEFAULT_GENOME_DIR,
@@ -90,6 +123,8 @@ def main(argv=None) -> int:
 
     if args.lineage:
         res = _lineage_result([t.strip() for t in args.lineage.split(",") if t.strip()])
+    elif args.rbp_fasta:
+        res = _rbp_result(args.rbp_fasta)
     else:
         res = _genome_result(args.genome_fasta, args.reference_manifest, args.reference_dir)
     res["scope"] = _SCOPE
@@ -101,8 +136,9 @@ def main(argv=None) -> int:
         if st == "CALLED":
             print(f"receptor: {res['receptor']}  ({res['mode']} path)")
             if res.get("nearest_reference"):
-                print(f"  nearest reference phage: {res['nearest_reference']} "
-                      f"(pident {res.get('percent_identity')})")
+                score = res.get("percent_identity") if res.get("percent_identity") is not None else res.get("similarity")
+                label = "pident" if res.get("percent_identity") is not None else "rbp k-mer similarity"
+                print(f"  nearest reference phage: {res['nearest_reference']} ({label} {score})")
             if res.get("taxon"):
                 print(f"  taxon: {res['taxon']} ({res.get('rank')})")
         else:

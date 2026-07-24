@@ -13,6 +13,11 @@ Pure functions here (k-mers, similarity, nearest-transfer, leave-one-out) are of
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
+
+# committed RBP reference (built by scripts/build_rbp_reference.py from the MIT-licensed LBNL Phage
+# Datasheets); makes the --rbp-fasta caller wheel-only (no repo clone at run time).
+DEFAULT_RBP_REFERENCE = Path(__file__).resolve().parents[2] / "data" / "phage_ref" / "rbp_reference.faa"
 
 
 def protein_kmers(seq: str, k: int = 4) -> frozenset[str]:
@@ -71,6 +76,47 @@ class RbpLOOResult:
     @property
     def accuracy(self) -> float | None:
         return (self.n_correct / self.n_called) if self.n_called else None
+
+
+def load_rbp_reference(path: str | Path | None = None, k: int = 4):
+    """Load the committed RBP reference FASTA (`>{phage}|{receptor}`). Returns (kmers{phage->set},
+    receptors{phage->class}). Comment lines start with ';'."""
+    fp = Path(path) if path else DEFAULT_RBP_REFERENCE
+    kmers: dict[str, frozenset[str]] = {}
+    receptors: dict[str, str] = {}
+    label = receptor = None
+    seq_parts: list[str] = []
+
+    def _flush():
+        if label and seq_parts:
+            kmers[label] = protein_kmers("".join(seq_parts), k=k)
+            receptors[label] = receptor
+    with open(fp, "r", encoding="utf-8", errors="replace") as fh:
+        for line in fh:
+            line = line.rstrip("\n")
+            if not line or line.startswith(";"):
+                continue
+            if line.startswith(">"):
+                _flush()
+                head = line[1:]
+                label, _, receptor = head.partition("|")
+                label, receptor = label.strip(), receptor.strip()
+                seq_parts = []
+            else:
+                seq_parts.append(line.strip())
+    _flush()
+    return kmers, receptors
+
+
+def call_rbp_from_protein(protein: str, *, ref_path: str | Path | None = None, k: int = 4,
+                          min_similarity: float = 0.05) -> RbpCall:
+    """Predict a phage's receptor from its tail-fiber RBP protein sequence, by k-mer transfer against the
+    committed RBP reference. Wheel-only. INDETERMINATE when no reference RBP clears `min_similarity`."""
+    ref_kmers, receptors = load_rbp_reference(ref_path, k=k)
+    if not ref_kmers:
+        return RbpCall("INDETERMINATE", None, None, None, reason="empty RBP reference")
+    return nearest_rbp_receptor(protein_kmers(protein, k=k), ref_kmers, receptors,
+                                min_similarity=min_similarity)
 
 
 def leave_one_out_rbp(rbp_kmers: dict[str, frozenset[str]], receptors: dict[str, str],
