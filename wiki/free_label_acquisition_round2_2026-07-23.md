@@ -22,7 +22,7 @@ free label sources:
 | # | Candidate | Phenotype (measured) | Free? | Fit to paradigm | Verdict | Top caveat |
 |---|---|---|---|---|---|---|
 | **1** | **HCMV antiviral** (UL97/UL54/UL56 → GCV/CDV/FOS/letermovir) | recombinant marker-transfer **fold-change EC50** (Chou compilations, open-access PMC/ASM) | **YES** (open PMC tables) | **near-exact** — target-site catalog + measured FC + built-in phenotyped-benign sensitive class | **GO (top)** | catalog is dozens–hundreds of mutations (curate from tables), not a single download |
-| **2** | **TB Portals (NIAID)** | MGIT/LJ **measured DST** + WGS in SRA (no DUA), joinable by `condition_id` | **YES** (open) | reuses shipped TB cell → **independent** out-of-distribution number | **GO** | per-isolate CRyPTIC/WHO-v2 disjointness must be BioSample-checked (tooling exists) |
+| **2** | **TB Portals (NIAID)** | MGIT/LJ **measured DST** + WGS in SRA, joinable by `condition_id` | **DST labels DUA-GATED** (genomes free on SRA) | reuses shipped TB cell → **independent** out-of-distribution number | **CLOSED for autonomous run (2026-07-24 correction) — the DST LABELS need TB Portals API auth** | the research agent's "no-DUA" was WRONG; live probe `/api/Dst` + `/api/Genomics` = **401 Unauthorized**, matching the prior session's DUA-signed runbook (`wiki/tb_portals_goldset_runbook_2026-06-22.md`). The full pipeline is ALREADY BUILT + tested (21 tests); only the user's DUA-gated label export is missing → `blocked:user-only` |
 | **3** | **Phage host-range** (Picard/Guelin, Nat Microbiol 2024) | **38,688 wet-lab lysis interactions** (403 sequenced *E. coli* × 96 phages) | **YES** (open + Zenodo/BioProject) | NEW non-AMR axis; matches AMR track's within-*E. coli* lineage depth (163 STs, 8 phylogroups) | **GO (new axis)** | receptor/adsorption catalog is the baseline (their genome model AUROC 0.86) → classify regime first |
 | **4** | **Antimalarial lab-evolution** (Winzeler 2024 `adk9893`; Cowell 2018 `aan4472`) | **measured EC50 fold-shift** (448 + 262 clones vs matched parents), WGS in SRA | **YES** (open, no DUA) | partial — mechanism-discovery shape | **GO w/ caveats** | mostly EXPERIMENTAL compounds (not clinical kelch13/pfcrt drugs); limited lab-founder lineages (G8) |
 | 5 | **BacDive (DSMZ)** | measured biochemical/physiological +/− (enzyme, carbon-util, growth-temp) on 50,588 linked genomes | **YES** (open REST API, no DUA — cleanest access) | NEW non-AMR axis | **MARGINAL-GO** | type-strain-dominated → verify within-single-organism phenotype∩genome depth |
@@ -47,9 +47,11 @@ wet-lab-measured recombinant fold-change → R/S with a genuine phenotyped-benig
 to a NEW pathogen family (herpesvirus), and clears every gate cleanly. Lowest build risk because the cell shape is
 proven.
 
-**Then #2 — TB Portals** — to produce a genuinely INDEPENDENT (CRyPTIC-disjoint) number for the SHIPPED TB decoder,
-reusing the existing TB cell + `biosample_resolver`/`cohort_manifest` disjointness tooling. High scientific value
-(external validation of a deployed claim), moderate build.
+**Then #2 — TB Portals** — **CORRECTED 2026-07-24: DST labels are DUA-gated (live `/api/Dst` = 401), NOT free.**
+The full pipeline is already built + tested (prior session, 21 tests); the only blocker is the user's DUA-gated
+`Patient_Cases` export → `blocked:user-only`. The DUA-FREE route to the same independent-TB-number goal is the
+**pooled post-2023 SRA cohorts** (India PZA `PRJNA1155695` + Peru/Singapore measured-pDST, open on SRA,
+CRyPTIC-disjoint; drug-patchy so pool for RIF/INH). See `wiki/tb_portals_goldset_runbook_2026-06-22.md`.
 
 **Optional new-axis bet — phage host-range** — the one genuinely NEW measured phenotype with AMR-track-grade
 within-*E. coli* depth. Worth a cheap regime-classification probe first (their genome-only model already hits 0.86

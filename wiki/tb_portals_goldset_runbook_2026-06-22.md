@@ -78,3 +78,22 @@ Feeds the existing `validate_tb_goldset_candidates.py` → `build_tb_goldset_man
 (`tb_goldset.assert_independent_aliased`) → `score_tb_independent_goldset.py`. Shortlist
 `research_outputs/tb_goldset_source_shortlist_2026-06-22.md`; Thorpe NO-GO context
 `wiki/tb_goldset_thorpe2024_assessment_2026-06-22.md`.
+
+## Live access re-check — 2026-07-24 (Soraya, `--until-mvp` TB Portals)
+
+Real-surface probe (the R2/R3 go/no-go): the analytics API is **back up** after the Jan-2026 outage
+(`analytic.tbportals.niaid.nih.gov` serves Swagger), **but the data endpoints are STILL auth-walled** —
+`GET /api/Dst` → **401 Unauthorized**, `GET /api/Genomics` → **401**. So the DST labels remain DUA-gated;
+there is no free public pull of the phenotypic-DST + accession table. This CONFIRMS the runbook above (the
+labels are the only DUA-gated piece) and REFUTES the 2026-07-23 round-2 research agent's "no-DUA" claim.
+
+**Status: `blocked:user-only` (external DUA/credential wall).** The whole pipeline is built + green (21 tests:
+`test_build_tbportals_candidates` / `test_tb_goldset` / `test_tb_goldset_ingest`). The single missing input is
+the user's DUA-gated `Patient_Cases` export (or TB Portals API credentials). Drop it on disk → Step 2 runs
+autonomously to a SCORED independent RIF/INH number.
+
+**DUA-FREE alternative for the same goal** (an independent TB number without the DUA): the round-2 memo's
+other TB candidate — **pooled post-2023 SRA cohorts** (e.g. India PZA `PRJNA1155695` + Peru/Singapore
+measured-pDST BioProjects) — are genuinely open on SRA/ENA and time/provenance-disjoint from CRyPTIC. Those
+ARE autonomously runnable (no DUA); they're drug-patchy individually (the India set is PZA-only) so they need
+pooling for RIF/INH. A user go/no-go on substrate (TB Portals-with-DUA vs pooled-free-SRA).
