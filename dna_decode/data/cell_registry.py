@@ -437,22 +437,25 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "
               "(genome-homology transfer) or NCBI lineage (catalogue lookup) — the first non-AMR cell",
-        # labels are wet-lab-MEASURED (single-gene mutant + EOP assays), but scored IN-DISTRIBUTION (catalogue
-        # curated from + validated on the same BASEL collection) -> knowledge baseline, not independent.
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
-        claim_status="in_distribution_basel_catalogue_leave_one_out",
+        # INDEPENDENT now: scored on a DIFFERENT LAB's measured receptors (LBNL/Arkin-Mutalik Phage Datasheets,
+        # non-Bas isolates disjoint from the BASEL reference, K-12 BW25113 host). Covered classes only.
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
+        claim_status="independent_measured_covered_classes_only",
         validation_slice=(
-            "real leave-one-out on 29 clade-conserved BASEL phages = 27/27 called correct = 1.000, 0 mis-calls, "
-            "2 honest INDETERMINATE abstentions (lone NfrA phage + a divergent LPS_core phage); 39 RBP-variable "
-            "phages (T-even/Drexlerviridae) excluded = the documented tractability boundary. Receptor-CLASS only"),
+            "INDEPENDENT (LBNL/Arkin-Mutalik Phage Datasheets, github.com/mjohnson11/PhageDataSheets; measured by "
+            "genome-wide genetic screens on K-12 BW25113; non-Bas isolates disjoint from the BASEL reference): on "
+            "the classes the v0 catalogue COVERS (BtuB/LPS_core/LptD/ECA/NfrA) = 25/29 called = 0.862 (BtuB 22/26, "
+            "LPS_core 3/3). In-distribution LOO on the 29 clade-conserved BASEL phages = 27/27. Overall independent "
+            "= 25/86=0.291 because v0 does NOT model the RBP-variable classes (Tsx/OmpC/FhuA/OmpA/... 60+ phages) — "
+            "out of v0 scope (the RBP-caller target), not a catalogue error"),
         label_provenance=(
-            "BASEL collection experimentally-determined receptors (Maffei 2021 PLOS Biology 3001424; >50 "
-            "single-gene E. coli K-12 mutant + EOP host-range assays; CC-BY)"),
+            "BASEL catalogue (Maffei 2021 PLOS Biology 3001424) for the rule; INDEPENDENT test labels from LBNL "
+            "Phage Datasheets (Moriniere et al.; measured on K-12 BW25113)"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="scripts/build_phage_receptor_report.py", incoming_data_gate="n/a",
+        falsifier_ref="scripts/lbnl_independent_validate.py", incoming_data_gate="n/a",
         demotion_rule=(
-            "a held-out phage set with measured receptors would move this from KNOWLEDGE_BASELINE to a real "
-            "independent tier; RBP-variable clades stay excluded (receptor is receptor-binding-protein-determined)"),
+            "the independent number is on COVERED classes only (0.862); expanding to the RBP-variable classes "
+            "needs the RBP-level caller. A drop on a larger independent measured set would re-tier"),
     ),
     CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",

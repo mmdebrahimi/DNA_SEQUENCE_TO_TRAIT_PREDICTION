@@ -1,0 +1,76 @@
+{
+  "cell": "phage_receptor_class",
+  "date": "2026-07-24",
+  "independent_source": "LBNL/Arkin-Mutalik Phage Datasheets (Moriniere et al.; github.com/mjohnson11/PhageDataSheets)",
+  "label": "measured receptor via genome-wide genetic screens on E. coli K-12 BW25113",
+  "independence": "DIFFERENT LAB, measured labels, non-Bas isolates disjoint from the BASEL-2021 reference (Bas## excluded as leakage); K-12 host comparable to BASEL",
+  "reference": "BASEL-2021 genome-homology caller (shipped v0)",
+  "reference_covered_classes": [
+    "BtuB",
+    "ECA",
+    "LPS_core",
+    "LptD",
+    "NfrA"
+  ],
+  "n_test_total": 119,
+  "n_called": 86,
+  "n_correct": 25,
+  "overall_accuracy_on_called": 0.29069767441860467,
+  "test_true_receptor_distribution": {
+    "Tsx": 31,
+    "OmpA": 11,
+    "OmpC": 14,
+    "OmpF": 5,
+    "FadL": 1,
+    "LPS_core": 6,
+    "BtuB": 30,
+    "FhuA": 14,
+    "TolC": 1,
+    "LptD": 2,
+    "LamB": 2,
+    "YncD": 2
+  },
+  "covered_subset_n": 38,
+  "covered_subset_called": 29,
+  "covered_subset_correct": 25,
+  "covered_subset_accuracy": 0.8620689655172413,
+  "per_receptor_correct_called": {
+    "Tsx": [
+      0,
+      28
+    ],
+    "OmpA": [
+      0,
+      10
+    ],
+    "OmpC": [
+      0,
+      8
+    ],
+    "OmpF": [
+      0,
+      2
+    ],
+    "FadL": [
+      0,
+      1
+    ],
+    "LPS_core": [
+      3,
+      3
+    ],
+    "BtuB": [
+      22,
+      26
+    ],
+    "FhuA": [
+      0,
+      7
+    ],
+    "TolC": [
+      0,
+      1
+    ]
+  },
+  "honest_reading": "The OVERALL number is dragged down by CLASS COVERAGE: the shipped v0 catalogue only contains reference phages for classes ['BtuB', 'ECA', 'LPS_core', 'LptD', 'NfrA'], so it cannot predict the RBP-variable classes (Tsx/OmpC/FhuA/OmpA/OmpF/...) that dominate the independent set \u2014 those are exactly the (3) RBP-caller scope. The COVERED-SUBSET accuracy is the fair independent test of what v0 CLAIMS to decode."
+}
