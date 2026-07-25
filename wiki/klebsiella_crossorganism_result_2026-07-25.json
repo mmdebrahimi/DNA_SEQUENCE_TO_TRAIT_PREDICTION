@@ -1,0 +1,99 @@
+{
+  "cell": "klebsiella_depolymerase_KLtype_crossorganism",
+  "date": "2026-07-25",
+  "question": "does the RBP/depolymerase->phenotype paradigm transfer cross-organism to Klebsiella capsule KL-type?",
+  "source": "DpoTropiSearch (Concha-Eloko/Nat Comms 2025; Zenodo 10.5281/zenodo.14065540) \u2014 different lab + different organism",
+  "seq_col": "domain_seq",
+  "k": 4,
+  "n_depolymerases": 2315,
+  "n_KL_types": 147,
+  "subsample": "KL-types with >=5 members, capped 20/type (stratified)",
+  "called": 2240,
+  "correct": 1272,
+  "crossorganism_LOO_accuracy": 0.5678571428571428,
+  "prior_null_accuracy": 0.008639308855291577,
+  "lift_over_null": 0.5592178340018512,
+  "per_KLtype_correct_called_wellpowered": {
+    "KL122|KL106": [
+      20,
+      20
+    ],
+    "KL30": [
+      9,
+      20
+    ],
+    "KL19": [
+      20,
+      20
+    ],
+    "KL25": [
+      19,
+      20
+    ],
+    "KL16": [
+      15,
+      20
+    ],
+    "KL64": [
+      19,
+      20
+    ],
+    "KL106": [
+      20,
+      20
+    ],
+    "KL24": [
+      17,
+      20
+    ],
+    "KL1": [
+      17,
+      20
+    ],
+    "KL28": [
+      2,
+      20
+    ],
+    "KL23": [
+      20,
+      20
+    ],
+    "KL47": [
+      19,
+      20
+    ],
+    "KL38": [
+      17,
+      20
+    ],
+    "KL18": [
+      12,
+      20
+    ],
+    "KL107": [
+      18,
+      20
+    ],
+    "KL145": [
+      17,
+      20
+    ],
+    "KL125": [
+      5,
+      20
+    ],
+    "KL60": [
+      12,
+      20
+    ],
+    "KL22": [
+      10,
+      20
+    ],
+    "KL26": [
+      17,
+      20
+    ]
+  },
+  "honest_scope": "labels are prophage-host-LCA-INFERRED (in-distribution, like the within-LBNL LOO), NOT independent wet-lab. This is the paradigm-TRANSFER analogue. The 63 experimentally-validated depolymerases are the independent gold-standard follow-on. domain_seq = the modular enzymatic capsule-degrading domain (the cleaner sequence->function unit)."
+}
