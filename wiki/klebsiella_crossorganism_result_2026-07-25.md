@@ -61,3 +61,14 @@ determinant-dependent (KL28 2/20 shows it is not uniform).
 # fetch Training_data.zip from Zenodo 10.5281/zenodo.14065540, extract cols 1-8 -> dpo_labels.tsv
 uv run python scripts/klebsiella_depolymerase_crossorganism.py --labels <dpo_labels.tsv>
 ```
+
+## Honesty caveat — likely clonality-inflated (the same lesson as AMR/phage)
+
+The LOO nearest-neighbour can be a NEAR-CLONAL depolymerase (same/related prophage lineage within a KL-type),
+which inflates accuracy — the exact clonality-inflation pattern documented for the AMR cells (raw isolate-level
+metric inflated ~2.5x vs lineage-collapsed) and the phage RBP caller. So **0.568 is an upper bound**; a
+domain-sequence-dedup / cluster-collapse (one vote per near-identical-domain cluster) would give the honest
+lower bound. Even so, the LIFT over the 0.009 null is so large (+0.559) that the qualitative finding — the
+paradigm TRANSFERS cross-organism on modular depolymerase domains — is robust to the correction; only the exact
+number would move. The clonality-collapsed number + the 63 exp_validated independent gold-standard number
+(labels in the DpoTropiSearch A3/A4 benchmark notebooks) are the two clean follow-ons.
