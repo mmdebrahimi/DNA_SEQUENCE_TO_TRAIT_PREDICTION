@@ -72,3 +72,19 @@ lower bound. Even so, the LIFT over the 0.009 null is so large (+0.559) that the
 paradigm TRANSFERS cross-organism on modular depolymerase domains — is robust to the correction; only the exact
 number would move. The clonality-collapsed number + the 63 exp_validated independent gold-standard number
 (labels in the DpoTropiSearch A3/A4 benchmark notebooks) are the two clean follow-ons.
+
+## CLONALITY-CORRECTED headline (the honest number)
+
+Greedy-representative clustering @0.90 domain k-mer similarity: 2315 → **719 clusters** (69% were near-clonal
+duplicates). Re-scored LOO on cluster representatives (`klebsiella_crossorganism_collapsed_2026-07-25.json`):
+
+| | raw (upper bound) | **clonality-corrected (honest)** |
+|---|---|---|
+| LOO accuracy | 0.568 | **0.453** |
+| null | 0.009 | 0.024 |
+| lift over null | +0.559 | **+0.429** |
+
+Clonality inflated the raw number 0.453 → 0.568 (the same ~AMR/phage pattern). **The finding is robust to the
+correction: even clonality-collapsed, depolymerase-domain homology predicts Klebsiella capsule KL-type at
+0.453 (+0.429 over chance).** The deterministic sequence-homology → phenotype paradigm GENERALIZES across the
+organism boundary on modular enzymatic determinants — this is the strongest breadth result for the paradigm.

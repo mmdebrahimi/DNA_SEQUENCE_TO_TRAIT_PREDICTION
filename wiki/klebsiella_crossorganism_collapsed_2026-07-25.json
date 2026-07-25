@@ -1,0 +1,11 @@
+{
+  "n_before": 2315,
+  "n_clusters_after": 719,
+  "collapse_ratio": 0.311,
+  "collapsed_called": 574,
+  "collapsed_correct": 260,
+  "collapsed_LOO_accuracy": 0.453,
+  "collapsed_null": 0.024,
+  "collapsed_lift": 0.429,
+  "note": "greedy-representative cluster @0.90 domain k-mer sim (one rep/near-clonal cluster) \u2014 honest lower bound vs the 0.568 upper bound"
+}
