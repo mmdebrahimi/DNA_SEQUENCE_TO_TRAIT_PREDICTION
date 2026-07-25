@@ -49,3 +49,17 @@ extraction noise, not pure caller failure. The load-bearing finding is the DIREC
 ```bash
 uv run --with biopython python scripts/phagereceptor_crosslab_validate.py   --api http://www.computationalbiology.cn:18887/viralRecepetor
 ```
+
+## Overnight diagnostic — the caveat is REFUTED (the drop is real, not extraction noise)
+
+The result above hedged that "part of the drop is extraction noise" (a phage carries several tail fibers;
+the best-match heuristic might pick the wrong one). Overnight best-CASE vs best-MATCH diagnostic (does ANY of
+a phage's tail-fiber CDSs predict the true receptor, vs the single best-k-mer-match one):
+
+- best-MATCH correct: 4/11 = 0.364  (the shipped metric)
+- best-CASE  correct: 4/11 = 0.364  (if the caller could pick the RIGHT fiber among all of the phage's)
+
+**No gap.** Even in the best case, no tail-fiber selection recovers a correct receptor beyond 4/11. So the
+0.975 (within-LBNL) → 0.364 (cross-lab) drop is a GENUINE generalization limit of the RBP k-mer caller — it
+overfits to LBNL's specific tail-fiber sequences and does not transfer cross-lab — NOT a fiber-extraction
+artifact. The honest cross-lab number stands at 0.364, and the extraction-noise escape hatch is closed.
