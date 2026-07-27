@@ -95,6 +95,10 @@ TRAITS = {
         "summary": "BACTERIOPHAGE genome/lineage/RBP -> host-RECEPTOR class: --lineage <genus> (wheel-only catalogue) | --genome-fasta X.fna (genome-homology transfer, needs blastn) | --rbp-fasta X.faa (tail-fiber RBP k-mer transfer, wheel-only — covers the RBP-variable mixed clades Tsx/OmpC/FhuA/OmpA that --lineage abstains on). The first non-AMR, non-host-organism cell (a virus-of-bacteria host-tropism axis)",
         "validation": "INDEPENDENT_MEASURED (covered classes): on the LBNL/Arkin-Mutalik Phage Datasheets (github.com/mjohnson11/PhageDataSheets; measured receptors on K-12 BW25113, non-Bas isolates disjoint from the BASEL reference) the BASEL-2021 catalogue = 25/29=0.862 on covered classes (BtuB 22/26, LPS_core 3/3); in-dist LOO on 29 clade-conserved BASEL phages = 27/27. RBP-level caller (--rbp-fasta) leave-one-out = 156/160=0.975 overall, 0.961 on the RBP-variable classes genome-homology got 0/N (Tsx 35/35, FhuA 22/22, OmpC 18/18). Receptor-CLASS only. See wiki/phage_{independent_result,rbp_caller_result}_2026-07-24",
     },
+    "kleb": {
+        "summary": "KLEBSIELLA phage depolymerase -> host CAPSULE (KL-type), ranked top-K (--depolymerase-fasta X.faa): the CROSS-ORGANISM cell (E. coli phage-receptor paradigm transferred to a different host + phenotype). FETCH-ONLY — bundles NO data; build the local reference via scripts/fetch_dpotropisearch.py (DpoTropiSearch/Zenodo; CC-BY record / repo non-commercial license — verify your use). Offline/no-reference -> actionable INDETERMINATE",
+        "validation": "KNOWLEDGE_BASELINE / in-distribution (DpoTropiSearch prophage-LCA labels; Concha-Eloko/Nat Commun 2025, Zenodo 10.5281/zenodo.14065540 — NOT independent wet-lab). Clonality-corrected leave-one-out (greedy-rep @0.90): top-1 ~0.45 / top-5 ~0.60 over 147-165 KL-types, lift +0.49 over a 0.10 prior null -> the deterministic sequence-homology->phenotype paradigm GENERALIZES cross-organism on modular depolymerase domains. See wiki/klebsiella_{crossorganism_result,topk_ksweep}_2026-07-25",
+    },
 }
 
 
@@ -158,6 +162,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "phage":
         from dna_decode.phage.cli import main as phage_main
         return phage_main(rest)
+    if trait == "kleb":
+        from dna_decode.kleb.cli import main as kleb_main
+        return kleb_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

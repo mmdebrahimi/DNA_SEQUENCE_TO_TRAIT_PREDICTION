@@ -460,6 +460,29 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "needs the RBP-level caller. A drop on a larger independent measured set would re-tier"),
     ),
     CellContract(
+        cell_id="typing:klebsiella:kleb", track="typing", route="dna-kleb",
+        organism="Klebsiella_pneumoniae", target="kleb",
+        claim="Klebsiella phage depolymerase (enzymatic domain) -> host capsule KL-type, ranked top-K "
+              "(cross-organism transfer of the E. coli phage-receptor paradigm) — FETCH-ONLY (no bundled data)",
+        # in-distribution: prophage-LCA labels, clonality-corrected LOO; NOT independent wet-lab.
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="in_distribution_dpotropisearch_prophage_lca_labels",
+        validation_slice=(
+            "clonality-corrected leave-one-out (greedy-rep @0.90) on DpoTropiSearch depolymerase domains: "
+            "top-1 ~0.45 / top-5 ~0.60 over 147-165 KL-types, lift +0.49 over a 0.10 prior null; the paradigm "
+            "GENERALIZES cross-organism on modular depolymerase domains (harder problem than E. coli receptors, "
+            "higher number). In-distribution (prophage-LCA labels), NOT independent wet-lab"),
+        label_provenance=(
+            "DpoTropiSearch (Concha-Eloko et al., Nat Commun 2025; Zenodo 10.5281/zenodo.14065540) — "
+            "prophage-host-LCA-inferred KL-type; data NOT bundled (fetch-only; CC-BY record / repo "
+            "Decapsulate Non-Commercial License v1.1 — user verifies their use)"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/klebsiella_depolymerase_crossorganism.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "an INDEPENDENT wet-lab depolymerase->KL-type test set (the 63 exp_validated set, currently "
+            "blocked:external) would re-tier off in-distribution; a finer clonality collapse would move the number"),
+    ),
+    CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
         organism="any", target="forward",
         claim="molecular-effect RANK for a protein/CDS edit (Regime B: enzyme fitness/stability), with a "

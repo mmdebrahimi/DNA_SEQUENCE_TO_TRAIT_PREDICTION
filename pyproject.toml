@@ -59,6 +59,7 @@ dna-inverse = "dna_decode.forward.inverse_cli:main"    # inverse design (effect 
 dna-pigment = "dna_decode.pigment.cli:main"    # visible-trait pigmentation (v0 = IrisPlex eye colour)
 dna-flowering = "dna_decode.organism_rules.flowering_cli:main"   # Arabidopsis flowering habit (FRI/FLC)
 dna-phage = "dna_decode.phage.cli:main"        # bacteriophage genome/lineage -> host-receptor class (first non-AMR cell)
+dna-kleb = "dna_decode.kleb.cli:main"          # Klebsiella phage depolymerase -> capsule KL-type (cross-organism, fetch-only)
 dna-plasmid = "dna_decode.plasmid.cli:main"
 dna-serotype = "dna_decode.serotype.cli:main"
 dna-resfinder = "dna_decode.resfinder.cli:main"
