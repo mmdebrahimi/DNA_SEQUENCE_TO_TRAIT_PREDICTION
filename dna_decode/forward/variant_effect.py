@@ -346,3 +346,71 @@ def predict_effect(protein_seq: str, mutation: str, *, protein: str = "protein",
     return ForwardPrediction(mutation, wt, pos, alt, protein, "B_molecular", method,
                              raw_score=score, predicted_effect=effect, confidence=conf,
                              phenotype_axis=phenotype_axis, abstain=False, notes=notes)
+
+
+@dataclass
+class ForwardMultiPrediction:
+    """Combined effect of MULTIPLE edits on one protein, under the additive (no-epistasis) null."""
+    mutations: list[str]
+    protein: str
+    method: str
+    regime: str
+    per_variant: list[dict]           # each single ForwardPrediction.as_dict()
+    additive_score: float             # sum of single raw_scores (higher = more preserved) — the additive null
+    mean_score: float                 # additive_score / n
+    predicted_effect: str             # "preserved" | "damaging" | "uncertain" | "abstain"
+    confidence: str
+    epistasis_model: str              # "additive_null" (single-variant scores summed; NO learned epistasis)
+    abstain: bool
+    notes: list[str] = field(default_factory=list)
+
+    def as_dict(self) -> dict:
+        return {
+            "mutations": self.mutations, "protein": self.protein, "method": self.method,
+            "regime": self.regime, "per_variant": self.per_variant,
+            "additive_score": self.additive_score, "mean_score": self.mean_score,
+            "predicted_effect": self.predicted_effect, "confidence": self.confidence,
+            "epistasis_model": self.epistasis_model, "abstain": self.abstain, "notes": self.notes,
+        }
+
+
+def predict_multi_effect(protein_seq: str, mutations: list[str], *, protein: str = "protein",
+                         phenotype_axis: str = "molecular fitness (DMS-measured)",
+                         method: str = "blosum62", regime: str = "B_molecular",
+                         **tables) -> ForwardMultiPrediction:
+    """Combined effect of >=1 edits on ONE protein under the ADDITIVE (no-epistasis) null.
+
+    Each mutation is scored INDEPENDENTLY via `predict_effect` (same WT-verification + per-method scoring),
+    and the single-variant `raw_score`s are SUMMED — the standard additive baseline against which a joint
+    sequence model reveals epistasis. The combined tier is method-agnostic: a single `damaging` edit dominates
+    (function-loss is rarely rescued additively) -> `damaging`; all `preserved` -> `preserved`; else `uncertain`.
+
+    HONESTY: this is the additive null — it does NOT capture epistasis (non-additivity). Scoring the fully
+    mutated sequence jointly (e.g. ESM2 on the multi-mutant) is the epistasis test, deferred to a GPU run.
+    Distinct positions are required (two edits at one position = a conflicting spec -> ValueError).
+    """
+    if not mutations:
+        raise ValueError("predict_multi_effect needs >=1 mutation")
+    if regime == "C_organismal":
+        return ForwardMultiPrediction(mutations, protein, method, "C_organismal", [], float("nan"),
+                                      float("nan"), "abstain", "low", "additive_null", True,
+                                      ["organism-level polygenic trait — closed-negative regime; abstaining"])
+    positions = [parse_mutation(m)[1] for m in mutations]
+    if len(set(positions)) != len(positions):
+        raise ValueError(f"conflicting edits at the same position in {mutations!r} — multi-mutant requires "
+                         f"distinct positions")
+    singles = [predict_effect(protein_seq, m, protein=protein, phenotype_axis=phenotype_axis,
+                              method=method, regime=regime, **tables) for m in mutations]
+    per = [s.as_dict() for s in singles]
+    add = float(sum(s.raw_score for s in singles))
+    mean = add / len(singles)
+    effects = [s.predicted_effect for s in singles]
+    if "damaging" in effects:
+        eff, conf = "damaging", "medium"
+    elif all(e == "preserved" for e in effects):
+        eff, conf = "preserved", "medium"
+    else:
+        eff, conf = "uncertain", "low"
+    notes = [f"additive null over {len(singles)} edits (epistasis NOT modelled); a single damaging edit dominates"]
+    return ForwardMultiPrediction(mutations, protein, method, "B_molecular", per, add, mean,
+                                  eff, conf, "additive_null", False, notes)

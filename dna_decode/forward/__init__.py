@@ -51,11 +51,13 @@ from .router import (  # noqa: F401
     variant_key,
 )
 from .variant_effect import (  # noqa: F401
+    ForwardMultiPrediction,
     ForwardPrediction,
     blosum62_score,
     esm_pos_table_to_variant_table,
     parse_mutation,
     predict_effect,
+    predict_multi_effect,
     predict_variant_hybrid,
     rank_average_hybrid,
 )

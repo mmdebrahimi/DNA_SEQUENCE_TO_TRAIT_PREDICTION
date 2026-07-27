@@ -15,7 +15,22 @@ from dna_decode.forward import predict_effect
 # score one edit on one protein (BLOSUM62 = deterministic, no deps)
 p = predict_effect(protein_seq, "M69L", protein="TEM-1", method="blosum62")
 print(p.predicted_effect, p.raw_score, p.confidence)   # preserved/damaging/uncertain + continuous score
+
+# score MULTIPLE edits at once (additive-null; the inverse cell's combine step)
+from dna_decode.forward import predict_multi_effect
+m = predict_multi_effect(protein_seq, ["A2G", "K3D", "G7W"], method="blosum62")
+print(m.additive_score, m.predicted_effect)            # sum of single scores; a single damaging edit dominates
 ```
+
+## Multi-mutant edits (`predict_multi_effect`) — the additive null
+
+Combines >=1 edits on one protein by **summing the single-variant scores** (method-agnostic: works for any
+`predict_effect` method). Distinct positions required; each WT is verified against the reference (a
+coordinate/frame error fails loudly). The combined tier is dominance-based — a single `damaging` edit ->
+`damaging`, all `preserved` -> `preserved`, else `uncertain`. **HONESTY: this is the additive null — it does
+NOT model epistasis (non-additivity).** Scoring the fully-mutated sequence jointly (e.g. ESM2 on the
+multi-mutant) is the epistasis test, deferred to a GPU run. This is the combine primitive the `inverse` cell
+needs to stack multiple proposed edits.
 
 ## The regime router (`predict_edit`) — the capstone
 
