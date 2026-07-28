@@ -84,6 +84,17 @@ This writes pgx code, DNA-11's lane. Three clean paths — **your call**:
 
 Full `decompose` → per-family `/project-init` is **overkill** for a ~4-gene additive change (would burn self-init slots for a task that is one plan + parallel per-gene units). This is planned as a single technical plan with parallelizable Wave-2 units, not a multi-family portfolio.
 
+## ✅ MVP-REACHED (2026-07-28) — all 4 GeT-RM-harnessed leak genes guarded; leak 36 → 0
+
+TPMT (6 withheld) + CYP2B6 (18) + CYP2C8 (5, 0 silent) POPULATED + validated on real 1000G (core
+concordance UNCHANGED on every gene); CYP3A5 populated + verified + safe, validation documented-
+underpowered (0 non-core carriers in n=8). Precision-leak audit headline = 0 samples; 57 non-core
+samples now correctly WITHHELD instead of silently mis-called *1. 323 pgx/registry/verifier tests pass;
+frozen AMR/forward surfaces byte-unchanged throughout; PGP-UK GRCh37 lift map covers every new sentinel.
+Sourcing: PharmCAT (TPMT/CYP2B6/CYP3A5) + PharmVar public get-download-file ZIP (CYP2C8; the API is
+key-gated but the download is not) + Ensembl GRCh38/GRCh37 verification. v0.1 residual: non-core alleles
+OUTSIDE each gene's sentinel set + absence-defined alleles (CYP2B6 *4/*9) still call *1.
+
 ## Progress (2026-07-28 — execution begun after the pre-exec brainstorm)
 
 The pre-exec `/brainstorm` reshaped the plan (4 grounded findings). Ownership resolved: this session IS
