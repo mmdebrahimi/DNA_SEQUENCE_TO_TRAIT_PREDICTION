@@ -1,0 +1,17 @@
+{
+  "organism": "Escherichia coli K-12 MG1655 (GCF_000005845.2)",
+  "n_genes": 4308,
+  "predicted_essential": 204,
+  "known_essentialome_approx": 300,
+  "primary_validation": "size + composition vs known essentialome (NOT a label AUROC)",
+  "uniprot_secondary": {
+    "n": 112,
+    "sens": 0.183,
+    "spec": 0.951,
+    "tp": 13,
+    "fn": 58,
+    "fp": 2,
+    "tn": 39,
+    "caveat": "UniProt disruption-phenotype labels: curation-biased base rate, incomplete (2.5% coverage), noisy keyword parse -- underpowered secondary only"
+  }
+}
