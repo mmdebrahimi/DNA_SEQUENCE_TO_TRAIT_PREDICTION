@@ -69,12 +69,21 @@ it deliberately does **not** supply coordinates, to avoid fabricated catalog dat
 3. **Registry truth-up:** update each edited cell's `cell_registry` `demotion_rule` from "mis-called *1 (no sentinel v0)" → the sentinel-guarded wording (so the trust surface reflects the new precision).
 4. Frozen AMR + forward surfaces byte-unchanged (pgx is outside them; assert anyway).
 
-## Effort / ordering
+## Effort / ordering — now backed by a MEASURED exposure number
 
-~6 star-allele cells × (source PharmVar sites + populate `SENTINELS` + 1 test + registry wording). TPMT /
-NUDT15 / UGT1A1 first (highest clinical stakes + clearest non-core sets); CYP3A5 / CYP2C8 / CYP2B6 next;
-DPYD is a decide-explicitly (likely skip). The mechanism + 2 reference implementations already exist, so
-each cell is a small, well-patterned addition — not new architecture.
+`wiki/pgx_precision_leak_audit_2026-07-28.md` quantifies the leak offline from the committed GeT-RM truth:
+**36 real GeT-RM 1000G-overlap samples (10.1%) are silently mis-called `*1` across the 4 harnessable leak
+genes** (a lower bound). Measured per-gene exposure → the priority order:
+
+1. **CYP2B6 — 16/114 (14.0%)** non-core (*18/*7/*2); highest exposure (the *6-proxy is blindest).
+2. **TPMT — 15/147 (10.2%)** non-core (*8/*2/*16/*46/…); highest *clinical* stakes (thiopurine).
+3. **CYP2C8 — 5/87 (5.7%)** non-core (*17/*18/*15/*16).
+4. **CYP3A5 — 0/9** in this tiny overlap → **underpowered, deprioritize (don't skip)**.
+5. **NUDT15 / UGT1A1 / DPYD** — NOT in the GeT-RM harness → un-sizeable offline; size after a v0.1 truth fetch.
+
+The non-core allele lists above ARE the guard-target lists (source defining rsIDs verbatim from PharmVar).
+Each cell is a small, well-patterned addition (mechanism + 2 reference impls exist) — not new architecture.
+Control that the pattern works: CYP2C19 (8) + CYP2C9 (13) non-core samples are **correctly withheld** today.
 
 ## Provenance
 

@@ -1,0 +1,201 @@
+{
+  "audit": "pgx_precision_leak",
+  "date": "2026-07-28",
+  "method": "offline_from_committed_getrm_truth",
+  "headline_leak_exposure_samples": 36,
+  "headline_leak_scored_samples": 357,
+  "headline_leak_noncore_rate": 0.1008,
+  "guarded_noncore_correctly_withheld": 21,
+  "leak_genes": [
+    "cyp2c8",
+    "cyp3a5",
+    "tpmt",
+    "cyp2b6"
+  ],
+  "genes_no_committed_truth": [],
+  "per_gene": [
+    {
+      "gene": "cyp2c19",
+      "status": "scored",
+      "guarded": true,
+      "core_set": [
+        "*1",
+        "*17",
+        "*2",
+        "*3"
+      ],
+      "n_scored_samples": 87,
+      "n_core": 79,
+      "n_noncore": 8,
+      "n_structural_excluded": 0,
+      "n_ambiguous_excluded": 0,
+      "noncore_rate": 0.092,
+      "noncore_alleles": {
+        "*8": 2,
+        "*39": 2,
+        "*4": 1,
+        "*35": 1,
+        "*13": 1,
+        "*15": 1
+      },
+      "interpretation": "non-core samples correctly WITHHELD by the sentinel layer (control)"
+    },
+    {
+      "gene": "cyp2c9",
+      "status": "scored",
+      "guarded": true,
+      "core_set": [
+        "*1",
+        "*2",
+        "*3"
+      ],
+      "n_scored_samples": 87,
+      "n_core": 74,
+      "n_noncore": 13,
+      "n_structural_excluded": 0,
+      "n_ambiguous_excluded": 0,
+      "noncore_rate": 0.1494,
+      "noncore_alleles": {
+        "*9": 4,
+        "*8": 3,
+        "*5": 2,
+        "*6": 2,
+        "*61": 1,
+        "*11": 1
+      },
+      "interpretation": "non-core samples correctly WITHHELD by the sentinel layer (control)"
+    },
+    {
+      "gene": "cyp2c8",
+      "status": "scored",
+      "guarded": false,
+      "core_set": [
+        "*1",
+        "*2",
+        "*3",
+        "*4"
+      ],
+      "n_scored_samples": 87,
+      "n_core": 82,
+      "n_noncore": 5,
+      "n_structural_excluded": 0,
+      "n_ambiguous_excluded": 0,
+      "noncore_rate": 0.0575,
+      "noncore_alleles": {
+        "*17": 2,
+        "*18": 1,
+        "*15": 1,
+        "*16": 1
+      },
+      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+    },
+    {
+      "gene": "cyp3a5",
+      "status": "scored",
+      "guarded": false,
+      "core_set": [
+        "*1",
+        "*3",
+        "*6",
+        "*7"
+      ],
+      "n_scored_samples": 9,
+      "n_core": 9,
+      "n_noncore": 0,
+      "n_structural_excluded": 0,
+      "n_ambiguous_excluded": 0,
+      "noncore_rate": 0.0,
+      "noncore_alleles": {},
+      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+    },
+    {
+      "gene": "tpmt",
+      "status": "scored",
+      "guarded": false,
+      "core_set": [
+        "*1",
+        "*3A",
+        "*3B",
+        "*3C"
+      ],
+      "n_scored_samples": 147,
+      "n_core": 132,
+      "n_noncore": 15,
+      "n_structural_excluded": 0,
+      "n_ambiguous_excluded": 0,
+      "noncore_rate": 0.102,
+      "noncore_alleles": {
+        "*8": 4,
+        "*2": 2,
+        "*16": 2,
+        "*46": 2,
+        "*40": 1,
+        "*24": 1,
+        "*32": 1,
+        "*21": 1,
+        "*12": 1,
+        "*6": 1,
+        "*33": 1
+      },
+      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+    },
+    {
+      "gene": "cyp2b6",
+      "status": "scored",
+      "guarded": false,
+      "core_set": [
+        "*1",
+        "*6"
+      ],
+      "n_scored_samples": 114,
+      "n_core": 98,
+      "n_noncore": 16,
+      "n_structural_excluded": 0,
+      "n_ambiguous_excluded": 23,
+      "noncore_rate": 0.1404,
+      "noncore_alleles": {
+        "*18": 7,
+        "*7": 6,
+        "*2": 4
+      },
+      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+    },
+    {
+      "gene": "cyp2d6",
+      "status": "scored",
+      "guarded": false,
+      "core_set": [
+        "*1",
+        "*10",
+        "*17",
+        "*2",
+        "*29",
+        "*3",
+        "*35",
+        "*4",
+        "*41",
+        "*6",
+        "*9"
+      ],
+      "n_scored_samples": 54,
+      "n_core": 47,
+      "n_noncore": 7,
+      "n_structural_excluded": 31,
+      "n_ambiguous_excluded": 2,
+      "noncore_rate": 0.1296,
+      "noncore_alleles": {
+        "*21": 2,
+        "*40": 2,
+        "*14": 1,
+        "*15": 1,
+        "*46": 1
+      },
+      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+    }
+  ],
+  "caveats": [
+    "exposure = GeT-RM-consensus samples carrying a non-core star the v0 core-SNP proxy silently calls *1; it is a LOWER BOUND on real-world leak (the ~87-sample GeT-RM 1000G overlap is small + non-core alleles are rarer in other populations).",
+    "NUDT15/UGT1A1/DPYD have NO committed GeT-RM truth (their 'external wall') -> not quantifiable offline here; their leak is real but must be sized after a v0.1 truth fetch.",
+    "CYP2D6 non-core SNP alleles are reported separately; its STRUCTURAL alleles (*5/*13/... = n_structural_excluded) are a different surface handled by the CRAM structural stack."
+  ]
+}
