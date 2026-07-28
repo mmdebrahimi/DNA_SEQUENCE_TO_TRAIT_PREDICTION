@@ -100,7 +100,19 @@ DNA-11 (user directive), so execution runs on `main`.
   a PharmVar account key). The SAME allele→rsID→GRCh38 definitions are **FREE** from **PharmCAT**
   (`raw.githubusercontent.com/PharmGKB/PharmCAT/.../alleles/<GENE>_translation.json`, source CLINPGX/CPIC,
   GRCh38) and the **CPIC API** (`api.cpicpgx.org/v1/allele_definition`). Both reachable this session.
-- ⏭ **REMAINING (the data population itself).** Parse the PharmCAT `<gene>_translation.json` position-array
+- ✅ **TPMT POPULATED + validated (commit ab3d381).** 10 non-core sentinels sourced from PharmCAT
+  `TPMT_translation.json` (GRCh38 chr6), all 10 Ensembl-verified (10/10 OK). Real-1000G GeT-RM concordance:
+  **core 85/85 UNCHANGED + 6 non-core samples now WITHHELD** (were silent *1). Leak audit 36→21; TPMT
+  guarded. 321 tests pass; registry truthed-up. THE FIRST REAL PRECISION GAIN.
+- ⚠️ **Per-gene wrinkles found (the remaining 3 are NOT clean TPMT repeats — handle each carefully):**
+  - **CYP2B6:** non-core `*7`/`*18` are COMPOUND with SNPs shared on the core `*6` haplotype (rs2279343/785
+    rides on `*6`) → a naive sentinel there FALSE-WITHHOLDS a core `*6` call. Needs distinctive-SNP selection
+    (`*7`→rs3211371, `*18`→rs28399499) + shared-SNP exclusion. Only `*2` (rs8192709) is a clean single-SNP.
+  - **CYP2C8:** NOT at the PharmCAT allele-def path (HTTP 404) → source from the CPIC API
+    (`api.cpicpgx.org/v1/allele_definition` + linked variant table) or a PharmVar download (different parser).
+  - **CYP3A5:** 0 non-core in the n=9 GeT-RM 1000G overlap → populate-but-unvalidatable on this cohort
+    (underpowered); lowest priority.
+- ⏭ **REMAINING (CYP2B6 / CYP2C8 / CYP3A5).** Parse the source `<gene>` allele definitions
   format → each non-core allele's defining variant(s) → `SentinelVariant` rows → run `verify_sentinel_coords`
   on every row (must pass) → populate `<gene>_catalog.SENTINELS` → per-gene withhold test → re-run
   `pgx_getrm_concordance.py` (core concordance unchanged) + `pgx_precision_leak_audit.py` (leak → guarded)
