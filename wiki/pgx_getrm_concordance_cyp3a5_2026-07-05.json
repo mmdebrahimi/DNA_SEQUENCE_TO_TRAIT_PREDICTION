@@ -1,7 +1,7 @@
 {
   "schema": "pgx-cyp3a5-getrm-concordance-v0",
   "gene": "CYP3A5",
-  "analysis_date": "2026-07-05",
+  "analysis_date": "2026-07-28",
   "truth_source": "GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP3A5_getrm_cons",
   "genotype_source": "1000 Genomes 30x phased panel (CYP3A5 region, pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker); GeT-RM CDC CYP3A4/5 table)",
   "caller_is_independent_of_consensus_tools": true,

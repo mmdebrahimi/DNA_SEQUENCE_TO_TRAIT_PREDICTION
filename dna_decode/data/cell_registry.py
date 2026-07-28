@@ -219,7 +219,7 @@ _PGX_CONTRACTS: list[CellContract] = [
         label_provenance="GeT-RM CDC reference-material multi-lab consensus (CYP3A4/CYP3A5 J Mol Diagn 2023 table) join 1000G",
         abstention_vocab=AbstentionVocab.UNDERPOWERED, native_abstention="UNDERPOWERED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="only ~8 GeT-RM CYP3A5 samples overlap 1000G (UNDERPOWERED); rare non-core alleles mis-called *1 (no sentinel layer v0)"),
+        demotion_rule="only ~8 GeT-RM CYP3A5 samples overlap 1000G (UNDERPOWERED, 0 non-core carriers); non-core *8/*9/*10/*11 sentinels are POPULATED + Ensembl-verified + safe (no core-site collision, core concordance 8/8 UNCHANGED) but UNEXERCISED on this cohort -> a powered cohort would validate the withhold; non-core alleles outside the 4-sentinel set still mis-called *1 (v0.1)"),
     CellContract(
         cell_id="pgx:human:tpmt", track="pgx", route="dna-pgx", organism="human", target="tpmt",
         claim="TPMT COMPOUND star-allele diplotype (*3A=*3B+*3C) + CPIC thiopurine metabolizer phenotype from a phased VCF",

@@ -157,6 +157,17 @@ def test_cyp2c8_sentinels_withhold(tmp_path):
     assert call_cyp2c8(v)["phenotype_status"] == "phenotype_withheld"
 
 
+def test_cyp3a5_sentinels_populated_and_fire_synthetic(tmp_path):
+    """CYP3A5 is UNDERPOWERED on the GeT-RM cohort (0 non-core carriers); pin that the populated sentinels
+    are correct + fire on a synthetic *8 carrier (the real-cohort withhold is validation-deferred)."""
+    from dna_decode.pgx.runner import call_cyp3a5
+    from dna_decode.pgx import cyp3a5_catalog as c3
+    assert len(c3.SENTINELS) == 4 and all(s.accounted_by_core is None for s in c3.SENTINELS)
+    v = _vcf(tmp_path, [("7", 99672916, "rs776746", "T", "C", "0/0"),      # *3 core = ref
+                        ("7", 99676198, "rs55817950", "G", "A", "0/1")], "c3.vcf")  # *8 sentinel present
+    assert call_cyp3a5(v)["phenotype_status"] == "phenotype_withheld"
+
+
 if __name__ == "__main__":
     import tempfile
     fns = [(k, v) for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

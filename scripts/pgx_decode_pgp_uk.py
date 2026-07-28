@@ -68,6 +68,8 @@ GRCH37_POS: dict[str, int] = {
     # CYP2C8 non-core sentinels *15/*16/*17/*18 (PharmVar-sourced; GRCh37 via Ensembl GRCh37 REST 2026-07-28)
     "rs41286886": 96824658, "rs146806199": 96802804, "rs11572102": 96818181, "rs45438799": 96802715,
     "rs776746": 99270539, "rs10264272": 99262835, "rs41303343": 99250394,    # CYP3A5 *3/*6/*7
+    # CYP3A5 non-core sentinels *8/*9/*10/*11 (PharmCAT-sourced; GRCh37 via Ensembl GRCh37 REST 2026-07-28)
+    "rs55817950": 99273821, "rs28383479": 99258139, "rs150999943": 99273765, "rs762725013": 99250396,
     "rs3745274": 41512841,                                                     # CYP2B6 *6 (516G>T)
     # CYP2B6 non-core sentinels *2/*7/*18 (distinctive SNPs; GRCh37 via Ensembl GRCh37 REST 2026-07-28)
     "rs8192709": 41497274, "rs3211371": 41522715, "rs28399499": 41518221,

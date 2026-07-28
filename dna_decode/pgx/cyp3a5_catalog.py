@@ -46,7 +46,20 @@ CORE_DEFINING: list[DefiningVariant] = [
 ]
 
 # No sentinel layer in v0 (the *3/*6/*7 no-function alleles ARE the core set). Documented residual.
-SENTINELS: list[SentinelVariant] = []
+# Non-core-allele SENTINELS: a proven non-core CYP3A5 allele the *1/*3/*6/*7 core proxy cannot resolve
+# WITHHOLDS the phenotype rather than a silent *1 (expressor) mis-call -- the wrong direction for a non-
+# expressor allele (tacrolimus dosing). Each row's defining SNP is sourced VERBATIM from the PharmCAT/CLINPGX
+# CYP3A5_translation.json (GRCh38.p14, chr7); each (rsid -> GRCh38 pos, ref, alt) machine-verified vs Ensembl
+# (4/4 OK, 2026-07-28). None of *8/*9/*10/*11's sites are defined by a core allele (*3/*6/*7) -> no false-
+# withhold; accounted_by_core stays None. UNDERPOWERED VALIDATION: the GeT-RM 1000G overlap has 0 non-core
+# CYP3A5 carriers (n=9), so concordance shows 0 withheld -- the sentinels are correct+safe but unexercised on
+# this cohort (a powered cohort would validate the withhold; core concordance is UNCHANGED = no regression).
+SENTINELS: list[SentinelVariant] = [
+    SentinelVariant("rs55817950", "7", 99676198, "G", "A", "*8", "CYP3A5*8 non-core"),
+    SentinelVariant("rs28383479", "7", 99660516, "C", "T", "*9", "CYP3A5*9 non-core"),
+    SentinelVariant("rs150999943", "7", 99676142, "C", "A", "*10", "CYP3A5*10 non-core"),
+    SentinelVariant("rs762725013", "7", 99652773, "G", "C", "*11", "CYP3A5*11 non-core"),
+]
 
 # CPIC allele FUNCTION: *1 EXPRESSOR (normal), *3/*6/*7 non-functional.
 ALLELE_FUNCTION: dict[str, str] = {

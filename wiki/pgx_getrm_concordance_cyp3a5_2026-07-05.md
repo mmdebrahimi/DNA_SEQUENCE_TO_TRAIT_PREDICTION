@@ -1,4 +1,4 @@
-# CYP3A5 caller vs GeT-RM consensus on real 1000G (2026-07-05)
+# CYP3A5 caller vs GeT-RM consensus on real 1000G (2026-07-28)
 
 **Truth:** GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP3A5_getrm_cons
 **Genotypes:** 1000 Genomes 30x phased panel (CYP3A5 region, pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker); GeT-RM CDC CYP3A4/5 table)
