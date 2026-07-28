@@ -84,6 +84,30 @@ This writes pgx code, DNA-11's lane. Three clean paths — **your call**:
 
 Full `decompose` → per-family `/project-init` is **overkill** for a ~4-gene additive change (would burn self-init slots for a task that is one plan + parallel per-gene units). This is planned as a single technical plan with parallelizable Wave-2 units, not a multi-family portfolio.
 
+## Progress (2026-07-28 — execution begun after the pre-exec brainstorm)
+
+The pre-exec `/brainstorm` reshaped the plan (4 grounded findings). Ownership resolved: this session IS
+DNA-11 (user directive), so execution runs on `main`.
+
+- ✅ **Wave 1.5 — shared withhold helper (commit 9831e15).** Extracted `apply_sentinel_withhold` +
+  `_scan_sentinel_counts` (list-keyed) used by BOTH `call_diplotype` and `assemble_compound_diplotype`;
+  generalized the CYP2C19 `*35` rule into `SentinelVariant.accounted_by_core`; the compound path (TPMT)
+  now withholds. All 4 brainstorm findings fixed. 309 pgx/compound/trio/registry tests pass (CYP2C19/
+  CYP2C9 byte-identical); 7 new tests. Compound path is a no-op while `SENTINELS=[]` (zero live change yet).
+- ✅ **Coord verifier (commit ddc257f).** `scripts/verify_sentinel_coords.py` — Ensembl-GRCh38 fail-closed
+  check; 11 offline tests + live-verified the 4 CYP2C9 sentinels OK. The anti-fabrication rail is now executable.
+- 🔎 **Sourcing path CONFIRMED + de-risked (finding).** PharmVar's own API is now **401 key-gated** (requires
+  a PharmVar account key). The SAME allele→rsID→GRCh38 definitions are **FREE** from **PharmCAT**
+  (`raw.githubusercontent.com/PharmGKB/PharmCAT/.../alleles/<GENE>_translation.json`, source CLINPGX/CPIC,
+  GRCh38) and the **CPIC API** (`api.cpicpgx.org/v1/allele_definition`). Both reachable this session.
+- ⏭ **REMAINING (the data population itself).** Parse the PharmCAT `<gene>_translation.json` position-array
+  format → each non-core allele's defining variant(s) → `SentinelVariant` rows → run `verify_sentinel_coords`
+  on every row (must pass) → populate `<gene>_catalog.SENTINELS` → per-gene withhold test → re-run
+  `pgx_getrm_concordance.py` (core concordance unchanged) + `pgx_precision_leak_audit.py` (leak → guarded)
+  → registry `demotion_rule` truth-up. Order: TPMT → CYP2B6 → CYP2C8 → CYP3A5. This is a distinct,
+  fabrication-sensitive ingestion pass — do it focused, not rushed; the infra above makes it SAFE (verifier
+  gates every coord). NOT money/hardware gated (code-closable; PharmCAT is free).
+
 ## Pipeline next steps (Planning STOP — not executed)
 
 Per the planning pipeline: **pre-exec `/brainstorm`** on this plan (class (d) cross-cutting → mandatory) → `/save-plan` → resolve §7 → `/execute-plan` (or hand to DNA-11). I stop here and await the §7 authority decision + your go-ahead.
