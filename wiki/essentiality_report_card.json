@@ -1,0 +1,21 @@
+{
+  "schema": "essentiality-report-card-v1",
+  "generated": "2026-07-28",
+  "note": "single-gene KO -> essential/non-essential; conserved-core R1 decoder; per-organism honest tier, NO aggregate headline; E. coli composition-validated, human transfer-AUROC (BAGEL)",
+  "organisms": [
+    {
+      "organism": "Escherichia coli K-12",
+      "cell": "conserved-core v0",
+      "tier": "COMPOSITION_VALIDATED",
+      "metric": "208/4318 predicted essential (known essentialome ~300)",
+      "validation": "size + composition match the known essentialome (translation/envelope/replication); per-gene AUROC pending gold-standard labels (walled)"
+    },
+    {
+      "organism": "Homo sapiens",
+      "cell": "cross-organism transfer (E4)",
+      "tier": "TRANSFER_SCORED",
+      "metric": "AUROC 0.5805 vs null 0.50 (BAGEL CEG2 n=681 / NEG n=899); sens 0.1571 spec 0.9978",
+      "validation": "universal core (ribosome/tRNA-synth/translation/polymerase) transfers cross-kingdom at high precision; human-specific core (proteasome 0/53, spliceosome 0/49) MISSED -> per-organism catalogue extension is the follow-on"
+    }
+  ]
+}

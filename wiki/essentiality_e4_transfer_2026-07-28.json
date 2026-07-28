@@ -1,0 +1,12 @@
+{
+  "test": "cross-organism transfer: E.coli-tuned conserved-core decoder applied UNCHANGED to human",
+  "reference": "BAGEL CEGv2 (core-essential) vs NEGv1 (non-essential), Hart lab -- citable human gold-standard",
+  "n_essential": 681,
+  "n_nonessential": 899,
+  "auroc": 0.5805,
+  "sens_at_thresh": 0.1571,
+  "spec_at_thresh": 0.9978,
+  "null_auroc": 0.5,
+  "base_rate": 0.431,
+  "interpretation": "the UNIVERSAL core (ribosome/tRNA-synth/translation/polymerase) transfers cross-kingdom; the human-specific core (proteasome 0/53, spliceosome 0/49) is MISSED by the bacterial catalogue -> high-precision low-recall transfer; a per-organism catalogue extension is the E4 follow-on"
+}
