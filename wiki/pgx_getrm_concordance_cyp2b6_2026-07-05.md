@@ -1,4 +1,4 @@
-# CYP2B6 caller vs GeT-RM consensus on real 1000G (2026-07-05)
+# CYP2B6 caller vs GeT-RM consensus on real 1000G (2026-07-28)
 
 **Truth:** GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2B6_getrm_cons
 **Genotypes:** 1000 Genomes 30x phased panel (CYP2B6 region, pure-Python tabix-over-HTTP (no Docker); GeT-RM CDC consolidated PGx table; SINGLE-SNP *6-proxy (785 absent from panel))
@@ -6,9 +6,9 @@
 - Overlap samples scored: **88**
 - **Core-comparable diplotype concordance: 62/62 (1.0)**  (GeT-RM truth in *1/*6)
 - Phenotype-correct incl. *38==*1: **62/88** (+0 *38 phenotype-equivalent samples)
-- Correctly WITHHELD by sentinel: **0**
-- **Genuine silent mis-call: 26/88 (29.5%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
-- Correct-or-abstains: **62/88**
+- Correctly WITHHELD by sentinel: **18**
+- **Genuine silent mis-call: 8/88 (9.1%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
+- Correct-or-abstains: **80/88**
 
 _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call)._
 
@@ -83,29 +83,29 @@ _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The str
 
 | sample | GeT-RM | core-proxy | phenotype_status |
 |---|---|---|---|
-| HG00276 | *2/(*4) | *1/*1 | ok |
-| HG01190 | *1(*27)/*1(*5) | *1/*1 | ok |
-| NA07019 | *1(*5) or *1(*22) | *1/*1 | ok |
+| HG00276 | *2/(*4) | *1/*1 | phenotype_withheld |
+| HG01190 | *1(*27)/*1(*5) | *1/*1 | phenotype_withheld |
+| NA07019 | *1(*5) or *1(*22) | *1/*1 | phenotype_withheld |
 | NA07029 | *6/(*27) | *1/*6 | ok |
 | NA07055 | *6/(*27) | *1/*6 | ok |
 | NA07056 | *6/(*22) | *1/*6 | ok |
 | NA10851 | *1/*1 (*27) | *1/*1 | ok |
-| NA10865 | *1/(*2;*10) | *1/*1 | ok |
+| NA10865 | *1/(*2;*10) | *1/*1 | phenotype_withheld |
 | NA11839 | *1/*1 (*15) | *1/*1 | ok |
-| NA12006 | *1/*1 (*5) | *1/*1 | ok |
+| NA12006 | *1/*1 (*5) | *1/*1 | phenotype_withheld |
 | NA12236 | *1/*1 (*4) | *1/*1 | ok |
-| NA12717 | *1/*7 | *1/*6 | ok |
-| NA12813 | *1/*2 | *1/*1 | ok |
-| NA18484 | *1/*18 | *1/*1 | ok |
-| NA18861 | *1/*18 | *1/*1 | ok |
-| NA18873 | *1/*18 | *1/*1 | ok |
-| NA18942 | *1/*2 | *1/*1 | ok |
-| NA18945 | *6/(*2;*10) | *1/*6 | ok |
+| NA12717 | *1/*7 | *1/*6 | phenotype_withheld |
+| NA12813 | *1/*2 | *1/*1 | phenotype_withheld |
+| NA18484 | *1/*18 | *1/*1 | phenotype_withheld |
+| NA18861 | *1/*18 | *1/*1 | phenotype_withheld |
+| NA18873 | *1/*18 | *1/*1 | phenotype_withheld |
+| NA18942 | *1/*2 | *1/*1 | phenotype_withheld |
+| NA18945 | *6/(*2;*10) | *1/*6 | phenotype_withheld |
 | NA18959 | *1/*1(*27) | *1/*1 | ok |
-| NA19095 | *18/*18 | *1/*1 | ok |
-| NA19147 | *1/*18 | *1/*1 | ok |
-| NA19174 | *6/*18 | *1/*6 | ok |
-| NA19226 | *18/(*20) | *1/*6 | ok |
+| NA19095 | *18/*18 | *1/*1 | phenotype_withheld |
+| NA19147 | *1/*18 | *1/*1 | phenotype_withheld |
+| NA19174 | *6/*18 | *1/*6 | phenotype_withheld |
+| NA19226 | *18/(*20) | *1/*6 | phenotype_withheld |
 | NA19789 | *1/*1 (*27) | *1/*1 | ok |
-| NA20296 | *1/*2 | *1/*1 | ok |
-| NA20509 | *1/*7 | *1/*6 | ok |
+| NA20296 | *1/*2 | *1/*1 | phenotype_withheld |
+| NA20509 | *1/*7 | *1/*6 | phenotype_withheld |

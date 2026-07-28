@@ -131,6 +131,21 @@ def test_tpmt_populated_sentinels_withhold_real_allele(tmp_path):
     assert rec["phenotype_status"] == "phenotype_withheld" and rec["phenotype"] is None
 
 
+def test_cyp2b6_sentinels_withhold_and_no_false_withhold(tmp_path):
+    """Uses REAL populated cyp2b6_catalog.SENTINELS (3 distinctive-SNP rows) via the runner."""
+    from dna_decode.pgx.runner import call_cyp2b6
+    from dna_decode.pgx import cyp2b6_catalog as c6
+    assert len(c6.SENTINELS) == 3 and all(s.accounted_by_core is None for s in c6.SENTINELS)
+    # a real *2 carrier (rs8192709 19:40991369 C>T) -> WITHHELD
+    v = _vcf(tmp_path, [("19", 41006936, "rs3745274", "G", "T", "0/0"),      # core *6 site = ref
+                        ("19", 40991369, "rs8192709", "C", "T", "0/1")], "c6a.vcf")  # *2 sentinel present
+    assert call_cyp2b6(v)["phenotype_status"] == "phenotype_withheld"
+    # a real core *6 carrier (516T at rs3745274) with NO distinctive non-core SNP -> NOT withheld (trap check)
+    v2 = _vcf(tmp_path, [("19", 41006936, "rs3745274", "G", "T", "1/1")], "c6b.vcf")
+    rec = call_cyp2b6(v2)
+    assert rec["phenotype_status"] != "phenotype_withheld" and rec["phenotype"] is not None
+
+
 if __name__ == "__main__":
     import tempfile
     fns = [(k, v) for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

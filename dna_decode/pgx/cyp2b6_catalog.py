@@ -29,7 +29,7 @@ from callset -> mis-called *1), and *2/*5/*18/*22/*27... are non-core -> documen
 """
 from __future__ import annotations
 
-from dna_decode.pgx.cyp2c19_catalog import DefiningVariant
+from dna_decode.pgx.cyp2c19_catalog import DefiningVariant, SentinelVariant
 
 GENE = "CYP2B6"
 ASSEMBLY = "GRCh38"
@@ -40,7 +40,24 @@ REFERENCE_ALLELE = "*1"
 CORE_DEFINING: list[DefiningVariant] = [
     DefiningVariant("*6", "rs3745274", "19", 41006936, "G", "T", "c.516G>T (*6/*9 signal)"),
 ]
-SENTINELS: list = []
+# Non-core-allele SENTINELS: a proven non-core CYP2B6 allele the *1/*6 proxy cannot resolve WITHHOLDS the
+# phenotype rather than a silent *1/*6 mis-call. Each row is the allele's DISTINCTIVE SNP (sourced VERBATIM
+# from PharmCAT/CLINPGX CYP2B6_translation.json, GRCh38.p14, chr19; each (rsid->pos,ref,alt) Ensembl-verified
+# 3/3 OK, 2026-07-28). CRITICAL: the shared *6-haplotype SNP rs2279343 (785A>G) is DELIBERATELY EXCLUDED --
+# a sentinel there would false-withhold a valid core *6 call (785G rides on *6). Each row uses the allele's
+# OWN distinctive site instead (*7=rs3211371/1459, *18=rs28399499/983, *2=rs8192709/64), none shared with a
+# core allele -> accounted_by_core stays None. SCOPE GAP (documented): *4 (785G-alone) and *9 (516T-alone)
+# are ABSENCE-defined (distinguished from *6 only by a MISSING partner SNP) -> not presence-sentinel-able;
+# they are NOT in the observed GeT-RM leak (which was *18/*7/*2). Exact ALT -> no benign-variant false-withhold.
+# VALIDATION NOTE: the distinctive SNP sites span 40991369-41016810, WIDER than the original narrow *6-proxy
+# 1000G fetch (41005049-41010995) -> re-fetch a wider region to exercise them:
+#   uv run python scripts/fetch_1000g_region.py --chrom chr19 --start 40991000 --end 41017000 --out data/pgx_1000g/cyp2b6_1000g.vcf
+# Then `pgx_getrm_concordance --gene cyp2b6` = core 62/62 UNCHANGED + 18 non-core WITHHELD (2026-07-28).
+SENTINELS: list[SentinelVariant] = [
+    SentinelVariant("rs8192709", "19", 40991369, "C", "T", "*2", "CYP2B6*2 (c.64C>T, R22C) non-core"),
+    SentinelVariant("rs3211371", "19", 41016810, "C", "T", "*7", "CYP2B6*7 distinctive SNP (c.1459C>T, R487C); the *6 components 516/785 are shared/excluded"),
+    SentinelVariant("rs28399499", "19", 41012316, "T", "C", "*18", "CYP2B6*18 distinctive SNP (c.983T>C, I328T); the shared 785 is excluded"),
+]
 
 ALLELE_FUNCTION: dict[str, str] = {
     "*1": "normal",

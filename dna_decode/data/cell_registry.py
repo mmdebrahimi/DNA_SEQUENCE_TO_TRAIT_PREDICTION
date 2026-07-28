@@ -233,11 +233,11 @@ _PGX_CONTRACTS: list[CellContract] = [
         cell_id="pgx:human:cyp2b6", track="pgx", route="dna-pgx", organism="human", target="cyp2b6",
         claim="CYP2B6 *6-proxy (516G>T signal) + CPIC efavirenz metabolizer phenotype from a phased VCF",
         evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_proxy_calling_validated_phenotype_faithful_to_cpic",
-        validation_slice="GeT-RM CDC consolidated consensus 62/62 on clean *1/*6 truth on 1000G-overlap; SINGLE-SNP *6-proxy (516G>T) — cannot split *6/*9 (rs2279343/785A>G absent from 1000G 30x panel)",
+        validation_slice="GeT-RM CDC consolidated consensus 62/62 on clean *1/*6 truth on 1000G-overlap (UNCHANGED after the sentinel layer -- no false-withhold on core despite the *6-haplotype-shared 785 SNP); 18 non-core samples now WITHHELD (were silent mis-calls); SINGLE-SNP *6-proxy (516G>T) — cannot split *6/*9 (rs2279343/785A>G absent from 1000G 30x panel)",
         label_provenance="GeT-RM CDC consolidated 363-sample PGx consensus (CYP2B6) join 1000G",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="single-SNP *6-proxy: rs2279343 (785A>G) absent from the 1000G 30x panel so *6 can't be split from *9; a callset with 785 upgrades to the compound resolver (v0.1)"),
+        demotion_rule="single-SNP *6-proxy: rs2279343 (785A>G) absent from the 1000G 30x panel so *6 can't be split from *9; non-core *2/*7/*18 now WITHHELD via distinctive-SNP sentinels (PharmCAT-sourced, Ensembl-verified; the *6-haplotype-shared 785 deliberately EXCLUDED to avoid false-withhold); absence-defined *4/*9 + rarer alleles outside the 3-sentinel set still mis-called (v0.1)"),
     CellContract(
         cell_id="pgx:human:cyp2d6", track="pgx", route="dna-pgx", organism="human", target="cyp2d6",
         claim="CYP2D6 SNP-surface star-allele diplotype (core {*2,*3,*4,*6,*9,*10,*17,*29,*35,*41}) + CPIC activity-score phenotype from a phased VCF — structural alleles UNASSESSED",

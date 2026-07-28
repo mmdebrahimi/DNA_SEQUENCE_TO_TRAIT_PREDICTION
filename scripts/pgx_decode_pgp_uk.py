@@ -67,7 +67,14 @@ GRCH37_POS: dict[str, int] = {
     "rs11572103": 96818106, "rs11572080": 96827030, "rs1058930": 96818119,   # CYP2C8 *2/*3/*4
     "rs776746": 99270539, "rs10264272": 99262835, "rs41303343": 99250394,    # CYP3A5 *3/*6/*7
     "rs3745274": 41512841,                                                     # CYP2B6 *6 (516G>T)
+    # CYP2B6 non-core sentinels *2/*7/*18 (distinctive SNPs; GRCh37 via Ensembl GRCh37 REST 2026-07-28)
+    "rs8192709": 41497274, "rs3211371": 41522715, "rs28399499": 41518221,
     "rs1800460": 18139228, "rs1142345": 18130918,                            # TPMT *3B/*3C
+    # TPMT non-core sentinels (GRCh37 via Ensembl GRCh37 REST 2026-07-28; the 10 PharmCAT-sourced rows)
+    "rs1800462": 18143955, "rs56161402": 18130993, "rs144041067": 18139200,
+    "rs139392616": 18130960, "rs6921269": 18134078, "rs115106679": 18143853,
+    "rs200591577": 18148082, "rs200220210": 18139941, "rs75543815": 18134076,
+    "rs112339338": 18139201,
     "rs9923231": 31107689,                                                     # VKORC1
     "rs4149056": 21331549,                                                     # SLCO1B1 *5
     # CYP2D6 (chr22) defining variants — GRCh37 positions resolved via Ensembl GRCh37 REST 2026-07-07,
@@ -99,6 +106,8 @@ def _all_variants():
             yield s.rsid, s.chrom, s.pos, s.ref, s.alt
     for d in tp.COMPONENTS:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
+    for s in getattr(tp, "SENTINELS", []):   # TPMT sentinels lifted too (were silently un-mapped)
+        yield s.rsid, s.chrom, s.pos, s.ref, s.alt
     for d in c2d6.COMPONENTS:
         yield d.rsid, d.chrom, d.pos, d.ref, d.alt
     for d in dp.CORE_DEFINING:
