@@ -99,6 +99,10 @@ TRAITS = {
         "summary": "KLEBSIELLA phage depolymerase -> host CAPSULE (KL-type), ranked top-K (--depolymerase-fasta X.faa): the CROSS-ORGANISM cell (E. coli phage-receptor paradigm transferred to a different host + phenotype). FETCH-ONLY — bundles NO data; build the local reference via scripts/fetch_dpotropisearch.py (DpoTropiSearch/Zenodo; CC-BY record / repo non-commercial license — verify your use). Offline/no-reference -> actionable INDETERMINATE",
         "validation": "KNOWLEDGE_BASELINE / in-distribution (DpoTropiSearch prophage-LCA labels; Concha-Eloko/Nat Commun 2025, Zenodo 10.5281/zenodo.14065540 — NOT independent wet-lab). Clonality-corrected leave-one-out (greedy-rep @0.90): top-1 ~0.45 / top-5 ~0.60 over 147-165 KL-types, lift +0.49 over a 0.10 prior null -> the deterministic sequence-homology->phenotype paradigm GENERALIZES cross-organism on modular depolymerase domains. See wiki/klebsiella_{crossorganism_result,topk_ksweep}_2026-07-25",
     },
+    "essentiality": {
+        "summary": "single-gene KO -> ESSENTIAL / non-essential (--gene X --product '...' | --feature-table X.txt.gz): the deterministic conserved-core decoder. Predicts essentiality from gene FUNCTION (translation / replication / transcription / cell-envelope / division catalogue), label-independent + offline. High-precision, conservative-recall (universal core; the learned E3 complement lifts the tail).",
+        "validation": "KNOWLEDGE_BASELINE / validated vs gold-standard. E. coli AUROC 0.695 genome-wide (Goodall 2018 mBio TraDIS Table S1); composition matches the known essentialome (208/4318, translation/envelope/replication-dominated). Cross-organism transfer to human (BAGEL CEG2/NEG) AUROC 0.580. The learned E3 complement (aa-composition+length+core, 5-fold CV) lifts it: E. coli 0.795 / human 0.911. NOT clinical. See wiki/essentiality_{decoder_v0,ecoli_v0_1_auroc,e4_transfer,e3_learned,e3_human}_2026-07-28",
+    },
 }
 
 
@@ -165,6 +169,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "kleb":
         from dna_decode.kleb.cli import main as kleb_main
         return kleb_main(rest)
+    if trait == "essentiality":
+        from dna_decode.essentiality.cli import main as essentiality_main
+        return essentiality_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

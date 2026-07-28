@@ -483,6 +483,27 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "blocked:external) would re-tier off in-distribution; a finer clonality collapse would move the number"),
     ),
     CellContract(
+        cell_id="essentiality:any:essentiality", track="essentiality", route="dna-essentiality",
+        organism="any", target="essentiality",
+        claim="single-gene KO -> essential/non-essential via the deterministic conserved-core FUNCTION "
+              "catalogue (translation/replication/transcription/envelope/division); label-independent, offline",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="conserved_core_validated_vs_gold_standard_in_distribution",
+        validation_slice=(
+            "E. coli AUROC 0.695 genome-wide vs the Goodall 2018 mBio TraDIS gold-standard (base rate 9.3%, "
+            "sens 0.373 / spec 0.984 -- high-precision, conservative-recall); composition matches the known "
+            "essentialome (208/4318, translation/envelope/replication-dominated). Cross-organism transfer to "
+            "human (BAGEL CEG2/NEG) AUROC 0.580. The learned E3 complement lifts it (E. coli 0.795 / human 0.911)"),
+        label_provenance=(
+            "gold-standard essentiality: Goodall 2018 mBio Table S1 (E. coli TraDIS genome-wide, CC-BY) + "
+            "BAGEL CEGv2/NEGv1 (human core-essential/non-essential reference, Hart lab). Free, independent screens"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/essentiality_e3_learned.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "the conserved-core is a deterministic PRIOR (high-precision, ~0.37 recall); the E3 learned complement "
+            "is the accuracy tier. An independent per-organism essentiality screen would re-validate the transfer"),
+    ),
+    CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
         organism="any", target="forward",
         claim="molecular-effect RANK for a protein/CDS edit (Regime B: enzyme fitness/stability), with a "
