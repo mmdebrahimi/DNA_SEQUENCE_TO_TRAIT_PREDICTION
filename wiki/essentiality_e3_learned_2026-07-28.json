@@ -1,0 +1,20 @@
+{
+  "organism": "E. coli K-12",
+  "reference": "Goodall 2018 mBio Table S1 (TraDIS)",
+  "n": 3776,
+  "base_rate": 0.0938,
+  "cv": "5-fold stratified",
+  "features": "aa-composition(20) + log-length + conserved-core-score",
+  "conserved_core_auroc": 0.6971,
+  "learned_best_model": "HistGradientBoosting",
+  "learned_auroc": 0.7947,
+  "auroc_lift": 0.0976,
+  "tail_recovery": {
+    "n_core_missed": 3586,
+    "n_essential_in_tail": 220,
+    "learned_auroc_on_tail": 0.6854,
+    "meaning": "learned model discriminates essential in the tail the deterministic core misses (score<2)"
+  },
+  "recall_at_spec_note": "NOT reported: conserved-core score is degenerate (mass at 0) so specificity-matched recall thresholds collapse -- AUROC (rank-based) is the valid comparison",
+  "verdict": "LEARNED_COMPLEMENT_EARNS_KEEP: +0.098 AUROC + recovers the core-missed tail, cheap features, no GPU"
+}
