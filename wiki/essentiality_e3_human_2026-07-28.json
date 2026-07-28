@@ -1,0 +1,15 @@
+{
+  "organism": "Homo sapiens",
+  "reference": "BAGEL CEGv2/NEGv1",
+  "n": 1539,
+  "n_essential": 659,
+  "n_nonessential": 880,
+  "cv": "5-fold stratified",
+  "features": "aa-composition(20)+log-length+conserved-core-score",
+  "conserved_core_auroc": 0.5718,
+  "learned_logreg_auroc": 0.8253,
+  "learned_gbm_auroc": 0.9107,
+  "auroc_lift": 0.3389,
+  "tail_recovery_auroc": 0.8975,
+  "verdict": "LEARNED_COMPLEMENT_EARNS_KEEP"
+}

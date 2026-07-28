@@ -11,3 +11,13 @@ def test_e3_learned_beats_conserved_core():
     assert r["auroc_lift"] > 0.02                                    # meaningful lift
     assert r["tail_recovery"]["learned_auroc_on_tail"] > 0.55        # recovers the core-missed tail
     assert "EARNS_KEEP" in r["verdict"]
+
+
+def test_human_e3_learned_beats_transfer():
+    import json, os
+    if not os.path.exists("wiki/essentiality_e3_human_2026-07-28.json"):
+        import pytest; pytest.skip("human E3 artifact absent")
+    r = json.load(open("wiki/essentiality_e3_human_2026-07-28.json"))
+    assert r["learned_gbm_auroc"] > r["conserved_core_auroc"]
+    assert r["auroc_lift"] > 0.1                        # human lift is large (E.coli-tuned core transfers poorly)
+    assert "EARNS_KEEP" in r["verdict"]
