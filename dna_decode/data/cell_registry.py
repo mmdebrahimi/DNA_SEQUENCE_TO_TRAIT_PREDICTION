@@ -206,11 +206,11 @@ _PGX_CONTRACTS: list[CellContract] = [
         cell_id="pgx:human:cyp2c8", track="pgx", route="dna-pgx", organism="human", target="cyp2c8",
         claim="CYP2C8 star-allele diplotype (*2/*3/*4) from a phased VCF — CALLING only, NO CPIC phenotype",
         evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_no_cpic_phenotype_substrate_dependent",
-        validation_slice="GeT-RM CYP2C8_getrm_ngs core-diplotype concordance 82/82 on real 1000G (Docker-free tabix-HTTP region fetch)",
+        validation_slice="GeT-RM CYP2C8_getrm_ngs core-diplotype concordance 82/82 on real 1000G (UNCHANGED after the sentinel layer); 5 non-core samples now WITHHELD -> silent mis-calls 0/87 (the leak fully closed on this cohort)",
         label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2C8_getrm_ngs join 1000G",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="rare non-core CYP2C8 allele mis-called *1 (no sentinel layer in v0); function is substrate-dependent so NO PM/IM/NM is ever emitted"),
+        demotion_rule="non-core *15/*16/*17/*18 now WITHHELD via sentinels (PharmVar-sourced, Ensembl-verified); function is substrate-dependent so NO PM/IM/NM is ever emitted; a non-core allele outside the 4-sentinel set would still mis-call *1 (v0.1)"),
     CellContract(
         cell_id="pgx:human:cyp3a5", track="pgx", route="dna-pgx", organism="human", target="cyp3a5",
         claim="CYP3A5 star-allele diplotype (*3/*6/*7) + CPIC expressor/non-expressor phenotype (tacrolimus) from a phased VCF",

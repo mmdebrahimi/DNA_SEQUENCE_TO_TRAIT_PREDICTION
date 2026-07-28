@@ -52,7 +52,18 @@ CORE_DEFINING: list[DefiningVariant] = [
 ]
 
 # No sentinel layer in v0 (CYP2C8's common alleles are all in the core set). Documented residual.
-SENTINELS: list[SentinelVariant] = []
+# Non-core-allele SENTINELS: a proven non-core CYP2C8 allele the *1/*2/*3/*4 core proxy cannot resolve
+# WITHHOLDS the diplotype rather than a silent *1 mis-call. Each row's defining SNP is sourced VERBATIM from
+# the PharmVar GRCh38 per-allele VCFs (CYP2C8-6.2.27; the PharmVar public get-download-file ZIP -- NOT the
+# now-key-gated api-service) and its (rsid -> GRCh38 pos, ref, alt) was machine-verified against Ensembl
+# (4/4 OK, 2026-07-28). Exact ALT -> no benign-variant false-withhold; none share a site with a core allele
+# (*2 95058349 / *3 95067273 / *4 95058362) so accounted_by_core stays None.
+SENTINELS: list[SentinelVariant] = [
+    SentinelVariant("rs41286886", "10", 95064901, "C", "T", "*15", "CYP2C8*15 non-core"),
+    SentinelVariant("rs146806199", "10", 95043047, "A", "G", "*16", "CYP2C8*16 non-core"),
+    SentinelVariant("rs11572102", "10", 95058424, "T", "C", "*17", "CYP2C8*17 non-core"),
+    SentinelVariant("rs45438799", "10", 95042958, "G", "A", "*18", "CYP2C8*18 non-core"),
+]
 
 # PharmVar/literature CLINICAL function per allele (substrate-dependent; NOT a CPIC activity value).
 ALLELE_FUNCTION: dict[str, str] = {

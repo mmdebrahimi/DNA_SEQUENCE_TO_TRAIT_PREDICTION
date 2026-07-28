@@ -146,6 +146,17 @@ def test_cyp2b6_sentinels_withhold_and_no_false_withhold(tmp_path):
     assert rec["phenotype_status"] != "phenotype_withheld" and rec["phenotype"] is not None
 
 
+def test_cyp2c8_sentinels_withhold(tmp_path):
+    """Uses REAL populated cyp2c8_catalog.SENTINELS (4 PharmVar-sourced rows) via the runner."""
+    from dna_decode.pgx.runner import call_cyp2c8
+    from dna_decode.pgx import cyp2c8_catalog as c8
+    assert len(c8.SENTINELS) == 4 and all(s.accounted_by_core is None for s in c8.SENTINELS)
+    # a real *15 carrier (rs41286886 10:95064901 C>T) -> WITHHELD
+    v = _vcf(tmp_path, [("10", 95058349, "rs11572103", "T", "A", "0/0"),   # *2 core = ref
+                        ("10", 95064901, "rs41286886", "C", "T", "0/1")], "c8.vcf")  # *15 sentinel present
+    assert call_cyp2c8(v)["phenotype_status"] == "phenotype_withheld"
+
+
 if __name__ == "__main__":
     import tempfile
     fns = [(k, v) for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

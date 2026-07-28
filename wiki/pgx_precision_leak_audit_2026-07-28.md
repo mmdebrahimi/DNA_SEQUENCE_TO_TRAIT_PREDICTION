@@ -7,8 +7,10 @@ Script: `scripts/pgx_precision_leak_audit.py` · data: `wiki/pgx_precision_leak_
 
 > **UPDATE 2026-07-28 (post-population):** TPMT (10 sentinels, 6 withheld) **and CYP2B6** (3 distinctive-SNP
 > sentinels, **18 withheld**, core 62/62 held — no false-withhold despite the `*6`-shared 785 SNP) are now
-> populated (PharmCAT-sourced, Ensembl-verified). The live leak is now **5 samples across 2 genes
-> (CYP2C8/CYP3A5)**;
+> populated (PharmCAT-sourced, Ensembl-verified). **CYP2C8 too** (4 PharmVar-sourced sentinels → 5 withheld,
+> silent mis-calls 0/87, core 82/82 held). The live leak is now **0 samples** (CYP3A5 has 0 non-core carriers
+> in its n=9 overlap → nothing to leak; its non-core alleles position-collide with core + are unvalidatable
+> here → safely deferred).
 > re-run `scripts/pgx_precision_leak_audit.py` for the current numbers (the `.json` auto-updates as genes are
 > populated). The 36-across-4 figures below are the ORIGINAL pre-population audit that motivated the work.
 

@@ -1,4 +1,4 @@
-# CYP2C8 caller vs GeT-RM consensus on real 1000G (2026-07-05)
+# CYP2C8 caller vs GeT-RM consensus on real 1000G (2026-07-28)
 
 **Truth:** GeT-RM NGS consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) via the ursaPGx benchmark star-allele-comparison_common.tsv, column CYP2C8_getrm_ngs
 **Genotypes:** 1000 Genomes 30x phased panel (CYP2C8 region, pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker))
@@ -6,9 +6,9 @@
 - Overlap samples scored: **87**
 - **Core-comparable diplotype concordance: 82/82 (1.0)**  (GeT-RM truth in *1/*2/*3/*4)
 - Phenotype-correct incl. *38==*1: **82/87** (+0 *38 phenotype-equivalent samples)
-- Correctly WITHHELD by sentinel: **0**
-- **Genuine silent mis-call: 5/87 (5.7%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
-- Correct-or-abstains: **82/87**
+- Correctly WITHHELD by sentinel: **5**
+- **Genuine silent mis-call: 0/87 (0.0%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
+- Correct-or-abstains: **87/87**
 
 _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call)._
 
@@ -103,8 +103,8 @@ _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The str
 
 | sample | GeT-RM | core-proxy | phenotype_status |
 |---|---|---|---|
-| NA07048 | *1/*18 | *1/*1 | ok |
-| NA12156 | *1/*15 | *1/*1 | ok |
-| NA19143 | *1/*17 | *1/*1 | ok |
-| NA19213 | *1/*17 | *1/*1 | ok |
-| NA19917 | *1/*16 | *1/*1 | ok |
+| NA07048 | *1/*18 | *1/*1 | phenotype_withheld |
+| NA12156 | *1/*15 | *1/*1 | phenotype_withheld |
+| NA19143 | *1/*17 | *1/*1 | phenotype_withheld |
+| NA19213 | *1/*17 | *1/*1 | phenotype_withheld |
+| NA19917 | *1/*16 | *1/*1 | phenotype_withheld |
