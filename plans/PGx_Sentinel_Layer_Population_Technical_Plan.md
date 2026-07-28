@@ -104,7 +104,17 @@ DNA-11 (user directive), so execution runs on `main`.
   `TPMT_translation.json` (GRCh38 chr6), all 10 Ensembl-verified (10/10 OK). Real-1000G GeT-RM concordance:
   **core 85/85 UNCHANGED + 6 non-core samples now WITHHELD** (were silent *1). Leak audit 36→21; TPMT
   guarded. 321 tests pass; registry truthed-up. THE FIRST REAL PRECISION GAIN.
-- ⚠️ **Per-gene wrinkles found (the remaining 3 are NOT clean TPMT repeats — handle each carefully):**
+- ✅ **CYP2B6 POPULATED + validated (commit 6670468).** 3 distinctive-SNP sentinels (`*2`/`*7`/`*18`),
+  PharmCAT-sourced + Ensembl-verified, with the `*6`-haplotype-shared 785 SNP deliberately EXCLUDED (no
+  false-withhold). Real-1000G GeT-RM: **core 62/62 UNCHANGED + 18 non-core WITHHELD** (silent 26→8). Leak
+  21→5. Verify-in-batch caught 2 real issues: (a) sentinel sites outside the narrow *6-proxy VCF → re-fetched
+  a wider chr19 region (40991000-41017000); (b) the GRCh37 lift map (`pgx_decode_pgp_uk.GRCH37_POS`) lacked
+  the new sentinels AND `_all_variants()` never yielded `tp.SENTINELS` (TPMT sentinels silently un-lifted) →
+  added 13 GRCh37 coords + wired `tp.SENTINELS`. `*4`/`*9` (absence-defined) = documented v0 gap.
+- 🔎 **CYP2C8 sourcing wrinkle CONFIRMED:** not in PharmCAT (404) AND the CPIC API schema (`allele` /
+  `sequence_location` joins) needs real exploration (my first-guess columns errored) → a focused sourcing
+  sub-task (CPIC schema OR PharmVar download), not a quick continuation. 5 exposed samples.
+- ⚠️ **Per-gene wrinkles found (the remaining 2 are NOT clean repeats — handle each carefully):**
   - **CYP2B6:** non-core `*7`/`*18` are COMPOUND with SNPs shared on the core `*6` haplotype (rs2279343/785
     rides on `*6`) → a naive sentinel there FALSE-WITHHOLDS a core `*6` call. Needs distinctive-SNP selection
     (`*7`→rs3211371, `*18`→rs28399499) + shared-SNP exclusion. Only `*2` (rs8192709) is a clean single-SNP.
