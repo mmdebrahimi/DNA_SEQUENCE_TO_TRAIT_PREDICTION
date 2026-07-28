@@ -1,0 +1,13 @@
+{
+  "test": "E. coli v0.1 per-gene AUROC: conserved-core decoder vs gold-standard essentiality",
+  "reference": "Goodall 2018 mBio Table S1 (TraDIS, genome-wide), CC-BY",
+  "n": 3783,
+  "n_essential": 351,
+  "n_nonessential": 3432,
+  "base_rate": 0.0928,
+  "auroc": 0.6952,
+  "null_auroc": 0.5,
+  "sens": 0.3732,
+  "spec": 0.984,
+  "precision": 0.7043
+}

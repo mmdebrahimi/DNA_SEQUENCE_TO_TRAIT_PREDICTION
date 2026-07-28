@@ -41,11 +41,24 @@ def human_transfer_auroc():
 
 def main():
     ht = human_transfer_auroc()
-    rows = [
+    ec = None
+    ecp = W / "essentiality_ecoli_v0_1_auroc_2026-07-28.json"
+    if ecp.exists():
+        ec = json.loads(ecp.read_text())
+    ecoli_row = (
+        {"organism": "Escherichia coli K-12", "cell": "conserved-core v0.1", "tier": "AUROC_SCORED",
+         "metric": f"AUROC {ec['auroc']} vs null 0.5 (Goodall-TraDIS gold-standard, n={ec['n']}, "
+                   f"{ec['n_essential']} ess/{ec['n_nonessential']} non, base rate {ec['base_rate']}); "
+                   f"sens {ec['sens']} spec {ec['spec']} prec {ec['precision']}",
+         "validation": "real per-gene AUROC vs the Goodall 2018 mBio Table S1 gold-standard (CC-BY); "
+                       "high-precision moderate-recall -- catches the universal core, misses the E. coli-"
+                       "specific essential tail (the E3 learned-complement target)"}
+        if ec else
         {"organism": "Escherichia coli K-12", "cell": "conserved-core v0", "tier": "COMPOSITION_VALIDATED",
          "metric": "208/4318 predicted essential (known essentialome ~300)",
-         "validation": "size + composition match the known essentialome (translation/envelope/replication); "
-                       "per-gene AUROC pending gold-standard labels (walled)"},
+         "validation": "size + composition match the known essentialome; per-gene AUROC pending labels (walled)"})
+    rows = [
+        ecoli_row,
         {"organism": "Homo sapiens", "cell": "cross-organism transfer (E4)",
          "tier": "TRANSFER_SCORED" if ht else "NOT_EVALUATED",
          "metric": (f"AUROC {ht['auroc']} vs null 0.50 (BAGEL CEG2 n={ht['n_essential']} / NEG n={ht['n_nonessential']}); "

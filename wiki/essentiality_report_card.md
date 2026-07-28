@@ -6,7 +6,7 @@ cross-organism TRANSFER AUROC on the citable BAGEL CEG2/NEG reference.
 
 | organism | cell | tier | metric | validation |
 |---|---|---|---|---|
-| Escherichia coli K-12 | conserved-core v0 | COMPOSITION_VALIDATED | 208/4318 predicted essential (known essentialome ~300) | size + composition match the known essentialome (translation/envelope/replication); per-gene AUROC pending gold-standard labels (walled) |
+| Escherichia coli K-12 | conserved-core v0.1 | AUROC_SCORED | AUROC 0.6952 vs null 0.5 (Goodall-TraDIS gold-standard, n=3783, 351 ess/3432 non, base rate 0.0928); sens 0.3732 spec 0.984 prec 0.7043 | real per-gene AUROC vs the Goodall 2018 mBio Table S1 gold-standard (CC-BY); high-precision moderate-recall -- catches the universal core, misses the E. coli-specific essential tail (the E3 learned-complement target) |
 | Homo sapiens | cross-organism transfer (E4) | TRANSFER_SCORED | AUROC 0.5805 vs null 0.50 (BAGEL CEG2 n=681 / NEG n=899); sens 0.1571 spec 0.9978 | universal core (ribosome/tRNA-synth/translation/polymerase) transfers cross-kingdom at high precision; human-specific core (proteasome 0/53, spliceosome 0/49) MISSED -> per-organism catalogue extension is the follow-on |
 
 ## Honest scope

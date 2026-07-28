@@ -5,10 +5,10 @@
   "organisms": [
     {
       "organism": "Escherichia coli K-12",
-      "cell": "conserved-core v0",
-      "tier": "COMPOSITION_VALIDATED",
-      "metric": "208/4318 predicted essential (known essentialome ~300)",
-      "validation": "size + composition match the known essentialome (translation/envelope/replication); per-gene AUROC pending gold-standard labels (walled)"
+      "cell": "conserved-core v0.1",
+      "tier": "AUROC_SCORED",
+      "metric": "AUROC 0.6952 vs null 0.5 (Goodall-TraDIS gold-standard, n=3783, 351 ess/3432 non, base rate 0.0928); sens 0.3732 spec 0.984 prec 0.7043",
+      "validation": "real per-gene AUROC vs the Goodall 2018 mBio Table S1 gold-standard (CC-BY); high-precision moderate-recall -- catches the universal core, misses the E. coli-specific essential tail (the E3 learned-complement target)"
     },
     {
       "organism": "Homo sapiens",
