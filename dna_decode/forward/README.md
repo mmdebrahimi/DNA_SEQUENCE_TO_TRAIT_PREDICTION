@@ -28,9 +28,17 @@ Combines >=1 edits on one protein by **summing the single-variant scores** (meth
 `predict_effect` method). Distinct positions required; each WT is verified against the reference (a
 coordinate/frame error fails loudly). The combined tier is dominance-based — a single `damaging` edit ->
 `damaging`, all `preserved` -> `preserved`, else `uncertain`. **HONESTY: this is the additive null — it does
-NOT model epistasis (non-additivity).** Scoring the fully-mutated sequence jointly (e.g. ESM2 on the
-multi-mutant) is the epistasis test, deferred to a GPU run. This is the combine primitive the `inverse` cell
-needs to stack multiple proposed edits.
+NOT model epistasis (non-additivity).** This is the combine primitive the `inverse` cell needs to stack
+multiple proposed edits.
+
+**The additive null is VALIDATED (2026-07-27, `wiki/forward_epistasis_gb1_2026-07-27.md`).** On the GB1
+double-mutant DMS (Olson 2014, n=2500, ESM2-650M on Kaggle T4), scoring the fully-mutated sequence JOINTLY
+(each mutation in the other's mutated background) beats the additive null by only **+0.0096 Spearman** — ESM2
+encodes minimal usable higher-order epistasis, so the joint variant's per-multi-mutant forward-pass cost isn't
+worth it for a zero-shot predictor. The dominant signal is additivity itself: summing the two *measured*
+single fitnesses predicts the double at ρ=0.958 (GB1 doubles are ~96% additive). The additive null is the
+right default; a joint/epistasis-aware upgrade is available but marginal (regime-dependent — denser,
+higher-order landscapes may differ).
 
 ## The regime router (`predict_edit`) — the capstone
 
