@@ -302,3 +302,10 @@ uv run python scripts/forward_dosage_sweep.py        # cross-organism dosage gen
 
 Tests: `tests/test_forward_{variant_effect,genome_edit,router,alphamissense,structure,dosage}.py` (35).
 Frozen decoder surface byte-unchanged throughout; `dna_decode/forward` is NON-frozen.
+
+## Trust surface — the validation report card
+
+`wiki/forward_validation_report_card.{md,json}` is the standing read-only roll-up of this cell's
+DMS-validated numbers (the molecular analogue of the AMR `decoder_validation_report_card`): per-capability
+honest tier + scope, **no aggregate headline**. Regenerate with `scripts/build_forward_report_card.py`
+(exit 0 always — a report, not a gate).

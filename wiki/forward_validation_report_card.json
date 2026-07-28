@@ -1,0 +1,71 @@
+{
+  "schema": "forward-validation-report-card-v1",
+  "generated": "2026-07-28",
+  "note": "DMS-validated molecular variant-effect cell; zero-shot unless stated; per-capability honest tier; NO aggregate headline",
+  "capabilities": [
+    {
+      "capability": "blosum62 (deterministic, no deps)",
+      "regime": "B_molecular",
+      "tier": "DMS_VALIDATED_BENCHMARK_WIDE",
+      "metric": "ProteinGym median |Spearman| 0.2012",
+      "scope": "n=209 assays; 61 below 0.15 \u2014 modest, the honest floor",
+      "source": "forward_blosum_proteingym_2026-07-17.json"
+    },
+    {
+      "capability": "esm2-650M (learned, universal)",
+      "regime": "B_molecular",
+      "tier": "DMS_VALIDATED_BENCHMARK_WIDE",
+      "metric": "ProteinGym median |Spearman| 0.49275",
+      "scope": "n=194 assays; 153 above 0.3 \u2014 the sequence baseline at scale",
+      "source": "forward_esm_proteingym_2026-07-17.json"
+    },
+    {
+      "capability": "modality hybrid (ESM2+ProSST[+GEMME])",
+      "regime": "B_molecular",
+      "tier": "DMS_VALIDATED_CEILING",
+      "metric": "ESM2 baseline median 0.4926; hybrid ceiling ~0.547 (ESM2+GEMME+ProSST)",
+      "scope": "n=95 struct+MSA assays; +0.056 paired, win 90.5% (prereg bar met); RANKS not doses",
+      "source": "forward_modality_hybrid_2026-07-17.json"
+    },
+    {
+      "capability": "alphamissense / esm-if / prosst (structure/pathogenicity)",
+      "regime": "B_molecular",
+      "tier": "DMS_VALIDATED_PER_PROTEIN",
+      "metric": "per-protein DMS Spearman (AM human-only; ESM-IF/ProSST structure tier)",
+      "scope": "18 proteins in the method leaderboard; ESM-IF does NOT beat ESM2 on PTEN",
+      "source": "forward_method_leaderboard_2026-07-15.json"
+    },
+    {
+      "capability": "multi-mutant additive-null (predict_multi_effect)",
+      "regime": "B_molecular",
+      "tier": "DMS_VALIDATED",
+      "metric": "GB1 doubles: joint-ESM2 beats additive by only +0.0096",
+      "scope": "additive null validated as the robust deployed default; GB1 doubles ~96% additive (measured s1+s2 -> 0.958)",
+      "source": "forward_epistasis_gb1_2026-07-27.json"
+    },
+    {
+      "capability": "epistasis characterization (joint vs additive)",
+      "regime": "B_molecular",
+      "tier": "CHARACTERIZED",
+      "metric": "5 proteins x orders 2-6: joint ~= additive (delta ~+-0.005); 'grows with order' FALSIFIED",
+      "scope": "novel: joint can be MUCH worse OOD (F7YBW8/ParD delta -0.283, degrades with order); additive is robust",
+      "source": "forward_epistasis_sweep_2026-07-27.json"
+    },
+    {
+      "capability": "inverse (effect->edit proposal)",
+      "regime": "B_molecular",
+      "tier": "DEPLOYABLE_RANK_ONLY",
+      "metric": "rank/percentile inverse works 4/4 assays (beats null); learned oracle earns keep 3/4; magnitude NOT deployable",
+      "scope": "RANKS not doses (percentile pts); magnitude needs the target's own DMS (circular by construction)",
+      "source": "forward_inverse_deployable_2026-07-17.json"
+    },
+    {
+      "capability": "regime router (predict_edit)",
+      "regime": "router",
+      "tier": "DEPLOYED",
+      "metric": "A determinant -> AMR catalogue / B molecular -> DMS methods / C organismal -> ABSTAIN",
+      "scope": "resistance NEVER routed to a likelihood model; organism-polygenic ABSTAINS (closed negative)",
+      "source": "dna_decode/forward/router.py"
+    }
+  ]
+}
