@@ -2,7 +2,8 @@
 
 **From:** Soraya (new-phenotype-cells session) · **To:** DNA-11 (owns the PGx / decoder-science lane)
 **Date:** 2026-07-28 · **Type:** verified handoff (R4) — grounded in the real caller code, NOT a guessed runbook.
-**Status:** DNA-11's lane to execute; this session did NOT modify any pgx cell (non-colliding).
+**Status:** DNA-11's lane to execute (user decision 2026-07-28); this session did NOT modify any pgx cell (non-colliding).
+**Execution spec ready:** `plans/PGx_Sentinel_Layer_Population_Technical_Plan.md` — a full technical plan (v0 scope, PharmVar-coord anti-fabrication verifier, per-gene waves, acceptance criteria). DNA-11 has all three inputs: this finding + the measured exposure (`wiki/pgx_precision_leak_audit_2026-07-28.md`) + the plan. **Recommended first step for DNA-11:** the mandatory pre-exec `/brainstorm` on the plan (class-d cross-cutting) before `/save-plan` + `/execute-plan`.
 
 ## Why this is the highest-VOI human-precision lever
 
