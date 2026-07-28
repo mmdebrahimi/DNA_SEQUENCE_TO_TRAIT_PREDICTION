@@ -103,6 +103,10 @@ TRAITS = {
         "summary": "single-gene KO -> ESSENTIAL / non-essential (--gene X --product '...' | --feature-table X.txt.gz): the deterministic conserved-core decoder. Predicts essentiality from gene FUNCTION (translation / replication / transcription / cell-envelope / division catalogue), label-independent + offline. High-precision, conservative-recall (universal core; the learned E3 complement lifts the tail).",
         "validation": "KNOWLEDGE_BASELINE / validated vs gold-standard. E. coli AUROC 0.695 genome-wide (Goodall 2018 mBio TraDIS Table S1); composition matches the known essentialome (208/4318, translation/envelope/replication-dominated). Cross-organism transfer to human (BAGEL CEG2/NEG) AUROC 0.580. The learned E3 complement (aa-composition+length+core, 5-fold CV) lifts it: E. coli 0.795 / human 0.911. NOT clinical. See wiki/essentiality_{decoder_v0,ecoli_v0_1_auroc,e4_transfer,e3_learned,e3_human}_2026-07-28",
     },
+    "metabolic": {
+        "summary": "E. coli carbon-source utilization (--source lactose/citrate/... --genes lacZ,lacY | --feature-table X.txt.gz): the deterministic UPTAKE-GATED catabolism decoder. utilizes iff (catabolic enzymes present) AND (a transporter present) AND (transporter expressed under the O2 condition). The uptake-gate is what a naive AMR-style has-the-genes rule misses.",
+        "validation": "KNOWLEDGE_BASELINE / validated vs measured E. coli K-12 MG1655 phenotypes (EcoCyc/Neidhardt). Anchors: lac+ ara+ mal+ xyl+ rha+ glc+, and the CITRATE anchor (Blount 2012 Nature LTEE) -- Cit- aerobic / Cit+ anaerobic, the case a naive has-the-genes rule mis-calls positive. Reads gene presence not sequence integrity; calls can/cannot DIRECTION not growth rate. NOT clinical. See wiki/metabolic_carbon_decoder_v0_2026-07-28",
+    },
 }
 
 
@@ -172,6 +176,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "essentiality":
         from dna_decode.essentiality.cli import main as essentiality_main
         return essentiality_main(rest)
+    if trait == "metabolic":
+        from dna_decode.metabolic.cli import main as metabolic_main
+        return metabolic_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

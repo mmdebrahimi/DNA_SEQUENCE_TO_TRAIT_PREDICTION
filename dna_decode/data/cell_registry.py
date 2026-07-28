@@ -483,7 +483,7 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "blocked:external) would re-tier off in-distribution; a finer clonality collapse would move the number"),
     ),
     CellContract(
-        cell_id="essentiality:any:essentiality", track="essentiality", route="dna-essentiality",
+        cell_id="essentiality:any:essentiality", track="typing", route="dna-essentiality",
         organism="any", target="essentiality",
         claim="single-gene KO -> essential/non-essential via the deterministic conserved-core FUNCTION "
               "catalogue (translation/replication/transcription/envelope/division); label-independent, offline",
@@ -502,6 +502,28 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         demotion_rule=(
             "the conserved-core is a deterministic PRIOR (high-precision, ~0.37 recall); the E3 learned complement "
             "is the accuracy tier. An independent per-organism essentiality screen would re-validate the transfer"),
+    ),
+    CellContract(
+        cell_id="metabolic:escherichia_coli:metabolic", track="typing", route="dna-metabolic",
+        organism="escherichia_coli", target="metabolic",
+        claim="E. coli carbon-source utilization from gene/operon presence via the UPTAKE-GATED rule "
+              "(utilizes iff catabolic enzymes present AND a transporter present AND transporter expressed "
+              "under the O2 condition); the uptake-gate is what a naive has-the-genes rule misses; offline",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_catalog_validated_vs_measured_k12_phenotypes",
+        validation_slice=(
+            "validated vs measured E. coli K-12 MG1655 phenotypes (EcoCyc / Neidhardt): lac+ ara+ mal+ xyl+ "
+            "rha+ glc+, and the CITRATE anchor (Blount 2012 Nature LTEE) -- Cit- aerobic / Cit+ anaerobic, the "
+            "case a naive has-the-genes rule mis-calls positive (K-12 carries the full TCA + citT yet the citT "
+            "importer is anaerobic-only). Reads gene PRESENCE, not sequence integrity"),
+        label_provenance=(
+            "curated operon/transporter assignments from EcoCyc + Neidhardt (E. coli textbook physiology) + "
+            "Blount et al. 2012 Nature for the LTEE Cit+ aerobic-citT anchor. Faithful-to-literature, not a new model"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="dna_decode/metabolic/carbon_catalog.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "v0 is presence-based E. coli carbon catabolism; a genome-mode that reads sequence integrity (not just "
+            "gene presence) + cross-organism transfer + a measured Biolog/BV-BRC phenotype cohort would re-tier it"),
     ),
     CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
