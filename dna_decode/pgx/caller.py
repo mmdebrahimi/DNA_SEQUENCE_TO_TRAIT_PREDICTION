@@ -238,20 +238,39 @@ def assemble_diplotype(calls: dict[str, VariantCall],
             res.flags.append("phase_ambiguous_phenotype_differs")
 
     # --- sentinel non-core detection (v0.1): a proven non-core allele -> WITHHOLD the phenotype ---
-    star2_alt = calls["*2"].alt_count if calls.get("*2") and calls["*2"].found else 0
+    apply_sentinel_withhold(res, calls, sentinel_counts, sentinels)
+    return res
+
+
+def apply_sentinel_withhold(res: DiplotypeResult, calls: dict[str, VariantCall],
+                            sentinel_counts: dict[str, int] | None,
+                            sentinels: list | None) -> DiplotypeResult:
+    """SHARED non-core sentinel withhold: a proven non-core allele -> phenotype_withheld (phenotype=None).
+
+    Single-sourced so BOTH the core caller (`assemble_diplotype`) and the compound caller
+    (`compound_caller.assemble_compound_diplotype`) apply IDENTICAL withhold semantics -- avoiding the
+    semantic split that copying the logic would create. Mutates + returns `res`.
+
+    `accounted_by_core` on a SentinelVariant names a CORE allele whose ALT copies already explain this
+    sentinel's ALT (e.g. CYP2C19 *35's rs12769205 is shared with *2): subtract that core allele's alt_count
+    before treating the sentinel as a genuine non-core signal. This generalizes the old hardcoded *35/*2
+    special-case out of the generic path (a gene with no such sharing leaves it None -> no subtraction)."""
     for s in (sentinels or []):
         n = (sentinel_counts or {}).get(s.rsid, 0)
         if n <= 0:
             continue
-        if getattr(s, "implies", None) == "*35" and (n - star2_alt) <= 0:
-            continue   # rs12769205 fully accounted for by *2 haplotype(s) -> not a *35 signal
+        acc = getattr(s, "accounted_by_core", None)
+        if acc:
+            core_alt = calls[acc].alt_count if calls.get(acc) and calls[acc].found else 0
+            if (n - core_alt) <= 0:
+                continue   # sentinel ALT fully accounted for by the core allele -> not a non-core signal
         res.sentinel_hits.append({"rsid": s.rsid, "implies": s.implies, "alt_count": n, "note": s.note})
     if res.sentinel_hits:
         res.phenotype_status = "phenotype_withheld"   # overrides phase_ambiguous (stronger)
         res.phenotype = None
         res.phenotype_confidence = "n/a"
-        res.flags.append("non_core_allele_sentinel")
-
+        if "non_core_allele_sentinel" not in res.flags:
+            res.flags.append("non_core_allele_sentinel")
     return res
 
 
@@ -273,7 +292,11 @@ def _scan_sentinel_counts(path: str | Path, sample: str | None = None,
                           sentinels: list = SENTINELS) -> dict[str, int]:
     """ALT copy count (0/1/2) per SENTINEL variant for the chosen sample. Raises on a named-but-absent
     sample (same contract as scan_vcf)."""
-    by_pos = {(s.chrom, s.pos): s for s in sentinels}
+    # LIST per coordinate: two sentinels at the SAME (chrom,pos) with different ALTs must NOT overwrite each
+    # other (the by_pos={(chrom,pos):s} single-key form silently dropped one once exact ALTs replace "*").
+    by_pos: dict[tuple[str, int], list] = {}
+    for s in sentinels:
+        by_pos.setdefault((s.chrom, s.pos), []).append(s)
     counts = {s.rsid: 0 for s in sentinels}
     sample_idx = 0
     for line in Path(path).read_text(encoding="utf-8").splitlines():
@@ -289,23 +312,24 @@ def _scan_sentinel_counts(path: str | Path, sample: str | None = None,
         cols = line.rstrip("\n").split("\t")
         if len(cols) < 8 or not cols[1].isdigit():
             continue
-        s = by_pos.get((_norm_chrom(cols[0]), int(cols[1])))
-        if s is None:
+        slist = by_pos.get((_norm_chrom(cols[0]), int(cols[1])))
+        if not slist:
             continue
         alts = cols[4].split(",")
-        any_alt = s.alt == "*"   # wildcard: any non-ref ALT at this site signals a non-core allele
-        ai = -1
-        if not any_alt:
-            if s.alt not in alts:
-                continue
-            ai = alts.index(s.alt) + 1
-        if len(cols) >= 10:
-            fmt = cols[8].split(":")
-            col = 9 + sample_idx
-            if "GT" in fmt and col < len(cols):
-                gt = cols[col].split(":")[fmt.index("GT")]
-                nums = [int(a) for a in gt.replace("|", "/").split("/") if a.isdigit()]
-                counts[s.rsid] = sum(1 for x in nums if (x > 0 if any_alt else x == ai))
+        if len(cols) < 10:
+            continue
+        fmt = cols[8].split(":")
+        col = 9 + sample_idx
+        if "GT" not in fmt or col >= len(cols):
+            continue
+        gt = cols[col].split(":")[fmt.index("GT")]
+        nums = [int(a) for a in gt.replace("|", "/").split("/") if a.isdigit()]
+        for s in slist:   # count EACH sentinel at this coordinate by its own ALT
+            if s.alt == "*":   # wildcard: any non-ref ALT signals a non-core allele
+                counts[s.rsid] = sum(1 for x in nums if x > 0)
+            elif s.alt in alts:
+                ai = alts.index(s.alt) + 1
+                counts[s.rsid] = sum(1 for x in nums if x == ai)
     return counts
 
 

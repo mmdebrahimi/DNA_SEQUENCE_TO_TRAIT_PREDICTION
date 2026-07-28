@@ -19,7 +19,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from dna_decode.pgx.caller import DiplotypeResult, _vc_dict, scan_vcf
+from dna_decode.pgx.caller import (
+    DiplotypeResult, _scan_sentinel_counts, _vc_dict, apply_sentinel_withhold, scan_vcf)
 from dna_decode.pgx.cyp2c19_catalog import DefiningVariant
 
 
@@ -54,6 +55,8 @@ def assemble_compound_diplotype(
     gene: str,
     sample: str | None = None,
     calls: dict | None = None,
+    sentinels: list | None = None,
+    sentinel_counts: dict[str, int] | None = None,
 ) -> DiplotypeResult:
     """Resolve a compound-allele diplotype from a VCF. `components[i].star` is the component tag used in
     the `rules`; `rules` map component-tag SETS -> star labels. Returns the same DiplotypeResult shape as
@@ -140,6 +143,14 @@ def assemble_compound_diplotype(
             res.alternate_diplotype = f"{t1}/{t2}"
             res.alternate_phenotype = alt_pheno
             res.flags.append("phase_ambiguous_phenotype_differs")
+
+    # --- non-core sentinel withhold (shared with the core caller so semantics are single-sourced) ---
+    # A proven non-core allele the compound proxy cannot resolve -> phenotype_withheld (not a silent *1).
+    # Empty/None sentinels -> no-op (the compound path is byte-unchanged until a gene populates SENTINELS).
+    if sentinels:
+        if sentinel_counts is None and vcf is not None:
+            sentinel_counts = _scan_sentinel_counts(vcf, sample=sample, sentinels=sentinels)
+        apply_sentinel_withhold(res, calls, sentinel_counts or {}, sentinels)
     return res
 
 

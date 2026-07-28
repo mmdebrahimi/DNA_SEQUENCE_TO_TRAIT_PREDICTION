@@ -79,9 +79,14 @@ class SentinelVariant:
     chrom: str
     pos: int
     ref: str
-    alt: str
+    alt: str            # a specific ALT base, or "*" = wildcard (any non-ref ALT at this site — use only
+                        # for a PharmVar-proven single-ALT site; a specific ALT is preferred to avoid a
+                        # false-withhold on a benign co-located variant).
     implies: str        # the non-core allele family this ALT signals
     note: str
+    accounted_by_core: str | None = None   # a CORE allele whose ALT copies already explain this sentinel's
+                                            # signal (subtract before treating it as a non-core hit). Generalizes
+                                            # the CYP2C19 *35-shared-with-*2 rule out of the generic caller.
 
 
 SENTINELS: list[SentinelVariant] = [
@@ -90,7 +95,8 @@ SENTINELS: list[SentinelVariant] = [
                     "call on this haplotype is actually *4b (reduced/no function, not increased)."),
     SentinelVariant("rs12769205", "10", 94775367, "A", "G", "*35",
                     "shared by *2 (with rs4244285) and *35 (alone); an rs12769205 copy in EXCESS of the "
-                    "rs4244285 (*2) copies marks a *35 haplotype the core proxy mis-calls as *1."),
+                    "rs4244285 (*2) copies marks a *35 haplotype the core proxy mis-calls as *1.",
+                    accounted_by_core="*2"),
 ]
 
 # CPIC CYP2C19 function-pair -> metabolizer phenotype (keyed by the SORTED function pair).

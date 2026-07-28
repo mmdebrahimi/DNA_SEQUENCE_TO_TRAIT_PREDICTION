@@ -56,7 +56,8 @@ def _tpmt_caller(plain_vcf, sample):
     from dna_decode.pgx.compound_caller import assemble_compound_diplotype
     return assemble_compound_diplotype(plain_vcf, tp.COMPONENTS, tp.COMPOUND_RULES,
                                        reference_allele=tp.REFERENCE_ALLELE,
-                                       phenotype_fn=tp.diplotype_phenotype, gene=tp.GENE, sample=sample)
+                                       phenotype_fn=tp.diplotype_phenotype, gene=tp.GENE, sample=sample,
+                                       sentinels=tp.SENTINELS)
 
 
 def _c2b6_caller(plain_vcf, sample):

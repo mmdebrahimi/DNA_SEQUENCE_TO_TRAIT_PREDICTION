@@ -438,7 +438,8 @@ def call_tpmt(vcf: str | Path, sample_id: str | None = None,
     from dna_decode.pgx.compound_caller import assemble_compound_diplotype
     res = assemble_compound_diplotype(vcf, tp.COMPONENTS, tp.COMPOUND_RULES,
                                       reference_allele=tp.REFERENCE_ALLELE,
-                                      phenotype_fn=tp.diplotype_phenotype, gene=tp.GENE, sample=sample_column)
+                                      phenotype_fn=tp.diplotype_phenotype, gene=tp.GENE, sample=sample_column,
+                                      sentinels=tp.SENTINELS)
     sid = sample_id or sample_column or Path(vcf).stem
     rec = {
         "sample_id": sid, "trait": "pgx_metabolizer_phenotype", "gene": tp.GENE,
