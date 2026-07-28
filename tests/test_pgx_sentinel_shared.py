@@ -118,6 +118,19 @@ def test_exact_alt_no_false_withhold(tmp_path):
     assert res.phenotype_status == "ok" and res.phenotype is not None   # exact-ALT: NOT withheld
 
 
+def test_tpmt_populated_sentinels_withhold_real_allele(tmp_path):
+    """Uses the REAL populated tpmt_catalog.SENTINELS (10 rows, Ensembl-verified) via the runner path."""
+    from dna_decode.pgx.runner import call_tpmt
+    assert len(tp.SENTINELS) == 10 and all(s.accounted_by_core is None for s in tp.SENTINELS)
+    # a real TPMT*8 carrier: rs56161402 (6:18130762 C>T) het, component sites reference -> WITHHELD not *1
+    rows = [("6", 18138997, "rs1800460", "C", "T", "0/0"),   # *3B component = ref
+            ("6", 18130687, "rs1142345", "T", "C", "0/0"),   # *3C component = ref
+            ("6", 18130762, "rs56161402", "C", "T", "0/1")]  # *8 non-core sentinel present
+    v = _vcf(tmp_path, rows)
+    rec = call_tpmt(v)
+    assert rec["phenotype_status"] == "phenotype_withheld" and rec["phenotype"] is None
+
+
 if __name__ == "__main__":
     import tempfile
     fns = [(k, v) for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

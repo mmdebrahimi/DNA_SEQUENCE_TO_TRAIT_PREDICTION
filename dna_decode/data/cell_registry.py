@@ -224,11 +224,11 @@ _PGX_CONTRACTS: list[CellContract] = [
         cell_id="pgx:human:tpmt", track="pgx", route="dna-pgx", organism="human", target="tpmt",
         claim="TPMT COMPOUND star-allele diplotype (*3A=*3B+*3C) + CPIC thiopurine metabolizer phenotype from a phased VCF",
         evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="compound_calling_validated_phenotype_faithful_to_cpic",
-        validation_slice="GeT-RM CDC consolidated consensus 85/85 core-comparable on 1000G-overlap (truth *1/*3A/*3B/*3C); compound *3A path exercised (6 *3A + 8 *3C samples)",
+        validation_slice="GeT-RM CDC consolidated consensus 85/85 core-comparable on 1000G-overlap (truth *1/*3A/*3B/*3C), UNCHANGED after the sentinel layer; 6 non-core samples now WITHHELD (were silent *1); compound *3A path exercised (6 *3A + 8 *3C samples)",
         label_provenance="GeT-RM CDC consolidated 363-sample PGx consensus (TPMT/NUDT15 J Mol Diagn 2022) join 1000G",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="first true compound-allele cell (>=2 SNPs in cis -> *3A); rare non-core alleles (*2/*8/*16) mis-called *1 (no sentinel layer v0)"),
+        demotion_rule="first true compound-allele cell (>=2 SNPs in cis -> *3A); non-core alleles (*2/*8/*16/*40/*24/*32/*21/*12/*6/*33) now WITHHELD via the sentinel layer (PharmCAT-sourced, Ensembl-verified) rather than mis-called *1; a non-core allele NOT in the 10-sentinel set is still called *1 (v0.1 = extend the set)"),
     CellContract(
         cell_id="pgx:human:cyp2b6", track="pgx", route="dna-pgx", organism="human", target="cyp2b6",
         claim="CYP2B6 *6-proxy (516G>T signal) + CPIC efavirenz metabolizer phenotype from a phased VCF",

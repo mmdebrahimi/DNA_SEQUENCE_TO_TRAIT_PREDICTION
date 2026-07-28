@@ -2,14 +2,13 @@
   "audit": "pgx_precision_leak",
   "date": "2026-07-28",
   "method": "offline_from_committed_getrm_truth",
-  "headline_leak_exposure_samples": 36,
-  "headline_leak_scored_samples": 357,
-  "headline_leak_noncore_rate": 0.1008,
-  "guarded_noncore_correctly_withheld": 21,
+  "headline_leak_exposure_samples": 21,
+  "headline_leak_scored_samples": 210,
+  "headline_leak_noncore_rate": 0.1,
+  "guarded_noncore_correctly_withheld": 36,
   "leak_genes": [
     "cyp2c8",
     "cyp3a5",
-    "tpmt",
     "cyp2b6"
   ],
   "genes_no_committed_truth": [],
@@ -111,7 +110,7 @@
     {
       "gene": "tpmt",
       "status": "scored",
-      "guarded": false,
+      "guarded": true,
       "core_set": [
         "*1",
         "*3A",
@@ -137,7 +136,7 @@
         "*6": 1,
         "*33": 1
       },
-      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+      "interpretation": "non-core samples correctly WITHHELD by the sentinel layer (control)"
     },
     {
       "gene": "cyp2b6",

@@ -26,7 +26,7 @@ SCOPE (v0): CORE *3A/*3B/*3C + *1. Rarer no-function alleles (*2/*8/*16/*46...) 
 from __future__ import annotations
 
 from dna_decode.pgx.compound_caller import CompoundAllele
-from dna_decode.pgx.cyp2c19_catalog import DefiningVariant
+from dna_decode.pgx.cyp2c19_catalog import DefiningVariant, SentinelVariant
 
 GENE = "TPMT"
 ASSEMBLY = "GRCh38"
@@ -49,7 +49,26 @@ COMPOUND_RULES: list[CompoundAllele] = [
 
 # `CORE_DEFINING` kept as the component list so the report/registry wiring that reads a defining list works.
 CORE_DEFINING = COMPONENTS
-SENTINELS: list = []
+# Non-core-allele SENTINELS: a proven non-core TPMT allele the *1/*3A/*3B/*3C core proxy cannot resolve
+# WITHHOLDS the phenotype (phenotype_withheld) rather than a silent *1 mis-call -- the clinically dangerous
+# direction for a thiopurine no/reduced-function allele. Each row's defining SNP is sourced VERBATIM from the
+# PharmCAT/CLINPGX TPMT_translation.json allele definitions (GRCh38.p14, chr6, forward strand) and its
+# (rsid -> GRCh38 pos, ref, alt) was machine-verified against Ensembl (scripts/verify_sentinel_coords.py,
+# 10/10 OK, 2026-07-28). Exact ALT (not the "*" wildcard) -> a benign co-located variant will NOT false-
+# withhold. None share a SNP with a core allele, so accounted_by_core stays None. *46 (compound) is covered
+# by the union of its components *8 (rs56161402) + *33 (rs112339338), so it needs no dedicated row.
+SENTINELS: list[SentinelVariant] = [
+    SentinelVariant("rs1800462", "6", 18143724, "C", "G", "*2", "TPMT*2 (p.A80P) non-core, no function"),
+    SentinelVariant("rs56161402", "6", 18130762, "C", "T", "*8", "TPMT*8 (p.R215H) non-core"),
+    SentinelVariant("rs144041067", "6", 18138969, "C", "T", "*16", "TPMT*16 (p.R163C) non-core"),
+    SentinelVariant("rs139392616", "6", 18130729, "C", "T", "*40", "TPMT*40 non-core"),
+    SentinelVariant("rs6921269", "6", 18133847, "C", "A", "*24", "TPMT*24 (p.Q42E) non-core"),
+    SentinelVariant("rs115106679", "6", 18143622, "C", "T", "*32", "TPMT*32 non-core"),
+    SentinelVariant("rs200591577", "6", 18147851, "G", "C", "*21", "TPMT*21 non-core"),
+    SentinelVariant("rs200220210", "6", 18139710, "G", "A", "*12", "TPMT*12 non-core"),
+    SentinelVariant("rs75543815", "6", 18133845, "T", "A", "*6", "TPMT*6 (p.Y180F) non-core"),
+    SentinelVariant("rs112339338", "6", 18138970, "G", "A", "*33", "TPMT*33 non-core"),
+]
 
 ALLELE_FUNCTION: dict[str, str] = {
     "*1": "normal",

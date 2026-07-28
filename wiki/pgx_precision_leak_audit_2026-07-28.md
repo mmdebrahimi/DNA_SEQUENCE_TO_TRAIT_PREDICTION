@@ -5,6 +5,12 @@
 own core allele sets — no 1000G VCF, no network, no Docker, and **no pgx code touched**.
 Script: `scripts/pgx_precision_leak_audit.py` · data: `wiki/pgx_precision_leak_audit_2026-07-28.json`.
 
+> **UPDATE 2026-07-28 (post-population):** TPMT's 10 sentinels are now populated (PharmCAT-sourced,
+> Ensembl-verified) → TPMT moved from LEAK to **guarded** (core concordance held 85/85; 6 non-core samples
+> now WITHHELD on real 1000G). The live leak is now **21 samples across 3 genes (CYP2C8/CYP3A5/CYP2B6)**;
+> re-run `scripts/pgx_precision_leak_audit.py` for the current numbers (the `.json` auto-updates as genes are
+> populated). The 36-across-4 figures below are the ORIGINAL pre-population audit that motivated the work.
+
 ## Headline
 
 On the committed GeT-RM 1000G-overlap truth set, **36 real samples carry a non-core star-allele that the

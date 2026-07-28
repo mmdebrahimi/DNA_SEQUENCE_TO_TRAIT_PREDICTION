@@ -28,8 +28,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from scripts.pgx_getrm_concordance import GENES, TRUTH  # core sets + truth-file locations (single source)
 
-# Which genes populate a non-empty SENTINELS list today (verified 2026-07-28 against the catalogs).
-GUARDED = {"cyp2c19", "cyp2c9"}
+# A gene is GUARDED iff its catalog ships a non-empty SENTINELS list (derived live, not hardcoded, so the
+# audit tracks population as it lands -- e.g. TPMT moved leak->guarded once its 10 sentinels were populated).
+def _guarded(gene: str) -> bool:
+    import importlib
+    try:
+        return bool(getattr(importlib.import_module(f"dna_decode.pgx.{gene}_catalog"), "SENTINELS", []))
+    except Exception:
+        return False
+
+
+GUARDED = {g for g in ("cyp2c19", "cyp2c9", "cyp2c8", "cyp3a5", "tpmt", "cyp2b6", "cyp2d6") if _guarded(g)}
 # CYP2D6 structural stars (deletion/dup/hybrid) — NOT SNP-decodable; excluded from the SNP exposure count.
 _CYP2D6_STRUCTURAL = {"*5", "*13", "*36", "*61", "*63", "*68"}
 
