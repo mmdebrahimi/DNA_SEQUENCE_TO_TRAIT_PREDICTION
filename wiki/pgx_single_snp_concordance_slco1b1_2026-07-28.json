@@ -1,0 +1,24 @@
+{
+  "gene": "SLCO1B1",
+  "method": "single_defining_SNP_vs_GeT-RM_actionable_allele",
+  "date": "2026-07-29",
+  "snps": [
+    {
+      "rsid": "rs4149056",
+      "actionable": [
+        "*15",
+        "*17",
+        "*5"
+      ],
+      "label": "*5-family (521C, decreased)",
+      "n_scored": 87,
+      "ambiguous_skipped": 1,
+      "dosage_concordance": 1.0,
+      "dosage_hits": "87/87",
+      "carrier_concordance": 1.0,
+      "carrier_hits": "87/87",
+      "mismatches": []
+    }
+  ],
+  "honesty": "single-SNP CELL call vs accepted GeT-RM star-allele truth; a defining-SNP proxy, not a full star-allele caller. Ambiguous (parenthetical) truth skipped."
+}

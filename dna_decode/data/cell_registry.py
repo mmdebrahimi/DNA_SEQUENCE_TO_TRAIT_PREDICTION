@@ -214,12 +214,12 @@ _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="pgx:human:cyp3a5", track="pgx", route="dna-pgx", organism="human", target="cyp3a5",
         claim="CYP3A5 star-allele diplotype (*3/*6/*7) + CPIC expressor/non-expressor phenotype (tacrolimus) from a phased VCF",
-        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_underpowered_phenotype_faithful_to_cpic",
-        validation_slice="GeT-RM CDC multi-lab consensus (CYP3A5_getrm_cons) 8/8 core-diplotype on 1000G-overlap; UNDERPOWERED n=8; covers *1/*3/*6/*7 incl. *7 insertion",
-        label_provenance="GeT-RM CDC reference-material multi-lab consensus (CYP3A4/CYP3A5 J Mol Diagn 2023 table) join 1000G",
-        abstention_vocab=AbstentionVocab.UNDERPOWERED, native_abstention="UNDERPOWERED",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="calling_validated_phenotype_faithful_to_cpic",
+        validation_slice="GeT-RM CDC multi-lab consensus (CYP3A5_getrm_cons) 88/88 core-diplotype on 1000G-overlap (POWERED via the full GeT-RM Consolidated table, up from n=8); covers *1/*3/*6/*7 incl. *7 insertion",
+        label_provenance="GeT-RM CDC Consolidated PGx/HLA table (363-sample; CYP3A4/CYP3A5 J Mol Diagn 2023) join 1000G",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="only ~8 GeT-RM CYP3A5 samples overlap 1000G (UNDERPOWERED, 0 non-core carriers); non-core *8/*9/*10/*11 sentinels are POPULATED + Ensembl-verified + safe (no core-site collision, core concordance 8/8 UNCHANGED) but UNEXERCISED on this cohort -> a powered cohort would validate the withhold; non-core alleles outside the 4-sentinel set still mis-called *1 (v0.1)"),
+        demotion_rule="88 GeT-RM CYP3A5 samples now overlap 1000G (POWERED, was n=8; the underpowered flag is cleared); non-core *8/*9/*10/*11 sentinels POPULATED + Ensembl-verified + safe (no core-site collision, core 88/88 UNCHANGED) but 0 non-core carriers in this cohort so UNEXERCISED; non-core alleles outside the 4-sentinel set still mis-called *1 (v0.1)"),
     CellContract(
         cell_id="pgx:human:tpmt", track="pgx", route="dna-pgx", organism="human", target="tpmt",
         claim="TPMT COMPOUND star-allele diplotype (*3A=*3B+*3C) + CPIC thiopurine metabolizer phenotype from a phased VCF",
@@ -268,11 +268,11 @@ _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="pgx:human:ugt1a1", track="pgx", route="dna-pgx", organism="human", target="ugt1a1",
         claim="UGT1A1 irinotecan-toxicity phenotype: CPIC activity-score over the SNP-callable *80 (rs887829, LD-tag for the *28 TA-repeat) + *6 (rs4148323) from a phased VCF",
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="cpic_activity_score_ld_tag_proxy_star28_repeat_unassessed",
-        validation_slice="v0 TAG-SNP tier: rs887829 (*80) EUR AF ~30% == the *28 frequency (confirms the LD tag); coords Ensembl-GRCh38-verified; decoded on real VCFs (PGP-UK). The direct *28 TA-repeat is a STRUCTURAL WALL (repeat-aware caller needed); GeT-RM UGT1A1 concordance = external wall",
-        label_provenance="CPIC UGT1A1 guideline (Gammal 2016) + PharmVar UGT1A1; rs887829 as the validated *28 LD-tag; deployment on PGP-UK PRJEB17529",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_ld_tag_validated_vs_getrm_repeat_unassessed",
+        validation_slice="GeT-RM Consolidated single-SNP concordance: rs887829 (*80, *28/*37 LD-tag) 39/39 dosage-concordant + rs4148323 (*6) 39/39 on 1000G-overlap (ambiguous parenthetical/compound truth skipped); rs887829 EUR AF ~30% == the *28 frequency. The direct *28 TA-repeat is still a STRUCTURAL WALL (repeat-aware caller needed) -- the SNP validates the TAG, not the repeat length",
+        label_provenance="CPIC UGT1A1 (Gammal 2016) + PharmVar; GeT-RM Consolidated table (363-sample) star-allele truth via scripts/pgx_single_snp_concordance.py; rs887829 as the *28/*37 LD-tag",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
-        falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
+        falsifier_ref="scripts/pgx_single_snp_concordance.py", incoming_data_gate="n/a",
         demotion_rule="STRUCTURAL: *28 (promoter TA-repeat) is NOT directly called — rs887829 (*80) is an LD-tag PROXY (EUR r^2 ~0.9+, imperfect off-EUR); star28_ta_repeat_unassessed=True. *37/*36 repeat alleles + rarer non-core called *1"),
     CellContract(
         cell_id="pgx:human:vkorc1", track="pgx", route="dna-pgx", organism="human", target="vkorc1",
@@ -285,12 +285,12 @@ _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="pgx:human:cyp4f2", track="pgx", route="dna-pgx", organism="human", target="cyp4f2",
         claim="CYP4F2 *3 (rs2108622, V433M) warfarin dose-modifier genotype+function from a phased VCF (3rd warfarin gene with VKORC1+CYP2C9)",
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_function_readout",
-        validation_slice="single-SNP rs2108622 genotype->CYP4F2 function readout (plus-strand genomic C>T == cDNA 433 Val>Met); AF-corroborated (*3 ~29% EUR / ~79% EAS); deployed on real VCFs (PGP-UK); trio-Mendelian consistency the only validation surface (no independent star truth)",
-        label_provenance="CPIC warfarin guideline (Johnson 2017) CYP4F2*3 dose effect + dbSNP rs2108622; deployment on PGP-UK PRJEB17529",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_validated_vs_getrm_star_truth",
+        validation_slice="GeT-RM Consolidated single-SNP concordance: rs2108622 -> *3 dosage 54/54 (1.0) on 1000G-overlap (10 ambiguous skipped); plus-strand genomic C>T == cDNA 433 Val>Met; AF-corroborated (*3 ~29% EUR / ~79% EAS)",
+        label_provenance="CPIC warfarin (Johnson 2017) CYP4F2*3 + GeT-RM Consolidated table star-allele truth via scripts/pgx_single_snp_concordance.py",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
-        falsifier_ref="scripts/pgx_decode_pgp_uk.py", incoming_data_gate="n/a",
-        demotion_rule="single-SNP *3 proxy (rs2108622 IS the *3 truth); a warfarin DOSE modifier, not a metabolizer phenotype; the dose direction is annotation only (NOT a clinical dose)"),
+        falsifier_ref="scripts/pgx_single_snp_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="single-SNP *3 (rs2108622 IS the *3-defining variant -> 54/54 vs GeT-RM); a warfarin DOSE modifier, not a metabolizer phenotype; the dose direction is annotation only (NOT a clinical dose)"),
     CellContract(
         cell_id="pgx:human:abcg2", track="pgx", route="dna-pgx", organism="human", target="abcg2",
         claim="ABCG2 Q141K (rs2231142) rosuvastatin transporter-function genotype from a phased VCF (pairs with SLCO1B1 for statins)",
@@ -303,12 +303,12 @@ _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="pgx:human:slco1b1", track="pgx", route="dna-pgx", organism="human", target="slco1b1",
         claim="SLCO1B1 c.521T>C (rs4149056, *5) transporter-function genotype -> simvastatin myopathy risk, from a phased VCF",
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="single_snp_genotype_to_function",
-        validation_slice="direct 521T>C genotype readout (plus-strand); NOT an independent star-diplotype concordance (single-SNP tautology); genotype+trio only",
-        label_provenance="CPIC simvastatin function assignment (Cooper-DeHoff 2022); no independent panel validation in-repo (rs4149056 IS the truth for a 521 call)",
-        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants (v0 scope-limit)"),
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_validated_vs_getrm_star_truth",
+        validation_slice="GeT-RM Consolidated single-SNP concordance: rs4149056 -> *5-family (521C: *5/*15/*17) dosage 87/87 (1.0) on 1000G-overlap (1 ambiguous skipped); plus-strand 521T>C readout",
+        label_provenance="CPIC simvastatin (Cooper-DeHoff 2022) + GeT-RM Consolidated table star-allele truth via scripts/pgx_single_snp_concordance.py (rs4149056 is the 521C-defining variant of *5/*15/*17)",
+        abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
+        falsifier_ref="scripts/pgx_single_snp_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="single-SNP 521C detector for *5/*15/*17 (87/87 vs GeT-RM); does NOT resolve WHICH of *5/*15/*17 (they share 521C); full star typing needs more variants (v0 scope-limit)"),
 ]
 
 # --- Typing + determinant-finder whole-tool cells (route dna-<trait>). Faithful-to-tool curated-DB callers. ---

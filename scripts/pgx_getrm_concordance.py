@@ -95,7 +95,7 @@ GENES = {
     "cyp3a5":  {"vcf": REPO / "data" / "pgx_1000g" / "cyp3a5_1000g.vcf.gz",
                 "truth_col": "CYP3A5_getrm_cons", "core": {"*1", "*3", "*6", "*7"},
                 "ref_equiv": {}, "caller": _c3a5_caller,
-                "truth_file": REPO / "tests" / "data" / "pgx_getrm" / "getrm_cyp3a5_consensus.tsv",
+                "truth_file": REPO / "tests" / "data" / "pgx_getrm" / "getrm_cyp3a5_consolidated.tsv",
                 "out_stem": "pgx_getrm_concordance_cyp3a5_2026-07-05",
                 "fetch_note": "pure-Python tabix-over-HTTP (scripts/fetch_1000g_region.py; no Docker); GeT-RM CDC CYP3A4/5 table"},
     "tpmt":    {"vcf": REPO / "data" / "pgx_1000g" / "tpmt_1000g.vcf.gz",

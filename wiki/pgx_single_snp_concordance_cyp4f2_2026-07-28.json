@@ -1,0 +1,22 @@
+{
+  "gene": "CYP4F2",
+  "method": "single_defining_SNP_vs_GeT-RM_actionable_allele",
+  "date": "2026-07-29",
+  "snps": [
+    {
+      "rsid": "rs2108622",
+      "actionable": [
+        "*3"
+      ],
+      "label": "*3 (V433M)",
+      "n_scored": 54,
+      "ambiguous_skipped": 10,
+      "dosage_concordance": 1.0,
+      "dosage_hits": "54/54",
+      "carrier_concordance": 1.0,
+      "carrier_hits": "54/54",
+      "mismatches": []
+    }
+  ],
+  "honesty": "single-SNP CELL call vs accepted GeT-RM star-allele truth; a defining-SNP proxy, not a full star-allele caller. Ambiguous (parenthetical) truth skipped."
+}
