@@ -83,6 +83,10 @@ TRAITS = {
         "summary": "INVERSE design (--protein-seq/--protein-fasta --target-percentile 0.05 [--cds-fasta]): effect -> EDIT. Proposes the edits at a target percentile of predicted molecular damage, using the DMS-validated forward oracle as LABEL-FREE ground truth (no phenotype label consulted). The effect->edit complement to `forward`",
         "validation": "graded NON-circularly against MEASURED wet-lab DMS (calibrate on held-out positions; grade on the proposed variant's measured value, never the model's re-score): beats an exact no-oracle null on 4/4 usable proteins across 4 kingdoms, ~2-5 percentile points at top-5. RANKS, NEVER DOSES -- the magnitude version needs a calibrator fit on the TARGET protein's own DMS (which would make the inverse unnecessary; and calibrators cannot transfer -- the assays share no scale), and its conformal interval is uninformative even where it brackets. The learned oracle beats plain BLOSUM62 on only 3/4, so the blosum62 default is often right, not a fallback; utility does NOT track forward rank (PTEN 0.5185 earns keep, RL40A 0.5190 does not) -> per-protein check required. Regime B molecular fitness only, NOT clinical resistance (use `amr`)",
     },
+    "coatcolor": {
+        "summary": "DOG coat colour (--loci E=e/e,K=KB/KB,A=at/at,B=B/b,D=D/d): eumelanin/phaeomelanin pigment type + eumelanin colour (black/brown/blue/isabella) + distribution (solid/sable/agouti/tan-points) via the FIVE classic OMIA loci (E/MC1R, K/CBD103, A/ASIP, B/TYRP1, D/MLPH) resolved in fixed epistatic order - the first PHYSICAL/visible-trait animal cell + the deterministic curated-catalog form of 'DNA->appearance'",
+        "validation": "deterministic epistatic curated-catalog rule (literature-anchored Little 1957 / Schmutz & Berryere; OMIA-sourced causal loci); reference-integrity biology-checked incl. the E-locus epistasis anchor a naive has-the-allele rule mis-calls (e/e is red/yellow even when K^B + b/b). KNOWLEDGE_BASELINE; per-individual scoring vs the free Darwin's Ark/Dryad cohort (N=1930 owner-reported coat colour + N=3277 canFam4 genotypes, doi:10.5061/dryad.83bk3jb4r) = the v0.1 measured tier (scripts/dog_coat_darwins_ark_validate.py). Calls COLOUR not shade/length/spotting; pattern loci (merle/spotting) ABSTAIN. Companion-animal, NOT human/forensic",
+    },
     "flowering": {
         "summary": "PLANT trait — Arabidopsis thaliana flowering HABIT (--fri/--flc allele calls): summer-annual-early vs winter-annual-late (vernalization-requiring), from the curated FRI/FLC causal loci. The deterministic counterpart to the CLOSED-NEGATIVE flowering EMBEDDING test (which learned lineage, not mechanism)",
         "validation": "deterministic curated-causal-allele rule (late iff functional FRI AND strong FLC; FLC is downstream so a weak/null FLC calls early regardless of FRI). Literature-anchored (Johanson 2000 FRI / Michaels 2003 PNAS weak-FLC / Werner 2005 FRI-independent); reference-integrity biology-checked incl. the Da(1)-12 anchor a naive FRI-only rule mis-calls. PARTIAL: FRI/FLC ~40-70% of long-day variation -> HABIT/direction only, NOT days-to-flower; FRI-route confidence capped by the Lz-0 counterexample. v0 = allele-call input; genome-mode = v0.1",
@@ -164,6 +168,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pigment":
         from dna_decode.pigment.cli import main as pigment_main
         return pigment_main(rest)
+    if trait == "coatcolor":
+        from dna_decode.pigment.coat_cli import main as coat_main
+        return coat_main(rest)
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)

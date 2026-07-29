@@ -57,6 +57,7 @@ dna-amr = "dna_decode.amr.cli:main"
 dna-forward = "dna_decode.forward.cli:main"    # forward variant-effect (edit -> molecular phenotype)
 dna-inverse = "dna_decode.forward.inverse_cli:main"    # inverse design (effect -> edit); ranks, never doses
 dna-pigment = "dna_decode.pigment.cli:main"    # visible-trait pigmentation (v0 = IrisPlex eye colour)
+dna-coatcolor = "dna_decode.pigment.coat_cli:main"  # dog coat colour (E/K/A/B/D epistasis) — first physical/visible-trait animal cell
 dna-flowering = "dna_decode.organism_rules.flowering_cli:main"   # Arabidopsis flowering habit (FRI/FLC)
 dna-phage = "dna_decode.phage.cli:main"        # bacteriophage genome/lineage -> host-receptor class (first non-AMR cell)
 dna-kleb = "dna_decode.kleb.cli:main"          # Klebsiella phage depolymerase -> capsule KL-type (cross-organism, fetch-only)

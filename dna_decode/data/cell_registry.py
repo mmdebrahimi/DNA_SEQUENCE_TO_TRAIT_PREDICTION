@@ -433,6 +433,31 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "tier — in either direction"),
     ),
     CellContract(
+        cell_id="typing:dog:coatcolor", track="typing", route="dna-coatcolor",
+        organism="Canis_lupus_familiaris", target="coatcolor",
+        claim="dog coat colour (pigment type + eumelanin colour black/brown/blue/isabella + distribution "
+              "solid/sable/agouti/tan-points) from the five classic OMIA loci E/K/A/B/D, resolved in fixed "
+              "epistatic order — the first PHYSICAL/visible-trait animal cell",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_epistatic_catalog_knowledge_baseline_not_scored",
+        validation_slice=(
+            "deterministic epistatic curated-catalog rule (Little 1957 / Schmutz & Berryere; OMIA causal loci "
+            "MC1R/CBD103/ASIP/TYRP1/MLPH). reference_integrity_ok() pins known breed genotypes -> colours "
+            "(yellow Lab e/e -> red; chocolate Lab bb -> brown; Weimaraner bb/dd -> isabella; GSD ky/ky at/at "
+            "-> tan-points) INCLUDING the E-locus EPISTASIS ANCHOR a naive has-the-allele rule mis-calls "
+            "(e/e is red/yellow even when K^B + b/b). NOT SCORED against measured phenotypes yet — the free "
+            "Darwin's Ark/Dryad cohort (N=1930 owner-reported coat colour + N=3277 canFam4 genotypes, "
+            "doi:10.5061/dryad.83bk3jb4r) is the v0.1 measured-tier substrate (scripts/dog_coat_darwins_ark_validate.py)"),
+        label_provenance=("OMIA-curated causal loci + classical dog-colour genetics (rule); Darwin's Ark/Dryad "
+                          "owner-reported coat colour (measured labels, pending the scoring run)"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/dog_coat_darwins_ark_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "v0 covers COLOUR only (5 solid-colour loci); pattern loci (merle M/spotting S/ticking T) ABSTAIN "
+            "rather than guess. Scoring the Darwin's Ark cohort would move this to a measured tier — in either "
+            "direction; a per-individual concordance below the epistasis anchors' expectation demotes the rule"),
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "
