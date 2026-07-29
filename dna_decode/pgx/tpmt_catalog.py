@@ -69,6 +69,13 @@ SENTINELS: list[SentinelVariant] = [
     SentinelVariant("rs75543815", "6", 18133845, "T", "A", "*6", "TPMT*6 (p.Y180F) non-core"),
     SentinelVariant("rs112339338", "6", 18138970, "G", "A", "*33", "TPMT*33 non-core"),
 ]
+# VALIDATION NOTE: the sentinel sites span 18130729-18147851, WIDER than the *3B/*3C-component fetch region
+# -> re-fetch a wider region to exercise them all:
+#   uv run python scripts/fetch_1000g_region.py --chrom chr6 --start 18128000 --end 18148000 --out data/pgx_1000g/tpmt_1000g.vcf
+# Then `pgx_getrm_concordance --gene tpmt` = core 85/85 UNCHANGED + 10 non-core WITHHELD (2026-07-28).
+# PANEL LIMITATION (not a code gap): *6/*12/*40 (rs75543815/rs200220210/rs139392616) are NOT genotyped in the
+# 1000G 30x panel -> their 3 carriers stay silent on THIS cohort; the sentinels are correct + would fire on a
+# WGS/clinical VCF that genotypes those sites.
 
 ALLELE_FUNCTION: dict[str, str] = {
     "*1": "normal",

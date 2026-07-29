@@ -224,7 +224,7 @@ _PGX_CONTRACTS: list[CellContract] = [
         cell_id="pgx:human:tpmt", track="pgx", route="dna-pgx", organism="human", target="tpmt",
         claim="TPMT COMPOUND star-allele diplotype (*3A=*3B+*3C) + CPIC thiopurine metabolizer phenotype from a phased VCF",
         evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="compound_calling_validated_phenotype_faithful_to_cpic",
-        validation_slice="GeT-RM CDC consolidated consensus 85/85 core-comparable on 1000G-overlap (truth *1/*3A/*3B/*3C), UNCHANGED after the sentinel layer; 6 non-core samples now WITHHELD (were silent *1); compound *3A path exercised (6 *3A + 8 *3C samples)",
+        validation_slice="GeT-RM CDC consolidated consensus 85/85 core-comparable on 1000G-overlap (truth *1/*3A/*3B/*3C), UNCHANGED after the sentinel layer; 10 non-core samples now WITHHELD (were silent *1) on the wider-region VCF; residual 3 silent = *6/*12/*40 NOT genotyped in the 1000G 30x panel (data limitation, not a code gap); compound *3A path exercised (6 *3A + 8 *3C samples)",
         label_provenance="GeT-RM CDC consolidated 363-sample PGx consensus (TPMT/NUDT15 J Mol Diagn 2022) join 1000G",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",

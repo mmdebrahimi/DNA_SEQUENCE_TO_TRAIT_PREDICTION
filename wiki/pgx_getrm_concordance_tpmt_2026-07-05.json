@@ -11,11 +11,11 @@
   "core_diplotype_hits": "85/85",
   "n_noncore_truth": 13,
   "star38_phenotype_equivalent": 0,
-  "noncore_correctly_withheld": 6,
-  "genuine_silent_miscall": 7,
-  "genuine_silent_miscall_pct": 7.1,
+  "noncore_correctly_withheld": 10,
+  "genuine_silent_miscall": 3,
+  "genuine_silent_miscall_pct": 3.1,
   "phenotype_correct_incl_star38": "85/98",
-  "correct_or_abstains": "91/98",
+  "correct_or_abstains": "95/98",
   "honesty_tier": "GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call).",
   "core_rows": [
     {
@@ -874,10 +874,10 @@
       "sample": "HG00133",
       "getrm": "*1/*2",
       "predicted": "*1/*1",
-      "phenotype_status": "ok",
-      "withheld": false,
+      "phenotype_status": "phenotype_withheld",
+      "withheld": true,
       "is_core_truth": false,
-      "bucket": "genuine_miscall",
+      "bucket": "withheld",
       "match": null
     },
     {
@@ -904,10 +904,10 @@
       "sample": "HG01083",
       "getrm": "*1/*2",
       "predicted": "*1/*1",
-      "phenotype_status": "ok",
-      "withheld": false,
+      "phenotype_status": "phenotype_withheld",
+      "withheld": true,
       "is_core_truth": false,
-      "bucket": "genuine_miscall",
+      "bucket": "withheld",
       "match": null
     },
     {
@@ -944,20 +944,20 @@
       "sample": "NA10855",
       "getrm": "*1/*32",
       "predicted": "*1/*1",
-      "phenotype_status": "ok",
-      "withheld": false,
+      "phenotype_status": "phenotype_withheld",
+      "withheld": true,
       "is_core_truth": false,
-      "bucket": "genuine_miscall",
+      "bucket": "withheld",
       "match": null
     },
     {
       "sample": "NA12044",
       "getrm": "*1/*21",
       "predicted": "*1/*1",
-      "phenotype_status": "ok",
-      "withheld": false,
+      "phenotype_status": "phenotype_withheld",
+      "withheld": true,
       "is_core_truth": false,
-      "bucket": "genuine_miscall",
+      "bucket": "withheld",
       "match": null
     },
     {

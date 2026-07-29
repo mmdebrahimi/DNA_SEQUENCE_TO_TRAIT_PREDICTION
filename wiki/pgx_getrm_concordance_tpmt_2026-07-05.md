@@ -6,9 +6,9 @@
 - Overlap samples scored: **98**
 - **Core-comparable diplotype concordance: 85/85 (1.0)**  (GeT-RM truth in *1/*3A/*3B/*3C)
 - Phenotype-correct incl. *38==*1: **85/98** (+0 *38 phenotype-equivalent samples)
-- Correctly WITHHELD by sentinel: **6**
-- **Genuine silent mis-call: 7/98 (7.1%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
-- Correct-or-abstains: **91/98**
+- Correctly WITHHELD by sentinel: **10**
+- **Genuine silent mis-call: 3/98 (3.1%)** -- non-core alleles beyond the v0 SNP set (+ sentinels where present); the honest residual blind spot.
+- Correct-or-abstains: **95/98**
 
 _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The strongest star-allele-CALLING validation tier available (vs the field's accepted consensus truth set). v0 covers the CORE SNP set; non-core-truth samples are scored separately (the v0.1 sentinel layer should WITHHOLD, not mis-call)._
 
@@ -106,15 +106,15 @@ _GeT-RM CONSENSUS concordance on real 1000G genomes, independent caller. The str
 
 | sample | GeT-RM | core-proxy | phenotype_status |
 |---|---|---|---|
-| HG00133 | *1/*2 | *1/*1 | ok |
+| HG00133 | *1/*2 | *1/*1 | phenotype_withheld |
 | HG00276 | *1/*16 | *1/*1 | phenotype_withheld |
 | HG00304 | *3A/*16 | *1/*3A | phenotype_withheld |
-| HG01083 | *1/*2 | *1/*1 | ok |
+| HG01083 | *1/*2 | *1/*1 | phenotype_withheld |
 | HG01474 | *1/*40 | *1/*1 | ok |
 | HG02496 | *1/*24 | *1/*1 | phenotype_withheld |
 | HG03521 | *1/*46 | *1/*1 | phenotype_withheld |
-| NA10855 | *1/*32 | *1/*1 | ok |
-| NA12044 | *1/*21 | *1/*1 | ok |
+| NA10855 | *1/*32 | *1/*1 | phenotype_withheld |
+| NA12044 | *1/*21 | *1/*1 | phenotype_withheld |
 | NA12751 | *1/*12 | *1/*1 | ok |
 | NA18603 | *1/*6 | *1/*1 | ok |
 | NA19026 | *8/*33 or *1/*46 | *1/*1 | phenotype_withheld |
