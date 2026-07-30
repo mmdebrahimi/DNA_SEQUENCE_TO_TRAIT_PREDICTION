@@ -54,20 +54,21 @@ CAUSAL_VARIANTS = {
           "OMIA 000031-9615; Drogemuller 2007; Bauer 2018"),
 }
 
-# owner-reported coat-colour category -> our decoder vocabulary (EXPLICIT + lossy; ambiguous/pattern -> EXCLUDE).
-# The exact Darwin's Ark Q243 answer strings are pinned by --probe against the real TSV before scoring.
-PHENOTYPE_MAP: dict[str, str] = {
-    # phaeomelanin
-    "yellow": "red/yellow", "red": "red/yellow", "gold": "red/yellow", "golden": "red/yellow",
-    "tan": "red/yellow", "cream": "red/yellow", "apricot": "red/yellow", "fawn": "red/yellow",
-    # eumelanin base colours
-    "black": "black", "brown": "brown/liver", "liver": "brown/liver", "chocolate": "brown/liver",
-    "blue": "blue/grey", "gray": "blue/grey", "grey": "blue/grey", "isabella": "isabella/lilac",
-    "lilac": "isabella/lilac",
+# REAL Darwin's Ark Q243 schema (verified 2026-07-30 against the file): a MULTI-HOT presence matrix, NOT a
+# single free-text colour. dog_id + per-colour 0/1 columns + number_of_colors_in_coat + single_color_in_coat.
+# Map each base-colour column -> our decoder's base-colour vocabulary. `white` = spotting / pigment-absence,
+# which the cell ABSTAINS on (a pattern axis, not a eumelanin/phaeomelanin base).
+COAT_COLOR_COLS: dict[str, str] = {
+    "Q243_black_coat_color": "black",
+    "Q243_liver_or_brown_coat_color": "brown/liver",
+    "Q243_red_coat_color": "red/yellow",
+    "Q243_yellow_coat_color": "red/yellow",
+    "Q243_cream_coat_color": "red/yellow",          # dilute phaeomelanin
+    "Q243_grey_or_blue_coat_color": "blue/grey",
+    "Q243_tan_coat_color": "tan",                   # tan-points / agouti tan
+    "Q243_white_coat_color": "white",               # spotting / absence -> ABSTAIN axis
 }
-# categories that are PATTERNS or ambiguous -> excluded from the colour concordance (v0 abstains on these)
-PHENOTYPE_EXCLUDE = {"merle", "brindle", "spotted", "piebald", "white", "multi", "multicolor",
-                     "multicolour", "sable", "agouti", "ticked", "mixed", "other", "unknown", ""}
+_WHITE = "white"
 
 
 class DataMissing(SystemExit):
@@ -92,53 +93,64 @@ def _require_files(pheno_tsv: Path, plink_prefix: Path) -> None:
 
 
 def read_phenotypes(pheno_tsv: Path) -> list[dict]:
-    """Parse the Q243 coat-colour TSV (real Dryad schema). Returns [{dog_id, raw_color}]."""
-    rows = pheno_tsv.read_text(encoding="utf-8", errors="replace").splitlines()
-    if not rows:
+    """Parse the REAL Q243 multi-hot coat-colour TSV. Each dog carries a SET of present colours.
+    Returns [{dog_id, colors:set (decoder vocab), n_colors:int, single:bool}]."""
+    import csv
+    with pheno_tsv.open(encoding="utf-8", errors="replace") as fh:
+        rows = list(csv.DictReader(fh, delimiter="\t"))
+    if not rows or "dog_id" not in rows[0]:
         raise SystemExit(3)
-    header = rows[0].split("\t")
-    # the Dryad file is "level-phenotypic data": a dog id column + the coat-colour answer; the exact header
-    # names are surfaced by --probe. We locate an id-like column and a colour-like column defensively.
-    idx_id = next((i for i, h in enumerate(header) if h.lower() in ("id", "dog", "dog_id", "iid", "fid")), 0)
-    idx_col = next((i for i, h in enumerate(header)
-                    if "color" in h.lower() or "colour" in h.lower() or h.lower() in ("answer", "value")),
-                   len(header) - 1)
     out = []
-    for line in rows[1:]:
-        f = line.split("\t")
-        if len(f) <= max(idx_id, idx_col):
-            continue
-        out.append({"dog_id": f[idx_id].strip(), "raw_color": f[idx_col].strip(),
-                    "_header": (header[idx_id], header[idx_col])})
+    for r in rows:
+        colors = {COAT_COLOR_COLS[c] for c, v in r.items() if c in COAT_COLOR_COLS and v == "1"}
+        try:
+            nc = int(r.get("number_of_colors_in_coat", "") or 0)
+        except ValueError:
+            nc = 0
+        out.append({"dog_id": r["dog_id"].strip(), "colors": colors, "n_colors": nc,
+                    "single": r.get("single_color_in_coat") == "1"})
     return out
 
 
-def map_phenotype(raw: str) -> str | None:
-    """Owner free-text colour -> decoder vocabulary; None if excluded (pattern/ambiguous)."""
-    r = raw.strip().lower()
-    if r in PHENOTYPE_EXCLUDE:
-        return None
-    for key, target in PHENOTYPE_MAP.items():
-        if key in r:
-            # a pattern word anywhere -> exclude (e.g. "black merle")
-            if any(p in r for p in PHENOTYPE_EXCLUDE if p):
-                return None
-            return target
+def scoring_target(pheno: dict):
+    """The concordance target for one dog:
+      ('base', color)      -- a cleanly-scorable single base colour (single-colour, non-white) -> match our call
+      ('abstain', reason)  -- white-only (spotting/absence) -> our cell should ABSTAIN
+      ('multi', frozenset) -- a multi-colour coat -> distribution-level scoring (e.g. {black,tan} = tan-points)
+      None                 -- uninformative
+    """
+    non_white = pheno["colors"] - {_WHITE}
+    if pheno["single"]:
+        if pheno["colors"] == {_WHITE}:
+            return ("abstain", "white/spotting")
+        if len(non_white) == 1:
+            return ("base", next(iter(non_white)))
+    if non_white:
+        return ("multi", frozenset(non_white))
     return None
+
+
+def phenotype_summary(phenos: list[dict]) -> dict:
+    """Distribution + scorable counts of the multi-hot coat-colour phenotypes."""
+    from collections import Counter
+    tgt = Counter(scoring_target(p) and scoring_target(p)[0] for p in phenos)
+    single_base = Counter(scoring_target(p)[1] for p in phenos
+                          if (scoring_target(p) or (None,))[0] == "base")
+    return {"n": len(phenos),
+            "single_colour": sum(1 for p in phenos if p["single"]),
+            "target_kinds": dict(tgt),
+            "single_base_colour_counts": dict(single_base.most_common()),
+            "directly_scorable_single_base": sum(single_base.values())}
 
 
 def probe(pheno_tsv: Path, plink_prefix: Path) -> int:
     phenos = read_phenotypes(pheno_tsv)
-    hdr = phenos[0]["_header"] if phenos else ("?", "?")
-    from collections import Counter
-    cats = Counter(p["raw_color"] for p in phenos)
-    mapped = Counter(map_phenotype(p["raw_color"]) for p in phenos)
-    print(f"# Darwin's Ark coat-colour PROBE")
-    print(f"phenotype TSV: {pheno_tsv.name}  (id col={hdr[0]!r}, colour col={hdr[1]!r}, N={len(phenos)})")
-    print(f"raw colour categories (top 20): {cats.most_common(20)}")
-    print(f"mapped -> decoder vocab: { {k: v for k, v in mapped.items()} }")
-    scored = sum(v for k, v in mapped.items() if k is not None)
-    print(f"scorable (colour maps, non-pattern): {scored} / {len(phenos)}")
+    s = phenotype_summary(phenos)
+    print("# Darwin's Ark coat-colour PROBE (multi-hot schema)")
+    print(f"phenotype TSV: {pheno_tsv.name}  (N={s['n']} dogs, {s['single_colour']} single-colour)")
+    print(f"target kinds (base/multi/abstain/None): {s['target_kinds']}")
+    print(f"single-base-colour concordance targets: {s['single_base_colour_counts']}")
+    print(f"directly-scorable single-base dogs: {s['directly_scorable_single_base']}")
     # genotype side: read the REAL .bim/.fam via the spec-verified plink_io reader (no line-count guess)
     from dna_decode.pigment import plink_io
     bim = plink_io.read_bim(plink_prefix.with_suffix(".bim"))
