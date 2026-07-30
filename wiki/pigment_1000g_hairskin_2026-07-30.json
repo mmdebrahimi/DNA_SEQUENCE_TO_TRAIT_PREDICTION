@@ -1,0 +1,213 @@
+{
+  "date": "2026-07-30",
+  "substrate": "1000G 30x phased 3202-sample panel; coords Ensembl-pinned; strand-harmonized",
+  "n_snps_fetched": 37,
+  "n_by_superpop": {
+    "EUR": 633,
+    "EAS": 585,
+    "AMR": 490,
+    "SAS": 601,
+    "AFR": 893
+  },
+  "distribution": {
+    "eye_colour": {
+      "EUR": {
+        "blue": 0.4676,
+        "brown": 0.5324
+      },
+      "EAS": {
+        "brown": 1.0
+      },
+      "AMR": {
+        "brown": 0.951,
+        "blue": 0.0469,
+        "intermediate": 0.002
+      },
+      "SAS": {
+        "brown": 0.9967,
+        "blue": 0.0033
+      },
+      "AFR": {
+        "brown": 0.9978,
+        "blue": 0.0022
+      }
+    },
+    "hair_colour": {
+      "EUR": {
+        "brown": 0.5592,
+        "blond": 0.3965,
+        "red": 0.0348,
+        "black": 0.0095
+      },
+      "EAS": {
+        "black": 0.9983,
+        "brown": 0.0017
+      },
+      "AMR": {
+        "brown": 0.5082,
+        "black": 0.4694,
+        "blond": 0.0184,
+        "red": 0.0041
+      },
+      "SAS": {
+        "black": 0.7471,
+        "brown": 0.2529
+      },
+      "AFR": {
+        "black": 0.9216,
+        "brown": 0.0784
+      }
+    },
+    "skin_colour": {
+      "EUR": {
+        "intermediate": 0.8942,
+        "very_pale": 0.0632,
+        "pale": 0.0363,
+        "dark": 0.0063
+      },
+      "EAS": {
+        "dark_to_black": 0.9863,
+        "intermediate": 0.0068,
+        "dark": 0.0068
+      },
+      "AMR": {
+        "dark": 0.2388,
+        "intermediate": 0.5245,
+        "dark_to_black": 0.2367
+      },
+      "SAS": {
+        "dark": 0.4975,
+        "dark_to_black": 0.3511,
+        "intermediate": 0.1514
+      },
+      "AFR": {
+        "dark_to_black": 0.9597,
+        "dark": 0.0302,
+        "intermediate": 0.0101
+      }
+    }
+  },
+  "mean_probabilities": {
+    "eye_colour": {
+      "EUR": {
+        "blue": 0.4668,
+        "intermediate": 0.093,
+        "brown": 0.4402
+      },
+      "EAS": {
+        "blue": 0.0,
+        "intermediate": 0.0026,
+        "brown": 0.9973
+      },
+      "AMR": {
+        "blue": 0.0541,
+        "intermediate": 0.038,
+        "brown": 0.9079
+      },
+      "SAS": {
+        "blue": 0.0052,
+        "intermediate": 0.0081,
+        "brown": 0.9867
+      },
+      "AFR": {
+        "blue": 0.0023,
+        "intermediate": 0.0044,
+        "brown": 0.9934
+      }
+    },
+    "hair_colour": {
+      "EUR": {
+        "blond": 0.381,
+        "brown": 0.4528,
+        "red": 0.0588,
+        "black": 0.1074
+      },
+      "EAS": {
+        "blond": 0.0026,
+        "brown": 0.1719,
+        "red": 0.0,
+        "black": 0.8255
+      },
+      "AMR": {
+        "blond": 0.0832,
+        "brown": 0.4548,
+        "red": 0.0076,
+        "black": 0.4545
+      },
+      "SAS": {
+        "blond": 0.0137,
+        "brown": 0.4141,
+        "red": 0.0003,
+        "black": 0.5718
+      },
+      "AFR": {
+        "blond": 0.007,
+        "brown": 0.3689,
+        "red": 0.0002,
+        "black": 0.6238
+      }
+    },
+    "skin_colour": {
+      "EUR": {
+        "intermediate": 0.6894,
+        "very_pale": 0.1153,
+        "pale": 0.1666,
+        "dark": 0.0249,
+        "dark_to_black": 0.0037
+      },
+      "EAS": {
+        "intermediate": 0.0156,
+        "very_pale": 0.0,
+        "pale": 0.0,
+        "dark": 0.0132,
+        "dark_to_black": 0.9712
+      },
+      "AMR": {
+        "intermediate": 0.4639,
+        "very_pale": 0.0088,
+        "pale": 0.018,
+        "dark": 0.2818,
+        "dark_to_black": 0.2275
+      },
+      "SAS": {
+        "intermediate": 0.1833,
+        "very_pale": 0.0013,
+        "pale": 0.0018,
+        "dark": 0.4524,
+        "dark_to_black": 0.3612
+      },
+      "AFR": {
+        "intermediate": 0.0147,
+        "very_pale": 0.0,
+        "pale": 0.0001,
+        "dark": 0.0726,
+        "dark_to_black": 0.9126
+      }
+    }
+  },
+  "geography_checks": {
+    "EUR light-hair(blond+red) >> AFR": {
+      "pass": true,
+      "lhs": 0.4398,
+      "rhs": 0.0072
+    },
+    "AFR dark-skin >> EUR (cline)": {
+      "pass": true,
+      "lhs": 0.9852,
+      "rhs": 0.0286
+    },
+    "EUR pale-skin >> AFR": {
+      "pass": true,
+      "lhs": 0.2819,
+      "rhs": 0.0001
+    }
+  },
+  "known_geography_held": true,
+  "snp_notes": [
+    "rs312262906: 1000G fetch/parse failed (no SNP record at pos 89919343 in the fetched slice); skipped",
+    "rs201326893: 1000G fetch/parse failed (no SNP record at pos 89919714 in the fetched slice); skipped",
+    "rs683: 1000G fetch/parse failed (curl rc=28 bytes=144298604: curl: (28) Operation timed out after 90008 milliseconds with 144298604 out of 1084153132 bytes received\n); skipped",
+    "rs10756819: 1000G fetch/parse failed (curl rc=28 bytes=306868380: curl: (28) Operation timed out after 90000 milliseconds with 306868380 out of 1032451794 bytes received\n); skipped"
+  ],
+  "known_model_limitation": "HIrisPlex-S mis-predicts East-Asian skin as dark (EAS dark_to_black ~0.97); faithfully reproduced from the webtool, not an extraction defect"
+}

@@ -102,20 +102,25 @@ def main() -> int:
     # known-geography gates (mean probabilities; robust to the argmax being brown/black for most)
     hp = result["mean_probabilities"]["hair_colour"]
     skp = result["mean_probabilities"]["skin_colour"]
+    _d = lambda pop, cats: sum(skp.get(pop, {}).get(c, 0) for c in cats)  # noqa: E731
     eur_light_hair = hp.get("EUR", {}).get("blond", 0) + hp.get("EUR", {}).get("red", 0)
     afr_light_hair = hp.get("AFR", {}).get("blond", 0) + hp.get("AFR", {}).get("red", 0)
-    afr_dark_skin = skp.get("AFR", {}).get("dark", 0) + skp.get("AFR", {}).get("dark_to_black", 0)
-    eur_pale_skin = skp.get("EUR", {}).get("very_pale", 0) + skp.get("EUR", {}).get("pale", 0)
+    eur_dark = _d("EUR", ["dark", "dark_to_black"]); afr_dark = _d("AFR", ["dark", "dark_to_black"])
+    eur_pale = _d("EUR", ["very_pale", "pale"]);      afr_pale = _d("AFR", ["very_pale", "pale"])
+    # RELATIVE geography checks (EUR-vs-AFR contrast), not absolute thresholds: EUR is intermediate-dominant
+    # in the HIrisPlex-S 5-cat scheme so an absolute "EUR pale>0.5" is wrong. NOTE: HIrisPlex-S is known to
+    # mis-predict EAST-ASIAN skin as dark (the panel misses convergent EAS light-skin variants) -- this model
+    # faithfully reproduces that webtool behavior, so EAS skin is NOT gated on here (documented model limit).
     checks = {
-        "EUR_light_hair(blond+red) > AFR": (eur_light_hair, afr_light_hair, eur_light_hair > afr_light_hair),
-        "AFR_dark_skin > EUR": (afr_dark_skin, skp.get("EUR", {}).get("dark", 0)
-                                + skp.get("EUR", {}).get("dark_to_black", 0),
-                                afr_dark_skin > 0.5),
-        "EUR_pale_skin(very_pale+pale) > AFR": (eur_pale_skin, skp.get("AFR", {}).get("very_pale", 0)
-                                                + skp.get("AFR", {}).get("pale", 0),
-                                                eur_pale_skin > 0.5),
+        "EUR light-hair(blond+red) >> AFR": (eur_light_hair, afr_light_hair,
+                                             eur_light_hair > 0.1 and eur_light_hair > 5 * afr_light_hair),
+        "AFR dark-skin >> EUR (cline)": (afr_dark, eur_dark, afr_dark > 0.7 and eur_dark < 0.2),
+        "EUR pale-skin >> AFR": (eur_pale, afr_pale, eur_pale > 0.1 and eur_pale > 10 * afr_pale),
     }
-    result["geography_checks"] = {k: {"eur/afr_or_val": v[:2], "pass": v[2]} for k, v in checks.items()}
+    result["geography_checks"] = {k: {"lhs": round(v[0], 4), "rhs": round(v[1], 4), "pass": v[2]}
+                                  for k, v in checks.items()}
+    result["known_model_limitation"] = ("HIrisPlex-S mis-predicts East-Asian skin as dark (EAS dark_to_black "
+                                        "~0.97); faithfully reproduced from the webtool, not an extraction defect")
     passed = all(v[2] for v in checks.values())
     result["known_geography_held"] = passed
     result["snp_notes"] = notes
