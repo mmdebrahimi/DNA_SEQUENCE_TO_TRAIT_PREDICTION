@@ -139,17 +139,55 @@ def probe(pheno_tsv: Path, plink_prefix: Path) -> int:
     print(f"mapped -> decoder vocab: { {k: v for k, v in mapped.items()} }")
     scored = sum(v for k, v in mapped.items() if k is not None)
     print(f"scorable (colour maps, non-pattern): {scored} / {len(phenos)}")
-    # genotype side: which causal loci are present in the .bim (by gene-region annotation)
-    bim = plink_prefix.with_suffix(".bim")
-    n_var = sum(1 for _ in bim.open(encoding="utf-8", errors="replace"))
-    print(f"\ngenotype .bim: {bim.name}  ({n_var} variants, canFam4)")
+    # genotype side: read the REAL .bim/.fam via the spec-verified plink_io reader (no line-count guess)
+    from dna_decode.pigment import plink_io
+    bim = plink_io.read_bim(plink_prefix.with_suffix(".bim"))
+    fam = plink_io.read_fam(plink_prefix.with_suffix(".fam"))
+    print(f"\ngenotype set: {len(bim)} variants x {len(fam)} dogs (canFam4, PLINK1)")
     print("causal loci to pin from this .bim (resolve exact canFam4 pos by gene region / study variant id):")
     for loc, (gene, desc, eff, src) in CAUSAL_VARIANTS.items():
         print(f"  {loc} ({gene}): {desc}  [effect={eff}]  <- {src}")
-    print("\nNEXT: pin each causal variant's (chrom,pos,ref,alt) from the .bim, add a genotype->allele "
-          "extractor, then re-run without --probe to score. (Coords are verified against THIS .bim, "
-          "never transcribed from memory.)")
+    print("\nNEXT: identify each causal variant's row in THIS .bim (by canFam4 pos / study variant id — "
+          "verified, never transcribed from memory; note E/K indels may be ABSENT from a SNP-imputed panel), "
+          "then re-run with --coords LOCUS=chrom:pos:counted_allele,... to score. The scorer uses the "
+          "spec-verified PLINK reader (dna_decode.pigment.plink_io) to extract only those variants.")
     return 0
+
+
+def extract_genotypes(plink_prefix: Path, coords: dict[str, tuple[str, int, str]]) -> dict[str, dict]:
+    """Extract the pinned causal variants for every dog via the spec-verified PLINK reader.
+
+    `coords`: {locus -> (chrom, pos, counted_allele)} pinned from the REAL .bim (never fabricated).
+    Returns {dog_id -> {locus -> 'A/G' harmonized to the counted allele's strand}}. Fails loud if a pinned
+    coord is not in the .bim (wrong coord/assembly). This is the DONE half of scoring — the extraction —
+    verified by tests/test_plink_io.py; it does NOT emit a concordance (see NOTE in main()).
+    """
+    from dna_decode.pigment import plink_io
+    bim = plink_io.read_bim(plink_prefix.with_suffix(".bim"))
+    fam = plink_io.read_fam(plink_prefix.with_suffix(".fam"))
+    loc_idx: dict[str, tuple[int, str, str, str]] = {}
+    for loc, (chrom, pos, counted) in coords.items():
+        hits = plink_io.find_variants(bim, chrom=chrom, pos=pos)
+        if not hits:
+            raise SystemExit(f"pinned {loc} variant {chrom}:{pos} not in the .bim (wrong coord/assembly?)")
+        v = hits[0]
+        loc_idx[loc] = (v.index, v.a1, v.a2, counted)
+    dos = plink_io.read_bed_variants(plink_prefix.with_suffix(".bed"), len(fam),
+                                     [t[0] for t in loc_idx.values()])
+    comp = {"A": "T", "T": "A", "C": "G", "G": "C"}
+    out: dict[str, dict] = {}
+    for si, dog in enumerate(fam):
+        genos: dict[str, str] = {}
+        for loc, (vidx, a1, a2, counted) in loc_idx.items():
+            gt = plink_io.genotype_string(dos[vidx][si], a1, a2)
+            if gt is None:
+                continue
+            bases = set(gt.split("/"))
+            if counted not in bases and comp.get(counted) in bases:
+                gt = "/".join(comp[b] for b in gt.split("/"))  # strand-harmonize to the counted allele
+            genos[loc] = gt
+        out[dog] = genos
+    return out
 
 
 def main(argv=None) -> int:
@@ -164,10 +202,14 @@ def main(argv=None) -> int:
     _require_files(args.pheno_tsv, args.plink_prefix)
     if args.probe:
         return probe(args.pheno_tsv, args.plink_prefix)
-    # Full scoring is gated on the causal-variant coords being pinned from the .bim (the --probe output).
-    # Until that pinning is committed, refuse rather than emit an unverified concordance (anti-fabrication).
-    print("scoring requires the causal-variant->allele extractor pinned from the .bim; run --probe first, "
-          "then commit the resolved coords. Refusing to emit an unverified concordance.", file=sys.stderr)
+    # DONE (verified): the PLINK extractor (dna_decode.pigment.plink_io + extract_genotypes here) and the
+    # phenotype ingest/mapping. PENDING (both need the real .bim, so NOT fabricated here): (1) the causal
+    # variants' canFam4 coords, and (2) the per-variant base->coat-allele-symbol table (which base is the
+    # `e`/`b`/`d` allele). Until both are pinned + committed, refuse to emit a concordance (anti-fabrication).
+    print("extraction is wired + spec-verified (plink_io). Scoring still needs, pinned from the REAL .bim: "
+          "(1) the causal-variant canFam4 coords, (2) the per-variant base->coat-allele-symbol table. "
+          "Run --probe first, commit those pins, then wire the call. Refusing to emit an unverified "
+          "concordance.", file=sys.stderr)
     return 3
 
 
