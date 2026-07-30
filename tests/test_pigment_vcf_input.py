@@ -78,5 +78,36 @@ def test_cli_vcf_missing_file(capsys):
     assert rc == 2 and "error" in capsys.readouterr().err
 
 
+# A VCF is reference-strand; the HIrisPlex-S hair/skin models count on the webtool strand (e.g.
+# rs12913832_T = reverse-complement of the forward A/G). genotypes_from_vcf must strand-harmonize.
+_VCF_STRAND = (
+    "##fileformat=VCFv4.2\n"
+    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tSAMPLE\n"
+    "15\t1\trs12913832\tA\tG\t.\tPASS\t.\tGT\t1/1\n"     # GG forward
+    "16\t2\trs1805007\tC\tT\t.\tPASS\t.\tGT\t0/1\n"      # CT; hair counts T (fwd) -> no complement
+    "15\t3\trs1426654\tA\tG\t.\tPASS\t.\tGT\t1/1\n"      # GG; skin counts G (fwd) -> no complement
+)
+
+
+def test_hairskin_strand_harmonization(tmp_path):
+    vcf = _write(tmp_path, _VCF_STRAND)
+    # hair/skin strand: rs12913832 counted allele is T (reverse of the forward A/G site)
+    g = genotypes_from_vcf(vcf, [("rs12913832", "T"), ("rs1805007", "T"), ("rs1426654", "G")])
+    assert g["rs12913832"] == "CC"      # GG forward -> CC (harmonized to the T-counting strand)
+    assert g["rs1805007"] == "CT"       # counted T is forward here -> unchanged
+    assert g["rs1426654"] == "GG"       # counted G is forward -> unchanged
+    # eye default: rs12913832 counted allele A is forward -> NO complement (backward-compatible)
+    assert genotypes_from_vcf(vcf)["rs12913832"] == "GG"
+
+
+def test_cli_hairskin_vcf_runs(tmp_path, capsys):
+    import json
+    rc = pigment_main(["--trait", "skin", "--vcf", _write(tmp_path, _VCF_STRAND),
+                       "--allow-missing", "--json"])
+    assert rc == 0
+    d = json.loads(capsys.readouterr().out)
+    assert "probabilities" in d and d["call"] in d["probabilities"]
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))

@@ -48,20 +48,20 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     from dna_decode.pigment import MissingGenotypeError, predict_eye_color
+    from dna_decode.pigment.vcf_input import genotypes_from_vcf
 
     try:
-        if args.vcf:
-            from dna_decode.pigment.vcf_input import genotypes_from_vcf
-            genos = genotypes_from_vcf(args.vcf)
-        else:
-            genos = _parse_genotypes(args.genotypes)
         if args.trait == "eye":
-            res = predict_eye_color(genos, allow_missing=args.allow_missing)
-            d = res.as_dict()
+            genos = genotypes_from_vcf(args.vcf) if args.vcf else _parse_genotypes(args.genotypes)
+            d = predict_eye_color(genos, allow_missing=args.allow_missing).as_dict()
         else:
             from dna_decode.pigment.hirisplex_models import load_hirisplex_models
             from dna_decode.pigment.multinomial import predict as mn_predict
             model = load_hirisplex_models()[f"{args.trait}_colour"]
+            if args.vcf:
+                genos = genotypes_from_vcf(args.vcf, [(s.rsid, s.counted_allele) for s in model.snps])
+            else:
+                genos = _parse_genotypes(args.genotypes)
             d = mn_predict(model, genos, allow_missing=args.allow_missing).as_dict()
     except FileNotFoundError as e:
         print(f"error: cannot read --vcf: {e}", file=sys.stderr)
