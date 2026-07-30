@@ -422,15 +422,20 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         validation_slice=(
             "reproduces the published IrisPlex multinomial model (coefficients transcribed verbatim) and its "
             "reference anchors (rs12913832 GG -> blue 0.984; AA -> brown 0.846) via reference_integrity_ok(). "
-            "NOT SCORED against measured phenotypes: the openSNP scoring run is still blocked on the host "
-            "being down. Faithful-to-tool, not validated"),
-        label_provenance="IrisPlex published model coefficients (Walsh et al.); no measured-phenotype cohort scored yet",
+            "POPULATION-LEVEL VALIDATION on real 1000G (N=3202, GRCh38 coords Ensembl-pinned at runtime + "
+            "strand-harmonized, 2026-07-29): the known GEOGRAPHY of eye colour is reproduced — EUR P(blue)=0.468, "
+            "AFR/EAS/SAS brown 0.998/1.0/0.997, AMR blue 0.049 (pattern held). This confirms the model on real "
+            "genomes at the POPULATION level; it is NOT per-individual concordance (openSNP, the free "
+            "per-individual label source, was permanently deleted 2025-04-30). Faithful-to-tool + population-validated"),
+        label_provenance=("IrisPlex published model coefficients (Walsh et al. 2011); population geography "
+                          "validated vs 1000G superpopulation frequencies; no per-individual measured cohort (openSNP deleted)"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="scripts/pigment_1000g_population_validate.py", incoming_data_gate="n/a",
         demotion_rule=(
             "European-ancestry-derived model; predictive accuracy is known to degrade off that ancestry and "
-            "intermediate is the weakest class. A measured-phenotype score (openSNP) would move this to a real "
-            "tier — in either direction"),
+            "intermediate is the weakest class. The population geography holds on 1000G, but a PER-INDIVIDUAL "
+            "measured score (needs a surviving openSNP mirror or a new consented genotype+phenotype cohort) "
+            "would move this to a real independent tier — in either direction"),
     ),
     CellContract(
         cell_id="typing:dog:coatcolor", track="typing", route="dna-coatcolor",

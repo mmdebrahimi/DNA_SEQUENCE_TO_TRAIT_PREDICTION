@@ -93,7 +93,7 @@ TRAITS = {
     },
     "pigment": {
         "summary": "HUMAN visible-trait pigmentation (--genotypes rsID=GT,...): v0 = IrisPlex EYE colour (6 curated SNPs -> P(blue)/P(intermediate)/P(brown) + call) - the deterministic curated-catalog form of 'DNA->appearance'. Benign visible-trait genetics, NOT a forensic tool",
-        "validation": "deterministic multinomial-logistic Walsh-2011 IrisPlex coefficients (curated, provenance brianbhsu/eye-color; re-verify vs Walsh Table = v0.1); reference-integrity biology-checked (HERC2 GG->blue, AA->brown). Eye pigmentation AUC ~0.9 (HIrisPlex-S lit). Hair/skin (full 41-SNP) + VCF input + openSNP scoring = v0.1 follow-ons",
+        "validation": "deterministic multinomial-logistic Walsh-2011 IrisPlex coefficients (curated, provenance brianbhsu/eye-color; re-verify vs Walsh Table = v0.1); reference-integrity biology-checked (HERC2 GG->blue, AA->brown). POPULATION-VALIDATED on real 1000G (N=3202, Ensembl-pinned coords): known eye-colour geography reproduced (EUR blue 0.468; AFR/EAS/SAS brown ~1.0) -- population-level, NOT per-individual (openSNP label source deleted 2025-04-30). Hair/skin (full 41-SNP) + VCF input + per-individual scoring = v0.1 follow-ons",
     },
     "phage": {
         "summary": "BACTERIOPHAGE genome/lineage/RBP -> host-RECEPTOR class: --lineage <genus> (wheel-only catalogue) | --genome-fasta X.fna (genome-homology transfer, needs blastn) | --rbp-fasta X.faa (tail-fiber RBP k-mer transfer, wheel-only — covers the RBP-variable mixed clades Tsx/OmpC/FhuA/OmpA that --lineage abstains on). The first non-AMR, non-host-organism cell (a virus-of-bacteria host-tropism axis)",

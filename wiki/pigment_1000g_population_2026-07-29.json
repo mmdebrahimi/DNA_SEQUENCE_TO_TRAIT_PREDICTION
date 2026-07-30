@@ -1,0 +1,54 @@
+{
+  "cell": "typing:human:pigment (IrisPlex eye colour)",
+  "date": "2026-07-29",
+  "substrate": "1000G 30x phased 3202-sample panel (GRCh38); coords Ensembl-pinned at runtime",
+  "n_scored_all6": 3202,
+  "distribution_by_superpopulation": {
+    "AFR": {
+      "n": 893,
+      "blue": 0.0022,
+      "intermediate": 0.0,
+      "brown": 0.9978
+    },
+    "AMR": {
+      "n": 490,
+      "blue": 0.049,
+      "intermediate": 0.002,
+      "brown": 0.949
+    },
+    "EAS": {
+      "n": 585,
+      "blue": 0.0,
+      "intermediate": 0.0,
+      "brown": 1.0
+    },
+    "EUR": {
+      "n": 633,
+      "blue": 0.4676,
+      "intermediate": 0.0,
+      "brown": 0.5324
+    },
+    "SAS": {
+      "n": 601,
+      "blue": 0.0033,
+      "intermediate": 0.0,
+      "brown": 0.9967
+    }
+  },
+  "expectation": {
+    "EUR_blue>=0.30": 0.4676,
+    "AFR_brown>=0.90": 0.9978,
+    "EAS_brown>=0.90": 1.0,
+    "SAS_brown>=0.85": 0.9967
+  },
+  "known_biology_pattern_held": true,
+  "snp_provenance": [
+    "rs12913832 chr15:28120472 site=A/G counted=A strand=fwd",
+    "rs1800407 chr15:27985172 site=C/T counted=T strand=fwd",
+    "rs12896399 chr14:92307319 site=G/T counted=T strand=fwd",
+    "rs16891982 chr5:33951588 site=C/G counted=C strand=fwd",
+    "rs1393350 chr11:89277878 site=G/A counted=A strand=fwd",
+    "rs12203592 chr6:396321 site=C/T counted=T strand=fwd"
+  ],
+  "honesty": "POPULATION-level sanity check, NOT per-individual concordance (openSNP, the free per-individual label source, was deleted 2025-04-30). Confirms the published IrisPlex model reproduces the known geography of eye colour on real genomes; it does NOT score individual accuracy. Includes related samples (3202 panel)."
+}
