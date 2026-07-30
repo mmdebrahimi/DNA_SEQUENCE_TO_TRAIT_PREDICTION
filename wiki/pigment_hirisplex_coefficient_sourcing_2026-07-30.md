@@ -99,3 +99,21 @@ declined (no fabrication). No potentially-wrong data was committed.
 The general engine (`dna_decode/pigment/multinomial.py`, validated against the shipped eye model) is ready
 to consume the recovered coefficients the moment either path lands. FROZEN AMR/forward + the shipped
 eye-colour cell (population-validated on 1000G) are unaffected — this remained a read-only sweep.
+
+## RESOLVED (2026-07-30) — webtool model-extraction succeeded; hair + skin SHIPPED
+
+The user authorized path #1 (webtool model-extraction). The deployed HIrisPlex-S softmax models were
+recovered by querying `hirisplex.erasmusmc.nl` with a designed genotype basis (all-zero + per-SNP unit
+vectors, ~103 rows in ONE POST) and LS-fitting the reference-parameterized softmax
+(`D:/dna_decode_cache/hirisplex_src/{webtool_extract,final_recover}.py`). The API: POST
+`predict_phenotype.php` (session cookie + AJAX header) then GET `display_csv_out.php` for the output CSV.
+
+**Validated on 20 random HELD-OUT genotypes (offline model vs the deployed webtool): max |ΔP| eye 6e-15 /
+hair 6e-16 / skin 9e-3** — the offline models reproduce the deployed webtool to machine precision (eye/hair)
+or <1% (skin; its only imprecision is the complete-separation betas). This bypasses the intercept gap
+entirely: the recovery captures the deployed model's actual behavior (intercepts + form + erratum-correct
+betas all folded in). Bonus: the recovered eye model CONFIRMS the shipped `irisplex.py` (small canonical
+deltas). Coefficients committed at `dna_decode/pigment/hirisplex_coefficients.json` (provenance + held-out
+errors embedded); loader `hirisplex_models.py`; CLI `dna-decode pigment --trait hair|skin`; 1000G geography
+validator `scripts/pigment_1000g_hairskin_validate.py`. These are FACTUAL recovered coefficients, not
+fabricated — every value reproduces the reference tool within the stated held-out tolerance.

@@ -416,21 +416,26 @@ _TRAIT_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="typing:human:pigment", track="typing", route="dna-pigment",
         organism="human", target="pigment",
-        claim="IrisPlex eye-colour probability (blue/intermediate/brown) from 6 curated SNP genotypes",
+        claim="HIrisPlex-S visible-trait pigmentation: eye (blue/intermediate/brown, IrisPlex 6-SNP) + "
+              "hair (blond/brown/red/black) + skin (very-pale..dark-black) probabilities from SNP genotypes",
         evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
-        claim_status="faithful_to_published_irisplex_model_not_scored",
+        claim_status="faithful_to_hirisplex_reference_tool_webtool_recovered_validated",
         validation_slice=(
-            "reproduces the published IrisPlex multinomial model (coefficients transcribed verbatim) and its "
-            "reference anchors (rs12913832 GG -> blue 0.984; AA -> brown 0.846) via reference_integrity_ok(). "
-            "POPULATION-LEVEL VALIDATION on real 1000G (N=3202, GRCh38 coords Ensembl-pinned at runtime + "
-            "strand-harmonized, 2026-07-29): the known GEOGRAPHY of eye colour is reproduced — EUR P(blue)=0.468, "
-            "AFR/EAS/SAS brown 0.998/1.0/0.997, AMR blue 0.049 (pattern held). This confirms the model on real "
-            "genomes at the POPULATION level; it is NOT per-individual concordance (openSNP, the free "
-            "per-individual label source, was permanently deleted 2025-04-30). Faithful-to-tool + population-validated"),
-        label_provenance=("IrisPlex published model coefficients (Walsh et al. 2011); population geography "
-                          "validated vs 1000G superpopulation frequencies; no per-individual measured cohort (openSNP deleted)"),
+            "EYE = the published IrisPlex model (coefficients in irisplex.py; reference anchors rs12913832 "
+            "GG->blue / AA->brown via reference_integrity_ok()), POPULATION-VALIDATED on real 1000G (N=3202, "
+            "Ensembl-pinned + strand-harmonized, 2026-07-29): known eye geography reproduced (EUR P(blue)=0.468, "
+            "AFR/EAS/SAS brown ~1.0). HAIR (4-cat) + SKIN (5-cat) = the HIrisPlex-S deployed multinomial models "
+            "RECOVERED from the erasmusmc webtool (2026-07-30) -- the papers publish the betas but NOT the "
+            "intercepts (webtool-only), so the models were extracted by a designed-genotype-basis query + LS-fit "
+            "and VALIDATED on 20 random held-out genotypes: max |ΔP| eye 6e-15 / hair 6e-16 / skin 9e-3, i.e. the "
+            "offline models reproduce the deployed webtool to machine precision (eye/hair) / <1% (skin). "
+            "Faithful-to-tool (the HIrisPlex-S webtool is the reference); population geography also confirmed on "
+            "1000G. NOT per-individual concordance (openSNP, the free per-individual label source, deleted 2025-04-30)"),
+        label_provenance=("EYE: IrisPlex published coefficients (Walsh 2011). HAIR/SKIN: HIrisPlex-S deployed "
+                          "model recovered from hirisplex.erasmusmc.nl (user-authorized extraction; held-out-validated) "
+                          "-- dna_decode/pigment/hirisplex_coefficients.json. Population geography vs 1000G; no per-individual cohort"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="scripts/pigment_1000g_population_validate.py", incoming_data_gate="n/a",
+        falsifier_ref="scripts/pigment_1000g_hairskin_validate.py", incoming_data_gate="n/a",
         demotion_rule=(
             "European-ancestry-derived model; predictive accuracy is known to degrade off that ancestry and "
             "intermediate is the weakest class. The population geography holds on 1000G, but a PER-INDIVIDUAL "

@@ -34,13 +34,16 @@ def main(argv=None) -> int:
         description="Visible-trait pigmentation decoder (v0 = IrisPlex eye colour, 6 SNPs, deterministic).",
         epilog="scope: benign visible-trait genetics, NOT a forensic/surveillance tool.",
     )
+    ap.add_argument("--trait", choices=["eye", "hair", "skin"], default="eye",
+                    help="which pigmentation trait to predict (default eye = IrisPlex 6-SNP). hair/skin use "
+                         "the HIrisPlex-S models recovered + held-out-validated from the erasmusmc webtool.")
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--genotypes",
-                     help="comma-separated rsID=GT for the 6 IrisPlex SNPs (rs12913832, rs1800407, rs12896399, "
-                          "rs16891982, rs1393350, rs12203592), e.g. rs12913832=GG,rs1800407=TT,...")
-    src.add_argument("--vcf", help="a genome VCF (.vcf/.vcf.gz); the 6 IrisPlex SNPs are extracted by rsID")
+                     help="comma-separated rsID=GT. eye: the 6 IrisPlex SNPs; hair/skin: the HIrisPlex-S "
+                          "panel (22/41 SNPs) — e.g. rs12913832=GG,rs1805007=CC,...")
+    src.add_argument("--vcf", help="a genome VCF (.vcf/.vcf.gz); the trait's SNPs are extracted by rsID")
     ap.add_argument("--allow-missing", action="store_true",
-                    help="impute a missing non-HERC2 SNP as x=0 + cap confidence low (biased; use knowingly)")
+                    help="impute a missing SNP as x=0 + cap confidence low (biased; use knowingly)")
     ap.add_argument("--json", action="store_true", help="emit the result as JSON")
     args = ap.parse_args(argv)
 
@@ -52,7 +55,14 @@ def main(argv=None) -> int:
             genos = genotypes_from_vcf(args.vcf)
         else:
             genos = _parse_genotypes(args.genotypes)
-        res = predict_eye_color(genos, allow_missing=args.allow_missing)
+        if args.trait == "eye":
+            res = predict_eye_color(genos, allow_missing=args.allow_missing)
+            d = res.as_dict()
+        else:
+            from dna_decode.pigment.hirisplex_models import load_hirisplex_models
+            from dna_decode.pigment.multinomial import predict as mn_predict
+            model = load_hirisplex_models()[f"{args.trait}_colour"]
+            d = mn_predict(model, genos, allow_missing=args.allow_missing).as_dict()
     except FileNotFoundError as e:
         print(f"error: cannot read --vcf: {e}", file=sys.stderr)
         return 2
@@ -61,17 +71,24 @@ def main(argv=None) -> int:
         return 2
 
     if args.json:
-        print(json.dumps(res.as_dict(), indent=2))
+        print(json.dumps(d, indent=2))
         return 0
 
-    d = res.as_dict()
-    print("pigmentation decode — eye colour (IrisPlex)")
-    print(f"  call: {d['call'].upper()}   confidence: {d['confidence']}")
-    print(f"  P(blue)={d['p_blue']:.3f}  P(intermediate)={d['p_intermediate']:.3f}  P(brown)={d['p_brown']:.3f}")
-    print(f"  counted alleles: {d['counted_alleles']}")
-    for n in d["notes"]:
-        print(f"  note: {n}")
-    print("  [deterministic Walsh-2011 IrisPlex coefficients (curated); reference-integrity biology-checked]")
+    if args.trait == "eye":
+        print("pigmentation decode — eye colour (IrisPlex)")
+        print(f"  call: {d['call'].upper()}   confidence: {d['confidence']}")
+        print(f"  P(blue)={d['p_blue']:.3f}  P(intermediate)={d['p_intermediate']:.3f}  P(brown)={d['p_brown']:.3f}")
+        print(f"  counted alleles: {d['counted_alleles']}")
+        for n in d["notes"]:
+            print(f"  note: {n}")
+        print("  [deterministic Walsh-2011 IrisPlex coefficients (curated); reference-integrity biology-checked]")
+    else:
+        print(f"pigmentation decode — {args.trait} colour (HIrisPlex-S)")
+        print(f"  call: {d['call'].upper()}   confidence: {d['confidence']}")
+        print("  probabilities: " + "  ".join(f"P({k})={v:.3f}" for k, v in d["probabilities"].items()))
+        for n in d["notes"]:
+            print(f"  note: {n}")
+        print("  [multinomial model recovered + held-out-validated from the HIrisPlex-S webtool (2026-07-30)]")
     print("  [scope: benign visible-trait genetics, NOT a forensic/surveillance tool]")
     return 0
 
