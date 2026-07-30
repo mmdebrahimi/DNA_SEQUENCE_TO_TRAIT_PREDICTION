@@ -58,5 +58,44 @@ DECIMAL betas are the wall.)
 2. **Drop a machine-readable coefficient file** — e.g. email the Walsh lab (IU) for the model file the
    webtool uses, or any lab that reimplemented the full model.
 
-FROZEN AMR/forward surfaces untouched (this was a read-only sourcing sweep; no code or catalog changed).
-The shipped eye-colour cell (`dna_decode/pigment`, population-validated on 1000G) is unaffected.
+## ATTENDED transcription attempt (2026-07-30) — the deeper wall: the public record is INCOMPLETE
+
+The user chose the attended-transcription path. It surfaced a wall DEEPER than "numbers are image-encoded":
+the deployable models are **under-specified by the public record**, so transcription cannot complete them
+even with perfect reading.
+
+- **Skin betas ARE extractable** — the Walsh 2017 IU-ScholarWorks PDF (`walsh2017.pdf`, NOT encrypted) has
+  Table 2 on p12 as a **clean TEXT layer** (360 decimals; the full 36-SNP × 5-contrast beta matrix
+  extracted machine-readably via pdfplumber — this is the artifact the earlier sweep couldn't get).
+- **BUT the per-category INTERCEPTS (α) are NOT published** — not in Table 2 (36 SNP rows, no intercept
+  row), not anywhere in the paper text (`grep` for intercept/constant/reference-category = nothing). A
+  multinomial/one-vs-rest model CANNOT produce probabilities without the intercepts. They live only in the
+  erasmusmc webtool (server-side) — which is exactly WHY no open reimplementation of the prediction math
+  exists.
+- **The extracted Table 2 betas are PRE-ERRATUM** — Hum Genet 2017;136:865-866 (PMC6828285) corrects
+  Table 2, so the printed values themselves need reconciliation with a correction that is not OA-BioC-indexed.
+- **The exact form is ambiguous** — the paper says "multinomial logistic regression" but Table 2 reports
+  one-vs-rest ("Very Pale versus the rest", …) with complete-separation artifacts (β≈1.9E+01, p≈0.99).
+- **Hair (Walsh 2013 Table 3) is paywalled** — Elsevier `fsigenetics.com/.../fulltext` = HTTP 403, no open
+  ScholarWorks/PMC version. The eye model was reproducible ONLY because Walsh 2011 published its intercepts;
+  the later hair/skin papers did not (or are behind a paywall).
+
+**Conclusion: the HIrisPlex hair + HIrisPlex-S skin models are NOT faithfully reproducible from the free
+public record.** The missing piece is the unpublished INTERCEPTS (+ the exact parameterization), held only
+in the webtool. Transcribing the betas alone would yield a non-predicting (or silently-wrong) model —
+declined (no fabrication). No potentially-wrong data was committed.
+
+## The two REAL completion paths (each needs a decision)
+
+1. **Webtool model-extraction** — recover the intercepts + validate the form + get the deployed
+   (erratum-correct) betas by querying `hirisplex.erasmusmc.nl` with a designed genotype set (all-zero →
+   softmax(α) gives the intercepts; per-SNP unit vectors recover each β), then build a faithful OFFLINE
+   reimplementation VALIDATED against the webtool. Reversible + free, BUT it is ~40–75 queries that
+   SYSTEMATICALLY EXTRACT a third party's model via their public API — a ToS/etiquette call to SURFACE
+   (not do silently). If the user is comfortable with it, this is the clean engineering path and it makes
+   the offline model provably faithful.
+2. **Lab email** — request the model coefficient file the webtool uses from the Walsh lab (IU) / Erasmus MC.
+
+The general engine (`dna_decode/pigment/multinomial.py`, validated against the shipped eye model) is ready
+to consume the recovered coefficients the moment either path lands. FROZEN AMR/forward + the shipped
+eye-colour cell (population-validated on 1000G) are unaffected — this remained a read-only sweep.
