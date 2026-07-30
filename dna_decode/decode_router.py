@@ -36,6 +36,8 @@ DECODERS: dict[str, list[Decoder]] = {
         Decoder("dna-clinvar", "Mendelian: curated ClinVar pathogenic/benign calls for the variants carried",
                 "dna-clinvar --vcf sample.vcf", "mendelian"),
         Decoder("dna-hla", "HLA typing from the VCF region", "dna-hla --vcf sample.vcf", "hla"),
+        Decoder("dna-pigment", "visible-trait pigmentation: eye/hair/skin colour probabilities (IrisPlex + HIrisPlex-S)",
+                "dna-pigment --trait skin --vcf sample.vcf", "typing"),
     ],
     "protein_fasta": [
         Decoder("dna-forward", "variant-effect: a protein point mutation -> molecular-phenotype change (fitness rank)",
