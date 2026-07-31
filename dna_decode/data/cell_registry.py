@@ -531,6 +531,34 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "roan/tobiano/appaloosa) + sooty/flaxen shade ABSTAIN by design"),
     ),
     CellContract(
+        cell_id="typing:cat:catcolor", track="typing", route="dna-catcolor",
+        organism="Felis_catus", target="catcolor",
+        claim="cat coat colour (base black/chocolate/cinnamon + dilute + X-linked orange red/cream + "
+              "TORTOISESHELL/CALICO mosaic + tabby + colorpoint + white spotting/dominant white) from the OMIA "
+              "loci W/O/A/B/D/C resolved in epistatic order — a 3rd-organism visible-trait cell, notable for the "
+              "X-linked orange -> tortoiseshell X-inactivation mosaic",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_epistatic_xlinked_catalog_no_free_validation_substrate",
+        validation_slice=(
+            "deterministic epistatic curated-catalog rule; OMIA-sourced causal variants incl. the 2025-identified "
+            "X-linked ORANGE gene (ARHGAP36 5.1-kb intron-1 deletion, Toh/Kaelin Current Biology 2025), KIT "
+            "dominant-white/spotting FERV1 (OMIA 000209/001737-9685, David 2014), ASIP agouti, TYRP1 brown, MLPH "
+            "dilute, TYR albino-series (Siamese cs, OMIA 000202-9685, Lyons 2005). reference_integrity_ok() pins "
+            "known genotypes -> colours incl. the THREE EPISTASIS ANCHORS a naive rule mis-calls: (1) W dominant-"
+            "white masks ALL colour; (2) a female O/o is a TORTOISESHELL mosaic (X-inactivation), +white spotting "
+            "= CALICO; (3) orange is EPISTATIC over brown (a b/b orange cat is red, not chocolate). The O locus is "
+            "X-linked -> sex-dependent zygosity (1 allele male / 2 female). KNOWLEDGE_BASELINE — no free "
+            "per-individual validation substrate"),
+        label_provenance="OMIA-curated causal variants (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule=(
+            "KNOWLEDGE_BASELINE curated catalog. To reach a MEASURED tier, score per-individual vs a public cat "
+            "genotype+phenotype cohort (the open risk: a FREE such substrate may not exist — the Darwin's-Ark-"
+            "style browser-download wall). Tabby sub-pattern (mackerel/classic/ticked), silver/inhibitor, "
+            "wideband, karpati/roan + coat length ABSTAIN by design"),
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "
