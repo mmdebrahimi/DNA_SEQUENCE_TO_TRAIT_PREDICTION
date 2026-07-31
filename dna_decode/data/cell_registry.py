@@ -473,6 +473,34 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "(merle/spotting) ABSTAIN by design"),
     ),
     CellContract(
+        cell_id="typing:dog:morphology", track="typing", route="dna-morphology",
+        organism="Canis_lupus_familiaris", target="morphology",
+        claim="dog body SIZE (relative rank toy/small..large/giant, additive polygenic score over "
+              "IGF1/HMGA2/STC2/GHR) + EAR type (MSRB3 erect/drop) from pinned canFam4 causal SNP dosages — "
+              "the quantitative/visible-trait sibling of the coat-colour cell",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_pinned_catalog_measured_relative_height_and_ear",
+        validation_slice=(
+            "deterministic pinned + FUNCTIONALLY-VALIDATED catalog on the free Darwin's Ark cohort (Dryad "
+            "doi:10.5061/dryad.83bk3jb4r; canFam4_gp-0.70_biallelic-SNV imputed, 3277 dogs x 29M SNVs; 2026-07-30): "
+            "the 4-locus body-size polygenic score (IGF1/HMGA2/STC2/GHR, OMIA/lit canFam3.1 -> canFam4 liftover -> "
+            ".bim-verified) tracks owner-reported height Q121 at r=+0.619 (R2=0.383, N=3276); the EAR lead MSRB3 "
+            "chr10:8612500 tracks Q125 at r=+0.543 (N=2834), CLEANLY resolved from the HMGA2 body-size SNP (r=-0.13, "
+            "the Morrill 2022 MSRB3-vs-HMGA2 confound). Unlike the coat indels/SVs, the body-size + ear causal SNPs "
+            "ARE in-panel. RELATIVE size rank + ear axis, NOT calibrated absolute height (Q121 is a covariate-adjusted "
+            "z-score); ear erect/drop NAMING is MSRB3-literature-anchored (Boyko 2010), not independently "
+            "label-confirmed -> medium confidence. See wiki/dog_morphology_darwins_ark_validated_2026-07-30.md"),
+        label_provenance=("OMIA/literature-curated causal loci + canFam4 gene windows (rule); Darwin's Ark/Dryad "
+                          "owner-reported height Q121 + morphology Q125 (measured); coords lifted + .bim-verified"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/dog_morphology_darwins_ark_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "MEASURED relative-signal (height polygenic r=0.619, ear r=0.543); RELATIVE rank not absolute inches. "
+            "Coat length/curl (FGF5/KRT71), leg length (FGF4 SV), and the 4 covariate-adjusted rerun morph traits "
+            "(Q124/127/128/245) ABSTAIN — no strong single-known-SNP mapping on this substrate (max |r|=0.21). A "
+            "calibrated absolute-height tier or a label-confirmed ear polarity needs a raw-inches/codebook label"),
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "

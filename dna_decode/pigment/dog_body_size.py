@@ -247,6 +247,29 @@ def polygenic_size_score(dosages: dict[str, int], present_unmodelled: list[str] 
     return BodySizeCall(rank, score, max_score, n, conf, per, abstains, rule, notes)
 
 
+def call_ear(dose: int) -> dict:
+    """RELATIVE ear-morphology call from the MSRB3 ear-locus high-allele dosage (0/1/2).
+
+    The SIGNAL is validated (dosage tracks the owner-reported ear ordinal Q125 at r=+0.543 on Darwin's Ark,
+    N=2834, cleanly resolved from body size). The erect/drop NAMING follows the MSRB3 literature (Boyko 2010:
+    two copies of the erect-associated allele -> erect/prick ears; zero -> drop/folded) — it is NOT
+    independently label-confirmed here (the dataset has no codebook for the Q-number), so confidence is
+    capped MEDIUM and the polarity caveat ships in the output. A future label-confirmed polarity is a
+    one-line flip, not a re-derivation.
+    """
+    if dose not in (0, 1, 2):
+        raise SizeInputError(f"EAR dosage {dose!r} must be 0, 1 or 2 (high-allele copies)")
+    tier = {2: "erect (prick)", 1: "semi-erect/intermediate", 0: "drop (folded)"}[dose]
+    return {
+        "trait": "ear_type", "gene": "MSRB3", "locus": MORPH_LOCI["EAR"].canfam4_variant,
+        "high_allele_dose": dose, "ear_type": tier, "confidence": "medium",
+        "functional_r": MORPH_LOCI["EAR"].functional_r,
+        "polarity_caveat": ("signal validated (r=+0.543 vs Q125); erect/drop NAMING is MSRB3-literature-anchored "
+                            "(Boyko 2010), not independently label-confirmed on this codebook-less cohort"),
+        "source": MORPH_LOCI["EAR"].source,
+    }
+
+
 def reference_integrity_ok() -> bool:
     """Catalog/rule contract guard (offline — no genotype data). Pins: all 4 loci present with well-formed
     canFam4 panel IDs whose big/small alleles are the ref/alt of that ID, positive measured directions, and

@@ -87,6 +87,10 @@ TRAITS = {
         "summary": "DOG coat colour (--loci E=e/e,K=KB/KB,A=at/at,B=B/b,D=D/d): eumelanin/phaeomelanin pigment type + eumelanin colour (black/brown/blue/isabella) + distribution (solid/sable/agouti/tan-points) via the FIVE classic OMIA loci (E/MC1R, K/CBD103, A/ASIP, B/TYRP1, D/MLPH) resolved in fixed epistatic order - the first PHYSICAL/visible-trait animal cell + the deterministic curated-catalog form of 'DNA->appearance'",
         "validation": "deterministic epistatic curated-catalog rule (literature-anchored Little 1957 / Schmutz & Berryere; OMIA-sourced causal loci); reference-integrity biology-checked incl. the E-locus epistasis anchor a naive has-the-allele rule mis-calls (e/e is red/yellow even when K^B + b/b). KNOWLEDGE_BASELINE; per-individual scoring vs the free Darwin's Ark/Dryad cohort (N=1930 owner-reported coat colour + N=3277 canFam4 genotypes, doi:10.5061/dryad.83bk3jb4r) = the v0.1 measured tier (scripts/dog_coat_darwins_ark_validate.py). Calls COLOUR not shade/length/spotting; pattern loci (merle/spotting) ABSTAIN. Companion-animal, NOT human/forensic",
     },
+    "morphology": {
+        "summary": "DOG body SIZE + EAR type (--dosages IGF1=2,HMGA2=2,STC2=1,GHR=1,EAR=2): relative size rank (toy/small..large/giant) from a 4-locus additive polygenic score (IGF1/HMGA2/STC2/GHR) + ear type (MSRB3 erect/drop) — the pinned + Darwin's-Ark-VALIDATED quantitative/visible-trait sibling of `coatcolor`. Input is per-locus big-allele DOSAGE (0/1/2); coat length/curl + leg length + the 4 rerun morph traits ABSTAIN",
+        "validation": "MEASURED relative-signal on the free Darwin's Ark cohort (Dryad doi:10.5061/dryad.83bk3jb4r, canFam4 imputed, N=3277): body-size polygenic score r=+0.619 (R2=0.383) vs owner-reported height Q121; ear MSRB3 lead chr10:8612500 r=+0.543 vs Q125, cleanly resolved from the HMGA2 body-size SNP (the Morrill 2022 confound). Causal SNP coords OMIA/lit canFam3.1 -> canFam4 liftover -> .bim-verified -> functionally validated (unlike the coat indels, the body-size SNPs ARE in-panel). RELATIVE rank NOT absolute inches; ear erect/drop naming is MSRB3-literature-anchored (medium confidence). Companion-animal, NOT human/forensic. See wiki/dog_morphology_darwins_ark_validated_2026-07-30 + dog_body_size_darwins_ark_pinned_2026-07-30",
+    },
     "flowering": {
         "summary": "PLANT trait — Arabidopsis thaliana flowering HABIT (--fri/--flc allele calls): summer-annual-early vs winter-annual-late (vernalization-requiring), from the curated FRI/FLC causal loci. The deterministic counterpart to the CLOSED-NEGATIVE flowering EMBEDDING test (which learned lineage, not mechanism)",
         "validation": "deterministic curated-causal-allele rule (late iff functional FRI AND strong FLC; FLC is downstream so a weak/null FLC calls early regardless of FRI). Literature-anchored (Johanson 2000 FRI / Michaels 2003 PNAS weak-FLC / Werner 2005 FRI-independent); reference-integrity biology-checked incl. the Da(1)-12 anchor a naive FRI-only rule mis-calls. PARTIAL: FRI/FLC ~40-70% of long-day variation -> HABIT/direction only, NOT days-to-flower; FRI-route confidence capped by the Lz-0 counterexample. v0 = allele-call input; genome-mode = v0.1",
@@ -171,6 +175,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "coatcolor":
         from dna_decode.pigment.coat_cli import main as coat_main
         return coat_main(rest)
+    if trait == "morphology":
+        from dna_decode.pigment.morphology_cli import main as morphology_main
+        return morphology_main(rest)
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)
