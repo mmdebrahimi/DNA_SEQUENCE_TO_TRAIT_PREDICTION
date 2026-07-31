@@ -3,11 +3,13 @@
     dna-decode morphology --dosages IGF1=2,HMGA2=2,STC2=1,GHR=1,EAR=2      # large dog, erect ears
     dna-decode morphology --dosages IGF1=0,HMGA2=0,STC2=0,GHR=0,EAR=0      # toy/small, drop ears
     dna-decode morphology --dosages HMGA2=1,IGF1=1 --json                  # partial panel (2/4 size loci)
+    dna-decode morphology --vcf dog.vcf                                    # decode a real canFam4 dog VCF
 
 Deterministic RELATIVE-signal decoder over the loci PINNED + functionally VALIDATED on Darwin's Ark
 (dna_decode.pigment.dog_body_size): body SIZE = an additive polygenic score over IGF1/HMGA2/STC2/GHR
-(height r=+0.619), plus single-SNP EAR type (MSRB3, r=+0.543). Input is per-locus BIG-ALLELE DOSAGE (0/1/2)
-— the natural PLINK/VCF panel shape (a genome/VCF caller for the pinned canFam4 coords is a v0.1 follow-on).
+(height r=+0.619), plus single-SNP EAR type (MSRB3, r=+0.543). Input is per-locus BIG-ALLELE DOSAGE (0/1/2) —
+the natural PLINK-panel shape — OR a canFam4 dog genome VCF (--vcf), from which the pinned SNP dosages are
+called by coordinate (dog_vcf_input; the dog causal SNPs have no rsIDs, so matched by chr:pos).
 
 HONEST SCOPE: RELATIVE size RANK + ear axis, NOT calibrated absolute height/inches (Q121 is a
 covariate-adjusted z-score). Coat length/curl (FGF5/KRT71) + leg length (FGF4) + the 4 covariate-adjusted
@@ -52,9 +54,14 @@ def main(argv=None) -> int:
         epilog="scope: RELATIVE size rank + ear axis (not absolute inches); benign companion-animal genetics. "
                "coat length/curl/leg-length + the 4 rerun morph traits ABSTAIN. NOT a human/forensic tool.",
     )
-    ap.add_argument("--dosages", required=True,
-                    help="comma-separated LOCUS=dose big-allele copies (0/1/2) for any of "
-                         "IGF1/HMGA2/STC2/GHR (size) + EAR (ear type), e.g. IGF1=2,HMGA2=2,STC2=1,GHR=1,EAR=2")
+    src = ap.add_mutually_exclusive_group(required=True)
+    src.add_argument("--dosages",
+                     help="comma-separated LOCUS=dose big-allele copies (0/1/2) for any of "
+                          "IGF1/HMGA2/STC2/GHR (size) + EAR (ear type), e.g. IGF1=2,HMGA2=2,STC2=1,GHR=1,EAR=2")
+    src.add_argument("--vcf",
+                     help="a canFam4 (UU_Cfam_GSD_1.0) dog genome VCF; the pinned body-size + ear SNP dosages "
+                          "are called by coordinate (dog causal SNPs have no rsIDs). Absent/uncallable SNPs are "
+                          "skipped (partial-panel scoring)")
     ap.add_argument("--json", action="store_true", help="emit the result as JSON")
     args = ap.parse_args(argv)
 
@@ -67,7 +74,15 @@ def main(argv=None) -> int:
     )
 
     try:
-        dos = _parse_dosages(args.dosages)
+        if args.vcf:
+            from dna_decode.pigment.dog_vcf_input import dosages_from_vcf
+            dos = dosages_from_vcf(args.vcf)
+            if not dos:
+                print(f"error: no pinned morphology SNPs found/callable in {args.vcf} "
+                      f"(expected canFam4 coords for IGF1/HMGA2/STC2/GHR/EAR)", file=sys.stderr)
+                return 2
+        else:
+            dos = _parse_dosages(args.dosages)
         size_dos = {k: v for k, v in dos.items() if k in SIZE_LOCI}
         ear = call_ear(dos["EAR"]) if "EAR" in dos else None
         unknown = [k for k in dos if k not in SIZE_LOCI and k not in MORPH_LOCI]
@@ -76,6 +91,9 @@ def main(argv=None) -> int:
         if not size_dos and ear is None:
             raise SizeInputError("supply at least one size locus (IGF1/HMGA2/STC2/GHR) or EAR")
         height = polygenic_size_score(size_dos).as_dict() if size_dos else None
+    except FileNotFoundError as e:
+        print(f"error: VCF not found: {e}", file=sys.stderr)
+        return 2
     except (ValueError, SizeInputError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
@@ -83,6 +101,8 @@ def main(argv=None) -> int:
     result = {
         "organism": "Canis_lupus_familiaris", "trait": "morphology",
         "regime": "A_curated_pinned_validated_catalog",
+        "input_source": "vcf" if args.vcf else "dosages",
+        "loci_scored": sorted(dos),
         "height": height, "ear": ear, "abstains_on": _ABSTAIN_AXES,
         "measure": "RELATIVE size rank + ear axis (validated on Darwin's Ark), NOT calibrated absolute height",
         "scope_limit": "companion-animal visible-trait genetics; benign, NOT human/forensic",
