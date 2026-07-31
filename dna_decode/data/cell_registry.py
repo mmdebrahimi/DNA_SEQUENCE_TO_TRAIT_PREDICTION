@@ -501,6 +501,36 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "calibrated absolute-height tier or a label-confirmed ear polarity needs a raw-inches/codebook label"),
     ),
     CellContract(
+        cell_id="typing:horse:horsecolor", track="typing", route="dna-horsecolor",
+        organism="Equus_caballus", target="horsecolor",
+        claim="horse coat colour (base chestnut/bay/black + cream dilution palomino/buckskin/cremello/perlino "
+              "+ dun red-dun/grullo + progressive grey) from the five OMIA loci E/A/CR/D/G resolved in fixed "
+              "epistatic order — a 2nd-organism visible-trait cell, the best-characterised animal coat system",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="deployed_rule_extended_validation_data_wall",
+        validation_slice=(
+            "deterministic epistatic curated-catalog rule; OMIA-sourced causal variants (MC1R p.Ser83Phe chestnut "
+            "OMIA 001199-9796 / ASIP 11-bp-del black / SLC45A2 c.457G>A cream OMIA 001344-9796 / TBX3 dun "
+            "Imsland 2016 / STX17 4.6-kb dup grey OMIA 001356-9796). The base E x A is the DEPLOYED VGL/Rieder-2001 "
+            "rule (REUSES dna_decode.data.horse_coat.call_horse_base_colour); this cell EXTENDS it with cream/dun/"
+            "grey. reference_integrity_ok() pins known genotypes -> colours incl. the TWO EPISTASIS ANCHORS a naive "
+            "rule mis-calls: (1) e/e is CHESTNUT even when A/A bay (recessive epistasis); (2) a G/n horse GREYS out "
+            "regardless of base (grey dominant + epistatic for the adult coat). KNOWLEDGE_BASELINE: the base rule's "
+            "validator (scripts/horse_coat_validate.py) reports VALIDATION_DATA_WALL — no free INDEPENDENT-colour "
+            "per-individual cohort (Dryad 3q111 is genotype-DERIVED=circular AND auth-gated; published contingencies "
+            "Rieder/Synergy/Noma are PDF/paywalled), so no measured number (unlike the dog cells' Darwin's Ark)"),
+        label_provenance=("OMIA-curated causal variants (rule); base E x A = deployed VGL/Rieder rule; no free "
+                          "independent-colour per-individual cohort scored (documented data wall)"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/horse_coat_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "KNOWLEDGE_BASELINE curated catalog + validation-data wall. To reach a MEASURED tier, feed "
+            "scripts/horse_coat_validate.py a TSV of mc1r,asip,INDEPENDENTLY-OBSERVED colour (not genotype-derived "
+            "= circular); the free-substrate availability is the open risk (Darwin's-Ark-style browser-download "
+            "wall). Cream/dun/grey extension has no validator yet. Dilution/pattern loci (champagne/silver/pearl/"
+            "roan/tobiano/appaloosa) + sooty/flaxen shade ABSTAIN by design"),
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "
