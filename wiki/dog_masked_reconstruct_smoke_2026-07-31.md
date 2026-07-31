@@ -1,5 +1,15 @@
 # Dog "world model" masked-genome reconstruction — F1 engine + first real result (2026-07-31)
 
+> **⚠️ DEPRECATED HEADLINE (2026-07-31, superseded by F1′).** The `−0.15` delta below is **not a clean
+> negative** and must not be cited. An adversarial review found the comparison biased against NT on TWO
+> independent axes: (1) the order-5 Markov baseline was fit on the SAME slice it scored, so each masked
+> target's own count leaked into the table predicting it (transductive leakage → inflated Markov accuracy);
+> (2) NT was scored by its single argmax 6-mer, discarding the per-base marginal distribution (true-token
+> prob ~0 does NOT prove the true BASES have low marginal prob). Both bias against NT; the sign may flip.
+> The engine + degeneracy guard remain valid. See the F1′ clean re-run
+> (`wiki/dog_masked_reconstruct_clean_2026-07-31.md`): disjoint/LOO Markov + per-base marginal NLL.
+
+
 **Question (user):** take one data-rich animal (dog) and see if our "world model" can mask parts of the
 genome and guess them. **Framing (ratified):** dog / Framing A (a DNA masked-LM reconstructs masked
 sequence — the model's native objective) / NT-v2-100M. **Why it matters strategically:** masked

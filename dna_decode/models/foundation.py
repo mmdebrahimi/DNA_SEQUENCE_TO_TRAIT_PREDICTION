@@ -55,6 +55,10 @@ class TokenPrediction:
     pred_kmer: str
     true_prob: float          # softmax prob the model assigned to the TRUE token at the masked slot
     pred_prob: float          # softmax prob of the argmax (predicted) token
+    # Per-base MARGINAL distribution at each offset j in the masked token: P(base@j) summed over all
+    # vocab tokens whose j-th base == that base. The FAIR per-base surface (vs the argmax-token proxy):
+    # a k-tuple of (pA, pC, pG, pT). Empty when the model doesn't provide it.
+    base_marginals: tuple = ()
 
 
 class FoundationModel(ABC):
@@ -182,13 +186,13 @@ class FoundationModel(ABC):
     kmer_size: int = 1
 
     def masked_token_predictions(
-        self, sequence: str, positions=None, batch_size: int = 16
+        self, sequence: str, positions=None, batch_size: int = 16, strict: bool = False
     ) -> list["TokenPrediction"]:
         """Mask each selected k-mer token, run the MLM head, return per-token reconstructions.
 
         `positions` = 0-based indices into the model's k-mer token stream (specials excluded);
-        None = every full-length token. Base sequence must fit the model's `max_context`. Only
-        implemented by masked-LM subclasses (`supports_mlm == True`).
+        None = every full-length token. `strict=True` raises if a requested position was dropped.
+        Base sequence must fit `max_context`. Only masked-LM subclasses (`supports_mlm`) implement it.
         """
         raise FoundationModelError(
             f"{self.name} does not support masked reconstruction (supports_mlm is False)"
@@ -227,24 +231,43 @@ class MockFoundationModel(FoundationModel):
     supports_mlm: bool = True
     kmer_size: int = 6
 
-    def masked_token_predictions(self, sequence, positions=None, batch_size: int = 16):
+    def masked_token_predictions(self, sequence, positions=None, batch_size: int = 16,
+                                 strict: bool = False):
         s = sequence.upper()
         k = self.kmer_size
         tokens = [s[i:i + k] for i in range(0, len(s) - k + 1, k)]  # non-overlapping full k-mers
-        idxs = range(len(tokens)) if positions is None else positions
+        _bi = {"A": 0, "C": 1, "G": 2, "T": 3}
+        requested = list(range(len(tokens))) if positions is None else list(positions)
+        idxs = [t for t in requested if 0 <= t < len(tokens) and all(c in _bi for c in tokens[t])]
+        if strict and len(idxs) != len(requested):
+            from_ = [t for t in requested if t not in set(idxs)]
+            raise FoundationModelError(f"mock masked_token_predictions(strict): dropped {from_[:5]}")
         _rot = {"A": "C", "C": "G", "G": "T", "T": "A"}
+
+        def _marg(true_base: str, correct: bool):
+            if correct:
+                v = [0.1 / 3] * 4
+                v[_bi[true_base]] = 0.9
+            else:  # mass on the rotated wrong base -> argmax != true, true marginal 0.1
+                v = [0.0] * 4
+                v[_bi[true_base]] = 0.1
+                v[_bi[_rot[true_base]]] = 0.9
+            return tuple(v)
+
         out = []
         for ti in idxs:
             true_kmer = tokens[ti]
-            if ti % 2 == 0:
+            correct_token = ti % 2 == 0
+            if correct_token:
                 pred_kmer, true_p, pred_p = true_kmer, 0.9, 0.9
-            else:
-                first = _rot.get(true_kmer[0], "N")
-                pred_kmer, true_p, pred_p = first + true_kmer[1:], 0.1, 0.6
+                marg = tuple(_marg(b, True) for b in true_kmer)
+            else:  # first base wrong (rotated), rest correct
+                pred_kmer, true_p, pred_p = _rot.get(true_kmer[0], "N") + true_kmer[1:], 0.1, 0.6
+                marg = tuple(_marg(b, j != 0) for j, b in enumerate(true_kmer))
             out.append(
                 TokenPrediction(
-                    token_index=ti, base_start=ti * k, true_kmer=true_kmer,
-                    pred_kmer=pred_kmer, true_prob=true_p, pred_prob=pred_p,
+                    token_index=ti, base_start=ti * k, true_kmer=true_kmer, pred_kmer=pred_kmer,
+                    true_prob=true_p, pred_prob=pred_p, base_marginals=marg,
                 )
             )
         return out
@@ -382,12 +405,36 @@ class NucleotideTransformerModel(FoundationModel):
     supports_mlm: bool = True
     kmer_size: int = 6  # NT-v2 is a non-overlapping 6-mer tokenizer
 
-    def masked_token_predictions(self, sequence, positions=None, batch_size: int = 16):
-        """Mask each selected 6-mer token, run the MLM head, decode the argmax token.
+    def _base_marginal_maps(self):
+        """Cache: for each k-mer offset j, a LongTensor mapping vocab-token-id -> base index
+        (0=A,1=C,2=G,3=T), or -1 for any token whose j-th char is not ACGT / is too short. Lets the
+        per-base marginal P(base@j) be an index_add scatter over the full softmax."""
+        import torch
 
-        Reads `.logits` (the MLM head already present via AutoModelForMaskedLM) rather than the
-        hidden states the embedding path uses. Only full-length 6-mer tokens are maskable (the
-        tail remainder token and any special token are skipped). Batches the masked variants.
+        if getattr(self, "_bmm_cache", None) is not None:
+            return self._bmm_cache
+        vocab = self._tokenizer.get_vocab()  # token_str -> id
+        vsize = max(vocab.values()) + 1
+        base_idx = {"A": 0, "C": 1, "G": 2, "T": 3}
+        maps = []
+        for j in range(self.kmer_size):
+            m = torch.full((vsize,), -1, dtype=torch.long)
+            for tok, tid in vocab.items():
+                if len(tok) == self.kmer_size and tok[j] in base_idx:
+                    m[tid] = base_idx[tok[j]]
+            maps.append(m)
+        self._bmm_cache = maps
+        return maps
+
+    def masked_token_predictions(self, sequence, positions=None, batch_size: int = 16,
+                                 strict: bool = False):
+        """Mask each selected 6-mer token, run the MLM head, return argmax + per-base MARGINALS.
+
+        Reads `.logits` (the MLM head already present via AutoModelForMaskedLM). Only full-length
+        ACGT 6-mer tokens are maskable (tail remainder + specials skipped). `strict=True` RAISES if
+        any explicitly-requested position was dropped (out of range / truncated / non-ACGT) rather
+        than silently scoring a subset -- the F2 full-chromosome-sweep guard. `base_marginals` on
+        each result marginalizes the full vocab softmax to per-base P(base@j) (the fair surface).
         """
         import torch
 
@@ -401,7 +448,6 @@ class NucleotideTransformerModel(FoundationModel):
         if mask_id is None:
             raise FoundationModelError("NT tokenizer has no mask token")
 
-        # Map k-mer token stream -> (absolute input-id index, token string, base_start).
         kmers = []  # (abs_idx, kmer_str, base_start)
         base_cursor = 0
         for abs_idx, tid in enumerate(input_ids.tolist()):
@@ -411,10 +457,17 @@ class NucleotideTransformerModel(FoundationModel):
             kmers.append((abs_idx, s, base_cursor))
             base_cursor += len(s)
 
-        targets = list(range(len(kmers))) if positions is None else list(positions)
-        targets = [t for t in targets if 0 <= t < len(kmers) and len(kmers[t][1]) == self.kmer_size
-                   and all(c in "ACGT" for c in kmers[t][1])]
+        requested = list(range(len(kmers))) if positions is None else list(positions)
+        targets = [t for t in requested if 0 <= t < len(kmers)
+                   and len(kmers[t][1]) == self.kmer_size and all(c in "ACGT" for c in kmers[t][1])]
+        if strict and len(targets) != len(requested):
+            dropped = [t for t in requested if t not in set(targets)]
+            raise FoundationModelError(
+                f"masked_token_predictions(strict): {len(dropped)} requested position(s) dropped "
+                f"(out-of-range/truncated/non-ACGT), e.g. {dropped[:5]}; n_tokens={len(kmers)}"
+            )
 
+        bmm = self._base_marginal_maps()
         preds: list[TokenPrediction] = []
         for start in range(0, len(targets), batch_size):
             chunk = targets[start:start + batch_size]
@@ -426,15 +479,22 @@ class NucleotideTransformerModel(FoundationModel):
             probs = torch.softmax(logits.float(), dim=-1).cpu()
             for row, tpos in enumerate(chunk):
                 abs_idx, true_kmer, base_start = kmers[tpos]
-                dist = probs[row, abs_idx]
+                dist = probs[row, abs_idx]  # (V,)
                 pred_id = int(torch.argmax(dist))
                 true_id = int(input_ids[abs_idx])
                 pred_kmer = self._tokenizer.convert_ids_to_tokens([pred_id])[0]
+                marginals = []
+                for j in range(self.kmer_size):
+                    acc = torch.zeros(4)
+                    m = bmm[j]
+                    keep = m >= 0
+                    acc.index_add_(0, m[keep], dist[keep])
+                    marginals.append(tuple(float(x) for x in acc))
                 preds.append(
                     TokenPrediction(
                         token_index=tpos, base_start=base_start, true_kmer=true_kmer,
                         pred_kmer=pred_kmer, true_prob=float(dist[true_id]),
-                        pred_prob=float(dist[pred_id]),
+                        pred_prob=float(dist[pred_id]), base_marginals=tuple(marginals),
                     )
                 )
         return preds

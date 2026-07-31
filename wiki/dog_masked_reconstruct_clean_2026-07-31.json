@@ -1,0 +1,58 @@
+{
+  "headline": {
+    "region_label": "canfam4_disjoint",
+    "PRIMARY_nll_delta_markov_minus_nt": -0.1121,
+    "nt_per_base_nll": 1.4474,
+    "markov_per_base_nll": 1.3354,
+    "nt_per_base_marginal_accuracy": 0.35,
+    "markov_per_base_accuracy": 0.3417,
+    "accuracy_delta": 0.0083,
+    "markov_k": 3,
+    "markov_mode": "disjoint-fit",
+    "n_tokens_masked": 40,
+    "n_bases_scored": 240,
+    "model_name": "nucleotide_transformer",
+    "note": "PRIMARY = per-base NLL delta (Markov - NT), positive = NT beats the baseline; NT uses per-base MARGINALS not argmax-token; Markov is disjoint-fit or LOO (no same-slice leakage); both scored on identical masked bases"
+  },
+  "headline_markov_k": 3,
+  "markov_mode": "disjoint-fit (k chosen = lowest Markov NLL = hardest baseline)",
+  "disjoint_nll_delta_by_k": {
+    "1": -0.1034,
+    "2": -0.1049,
+    "3": -0.1121,
+    "4": -0.0994,
+    "5": -0.0464,
+    "6": -0.0289,
+    "7": -0.0252,
+    "8": -0.0221
+  },
+  "disjoint_markov_nll_by_k": {
+    "1": 1.344,
+    "2": 1.3426,
+    "3": 1.3354,
+    "4": 1.3481,
+    "5": 1.401,
+    "6": 1.4185,
+    "7": 1.4223,
+    "8": 1.4254
+  },
+  "leave_one_out_secondary": {
+    "region_label": "canfam4_loo",
+    "PRIMARY_nll_delta_markov_minus_nt": 0.0033,
+    "nt_per_base_nll": 1.4474,
+    "markov_per_base_nll": 1.4508,
+    "nt_per_base_marginal_accuracy": 0.35,
+    "markov_per_base_accuracy": 0.2708,
+    "accuracy_delta": 0.0792,
+    "markov_k": 3,
+    "markov_mode": "leave-one-out",
+    "n_tokens_masked": 40,
+    "n_bases_scored": 240,
+    "model_name": "nucleotide_transformer",
+    "note": "PRIMARY = per-base NLL delta (Markov - NT), positive = NT beats the baseline; NT uses per-base MARGINALS not argmax-token; Markov is disjoint-fit or LOO (no same-slice leakage); both scored on identical masked bases"
+  },
+  "nt_per_base_nll": 1.4474,
+  "substrate": "D:\\dna_decode_cache\\dog_ref\\NC_051804.1_20000000_20006000.txt",
+  "supersedes": "wiki/dog_masked_reconstruct_smoke_2026-07-31 (deprecated: leaky Markov + argmax NT)",
+  "real_surface": true
+}
