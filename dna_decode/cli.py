@@ -111,6 +111,14 @@ TRAITS = {
         "summary": "SHEEP coat colour (--loci A=AWt/a,E=ED/E+): ASIP Agouti (A^Wt dominant white/tan from a 190kb duplication > a recessive black) + MC1R Extension (ED dominant-black overrides ASIP white). Via the shared engine",
         "validation": "deterministic curated OMIA epistatic rule (OMIA 000201-9940 agouti; ASIP dominant-white duplication vs recessive-black LOF; MC1R ED dominant black); reference-integrity biology-checked incl. ED-overrides-ASIP-white. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
     },
+    "goatcolor": {
+        "summary": "GOAT coat colour (--loci A=AWt/a,B=B/b): ASIP Agouti (A^Wt dominant white/tan, the CNV-driven many-pattern hub > a recessive nonagouti black) + TYRP1 brown (Copperneck). Via the shared mammalian engine (OMIA 000201-9925)",
+        "validation": "deterministic curated OMIA epistatic rule (ASIP dominant-white/tan vs recessive-black; TYRP1 brown); reference-integrity biology-checked. Goat MC1R association is incomplete in the literature so ASIP is the modeled driver. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
+    "alpacacolor": {
+        "summary": "ALPACA/llama fleece colour (--loci E=E/e,A=A/a): MC1R Extension (E coloured; e/e = recessive WHITE regardless of ASIP -- the camelid twist) + ASIP Agouti (A functional -> fawn/agouti > a loss-of-function -> black). Via the shared engine",
+        "validation": "deterministic curated OMIA epistatic rule (MC1R E/e camelid recessive-white; ASIP fawn-vs-black); reference-integrity biology-checked incl. the ee-recessive-white anchor (white regardless of ASIP). KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
     "plumage": {
         "summary": "CHICKEN plumage colour (--loci E=E/E,B=B/b+,S=S/s+,I=i+/i+,BL=bl+/bl+ [--sex male]): eumelanin canvas (extended-black/birchen/wheaten/partridge via E/MC1R) + Z-LINKED barring (B/CDKN2A) + Z-linked silver/gold (S/SLC45A2) + dominant white (I/PMEL17) + blue/splash (Bl) + lavender (MLPH) + recessive white (TYR). The B/S loci are Z-linked so a FEMALE (ZW) is HEMIZYGOUS (reversed from mammals). A 4th-organism (bird) visible-trait cell",
         "validation": "deterministic epistatic curated-catalog rule; OMIA-sourced causal variants (MC1R E-locus series OMIA 000374-9031; CDKN2A sex-linked barring OMIA 000102-9031 Hellstrom/Schwochow; SLC45A2 silver OMIA 000370-9031 Gunnarsson; PMEL17 dominant white OMIA 000373-9031 Kerje; Bl blue; MLPH lavender). reference-integrity biology-checked incl. the epistasis anchors a naive rule mis-calls: (1) EXTENSION is the canvas (barring/blue barely show on a wheaten bird); (2) Z-LINKED barring/silver with REVERSED hemizygosity (the FEMALE is ZW-hemizygous, mirror of cat's X-linked orange); (3) dominant/recessive white mask eumelanin. KNOWLEDGE_BASELINE: no free per-individual validation substrate. Calls canvas+major modifiers not fine pattern/lacing/pencilling. Livestock, NOT human/forensic",
@@ -219,10 +227,11 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "plumage":
         from dna_decode.pigment.chicken_plumage_cli import main as plumage_main
         return plumage_main(rest)
-    if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor"):
+    if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor", "goatcolor", "alpacacolor"):
         from dna_decode.pigment import mammal_color_cli as mcc
         return {"rabbitcolor": mcc.rabbit_main, "mousecolor": mcc.mouse_main, "cattlecolor": mcc.cattle_main,
-                "pigcolor": mcc.pig_main, "sheepcolor": mcc.sheep_main}[trait](rest)
+                "pigcolor": mcc.pig_main, "sheepcolor": mcc.sheep_main, "goatcolor": mcc.goat_main,
+                "alpacacolor": mcc.alpaca_main}[trait](rest)
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)

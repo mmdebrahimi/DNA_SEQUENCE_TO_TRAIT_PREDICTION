@@ -43,6 +43,7 @@ class Locus:
     source: str
     black_alleles: frozenset = frozenset()   # extension: alleles that give solid eumelanin (dominant black)
     red_allele: str | None = None            # extension: recessive-red allele (homozygous -> phaeomelanin)
+    recessive_white_allele: str | None = None  # extension: allele whose homozygote -> WHITE (camelid e/e=white)
     albino_allele: str | None = None         # albino: allele whose homozygote -> white
     white_alleles: frozenset = frozenset()   # agouti: dominant-white/tan alleles (sheep A^Wt)
     self_allele: str | None = None           # agouti: non-agouti / self (black) allele
@@ -153,6 +154,11 @@ def call_mammal_color(cat: MammalCatalog, loci_genotypes: dict[str, str]) -> Mam
         loc = cat.loci[ext[0]]
         g = geno[ext[0]]
         edom = _dominant(loc, g)
+        if loc.recessive_white_allele and g == (loc.recessive_white_allele, loc.recessive_white_allele):
+            notes.append(f"e/e ({loc.recessive_white_allele}) -> recessive WHITE ({loc.gene}); masks all colour "
+                         "(the camelid pattern: ee is white regardless of ASIP)")
+            return MammalColorCall("white (recessive white)", "masked", None, "white", [], True, "high",
+                                   [], per, cat.organism, rule, notes)
         if edom in loc.black_alleles:
             solid_black = True
             notes.append(f"E dominant-black allele {edom!r} -> solid eumelanin (epistatic over agouti)")
@@ -330,6 +336,39 @@ SHEEP = MammalCatalog(
     ),
 )
 
+GOAT = MammalCatalog(
+    "Capra_hircus", "goat",
+    {
+        # ASIP is the many-pattern hub in goats (~11 alleles, CNV-driven): A^Wt white/tan dominant > a nonagouti black.
+        "A": Locus("A", "ASIP", "agouti", ("AWt", "a"), "goat Agouti (ASIP, OMIA 000201-9925): A^Wt dominant "
+                   "white/tan (CNV) > a recessive nonagouti black; ~11 pattern alleles collapsed to the two poles",
+                   white_alleles=frozenset({"AWt"}), self_allele="a"),
+        "B": Locus("B", "TYRP1", "brown", ("B", "b"), "goat B (TYRP1): b/b brown (e.g. Copperneck)", recessive_allele="b"),
+    },
+    anchors=(
+        ("dominant white/tan", {"A": "AWt/a"}, lambda c: c.pattern == "white/tan"),
+        ("recessive black", {"A": "a/a", "B": "B/B"}, lambda c: c.coat_color == "black"),
+        ("brown", {"A": "a/a", "B": "b/b"}, lambda c: "brown/chocolate" in c.coat_color),
+    ),
+)
+
+ALPACA = MammalCatalog(
+    "Vicugna_pacos", "alpaca",
+    {
+        # camelid model: E/_ coloured (black if aa, fawn/agouti if A_); e/e -> WHITE regardless of ASIP.
+        "E": Locus("E", "MC1R", "extension", ("E", "e"), "alpaca/llama E (MC1R): E coloured > e; e/e = recessive WHITE",
+                   recessive_white_allele="e"),
+        "A": Locus("A", "ASIP", "agouti", ("A", "a"), "alpaca Agouti (ASIP): A functional -> fawn/agouti (pheo) > "
+                   "a loss-of-function -> black (eumelanin)", self_allele="a"),
+    },
+    anchors=(
+        ("ee recessive white", {"E": "e/e", "A": "a/a"}, lambda c: c.is_white_masked),
+        ("black (E-, aa)", {"E": "E/E", "A": "a/a"}, lambda c: c.coat_color == "black"),
+        ("fawn/agouti (E-, A_)", {"E": "E/E", "A": "A/a"}, lambda c: c.pattern == "agouti"),
+    ),
+)
+
 MAMMAL_CATALOGS: dict[str, MammalCatalog] = {
     "rabbit": RABBIT, "mouse": MOUSE, "cattle": CATTLE, "pig": PIG, "sheep": SHEEP,
+    "goat": GOAT, "alpaca": ALPACA,
 }

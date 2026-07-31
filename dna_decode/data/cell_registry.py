@@ -654,6 +654,34 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free sheep cohort. Badgerface/spotting ASIP sub-alleles ABSTAIN",
     ),
     CellContract(
+        cell_id="typing:goat:goatcolor", track="typing", route="dna-goatcolor",
+        organism="Capra_hircus", target="goatcolor",
+        claim="goat coat colour via ASIP Agouti (A^Wt dominant white/tan, the CNV-driven many-pattern hub > a "
+              "recessive nonagouti black) + TYRP1 brown, resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (ASIP OMIA 000201-9925 dominant-white/tan CNV vs recessive-"
+                          "black; TYRP1 brown) via the shared engine; goat MC1R association is incomplete in the "
+                          "literature so ASIP is the modeled driver. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free goat cohort. The ~11 ASIP pattern sub-alleles (badgerface/swiss/grey) ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:alpaca:alpacacolor", track="typing", route="dna-alpacacolor",
+        organism="Vicugna_pacos", target="alpacacolor",
+        claim="alpaca/llama fleece colour via MC1R Extension (E coloured; e/e = recessive WHITE regardless of ASIP — "
+              "the camelid twist) + ASIP Agouti (A functional -> fawn/agouti > a loss-of-function -> black)",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (MC1R E/e camelid recessive-white; ASIP fawn-vs-black LOF) "
+                          "via the shared engine; reference_integrity_ok pins ee-recessive-white (white regardless of "
+                          "ASIP) / black-if-aa / fawn-if-A. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free alpaca cohort. KIT grey/blue-eyed-white (open question) ABSTAINs",
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "

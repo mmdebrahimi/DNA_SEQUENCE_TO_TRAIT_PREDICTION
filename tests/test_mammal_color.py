@@ -27,8 +27,19 @@ def test_all_catalogs_reference_integrity():
         assert reference_integrity_ok(cat) is True, name
 
 
-def test_five_organisms_present():
-    assert set(MAMMAL_CATALOGS) == {"rabbit", "mouse", "cattle", "pig", "sheep"}
+def test_organisms_present():
+    assert set(MAMMAL_CATALOGS) == {"rabbit", "mouse", "cattle", "pig", "sheep", "goat", "alpaca"}
+
+
+def test_goat_asip():
+    assert call_mammal_color(MAMMAL_CATALOGS["goat"], {"A": "AWt/a"}).pattern == "white/tan"
+    assert call_mammal_color(MAMMAL_CATALOGS["goat"], {"A": "a/a", "B": "b/b"}).base_eumelanin == "brown/chocolate"
+
+
+def test_alpaca_recessive_white():
+    # the camelid twist: e/e -> white REGARDLESS of ASIP
+    assert call_mammal_color(MAMMAL_CATALOGS["alpaca"], {"E": "e/e", "A": "A/A"}).is_white_masked
+    assert call_mammal_color(MAMMAL_CATALOGS["alpaca"], {"E": "E/E", "A": "a/a"}).coat_color == "black"
 
 
 def test_rabbit_canonical():
@@ -77,7 +88,8 @@ def test_cli_json_and_dispatch(capsys):
     assert d["organism"] == "Oryctolagus_cuniculus" and d["pattern"] == "agouti"
     # dispatch through the unified CLI for each organism
     for trait, fn_name in [("rabbitcolor", "rabbit_main"), ("mousecolor", "mouse_main"),
-                           ("cattlecolor", "cattle_main"), ("pigcolor", "pig_main"), ("sheepcolor", "sheep_main")]:
+                           ("cattlecolor", "cattle_main"), ("pigcolor", "pig_main"), ("sheepcolor", "sheep_main"),
+                           ("goatcolor", "goat_main"), ("alpacacolor", "alpaca_main")]:
         captured = {}
         orig = getattr(mcc, fn_name)
         setattr(mcc, fn_name, lambda argv, _c=captured: (_c.update(argv=argv) or 0))

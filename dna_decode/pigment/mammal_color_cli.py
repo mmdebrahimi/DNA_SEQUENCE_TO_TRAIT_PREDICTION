@@ -92,6 +92,14 @@ def sheep_main(argv=None) -> int:
     return _main("sheep", argv)
 
 
+def goat_main(argv=None) -> int:
+    return _main("goat", argv)
+
+
+def alpaca_main(argv=None) -> int:
+    return _main("alpaca", argv)
+
+
 if __name__ == "__main__":
     import sys as _s
     org = _s.argv[1] if len(_s.argv) > 1 else "rabbit"
