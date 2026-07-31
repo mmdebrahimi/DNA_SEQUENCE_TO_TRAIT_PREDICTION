@@ -61,6 +61,7 @@ dna-coatcolor = "dna_decode.pigment.coat_cli:main"  # dog coat colour (E/K/A/B/D
 dna-morphology = "dna_decode.pigment.morphology_cli:main"  # dog body size + ear type (pinned + Darwin's-Ark-validated catalog)
 dna-horsecolor = "dna_decode.pigment.horse_coat_cli:main"  # horse coat colour (E/A/CR/D/G epistasis) — 2nd-organism visible-trait cell
 dna-catcolor = "dna_decode.pigment.cat_coat_cli:main"  # cat coat colour (W/O/A/B/D/C; X-linked orange -> tortoiseshell) — 3rd-organism cell
+dna-plumage = "dna_decode.pigment.chicken_plumage_cli:main"  # chicken plumage (E/B/S/I/Bl/lav/c; Z-linked barring/silver) — 4th-organism (bird) cell
 dna-flowering = "dna_decode.organism_rules.flowering_cli:main"   # Arabidopsis flowering habit (FRI/FLC)
 dna-phage = "dna_decode.phage.cli:main"        # bacteriophage genome/lineage -> host-receptor class (first non-AMR cell)
 dna-kleb = "dna_decode.kleb.cli:main"          # Klebsiella phage depolymerase -> capsule KL-type (cross-organism, fetch-only)

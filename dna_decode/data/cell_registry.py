@@ -559,6 +559,33 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "wideband, karpati/roan + coat length ABSTAIN by design"),
     ),
     CellContract(
+        cell_id="typing:chicken:plumage", track="typing", route="dna-plumage",
+        organism="Gallus_gallus", target="plumage",
+        claim="chicken plumage colour (eumelanin canvas extended-black/birchen/wheaten/partridge + Z-linked "
+              "barring + Z-linked silver/gold + dominant white + blue/splash + lavender + recessive white) from "
+              "the OMIA loci E/B/S/I/Bl/lav/c resolved in epistatic order — a 4th-organism (bird) visible-trait "
+              "cell, notable for Z-LINKED loci where the FEMALE (ZW) is hemizygous (reversed from mammals)",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_epistatic_zlinked_catalog_no_free_validation_substrate",
+        validation_slice=(
+            "deterministic epistatic curated-catalog rule; OMIA-sourced causal variants (MC1R E-locus series "
+            "OMIA 000374-9031, E extended-black G274A/E92K; CDKN2A sex-linked barring OMIA 000102-9031, B1 V9D, "
+            "Hellstrom 2010/Schwochow 2017; SLC45A2 silver OMIA 000370-9031, Y277C/L347M, Gunnarsson 2007; PMEL17 "
+            "dominant white OMIA 000373-9031, 9-bp exon-10 insertion, Kerje 2004; Bl blue; MLPH lavender). "
+            "reference_integrity_ok() pins the anchors a naive rule mis-calls: (1) EXTENSION is the canvas "
+            "(barring/blue act on eumelanin, so barely show on a wheaten bird); (2) Z-LINKED barring/silver with "
+            "REVERSED hemizygosity (the FEMALE is ZW-hemizygous -> 1 allele, the mirror of cat's X-linked orange); "
+            "(3) dominant/recessive white mask eumelanin. KNOWLEDGE_BASELINE — no free per-individual validation substrate"),
+        label_provenance="OMIA-curated causal variants (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule=(
+            "KNOWLEDGE_BASELINE curated catalog. To reach a MEASURED tier, score per-individual vs a public "
+            "chicken genotype+phenotype cohort (the open risk: a FREE such substrate may not exist — the Darwin's-"
+            "Ark-style browser-download wall). Fine feather pattern (Columbian/mottling/pencilling/spangling), "
+            "lacing, and comb/feather-structure genes ABSTAIN by design"),
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "
