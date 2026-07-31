@@ -1,0 +1,61 @@
+{
+  "cohort": "Darwin's Ark (Dryad doi:10.5061/dryad.83bk3jb4r) canFam4 gp-0.70 biallelic",
+  "height": {
+    "trait": "height_Q121",
+    "score": "sum of 4 big-allele dosages (0-8)",
+    "n": 3276,
+    "polygenic_r": 0.6189089755889903,
+    "r2": 0.38304832006461337,
+    "score_bin_mean_height": {
+      "0": -1.154,
+      "1": -1.22,
+      "2": -1.129,
+      "3": -0.98,
+      "4": -0.619,
+      "5": -0.087,
+      "6": 0.145,
+      "7": 0.502,
+      "8": 0.769
+    }
+  },
+  "ear": {
+    "trait": "ear_Q125",
+    "locus": "chr10:8612500:A:G",
+    "gene": "MSRB3",
+    "n": 2834,
+    "ear_r": 0.5434106897806175,
+    "bodysize_snp_r": -0.12748724639119505,
+    "dose_response": {
+      "0": -1.129,
+      "1": -0.32,
+      "2": 0.426
+    },
+    "resolved_from_size": true
+  },
+  "rerun_morph_scan": {
+    "rerun_traits_best_r_by_locus": {
+      "Q124_rerun": {
+        "FGF5": -0.106,
+        "KRT71": -0.041,
+        "MSRB3_ear": -0.194
+      },
+      "Q127_rerun": {
+        "FGF5": -0.095,
+        "KRT71": -0.076,
+        "MSRB3_ear": 0.111
+      },
+      "Q128_rerun": {
+        "FGF5": 0.056,
+        "KRT71": -0.027,
+        "MSRB3_ear": -0.054
+      },
+      "Q245_recoded": {
+        "FGF5": 0.094,
+        "KRT71": 0.026,
+        "MSRB3_ear": 0.213
+      }
+    },
+    "max_abs_r": 0.213,
+    "verdict": "NO_STRONG_SINGLE_SNP: the 4 rerun morph traits do not map to FGF5/KRT71/MSRB3 (|r|<=0.3) -- likely SV-caused (substrate-limited like coat) or different traits"
+  }
+}

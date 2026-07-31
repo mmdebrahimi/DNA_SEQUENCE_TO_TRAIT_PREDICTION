@@ -91,6 +91,41 @@ POLYGENIC_SCORE_R = 0.619          # r; R^2 = 0.383 (~38% of cross-breed height 
 VALIDATION_N = 3276
 VALIDATION_COHORT = "Darwin's Ark (Dryad doi:10.5061/dryad.83bk3jb4r), canFam4 gp-0.70 biallelic imputed"
 
+# ---- validated SINGLE-SNP morphology loci (beyond the polygenic size score) ----------------------------
+# These are separate visible morphology traits each driven by ONE known SNP (not the additive size score).
+# EAR is the only one validated on Darwin's Ark so far; pinned + functionally validated exactly like the
+# size loci (canFam4 SNP -> dosage tracks the owner-reported morphology ordinal). CLEANLY resolved from
+# body size: the ear lead (chr10:8,612,500) sits 91 kb from the HMGA2 size SNP (chr10:8,703,415) and the
+# ear phenotype's correlation with the SIZE SNP is near-zero/opposite — the exact MSRB3-vs-HMGA2 confound
+# Morrill 2022 had to untangle in the diverse cohort. FGF5 (coat length) + KRT71 (curl) were scanned but
+# showed NO strong signal on any of the 9 Darwin's Ark morphology questions (those coat-texture traits are
+# not among the measured morph Qs); the 4 covariate-adjusted "rerun" morph traits likewise did not map to a
+# classic single SNP (max |r|~0.17) — likely SV-caused or different traits (see the validation artifact).
+
+
+@dataclass(frozen=True)
+class MorphLocus:
+    trait: str                  # visible morphology trait
+    gene: str
+    canfam4_variant: str        # panel ID chrN:pos:ref:alt (canFam4)
+    high_allele: str            # allele whose dose moves the ordinal UP (e.g. toward erect ears)
+    functional_r: float         # measured r(high-allele dose, owner-reported ordinal) on Darwin's Ark
+    darwins_ark_question: str   # the survey Q this validated against (identity inferred functionally)
+    source: str
+    note: str = ""
+
+
+MORPH_LOCI: dict[str, MorphLocus] = {
+    "EAR": MorphLocus(
+        "ear_type_erect_vs_drop", "MSRB3", "chr10:8612500:A:G", high_allele="A",
+        functional_r=0.543, darwins_ark_question="Q125",
+        source="OMIA 000319-9615 (Ears, folded/drop vs prick); Boyko 2010; Vaysse 2011; ear lead "
+               "chr10:8,612,500 (canFam4) — Sci Rep 2025 s41598-025-33036-0",
+        note="intergenic 3' of MSRB3 / 5' of HMGA2; the exact published canFam4 ear lead variant is in-panel "
+             "and its dosage tracks Q125 monotonically (dose 0 -1.13 -> dose 2 +0.43), r=+0.543. Resolved "
+             "from body size: r with the HMGA2 size SNP is only -0.13 (opposite sign)."),
+}
+
 # secondary / structural size loci intentionally NOT in v0 (naming them keeps the abstention honest)
 UNMODELLED_SIZE_LOCI = {
     "IGF1R": "CFA3 splice variant — secondary size locus, smaller increment (not in v0)",
@@ -231,8 +266,16 @@ def reference_integrity_ok() -> bool:
     all_small = polygenic_size_score({k: 0 for k in SIZE_LOCI})
     all_het = polygenic_size_score({k: 1 for k in SIZE_LOCI})
     all_big = polygenic_size_score({k: 2 for k in SIZE_LOCI})
+    # MORPH_LOCI (single-SNP morphology) well-formedness: canFam4 id whose high-allele is the ref/alt, r in range
+    for M in MORPH_LOCI.values():
+        parts = M.canfam4_variant.split(":")
+        if len(parts) != 4 or not parts[0].startswith("chr") or M.high_allele not in (parts[2], parts[3]):
+            return False
+        if not (0.0 < M.functional_r < 1.0):
+            return False
     return (all_small.polygenic_score == 0 and all_small.size_rank == "toy/small"
             and all_big.polygenic_score == 8 and all_big.size_rank == "large/giant"
             and all_het.polygenic_score == 4
             and all_small.polygenic_score < all_het.polygenic_score < all_big.polygenic_score
-            and POLYGENIC_SCORE_R > max(L.functional_r for L in SIZE_LOCI.values()))  # combined beats best single
+            and POLYGENIC_SCORE_R > max(L.functional_r for L in SIZE_LOCI.values())  # combined beats best single
+            and "EAR" in MORPH_LOCI)
