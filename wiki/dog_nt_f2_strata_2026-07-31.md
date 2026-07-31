@@ -28,14 +28,22 @@ disjoint 200 kb Markov-train region (chr1 22.0–22.2 Mb); Markov given its best
    "global reconstruction win = calibration, not biology" prediction, confirmed and sharpened: the skill
    is anti-correlated with functional constraint.
 
-2. **The scale-test win is baseline-fragile [OBSERVATION, candidate causes — not asserted causal fact].**
-   NT-500M here does NOT beat the well-trained (200 kb) Markov in EITHER stratum (deltas −0.05 / −0.23),
-   vs the scale test's +0.289 against a 4 kb-trained Markov. Two things differ between the runs — the
-   Markov training size (4 kb → 200 kb, a much stronger baseline) AND the eval windows (one favorable
-   window → 34 annotation-selected windows; NT's own NLL differs by window, 1.07 → 1.37). Both plausibly
-   contribute; cleanly disentangling needs a controlled re-run (NT-500M on the original scale window vs
-   the 200 kb Markov) — deferred. What is SOLID: the within-run scale ORDERING (bigger NT reconstructs
-   better than smaller NT) stands; what does NOT generalize is "NT-500M beats Markov in absolute terms".
+2. **The scale-test win is WINDOW-dependent, NOT baseline-fragile [RESOLVED 2026-07-31 by a controlled
+   test].** My initial hypothesis (the scale win was inflated by a weak 4 kb Markov) was FALSIFIED. Holding
+   the scale window fixed and varying ONLY the Markov training set: NT-500M NLL 1.0668; Markov-4kb NLL
+   **1.3561** (delta +0.289 — reproduces the scale test exactly); Markov-**200kb** NLL **1.3384** (delta
+   +0.272). The pure baseline-strength effect is only **−0.018 nats** — a 200 kb Markov barely beats a
+   4 kb one on this window, and NT still wins by +0.27. So the scale-test's arbitrary first-1200 bp window
+   was simply a FAVORABLE (easy, low-complexity) window; the broader F2 annotation-selected windows are
+   genuinely harder (NT's own NLL 1.07 → 1.37). The scale/F2 disagreement is a **window/sampling effect**,
+   not baseline strength. What is SOLID: the within-run scale ORDERING (bigger NT > smaller NT) stands;
+   what does NOT generalize is "NT-500M beats Markov" — it beats it on favorable windows and loses on a
+   representative sample. Controlled result: `wiki/dog_nt_scale_window_control_2026-07-31.json`.
+
+   **Reusable lesson (corrected):** a single-window reconstruction number does NOT generalize — sample
+   windows representatively before claiming a win. (Baseline strength was HYPOTHESIZED, tested, and was
+   NOT the driver here; the general "check baseline strength" hygiene still holds, but window-sampling was
+   the real confound.)
 
 ## Verdict — the reconstruction track is CLOSED (honest negative for decoding)
 

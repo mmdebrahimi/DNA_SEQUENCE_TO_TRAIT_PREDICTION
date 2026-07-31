@@ -1,0 +1,20 @@
+{
+  "purpose": "Controlled test: is the scale-test NT-500M win over Markov baseline-FRAGILE or WINDOW-dependent? Hold the scale window fixed, vary ONLY the Markov training-set size.",
+  "window": "canFam4 chr1 NC_051804.1:20,000,000-20,001,200 (the scale-test eval window)",
+  "masked_positions": "first 200 non-overlapping 6-mer tokens (bases 0-1199)",
+  "nt_500m_per_base_nll": 1.0668,
+  "nt_500m_source": "wiki/dog_nt_scale_2026-07-31.json (same window+model; harness reproduces cross-environment)",
+  "markov_4kb_train_bp": 4001,
+  "markov_4kb_best_k": 2,
+  "markov_4kb_nll": 1.3561,
+  "markov_4kb_delta_markov_minus_nt": 0.2893,
+  "markov_200kb_train_bp": 200001,
+  "markov_200kb_best_k": 4,
+  "markov_200kb_nll": 1.3384,
+  "markov_200kb_delta_markov_minus_nt": 0.2716,
+  "pure_baseline_strength_effect_nats": -0.0177,
+  "verdict": "WINDOW_EFFECT_not_baseline_fragile",
+  "interpretation": "A 200kb Markov barely beats a 4kb one on this window (-0.018 nats); NT-500M still wins by +0.27 here. So the scale-test window was FAVORABLE (easy); the F2 windows are harder. The scale/F2 disagreement is window-sampling, not baseline strength. F2 finding #1 (anti-structured: NT worse in coding) is unaffected and stands.",
+  "reproduces_scale_test": "Markov-4kb best-k=2 NLL 1.3561 matches wiki/dog_nt_scale_2026-07-31.json exactly -> setup validated",
+  "method": "local, dna_decode.interp.markov_baseline.MarkovModel (no NT re-run needed; NT NLL already established)"
+}
