@@ -740,6 +740,45 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free buffalo cohort. KIT white-spotting (OMIA 001737) + the disputed ASIP-black SNP ABSTAIN",
     ),
     CellContract(
+        cell_id="typing:camel:camelcolor", track="typing", route="dna-camelcolor",
+        organism="Camelus_dromedarius", target="camelcolor",
+        claim="dromedary camel coat colour via MC1R c.901C>T DOMINANT white (dominant-negative, heterozygote "
+              "sufficient) + ASIP recessive black (exon-2 frameshift); wild = light brown",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (MC1R c.901C>T dominant-white, Almathen 2018/Alshanbari "
+                          "2019; ASIP 23delT exon-2 frameshift recessive-black) via the shared engine. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free camel cohort. KIT white-spotting + SLC45A2/TYR modifiers ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:mink:minkcolor", track="typing", route="dna-minkcolor",
+        organism="Neogale_vison", target="minkcolor",
+        claim="American mink coat colour via TYR albino/Himalayan + TYRP1 American-Palomino brown + MLPH "
+              "Silverblue dilute; wild = dark",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (TYR albino nonsense OMIA 000202-452646; TYRP1 Palomino "
+                          "intron-2 insertion; MLPH Silverblue splice c.901+1G>A OMIA 000031-452646, Manakhov 2019) "
+                          "via the shared engine. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free mink cohort. LYST Aleutian + MITF Hedlund-white + the 30+ other fur colours ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:roedeer:roedeercolor", track="typing", route="dna-roedeercolor",
+        organism="Capreolus_capreolus", target="roedeercolor",
+        claim="roe deer coat colour via ASIP c.33G>T p.Leu11Phe — A chestnut (phaeomelanin) > a recessive black",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA locus (ASIP c.33G>T OMIA 000201-9858, Reissmann 2020: TT black "
+                          "/ GG-GT chestnut) via the shared engine. KNOWLEDGE_BASELINE — a WILDLIFE cell"),
+        label_provenance="OMIA-curated causal gene (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; the single confirmed roe-deer colour variant is ASIP (chestnut vs black); other coat variation ABSTAINs",
+    ),
+    CellContract(
         cell_id="typing:pigeon:pigeoncolor", track="typing", route="dna-pigeoncolor",
         organism="Columba_livia", target="pigeoncolor",
         claim="pigeon plumage colour (base ash-red/blue/brown via the Z-linked B/TYRP1 series + recessive-red "

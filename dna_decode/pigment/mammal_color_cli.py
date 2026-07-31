@@ -116,6 +116,18 @@ def buffalo_main(argv=None) -> int:
     return _main("buffalo", argv)
 
 
+def camel_main(argv=None) -> int:
+    return _main("camel", argv)
+
+
+def mink_main(argv=None) -> int:
+    return _main("mink", argv)
+
+
+def roedeer_main(argv=None) -> int:
+    return _main("roedeer", argv)
+
+
 if __name__ == "__main__":
     import sys as _s
     org = _s.argv[1] if len(_s.argv) > 1 else "rabbit"

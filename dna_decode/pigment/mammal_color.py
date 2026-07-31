@@ -444,7 +444,57 @@ BUFFALO = MammalCatalog(
     ),
 )
 
+CAMEL = MammalCatalog(
+    "Camelus_dromedarius", "camel",
+    {
+        # MC1R c.901C>T -> WHITE, DOMINANT (heterozygous sufficient, dominant-negative; Almathen 2018).
+        "MC1R": Locus("MC1R", "MC1R", "dominant_white", ("W", "E+"), "camel MC1R (Almathen 2018): c.901C>T W "
+                      "dominant white (dominant-negative) > E+ wild", dominant_allele="W"),
+        # ASIP exon-2 frameshift -> BLACK, recessive; wild = light brown (agouti).
+        "A": _A_series("ASIP", ("A", "a"), "a", src="camel Agouti (ASIP, Almathen 2018): A wild light-brown > "
+                       "a recessive black (23delT exon-2 frameshift)"),
+    },
+    anchors=(
+        ("dominant white (MC1R)", {"MC1R": "W/E+"}, lambda c: c.is_white_masked),
+        ("recessive black (aa)", {"MC1R": "E+/E+", "A": "a/a"}, lambda c: c.coat_color == "black"),
+        ("wild brown (agouti)", {"MC1R": "E+/E+", "A": "A/a"}, lambda c: c.pattern == "agouti"),
+    ),
+)
+
+MINK = MammalCatalog(
+    "Neogale_vison", "mink",
+    {
+        "C": Locus("C", "TYR", "albino", ("C", "ch", "c"), "mink C (TYR, OMIA 000202-452646): C > ch Himalayan "
+                   "> c albino (nonsense)", albino_allele="c"),
+        "B": Locus("B", "TYRP1", "brown", ("B", "b"), "mink B (TYRP1): b/b American Palomino brown (intron-2 insertion)",
+                   recessive_allele="b"),
+        "D": Locus("D", "MLPH", "dilute", ("D", "d"), "mink D (MLPH, OMIA 000031-452646): d/d Silverblue dilute "
+                   "(c.901+1G>A splice, Manakhov 2019)", recessive_allele="d"),
+    },
+    anchors=(
+        ("standard dark", {"C": "C/C", "B": "B/B", "D": "D/D"}, lambda c: c.coat_color == "black"),
+        ("Silverblue (dilute)", {"C": "C/C", "B": "B/B", "D": "d/d"}, lambda c: c.base_eumelanin == "blue"),
+        ("Palomino (brown)", {"C": "C/C", "B": "b/b", "D": "D/D"}, lambda c: "brown/chocolate" in c.coat_color),
+        ("albino", {"C": "c/c"}, lambda c: c.is_white_masked),
+    ),
+)
+
+ROEDEER = MammalCatalog(
+    "Capreolus_capreolus", "roedeer",
+    {
+        # ASIP c.33G>T p.Leu11Phe: TT (a/a) black, GG/GT (A_) chestnut (Reissmann 2020, OMIA 000201-9858).
+        "A": Locus("A", "ASIP", "agouti", ("A", "a"), "roe deer Agouti (ASIP, OMIA 000201-9858, Reissmann 2020): "
+                   "A chestnut (G, phaeomelanin) > a recessive black (T, c.33G>T)",
+                   self_allele="a", pheomelanin_alleles=frozenset({"A"})),
+    },
+    anchors=(
+        ("chestnut (A_)", {"A": "A/a"}, lambda c: c.pigment_type == "phaeomelanin"),
+        ("recessive black (aa)", {"A": "a/a"}, lambda c: c.coat_color == "black"),
+    ),
+)
+
 MAMMAL_CATALOGS: dict[str, MammalCatalog] = {
     "rabbit": RABBIT, "mouse": MOUSE, "cattle": CATTLE, "pig": PIG, "sheep": SHEEP,
     "goat": GOAT, "alpaca": ALPACA, "guineapig": GUINEAPIG, "fox": FOX, "donkey": DONKEY, "buffalo": BUFFALO,
+    "camel": CAMEL, "mink": MINK, "roedeer": ROEDEER,
 }

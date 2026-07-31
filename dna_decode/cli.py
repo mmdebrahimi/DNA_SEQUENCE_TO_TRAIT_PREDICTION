@@ -111,6 +111,18 @@ TRAITS = {
         "summary": "SHEEP coat colour (--loci A=AWt/a,E=ED/E+): ASIP Agouti (A^Wt dominant white/tan from a 190kb duplication > a recessive black) + MC1R Extension (ED dominant-black overrides ASIP white). Via the shared engine",
         "validation": "deterministic curated OMIA epistatic rule (OMIA 000201-9940 agouti; ASIP dominant-white duplication vs recessive-black LOF; MC1R ED dominant black); reference-integrity biology-checked incl. ED-overrides-ASIP-white. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
     },
+    "camelcolor": {
+        "summary": "CAMEL (dromedary) coat colour (--loci MC1R=W/E+,A=A/a): MC1R c.901C>T DOMINANT white (dominant-negative, heterozygote sufficient) + ASIP recessive black (exon-2 frameshift); wild = light brown. Via the shared engine (Almathen 2018)",
+        "validation": "deterministic curated OMIA rule (MC1R dominant-white / ASIP recessive-black, Almathen 2018 / Alshanbari 2019); reference-integrity biology-checked. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
+    "minkcolor": {
+        "summary": "AMERICAN MINK coat colour (--loci C=C/c,B=B/b,D=D/d): TYR albino/Himalayan + TYRP1 American-Palomino brown + MLPH Silverblue dilute; wild = dark. Via the shared engine (OMIA 000202/000031-452646, Manakhov 2019)",
+        "validation": "deterministic curated OMIA rule (TYR albino nonsense; TYRP1 Palomino intron-2 insertion; MLPH Silverblue splice c.901+1G>A); reference-integrity biology-checked. KNOWLEDGE_BASELINE. Fur-farm animal, NOT human/forensic",
+    },
+    "roedeercolor": {
+        "summary": "ROE DEER coat colour (--loci A=A/a): ASIP c.33G>T p.Leu11Phe -- A chestnut (G, phaeomelanin) > a recessive black (T). Via the shared engine (OMIA 000201-9858, Reissmann 2020)",
+        "validation": "deterministic curated OMIA rule (ASIP c.33G>T; TT black / GG-GT chestnut, Reissmann 2020); reference-integrity biology-checked. KNOWLEDGE_BASELINE. Wildlife, NOT human/forensic",
+    },
     "guineapigcolor": {
         "summary": "GUINEA PIG coat colour (--loci A=A/a,B=B/b,C=C/C,D=D/d,E=E/e): the classic A/B/C/D/E series (ASIP agouti/non-agouti black c.181delTTCA / TYRP1 brown / TYR / MLPH dilute / MC1R e recessive-red). Via the shared engine (OMIA 000201-10141, 001199-10141)",
         "validation": "deterministic curated OMIA epistatic rule; reference-integrity biology-checked. KNOWLEDGE_BASELINE. Lab/companion animal, NOT human/forensic",
@@ -251,12 +263,14 @@ def _delegate(trait: str, rest: list[str]) -> int:
         from dna_decode.pigment.pigeon_plumage_cli import main as pigeon_main
         return pigeon_main(rest)
     if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor", "goatcolor", "alpacacolor",
-                 "guineapigcolor", "foxcolor", "donkeycolor", "buffalocolor"):
+                 "guineapigcolor", "foxcolor", "donkeycolor", "buffalocolor", "camelcolor", "minkcolor",
+                 "roedeercolor"):
         from dna_decode.pigment import mammal_color_cli as mcc
         return {"rabbitcolor": mcc.rabbit_main, "mousecolor": mcc.mouse_main, "cattlecolor": mcc.cattle_main,
                 "pigcolor": mcc.pig_main, "sheepcolor": mcc.sheep_main, "goatcolor": mcc.goat_main,
                 "alpacacolor": mcc.alpaca_main, "guineapigcolor": mcc.guineapig_main, "foxcolor": mcc.fox_main,
-                "donkeycolor": mcc.donkey_main, "buffalocolor": mcc.buffalo_main}[trait](rest)
+                "donkeycolor": mcc.donkey_main, "buffalocolor": mcc.buffalo_main, "camelcolor": mcc.camel_main,
+                "minkcolor": mcc.mink_main, "roedeercolor": mcc.roedeer_main}[trait](rest)
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)
