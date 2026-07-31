@@ -1,0 +1,16 @@
+{
+  "region_label": "canfam4_chr1_NC_051804.1_smoke",
+  "headline_delta_lm_minus_markov": -0.15,
+  "lm_base_accuracy": 0.3375,
+  "markov_base_accuracy": 0.4875,
+  "markov_k": 5,
+  "lm_token_accuracy": 0.0,
+  "lm_mean_true_prob": 0.0007,
+  "n_tokens_masked": 40,
+  "n_bases_scored": 240,
+  "model_name": "nucleotide_transformer",
+  "note": "headline is delta vs order-k Markov; raw accuracy is NOT the claim; masking granularity is 6-base tokens; Markov is teacher-forced (conservative)",
+  "null_uniform_base_accuracy": 0.25,
+  "substrate": "D:\\dna_decode_cache\\dog_ref\\NC_051804.1_20000000_20006000.txt",
+  "real_surface": true
+}

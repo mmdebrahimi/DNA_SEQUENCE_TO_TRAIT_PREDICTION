@@ -40,6 +40,23 @@ class ModelMetadata:
     max_context: int
 
 
+@dataclass(frozen=True)
+class TokenPrediction:
+    """One masked-token reconstruction result (for the dog world-model probe).
+
+    A model that tokenizes into k-mers reconstructs at k-mer granularity: masking one token hides
+    `len(true_kmer)` bases at once. `pred_kmer` is the argmax token's decoded string; base-level
+    accuracy compares `pred_kmer` to `true_kmer` position-by-position (min length).
+    """
+
+    token_index: int          # 0-based index into the model's k-mer token stream (specials excluded)
+    base_start: int           # 0-based absolute start of this token's bases in the input sequence
+    true_kmer: str
+    pred_kmer: str
+    true_prob: float          # softmax prob the model assigned to the TRUE token at the masked slot
+    pred_prob: float          # softmax prob of the argmax (predicted) token
+
+
 class FoundationModel(ABC):
     """Abstract base for DNA foundation-model wrappers.
 
@@ -159,6 +176,24 @@ class FoundationModel(ABC):
             start += stride
         return windows
 
+    # --- masked-reconstruction (world-model probe) -------------------------------------------
+    # Capability flag: only masked-LM models (NT, DNABERT, mock) implement the forward below.
+    supports_mlm: bool = False
+    kmer_size: int = 1
+
+    def masked_token_predictions(
+        self, sequence: str, positions=None, batch_size: int = 16
+    ) -> list["TokenPrediction"]:
+        """Mask each selected k-mer token, run the MLM head, return per-token reconstructions.
+
+        `positions` = 0-based indices into the model's k-mer token stream (specials excluded);
+        None = every full-length token. Base sequence must fit the model's `max_context`. Only
+        implemented by masked-LM subclasses (`supports_mlm == True`).
+        """
+        raise FoundationModelError(
+            f"{self.name} does not support masked reconstruction (supports_mlm is False)"
+        )
+
 
 class MockFoundationModel(FoundationModel):
     """Deterministic hash-based mock for tests + smoke pipeline.
@@ -185,6 +220,34 @@ class MockFoundationModel(FoundationModel):
         seed = int.from_bytes(h[:8], "big")
         rng = np.random.default_rng(seed)
         return rng.standard_normal(self.embedding_dim).astype(np.float32)
+
+    # Deterministic 6-mer masked-LM mock: reconstructs EVEN token positions correctly and
+    # corrupts ODD ones (first base rotated A->C->G->T->A). Gives a KNOWN base-accuracy so the
+    # reconstruction scorer can be pinned offline with no weights.
+    supports_mlm: bool = True
+    kmer_size: int = 6
+
+    def masked_token_predictions(self, sequence, positions=None, batch_size: int = 16):
+        s = sequence.upper()
+        k = self.kmer_size
+        tokens = [s[i:i + k] for i in range(0, len(s) - k + 1, k)]  # non-overlapping full k-mers
+        idxs = range(len(tokens)) if positions is None else positions
+        _rot = {"A": "C", "C": "G", "G": "T", "T": "A"}
+        out = []
+        for ti in idxs:
+            true_kmer = tokens[ti]
+            if ti % 2 == 0:
+                pred_kmer, true_p, pred_p = true_kmer, 0.9, 0.9
+            else:
+                first = _rot.get(true_kmer[0], "N")
+                pred_kmer, true_p, pred_p = first + true_kmer[1:], 0.1, 0.6
+            out.append(
+                TokenPrediction(
+                    token_index=ti, base_start=ti * k, true_kmer=true_kmer,
+                    pred_kmer=pred_kmer, true_prob=true_p, pred_prob=pred_p,
+                )
+            )
+        return out
 
 
 class EvoModel(FoundationModel):
@@ -314,6 +377,67 @@ class NucleotideTransformerModel(FoundationModel):
         mask = inputs["attention_mask"].unsqueeze(-1).float()  # (B, T, 1)
         pooled = (hidden * mask).sum(dim=1) / mask.sum(dim=1).clamp(min=1)  # (B, D)
         return pooled.cpu().float().numpy()
+
+    # --- masked reconstruction (world-model probe) -------------------------------------------
+    supports_mlm: bool = True
+    kmer_size: int = 6  # NT-v2 is a non-overlapping 6-mer tokenizer
+
+    def masked_token_predictions(self, sequence, positions=None, batch_size: int = 16):
+        """Mask each selected 6-mer token, run the MLM head, decode the argmax token.
+
+        Reads `.logits` (the MLM head already present via AutoModelForMaskedLM) rather than the
+        hidden states the embedding path uses. Only full-length 6-mer tokens are maskable (the
+        tail remainder token and any special token are skipped). Batches the masked variants.
+        """
+        import torch
+
+        self._ensure_loaded()
+        seq = sequence.upper()
+        enc = self._tokenizer(seq, return_tensors="pt", truncation=True)
+        input_ids = enc["input_ids"][0]  # includes special tokens (e.g. <cls>)
+        tok_strs = self._tokenizer.convert_ids_to_tokens(input_ids.tolist())
+        special = set(self._tokenizer.all_special_ids)
+        mask_id = self._tokenizer.mask_token_id
+        if mask_id is None:
+            raise FoundationModelError("NT tokenizer has no mask token")
+
+        # Map k-mer token stream -> (absolute input-id index, token string, base_start).
+        kmers = []  # (abs_idx, kmer_str, base_start)
+        base_cursor = 0
+        for abs_idx, tid in enumerate(input_ids.tolist()):
+            if tid in special:
+                continue
+            s = tok_strs[abs_idx]
+            kmers.append((abs_idx, s, base_cursor))
+            base_cursor += len(s)
+
+        targets = list(range(len(kmers))) if positions is None else list(positions)
+        targets = [t for t in targets if 0 <= t < len(kmers) and len(kmers[t][1]) == self.kmer_size
+                   and all(c in "ACGT" for c in kmers[t][1])]
+
+        preds: list[TokenPrediction] = []
+        for start in range(0, len(targets), batch_size):
+            chunk = targets[start:start + batch_size]
+            batch = input_ids.unsqueeze(0).repeat(len(chunk), 1).clone()
+            for row, tpos in enumerate(chunk):
+                batch[row, kmers[tpos][0]] = mask_id
+            with torch.no_grad():
+                logits = self._model(input_ids=batch.to(self._device)).logits  # (B, T, V)
+            probs = torch.softmax(logits.float(), dim=-1).cpu()
+            for row, tpos in enumerate(chunk):
+                abs_idx, true_kmer, base_start = kmers[tpos]
+                dist = probs[row, abs_idx]
+                pred_id = int(torch.argmax(dist))
+                true_id = int(input_ids[abs_idx])
+                pred_kmer = self._tokenizer.convert_ids_to_tokens([pred_id])[0]
+                preds.append(
+                    TokenPrediction(
+                        token_index=tpos, base_start=base_start, true_kmer=true_kmer,
+                        pred_kmer=pred_kmer, true_prob=float(dist[true_id]),
+                        pred_prob=float(dist[pred_id]),
+                    )
+                )
+        return preds
 
 
 class GenaLMModel(FoundationModel):
