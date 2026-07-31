@@ -740,6 +740,29 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free buffalo cohort. KIT white-spotting (OMIA 001737) + the disputed ASIP-black SNP ABSTAIN",
     ),
     CellContract(
+        cell_id="typing:pigeon:pigeoncolor", track="typing", route="dna-pigeoncolor",
+        organism="Columba_livia", target="pigeoncolor",
+        claim="pigeon plumage colour (base ash-red/blue/brown via the Z-linked B/TYRP1 series + recessive-red "
+              "SOX10 + dilute SLC45A2 + wing pattern NDP T-check/checker/bar/barless) resolved epistatically — "
+              "one of the best-characterised colour systems in any organism (Shapiro lab); a 2nd BIRD cell",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_epistatic_zlinked_catalog_no_free_validation_substrate",
+        validation_slice=(
+            "deterministic epistatic curated-catalog rule; MOLECULARLY-CONFIRMED causal genes (TYRP1 B-locus "
+            "ash-red/blue/brown, Domyan 2014 Curr Biol VAAST; SOX10 recessive-red; SLC45A2 dilute; NDP wing-pattern "
+            "T-check>checker>bar>barless, Vickrey 2018 eLife). reference_integrity_ok() pins the anchors a naive "
+            "rule mis-calls: (1) SOX10 e/e -> RED regardless of the TYRP1 base (epistatic); (2) Z-LINKED B/dilute "
+            "with REVERSED hemizygosity (the FEMALE is ZW-hemizygous, same as chicken). KNOWLEDGE_BASELINE — no "
+            "free per-individual validation substrate"),
+        label_provenance="Shapiro-lab/OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule=(
+            "KNOWLEDGE_BASELINE curated catalog. To reach a MEASURED tier, score per-individual vs a public pigeon "
+            "genotype+phenotype cohort (the open risk: a FREE such substrate may not exist). Modifiers (spread/"
+            "grizzle/almond/indigo) + shade ABSTAIN by design"),
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "

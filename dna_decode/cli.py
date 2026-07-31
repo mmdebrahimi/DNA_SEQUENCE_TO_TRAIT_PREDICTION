@@ -135,6 +135,10 @@ TRAITS = {
         "summary": "ALPACA/llama fleece colour (--loci E=E/e,A=A/a): MC1R Extension (E coloured; e/e = recessive WHITE regardless of ASIP -- the camelid twist) + ASIP Agouti (A functional -> fawn/agouti > a loss-of-function -> black). Via the shared engine",
         "validation": "deterministic curated OMIA epistatic rule (MC1R E/e camelid recessive-white; ASIP fawn-vs-black); reference-integrity biology-checked incl. the ee-recessive-white anchor (white regardless of ASIP). KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
     },
+    "pigeoncolor": {
+        "summary": "PIGEON plumage colour (--loci B=BA/B+,E=E+/e,D=D/d,C=C/+ [--sex female]): base ash-red/blue/brown (B/TYRP1, Z-linked) + recessive-red (E/SOX10, epistatic) + dilute dun/khaki/ash-yellow (D/SLC45A2, Z-linked) + wing pattern T-check/checker/bar/barless (C/NDP). One of the best-characterised colour systems in any organism (Shapiro lab). A 2nd BIRD cell; B/D Z-linked -> FEMALE (ZW) hemizygous",
+        "validation": "deterministic curated epistatic rule; molecularly-confirmed causal genes (TYRP1 B-locus Domyan 2014; SOX10 recessive-red; SLC45A2 dilute; NDP wing-pattern Vickrey 2018 eLife). reference-integrity biology-checked incl. anchors a naive rule mis-calls: (1) SOX10 e/e is RED regardless of the TYRP1 base; (2) Z-linked reversed hemizygosity (FEMALE is ZW). KNOWLEDGE_BASELINE: no free per-individual validation substrate. Calls base+dilute+wing-pattern not modifiers/shade. Hobby/livestock, NOT human/forensic",
+    },
     "plumage": {
         "summary": "CHICKEN plumage colour (--loci E=E/E,B=B/b+,S=S/s+,I=i+/i+,BL=bl+/bl+ [--sex male]): eumelanin canvas (extended-black/birchen/wheaten/partridge via E/MC1R) + Z-LINKED barring (B/CDKN2A) + Z-linked silver/gold (S/SLC45A2) + dominant white (I/PMEL17) + blue/splash (Bl) + lavender (MLPH) + recessive white (TYR). The B/S loci are Z-linked so a FEMALE (ZW) is HEMIZYGOUS (reversed from mammals). A 4th-organism (bird) visible-trait cell",
         "validation": "deterministic epistatic curated-catalog rule; OMIA-sourced causal variants (MC1R E-locus series OMIA 000374-9031; CDKN2A sex-linked barring OMIA 000102-9031 Hellstrom/Schwochow; SLC45A2 silver OMIA 000370-9031 Gunnarsson; PMEL17 dominant white OMIA 000373-9031 Kerje; Bl blue; MLPH lavender). reference-integrity biology-checked incl. the epistasis anchors a naive rule mis-calls: (1) EXTENSION is the canvas (barring/blue barely show on a wheaten bird); (2) Z-LINKED barring/silver with REVERSED hemizygosity (the FEMALE is ZW-hemizygous, mirror of cat's X-linked orange); (3) dominant/recessive white mask eumelanin. KNOWLEDGE_BASELINE: no free per-individual validation substrate. Calls canvas+major modifiers not fine pattern/lacing/pencilling. Livestock, NOT human/forensic",
@@ -243,6 +247,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "plumage":
         from dna_decode.pigment.chicken_plumage_cli import main as plumage_main
         return plumage_main(rest)
+    if trait == "pigeoncolor":
+        from dna_decode.pigment.pigeon_plumage_cli import main as pigeon_main
+        return pigeon_main(rest)
     if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor", "goatcolor", "alpacacolor",
                  "guineapigcolor", "foxcolor", "donkeycolor", "buffalocolor"):
         from dna_decode.pigment import mammal_color_cli as mcc
