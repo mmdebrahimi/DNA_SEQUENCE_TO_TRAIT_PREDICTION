@@ -1,0 +1,40 @@
+{
+  "gpu": "Tesla T4",
+  "transformers": "4.44.2",
+  "eval_bp": 1200,
+  "n_tokens_target": 200,
+  "models": {
+    "NT-v2-100M": {
+      "nt_per_base_nll": 1.4635,
+      "markov_per_base_nll_bestk": 1.3561,
+      "markov_best_k": 2,
+      "PRIMARY_nll_delta_markov_minus_nt": -0.1074,
+      "nt_marginal_accuracy": 0.3267,
+      "markov_accuracy": 0.2933,
+      "n_bases": 1200
+    },
+    "NT-v2-500M": {
+      "nt_per_base_nll": 1.0668,
+      "markov_per_base_nll_bestk": 1.3561,
+      "markov_best_k": 2,
+      "PRIMARY_nll_delta_markov_minus_nt": 0.2893,
+      "nt_marginal_accuracy": 0.5083,
+      "markov_accuracy": 0.2933,
+      "n_bases": 1200
+    },
+    "NT-2.5B": {
+      "nt_per_base_nll": 0.9745,
+      "markov_per_base_nll_bestk": 1.3561,
+      "markov_best_k": 2,
+      "PRIMARY_nll_delta_markov_minus_nt": 0.3816,
+      "nt_marginal_accuracy": 0.5525,
+      "markov_accuracy": 0.2933,
+      "n_bases": 1200
+    }
+  },
+  "_dtype": {
+    "NT-v2-100M": "torch.float32",
+    "NT-v2-500M": "torch.float32",
+    "NT-2.5B": "torch.float16"
+  }
+}
