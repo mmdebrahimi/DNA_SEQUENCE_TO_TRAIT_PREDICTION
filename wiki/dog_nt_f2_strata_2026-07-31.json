@@ -1,0 +1,24 @@
+{
+  "model": "InstaDeepAI/nucleotide-transformer-v2-500m-multi-species",
+  "gpu": "Tesla T4",
+  "transformers": "4.44.2",
+  "strata": {
+    "coding": {
+      "n_bases": 3816,
+      "nt_per_base_nll": 1.5865,
+      "markov_per_base_nll_bestk": 1.3588,
+      "markov_best_k": 3,
+      "nll_delta_markov_minus_nt": -0.2278,
+      "nt_marginal_accuracy": 0.2906
+    },
+    "intergenic": {
+      "n_bases": 36780,
+      "nt_per_base_nll": 1.3708,
+      "markov_per_base_nll_bestk": 1.3184,
+      "markov_best_k": 3,
+      "nll_delta_markov_minus_nt": -0.0524,
+      "nt_marginal_accuracy": 0.4082
+    }
+  },
+  "structured_signal_delta_gap": -0.1754
+}
