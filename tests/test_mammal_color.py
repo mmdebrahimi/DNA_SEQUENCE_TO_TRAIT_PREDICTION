@@ -28,7 +28,26 @@ def test_all_catalogs_reference_integrity():
 
 
 def test_organisms_present():
-    assert set(MAMMAL_CATALOGS) == {"rabbit", "mouse", "cattle", "pig", "sheep", "goat", "alpaca"}
+    assert set(MAMMAL_CATALOGS) == {"rabbit", "mouse", "cattle", "pig", "sheep", "goat", "alpaca",
+                                    "guineapig", "fox", "donkey", "buffalo"}
+
+
+def test_fox_non_epistatic_silver():
+    # Alaska Silver (EA dominant) AND Standard Silver (aa recessive) both -> black via DIFFERENT loci
+    assert call_mammal_color(MAMMAL_CATALOGS["fox"], {"E": "EA/E+", "A": "A/A"}).coat_color == "black"
+    assert call_mammal_color(MAMMAL_CATALOGS["fox"], {"E": "E+/E+", "A": "a/a"}).coat_color == "black"
+    assert call_mammal_color(MAMMAL_CATALOGS["fox"], {"E": "E+/E+", "A": "A/A"}).pigment_type == "phaeomelanin"  # wild red
+
+
+def test_buffalo_line1_dominant_white():
+    assert call_mammal_color(MAMMAL_CATALOGS["buffalo"], {"A": "AW/a"}).pattern == "white/tan"
+    assert call_mammal_color(MAMMAL_CATALOGS["buffalo"], {"A": "a/a"}).coat_color == "black"
+
+
+def test_donkey_light_points():
+    assert call_mammal_color(MAMMAL_CATALOGS["donkey"], {"E": "E+/E+", "A": "a/a"}).coat_color == "black"  # no light points
+    assert call_mammal_color(MAMMAL_CATALOGS["donkey"], {"E": "E+/E+", "A": "A/a"}).pattern == "agouti"    # grey-dun light points
+    assert call_mammal_color(MAMMAL_CATALOGS["donkey"], {"A": "A/A", "C": "c/c", "E": "E+/E+"}).is_white_masked  # Asinara albino
 
 
 def test_goat_asip():
@@ -89,7 +108,9 @@ def test_cli_json_and_dispatch(capsys):
     # dispatch through the unified CLI for each organism
     for trait, fn_name in [("rabbitcolor", "rabbit_main"), ("mousecolor", "mouse_main"),
                            ("cattlecolor", "cattle_main"), ("pigcolor", "pig_main"), ("sheepcolor", "sheep_main"),
-                           ("goatcolor", "goat_main"), ("alpacacolor", "alpaca_main")]:
+                           ("goatcolor", "goat_main"), ("alpacacolor", "alpaca_main"),
+                           ("guineapigcolor", "guineapig_main"), ("foxcolor", "fox_main"),
+                           ("donkeycolor", "donkey_main"), ("buffalocolor", "buffalo_main")]:
         captured = {}
         orig = getattr(mcc, fn_name)
         setattr(mcc, fn_name, lambda argv, _c=captured: (_c.update(argv=argv) or 0))

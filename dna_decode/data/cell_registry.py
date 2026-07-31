@@ -682,6 +682,64 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free alpaca cohort. KIT grey/blue-eyed-white (open question) ABSTAINs",
     ),
     CellContract(
+        cell_id="typing:guineapig:guineapigcolor", track="typing", route="dna-guineapigcolor",
+        organism="Cavia_porcellus", target="guineapigcolor",
+        claim="guinea pig coat colour via the classic A/B/C/D/E series (ASIP agouti/non-agouti x TYRP1 brown x "
+              "TYR x MLPH dilute x MC1R recessive-red), resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (ASIP OMIA 000201-10141 c.181delTTCA non-agouti; MC1R "
+                          "OMIA 001199-10141 e recessive-red Vidal 2018; TYRP1/TYR/MLPH classical) via the shared "
+                          "engine. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free guinea pig cohort. White spotting (OMIA 000214) ABSTAINs",
+    ),
+    CellContract(
+        cell_id="typing:fox:foxcolor", track="typing", route="dna-foxcolor",
+        organism="Vulpes_vulpes", target="foxcolor",
+        claim="red/silver fox coat colour via the NON-epistatic silver-fox system — MC1R EA Alaska-Silver "
+              "dominant-black + ASIP wild-red vs a Standard-Silver recessive-black (both routes reach dark)",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (MC1R EA Cys125Arg gain-of-function; ASIP OMIA 000201-9627 "
+                          "Standard-Silver 166-nt exon-1 deletion; non-epistatic, Vage 1997) via the shared engine; "
+                          "reference_integrity_ok pins Alaska + Standard silver both -> black via different loci, "
+                          "wild red. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free fox cohort. Platinum (KIT) + other farm morphs ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:donkey:donkeycolor", track="typing", route="dna-donkeycolor",
+        organism="Equus_asinus", target="donkeycolor",
+        claim="donkey coat colour via MC1R (e recessive-red) + ASIP (light-points/grey-dun vs solid-black-no-light-"
+              "points) + TYR (Asinara white albinism), resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (MC1R OMIA 001199-9793 e c.629T>C Abitbol 2014; ASIP OMIA "
+                          "000201-9793 c.349T>C light-points Sun 2017; TYR Asinara albino c.604C>G) via the shared "
+                          "engine. ASIP heterozygote variability -> one residual gene unidentified (documented). "
+                          "KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free donkey cohort. KIT dominant-white/SLC45A2-cream/the residual ASIP-het gene ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:buffalo:buffalocolor", track="typing", route="dna-buffalocolor",
+        organism="Bubalus_bubalis", target="buffalocolor",
+        claim="water buffalo coat colour via ASIP A^W DOMINANT white (a 2809-bp LINE-1 insertion causing 10x ASIP "
+              "overexpression) > a black; MC1R is monomorphic in buffalo so ASIP is the sole driver",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA locus (ASIP OMIA 000213-89462 LINE-1 dominant-white, Liang 2020 "
+                          "-- convergent with cattle; MC1R monomorphic per Cruz 2020) via the shared engine. "
+                          "KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal gene (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free buffalo cohort. KIT white-spotting (OMIA 001737) + the disputed ASIP-black SNP ABSTAIN",
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "

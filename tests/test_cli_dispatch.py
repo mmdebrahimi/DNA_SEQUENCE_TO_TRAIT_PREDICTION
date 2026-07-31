@@ -79,7 +79,8 @@ def test_traits_registry_matches_console_entries():
                                "forward", "pigment", "flowering", "inverse", "phage", "kleb", "essentiality",
                                "metabolic", "coatcolor", "morphology", "horsecolor", "catcolor", "plumage",
                                "rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor",
-                               "goatcolor", "alpacacolor"}
+                               "goatcolor", "alpacacolor", "guineapigcolor", "foxcolor", "donkeycolor",
+                               "buffalocolor"}
     # "decode" (added 2026-07-23) is the input-aware ROUTER analysis -- handled inline in cli.py (no
     # delegate module), so it is an ANALYSES entry but not a console script. Conscious addition.
     assert set(uni.ANALYSES) == {"decode", "concordance", "profile", "coloc"}

@@ -47,6 +47,7 @@ class Locus:
     albino_allele: str | None = None         # albino: allele whose homozygote -> white
     white_alleles: frozenset = frozenset()   # agouti: dominant-white/tan alleles (sheep A^Wt)
     self_allele: str | None = None           # agouti: non-agouti / self (black) allele
+    pheomelanin_alleles: frozenset = frozenset()  # agouti: dominant allele -> phaeomelanin red/fawn (fox/alpaca)
     recessive_allele: str | None = None      # dilute/brown/pink: the recessive (b/d/p) allele
     dilution_alleles: frozenset = frozenset()  # dilution_incomplete: PMEL dosage alleles
     dominant_allele: str | None = None       # dominant_white: the masking allele (KIT I)
@@ -177,6 +178,12 @@ def call_mammal_color(cat: MammalCatalog, loci_genotypes: dict[str, str]) -> Mam
                 notes.append(f"{s} dominant-white/tan allele {adom!r} ({loc.gene}) -> white/tan")
                 return MammalColorCall("white/tan (dominant agouti)", "phaeomelanin", None, "white/tan", [],
                                        False, "high", [], per, cat.organism, rule, notes)
+            if adom in loc.pheomelanin_alleles:          # fox/alpaca: functional ASIP -> phaeomelanin (red/fawn)
+                pigment = "phaeomelanin"
+                notes.append(f"{s} functional-agouti allele {adom!r} ({loc.gene}) -> phaeomelanin (red/fawn); "
+                             "a/a loss-of-function -> black")
+                pattern = "agouti"
+                break
             if loc.self_allele and geno[s] == (loc.self_allele, loc.self_allele):
                 pattern = "self"                          # non-agouti -> solid eumelanin
             elif adom == loc.alleles[0]:
@@ -358,17 +365,86 @@ ALPACA = MammalCatalog(
         # camelid model: E/_ coloured (black if aa, fawn/agouti if A_); e/e -> WHITE regardless of ASIP.
         "E": Locus("E", "MC1R", "extension", ("E", "e"), "alpaca/llama E (MC1R): E coloured > e; e/e = recessive WHITE",
                    recessive_white_allele="e"),
-        "A": Locus("A", "ASIP", "agouti", ("A", "a"), "alpaca Agouti (ASIP): A functional -> fawn/agouti (pheo) > "
-                   "a loss-of-function -> black (eumelanin)", self_allele="a"),
+        "A": Locus("A", "ASIP", "agouti", ("A", "a"), "alpaca Agouti (ASIP): A functional -> fawn (phaeomelanin) > "
+                   "a loss-of-function -> black (eumelanin)", self_allele="a", pheomelanin_alleles=frozenset({"A"})),
     },
     anchors=(
         ("ee recessive white", {"E": "e/e", "A": "a/a"}, lambda c: c.is_white_masked),
         ("black (E-, aa)", {"E": "E/E", "A": "a/a"}, lambda c: c.coat_color == "black"),
-        ("fawn/agouti (E-, A_)", {"E": "E/E", "A": "A/a"}, lambda c: c.pattern == "agouti"),
+        ("fawn (E-, A_)", {"E": "E/E", "A": "A/a"}, lambda c: c.pigment_type == "phaeomelanin"),
+    ),
+)
+
+GUINEAPIG = MammalCatalog(
+    "Cavia_porcellus", "guineapig",
+    {
+        "A": _A_series("ASIP", ("A", "a"), "a", src="guinea pig A (ASIP, OMIA 000201-10141): A light-bellied "
+                       "agouti > a non-agouti black (c.181_184delTTCA, Lai 2019)"),
+        "B": Locus("B", "TYRP1", "brown", ("B", "b"), "guinea pig B (TYRP1): b/b brown (cinnamon-agouti with A)",
+                   recessive_allele="b"),
+        "C": Locus("C", "TYR", "albino", ("C", "c"), "guinea pig C (TYR): reduced-pigment series; c/c depigmented",
+                   albino_allele="c"),
+        "D": Locus("D", "MLPH", "dilute", ("D", "d"), "guinea pig dilute factor: d/d dilute", recessive_allele="d"),
+        "E": Locus("E", "MC1R", "extension", ("E", "e"), "guinea pig E (MC1R, OMIA 001199-10141): E > e recessive "
+                   "red (Vidal 2018: L250Q / 2760-bp deletion)", red_allele="e"),
+    },
+    anchors=(
+        ("non-agouti black", {"A": "a/a", "B": "B/B", "C": "C/C", "D": "D/D", "E": "E/E"}, lambda c: c.coat_color == "black"),
+        ("golden agouti", {"A": "A/A", "B": "B/B", "C": "C/C", "E": "E/E"}, lambda c: c.pattern == "agouti"),
+        ("e/e red", {"A": "a/a", "E": "e/e"}, lambda c: c.pigment_type == "phaeomelanin"),
+        ("c/c depigmented", {"A": "A/A", "C": "c/c", "E": "E/E"}, lambda c: c.is_white_masked),
+    ),
+)
+
+FOX = MammalCatalog(
+    "Vulpes_vulpes", "fox",
+    {
+        "E": Locus("E", "MC1R", "extension", ("EA", "E+"), "fox E (MC1R): EA Alaska Silver dominant-black "
+                   "(Cys125Arg gain-of-function) > E+ wild red (Vage 1997)", black_alleles=frozenset({"EA"})),
+        "A": Locus("A", "ASIP", "agouti", ("A", "a"), "fox A (ASIP, OMIA 000201-9627): A wild -> red (phaeomelanin) "
+                   "> a Standard Silver (recessive black, 166-nt exon-1 deletion; non-epistatic with E, Vage 1997)",
+                   self_allele="a", pheomelanin_alleles=frozenset({"A"})),
+    },
+    anchors=(
+        ("Alaska Silver (EA dominant black)", {"E": "EA/E+", "A": "A/A"}, lambda c: c.coat_color == "black"),
+        ("Standard Silver (aa recessive black)", {"E": "E+/E+", "A": "a/a"}, lambda c: c.coat_color == "black"),
+        ("wild red", {"E": "E+/E+", "A": "A/a"}, lambda c: c.pigment_type == "phaeomelanin"),
+    ),
+)
+
+DONKEY = MammalCatalog(
+    "Equus_asinus", "donkey",
+    {
+        "E": Locus("E", "MC1R", "extension", ("E+", "e"), "donkey E (MC1R, OMIA 001199-9793): E+ > e recessive red "
+                   "(c.629T>C p.Met210Thr, Abitbol 2014)", red_allele="e"),
+        "A": _A_series("ASIP", ("A", "a"), "a", src="donkey A (ASIP, OMIA 000201-9793): A light-points/grey-dun "
+                       "(T-allele) > a solid-black/no-light-points (c.349T>C p.Cys117Arg, Sun 2017)"),
+        "C": Locus("C", "TYR", "albino", ("C", "c"), "donkey C (TYR): c/c Asinara white albinism (c.604C>G "
+                   "p.His202Asp, recessive)", albino_allele="c"),
+    },
+    anchors=(
+        ("grey-dun (light points)", {"E": "E+/E+", "A": "A/a"}, lambda c: c.pattern == "agouti"),
+        ("solid black (no light points)", {"E": "E+/E+", "A": "a/a"}, lambda c: c.coat_color == "black"),
+        ("e/e red", {"A": "a/a", "E": "e/e"}, lambda c: c.pigment_type == "phaeomelanin"),
+        ("Asinara albino", {"A": "A/A", "C": "c/c", "E": "E+/E+"}, lambda c: c.is_white_masked),
+    ),
+)
+
+BUFFALO = MammalCatalog(
+    "Bubalus_bubalis", "buffalo",
+    {
+        # MC1R is monomorphic in buffalo; ASIP LINE-1 insertion -> DOMINANT white (10x ASIP overexpression).
+        "A": Locus("A", "ASIP", "agouti", ("AW", "a"), "water buffalo A (ASIP, OMIA 000213-89462): A^W dominant "
+                   "WHITE (2809-bp LINE-1 insertion -> ASIP overexpression, Liang 2020) > a black/wild",
+                   white_alleles=frozenset({"AW"}), self_allele="a"),
+    },
+    anchors=(
+        ("dominant white (LINE-1)", {"A": "AW/a"}, lambda c: c.pattern == "white/tan"),
+        ("black/dark (aa)", {"A": "a/a"}, lambda c: c.coat_color == "black"),
     ),
 )
 
 MAMMAL_CATALOGS: dict[str, MammalCatalog] = {
     "rabbit": RABBIT, "mouse": MOUSE, "cattle": CATTLE, "pig": PIG, "sheep": SHEEP,
-    "goat": GOAT, "alpaca": ALPACA,
+    "goat": GOAT, "alpaca": ALPACA, "guineapig": GUINEAPIG, "fox": FOX, "donkey": DONKEY, "buffalo": BUFFALO,
 }

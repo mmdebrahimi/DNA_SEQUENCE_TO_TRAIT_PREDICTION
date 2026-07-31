@@ -111,6 +111,22 @@ TRAITS = {
         "summary": "SHEEP coat colour (--loci A=AWt/a,E=ED/E+): ASIP Agouti (A^Wt dominant white/tan from a 190kb duplication > a recessive black) + MC1R Extension (ED dominant-black overrides ASIP white). Via the shared engine",
         "validation": "deterministic curated OMIA epistatic rule (OMIA 000201-9940 agouti; ASIP dominant-white duplication vs recessive-black LOF; MC1R ED dominant black); reference-integrity biology-checked incl. ED-overrides-ASIP-white. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
     },
+    "guineapigcolor": {
+        "summary": "GUINEA PIG coat colour (--loci A=A/a,B=B/b,C=C/C,D=D/d,E=E/e): the classic A/B/C/D/E series (ASIP agouti/non-agouti black c.181delTTCA / TYRP1 brown / TYR / MLPH dilute / MC1R e recessive-red). Via the shared engine (OMIA 000201-10141, 001199-10141)",
+        "validation": "deterministic curated OMIA epistatic rule; reference-integrity biology-checked. KNOWLEDGE_BASELINE. Lab/companion animal, NOT human/forensic",
+    },
+    "foxcolor": {
+        "summary": "FOX (red/silver) coat colour (--loci E=EA/E+,A=A/a): the non-epistatic silver-fox system -- MC1R EA Alaska-Silver dominant-black (Cys125Arg gain) + ASIP A wild-red / a Standard-Silver recessive-black (both routes -> dark). Via the shared engine (OMIA 000201-9627)",
+        "validation": "deterministic curated OMIA rule (Vage 1997 non-epistatic ASIP x MC1R); reference-integrity biology-checked (Alaska + Standard silver both black via different loci; wild red). KNOWLEDGE_BASELINE. NOT human/forensic",
+    },
+    "donkeycolor": {
+        "summary": "DONKEY coat colour (--loci E=E+/e,A=A/a,C=C/c): MC1R e recessive-red (c.629T>C, Abitbol 2014) + ASIP light-points/grey-dun vs solid-black-no-light-points (c.349T>C, Sun 2017) + TYR Asinara-white albinism. Via the shared engine (OMIA 000201/001199-9793)",
+        "validation": "deterministic curated OMIA rule; reference-integrity biology-checked (grey-dun light-points / solid-black / red / Asinara albino). ASIP heterozygote variability -> a residual gene is unidentified (documented). KNOWLEDGE_BASELINE. NOT human/forensic",
+    },
+    "buffalocolor": {
+        "summary": "WATER BUFFALO coat colour (--loci A=AW/a): ASIP A^W DOMINANT white via a 2809-bp LINE-1 insertion (10x ASIP overexpression, Liang 2020) > a black. MC1R is monomorphic in buffalo so ASIP is the sole driver. Via the shared engine (OMIA 000213-89462)",
+        "validation": "deterministic curated OMIA rule (LINE-1 ASIP dominant-white; convergent with cattle); reference-integrity biology-checked. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
     "goatcolor": {
         "summary": "GOAT coat colour (--loci A=AWt/a,B=B/b): ASIP Agouti (A^Wt dominant white/tan, the CNV-driven many-pattern hub > a recessive nonagouti black) + TYRP1 brown (Copperneck). Via the shared mammalian engine (OMIA 000201-9925)",
         "validation": "deterministic curated OMIA epistatic rule (ASIP dominant-white/tan vs recessive-black; TYRP1 brown); reference-integrity biology-checked. Goat MC1R association is incomplete in the literature so ASIP is the modeled driver. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
@@ -227,11 +243,13 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "plumage":
         from dna_decode.pigment.chicken_plumage_cli import main as plumage_main
         return plumage_main(rest)
-    if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor", "goatcolor", "alpacacolor"):
+    if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor", "goatcolor", "alpacacolor",
+                 "guineapigcolor", "foxcolor", "donkeycolor", "buffalocolor"):
         from dna_decode.pigment import mammal_color_cli as mcc
         return {"rabbitcolor": mcc.rabbit_main, "mousecolor": mcc.mouse_main, "cattlecolor": mcc.cattle_main,
                 "pigcolor": mcc.pig_main, "sheepcolor": mcc.sheep_main, "goatcolor": mcc.goat_main,
-                "alpacacolor": mcc.alpaca_main}[trait](rest)
+                "alpacacolor": mcc.alpaca_main, "guineapigcolor": mcc.guineapig_main, "foxcolor": mcc.fox_main,
+                "donkeycolor": mcc.donkey_main, "buffalocolor": mcc.buffalo_main}[trait](rest)
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)

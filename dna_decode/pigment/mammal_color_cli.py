@@ -100,6 +100,22 @@ def alpaca_main(argv=None) -> int:
     return _main("alpaca", argv)
 
 
+def guineapig_main(argv=None) -> int:
+    return _main("guineapig", argv)
+
+
+def fox_main(argv=None) -> int:
+    return _main("fox", argv)
+
+
+def donkey_main(argv=None) -> int:
+    return _main("donkey", argv)
+
+
+def buffalo_main(argv=None) -> int:
+    return _main("buffalo", argv)
+
+
 if __name__ == "__main__":
     import sys as _s
     org = _s.argv[1] if len(_s.argv) > 1 else "rabbit"
