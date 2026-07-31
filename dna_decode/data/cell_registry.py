@@ -586,6 +586,74 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "lacing, and comb/feather-structure genes ABSTAIN by design"),
     ),
     CellContract(
+        cell_id="typing:rabbit:rabbitcolor", track="typing", route="dna-rabbitcolor",
+        organism="Oryctolagus_cuniculus", target="rabbitcolor",
+        claim="rabbit coat colour via the textbook A-E mammalian series (agouti/tan/self x black/chocolate x "
+              "chinchilla/Himalayan/albino x dense/dilute x extension/steel/red) resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA A-E series (A/ASIP, B/TYRP1, C/TYR, D/MLPH, E/MC1R) via the "
+                          "shared mammalian-colour engine; reference_integrity_ok pins albino-masks / e-e-red-hides-"
+                          "agouti / Ed-self-black. KNOWLEDGE_BASELINE — no free per-individual validation substrate"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free rabbit genotype+observed-colour cohort. Spotting (En/Du) ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:mouse:mousecolor", track="typing", route="dna-mousecolor",
+        organism="Mus_musculus", target="mousecolor",
+        claim="mouse coat colour via the foundational pigment loci (agouti x brown x albino x dilute x pink-eyed "
+              "dilution x extension) resolved epistatically — the century-old model of mammalian colour genetics",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (A/ASIP, B/Tyrp1, C/Tyr, D/Myo5a, P/Oca2, E/Mc1r) via the "
+                          "shared engine; reference_integrity_ok pins albino-masks / e-e-yellow. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free mouse genotype+colour cohort. Spotting (s/piebald) ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:cattle:cattlecolor", track="typing", route="dna-cattlecolor",
+        organism="Bos_taurus", target="cattlecolor",
+        claim="cattle coat colour via MC1R Extension (dominant-black/wild/recessive-red) + incompletely-dominant "
+              "PMEL/SILV dilution (Charolais/Highland -> dun/silver), resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (MC1R ED>E+>e; PMEL Dc/Dh dosage dilution) via the shared "
+                          "engine; reference_integrity_ok pins ED-dominant-black / e-e-red / PMEL-incomplete-dominant. "
+                          "KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free cattle cohort. Roan (KITLG)/spotting (MITF)/COPA-dom-red ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:pig:pigcolor", track="typing", route="dna-pigcolor",
+        organism="Sus_scrofa", target="pigcolor",
+        claim="pig coat colour via KIT Dominant-White (epistatic, masks all) + MC1R Extension (dominant-black/wild/"
+              "recessive-red), resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (KIT dominant-white; MC1R OMIA 001199-9823 ED>E+>e) via the "
+                          "shared engine; reference_integrity_ok pins KIT-masks / ED-black / e-e-red. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free pig cohort. KIT belt/patch/roan sub-alleles ABSTAIN",
+    ),
+    CellContract(
+        cell_id="typing:sheep:sheepcolor", track="typing", route="dna-sheepcolor",
+        organism="Ovis_aries", target="sheepcolor",
+        claim="sheep coat colour via ASIP Agouti (A^Wt dominant white/tan from a 190kb duplication > a recessive "
+              "black) + MC1R Extension (dominant-black overrides ASIP white), resolved epistatically",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="curated_epistatic_catalog_shared_engine",
+        validation_slice=("deterministic curated OMIA loci (ASIP OMIA 000201-9940 dominant-white-duplication vs "
+                          "recessive-black LOF; MC1R ED M73K/D121N) via the shared engine; reference_integrity_ok pins "
+                          "ED-overrides-ASIP-white / dominant-white-tan / recessive-black. KNOWLEDGE_BASELINE"),
+        label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="none", incoming_data_gate="n/a",
+        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free sheep cohort. Badgerface/spotting ASIP sub-alleles ABSTAIN",
+    ),
+    CellContract(
         cell_id="typing:bacteriophage:phage", track="typing", route="dna-phage",
         organism="bacteriophage", target="phage",
         claim="bacteriophage host-RECEPTOR class (FhuA/BtuB/LPS_core/ECA/NfrA/LptD/...) from a phage genome "

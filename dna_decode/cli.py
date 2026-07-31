@@ -91,6 +91,26 @@ TRAITS = {
         "summary": "DOG body SIZE + EAR type (--dosages IGF1=2,HMGA2=2,STC2=1,GHR=1,EAR=2 | --vcf dog.vcf): relative size rank (toy/small..large/giant) from a 4-locus additive polygenic score (IGF1/HMGA2/STC2/GHR) + ear type (MSRB3 erect/drop) — the pinned + Darwin's-Ark-VALIDATED quantitative/visible-trait sibling of `coatcolor`. Input is per-locus big-allele DOSAGE (0/1/2) OR a canFam4 dog genome VCF (pinned SNPs called by coordinate); coat length/curl + leg length + the 4 rerun morph traits ABSTAIN",
         "validation": "MEASURED relative-signal on the free Darwin's Ark cohort (Dryad doi:10.5061/dryad.83bk3jb4r, canFam4 imputed, N=3277): body-size polygenic score r=+0.619 (R2=0.383) vs owner-reported height Q121; ear MSRB3 lead chr10:8612500 r=+0.543 vs Q125, cleanly resolved from the HMGA2 body-size SNP (the Morrill 2022 confound). Causal SNP coords OMIA/lit canFam3.1 -> canFam4 liftover -> .bim-verified -> functionally validated (unlike the coat indels, the body-size SNPs ARE in-panel). RELATIVE rank NOT absolute inches; ear erect/drop naming is MSRB3-literature-anchored (medium confidence). Companion-animal, NOT human/forensic. See wiki/dog_morphology_darwins_ark_validated_2026-07-30 + dog_body_size_darwins_ark_pinned_2026-07-30",
     },
+    "rabbitcolor": {
+        "summary": "RABBIT coat colour (--loci A=A/a,B=B/b,C=C/C,D=D/d,E=E/e): the textbook A-E mammalian series — agouti/tan/self (A/ASIP) x black/chocolate (B/TYRP1) x full-colour/chinchilla/Himalayan/albino (C/TYR) x dense/dilute (D/MLPH) x extension/steel/red (E/MC1R). Via the shared mammalian-colour engine",
+        "validation": "deterministic curated OMIA epistatic rule (classic rabbit A-E series); reference-integrity biology-checked incl. anchors a naive rule mis-calls (albino c/c masks all; e/e red hides agouti; Ed self-black). KNOWLEDGE_BASELINE: no free per-individual validation substrate. Companion/lab-animal, NOT human/forensic",
+    },
+    "mousecolor": {
+        "summary": "MOUSE coat colour (--loci A=a/a,B=b/b,C=C/C,D=D/d,P=p/p,E=E/E): the FOUNDATIONAL mammalian pigment loci — agouti (A/ASIP) x brown (B/Tyrp1) x albino (C/Tyr) x dilute (D/Myo5a) x pink-eyed dilution (P/Oca2) x extension (E/Mc1r). Via the shared engine",
+        "validation": "deterministic curated OMIA epistatic rule (the century-old mouse pigment genetics); reference-integrity biology-checked (albino c/c masks; e/e yellow hides agouti). KNOWLEDGE_BASELINE. Lab-animal, NOT human/forensic",
+    },
+    "cattlecolor": {
+        "summary": "CATTLE coat colour (--loci E=ED/e,PMEL=Dc/n): base black/red/wild via MC1R Extension (ED dominant-black > E+ > e recessive-red) + incompletely-dominant PMEL/SILV dilution (Charolais Dc / Highland Dh -> dun/silver). Via the shared engine",
+        "validation": "deterministic curated OMIA epistatic rule (MC1R ED/E+/e; PMEL Dc/Dh dosage dilution); reference-integrity biology-checked (ED dominant black; e/e red; PMEL incomplete-dominant). KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
+    "pigcolor": {
+        "summary": "PIG coat colour (--loci KIT=I/i+,E=ED/e): KIT Dominant-White (I, epistatic — masks all colour) + MC1R Extension (ED dominant-black > E+ > e recessive-red). Via the shared engine (OMIA 001199-9823 extension)",
+        "validation": "deterministic curated OMIA epistatic rule (KIT dominant white epistatic over MC1R E-series); reference-integrity biology-checked (KIT I masks; ED black; e/e red). KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
+    "sheepcolor": {
+        "summary": "SHEEP coat colour (--loci A=AWt/a,E=ED/E+): ASIP Agouti (A^Wt dominant white/tan from a 190kb duplication > a recessive black) + MC1R Extension (ED dominant-black overrides ASIP white). Via the shared engine",
+        "validation": "deterministic curated OMIA epistatic rule (OMIA 000201-9940 agouti; ASIP dominant-white duplication vs recessive-black LOF; MC1R ED dominant black); reference-integrity biology-checked incl. ED-overrides-ASIP-white. KNOWLEDGE_BASELINE. Livestock, NOT human/forensic",
+    },
     "plumage": {
         "summary": "CHICKEN plumage colour (--loci E=E/E,B=B/b+,S=S/s+,I=i+/i+,BL=bl+/bl+ [--sex male]): eumelanin canvas (extended-black/birchen/wheaten/partridge via E/MC1R) + Z-LINKED barring (B/CDKN2A) + Z-linked silver/gold (S/SLC45A2) + dominant white (I/PMEL17) + blue/splash (Bl) + lavender (MLPH) + recessive white (TYR). The B/S loci are Z-linked so a FEMALE (ZW) is HEMIZYGOUS (reversed from mammals). A 4th-organism (bird) visible-trait cell",
         "validation": "deterministic epistatic curated-catalog rule; OMIA-sourced causal variants (MC1R E-locus series OMIA 000374-9031; CDKN2A sex-linked barring OMIA 000102-9031 Hellstrom/Schwochow; SLC45A2 silver OMIA 000370-9031 Gunnarsson; PMEL17 dominant white OMIA 000373-9031 Kerje; Bl blue; MLPH lavender). reference-integrity biology-checked incl. the epistasis anchors a naive rule mis-calls: (1) EXTENSION is the canvas (barring/blue barely show on a wheaten bird); (2) Z-LINKED barring/silver with REVERSED hemizygosity (the FEMALE is ZW-hemizygous, mirror of cat's X-linked orange); (3) dominant/recessive white mask eumelanin. KNOWLEDGE_BASELINE: no free per-individual validation substrate. Calls canvas+major modifiers not fine pattern/lacing/pencilling. Livestock, NOT human/forensic",
@@ -199,6 +219,10 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "plumage":
         from dna_decode.pigment.chicken_plumage_cli import main as plumage_main
         return plumage_main(rest)
+    if trait in ("rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor"):
+        from dna_decode.pigment import mammal_color_cli as mcc
+        return {"rabbitcolor": mcc.rabbit_main, "mousecolor": mcc.mouse_main, "cattlecolor": mcc.cattle_main,
+                "pigcolor": mcc.pig_main, "sheepcolor": mcc.sheep_main}[trait](rest)
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)
