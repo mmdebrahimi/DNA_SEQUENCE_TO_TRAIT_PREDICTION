@@ -41,7 +41,7 @@ def main(argv=None) -> int:
     pidx = {s: p_ids.index(s) for s in common}
     print(f"aligned {len(common)} segregants x {X.shape[1]} markers", flush=True)
 
-    wanted = [t.strip() for t in args.traits.split(",") if t.strip() in traits]
+    wanted = list(traits) if args.traits == "all" else [t.strip() for t in args.traits.split(",") if t.strip() in traits]
     rows = []
     for t in wanted:
         y = P[[pidx[s] for s in common], traits.index(t)]

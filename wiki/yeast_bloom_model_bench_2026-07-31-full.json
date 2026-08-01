@@ -1,0 +1,335 @@
+{
+  "substrate": "Bloom_2013_BYxRM_yeast_cross",
+  "n_segregants": 1008,
+  "n_markers": 1453,
+  "question": "does nonlinear (gbm) beat linear ridge? = optimize-the-model",
+  "n_traits": 46,
+  "gbm_wins": 26,
+  "ridge_wins": 9,
+  "mean_delta_gbm_minus_ridge": 0.0227,
+  "median_delta": 0.0134,
+  "traits": [
+    {
+      "trait": "Cadmium_Chloride",
+      "ridge_r": 0.6929,
+      "gbm_r": 0.7876,
+      "delta_gbm_minus_ridge": 0.0947,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Caffeine",
+      "ridge_r": 0.4627,
+      "gbm_r": 0.4723,
+      "delta_gbm_minus_ridge": 0.0096,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Calcium_Chloride",
+      "ridge_r": 0.5001,
+      "gbm_r": 0.4883,
+      "delta_gbm_minus_ridge": -0.0118,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Cisplatin",
+      "ridge_r": 0.5161,
+      "gbm_r": 0.5341,
+      "delta_gbm_minus_ridge": 0.018,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Cobalt_Chloride",
+      "ridge_r": 0.6773,
+      "gbm_r": 0.66,
+      "delta_gbm_minus_ridge": -0.0173,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Congo_red",
+      "ridge_r": 0.6956,
+      "gbm_r": 0.6908,
+      "delta_gbm_minus_ridge": -0.0047,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Copper",
+      "ridge_r": 0.5659,
+      "gbm_r": 0.6585,
+      "delta_gbm_minus_ridge": 0.0926,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Cycloheximide",
+      "ridge_r": 0.7086,
+      "gbm_r": 0.7219,
+      "delta_gbm_minus_ridge": 0.0134,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Diamide",
+      "ridge_r": 0.6993,
+      "gbm_r": 0.6701,
+      "delta_gbm_minus_ridge": -0.0292,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "E6_Berbamine",
+      "ridge_r": 0.6216,
+      "gbm_r": 0.6077,
+      "delta_gbm_minus_ridge": -0.0139,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Ethanol",
+      "ridge_r": 0.6731,
+      "gbm_r": 0.6968,
+      "delta_gbm_minus_ridge": 0.0237,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Formamide",
+      "ridge_r": 0.4828,
+      "gbm_r": 0.5784,
+      "delta_gbm_minus_ridge": 0.0957,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Galactose",
+      "ridge_r": 0.4242,
+      "gbm_r": 0.4748,
+      "delta_gbm_minus_ridge": 0.0506,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Hydrogen_Peroxide",
+      "ridge_r": 0.6029,
+      "gbm_r": 0.6224,
+      "delta_gbm_minus_ridge": 0.0195,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Hydroquinone",
+      "ridge_r": 0.4515,
+      "gbm_r": 0.433,
+      "delta_gbm_minus_ridge": -0.0185,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Hydroxyurea",
+      "ridge_r": 0.5287,
+      "gbm_r": 0.5302,
+      "delta_gbm_minus_ridge": 0.0016,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Indoleacetic_Acid",
+      "ridge_r": 0.5312,
+      "gbm_r": 0.6916,
+      "delta_gbm_minus_ridge": 0.1603,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Lactate",
+      "ridge_r": 0.732,
+      "gbm_r": 0.7379,
+      "delta_gbm_minus_ridge": 0.0059,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Lactose",
+      "ridge_r": 0.7446,
+      "gbm_r": 0.7445,
+      "delta_gbm_minus_ridge": -0.0001,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Lithium_Chloride",
+      "ridge_r": 0.8035,
+      "gbm_r": 0.8172,
+      "delta_gbm_minus_ridge": 0.0138,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Magnesium_Chloride",
+      "ridge_r": 0.4633,
+      "gbm_r": 0.4822,
+      "delta_gbm_minus_ridge": 0.019,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Magnesium_Sulfate",
+      "ridge_r": 0.606,
+      "gbm_r": 0.6824,
+      "delta_gbm_minus_ridge": 0.0764,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Maltose",
+      "ridge_r": 0.7284,
+      "gbm_r": 0.8885,
+      "delta_gbm_minus_ridge": 0.1601,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Mannose",
+      "ridge_r": 0.4366,
+      "gbm_r": 0.4414,
+      "delta_gbm_minus_ridge": 0.0048,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Menadione",
+      "ridge_r": 0.6222,
+      "gbm_r": 0.6346,
+      "delta_gbm_minus_ridge": 0.0124,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Neomycin",
+      "ridge_r": 0.773,
+      "gbm_r": 0.7571,
+      "delta_gbm_minus_ridge": -0.0159,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Paraquat",
+      "ridge_r": 0.6843,
+      "gbm_r": 0.654,
+      "delta_gbm_minus_ridge": -0.0303,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Raffinose",
+      "ridge_r": 0.6021,
+      "gbm_r": 0.6194,
+      "delta_gbm_minus_ridge": 0.0173,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "SDS",
+      "ridge_r": 0.6117,
+      "gbm_r": 0.6298,
+      "delta_gbm_minus_ridge": 0.0181,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Sorbitol",
+      "ridge_r": 0.5754,
+      "gbm_r": 0.5887,
+      "delta_gbm_minus_ridge": 0.0133,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Trehalose",
+      "ridge_r": 0.6883,
+      "gbm_r": 0.7088,
+      "delta_gbm_minus_ridge": 0.0205,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Tunicamycin",
+      "ridge_r": 0.7722,
+      "gbm_r": 0.729,
+      "delta_gbm_minus_ridge": -0.0432,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "x4-Hydroxybenzaldehyde",
+      "ridge_r": 0.6023,
+      "gbm_r": 0.6449,
+      "delta_gbm_minus_ridge": 0.0425,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "x4NQO",
+      "ridge_r": 0.7226,
+      "gbm_r": 0.7878,
+      "delta_gbm_minus_ridge": 0.0652,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "x5-Fluorocytosine",
+      "ridge_r": 0.6086,
+      "gbm_r": 0.6051,
+      "delta_gbm_minus_ridge": -0.0036,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "x5-Fluorouracil",
+      "ridge_r": 0.7199,
+      "gbm_r": 0.7221,
+      "delta_gbm_minus_ridge": 0.0023,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "x6-Azauracil",
+      "ridge_r": 0.5465,
+      "gbm_r": 0.5487,
+      "delta_gbm_minus_ridge": 0.0021,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Xylose",
+      "ridge_r": 0.6692,
+      "gbm_r": 0.7066,
+      "delta_gbm_minus_ridge": 0.0374,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YNB",
+      "ridge_r": 0.6876,
+      "gbm_r": 0.686,
+      "delta_gbm_minus_ridge": -0.0016,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YNB:ph3",
+      "ridge_r": 0.4231,
+      "gbm_r": 0.4127,
+      "delta_gbm_minus_ridge": -0.0104,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YNB:ph8",
+      "ridge_r": 0.5921,
+      "gbm_r": 0.6043,
+      "delta_gbm_minus_ridge": 0.0121,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YPD",
+      "ridge_r": 0.6924,
+      "gbm_r": 0.7271,
+      "delta_gbm_minus_ridge": 0.0346,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YPD:15C",
+      "ridge_r": 0.5909,
+      "gbm_r": 0.6432,
+      "delta_gbm_minus_ridge": 0.0523,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YPD:37C",
+      "ridge_r": 0.771,
+      "gbm_r": 0.8108,
+      "delta_gbm_minus_ridge": 0.0398,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YPD:4C",
+      "ridge_r": 0.6467,
+      "gbm_r": 0.6653,
+      "delta_gbm_minus_ridge": 0.0187,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Zeocin",
+      "ridge_r": 0.6806,
+      "gbm_r": 0.6774,
+      "delta_gbm_minus_ridge": -0.0032,
+      "ridge_beats_null": true
+    }
+  ]
+}
