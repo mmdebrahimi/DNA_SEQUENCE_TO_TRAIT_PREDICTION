@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import numpy as np  # noqa: E402
 import pytest  # noqa: E402
 
-from dna_decode.eval.genomic_prediction import cv_ridge_gp  # noqa: E402
+from dna_decode.eval.genomic_prediction import cv_model_gp, cv_ridge_gp  # noqa: E402
 
 
 def _synthetic(n=200, m=50, n_causal=8, noise=0.5, seed=0):
@@ -48,6 +48,18 @@ def test_nan_phenotypes_dropped_and_dict():
     assert res.n == 110                        # NaN rows dropped
     d = res.as_dict()
     assert d["trait"] == "t" and "predictive_r" in d and "beats_null" in d
+
+
+def test_xgboost_catches_epistasis_linear_ridge_misses():
+    # y has a pure INTERACTION term (X0*X1) that a linear model cannot represent + one main effect.
+    # XGBoost (nonlinear) should out-predict ridge on this epistatic trait.
+    rng = np.random.default_rng(7)
+    n, m = 400, 30
+    X = rng.integers(0, 2, size=(n, m)).astype(float) * 2 - 1
+    y = 2.0 * (X[:, 0] * X[:, 1]) + 0.7 * X[:, 2] + rng.normal(0, 0.4, n)
+    xgb = cv_model_gp(X, y, model="gbm", n_perm=0, seed=1)
+    rid = cv_model_gp(X, y, model="ridge", n_perm=0, seed=1)
+    assert xgb.predictive_r > rid.predictive_r + 0.1   # nonlinear captures the epistasis ridge can't
 
 
 def test_too_few_samples_raises():

@@ -81,6 +81,67 @@ def _cv_predictive_r(X, y, alphas, folds):
     return r, r2_score, float(np.median(chosen_alpha))
 
 
+def _cv_r_with(X, y, folds, fit_predict):
+    """Generic held-out predictive r + R2 for any fit_predict(Xtr, ytr, Xte) -> preds callback."""
+    preds = np.full(len(y), np.nan)
+    for f, test_idx in enumerate(folds):
+        train_idx = np.concatenate([folds[j] for j in range(len(folds)) if j != f])
+        preds[test_idx] = fit_predict(X[train_idx], y[train_idx], X[test_idx])
+    r = float(np.corrcoef(preds, y)[0, 1]) if np.std(preds) > 0 else 0.0
+    ss_res = float(np.sum((y - preds) ** 2))
+    ss_tot = float(np.sum((y - y.mean()) ** 2))
+    return r, (1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0)
+
+
+def _ridge_fit_predict(Xtr, ytr, Xte, alpha=100.0):
+    from sklearn.linear_model import Ridge
+
+    mu, sd = Xtr.mean(0), Xtr.std(0)
+    sd[sd == 0] = 1.0
+    ymu = ytr.mean()
+    m = Ridge(alpha=alpha).fit((Xtr - mu) / sd, ytr - ymu)
+    return m.predict((Xte - mu) / sd) + ymu
+
+
+def _gbm_fit_predict(Xtr, ytr, Xte):
+    # sklearn gradient-boosted trees (no extra dep); captures nonlinearity / epistasis a linear
+    # model cannot represent.
+    from sklearn.ensemble import HistGradientBoostingRegressor
+
+    m = HistGradientBoostingRegressor(max_iter=300, max_depth=4, learning_rate=0.05,
+                                      l2_regularization=1.0, random_state=0)
+    m.fit(Xtr, ytr)
+    return m.predict(Xte)
+
+
+def cv_model_gp(X, y, *, model: str = "gbm", trait: str = "trait", n_splits: int = 5,
+                seed: int = 0, n_perm: int = 0, ridge_alpha: float = 100.0) -> GPResult:
+    """CV genomic prediction with a pluggable model (ridge / gbm=gradient-boosted trees). `n_perm=0`
+    skips the permutation null (for a head-to-head benchmark where the ridge arm already established
+    the null baseline)."""
+    X = np.asarray(X, dtype=float)
+    y = np.asarray(y, dtype=float)
+    keep = ~np.isnan(y)
+    X, y = X[keep], y[keep]
+    n = len(y)
+    if n < n_splits + 1:
+        raise ValueError(f"too few samples ({n}) for {n_splits}-fold CV")
+    folds = _kfold_indices(n, n_splits, seed)
+    fp = {"ridge": lambda a, b, c: _ridge_fit_predict(a, b, c, ridge_alpha),
+          "gbm": _gbm_fit_predict}[model]
+    r, r2_score = _cv_r_with(X, y, folds, fp)
+    if n_perm > 0:
+        rng = np.random.default_rng(seed + 1)
+        nulls = np.array([_cv_r_with(X, rng.permutation(y), folds, fp)[0] for _ in range(n_perm)])
+        nmean, np95 = float(nulls.mean()), float(np.percentile(nulls, 95))
+    else:
+        nmean, np95 = 0.0, 0.0
+    return GPResult(trait=trait, n=n, n_markers=X.shape[1], predictive_r=r,
+                    predictive_r2=r * r if r > 0 else 0.0, r2_score=r2_score,
+                    best_alpha=(ridge_alpha if model == "ridge" else 0.0),
+                    null_r_mean=nmean, null_r_p95=np95, beats_null=(r > np95 if n_perm > 0 else True))
+
+
 def cv_ridge_gp(X, y, *, trait: str = "trait", n_splits: int = 5,
                 alphas=(1.0, 10.0, 100.0, 1000.0), seed: int = 0, n_perm: int = 100) -> GPResult:
     """K-fold CV ridge genomic prediction with a label-permutation null.

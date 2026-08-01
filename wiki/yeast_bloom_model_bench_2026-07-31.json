@@ -1,0 +1,97 @@
+{
+  "substrate": "Bloom_2013_BYxRM_yeast_cross",
+  "n_segregants": 1008,
+  "n_markers": 1453,
+  "question": "does nonlinear (gbm) beat linear ridge? = optimize-the-model",
+  "n_traits": 12,
+  "gbm_wins": 7,
+  "ridge_wins": 3,
+  "mean_delta_gbm_minus_ridge": 0.0311,
+  "median_delta": 0.0136,
+  "traits": [
+    {
+      "trait": "Cadmium_Chloride",
+      "ridge_r": 0.6929,
+      "gbm_r": 0.7876,
+      "delta_gbm_minus_ridge": 0.0947,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Hydrogen_Peroxide",
+      "ridge_r": 0.6029,
+      "gbm_r": 0.6224,
+      "delta_gbm_minus_ridge": 0.0195,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Copper",
+      "ridge_r": 0.5659,
+      "gbm_r": 0.6585,
+      "delta_gbm_minus_ridge": 0.0926,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Caffeine",
+      "ridge_r": 0.4627,
+      "gbm_r": 0.4723,
+      "delta_gbm_minus_ridge": 0.0096,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Lithium_Chloride",
+      "ridge_r": 0.8035,
+      "gbm_r": 0.8172,
+      "delta_gbm_minus_ridge": 0.0138,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Maltose",
+      "ridge_r": 0.7284,
+      "gbm_r": 0.8885,
+      "delta_gbm_minus_ridge": 0.1601,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "YPD",
+      "ridge_r": 0.6924,
+      "gbm_r": 0.7271,
+      "delta_gbm_minus_ridge": 0.0346,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Diamide",
+      "ridge_r": 0.6993,
+      "gbm_r": 0.6701,
+      "delta_gbm_minus_ridge": -0.0292,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Cobalt_Chloride",
+      "ridge_r": 0.6773,
+      "gbm_r": 0.66,
+      "delta_gbm_minus_ridge": -0.0173,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Cycloheximide",
+      "ridge_r": 0.7086,
+      "gbm_r": 0.7219,
+      "delta_gbm_minus_ridge": 0.0134,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Neomycin",
+      "ridge_r": 0.773,
+      "gbm_r": 0.7571,
+      "delta_gbm_minus_ridge": -0.0159,
+      "ridge_beats_null": true
+    },
+    {
+      "trait": "Zeocin",
+      "ridge_r": 0.6806,
+      "gbm_r": 0.6774,
+      "delta_gbm_minus_ridge": -0.0032,
+      "ridge_beats_null": true
+    }
+  ]
+}
