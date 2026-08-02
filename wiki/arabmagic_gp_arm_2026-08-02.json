@@ -1,0 +1,75 @@
+{
+  "organism": "Arabidopsis thaliana (19-parent MAGIC)",
+  "design": "MAGIC RIL -> confound-free",
+  "n_markers": 1260,
+  "n_traits": 8,
+  "layer1_decode_beat_null": 7,
+  "layer2_gbm_wins": 4,
+  "mean_delta_gbm_minus_ridge": 0.0246,
+  "traits": [
+    {
+      "trait": "bolting_days",
+      "n": 677,
+      "ridge_r": 0.5684,
+      "ridge_beats_null": true,
+      "gbm_r": 0.671,
+      "delta_gbm_minus_ridge": 0.1026
+    },
+    {
+      "trait": "seed_weight",
+      "n": 677,
+      "ridge_r": 0.4144,
+      "ridge_beats_null": true,
+      "gbm_r": 0.3977,
+      "delta_gbm_minus_ridge": -0.0167
+    },
+    {
+      "trait": "seed_area",
+      "n": 676,
+      "ridge_r": 0.3842,
+      "ridge_beats_null": true,
+      "gbm_r": 0.3665,
+      "delta_gbm_minus_ridge": -0.0178
+    },
+    {
+      "trait": "ttl_seedspfruit",
+      "n": 677,
+      "ridge_r": 0.2424,
+      "ridge_beats_null": true,
+      "gbm_r": 0.2184,
+      "delta_gbm_minus_ridge": -0.024
+    },
+    {
+      "trait": "branches",
+      "n": 670,
+      "ridge_r": 0.2718,
+      "ridge_beats_null": true,
+      "gbm_r": 0.2568,
+      "delta_gbm_minus_ridge": -0.0149
+    },
+    {
+      "trait": "height",
+      "n": 514,
+      "ridge_r": 0.4798,
+      "ridge_beats_null": true,
+      "gbm_r": 0.5366,
+      "delta_gbm_minus_ridge": 0.0568
+    },
+    {
+      "trait": "pc_seeds_aborted",
+      "n": 677,
+      "ridge_r": 0.0696,
+      "ridge_beats_null": false,
+      "gbm_r": 0.1101,
+      "delta_gbm_minus_ridge": 0.0406
+    },
+    {
+      "trait": "fruit_length",
+      "n": 674,
+      "ridge_r": 0.4024,
+      "ridge_beats_null": true,
+      "gbm_r": 0.4725,
+      "delta_gbm_minus_ridge": 0.0702
+    }
+  ]
+}
