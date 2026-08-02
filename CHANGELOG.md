@@ -7,6 +7,49 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 _Nothing yet._
 
+## [0.10.0] — the visible-trait animal fleet + more microbial/viral cells + the confound-free decoding-validation arm (2026-08-02)
+
+Purely **additive** — the **frozen AMR decoder surface (`amr_rules.py` + `calibrated_amr_rules.json` +
+`mic_tiers.py` + `shipped_decoder_surface.py`) is byte-unchanged from 0.9.0**, so every existing R/S call is
+identical. This release expands the fleet toward the north-star "DNA → visible trait" direction and folds in
+the confound-free genotype→phenotype validation arm.
+
+**New visible-trait / physical-trait animal cells** (the north-star direction):
+
+- `dna-coatcolor` — dog coat colour (E/K/A/B/D epistasis; Darwin's-Ark-validated) — first physical/visible
+  animal-trait cell.
+- `dna-morphology` — dog body size + ear type (pinned + Darwin's-Ark-validated catalog).
+- `dna-horsecolor` — horse coat colour (E/A/CR/D/G epistasis).
+- `dna-catcolor` — cat coat colour (W/O/A/B/D/C; X-linked orange → tortoiseshell).
+- `dna-plumage` — chicken plumage (E/B/S/I/Bl/lav/c; Z-linked barring/silver).
+- `dna-pigeoncolor` — pigeon plumage (B/TYRP1 Z-linked, SOX10, SLC45A2, NDP).
+- A **shared mammalian coat-colour engine** spanning ~14 organisms (rabbit, mouse, goat, alpaca, guinea pig,
+  fox, donkey, buffalo, camel, mink, roe-deer, …).
+
+**More microbial + viral cells:**
+
+- `dna-essentiality` — single-gene KO → essential/non-essential (conserved-core decoder).
+- `dna-metabolic` — E. coli carbon-source utilization (uptake-gated catabolism decoder).
+- `dna-kleb` — Klebsiella phage depolymerase → capsule KL-type (cross-organism, fetch-only).
+- `dna-phage` — first-class bacteriophage genome/lineage → host-receptor class.
+- HCMV v0.1 target-site (ganciclovir/cidofovir/foscarnet/letermovir) via `dna-amr --observed`.
+
+**Confound-free decoding-validation arm** (research): genomic prediction (cv-ridge + gradient-boosted trees
++ permutation null) DECODES quantitative traits across **three kingdoms** on confound-free crosses — yeast
+Bloom-2013 (12/12 traits), mouse BXD (brain weight r=0.57), Arabidopsis MAGIC (bolting r=0.57). Layer-2
+finding: the nonlinear/epistasis advantage is **trait-architecture-dependent, not sample-size** (settled two
+ways — a yeast power curve + a dense plant cross).
+
+**FM-value regime map:** the definitive "when does a foundation model add value for genotype→phenotype"
+synthesis — Regime A (reconstruction) = calibration not signal; Regime B (in-distribution) = the genotype is
+a sufficient statistic → a simple model is near-optimal; Regime C (transfer / unseen variants) = the FM adds
+real value (the DMS-validated `forward` cell, ProteinGym median Spearman ~0.49).
+
+**Packaging:** sdist 8.4 MB → 588 KB (14×) via an explicit sdist include-list.
+
+**Unchanged:** the frozen AMR/viral/fungal R/S surface, every evidence-contract, and all prior validation
+numbers. No breaking changes.
+
 ## [0.9.0] — the usable-tool productization layer: input router + deployable strong-method variant-effect (2026-07-23)
 
 Purely **additive** — the **frozen AMR decoder surface (`amr_rules.py` + `calibrated_amr_rules.json` +
