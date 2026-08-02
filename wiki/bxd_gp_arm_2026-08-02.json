@@ -1,0 +1,132 @@
+{
+  "organism": "Mus musculus (BXD RIL, C57BL/6J x DBA/2J)",
+  "substrate": "BXD_rqtl2",
+  "design": "recombinant-inbred cross -> confound-free",
+  "n_markers": 2440,
+  "n_traits": 12,
+  "layer1_traits_decode_beat_null": 6,
+  "layer2_gbm_wins": 3,
+  "mean_delta_gbm_minus_ridge": -0.0599,
+  "traits": [
+    {
+      "trait_id": "18524",
+      "desc": "Central nervous system; morphology: Brain weight average of both males",
+      "n": 90,
+      "ridge_r": 0.5738,
+      "ridge_beats_null": true,
+      "null_p95": 0.2331,
+      "gbm_r": 0.3784,
+      "delta_gbm_minus_ridge": -0.1954
+    },
+    {
+      "trait_id": "12659",
+      "desc": "Central nervous system; morphology: Brain weight; corrected only for d",
+      "n": 85,
+      "ridge_r": 0.3988,
+      "ridge_beats_null": true,
+      "null_p95": 0.2447,
+      "gbm_r": 0.3227,
+      "delta_gbm_minus_ridge": -0.0761
+    },
+    {
+      "trait_id": "12660",
+      "desc": "Central nervous system; morphology: Brain weight; repeat measurement p",
+      "n": 85,
+      "ridge_r": 0.4814,
+      "ridge_beats_null": true,
+      "null_p95": 0.2542,
+      "gbm_r": 0.4138,
+      "delta_gbm_minus_ridge": -0.0676
+    },
+    {
+      "trait_id": "12661",
+      "desc": "Central nervous system; morphology: Brain weight; repeat measurement p",
+      "n": 85,
+      "ridge_r": 0.5293,
+      "ridge_beats_null": true,
+      "null_p95": 0.2607,
+      "gbm_r": 0.5036,
+      "delta_gbm_minus_ridge": -0.0257
+    },
+    {
+      "trait_id": "12686",
+      "desc": "Morphology: Body weight (no statistical adjustment) [g]",
+      "n": 84,
+      "ridge_r": 0.3005,
+      "ridge_beats_null": true,
+      "null_p95": 0.2288,
+      "gbm_r": 0.2101,
+      "delta_gbm_minus_ridge": -0.0904
+    },
+    {
+      "trait_id": "12685",
+      "desc": "Morphology: Body weight; statistically adjusted for variation in sex a",
+      "n": 84,
+      "ridge_r": 0.0905,
+      "ridge_beats_null": false,
+      "null_p95": 0.1584,
+      "gbm_r": 0.1319,
+      "delta_gbm_minus_ridge": 0.0414
+    },
+    {
+      "trait_id": "10799",
+      "desc": "Eye; visual system; morphology: Eye weight; fresh unfixed; corrected f",
+      "n": 83,
+      "ridge_r": 0.1551,
+      "ridge_beats_null": false,
+      "null_p95": 0.218,
+      "gbm_r": 0.0468,
+      "delta_gbm_minus_ridge": -0.1083
+    },
+    {
+      "trait_id": "18792",
+      "desc": "Cardiovascular system; morphology: Heart weight adjusted by age; sex; ",
+      "n": 83,
+      "ridge_r": 0.1675,
+      "ridge_beats_null": false,
+      "null_p95": 0.2362,
+      "gbm_r": 0.0677,
+      "delta_gbm_minus_ridge": -0.0999
+    },
+    {
+      "trait_id": "18618",
+      "desc": "Central nervous system; morphology; eye; visual system: Trait_24_Jablo",
+      "n": 81,
+      "ridge_r": -0.117,
+      "ridge_beats_null": false,
+      "null_p95": 0.2397,
+      "gbm_r": -0.0511,
+      "delta_gbm_minus_ridge": 0.0659
+    },
+    {
+      "trait_id": "18617",
+      "desc": "Trait_23_Jablonski",
+      "n": 81,
+      "ridge_r": 0.0362,
+      "ridge_beats_null": false,
+      "null_p95": 0.2118,
+      "gbm_r": 0.0282,
+      "delta_gbm_minus_ridge": -0.008
+    },
+    {
+      "trait_id": "18615",
+      "desc": "Trait_21_Jablonski",
+      "n": 81,
+      "ridge_r": 0.0056,
+      "ridge_beats_null": false,
+      "null_p95": 0.205,
+      "gbm_r": 0.0383,
+      "delta_gbm_minus_ridge": 0.0327
+    },
+    {
+      "trait_id": "18616",
+      "desc": "Trait_22_Jablonski",
+      "n": 81,
+      "ridge_r": 0.2733,
+      "ridge_beats_null": true,
+      "null_p95": 0.2018,
+      "gbm_r": 0.0854,
+      "delta_gbm_minus_ridge": -0.1879
+    }
+  ]
+}

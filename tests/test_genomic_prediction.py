@@ -62,6 +62,16 @@ def test_xgboost_catches_epistasis_linear_ridge_misses():
     assert xgb.predictive_r > rid.predictive_r + 0.1   # nonlinear captures the epistasis ridge can't
 
 
+def test_n_perm_zero_skips_null_no_crash():
+    # n_perm=0 must skip the null cleanly (empty percentile used to crash) -- both models.
+    X, y = _synthetic(n=120)
+    for m in ("ridge", "gbm"):
+        res = cv_model_gp(X, y, model=m, n_perm=0)
+        assert res.null_r_p95 == 0.0 and res.beats_null is True
+    rid = cv_ridge_gp(X, y, n_perm=0)          # the fixed path
+    assert rid.null_r_p95 == 0.0
+
+
 def test_too_few_samples_raises():
     X, y = _synthetic(n=4)
     with pytest.raises(ValueError):

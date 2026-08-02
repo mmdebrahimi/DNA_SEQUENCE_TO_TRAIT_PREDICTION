@@ -166,9 +166,13 @@ def cv_ridge_gp(X, y, *, trait: str = "trait", n_splits: int = 5,
         nr, _, _ = _cv_predictive_r(X, yp, [alpha], folds)  # fixed alpha for the null (cheaper, fair)
         null_rs.append(nr)
     null_rs = np.array(null_rs)
+    if n_perm > 0:
+        nmean, np95 = float(null_rs.mean()), float(np.percentile(null_rs, 95))
+    else:  # n_perm=0: skip the null (empty percentile would crash)
+        nmean, np95 = 0.0, 0.0
 
     return GPResult(
         trait=trait, n=n, n_markers=X.shape[1], predictive_r=r, predictive_r2=r * r if r > 0 else 0.0,
-        r2_score=r2_score, best_alpha=alpha, null_r_mean=float(null_rs.mean()),
-        null_r_p95=float(np.percentile(null_rs, 95)), beats_null=r > float(np.percentile(null_rs, 95)),
+        r2_score=r2_score, best_alpha=alpha, null_r_mean=nmean, null_r_p95=np95,
+        beats_null=(r > np95 if n_perm > 0 else True),
     )
