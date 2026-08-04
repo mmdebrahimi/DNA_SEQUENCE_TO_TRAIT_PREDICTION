@@ -187,6 +187,10 @@ TRAITS = {
         "summary": "E. coli carbon-source utilization (--source lactose/citrate/... --genes lacZ,lacY | --feature-table X.txt.gz): the deterministic UPTAKE-GATED catabolism decoder. utilizes iff (catabolic enzymes present) AND (a transporter present) AND (transporter expressed under the O2 condition). The uptake-gate is what a naive AMR-style has-the-genes rule misses.",
         "validation": "KNOWLEDGE_BASELINE / validated vs measured E. coli K-12 MG1655 phenotypes (EcoCyc/Neidhardt). Anchors: lac+ ara+ mal+ xyl+ rha+ glc+, and the CITRATE anchor (Blount 2012 Nature LTEE) -- Cit- aerobic / Cit+ anaerobic, the case a naive has-the-genes rule mis-calls positive. Reads gene presence not sequence integrity; calls can/cannot DIRECTION not growth rate. NOT clinical. See wiki/metabolic_carbon_decoder_v0_2026-07-28",
     },
+    "motility": {
+        "summary": "flagellar SWIMMING motility from gene presence (--genes flhD,flhC,fliC,motA,... | --feature-table X.txt.gz): the first NON-metabolic trait catalog. MOTILE iff all 5 flagellar modules present (master flhDC -> sigma-28 fliA -> flagellin fliC/fljB -> motor motAB -> basal-body/export fliF/fliG/flhA/fliI); chemotaxis (cheA/W/Y/Z) reported SEPARATELY (a che-mutant still swims). The determinant->phenotype paradigm (like amr/metabolic) applied to a physical behaviour.",
+        "validation": "KNOWLEDGE_BASELINE / curated flagellar catalog vs literature anchors: E. coli K-12 MG1655 + Salmonella motile (all modules) vs Shigella flexneri non-motile (flagellar pseudogenes) + flhDC/fliC/motAB KO non-motile. Presence-based DIRECTION (swim/no-swim), NOT speed; cannot see a present-but-inactivated gene (the K-12 flhD IS-insertion) -> sequence-mode is v0.1. NOT clinical. See wiki/motility_catalog_v0_2026-08-03",
+    },
     "fba": {
         "summary": "gene edit -> QUANTITATIVE cell-level trait via genome-scale flux-balance analysis (iML1515 E. coli default; --organism saureus|paeruginosa|yeast generalizes). KO mode: --gene b0720|gltA | --knockout b0720,b0721 | --wildtype -> growth rate (/h) + essential/non-essential over ANY model gene. SYNTHETIC-LETHALITY: --knockout A,B --synthetic-lethality -> is the PAIR lethal though neither single is? POINT-MUTATION mode (composes `forward`): --gene gltA --mutation D362A --protein-seq S -> forward scores the missense (LOF?) -> if damaging, model as KO -> cell trait; uncertain -> reported both-ways (never forced). The first GENERAL edit->quantitative-trait rung; computes from stoichiometry, sidesteps population-structure confounding.",
         "validation": "KNOWLEDGE_BASELINE (in-distribution) / genome-wide single-gene-deletion essentiality (glucose M9 aerobic) vs the free Keio-collection mutant-fitness gold standard (Bernstein 2023 method, fitness<-2): accuracy 0.954 / MCC 0.652. Point-mutation mode inherits forward's DMS validation (missense->LOF) + this Keio validation (LOF->trait); the LOF binarization is forward's own method-aware threshold (heuristic, not a calibrated LOF probability). METABOLIC traits only -- NOT virulence/regulation. cobrapy required (`uv pip install cobra`); iML1515 auto-fetched from BiGG + cached. See wiki/fba_keio_validation_2026-08-03 + wiki/fba_variant_compose_2026-08-03",
@@ -293,6 +297,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "fba":
         from dna_decode.fba.cli import main as fba_main
         return fba_main(rest)
+    if trait == "motility":
+        from dna_decode.motility.cli import main as motility_main
+        return motility_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)

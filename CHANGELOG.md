@@ -5,6 +5,17 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **`dna-decode motility` — the first NON-metabolic trait catalog (flagellar swimming).** The AMR/metabolic
+  determinant→phenotype paradigm applied to a physical BEHAVIOUR: gene presence → can the cell SWIM?
+  MOTILE iff all 5 flagellar modules present (master `flhDC` → sigma-28 `fliA` → flagellin `fliC/fljB` →
+  motor `motAB` → basal-body/export `fliF/fliG/flhA/fliI`); **chemotaxis (cheA/W/Y/Z) is reported SEPARATELY
+  and does NOT gate motility** (a che-mutant still swims — gating on it would be a biology error).
+  `dna-decode motility --genes flhD,flhC,... | --feature-table X.txt.gz`. KNOWLEDGE_BASELINE — curated
+  flagellar catalog vs literature anchors (MG1655 + Salmonella motile; Shigella non-motile; flhDC/fliC/motAB
+  KO non-motile); presence-based DIRECTION not speed; can't see a present-but-IS-disrupted flhD (v0.1
+  sequence-mode). `dna_decode/motility/` + 12 tests; the four CLI-trait guards fire. Frozen AMR surface
+  byte-unchanged. See `wiki/motility_catalog_v0_2026-08-03.md`.
+
 - **FBA carbon-source growth validation — the QUANTITATIVE-growth axis (complement to essentiality).**
   `scripts/fba_carbon_growth_validate.py` + `dna_decode/fba/carbon_growth.py`: for a carbon source, swap it
   into iML1515's known-growing medium as the sole carbon (robust `model.medium` swap, not zero-then-reopen)

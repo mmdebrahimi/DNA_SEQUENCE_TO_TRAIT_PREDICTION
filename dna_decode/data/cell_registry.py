@@ -895,6 +895,30 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "gene presence) + cross-organism transfer + a measured Biolog/BV-BRC phenotype cohort would re-tier it"),
     ),
     CellContract(
+        cell_id="motility:escherichia_coli:flagellar", track="typing", route="dna-motility",
+        organism="escherichia_coli", target="motility",
+        claim="flagellar SWIMMING motility from gene presence -- the first NON-metabolic trait catalog. "
+              "MOTILE iff all 5 flagellar modules present (master flhDC / sigma-28 fliA / flagellin fliC-fljB / "
+              "motor motAB / basal-body-export fliF-fliG-flhA-fliI); chemotaxis reported separately (a "
+              "che-mutant still swims -- gating swimming on chemotaxis would be a biology error); offline",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="curated_catalog_validated_vs_literature_anchors",
+        validation_slice=(
+            "curated flagellar catalog vs literature-known anchors: E. coli K-12 MG1655 + Salmonella "
+            "Typhimurium MOTILE (all modules) vs Shigella flexneri NON-motile (flagellar pseudogenes/deleted) "
+            "+ any flhDC/fliC/motAB knockout non-motile. Presence-based DIRECTION (swim/no-swim), not speed"),
+        label_provenance=(
+            "curated flagellar-regulon assignments (class-1 flhDC master / class-2/3 cascade) from E. coli "
+            "flagellar biology (Chevance & Hughes; EcoCyc). Faithful-to-literature, not a new model. No free "
+            "genome-keyed swim-plate cohort is fetchable -> KNOWLEDGE_BASELINE, not a measured-cohort tier"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="dna_decode/motility/flagellar_catalog.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "v0 is presence-based E. coli flagellar swimming; a sequence-integrity genome-mode (to catch a "
+            "present-but-IS-disrupted flhD, the K-12 non-motile case) + cross-organism transfer + a measured "
+            "swim-plate/motility cohort would re-tier it. Twitching/gliding/swarming are separate traits (out)"),
+    ),
+    CellContract(
         cell_id="fba:escherichia_coli:growth_essentiality", track="typing", route="dna-fba",
         organism="escherichia_coli", target="fba",
         claim="a gene edit (single/double KO) -> a QUANTITATIVE cell-level trait (growth rate /h + "
