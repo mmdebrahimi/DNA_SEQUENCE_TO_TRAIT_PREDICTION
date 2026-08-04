@@ -5,6 +5,18 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **FBA carbon-source growth validation — the QUANTITATIVE-growth axis (complement to essentiality).**
+  `scripts/fba_carbon_growth_validate.py` + `dna_decode/fba/carbon_growth.py`: for a carbon source, swap it
+  into iML1515's known-growing medium as the sole carbon (robust `model.medium` swap, not zero-then-reopen)
+  → predicted growth RATE (/h). **RECALL 1.000 (21/21)** on measured-positive K-12 carbon sources
+  (Keio/Wetmore), with a quantitative rate spread 0.21–0.94 /h (pentoses slower than glucose — biologically
+  ordered). **Honest scope (R2 web probe):** a clean *measured growth-rate across carbon sources* dataset
+  doesn't exist fetchably, and Biolog pos+neg for the K-12 strain is SI-locked (the 190-source Biolog set is
+  E. coli Nissle — strain mismatch), so full specificity + a rate correlation are **EXTERNAL-walled**
+  (named). Verify-in-batch surfaced a real finding: **BW25113 grows on sucrose but iML1515 has no sucrose
+  transport → a false negative the validation exposes** (an honest model-gap, not a mapping gap). +3 tests +
+  `wiki/fba_carbon_growth_validation_2026-08-03.md`. Frozen AMR/forward surfaces byte-unchanged.
+
 - **Per-organism FBA essentiality validation — the cross-organism claim is now QUANTIFIED, not assumed.**
   `scripts/fba_essentiality_validate.py --organism <org>` generalizes the E. coli Keio validation: load the
   GEM → genome-wide single-gene-deletion essentiality → join a per-organism experimental gold standard →

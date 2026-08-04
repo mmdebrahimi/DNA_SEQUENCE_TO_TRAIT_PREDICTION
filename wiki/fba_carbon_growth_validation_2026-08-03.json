@@ -1,0 +1,152 @@
+{
+  "record": "fba-carbon-growth-validation-v1",
+  "date": "2026-08-03",
+  "organism": "Escherichia coli K-12",
+  "model": "iML1515",
+  "status": "SCORED_RECALL",
+  "n_measured_positive_sources": 28,
+  "n_mapped_to_exchange": 21,
+  "n_unmapped": 7,
+  "unmapped_sources": [
+    "D-Maltose",
+    "D-Trehalose",
+    "Glycolic Acid",
+    "L-Malic",
+    "NAG",
+    "Sucrose",
+    "casaminos"
+  ],
+  "recall_on_mapped_positives": 1.0,
+  "n_grows": 21,
+  "growth_rate_spread": {
+    "min": 0.2101,
+    "median": 0.7171,
+    "max": 0.9428
+  },
+  "unmapped_classification_heuristic": {
+    "D-Maltose": "name-gap",
+    "D-Trehalose": "name-gap",
+    "Glycolic Acid": "name-gap",
+    "L-Malic": "model-gap",
+    "NAG": "model-gap",
+    "Sucrose": "name-gap",
+    "casaminos": "model-gap"
+  },
+  "model_gap_verified_example": "sucrose (BW25113 grows; iML1515 has no sucrose transport)",
+  "per_source": {
+    "D-Fructose": {
+      "exchange": "EX_fru_e",
+      "growth_per_h": 0.877,
+      "grows": true
+    },
+    "D-Galactose": {
+      "exchange": "EX_gal_e",
+      "growth_per_h": 0.8676,
+      "grows": true
+    },
+    "D-Galacturonic Acid": {
+      "exchange": "EX_galur_e",
+      "growth_per_h": 0.7047,
+      "grows": true
+    },
+    "D-Gluconic Acid": {
+      "exchange": "EX_glcn_e",
+      "growth_per_h": 0.7971,
+      "grows": true
+    },
+    "D-Glucosamine Hydrochloride": {
+      "exchange": "EX_gam_e",
+      "growth_per_h": 0.8773,
+      "grows": true
+    },
+    "D-Glucose": {
+      "exchange": "EX_glc__D_e",
+      "growth_per_h": 0.877,
+      "grows": true
+    },
+    "D-Glucose-6-Phosphate": {
+      "exchange": "EX_g6p_e",
+      "growth_per_h": 0.9052,
+      "grows": true
+    },
+    "D-Glucuronic Acid": {
+      "exchange": "EX_glcur_e",
+      "growth_per_h": 0.7047,
+      "grows": true
+    },
+    "D-Lactate": {
+      "exchange": "EX_lac__D_e",
+      "growth_per_h": 0.3774,
+      "grows": true
+    },
+    "D-Mannitol": {
+      "exchange": "EX_mnl_e",
+      "growth_per_h": 0.9428,
+      "grows": true
+    },
+    "D-Mannose": {
+      "exchange": "EX_man_e",
+      "growth_per_h": 0.877,
+      "grows": true
+    },
+    "D-Ribose": {
+      "exchange": "EX_rib__D_e",
+      "growth_per_h": 0.6889,
+      "grows": true
+    },
+    "D-Serine": {
+      "exchange": "EX_ser__D_e",
+      "growth_per_h": 0.3181,
+      "grows": true
+    },
+    "D-Sorbitol": {
+      "exchange": "EX_sbt__D_e",
+      "growth_per_h": 0.9428,
+      "grows": true
+    },
+    "D-Xylose": {
+      "exchange": "EX_xyl__D_e",
+      "growth_per_h": 0.7171,
+      "grows": true
+    },
+    "Glycerol": {
+      "exchange": "EX_glyc_e",
+      "growth_per_h": 0.4947,
+      "grows": true
+    },
+    "L-Fucose": {
+      "exchange": "EX_fuc__L_e",
+      "growth_per_h": 0.8621,
+      "grows": true
+    },
+    "a-Ketoglutaric": {
+      "exchange": "EX_akg_e",
+      "growth_per_h": 0.5474,
+      "grows": true
+    },
+    "acetate": {
+      "exchange": "EX_ac_e",
+      "growth_per_h": 0.2101,
+      "grows": true
+    },
+    "pyruvate": {
+      "exchange": "EX_pyr_e",
+      "growth_per_h": 0.3139,
+      "grows": true
+    },
+    "succinate": {
+      "exchange": "EX_succ_e",
+      "growth_per_h": 0.4501,
+      "grows": true
+    }
+  },
+  "walls": {
+    "full_specificity": "EXTERNAL -- needs a MEASURED negative carbon-source set (K-12 can't-use). The Keio/Wetmore assay is positive-only; EcN Biolog (PMC9801561) is a strain mismatch + SI-locked.",
+    "growth_rate_correlation": "EXTERNAL -- no fetchable MEASURED growth-rate-across-carbon-sources dataset (Biolog reports activity indices, not rates; Monk 2017 rates are KO phenotypes on 16 sources, SI-locked)."
+  },
+  "caveats": [
+    "RECALL (sensitivity) only -- FBA predicts growth on carbon sources E. coli is measured to use.",
+    "FBA growth RATES are quantitative but there is no fetchable measured rate to correlate against.",
+    "Unmapped measured-positives are EITHER name-mapping gaps OR real MODEL-gaps (no transporter in iML1515 -> a false negative). E.g. BW25113 grows on SUCROSE but K-12 iML1515 lacks the sucrose system -> a genuine model limitation the validation surfaces, not just a mapping gap."
+  ]
+}
