@@ -33,6 +33,15 @@ def main(argv: list[str] | None = None) -> int:
     src.add_argument("--wildtype", action="store_true", help="report wild-type growth only")
     ap.add_argument("--frac", type=float, default=0.01,
                     help="essential threshold as fraction of WT growth (default 0.01)")
+    # compose forward+fba: a POINT MUTATION -> LOF? -> cell trait (requires the protein sequence)
+    ap.add_argument("--mutation", default=None,
+                    help="a missense in --gene (e.g. D362A); composes forward (LOF?) -> fba (cell trait)")
+    seqsrc = ap.add_mutually_exclusive_group()
+    seqsrc.add_argument("--protein-seq", default=None, help="protein sequence of --gene (for --mutation)")
+    seqsrc.add_argument("--protein-fasta", default=None, help="FASTA file with --gene's protein (for --mutation)")
+    ap.add_argument("--forward-method", default="blosum62",
+                    choices=["blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"],
+                    help="forward scorer for the missense (default blosum62, offline)")
     ap.add_argument("--model", default=None, help="path to an iML1515 SBML (override)")
     ap.add_argument("--json", action="store_true", help="emit JSON")
     a = ap.parse_args(argv)
@@ -46,6 +55,47 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     wt = wildtype_growth(model)
+
+    # --- compose mode: a POINT MUTATION -> forward (LOF?) -> fba (cell trait) ---
+    if a.mutation:
+        if not a.gene:
+            print("ERROR: --mutation needs --gene (the metabolic gene the missense is in)", file=sys.stderr)
+            return 2
+        seq = a.protein_seq
+        if a.protein_fasta:
+            from pathlib import Path
+            lines = Path(a.protein_fasta).read_text(encoding="utf-8").splitlines()
+            seq = "".join(x.strip() for x in lines if x and not x.startswith(">"))
+        if not seq:
+            print("ERROR: --mutation needs --protein-seq or --protein-fasta (the gene's protein, for "
+                  "forward to score the missense)", file=sys.stderr)
+            return 2
+        gid = _resolve_gene(model, a.gene)
+        if gid is None:
+            print(f"ERROR: gene '{a.gene}' not in iML1515 (metabolic genes only)", file=sys.stderr)
+            return 2
+        from .compose import variant_to_cell_trait
+        try:
+            crec = variant_to_cell_trait(model, gid, seq, a.mutation, method=a.forward_method, frac=a.frac)
+        except Exception as e:  # WT-mismatch / forward import / parse
+            print(f"ERROR: {e}", file=sys.stderr)
+            return 2
+        if a.json:
+            print(json.dumps(crec, indent=2))
+            return 0
+        f = crec["forward"]
+        print(f"iML1515 FBA + forward  |  WT growth {crec['wildtype_growth_per_h']} /h")
+        print(f"  missense {a.gene} {crec['mutation']}  ->  forward({f['method']}) "
+              f"{f['predicted_effect']} (raw {f['raw_score']})  ->  {crec['lof_call']}")
+        if crec["fba_action"] == "conditional":
+            print(f"  UNCERTAIN -> reported both ways (forward is a validated RANK, not a calibrated LOF prob):")
+            print(f"    if LOF:       {crec['cell_trait_if_LOF']}  (KO growth {crec['ko_growth_per_h_if_LOF']} /h)")
+            print(f"    if tolerated: {crec['cell_trait_if_tolerated']}")
+        else:
+            print(f"  cell-level trait: {crec['cell_trait']}")
+        print(f"  scope: {crec['scope']}")
+        return 0
+
     rec = {
         "record": "fba-metabolic-trait-v1",
         "model": "iML1515",

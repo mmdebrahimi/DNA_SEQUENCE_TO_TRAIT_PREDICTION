@@ -5,6 +5,18 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **`dna-decode fba` point-mutation mode — composes `forward` + `fba` so a single MISSENSE edit → cell-level
+  trait.** `dna-decode fba --gene gltA --mutation D362A --protein-seq S`: `forward` scores whether the
+  missense breaks the enzyme (its own method-aware LOF call), and if damaging the gene is modelled as a
+  knockout → FBA growth/essentiality; a *preserved* variant → wild-type (no metabolic change); an
+  *uncertain* variant → the **conditional reported both-ways** (never a forced binary — the anti-theater
+  rail). This is the rung above gene-KO: the user's original "minor edit to a genotype" (a point mutation),
+  not just full knockouts. The chain **inherits** forward's DMS validation (missense→LOF) + fba's Keio
+  validation (LOF→trait, accuracy 0.954); the only new piece is the ranker→LOF binarization, labelled a
+  heuristic (forward's threshold), not a calibrated LOF probability. `--forward-method esm2/prosst/gemme/hybrid`
+  upgrades the LOF call to the stronger DMS scorers. `dna_decode/fba/compose.py` + 5 tests; frozen AMR
+  surface byte-unchanged (READ-only composition). See `wiki/fba_variant_compose_2026-08-03.md`.
+
 - **`dna-decode fba` — the first GENERAL edit → quantitative cell-level-trait cell (mechanistic, not learned).**
   Knock out ANY of the 1515 genes in the **iML1515** E. coli genome-scale model → predicted **growth rate (/h)**
   + **essential/non-essential**, via flux-balance analysis (`cobrapy`). Unlike the learned organism-level regime
