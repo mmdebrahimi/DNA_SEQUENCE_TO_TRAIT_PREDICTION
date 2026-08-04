@@ -5,6 +5,16 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.11.0] — the FBA metabolic-model cell: edit → quantitative cell-level trait (gene-KO, point-mutation, synthetic-lethality, cross-organism) (2026-08-03)
+
+The **first GENERAL "gene edit → quantitative cell-level trait" cell** — mechanistic flux-balance analysis
+over genome-scale metabolic models, in the OPEN mechanistic regime (computes from stoichiometry, sidesteps
+the population-structure confounding that closed the learned organism-level track). The frozen AMR/forward
+surfaces are **byte-unchanged**; this is purely additive. Ships the whole edit→cell-trait ladder: gene-KO,
+point-mutation (composing `forward`), synthetic-lethality, and cross-organism generalization.
+
 - **`dna-decode fba --organism` — the FBA cell generalizes across organisms.** The engine is organism-agnostic;
   `--organism ecoli|saureus|paeruginosa|yeast` (or `--model-id <BiGG id>`) loads the matching genome-scale
   model from BiGG (fetched + cached like iML1515). Verified on *S. aureus* iYS1720 (1707 genes, WT growth
