@@ -5,7 +5,16 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
-_Nothing yet._
+- **Per-organism FBA essentiality validation — the cross-organism claim is now QUANTIFIED, not assumed.**
+  `scripts/fba_essentiality_validate.py --organism <org>` generalizes the E. coli Keio validation: load the
+  GEM → genome-wide single-gene-deletion essentiality → join a per-organism experimental gold standard →
+  full metric panel (accuracy/MCC/precision/recall/ROC-AUC/PR-AUC). **Finding (honest): FBA essentiality does
+  NOT transfer strongly from E. coli.** E. coli iML1515 = strong (MCC 0.652); yeast iMM904 vs SGD inviable-null
+  (Giaever/SGD, keyed by systematic ORF) = **weak (accuracy 0.824 but MCC 0.252** — accuracy is flattered by
+  the imbalanced majority, so MCC is the reported signal). S. aureus (iYS1720, Salmonella-style STM#### ids)
+  + P. aeruginosa (iJN1463) are honest **LABEL_WALLED** (external — need a crosswalk / a fetchable Tn-seq set).
+  `dna_decode/fba/essentiality_labels.py` (per-organism sources + pure parsers) + 4 tests + status roll-up
+  `wiki/fba_per_organism_essentiality_2026-08-03.md`. Frozen AMR/forward surfaces byte-unchanged.
 
 ## [0.11.0] — the FBA metabolic-model cell: edit → quantitative cell-level trait (gene-KO, point-mutation, synthetic-lethality, cross-organism) (2026-08-03)
 

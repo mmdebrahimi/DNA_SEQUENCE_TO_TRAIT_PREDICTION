@@ -1,0 +1,36 @@
+{
+  "record": "fba-essentiality-validation-v1",
+  "date": "2026-08-03",
+  "organism": "yeast",
+  "model": "iMM904",
+  "status": "SCORED",
+  "label_source": "sgd: http://sgd-archive.yeastgenome.org/curation/literature/phenotype_data.tab",
+  "wildtype_growth_per_h": 0.2879,
+  "n_gold_standard_essential": 1215,
+  "n_model_genes_scored": 905,
+  "essential_prevalence": 0.1492,
+  "confusion": {
+    "tp": 43,
+    "fp": 67,
+    "tn": 703,
+    "fn": 92,
+    "n": 905
+  },
+  "metrics": {
+    "accuracy": 0.8243,
+    "precision": 0.3909,
+    "recall": 0.3185,
+    "f1": 0.351,
+    "mcc": 0.2524,
+    "essential_prevalence": 0.1492
+  },
+  "roc_auc": 0.6301,
+  "pr_auc": 0.3037,
+  "discrimination": "weak",
+  "caveats": [
+    "METABOLIC-gene essentiality only; the model's DEFAULT medium.",
+    "Highly class-imbalanced -> MCC (not accuracy) is the discrimination signal.",
+    "In-distribution vs a published knowledge baseline; not an independent-lab claim.",
+    "Essentiality is medium-dependent; a mismatched default medium weakens the metric (a demotion path: set the organism's standard medium + re-score)."
+  ]
+}

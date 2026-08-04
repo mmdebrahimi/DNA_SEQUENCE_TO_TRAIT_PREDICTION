@@ -1,0 +1,9 @@
+{
+  "record": "fba-essentiality-validation-v1",
+  "organism": "saureus",
+  "model": "iYS1720",
+  "status": "LABEL_WALLED",
+  "wall_kind": "external",
+  "reason": "iYS1720 gene ids are STM#### (Salmonella-style); needs a gene-name crosswalk",
+  "note": "the FBA engine RUNS on this organism; only a fetchable+model-gene-keyed essential-gene gold standard is missing. Not code-closable without a crosswalk / a new label source."
+}
