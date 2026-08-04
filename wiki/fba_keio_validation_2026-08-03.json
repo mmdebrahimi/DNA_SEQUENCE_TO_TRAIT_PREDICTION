@@ -1,0 +1,39 @@
+{
+  "record": "fba-keio-validation-v1",
+  "date": "2026-08-03",
+  "model": "iML1515",
+  "label_source": "Keio BW25113 RB-TnSeq mutant fitness (Bernstein 2023); fitness<-2 = essential-on-glucose",
+  "carbon_source": "D-Glucose",
+  "wildtype_growth_per_h": 0.877,
+  "n_model_genes": 1516,
+  "n_labelled_genes": 3789,
+  "n_scored_intersection": 1339,
+  "essential_prevalence": 0.0724,
+  "confusion": {
+    "tp": 65,
+    "fp": 30,
+    "tn": 1212,
+    "fn": 32,
+    "n": 1339
+  },
+  "metrics": {
+    "accuracy": 0.9537,
+    "precision": 0.6842,
+    "recall": 0.6701,
+    "f1": 0.6771,
+    "mcc": 0.6522,
+    "essential_prevalence": 0.0724
+  },
+  "roc_auc": 0.839,
+  "pr_auc": 0.5445,
+  "fba_essential_absent_from_mutant_table": 101,
+  "note_absent": "101 FBA-essential genes have NO viable mutant in the Keio pool (an independent essentiality signal, excluded from the assayable-set metrics above)",
+  "caveats": [
+    "METABOLIC traits only; glucose M9 aerobic medium.",
+    "Metrics computed on the ASSAYABLE gene set (genes with a measurable mutant); absolutely-essential genes without mutants are corroborated separately.",
+    "Gene essentiality is highly class-imbalanced -> MCC + PR-AUC are more meaningful than ROC-AUC.",
+    "In-distribution vs a published knowledge baseline; not an independent-lab claim."
+  ],
+  "min_accuracy_gate": 0.85,
+  "passed": true
+}

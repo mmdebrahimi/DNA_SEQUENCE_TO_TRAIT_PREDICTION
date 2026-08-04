@@ -895,6 +895,29 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "gene presence) + cross-organism transfer + a measured Biolog/BV-BRC phenotype cohort would re-tier it"),
     ),
     CellContract(
+        cell_id="fba:escherichia_coli:growth_essentiality", track="typing", route="dna-fba",
+        organism="escherichia_coli", target="fba",
+        claim="a gene edit (single/double KO) -> a QUANTITATIVE cell-level trait (growth rate /h + "
+              "essential/non-essential) via mechanistic flux-balance analysis over the iML1515 genome-scale "
+              "model; GENERAL over all 1515 model genes (not a curated list); computes from stoichiometry + "
+              "known biochemistry, so it sidesteps population-structure confounding by construction",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="mechanistic_model_validated_vs_keio_in_distribution",
+        validation_slice=(
+            "genome-wide single-gene-deletion essentiality (glucose M9 aerobic) vs the free Keio-collection "
+            "mutant-fitness gold standard (Bernstein 2023 method, fitness<-2 = essential-on-glucose). Metrics on "
+            "the assayable gene set + corroboration that FBA-essential genes have no viable Keio mutant. See "
+            "wiki/fba_keio_validation_2026-08-03. METABOLIC traits only -- NOT virulence/regulation"),
+        label_provenance=(
+            "iML1515 genome-scale model (Monk 2017, Nat Biotechnol, free on BiGG) + Keio BW25113 RB-TnSeq mutant "
+            "fitness (Baba 2006 / Wetmore-Price fitness browser, as vendored by Bernstein 2023). Free, published"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/fba_keio_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "v0 is FBA on iML1515, glucose M9, in-distribution vs a knowledge baseline; a provenance-independent "
+            "measured growth-rate/essentiality cohort (Biolog / a fresh TnSeq) + non-metabolic traits would re-tier it"),
+    ),
+    CellContract(
         cell_id="finder:any:forward", track="finder", route="dna-decode-forward",
         organism="any", target="forward",
         claim="molecular-effect RANK for a protein/CDS edit (Regime B: enzyme fitness/stability), with a "

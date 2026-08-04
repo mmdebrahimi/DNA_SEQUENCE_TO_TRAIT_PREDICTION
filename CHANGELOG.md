@@ -5,7 +5,19 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
-_Nothing yet._
+- **`dna-decode fba` — the first GENERAL edit → quantitative cell-level-trait cell (mechanistic, not learned).**
+  Knock out ANY of the 1515 genes in the **iML1515** E. coli genome-scale model → predicted **growth rate (/h)**
+  + **essential/non-essential**, via flux-balance analysis (`cobrapy`). Unlike the learned organism-level regime
+  (a closed negative — it learns population structure, not causation), FBA computes phenotype from stoichiometry
+  + known biochemistry, so it sidesteps population-structure confounding by construction. `dna-decode fba
+  --gene gltA` / `--knockout b0720,b0721` / `--wildtype`; `pip install dna-decode[fba]` (iML1515 auto-fetched
+  from BiGG + cached; cobra bundles the GLPK solver). **Scope (honest): METABOLIC traits only** — growth /
+  essentiality / secretion; NOT virulence / regulation. **Validated** genome-wide vs the free Keio-collection
+  mutant-fitness gold standard (Bernstein 2023 method): **accuracy 0.954, MCC 0.652, ROC-AUC 0.863, PR-AUC 0.526**
+  over 1339 genes (7.2% essential prevalence) — matching the published iML1515-vs-Keio literature (~0.93); 101
+  FBA-essential genes corroborated by having no viable Keio mutant. In-distribution vs a knowledge baseline, not
+  an independent-lab claim. `dna_decode/fba/` + `scripts/fba_keio_validate.py` + 10 tests; frozen AMR surface
+  byte-unchanged. See `wiki/fba_keio_validation_2026-08-03.md`.
 
 ## [0.10.0] — the visible-trait animal fleet + more microbial/viral cells + the confound-free decoding-validation arm (2026-08-02)
 

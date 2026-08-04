@@ -82,6 +82,7 @@ dna-phage = "dna_decode.phage.cli:main"        # bacteriophage genome/lineage ->
 dna-kleb = "dna_decode.kleb.cli:main"          # Klebsiella phage depolymerase -> capsule KL-type (cross-organism, fetch-only)
 dna-essentiality = "dna_decode.essentiality.cli:main"  # single-gene KO -> essential/non-essential (conserved-core decoder)
 dna-metabolic = "dna_decode.metabolic.cli:main"  # E. coli carbon-source utilization (uptake-gated catabolism decoder)
+dna-fba = "dna_decode.fba.cli:main"            # E. coli gene-KO -> quantitative growth/essentiality (iML1515 flux-balance analysis)
 dna-plasmid = "dna_decode.plasmid.cli:main"
 dna-serotype = "dna_decode.serotype.cli:main"
 dna-resfinder = "dna_decode.resfinder.cli:main"
@@ -109,6 +110,14 @@ Issues = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION/issues
 dev = [
     "pytest-cov>=5",
     "ruff>=0.4",
+]
+
+# FBA metabolic-model cell (`dna-decode fba`): mechanistic gene-KO -> growth/essentiality over iML1515.
+# `pip install dna-decode[fba]` makes the cell runnable; iML1515 (~620 KB) is auto-fetched from BiGG Models
+# on first use + cached. cobra bundles the GLPK solver (swiglpk) so no extra solver install is needed. The
+# pure logic (call_essential / keio parsing / metrics) imports wheel-only; only the FBA engine needs cobra.
+fba = [
+    "cobra>=0.29",
 ]
 
 # Deployable FORWARD variant-effect stack (Regime B — the DMS-VALIDATED learned frontier, NOT the closed

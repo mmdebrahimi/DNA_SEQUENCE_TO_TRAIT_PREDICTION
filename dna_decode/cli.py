@@ -187,6 +187,10 @@ TRAITS = {
         "summary": "E. coli carbon-source utilization (--source lactose/citrate/... --genes lacZ,lacY | --feature-table X.txt.gz): the deterministic UPTAKE-GATED catabolism decoder. utilizes iff (catabolic enzymes present) AND (a transporter present) AND (transporter expressed under the O2 condition). The uptake-gate is what a naive AMR-style has-the-genes rule misses.",
         "validation": "KNOWLEDGE_BASELINE / validated vs measured E. coli K-12 MG1655 phenotypes (EcoCyc/Neidhardt). Anchors: lac+ ara+ mal+ xyl+ rha+ glc+, and the CITRATE anchor (Blount 2012 Nature LTEE) -- Cit- aerobic / Cit+ anaerobic, the case a naive has-the-genes rule mis-calls positive. Reads gene presence not sequence integrity; calls can/cannot DIRECTION not growth rate. NOT clinical. See wiki/metabolic_carbon_decoder_v0_2026-07-28",
     },
+    "fba": {
+        "summary": "E. coli gene edit -> QUANTITATIVE cell-level trait (--gene b0720|gltA | --knockout b0720,b0721 | --wildtype): mechanistic flux-balance analysis over the iML1515 genome-scale model. Knock out ANY of the 1515 model genes -> predicted growth rate (/h) + essential/non-essential. The first GENERAL edit->quantitative-trait rung (not a curated list); computes from stoichiometry, sidesteps population-structure confounding.",
+        "validation": "KNOWLEDGE_BASELINE (in-distribution) / genome-wide single-gene-deletion essentiality (glucose M9 aerobic) vs the free Keio-collection mutant-fitness gold standard (Bernstein 2023 method, fitness<-2). METABOLIC traits only -- NOT virulence/regulation. cobrapy required (`uv pip install cobra`); iML1515 auto-fetched from BiGG + cached. See wiki/fba_keio_validation_2026-08-03",
+    },
 }
 
 
@@ -286,6 +290,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "metabolic":
         from dna_decode.metabolic.cli import main as metabolic_main
         return metabolic_main(rest)
+    if trait == "fba":
+        from dna_decode.fba.cli import main as fba_main
+        return fba_main(rest)
     if trait == "concordance":
         from dna_decode.concordance.cli import main as concordance_main
         return concordance_main(rest)
