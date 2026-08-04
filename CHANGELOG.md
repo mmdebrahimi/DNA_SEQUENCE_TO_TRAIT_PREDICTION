@@ -5,6 +5,16 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [0.12.0] — the FBA cell matures: cross-organism generalization + honest per-organism validation, and the first NON-metabolic trait catalog (2026-08-03)
+
+Purely **additive** — the frozen AMR/forward surfaces are **byte-unchanged from 0.11.0**. This release
+hardens the v0.11.0 FBA metabolic cell with real per-organism + carbon-source validation (the cross-organism
+claim is now *quantified*, not assumed), and opens a new axis with the first **non-metabolic** trait catalog
+(motility). The recurring honest finding across all three: FBA/curated-catalog decoding is E. coli-strong and
+label-walled elsewhere — the binding constraint is measured LABELS, not model capacity.
+
 - **`dna-decode motility` — the first NON-metabolic trait catalog (flagellar swimming).** The AMR/metabolic
   determinant→phenotype paradigm applied to a physical BEHAVIOUR: gene presence → can the cell SWIM?
   MOTILE iff all 5 flagellar modules present (master `flhDC` → sigma-28 `fliA` → flagellin `fliC/fljB` →
