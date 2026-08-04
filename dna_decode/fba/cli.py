@@ -33,6 +33,8 @@ def main(argv: list[str] | None = None) -> int:
     src.add_argument("--wildtype", action="store_true", help="report wild-type growth only")
     ap.add_argument("--frac", type=float, default=0.01,
                     help="essential threshold as fraction of WT growth (default 0.01)")
+    ap.add_argument("--synthetic-lethality", action="store_true",
+                    help="with --knockout A,B: is the PAIR synthetic-lethal? (both singles viable, double lethal)")
     # compose forward+fba: a POINT MUTATION -> LOF? -> cell trait (requires the protein sequence)
     ap.add_argument("--mutation", default=None,
                     help="a missense in --gene (e.g. D362A); composes forward (LOF?) -> fba (cell trait)")
@@ -42,15 +44,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--forward-method", default="blosum62",
                     choices=["blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"],
                     help="forward scorer for the missense (default blosum62, offline)")
-    ap.add_argument("--model", default=None, help="path to an iML1515 SBML (override)")
+    ap.add_argument("--organism", default=None,
+                    help="cross-organism GEM: ecoli(default) | saureus | paeruginosa | yeast "
+                         "(engine generalizes; only E. coli is Keio-validated)")
+    ap.add_argument("--model-id", default=None, help="a BiGG model id directly (e.g. iYS1720)")
+    ap.add_argument("--model", default=None, help="path to an SBML model (override organism/model-id)")
     ap.add_argument("--json", action="store_true", help="emit JSON")
     a = ap.parse_args(argv)
 
     from .model import call_essential, knockout_growth, load_model, wildtype_growth
 
     try:
-        model = load_model(a.model)
-    except Exception as e:  # ImportError / FileNotFoundError / parse
+        model = load_model(a.model, organism=a.organism, model_id=a.model_id)
+    except Exception as e:  # ImportError / FileNotFoundError / parse / unknown organism
         print(f"ERROR: {e}", file=sys.stderr)
         return 2
 
@@ -120,6 +126,28 @@ def main(argv: list[str] | None = None) -> int:
                       f"non-metabolic genes are out of model scope)", file=sys.stderr)
                 return 2
             resolved.append(gid)
+        # synthetic-lethality mode: --knockout A,B --synthetic-lethality
+        if a.synthetic_lethality:
+            if len(resolved) != 2:
+                print("ERROR: --synthetic-lethality needs exactly two genes (--knockout A,B)", file=sys.stderr)
+                return 2
+            from .model import synthetic_lethality
+            sl = synthetic_lethality(model, resolved[0], resolved[1], a.frac)
+            sl["genes"] = tokens
+            sl["scope"] = "METABOLIC traits only; iML1515. NOT clinical."
+            if a.json:
+                print(json.dumps(sl, indent=2))
+                return 0
+            print(f"iML1515 FBA  |  WT growth {sl['wildtype_growth_per_h']} /h")
+            print(f"  KO {tokens[0]} alone: {sl['ko_a_growth_per_h']} /h "
+                  f"({'essential' if sl['single_a_essential'] else 'viable'})")
+            print(f"  KO {tokens[1]} alone: {sl['ko_b_growth_per_h']} /h "
+                  f"({'essential' if sl['single_b_essential'] else 'viable'})")
+            print(f"  KO {tokens[0]}+{tokens[1]} together: {sl['double_ko_growth_per_h']} /h "
+                  f"({'LETHAL' if sl['double_essential'] else 'viable'})")
+            print(f"  verdict: {sl['verdict']}")
+            print(f"  scope: {sl['scope']}")
+            return 0
         growth = knockout_growth(model, resolved)
         essential = call_essential(growth, wt, a.frac)
         rec["query"] = {"knockout": tokens, "resolved_ids": resolved}

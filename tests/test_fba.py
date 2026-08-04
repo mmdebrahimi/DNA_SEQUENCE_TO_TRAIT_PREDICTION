@@ -4,7 +4,7 @@ from __future__ import annotations
 import pytest
 
 from dna_decode.fba.keio import confusion, metrics_from_confusion, parse_keio_fitness
-from dna_decode.fba.model import call_essential
+from dna_decode.fba.model import call_essential, resolve_model_id
 
 
 # ---- pure logic: essential-call threshold (no cobra import) ----
@@ -80,7 +80,49 @@ def test_confusion_intersection_only():
     assert cm["n"] == 1 and cm["tp"] == 1
 
 
+# ---- pure: cross-organism model-id resolution (no network) ----
+
+def test_resolve_model_id_aliases():
+    assert resolve_model_id(None) == "iML1515"
+    assert resolve_model_id("ecoli") == "iML1515"
+    assert resolve_model_id("E. coli") == "iML1515"
+    assert resolve_model_id("saureus") == "iYS1720"
+    assert resolve_model_id("Pseudomonas aeruginosa") == "iJN1463"
+    assert resolve_model_id("yeast") == "iMM904"
+    assert resolve_model_id("iYS1720") == "iYS1720"  # raw BiGG id passes through
+
+
+def test_resolve_model_id_unknown_raises():
+    with pytest.raises(ValueError):
+        resolve_model_id("tyrannosaurus_rex")
+
+
 # ---- real-model smoke (needs cobra + iML1515; slow) ----
+
+@pytest.mark.slow
+def test_synthetic_lethality_real_isozyme_pair():
+    pytest.importorskip("cobra")
+    from dna_decode.fba.model import load_model, synthetic_lethality
+    m = load_model()
+    # dadX (b1190) + alr (b4053): alanine racemase isozymes -> a real synthetic-lethal pair
+    sl = synthetic_lethality(m, "b1190", "b4053")
+    assert sl["single_a_essential"] is False and sl["single_b_essential"] is False
+    assert sl["double_essential"] is True
+    assert sl["synthetic_lethal"] is True
+    # a non-SL pair: pgi (b4025) + zwf (b1852) -> double still viable
+    nsl = synthetic_lethality(m, "b4025", "b1852")
+    assert nsl["synthetic_lethal"] is False
+
+
+@pytest.mark.slow
+def test_cross_organism_load_saureus():
+    pytest.importorskip("cobra")
+    from dna_decode.fba.model import load_model, wildtype_growth
+    # downloads iYS1720 from BiGG on first run (network); cached after
+    m = load_model(organism="saureus")
+    assert len(m.genes) > 1000            # S. aureus iYS1720 has ~1707 genes
+    assert wildtype_growth(m) > 1e-4      # grows on its default medium
+
 
 @pytest.mark.slow
 def test_iml1515_wildtype_and_known_essential():

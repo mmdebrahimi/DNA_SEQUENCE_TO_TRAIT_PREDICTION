@@ -23,7 +23,9 @@ from .model import (
     gene_essentiality,
     knockout_growth,
     load_model,
+    resolve_model_id,
     resolve_model_path,
+    synthetic_lethality,
     wildtype_growth,
 )
 
@@ -33,6 +35,8 @@ __all__ = [
     "gene_essentiality",
     "knockout_growth",
     "load_model",
+    "resolve_model_id",
     "resolve_model_path",
+    "synthetic_lethality",
     "wildtype_growth",
 ]

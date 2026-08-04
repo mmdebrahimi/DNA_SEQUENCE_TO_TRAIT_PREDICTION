@@ -16,10 +16,20 @@ import urllib.request
 from pathlib import Path
 
 MODEL_NAME = "iML1515"
-_BIGG_URL = "http://bigg.ucsd.edu/static/models/iML1515.xml.gz"
 
-# module-level model cache so repeated CLI calls in one process don't re-parse (~10s)
-_MODEL = None
+# Cross-organism genome-scale models on BiGG (the engine is organism-agnostic; only E. coli is
+# Keio-validated -- other organisms are v0 "engine generalizes" with their own essentiality gold
+# standard deferred). organism alias -> BiGG model id.
+_BIGG_MODELS: dict[str, str] = {
+    "escherichia_coli": "iML1515", "ecoli": "iML1515", "e_coli": "iML1515", "escherichia": "iML1515",
+    "staphylococcus_aureus": "iYS1720", "saureus": "iYS1720", "s_aureus": "iYS1720",
+    "pseudomonas_aeruginosa": "iJN1463", "paeruginosa": "iJN1463", "p_aeruginosa": "iJN1463",
+    "saccharomyces_cerevisiae": "iMM904", "yeast": "iMM904", "scerevisiae": "iMM904",
+}
+_DEFAULT_MODEL_ID = "iML1515"
+
+# module-level per-model cache so repeated CLI calls in one process don't re-parse (~10s)
+_MODELS: dict[str, object] = {}
 
 
 def _cache_dir() -> Path:
@@ -28,43 +38,68 @@ def _cache_dir() -> Path:
     return base / "fba"
 
 
-def resolve_model_path(download: bool = True) -> Path:
-    """Locate iML1515.xml.gz; optionally download from BiGG into the cache. Raises if unresolved."""
-    override = os.environ.get("DNA_DECODE_IML1515")
-    if override and Path(override).exists():
-        return Path(override)
-    # dev checkout copy
-    dev = Path(__file__).resolve().parent.parent.parent / "data" / "fba" / "iML1515.xml.gz"
-    if dev.exists():
-        return dev
-    cached = _cache_dir() / "iML1515.xml.gz"
+def resolve_model_id(organism: str | None) -> str:
+    """organism alias -> BiGG model id (default iML1515). Raises on an unknown organism."""
+    if not organism:
+        return _DEFAULT_MODEL_ID
+    key = organism.strip().lower().replace(" ", "_").replace(".", "").replace("-", "_")
+    if key in _BIGG_MODELS:
+        return _BIGG_MODELS[key]
+    if organism in _BIGG_MODELS.values():  # a raw model id was passed
+        return organism
+    raise ValueError(
+        f"unknown organism '{organism}'. Known: {sorted(set(_BIGG_MODELS))} "
+        f"(or pass a BiGG model id via --model-id)."
+    )
+
+
+def resolve_model_path(model_id: str = _DEFAULT_MODEL_ID, download: bool = True) -> Path:
+    """Locate <model_id>.xml.gz; optionally download from BiGG into the cache. Raises if unresolved."""
+    if model_id == _DEFAULT_MODEL_ID:
+        override = os.environ.get("DNA_DECODE_IML1515")
+        if override and Path(override).exists():
+            return Path(override)
+        dev = Path(__file__).resolve().parent.parent.parent / "data" / "fba" / "iML1515.xml.gz"
+        if dev.exists():
+            return dev
+    cached = _cache_dir() / f"{model_id}.xml.gz"
     if cached.exists():
         return cached
     if not download:
         raise FileNotFoundError(
-            "iML1515 model not found. Set $DNA_DECODE_IML1515, place it at data/fba/iML1515.xml.gz, "
-            "or allow the BiGG download."
+            f"{model_id} model not found. Place it at data/fba/{model_id}.xml.gz or allow the BiGG download."
         )
     cached.parent.mkdir(parents=True, exist_ok=True)
-    urllib.request.urlretrieve(_BIGG_URL, cached)  # ~620 KB, free (BiGG Models)
+    urllib.request.urlretrieve(  # free (BiGG Models)
+        f"http://bigg.ucsd.edu/static/models/{model_id}.xml.gz", cached
+    )
     return cached
 
 
-def load_model(path: str | Path | None = None, reuse: bool = True):
-    """Load (and cache) the iML1515 cobra model. Lazy-imports cobra."""
-    global _MODEL
-    if reuse and _MODEL is not None and path is None:
-        return _MODEL
+def load_model(
+    path: str | Path | None = None,
+    *,
+    organism: str | None = None,
+    model_id: str | None = None,
+    reuse: bool = True,
+):
+    """Load (and cache) a genome-scale cobra model. Default = iML1515 (E. coli). Lazy-imports cobra.
+
+    `organism` (alias) or `model_id` (BiGG id) selects a cross-organism model; `path` overrides both.
+    """
+    mid = model_id or resolve_model_id(organism)
+    if reuse and path is None and mid in _MODELS:
+        return _MODELS[mid]
     try:
         import cobra  # noqa: PLC0415  (lazy heavy import)
     except ImportError as e:  # pragma: no cover - env-dependent
         raise ImportError(
             "cobrapy is required for the FBA cell: `pip install 'dna-decode[fba]'` or `uv pip install cobra`."
         ) from e
-    p = Path(path) if path else resolve_model_path()
+    p = Path(path) if path else resolve_model_path(mid)
     model = cobra.io.read_sbml_model(str(p))
     if path is None:
-        _MODEL = model
+        _MODELS[mid] = model
     return model
 
 
@@ -97,6 +132,41 @@ def knockout_growth(model, gene_ids) -> float:
             model.genes.get_by_id(g).knock_out()
         val = model.slim_optimize()
     return 0.0 if (val is None or val != val) else float(val)
+
+
+def synthetic_lethality(model, gene_a: str, gene_b: str, frac: float = 0.01) -> dict:
+    """Two-gene edit -> is the PAIR synthetic-lethal? (neither alone lethal, but the double is).
+
+    Synthetic lethality = KO(a) viable AND KO(b) viable AND KO(a,b) lethal. It is how metabolic
+    drug-target PAIRS are found (each single is buffered by an isozyme / alternate route; the double
+    breaks it). Returns a `fba-synthetic-lethality-v1` record.
+    """
+    wt = wildtype_growth(model)
+    ga = knockout_growth(model, gene_a)
+    gb = knockout_growth(model, gene_b)
+    gab = knockout_growth(model, [gene_a, gene_b])
+    a_ess = call_essential(ga, wt, frac)
+    b_ess = call_essential(gb, wt, frac)
+    ab_ess = call_essential(gab, wt, frac)
+    is_sl = (not a_ess) and (not b_ess) and ab_ess
+    return {
+        "record": "fba-synthetic-lethality-v1",
+        "gene_a": gene_a,
+        "gene_b": gene_b,
+        "wildtype_growth_per_h": round(wt, 4),
+        "ko_a_growth_per_h": round(ga, 4),
+        "ko_b_growth_per_h": round(gb, 4),
+        "double_ko_growth_per_h": round(gab, 4),
+        "single_a_essential": a_ess,
+        "single_b_essential": b_ess,
+        "double_essential": ab_ess,
+        "synthetic_lethal": is_sl,
+        "verdict": (
+            "SYNTHETIC-LETHAL (each single viable; the PAIR is lethal)" if is_sl
+            else "not synthetic-lethal"
+            + (" (a single is already essential)" if (a_ess or b_ess) else " (double is viable)")
+        ),
+    }
 
 
 def gene_essentiality(model, frac: float = 0.01) -> dict[str, tuple[float, bool]]:

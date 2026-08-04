@@ -5,6 +5,18 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **`dna-decode fba --organism` — the FBA cell generalizes across organisms.** The engine is organism-agnostic;
+  `--organism ecoli|saureus|paeruginosa|yeast` (or `--model-id <BiGG id>`) loads the matching genome-scale
+  model from BiGG (fetched + cached like iML1515). Verified on *S. aureus* iYS1720 (1707 genes, WT growth
+  0.489/h, KO smoke). **Only E. coli is Keio-validated** — other organisms are v0 "the engine generalizes"
+  with their own essentiality gold standard deferred (honest scope). `dna_decode/fba/model.py` `_BIGG_MODELS`
+  registry + `resolve_model_id`.
+
+- **`dna-decode fba --knockout A,B --synthetic-lethality` — two-gene edit → synthetic-lethality call.** Detects
+  when a gene PAIR is lethal even though neither single is (each buffered by an isozyme/alternate route; the
+  double breaks it) — how metabolic drug-target *pairs* are found. Verified on the real *dadX+alr* alanine-
+  racemase isozyme pair (both singles viable, double lethal) vs a non-SL control (pgi+zwf). `model.synthetic_lethality`.
+
 - **`dna-decode fba` point-mutation mode — composes `forward` + `fba` so a single MISSENSE edit → cell-level
   trait.** `dna-decode fba --gene gltA --mutation D362A --protein-seq S`: `forward` scores whether the
   missense breaks the enzyme (its own method-aware LOF call), and if damaging the gene is modelled as a
