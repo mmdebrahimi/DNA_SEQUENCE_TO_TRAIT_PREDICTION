@@ -1,9 +1,9 @@
 {
   "record": "fba-essentiality-validation-v1",
   "organism": "paeruginosa",
-  "model": "iJN1463",
-  "status": "LABEL_WALLED",
+  "model": null,
+  "status": "MODEL_WALLED",
   "wall_kind": "external",
-  "reason": "needs a fetchable PAO1 Tn-seq essential set keyed by PA-number",
-  "note": "the FBA engine RUNS on this organism; only a fetchable+model-gene-keyed essential-gene gold standard is missing. Not code-closable without a crosswalk / a new label source."
+  "reason": "no P. aeruginosa GEM in BiGG; gold standard exists but has no model to join to",
+  "note": "there is NO genome-scale model for this organism to validate; the blocker is the MODEL, not the label. Refusing to substitute another organism's model."
 }

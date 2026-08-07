@@ -8,8 +8,27 @@ honest status across the shipped organisms.
 |---|---|---|---|---|---|---|
 | E. coli | iML1515 | **SCORED** | **0.954** | **0.652** | strong | Keio RB-TnSeq fitness (Bernstein 2023) |
 | S. cerevisiae | iMM904 | **SCORED** | 0.824 | 0.252 | **weak** | SGD `phenotype_data.tab` inviable-null (Giaever/SGD) |
-| S. aureus | iYS1720 | **LABEL_WALLED** | — | — | — | model ids are STM#### (Salmonella-style) → needs a gene-name crosswalk |
-| P. aeruginosa | iJN1463 | **LABEL_WALLED** | — | — | — | needs a fetchable PAO1 Tn-seq essential set keyed by PA-number |
+| ~~S. aureus~~ | ~~iYS1720~~ | ~~LABEL_WALLED~~ | — | — | — | ⚠️ **WRONG — iYS1720 is a *Salmonella* pan-reactome.** See correction below |
+| ~~P. aeruginosa~~ | ~~iJN1463~~ | ~~LABEL_WALLED~~ | — | — | — | ⚠️ **WRONG — iJN1463 is *P. putida* KT2440.** See correction below |
+
+> ## ⚠️ CORRECTED 2026-08-07
+>
+> The two walled rows above were **misdiagnosed**. Verified against the BiGG Models API: `iYS1720` is a
+> ***Salmonella* pan-reactome** (1262/1707 gene ids carry the *S.* Typhimurium `STM` prefix — the very
+> detail this artifact read as an "ID convention" quirk) and `iJN1463` is ***Pseudomonas putida* KT2440**.
+> Neither cell was label-walled: **no gold standard could ever have joined, because the model was the
+> wrong organism.** Corrected status (v0.12.1):
+>
+> | organism | model | status | why |
+> |---|---|---|---|
+> | S. aureus | **iYS854** (USA300_TCH1516) | LABEL_WALLED | ids are `USA300HOU_####`; NTML is USA300 JE2 (`SAUSA300_####`) → still a crosswalk |
+> | Salmonella | iYS1720 | LABEL_WALLED | ids are `STM####`; no keyed gold standard wired |
+> | P. putida | iJN1463 | LABEL_WALLED | no keyed essentiality gold standard wired |
+> | P. aeruginosa | **none** | **MODEL_WALLED** | BiGG has no P. aeruginosa reconstruction; the alias now refuses |
+>
+> The **E. coli and yeast rows are UNAFFECTED** — both models were correctly assigned, so both scored
+> numbers and the "does not transfer strongly" finding stand. Full evidence:
+> `wiki/fba_wrong_organism_model_bug_2026-08-07.md`.
 
 ## The finding (honest, not flattering)
 
@@ -29,11 +48,15 @@ re-run; a fair medium likely lifts the number. The default-medium result is the 
 
 ## What would close the two walls (external, not code-closable here)
 
-- **S. aureus:** a `STM#### → S. aureus symbol/locus` crosswalk (the model carries real gene *names* like
-  ArgD, so a name-keyed gold standard + a name join would work) — or a different S. aureus GEM whose ids are
-  real SAUSA300 locus tags.
-- **P. aeruginosa:** a fetchable PAO1/PA14 Tn-seq essential-gene set keyed by PA-number (Jacobs 2003 /
-  Lee 2015), which the Chinese/Japanese essentiality servers (DEG/OGEE) host but time out from this host.
+> **⚠️ SUPERSEDED 2026-08-07 by the correction above.** The "different S. aureus GEM whose ids are real
+> locus tags" was the right instinct — that GEM is **iYS854**, and v0.12.1 now uses it. Updated walls:
+
+- **S. aureus (iYS854):** a `USA300HOU_#### → SAUSA300_####` ortholog crosswalk, to join the NTML /
+  Nebraska transposon library (USA300 JE2). Near-1:1, but a crosswalk nonetheless.
+- **P. aeruginosa:** needs a **genome-scale model**, not a label. The gold standard already exists and
+  IS fetchable from this host — PLOS Comput Biol 2026 `pcbi.1013945.s011`, sheets `GOLD_84` / `GOLD_115`
+  (downloaded + parsed 2026-08-07; the earlier bot-block was transient) — but it is **PA14**-keyed and
+  BiGG has no P. aeruginosa reconstruction to join it to.
 
 ## Reproduce
 
