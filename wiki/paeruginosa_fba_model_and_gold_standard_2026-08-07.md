@@ -60,7 +60,29 @@ FBA-essential-but-not-in-gold call would be scored as a false positive on an uns
 **RECALL** is sound here. This is the same shape as the carbon-growth validation (recall 1.0,
 specificity externally walled) — see `wiki/fba_carbon_growth_validation_2026-08-03.md`.
 
-## Recommendation: do NOT wire iSD1509 into the shipped registry yet
+## DECIDED 2026-08-07 (user-delegated): do NOT wire iSD1509 into the shipped registry
+
+**Status: DECIDED, not pending.** The user delegated the acceptance-bar call ("use your best judgement",
+2026-08-07). The answer is **no — recall ~0.6 with no computable specificity does not clear the bar to
+expose as a decoder cell.** Three reasons, in order of weight:
+
+1. **A recall-only number cannot support the claim a decoder cell makes.** Every shipped cell answers
+   "is this gene essential / is this strain resistant" — a two-sided question. With no computable
+   specificity we would be shipping a cell that cannot be wrong in a measurable direction. That is not a
+   weak cell; it is an *unfalsifiable* one.
+2. **The failure sits precisely where the cell would be used.** Recall on the `Metabolic pathway` class
+   is **0.353** — FBA's own home turf, on a medium that matches the label's condition. A metabolic
+   decoder that misses two thirds of metabolic essentials is not a v0, it is a negative result.
+3. **Shipping it would repeat, in a new place, the error we just spent this session fixing.** v0.11.0
+   went out claiming cross-organism support it did not have. Adding `--organism paeruginosa` back on a
+   0.57 recall, days later, would be the same over-claim with better paperwork.
+
+**What would change the answer** (unchanged from the preconditions below): an *exhaustive* P. aeruginosa
+essentiality call set, making specificity computable. The model half of the wall is now solved — iSD1509
+exists, joins directly, and this memo records exactly how to fetch it — so if that label ever appears,
+this is a short build, not a research project. Until then the honest state is `MODEL_WALLED`.
+
+### Original recommendation (preconditions, retained)
 
 Deliberate, and the reason matters: this session's whole subject was an **over-claimed cross-organism
 capability**. Shipping `--organism paeruginosa` on the back of a 0.57 recall with no computable
