@@ -119,12 +119,50 @@ compute-gated to Kaggle, and explicitly **not a prerequisite**.
 
 ---
 
-## 5. The epoch's falsifier (pre-registered)
+## 5. The epoch's falsifier (pre-registered — SHARPENED 2026-08-07 with the paper's own baseline)
 
-**Track B's held-out r² vs the simple-feature baseline.** If a learned model cannot beat GC/codon/RBS
-features on 12,563 confound-free constructs with directly measured protein output, then the
-learned-design thesis is in serious trouble and the epoch should fall back to deterministic Track A only.
-Cheap, decisive, and it tests the thesis rather than assuming it.
+Original wording: "beat a simple sequence-feature baseline". **Kosuri 2013 supplies a better, published
+one**, so the bar is now sourced rather than invented:
+
+| model (Kosuri 2013, their Fig. 4 / ANOVA) | RNA R² | **protein R²** |
+|---|---|---|
+| simple multiplicative (promoter strength × RBS strength) | 0.92 | **0.76** |
+| ANOVA (promoter + RBS, both affecting both levels) | 0.96 | **0.82** |
+
+Also reported: 80% of RNA and **64% of protein** levels land within twofold of prediction, while **the
+worst 5% deviate by 13-fold on average**.
+
+**The bar: a learned sequence model must beat protein R² ≈ 0.82 on HELD-OUT constructs.**
+
+Two honesty conditions on that comparison, both load-bearing:
+1. The paper's R² values come from element strengths **fit on the same data**, so they are effectively
+   in-sample. The fair test re-fits the element-strength baseline on the training split only and scores
+   both models on the same held-out constructs.
+2. Split by **element**, not at random — held-out *promoters* and *RBSs*, not just held-out combinations.
+   Predicting an unseen combination of seen parts is a much easier problem than predicting a new part,
+   and only the latter is what a designer actually needs.
+
+The paper's own conclusion makes this a genuinely decisive test rather than a formality: in 2013 the
+authors judged prediction good enough that they recommended *screening libraries instead of predicting*.
+If a modern sequence model clears 0.82 on held-out elements, that is a real advance and Track B is live.
+If it does not, that is an honest negative and the epoch falls back to deterministic Track A.
+
+### Getting the data (verified 2026-08-07 — needs ONE browser download)
+
+Automated fetch is blocked, and it is a **bot-block, not a paywall** (the article is free access). Tried
+and failed from this host: PNAS `suppl_file` and `downloadSupplement` paths with the correct `.xls`
+names and a proper referer (**HTTP 403** every time); the PMC mirror (serves a **JavaScript
+proof-of-work** "Preparing to download…" interstitial); and a GitHub mirror search (**0 repos**).
+A browser passes both gates invisibly.
+
+- Article: <https://www.pnas.org/doi/10.1073/pnas.1301301110> → Supporting Information
+- **`sd03.xls` (15.8 MB) is the one that matters** — *"All values used in intermediate and final
+  calculations are enumerated in Dataset S3"* (per-construct DNA/RNA/protein). `sd01`/`sd02` are the
+  per-promoter and per-RBS strength summaries.
+- PMC direct paths (same files, if the PNAS page is awkward):
+  `https://pmc.ncbi.nlm.nih.gov/articles/instance/3752251/bin/1301301110_sd0{1,2,3}.xls`
+
+Drop any of them anywhere on disk and point me at the path; ingestion is a short build from there.
 
 Secondary honesty rail: a design that FBA says is growth-coupled has **not** been shown to work in a
 cell. Every output of Track A is a *hypothesis for the bench*, never a validated strain — the same wall
