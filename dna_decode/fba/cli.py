@@ -31,6 +31,17 @@ def main(argv: list[str] | None = None) -> int:
     src.add_argument("--gene", help="single gene to knock out (b-number or gene name)")
     src.add_argument("--knockout", help="comma-separated genes to knock out together")
     src.add_argument("--wildtype", action="store_true", help="report wild-type growth only")
+    src.add_argument("--design-target", default=None, metavar="PRODUCT",
+                     help="DESIGN mode: search knockouts that make producing PRODUCT (e.g. succ, "
+                          "EX_lac__D_e) NECESSARY for growth -- growth-coupled strain design")
+    ap.add_argument("--growth-frac", type=float, default=0.9,
+                    help="design mode: growth floor as a fraction of each strain's OWN max growth (default 0.9)")
+    ap.add_argument("--max-knockouts", type=int, default=3, choices=[1, 2, 3],
+                    help="design mode: knockout-set size to search (default 2)")
+    ap.add_argument("--anaerobic", action="store_true",
+                    help="design mode: close O2 uptake (redox must balance through secreted products)")
+    ap.add_argument("--level", default="reaction", choices=["reaction", "gene"],
+                    help="design mode: knockout level (default reaction; GPR isozymes blunt gene-level KOs)")
     ap.add_argument("--frac", type=float, default=0.01,
                     help="essential threshold as fraction of WT growth (default 0.01)")
     ap.add_argument("--synthetic-lethality", action="store_true",
@@ -67,6 +78,41 @@ def main(argv: list[str] | None = None) -> int:
     loaded_organism = organism_for(loaded_id)
 
     wt = wildtype_growth(model)
+
+    # --- DESIGN mode: which knockouts make producing the target NECESSARY for growth? ---
+    if a.design_target:
+        from .design import find_coupled_designs
+
+        try:
+            drec = find_coupled_designs(
+                model, a.design_target, growth_frac=a.growth_frac,
+                max_knockouts=a.max_knockouts, wt_growth=wt, anaerobic=a.anaerobic, level=a.level,
+            )
+        except ValueError as e:  # unresolvable / ambiguous target
+            print(f"ERROR: {e}", file=sys.stderr)
+            return 2
+        drec.update({"record": "fba-strain-design-v1", "model": loaded_id, "organism": loaded_organism})
+        if a.json:
+            print(json.dumps(drec, indent=2))
+            return 0
+        print(f"{loaded_id} strain design ({loaded_organism})  |  target {drec['target_reaction']}"
+              f"  |  growth floor {drec['growth_floor_per_h']} /h ({a.growth_frac:.0%} of WT {wt:.4f})")
+        print(f"  wild type: min {drec['baseline']['min_product_flux']} / max "
+              f"{drec['baseline']['max_product_flux']} -> {drec['baseline']['coupling']}")
+        print(f"  {drec['search']}")
+        if drec["designs"]:
+            print(f"  {drec['n_coupled_designs']} GROWTH-COUPLED design(s); best:")
+            for d in drec["designs"][:5]:
+                print(f"    KO {','.join(d['knockouts'])}  guaranteed {d['min_product_flux']}"
+                      f"  (max {d['max_product_flux']}, growth {d['growth_per_h']} /h)")
+        else:
+            print("  NO growth-coupled design found (closest candidates stay uncoupled -- the cell can "
+                  "still avoid producing):")
+            for d in drec["best_uncoupled"][:5]:
+                print(f"    KO {','.join(d['knockouts']) or '(none)'}  min {d['min_product_flux']}"
+                      f"  max {d['max_product_flux']}  growth {d['growth_per_h']} /h  [{d['coupling']}]")
+        print(f"  scope: {drec['scope']}")
+        return 0
 
     # --- compose mode: a POINT MUTATION -> forward (LOF?) -> fba (cell trait) ---
     if a.mutation:

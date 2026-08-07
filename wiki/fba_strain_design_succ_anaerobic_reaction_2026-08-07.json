@@ -1,0 +1,111 @@
+{
+  "target_reaction": "EX_succ_e",
+  "target_name": "Succinate exchange",
+  "condition": "ANAEROBIC (O2 uptake closed)",
+  "knockout_level": "reaction",
+  "growth_floor_frac": 0.9,
+  "growth_floor_basis": "fraction of EACH strain's OWN maximum growth (standard coupling definition)",
+  "min_growth_frac_of_wt": 0.05,
+  "growth_floor_per_h": 0.141786,
+  "wildtype_growth_per_h": 0.15754,
+  "baseline": {
+    "knockouts": [],
+    "n_knockouts": 0,
+    "min_product_flux": 0.047306,
+    "max_product_flux": 3.675306,
+    "growth_per_h": 0.15754,
+    "coupling": "OBLIGATORY",
+    "notes": [
+      "floor = 90% of this strain's own max growth (0.1575 /h)",
+      "wild type (no knockouts)"
+    ]
+  },
+  "n_candidates_scanned": 2266,
+  "n_nonviable_at_floor": 258,
+  "n_singles_evaluated": 2008,
+  "n_pairs_evaluated": 780,
+  "n_triples_evaluated": 816,
+  "search": "exhaustive single reaction knockouts over 2266 candidates; pairs are a BOUNDED heuristic over the top 40 singles: 780 pairs, 816 triples. NOT exhaustive at depth>1",
+  "wildtype_already_coupled": true,
+  "n_coupled_designs": 0,
+  "n_inheriting_baseline_only": 3604,
+  "designs": [],
+  "best_uncoupled": [
+    {
+      "knockouts": [
+        "ETHAtex"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.047306,
+      "max_product_flux": 3.675306,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.1575 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "R15BPK"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.047306,
+      "max_product_flux": 3.675306,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.1575 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "TRDR"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.047306,
+      "max_product_flux": 3.675306,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.1575 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "NNAM"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.047306,
+      "max_product_flux": 3.675306,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.1575 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "PGMT"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.047306,
+      "max_product_flux": 3.675306,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.1575 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    }
+  ],
+  "scope": "STOICHIOMETRIC prediction. A coupled design is a HYPOTHESIS FOR THE BENCH, not a validated strain: FBA does not model regulation, enzyme kinetics, toxicity, metabolic burden, or whether the knockout strain is constructible.",
+  "record": "fba-strain-design-v1",
+  "date": "2026-08-07",
+  "model": "iML1515",
+  "organism": "Escherichia coli K-12 MG1655",
+  "method": "growth-coupled knockout search (two-sided LP at a fixed growth floor); mechanistic, deterministic"
+}

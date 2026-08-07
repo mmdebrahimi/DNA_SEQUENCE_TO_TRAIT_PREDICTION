@@ -5,7 +5,23 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
-_Nothing yet._
+- **`dna-decode fba --design-target` — the DESIGN direction: product → edits (design epoch, Track A).**
+  The FBA cell could answer *edit → trait*; this adds the inverse that strain engineering actually needs:
+  given a product, which knockouts make producing it **necessary for growth**? Growth coupling is what
+  makes an engineered strain stable — selection for growth becomes selection for production. Two-sided LP
+  at a near-optimal growth floor: `min_flux > 0` = OBLIGATORY (a design), `min_flux ≈ 0 < max_flux` =
+  POSSIBLE (the un-engineered case). `dna_decode/fba/design.py` + `scripts/fba_strain_design.py`.
+  **Validated end-to-end: the search independently recovers the OptKnock-lineage anaerobic succinate
+  design `PFL + LDH_D + ALCD2x`, guaranteed flux 9.26 vs a wild-type floor of 0.047** (a ~196× increase
+  in the *guaranteed* floor), pinned by a slow test. Needs no labels and no new data — purely
+  stoichiometric. Every design is stamped a **hypothesis for the bench, never a validated strain**.
+  Four defects were caught by inspecting real output rather than by failing tests, and three of them
+  failed in the same direction (return zero or garbage while appearing to work): counting `OBLIGATORY`
+  instead of *improvement over wild type* reported **2096 of 2096** knockouts as designs; GPR isozymes
+  blunt gene-level knockouts (default is now reaction-level); the growth floor must be **near-optimal and
+  relative to each strain's own maximum** (the same design guarantees 0.0027 at 10% and 12.28 at 99%);
+  and the top-ranked "design" was `ATPM`, the ATP-maintenance pseudo-reaction, now excluded by requiring
+  a non-empty GPR. Full write-up: `wiki/fba_strain_design_cell_2026-08-07.md`.
 
 ## [0.12.1] — CORRECTNESS FIX: the FBA cross-organism registry shipped two wrong-organism models (2026-08-07)
 
