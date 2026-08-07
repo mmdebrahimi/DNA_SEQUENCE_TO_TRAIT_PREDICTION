@@ -1,5 +1,20 @@
 # Breaking the label wall — verified downloadable measured-label sources (2026-08-03)
 
+> ## ⚠️ CORRECTED 2026-08-07 — read this first
+>
+> Two load-bearing claims below about **row #2 (P. aeruginosa)** are **WRONG**:
+> 1. **The gold-standard tags are `PA14_*`, not PAO1 `PA####`.** The SI was downloaded and parsed
+>    2026-08-07 (sheets `GOLD_84` / `GOLD_115`); the key columns are `PA14_RS00005` / `PA14_00010`.
+> 2. **`iJN1463` is not a P. aeruginosa model — it is *Pseudomonas putida* KT2440**, and BiGG has NO
+>    P. aeruginosa reconstruction at all. So there is no "direct join", and the P. aeruginosa cell was
+>    never LABEL-walled: it was **MODEL**-walled.
+>
+> Net: row #2 is **not** the "cleanest immediate win" — it is blocked on a missing model, not a missing
+> label, and downloading the SI does not unblock it on its own. See
+> `wiki/fba_wrong_organism_model_bug_2026-08-07.md`. Also: the SI is **fetchable from this host** (the
+> 2026-08-03 bot-block was transient), so it needs no manual download. Rows #1 (Madin motility) and #3
+> (PMkbase carbon) are unaffected.
+
 The FBA / non-metabolic cells are stuck at KNOWLEDGE_BASELINE / partial because no free, genome-keyed,
 MEASURED label was fetchable. A deep search (2026-08-03) found several that are — some I can pull directly,
 most you download manually (registration / SI / bot-blocked servers) and I ingest. Each is mapped to the

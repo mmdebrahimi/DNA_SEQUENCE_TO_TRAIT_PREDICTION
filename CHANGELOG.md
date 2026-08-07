@@ -7,6 +7,38 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 _Nothing yet._
 
+## [0.12.1] — CORRECTNESS FIX: the FBA cross-organism registry shipped two wrong-organism models (2026-08-07)
+
+**This supersedes 0.12.0 (tagged but never published). Anyone who ran `--organism saureus` or
+`--organism paeruginosa` on 0.11.0 got a result for a DIFFERENT SPECIES.**
+
+- **Fixed — `--organism` loaded the wrong organism's model for two of four aliases.** Verified against
+  the BiGG Models API: `saureus` resolved to **iYS1720**, which is a ***Salmonella* pan-reactome**
+  (1262/1707 gene ids carry the *S.* Typhimurium `STM` prefix), and `paeruginosa` resolved to
+  **iJN1463**, which is ***Pseudomonas putida* KT2440**. Corrected registry:
+  `saureus`→**iYS854** (*S. aureus* USA300_TCH1516), `salmonella`→iYS1720, `pputida`→iJN1463,
+  `ecoli`→iML1515, `yeast`→iMM904 — every alias now loads a model of that actual organism.
+- **Fixed — `--organism paeruginosa` now RAISES instead of silently substituting.** BiGG has no
+  *P. aeruginosa* reconstruction at all; the alias reports that plainly and names the affected versions
+  rather than handing back another species' model.
+- **Fixed — emitted records hardcoded `"model": "iML1515"` / `"organism": "Escherichia coli K-12"`
+  regardless of `--organism`.** Every `fba-metabolic-trait-v1` record (and the human-readable output +
+  the `medium` field, which asserted E. coli's glucose-M9 default on any organism) now stamps provenance
+  from the LOADED model via the new `model.MODEL_ORGANISM` / `organism_for()` source of truth.
+- **Corrected framing — S. aureus / P. aeruginosa were never "LABEL_WALLED".** 0.12.0 reported both as
+  blocked on a missing measured label. The real blocker was the wrong model. They are now separated:
+  `LABEL_WALLED` (a model exists, no joinable label — S. aureus, Salmonella, P. putida) vs the new
+  `MODEL_WALLED` (no model exists at all — P. aeruginosa; its gold standard *is* fetchable at PLOS
+  `pcbi.1013945.s011`, sheets GOLD_84/GOLD_115, but is PA14-keyed with nothing to join to).
+- **Regression guard** — `tests/test_fba.py` now asserts the invariant that would have caught this: the
+  organism named by an alias must appear in the organism its resolved model actually reconstructs, every
+  registered model must declare an organism, and `paeruginosa` must refuse. The previous tests *pinned
+  the bug* (`assert resolve_model_id("saureus") == "iYS1720"`).
+
+E. coli (iML1515, Keio-validated, MCC 0.652) and yeast (iMM904 vs SGD, MCC 0.252) results are
+**UNAFFECTED** — both were correctly assigned. Frozen AMR/forward surfaces byte-unchanged.
+Full evidence: `wiki/fba_wrong_organism_model_bug_2026-08-07.md`.
+
 ## [0.12.0] — the FBA cell matures: cross-organism generalization + honest per-organism validation, and the first NON-metabolic trait catalog (2026-08-03)
 
 Purely **additive** — the frozen AMR/forward surfaces are **byte-unchanged from 0.11.0**. This release
@@ -46,6 +78,9 @@ label-walled elsewhere — the binding constraint is measured LABELS, not model 
   (Giaever/SGD, keyed by systematic ORF) = **weak (accuracy 0.824 but MCC 0.252** — accuracy is flattered by
   the imbalanced majority, so MCC is the reported signal). S. aureus (iYS1720, Salmonella-style STM#### ids)
   + P. aeruginosa (iJN1463) are honest **LABEL_WALLED** (external — need a crosswalk / a fetchable Tn-seq set).
+  > **⚠️ CORRECTED IN 0.12.1:** the S. aureus / P. aeruginosa half of this bullet is WRONG. iYS1720 is a
+  > *Salmonella* model and iJN1463 is *P. putida* — the blocker was the wrong MODEL, not a missing label.
+  > The E. coli + yeast numbers stand.
   `dna_decode/fba/essentiality_labels.py` (per-organism sources + pure parsers) + 4 tests + status roll-up
   `wiki/fba_per_organism_essentiality_2026-08-03.md`. Frozen AMR/forward surfaces byte-unchanged.
 
@@ -60,7 +95,10 @@ point-mutation (composing `forward`), synthetic-lethality, and cross-organism ge
 - **`dna-decode fba --organism` — the FBA cell generalizes across organisms.** The engine is organism-agnostic;
   `--organism ecoli|saureus|paeruginosa|yeast` (or `--model-id <BiGG id>`) loads the matching genome-scale
   model from BiGG (fetched + cached like iML1515). Verified on *S. aureus* iYS1720 (1707 genes, WT growth
-  0.489/h, KO smoke). **Only E. coli is Keio-validated** — other organisms are v0 "the engine generalizes"
+  0.489/h, KO smoke).
+  > **⚠️ CORRECTED IN 0.12.1:** `saureus` did NOT load an S. aureus model — iYS1720 is a *Salmonella*
+  > pan-reactome, and `paeruginosa`'s iJN1463 is *P. putida*. The "verified on S. aureus iYS1720" claim
+  > above is a **Salmonella** result. E. coli + yeast were correctly assigned. **Only E. coli is Keio-validated** — other organisms are v0 "the engine generalizes"
   with their own essentiality gold standard deferred (honest scope). `dna_decode/fba/model.py` `_BIGG_MODELS`
   registry + `resolve_model_id`.
 

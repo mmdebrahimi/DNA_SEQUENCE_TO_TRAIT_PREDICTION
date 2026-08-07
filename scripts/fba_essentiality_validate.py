@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dna_decode.fba.essentiality_labels import (  # noqa: E402
     ESSENTIALITY_LABEL_SOURCES,
     LABEL_WALLED,
+    MODEL_WALLED,
     parse_essential,
 )
 from dna_decode.fba.keio import confusion, metrics_from_confusion  # noqa: E402
@@ -47,7 +48,9 @@ def _auc(scores, labels):
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--organism", required=True, help="ecoli(->use fba_keio_validate) | yeast | saureus | paeruginosa")
+    ap.add_argument("--organism", required=True,
+                    help="ecoli(->use fba_keio_validate) | yeast | saureus | salmonella | pputida "
+                         "(paeruginosa -> MODEL_WALLED: no BiGG reconstruction exists)")
     ap.add_argument("--frac", type=float, default=0.01)
     ap.add_argument("--date", default="2026-08-03")
     ap.add_argument("--label-file", default=None, help="local gold-standard file (skip network)")
@@ -59,6 +62,21 @@ def main(argv: list[str] | None = None) -> int:
 
     if key in ("escherichia_coli", "ecoli", "e_coli"):
         print("E. coli essentiality is validated by scripts/fba_keio_validate.py (Keio-fitness label).")
+        return 1
+
+    if key in MODEL_WALLED:
+        wall = {
+            "record": "fba-essentiality-validation-v1",
+            "organism": a.organism,
+            "model": None,
+            "status": "MODEL_WALLED",
+            "wall_kind": "external",
+            "reason": MODEL_WALLED[key],
+            "note": "there is NO genome-scale model for this organism to validate; the blocker is the "
+                    "MODEL, not the label. Refusing to substitute another organism's model.",
+        }
+        (outdir / f"fba_essentiality_{key}_{a.date}.json").write_text(json.dumps(wall, indent=2), encoding="utf-8")
+        print(f"{a.organism}: MODEL_WALLED -- {wall['reason']}")
         return 1
 
     if key in LABEL_WALLED:

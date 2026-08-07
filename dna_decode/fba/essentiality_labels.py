@@ -10,9 +10,21 @@ VALIDATED (label fetchable + keys join to the BiGG model genes):
   Keyed by systematic ORF name (YXX###W) == iMM904 gene ids. WEAK discrimination (see the validation artifact).
 
 LABEL-WALLED (engine runs, but no clean fetchable+keyed gold standard yet — EXTERNAL wall, documented):
-- **staphylococcus_aureus** (iYS1720): the model's gene *ids* are STM#### (Salmonella-style locus tags) while
-  its gene *names* are real symbols (ArgD, ...) -> a gold standard would need a name/symbol CROSSWALK.
-- **pseudomonas_aeruginosa** (iJN1463): needs a fetchable PAO1 Tn-seq essential set keyed by PA-number.
+- **staphylococcus_aureus** (iYS854, *S. aureus* USA300_TCH1516): gene ids are `USA300HOU_####`. The
+  NTML / Nebraska transposon library (the natural gold standard) is USA300 **JE2/FPR3757**
+  (`SAUSA300_####`) -> near-1:1 orthologs but still a CROSSWALK, not a free join.
+- **salmonella** (iYS1720, Salmonella pan-reactome): gene ids are `STM####` (S. Typhimurium LT2).
+
+NO MODEL (refused, not substituted):
+- **pseudomonas_aeruginosa**: BiGG has NO P. aeruginosa reconstruction (checked 2026-08-07), so the
+  alias RAISES rather than silently loading another species' model. The gold standard DOES exist and
+  is fetchable (PLOS Comput Biol 2026 `pcbi.1013945.s011`, sheets GOLD_84 / GOLD_115) but is keyed to
+  **PA14** locus tags -- so the blocker is the MODEL, not the label.
+
+CORRECTED 2026-08-07 (see `wiki/fba_wrong_organism_model_bug_2026-08-07.md`): v0.11.0-v0.12.0 mapped
+`saureus` -> iYS1720 (a *Salmonella* pan-reactome) and `paeruginosa` -> iJN1463 (*P. putida*). The
+"needs a crosswalk / needs a PAO1 Tn-seq set" framing here was a MISDIAGNOSIS -- no label could ever
+have joined, because the model was the wrong organism.
 """
 from __future__ import annotations
 
@@ -29,10 +41,19 @@ ESSENTIALITY_LABEL_SOURCES: dict[str, tuple[str, str]] = {
 
 # organisms the engine runs on but that have no clean fetchable+keyed gold standard yet (honest walls)
 LABEL_WALLED = {
-    "staphylococcus_aureus": "iYS1720 gene ids are STM#### (Salmonella-style); needs a gene-name crosswalk",
-    "saureus": "iYS1720 gene ids are STM#### (Salmonella-style); needs a gene-name crosswalk",
-    "pseudomonas_aeruginosa": "needs a fetchable PAO1 Tn-seq essential set keyed by PA-number",
-    "paeruginosa": "needs a fetchable PAO1 Tn-seq essential set keyed by PA-number",
+    "staphylococcus_aureus": "iYS854 ids are USA300HOU_####; NTML is USA300 JE2 (SAUSA300_####) -> crosswalk",
+    "saureus": "iYS854 ids are USA300HOU_####; NTML is USA300 JE2 (SAUSA300_####) -> crosswalk",
+    "salmonella": "iYS1720 ids are STM#### (S. Typhimurium LT2); no fetchable keyed gold standard wired yet",
+    "pputida": "iJN1463 (P. putida KT2440); no fetchable keyed essentiality gold standard wired yet",
+    "pseudomonas_putida": "iJN1463 (P. putida KT2440); no fetchable keyed essentiality gold standard wired yet",
+}
+
+# Organisms with NO genome-scale model at all -- distinct from LABEL_WALLED (which has a model but no
+# joinable label). The blocker here is the MODEL. See `model._NO_BIGG_MODEL`.
+MODEL_WALLED = {
+    "pseudomonas_aeruginosa": "no P. aeruginosa GEM in BiGG; gold standard exists (PLOS pcbi.1013945 "
+                              "GOLD_84/GOLD_115) but is PA14-keyed and has nothing to join to",
+    "paeruginosa": "no P. aeruginosa GEM in BiGG; gold standard exists but has no model to join to",
 }
 
 

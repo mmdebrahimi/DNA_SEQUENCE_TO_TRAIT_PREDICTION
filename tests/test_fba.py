@@ -86,10 +86,49 @@ def test_resolve_model_id_aliases():
     assert resolve_model_id(None) == "iML1515"
     assert resolve_model_id("ecoli") == "iML1515"
     assert resolve_model_id("E. coli") == "iML1515"
-    assert resolve_model_id("saureus") == "iYS1720"
-    assert resolve_model_id("Pseudomonas aeruginosa") == "iJN1463"
+    assert resolve_model_id("saureus") == "iYS854"        # S. aureus USA300_TCH1516
+    assert resolve_model_id("salmonella") == "iYS1720"    # Salmonella pan-reactome
+    assert resolve_model_id("pputida") == "iJN1463"       # P. putida KT2440
     assert resolve_model_id("yeast") == "iMM904"
-    assert resolve_model_id("iYS1720") == "iYS1720"  # raw BiGG id passes through
+    assert resolve_model_id("iYS854") == "iYS854"         # raw BiGG id passes through
+
+
+# ---- the regression guard for the 2026-08-07 wrong-organism defect ----
+# v0.11.0-v0.12.0 mapped `saureus`->iYS1720 (a *Salmonella* model) and `paeruginosa`->iJN1463
+# (*P. putida*). This asserts the INVARIANT that would have caught it: the organism named by an
+# alias must actually appear in the organism the resolved model reconstructs.
+_ALIAS_MUST_APPEAR_IN_ORGANISM = {
+    "ecoli": "Escherichia",
+    "escherichia_coli": "Escherichia",
+    "saureus": "Staphylococcus aureus",
+    "staphylococcus_aureus": "Staphylococcus aureus",
+    "salmonella": "Salmonella",
+    "pputida": "putida",
+    "pseudomonas_putida": "putida",
+    "yeast": "Saccharomyces",
+    "scerevisiae": "Saccharomyces",
+}
+
+
+@pytest.mark.parametrize(("alias", "expected"), sorted(_ALIAS_MUST_APPEAR_IN_ORGANISM.items()))
+def test_alias_resolves_to_a_model_of_that_actual_organism(alias, expected):
+    from dna_decode.fba.model import organism_for
+
+    assert expected.lower() in organism_for(resolve_model_id(alias)).lower()
+
+
+def test_every_registered_model_declares_its_organism():
+    from dna_decode.fba.model import MODEL_ORGANISM, _BIGG_MODELS
+
+    missing = set(_BIGG_MODELS.values()) - set(MODEL_ORGANISM)
+    assert not missing, f"models with no declared organism (provenance would be unstampable): {missing}"
+
+
+def test_p_aeruginosa_is_refused_not_substituted():
+    # BiGG has no P. aeruginosa reconstruction; silently handing back P. putida was the defect.
+    for alias in ("paeruginosa", "Pseudomonas aeruginosa", "P. aeruginosa"):
+        with pytest.raises(ValueError, match="no genome-scale metabolic model"):
+            resolve_model_id(alias)
 
 
 def test_resolve_model_id_unknown_raises():

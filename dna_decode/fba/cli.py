@@ -45,20 +45,26 @@ def main(argv: list[str] | None = None) -> int:
                     choices=["blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"],
                     help="forward scorer for the missense (default blosum62, offline)")
     ap.add_argument("--organism", default=None,
-                    help="cross-organism GEM: ecoli(default) | saureus | paeruginosa | yeast "
-                         "(engine generalizes; only E. coli is Keio-validated)")
-    ap.add_argument("--model-id", default=None, help="a BiGG model id directly (e.g. iYS1720)")
+                    help="cross-organism GEM: ecoli(default) | saureus | salmonella | pputida | yeast "
+                         "(engine generalizes; only E. coli is Keio-validated). "
+                         "P. aeruginosa has NO BiGG model and is refused rather than substituted.")
+    ap.add_argument("--model-id", default=None, help="a BiGG model id directly (e.g. iYS854)")
     ap.add_argument("--model", default=None, help="path to an SBML model (override organism/model-id)")
     ap.add_argument("--json", action="store_true", help="emit JSON")
     a = ap.parse_args(argv)
 
-    from .model import call_essential, knockout_growth, load_model, wildtype_growth
+    from .model import call_essential, knockout_growth, load_model, organism_for, wildtype_growth
 
     try:
         model = load_model(a.model, organism=a.organism, model_id=a.model_id)
     except Exception as e:  # ImportError / FileNotFoundError / parse / unknown organism
         print(f"ERROR: {e}", file=sys.stderr)
         return 2
+
+    # Provenance is read from the LOADED model, never hardcoded -- a record must never claim an
+    # organism the run did not actually use (the v0.11.0-v0.12.0 defect).
+    loaded_id = a.model_id or getattr(model, "id", None) or "unknown"
+    loaded_organism = organism_for(loaded_id)
 
     wt = wildtype_growth(model)
 
@@ -78,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         gid = _resolve_gene(model, a.gene)
         if gid is None:
-            print(f"ERROR: gene '{a.gene}' not in iML1515 (metabolic genes only)", file=sys.stderr)
+            print(f"ERROR: gene '{a.gene}' not in {loaded_id} (metabolic genes only)", file=sys.stderr)
             return 2
         from .compose import variant_to_cell_trait
         try:
@@ -90,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(crec, indent=2))
             return 0
         f = crec["forward"]
-        print(f"iML1515 FBA + forward  |  WT growth {crec['wildtype_growth_per_h']} /h")
+        print(f"{loaded_id} FBA + forward ({loaded_organism})  |  WT growth {crec['wildtype_growth_per_h']} /h")
         print(f"  missense {a.gene} {crec['mutation']}  ->  forward({f['method']}) "
               f"{f['predicted_effect']} (raw {f['raw_score']})  ->  {crec['lof_call']}")
         if crec["fba_action"] == "conditional":
@@ -104,9 +110,12 @@ def main(argv: list[str] | None = None) -> int:
 
     rec = {
         "record": "fba-metabolic-trait-v1",
-        "model": "iML1515",
-        "organism": "Escherichia coli K-12",
-        "medium": "model default (glucose M9 aerobic)",
+        "model": loaded_id,
+        "organism": loaded_organism,
+        # The medium is whatever the loaded GEM's default exchange bounds encode -- for iML1515 that
+        # is glucose M9 aerobic, but it is NOT the same for other organisms' models, so do not claim it.
+        "medium": ("model default exchange bounds (iML1515: glucose M9 aerobic)"
+                   if loaded_id == "iML1515" else f"model default exchange bounds ({loaded_id})"),
         "wildtype_growth_per_h": round(wt, 4),
         "trait_axis": "growth rate (/h) + gene-KO essentiality",
         "scope": "METABOLIC traits only (growth/essentiality/secretion); NOT virulence/regulation. NOT clinical.",
@@ -122,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
         for t in tokens:
             gid = _resolve_gene(model, t)
             if gid is None:
-                print(f"ERROR: gene '{t}' not in iML1515 (metabolic genes only; "
+                print(f"ERROR: gene '{t}' not in {loaded_id} (metabolic genes only; "
                       f"non-metabolic genes are out of model scope)", file=sys.stderr)
                 return 2
             resolved.append(gid)
@@ -134,11 +143,11 @@ def main(argv: list[str] | None = None) -> int:
             from .model import synthetic_lethality
             sl = synthetic_lethality(model, resolved[0], resolved[1], a.frac)
             sl["genes"] = tokens
-            sl["scope"] = "METABOLIC traits only; iML1515. NOT clinical."
+            sl["scope"] = f"METABOLIC traits only; {loaded_id} ({loaded_organism}). NOT clinical."
             if a.json:
                 print(json.dumps(sl, indent=2))
                 return 0
-            print(f"iML1515 FBA  |  WT growth {sl['wildtype_growth_per_h']} /h")
+            print(f"{loaded_id} FBA ({loaded_organism})  |  WT growth {sl['wildtype_growth_per_h']} /h")
             print(f"  KO {tokens[0]} alone: {sl['ko_a_growth_per_h']} /h "
                   f"({'essential' if sl['single_a_essential'] else 'viable'})")
             print(f"  KO {tokens[1]} alone: {sl['ko_b_growth_per_h']} /h "
@@ -161,7 +170,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     # human-readable
-    print(f"iML1515 FBA  |  WT growth {rec['wildtype_growth_per_h']} /h (glucose M9 aerobic)")
+    print(f"{loaded_id} FBA ({loaded_organism})  |  WT growth {rec['wildtype_growth_per_h']} /h "
+          f"[{rec['medium']}]")
     if a.wildtype:
         print("  wild-type growth reported.")
     else:

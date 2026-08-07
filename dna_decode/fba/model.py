@@ -17,16 +17,47 @@ from pathlib import Path
 
 MODEL_NAME = "iML1515"
 
+# BiGG model id -> the organism that model ACTUALLY reconstructs, verified against the BiGG Models
+# API (http://bigg.ucsd.edu/api/v2/models/<id>) on 2026-08-07. This is the PROVENANCE SOURCE OF
+# TRUTH: every emitted record stamps its organism from here, never from a hardcoded literal.
+#
+# History (see wiki/fba_wrong_organism_model_bug_2026-08-07.md): v0.11.0-v0.12.0 mapped
+# `saureus` -> iYS1720 (actually a *Salmonella* pan-reactome; 1262/1707 gene ids carry the
+# Salmonella Typhimurium `STM` prefix) and `paeruginosa` -> iJN1463 (actually *P. putida*).
+# Both are corrected below; the models themselves are kept under their TRUE organism aliases.
+MODEL_ORGANISM: dict[str, str] = {
+    "iML1515": "Escherichia coli K-12 MG1655",
+    "iYS854": "Staphylococcus aureus USA300_TCH1516",
+    "iSB619": "Staphylococcus aureus N315",
+    "iJN1463": "Pseudomonas putida KT2440",
+    "iYS1720": "Salmonella (pan-reactome)",
+    "iMM904": "Saccharomyces cerevisiae S288C",
+}
+
 # Cross-organism genome-scale models on BiGG (the engine is organism-agnostic; only E. coli is
 # Keio-validated -- other organisms are v0 "engine generalizes" with their own essentiality gold
 # standard deferred). organism alias -> BiGG model id.
 _BIGG_MODELS: dict[str, str] = {
     "escherichia_coli": "iML1515", "ecoli": "iML1515", "e_coli": "iML1515", "escherichia": "iML1515",
-    "staphylococcus_aureus": "iYS1720", "saureus": "iYS1720", "s_aureus": "iYS1720",
-    "pseudomonas_aeruginosa": "iJN1463", "paeruginosa": "iJN1463", "p_aeruginosa": "iJN1463",
+    "staphylococcus_aureus": "iYS854", "saureus": "iYS854", "s_aureus": "iYS854",
+    "salmonella": "iYS1720", "salmonella_enterica": "iYS1720",
+    "pseudomonas_putida": "iJN1463", "pputida": "iJN1463", "p_putida": "iJN1463",
     "saccharomyces_cerevisiae": "iMM904", "yeast": "iMM904", "scerevisiae": "iMM904",
 }
 _DEFAULT_MODEL_ID = "iML1515"
+
+# Organisms we are ASKED for but have no genome-scale model for in BiGG. Fail LOUDLY here rather
+# than silently handing back a different species' model (the v0.11.0 defect). Queried the full
+# BiGG model list 2026-08-07: zero hits for "aeruginosa".
+_NO_BIGG_MODEL: dict[str, str] = {
+    "pseudomonas_aeruginosa": "P. aeruginosa", "paeruginosa": "P. aeruginosa",
+    "p_aeruginosa": "P. aeruginosa",
+}
+
+
+def organism_for(model_id: str) -> str:
+    """BiGG model id -> the organism it actually reconstructs. Unknown ids are reported as such."""
+    return MODEL_ORGANISM.get(model_id, f"unknown organism (BiGG model {model_id})")
 
 # module-level per-model cache so repeated CLI calls in one process don't re-parse (~10s)
 _MODELS: dict[str, object] = {}
@@ -45,7 +76,15 @@ def resolve_model_id(organism: str | None) -> str:
     key = organism.strip().lower().replace(" ", "_").replace(".", "").replace("-", "_")
     if key in _BIGG_MODELS:
         return _BIGG_MODELS[key]
-    if organism in _BIGG_MODELS.values():  # a raw model id was passed
+    if key in _NO_BIGG_MODEL:
+        raise ValueError(
+            f"no genome-scale metabolic model is available for {_NO_BIGG_MODEL[key]} in BiGG "
+            f"(checked 2026-08-07). Refusing to substitute another organism's model. "
+            f"Supply one explicitly with --model / --model-id if you have a reconstruction. "
+            f"NOTE: dna-decode v0.11.0-v0.12.0 silently loaded iJN1463 (*Pseudomonas putida*) "
+            f"for this alias -- any result from those versions is P. putida, not P. aeruginosa."
+        )
+    if organism in _BIGG_MODELS.values() or organism in MODEL_ORGANISM:  # a raw model id was passed
         return organism
     raise ValueError(
         f"unknown organism '{organism}'. Known: {sorted(set(_BIGG_MODELS))} "

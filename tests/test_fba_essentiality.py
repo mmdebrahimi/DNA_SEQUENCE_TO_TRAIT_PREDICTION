@@ -40,10 +40,18 @@ def test_parse_essential_dispatch():
 
 
 def test_registry_shapes():
-    # yeast is a scored source; S. aureus / P. aeruginosa are honest walls (disjoint sets)
+    # yeast is a scored source; the walls are honest and DISJOINT from it.
+    from dna_decode.fba.essentiality_labels import MODEL_WALLED
+
     assert ESSENTIALITY_LABEL_SOURCES["yeast"][0] == "sgd"
-    assert "saureus" in LABEL_WALLED and "paeruginosa" in LABEL_WALLED
+    # S. aureus has a model (iYS854) but no joinable label -> LABEL wall.
+    assert "saureus" in LABEL_WALLED
+    # P. aeruginosa has NO model at all -> MODEL wall, a distinct kind. Keeping these separate is
+    # the point: v0.11.0-v0.12.0 called it "label-walled" while silently loading a P. putida model.
+    assert "paeruginosa" in MODEL_WALLED
+    assert not (set(LABEL_WALLED) & set(MODEL_WALLED))
     assert not (set(ESSENTIALITY_LABEL_SOURCES) & set(LABEL_WALLED))
+    assert not (set(ESSENTIALITY_LABEL_SOURCES) & set(MODEL_WALLED))
 
 
 @pytest.mark.slow
