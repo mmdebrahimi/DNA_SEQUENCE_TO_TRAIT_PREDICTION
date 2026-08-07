@@ -70,6 +70,28 @@ designs while appearing to work**. A green test suite would not have caught any 
   the *unrestricted* search can miss a design that the tool finds immediately when the candidate set is
   scoped to a pathway. Reported in every artifact's `search` field. A MILP (OptKnock proper) would fix
   this; `cobra.design` was removed from cobrapy, so that is a future build.
+
+  > **I tried to close this and FAILED — twice, measurably (2026-08-07).** Recorded so nobody
+  > re-treads it. `competition_ranking` scores each reaction by how far its flux *capacity* collapses
+  > when the product is maximised, the idea being that a route which must switch off to make the product
+  > is exactly what a designer deletes.
+  >
+  > | attempt | what happened |
+  > |---|---|
+  > | product maximised, growth free | `ALCD2x` rank 3, but `LDH_D` 63 and `PFL` 74 — and the top of the list is **ion transporters and BIOMASS itself**. At max product growth is ~0, so *everything* growth-associated collapses: the score measures "is growth-associated", not "competes". |
+  > | matched growth in both passes | confound gone (`LDH_D` → rank 12, transporters drop out) — but `PFL` and `ALCD2x` fall to ranks ~1466/~1452, because the most product reachable *while still growing at 90%* is only 3.675, far too weak to force those routes off. |
+  >
+  > Neither variant gets all three members into a usable pool, and the unrestricted search still returns
+  > **0**. The default therefore stays the exhaustive `single_effect` strategy — pinned by
+  > `test_default_pool_strategy_does_not_narrow_the_search`, because defaulting to the heuristic would
+  > have narrowed 2266 candidates to 120 on an unvalidated score, trading an honest zero for a fast one
+  > that could hide designs the exhaustive scan reaches. `competition_ranking` is kept as an opt-in
+  > diagnostic (it *does* correctly separate the production pathway, FRD2/PPC ~1) with the failure in its
+  > docstring.
+  >
+  > **The lesson generalises:** a greedy pre-ranking is structurally blind to a design whose members are
+  > individually unremarkable — which is most real ones. That is precisely why the literature uses a
+  > MILP, and these two failures are evidence *for* building one, not against.
 - **Every design is a HYPOTHESIS FOR THE BENCH, never a validated strain.** FBA sees stoichiometry. It
   does not see regulation, enzyme kinetics, toxicity, metabolic burden, or whether the knockout strain is
   constructible. This is the same wall that separates the decoders from clinical claims, and it is

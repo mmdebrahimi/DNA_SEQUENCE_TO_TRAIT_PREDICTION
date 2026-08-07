@@ -223,6 +223,62 @@ def set_anaerobic(model) -> bool:
     return True
 
 
+def competition_ranking(model, target_rxn, growth_frac: float = 0.9, processes: int = 1) -> dict:
+    """DIAGNOSTIC ONLY — a MEASURED-NEGATIVE pool heuristic. **Not the default; do not trust it to rank.**
+
+    Score every reaction by how much its flux CAPACITY collapses when the product is maximised.
+
+    **Verdict 2026-08-07: this does NOT solve the pool problem, and neither does its obvious repair.**
+    Kept because the two failures are informative and cheaply re-checkable, not because it works:
+
+    * **As written (product maximised with growth free):** ranks `ALCD2x` 3rd but `LDH_D` 63rd and `PFL`
+      74th, and the top of the list is junk — `EX_etoh_e`/`ETOHtex`/`ETOHtrpp` (the same ethanol pathway
+      counted three times), potassium/magnesium/calcium/chloride transporters, and the BIOMASS reaction
+      itself. Cause: at maximum product growth is ~0, so *every* growth-associated flux collapses. The
+      score measures "is growth-associated", not "competes with the product".
+    * **Matched-growth repair (pin growth in BOTH passes, force product high in the second):** removes
+      the confound — `LDH_D` rises to rank 12 and the ion transporters drop out — but now `PFL` and
+      `ALCD2x` fall to ranks ~1466 and ~1452, because the most product reachable *while still growing at
+      90%* is only 3.675, far too weak a constraint to force those routes off.
+
+    Neither variant puts all three members of the known design in a usable pool. This is exactly why the
+    literature solves strain design with a **MILP** (OptKnock) that searches the knockout space against
+    the coupling objective directly, rather than pre-ranking candidates — a greedy/heuristic pool is
+    blind to a design whose members are individually unremarkable. `cobra.design` was removed from
+    cobrapy, so the MILP is a future build and the pool limitation stands, NAMED, in the meantime.
+
+    What it computes (two flux-variability passes):
+
+        capacity_growth  = widest |flux| the reaction can carry while growing near-optimally
+        capacity_product = widest |flux| it can carry while the product is near-maximal
+        score            = capacity_growth / (capacity_product + eps)
+
+    It does correctly separate the succinate-PRODUCING pathway (FRD2/PPC score ~1, capacity *increases*)
+    from the fermentation routes; it just does not rank the three design members together.
+
+    FVA rather than a single optimum is deliberate and IS worth keeping: FBA reports one arbitrary
+    solution among many optima, and `LDH_D` is zero in the max-growth solution while still being a real
+    alternative fermentation route. A single-solution test misses it entirely; the variability range
+    does not.
+    """
+    from cobra.flux_analysis import flux_variability_analysis  # noqa: PLC0415 (lazy heavy import)
+
+    eps = 1e-6
+    g = flux_variability_analysis(model, fraction_of_optimum=growth_frac, processes=processes)
+    with model:
+        model.objective = target_rxn
+        model.objective_direction = "max"
+        p = flux_variability_analysis(model, fraction_of_optimum=0.99, processes=processes)
+    scores = {}
+    for rid in g.index:
+        cap_g = max(abs(g.minimum[rid]), abs(g.maximum[rid]))
+        cap_p = max(abs(p.minimum[rid]), abs(p.maximum[rid])) if rid in p.index else 0.0
+        if cap_g <= eps:
+            continue                       # carries nothing while growing -> nothing to delete
+        scores[rid] = cap_g / (cap_p + eps)
+    return scores
+
+
 def find_coupled_designs(
     model,
     target: str,
@@ -236,6 +292,7 @@ def find_coupled_designs(
     anaerobic: bool = False,
     level: str = "reaction",
     min_growth_frac_of_wt: float = 0.05,
+    pool_strategy: str = "single_effect",
 ) -> dict:
     """Search knockout sets that make `target` production obligatory for growth.
 
@@ -284,6 +341,22 @@ def find_coupled_designs(
             candidates = [g.id for g in model.genes]
 
         viable_floor = min_growth_frac_of_wt * wt_growth   # a design that barely grows is not a design
+
+        # Candidate PRE-RANKING. "competition" asks which routes must switch off for the product to be
+        # made (see `competition_ranking`); it is the default because ranking by single-knockout effect
+        # is blind to designs whose members are individually unremarkable -- which is most real ones.
+        pool_note = f"all {len(candidates)} candidates scanned exhaustively as singles"
+        if pool_strategy == "competition" and gene_ids is None:
+            scores = competition_ranking(model, target_rxn, growth_frac=growth_frac)
+            ranked = sorted(
+                (c for c in candidates if c in scores), key=lambda c: -scores[c]
+            )[: max(pair_pool * 3, 60)]
+            pool_note = (
+                f"candidates pre-ranked by flux-capacity COLLAPSE under product maximisation "
+                f"(FVA growth-vs-product); top {len(ranked)} of {len(candidates)} taken forward"
+            )
+            candidates = ranked
+
         singles: list[Design] = []
         n_nonviable = 0
         for cid in candidates:
@@ -299,7 +372,12 @@ def find_coupled_designs(
         pairs: list[Design] = []
         triples: list[Design] = []
         n_pairs_tested = n_triples_tested = 0
-        pool = [d.knockouts[0] for d in ranked_singles[:pair_pool]]
+        viable_ids = {d.knockouts[0] for d in singles}
+        if pool_strategy == "competition" and gene_ids is None:
+            # keep the competition order -- re-sorting by single-knockout effect would undo the point
+            pool = [c for c in candidates if c in viable_ids][:pair_pool]
+        else:
+            pool = [d.knockouts[0] for d in ranked_singles[:pair_pool]]
         if max_knockouts >= 2:
             for i, a in enumerate(pool):
                 for b in pool[i + 1:]:
@@ -350,8 +428,10 @@ def find_coupled_designs(
         "n_singles_evaluated": len(singles),
         "n_pairs_evaluated": n_pairs_tested,
         "n_triples_evaluated": n_triples_tested,
+        "pool_strategy": pool_strategy,
+        "pool_note": pool_note,
         "search": (
-            f"exhaustive single {level} knockouts over {len(candidates)} candidates; "
+            f"{pool_note}; single {level} knockouts over {len(candidates)}; "
             + (
                 f"pairs are a BOUNDED heuristic over the top {min(pair_pool, len(ranked_singles))} "
                 f"singles: {n_pairs_tested} pairs, {n_triples_tested} triples. NOT exhaustive at depth>1"

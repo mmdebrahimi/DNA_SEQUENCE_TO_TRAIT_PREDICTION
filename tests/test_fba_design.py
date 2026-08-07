@@ -113,6 +113,25 @@ def test_design_dict_reports_the_guarantee_and_the_count():
 
 # ---- real model (slow): the honest baseline -- wild type must NOT look coupled ----
 
+def test_default_pool_strategy_does_not_narrow_the_search():
+    """The default must stay the exhaustive strategy, not the MEASURED-NEGATIVE `competition` heuristic.
+
+    `competition_ranking` was built 2026-08-07 to fix the pool limitation and FAILED twice (see its
+    docstring): as written it ranks by "is growth-associated" and floods the top with ion transporters
+    and BIOMASS; matched-growth fixes that but drops PFL/ALCD2x to rank ~1450. Defaulting to it would
+    narrow 2266 candidates to 120 on an UNVALIDATED score -- trading an honest zero for a fast one that
+    could hide designs the exhaustive scan would reach.
+    """
+    import inspect
+
+    from dna_decode.fba.design import find_coupled_designs
+
+    default = inspect.signature(find_coupled_designs).parameters["pool_strategy"].default
+    assert default == "single_effect", (
+        f"default pool_strategy is {default!r}; 'competition' is a measured negative and must stay opt-in"
+    )
+
+
 @pytest.mark.slow
 def test_reproduces_the_literature_anaerobic_succinate_design():
     """The end-to-end gate: the search must FIND a published growth-coupled design.
