@@ -82,6 +82,49 @@ def test_a_combination_result_below_the_bar_is_reported_as_FAIL():
     assert v["combination_split_verdict"] == "FAIL"
 
 
+# ---- pure: the RBS sequence features (the design-question arm) ----
+
+def test_sd_motif_scores_highest_on_a_perfect_shine_dalgarno():
+    from scripts.kosuri_expression_validate import rbs_features
+
+    perfect = rbs_features("TTTTAGGAGGTTTTATG")[-2]     # best SD match
+    none = rbs_features("TTTTTTTTTTTTTTTATG")[-2]
+    assert perfect == 6 and none < 6
+
+
+def test_sd_spacing_is_measured_from_the_motif_to_the_end():
+    from scripts.kosuri_expression_validate import rbs_features
+
+    near = rbs_features("TTTTTTAGGAGGATG")[-1]
+    far = rbs_features("AGGAGGTTTTTTTTTTTTATG")[-1]
+    assert far > near > 0
+
+
+def test_features_use_only_the_sequence_and_are_fixed_width():
+    """No identity, no measured strength -- a held-out RBS must be scored from its letters alone."""
+    from scripts.kosuri_expression_validate import rbs_features
+
+    a, b = rbs_features("ACGTACGTACGTAAGGAGGATG"), rbs_features("TTTT")
+    assert len(a) == len(b) == 4 + 16 + 64 + 4
+    assert rbs_features("ACGT") == rbs_features("acgt")     # case-insensitive
+
+
+def test_sequence_verdict_requires_a_real_margin_over_the_baseline():
+    """A sequence model that merely ties the baseline is NOT generalisation."""
+    from scripts.kosuri_expression_validate import sequence_verdict
+
+    real = sequence_verdict({"additive_baseline": 0.499, "identity": 0.268, "promoter_only": 0.499,
+                             "rbs_sequence_only": 0.099, "promoter_plus_rbs_sequence": 0.747,
+                             "promoter_plus_rbs_sequence_plus_deltaG": 0.781})
+    assert real["generalises_from_sequence"] is True
+    assert real["vs_additive_baseline"] == pytest.approx(0.2815, abs=1e-3)
+
+    tie = sequence_verdict({"additive_baseline": 0.499, "identity": 0.268, "promoter_only": 0.499,
+                            "rbs_sequence_only": 0.099, "promoter_plus_rbs_sequence": 0.50,
+                            "promoter_plus_rbs_sequence_plus_deltaG": 0.51})
+    assert tie["generalises_from_sequence"] is False
+
+
 # ---- real data (slow, skipped when the uncommitted supplementary is absent) ----
 
 @pytest.mark.slow

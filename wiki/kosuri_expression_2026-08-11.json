@@ -37,6 +37,23 @@
     "element_split_verdict": "FAIL",
     "element_best": 0.3271,
     "element_note": "On the element split NOTHING approaches 0.82 -- including the baseline (0.26-0.50). The bar was mis-specified for that split: 0.82 is a COMBINATION-level in-sample number and does not transfer to predicting an unseen element.",
-    "headline": "The learned model's entire advantage is INTERACTION CAPTURE among elements it has already seen. Given an unseen promoter it is WORSE than the additive baseline and below chance (-0.014): it learned identity, not sequence. The only genuine sequence generalisation comes from deltaG, which alone lifts held-out-element R^2 to 0.14-0.33."
+    "identity_model_headline": "An IDENTITY-based learned model's entire advantage is INTERACTION CAPTURE among elements it has already seen. Given an unseen promoter it is WORSE than the additive baseline and below chance (-0.014): it learned identity, not sequence."
+  },
+  "rbs_sequence_split": {
+    "additive_baseline": 0.4993,
+    "identity": 0.2678,
+    "promoter_only": 0.4993,
+    "rbs_sequence_only": 0.0993,
+    "promoter_plus_rbs_sequence": 0.747,
+    "promoter_plus_rbs_sequence_plus_deltaG": 0.7808
+  },
+  "sequence_verdict": {
+    "held_out_rbs_from_sequence": 0.7808,
+    "vs_additive_baseline": 0.2815,
+    "vs_identity_model": 0.513,
+    "promoter_only_control": 0.4993,
+    "rbs_sequence_only_control": 0.0993,
+    "generalises_from_sequence": true,
+    "headline": "Scoring a NOVEL RBS from its letters works: sequence features lift a never-seen RBS well above both the additive baseline and the identity model. The promoter_only control shows the promoter alone does not account for it."
   }
 }

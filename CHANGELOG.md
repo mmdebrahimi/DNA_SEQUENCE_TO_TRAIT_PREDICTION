@@ -18,9 +18,15 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   ("split BY ELEMENT") this is a FAIL**, and the bar was mis-specified for that split — 0.82 is a
   combination-level in-sample number that an element-strength model cannot reach on unseen elements
   (baseline 0.26–0.50). What IS established: given characterised parts, ML picks a new combination to hit a
-  target expression level (0.919). What is not: scoring a novel part from sequence — blocked because
-  `sd01.xls` (promoter sequences) failed to download. `scripts/kosuri_expression_validate.py` + 8 tests;
-  data not committed. Write-up: `wiki/kosuri_expression_2026-08-11.md`.
+  target expression level (0.919). **And scoring a NOVEL RBS from its sequence works too (R^2 0.781)** —
+  held-out RBS, features = 1/2/3-mers + length + GC + Shine-Dalgarno match + SD-to-start spacing, with two
+  controls proving the lift is sequence and not the promoter (`promoter_only` 0.499, `rbs_sequence_only`
+  0.099; sequence adds +0.248 over promoter-only, +0.281 over baseline, +0.513 over identity). So the
+  identity-model failure is a statement about ENCODING, not about expression being unpredictable. Still
+  untested: novel PROMOTER from sequence — `sd01.xls` (promoter sequences) failed to download (the saved
+  file is the Cloudflare challenge page; the SI PDF's DNA is sequencing primers, not the library).
+  `scripts/kosuri_expression_validate.py` + 12 tests; data not committed.
+  Write-up: `wiki/kosuri_expression_2026-08-11.md`.
 
 - **`dna-decode fba --dead-ends` / `--gapfill-target` — find and repair the model's MISSING parts (design
   epoch, Track C).** The honest form of "predict what's absent": not nucleotide infilling, but the missing
