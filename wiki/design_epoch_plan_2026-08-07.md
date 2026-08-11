@@ -149,11 +149,17 @@ If it does not, that is an honest negative and the epoch falls back to determini
 
 ### Getting the data (verified 2026-08-07 — needs ONE browser download)
 
-Automated fetch is blocked, and it is a **bot-block, not a paywall** (the article is free access). Tried
-and failed from this host: PNAS `suppl_file` and `downloadSupplement` paths with the correct `.xls`
-names and a proper referer (**HTTP 403** every time); the PMC mirror (serves a **JavaScript
-proof-of-work** "Preparing to download…" interstitial); and a GitHub mirror search (**0 repos**).
-A browser passes both gates invisibly.
+Automated fetch is blocked, and it is a **bot-block, not a paywall** (the article is Free access).
+**DIAGNOSIS IS DEFINITIVE — do not re-try these; four independent routes are exhausted:**
+
+| route | result |
+|---|---|
+| PNAS `suppl_file` + `downloadSupplement`, correct `.xls` names, proper referer | first **HTTP 403**; later **HTTP 200 returning 59 211 bytes of HTML** — identical for `sd01`/`sd03`, confirmed to contain `cloudflare` / `captcha` / `challenge` / `verify` markers. A **Cloudflare CAPTCHA**, not a transient error |
+| PMC mirror (`PMC3752251`, real paths parsed from the article HTML) | **JavaScript proof-of-work** "Preparing to download…" interstitial |
+| GitHub repository search (4 query forms) | **0 repos** |
+| reuse-paper vendored copy (arXiv 2506.10271, which uses this dataset) | **no repo link** on the abstract page |
+
+A browser passes the Cloudflare and PMC gates invisibly; nothing scriptable from this host does.
 
 - Article: <https://www.pnas.org/doi/10.1073/pnas.1301301110> → Supporting Information
 - **`sd03.xls` (15.8 MB) is the one that matters** — *"All values used in intermediate and final
