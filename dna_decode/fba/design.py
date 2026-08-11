@@ -279,6 +279,115 @@ def competition_ranking(model, target_rxn, growth_frac: float = 0.9, processes: 
     return scores
 
 
+def find_coupled_designs_milp(
+    model,
+    target: str,
+    *,
+    growth_floor_frac_of_wt: float = 0.5,
+    max_knockouts: int = 3,
+    anaerobic: bool = False,
+    candidates: list[str] | None = None,
+    time_limit: int = 1800,
+    product_tol: float = 0.05,
+    solver: str = "scip",
+) -> dict:
+    """Solve the design problem as a MILP instead of enumerating — closes the bounded-pool limitation.
+
+    The enumeration in `find_coupled_designs` is exhaustive only at depth 1; pairs and triples come from a
+    pre-ranked pool, and a pre-ranking cannot see a design whose members are individually unremarkable
+    (`competition_ranking` documents two measured attempts to fix that and why both failed). This path
+    hands the real bilevel problem to `straindesign`, which searches the knockout space directly:
+
+        SUPPRESS   growth >= floor  AND  product <= tol     ("growing without producing" must be impossible)
+        PROTECT    growth >= floor                          (the cell must still actually grow)
+
+    **The PROTECT module is not optional.** Without it the MILP returns hundreds of "designs" that simply
+    kill the cell — if it cannot grow, "grows without producing" is trivially suppressed. Measured
+    2026-08-07: SUPPRESS alone gave 278 solutions topped by `CYSS`, `UPP3S` and heme biosynthesis.
+
+    **The floor here is a fraction of WILD-TYPE growth — NOT the mutant-relative floor `evaluate_knockouts`
+    uses.** A MILP needs one absolute bound, so it cannot express "90% of whatever this particular strain
+    can manage". Getting this wrong is silent and total: at 0.9x wild type the known anaerobic succinate
+    design is `infeasible` by construction, because that design only grows at 0.0816 /h (52% of the
+    anaerobic wild type). Measured on the fermentation candidate set: **50% and 30% of wild type both
+    return exactly `PFL + LDH_D + ALCD2x` in ~23s; 10% is infeasible** (too much slack — the cell can grow
+    that slowly without producing, so no small knockout set can force it).
+
+    Every returned knockout set is RE-EVALUATED with this module's own `evaluate_knockouts`, so the
+    reported guarantee is measured here rather than taken on the solver's word, and is directly comparable
+    to the enumeration path's numbers.
+    """
+    try:
+        import straindesign as sd  # noqa: PLC0415 (optional heavy extra)
+    except ImportError as e:  # pragma: no cover - env-dependent
+        raise ImportError(
+            "MILP strain design needs the [design] extra: `pip install 'dna-decode[design]'` "
+            "(straindesign + pyscipopt). SCIP is required, not optional — GLPK has no indicator "
+            "constraints and its big-M fallback returned `unbounded` on iML1515."
+        ) from e
+
+    with model:
+        condition = "model default (aerobic if O2 uptake is open)"
+        if anaerobic:
+            if not set_anaerobic(model):
+                raise ValueError("anaerobic requested but the model has no EX_o2_e exchange")
+            condition = "ANAEROBIC (O2 uptake closed)"
+        target_rxn = resolve_target(model, target)
+        bio = biomass_reaction(model)
+        wt_growth = model.slim_optimize()
+        floor = growth_floor_frac_of_wt * wt_growth
+        if candidates is None:
+            candidates = [
+                r.id for r in model.reactions
+                if not r.id.startswith(("EX_", "DM_", "SK_"))
+                and r.id not in (bio.id, target_rxn.id)
+                and (r.gene_reaction_rule or "").strip()
+            ]
+        modules = [
+            sd.SDModule(model, sd.names.SUPPRESS,
+                        constraints=[f"{bio.id} >= {floor}", f"{target_rxn.id} <= {product_tol}"]),
+            sd.SDModule(model, sd.names.PROTECT, constraints=[f"{bio.id} >= {floor}"]),
+        ]
+        sols = sd.compute_strain_designs(
+            model, sd_modules=modules, max_cost=max_knockouts,
+            ko_cost={r: 1 for r in candidates}, solution_approach=sd.names.ANY,
+            solver=solver, time_limit=time_limit,
+        )
+        # Re-derive the guarantee ourselves; never report the solver's word as the measured number.
+        verified = []
+        for s in sols.reaction_sd:
+            kos = sorted(s.keys())
+            d = evaluate_knockouts(model, target_rxn, kos, 0.9, wt_growth, "reaction")
+            rec = d.as_dict()
+            rec["verified_by"] = "fba.design.evaluate_knockouts (mutant-relative 90% floor)"
+            verified.append(rec)
+
+    return {
+        "record": "fba-strain-design-milp-v1",
+        "method": "MILP bilevel strain design (straindesign SUPPRESS+PROTECT); mechanistic, deterministic",
+        "solver": solver,
+        "condition": condition,
+        "target_reaction": target_rxn.id,
+        "wildtype_growth_per_h": round(wt_growth, 6),
+        "growth_floor_frac_of_wt": growth_floor_frac_of_wt,
+        "growth_floor_per_h": round(floor, 6),
+        "growth_floor_basis": (
+            "fraction of WILD-TYPE growth (a MILP needs one absolute bound; this is NOT the "
+            "mutant-relative floor the enumeration path uses)"
+        ),
+        "max_knockouts": max_knockouts,
+        "n_candidates": len(candidates),
+        "status": str(sols.status),
+        "n_designs": len(verified),
+        "designs": verified[:20],
+        "scope": (
+            "STOICHIOMETRIC prediction. A coupled design is a HYPOTHESIS FOR THE BENCH, not a validated "
+            "strain: FBA does not model regulation, enzyme kinetics, toxicity, metabolic burden, or "
+            "whether the knockout strain is constructible."
+        ),
+    }
+
+
 def find_coupled_designs(
     model,
     target: str,

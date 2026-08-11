@@ -42,6 +42,15 @@ def main(argv: list[str] | None = None) -> int:
                     help="design mode: close O2 uptake (redox must balance through secreted products)")
     ap.add_argument("--level", default="reaction", choices=["reaction", "gene"],
                     help="design mode: knockout level (default reaction; GPR isozymes blunt gene-level KOs)")
+    ap.add_argument("--milp", action="store_true",
+                    help="design mode: solve the bilevel problem as a MILP (needs the [design] extra) "
+                         "instead of the bounded pair/triple enumeration, which is blind to designs whose "
+                         "members are individually unremarkable")
+    ap.add_argument("--milp-floor", type=float, default=0.5,
+                    help="--milp: growth floor as a fraction of WILD-TYPE growth (default 0.5). NOT the "
+                         "mutant-relative floor the enumeration uses -- a MILP needs one absolute bound")
+    ap.add_argument("--candidates", default=None,
+                    help="design mode: comma-separated knockout candidates to scope the search to")
     ap.add_argument("--frac", type=float, default=0.01,
                     help="essential threshold as fraction of WT growth (default 0.01)")
     ap.add_argument("--synthetic-lethality", action="store_true",
@@ -83,10 +92,41 @@ def main(argv: list[str] | None = None) -> int:
     if a.design_target:
         from .design import find_coupled_designs
 
+        cand = [c.strip() for c in a.candidates.split(",")] if a.candidates else None
+        if a.milp:
+            from .design import find_coupled_designs_milp
+            try:
+                mrec = find_coupled_designs_milp(
+                    model, a.design_target, growth_floor_frac_of_wt=a.milp_floor,
+                    max_knockouts=a.max_knockouts, anaerobic=a.anaerobic, candidates=cand,
+                )
+            except (ValueError, ImportError) as e:
+                print(f"ERROR: {e}", file=sys.stderr)
+                return 2
+            mrec.update({"model": loaded_id, "organism": loaded_organism})
+            if a.json:
+                print(json.dumps(mrec, indent=2))
+                return 0
+            print(f"{loaded_id} MILP strain design ({loaded_organism})  |  target {mrec['target_reaction']}"
+                  f"  |  floor {mrec['growth_floor_per_h']} /h ({a.milp_floor:.0%} of WT)  |  {mrec['condition']}")
+            print(f"  solver {mrec['solver']} | candidates {mrec['n_candidates']} | status {mrec['status']}")
+            if mrec["designs"]:
+                print(f"  {mrec['n_designs']} design(s) (guarantee RE-VERIFIED by evaluate_knockouts):")
+                for d in mrec["designs"][:5]:
+                    print(f"    KO {','.join(d['knockouts'])}  guaranteed {d['min_product_flux']}"
+                          f"  (growth {d['growth_per_h']} /h, {d['coupling']})")
+            else:
+                print("  no design found. If status is 'infeasible', the growth floor may be UNREACHABLE "
+                      "for any knockout set -- try a lower --milp-floor (a design that slows the cell "
+                      "cannot preserve a wild-type-level floor).")
+            print(f"  scope: {mrec['scope']}")
+            return 0
+
         try:
             drec = find_coupled_designs(
                 model, a.design_target, growth_frac=a.growth_frac,
                 max_knockouts=a.max_knockouts, wt_growth=wt, anaerobic=a.anaerobic, level=a.level,
+                gene_ids=cand,
             )
         except ValueError as e:  # unresolvable / ambiguous target
             print(f"ERROR: {e}", file=sys.stderr)

@@ -5,6 +5,22 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **`dna-decode fba --design-target … --milp` — MILP strain design; closes the enumeration's blind spot.**
+  The bounded pair/triple enumeration is exhaustive only at depth 1 and cannot see a design whose members
+  are individually unremarkable — which is most real ones. Two attempts to fix it by pre-ranking candidates
+  both failed measurably (`competition_ranking`: first by ranking "is growth-associated" instead of
+  "competes", flooding the top with ion transporters and BIOMASS; then, after matching growth, by leaving
+  the product constraint too weak to expose `PFL`/`ALCD2x`), so the default stays the exhaustive strategy
+  and is pinned by a test. The real fix is the bilevel MILP the literature uses: wired via **`straindesign`**
+  (new optional `[design]` extra) as `find_coupled_designs_milp`. **It reaches `PFL + LDH_D + ALCD2x` and
+  reports guaranteed flux 9.263835 — exactly matching the enumeration path**, because every MILP result is
+  re-derived by `evaluate_knockouts` rather than trusted from the solver. Three diagnosable failures en
+  route, now all pinned: a **PROTECT module is mandatory** (SUPPRESS alone returned 278 "designs" that
+  simply kill the cell), **SCIP is required not optional** (GLPK lacks indicator constraints; its big-M
+  fallback returned `unbounded`), and the **MILP floor is a fraction of WILD-TYPE growth, not the
+  mutant-relative floor the enumeration uses** (at 0.9×WT the known design is `infeasible` by construction,
+  since it grows at 52% of wild type). Full write-up: `wiki/fba_strain_design_cell_2026-08-07.md`.
+
 - **`dna-decode fba --design-target` — the DESIGN direction: product → edits (design epoch, Track A).**
   The FBA cell could answer *edit → trait*; this adds the inverse that strain engineering actually needs:
   given a product, which knockouts make producing it **necessary for growth**? Growth coupling is what

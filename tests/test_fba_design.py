@@ -160,6 +160,34 @@ def test_reproduces_the_literature_anaerobic_succinate_design():
 
 
 @pytest.mark.slow
+def test_milp_finds_the_same_design_and_the_same_guarantee():
+    """The MILP path must reach the SAME design as the enumeration, with the SAME verified guarantee.
+
+    Two independent methods agreeing on 9.263835 is the cross-validation that makes either trustworthy.
+    Also pins the floor semantics that cost a 30-minute run: the MILP floor is a fraction of WILD-TYPE
+    growth, and at 0.9 the known design is `infeasible` by construction because it only grows at 0.0816
+    (52% of the anaerobic wild type). Skips cleanly when the optional [design] extra is absent.
+    """
+    pytest.importorskip("cobra")
+    pytest.importorskip("straindesign")
+    from dna_decode.fba.design import find_coupled_designs_milp
+    from dna_decode.fba.model import load_model
+
+    m = load_model()
+    r = find_coupled_designs_milp(
+        m, "succ", anaerobic=True, growth_floor_frac_of_wt=0.5, max_knockouts=3,
+        candidates=["PFL", "LDH_D", "ALCD2x", "ACKr", "PTAr", "FRD2", "FRD3", "PPCK", "PPC"],
+        time_limit=600,
+    )
+    assert r["n_designs"] >= 1, f"MILP found nothing (status {r['status']})"
+    best = r["designs"][0]
+    assert set(best["knockouts"]) == {"PFL", "LDH_D", "ALCD2x"}
+    # the guarantee is re-derived by evaluate_knockouts, so it must match the enumeration path exactly
+    assert best["min_product_flux"] == pytest.approx(9.263835, abs=1e-3)
+    assert best["coupling"] == OBLIGATORY
+
+
+@pytest.mark.slow
 def test_wildtype_ecoli_is_not_growth_coupled_for_succinate():
     """Real iML1515: WT can secrete succinate but is never forced to. A regression that reported the
     wild type as OBLIGATORY would make every design look unnecessary."""

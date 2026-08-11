@@ -92,6 +92,30 @@ designs while appearing to work**. A green test suite would not have caught any 
   > **The lesson generalises:** a greedy pre-ranking is structurally blind to a design whose members are
   > individually unremarkable — which is most real ones. That is precisely why the literature uses a
   > MILP, and these two failures are evidence *for* building one, not against.
+  >
+  > ### ✅ CLOSED the same day — `--milp` (2026-08-07)
+  >
+  > Rather than hand-roll the bilevel formulation, checked first whether a maintained package solves it:
+  > **`straindesign` 1.19.1** does (OptKnock/OptCouple/MCS over cobrapy models). Wired as
+  > `find_coupled_designs_milp` + `dna-decode fba --design-target … --milp`, optional `[design]` extra.
+  >
+  > **It reaches the design the enumeration cannot, and both methods agree on the number exactly:**
+  > `PFL + LDH_D + ALCD2x`, guaranteed **9.263835** — identical to the enumeration path, because every
+  > MILP result is re-derived here by `evaluate_knockouts` rather than taken on the solver's word.
+  >
+  > Three failures on the way, each diagnosable and each now pinned in code or docs:
+  >
+  > | attempt | result | cause |
+  > |---|---|---|
+  > | SUPPRESS only | 278 "designs" | killing the cell trivially suppresses "grow without producing" → a **PROTECT** module is mandatory |
+  > | SUPPRESS+PROTECT, GLPK | `unbounded`, 30 min | GLPK has no indicator constraints; its big-M fallback is unbounded here → **SCIP is required, not optional** |
+  > | SUPPRESS+PROTECT, SCIP, floor 0.9×WT | `infeasible` in 22 s | **my spec error** — the design grows at 0.0816 (52% of anaerobic WT), so a 0.9×WT floor is unreachable by construction |
+  >
+  > At 0.5× and 0.3× of wild type it returns the design in ~23 s; at 0.1× it is `infeasible` (too much
+  > slack to force production) — consistent with the enumeration path's own finding that a low floor
+  > kills coupling. **The MILP floor is a fraction of WILD-TYPE growth, NOT the mutant-relative floor the
+  > enumeration uses** — a MILP needs one absolute bound. That difference is silent and total if you get
+  > it wrong, so it is documented in the function, the CLI help, and a test.
 - **Every design is a HYPOTHESIS FOR THE BENCH, never a validated strain.** FBA sees stoichiometry. It
   does not see regulation, enzyme kinetics, toxicity, metabolic burden, or whether the knockout strain is
   constructible. This is the same wall that separates the decoders from clinical claims, and it is

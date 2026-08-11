@@ -121,6 +121,19 @@ fba = [
     "cobra>=0.29",
 ]
 
+# MILP strain design (`dna-decode fba --design-target --milp`). The bounded pair/triple enumeration in
+# `fba/design.py` is exhaustive only at depth 1 and is blind to designs whose members are individually
+# unremarkable -- which is most real ones (see that module's `competition_ranking` for two measured
+# failed attempts to fix it by pre-ranking). `straindesign` solves the actual bilevel problem instead.
+# SEPARATE from [fba] on purpose: it pulls pyscipopt + matplotlib, and SCIP is REQUIRED, not optional --
+# GLPK lacks indicator constraints, so straindesign falls back to a big-M translation that returned
+# `unbounded` on iML1515 (measured 2026-08-07); with SCIP the same problem solves.
+design = [
+    "cobra>=0.29",
+    "straindesign>=1.19",
+    "pyscipopt>=5",
+]
+
 # Deployable FORWARD variant-effect stack (Regime B — the DMS-VALIDATED learned frontier, NOT the closed
 # embedding track). `pip install dna-decode[forward]` makes `dna-decode forward --method esm2` runnable.
 # transformers PINNED >=5: ProSST's trust_remote_code modeling file + the ESM2 masked-marginal path were
