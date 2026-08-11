@@ -1,0 +1,42 @@
+{
+  "record": "kosuri-expression-validation-v1",
+  "date": "2026-08-11",
+  "dataset": "Kosuri 2013 PNAS 110:14024 Dataset S3",
+  "n_constructs": 12270,
+  "target": "log2(protein)",
+  "reproduction_gate": {
+    "protein_simple_log2": 0.7525,
+    "protein_simple_published": 0.76,
+    "rna_simple_log10": 0.9238,
+    "rna_simple_published": 0.92,
+    "rna_full_log10": 0.9623,
+    "rna_full_published": 0.96
+  },
+  "splits": {
+    "held_out_combination": {
+      "additive_baseline": 0.7951,
+      "gbm_identity": 0.8926,
+      "gbm_identity_plus_deltaG": 0.9189
+    },
+    "held_out_promoter": {
+      "additive_baseline": 0.2627,
+      "gbm_identity": -0.0143,
+      "gbm_identity_plus_deltaG": 0.1444
+    },
+    "held_out_rbs": {
+      "additive_baseline": 0.4993,
+      "gbm_identity": 0.2678,
+      "gbm_identity_plus_deltaG": 0.3271
+    }
+  },
+  "verdict": {
+    "preregistered_bar": 0.82,
+    "combination_split_verdict": "PASS",
+    "combination_best": 0.9189,
+    "combination_baseline": 0.7951,
+    "element_split_verdict": "FAIL",
+    "element_best": 0.3271,
+    "element_note": "On the element split NOTHING approaches 0.82 -- including the baseline (0.26-0.50). The bar was mis-specified for that split: 0.82 is a COMBINATION-level in-sample number and does not transfer to predicting an unseen element.",
+    "headline": "The learned model's entire advantage is INTERACTION CAPTURE among elements it has already seen. Given an unseen promoter it is WORSE than the additive baseline and below chance (-0.014): it learned identity, not sequence. The only genuine sequence generalisation comes from deltaG, which alone lifts held-out-element R^2 to 0.14-0.33."
+  }
+}

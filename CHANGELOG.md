@@ -5,6 +5,23 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **Track B — the learned expression model: PASS on composability, FAIL on the design question.** The
+  pre-registered test from the design epoch, run against Kosuri 2013 (PNAS 110:14024; 12,563 constructed
+  promoter x RBS combinations with measured protein). Gated first on **reproducing the paper's own numbers
+  from its own columns** (RNA 0.9238/0.9623 vs published 0.92/0.96; protein 0.7525 vs 0.76). Result on
+  `log2(protein)`, baseline re-fit on the training split only: held-out **combination** additive 0.795 ->
+  GBM+deltaG **0.919** (clears the 0.82 bar, +0.124 over the fair like-for-like baseline); held-out
+  **promoter** 0.263 -> **-0.014**; held-out **RBS** 0.499 -> 0.327. **The element split falsifies the
+  tempting read of 0.919:** given an unseen promoter the learned model is *below chance and worse than the
+  baseline it beat on combinations* — it learned element IDENTITY, not sequence. The only genuine sequence
+  generalisation is deltaG (5' secondary structure), worth 0.14–0.33 alone. **By the stated falsifier
+  ("split BY ELEMENT") this is a FAIL**, and the bar was mis-specified for that split — 0.82 is a
+  combination-level in-sample number that an element-strength model cannot reach on unseen elements
+  (baseline 0.26–0.50). What IS established: given characterised parts, ML picks a new combination to hit a
+  target expression level (0.919). What is not: scoring a novel part from sequence — blocked because
+  `sd01.xls` (promoter sequences) failed to download. `scripts/kosuri_expression_validate.py` + 8 tests;
+  data not committed. Write-up: `wiki/kosuri_expression_2026-08-11.md`.
+
 - **`dna-decode fba --dead-ends` / `--gapfill-target` — find and repair the model's MISSING parts (design
   epoch, Track C).** The honest form of "predict what's absent": not nucleotide infilling, but the missing
   biochemistry, which is where a genome-scale model is actually wrong. Two capabilities kept apart by

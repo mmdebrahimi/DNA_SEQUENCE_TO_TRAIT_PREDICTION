@@ -1,0 +1,101 @@
+"""Track B expression validation — pure logic (wheel-only) + the real-data gate when sd03 is present."""
+from __future__ import annotations
+
+import os
+
+import numpy as np
+import pytest
+
+from scripts.kosuri_expression_validate import PREREGISTERED_BAR, additive_predict, r2, verdict
+
+_SD03 = os.environ.get("KOSURI_SD03", "D:/PythonProjects/DNA_AI_Decoder/sd03.xls")
+
+
+# ---- pure: the scoring + baseline ----
+
+def test_r2_is_1_for_a_perfect_fit_and_0_for_the_mean():
+    y = np.array([1.0, 2.0, 3.0, 4.0])
+    assert r2(y, y) == pytest.approx(1.0)
+    assert r2(y, np.full_like(y, y.mean())) == pytest.approx(0.0)
+
+
+def test_r2_goes_negative_for_a_predictor_worse_than_the_mean():
+    """Load-bearing: the headline finding is a NEGATIVE R2 (-0.014 on held-out promoters). If r2 clipped
+    at 0 that result would silently read as 'no signal' instead of 'worse than predicting the mean'."""
+    y = np.array([1.0, 2.0, 3.0, 4.0])
+    assert r2(y, np.array([4.0, 3.0, 2.0, 1.0])) < 0
+
+
+def test_r2_ignores_non_finite_pairs():
+    y = np.array([1.0, 2.0, np.nan, 4.0])
+    assert np.isfinite(r2(y, np.array([1.0, 2.0, 3.0, 4.0])))
+
+
+def _frame(rows):
+    pd = pytest.importorskip("pandas")
+    return pd.DataFrame(rows)
+
+
+def test_additive_baseline_recovers_a_clean_additive_signal():
+    """y = mu + promoter effect + RBS effect must be recovered exactly when that IS the generating model."""
+    rows = [{"p_code": p, "r_code": r, "y": 10.0 + p - r} for p in range(3) for r in range(3)]
+    d = _frame(rows)
+    assert r2(d.y.values, additive_predict(d, d)) == pytest.approx(1.0, abs=1e-9)
+
+
+def test_unseen_element_falls_back_rather_than_erroring():
+    """An unseen element contributes 0, so the baseline degrades to (other element + grand mean) instead
+    of crashing. That fallback is exactly why it still scores 0.26-0.50 where an identity model scores ~0."""
+    tr = _frame([{"p_code": p, "r_code": r, "y": 10.0 + p - r} for p in range(3) for r in range(3)])
+    te = _frame([{"p_code": 99, "r_code": 0, "y": 12.0}])          # promoter never seen in training
+    pred = additive_predict(tr, te)
+    assert np.isfinite(pred).all()
+
+
+# ---- pure: the verdict contract ----
+
+def test_verdict_reports_both_halves_and_they_can_disagree():
+    """The finding IS the disagreement: PASS on combinations, FAIL on elements. A verdict function that
+    collapsed to one boolean would erase it."""
+    v = verdict({
+        "held_out_combination": {"additive_baseline": 0.795, "gbm_identity": 0.893,
+                                 "gbm_identity_plus_deltaG": 0.919},
+        "held_out_promoter": {"additive_baseline": 0.263, "gbm_identity": -0.014,
+                              "gbm_identity_plus_deltaG": 0.144},
+        "held_out_rbs": {"additive_baseline": 0.499, "gbm_identity": 0.268,
+                         "gbm_identity_plus_deltaG": 0.327},
+    })
+    assert v["combination_split_verdict"] == "PASS"
+    assert v["element_split_verdict"] == "FAIL"
+    assert v["preregistered_bar"] == PREREGISTERED_BAR
+
+
+def test_a_combination_result_below_the_bar_is_reported_as_FAIL():
+    v = verdict({
+        "held_out_combination": {"additive_baseline": 0.79, "gbm_identity": 0.80,
+                                 "gbm_identity_plus_deltaG": 0.81},
+        "held_out_promoter": {"additive_baseline": 0.2, "gbm_identity": 0.0,
+                              "gbm_identity_plus_deltaG": 0.1},
+        "held_out_rbs": {"additive_baseline": 0.4, "gbm_identity": 0.2,
+                         "gbm_identity_plus_deltaG": 0.3},
+    })
+    assert v["combination_split_verdict"] == "FAIL"
+
+
+# ---- real data (slow, skipped when the uncommitted supplementary is absent) ----
+
+@pytest.mark.slow
+@pytest.mark.skipif(not os.path.exists(_SD03), reason="Kosuri sd03.xls not present (not committed)")
+def test_reproduces_the_papers_own_published_numbers():
+    """Gate before trusting anything downstream: recompute the paper's results from its own columns.
+
+    Also pins the units trap -- `model.prot.simple` is log2 while `prot` is raw; comparing in the wrong
+    space returns R2 = -15.
+    """
+    pytest.importorskip("xlrd")
+    from scripts.kosuri_expression_validate import reproduce_published
+
+    rep = reproduce_published(_SD03)
+    assert rep["rna_simple_log10"] == pytest.approx(0.92, abs=0.01)
+    assert rep["rna_full_log10"] == pytest.approx(0.96, abs=0.01)
+    assert rep["protein_simple_log2"] == pytest.approx(0.76, abs=0.02)
