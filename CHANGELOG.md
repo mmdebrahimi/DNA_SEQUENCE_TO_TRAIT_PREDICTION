@@ -37,7 +37,12 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   simply kill the cell), **SCIP is required not optional** (GLPK lacks indicator constraints; its big-M
   fallback returned `unbounded`), and the **MILP floor is a fraction of WILD-TYPE growth, not the
   mutant-relative floor the enumeration uses** (at 0.9×WT the known design is `infeasible` by construction,
-  since it grows at 52% of wild type). Full write-up: `wiki/fba_strain_design_cell_2026-08-07.md`.
+  since it grows at 52% of wild type). **Scope limit, measured:** the MILP finds what the pre-ranking cannot
+  *within a scoped candidate set* (~23 s on the 11-reaction fermentation set) but does **not** make the
+  unrestricted whole-model search tractable — the same formulation at the same working floor over all 2266
+  gene-associated reactions hit `time_limit` with 0 solutions after 50 min on SCIP. Scoping to a pathway is a
+  generic biological prior, not "knowing the answer", but `--milp` is not a point-it-at-the-whole-model
+  button. Full write-up: `wiki/fba_strain_design_cell_2026-08-07.md`.
 
 - **`dna-decode fba --design-target` — the DESIGN direction: product → edits (design epoch, Track A).**
   The FBA cell could answer *edit → trait*; this adds the inverse that strain engineering actually needs:

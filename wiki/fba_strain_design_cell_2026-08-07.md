@@ -113,7 +113,20 @@ designs while appearing to work**. A green test suite would not have caught any 
   >
   > At 0.5× and 0.3× of wild type it returns the design in ~23 s; at 0.1× it is `infeasible` (too much
   > slack to force production) — consistent with the enumeration path's own finding that a low floor
-  > kills coupling. **The MILP floor is a fraction of WILD-TYPE growth, NOT the mutant-relative floor the
+  > kills coupling.
+  >
+  > #### ⚠️ Scale limit — the MILP does NOT make the unrestricted whole-model search tractable
+  >
+  > Measured, same day: the identical formulation at the identical **working** floor (0.5×WT), run over
+  > **all 2266 gene-associated reactions**, returned **`time_limit` with 0 solutions after 3033 s (50 min)**
+  > on this host with SCIP. On the 11-reaction fermentation set it solves in ~23 s.
+  >
+  > So the honest scope of `--milp` is: **it finds designs the enumeration's pre-ranking cannot reach
+  > WITHIN A SCOPED CANDIDATE SET** — it does *not* remove the need to scope. Scoping to a pathway is a
+  > generic biological prior (standard practice in OptKnock studies), not "knowing the answer", so this is
+  > a real capability; but "closes the blind spot" must not be read as "point it at the whole model".
+  > A faster MILP (commercial CPLEX/Gurobi, which straindesign supports) or a compressed network would be
+  > the lever; neither is tried here. **The MILP floor is a fraction of WILD-TYPE growth, NOT the mutant-relative floor the
   > enumeration uses** — a MILP needs one absolute bound. That difference is silent and total if you get
   > it wrong, so it is documented in the function, the CLI help, and a test.
 - **Every design is a HYPOTHESIS FOR THE BENCH, never a validated strain.** FBA sees stoichiometry. It
