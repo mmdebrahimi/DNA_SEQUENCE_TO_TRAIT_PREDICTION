@@ -5,6 +5,24 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+- **`dna-decode fba --dead-ends` / `--gapfill-target` — find and repair the model's MISSING parts (design
+  epoch, Track C).** The honest form of "predict what's absent": not nucleotide infilling, but the missing
+  biochemistry, which is where a genome-scale model is actually wrong. Two capabilities kept apart by
+  evidential weight — `--dead-ends` is a **structural fact** (metabolites produced but never consumed cannot
+  carry steady-state flux; needs no labels, no donor, no network), while `--gapfill-target` is a
+  **hypothesis** (which donor reactions would restore a wrongly-absent trait). **Worked end to end on a
+  measured false negative:** iML1515 predicts no growth on sucrose, but BW25113 has a Sucrose carbon-source
+  experiment in the Wetmore/Keio RB-TnSeq set (verified at source; that assay only runs sources the organism
+  grows on). The diagnostic surfaces the gap **unprompted** — `suc6p_c` is one of 42 transport-fed dead ends,
+  produced by `SUCptspp` and consumed by nothing, so the model carries a sucrose transporter that leads
+  nowhere. Gap-filling against *Salmonella* iYS1720 proposes a single reaction, `FFSD`, and it takes sucrose
+  growth **0.000 → 1.7798 /h** — about twice the glucose rate (0.877), as a disaccharide should — with
+  glucose/xylose/cellobiose **unchanged**. Honesty rails in code, CLI output and tests: a gap is NOT
+  automatically a defect (every proposal ships stamped `HYPOTHESIS`, since "repairing" a correct model
+  fabricates biology), reversible reactions count as both producer and consumer (else the diagnostic invents
+  dead ends), and `demand_reactions`/`exchange_reactions` are both off (inventing a sink is not a repair).
+  Full write-up: `wiki/fba_gapfill_2026-08-07.md`.
+
 - **`dna-decode fba --design-target … --milp` — MILP strain design; closes the enumeration's blind spot.**
   The bounded pair/triple enumeration is exhaustive only at depth 1 and cannot see a design whose members
   are individually unremarkable — which is most real ones. Two attempts to fix it by pre-ranking candidates

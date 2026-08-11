@@ -31,6 +31,13 @@ def main(argv: list[str] | None = None) -> int:
     src.add_argument("--gene", help="single gene to knock out (b-number or gene name)")
     src.add_argument("--knockout", help="comma-separated genes to knock out together")
     src.add_argument("--wildtype", action="store_true", help="report wild-type growth only")
+    src.add_argument("--dead-ends", action="store_true",
+                     help="DIAGNOSTIC: list metabolites the model can never carry flux through (produced "
+                          "but never consumed, or vice versa) -- where the model's MISSING parts show up. "
+                          "Structural: needs no labels, no donor, no network")
+    src.add_argument("--gapfill-target", default=None, metavar="EXCHANGE",
+                     help="REPAIR: propose donor reactions that would restore growth on EXCHANGE "
+                          "(e.g. EX_sucr_e). Every proposal is a HYPOTHESIS -- a gap may be correct biology")
     src.add_argument("--design-target", default=None, metavar="PRODUCT",
                      help="DESIGN mode: search knockouts that make producing PRODUCT (e.g. succ, "
                           "EX_lac__D_e) NECESSARY for growth -- growth-coupled strain design")
@@ -49,6 +56,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--milp-floor", type=float, default=0.5,
                     help="--milp: growth floor as a fraction of WILD-TYPE growth (default 0.5). NOT the "
                          "mutant-relative floor the enumeration uses -- a MILP needs one absolute bound")
+    ap.add_argument("--donor", default="iYS1720",
+                    help="--gapfill-target: BiGG model id to borrow reactions from (default iYS1720)")
     ap.add_argument("--candidates", default=None,
                     help="design mode: comma-separated knockout candidates to scope the search to")
     ap.add_argument("--frac", type=float, default=0.01,
@@ -87,6 +96,58 @@ def main(argv: list[str] | None = None) -> int:
     loaded_organism = organism_for(loaded_id)
 
     wt = wildtype_growth(model)
+
+    # --- DIAGNOSTIC: where are the model's missing parts? ---
+    if a.dead_ends:
+        from .gapfill import model_dead_ends, orphan_uptake_targets
+        des = model_dead_ends(model)
+        orph = orphan_uptake_targets(model)
+        rec = {"record": "fba-dead-ends-v1", "model": loaded_id, "organism": loaded_organism,
+               "n_dead_end_metabolites": len(des), "n_transport_fed": len(orph),
+               "transport_fed": [d.as_dict() for d in orph],
+               "scope": "STRUCTURAL fact about the model, not a claim about the organism's biology."}
+        if a.json:
+            print(json.dumps(rec, indent=2))
+            return 0
+        print(f"{loaded_id} ({loaded_organism}): {len(des)} dead-end metabolites; "
+              f"{len(orph)} fed by a TRANSPORT reaction (structurally suspicious -- the model imports "
+              f"something nothing then consumes)")
+        for d in orph[:15]:
+            print(f"    {d.metabolite:14s} {d.kind:12s} from {','.join(d.reactions)}")
+        print(f"  scope: {rec['scope']}")
+        return 0
+
+    # --- REPAIR: which donor reactions restore a wrongly-absent trait? ---
+    if a.gapfill_target:
+        from .gapfill import propose_repair, verify_repair
+        try:
+            donor = load_model(model_id=a.donor)
+        except Exception as e:
+            print(f"ERROR: donor model {a.donor}: {e}", file=sys.stderr)
+            return 2
+        p = propose_repair(model, donor, a.gapfill_target)
+        if p["candidates"]:
+            ids = [c["id"] for c in p["candidates"][0]]
+            p["verification"] = verify_repair(
+                model, donor, ids, a.gapfill_target,
+                specificity_exchanges=("EX_glc__D_e", "EX_xyl__D_e", "EX_cellb_e"))
+        p.update({"model": loaded_id, "organism": loaded_organism, "donor": a.donor})
+        if a.json:
+            print(json.dumps(p, indent=2))
+            return 0
+        print(f"{loaded_id} ({loaded_organism}) gapfill for {a.gapfill_target} | donor {a.donor} "
+              f"({p['n_donor_reactions']} candidate reactions) | status {p['status']}")
+        print(f"  growth before: {p['growth_before']} /h")
+        for i, sol in enumerate(p["candidates"][:3]):
+            print(f"  candidate {i+1}: {', '.join(c['id'] for c in sol)}")
+            for c in sol:
+                print(f"      {c['id']:10s} {c['reaction'][:66]}")
+        v = p.get("verification")
+        if v:
+            print(f"  VERIFIED: growth {v['growth_before']} -> {v['growth_after']} /h "
+                  f"(repaired={v['repaired']}); specificity unchanged={v['specificity_unchanged']}")
+        print(f"  {p.get('claim_status','')}")
+        return 0
 
     # --- DESIGN mode: which knockouts make producing the target NECESSARY for growth? ---
     if a.design_target:
