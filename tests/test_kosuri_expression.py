@@ -109,20 +109,63 @@ def test_features_use_only_the_sequence_and_are_fixed_width():
     assert rbs_features("ACGT") == rbs_features("acgt")     # case-insensitive
 
 
-def test_sequence_verdict_requires_a_real_margin_over_the_baseline():
+def _split(head, base=0.4991, ident=0.2678, other=0.4991, seqonly=0.1429, ridge=0.0681, oracle=0.8068):
+    def s(m): return {"mean": m, "std": 0.03, "p5": m - 0.05, "p95": m + 0.05}
+    return {"additive_baseline": s(base), "identity": s(ident), "other_element_only": s(other),
+            "sequence_only": s(seqonly), "other_plus_sequence": s(head),
+            "ridge_other_plus_sequence": s(ridge),
+            "other_plus_sequence_plus_deltaG_ORACLE": s(oracle), "n_splits": 25}
+
+
+def test_verdict_headlines_the_NO_deltaG_arm():
+    """Load-bearing. deltaG spans promoter TSS -> +30 GFP, so it is not design-time recomputable; it
+    must never be the headline. A previous version headlined it (0.781) and overstated the result."""
+    from scripts.kosuri_expression_validate import sequence_verdict
+
+    v = sequence_verdict(_split(0.7762), {"r2": 0.6123, "n_elements": 111}, "rbs")
+    assert v["headline_from_sequence"] == 0.7762          # the no-deltaG arm
+    assert v["deltaG_oracle_upper_bound"] == 0.8068       # reported, but separately
+    assert v["headline_from_sequence"] != v["deltaG_oracle_upper_bound"]
+    assert "not design-time recomputable" in v["oracle_note"].lower() or "oracle" in v["oracle_note"].lower()
+
+
+def test_verdict_requires_a_real_margin_over_the_baseline():
     """A sequence model that merely ties the baseline is NOT generalisation."""
     from scripts.kosuri_expression_validate import sequence_verdict
 
-    real = sequence_verdict({"additive_baseline": 0.499, "identity": 0.268, "promoter_only": 0.499,
-                             "rbs_sequence_only": 0.099, "promoter_plus_rbs_sequence": 0.747,
-                             "promoter_plus_rbs_sequence_plus_deltaG": 0.781})
+    real = sequence_verdict(_split(0.7762), {"r2": 0.6123, "n_elements": 111}, "rbs")
     assert real["generalises_from_sequence"] is True
-    assert real["vs_additive_baseline"] == pytest.approx(0.2815, abs=1e-3)
+    assert real["vs_additive_baseline"] == pytest.approx(0.2771, abs=1e-3)
 
-    tie = sequence_verdict({"additive_baseline": 0.499, "identity": 0.268, "promoter_only": 0.499,
-                            "rbs_sequence_only": 0.099, "promoter_plus_rbs_sequence": 0.50,
-                            "promoter_plus_rbs_sequence_plus_deltaG": 0.51})
+    tie = sequence_verdict(_split(0.51), {"r2": 0.2, "n_elements": 111}, "rbs")
     assert tie["generalises_from_sequence"] is False
+
+
+def test_verdict_carries_the_conditional_scope_and_both_numbers():
+    """The per-construct and per-element numbers answer different questions; both must survive."""
+    from scripts.kosuri_expression_validate import sequence_verdict
+
+    v = sequence_verdict(_split(0.7762), {"r2": 0.6123, "n_elements": 111}, "rbs")
+    assert v["per_element_mean_r2"] == 0.6123 and v["per_element_n"] == 111
+    assert "characterised" in v["scope"].lower()
+
+
+def test_promoter_features_score_the_sigma70_boxes():
+    from scripts.kosuri_expression_validate import promoter_features
+
+    f = promoter_features("AAATTGACAGGGGGGGGGGGGGGGGGTATAATAAA")
+    assert f[-4] == 6 and f[-3] == 6      # perfect -35 (TTGACA) and -10 (TATAAT) matches
+    weak = promoter_features("A" * 40)
+    assert weak[-4] < 6 and weak[-3] < 6
+
+
+def test_promoter_features_exclude_measured_TSS_and_are_fixed_width():
+    """TSS.best is MEASURED by RNA-seq in this dataset -- including it would repeat the deltaG mistake."""
+    from scripts.kosuri_expression_validate import promoter_features
+
+    a, b = promoter_features("ACGTTTGACAAAGGTATAATGG"), promoter_features("TTTT")
+    assert len(a) == len(b) == 4 + 16 + 64 + 6
+    assert promoter_features("acgt") == promoter_features("ACGT")
 
 
 # ---- real data (slow, skipped when the uncommitted supplementary is absent) ----

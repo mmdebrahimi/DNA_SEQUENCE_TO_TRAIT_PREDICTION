@@ -5,85 +5,22 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
-- **Track B — the learned expression model: PASS on composability, FAIL on the design question.** The
-  pre-registered test from the design epoch, run against Kosuri 2013 (PNAS 110:14024; 12,563 constructed
-  promoter x RBS combinations with measured protein). Gated first on **reproducing the paper's own numbers
-  from its own columns** (RNA 0.9238/0.9623 vs published 0.92/0.96; protein 0.7525 vs 0.76). Result on
-  `log2(protein)`, baseline re-fit on the training split only: held-out **combination** additive 0.795 ->
-  GBM+deltaG **0.919** (clears the 0.82 bar, +0.124 over the fair like-for-like baseline); held-out
-  **promoter** 0.263 -> **-0.014**; held-out **RBS** 0.499 -> 0.327. **The element split falsifies the
-  tempting read of 0.919:** given an unseen promoter the learned model is *below chance and worse than the
-  baseline it beat on combinations* — it learned element IDENTITY, not sequence. The only genuine sequence
-  generalisation is deltaG (5' secondary structure), worth 0.14–0.33 alone. **By the stated falsifier
-  ("split BY ELEMENT") this is a FAIL**, and the bar was mis-specified for that split — 0.82 is a
-  combination-level in-sample number that an element-strength model cannot reach on unseen elements
-  (baseline 0.26–0.50). What IS established: given characterised parts, ML picks a new combination to hit a
-  target expression level (0.919). **And scoring a NOVEL RBS from its sequence works too (R^2 0.781)** —
-  held-out RBS, features = 1/2/3-mers + length + GC + Shine-Dalgarno match + SD-to-start spacing, with two
-  controls proving the lift is sequence and not the promoter (`promoter_only` 0.499, `rbs_sequence_only`
-  0.099; sequence adds +0.248 over promoter-only, +0.281 over baseline, +0.513 over identity). So the
-  identity-model failure is a statement about ENCODING, not about expression being unpredictable. Still
-  untested: novel PROMOTER from sequence — `sd01.xls` (promoter sequences) failed to download (the saved
-  file is the Cloudflare challenge page; the SI PDF's DNA is sequencing primers, not the library).
-  `scripts/kosuri_expression_validate.py` + 12 tests; data not committed.
-  Write-up: `wiki/kosuri_expression_2026-08-11.md`.
-
-- **`dna-decode fba --dead-ends` / `--gapfill-target` — find and repair the model's MISSING parts (design
-  epoch, Track C).** The honest form of "predict what's absent": not nucleotide infilling, but the missing
-  biochemistry, which is where a genome-scale model is actually wrong. Two capabilities kept apart by
-  evidential weight — `--dead-ends` is a **structural fact** (metabolites produced but never consumed cannot
-  carry steady-state flux; needs no labels, no donor, no network), while `--gapfill-target` is a
-  **hypothesis** (which donor reactions would restore a wrongly-absent trait). **Worked end to end on a
-  measured false negative:** iML1515 predicts no growth on sucrose, but BW25113 has a Sucrose carbon-source
-  experiment in the Wetmore/Keio RB-TnSeq set (verified at source; that assay only runs sources the organism
-  grows on). The diagnostic surfaces the gap **unprompted** — `suc6p_c` is one of 42 transport-fed dead ends,
-  produced by `SUCptspp` and consumed by nothing, so the model carries a sucrose transporter that leads
-  nowhere. Gap-filling against *Salmonella* iYS1720 proposes a single reaction, `FFSD`, and it takes sucrose
-  growth **0.000 → 1.7798 /h** — about twice the glucose rate (0.877), as a disaccharide should — with
-  glucose/xylose/cellobiose **unchanged**. Honesty rails in code, CLI output and tests: a gap is NOT
-  automatically a defect (every proposal ships stamped `HYPOTHESIS`, since "repairing" a correct model
-  fabricates biology), reversible reactions count as both producer and consumer (else the diagnostic invents
-  dead ends), and `demand_reactions`/`exchange_reactions` are both off (inventing a sink is not a repair).
-  Full write-up: `wiki/fba_gapfill_2026-08-07.md`.
-
-- **`dna-decode fba --design-target … --milp` — MILP strain design; closes the enumeration's blind spot.**
-  The bounded pair/triple enumeration is exhaustive only at depth 1 and cannot see a design whose members
-  are individually unremarkable — which is most real ones. Two attempts to fix it by pre-ranking candidates
-  both failed measurably (`competition_ranking`: first by ranking "is growth-associated" instead of
-  "competes", flooding the top with ion transporters and BIOMASS; then, after matching growth, by leaving
-  the product constraint too weak to expose `PFL`/`ALCD2x`), so the default stays the exhaustive strategy
-  and is pinned by a test. The real fix is the bilevel MILP the literature uses: wired via **`straindesign`**
-  (new optional `[design]` extra) as `find_coupled_designs_milp`. **It reaches `PFL + LDH_D + ALCD2x` and
-  reports guaranteed flux 9.263835 — exactly matching the enumeration path**, because every MILP result is
-  re-derived by `evaluate_knockouts` rather than trusted from the solver. Three diagnosable failures en
-  route, now all pinned: a **PROTECT module is mandatory** (SUPPRESS alone returned 278 "designs" that
-  simply kill the cell), **SCIP is required not optional** (GLPK lacks indicator constraints; its big-M
-  fallback returned `unbounded`), and the **MILP floor is a fraction of WILD-TYPE growth, not the
-  mutant-relative floor the enumeration uses** (at 0.9×WT the known design is `infeasible` by construction,
-  since it grows at 52% of wild type). **Scope limit, measured:** the MILP finds what the pre-ranking cannot
-  *within a scoped candidate set* (~23 s on the 11-reaction fermentation set) but does **not** make the
-  unrestricted whole-model search tractable — the same formulation at the same working floor over all 2266
-  gene-associated reactions hit `time_limit` with 0 solutions after 50 min on SCIP. Scoping to a pathway is a
-  generic biological prior, not "knowing the answer", but `--milp` is not a point-it-at-the-whole-model
-  button. Full write-up: `wiki/fba_strain_design_cell_2026-08-07.md`.
-
-- **`dna-decode fba --design-target` — the DESIGN direction: product → edits (design epoch, Track A).**
-  The FBA cell could answer *edit → trait*; this adds the inverse that strain engineering actually needs:
-  given a product, which knockouts make producing it **necessary for growth**? Growth coupling is what
-  makes an engineered strain stable — selection for growth becomes selection for production. Two-sided LP
-  at a near-optimal growth floor: `min_flux > 0` = OBLIGATORY (a design), `min_flux ≈ 0 < max_flux` =
-  POSSIBLE (the un-engineered case). `dna_decode/fba/design.py` + `scripts/fba_strain_design.py`.
-  **Validated end-to-end: the search independently recovers the OptKnock-lineage anaerobic succinate
-  design `PFL + LDH_D + ALCD2x`, guaranteed flux 9.26 vs a wild-type floor of 0.047** (a ~196× increase
-  in the *guaranteed* floor), pinned by a slow test. Needs no labels and no new data — purely
-  stoichiometric. Every design is stamped a **hypothesis for the bench, never a validated strain**.
-  Four defects were caught by inspecting real output rather than by failing tests, and three of them
-  failed in the same direction (return zero or garbage while appearing to work): counting `OBLIGATORY`
-  instead of *improvement over wild type* reported **2096 of 2096** knockouts as designs; GPR isozymes
-  blunt gene-level knockouts (default is now reaction-level); the growth floor must be **near-optimal and
-  relative to each strain's own maximum** (the same design guarantees 0.0027 at 10% and 12.28 at 99%);
-  and the top-ranked "design" was `ATPM`, the ATP-maintenance pseudo-reaction, now excluded by requiring
-  a non-empty GPR. Full write-up: `wiki/fba_strain_design_cell_2026-08-07.md`.
+- **Track B complete — a novel regulatory part CAN be scored from its sequence, for BOTH elements.**
+  Kosuri 2013 (12,563 promoter x RBS constructs, measured protein). 25 repeated GroupShuffleSplits held
+  out by element; the held-out element is never seen in training. **Held-out RBS: 0.7762 +/- 0.034**
+  (baseline 0.4991, identity 0.2678); **held-out PROMOTER: 0.4967 +/- 0.097** (baseline 0.2471, identity
+  0.0304). Confound-free per-element means from sequence alone: **RBS 0.6123** (111 pts),
+  **promoter 0.4165** (112 pts). Features are mechanistic, not learned: k-mers + length + GC, plus the
+  Shine-Dalgarno core for RBSs and the sigma70 -35/-10 boxes with spacer for promoters.
+  **The interesting finding: the promoter is HARDER than the RBS** (0.417 vs 0.612 confound-free) despite
+  explaining more of the protein variance. **The comparator is not a strawman** — ridge on the same
+  features collapses on held-out groups (RBS 0.068 p5 -1.77; promoter **-3.37** p5 -7.72), so the additive
+  baseline is strong. **deltaG is now an explicitly-named ORACLE bound, never the headline** — it is
+  dataset-provided, spans promoter TSS->+30 GFP, and is not design-time recomputable; `TSS.best` is
+  excluded from promoter features for the same reason. Corrects a previous version that headlined 0.781
+  (the deltaG arm). Held-out COMBINATION unchanged: 0.795 -> 0.919. Pre-registered "beat 0.82 split BY
+  ELEMENT" still reported as a **FAIL** (best 0.776), with the bar itself noted as mis-specified for that
+  split. 16 tests; data not committed. Write-up: `wiki/kosuri_expression_2026-08-11.md`.
 
 ## [0.12.1] — CORRECTNESS FIX: the FBA cross-organism registry shipped two wrong-organism models (2026-08-07)
 

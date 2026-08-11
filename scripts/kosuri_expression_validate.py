@@ -72,7 +72,8 @@ def load_sd03(path: str):
         df[c] = df[c].astype(str).str.strip('"')
     d = df[np.isfinite(df.prot)].copy()
     d["y"] = np.log2(d.prot.values)          # protein is raw RFU; the paper models it in log space
-    d["dG"] = d["deltaG"].values             # 5' secondary structure, computable from sequence
+    d["dG"] = d["deltaG"].values             # DATASET-PROVIDED; spans promoter TSS->+30 GFP, so it
+    # is NOT design-time recomputable without promoter sequence. Oracle upper bound only, never a headline.
     d["p_code"] = d.Promoter.astype("category").cat.codes
     d["r_code"] = d.RBS.astype("category").cat.codes
     return d
@@ -163,6 +164,129 @@ def rbs_features(seq: str) -> list[float]:
     return [s.count(k) / n for k in _kmer_list()] + [len(s), gc, best, (len(s) - pos) if pos >= 0 else -1]
 
 
+def promoter_features(seq: str) -> list[float]:
+    """Sequence-only features for one promoter: composition + the sigma70 box mechanics.
+
+    The promoter analogue of `rbs_features`: 1/2/3-mers, length, GC, best match to the -35 box
+    (`TTGACA`) and the -10 Pribnow box (`TATAAT`), the spacer between them (~17 bp is optimal), and the
+    -10 box's distance from the 3' end.
+
+    Deliberately EXCLUDES `TSS.best` from S1. The transcription start site was MEASURED by RNA-seq in
+    this dataset; for a genuinely novel promoter you would have to predict it, not look it up. Including
+    it would repeat the deltaG mistake — a dataset-provided quantity smuggled into a "from sequence"
+    claim.
+    """
+    s = (seq or "").upper()
+    n = max(len(s), 1)
+
+    def best(motif):
+        b, pos = 0, -1
+        for i in range(len(s) - len(motif) + 1):
+            m = sum(a == c for a, c in zip(s[i:i + len(motif)], motif))
+            if m > b:
+                b, pos = m, i
+        return b, pos
+
+    b35, p35 = best("TTGACA")
+    b10, p10 = best("TATAAT")
+    spacer = (p10 - p35 - 6) if (p10 >= 0 and p35 >= 0) else -1
+    gc = (s.count("G") + s.count("C")) / n
+    return [s.count(k) / n for k in _kmer_list()] + [
+        len(s), gc, b35, b10, spacer, (len(s) - p10) if p10 >= 0 else -1]
+
+
+def load_element_sequences(path: str) -> dict:
+    """Kosuri S1 (promoters) or S2 (RBSs) -> {element name: sequence}. Same layout in both files."""
+    import xlrd  # noqa: PLC0415
+
+    sh = xlrd.open_workbook(path).sheet_by_index(0)
+    hdr = [str(sh.cell_value(0, c)).strip('"') for c in range(sh.ncols)]
+    si = hdr.index("Sequence")
+    return {str(sh.cell_value(r, 0)).strip('"'):
+            str(sh.cell_value(r, si)).strip('"').replace(" ", "").upper()
+            for r in range(1, sh.nrows)}
+
+
+def per_element_mean_r2(d, seqmap: dict, name_col: str, feat_fn, seed: int = 0) -> dict:
+    """The CONFOUND-FREE number: predict each held-out element's MEAN log2 protein from its sequence.
+
+    One row per element (not per construct), so the score cannot be inflated by the *other* element
+    being replicated across the panel. This is the honest figure for "how strong is this novel part?",
+    as distinct from "what will this specific construct express?".
+    """
+    import numpy as np  # noqa: PLC0415
+    from sklearn.ensemble import HistGradientBoostingRegressor  # noqa: PLC0415
+    from sklearn.model_selection import KFold  # noqa: PLC0415
+
+    g = d.groupby(name_col).y.mean()
+    names = list(g.index)
+    y = g.values
+    x = np.array([feat_fn(seqmap[n]) for n in names])
+    pred = np.zeros(len(y))
+    for tri, tei in KFold(5, shuffle=True, random_state=seed).split(x):
+        pred[tei] = HistGradientBoostingRegressor(
+            max_iter=400, random_state=seed).fit(x[tri], y[tri]).predict(x[tei])
+    return {"n_elements": len(names), "r2": round(r2(y, pred), 4),
+            "spread_sd_log2": round(float(y.std()), 3)}
+
+
+def run_sequence_split(d, seqmap: dict, name_col: str, group_col: str, other_col: str,
+                       feat_fn, n_splits: int = 25, seed: int = 0) -> dict:
+    """Hold out whole ELEMENTS and score them from sequence. Repeated splits, with controls.
+
+    `n_splits` repeated GroupShuffleSplits rather than one deterministic KFold: with only ~112 groups a
+    single partition is not enough to trust a headline (fold composition matters). Reports mean/std/p5/p95.
+
+    Arms include a RIDGE comparator on the same folds, because "the GBM only beat a weak baseline" is the
+    obvious objection — and it is answered by measurement: ridge with one-hot identity + standardised
+    sequence features collapses on held-out groups (negative R^2), so the additive baseline is a STRONG
+    comparator, not a strawman.
+    """
+    import numpy as np  # noqa: PLC0415
+    from sklearn.ensemble import HistGradientBoostingRegressor  # noqa: PLC0415
+    from sklearn.linear_model import RidgeCV  # noqa: PLC0415
+    from sklearn.model_selection import GroupShuffleSplit  # noqa: PLC0415
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler  # noqa: PLC0415
+
+    d = d[d[name_col].map(seqmap).notna()].copy()
+    F = np.array([feat_fn(seqmap[v]) for v in d[name_col].values])
+    arms = {k: [] for k in ("additive_baseline", "identity", "other_element_only",
+                            "sequence_only", "other_plus_sequence", "ridge_other_plus_sequence",
+                            "other_plus_sequence_plus_deltaG_ORACLE")}
+    for tri, tei in GroupShuffleSplit(n_splits=n_splits, test_size=0.2,
+                                      random_state=seed).split(d, groups=d[group_col].values):
+        tr, te = d.iloc[tri], d.iloc[tei]
+        ftr, fte = F[tri], F[tei]
+        y, yt = tr.y.values, te.y.values
+
+        def gbm(a, b, cats=None):
+            return HistGradientBoostingRegressor(max_iter=400, categorical_features=cats,
+                                                 random_state=seed).fit(a, y).predict(b)
+        arms["additive_baseline"].append(r2(yt, additive_predict(tr, te)))
+        arms["identity"].append(r2(yt, gbm(np.c_[tr.p_code.values, tr.r_code.values],
+                                           np.c_[te.p_code.values, te.r_code.values], [0, 1])))
+        o_tr, o_te = tr[other_col].values.reshape(-1, 1), te[other_col].values.reshape(-1, 1)
+        arms["other_element_only"].append(r2(yt, gbm(o_tr, o_te, [0])))
+        arms["sequence_only"].append(r2(yt, gbm(ftr, fte)))
+        arms["other_plus_sequence"].append(r2(yt, gbm(np.c_[tr[other_col].values, ftr],
+                                                      np.c_[te[other_col].values, fte], [0])))
+        arms["other_plus_sequence_plus_deltaG_ORACLE"].append(
+            r2(yt, gbm(np.c_[tr[other_col].values, ftr, tr.dG.values],
+                       np.c_[te[other_col].values, fte, te.dG.values], [0])))
+        oh = OneHotEncoder(handle_unknown="ignore", sparse_output=False).fit(o_tr)
+        sc = StandardScaler().fit(ftr)
+        arms["ridge_other_plus_sequence"].append(r2(yt, RidgeCV(alphas=np.logspace(-2, 3, 20)).fit(
+            np.c_[oh.transform(o_tr), sc.transform(ftr)], y).predict(
+            np.c_[oh.transform(o_te), sc.transform(fte)])))
+    out = {}
+    for k, v in arms.items():
+        a = np.array(v)
+        out[k] = {"mean": round(float(a.mean()), 4), "std": round(float(a.std()), 4),
+                  "p5": round(float(np.percentile(a, 5)), 4), "p95": round(float(np.percentile(a, 95)), 4)}
+    out["n_splits"] = n_splits
+    return out
+
+
 def load_rbs_sequences(sd02_path: str) -> dict:
     """Kosuri Dataset S2 -> {RBS name: sequence}. S2 is the only file here carrying element sequences."""
     import xlrd  # noqa: PLC0415
@@ -243,29 +367,42 @@ def verdict(splits: dict) -> dict:
     }
 
 
-def sequence_verdict(rbs: dict) -> dict:
-    """Did REAL sequence features generalise to a never-seen RBS? (the design question)"""
-    seq = rbs["promoter_plus_rbs_sequence_plus_deltaG"]
+def sequence_verdict(split: dict, per_element: dict, element: str) -> dict:
+    """Did REAL sequence features generalise to a never-seen element? (the design question)
+
+    The headline is the NO-deltaG arm. deltaG spans promoter TSS -> +30 of GFP, so it contains
+    promoter-derived sequence and is NOT recomputable at design time without the promoter sequence;
+    headlining it would claim a capability the pipeline does not have. It is retained only as an
+    explicitly-named ORACLE upper bound.
+    """
+    head = split["other_plus_sequence"]
+    base = split["additive_baseline"]
     return {
-        "held_out_rbs_from_sequence": seq,
-        "vs_additive_baseline": round(seq - rbs["additive_baseline"], 4),
-        "vs_identity_model": round(seq - rbs["identity"], 4),
-        "promoter_only_control": rbs["promoter_only"],
-        "rbs_sequence_only_control": rbs["rbs_sequence_only"],
-        "generalises_from_sequence": seq > rbs["additive_baseline"] + 0.05,
-        "headline": (
-            "Scoring a NOVEL RBS from its letters works: sequence features lift a never-seen RBS well "
-            "above both the additive baseline and the identity model. The promoter_only control shows the "
-            "promoter alone does not account for it."
-        ),
+        "element_held_out": element,
+        "headline_from_sequence": head["mean"],
+        "headline_std": head["std"],
+        "headline_p5": head["p5"],
+        "vs_additive_baseline": round(head["mean"] - base["mean"], 4),
+        "vs_identity_model": round(head["mean"] - split["identity"]["mean"], 4),
+        "other_element_only_control": split["other_element_only"]["mean"],
+        "sequence_only_control": split["sequence_only"]["mean"],
+        "ridge_comparator": split["ridge_other_plus_sequence"]["mean"],
+        "deltaG_oracle_upper_bound": split["other_plus_sequence_plus_deltaG_ORACLE"]["mean"],
+        "oracle_note": ("deltaG is dataset-provided and spans promoter TSS -> +30 GFP; NOT design-time "
+                        "recomputable without promoter sequence. Upper bound only, never the headline."),
+        "per_element_mean_r2": per_element["r2"],
+        "per_element_n": per_element["n_elements"],
+        "generalises_from_sequence": head["mean"] > base["mean"] + 0.05,
+        "scope": (f"Conditional on a CHARACTERISED panel of the other element: a novel {element} scored "
+                  f"against known partners. Not a claim about arbitrary novel-part design."),
     }
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--sd03", required=True, help="path to Kosuri Dataset S3 (.xls, ~16 MB, not committed)")
-    ap.add_argument("--sd02", default=None, help="path to Dataset S2 (RBS sequences) -- enables the "
-                                                 "sequence-generalisation arm (the design question)")
+    ap.add_argument("--sd02", default=None, help="Dataset S2 (RBS sequences) -- enables the novel-RBS arm")
+    ap.add_argument("--sd01", default=None, help="Dataset S1 (promoter sequences) -- enables the novel-promoter arm")
     ap.add_argument("--date", default=str(date.today()))
     ap.add_argument("--out-dir", default=None)
     a = ap.parse_args(argv)
@@ -281,27 +418,38 @@ def main(argv=None) -> int:
     for name, s in splits.items():
         print(f"  {name:22s} additive {s['additive_baseline']:7.3f} | GBM {s['gbm_identity']:7.3f} "
               f"| GBM+dG {s['gbm_identity_plus_deltaG']:7.3f}")
-    rbs_seq = seq_v = None
-    if a.sd02:
-        rbs_seq = run_rbs_sequence_split(d, a.sd02)
-        seq_v = sequence_verdict(rbs_seq)
-        print("\nHELD-OUT RBS, scored from SEQUENCE (the design question):")
-        for k, val in rbs_seq.items():
-            print(f"   {k:42s} {val:7.4f}")
+    seq_results = {}
+    for tag, path, name_col, group_col, other_col, feat in (
+        ("rbs", a.sd02, "RBS", "r_code", "p_code", rbs_features),
+        ("promoter", a.sd01, "Promoter", "p_code", "r_code", promoter_features),
+    ):
+        if not path:
+            continue
+        seqmap = load_element_sequences(path)
+        split = run_sequence_split(d, seqmap, name_col, group_col, other_col, feat)
+        pem = per_element_mean_r2(d[d[name_col].map(seqmap).notna()], seqmap, name_col, feat)
+        sv = sequence_verdict(split, pem, tag)
+        seq_results[tag] = {"split": split, "per_element_mean": pem, "verdict": sv}
+        print(f"\nHELD-OUT {tag.upper()} scored from SEQUENCE ({split['n_splits']} repeated splits):")
+        for k in ("additive_baseline", "identity", "other_element_only", "sequence_only",
+                  "other_plus_sequence", "ridge_other_plus_sequence",
+                  "other_plus_sequence_plus_deltaG_ORACLE"):
+            s = split[k]
+            print(f"   {k:42s} {s['mean']:7.4f} +/- {s['std']:.4f}  [p5 {s['p5']:6.3f}]")
+        print(f"   per-{tag}-mean from sequence ({pem['n_elements']} pts): R2 = {pem['r2']}")
+        print(f"   -> headline {sv['headline_from_sequence']} (+{sv['vs_additive_baseline']} vs baseline); "
+              f"generalises={sv['generalises_from_sequence']}")
+
     v = verdict(splits)
     print(f"\ncombination split: {v['combination_split_verdict']} "
           f"({v['combination_best']} vs bar {PREREGISTERED_BAR}, baseline {v['combination_baseline']})")
     print(f"element split:     {v['element_split_verdict']} (best {v['element_best']})")
     print(f"\n{v['identity_model_headline']}")
 
-    if seq_v:
-        print(f"\nsequence generalisation: {seq_v['held_out_rbs_from_sequence']} "
-              f"(+{seq_v['vs_additive_baseline']} vs additive, +{seq_v['vs_identity_model']} vs identity) "
-              f"-> generalises={seq_v['generalises_from_sequence']}")
     rec = {"record": "kosuri-expression-validation-v1", "date": a.date,
            "dataset": "Kosuri 2013 PNAS 110:14024 Dataset S3", "n_constructs": int(len(d)),
            "target": "log2(protein)", "reproduction_gate": repro, "splits": splits, "verdict": v,
-           "rbs_sequence_split": rbs_seq, "sequence_verdict": seq_v}
+           "sequence_arms": seq_results}
     outdir = Path(a.out_dir) if a.out_dir else Path(__file__).resolve().parent.parent / "wiki"
     outdir.mkdir(parents=True, exist_ok=True)
     stem = outdir / f"kosuri_expression_{a.date}"

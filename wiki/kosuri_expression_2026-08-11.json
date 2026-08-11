@@ -39,21 +39,144 @@
     "element_note": "On the element split NOTHING approaches 0.82 -- including the baseline (0.26-0.50). The bar was mis-specified for that split: 0.82 is a COMBINATION-level in-sample number and does not transfer to predicting an unseen element.",
     "identity_model_headline": "An IDENTITY-based learned model's entire advantage is INTERACTION CAPTURE among elements it has already seen. Given an unseen promoter it is WORSE than the additive baseline and below chance (-0.014): it learned identity, not sequence."
   },
-  "rbs_sequence_split": {
-    "additive_baseline": 0.4993,
-    "identity": 0.2678,
-    "promoter_only": 0.4993,
-    "rbs_sequence_only": 0.0993,
-    "promoter_plus_rbs_sequence": 0.747,
-    "promoter_plus_rbs_sequence_plus_deltaG": 0.7808
-  },
-  "sequence_verdict": {
-    "held_out_rbs_from_sequence": 0.7808,
-    "vs_additive_baseline": 0.2815,
-    "vs_identity_model": 0.513,
-    "promoter_only_control": 0.4993,
-    "rbs_sequence_only_control": 0.0993,
-    "generalises_from_sequence": true,
-    "headline": "Scoring a NOVEL RBS from its letters works: sequence features lift a never-seen RBS well above both the additive baseline and the identity model. The promoter_only control shows the promoter alone does not account for it."
+  "sequence_arms": {
+    "rbs": {
+      "split": {
+        "additive_baseline": {
+          "mean": 0.4991,
+          "std": 0.0505,
+          "p5": 0.4167,
+          "p95": 0.5725
+        },
+        "identity": {
+          "mean": 0.2528,
+          "std": 0.0989,
+          "p5": 0.0826,
+          "p95": 0.3997
+        },
+        "other_element_only": {
+          "mean": 0.4991,
+          "std": 0.0505,
+          "p5": 0.4167,
+          "p95": 0.5725
+        },
+        "sequence_only": {
+          "mean": 0.1429,
+          "std": 0.0575,
+          "p5": 0.0593,
+          "p95": 0.2271
+        },
+        "other_plus_sequence": {
+          "mean": 0.7762,
+          "std": 0.034,
+          "p5": 0.7305,
+          "p95": 0.8321
+        },
+        "ridge_other_plus_sequence": {
+          "mean": 0.0681,
+          "std": 0.7428,
+          "p5": -1.7683,
+          "p95": 0.5997
+        },
+        "other_plus_sequence_plus_deltaG_ORACLE": {
+          "mean": 0.8068,
+          "std": 0.0313,
+          "p5": 0.7593,
+          "p95": 0.8525
+        },
+        "n_splits": 25
+      },
+      "per_element_mean": {
+        "n_elements": 111,
+        "r2": 0.6123,
+        "spread_sd_log2": 1.401
+      },
+      "verdict": {
+        "element_held_out": "rbs",
+        "headline_from_sequence": 0.7762,
+        "headline_std": 0.034,
+        "headline_p5": 0.7305,
+        "vs_additive_baseline": 0.2771,
+        "vs_identity_model": 0.5234,
+        "other_element_only_control": 0.4991,
+        "sequence_only_control": 0.1429,
+        "ridge_comparator": 0.0681,
+        "deltaG_oracle_upper_bound": 0.8068,
+        "oracle_note": "deltaG is dataset-provided and spans promoter TSS -> +30 GFP; NOT design-time recomputable without promoter sequence. Upper bound only, never the headline.",
+        "per_element_mean_r2": 0.6123,
+        "per_element_n": 111,
+        "generalises_from_sequence": true,
+        "scope": "Conditional on a CHARACTERISED panel of the other element: a novel rbs scored against known partners. Not a claim about arbitrary novel-part design."
+      }
+    },
+    "promoter": {
+      "split": {
+        "additive_baseline": {
+          "mean": 0.2471,
+          "std": 0.0612,
+          "p5": 0.1605,
+          "p95": 0.3409
+        },
+        "identity": {
+          "mean": 0.0304,
+          "std": 0.1574,
+          "p5": -0.2344,
+          "p95": 0.2589
+        },
+        "other_element_only": {
+          "mean": 0.2471,
+          "std": 0.0612,
+          "p5": 0.1605,
+          "p95": 0.3409
+        },
+        "sequence_only": {
+          "mean": 0.1119,
+          "std": 0.1217,
+          "p5": -0.1086,
+          "p95": 0.2588
+        },
+        "other_plus_sequence": {
+          "mean": 0.4967,
+          "std": 0.0966,
+          "p5": 0.3044,
+          "p95": 0.6188
+        },
+        "ridge_other_plus_sequence": {
+          "mean": -3.3728,
+          "std": 2.7271,
+          "p5": -7.7176,
+          "p95": -0.7096
+        },
+        "other_plus_sequence_plus_deltaG_ORACLE": {
+          "mean": 0.5521,
+          "std": 0.0923,
+          "p5": 0.3434,
+          "p95": 0.671
+        },
+        "n_splits": 25
+      },
+      "per_element_mean": {
+        "n_elements": 112,
+        "r2": 0.4165,
+        "spread_sd_log2": 1.918
+      },
+      "verdict": {
+        "element_held_out": "promoter",
+        "headline_from_sequence": 0.4967,
+        "headline_std": 0.0966,
+        "headline_p5": 0.3044,
+        "vs_additive_baseline": 0.2496,
+        "vs_identity_model": 0.4663,
+        "other_element_only_control": 0.2471,
+        "sequence_only_control": 0.1119,
+        "ridge_comparator": -3.3728,
+        "deltaG_oracle_upper_bound": 0.5521,
+        "oracle_note": "deltaG is dataset-provided and spans promoter TSS -> +30 GFP; NOT design-time recomputable without promoter sequence. Upper bound only, never the headline.",
+        "per_element_mean_r2": 0.4165,
+        "per_element_n": 112,
+        "generalises_from_sequence": true,
+        "scope": "Conditional on a CHARACTERISED panel of the other element: a novel promoter scored against known partners. Not a claim about arbitrary novel-part design."
+      }
+    }
   }
 }
