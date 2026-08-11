@@ -287,6 +287,121 @@ def run_sequence_split(d, seqmap: dict, name_col: str, group_col: str, other_col
     return out
 
 
+def library_of(name: str) -> str:
+    """Which parts library a promoter/RBS came from, recovered from its NAME prefix.
+
+    The four sources Kosuri drew on, and the reason leave-library-out is possible at all:
+      apFAB*            -> BIOFAB
+      BBa_* / J23*      -> BioBrick / Anderson  (J23xxx is the Anderson promoter series)
+      salis*            -> Salis RBS Calculator
+      everything else   -> vector / other  (lacUV5, pTrc, PLTETo1, DeadRBS, ...)
+    """
+    n = (name or "").strip()
+    if n.startswith("apFAB"):
+        return "BIOFAB"
+    if n.startswith("BBa_") or n.startswith("J23"):
+        return "BioBrick/Anderson"
+    if n.lower().startswith("salis"):
+        return "Salis"
+    return "vector/other"
+
+
+def leave_library_out(d, seqmap: dict, name_col: str, feat_fn, min_test: int = 5, seed: int = 0) -> dict:
+    """OUT-OF-DISTRIBUTION stress test: train on some parts libraries, predict an ENTIRELY UNSEEN one.
+
+    Every part in this dataset is DESIGNED (BIOFAB / Anderson / Salis / cloning vectors), so a
+    leave-one-ELEMENT-out score can still be interpolation *within* a design style — the held-out part may
+    be a near neighbour of its library-mates in the training set. Holding out a whole library removes that
+    crutch and is the closest thing this data offers to "a part nobody in this dataset designed".
+
+    Scored on per-element MEANS (one row per part) so the number is not inflated by partner replication.
+    A library with fewer than `min_test` parts is reported but flagged `underpowered`.
+    """
+    import numpy as np  # noqa: PLC0415
+    from sklearn.ensemble import HistGradientBoostingRegressor  # noqa: PLC0415
+
+    g = d.groupby(name_col).y.mean()
+    names = np.array(list(g.index))
+    y = g.values
+    x = np.array([feat_fn(seqmap[n]) for n in names])
+    libs = np.array([library_of(n) for n in names])
+
+    out = {}
+    for lib in sorted(set(libs)):
+        te = libs == lib
+        tr = ~te
+        if te.sum() < 2 or tr.sum() < 10:
+            out[lib] = {"n_test": int(te.sum()), "status": "skipped_too_small"}
+            continue
+        m = HistGradientBoostingRegressor(max_iter=400, random_state=seed).fit(x[tr], y[tr])
+        pred = m.predict(x[te])
+        # R^2 is computed against the GLOBAL mean, not the held-out library's own mean: predicting an
+        # unseen library must beat "the average part", which is the question a designer actually faces.
+        ss_res = float(((y[te] - pred) ** 2).sum())
+        ss_tot = float(((y[te] - y.mean()) ** 2).sum())
+        out[lib] = {
+            "n_test": int(te.sum()), "n_train": int(tr.sum()),
+            "r2_vs_global_mean": round(1 - ss_res / ss_tot, 4) if ss_tot > 0 else float("nan"),
+            "status": "ok" if te.sum() >= min_test else "underpowered",
+        }
+    return out
+
+
+def leave_library_out_with_size_control(d, seqmap: dict, name_col: str, feat_fn,
+                                        n_control: int = 20, seed: int = 0) -> dict:
+    """Leave-one-library-out, PLUS the control that makes it interpretable.
+
+    Holding out a library changes two things at once: the test parts become out-of-distribution AND the
+    training set shrinks (holding out BIOFAB leaves only 22 promoters to train on). A raw LOLO score
+    therefore cannot distinguish "this design style is unfamiliar" from "there wasn't enough data".
+
+    The control fixes that: for each library, also score `n_control` RANDOM splits with the SAME train and
+    test sizes, drawn across all libraries. The GAP (`lolo - random_same_size`) isolates the library-shift
+    component. Verified 2026-08-11: promoter-BIOFAB LOLO is -0.655, but a *random* split at that same
+    train size (22) scores -0.065 — so most of the collapse is small-data, and the shift component is the
+    -0.590 gap, not the raw number.
+    """
+    import numpy as np  # noqa: PLC0415
+    from sklearn.ensemble import HistGradientBoostingRegressor  # noqa: PLC0415
+
+    rng = np.random.default_rng(seed)
+    g = d.groupby(name_col).y.mean()
+    names = np.array(list(g.index))
+    y = g.values
+    x = np.array([feat_fn(seqmap[n]) for n in names])
+    libs = np.array([library_of(n) for n in names])
+    gmean = y.mean()
+
+    def score(tr, te):
+        m = HistGradientBoostingRegressor(max_iter=400, random_state=seed).fit(x[tr], y[tr])
+        p = m.predict(x[te])
+        denom = float(((y[te] - gmean) ** 2).sum())
+        return float("nan") if denom <= 0 else float(1 - ((y[te] - p) ** 2).sum() / denom)
+
+    out = {}
+    for lib in sorted(set(libs)):
+        te = np.where(libs == lib)[0]
+        tr = np.where(libs != lib)[0]
+        if len(te) < 2 or len(tr) < 10:
+            out[lib] = {"n_test": int(len(te)), "status": "skipped_too_small"}
+            continue
+        lolo = score(tr, te)
+        ctl = []
+        for _ in range(n_control):
+            perm = rng.permutation(len(names))
+            ctl.append(score(perm[len(te):len(te) + len(tr)], perm[:len(te)]))
+        cm, cs = float(np.mean(ctl)), float(np.std(ctl))
+        out[lib] = {
+            "n_test": int(len(te)), "n_train": int(len(tr)),
+            "lolo_r2": round(lolo, 4),
+            "random_same_size_r2": round(cm, 4), "random_same_size_std": round(cs, 4),
+            "library_shift_gap": round(lolo - cm, 4),
+            # only call it real shift when the gap clears the control's own spread
+            "shift_is_significant": bool(cs > 0 and (cm - lolo) > 2 * cs),
+        }
+    return out
+
+
 def load_rbs_sequences(sd02_path: str) -> dict:
     """Kosuri Dataset S2 -> {RBS name: sequence}. S2 is the only file here carrying element sequences."""
     import xlrd  # noqa: PLC0415
@@ -429,7 +544,10 @@ def main(argv=None) -> int:
         split = run_sequence_split(d, seqmap, name_col, group_col, other_col, feat)
         pem = per_element_mean_r2(d[d[name_col].map(seqmap).notna()], seqmap, name_col, feat)
         sv = sequence_verdict(split, pem, tag)
-        seq_results[tag] = {"split": split, "per_element_mean": pem, "verdict": sv}
+        lolo = leave_library_out_with_size_control(d[d[name_col].map(seqmap).notna()],
+                                                   seqmap, name_col, feat)
+        seq_results[tag] = {"split": split, "per_element_mean": pem, "verdict": sv,
+                            "leave_library_out": lolo}
         print(f"\nHELD-OUT {tag.upper()} scored from SEQUENCE ({split['n_splits']} repeated splits):")
         for k in ("additive_baseline", "identity", "other_element_only", "sequence_only",
                   "other_plus_sequence", "ridge_other_plus_sequence",
@@ -439,6 +557,14 @@ def main(argv=None) -> int:
         print(f"   per-{tag}-mean from sequence ({pem['n_elements']} pts): R2 = {pem['r2']}")
         print(f"   -> headline {sv['headline_from_sequence']} (+{sv['vs_additive_baseline']} vs baseline); "
               f"generalises={sv['generalises_from_sequence']}")
+        print(f"   LEAVE-ONE-LIBRARY-OUT (OOD stress; gap isolates shift from train-size):")
+        for lib, r in lolo.items():
+            if r.get("status") == "skipped_too_small":
+                print(f"      {lib:20s} n={r['n_test']:3d}  skipped")
+                continue
+            flag = "SHIFT" if r["shift_is_significant"] else "ok"
+            print(f"      {lib:20s} n_te={r['n_test']:3d} n_tr={r['n_train']:3d} | LOLO {r['lolo_r2']:7.4f} "
+                  f"| random-same-size {r['random_same_size_r2']:7.4f} | gap {r['library_shift_gap']:+7.4f} [{flag}]")
 
     v = verdict(splits)
     print(f"\ncombination split: {v['combination_split_verdict']} "

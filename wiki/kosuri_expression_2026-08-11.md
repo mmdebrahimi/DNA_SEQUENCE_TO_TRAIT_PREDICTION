@@ -98,12 +98,49 @@ The bar was also **mis-specified for that split**, and the incompatibility went 
 was in hand: 0.82 is a *combination-level, in-sample* number, and an element-strength model has no
 strength for an unseen element — the baseline itself reaches only 0.25–0.50 there.
 
+## Out-of-distribution: leave-one-library-out (2026-08-11)
+
+Every part here is **designed** — BIOFAB, BioBrick/Anderson, Salis, cloning vectors — so a
+leave-one-*element*-out score can still be interpolation *within a design style*. Provenance survives in
+the part names, so a whole library can be held out. That is the closest this data gets to "a part nobody
+in this dataset designed".
+
+**The raw LOLO number is not interpretable on its own**, because holding out a library shrinks the
+training set at the same time (holding out BIOFAB leaves just **22** promoters to train on). So each
+holdout is paired with a **size-matched random control**: same train and test sizes, parts drawn across
+all libraries, 20 repeats. The **gap** isolates library shift from data starvation.
+
+| element | held out | n_test | n_train | LOLO | random, same size | **gap** | verdict |
+|---|---|---|---|---|---|---|---|
+| **RBS** | BIOFAB | 55 | 56 | 0.2524 | 0.6375 ± 0.083 | **−0.3851** | **real shift** |
+| RBS | BioBrick/Anderson | 31 | 80 | 0.7143 | 0.5791 ± 0.126 | +0.1352 | no shift |
+| RBS | Salis | 13 | 98 | 0.6248 | 0.6596 ± 0.178 | −0.0348 | no shift |
+| RBS | vector/other | 12 | 99 | 0.6137 | 0.5947 ± 0.218 | +0.0190 | no shift |
+| **PROMOTER** | BIOFAB | 90 | **22** | −0.6547 | −0.0540 ± 0.078 | **−0.6007** | **real shift** |
+| PROMOTER | BioBrick/Anderson | 15 | 97 | 0.1478 | 0.2619 ± 0.410 | −0.1141 | inside noise |
+| PROMOTER | vector/other | 7 | 105 | 0.5441 | 0.1179 ± 0.544 | +0.4262 | inside noise |
+
+**Neither "OOD is fine" nor "OOD fails" — the answer is specific.** Transfer holds across three of four
+RBS library boundaries (0.61–0.71, one of them *above* the within-distribution 0.612) and across the
+promoter's small libraries. It degrades materially only when **BIOFAB** is held out — and BIOFAB is
+**50% of the RBSs and 80% of the promoters**. The dominant design style is carrying the model; remove it
+and performance drops by a gap of 0.39 (RBS) to 0.59 (promoter), both well clear of the control's spread.
+
+**The control earned its place.** Promoter-BIOFAB's raw −0.655 looks catastrophic, but a *random* split
+at that same training size scores −0.065 — so most of that collapse is **small-data, not unfamiliarity**.
+Reporting the raw number as an OOD failure would have been wrong. Conversely the RBS-BIOFAB gap (−0.385
+against a control σ of 0.083) is ~4.6σ and is real.
+
+**Practical reading for a designer:** expect roughly the headline figure for a novel part resembling
+these design styles; expect materially less for a part from a genuinely different paradigm. Small holdouts (n=7–15) have very wide control bands (σ up to **0.54**) and should not be over-read in
+either direction — a scratch run with a different control seed moved the promoter vector/other gap from
++0.13 to +0.43 while the two BIOFAB verdicts were unchanged. Only the two flagged `real shift` rows,
+whose gaps clear 2σ of their own control, are load-bearing.
+
 ## Limits
 
-- **All 111 RBSs and 112 promoters are DESIGNED parts** (BIOFAB 55, BioBrick/Anderson 31, Salis,
-  cloning vectors), not random sequence. These figures are plausibly **interpolation** estimates.
-  Provenance *is* recoverable from name prefixes, so **leave-library-out** is a runnable stress test —
-  not yet done, and the sharpest remaining check.
+- These remain **designed** parts throughout; nothing here tests truly random sequence.
+- Per-element means are **simple** means, not adjusted for partner main effects.
 - Per-element means are **simple** means, not adjusted for partner main effects. Adjusted means would
   give a sharper estimate of intrinsic part strength.
 - Nothing here is wet-lab validated. It is a prediction about a measured dataset.

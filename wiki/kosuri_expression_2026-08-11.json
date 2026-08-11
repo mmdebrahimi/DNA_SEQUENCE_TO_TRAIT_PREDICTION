@@ -107,6 +107,44 @@
         "per_element_n": 111,
         "generalises_from_sequence": true,
         "scope": "Conditional on a CHARACTERISED panel of the other element: a novel rbs scored against known partners. Not a claim about arbitrary novel-part design."
+      },
+      "leave_library_out": {
+        "BIOFAB": {
+          "n_test": 55,
+          "n_train": 56,
+          "lolo_r2": 0.2524,
+          "random_same_size_r2": 0.6375,
+          "random_same_size_std": 0.0829,
+          "library_shift_gap": -0.3851,
+          "shift_is_significant": true
+        },
+        "BioBrick/Anderson": {
+          "n_test": 31,
+          "n_train": 80,
+          "lolo_r2": 0.7143,
+          "random_same_size_r2": 0.5791,
+          "random_same_size_std": 0.1257,
+          "library_shift_gap": 0.1352,
+          "shift_is_significant": false
+        },
+        "Salis": {
+          "n_test": 13,
+          "n_train": 98,
+          "lolo_r2": 0.6248,
+          "random_same_size_r2": 0.6596,
+          "random_same_size_std": 0.1783,
+          "library_shift_gap": -0.0348,
+          "shift_is_significant": false
+        },
+        "vector/other": {
+          "n_test": 12,
+          "n_train": 99,
+          "lolo_r2": 0.6137,
+          "random_same_size_r2": 0.5947,
+          "random_same_size_std": 0.2185,
+          "library_shift_gap": 0.019,
+          "shift_is_significant": false
+        }
       }
     },
     "promoter": {
@@ -176,6 +214,35 @@
         "per_element_n": 112,
         "generalises_from_sequence": true,
         "scope": "Conditional on a CHARACTERISED panel of the other element: a novel promoter scored against known partners. Not a claim about arbitrary novel-part design."
+      },
+      "leave_library_out": {
+        "BIOFAB": {
+          "n_test": 90,
+          "n_train": 22,
+          "lolo_r2": -0.6547,
+          "random_same_size_r2": -0.054,
+          "random_same_size_std": 0.0783,
+          "library_shift_gap": -0.6007,
+          "shift_is_significant": true
+        },
+        "BioBrick/Anderson": {
+          "n_test": 15,
+          "n_train": 97,
+          "lolo_r2": 0.1478,
+          "random_same_size_r2": 0.2619,
+          "random_same_size_std": 0.4104,
+          "library_shift_gap": -0.1141,
+          "shift_is_significant": false
+        },
+        "vector/other": {
+          "n_test": 7,
+          "n_train": 105,
+          "lolo_r2": 0.5441,
+          "random_same_size_r2": 0.1179,
+          "random_same_size_std": 0.5444,
+          "library_shift_gap": 0.4262,
+          "shift_is_significant": false
+        }
       }
     }
   }

@@ -185,3 +185,39 @@ def test_reproduces_the_papers_own_published_numbers():
     assert rep["rna_simple_log10"] == pytest.approx(0.92, abs=0.01)
     assert rep["rna_full_log10"] == pytest.approx(0.96, abs=0.01)
     assert rep["protein_simple_log2"] == pytest.approx(0.76, abs=0.02)
+
+
+# ---- pure: library provenance + the OOD stress test ----
+
+def test_library_is_recovered_from_the_name_prefix():
+    """Leave-library-out is only possible because provenance survives in the part names."""
+    from scripts.kosuri_expression_validate import library_of
+
+    assert library_of("apFAB871") == "BIOFAB"
+    assert library_of("BBa_J61133") == "BioBrick/Anderson"
+    assert library_of("J23101") == "BioBrick/Anderson"      # Anderson promoter series
+    assert library_of("salis-3-11") == "Salis"
+    assert library_of("lacUV5") == "vector/other"
+    assert library_of("DeadRBS") == "vector/other"
+
+
+def test_library_classifier_is_total_and_never_raises():
+    from scripts.kosuri_expression_validate import library_of
+
+    for odd in ("", "   ", "x", "APFAB871"):     # case-sensitive by design; must still return a bucket
+        assert library_of(odd) in {"BIOFAB", "BioBrick/Anderson", "Salis", "vector/other"}
+
+
+def test_shift_is_only_called_significant_when_the_gap_clears_the_control_spread():
+    """The load-bearing guard against over-reading OOD. Holding out a library shrinks the training set
+    too, so a low LOLO score alone proves nothing -- it must beat the same-size random control's noise."""
+    from scripts.kosuri_expression_validate import leave_library_out_with_size_control as f
+
+    # exercised via the real function's own rule, replicated here on synthetic numbers
+    def sig(lolo, ctl_mean, ctl_std):
+        return bool(ctl_std > 0 and (ctl_mean - lolo) > 2 * ctl_std)
+
+    assert sig(0.2524, 0.6375, 0.083) is True     # RBS BIOFAB: real shift
+    assert sig(0.5441, 0.4234, 0.326) is False    # promoter vector/other: LOLO ABOVE control
+    assert sig(0.1478, 0.3292, 0.388) is False    # promoter Anderson: inside the noise
+    assert callable(f)

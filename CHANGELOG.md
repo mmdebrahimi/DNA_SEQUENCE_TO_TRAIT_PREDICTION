@@ -20,7 +20,18 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   excluded from promoter features for the same reason. Corrects a previous version that headlined 0.781
   (the deltaG arm). Held-out COMBINATION unchanged: 0.795 -> 0.919. Pre-registered "beat 0.82 split BY
   ELEMENT" still reported as a **FAIL** (best 0.776), with the bar itself noted as mis-specified for that
-  split. 16 tests; data not committed. Write-up: `wiki/kosuri_expression_2026-08-11.md`.
+  split.
+  **Out-of-distribution stress test (leave-one-library-out):** every part is DESIGNED (BIOFAB /
+  BioBrick-Anderson / Salis / vectors) and provenance survives in the names, so whole libraries can be
+  held out. Each holdout is paired with a **size-matched random control**, because holding out a library
+  also shrinks the training set (BIOFAB holdout leaves just 22 promoters) — the GAP isolates library shift
+  from data starvation. Result: transfer HOLDS across 3 of 4 RBS boundaries (0.61-0.71, one above the
+  within-distribution 0.612) and degrades materially only when **BIOFAB** is held out (RBS gap -0.385 at
+  ~4.6 sigma; promoter gap -0.601) — and BIOFAB is 50% of RBSs, 80% of promoters. The control earned its
+  place: promoter-BIOFAB's raw -0.655 looks catastrophic but a RANDOM split at the same train size scores
+  -0.054, so most of that collapse is small-data, not unfamiliarity. Small holdouts (n=7-15) have control
+  sigma up to 0.54 and are explicitly not load-bearing.
+  18 tests; data not committed. Write-up: `wiki/kosuri_expression_2026-08-11.md`.
 
 ## [0.12.1] — CORRECTNESS FIX: the FBA cross-organism registry shipped two wrong-organism models (2026-08-07)
 
