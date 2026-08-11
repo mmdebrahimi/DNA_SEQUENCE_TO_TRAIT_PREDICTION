@@ -64,6 +64,33 @@ identical to success if you only watch the target.
 - **Boundary reactions are excluded** from the dead-end scan: exchanges exist precisely to be one-sided, so
   counting them buries the real hits under hundreds of uninteresting ones.
 
+## Cross-organism census — and a NAMED HYPOTHESIS (not a finding)
+
+The diagnostic is cheap enough to run over every model the cell supports:
+
+| model | organism | reactions | metabolites | dead ends | % of metabolites | transport-fed |
+|---|---|---|---|---|---|---|
+| iML1515 | *E. coli* K-12 | 2712 | 1877 | 138 | **7.4%** | 42 |
+| iYS1720 | *Salmonella* (pan) | 3357 | 2436 | 312 | 12.8% | 186 |
+| iYS854 | *S. aureus* USA300 | 1455 | 1335 | 196 | 14.7% | 29 |
+| iMM904 | *S. cerevisiae* | 1577 | 1226 | 225 | **18.4%** | 71 |
+
+**The hypothesis (labelled `unfalsified` — no kill-test run):** the weak transfer of FBA gene-essentiality
+away from *E. coli* (`wiki/fba_per_organism_essentiality_2026-08-03.md`: E. coli MCC **0.652** strong →
+yeast MCC **0.252** weak) may be driven by **model incompleteness rather than by FBA or by yeast biology**.
+The two organisms with measured essentiality sit at the extremes of this table — E. coli's model is the most
+complete at 7.4%, yeast's the least at 18.4%, ~2.5× the dead-end rate.
+
+**Why this is a hypothesis and not a result:** it rests on **n = 2** organisms that have both numbers, and
+the obvious confound is uncontrolled — iML1515 is among the most intensively curated reconstructions in
+existence, so curation effort plausibly drives both its low dead-end rate *and* its strong essentiality
+score without one causing the other. Two points are a coincidence, not a trend.
+
+**The decisive test, which this module now makes possible:** gap-fill iMM904's dead ends against a donor,
+re-run the SGD inviable-null validation, and see whether MCC moves. If repairing the model lifts
+essentiality accuracy, incompleteness was the mechanism; if it doesn't, the weak transfer is about
+something else. That is a real, runnable experiment and it is NOT done here.
+
 ## Limits
 
 - The donor is one related organism's reconstruction, so the reachable repairs are bounded by what the donor
