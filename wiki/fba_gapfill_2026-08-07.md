@@ -86,10 +86,17 @@ the obvious confound is uncontrolled — iML1515 is among the most intensively c
 existence, so curation effort plausibly drives both its low dead-end rate *and* its strong essentiality
 score without one causing the other. Two points are a coincidence, not a trend.
 
-**The decisive test, which this module now makes possible:** gap-fill iMM904's dead ends against a donor,
-re-run the SGD inviable-null validation, and see whether MCC moves. If repairing the model lifts
-essentiality accuracy, incompleteness was the mechanism; if it doesn't, the weak transfer is about
-something else. That is a real, runnable experiment and it is NOT done here.
+**The decisive test:** gap-fill iMM904's dead ends against a donor, re-run the SGD inviable-null validation,
+and see whether MCC moves. If repairing the model lifts essentiality accuracy, incompleteness was the
+mechanism; if it doesn't, the weak transfer is about something else.
+
+> **Correction (same day, before this shipped):** an earlier draft of this section called that test
+> "runnable". **It is not, with what is on hand** — it needs a *yeast-compatible* donor, and every donor
+> here is bacterial (cross-kingdom gap-filling would mostly fail on compartment and identifier mismatch).
+> BiGG's only other *S. cerevisiae* model is **iND750**, a smaller **predecessor** of iMM904, so it would
+> contribute almost nothing. A real test needs an external reconstruction (Yeast8 / Yeast-GEM, GitHub,
+> different identifier namespace) — a **data-acquisition step, not a config change**. Checked rather than
+> assumed, because the whole point of this module is not to assert what hasn't been verified.
 
 ## Limits
 
