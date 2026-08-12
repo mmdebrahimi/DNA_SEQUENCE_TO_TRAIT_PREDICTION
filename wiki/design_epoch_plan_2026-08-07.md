@@ -73,7 +73,17 @@ has already *measured* that gap:
   K. pneumoniae / Gemmata).
 - The FBA cell's weakness is **model gaps**: the sucrose false-negative was a missing transporter, not a
   wrong prediction (`fba_carbon_growth_validation_2026-08-03`); essentiality is weak off E. coli
-  (yeast MCC **0.252**; P. aeruginosa recall **0.57**, worst on the metabolic class).
+  (yeast **iMM904** MCC **0.252**, recall 0.319 — the only cross-organism cell that is SCORED at all).
+
+  > **Stale-citation correction (2026-08-11).** This line previously also read *"P. aeruginosa recall
+  > **0.57**, worst on the metabolic class."* **Withdrawn.** That number came from a run where
+  > `paeruginosa` was mapped to `iJN1463` — a *P. putida* model — the wrong-organism defect fixed in
+  > `78ea4ba`. The artifact was corrected to `MODEL_WALLED` in `0d8f9ad` (there is no P. aeruginosa GEM in
+  > BiGG, and substituting another organism's model was refused), but this plan was not updated with it.
+  > There is **no** P. aeruginosa essentiality number. S. aureus is `LABEL_WALLED` (iYS854 uses
+  > `USA300HOU_####` ids; NTML is JE2 `SAUSA300_####` — a crosswalk away). So the honest statement of the
+  > cross-organism weakness rests on **yeast alone**, which weakens the evidence for this bullet without
+  > changing its direction.
 
 So "missing parts" → **metabolic model gap-filling driven by protein-function prediction**, which has an
 *already-instrumented* metric: does essentiality/growth accuracy improve against Keio / SGD / GOLD_115?

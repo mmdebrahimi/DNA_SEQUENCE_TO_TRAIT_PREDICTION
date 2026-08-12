@@ -1,0 +1,42 @@
+{
+  "record": "fba-gap-premise-check-v1",
+  "date": "2026-08-11",
+  "organism": "yeast",
+  "model": "iMM904",
+  "label_source": "sgd: http://sgd-archive.yeastgenome.org/curation/literature/phenotype_data.tab",
+  "n_model_genes_scored": 905,
+  "confusion_counts": {
+    "TP": 43,
+    "FP": 67,
+    "FN": 92,
+    "TN": 703
+  },
+  "gap_adjacent_counts": {
+    "TP": 6,
+    "FP": 6,
+    "FN": 65,
+    "TN": 307
+  },
+  "gap_adjacent_rates": {
+    "TP": 0.1395,
+    "FP": 0.0896,
+    "FN": 0.7065,
+    "TN": 0.4367
+  },
+  "fn_vs_tn_fisher_p": 1.22e-06,
+  "premise_supported": true,
+  "blocked_reactions": {
+    "n_reactions": 1577,
+    "n_blocked_default_medium": 692,
+    "n_blocked_structural": 553,
+    "n_unblocked_by_opening_medium": 139,
+    "structural_fraction_of_blocked": 0.7991
+  },
+  "verdict": "Gap-adjacency predicts WHICH essential genes FBA misses; the gap-filling premise is worth building on.",
+  "caveats": [
+    "CORRELATION, not proof of repair: this shows gaps mark the FNs, NOT that filling a specific gap flips a specific gene. The decisive test is a measured MCC delta after gap-filling.",
+    "The mechanism is near-tautological in one direction -- a gene whose reactions are all blocked carries zero flux and MUST be called dispensable. The informative part is that this holds MORE for truly-essential genes (FN) than for truly-dispensable ones (TN).",
+    "Gap-adjacency is a coarse proxy: 'controls >=1 blocked or dead-end-touching reaction'.",
+    "Essentiality is medium-dependent; the model's DEFAULT medium is used throughout."
+  ]
+}
