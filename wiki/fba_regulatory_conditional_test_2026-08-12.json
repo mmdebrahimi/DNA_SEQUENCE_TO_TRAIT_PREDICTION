@@ -1,0 +1,70 @@
+{
+  "record": "fba-regulatory-conditional-test-v1",
+  "date": "2026-08-12",
+  "model": "iML1515",
+  "intervention": "pFBA restriction -- force off every gene-associated reaction carrying no flux in the parsimonious solution for that medium",
+  "baseline": {
+    "exact_set_match": 3,
+    "n_conditionally_essential": 67,
+    "per_condition_agreement": 0.5709,
+    "mean_per_condition_mcc": 0.0611,
+    "auroc_threshold_free": 0.6115,
+    "n_cells_called_essential": 16,
+    "tp": 10,
+    "fp": 6,
+    "precision": 0.625,
+    "wildtype_growth": {
+      "glucose_aerobic": 0.877,
+      "glucose_anaerobic": 0.1575,
+      "lactate_aerobic": 0.3506,
+      "succinate_aerobic": 0.4501
+    },
+    "reactions_forced_off": {
+      "glucose_aerobic": 0,
+      "glucose_anaerobic": 0,
+      "lactate_aerobic": 0,
+      "succinate_aerobic": 0
+    }
+  },
+  "regulatory": {
+    "exact_set_match": 5,
+    "n_conditionally_essential": 67,
+    "per_condition_agreement": 0.6157,
+    "mean_per_condition_mcc": 0.217,
+    "auroc_threshold_free": 0.5755,
+    "n_cells_called_essential": 96,
+    "tp": 56,
+    "fp": 40,
+    "precision": 0.5833,
+    "wildtype_growth": {
+      "glucose_aerobic": 0.877,
+      "glucose_anaerobic": 0.1575,
+      "lactate_aerobic": 0.3506,
+      "succinate_aerobic": 0.4501
+    },
+    "reactions_forced_off": {
+      "glucose_aerobic": 1863,
+      "glucose_anaerobic": 1868,
+      "lactate_aerobic": 1866,
+      "succinate_aerobic": 1868
+    }
+  },
+  "controls": {
+    "best_constant_predictor_per_cell": 0.556,
+    "rate_matched_random": {
+      "n_draws": 200,
+      "n_called_essential": 96,
+      "mean": 0.5172,
+      "sd": 0.0284,
+      "max": 0.5933,
+      "p_empirical_vs_observed": 0.0
+    }
+  },
+  "verdict": "REGULATORY_CONSTRAINT_MOVES_THE_CONDITIONAL_METRIC",
+  "caveats": [
+    "pFBA restriction is a CRUDE proxy for regulation -- it forces off ~69% of gene-associated reactions. It is evidence about WHERE the deficit lives, not a deployable method.",
+    "The gain is RECALL, not precision: precision does not improve, and the threshold-free AUROC gets WORSE, so the continuous ranking degrades even as the binary calls improve.",
+    "Still only a handful of exact-set matches -- the switch is mostly still not reproduced.",
+    "pFBA picks ONE optimal-flux solution; alternate optima of equal cost would force off a different route and could change which genes look essential."
+  ]
+}

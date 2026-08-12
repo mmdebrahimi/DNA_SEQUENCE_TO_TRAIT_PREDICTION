@@ -80,14 +80,45 @@ floor.
 
 **Ruled out:** adding reactions. Any form of it — random, dead-end-targeted, or exhaustive.
 
-**Not tested, and now the leading candidate:** regulatory and uptake constraints. The flat ratios say the
-model keeps the same routes available in every medium. Real cells don't — they repress and induce. A
-method that switches *which reactions are available* per condition (regulatory FBA, or condition-specific
-expression constraints) attacks the actual mechanism, whereas gap-filling attacks a mechanism that isn't
-the problem here.
+**Ruled IN — tested, not asserted:** regulatory constraints. See below.
 
 Also untested: a different donor. The maximal arm exhausts *this* donor, but another reconstruction could
 in principle carry a reaction that matters.
+
+## What *does* move it — the regulatory constraint
+
+Rather than leave "regulation is the leading candidate" as an assertion, it was tested the same day
+(`scripts/fba_regulatory_conditional_test.py`). The intervention is a **parsimonious (pFBA) restriction**:
+in each medium, solve for the cheapest way to grow, then force off every gene-associated reaction carrying
+no flux in that solution. The surviving route differs *by medium* — the condition-specificity the flat
+ratios lack. pFBA never sees the labels, so it is label-blind in the same sense as the gap-fill arms.
+
+| | exact-set | per-cell | mean MCC | AUROC | TP | FP | precision |
+|---|---|---|---|---|---|---|---|
+| baseline | 3/67 | 0.5709 | 0.0611 | 0.612 | 10 | 6 | 0.625 |
+| **pFBA-restricted** | **5/67** | **0.6157** | **0.217** | 0.576 | **56** | 40 | 0.583 |
+
+**Lift over the constant null goes from +0.012 to +0.057 — nearly 5×**, and mean per-condition MCC more
+than triples.
+
+**The control is what makes that meaningful.** Forcing a unique route makes far more genes look essential,
+so the gain could be nothing but a better-matched base rate. Scoring a **rate-matched random** predictor —
+calling the same 96 cells essential, at random, 200 times — gives mean **0.5172** (sd 0.028, max 0.5933).
+**Zero of 200 draws reach the observed 0.6157** (empirical p < 0.005). The gain is genuine
+condition-specific signal.
+
+**But read it as a direction, not a method:**
+
+- It is a **crude** proxy for regulation — it forces off ~**1,865 of 2,712** gene-associated reactions
+  (~69% of the model).
+- The gain is **recall only**. Precision does not improve (0.625 → 0.583), and the threshold-free **AUROC
+  gets worse** (0.612 → 0.576) — the continuous ranking degrades even as the binary calls improve.
+- It still reproduces only **5 of 67** switches. Most of the deficit remains.
+- pFBA picks *one* optimal-flux solution; alternate optima of equal cost would force off a different route.
+
+So the honest summary of the pair: **adding reactions cannot move this metric at all; constraining which
+reactions are available moves it about 5× over null.** That is a clear signpost for where the FBA cell's
+condition-awareness has to come from — and it points at regulation, not at biochemistry coverage.
 
 ## Reproduce
 
