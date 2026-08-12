@@ -33,7 +33,12 @@ from dna_decode.fba.essentiality_labels import (  # noqa: E402
 )
 from dna_decode.fba.keio import confusion, metrics_from_confusion  # noqa: E402
 from dna_decode.fba.medium import apply_rich_medium  # noqa: E402
-from dna_decode.fba.model import gene_essentiality, load_model, resolve_model_id, wildtype_growth  # noqa: E402
+from dna_decode.fba.model import (  # noqa: E402
+    gene_essentiality,
+    load_model,
+    resolve_model_id,
+    wildtype_growth,
+)
 
 
 def _discrimination(mcc: float) -> str:

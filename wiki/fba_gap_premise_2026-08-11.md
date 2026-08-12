@@ -12,21 +12,31 @@ falsifier written down before the run.
 **Pre-registered falsifier:** FN gap-adjacency must sit materially above the TN rate among genes the model
 calls dispensable, Fisher two-sided p < 0.05. Equal rates falsify it.
 
-## Result — SUPPORTED
+## Result — SUPPORTED, on both media
 
 Yeast / **iMM904**, the only cross-organism essentiality cell currently SCORED. Gold standard: SGD
 (1,215 essential genes). 905 model genes scored.
 
+**Label-matched rich medium** (what the cell now runs on — see
+`wiki/fba_label_matched_medium_2026-08-11.md`):
+
 | cell | n | gap-adjacent | rate |
 |---|---|---|---|
-| TP *(essential, called essential)* | 43 | 6 | 14.0% |
-| FP | 67 | 6 | 9.0% |
-| **FN** *(essential, called dispensable)* | **92** | **65** | **70.7%** |
-| TN *(dispensable, called dispensable)* | 703 | 307 | 43.7% |
+| TP *(essential, called essential)* | 34 | 4 | 11.8% |
+| FP | 13 | 1 | 7.7% |
+| **FN** *(essential, called dispensable)* | **101** | **67** | **66.3%** |
+| TN *(dispensable, called dispensable)* | 757 | 312 | 41.2% |
 
-**FN 70.7% vs TN 43.7%, Fisher two-sided p = 1.2 × 10⁻⁶.** Among the genes FBA calls dispensable, the ones
+**FN 66.3% vs TN 41.2%, Fisher two-sided p = 2.1 × 10⁻⁶.** Among the genes FBA calls dispensable, the ones
 it is *wrong* about are far more likely to sit next to a hole in the model. Gap structure predicts **which**
 essential genes the model misses.
+
+**The verdict does not depend on the medium.** This check was first run on the model's default (minimal)
+medium and gave FN **70.7%** vs TN **43.7%**, p = 1.2 × 10⁻⁶. The medium correction landed between the two
+runs and changed the error set (FP 67 → 13, FN 92 → 101) without disturbing the conclusion — which is the
+right consistency check to demand, since a premise established on a medium the cell no longer uses would be
+testing errors it no longer makes. `--medium` on this script defaults to `label_matched` so the two stay
+in step.
 
 ## The cheaper lever was checked first, and it does not dissolve the result
 
@@ -66,11 +76,14 @@ is incomplete, and that incompleteness is mostly structural rather than a medium
 
 ## Recommended sequencing for Track C
 
-1. **Set yeast's standard medium and re-score** — nearly free, recovers ~20% of the blocked set, and
-   sharpens the baseline every later number is measured against.
-2. **Then** the function-prediction build, measured by MCC delta on this same gold standard.
+1. ~~**Set yeast's standard medium and re-score**~~ — **DONE 2026-08-11**, and it mattered more than
+   expected: MCC **0.2524 → 0.3773**, false positives **67 → 13**, discrimination WEAK → MODERATE. The
+   remaining error is now **101 false negatives out of 114** — i.e. almost purely the class gap-filling
+   targets. Details in `wiki/fba_label_matched_medium_2026-08-11.md`.
+2. **Next:** the function-prediction build, measured by MCC delta on this same gold standard.
 
-Doing (2) before (1) would attribute to gap-filling whatever (1) would have fixed for nothing.
+Doing (2) before (1) would have credited gap-filling with the 54 false positives (1) removed for free.
+That is no longer a hypothetical — the medium fix was measured before the build started.
 
 ## Reproduce
 

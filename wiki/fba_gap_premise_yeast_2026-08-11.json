@@ -3,34 +3,35 @@
   "date": "2026-08-11",
   "organism": "yeast",
   "model": "iMM904",
+  "medium_condition": "rich",
   "label_source": "sgd: http://sgd-archive.yeastgenome.org/curation/literature/phenotype_data.tab",
   "n_model_genes_scored": 905,
   "confusion_counts": {
-    "TP": 43,
-    "FP": 67,
-    "FN": 92,
-    "TN": 703
+    "TP": 34,
+    "FP": 13,
+    "FN": 101,
+    "TN": 757
   },
   "gap_adjacent_counts": {
-    "TP": 6,
-    "FP": 6,
-    "FN": 65,
-    "TN": 307
+    "TP": 4,
+    "FP": 1,
+    "FN": 67,
+    "TN": 312
   },
   "gap_adjacent_rates": {
-    "TP": 0.1395,
-    "FP": 0.0896,
-    "FN": 0.7065,
-    "TN": 0.4367
+    "TP": 0.1176,
+    "FP": 0.0769,
+    "FN": 0.6634,
+    "TN": 0.4122
   },
-  "fn_vs_tn_fisher_p": 1.22e-06,
+  "fn_vs_tn_fisher_p": 2.1e-06,
   "premise_supported": true,
   "blocked_reactions": {
     "n_reactions": 1577,
-    "n_blocked_default_medium": 692,
+    "n_blocked_default_medium": 684,
     "n_blocked_structural": 553,
-    "n_unblocked_by_opening_medium": 139,
-    "structural_fraction_of_blocked": 0.7991
+    "n_unblocked_by_opening_medium": 131,
+    "structural_fraction_of_blocked": 0.8085
   },
   "verdict": "Gap-adjacency predicts WHICH essential genes FBA misses; the gap-filling premise is worth building on.",
   "caveats": [

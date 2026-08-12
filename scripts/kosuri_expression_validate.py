@@ -513,7 +513,10 @@ def model_class_sensitivity(d, seqmap: dict, name_col: str, feat_fn, seed: int =
     Reported per (library x model class) so a verdict that depends on one regressor is visible as such.
     """
     import numpy as np  # noqa: PLC0415
-    from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor  # noqa: PLC0415
+    from sklearn.ensemble import (  # noqa: PLC0415
+        HistGradientBoostingRegressor,
+        RandomForestRegressor,
+    )
     from sklearn.linear_model import RidgeCV  # noqa: PLC0415
     from sklearn.pipeline import make_pipeline  # noqa: PLC0415
     from sklearn.preprocessing import StandardScaler  # noqa: PLC0415

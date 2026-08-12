@@ -31,8 +31,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from dna_decode.fba.essentiality_labels import ESSENTIALITY_LABEL_SOURCES, parse_essential  # noqa: E402
+from dna_decode.fba.essentiality_labels import (  # noqa: E402
+    ESSENTIALITY_LABEL_CONDITION,
+    ESSENTIALITY_LABEL_SOURCES,
+    parse_essential,
+)
 from dna_decode.fba.gapfill import model_dead_ends  # noqa: E402
+from dna_decode.fba.medium import apply_rich_medium  # noqa: E402
 from dna_decode.fba.model import gene_essentiality, load_model, wildtype_growth  # noqa: E402
 
 
@@ -96,6 +101,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--organism", default="yeast")
     ap.add_argument("--label-file", default=None, help="local gold standard (skip the network fetch)")
     ap.add_argument("--frac", type=float, default=0.01, help="essentiality growth threshold (of wild type)")
+    ap.add_argument("--medium", choices=("label_matched", "default", "rich"), default="label_matched",
+                    help="MUST match the medium the validation cell runs on, else the premise is tested "
+                         "against a different error set than the one being fixed")
     ap.add_argument("--date", default=str(date.today()))
     ap.add_argument("--out-dir", default=None)
     a = ap.parse_args(argv)
@@ -110,11 +118,18 @@ def main(argv: list[str] | None = None) -> int:
     ess = parse_essential(kind, text)
 
     model = load_model(organism=a.organism)
+    # The FN set depends on the medium, so this MUST be scored on the same medium as the validation
+    # cell -- otherwise the premise is tested against errors the cell no longer makes.
+    condition = (ESSENTIALITY_LABEL_CONDITION.get(a.organism, 'default') if a.medium == 'label_matched'
+                 else a.medium)
+    if condition == 'rich':
+        apply_rich_medium(model)
     wt = wildtype_growth(model)
     dead_ids = {d.metabolite for d in model_dead_ends(model)}
     blk = structural_vs_medium_blocked(model)
     blocked = set(blk["blocked_ids_default"])
-    print(f"{model.id}: {len(model.genes)} genes, {len(model.reactions)} reactions, wt {wt:.4f}")
+    print(f"{model.id}: {len(model.genes)} genes, {len(model.reactions)} reactions, wt {wt:.4f} "
+          f"| medium={condition}")
     print(f"dead-end metabolites {len(dead_ids)}/{len(model.metabolites)} | "
           f"blocked {blk['n_blocked_default_medium']} (default) / {blk['n_blocked_structural']} (structural)")
 
@@ -146,6 +161,7 @@ def main(argv: list[str] | None = None) -> int:
         "date": a.date,
         "organism": a.organism,
         "model": model.id,
+        "medium_condition": condition,
         "label_source": f"{kind}: {url}",
         "n_model_genes_scored": len(pred),
         "confusion_counts": {k: len(v) for k, v in cells.items()},

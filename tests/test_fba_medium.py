@@ -1,8 +1,6 @@
 """Label-matched growth media (wheel-only; no cobra, no network)."""
 from __future__ import annotations
 
-import pytest
-
 from dna_decode.fba.essentiality_labels import ESSENTIALITY_LABEL_CONDITION
 from dna_decode.fba.medium import RICH_MEDIUM_EXCHANGES, apply_rich_medium, rich_medium
 
