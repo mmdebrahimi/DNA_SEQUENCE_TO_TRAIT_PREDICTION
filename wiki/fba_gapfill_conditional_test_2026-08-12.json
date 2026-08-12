@@ -1,0 +1,134 @@
+{
+  "record": "fba-gapfill-conditional-test-v1",
+  "date": "2026-08-12",
+  "model": "iML1515",
+  "donor": "iYS1720",
+  "prediction_registered_before_running": "gap-filling should make the conditional metric WORSE, because it adds alternative routes and conditional essentiality requires their ABSENCE in one medium",
+  "baseline": {
+    "exact_set_match": 3,
+    "n_conditionally_essential": 67,
+    "per_condition_agreement": 0.5709,
+    "mean_per_condition_mcc": 0.0611,
+    "auroc_threshold_free": 0.6371,
+    "deployed_mcc": 0.0918
+  },
+  "baseline_wildtype_growth": {
+    "glucose_aerobic": 0.877,
+    "glucose_anaerobic": 0.1575,
+    "lactate_aerobic": 0.3506,
+    "succinate_aerobic": 0.4501
+  },
+  "n_donor_reactions_available": 1125,
+  "n_donor_reactions_touching_a_dead_end": 28,
+  "arms": {
+    "random_k25_seed0": {
+      "exact_set_match": 3,
+      "n_conditionally_essential": 67,
+      "per_condition_agreement": 0.5709,
+      "mean_per_condition_mcc": 0.0611,
+      "auroc_threshold_free": 0.5886,
+      "deployed_mcc": 0.0918,
+      "n_reactions_added": 25,
+      "binary_call_flips_vs_baseline": 0,
+      "n_ratios_changed_vs_baseline": 0,
+      "wildtype_growth": {
+        "glucose_aerobic": 0.877,
+        "glucose_anaerobic": 0.1575,
+        "lactate_aerobic": 0.3506,
+        "succinate_aerobic": 0.4501
+      }
+    },
+    "random_k25_seed1": {
+      "exact_set_match": 3,
+      "n_conditionally_essential": 67,
+      "per_condition_agreement": 0.5709,
+      "mean_per_condition_mcc": 0.0611,
+      "auroc_threshold_free": 0.5661,
+      "deployed_mcc": 0.0918,
+      "n_reactions_added": 25,
+      "binary_call_flips_vs_baseline": 0,
+      "n_ratios_changed_vs_baseline": 78,
+      "wildtype_growth": {
+        "glucose_aerobic": 1.3841,
+        "glucose_anaerobic": 1.3528,
+        "lactate_aerobic": 0.5767,
+        "succinate_aerobic": 0.6921
+      }
+    },
+    "random_k400_seed0": {
+      "exact_set_match": 3,
+      "n_conditionally_essential": 67,
+      "per_condition_agreement": 0.5709,
+      "mean_per_condition_mcc": 0.0611,
+      "auroc_threshold_free": 0.6234,
+      "deployed_mcc": 0.0918,
+      "n_reactions_added": 400,
+      "binary_call_flips_vs_baseline": 0,
+      "n_ratios_changed_vs_baseline": 78,
+      "wildtype_growth": {
+        "glucose_aerobic": 1.3841,
+        "glucose_anaerobic": 1.3528,
+        "lactate_aerobic": 0.5767,
+        "succinate_aerobic": 0.6921
+      }
+    },
+    "random_k400_seed1": {
+      "exact_set_match": 3,
+      "n_conditionally_essential": 67,
+      "per_condition_agreement": 0.5709,
+      "mean_per_condition_mcc": 0.0611,
+      "auroc_threshold_free": 0.6729,
+      "deployed_mcc": 0.0918,
+      "n_reactions_added": 400,
+      "binary_call_flips_vs_baseline": 0,
+      "n_ratios_changed_vs_baseline": 78,
+      "wildtype_growth": {
+        "glucose_aerobic": 1.3842,
+        "glucose_anaerobic": 1.3529,
+        "lactate_aerobic": 0.5767,
+        "succinate_aerobic": 0.6921
+      }
+    },
+    "targeted_dead_end": {
+      "exact_set_match": 3,
+      "n_conditionally_essential": 67,
+      "per_condition_agreement": 0.5709,
+      "mean_per_condition_mcc": 0.0611,
+      "auroc_threshold_free": 0.6163,
+      "deployed_mcc": 0.0918,
+      "n_reactions_added": 28,
+      "binary_call_flips_vs_baseline": 0,
+      "n_ratios_changed_vs_baseline": 0,
+      "wildtype_growth": {
+        "glucose_aerobic": 0.877,
+        "glucose_anaerobic": 0.1575,
+        "lactate_aerobic": 0.3506,
+        "succinate_aerobic": 0.4501
+      }
+    },
+    "maximal": {
+      "exact_set_match": 3,
+      "n_conditionally_essential": 67,
+      "per_condition_agreement": 0.5709,
+      "mean_per_condition_mcc": 0.0611,
+      "auroc_threshold_free": 0.6508,
+      "deployed_mcc": 0.0918,
+      "n_reactions_added": 1125,
+      "binary_call_flips_vs_baseline": 0,
+      "n_ratios_changed_vs_baseline": 78,
+      "wildtype_growth": {
+        "glucose_aerobic": 1.3842,
+        "glucose_anaerobic": 1.3529,
+        "lactate_aerobic": 0.5767,
+        "succinate_aerobic": 0.6921
+      }
+    }
+  },
+  "verdict": "GAP_FILLING_DOES_NOT_MOVE_THE_CONDITIONAL_METRIC",
+  "caveats": [
+    "Adding a donor reaction also imports its GPR, so the augmented model gains genes; the SCORED gene set is held fixed to the conditionally-essential genes present in the base model.",
+    "AUROC carries run-to-run and invocation-shape variation of a few points (degenerate LP optima); small AUROC deltas between arms are NOT evidence of anything.",
+    "One donor only. A different donor could in principle supply a reaction that matters, though the maximal arm already adds every reaction this donor has.",
+    "This tests whether ADDING REACTIONS helps. It does not test regulatory/uptake constraints, which is the other candidate explanation for the flat ratios."
+  ]
+}
