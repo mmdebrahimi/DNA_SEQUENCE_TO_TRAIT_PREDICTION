@@ -1,0 +1,155 @@
+{
+  "record": "fba-conditional-essentiality-v1",
+  "date": "2026-08-12",
+  "organism": "ecoli",
+  "model": "iML1515",
+  "labels": {
+    "source": "Orth 2011 Mol Syst Biol 7:535 (iJO1366) Supplementary Table 1",
+    "n_genes": 1075,
+    "conditions": [
+      "glucose_aerobic",
+      "glucose_anaerobic",
+      "lactate_aerobic",
+      "succinate_aerobic"
+    ],
+    "n_conditionally_essential_recomputed": 68,
+    "n_conditionally_essential_supplement_flag": 68
+  },
+  "reproduction_gate_paper_own_fba": {
+    "per_condition": {
+      "glucose_aerobic": {
+        "n": 1075,
+        "tp": 79,
+        "fp": 16,
+        "fn": 45,
+        "tn": 935,
+        "accuracy": 0.9433,
+        "precision": 0.8316,
+        "recall": 0.6371,
+        "mcc": 0.6981
+      },
+      "glucose_anaerobic": {
+        "n": 1075,
+        "tp": 80,
+        "fp": 21,
+        "fn": 48,
+        "tn": 926,
+        "accuracy": 0.9358,
+        "precision": 0.7921,
+        "recall": 0.625,
+        "mcc": 0.6692
+      },
+      "lactate_aerobic": {
+        "n": 1075,
+        "tp": 83,
+        "fp": 14,
+        "fn": 58,
+        "tn": 920,
+        "accuracy": 0.933,
+        "precision": 0.8557,
+        "recall": 0.5887,
+        "mcc": 0.6759
+      },
+      "succinate_aerobic": {
+        "n": 1075,
+        "tp": 85,
+        "fp": 15,
+        "fn": 62,
+        "tn": 913,
+        "accuracy": 0.9284,
+        "precision": 0.85,
+        "recall": 0.5782,
+        "mcc": 0.6648
+      }
+    },
+    "switch": {
+      "n_conditionally_essential": 68,
+      "exact_set_match": 4,
+      "exact_set_match_rate": 0.0588,
+      "per_condition_agreement": 0.5735
+    }
+  },
+  "null_controls": {
+    "always_essential": {
+      "n_conditionally_essential": 68,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.4412
+    },
+    "always_dispensable": {
+      "n_conditionally_essential": 68,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.5588
+    }
+  },
+  "model_scored": {
+    "n_genes_scored": 1064,
+    "wildtype_growth_per_condition": {
+      "glucose_aerobic": 0.877,
+      "glucose_anaerobic": 0.1575,
+      "lactate_aerobic": 0.3506,
+      "succinate_aerobic": 0.4501
+    },
+    "per_condition": {
+      "glucose_aerobic": {
+        "n": 1064,
+        "tp": 82,
+        "fp": 10,
+        "fn": 42,
+        "tn": 930,
+        "accuracy": 0.9511,
+        "precision": 0.8913,
+        "recall": 0.6613,
+        "mcc": 0.7428
+      },
+      "glucose_anaerobic": {
+        "n": 1064,
+        "tp": 82,
+        "fp": 11,
+        "fn": 46,
+        "tn": 925,
+        "accuracy": 0.9464,
+        "precision": 0.8817,
+        "recall": 0.6406,
+        "mcc": 0.7244
+      },
+      "lactate_aerobic": {
+        "n": 1064,
+        "tp": 83,
+        "fp": 9,
+        "fn": 57,
+        "tn": 915,
+        "accuracy": 0.938,
+        "precision": 0.9022,
+        "recall": 0.5929,
+        "mcc": 0.7013
+      },
+      "succinate_aerobic": {
+        "n": 1064,
+        "tp": 87,
+        "fp": 9,
+        "fn": 60,
+        "tn": 908,
+        "accuracy": 0.9352,
+        "precision": 0.9062,
+        "recall": 0.5918,
+        "mcc": 0.701
+      }
+    },
+    "switch": {
+      "n_conditionally_essential": 67,
+      "exact_set_match": 3,
+      "exact_set_match_rate": 0.0448,
+      "per_condition_agreement": 0.5709
+    }
+  },
+  "caveats": [
+    "The paper scored iJO1366; this scores its SUCCESSOR iML1515, so a difference vs the reproduction gate is a MODEL difference, not a reproduction failure.",
+    "Labels are the EXPERIMENTAL columns only; the paper's FBA columns are a gate, never truth.",
+    "Media are the reconstruction's own M9 mineral background with the carbon source swapped and the oxygen bound set; they are not independently calibrated to the assay's exact medium.",
+    "Lactate is scored as L-lactate (EX_lac__L_e); the assay medium may have been D,L-lactate.",
+    "In-distribution vs a published knowledge baseline; not an independent-lab claim.",
+    "per_condition_agreement MUST be read against `null_controls`: predicting dispensable everywhere already scores ~0.56 on this subset, so the models' ~0.57 is ~1 point of lift."
+  ]
+}
