@@ -61,7 +61,8 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
   registered model must declare an organism, and `paeruginosa` must refuse. The previous tests *pinned
   the bug* (`assert resolve_model_id("saureus") == "iYS1720"`).
 
-E. coli (iML1515, Keio-validated, MCC 0.652) and yeast (iMM904 vs SGD, MCC 0.252) results are
+E. coli (iML1515, Keio-validated, MCC 0.652) and yeast (iMM904 vs SGD, MCC 0.252 -- SUPERSEDED
+2026-08-11 by 0.377 on a label-matched rich medium; the SGD labels come from YPD) results are
 **UNAFFECTED** — both were correctly assigned. Frozen AMR/forward surfaces byte-unchanged.
 Full evidence: `wiki/fba_wrong_organism_model_bug_2026-08-07.md`.
 

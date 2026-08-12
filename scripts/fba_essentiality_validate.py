@@ -25,12 +25,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from dna_decode.fba.essentiality_labels import (  # noqa: E402
+    ESSENTIALITY_LABEL_CONDITION,
     ESSENTIALITY_LABEL_SOURCES,
     LABEL_WALLED,
     MODEL_WALLED,
     parse_essential,
 )
 from dna_decode.fba.keio import confusion, metrics_from_confusion  # noqa: E402
+from dna_decode.fba.medium import apply_rich_medium  # noqa: E402
 from dna_decode.fba.model import gene_essentiality, load_model, resolve_model_id, wildtype_growth  # noqa: E402
 
 
@@ -54,6 +56,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--frac", type=float, default=0.01)
     ap.add_argument("--date", default="2026-08-03")
     ap.add_argument("--label-file", default=None, help="local gold-standard file (skip network)")
+    ap.add_argument("--medium", choices=("label_matched", "default", "rich"), default="label_matched",
+                    help="growth medium: label_matched (default) honours how the gold standard was "
+                         "measured; `default` uses the reconstruction's own medium")
     a = ap.parse_args(argv)
 
     key = a.organism.strip().lower().replace(" ", "_").replace(".", "").replace("-", "_")
@@ -106,6 +111,14 @@ def main(argv: list[str] | None = None) -> int:
 
     model = load_model(organism=a.organism)
     mid = resolve_model_id(a.organism)
+    # Match the medium to how the LABELS were measured. Essentiality is medium-dependent, so scoring a
+    # minimal-medium model against rich-medium labels charges the model for biology (yeast/iMM904 vs SGD:
+    # MCC 0.2524 -> 0.3773, FP 67 -> 13). `--medium default` restores the old model-default behaviour.
+    condition = (ESSENTIALITY_LABEL_CONDITION.get(key, "default") if a.medium == "label_matched"
+                 else a.medium)
+    supplements_opened: list[str] = []
+    if condition == "rich":
+        supplements_opened = apply_rich_medium(model)
     wt = wildtype_growth(model)
     fba = gene_essentiality(model, frac=a.frac)          # {gid: (growth, is_essential)}
     pred = {g: v[1] for g, v in fba.items()}
@@ -124,6 +137,9 @@ def main(argv: list[str] | None = None) -> int:
         "model": mid,
         "status": "SCORED",
         "label_source": f"{kind}: {url}",
+        "medium_mode": a.medium,
+        "medium_condition": condition,
+        "n_rich_supplements_opened": len(supplements_opened),
         "wildtype_growth_per_h": round(wt, 4),
         "n_gold_standard_essential": len(ess),
         "n_model_genes_scored": cm["n"],
@@ -134,11 +150,12 @@ def main(argv: list[str] | None = None) -> int:
         "pr_auc": None if pr != pr else round(pr, 4),
         "discrimination": _discrimination(met["mcc"]),
         "caveats": [
-            "METABOLIC-gene essentiality only; the model's DEFAULT medium.",
+            f"METABOLIC-gene essentiality only; medium = {condition}.",
             "Highly class-imbalanced -> MCC (not accuracy) is the discrimination signal.",
             "In-distribution vs a published knowledge baseline; not an independent-lab claim.",
-            "Essentiality is medium-dependent; a mismatched default medium weakens the metric "
-            "(a demotion path: set the organism's standard medium + re-score).",
+            f"Medium: {condition} (mode={a.medium}). Essentiality is medium-dependent -- the SGD labels "
+            "come from YPD (rich), so a minimal-medium score charges the model for biology; measured "
+            "effect on yeast/iMM904 was MCC 0.2524 -> 0.3773 with FP 67 -> 13.",
         ],
     }
     (outdir / f"fba_essentiality_{key}_{a.date}.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

@@ -73,7 +73,9 @@ has already *measured* that gap:
   K. pneumoniae / Gemmata).
 - The FBA cell's weakness is **model gaps**: the sucrose false-negative was a missing transporter, not a
   wrong prediction (`fba_carbon_growth_validation_2026-08-03`); essentiality is weak off E. coli
-  (yeast **iMM904** MCC **0.252**, recall 0.319 — the only cross-organism cell that is SCORED at all).
+  (yeast **iMM904** MCC **0.377** on a label-matched rich medium — the only cross-organism cell that is
+  SCORED at all; the 0.252 first reported here was a MEDIUM-MISMATCH artifact, see
+  `wiki/fba_label_matched_medium_2026-08-11.md`).
 
   > **Stale-citation correction (2026-08-11).** This line previously also read *"P. aeruginosa recall
   > **0.57**, worst on the metabolic class."* **Withdrawn.** That number came from a run where

@@ -39,6 +39,16 @@ ESSENTIALITY_LABEL_SOURCES: dict[str, tuple[str, str]] = {
     "scerevisiae": ("sgd", "http://sgd-archive.yeastgenome.org/curation/literature/phenotype_data.tab"),
 }
 
+# The GROWTH CONDITION each gold standard was measured in. Load-bearing: essentiality is medium-dependent,
+# so scoring a minimal-medium model against rich-medium labels reports biology as model error. SGD's
+# inviable-null set comes from the deletion collection on YPD (RICH); measured effect of honouring this on
+# yeast/iMM904 is MCC 0.2524 -> 0.3773 with false positives falling 67 -> 13. See `fba/medium.py`.
+ESSENTIALITY_LABEL_CONDITION: dict[str, str] = {
+    "saccharomyces_cerevisiae": "rich",
+    "yeast": "rich",
+    "scerevisiae": "rich",
+}
+
 # organisms the engine runs on but that have no clean fetchable+keyed gold standard yet (honest walls)
 LABEL_WALLED = {
     "staphylococcus_aureus": "iYS854 ids are USA300HOU_####; NTML is USA300 JE2 (SAUSA300_####) -> crosswalk",
