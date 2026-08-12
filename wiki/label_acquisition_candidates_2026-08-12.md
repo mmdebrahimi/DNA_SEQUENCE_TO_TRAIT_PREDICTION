@@ -51,6 +51,35 @@ G4/G8 n/a (not surveillance isolate-population data).
 even with a browser User-Agent). That is a bot-block, not a licence wall — a real browser gets through,
 which is exactly why this is a manual download. The figshare mirror is scriptable if you prefer.
 
+### Direct URLs + checksums (verify your download)
+
+| file | size | md5 | direct URL |
+|---|---|---|---|
+| `feba.db.gz` | 2,302 MB | `87b8e150df81f85cfa10650293bb603d` | <https://ndownloader.figshare.com/files/44580595> |
+| `code.tar.gz` | 4.6 MB | `74b47706142e59326ecb756b7fa74e76` | <https://ndownloader.figshare.com/files/44580445> |
+| `aaseqs.gz` | 43.2 MB | `ec4e093bfade3243d97686a0800d6325` | <https://ndownloader.figshare.com/files/44580544> |
+
+### Schema — READ 2026-08-12, ingestion is de-risked
+
+`code.tar.gz` was fetched (md5 verified) and `feba/lib/db_setup_tables.sql` extracted. 32 tables. The four
+that matter, and one fact that removes the main integration risk:
+
+- **`GeneFitness`** = `orgId, locusId, expName, fit, t` — a **continuous fitness value plus a
+  t-statistic**. Two-sided *and* significance-weighted; strictly more than the binary essentiality calls
+  the current cell uses.
+- **`Experiment`** carries **full condition metadata**: `media`, `mediaStrength`, `temperature`, `pH`,
+  **`aerobic`**, `liquid`, `shaking`, `expGroup`, `nGenerations`, and **`condition_1..4` with
+  `units_1..4` + `concentration_1..4`** — up to four simultaneous defined conditions with concentrations.
+  So every experiment is fully characterised, and carbon-source experiments are selectable by `expGroup`.
+- **`Gene.sysName`** is documented as *"a locus tag like SO_1446 or **b2338**"*. **Those are E. coli
+  b-numbers — the exact join key `dna_decode/fba/conditional_essentiality.py` and the Orth 2011 gold
+  standard already use.** The join to iML1515 is direct; no crosswalk needed.
+- **`Ortholog`** — cross-organism gene mapping, which is the path to testing catalog transfer across the
+  48 organisms rather than assuming it.
+
+Also present and useful later: `SpecificPhenotype` (genes with condition-specific phenotypes — a
+ready-made conditional set), `Cofit` / `ConservedCofit` (cofitness), `Organism.taxonomyId` (maps to BiGG).
+
 ---
 
 ## 2. E. coli genome-wide promoter atlas (Urtecho et al.) ⭐ for design-Q2
