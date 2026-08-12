@@ -154,7 +154,12 @@ def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, fl
     missed. The readout costs real signal; most of the deficit is still the model.
 
     **`oracle_*` is fitted ON the evaluation set and is an UPPER BOUND, never a deployable number** -- the
-    same rail the Track B deltaG arm carries. A deployable threshold needs a disjoint tuning split.
+    same rail the Track B deltaG arm carries. `deployable_threshold` is the honest counterpart.
+
+    **AUROC carries run-to-run variation of about +-0.01** (0.598 / 0.6110 / 0.6099 over three identical
+    invocations) because degenerate LP optima shift mid-range growth ratios between processes. The
+    THRESHOLDED numbers are byte-stable across the same runs, since the shifts never cross a cutoff. Quote
+    the AUROC as ~0.60, not to four decimals.
     """
     keys = sorted(CONDITIONS)
     y: list[int] = []
@@ -209,6 +214,77 @@ def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, fl
         "oracle_mcc": round(best_mcc, 4),
         "oracle_note": ("the oracle threshold is fitted ON the evaluation set -- an UPPER BOUND, not a "
                         "deployable number. A deployable one needs a disjoint tuning split."),
+    }
+
+
+def deployable_threshold(records: list[GeneRecord], ratios: dict[str, dict[str, float]],
+                         n_folds: int = 5) -> dict:
+    """The honest version of `continuous_readout`'s oracle: fit the cutoff on a DISJOINT gene split.
+
+    The oracle threshold is chosen on the same cells it is scored on, so it cannot be deployed. Here the
+    conditionally-essential genes are split into `n_folds` groups **by gene** (never by cell -- splitting
+    cells would leak, since the four cells of one gene share its ratio profile). For each fold the cutoff
+    that maximises MCC on the OTHER folds is applied to the held-out one, and the held-out predictions are
+    pooled into a single confusion matrix.
+
+    If the held-out MCC lands near the oracle, the retune is real and deployable. If it collapses toward
+    the deployed cutoff's score, the oracle was fitting noise -- which is exactly what a 268-cell set with
+    AUROC 0.598 might do, and the reason this function exists rather than shipping the oracle.
+
+    Folds are assigned by sorted gene id (deterministic, no RNG) so the number is reproducible.
+    """
+    keys = sorted(CONDITIONS)
+    subset = sorted(conditionally_essential_genes(records), key=lambda r: r.gene_id)
+    cells: list[tuple[str, int, float]] = []          # (gene_id, truth, ratio)
+    for r in subset:
+        for c in keys:
+            if r.gene_id in ratios.get(c, {}):
+                cells.append((r.gene_id, 1 if r.experimental[c] else 0, ratios[c][r.gene_id]))
+    if not cells:
+        return {"n_cells": 0, "held_out_mcc": None, "note": "no cells"}
+
+    fold_of = {r.gene_id: i % n_folds for i, r in enumerate(subset)}
+
+    def best_threshold(train: list[tuple[str, int, float]]) -> float:
+        best, best_v = 0.01, -2.0
+        for thr in sorted({c[2] for c in train}):
+            tp = sum(1 for _, y, s in train if s <= thr and y == 1)
+            fp = sum(1 for _, y, s in train if s <= thr and y == 0)
+            fn = sum(1 for _, y, s in train if s > thr and y == 1)
+            tn = sum(1 for _, y, s in train if s > thr and y == 0)
+            v = mcc({"tp": tp, "fp": fp, "fn": fn, "tn": tn})
+            if v > best_v:
+                best, best_v = thr, v
+        return best
+
+    tp = fp = fn = tn = 0
+    chosen = []
+    for f in range(n_folds):
+        train = [c for c in cells if fold_of[c[0]] != f]
+        test = [c for c in cells if fold_of[c[0]] == f]
+        if not train or not test:
+            continue
+        thr = best_threshold(train)
+        chosen.append(round(thr, 4))
+        for _, y, s in test:
+            pred = s <= thr
+            if pred and y == 1:
+                tp += 1
+            elif pred and y == 0:
+                fp += 1
+            elif not pred and y == 1:
+                fn += 1
+            else:
+                tn += 1
+    cm = {"tp": tp, "fp": fp, "fn": fn, "tn": tn, "n": tp + fp + fn + tn}
+    return {
+        "n_cells": len(cells), "n_folds": n_folds,
+        "thresholds_per_fold": chosen,
+        "held_out_confusion": cm,
+        "held_out_mcc": round(mcc(cm), 4),
+        "note": ("cutoff fitted on disjoint gene folds and scored on held-out genes -- a DEPLOYABLE "
+                 "estimate, unlike the oracle. Folds split BY GENE because the four cells of one gene "
+                 "share a ratio profile and splitting cells would leak."),
     }
 
 

@@ -85,14 +85,23 @@ thresholds it at 1% of wild type. Scoring the raw ratio as a ranking over all 26
 | | MCC | TP | FP | FN |
 |---|---|---|---|---|
 | deployed cutoff (ratio ≤ 0.01) | 0.0918 | 10 | 6 | 109 |
-| **ORACLE cutoff** (≤ 0.073) | **0.2544** | 24 | 6 | 95 |
+| **DEPLOYABLE** — cutoff refit on disjoint gene folds, scored held-out | **0.1932** | 28 | 14 | 91 |
+| ORACLE cutoff (≤ 0.073), fitted on the eval set | 0.2544 | 24 | 6 | 95 |
 
-**AUROC of the raw ratio = 0.598** — weak, but above chance, so the sub-threshold variation is not pure
-noise. Retuning the threshold would roughly **triple** the conditional MCC while adding **zero** false
-positives.
+**AUROC of the raw ratio ≈ 0.60** — weak, but above chance, so the sub-threshold variation is not pure
+noise.
 
-> **The oracle threshold is fitted ON the evaluation set — an upper bound, never a deployable number.**
-> A deployable one needs a disjoint tuning split. Same rail the Track B ΔG arm carries.
+**Retuning the cutoff more than doubles the conditional MCC, and that number is real.** The oracle (0.2544)
+is fitted on the same cells it is scored on and is an upper bound only. The **deployable** figure refits
+the cutoff on disjoint *gene* folds — split by gene, never by cell, since the four cells of one gene share
+its ratio profile — and scores the held-out genes: **MCC 0.1932**, more than double the deployed 0.0918.
+Four of the five folds independently choose the same cutoff (0.0734); one picks 0.9806, which is where the
+extra false positives come from, so the retune is real but not perfectly stable.
+
+> **Precision note.** AUROC carries run-to-run variation of about ±0.01 (0.598 / 0.6110 / 0.6099 over three
+> identical invocations) because degenerate LP optima shift mid-range growth ratios between processes. The
+> thresholded numbers were byte-identical across those same runs — the shifts never cross a cutoff. Quote
+> the AUROC as ~0.60, not to four decimals.
 
 And the ceiling is still low, because **43 of 67 genes (64%) have a perfectly flat ratio** — identical in
 all four media, median spread exactly 0.0000. For those, no threshold helps; FBA simply has no conditional

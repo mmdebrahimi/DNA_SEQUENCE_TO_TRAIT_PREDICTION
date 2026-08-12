@@ -241,3 +241,44 @@ def test_continuous_readout_is_degenerate_safe():
 
     r = _rec("b1", [True, True, True, True])           # not two-sided -> no cells
     assert continuous_readout([r], {c: {"b1": 0.5} for c in CONDITIONS})["auroc"] is None
+
+
+# ---- deployable threshold (the honest version of the oracle) ----
+
+def test_deployable_threshold_splits_by_gene_not_by_cell():
+    """Load-bearing against leakage: the four cells of one gene share its ratio profile, so splitting
+    cells would put a gene's own data in both train and test."""
+    from dna_decode.fba.conditional_essentiality import deployable_threshold
+
+    keys = sorted(CONDITIONS)
+    recs = [_rec(f"b{i}", [True, False, False, False]) for i in range(10)]
+    ratios = {c: {f"b{i}": (0.2 if c == keys[0] else 0.9) for i in range(10)} for c in keys}
+    got = deployable_threshold(recs, ratios, n_folds=5)
+    assert got["n_cells"] == 40                     # 10 genes x 4 conditions
+    assert got["n_folds"] == 5
+    assert len(got["thresholds_per_fold"]) == 5
+
+
+def test_deployable_threshold_recovers_a_clean_separable_signal_out_of_sample():
+    """When the ratio separates the classes perfectly, a held-out fit must find it."""
+    from dna_decode.fba.conditional_essentiality import deployable_threshold
+
+    keys = sorted(CONDITIONS)
+    recs = [_rec(f"b{i}", [True, False, False, False]) for i in range(10)]
+    ratios = {c: {f"b{i}": (0.1 if c == keys[0] else 0.9) for i in range(10)} for c in keys}
+    assert deployable_threshold(recs, ratios, n_folds=5)["held_out_mcc"] == pytest.approx(1.0)
+
+
+def test_deployable_threshold_does_not_invent_signal_from_noise():
+    """A ratio identical for essential and dispensable cells must NOT produce a positive held-out MCC."""
+    from dna_decode.fba.conditional_essentiality import deployable_threshold
+
+    recs = [_rec(f"b{i}", [True, False, False, False]) for i in range(10)]
+    ratios = {c: {f"b{i}": 0.5 for i in range(10)} for c in CONDITIONS}
+    assert deployable_threshold(recs, ratios, n_folds=5)["held_out_mcc"] <= 0.0
+
+
+def test_deployable_threshold_is_degenerate_safe():
+    from dna_decode.fba.conditional_essentiality import deployable_threshold
+
+    assert deployable_threshold([], {}, n_folds=5)["held_out_mcc"] is None

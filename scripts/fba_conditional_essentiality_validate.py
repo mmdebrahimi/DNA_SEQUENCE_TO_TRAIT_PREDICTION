@@ -34,6 +34,7 @@ from dna_decode.fba.conditional_essentiality import (  # noqa: E402
     confusion_from_calls,
     constant_baselines,
     continuous_readout,
+    deployable_threshold,
     load_labels,
     mcc,
     pattern_distribution,
@@ -177,6 +178,12 @@ def main(argv: list[str] | None = None) -> int:
           f"(TP {cont['oracle_confusion']['tp']} FP {cont['oracle_confusion']['fp']} "
           f"FN {cont['oracle_confusion']['fn']})  <- fitted ON the eval set, UPPER BOUND only")
 
+    # The deployable version of that oracle: fit the cutoff on disjoint GENE folds, score held-out.
+    dep = deployable_threshold(conditionally_essential_genes(scored), ratios)
+    print(f"   DEPLOYABLE (5-fold by gene): MCC {dep['held_out_mcc']} "
+          f"(TP {dep['held_out_confusion']['tp']} FP {dep['held_out_confusion']['fp']} "
+          f"FN {dep['held_out_confusion']['fn']}) | per-fold cutoffs {dep['thresholds_per_fold']}")
+
     result = {
         "record": "fba-conditional-essentiality-v1",
         "date": a.date,
@@ -199,6 +206,7 @@ def main(argv: list[str] | None = None) -> int:
             "switch": our_switch,
             "pattern_distribution": our_pat,
             "continuous_readout": cont,
+            "deployable_threshold": dep,
         },
         "caveats": [
             "The paper scored iJO1366; this scores its SUCCESSOR iML1515, so a difference vs the "
