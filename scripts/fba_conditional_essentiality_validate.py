@@ -33,6 +33,7 @@ from dna_decode.fba.conditional_essentiality import (  # noqa: E402
     conditionally_essential_genes,
     confusion_from_calls,
     constant_baselines,
+    continuous_readout,
     load_labels,
     mcc,
     pattern_distribution,
@@ -117,13 +118,15 @@ def main(argv: list[str] | None = None) -> int:
           f"{len(scored)}/{len(records)}")
 
     ours: dict[str, dict[str, bool]] = {}
+    ratios: dict[str, dict[str, float]] = {}
     growth_by_condition = {}
     for c in CONDITIONS:
         with model:
             apply_condition(model, c)
             wt = wildtype_growth(model)
             growth_by_condition[c] = round(wt, 4)
-            calls = {}
+            calls: dict[str, bool] = {}
+            rat: dict[str, float] = {}
             if wt > 1e-6:
                 from cobra.flux_analysis import single_gene_deletion  # noqa: PLC0415
                 res = single_gene_deletion(model, gene_list=[model.genes.get_by_id(r.gene_id)
@@ -134,8 +137,11 @@ def main(argv: list[str] | None = None) -> int:
                     ids = row["ids"] if "ids" in res.columns else idx
                     gid = next(iter(ids)) if not isinstance(ids, str) else ids
                     g = row["growth"]
-                    calls[gid] = (g != g) or (g < a.frac * wt)     # NaN (infeasible) counts as essential
+                    # NaN (infeasible) is total loss of growth -> ratio 0, and counts as essential
+                    rat[gid] = 0.0 if g != g else g / wt
+                    calls[gid] = (g != g) or (g < a.frac * wt)
             ours[c] = calls
+            ratios[c] = rat
         print(f"   {c:20s} wild-type growth {growth_by_condition[c]:.4f} | "
               f"{sum(calls.values())} genes called essential")
 
@@ -159,6 +165,18 @@ def main(argv: list[str] | None = None) -> int:
     print(f"   vs best constant-predictor null {best_null} -> "
           f"lift {our_switch['per_condition_agreement'] - best_null:+.4f}")
 
+    # Is the signal ABSENT, or is the 1%-of-wild-type CUTOFF discarding it?
+    cont = continuous_readout(conditionally_essential_genes(scored), ratios)
+    print(f"\nCONTINUOUS READOUT on {cont['n_cells']} gene x condition cells "
+          f"({cont['n_essential_cells']} truly essential):")
+    print(f"   AUROC of the raw growth ratio        {cont['auroc']}   (0.5 = nothing below the cutoff)")
+    print(f"   deployed cutoff <= {cont['deployed_threshold']}: MCC {cont['deployed_mcc']} "
+          f"(TP {cont['deployed_confusion']['tp']} FP {cont['deployed_confusion']['fp']} "
+          f"FN {cont['deployed_confusion']['fn']})")
+    print(f"   ORACLE cutoff   <= {cont['oracle_threshold']}: MCC {cont['oracle_mcc']} "
+          f"(TP {cont['oracle_confusion']['tp']} FP {cont['oracle_confusion']['fp']} "
+          f"FN {cont['oracle_confusion']['fn']})  <- fitted ON the eval set, UPPER BOUND only")
+
     result = {
         "record": "fba-conditional-essentiality-v1",
         "date": a.date,
@@ -180,6 +198,7 @@ def main(argv: list[str] | None = None) -> int:
             "per_condition": our_per_cond,
             "switch": our_switch,
             "pattern_distribution": our_pat,
+            "continuous_readout": cont,
         },
         "caveats": [
             "The paper scored iJO1366; this scores its SUCCESSOR iML1515, so a difference vs the "

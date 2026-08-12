@@ -206,6 +206,30 @@
       "n_distinct_patterns": 3,
       "n_constant_pattern": 63,
       "constant_pattern_fraction": 0.9403
+    },
+    "continuous_readout": {
+      "n_cells": 268,
+      "n_essential_cells": 119,
+      "auroc": 0.598,
+      "deployed_threshold": 0.01,
+      "deployed_confusion": {
+        "tp": 10,
+        "fp": 6,
+        "fn": 109,
+        "tn": 143,
+        "n": 268
+      },
+      "deployed_mcc": 0.0918,
+      "oracle_threshold": 0.0734,
+      "oracle_confusion": {
+        "tp": 24,
+        "fp": 6,
+        "fn": 95,
+        "tn": 143,
+        "n": 268
+      },
+      "oracle_mcc": 0.2544,
+      "oracle_note": "the oracle threshold is fitted ON the evaluation set -- an UPPER BOUND, not a deployable number. A deployable one needs a disjoint tuning split."
     }
   },
   "caveats": [

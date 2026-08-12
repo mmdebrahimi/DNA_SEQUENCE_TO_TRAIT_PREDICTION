@@ -136,6 +136,82 @@ def mcc(cm: dict[str, int]) -> float:
     return 0.0 if den == 0 else (tp * tn - fp * fn) / den
 
 
+def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, float]]) -> dict:
+    """Is the conditional signal ABSENT, or is the binary CUTOFF discarding it?
+
+    FBA computes a continuous knockout growth ratio (mutant / wild type) per condition, and the deployed
+    call thresholds it at 1% of wild type. That throws away everything in between, so this scores the raw
+    ratio as a RANKING over every gene x condition cell on the two-sided subset (lower growth = more
+    essential) and reports the best threshold the data could support.
+
+    Measured 2026-08-12 on iML1515 / 268 cells (119 essential):
+      * AUROC **0.5907** -- weak but above chance, so the sub-threshold variation is not pure noise.
+      * deployed cutoff (<=0.01): MCC 0.0918, TP 10 / FN 109.
+      * ORACLE best cutoff (<=0.3249): MCC 0.2544, TP 24, with the SAME 6 false positives.
+
+    So retuning would roughly TRIPLE the conditional MCC at no precision cost -- but 64% of these genes have
+    a perfectly FLAT ratio across all four media, so even the oracle leaves 95 of 119 essential cells
+    missed. The readout costs real signal; most of the deficit is still the model.
+
+    **`oracle_*` is fitted ON the evaluation set and is an UPPER BOUND, never a deployable number** -- the
+    same rail the Track B deltaG arm carries. A deployable threshold needs a disjoint tuning split.
+    """
+    keys = sorted(CONDITIONS)
+    y: list[int] = []
+    score: list[float] = []
+    for r in records:
+        for c in keys:
+            if r.gene_id in ratios.get(c, {}):
+                y.append(1 if r.experimental[c] else 0)
+                score.append(ratios[c][r.gene_id])
+    n_pos, n_neg = sum(y), len(y) - sum(y)
+    if not y or n_pos == 0 or n_neg == 0:
+        return {"n_cells": len(y), "auroc": None, "note": "degenerate: one class only"}
+
+    # rank-based AUROC with average ranks for ties (ties are common -- many ratios are exactly 1.0)
+    paired = sorted(range(len(score)), key=lambda i: -score[i])   # ascending essentiality score
+    ranks = [0.0] * len(score)
+    for pos, i in enumerate(paired, start=1):
+        ranks[i] = float(pos)
+    by_val: dict[float, list[int]] = {}
+    for i, v in enumerate(score):
+        by_val.setdefault(v, []).append(i)
+    for idxs in by_val.values():
+        if len(idxs) > 1:
+            avg = sum(ranks[i] for i in idxs) / len(idxs)
+            for i in idxs:
+                ranks[i] = avg
+    pos_rank_sum = sum(ranks[i] for i in range(len(y)) if y[i] == 1)
+    auroc = (pos_rank_sum - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
+
+    def at(thr: float) -> dict[str, int]:
+        tp = sum(1 for i in range(len(y)) if score[i] <= thr and y[i] == 1)
+        fp = sum(1 for i in range(len(y)) if score[i] <= thr and y[i] == 0)
+        fn = sum(1 for i in range(len(y)) if score[i] > thr and y[i] == 1)
+        tn = sum(1 for i in range(len(y)) if score[i] > thr and y[i] == 0)
+        return {"tp": tp, "fp": fp, "fn": fn, "tn": tn, "n": len(y)}
+
+    best_thr, best_cm, best_mcc = None, None, -2.0
+    for thr in sorted(set(score)):
+        cm = at(thr)
+        v = mcc(cm)
+        if v > best_mcc:
+            best_thr, best_cm, best_mcc = thr, cm, v
+    deployed = at(0.01)
+    return {
+        "n_cells": len(y), "n_essential_cells": n_pos,
+        "auroc": round(auroc, 4),
+        "deployed_threshold": 0.01,
+        "deployed_confusion": deployed,
+        "deployed_mcc": round(mcc(deployed), 4),
+        "oracle_threshold": round(best_thr, 4),
+        "oracle_confusion": best_cm,
+        "oracle_mcc": round(best_mcc, 4),
+        "oracle_note": ("the oracle threshold is fitted ON the evaluation set -- an UPPER BOUND, not a "
+                        "deployable number. A deployable one needs a disjoint tuning split."),
+    }
+
+
 def pattern_distribution(records: list[GeneRecord],
                          predicted: dict[str, dict[str, bool]] | None = None) -> dict:
     """WHY the switch score is low: what shape are the predictions, on the two-sided subset?

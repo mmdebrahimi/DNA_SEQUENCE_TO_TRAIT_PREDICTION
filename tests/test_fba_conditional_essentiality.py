@@ -195,3 +195,49 @@ def test_the_experimental_patterns_are_genuinely_diverse():
     from dna_decode.fba.conditional_essentiality import pattern_distribution
 
     assert pattern_distribution(load_labels())["n_distinct_patterns"] >= 10
+
+
+# ---- continuous readout: is the signal absent, or is the cutoff discarding it? ----
+
+def test_continuous_readout_recovers_a_perfect_ranking_the_binary_cutoff_would_miss():
+    """The case the metric exists to detect: ratios that order the conditions correctly but never fall
+    below the 1% cutoff. AUROC must see it; the deployed threshold must not."""
+    from dna_decode.fba.conditional_essentiality import continuous_readout
+
+    r = _rec("b1", [True, False, False, False])
+    keys = sorted(CONDITIONS)
+    ratios = {keys[0]: {"b1": 0.20}, keys[1]: {"b1": 0.90},
+              keys[2]: {"b1": 0.95}, keys[3]: {"b1": 0.99}}
+    got = continuous_readout([r], ratios)
+    assert got["auroc"] == pytest.approx(1.0)          # ranking is perfect
+    assert got["deployed_confusion"]["tp"] == 0        # ...and the deployed cutoff catches none of it
+
+
+def test_continuous_readout_reports_auroc_half_when_the_ratio_is_flat():
+    """A flat ratio carries no conditional information; AUROC must say so rather than flatter it."""
+    from dna_decode.fba.conditional_essentiality import continuous_readout
+
+    r = _rec("b1", [True, False, False, False])
+    ratios = {c: {"b1": 0.5} for c in CONDITIONS}
+    assert continuous_readout([r], ratios)["auroc"] == pytest.approx(0.5)
+
+
+def test_the_oracle_threshold_is_labelled_as_an_upper_bound():
+    """Load-bearing honesty rail, same shape as the Track B deltaG arm: the best threshold is fitted ON
+    the evaluation set and must never be presented as a deployable number."""
+    from dna_decode.fba.conditional_essentiality import continuous_readout
+
+    r = _rec("b1", [True, False, False, False])
+    keys = sorted(CONDITIONS)
+    got = continuous_readout([r], {keys[0]: {"b1": 0.2}, keys[1]: {"b1": 0.9},
+                                   keys[2]: {"b1": 0.9}, keys[3]: {"b1": 0.9}})
+    assert "upper bound" in got["oracle_note"].lower()
+    assert got["oracle_mcc"] >= got["deployed_mcc"]     # an oracle can never be worse
+
+
+def test_continuous_readout_is_degenerate_safe():
+    """All-essential or all-dispensable cells give no AUROC; report it, do not divide by zero."""
+    from dna_decode.fba.conditional_essentiality import continuous_readout
+
+    r = _rec("b1", [True, True, True, True])           # not two-sided -> no cells
+    assert continuous_readout([r], {c: {"b1": 0.5} for c in CONDITIONS})["auroc"] is None

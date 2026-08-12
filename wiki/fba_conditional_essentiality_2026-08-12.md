@@ -77,6 +77,35 @@ within a point of the constant-predictor null: on this subset it very nearly *is
 And iML1515 is *more* collapsed than its predecessor, not less — 3 distinct predicted shapes against
 iJO1366's 5.
 
+### Is the signal absent, or is the cutoff discarding it?
+
+Both, in a measurable ratio. FBA computes a *continuous* knockout growth ratio; the deployed call
+thresholds it at 1% of wild type. Scoring the raw ratio as a ranking over all 268 gene × condition cells:
+
+| | MCC | TP | FP | FN |
+|---|---|---|---|---|
+| deployed cutoff (ratio ≤ 0.01) | 0.0918 | 10 | 6 | 109 |
+| **ORACLE cutoff** (≤ 0.073) | **0.2544** | 24 | 6 | 95 |
+
+**AUROC of the raw ratio = 0.598** — weak, but above chance, so the sub-threshold variation is not pure
+noise. Retuning the threshold would roughly **triple** the conditional MCC while adding **zero** false
+positives.
+
+> **The oracle threshold is fitted ON the evaluation set — an upper bound, never a deployable number.**
+> A deployable one needs a disjoint tuning split. Same rail the Track B ΔG arm carries.
+
+And the ceiling is still low, because **43 of 67 genes (64%) have a perfectly flat ratio** — identical in
+all four media, median spread exactly 0.0000. For those, no threshold helps; FBA simply has no conditional
+signal. Another 20 vary but never cross the cutoff, which is the recoverable part.
+
+The variation that exists is sometimes exactly right and sometimes backwards. `sdhA/B/C/D` (succinate
+dehydrogenase) score 0.960 / 1.000 / 0.791 / **0.000** — lethal on succinate, nearly free on glucose,
+which is both correct and correctly captured. But `nuoM` (truth: essential on succinate) is *lowest* on
+glucose, and `sucA` (truth: lactate) is lowest on succinate. Direction is not reliable.
+
+**So: ~2/3 of the deficit is the model having no conditional signal at all, and ~1/3 is a binary readout
+discarding weak signal that does exist.**
+
 ### What that means
 
 The per-condition MCC of 0.70–0.74 is real, but it is carried almost entirely by genes that are *always*
