@@ -223,11 +223,67 @@ def per_element_mean_r2(d, seqmap: dict, name_col: str, feat_fn, seed: int = 0) 
     y = g.values
     x = np.array([feat_fn(seqmap[n]) for n in names])
     pred = np.zeros(len(y))
+    lib_only = np.zeros(len(y))
+    libs = np.array([library_of(n) for n in names])
     for tri, tei in KFold(5, shuffle=True, random_state=seed).split(x):
         pred[tei] = HistGradientBoostingRegressor(
             max_iter=400, random_state=seed).fit(x[tri], y[tri]).predict(x[tei])
+        # LIBRARY-IDENTITY BASELINE: predict a held-out element by its LIBRARY's training mean, using no
+        # sequence at all. If the headline barely beats this, the model is identifying the design style
+        # rather than reading the part.
+        for lib in set(libs[tei]):
+            src = y[tri][libs[tri] == lib]
+            lib_only[tei[libs[tei] == lib]] = src.mean() if len(src) else y[tri].mean()
     return {"n_elements": len(names), "r2": round(r2(y, pred), 4),
-            "spread_sd_log2": round(float(y.std()), 3)}
+            "spread_sd_log2": round(float(y.std()), 3),
+            "library_identity_only_r2": round(r2(y, lib_only), 4),
+            "r2_within_library": round(_within_group_r2(y, pred, libs), 4),
+            "rmse_log2": round(_rmse(y, pred), 4),
+            "spearman": round(_spearman(y, pred), 4),
+            "decomposition_note": (
+                "`r2` is the headline and includes credit for placing an element's LIBRARY correctly. "
+                "`library_identity_only_r2` is that credit alone (no sequence); `r2_within_library` is "
+                "the part-level ranking that survives when library identity is removed from both sides."
+            )}
+
+
+def _within_group_r2(y, pred, groups) -> float:
+    """R^2 after centring BOTH truth and prediction within each group.
+
+    Removes the group's offset from both sides, so what is left is ranking WITHIN the group. A model that
+    only learns "this library is strong" scores ~0 here while scoring well against the global mean.
+    """
+    import numpy as np  # noqa: PLC0415
+
+    y, pred, groups = np.asarray(y, float), np.asarray(pred, float), np.asarray(groups)
+    yc, pc = y.copy(), np.asarray(pred, float).copy()
+    for g in set(groups.tolist()):
+        m = groups == g
+        yc[m] -= y[m].mean()
+        pc[m] -= pred[m].mean()
+    denom = float((yc ** 2).sum())
+    return float("nan") if denom <= 0 else float(1 - ((yc - pc) ** 2).sum() / denom)
+
+
+def _rmse(y, pred) -> float:
+    """Denominator-free error, in the target's own units (log2 protein). Immune to every R^2 pathology."""
+    import numpy as np  # noqa: PLC0415
+
+    return float(np.sqrt(np.mean((np.asarray(y, float) - np.asarray(pred, float)) ** 2)))
+
+
+def _spearman(y, pred) -> float:
+    """Rank correlation -- the quantity a designer shortlisting parts actually cares about."""
+    import numpy as np  # noqa: PLC0415
+
+    def rank(v):
+        order = np.argsort(np.argsort(np.asarray(v, float)))
+        return order.astype(float)
+
+    a, b = rank(y), rank(pred)
+    a, b = a - a.mean(), b - b.mean()
+    d = float(np.sqrt((a ** 2).sum() * (b ** 2).sum()))
+    return float("nan") if d <= 0 else float((a * b).sum() / d)
 
 
 def run_sequence_split(d, seqmap: dict, name_col: str, group_col: str, other_col: str,
@@ -347,19 +403,41 @@ def leave_library_out(d, seqmap: dict, name_col: str, feat_fn, min_test: int = 5
     return out
 
 
+def control_percentile(lolo: float, controls) -> float:
+    """Where the structured holdout falls in the EMPIRICAL distribution of same-size random holdouts.
+
+    Replaces an earlier `mean - 2*sd` rule, which was a heuristic wearing a test's clothes: it compared a
+    single structured point against a control spread while assuming near-normality, used a population sd,
+    and adjusted for nothing. A randomization percentile assumes no shape at all. Read it as "this holdout
+    was worse than all but X of the random splits" -- NOT as a p-value against a null the design supports.
+    """
+    import numpy as np  # noqa: PLC0415
+
+    c = np.asarray([v for v in controls if np.isfinite(v)], float)
+    if c.size == 0 or not np.isfinite(lolo):
+        return float("nan")
+    return float((c <= lolo).sum() / c.size)
+
+
 def leave_library_out_with_size_control(d, seqmap: dict, name_col: str, feat_fn,
-                                        n_control: int = 20, seed: int = 0) -> dict:
+                                        n_control: int = 200, seed: int = 0) -> dict:
     """Leave-one-library-out, PLUS the control that makes it interpretable.
 
     Holding out a library changes two things at once: the test parts become out-of-distribution AND the
     training set shrinks (holding out BIOFAB leaves only 22 promoters to train on). A raw LOLO score
     therefore cannot distinguish "this design style is unfamiliar" from "there wasn't enough data".
 
-    The control fixes that: for each library, also score `n_control` RANDOM splits with the SAME train and
-    test sizes, drawn across all libraries. The GAP (`lolo - random_same_size`) isolates the library-shift
-    component. Verified 2026-08-11: promoter-BIOFAB LOLO is -0.655, but a *random* split at that same
-    train size (22) scores -0.065 — so most of the collapse is small-data, and the shift component is the
-    -0.590 gap, not the raw number.
+    The control bounds that: for each library, also score `n_control` RANDOM splits with the SAME train and
+    test sizes, drawn across all libraries. It does NOT cleanly separate the two -- a random 22-promoter
+    training draw usually still CONTAINS BIOFAB (80% of promoters), so the comparison is
+    "structured removal vs iid same-size removal", not a variance decomposition. Report it as such.
+
+    Three metrics per library, because the choice of denominator changes the conclusion:
+      * `lolo_r2`            -- vs the GLOBAL mean. Offset-inclusive: credits getting the library's level right.
+      * `r2_within_library`  -- both sides centred. Part-level RANKING only. This is the honest headline.
+      * `rmse_log2`          -- denominator-free, in target units.
+    Verified 2026-08-11: RBS-Salis scores 0.625 offset-inclusive but only 0.100 within-library, and two of
+    three promoter libraries are NEGATIVE within-library. The global-mean metric was hiding that.
     """
     import numpy as np  # noqa: PLC0415
     from sklearn.ensemble import HistGradientBoostingRegressor  # noqa: PLC0415
@@ -372,9 +450,11 @@ def leave_library_out_with_size_control(d, seqmap: dict, name_col: str, feat_fn,
     libs = np.array([library_of(n) for n in names])
     gmean = y.mean()
 
+    def predict(tr, te):
+        return HistGradientBoostingRegressor(max_iter=400, random_state=seed).fit(x[tr], y[tr]).predict(x[te])
+
     def score(tr, te):
-        m = HistGradientBoostingRegressor(max_iter=400, random_state=seed).fit(x[tr], y[tr])
-        p = m.predict(x[te])
+        p = predict(tr, te)
         denom = float(((y[te] - gmean) ** 2).sum())
         return float("nan") if denom <= 0 else float(1 - ((y[te] - p) ** 2).sum() / denom)
 
@@ -385,19 +465,37 @@ def leave_library_out_with_size_control(d, seqmap: dict, name_col: str, feat_fn,
         if len(te) < 2 or len(tr) < 10:
             out[lib] = {"n_test": int(len(te)), "status": "skipped_too_small"}
             continue
+        pred = predict(tr, te)
         lolo = score(tr, te)
         ctl = []
         for _ in range(n_control):
             perm = rng.permutation(len(names))
             ctl.append(score(perm[len(te):len(te) + len(tr)], perm[:len(te)]))
         cm, cs = float(np.mean(ctl)), float(np.std(ctl))
+        pct = control_percentile(lolo, ctl)
+        tr_mean_denom = float(((y[te] - y[tr].mean()) ** 2).sum())
+        # DEGENERACY GUARD: below ~2x min_samples_leaf the regressor cannot split and emits ONE constant
+        # for every test part. Its score is then purely about where that constant sits relative to the
+        # held-out library's mean -- a library-OFFSET statement with zero part-level content. Verified
+        # 2026-08-11: promoter-BIOFAB (n_train=22) returns exactly 1 distinct prediction.
+        degenerate = bool(len(np.unique(np.round(pred, 9))) == 1)
         out[lib] = {
             "n_test": int(len(te)), "n_train": int(len(tr)),
+            "n_distinct_predictions": int(len(np.unique(np.round(pred, 9)))),
+            "prediction_is_constant": degenerate,
             "lolo_r2": round(lolo, 4),
+            "r2_within_library": round(_within_group_r2(y[te], pred, np.zeros(len(te))), 4),
+            "rmse_log2": round(_rmse(y[te], pred), 4),
+            "r2_vs_train_mean": (round(1 - float(((y[te] - pred) ** 2).sum()) / tr_mean_denom, 4)
+                                 if tr_mean_denom > 0 else float("nan")),
             "random_same_size_r2": round(cm, 4), "random_same_size_std": round(cs, 4),
+            "n_control": int(n_control),
             "library_shift_gap": round(lolo - cm, 4),
-            # only call it real shift when the gap clears the control's own spread
-            "shift_is_significant": bool(cs > 0 and (cm - lolo) > 2 * cs),
+            # empirical: fraction of same-size RANDOM splits that scored at or below this structured one
+            "control_percentile": round(pct, 4),
+            "worse_than_iid_same_size": bool(np.isfinite(pct) and pct <= 0.05),
+            "comparison_note": ("structured removal vs iid same-size removal; the random draw usually still "
+                                "contains the held-out library, so this bounds shift rather than isolating it"),
         }
     return out
 
@@ -555,16 +653,20 @@ def main(argv=None) -> int:
             s = split[k]
             print(f"   {k:42s} {s['mean']:7.4f} +/- {s['std']:.4f}  [p5 {s['p5']:6.3f}]")
         print(f"   per-{tag}-mean from sequence ({pem['n_elements']} pts): R2 = {pem['r2']}")
+        print(f"      library-identity-only baseline (no sequence) {pem['library_identity_only_r2']:7.4f}")
+        print(f"      WITHIN-library R2 (identity removed)         {pem['r2_within_library']:7.4f}")
+        print(f"      RMSE {pem['rmse_log2']:.4f} log2 | spearman {pem['spearman']:.4f}")
         print(f"   -> headline {sv['headline_from_sequence']} (+{sv['vs_additive_baseline']} vs baseline); "
               f"generalises={sv['generalises_from_sequence']}")
-        print(f"   LEAVE-ONE-LIBRARY-OUT (OOD stress; gap isolates shift from train-size):")
+        print("   LEAVE-ONE-LIBRARY-OUT (structured vs iid same-size removal):")
         for lib, r in lolo.items():
             if r.get("status") == "skipped_too_small":
                 print(f"      {lib:20s} n={r['n_test']:3d}  skipped")
                 continue
-            flag = "SHIFT" if r["shift_is_significant"] else "ok"
+            flag = "WORSE-THAN-IID" if r["worse_than_iid_same_size"] else "unremarkable"
             print(f"      {lib:20s} n_te={r['n_test']:3d} n_tr={r['n_train']:3d} | LOLO {r['lolo_r2']:7.4f} "
-                  f"| random-same-size {r['random_same_size_r2']:7.4f} | gap {r['library_shift_gap']:+7.4f} [{flag}]")
+                  f"| within-lib {r['r2_within_library']:7.4f} | rmse {r['rmse_log2']:.3f} "
+                  f"| iid-same-size {r['random_same_size_r2']:7.4f} | pctile {r['control_percentile']:.3f} [{flag}]")
 
     v = verdict(splits)
     print(f"\ncombination split: {v['combination_split_verdict']} "

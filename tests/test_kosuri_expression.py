@@ -208,16 +208,62 @@ def test_library_classifier_is_total_and_never_raises():
         assert library_of(odd) in {"BIOFAB", "BioBrick/Anderson", "Salis", "vector/other"}
 
 
-def test_shift_is_only_called_significant_when_the_gap_clears_the_control_spread():
-    """The load-bearing guard against over-reading OOD. Holding out a library shrinks the training set
-    too, so a low LOLO score alone proves nothing -- it must beat the same-size random control's noise."""
+def test_control_percentile_is_empirical_and_assumes_no_distribution_shape():
+    """Replaces a `mean - 2*sd` heuristic that compared ONE structured point to a control spread while
+    assuming normality and correcting for nothing. The percentile assumes no shape at all."""
+    from scripts.kosuri_expression_validate import control_percentile
+
+    ctl = [0.1 * i for i in range(10)]            # 0.0 .. 0.9
+    assert control_percentile(-1.0, ctl) == 0.0   # worse than every random split
+    assert control_percentile(1.0, ctl) == 1.0    # better than every random split
+    assert control_percentile(0.35, ctl) == pytest.approx(0.4)
+
+
+def test_control_percentile_survives_non_finite_controls_and_never_raises():
+    """A degenerate same-size split can return nan; it must be dropped, not poison the percentile."""
+    from scripts.kosuri_expression_validate import control_percentile
+
+    assert control_percentile(0.5, [0.1, float("nan"), 0.9]) == pytest.approx(0.5)
+    assert np.isnan(control_percentile(0.5, [float("nan")]))
+    assert np.isnan(control_percentile(float("nan"), [0.1, 0.2]))
+
+
+def test_within_group_r2_is_zero_for_a_model_that_only_knows_the_group():
+    """THE load-bearing metric. A model predicting each library's mean scores well against the global mean
+    while having no part-level ranking at all -- exactly the failure the global-mean denominator hid
+    (RBS-Salis: 0.625 offset-inclusive, 0.100 within-library)."""
+    from scripts.kosuri_expression_validate import _within_group_r2, r2
+
+    y = np.array([1.0, 2.0, 3.0, 11.0, 12.0, 13.0])
+    groups = np.array(["a", "a", "a", "b", "b", "b"])
+    group_mean_only = np.array([2.0, 2.0, 2.0, 12.0, 12.0, 12.0])
+
+    assert r2(y, group_mean_only) > 0.85                            # looks strong globally
+    assert _within_group_r2(y, group_mean_only, groups) == pytest.approx(0.0)   # ranks nothing
+
+
+def test_within_group_r2_goes_negative_when_ranking_is_inverted():
+    """Two of three promoter libraries came out NEGATIVE within-library; the metric must be able to say so."""
+    from scripts.kosuri_expression_validate import _within_group_r2
+
+    y = np.array([1.0, 2.0, 3.0])
+    assert _within_group_r2(y, np.array([3.0, 2.0, 1.0]), np.zeros(3)) < 0
+
+
+def test_rmse_and_spearman_are_denominator_free_and_rank_only():
+    from scripts.kosuri_expression_validate import _rmse, _spearman
+
+    y = np.array([1.0, 2.0, 3.0, 4.0])
+    assert _rmse(y, y) == pytest.approx(0.0)
+    assert _rmse(y, y + 2.0) == pytest.approx(2.0)
+    assert _spearman(y, 10 * y + 5) == pytest.approx(1.0)      # monotone => rank-identical
+    assert _spearman(y, -y) == pytest.approx(-1.0)
+
+
+def test_leave_library_out_defaults_to_enough_controls_for_a_percentile():
+    """20 controls cannot resolve a percentile below 0.05; the two load-bearing verdicts sit at 0.005/0.000."""
+    import inspect
+
     from scripts.kosuri_expression_validate import leave_library_out_with_size_control as f
 
-    # exercised via the real function's own rule, replicated here on synthetic numbers
-    def sig(lolo, ctl_mean, ctl_std):
-        return bool(ctl_std > 0 and (ctl_mean - lolo) > 2 * ctl_std)
-
-    assert sig(0.2524, 0.6375, 0.083) is True     # RBS BIOFAB: real shift
-    assert sig(0.5441, 0.4234, 0.326) is False    # promoter vector/other: LOLO ABOVE control
-    assert sig(0.1478, 0.3292, 0.388) is False    # promoter Anderson: inside the noise
-    assert callable(f)
+    assert inspect.signature(f).parameters["n_control"].default >= 200

@@ -156,10 +156,15 @@ def test_synthetic_lethality_real_isozyme_pair():
 @pytest.mark.slow
 def test_cross_organism_load_saureus():
     pytest.importorskip("cobra")
-    from dna_decode.fba.model import load_model, wildtype_growth
-    # downloads iYS1720 from BiGG on first run (network); cached after
+    from dna_decode.fba.model import MODEL_ORGANISM, load_model, wildtype_growth
+    # downloads iYS854 from BiGG on first run (network); cached after
     m = load_model(organism="saureus")
-    assert len(m.genes) > 1000            # S. aureus iYS1720 has ~1707 genes
+    # Pin the model IDENTITY, not a gene count. The original defect here was that `saureus` loaded
+    # Salmonella's iYS1720 -- and a `len(m.genes) > 1000` assertion PASSED on it (~1707 genes) while
+    # failing on the correct S. aureus iYS854 (866). A count cannot catch a wrong-organism mapping.
+    assert m.id == "iYS854"
+    assert MODEL_ORGANISM[m.id].startswith("Staphylococcus aureus")
+    assert 800 < len(m.genes) < 1000      # iYS854: 866 genes
     assert wildtype_growth(m) > 1e-4      # grows on its default medium
 
 

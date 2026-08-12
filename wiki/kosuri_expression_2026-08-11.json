@@ -89,7 +89,12 @@
       "per_element_mean": {
         "n_elements": 111,
         "r2": 0.6123,
-        "spread_sd_log2": 1.401
+        "spread_sd_log2": 1.401,
+        "library_identity_only_r2": 0.1526,
+        "r2_within_library": 0.4951,
+        "rmse_log2": 0.8722,
+        "spearman": 0.8077,
+        "decomposition_note": "`r2` is the headline and includes credit for placing an element's LIBRARY correctly. `library_identity_only_r2` is that credit alone (no sequence); `r2_within_library` is the part-level ranking that survives when library identity is removed from both sides."
       },
       "verdict": {
         "element_held_out": "rbs",
@@ -112,38 +117,70 @@
         "BIOFAB": {
           "n_test": 55,
           "n_train": 56,
+          "n_distinct_predictions": 38,
+          "prediction_is_constant": false,
           "lolo_r2": 0.2524,
-          "random_same_size_r2": 0.6375,
-          "random_same_size_std": 0.0829,
-          "library_shift_gap": -0.3851,
-          "shift_is_significant": true
+          "r2_within_library": 0.4497,
+          "rmse_log2": 1.1445,
+          "r2_vs_train_mean": 0.316,
+          "random_same_size_r2": 0.6266,
+          "random_same_size_std": 0.0748,
+          "n_control": 200,
+          "library_shift_gap": -0.3742,
+          "control_percentile": 0.005,
+          "worse_than_iid_same_size": true,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         },
         "BioBrick/Anderson": {
           "n_test": 31,
           "n_train": 80,
+          "n_distinct_predictions": 30,
+          "prediction_is_constant": false,
           "lolo_r2": 0.7143,
-          "random_same_size_r2": 0.5791,
-          "random_same_size_std": 0.1257,
-          "library_shift_gap": 0.1352,
-          "shift_is_significant": false
+          "r2_within_library": 0.4953,
+          "rmse_log2": 0.7371,
+          "r2_vs_train_mean": 0.8116,
+          "random_same_size_r2": 0.6041,
+          "random_same_size_std": 0.1198,
+          "n_control": 200,
+          "library_shift_gap": 0.1101,
+          "control_percentile": 0.81,
+          "worse_than_iid_same_size": false,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         },
         "Salis": {
           "n_test": 13,
           "n_train": 98,
+          "n_distinct_predictions": 13,
+          "prediction_is_constant": false,
           "lolo_r2": 0.6248,
-          "random_same_size_r2": 0.6596,
-          "random_same_size_std": 0.1783,
-          "library_shift_gap": -0.0348,
-          "shift_is_significant": false
+          "r2_within_library": 0.3799,
+          "rmse_log2": 0.8759,
+          "r2_vs_train_mean": 0.6779,
+          "random_same_size_r2": 0.6052,
+          "random_same_size_std": 0.187,
+          "n_control": 200,
+          "library_shift_gap": 0.0196,
+          "control_percentile": 0.47,
+          "worse_than_iid_same_size": false,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         },
         "vector/other": {
           "n_test": 12,
           "n_train": 99,
+          "n_distinct_predictions": 12,
+          "prediction_is_constant": false,
           "lolo_r2": 0.6137,
-          "random_same_size_r2": 0.5947,
-          "random_same_size_std": 0.2185,
-          "library_shift_gap": 0.019,
-          "shift_is_significant": false
+          "r2_within_library": 0.6948,
+          "rmse_log2": 1.0756,
+          "r2_vs_train_mean": 0.6189,
+          "random_same_size_r2": 0.5916,
+          "random_same_size_std": 0.2101,
+          "n_control": 200,
+          "library_shift_gap": 0.0221,
+          "control_percentile": 0.475,
+          "worse_than_iid_same_size": false,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         }
       }
     },
@@ -196,7 +233,12 @@
       "per_element_mean": {
         "n_elements": 112,
         "r2": 0.4165,
-        "spread_sd_log2": 1.918
+        "spread_sd_log2": 1.918,
+        "library_identity_only_r2": 0.0223,
+        "r2_within_library": 0.3522,
+        "rmse_log2": 1.4652,
+        "spearman": 0.5633,
+        "decomposition_note": "`r2` is the headline and includes credit for placing an element's LIBRARY correctly. `library_identity_only_r2` is that credit alone (no sequence); `r2_within_library` is the part-level ranking that survives when library identity is removed from both sides."
       },
       "verdict": {
         "element_held_out": "promoter",
@@ -219,29 +261,53 @@
         "BIOFAB": {
           "n_test": 90,
           "n_train": 22,
+          "n_distinct_predictions": 1,
+          "prediction_is_constant": true,
           "lolo_r2": -0.6547,
-          "random_same_size_r2": -0.054,
-          "random_same_size_std": 0.0783,
-          "library_shift_gap": -0.6007,
-          "shift_is_significant": true
+          "r2_within_library": 0.0,
+          "rmse_log2": 2.2877,
+          "r2_vs_train_mean": 0.0,
+          "random_same_size_r2": -0.0653,
+          "random_same_size_std": 0.0966,
+          "n_control": 200,
+          "library_shift_gap": -0.5895,
+          "control_percentile": 0.005,
+          "worse_than_iid_same_size": true,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         },
         "BioBrick/Anderson": {
           "n_test": 15,
           "n_train": 97,
+          "n_distinct_predictions": 15,
+          "prediction_is_constant": false,
           "lolo_r2": 0.1478,
-          "random_same_size_r2": 0.2619,
-          "random_same_size_std": 0.4104,
-          "library_shift_gap": -0.1141,
-          "shift_is_significant": false
+          "r2_within_library": -0.3495,
+          "rmse_log2": 2.3595,
+          "r2_vs_train_mean": 0.2483,
+          "random_same_size_r2": 0.345,
+          "random_same_size_std": 0.3003,
+          "n_control": 200,
+          "library_shift_gap": -0.1972,
+          "control_percentile": 0.175,
+          "worse_than_iid_same_size": false,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         },
         "vector/other": {
           "n_test": 7,
           "n_train": 105,
+          "n_distinct_predictions": 7,
+          "prediction_is_constant": false,
           "lolo_r2": 0.5441,
-          "random_same_size_r2": 0.1179,
-          "random_same_size_std": 0.5444,
-          "library_shift_gap": 0.4262,
-          "shift_is_significant": false
+          "r2_within_library": 0.5676,
+          "rmse_log2": 1.3841,
+          "r2_vs_train_mean": 0.545,
+          "random_same_size_r2": 0.2182,
+          "random_same_size_std": 0.5823,
+          "n_control": 200,
+          "library_shift_gap": 0.3259,
+          "control_percentile": 0.655,
+          "worse_than_iid_same_size": false,
+          "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         }
       }
     }

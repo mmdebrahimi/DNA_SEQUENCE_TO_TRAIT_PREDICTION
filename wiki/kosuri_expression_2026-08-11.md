@@ -38,6 +38,22 @@ never seen in training; the *other* element's identity is supplied (a designer k
 +0.25 promoter). Feature sets are mechanistic, not learned: k-mers, length, GC, plus the
 Shine-Dalgarno core for RBSs and the σ70 **−35 / −10** boxes with their spacer for promoters.
 
+### Is the headline just identifying the library? — decomposed, and it survives
+
+Every part belongs to a design library (BIOFAB / Anderson / Salis / vectors), and libraries differ in mean
+strength. A model that only learned *"this looks like a BIOFAB part"* would score well against the global
+mean while ranking nothing. The per-element numbers are therefore decomposed:
+
+| | headline R² | **library identity alone** (no sequence) | **within-library R²** (identity removed) | Spearman | RMSE (log2) |
+|---|---|---|---|---|---|
+| RBS | 0.6123 | 0.1526 | **0.4951** | 0.808 | **0.872** |
+| promoter | 0.4165 | 0.0223 | **0.3522** | 0.563 | **1.465** |
+
+Library identity alone explains little (0.15 / 0.02). After centring **both** truth and prediction within
+each library, genuine part-level ranking remains: **0.495 / 0.352**. The claim survives with a haircut,
+not a collapse. RMSE is the denominator-free reading — a novel RBS lands within ~0.87 log2 (≈1.8×) and a
+novel promoter within ~1.47 log2 (≈2.8×) of its measured mean.
+
 ### The promoter is harder than the RBS — the interesting finding
 
 Confound-free, sequence alone: **RBS 0.612 vs promoter 0.417**. The promoter explains *more* of the
@@ -74,10 +90,20 @@ bound (`other_plus_sequence_plus_deltaG_ORACLE`) and `sequence_verdict` headline
 `TSS.best` from S1 is excluded from promoter features for exactly the same reason — it was measured by
 RNA-seq, not predicted.
 
-> **Correction history.** An earlier version of this memo headlined **0.781** (the ΔG arm) and, before
-> that, concluded sequence generalisation "is not demonstrated and this dataset alone cannot answer it."
-> Both were wrong: the first smuggled a non-reproducible feature into a "from sequence" claim; the
-> second was drawn while only 2 of the 4 supplementary files had been used.
+> **Correction history.** Four corrections, all of them narrowing the claim:
+> 1. An early version concluded sequence generalisation "is not demonstrated and this dataset alone cannot
+>    answer it" — drawn while only 2 of the 4 supplementary files had been used.
+> 2. A later version headlined **0.781**, the ΔG arm, smuggling a non-reproducible feature into a
+>    "from sequence" claim.
+> 3. The OOD section stated *"most of that collapse is small-data, not unfamiliarity."* **That was
+>    arithmetically false.** Of the promoter's 1.0712 total drop (0.4165 → −0.6547), the scarcity component
+>    is 0.4818 (**45.0%**) and the shift component 0.5894 (**55.0%**) — shift is the *larger* share. The
+>    section now avoids the decomposition entirely, because at n_train = 22 the fit is degenerate and no
+>    clean decomposition is available (see ⚠ above).
+> 4. Significance used a `mean − 2σ` rule, which compared one structured point against a control spread
+>    while assuming near-normality, using a population σ, with no adjustment across seven tests. Replaced
+>    by an empirical randomization percentile over 200 controls. **Both BIOFAB verdicts survive** the
+>    stricter test; nothing else was ever significant.
 
 ## The composability result (a different question)
 
@@ -106,43 +132,56 @@ the part names, so a whole library can be held out. That is the closest this dat
 in this dataset designed".
 
 **The raw LOLO number is not interpretable on its own**, because holding out a library shrinks the
-training set at the same time (holding out BIOFAB leaves just **22** promoters to train on). So each
-holdout is paired with a **size-matched random control**: same train and test sizes, parts drawn across
-all libraries, 20 repeats. The **gap** isolates library shift from data starvation.
+training set at the same time (holding out BIOFAB leaves just **22** promoters to train on). Each holdout
+is therefore paired with a **size-matched random control**: same train and test sizes, parts drawn across
+all libraries, **200** repeats. Significance is the **empirical percentile** of the structured holdout in
+that control distribution — the fraction of random splits that scored at or below it.
 
-| element | held out | n_test | n_train | LOLO | random, same size | **gap** | verdict |
-|---|---|---|---|---|---|---|---|
-| **RBS** | BIOFAB | 55 | 56 | 0.2524 | 0.6375 ± 0.083 | **−0.3851** | **real shift** |
-| RBS | BioBrick/Anderson | 31 | 80 | 0.7143 | 0.5791 ± 0.126 | +0.1352 | no shift |
-| RBS | Salis | 13 | 98 | 0.6248 | 0.6596 ± 0.178 | −0.0348 | no shift |
-| RBS | vector/other | 12 | 99 | 0.6137 | 0.5947 ± 0.218 | +0.0190 | no shift |
-| **PROMOTER** | BIOFAB | 90 | **22** | −0.6547 | −0.0540 ± 0.078 | **−0.6007** | **real shift** |
-| PROMOTER | BioBrick/Anderson | 15 | 97 | 0.1478 | 0.2619 ± 0.410 | −0.1141 | inside noise |
-| PROMOTER | vector/other | 7 | 105 | 0.5441 | 0.1179 ± 0.544 | +0.4262 | inside noise |
+> **What the control does and does not do.** It compares *structured removal* against *iid same-size
+> removal*. It does **not** cleanly isolate shift from scarcity: a random 22-promoter training draw
+> usually still **contains** BIOFAB parts (80% of promoters), so the comparison bounds the shift rather
+> than decomposing it. An earlier version of this memo described it as a decomposition; that was too strong.
 
-**Neither "OOD is fine" nor "OOD fails" — the answer is specific.** Transfer holds across three of four
-RBS library boundaries (0.61–0.71, one of them *above* the within-distribution 0.612) and across the
-promoter's small libraries. It degrades materially only when **BIOFAB** is held out — and BIOFAB is
-**50% of the RBSs and 80% of the promoters**. The dominant design style is carrying the model; remove it
-and performance drops by a gap of 0.39 (RBS) to 0.59 (promoter), both well clear of the control's spread.
+| element | held out | n_test | n_train | LOLO *(vs global mean)* | **within-library R²** | **RMSE** | iid same-size | **percentile** |
+|---|---|---|---|---|---|---|---|---|
+| **RBS** | BIOFAB | 55 | 56 | 0.2524 | 0.4497 | 1.145 | 0.6266 | **0.005** |
+| RBS | BioBrick/Anderson | 31 | 80 | 0.7143 | 0.4953 | 0.737 | 0.6041 | 0.810 |
+| RBS | Salis | 13 | 98 | 0.6248 | 0.3799 | 0.876 | 0.6052 | 0.470 |
+| RBS | vector/other | 12 | 99 | 0.6137 | 0.6948 | 1.076 | 0.5916 | 0.475 |
+| **PROMOTER** | BIOFAB | 90 | **22** | −0.6547 | **0.0000** ⚠ | 2.288 | −0.0653 | **0.005** |
+| PROMOTER | BioBrick/Anderson | 15 | 97 | 0.1478 | **−0.3495** | 2.360 | 0.3450 | 0.175 |
+| PROMOTER | vector/other | 7 | 105 | 0.5441 | 0.5676 | 1.384 | 0.2182 | 0.655 |
 
-**The control earned its place.** Promoter-BIOFAB's raw −0.655 looks catastrophic, but a *random* split
-at that same training size scores −0.065 — so most of that collapse is **small-data, not unfamiliarity**.
-Reporting the raw number as an OOD failure would have been wrong. Conversely the RBS-BIOFAB gap (−0.385
-against a control σ of 0.083) is ~4.6σ and is real.
+**Only the two BIOFAB rows are load-bearing**, and both survive the randomization test: each was worse
+than **199 of 200** same-size random splits (percentile 0.005). Every other row sits between the 17th and
+81st percentile — unremarkable. BIOFAB is **50% of the RBSs and 80% of the promoters**; the dominant
+design style is carrying the model.
 
-**Practical reading for a designer:** expect roughly the headline figure for a novel part resembling
-these design styles; expect materially less for a part from a genuinely different paradigm. Small holdouts (n=7–15) have very wide control bands (σ up to **0.54**) and should not be over-read in
-either direction — a scratch run with a different control seed moved the promoter vector/other gap from
-+0.13 to +0.43 while the two BIOFAB verdicts were unchanged. Only the two flagged `real shift` rows,
-whose gaps clear 2σ of their own control, are load-bearing.
+> **⚠ Promoter-BIOFAB is a degenerate fit, and that is the honest report.** At n_train = 22 the regressor
+> cannot split (`min_samples_leaf = 20`) and emits **one constant** — 13.1199 — for all 90 held-out
+> promoters. Its within-library R² is exactly 0.0000 *by construction*, and its −0.655 is entirely about
+> where that constant sits relative to BIOFAB's mean. So: **no clean shift-vs-scarcity decomposition is
+> available at this training size**; what can be said is that the structured holdout was worse than 199 of
+> 200 iid same-size splits. The artifact flags this as `prediction_is_constant`.
+
+**Two of three promoter libraries have no within-library ranking at all** (0.0000 and −0.3495), which the
+global-mean column hides. RBS ranking survives every boundary (0.38–0.69). Reporting only the
+offset-inclusive R² would have overstated promoter transfer.
+
+**Practical reading for a designer:** expect roughly the headline figure for a novel RBS resembling these
+design styles, and treat novel *promoters* from an unfamiliar library as essentially unranked. Small
+holdouts (n = 7–15) sit on very wide control bands and should not be over-read in either direction.
 
 ## Limits
 
 - These remain **designed** parts throughout; nothing here tests truly random sequence.
-- Per-element means are **simple** means, not adjusted for partner main effects.
 - Per-element means are **simple** means, not adjusted for partner main effects. Adjusted means would
   give a sharper estimate of intrinsic part strength.
+- The seven library tests carry **no multiple-comparison adjustment**. At 200 controls the two
+  load-bearing rows sit at the resolution floor (0.005 = 1/200); a Bonferroni-style correction across
+  seven tests would need more controls to separate them from it.
+- The BIOFAB verdicts have not been checked for **model-class sensitivity** — a different regressor
+  (especially at n_train = 22, where this one degenerates to a constant) could move them.
 - Nothing here is wet-lab validated. It is a prediction about a measured dataset.
 
 ## Reproduce
