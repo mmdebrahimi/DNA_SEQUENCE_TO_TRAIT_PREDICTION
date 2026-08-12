@@ -57,6 +57,26 @@ conditional metric:
 **Both models reproduce the conditional switch for about 1 gene in 20, and beat a constant predictor by
 about one percentage point.**
 
+### The mechanism — it isn't switching *at all*
+
+Turning each gene into a 4-character pattern over the conditions (`E` essential, `.` not) shows what is
+actually happening:
+
+| | distinct patterns | genes predicted **constant** (`....` or `EEEE`) |
+|---|---|---|
+| experimental truth | **12** | 0 *(by definition)* |
+| iJO1366 *(paper's own)* | 5 | **62 / 68 = 91.2%** |
+| **iML1515** *(ours)* | **3** | **63 / 67 = 94.0%** |
+
+The true patterns are genuinely diverse — 12 shapes spread across every combination (`...E` ×13, `E.EE`
+×12, `.E..` ×12, `..E.` ×10, …). The models answer with essentially one shape: iJO1366 predicts
+"dispensable in all four media" for **58 of 68** and "essential in all four" for 4 more.
+
+**So the model is not getting the switch wrong — it is not making a switch at all.** That is why it lands
+within a point of the constant-predictor null: on this subset it very nearly *is* the constant predictor.
+And iML1515 is *more* collapsed than its predecessor, not less — 3 distinct predicted shapes against
+iJO1366's 5.
+
 ### What that means
 
 The per-condition MCC of 0.70–0.74 is real, but it is carried almost entirely by genes that are *always*

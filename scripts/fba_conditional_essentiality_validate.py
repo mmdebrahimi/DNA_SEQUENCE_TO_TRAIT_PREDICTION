@@ -35,6 +35,7 @@ from dna_decode.fba.conditional_essentiality import (  # noqa: E402
     constant_baselines,
     load_labels,
     mcc,
+    pattern_distribution,
     switch_accuracy,
 )
 from dna_decode.fba.model import load_model, wildtype_growth  # noqa: E402
@@ -98,6 +99,16 @@ def main(argv: list[str] | None = None) -> int:
         print(f"   {name:20s} exact-set {g['exact_set_match']}/{g['n_conditionally_essential']} | "
               f"per-cell {g['per_condition_agreement']}")
 
+    true_pat = pattern_distribution(records)
+    paper_pat = pattern_distribution(records, {c: {r.gene_id: r.paper_fba[c] for r in records}
+                                               for c in CONDITIONS})
+    print(f"\nPATTERN SHAPE on the {true_pat['n_genes']} conditionally-essential genes "
+          f"(order {true_pat['conditions_order']}):")
+    print(f"   TRUE  : {true_pat['n_distinct_patterns']} distinct shapes; "
+          f"constant-pattern genes {true_pat['n_constant_pattern']} (0 by definition)")
+    print(f"   iJO1366: constant-pattern genes {paper_pat['n_constant_pattern']}/{paper_pat['n_genes']} "
+          f"({paper_pat['constant_pattern_fraction']}) <- it is not switching at all")
+
     # ---- our model, same four conditions ----
     model = load_model(organism=a.organism)
     model_gene_ids = {g.id for g in model.genes}
@@ -141,6 +152,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"   CONDITIONAL SWITCH: exact-set {our_switch['exact_set_match']}/"
           f"{our_switch['n_conditionally_essential']} "
           f"({our_switch['exact_set_match_rate']}) | per-cell {our_switch['per_condition_agreement']}")
+    our_pat = pattern_distribution(scored, ours)
+    print(f"   pattern shape: constant-pattern genes {our_pat['n_constant_pattern']}/{our_pat['n_genes']} "
+          f"({our_pat['constant_pattern_fraction']}) across {our_pat['n_distinct_patterns']} shapes")
     best_null = max(g["per_condition_agreement"] for g in nulls.values())
     print(f"   vs best constant-predictor null {best_null} -> "
           f"lift {our_switch['per_condition_agreement'] - best_null:+.4f}")
@@ -159,11 +173,13 @@ def main(argv: list[str] | None = None) -> int:
         },
         "reproduction_gate_paper_own_fba": {"per_condition": paper_per_cond, "switch": paper_switch},
         "null_controls": nulls,
+        "pattern_distribution": {"experimental": true_pat, "paper_fba": paper_pat},
         "model_scored": {
             "n_genes_scored": len(scored),
             "wildtype_growth_per_condition": growth_by_condition,
             "per_condition": our_per_cond,
             "switch": our_switch,
+            "pattern_distribution": our_pat,
         },
         "caveats": [
             "The paper scored iJO1366; this scores its SUCCESSOR iML1515, so a difference vs the "

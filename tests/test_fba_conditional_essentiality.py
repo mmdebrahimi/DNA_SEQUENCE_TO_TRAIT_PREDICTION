@@ -152,3 +152,46 @@ def test_the_two_nulls_are_complementary_per_cell():
     n = constant_baselines(load_labels())
     assert (n["always_essential"]["per_condition_agreement"]
             + n["always_dispensable"]["per_condition_agreement"]) == pytest.approx(1.0)
+
+
+# ---- pattern shape: WHY the switch score is low ----
+
+def test_pattern_distribution_flags_a_constant_predictor_as_constant():
+    """The mechanism behind the low switch score. A model predicting the same call in every medium is
+    'not switching at all', and that must be countable rather than inferred."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    r = _rec("b1", [True, False, False, False])
+    got = pattern_distribution([r], {c: {"b1": False} for c in CONDITIONS})
+    assert got["n_constant_pattern"] == 1
+    assert got["constant_pattern_fraction"] == pytest.approx(1.0)
+    assert got["patterns"] == {"....": 1}
+
+
+def test_true_patterns_are_never_constant_by_definition():
+    """A conditionally-essential gene has >=1 E and >=1 N, so its own pattern can never be constant.
+    If this ever fires, the two-sided subset is being computed wrong."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    got = pattern_distribution(load_labels())
+    assert got["n_constant_pattern"] == 0
+    assert got["n_genes"] == 68
+
+
+def test_the_papers_own_model_is_constant_on_91_percent_of_the_switching_genes():
+    """The headline diagnostic, pinned: iJO1366 predicts '....' or 'EEEE' for 62 of the 68 genes whose
+    essentiality actually depends on the medium."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    records = load_labels()
+    got = pattern_distribution(records, {c: {r.gene_id: r.paper_fba[c] for r in records}
+                                         for c in CONDITIONS})
+    assert got["n_constant_pattern"] == 62
+    assert got["constant_pattern_fraction"] == pytest.approx(0.9118, abs=1e-3)
+
+
+def test_the_experimental_patterns_are_genuinely_diverse():
+    """If the true patterns collapsed to one or two shapes the metric would be near-degenerate."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    assert pattern_distribution(load_labels())["n_distinct_patterns"] >= 10

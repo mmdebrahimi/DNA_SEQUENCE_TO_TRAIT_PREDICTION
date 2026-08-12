@@ -83,6 +83,53 @@
       "per_condition_agreement": 0.5588
     }
   },
+  "pattern_distribution": {
+    "experimental": {
+      "conditions_order": [
+        "glucose_aerobic",
+        "glucose_anaerobic",
+        "lactate_aerobic",
+        "succinate_aerobic"
+      ],
+      "n_genes": 68,
+      "patterns": {
+        "...E": 13,
+        "E.EE": 12,
+        ".E..": 12,
+        "..E.": 10,
+        "..EE": 7,
+        ".EEE": 6,
+        "EE..": 2,
+        "E..E": 2,
+        "E...": 1,
+        "EE.E": 1,
+        ".E.E": 1,
+        "EEE.": 1
+      },
+      "n_distinct_patterns": 12,
+      "n_constant_pattern": 0,
+      "constant_pattern_fraction": 0.0
+    },
+    "paper_fba": {
+      "conditions_order": [
+        "glucose_aerobic",
+        "glucose_anaerobic",
+        "lactate_aerobic",
+        "succinate_aerobic"
+      ],
+      "n_genes": 68,
+      "patterns": {
+        "....": 58,
+        "...E": 4,
+        "EEEE": 4,
+        "..E.": 1,
+        ".E..": 1
+      },
+      "n_distinct_patterns": 5,
+      "n_constant_pattern": 62,
+      "constant_pattern_fraction": 0.9118
+    }
+  },
   "model_scored": {
     "n_genes_scored": 1064,
     "wildtype_growth_per_condition": {
@@ -142,6 +189,23 @@
       "exact_set_match": 3,
       "exact_set_match_rate": 0.0448,
       "per_condition_agreement": 0.5709
+    },
+    "pattern_distribution": {
+      "conditions_order": [
+        "glucose_aerobic",
+        "glucose_anaerobic",
+        "lactate_aerobic",
+        "succinate_aerobic"
+      ],
+      "n_genes": 67,
+      "patterns": {
+        "....": 60,
+        "...E": 4,
+        "EEEE": 3
+      },
+      "n_distinct_patterns": 3,
+      "n_constant_pattern": 63,
+      "constant_pattern_fraction": 0.9403
     }
   },
   "caveats": [
