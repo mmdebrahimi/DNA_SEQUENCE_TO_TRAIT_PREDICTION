@@ -500,6 +500,64 @@ def leave_library_out_with_size_control(d, seqmap: dict, name_col: str, feat_fn,
     return out
 
 
+def model_class_sensitivity(d, seqmap: dict, name_col: str, feat_fn, seed: int = 0) -> dict:
+    """Is a leave-one-library-out verdict a property of the DATA or of the regressor?
+
+    Load-bearing, and it changed a published number. `HistGradientBoostingRegressor`'s default
+    `min_samples_leaf=20` cannot split 22 training points, so the promoter-BIOFAB holdout emitted ONE
+    constant and scored -0.6547 -- reported at first as a catastrophic distribution shift. Every model
+    class that CAN fit 22 points returns a POSITIVE score there (+0.01 to +0.12). What survives across all
+    four is that within-library RANKING is ~0 (0.00-0.14): promoter transfer to an unfamiliar library is
+    weak, but it is not the collapse the default model implied.
+
+    Reported per (library x model class) so a verdict that depends on one regressor is visible as such.
+    """
+    import numpy as np  # noqa: PLC0415
+    from sklearn.ensemble import HistGradientBoostingRegressor, RandomForestRegressor  # noqa: PLC0415
+    from sklearn.linear_model import RidgeCV  # noqa: PLC0415
+    from sklearn.pipeline import make_pipeline  # noqa: PLC0415
+    from sklearn.preprocessing import StandardScaler  # noqa: PLC0415
+
+    classes = {
+        "histgbr_default_leaf20": HistGradientBoostingRegressor(max_iter=400, random_state=seed),
+        "histgbr_leaf5": HistGradientBoostingRegressor(max_iter=400, min_samples_leaf=5,
+                                                       random_state=seed),
+        "randomforest": RandomForestRegressor(n_estimators=400, random_state=seed),
+        "ridge_cv": make_pipeline(StandardScaler(), RidgeCV(alphas=np.logspace(-3, 4, 40))),
+    }
+    g = d.groupby(name_col).y.mean()
+    names = np.array(list(g.index))
+    y = g.values
+    x = np.array([feat_fn(seqmap[n]) for n in names])
+    libs = np.array([library_of(n) for n in names])
+    gmean = y.mean()
+
+    out = {}
+    for lib in sorted(set(libs)):
+        te, tr = np.where(libs == lib)[0], np.where(libs != lib)[0]
+        if len(te) < 2 or len(tr) < 10:
+            continue
+        per = {}
+        for mname, m in classes.items():
+            p = m.fit(x[tr], y[tr]).predict(x[te])
+            per[mname] = {
+                "lolo_r2": round(float(1 - ((y[te] - p) ** 2).sum() / ((y[te] - gmean) ** 2).sum()), 4),
+                "r2_within_library": round(_within_group_r2(y[te], p, np.zeros(len(te))), 4),
+                "rmse_log2": round(_rmse(y[te], p), 4),
+                "n_distinct_predictions": int(len(np.unique(np.round(p, 9)))),
+            }
+        lolos = [v["lolo_r2"] for v in per.values()]
+        withins = [v["r2_within_library"] for v in per.values()]
+        out[lib] = {
+            "by_model": per,
+            "lolo_range": [min(lolos), max(lolos)],
+            "within_library_range": [min(withins), max(withins)],
+            # a verdict is only robust if every model class agrees on the SIGN
+            "sign_agrees_across_models": bool(all(v > 0 for v in lolos) or all(v < 0 for v in lolos)),
+        }
+    return out
+
+
 def load_rbs_sequences(sd02_path: str) -> dict:
     """Kosuri Dataset S2 -> {RBS name: sequence}. S2 is the only file here carrying element sequences."""
     import xlrd  # noqa: PLC0415
@@ -644,8 +702,9 @@ def main(argv=None) -> int:
         sv = sequence_verdict(split, pem, tag)
         lolo = leave_library_out_with_size_control(d[d[name_col].map(seqmap).notna()],
                                                    seqmap, name_col, feat)
+        sens = model_class_sensitivity(d[d[name_col].map(seqmap).notna()], seqmap, name_col, feat)
         seq_results[tag] = {"split": split, "per_element_mean": pem, "verdict": sv,
-                            "leave_library_out": lolo}
+                            "leave_library_out": lolo, "model_class_sensitivity": sens}
         print(f"\nHELD-OUT {tag.upper()} scored from SEQUENCE ({split['n_splits']} repeated splits):")
         for k in ("additive_baseline", "identity", "other_element_only", "sequence_only",
                   "other_plus_sequence", "ridge_other_plus_sequence",
@@ -667,6 +726,11 @@ def main(argv=None) -> int:
             print(f"      {lib:20s} n_te={r['n_test']:3d} n_tr={r['n_train']:3d} | LOLO {r['lolo_r2']:7.4f} "
                   f"| within-lib {r['r2_within_library']:7.4f} | rmse {r['rmse_log2']:.3f} "
                   f"| iid-same-size {r['random_same_size_r2']:7.4f} | pctile {r['control_percentile']:.3f} [{flag}]")
+        print("   MODEL-CLASS SENSITIVITY (is a verdict the data, or the regressor?):")
+        for lib, s in sens.items():
+            print(f"      {lib:20s} LOLO across 4 classes [{s['lolo_range'][0]:+7.4f} .. {s['lolo_range'][1]:+7.4f}] "
+                  f"| within-lib [{s['within_library_range'][0]:+7.4f} .. {s['within_library_range'][1]:+7.4f}] "
+                  f"| sign agrees: {s['sign_agrees_across_models']}")
 
     v = verdict(splits)
     print(f"\ncombination split: {v['combination_split_verdict']} "

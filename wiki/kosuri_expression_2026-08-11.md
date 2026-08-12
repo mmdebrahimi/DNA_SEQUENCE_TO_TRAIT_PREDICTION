@@ -104,6 +104,11 @@ RNA-seq, not predicted.
 >    while assuming near-normality, using a population σ, with no adjustment across seven tests. Replaced
 >    by an empirical randomization percentile over 200 controls. **Both BIOFAB verdicts survive** the
 >    stricter test; nothing else was ever significant.
+> 5. The promoter-BIOFAB collapse was reported as a **−0.601 shift gap**. A model-class sweep shows it does
+>    not replicate: three other regressors return *positive* scores there. The verdict is now "weak
+>    transfer" rather than "collapse", and RBS-BIOFAB is re-read as an offset rather than a ranking
+>    failure. Correction 3 above is itself superseded by this one — with the degenerate fit excluded, the
+>    scarcity-vs-shift split it argued over was never measurable at that training size.
 
 ## The composability result (a different question)
 
@@ -157,31 +162,57 @@ than **199 of 200** same-size random splits (percentile 0.005). Every other row 
 81st percentile — unremarkable. BIOFAB is **50% of the RBSs and 80% of the promoters**; the dominant
 design style is carrying the model.
 
-> **⚠ Promoter-BIOFAB is a degenerate fit, and that is the honest report.** At n_train = 22 the regressor
-> cannot split (`min_samples_leaf = 20`) and emits **one constant** — 13.1199 — for all 90 held-out
-> promoters. Its within-library R² is exactly 0.0000 *by construction*, and its −0.655 is entirely about
-> where that constant sits relative to BIOFAB's mean. So: **no clean shift-vs-scarcity decomposition is
-> available at this training size**; what can be said is that the structured holdout was worse than 199 of
-> 200 iid same-size splits. The artifact flags this as `prediction_is_constant`.
+> **⚠ Promoter-BIOFAB is a degenerate fit, and the −0.655 is mostly the model.** At n_train = 22 the
+> regressor cannot split (`min_samples_leaf = 20`) and emits **one constant** — 13.1199 — for all 90
+> held-out promoters, so its within-library R² is exactly 0.0000 *by construction*. The table above is the
+> default model's view; the sensitivity sweep below is the honest one.
 
-**Two of three promoter libraries have no within-library ranking at all** (0.0000 and −0.3495), which the
-global-mean column hides. RBS ranking survives every boundary (0.38–0.69). Reporting only the
-offset-inclusive R² would have overstated promoter transfer.
+### Is a verdict the data, or the regressor? — the check that revised a number
 
-**Practical reading for a designer:** expect roughly the headline figure for a novel RBS resembling these
-design styles, and treat novel *promoters* from an unfamiliar library as essentially unranked. Small
-holdouts (n = 7–15) sit on very wide control bands and should not be over-read in either direction.
+Both BIOFAB rows were re-run across four model classes. **This changed a published number and is the
+reason the table above should not be read alone.**
+
+| held out | histgbr *(default)* | histgbr `leaf5` | random forest | ridge CV | **within-library range** |
+|---|---|---|---|---|---|
+| RBS · BIOFAB | 0.2524 | 0.3344 | 0.4709 | 0.3750 | **0.450 … 0.475** |
+| PROMOTER · BIOFAB | **−0.6547** ⚠ | **+0.1220** | +0.0952 | +0.0144 | **0.000 … 0.137** |
+
+**Promoter-BIOFAB's catastrophic −0.655 does not replicate.** Every model class able to fit 22 points
+returns a *positive* score. What survives across all four is that within-library ranking is ≈0
+(0.000–0.137): promoter transfer to an unfamiliar library is **weak, not collapsed**. The earlier reading —
+"performance drops by a gap of 0.59" — attributed to distribution shift what was substantially a regressor
+that could not split its training set.
+
+The artifact records `sign_agrees_across_models` per library, and it separates the two elements cleanly:
+**all four RBS libraries agree on sign; two of three promoter libraries do not.** Promoter
+BioBrick/Anderson spans −0.6975 … +0.3250 depending on regressor — its within-library value is uniformly
+negative (−0.35 … −0.06), so the stable statement there is again "no ranking", not any particular score.
+
+**RBS-BIOFAB reverses in the useful direction.** Its within-library ranking (**0.45–0.48**, stable across
+all four classes) is as strong as any other RBS library. So the BIOFAB effect there is an **offset**
+problem, not a ranking problem: the model ranks BIOFAB RBSs correctly and places their overall *level*
+wrong. For a designer choosing among candidate parts — a ranking task — that is a materially better
+position than the global-mean R² of 0.2524 suggests.
+
+**Practical reading for a designer:** for a novel **RBS**, expect the headline ranking quality to hold even
+across an unfamiliar library, but do not trust the absolute predicted level there. For a novel
+**promoter** from an unfamiliar library, expect near-zero ranking — this is the genuine weak spot, and it
+is weak rather than inverted. Small holdouts (n = 7–15) sit on very wide control bands either way.
 
 ## Limits
 
 - These remain **designed** parts throughout; nothing here tests truly random sequence.
-- Per-element means are **simple** means, not adjusted for partner main effects. Adjusted means would
-  give a sharper estimate of intrinsic part strength.
+- ~~Per-element means are **simple** means, not adjusted for partner main effects.~~ **CHECKED — immaterial.**
+  Fitting additive main effects and re-scoring against the partner-adjusted element strength changes almost
+  nothing: the adjusted and simple strengths correlate **0.994 (RBS) / 0.999 (promoter)**, and the headline
+  moves 0.6123 → 0.6431 (RBS) and 0.4165 → 0.4110 (promoter). The partner panel was balanced enough across
+  elements that adjustment does not matter here. Kept as the simple mean.
 - The seven library tests carry **no multiple-comparison adjustment**. At 200 controls the two
   load-bearing rows sit at the resolution floor (0.005 = 1/200); a Bonferroni-style correction across
   seven tests would need more controls to separate them from it.
-- The BIOFAB verdicts have not been checked for **model-class sensitivity** — a different regressor
-  (especially at n_train = 22, where this one degenerates to a constant) could move them.
+- The randomization percentiles were computed with the **default** regressor only. Given that the
+  model-class sweep moved promoter-BIOFAB from −0.65 to +0.12, those percentiles describe that model's
+  behaviour, not a model-free property of the data.
 - Nothing here is wet-lab validated. It is a prediction about a measured dataset.
 
 ## Reproduce

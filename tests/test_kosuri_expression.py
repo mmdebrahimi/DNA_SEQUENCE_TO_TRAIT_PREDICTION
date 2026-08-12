@@ -260,6 +260,27 @@ def test_rmse_and_spearman_are_denominator_free_and_rank_only():
     assert _spearman(y, -y) == pytest.approx(-1.0)
 
 
+def test_sign_agreement_is_what_makes_a_holdout_verdict_robust():
+    """The rule that caught a wrong published number. Promoter-BIOFAB scored -0.6547 under the default
+    regressor (which degenerates to a constant at n_train=22) and POSITIVE under three others -- the signs
+    disagree, so the verdict was the model, not the data."""
+    agree = lambda v: bool(all(x > 0 for x in v) or all(x < 0 for x in v))  # noqa: E731
+
+    assert agree([-0.6547, 0.1220, 0.0952, 0.0144]) is False   # promoter BIOFAB: model-dependent
+    assert agree([0.2524, 0.3344, 0.4709, 0.3750]) is True     # RBS BIOFAB: robust
+
+
+def test_degenerate_constant_prediction_is_detectable():
+    """A regressor that cannot split emits ONE value; its within-library R2 is then 0.0 BY CONSTRUCTION and
+    means nothing. That must be visible as degeneracy rather than read as 'no signal'."""
+    from scripts.kosuri_expression_validate import _within_group_r2
+
+    y = np.array([1.0, 2.0, 3.0, 4.0])
+    constant = np.full(4, 13.1199)
+    assert len(np.unique(np.round(constant, 9))) == 1
+    assert _within_group_r2(y, constant, np.zeros(4)) == pytest.approx(0.0)
+
+
 def test_leave_library_out_defaults_to_enough_controls_for_a_percentile():
     """20 controls cannot resolve a percentile below 0.05; the two load-bearing verdicts sit at 0.005/0.000."""
     import inspect

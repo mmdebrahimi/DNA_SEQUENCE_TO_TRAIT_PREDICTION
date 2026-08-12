@@ -182,6 +182,156 @@
           "worse_than_iid_same_size": false,
           "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
         }
+      },
+      "model_class_sensitivity": {
+        "BIOFAB": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": 0.2524,
+              "r2_within_library": 0.4497,
+              "rmse_log2": 1.1445,
+              "n_distinct_predictions": 38
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.3344,
+              "r2_within_library": 0.4747,
+              "rmse_log2": 1.0799,
+              "n_distinct_predictions": 55
+            },
+            "randomforest": {
+              "lolo_r2": 0.4709,
+              "r2_within_library": 0.4658,
+              "rmse_log2": 0.9628,
+              "n_distinct_predictions": 55
+            },
+            "ridge_cv": {
+              "lolo_r2": 0.375,
+              "r2_within_library": 0.4554,
+              "rmse_log2": 1.0465,
+              "n_distinct_predictions": 55
+            }
+          },
+          "lolo_range": [
+            0.2524,
+            0.4709
+          ],
+          "within_library_range": [
+            0.4497,
+            0.4747
+          ],
+          "sign_agrees_across_models": true
+        },
+        "BioBrick/Anderson": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": 0.7143,
+              "r2_within_library": 0.4953,
+              "rmse_log2": 0.7371,
+              "n_distinct_predictions": 30
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.6125,
+              "r2_within_library": 0.2636,
+              "rmse_log2": 0.8584,
+              "n_distinct_predictions": 31
+            },
+            "randomforest": {
+              "lolo_r2": 0.2318,
+              "r2_within_library": 0.4304,
+              "rmse_log2": 1.2086,
+              "n_distinct_predictions": 31
+            },
+            "ridge_cv": {
+              "lolo_r2": 0.5635,
+              "r2_within_library": 0.4503,
+              "rmse_log2": 0.911,
+              "n_distinct_predictions": 31
+            }
+          },
+          "lolo_range": [
+            0.2318,
+            0.7143
+          ],
+          "within_library_range": [
+            0.2636,
+            0.4953
+          ],
+          "sign_agrees_across_models": true
+        },
+        "Salis": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": 0.6248,
+              "r2_within_library": 0.3799,
+              "rmse_log2": 0.8759,
+              "n_distinct_predictions": 13
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.846,
+              "r2_within_library": 0.722,
+              "rmse_log2": 0.5612,
+              "n_distinct_predictions": 13
+            },
+            "randomforest": {
+              "lolo_r2": 0.7892,
+              "r2_within_library": 0.6327,
+              "rmse_log2": 0.6565,
+              "n_distinct_predictions": 13
+            },
+            "ridge_cv": {
+              "lolo_r2": 0.8022,
+              "r2_within_library": 0.5261,
+              "rmse_log2": 0.6359,
+              "n_distinct_predictions": 13
+            }
+          },
+          "lolo_range": [
+            0.6248,
+            0.846
+          ],
+          "within_library_range": [
+            0.3799,
+            0.722
+          ],
+          "sign_agrees_across_models": true
+        },
+        "vector/other": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": 0.6137,
+              "r2_within_library": 0.6948,
+              "rmse_log2": 1.0756,
+              "n_distinct_predictions": 12
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.6515,
+              "r2_within_library": 0.6361,
+              "rmse_log2": 1.0216,
+              "n_distinct_predictions": 12
+            },
+            "randomforest": {
+              "lolo_r2": 0.6177,
+              "r2_within_library": 0.6009,
+              "rmse_log2": 1.07,
+              "n_distinct_predictions": 12
+            },
+            "ridge_cv": {
+              "lolo_r2": 0.7485,
+              "r2_within_library": 0.7345,
+              "rmse_log2": 0.8678,
+              "n_distinct_predictions": 12
+            }
+          },
+          "lolo_range": [
+            0.6137,
+            0.7485
+          ],
+          "within_library_range": [
+            0.6009,
+            0.7345
+          ],
+          "sign_agrees_across_models": true
+        }
       }
     },
     "promoter": {
@@ -308,6 +458,119 @@
           "control_percentile": 0.655,
           "worse_than_iid_same_size": false,
           "comparison_note": "structured removal vs iid same-size removal; the random draw usually still contains the held-out library, so this bounds shift rather than isolating it"
+        }
+      },
+      "model_class_sensitivity": {
+        "BIOFAB": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": -0.6547,
+              "r2_within_library": 0.0,
+              "rmse_log2": 2.2877,
+              "n_distinct_predictions": 1
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.122,
+              "r2_within_library": 0.0993,
+              "rmse_log2": 1.6664,
+              "n_distinct_predictions": 90
+            },
+            "randomforest": {
+              "lolo_r2": 0.0952,
+              "r2_within_library": 0.1372,
+              "rmse_log2": 1.6916,
+              "n_distinct_predictions": 90
+            },
+            "ridge_cv": {
+              "lolo_r2": 0.0144,
+              "r2_within_library": 0.0039,
+              "rmse_log2": 1.7655,
+              "n_distinct_predictions": 90
+            }
+          },
+          "lolo_range": [
+            -0.6547,
+            0.122
+          ],
+          "within_library_range": [
+            0.0,
+            0.1372
+          ],
+          "sign_agrees_across_models": false
+        },
+        "BioBrick/Anderson": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": 0.1478,
+              "r2_within_library": -0.3495,
+              "rmse_log2": 2.3595,
+              "n_distinct_predictions": 15
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.2803,
+              "r2_within_library": -0.0614,
+              "rmse_log2": 2.1683,
+              "n_distinct_predictions": 15
+            },
+            "randomforest": {
+              "lolo_r2": 0.325,
+              "r2_within_library": -0.1074,
+              "rmse_log2": 2.0998,
+              "n_distinct_predictions": 15
+            },
+            "ridge_cv": {
+              "lolo_r2": -0.6975,
+              "r2_within_library": -0.0712,
+              "rmse_log2": 3.33,
+              "n_distinct_predictions": 15
+            }
+          },
+          "lolo_range": [
+            -0.6975,
+            0.325
+          ],
+          "within_library_range": [
+            -0.3495,
+            -0.0614
+          ],
+          "sign_agrees_across_models": false
+        },
+        "vector/other": {
+          "by_model": {
+            "histgbr_default_leaf20": {
+              "lolo_r2": 0.5441,
+              "r2_within_library": 0.5676,
+              "rmse_log2": 1.3841,
+              "n_distinct_predictions": 7
+            },
+            "histgbr_leaf5": {
+              "lolo_r2": 0.2828,
+              "r2_within_library": 0.3261,
+              "rmse_log2": 1.7361,
+              "n_distinct_predictions": 7
+            },
+            "randomforest": {
+              "lolo_r2": 0.4034,
+              "r2_within_library": 0.3954,
+              "rmse_log2": 1.5834,
+              "n_distinct_predictions": 7
+            },
+            "ridge_cv": {
+              "lolo_r2": 0.7098,
+              "r2_within_library": 0.7124,
+              "rmse_log2": 1.1043,
+              "n_distinct_predictions": 7
+            }
+          },
+          "lolo_range": [
+            0.2828,
+            0.7098
+          ],
+          "within_library_range": [
+            0.3261,
+            0.7124
+          ],
+          "sign_agrees_across_models": true
         }
       }
     }
