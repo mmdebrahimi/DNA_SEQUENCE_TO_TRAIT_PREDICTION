@@ -115,6 +115,17 @@ measurably more accurate and somewhat less collapsed.*
   commitments are structurally easy, because sole-route catabolism is the one place a stoichiometric
   model with a maintenance floor cannot help but be right. It says nothing about the 184 constant genes,
   where the conditional deficit still lives.
+- **The 184 constant genes are now diagnosed — the deficit is a MODEL problem, not a readout one.**
+  *(2026-08-13, `wiki/fba_constant_gene_diagnostic_2026-08-13.md`.)* Of 1,083 missed essential cells,
+  **833 (76.9%) are `flat`** — deleting the gene changed predicted growth by *nothing* (median missed
+  ratio **1.0**); only **10.7% are readout-recoverable** (23% even counting the generous `slight`
+  bucket). 110 of the 145 all-dispensable genes are flat in EVERY condition where truth says essential,
+  and only **29% of those are isozyme-redundant by GPR** — so the obvious mechanism explains less than a
+  third. The 39 over-callers behave oppositely: 315 wrong cells, **0 from infeasibility**. Infeasibility
+  only ever produces CORRECT calls here; both error directions live in the finite-ratio regime.
+  **Consequence:** threshold retuning (`continuous_readout`'s oracle, `deployable_threshold`) addresses
+  at most ~11% of the deficit and should stop being proposed as the next lever; the redundancy that
+  pFBA-restriction attacks is the real target.
 - **True patterns are far more diverse than predicted ones**: 141 distinct true shapes among 217 genes,
   against 20 predicted shapes. That asymmetry, not the aggregate agreement, is the clearest statement of
   the model's conditional resolution.
