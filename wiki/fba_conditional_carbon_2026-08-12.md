@@ -87,8 +87,14 @@ measurably more accurate and somewhat less collapsed.*
 ## Honest limits
 
 - **No label sensitivity analysis.** The 217-gene set rests on one inherited cutoff (`fit < -2`, from the
-  shipped Keio validation). Replicate fitness values are averaged and the mean thresholded; the
-  t-statistic that the loader reads is not used, and no threshold sweep was run.
+  shipped Keio validation). Replicate fitness values are averaged and the mean thresholded. The
+  per-measurement t-statistic (`GeneFitness.t`) is present in the source table but was **never read by
+  the loader**, and no threshold sweep was run.
+  *(Corrected 2026-08-13: an earlier version of this bullet said the loader **read** the t-statistic and
+  merely left it unused. That was false in the "read" half — `load_records` selected only `fit`. A factual error
+  inside the honest-limits section is worse than one in a headline, because this is the section a reader
+  trusts to be conservative. The column is now selected and reachable via `load_records(..., min_abs_t=)`,
+  still unused by default, so no number above moves.)*
 - **Exact-set is a weak headline metric here** given how concentrated the true patterns are. The commit-rate
   decomposition above is the more honest summary.
 - **The null moved too** (0.5588 → 0.6623), so "lift" is being compared across different base rates.

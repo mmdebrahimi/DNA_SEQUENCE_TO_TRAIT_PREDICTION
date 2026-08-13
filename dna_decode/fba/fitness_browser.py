@@ -66,7 +66,8 @@ def carbon_conditions(conn: sqlite3.Connection, model) -> dict[str, str]:
 
 def load_records(conn: sqlite3.Connection, conditions: dict[str, str],
                  gene_filter: set[str] | None = None,
-                 threshold: float = ESSENTIAL_FITNESS) -> list[GeneRecord]:
+                 threshold: float = ESSENTIAL_FITNESS,
+                 min_abs_t: float | None = None) -> list[GeneRecord]:
     """Experimental conditional essentiality per (gene, carbon source), as GeneRecords.
 
     Replicate experiments for the same carbon source are averaged (62 experiments over 25 sources, so
@@ -75,8 +76,19 @@ def load_records(conn: sqlite3.Connection, conditions: dict[str, str],
 
     `paper_fba` is left empty: unlike the Orth substrate there is no published FBA column here, so this
     substrate has NO built-in reproduction gate. That is a real difference and is recorded in the artifact.
+
+    **The t-statistic.** `GeneFitness` carries a per-measurement `t` beside `fit` (verified on the live
+    db: columns are `['orgId','locusId','expName','fit','t']`). It was never selected by this loader — a
+    published memo claimed it was read-but-unused, which was false in the "read" half. It is now
+    selected, and `min_abs_t` makes it usable: a gene is admitted only if `abs(mean t) >= min_abs_t` in
+    EVERY condition, preserving the complete-row rule above.
+
+    `min_abs_t=None` is the default and changes nothing — the inherited `fit < -2` cutoff still defines
+    every shipped number. This parameter makes the axis reachable for a sensitivity sweep; it does not
+    move any committed result.
     """
     agg: dict[tuple[str, str], list[float]] = defaultdict(list)
+    agg_t: dict[tuple[str, str], list[float]] = defaultdict(list)
     exp_to_cond = {}
     for name, cond in conn.execute(
             "SELECT expName, condition_1 FROM Experiment WHERE orgId=? AND expGroup='carbon source'",
@@ -84,25 +96,37 @@ def load_records(conn: sqlite3.Connection, conditions: dict[str, str],
         if cond in conditions:
             exp_to_cond[name] = cond
 
-    q = ("SELECT g.sysName, f.expName, f.fit FROM GeneFitness f "
+    q = ("SELECT g.sysName, f.expName, f.fit, f.t FROM GeneFitness f "
          "JOIN Gene g ON g.orgId=f.orgId AND g.locusId=f.locusId WHERE f.orgId=?")
-    for sysname, expname, fit in conn.execute(q, (ORG_ID,)):
+    for sysname, expname, fit, tstat in conn.execute(q, (ORG_ID,)):
         cond = exp_to_cond.get(expname)
         if cond is None or not sysname:
             continue
         if gene_filter is not None and sysname not in gene_filter:
             continue
         agg[(sysname, cond)].append(fit)
+        if tstat is not None:
+            agg_t[(sysname, cond)].append(tstat)
 
     by_gene: dict[str, dict[str, float]] = defaultdict(dict)
     for (gene, cond), vals in agg.items():
         by_gene[gene][cond] = statistics.mean(vals)
+    t_by_gene: dict[str, dict[str, float]] = defaultdict(dict)
+    for (gene, cond), vals in agg_t.items():
+        t_by_gene[gene][cond] = statistics.mean(vals)
 
     keys = sorted(conditions)
     records: list[GeneRecord] = []
     for gene, per_cond in by_gene.items():
         if len(per_cond) != len(keys):
             continue                                  # incomplete row -> not comparable
+        if min_abs_t is not None:
+            per_t = t_by_gene.get(gene, {})
+            # A gene failing the |t| bar in ANY condition is dropped whole, so the switch pattern stays
+            # comparable across genes. The per-CELL alternative (admit the gene, abstain the cell)
+            # changes switch-pattern semantics and is deliberately not the v1 shape.
+            if len(per_t) != len(keys) or any(abs(per_t[c]) < min_abs_t for c in keys):
+                continue
         exp = {c: (per_cond[c] < threshold) for c in keys}
         records.append(GeneRecord(gene_id=gene, gene=gene, experimental=exp, paper_fba={},
                                   conditionally_essential=any(exp.values()) and not all(exp.values())))
@@ -119,12 +143,38 @@ def mean_fitness_matrix(conn: sqlite3.Connection, conditions: dict[str, str],
             (ORG_ID,)):
         if cond in conditions:
             exp_to_cond[name] = cond
-    q = ("SELECT g.sysName, f.expName, f.fit FROM GeneFitness f "
+    q = ("SELECT g.sysName, f.expName, f.fit, f.t FROM GeneFitness f "
          "JOIN Gene g ON g.orgId=f.orgId AND g.locusId=f.locusId WHERE f.orgId=?")
-    for sysname, expname, fit in conn.execute(q, (ORG_ID,)):
+    for sysname, expname, fit, _t in conn.execute(q, (ORG_ID,)):
         cond = exp_to_cond.get(expname)
         if cond is not None and sysname in genes:
             agg[(sysname, cond)].append(fit)
+    out: dict[str, dict[str, float]] = defaultdict(dict)
+    for (gene, cond), vals in agg.items():
+        out[cond][gene] = statistics.mean(vals)
+    return dict(out)
+
+
+def mean_t_matrix(conn: sqlite3.Connection, conditions: dict[str, str],
+                  genes: set[str]) -> dict[str, dict[str, float]]:
+    """{condition: {gene: mean t-statistic}} — mirrors `mean_fitness_matrix` on the confidence axis.
+
+    A sweep needs the t DISTRIBUTION before it can pick a bar; this makes it inspectable without
+    re-querying the 7 GB table through `load_records`.
+    """
+    agg: dict[tuple[str, str], list[float]] = defaultdict(list)
+    exp_to_cond = {}
+    for name, cond in conn.execute(
+            "SELECT expName, condition_1 FROM Experiment WHERE orgId=? AND expGroup='carbon source'",
+            (ORG_ID,)):
+        if cond in conditions:
+            exp_to_cond[name] = cond
+    q = ("SELECT g.sysName, f.expName, f.t FROM GeneFitness f "
+         "JOIN Gene g ON g.orgId=f.orgId AND g.locusId=f.locusId WHERE f.orgId=?")
+    for sysname, expname, tstat in conn.execute(q, (ORG_ID,)):
+        cond = exp_to_cond.get(expname)
+        if cond is not None and sysname in genes and tstat is not None:
+            agg[(sysname, cond)].append(tstat)
     out: dict[str, dict[str, float]] = defaultdict(dict)
     for (gene, cond), vals in agg.items():
         out[cond][gene] = statistics.mean(vals)

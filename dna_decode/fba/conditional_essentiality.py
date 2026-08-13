@@ -136,7 +136,8 @@ def mcc(cm: dict[str, int]) -> float:
     return 0.0 if den == 0 else (tp * tn - fp * fn) / den
 
 
-def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, float]]) -> dict:
+def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, float]],
+                       conditions: tuple[str, ...] | None = None) -> dict:
     """Is the conditional signal ABSENT, or is the binary CUTOFF discarding it?
 
     FBA computes a continuous knockout growth ratio (mutant / wild type) per condition, and the deployed
@@ -161,7 +162,12 @@ def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, fl
     THRESHOLDED numbers are byte-stable across the same runs, since the shifts never cross a cutoff. Quote
     the AUROC as ~0.60, not to four decimals.
     """
-    keys = sorted(CONDITIONS)
+    # Third instance of the hardcoded-4 bug class (after pattern_distribution's keys and its constant
+    # test). This one fails SILENTLY and is therefore the nastiest: `ratios.get(c, {})` below means a
+    # 25-source ratios dict misses on every 4-media key, accumulates zero cells, and returns
+    # "degenerate: one class only" -- which reads as "your data was degenerate", not "you passed the
+    # wrong keys". Callers on any non-default panel MUST pass `conditions`.
+    keys = sorted(conditions) if conditions is not None else sorted(CONDITIONS)
     y: list[int] = []
     score: list[float] = []
     for r in records:
@@ -218,7 +224,7 @@ def continuous_readout(records: list[GeneRecord], ratios: dict[str, dict[str, fl
 
 
 def deployable_threshold(records: list[GeneRecord], ratios: dict[str, dict[str, float]],
-                         n_folds: int = 5) -> dict:
+                         n_folds: int = 5, conditions: tuple[str, ...] | None = None) -> dict:
     """The honest version of `continuous_readout`'s oracle: fit the cutoff on a DISJOINT gene split.
 
     The oracle threshold is chosen on the same cells it is scored on, so it cannot be deployed. Here the
@@ -233,7 +239,9 @@ def deployable_threshold(records: list[GeneRecord], ratios: dict[str, dict[str, 
 
     Folds are assigned by sorted gene id (deterministic, no RNG) so the number is reproducible.
     """
-    keys = sorted(CONDITIONS)
+    # Fourth instance of the hardcoded-4 bug class -- same silent-degenerate failure as
+    # `continuous_readout` above. See that comment.
+    keys = sorted(conditions) if conditions is not None else sorted(CONDITIONS)
     subset = sorted(conditionally_essential_genes(records), key=lambda r: r.gene_id)
     cells: list[tuple[str, int, float]] = []          # (gene_id, truth, ratio)
     for r in subset:

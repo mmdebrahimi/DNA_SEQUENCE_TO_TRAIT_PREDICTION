@@ -345,3 +345,70 @@ def test_the_four_media_constant_numbers_are_UNAFFECTED_by_the_fix():
     got = pattern_distribution(records, {c: {r.gene_id: r.paper_fba[c] for r in records}
                                          for c in CONDITIONS})
     assert got["n_constant_pattern"] == 62          # the published iJO1366 figure, unchanged
+
+
+# ---- the third and fourth hardcoded-4 sites (silent-degenerate class) ----
+
+def _25_key_fixture():
+    keys = tuple(f"c{i}" for i in range(25))
+    recs = [
+        GeneRecord(f"b{i}", f"b{i}", {k: (k in (keys[i % 25], keys[(i + 1) % 25])) for k in keys},
+                   {}, True)
+        for i in range(12)
+    ]
+    # a ratio per (condition, gene): low where truly essential, high otherwise, plus a little spread
+    ratios = {k: {r.gene_id: (0.02 if r.experimental[k] else 0.9) for r in recs} for k in keys}
+    return keys, recs, ratios
+
+
+def test_continuous_readout_silently_degenerates_on_the_wrong_condition_set():
+    """Third instance of the hardcoded-4 class, and the nastiest shape: it does NOT raise. `ratios.get`
+    misses on every 4-media key against a 25-source dict, so zero cells accumulate and the return reads
+    as 'your data was degenerate' rather than 'you passed the wrong keys'. Pinned as a known trap."""
+    from dna_decode.fba.conditional_essentiality import continuous_readout
+
+    keys, recs, ratios = _25_key_fixture()
+    stale = continuous_readout(recs, ratios)                    # no conditions -> 4-media default
+    assert stale["n_cells"] == 0 and stale["auroc"] is None
+    assert "degenerate" in stale["note"]
+
+
+def test_continuous_readout_scores_the_full_panel_when_told_the_conditions():
+    from dna_decode.fba.conditional_essentiality import continuous_readout
+
+    keys, recs, ratios = _25_key_fixture()
+    got = continuous_readout(recs, ratios, conditions=keys)
+    assert got["n_cells"] == len(recs) * len(keys)
+    assert got["auroc"] is not None
+
+
+def test_deployable_threshold_silently_degenerates_on_the_wrong_condition_set():
+    """Fourth instance -- same silent shape as continuous_readout."""
+    from dna_decode.fba.conditional_essentiality import deployable_threshold
+
+    keys, recs, ratios = _25_key_fixture()
+    stale = deployable_threshold(recs, ratios)
+    assert stale["n_cells"] == 0 and stale["held_out_mcc"] is None
+
+
+def test_deployable_threshold_scores_the_full_panel_when_told_the_conditions():
+    from dna_decode.fba.conditional_essentiality import deployable_threshold
+
+    keys, recs, ratios = _25_key_fixture()
+    got = deployable_threshold(recs, ratios, conditions=keys)
+    assert got["n_cells"] == len(recs) * len(keys)
+    assert got["held_out_mcc"] is not None
+
+
+def test_condition_threading_cannot_perturb_the_published_four_media_numbers():
+    """Blast-radius check for the threading itself: on the 4-media panel the new explicit-conditions
+    path and the untouched default path must agree cell-for-cell, so no shipped number can move."""
+    from dna_decode.fba.conditional_essentiality import continuous_readout, deployable_threshold
+
+    records = load_labels()
+    keys = tuple(sorted(CONDITIONS))
+    ratios = {c: {r.gene_id: (0.005 if r.paper_fba[c] else 0.8) for r in records} for c in keys}
+
+    assert continuous_readout(records, ratios) == continuous_readout(records, ratios, conditions=keys)
+    assert deployable_threshold(records, ratios) == deployable_threshold(records, ratios,
+                                                                        conditions=keys)
