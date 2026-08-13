@@ -41,6 +41,7 @@ from dna_decode.fba.conditional_essentiality import (  # noqa: E402
     switch_accuracy,
 )
 from dna_decode.fba.model import load_model, wildtype_growth  # noqa: E402
+from dna_decode.fba.solver_audit import audit_deletion_frame, merge_audits  # noqa: E402
 
 
 def _metrics(cm: dict) -> dict:
@@ -120,7 +121,7 @@ def main(argv: list[str] | None = None) -> int:
 
     ours: dict[str, dict[str, bool]] = {}
     ratios: dict[str, dict[str, float]] = {}
-    nonoptimal: dict[str, int] = {}
+    audits = {}
     growth_by_condition = {}
     for c in CONDITIONS:
         with model:
@@ -133,17 +134,16 @@ def main(argv: list[str] | None = None) -> int:
                 from cobra.flux_analysis import single_gene_deletion  # noqa: PLC0415
                 res = single_gene_deletion(model, gene_list=[model.genes.get_by_id(r.gene_id)
                                                              for r in scored])
+                # Per-CELL audit (was a per-condition COUNT): a count can never be crossed against the
+                # genes the model actually commits on, which is the question that matters.
+                if "ids" in res.columns:
+                    audits[c] = audit_deletion_frame(res, c)
                 # cobrapy returns an `ids` COLUMN holding a frozenset per row (a RangeIndex, not the ids);
                 # older versions put the frozenset in the index. Handle both rather than assume one.
                 for idx, row in res.iterrows():
                     ids = row["ids"] if "ids" in res.columns else idx
                     gid = next(iter(ids)) if not isinstance(ids, str) else ids
                     g = row["growth"]
-                    # cobrapy also returns `status`; without reading it a non-optimal solve is
-                    # indistinguishable from a real growth value. Audited, not acted on.
-                    st = row.get("status") if hasattr(row, "get") else None
-                    if st is not None and st != "optimal":
-                        nonoptimal[c] = nonoptimal.get(c, 0) + 1
                     # NaN (infeasible) is total loss of growth -> ratio 0, and counts as essential
                     rat[gid] = 0.0 if g != g else g / wt
                     calls[gid] = (g != g) or (g < a.frac * wt)
@@ -207,7 +207,7 @@ def main(argv: list[str] | None = None) -> int:
         "pattern_distribution": {"experimental": true_pat, "paper_fba": paper_pat},
         "model_scored": {
             "n_genes_scored": len(scored),
-            "n_solver_nonoptimal_by_condition": nonoptimal,
+            "solver_audit": (merge_audits(audits) if audits else None),
             "wildtype_growth_per_condition": growth_by_condition,
             "per_condition": our_per_cond,
             "switch": our_switch,

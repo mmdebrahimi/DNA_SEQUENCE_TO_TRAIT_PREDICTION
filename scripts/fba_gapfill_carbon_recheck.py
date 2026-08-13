@@ -47,16 +47,25 @@ from dna_decode.fba.fitness_browser import (  # noqa: E402
     open_db,
 )
 from dna_decode.fba.model import load_model, wildtype_growth  # noqa: E402
+from dna_decode.fba.solver_audit import audit_deletion_frame, merge_audits  # noqa: E402
 
 FRAC = 0.01
 
 
 def score(model, genes, conds, keys):
+    """Returns (calls, wildtype growths, solver audit).
+
+    NOTE the NaN coding below: `(g != g)` is the NaN test, and cobrapy returns NaN when a solve is
+    non-optimal -- so a failed solve reads as ESSENTIAL. That coding is KEPT deliberately (changing it
+    would silently move the published 154-flip number); the audit makes the count VISIBLE so the flip
+    count can be read net of solver noise.
+    """
     from cobra.flux_analysis import single_gene_deletion  # noqa: PLC0415
 
     all_ex = tuple(conds.values())
     calls: dict[str, dict[str, bool]] = {}
     wts: dict[str, float] = {}
+    audits = {}
     for cond in keys:
         with model:
             apply_carbon_condition(model, conds[cond], all_carbon=all_ex)
@@ -65,12 +74,13 @@ def score(model, genes, conds, keys):
             d: dict[str, bool] = {}
             if wt > 1e-9:
                 res = single_gene_deletion(model, gene_list=[model.genes.get_by_id(g) for g in genes])
+                audits[cond] = audit_deletion_frame(res, cond)
                 for _, row in res.iterrows():
                     gid = next(iter(row["ids"]))
                     g = row["growth"]
                     d[gid] = (g != g) or (g < FRAC * wt)
             calls[cond] = d
-    return calls, wts
+    return calls, wts, (merge_audits(audits) if audits else None)
 
 
 def flips(a: dict, b: dict) -> int:
@@ -106,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{base.id}: {len(keys)} carbon sources | {len(genes)} conditionally-essential genes")
 
     print("\nBASELINE ...", flush=True)
-    base_calls, base_wt = score(base, genes, conds, keys)
+    base_calls, base_wt, base_audit = score(base, genes, conds, keys)
     sw0 = switch_accuracy(subset, base_calls, conditions=keys)
     nulls = constant_baselines(subset, conditions=keys)
     best_null = max(g["per_condition_agreement"] for g in nulls.values())
@@ -120,13 +130,21 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\nMAXIMAL arm: +{len(pool)} donor reactions from {donor.id} ...", flush=True)
     aug = base.copy()
     aug.add_reactions([r.copy() for r in pool])
-    aug_calls, aug_wt = score(aug, genes, conds, keys)
+    aug_calls, aug_wt, aug_audit = score(aug, genes, conds, keys)
     sw1 = switch_accuracy(subset, aug_calls, conditions=keys)
     pat1 = pattern_distribution(subset, aug_calls, conditions=keys)
     n_flip = flips(base_calls, aug_calls)
     print(f"   exact-set {sw1['exact_set_match']}/{sw1['n_conditionally_essential']} | "
           f"per-cell {sw1['per_condition_agreement']} | constant {pat1['constant_pattern_fraction']}")
     print(f"   BINARY CALL FLIPS vs baseline: {n_flip} / {len(genes) * len(keys):,} cells")
+
+    # How many of those flips involve a cell whose solve was non-optimal in EITHER arm? A flip between
+    # two suspect solves is solver noise, not biochemistry -- the flip count is only meaningful net of it.
+    suspect = {tuple(x) for x in ((base_audit or {}).get("suspect_cells") or [])}
+    suspect |= {tuple(x) for x in ((aug_audit or {}).get("suspect_cells") or [])}
+    n_flip_suspect = sum(1 for c in base_calls for g, v in base_calls[c].items()
+                         if g in aug_calls.get(c, {}) and aug_calls[c][g] != v and (g, c) in suspect)
+    print(f"   ... of which {n_flip_suspect} involve a non-optimal / NaN solve in either arm")
 
     # THREE-WAY, because "changes calls" and "improves accuracy" are different claims and conflating
     # them is exactly how a negative gets overstated. The 4-media run could not tell them apart (0 flips
@@ -148,9 +166,12 @@ def main(argv: list[str] | None = None) -> int:
         "model": base.id, "donor": donor.id,
         "n_conditions": len(keys), "n_conditionally_essential": len(subset),
         "n_donor_reactions_added": len(pool),
-        "baseline": {"switch": sw0, "pattern": pat0, "wildtype_growth": base_wt},
-        "maximal": {"switch": sw1, "pattern": pat1, "wildtype_growth": aug_wt},
+        "baseline": {"switch": sw0, "pattern": pat0, "wildtype_growth": base_wt,
+                     "solver_audit": base_audit},
+        "maximal": {"switch": sw1, "pattern": pat1, "wildtype_growth": aug_wt,
+                    "solver_audit": aug_audit},
         "binary_call_flips": n_flip,
+        "binary_call_flips_involving_a_suspect_solve": n_flip_suspect,
         "n_cells": len(genes) * len(keys),
         "best_constant_null_per_cell": best_null,
         "verdict": verdict,
@@ -167,6 +188,9 @@ def main(argv: list[str] | None = None) -> int:
             "Adding donor reactions imports their GPRs, so the augmented model gains genes; the SCORED "
             "gene set is held fixed to the conditionally-essential genes of the BASE model.",
             "All 25 conditions are aerobic carbon sources -- no oxygen axis.",
+            "A NaN growth (= a non-optimal solve) is coded as ESSENTIAL here, deliberately unchanged so "
+            "the published flip count stays reproducible. `binary_call_flips_involving_a_suspect_solve` "
+            "is how much of the flip count is solver noise rather than biochemistry.",
         ],
     }
     outdir = Path(a.out_dir) if a.out_dir else Path(__file__).resolve().parent.parent / "wiki"

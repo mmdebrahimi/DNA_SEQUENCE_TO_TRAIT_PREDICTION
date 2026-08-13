@@ -117,3 +117,58 @@ def test_no_script_reads_growth_without_also_reading_status(script):
     if 'row["growth"]' not in src:
         pytest.skip(f"{script} does not read a deletion growth column directly")
     assert "audit_deletion_frame" in src or 'row["status"]' in src or 'row.get("status")' in src
+
+
+# --- commit stratification (Step 7) ---------------------------------------------------------------
+
+def _strata_fixture():
+    from dna_decode.fba.conditional_essentiality import GeneRecord
+
+    keys = tuple(f"c{i}" for i in range(5))
+    recs = [
+        GeneRecord("gConst", "gConst", {k: (k == "c0") for k in keys}, {}, True),
+        GeneRecord("gOne", "gOne", {k: (k == "c1") for k in keys}, {}, True),
+        GeneRecord("gTwo", "gTwo", {k: (k in ("c2", "c3")) for k in keys}, {}, True),
+    ]
+    calls = {
+        "c0": {"gConst": False, "gOne": False, "gTwo": False},
+        "c1": {"gConst": False, "gOne": True, "gTwo": False},
+        "c2": {"gConst": False, "gOne": False, "gTwo": True},
+        "c3": {"gConst": False, "gOne": False, "gTwo": True},
+        "c4": {"gConst": False, "gOne": False, "gTwo": False},
+    }
+    return keys, recs, calls
+
+
+def test_the_three_strata_partition_the_gene_set_exactly():
+    from scripts.fba_conditional_carbon_validate import commit_strata
+
+    keys, recs, calls = _strata_fixture()
+    got = commit_strata(recs, calls, keys)
+    assert sum(s["n_genes"] for s in got.values()) == len(recs)
+    assert got["predicted_constant"]["n_genes"] == 1        # gConst: all-dispensable
+    assert got["predicted_1_of_n"]["n_genes"] == 1          # gOne
+    assert got["predicted_2plus"]["n_genes"] == 1           # gTwo
+
+
+def test_a_constant_prediction_can_never_exact_match_a_two_sided_gene():
+    """The arithmetic invariant the retracted bug violated: all exact matches must come from the
+    non-constant strata, so a run reporting matches alongside 100%-constant is self-contradictory."""
+    from scripts.fba_conditional_carbon_validate import commit_strata
+
+    keys, recs, calls = _strata_fixture()
+    got = commit_strata(recs, calls, keys)
+    assert got["predicted_constant"]["n_exact_set_match"] == 0
+    assert got["predicted_1_of_n"]["n_exact_set_match"] == 1
+    assert got["predicted_2plus"]["n_exact_set_match"] == 1
+
+
+def test_strata_report_which_genes_touch_a_suspect_solve():
+    """A global suspect rate does not clear a CONCENTRATED subset -- one bad cell can make or break a
+    1-of-N exact match."""
+    from scripts.fba_conditional_carbon_validate import commit_strata
+
+    keys, recs, calls = _strata_fixture()
+    got = commit_strata(recs, calls, keys, suspect={("gOne", "c1")})
+    assert got["predicted_1_of_n"]["n_genes_touching_a_nonoptimal_cell"] == 1
+    assert got["predicted_2plus"]["n_genes_touching_a_nonoptimal_cell"] == 0

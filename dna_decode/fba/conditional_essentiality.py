@@ -346,7 +346,8 @@ def pattern_distribution(records: list[GeneRecord],
 
 
 def constant_baselines(records: list[GeneRecord],
-                       conditions: tuple[str, ...] | None = None) -> dict[str, dict]:
+                       conditions: tuple[str, ...] | None = None,
+                       exclude_cells: set[tuple[str, str]] | None = None) -> dict[str, dict]:
     """The NULL controls the switch metric must always be reported against.
 
     A per-cell agreement of 0.57 sounds like signal until you notice that predicting **dispensable for
@@ -355,18 +356,22 @@ def constant_baselines(records: list[GeneRecord],
     against that 0.5588 null, i.e. roughly one point of real conditional resolution between them.
 
     Never quote `per_condition_agreement` without this.
+
+    `exclude_cells` MUST be forwarded whenever the measurement it is compared against abstained: a null
+    computed on the full denominator against a metric computed on a reduced one is not a control.
     """
     keys = tuple(conditions) if conditions is not None else tuple(CONDITIONS)
     subset = conditionally_essential_genes(records)
     out = {}
     for name, const in (("always_essential", True), ("always_dispensable", False)):
         pred = {c: {r.gene_id: const for r in subset} for c in keys}
-        out[name] = switch_accuracy(records, pred, conditions=keys)
+        out[name] = switch_accuracy(records, pred, conditions=keys, exclude_cells=exclude_cells)
     return out
 
 
 def switch_accuracy(records: list[GeneRecord], predicted: dict[str, dict[str, bool]],
-                    conditions: tuple[str, ...] | None = None) -> dict:
+                    conditions: tuple[str, ...] | None = None,
+                    exclude_cells: set[tuple[str, str]] | None = None) -> dict:
     """THE conditional metric: on the two-sided subset, does the model reproduce the SWITCH?
 
     For each conditionally-essential gene, compare the exact SET of media in which it is essential.
@@ -375,24 +380,45 @@ def switch_accuracy(records: list[GeneRecord], predicted: dict[str, dict[str, bo
 
     A model that calls a gene essential in all four media, or in none, scores 0 on the strict metric even
     though a single-condition metric might score it well -- which is the entire point of measuring here.
+
+    **`exclude_cells` is ABSTENTION, and it exists because deleting a cell from `predicted` is NOT
+    abstention.** The lookups below default a missing cell to `False` and still count it in the
+    denominator, so a dropped cell is silently scored as "dispensable" -- fail-OPEN. Pass
+    `{(gene_id, condition)}` to remove a cell from BOTH the numerator and the denominator.
+
+    Exact-set treats abstention more strictly than per-cell does: a gene with ANY abstained cell has an
+    incomplete pattern, so it is dropped from the exact-set numerator AND its denominator
+    (`n_scored_exact_set`) rather than being judged on its surviving cells -- scoring a partial pattern
+    would make exact-set easier exactly where the solver struggled. Its surviving cells still count
+    toward per-cell agreement.
     """
     keys = tuple(conditions) if conditions is not None else tuple(CONDITIONS)
+    excl = exclude_cells or set()
     subset = conditionally_essential_genes(records)
     exact = 0
+    n_exact_scored = 0
     cells_right = 0
     cells_total = 0
     for r in subset:
-        pred_set = {c for c in keys if predicted.get(c, {}).get(r.gene_id, False)}
-        true_set = {c for c in keys if r.experimental.get(c, False)}
-        if pred_set == true_set:
-            exact += 1
+        gene_excluded = any((r.gene_id, c) in excl for c in keys)
+        if not gene_excluded:
+            n_exact_scored += 1
+            pred_set = {c for c in keys if predicted.get(c, {}).get(r.gene_id, False)}
+            true_set = {c for c in keys if r.experimental.get(c, False)}
+            if pred_set == true_set:
+                exact += 1
         for c in keys:
+            if (r.gene_id, c) in excl:
+                continue
             cells_total += 1
             if predicted.get(c, {}).get(r.gene_id, False) == r.experimental.get(c, False):
                 cells_right += 1
     return {
         "n_conditionally_essential": len(subset),
         "exact_set_match": exact,
-        "exact_set_match_rate": round(exact / len(subset), 4) if subset else None,
+        "n_scored_exact_set": n_exact_scored,
+        "exact_set_match_rate": (round(exact / n_exact_scored, 4) if n_exact_scored else None),
         "per_condition_agreement": round(cells_right / cells_total, 4) if cells_total else None,
+        "n_cells_scored": cells_total,
+        "n_cells_abstained": len(subset) * len(keys) - cells_total,
     }

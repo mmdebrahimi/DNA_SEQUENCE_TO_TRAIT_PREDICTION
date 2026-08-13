@@ -49,15 +49,21 @@ from dna_decode.fba.conditional_essentiality import (  # noqa: E402
 )
 from dna_decode.fba.gapfill import model_dead_ends  # noqa: E402
 from dna_decode.fba.model import load_model, wildtype_growth  # noqa: E402
+from dna_decode.fba.solver_audit import audit_deletion_frame, merge_audits  # noqa: E402
 
 ESSENTIAL_FRAC = 0.01
 
 
-def knockout_ratios(model, gene_ids: list[str]) -> tuple[dict, dict]:
-    """{condition: {gene: mutant/wild-type growth}} plus the wild-type growth per condition."""
+def knockout_ratios(model, gene_ids: list[str]) -> tuple[dict, dict, dict | None]:
+    """{condition: {gene: mutant/wild-type growth}}, wild-type growth per condition, and a solver audit.
+
+    `0.0 if g != g` codes a NaN growth -- which cobrapy returns on a non-optimal solve -- as ratio 0.0,
+    i.e. ESSENTIAL. Kept unchanged so the committed 0-flip result stays reproducible; the audit makes
+    the failure count visible rather than silent.
+    """
     from cobra.flux_analysis import single_gene_deletion  # noqa: PLC0415
 
-    ratios, wts = {}, {}
+    ratios, wts, audits = {}, {}, {}
     for c in sorted(CONDITIONS):
         with model:
             apply_condition(model, c)
@@ -67,12 +73,13 @@ def knockout_ratios(model, gene_ids: list[str]) -> tuple[dict, dict]:
             if wt > 1e-9:
                 res = single_gene_deletion(
                     model, gene_list=[model.genes.get_by_id(g) for g in gene_ids])
+                audits[c] = audit_deletion_frame(res, c)
                 for _, row in res.iterrows():
                     gid = next(iter(row["ids"]))
                     g = row["growth"]
                     out[gid] = 0.0 if g != g else g / wt
             ratios[c] = out
-    return ratios, wts
+    return ratios, wts, (merge_audits(audits) if audits else None)
 
 
 def score_arm(records, ratios: dict) -> dict:
@@ -121,9 +128,10 @@ def main(argv: list[str] | None = None) -> int:
     genes = [r.gene_id for r in records]
     print(f"{base.id}: {len(base.reactions)} reactions | conditionally-essential genes scored: {len(genes)}")
 
-    base_ratios, base_wts = knockout_ratios(base, genes)
+    base_ratios, base_wts, base_audit = knockout_ratios(base, genes)
     baseline = score_arm(records, base_ratios)
     base_calls = baseline.pop("calls")
+    baseline["solver_audit"] = base_audit
     print(f"BASELINE: exact-set {baseline['exact_set_match']}/{baseline['n_conditionally_essential']} | "
           f"per-cell {baseline['per_condition_agreement']} | deployed MCC {baseline['deployed_mcc']} | "
           f"AUROC {baseline['auroc_threshold_free']}")
@@ -139,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
     def run_arm(label, rxns):
         m = base.copy()
         m.add_reactions([r.copy() for r in rxns])
-        ratios, wts = knockout_ratios(m, genes)
+        ratios, wts, arm_audit = knockout_ratios(m, genes)
         s = score_arm(records, ratios)
         calls = s.pop("calls")
         s["n_reactions_added"] = len(rxns)
@@ -148,6 +156,7 @@ def main(argv: list[str] | None = None) -> int:
             1 for c in ratios for g in ratios[c]
             if abs(ratios[c][g] - base_ratios[c].get(g, ratios[c][g])) > 1e-6)
         s["wildtype_growth"] = wts
+        s["solver_audit"] = arm_audit
         print(f"   {label:28s} +{len(rxns):4d} rxns | exact-set {s['exact_set_match']}/"
               f"{s['n_conditionally_essential']} | per-cell {s['per_condition_agreement']} | "
               f"deployed MCC {s['deployed_mcc']} | CALL FLIPS {s['binary_call_flips_vs_baseline']} | "
