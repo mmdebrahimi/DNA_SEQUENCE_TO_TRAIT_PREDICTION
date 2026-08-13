@@ -282,3 +282,37 @@ def test_deployable_threshold_is_degenerate_safe():
     from dna_decode.fba.conditional_essentiality import deployable_threshold
 
     assert deployable_threshold([], {}, n_folds=5)["held_out_mcc"] is None
+
+
+# ---- generalisation to an arbitrary condition set (Fitness Browser, 2026-08-12) ----
+
+def test_metrics_accept_a_condition_set_beyond_the_four_shipped_media():
+    """The 4-media CONDITIONS is a default, not a hard-coding. The Fitness Browser path scores 25 carbon
+    sources through the SAME functions."""
+    from dna_decode.fba.conditional_essentiality import constant_baselines
+
+    keys = ("carbA", "carbB", "carbC")
+    r = GeneRecord("b1", "b1", {"carbA": True, "carbB": False, "carbC": False}, {}, True)
+    pred = {c: {"b1": (c == "carbA")} for c in keys}
+    assert switch_accuracy([r], pred, conditions=keys)["exact_set_match"] == 1
+    assert constant_baselines([r], conditions=keys)["always_dispensable"]["exact_set_match"] == 0
+
+
+def test_pattern_distribution_MUST_use_the_callers_conditions():
+    """THE bug this pins. Defaulting to the 4 media against a 25-carbon-source prediction made every
+    lookup miss, so every gene read as '....' and the run reported a FALSE '100% constant across 1 shape'
+    -- which contradicted a positive exact-set count in the very same run. A contradiction between two
+    metrics of one run is a bug signal, not a finding."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    keys = ("carbA", "carbB", "carbC")
+    r = GeneRecord("b1", "b1", {"carbA": True, "carbB": False, "carbC": False}, {}, True)
+    pred = {c: {"b1": (c == "carbA")} for c in keys}
+
+    got = pattern_distribution([r], pred, conditions=keys)
+    assert got["n_constant_pattern"] == 0            # it is NOT constant -- it matches exactly
+    assert got["patterns"] == {"E..": 1}
+
+    stale = pattern_distribution([r], pred)          # default 4-media keys -> every lookup misses
+    assert stale["n_constant_pattern"] == 1          # the false "constant" the bug produced
+    assert got["n_constant_pattern"] != stale["n_constant_pattern"]

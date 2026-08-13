@@ -289,7 +289,8 @@ def deployable_threshold(records: list[GeneRecord], ratios: dict[str, dict[str, 
 
 
 def pattern_distribution(records: list[GeneRecord],
-                         predicted: dict[str, dict[str, bool]] | None = None) -> dict:
+                         predicted: dict[str, dict[str, bool]] | None = None,
+                         conditions: tuple[str, ...] | None = None) -> dict:
     """WHY the switch score is low: what shape are the predictions, on the two-sided subset?
 
     Each gene becomes a 4-character pattern over the sorted conditions ('E' essential, '.' not), so the
@@ -303,7 +304,10 @@ def pattern_distribution(records: list[GeneRecord],
     `predicted=None` describes the experimental labels themselves.
     """
     subset = conditionally_essential_genes(records)
-    keys = sorted(CONDITIONS)
+    # MUST accept the caller's condition set. Defaulting to the 4-media CONDITIONS against a
+    # 25-carbon-source prediction made every lookup miss -> every gene read as '....' -> a FALSE
+    # '100% constant across 1 shape', which contradicted a positive exact-set count in the same run.
+    keys = sorted(conditions) if conditions is not None else sorted(CONDITIONS)
 
     def pat(d: dict[str, bool]) -> str:
         return "".join("E" if d.get(c) else "." for c in keys)
@@ -328,7 +332,8 @@ def pattern_distribution(records: list[GeneRecord],
     }
 
 
-def constant_baselines(records: list[GeneRecord]) -> dict[str, dict]:
+def constant_baselines(records: list[GeneRecord],
+                       conditions: tuple[str, ...] | None = None) -> dict[str, dict]:
     """The NULL controls the switch metric must always be reported against.
 
     A per-cell agreement of 0.57 sounds like signal until you notice that predicting **dispensable for
@@ -338,15 +343,17 @@ def constant_baselines(records: list[GeneRecord]) -> dict[str, dict]:
 
     Never quote `per_condition_agreement` without this.
     """
+    keys = tuple(conditions) if conditions is not None else tuple(CONDITIONS)
     subset = conditionally_essential_genes(records)
     out = {}
     for name, const in (("always_essential", True), ("always_dispensable", False)):
-        pred = {c: {r.gene_id: const for r in subset} for c in CONDITIONS}
-        out[name] = switch_accuracy(records, pred)
+        pred = {c: {r.gene_id: const for r in subset} for c in keys}
+        out[name] = switch_accuracy(records, pred, conditions=keys)
     return out
 
 
-def switch_accuracy(records: list[GeneRecord], predicted: dict[str, dict[str, bool]]) -> dict:
+def switch_accuracy(records: list[GeneRecord], predicted: dict[str, dict[str, bool]],
+                    conditions: tuple[str, ...] | None = None) -> dict:
     """THE conditional metric: on the two-sided subset, does the model reproduce the SWITCH?
 
     For each conditionally-essential gene, compare the exact SET of media in which it is essential.
@@ -356,18 +363,19 @@ def switch_accuracy(records: list[GeneRecord], predicted: dict[str, dict[str, bo
     A model that calls a gene essential in all four media, or in none, scores 0 on the strict metric even
     though a single-condition metric might score it well -- which is the entire point of measuring here.
     """
+    keys = tuple(conditions) if conditions is not None else tuple(CONDITIONS)
     subset = conditionally_essential_genes(records)
     exact = 0
     cells_right = 0
     cells_total = 0
     for r in subset:
-        pred_set = {c for c in CONDITIONS if predicted.get(c, {}).get(r.gene_id, False)}
-        true_set = {c for c in CONDITIONS if r.experimental[c]}
+        pred_set = {c for c in keys if predicted.get(c, {}).get(r.gene_id, False)}
+        true_set = {c for c in keys if r.experimental.get(c, False)}
         if pred_set == true_set:
             exact += 1
-        for c in CONDITIONS:
+        for c in keys:
             cells_total += 1
-            if predicted.get(c, {}).get(r.gene_id, False) == r.experimental[c]:
+            if predicted.get(c, {}).get(r.gene_id, False) == r.experimental.get(c, False):
                 cells_right += 1
     return {
         "n_conditionally_essential": len(subset),
