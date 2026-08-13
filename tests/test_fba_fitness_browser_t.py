@@ -59,23 +59,45 @@ def test_default_path_is_byte_identical_to_the_no_t_behaviour():
     assert recs == load_records(conn, CONDS, min_abs_t=None)
 
 
-def test_a_low_confidence_measurement_drops_the_gene_when_a_t_bar_is_set():
-    """b0001's acetate call rests on |t|=0.4 -- noise. With a bar it leaves; without one it stays,
-    which is precisely the sensitivity the 217-gene set has never been tested for."""
+def test_all_conditions_mode_is_ANTI_SELECTIVE_for_switchers():
+    """The defect the 2026-08-13 sweep exposed. A conditionally-essential gene is confidently essential
+    in ONE condition and confidently NEUTRAL (t ~ 0) in the rest -- so requiring |t| >= bar in EVERY
+    condition removes exactly the switchers. Measured on the real grid: 15/15 settings collapsed to
+    100% constant predictions and ZERO commitments."""
+    conn = _db([
+        ("b0001", "glucose", -3.0, 8.0), ("b0001", "acetate", 0.1, 0.4),   # a real switcher
+        ("b0002", "glucose", -4.0, 9.0), ("b0002", "acetate", -4.0, 9.0),  # essential everywhere
+    ])
+    kept = {r.gene_id for r in load_records(conn, CONDS, min_abs_t=3.0,
+                                            min_abs_t_mode="all_conditions")}
+    assert kept == {"b0002"}                       # the SWITCHER was dropped, the constant gene kept
+    switchers = [r.gene_id for r in load_records(conn, CONDS, min_abs_t=3.0,
+                                                 min_abs_t_mode="all_conditions")
+                 if r.conditionally_essential]
+    assert switchers == []                         # nothing conditional survives -- the anti-selection
+
+
+def test_per_cell_mode_keeps_the_gene_and_only_withholds_the_unconfident_CALL():
+    """The correct semantics: a low-|t| measurement cannot SUPPORT an essential claim, but it is no
+    reason to discard a gene whose other conditions are cleanly measured."""
     conn = _db([
         ("b0001", "glucose", -3.0, 8.0), ("b0001", "acetate", 0.1, 0.4),
-        ("b0002", "glucose", 0.2, 5.0), ("b0002", "acetate", -4.0, 9.0),
+        ("b0002", "glucose", -3.0, 0.5), ("b0002", "acetate", 0.1, 0.4),   # essential-looking, unconfident
     ])
-    assert {r.gene_id for r in load_records(conn, CONDS)} == {"b0001", "b0002"}
-    kept = {r.gene_id for r in load_records(conn, CONDS, min_abs_t=3.0)}
-    assert kept == {"b0002"}
+    recs = {r.gene_id: r for r in load_records(conn, CONDS, min_abs_t=3.0, min_abs_t_mode="per_cell")}
+    assert set(recs) == {"b0001", "b0002"}                     # both genes SURVIVE
+    assert recs["b0001"].experimental == {"glucose": True, "acetate": False}
+    assert recs["b0002"].experimental == {"glucose": False, "acetate": False}   # call withheld
+    assert recs["b0001"].conditionally_essential is True
+    assert recs["b0002"].conditionally_essential is False
 
 
 def test_the_t_bar_uses_absolute_value_so_strong_negatives_survive():
     """A strongly-depleted gene has a large NEGATIVE t; a naive `t >= bar` would drop exactly the
     genes the analysis is about."""
     conn = _db([("b0003", "glucose", -5.0, -12.0), ("b0003", "acetate", 0.0, 7.0)])
-    assert {r.gene_id for r in load_records(conn, CONDS, min_abs_t=5.0)} == {"b0003"}
+    recs = load_records(conn, CONDS, min_abs_t=5.0, min_abs_t_mode="per_cell")
+    assert recs[0].experimental["glucose"] is True      # |t|=12, strongly depleted -> call SURVIVES
 
 
 def test_replicates_are_averaged_on_the_t_axis_the_same_way_as_fitness():
@@ -88,8 +110,10 @@ def test_replicates_are_averaged_on_the_t_axis_the_same_way_as_fitness():
     assert got["acetate"]["b0001"] == 1.0
 
 
-def test_a_gene_missing_t_entirely_is_dropped_under_a_bar_not_admitted_by_default():
+def test_a_missing_t_cannot_support_an_essential_call_fail_closed():
     """Fail-closed: an unprovable confidence is not a passing one."""
     conn = _db([("b0004", "glucose", -3.0, None), ("b0004", "acetate", 0.1, None)])
     assert {r.gene_id for r in load_records(conn, CONDS)} == {"b0004"}      # default unaffected
-    assert load_records(conn, CONDS, min_abs_t=1.0) == []                   # bar -> dropped
+    per_cell = load_records(conn, CONDS, min_abs_t=1.0, min_abs_t_mode="per_cell")
+    assert per_cell[0].experimental == {"glucose": False, "acetate": False}  # no call survives
+    assert load_records(conn, CONDS, min_abs_t=1.0, min_abs_t_mode="all_conditions") == []

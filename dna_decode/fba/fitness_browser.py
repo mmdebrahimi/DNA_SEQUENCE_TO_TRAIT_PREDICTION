@@ -67,7 +67,8 @@ def carbon_conditions(conn: sqlite3.Connection, model) -> dict[str, str]:
 def load_records(conn: sqlite3.Connection, conditions: dict[str, str],
                  gene_filter: set[str] | None = None,
                  threshold: float = ESSENTIAL_FITNESS,
-                 min_abs_t: float | None = None) -> list[GeneRecord]:
+                 min_abs_t: float | None = None,
+                 min_abs_t_mode: str = "per_cell") -> list[GeneRecord]:
     """Experimental conditional essentiality per (gene, carbon source), as GeneRecords.
 
     Replicate experiments for the same carbon source are averaged (62 experiments over 25 sources, so
@@ -79,13 +80,23 @@ def load_records(conn: sqlite3.Connection, conditions: dict[str, str],
 
     **The t-statistic.** `GeneFitness` carries a per-measurement `t` beside `fit` (verified on the live
     db: columns are `['orgId','locusId','expName','fit','t']`). It was never selected by this loader — a
-    published memo claimed it was read-but-unused, which was false in the "read" half. It is now
-    selected, and `min_abs_t` makes it usable: a gene is admitted only if `abs(mean t) >= min_abs_t` in
-    EVERY condition, preserving the complete-row rule above.
+    published memo claimed it was read-but-unused, which was false in the "read" half.
+
+    `min_abs_t` applies a confidence bar, and **`min_abs_t_mode` is load-bearing — the wrong mode
+    destroys the very phenomenon being measured** (measured 2026-08-13, see
+    `wiki/fba_label_threshold_sweep_2026-08-13.md`):
+
+    - **`per_cell` (DEFAULT, correct):** a cell is called essential only if the fitness clears the bar
+      AND that measurement is confident. A low-|t| cell simply is not claimed as essential; the gene
+      stays. This is the only mode that answers "are the essential CALLS trustworthy?".
+    - **`all_conditions` (the v1 shape, kept for the record):** drop the gene unless `abs(mean t) >=
+      min_abs_t` in EVERY condition. **This is ANTI-SELECTIVE for conditional essentiality** — a
+      switcher is confidently essential in one condition and confidently NEUTRAL (t ≈ 0) in the others,
+      so it fails the bar by construction. Measured: 15 of 15 grid settings collapsed to 100% constant
+      predictions and ZERO commitments, because the filter had removed every switcher.
 
     `min_abs_t=None` is the default and changes nothing — the inherited `fit < -2` cutoff still defines
-    every shipped number. This parameter makes the axis reachable for a sensitivity sweep; it does not
-    move any committed result.
+    every shipped number.
     """
     agg: dict[tuple[str, str], list[float]] = defaultdict(list)
     agg_t: dict[tuple[str, str], list[float]] = defaultdict(list)
@@ -120,14 +131,17 @@ def load_records(conn: sqlite3.Connection, conditions: dict[str, str],
     for gene, per_cond in by_gene.items():
         if len(per_cond) != len(keys):
             continue                                  # incomplete row -> not comparable
-        if min_abs_t is not None:
-            per_t = t_by_gene.get(gene, {})
-            # A gene failing the |t| bar in ANY condition is dropped whole, so the switch pattern stays
-            # comparable across genes. The per-CELL alternative (admit the gene, abstain the cell)
-            # changes switch-pattern semantics and is deliberately not the v1 shape.
+        per_t = t_by_gene.get(gene, {})
+        if min_abs_t is not None and min_abs_t_mode == "all_conditions":
+            # ANTI-SELECTIVE for switchers -- kept only so the sweep can demonstrate it. See docstring.
             if len(per_t) != len(keys) or any(abs(per_t[c]) < min_abs_t for c in keys):
                 continue
-        exp = {c: (per_cond[c] < threshold) for c in keys}
+        if min_abs_t is not None and min_abs_t_mode == "per_cell":
+            # Fail-closed per CELL: an unconfident measurement cannot support an ESSENTIAL claim, but
+            # it is no reason to discard the gene (its other conditions may be perfectly measured).
+            exp = {c: (per_cond[c] < threshold and abs(per_t.get(c, 0.0)) >= min_abs_t) for c in keys}
+        else:
+            exp = {c: (per_cond[c] < threshold) for c in keys}
         records.append(GeneRecord(gene_id=gene, gene=gene, experimental=exp, paper_fba={},
                                   conditionally_essential=any(exp.values()) and not all(exp.values())))
     return records

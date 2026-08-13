@@ -1,0 +1,1461 @@
+{
+  "record": "fba-label-threshold-sweep-v1",
+  "date": "2026-08-13",
+  "model": "iML1515",
+  "n_conditions": 25,
+  "fit_thresholds": [
+    -1.0,
+    -1.5,
+    -2.0,
+    -2.5,
+    -3.0
+  ],
+  "t_bars": [
+    null,
+    2.0,
+    3.0,
+    4.0
+  ],
+  "t_modes": [
+    "per_cell",
+    "all_conditions"
+  ],
+  "n_genes_deleted_union": 372,
+  "essentiality_frac": 0.01,
+  "cells": [
+    {
+      "n_conditionally_essential": 318,
+      "exact_set_match": 27,
+      "exact_set_match_rate": 0.0849,
+      "per_condition_agreement": 0.7197,
+      "best_constant_null": 0.6801,
+      "lift_over_null": 0.0396,
+      "constant_pattern_fraction": 0.8711,
+      "n_committed": 41,
+      "n_committed_all_infeasible": 40,
+      "essential_calls_by_mechanism": {
+        "infeasible": 47,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.662,
+      "fit_threshold": -1.0,
+      "min_abs_t": null,
+      "min_abs_t_mode": null,
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 316,
+      "exact_set_match": 27,
+      "exact_set_match_rate": 0.0854,
+      "per_condition_agreement": 0.7168,
+      "best_constant_null": 0.6728,
+      "lift_over_null": 0.044,
+      "constant_pattern_fraction": 0.8703,
+      "n_committed": 41,
+      "n_committed_all_infeasible": 40,
+      "essential_calls_by_mechanism": {
+        "infeasible": 47,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.662,
+      "fit_threshold": -1.0,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 14,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.5257,
+      "best_constant_null": 0.9057,
+      "lift_over_null": -0.38,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -1.0,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 305,
+      "exact_set_match": 28,
+      "exact_set_match_rate": 0.0918,
+      "per_condition_agreement": 0.7249,
+      "best_constant_null": 0.6867,
+      "lift_over_null": 0.0382,
+      "constant_pattern_fraction": 0.8656,
+      "n_committed": 41,
+      "n_committed_all_infeasible": 40,
+      "essential_calls_by_mechanism": {
+        "infeasible": 47,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.662,
+      "fit_threshold": -1.0,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 6,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.6533,
+      "best_constant_null": 0.96,
+      "lift_over_null": -0.3067,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -1.0,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 290,
+      "exact_set_match": 24,
+      "exact_set_match_rate": 0.0828,
+      "per_condition_agreement": 0.7411,
+      "best_constant_null": 0.6728,
+      "lift_over_null": 0.0683,
+      "constant_pattern_fraction": 0.8759,
+      "n_committed": 36,
+      "n_committed_all_infeasible": 35,
+      "essential_calls_by_mechanism": {
+        "infeasible": 40,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.625,
+      "fit_threshold": -1.0,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 2,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.5,
+      "best_constant_null": 0.96,
+      "lift_over_null": -0.46,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -1.0,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 261,
+      "exact_set_match": 24,
+      "exact_set_match_rate": 0.092,
+      "per_condition_agreement": 0.7146,
+      "best_constant_null": 0.669,
+      "lift_over_null": 0.0456,
+      "constant_pattern_fraction": 0.8659,
+      "n_committed": 35,
+      "n_committed_all_infeasible": 34,
+      "essential_calls_by_mechanism": {
+        "infeasible": 41,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.6308,
+      "fit_threshold": -1.5,
+      "min_abs_t": null,
+      "min_abs_t_mode": null,
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 260,
+      "exact_set_match": 24,
+      "exact_set_match_rate": 0.0923,
+      "per_condition_agreement": 0.7108,
+      "best_constant_null": 0.6683,
+      "lift_over_null": 0.0425,
+      "constant_pattern_fraction": 0.8654,
+      "n_committed": 35,
+      "n_committed_all_infeasible": 34,
+      "essential_calls_by_mechanism": {
+        "infeasible": 41,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.6308,
+      "fit_threshold": -1.5,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 18,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.5978,
+      "best_constant_null": 0.8689,
+      "lift_over_null": -0.2711,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -1.5,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 254,
+      "exact_set_match": 24,
+      "exact_set_match_rate": 0.0945,
+      "per_condition_agreement": 0.7225,
+      "best_constant_null": 0.68,
+      "lift_over_null": 0.0425,
+      "constant_pattern_fraction": 0.8622,
+      "n_committed": 35,
+      "n_committed_all_infeasible": 34,
+      "essential_calls_by_mechanism": {
+        "infeasible": 41,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.6308,
+      "fit_threshold": -1.5,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 10,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.688,
+      "best_constant_null": 0.956,
+      "lift_over_null": -0.268,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -1.5,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 246,
+      "exact_set_match": 21,
+      "exact_set_match_rate": 0.0854,
+      "per_condition_agreement": 0.732,
+      "best_constant_null": 0.6647,
+      "lift_over_null": 0.0673,
+      "constant_pattern_fraction": 0.874,
+      "n_committed": 31,
+      "n_committed_all_infeasible": 30,
+      "essential_calls_by_mechanism": {
+        "infeasible": 35,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5932,
+      "fit_threshold": -1.5,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 4,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.51,
+      "best_constant_null": 0.95,
+      "lift_over_null": -0.44,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -1.5,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 217,
+      "exact_set_match": 23,
+      "exact_set_match_rate": 0.106,
+      "per_condition_agreement": 0.7368,
+      "best_constant_null": 0.6623,
+      "lift_over_null": 0.0745,
+      "constant_pattern_fraction": 0.8479,
+      "n_committed": 33,
+      "n_committed_all_infeasible": 32,
+      "essential_calls_by_mechanism": {
+        "infeasible": 39,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.619,
+      "fit_threshold": -2.0,
+      "min_abs_t": null,
+      "min_abs_t_mode": null,
+      "is_shipped_setting": true
+    },
+    {
+      "n_conditionally_essential": 219,
+      "exact_set_match": 23,
+      "exact_set_match_rate": 0.105,
+      "per_condition_agreement": 0.7352,
+      "best_constant_null": 0.6663,
+      "lift_over_null": 0.0689,
+      "constant_pattern_fraction": 0.8493,
+      "n_committed": 33,
+      "n_committed_all_infeasible": 32,
+      "essential_calls_by_mechanism": {
+        "infeasible": 39,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.619,
+      "fit_threshold": -2.0,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 24,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.6217,
+      "best_constant_null": 0.835,
+      "lift_over_null": -0.2133,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -2.0,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 214,
+      "exact_set_match": 23,
+      "exact_set_match_rate": 0.1075,
+      "per_condition_agreement": 0.7514,
+      "best_constant_null": 0.6721,
+      "lift_over_null": 0.0793,
+      "constant_pattern_fraction": 0.8458,
+      "n_committed": 33,
+      "n_committed_all_infeasible": 32,
+      "essential_calls_by_mechanism": {
+        "infeasible": 39,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.619,
+      "fit_threshold": -2.0,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 16,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.68,
+      "best_constant_null": 0.9325,
+      "lift_over_null": -0.2525,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -2.0,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 209,
+      "exact_set_match": 21,
+      "exact_set_match_rate": 0.1005,
+      "per_condition_agreement": 0.7537,
+      "best_constant_null": 0.6582,
+      "lift_over_null": 0.0955,
+      "constant_pattern_fraction": 0.8565,
+      "n_committed": 30,
+      "n_committed_all_infeasible": 29,
+      "essential_calls_by_mechanism": {
+        "infeasible": 34,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5862,
+      "fit_threshold": -2.0,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 8,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.525,
+      "best_constant_null": 0.915,
+      "lift_over_null": -0.39,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -2.0,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 218,
+      "exact_set_match": 22,
+      "exact_set_match_rate": 0.1009,
+      "per_condition_agreement": 0.7561,
+      "best_constant_null": 0.6582,
+      "lift_over_null": 0.0979,
+      "constant_pattern_fraction": 0.8532,
+      "n_committed": 32,
+      "n_committed_all_infeasible": 31,
+      "essential_calls_by_mechanism": {
+        "infeasible": 38,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.6129,
+      "fit_threshold": -2.5,
+      "min_abs_t": null,
+      "min_abs_t_mode": null,
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 218,
+      "exact_set_match": 22,
+      "exact_set_match_rate": 0.1009,
+      "per_condition_agreement": 0.7545,
+      "best_constant_null": 0.6628,
+      "lift_over_null": 0.0917,
+      "constant_pattern_fraction": 0.8532,
+      "n_committed": 32,
+      "n_committed_all_infeasible": 31,
+      "essential_calls_by_mechanism": {
+        "infeasible": 38,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.6129,
+      "fit_threshold": -2.5,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 42,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.66,
+      "best_constant_null": 0.8352,
+      "lift_over_null": -0.1752,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -2.5,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 212,
+      "exact_set_match": 22,
+      "exact_set_match_rate": 0.1038,
+      "per_condition_agreement": 0.7675,
+      "best_constant_null": 0.6657,
+      "lift_over_null": 0.1018,
+      "constant_pattern_fraction": 0.8491,
+      "n_committed": 32,
+      "n_committed_all_infeasible": 31,
+      "essential_calls_by_mechanism": {
+        "infeasible": 38,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.6129,
+      "fit_threshold": -2.5,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 32,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.705,
+      "best_constant_null": 0.89,
+      "lift_over_null": -0.185,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -2.5,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 199,
+      "exact_set_match": 20,
+      "exact_set_match_rate": 0.1005,
+      "per_condition_agreement": 0.7616,
+      "best_constant_null": 0.6563,
+      "lift_over_null": 0.1053,
+      "constant_pattern_fraction": 0.8543,
+      "n_committed": 29,
+      "n_committed_all_infeasible": 28,
+      "essential_calls_by_mechanism": {
+        "infeasible": 33,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5789,
+      "fit_threshold": -2.5,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 18,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.6533,
+      "best_constant_null": 0.8844,
+      "lift_over_null": -0.2311,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -2.5,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 195,
+      "exact_set_match": 17,
+      "exact_set_match_rate": 0.0872,
+      "per_condition_agreement": 0.7774,
+      "best_constant_null": 0.6361,
+      "lift_over_null": 0.1413,
+      "constant_pattern_fraction": 0.8615,
+      "n_committed": 27,
+      "n_committed_all_infeasible": 26,
+      "essential_calls_by_mechanism": {
+        "infeasible": 31,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5636,
+      "fit_threshold": -3.0,
+      "min_abs_t": null,
+      "min_abs_t_mode": null,
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 195,
+      "exact_set_match": 17,
+      "exact_set_match_rate": 0.0872,
+      "per_condition_agreement": 0.7758,
+      "best_constant_null": 0.6377,
+      "lift_over_null": 0.1381,
+      "constant_pattern_fraction": 0.8615,
+      "n_committed": 27,
+      "n_committed_all_infeasible": 26,
+      "essential_calls_by_mechanism": {
+        "infeasible": 31,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5636,
+      "fit_threshold": -3.0,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 58,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.7083,
+      "best_constant_null": 0.7903,
+      "lift_over_null": -0.082,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -3.0,
+      "min_abs_t": 2.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 190,
+      "exact_set_match": 17,
+      "exact_set_match_rate": 0.0895,
+      "per_condition_agreement": 0.7817,
+      "best_constant_null": 0.6396,
+      "lift_over_null": 0.1421,
+      "constant_pattern_fraction": 0.8579,
+      "n_committed": 27,
+      "n_committed_all_infeasible": 26,
+      "essential_calls_by_mechanism": {
+        "infeasible": 31,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5636,
+      "fit_threshold": -3.0,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 45,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.7209,
+      "best_constant_null": 0.8302,
+      "lift_over_null": -0.1093,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -3.0,
+      "min_abs_t": 3.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 182,
+      "exact_set_match": 16,
+      "exact_set_match_rate": 0.0879,
+      "per_condition_agreement": 0.7705,
+      "best_constant_null": 0.6305,
+      "lift_over_null": 0.14,
+      "constant_pattern_fraction": 0.8626,
+      "n_committed": 25,
+      "n_committed_all_infeasible": 24,
+      "essential_calls_by_mechanism": {
+        "infeasible": 28,
+        "sub_threshold": 24
+      },
+      "infeasible_share_of_commitment_calls": 0.5385,
+      "fit_threshold": -3.0,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "per_cell",
+      "is_shipped_setting": false
+    },
+    {
+      "n_conditionally_essential": 30,
+      "exact_set_match": 0,
+      "exact_set_match_rate": 0.0,
+      "per_condition_agreement": 0.7213,
+      "best_constant_null": 0.8347,
+      "lift_over_null": -0.1134,
+      "constant_pattern_fraction": 1.0,
+      "n_committed": 0,
+      "n_committed_all_infeasible": 0,
+      "essential_calls_by_mechanism": {
+        "infeasible": 0,
+        "sub_threshold": 0
+      },
+      "infeasible_share_of_commitment_calls": null,
+      "fit_threshold": -3.0,
+      "min_abs_t": 4.0,
+      "min_abs_t_mode": "all_conditions",
+      "is_shipped_setting": false
+    }
+  ],
+  "verdict": {
+    "fit_threshold_axis": {
+      "status": "SURVIVES_EVERY_POWERED_SETTING",
+      "n_powered": 5,
+      "n_beating_null": 5,
+      "lifts": [
+        0.0396,
+        0.0456,
+        0.0745,
+        0.0979,
+        0.1413
+      ],
+      "n_committing": 5
+    },
+    "t_bar_axis_per_cell": {
+      "status": "SURVIVES_EVERY_POWERED_SETTING",
+      "n_powered": 15,
+      "n_beating_null": 15,
+      "lifts": [
+        0.044,
+        0.0382,
+        0.0683,
+        0.0425,
+        0.0425,
+        0.0673,
+        0.0689,
+        0.0793,
+        0.0955,
+        0.0917,
+        0.1018,
+        0.1053,
+        0.1381,
+        0.1421,
+        0.14
+      ],
+      "n_committing": 15
+    },
+    "t_bar_axis_all_conditions": {
+      "status": "INSTRUMENT_DEGENERATE_NO_COMMITMENTS",
+      "n_powered": 5,
+      "n_beating_null": 0,
+      "lifts": [
+        -0.1752,
+        -0.185,
+        -0.082,
+        -0.1093,
+        -0.1134
+      ],
+      "n_committing": 0
+    },
+    "headline_label_sensitivity": "SURVIVES_EVERY_POWERED_SETTING",
+    "mechanism": "CONDITIONAL_SIGNAL_IS_MOSTLY_FEASIBILITY",
+    "min_infeasible_share": 0.5385,
+    "max_infeasible_share": 0.662,
+    "note_on_all_conditions_mode": "An `all_conditions` t-bar is ANTI-SELECTIVE for conditional essentiality: a switcher is confidently essential in ONE condition and confidently NEUTRAL (t~0) in the rest, so it fails a require-|t|-everywhere bar by construction. Its settings are reported but must NOT be pooled with the others -- the instrument, not the claim, is what failed there."
+  },
+  "solver_audit": {
+    "n_conditions": 25,
+    "n_rows_total": 9300,
+    "n_nonoptimal_total": 47,
+    "n_nan_growth_total": 47,
+    "n_suspect_total": 47,
+    "suspect_fraction": 0.005054,
+    "status_available": true,
+    "n_conditions_with_nonoptimal": 17,
+    "suspect_cells": [
+      [
+        "b0677",
+        "N-Acetyl-D-Glucosamine"
+      ],
+      [
+        "b0678",
+        "D-Glucosamine Hydrochloride"
+      ],
+      [
+        "b0678",
+        "N-Acetyl-D-Glucosamine"
+      ],
+      [
+        "b0721",
+        "Sodium succinate dibasic hexahydrate"
+      ],
+      [
+        "b0722",
+        "Sodium succinate dibasic hexahydrate"
+      ],
+      [
+        "b0723",
+        "Sodium succinate dibasic hexahydrate"
+      ],
+      [
+        "b0724",
+        "Sodium succinate dibasic hexahydrate"
+      ],
+      [
+        "b0757",
+        "D-Galactose"
+      ],
+      [
+        "b0758",
+        "D-Galactose"
+      ],
+      [
+        "b0759",
+        "D-Galactose"
+      ],
+      [
+        "b1521",
+        "D-Galacturonic Acid monohydrate"
+      ],
+      [
+        "b1613",
+        "D-Mannose"
+      ],
+      [
+        "b1817",
+        "D-Glucosamine Hydrochloride"
+      ],
+      [
+        "b1817",
+        "D-Mannose"
+      ],
+      [
+        "b1818",
+        "D-Glucosamine Hydrochloride"
+      ],
+      [
+        "b1818",
+        "D-Mannose"
+      ],
+      [
+        "b1819",
+        "D-Glucosamine Hydrochloride"
+      ],
+      [
+        "b1819",
+        "D-Mannose"
+      ],
+      [
+        "b1850",
+        "D-Galacturonic Acid monohydrate"
+      ],
+      [
+        "b1850",
+        "D-Glucuronic Acid"
+      ],
+      [
+        "b2587",
+        "a-Ketoglutaric acid disodium salt hydrate"
+      ],
+      [
+        "b2702",
+        "D-Sorbitol"
+      ],
+      [
+        "b2703",
+        "D-Sorbitol"
+      ],
+      [
+        "b2705",
+        "D-Sorbitol"
+      ],
+      [
+        "b2801",
+        "L-Fucose"
+      ],
+      [
+        "b2802",
+        "L-Fucose"
+      ],
+      [
+        "b2803",
+        "L-Fucose"
+      ],
+      [
+        "b2979",
+        "Glycolic Acid"
+      ],
+      [
+        "b3091",
+        "D-Galacturonic Acid monohydrate"
+      ],
+      [
+        "b3092",
+        "D-Galacturonic Acid monohydrate"
+      ],
+      [
+        "b3092",
+        "D-Glucuronic Acid"
+      ],
+      [
+        "b3093",
+        "D-Galacturonic Acid monohydrate"
+      ],
+      [
+        "b3416",
+        "D-Maltose monohydrate"
+      ],
+      [
+        "b3526",
+        "D-Galacturonic Acid monohydrate"
+      ],
+      [
+        "b3526",
+        "D-Glucuronic Acid"
+      ],
+      [
+        "b3565",
+        "D-Xylose"
+      ],
+      [
+        "b3600",
+        "D-Mannitol"
+      ],
+      [
+        "b3666",
+        "D-Glucose-6-Phosphate sodium salt"
+      ],
+      [
+        "b3752",
+        "D-Ribose"
+      ],
+      [
+        "b4032",
+        "D-Maltose monohydrate"
+      ],
+      [
+        "b4033",
+        "D-Maltose monohydrate"
+      ],
+      [
+        "b4034",
+        "D-Maltose monohydrate"
+      ],
+      [
+        "b4035",
+        "D-Maltose monohydrate"
+      ],
+      [
+        "b4208",
+        "D-Serine"
+      ],
+      [
+        "b4322",
+        "D-Glucuronic Acid"
+      ],
+      [
+        "b4467",
+        "Glycolic Acid"
+      ],
+      [
+        "b4468",
+        "Glycolic Acid"
+      ]
+    ],
+    "per_condition": {
+      "D-Fructose": {
+        "condition": "D-Fructose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "D-Galactose": {
+        "condition": "D-Galactose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 3,
+          "optimal": 369
+        },
+        "n_nonoptimal": 3,
+        "n_nan_growth": 3,
+        "n_suspect": 3,
+        "nonoptimal_cells": [
+          "b0757",
+          "b0758",
+          "b0759"
+        ],
+        "nan_cells": [
+          "b0757",
+          "b0758",
+          "b0759"
+        ]
+      },
+      "D-Galacturonic Acid monohydrate": {
+        "condition": "D-Galacturonic Acid monohydrate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 6,
+          "optimal": 366
+        },
+        "n_nonoptimal": 6,
+        "n_nan_growth": 6,
+        "n_suspect": 6,
+        "nonoptimal_cells": [
+          "b1521",
+          "b1850",
+          "b3091",
+          "b3092",
+          "b3093",
+          "b3526"
+        ],
+        "nan_cells": [
+          "b1521",
+          "b1850",
+          "b3091",
+          "b3092",
+          "b3093",
+          "b3526"
+        ]
+      },
+      "D-Gluconic Acid sodium salt": {
+        "condition": "D-Gluconic Acid sodium salt",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "D-Glucosamine Hydrochloride": {
+        "condition": "D-Glucosamine Hydrochloride",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 4,
+          "optimal": 368
+        },
+        "n_nonoptimal": 4,
+        "n_nan_growth": 4,
+        "n_suspect": 4,
+        "nonoptimal_cells": [
+          "b0678",
+          "b1817",
+          "b1818",
+          "b1819"
+        ],
+        "nan_cells": [
+          "b0678",
+          "b1817",
+          "b1818",
+          "b1819"
+        ]
+      },
+      "D-Glucose": {
+        "condition": "D-Glucose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "D-Glucose-6-Phosphate sodium salt": {
+        "condition": "D-Glucose-6-Phosphate sodium salt",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 1,
+          "optimal": 371
+        },
+        "n_nonoptimal": 1,
+        "n_nan_growth": 1,
+        "n_suspect": 1,
+        "nonoptimal_cells": [
+          "b3666"
+        ],
+        "nan_cells": [
+          "b3666"
+        ]
+      },
+      "D-Glucuronic Acid": {
+        "condition": "D-Glucuronic Acid",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 4,
+          "optimal": 368
+        },
+        "n_nonoptimal": 4,
+        "n_nan_growth": 4,
+        "n_suspect": 4,
+        "nonoptimal_cells": [
+          "b1850",
+          "b3092",
+          "b3526",
+          "b4322"
+        ],
+        "nan_cells": [
+          "b1850",
+          "b3092",
+          "b3526",
+          "b4322"
+        ]
+      },
+      "D-Maltose monohydrate": {
+        "condition": "D-Maltose monohydrate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 5,
+          "optimal": 367
+        },
+        "n_nonoptimal": 5,
+        "n_nan_growth": 5,
+        "n_suspect": 5,
+        "nonoptimal_cells": [
+          "b3416",
+          "b4032",
+          "b4033",
+          "b4034",
+          "b4035"
+        ],
+        "nan_cells": [
+          "b3416",
+          "b4032",
+          "b4033",
+          "b4034",
+          "b4035"
+        ]
+      },
+      "D-Mannitol": {
+        "condition": "D-Mannitol",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 1,
+          "optimal": 371
+        },
+        "n_nonoptimal": 1,
+        "n_nan_growth": 1,
+        "n_suspect": 1,
+        "nonoptimal_cells": [
+          "b3600"
+        ],
+        "nan_cells": [
+          "b3600"
+        ]
+      },
+      "D-Mannose": {
+        "condition": "D-Mannose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 4,
+          "optimal": 368
+        },
+        "n_nonoptimal": 4,
+        "n_nan_growth": 4,
+        "n_suspect": 4,
+        "nonoptimal_cells": [
+          "b1613",
+          "b1817",
+          "b1818",
+          "b1819"
+        ],
+        "nan_cells": [
+          "b1613",
+          "b1817",
+          "b1818",
+          "b1819"
+        ]
+      },
+      "D-Ribose": {
+        "condition": "D-Ribose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 1,
+          "optimal": 371
+        },
+        "n_nonoptimal": 1,
+        "n_nan_growth": 1,
+        "n_suspect": 1,
+        "nonoptimal_cells": [
+          "b3752"
+        ],
+        "nan_cells": [
+          "b3752"
+        ]
+      },
+      "D-Serine": {
+        "condition": "D-Serine",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 1,
+          "optimal": 371
+        },
+        "n_nonoptimal": 1,
+        "n_nan_growth": 1,
+        "n_suspect": 1,
+        "nonoptimal_cells": [
+          "b4208"
+        ],
+        "nan_cells": [
+          "b4208"
+        ]
+      },
+      "D-Sorbitol": {
+        "condition": "D-Sorbitol",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 3,
+          "optimal": 369
+        },
+        "n_nonoptimal": 3,
+        "n_nan_growth": 3,
+        "n_suspect": 3,
+        "nonoptimal_cells": [
+          "b2702",
+          "b2703",
+          "b2705"
+        ],
+        "nan_cells": [
+          "b2702",
+          "b2703",
+          "b2705"
+        ]
+      },
+      "D-Xylose": {
+        "condition": "D-Xylose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 1,
+          "optimal": 371
+        },
+        "n_nonoptimal": 1,
+        "n_nan_growth": 1,
+        "n_suspect": 1,
+        "nonoptimal_cells": [
+          "b3565"
+        ],
+        "nan_cells": [
+          "b3565"
+        ]
+      },
+      "Glycerol": {
+        "condition": "Glycerol",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "Glycolic Acid": {
+        "condition": "Glycolic Acid",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 3,
+          "optimal": 369
+        },
+        "n_nonoptimal": 3,
+        "n_nan_growth": 3,
+        "n_suspect": 3,
+        "nonoptimal_cells": [
+          "b2979",
+          "b4467",
+          "b4468"
+        ],
+        "nan_cells": [
+          "b2979",
+          "b4467",
+          "b4468"
+        ]
+      },
+      "L-Fucose": {
+        "condition": "L-Fucose",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 3,
+          "optimal": 369
+        },
+        "n_nonoptimal": 3,
+        "n_nan_growth": 3,
+        "n_suspect": 3,
+        "nonoptimal_cells": [
+          "b2801",
+          "b2802",
+          "b2803"
+        ],
+        "nan_cells": [
+          "b2801",
+          "b2802",
+          "b2803"
+        ]
+      },
+      "L-Malic acid disodium salt monohydrate": {
+        "condition": "L-Malic acid disodium salt monohydrate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "N-Acetyl-D-Glucosamine": {
+        "condition": "N-Acetyl-D-Glucosamine",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 2,
+          "optimal": 370
+        },
+        "n_nonoptimal": 2,
+        "n_nan_growth": 2,
+        "n_suspect": 2,
+        "nonoptimal_cells": [
+          "b0677",
+          "b0678"
+        ],
+        "nan_cells": [
+          "b0677",
+          "b0678"
+        ]
+      },
+      "Potassium acetate": {
+        "condition": "Potassium acetate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "Sodium D-Lactate": {
+        "condition": "Sodium D-Lactate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "Sodium pyruvate": {
+        "condition": "Sodium pyruvate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "optimal": 372
+        },
+        "n_nonoptimal": 0,
+        "n_nan_growth": 0,
+        "n_suspect": 0,
+        "nonoptimal_cells": [],
+        "nan_cells": []
+      },
+      "Sodium succinate dibasic hexahydrate": {
+        "condition": "Sodium succinate dibasic hexahydrate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 4,
+          "optimal": 368
+        },
+        "n_nonoptimal": 4,
+        "n_nan_growth": 4,
+        "n_suspect": 4,
+        "nonoptimal_cells": [
+          "b0721",
+          "b0722",
+          "b0723",
+          "b0724"
+        ],
+        "nan_cells": [
+          "b0721",
+          "b0722",
+          "b0723",
+          "b0724"
+        ]
+      },
+      "a-Ketoglutaric acid disodium salt hydrate": {
+        "condition": "a-Ketoglutaric acid disodium salt hydrate",
+        "n_rows": 372,
+        "status_available": true,
+        "statuses": {
+          "infeasible": 1,
+          "optimal": 371
+        },
+        "n_nonoptimal": 1,
+        "n_nan_growth": 1,
+        "n_suspect": 1,
+        "nonoptimal_cells": [
+          "b2587"
+        ],
+        "nan_cells": [
+          "b2587"
+        ]
+      }
+    }
+  },
+  "caveats": [
+    "The FBA calls are IDENTICAL across settings by construction -- only which genes are SCORED changes. So this measures label-cutoff sensitivity of the METRIC, not of the model.",
+    "A lower |fit| bar admits noisier labels and a higher one shrinks the set; both move the constant null, so `lift_over_null` is the comparable column, not raw per-cell agreement.",
+    "min_abs_t drops a gene failing the confidence bar in ANY condition (the complete-row rule), so it shrinks the set faster than a per-cell mask would.",
+    "All 25 conditions are aerobic carbon sources; no oxygen axis."
+  ]
+}
