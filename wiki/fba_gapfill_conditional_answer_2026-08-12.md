@@ -16,6 +16,13 @@
 > | **Mechanism:** "adding reactions cannot change a single call" (0 flips at every dose) | **FALSIFIED** — the maximal arm changes **154 of 5,425** calls |
 > | **Practical:** "gap-filling does not help" | **CONFIRMED, on much better evidence** — exact-set goes **23 → 22** (down 1) and per-cell moves **+0.0003** |
 >
+> **Third note (2026-08-13): the negative is now solver-audited and survives cleanly.** Of the 154
+> flips on the 25-source panel, only **4** involve a cell whose solve was non-optimal in either arm — so
+> the "changed calls are noise, not signal" reading is not itself a solver artifact. Separately, the
+> NaN-as-essential coding these scripts use was suspected of manufacturing results and was tested and
+> **refuted**: it is deterministic ATPM-maintenance infeasibility, i.e. genuine essentiality. See
+> `wiki/fba_infeasibility_finding_2026-08-13.md`.
+>
 > So the *headline answer is unchanged and now better supported* — gap-filling still does not improve
 > conditional essentiality — but the **"it cannot move anything at all" framing was substrate-bounded**:
 > on a wider panel it moves 154 calls. The changed calls are noise, not signal.

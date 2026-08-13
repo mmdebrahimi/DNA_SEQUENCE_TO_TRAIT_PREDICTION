@@ -98,12 +98,21 @@ measurably more accurate and somewhat less collapsed.*
 - **Exact-set is a weak headline metric here** given how concentrated the true patterns are. The commit-rate
   decomposition above is the more honest summary.
 - **The null moved too** (0.5588 → 0.6623), so "lift" is being compared across different base rates.
-- **Non-optimal solver statuses exist and were previously invisible.** cobrapy's `single_gene_deletion`
-  returns a `status` column alongside `growth`; the original run read only `growth`, so a non-optimal solve
-  was indistinguishable from a real growth value. Now audited, and it fires immediately: **39 non-optimal
-  solves across 15 of the 25 conditions** (0.7% of 5,425 cells; worst is maltose at 5). Small enough not to
-  overturn the headline, large enough that it should never have been unrecorded — and the same gap exists
-  in the three other FBA deletion scripts.
+- **The 39 non-optimal solves ARE the commitments — and they are correct.** *(resolved 2026-08-13; see
+  `wiki/fba_infeasibility_finding_2026-08-13.md`)* All five deletion scripts now audit solver status per
+  cell. The audit showed a total concentration: **23 of 23 exact-set matches, and 32 of 33 committed
+  genes, have essential calls that are entirely non-optimal solves** (25 genes × 1 cell + 7 × 2 = 39, the
+  whole suspect set), while the 184 predicted-constant genes touch none. That looked damning. It is not:
+  all 39 re-solve `infeasible` deterministically, each is the canonical catabolic gene for exactly that
+  carbon source (galT/galE/galK on galactose, malEFGK/malQ on maltose, xylA on xylose, sdhABCD on
+  succinate, kgtP on α-ketoglutarate …), and **38 of 39 are experimentally essential in that condition**.
+  With `ATPM lower_bound = 6.86`, deleting the sole catabolic route leaves no feasible flux distribution
+  at all — infeasibility is the model's signature for *this carbon source cannot be used*. The
+  NaN-to-essential coding is correct.
+  **So the commit claim now has a mechanism, not just a count** — and a sharper caveat: those
+  commitments are structurally easy, because sole-route catabolism is the one place a stoichiometric
+  model with a maintenance floor cannot help but be right. It says nothing about the 184 constant genes,
+  where the conditional deficit still lives.
 - **True patterns are far more diverse than predicted ones**: 141 distinct true shapes among 217 genes,
   against 20 predicted shapes. That asymmetry, not the aggregate agreement, is the clearest statement of
   the model's conditional resolution.

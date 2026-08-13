@@ -55,6 +55,23 @@ from dna_decode.fba.solver_audit import (  # noqa: E402
 ESSENTIAL_FRAC = 0.01
 
 
+def _load_probe(path: str | None, root: Path, run_date: str) -> dict | None:
+    """The infeasibility probe's finding, which decides how to read a non-optimal solve.
+
+    Absent -> None, and the verdict says INDETERMINATE rather than guessing. Assuming either reading
+    is exactly the mistake the pre-committed rule made.
+    """
+    p = Path(path) if path else root / f"wiki/fba_infeasibility_probe_{run_date}.json"
+    if not p.exists():
+        for cand in sorted(root.glob("wiki/fba_infeasibility_probe_*.json"), reverse=True):
+            p = cand
+            break
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
 def rate_matched_null(records, n_called_essential: int, n_draws: int = 200, seed0: int = 0,
                       conditions: tuple[str, ...] | None = None,
                       exclude_cells: set[tuple[str, str]] | None = None) -> dict:
@@ -95,17 +112,20 @@ def rate_matched_null(records, n_called_essential: int, n_draws: int = 200, seed
 
 def score_model(model, records, gene_ids: list[str], restrict: bool,
                 abstain_nonoptimal: bool = False) -> dict:
-    """Score one arm. `abstain_nonoptimal` is the honesty switch.
+    """Score one arm. `abstain_nonoptimal` was built as an honesty switch; it turned out to be a TRAP.
 
-    DEFAULT (False) keeps the original coding: a NaN growth becomes ratio 0.0, which is below
-    ESSENTIAL_FRAC and therefore reads as ESSENTIAL. cobrapy returns NaN exactly when a solve is
-    non-optimal, so the default silently codes "the solver failed" as "the gene is required". That is
-    retained so every committed number stays reproducible -- it is not a behaviour to trust, it is a
-    baseline to compare against.
+    DEFAULT (False) keeps the original coding: a NaN growth becomes ratio 0.0, below ESSENTIAL_FRAC,
+    therefore ESSENTIAL. cobrapy returns NaN when a solve is non-optimal, and this was SUSPECTED of
+    silently coding "the solver failed" as "the gene is required".
 
-    ABSTENTION (True) excludes those cells from scoring entirely. The restricted arm disables ~69% of
-    gene-associated reactions before deleting anything, so infeasible solves are its expected failure
-    mode; if the published lift is an artifact of NaN-as-essential, it is this arm that shows it.
+    **That suspicion was tested and refuted** (`scripts/fba_infeasibility_probe.py`). A non-optimal
+    solve here is the LP correctly reporting that the ATPM maintenance floor (lb=6.86) cannot be met
+    without that gene -- deterministic on re-solve, and 38 of 39 such cells on the carbon panel are
+    experimentally essential in exactly that condition. The default coding is CORRECT.
+
+    ABSTENTION (True) therefore removes TRUE POSITIVES, not noise. Its output is a biased LOWER BOUND
+    and must never be quoted as the cleaner number. It is kept because the comparison is what proves
+    the point: TP collapses 56 -> 12 when the genuine essentiality calls are discarded.
     """
     from cobra.flux_analysis import pfba, single_gene_deletion  # noqa: PLC0415
 
@@ -181,6 +201,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--null-draws", type=int, default=200)
     ap.add_argument("--date", default=str(date.today()))
     ap.add_argument("--out-dir", default=None)
+    ap.add_argument("--infeasibility-probe", default=None,
+                    help="JSON from scripts/fba_infeasibility_probe.py; decides how a "
+                         "non-optimal solve is read")
     a = ap.parse_args(argv)
 
     model = load_model(organism=a.organism)
@@ -244,20 +267,44 @@ def main(argv: list[str] | None = None) -> int:
     print(f"   observed abstained arm       per-cell {reg_abs['per_condition_agreement']} -> "
           f"empirical p {rm_abs['p_empirical_vs_observed']}")
 
-    # ---- PRE-COMMITTED VERDICT (authored before the run; see the plan's Step 8) ----
+    # ---- VERDICT ----
+    # The PRE-COMMITTED rule (authored before the run) was:
+    #     A <= null_max  ->  REGULATORY_LIFT_IS_A_SOLVER_ARTIFACT
+    # It fired. Its PREMISE was then FALSIFIED by scripts/fba_infeasibility_probe.py: a non-optimal
+    # solve here is not a solver failure, it is the LP correctly reporting that the ATPM maintenance
+    # floor (lb=6.86) cannot be met without that gene. So abstaining those cells removes the TRUE
+    # POSITIVES, and the abstained arm is a biased LOWER BOUND, not a cleaner measurement.
+    # The rule is therefore superseded rather than silently deleted -- both are reported.
     A = reg_abs["per_condition_agreement"] or 0.0
     n_max = rm_abs.get("max")
     published = 0.6157
     if n_max is None:
-        verdict = "REGULATORY_LIFT_INDETERMINATE_NO_NULL"
+        precommitted = "REGULATORY_LIFT_INDETERMINATE_NO_NULL"
     elif A <= n_max:
-        verdict = "REGULATORY_LIFT_IS_A_SOLVER_ARTIFACT"
+        precommitted = "REGULATORY_LIFT_IS_A_SOLVER_ARTIFACT"
     elif f_suspect < 0.05 and abs(A - published) <= 0.02:
-        verdict = "REGULATORY_LIFT_CONFIRMED"
+        precommitted = "REGULATORY_LIFT_CONFIRMED"
     else:
-        verdict = "REGULATORY_LIFT_PARTIALLY_SURVIVES"
-    print(f"\nVERDICT: {verdict}")
-    print(f"   (A={A} vs null max={n_max}; f={f_suspect}; published={published})")
+        precommitted = "REGULATORY_LIFT_PARTIALLY_SURVIVES"
+
+    probe = _load_probe(a.infeasibility_probe, Path(__file__).resolve().parent.parent, a.date)
+    probe_verdict = (probe or {}).get("verdict")
+    if probe_verdict == "INFEASIBLE_IS_DETERMINISTIC_GENUINE_ESSENTIALITY":
+        beats = rm["p_empirical_vs_observed"] is not None and rm["p_empirical_vs_observed"] < 0.05
+        verdict = ("REGULATORY_LIFT_STANDS_ABSTENTION_IS_A_BIASED_LOWER_BOUND" if beats
+                   else "NO_MOVEMENT_BEYOND_CONTROLS")
+    elif probe_verdict is None:
+        verdict = "INDETERMINATE_RUN_THE_INFEASIBILITY_PROBE"
+    else:
+        verdict = precommitted
+
+    print(f"\nPRE-COMMITTED RULE SAID: {precommitted}")
+    print(f"   (A={A} vs abstained null max={n_max}; f={f_suspect}; published={published})")
+    print(f"INFEASIBILITY PROBE:     {probe_verdict}")
+    print(f"VERDICT: {verdict}")
+    if probe_verdict == "INFEASIBLE_IS_DETERMINISTIC_GENUINE_ESSENTIALITY":
+        print("   The pre-committed rule's PREMISE is falsified: non-optimal here means the ATPM floor "
+              "cannot be met, i.e. genuine essentiality. Abstention drops true positives.")
 
     reproduces = (reg["per_condition_agreement"] == published and reg["tp"] == 56
                   and reg["fp"] == 40)
@@ -278,6 +325,10 @@ def main(argv: list[str] | None = None) -> int:
         "controls_abstained": {"best_constant_predictor_per_cell": best_const_abs,
                                "rate_matched_random": rm_abs},
         "verdict": verdict,
+        "verdict_precommitted_rule_said": precommitted,
+        "infeasibility_probe_verdict": probe_verdict,
+        "precommitted_rule_premise_falsified": (
+            probe_verdict == "INFEASIBLE_IS_DETERMINISTIC_GENUINE_ESSENTIALITY"),
         "verdict_rule_precommitted": {
             "REGULATORY_LIFT_CONFIRMED": "f < 0.05 AND A > null_max AND |A - 0.6157| <= 0.02",
             "REGULATORY_LIFT_IS_A_SOLVER_ARTIFACT": "A <= null_max (lift does not survive abstention)",

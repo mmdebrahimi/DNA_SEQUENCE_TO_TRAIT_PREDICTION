@@ -204,18 +204,37 @@ def main(argv: list[str] | None = None) -> int:
     exact_genes = [r for r in subset
                    if {c for c in keys if calls.get(c, {}).get(r.gene_id, False)}
                    == {c for c in keys if r.experimental.get(c, False)}]
+    def pred_ess(r):
+        return {c for c in keys if calls.get(c, {}).get(r.gene_id, False)}
+
+    # "Touches a suspect cell" is the weak form -- the suspect cell might sit in a condition the model
+    # called dispensable, in which case it did not manufacture the prediction. The DECISIVE question is
+    # whether the ESSENTIAL calls themselves are the failed solves.
     enrichment = {
         "n_committed_genes": len(committed_genes),
         "n_committed_touching_a_suspect_cell": sum(
             1 for r in committed_genes if any((r.gene_id, c) in suspect for c in keys)),
+        "n_committed_whose_essential_calls_are_ALL_suspect": sum(
+            1 for r in committed_genes if pred_ess(r) and all((r.gene_id, c) in suspect
+                                                              for c in pred_ess(r))),
         "n_exact_set_matches": len(exact_genes),
         "n_exact_matches_touching_a_suspect_cell": sum(
             1 for r in exact_genes if any((r.gene_id, c) in suspect for c in keys)),
+        "n_exact_matches_whose_essential_calls_are_ALL_suspect": sum(
+            1 for r in exact_genes if pred_ess(r) and all((r.gene_id, c) in suspect
+                                                          for c in pred_ess(r))),
+        "n_exact_matches_that_are_constant_predictions": sum(
+            1 for r in exact_genes if not pred_ess(r) or pred_ess(r) == set(keys)),
     }
     print(f"   non-optimal enrichment: {enrichment['n_committed_touching_a_suspect_cell']}"
           f"/{enrichment['n_committed_genes']} committed genes and "
           f"{enrichment['n_exact_matches_touching_a_suspect_cell']}"
-          f"/{enrichment['n_exact_set_matches']} exact matches touch a suspect cell")
+          f"/{enrichment['n_exact_set_matches']} exact matches TOUCH a suspect cell")
+    print(f"   DECISIVE: {enrichment['n_committed_whose_essential_calls_are_ALL_suspect']}"
+          f"/{enrichment['n_committed_genes']} committed genes and "
+          f"{enrichment['n_exact_matches_whose_essential_calls_are_ALL_suspect']}"
+          f"/{enrichment['n_exact_set_matches']} exact matches have essential calls that are ALL "
+          f"failed solves")
     print("   (4-media baseline: exact-set 3/67 = 0.0448, per-cell 0.5709, lift +0.0121, constant 94.0%)")
 
     result = {

@@ -1,0 +1,1280 @@
+{
+  "record": "fba-regulatory-conditional-recheck-v1",
+  "date": "2026-08-13",
+  "model": "iML1515",
+  "supersedes": "wiki/fba_regulatory_conditional_test_2026-08-12.json",
+  "intervention": "pFBA restriction -- force off every gene-associated reaction carrying no flux in the parsimonious solution for that medium",
+  "baseline": {
+    "exact_set_match": 3,
+    "n_conditionally_essential": 67,
+    "n_scored_exact_set": 67,
+    "per_condition_agreement": 0.5709,
+    "mean_per_condition_mcc": 0.0611,
+    "auroc_threshold_free": 0.6014,
+    "n_cells_called_essential": 16,
+    "tp": 10,
+    "fp": 6,
+    "precision": 0.625,
+    "wildtype_growth": {
+      "glucose_aerobic": 0.877,
+      "glucose_anaerobic": 0.1575,
+      "lactate_aerobic": 0.3506,
+      "succinate_aerobic": 0.4501
+    },
+    "reactions_forced_off": {
+      "glucose_aerobic": 0,
+      "glucose_anaerobic": 0,
+      "lactate_aerobic": 0,
+      "succinate_aerobic": 0
+    },
+    "abstain_nonoptimal": false,
+    "n_cells_scored": 268,
+    "n_cells_abstained": 0,
+    "pfba_status": {},
+    "solver_audit": {
+      "n_conditions": 4,
+      "n_rows_total": 268,
+      "n_nonoptimal_total": 4,
+      "n_nan_growth_total": 4,
+      "n_suspect_total": 4,
+      "suspect_fraction": 0.014925,
+      "status_available": true,
+      "n_conditions_with_nonoptimal": 1,
+      "suspect_cells": [
+        [
+          "b0721",
+          "succinate_aerobic"
+        ],
+        [
+          "b0722",
+          "succinate_aerobic"
+        ],
+        [
+          "b0723",
+          "succinate_aerobic"
+        ],
+        [
+          "b0724",
+          "succinate_aerobic"
+        ]
+      ],
+      "per_condition": {
+        "glucose_aerobic": {
+          "condition": "glucose_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "optimal": 67
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "glucose_anaerobic": {
+          "condition": "glucose_anaerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "optimal": 67
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "lactate_aerobic": {
+          "condition": "lactate_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "optimal": 67
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "succinate_aerobic": {
+          "condition": "succinate_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 4,
+            "optimal": 63
+          },
+          "n_nonoptimal": 4,
+          "n_nan_growth": 4,
+          "n_suspect": 4,
+          "nonoptimal_cells": [
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724"
+          ],
+          "nan_cells": [
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724"
+          ]
+        }
+      }
+    }
+  },
+  "regulatory": {
+    "exact_set_match": 5,
+    "n_conditionally_essential": 67,
+    "n_scored_exact_set": 67,
+    "per_condition_agreement": 0.6157,
+    "mean_per_condition_mcc": 0.217,
+    "auroc_threshold_free": 0.5773,
+    "n_cells_called_essential": 96,
+    "tp": 56,
+    "fp": 40,
+    "precision": 0.5833,
+    "wildtype_growth": {
+      "glucose_aerobic": 0.877,
+      "glucose_anaerobic": 0.1575,
+      "lactate_aerobic": 0.3506,
+      "succinate_aerobic": 0.4501
+    },
+    "reactions_forced_off": {
+      "glucose_aerobic": 1863,
+      "glucose_anaerobic": 1868,
+      "lactate_aerobic": 1866,
+      "succinate_aerobic": 1868
+    },
+    "abstain_nonoptimal": false,
+    "n_cells_scored": 268,
+    "n_cells_abstained": 0,
+    "pfba_status": {
+      "glucose_aerobic": "optimal",
+      "glucose_anaerobic": "optimal",
+      "lactate_aerobic": "optimal",
+      "succinate_aerobic": "optimal"
+    },
+    "solver_audit": {
+      "n_conditions": 4,
+      "n_rows_total": 268,
+      "n_nonoptimal_total": 74,
+      "n_nan_growth_total": 74,
+      "n_suspect_total": 74,
+      "suspect_fraction": 0.276119,
+      "status_available": true,
+      "n_conditions_with_nonoptimal": 4,
+      "suspect_cells": [
+        [
+          "b0114",
+          "glucose_aerobic"
+        ],
+        [
+          "b0114",
+          "lactate_aerobic"
+        ],
+        [
+          "b0114",
+          "succinate_aerobic"
+        ],
+        [
+          "b0115",
+          "glucose_aerobic"
+        ],
+        [
+          "b0115",
+          "lactate_aerobic"
+        ],
+        [
+          "b0115",
+          "succinate_aerobic"
+        ],
+        [
+          "b0116",
+          "glucose_aerobic"
+        ],
+        [
+          "b0116",
+          "lactate_aerobic"
+        ],
+        [
+          "b0116",
+          "succinate_aerobic"
+        ],
+        [
+          "b0721",
+          "glucose_aerobic"
+        ],
+        [
+          "b0721",
+          "lactate_aerobic"
+        ],
+        [
+          "b0721",
+          "succinate_aerobic"
+        ],
+        [
+          "b0722",
+          "glucose_aerobic"
+        ],
+        [
+          "b0722",
+          "lactate_aerobic"
+        ],
+        [
+          "b0722",
+          "succinate_aerobic"
+        ],
+        [
+          "b0723",
+          "glucose_aerobic"
+        ],
+        [
+          "b0723",
+          "lactate_aerobic"
+        ],
+        [
+          "b0723",
+          "succinate_aerobic"
+        ],
+        [
+          "b0724",
+          "glucose_aerobic"
+        ],
+        [
+          "b0724",
+          "lactate_aerobic"
+        ],
+        [
+          "b0724",
+          "succinate_aerobic"
+        ],
+        [
+          "b0726",
+          "glucose_aerobic"
+        ],
+        [
+          "b0726",
+          "lactate_aerobic"
+        ],
+        [
+          "b0726",
+          "succinate_aerobic"
+        ],
+        [
+          "b0727",
+          "glucose_aerobic"
+        ],
+        [
+          "b0727",
+          "lactate_aerobic"
+        ],
+        [
+          "b0727",
+          "succinate_aerobic"
+        ],
+        [
+          "b0728",
+          "glucose_aerobic"
+        ],
+        [
+          "b0728",
+          "lactate_aerobic"
+        ],
+        [
+          "b0728",
+          "succinate_aerobic"
+        ],
+        [
+          "b0729",
+          "glucose_aerobic"
+        ],
+        [
+          "b0729",
+          "lactate_aerobic"
+        ],
+        [
+          "b0729",
+          "succinate_aerobic"
+        ],
+        [
+          "b2277",
+          "glucose_aerobic"
+        ],
+        [
+          "b2277",
+          "lactate_aerobic"
+        ],
+        [
+          "b2277",
+          "succinate_aerobic"
+        ],
+        [
+          "b2283",
+          "glucose_aerobic"
+        ],
+        [
+          "b2283",
+          "lactate_aerobic"
+        ],
+        [
+          "b2283",
+          "succinate_aerobic"
+        ],
+        [
+          "b2415",
+          "glucose_aerobic"
+        ],
+        [
+          "b2415",
+          "glucose_anaerobic"
+        ],
+        [
+          "b2416",
+          "glucose_aerobic"
+        ],
+        [
+          "b2416",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3236",
+          "glucose_aerobic"
+        ],
+        [
+          "b3236",
+          "lactate_aerobic"
+        ],
+        [
+          "b3236",
+          "succinate_aerobic"
+        ],
+        [
+          "b3732",
+          "glucose_aerobic"
+        ],
+        [
+          "b3732",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3732",
+          "lactate_aerobic"
+        ],
+        [
+          "b3732",
+          "succinate_aerobic"
+        ],
+        [
+          "b3733",
+          "glucose_aerobic"
+        ],
+        [
+          "b3733",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3733",
+          "lactate_aerobic"
+        ],
+        [
+          "b3733",
+          "succinate_aerobic"
+        ],
+        [
+          "b3734",
+          "glucose_aerobic"
+        ],
+        [
+          "b3734",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3734",
+          "lactate_aerobic"
+        ],
+        [
+          "b3734",
+          "succinate_aerobic"
+        ],
+        [
+          "b3735",
+          "glucose_aerobic"
+        ],
+        [
+          "b3735",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3735",
+          "lactate_aerobic"
+        ],
+        [
+          "b3735",
+          "succinate_aerobic"
+        ],
+        [
+          "b3736",
+          "glucose_aerobic"
+        ],
+        [
+          "b3736",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3736",
+          "lactate_aerobic"
+        ],
+        [
+          "b3736",
+          "succinate_aerobic"
+        ],
+        [
+          "b3737",
+          "glucose_aerobic"
+        ],
+        [
+          "b3737",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3737",
+          "lactate_aerobic"
+        ],
+        [
+          "b3737",
+          "succinate_aerobic"
+        ],
+        [
+          "b3738",
+          "glucose_aerobic"
+        ],
+        [
+          "b3738",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3738",
+          "lactate_aerobic"
+        ],
+        [
+          "b3738",
+          "succinate_aerobic"
+        ]
+      ],
+      "per_condition": {
+        "glucose_aerobic": {
+          "condition": "glucose_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 23,
+            "optimal": 44
+          },
+          "n_nonoptimal": 23,
+          "n_nan_growth": 23,
+          "n_suspect": 23,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b2415",
+            "b2416",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b2415",
+            "b2416",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        },
+        "glucose_anaerobic": {
+          "condition": "glucose_anaerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 9,
+            "optimal": 58
+          },
+          "n_nonoptimal": 9,
+          "n_nan_growth": 9,
+          "n_suspect": 9,
+          "nonoptimal_cells": [
+            "b2415",
+            "b2416",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b2415",
+            "b2416",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        },
+        "lactate_aerobic": {
+          "condition": "lactate_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 21,
+            "optimal": 46
+          },
+          "n_nonoptimal": 21,
+          "n_nan_growth": 21,
+          "n_suspect": 21,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        },
+        "succinate_aerobic": {
+          "condition": "succinate_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 21,
+            "optimal": 46
+          },
+          "n_nonoptimal": 21,
+          "n_nan_growth": 21,
+          "n_suspect": 21,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        }
+      }
+    }
+  },
+  "regulatory_abstained": {
+    "exact_set_match": 1,
+    "n_conditionally_essential": 67,
+    "n_scored_exact_set": 44,
+    "per_condition_agreement": 0.6237,
+    "mean_per_condition_mcc": 0.128,
+    "auroc_threshold_free": 0.5845,
+    "n_cells_called_essential": 22,
+    "tp": 12,
+    "fp": 10,
+    "precision": 0.5455,
+    "wildtype_growth": {
+      "glucose_aerobic": 0.877,
+      "glucose_anaerobic": 0.1575,
+      "lactate_aerobic": 0.3506,
+      "succinate_aerobic": 0.4501
+    },
+    "reactions_forced_off": {
+      "glucose_aerobic": 1864,
+      "glucose_anaerobic": 1868,
+      "lactate_aerobic": 1866,
+      "succinate_aerobic": 1868
+    },
+    "abstain_nonoptimal": true,
+    "n_cells_scored": 194,
+    "n_cells_abstained": 74,
+    "pfba_status": {
+      "glucose_aerobic": "optimal",
+      "glucose_anaerobic": "optimal",
+      "lactate_aerobic": "optimal",
+      "succinate_aerobic": "optimal"
+    },
+    "solver_audit": {
+      "n_conditions": 4,
+      "n_rows_total": 268,
+      "n_nonoptimal_total": 74,
+      "n_nan_growth_total": 74,
+      "n_suspect_total": 74,
+      "suspect_fraction": 0.276119,
+      "status_available": true,
+      "n_conditions_with_nonoptimal": 4,
+      "suspect_cells": [
+        [
+          "b0114",
+          "glucose_aerobic"
+        ],
+        [
+          "b0114",
+          "lactate_aerobic"
+        ],
+        [
+          "b0114",
+          "succinate_aerobic"
+        ],
+        [
+          "b0115",
+          "glucose_aerobic"
+        ],
+        [
+          "b0115",
+          "lactate_aerobic"
+        ],
+        [
+          "b0115",
+          "succinate_aerobic"
+        ],
+        [
+          "b0116",
+          "glucose_aerobic"
+        ],
+        [
+          "b0116",
+          "lactate_aerobic"
+        ],
+        [
+          "b0116",
+          "succinate_aerobic"
+        ],
+        [
+          "b0721",
+          "glucose_aerobic"
+        ],
+        [
+          "b0721",
+          "lactate_aerobic"
+        ],
+        [
+          "b0721",
+          "succinate_aerobic"
+        ],
+        [
+          "b0722",
+          "glucose_aerobic"
+        ],
+        [
+          "b0722",
+          "lactate_aerobic"
+        ],
+        [
+          "b0722",
+          "succinate_aerobic"
+        ],
+        [
+          "b0723",
+          "glucose_aerobic"
+        ],
+        [
+          "b0723",
+          "lactate_aerobic"
+        ],
+        [
+          "b0723",
+          "succinate_aerobic"
+        ],
+        [
+          "b0724",
+          "glucose_aerobic"
+        ],
+        [
+          "b0724",
+          "lactate_aerobic"
+        ],
+        [
+          "b0724",
+          "succinate_aerobic"
+        ],
+        [
+          "b0726",
+          "glucose_aerobic"
+        ],
+        [
+          "b0726",
+          "lactate_aerobic"
+        ],
+        [
+          "b0726",
+          "succinate_aerobic"
+        ],
+        [
+          "b0727",
+          "glucose_aerobic"
+        ],
+        [
+          "b0727",
+          "lactate_aerobic"
+        ],
+        [
+          "b0727",
+          "succinate_aerobic"
+        ],
+        [
+          "b0728",
+          "glucose_aerobic"
+        ],
+        [
+          "b0728",
+          "lactate_aerobic"
+        ],
+        [
+          "b0728",
+          "succinate_aerobic"
+        ],
+        [
+          "b0729",
+          "glucose_aerobic"
+        ],
+        [
+          "b0729",
+          "lactate_aerobic"
+        ],
+        [
+          "b0729",
+          "succinate_aerobic"
+        ],
+        [
+          "b2277",
+          "glucose_aerobic"
+        ],
+        [
+          "b2277",
+          "lactate_aerobic"
+        ],
+        [
+          "b2277",
+          "succinate_aerobic"
+        ],
+        [
+          "b2283",
+          "glucose_aerobic"
+        ],
+        [
+          "b2283",
+          "lactate_aerobic"
+        ],
+        [
+          "b2283",
+          "succinate_aerobic"
+        ],
+        [
+          "b2415",
+          "glucose_aerobic"
+        ],
+        [
+          "b2415",
+          "glucose_anaerobic"
+        ],
+        [
+          "b2416",
+          "glucose_aerobic"
+        ],
+        [
+          "b2416",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3236",
+          "glucose_aerobic"
+        ],
+        [
+          "b3236",
+          "lactate_aerobic"
+        ],
+        [
+          "b3236",
+          "succinate_aerobic"
+        ],
+        [
+          "b3732",
+          "glucose_aerobic"
+        ],
+        [
+          "b3732",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3732",
+          "lactate_aerobic"
+        ],
+        [
+          "b3732",
+          "succinate_aerobic"
+        ],
+        [
+          "b3733",
+          "glucose_aerobic"
+        ],
+        [
+          "b3733",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3733",
+          "lactate_aerobic"
+        ],
+        [
+          "b3733",
+          "succinate_aerobic"
+        ],
+        [
+          "b3734",
+          "glucose_aerobic"
+        ],
+        [
+          "b3734",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3734",
+          "lactate_aerobic"
+        ],
+        [
+          "b3734",
+          "succinate_aerobic"
+        ],
+        [
+          "b3735",
+          "glucose_aerobic"
+        ],
+        [
+          "b3735",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3735",
+          "lactate_aerobic"
+        ],
+        [
+          "b3735",
+          "succinate_aerobic"
+        ],
+        [
+          "b3736",
+          "glucose_aerobic"
+        ],
+        [
+          "b3736",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3736",
+          "lactate_aerobic"
+        ],
+        [
+          "b3736",
+          "succinate_aerobic"
+        ],
+        [
+          "b3737",
+          "glucose_aerobic"
+        ],
+        [
+          "b3737",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3737",
+          "lactate_aerobic"
+        ],
+        [
+          "b3737",
+          "succinate_aerobic"
+        ],
+        [
+          "b3738",
+          "glucose_aerobic"
+        ],
+        [
+          "b3738",
+          "glucose_anaerobic"
+        ],
+        [
+          "b3738",
+          "lactate_aerobic"
+        ],
+        [
+          "b3738",
+          "succinate_aerobic"
+        ]
+      ],
+      "per_condition": {
+        "glucose_aerobic": {
+          "condition": "glucose_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 23,
+            "optimal": 44
+          },
+          "n_nonoptimal": 23,
+          "n_nan_growth": 23,
+          "n_suspect": 23,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b2415",
+            "b2416",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b2415",
+            "b2416",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        },
+        "glucose_anaerobic": {
+          "condition": "glucose_anaerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 9,
+            "optimal": 58
+          },
+          "n_nonoptimal": 9,
+          "n_nan_growth": 9,
+          "n_suspect": 9,
+          "nonoptimal_cells": [
+            "b2415",
+            "b2416",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b2415",
+            "b2416",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        },
+        "lactate_aerobic": {
+          "condition": "lactate_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 21,
+            "optimal": 46
+          },
+          "n_nonoptimal": 21,
+          "n_nan_growth": 21,
+          "n_suspect": 21,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        },
+        "succinate_aerobic": {
+          "condition": "succinate_aerobic",
+          "n_rows": 67,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 21,
+            "optimal": 46
+          },
+          "n_nonoptimal": 21,
+          "n_nan_growth": 21,
+          "n_suspect": 21,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0115",
+            "b0116",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0726",
+            "b0727",
+            "b0728",
+            "b0729",
+            "b2277",
+            "b2283",
+            "b3236",
+            "b3732",
+            "b3733",
+            "b3734",
+            "b3735",
+            "b3736",
+            "b3737",
+            "b3738"
+          ]
+        }
+      }
+    }
+  },
+  "suspect_fraction_restricted_arm": 0.276119,
+  "default_coding_reproduces_committed_baseline": true,
+  "controls": {
+    "best_constant_predictor_per_cell": 0.556,
+    "rate_matched_random": {
+      "n_draws": 200,
+      "n_called_essential": 96,
+      "mean": 0.5172,
+      "sd": 0.0284,
+      "max": 0.5933,
+      "p_empirical_vs_observed": 0.0
+    }
+  },
+  "controls_abstained": {
+    "best_constant_predictor_per_cell": 0.6134,
+    "rate_matched_random": {
+      "n_draws": 200,
+      "n_called_essential": 22,
+      "mean": 0.5866,
+      "sd": 0.0244,
+      "max": 0.6546,
+      "p_empirical_vs_observed": 0.125
+    }
+  },
+  "verdict": "REGULATORY_LIFT_STANDS_ABSTENTION_IS_A_BIASED_LOWER_BOUND",
+  "verdict_precommitted_rule_said": "REGULATORY_LIFT_IS_A_SOLVER_ARTIFACT",
+  "infeasibility_probe_verdict": "INFEASIBLE_IS_DETERMINISTIC_GENUINE_ESSENTIALITY",
+  "precommitted_rule_premise_falsified": true,
+  "verdict_rule_precommitted": {
+    "REGULATORY_LIFT_CONFIRMED": "f < 0.05 AND A > null_max AND |A - 0.6157| <= 0.02",
+    "REGULATORY_LIFT_IS_A_SOLVER_ARTIFACT": "A <= null_max (lift does not survive abstention)",
+    "REGULATORY_LIFT_PARTIALLY_SURVIVES": "anything else",
+    "note": "Authored BEFORE the run, per the project's verdict-vs-budget discipline. A = abstained per-cell agreement; null_max = max rate-matched draw recomputed on the ABSTAINED denominator; f = suspect-cell fraction of the restricted arm."
+  },
+  "caveats": [
+    "pFBA restriction is a CRUDE proxy for regulation -- it forces off ~69% of gene-associated reactions. It is evidence about WHERE the deficit lives, not a deployable method.",
+    "The gain is RECALL, not precision: precision does not improve, and the threshold-free AUROC gets WORSE, so the continuous ranking degrades even as the binary calls improve.",
+    "Still only a handful of exact-set matches -- the switch is mostly still not reproduced.",
+    "pFBA picks ONE optimal-flux solution; alternate optima of equal cost would force off a different route and could change which genes look essential.",
+    "The DEFAULT arm codes a NaN growth (= a non-optimal solve) as ESSENTIAL. It is kept only to reproduce the committed numbers; the abstained arm is the honest one.",
+    "The rate-matched null samples cells INDEPENDENTLY while real gene patterns are correlated across conditions. A margin-preserving null would be a stronger test and is not built."
+  ]
+}

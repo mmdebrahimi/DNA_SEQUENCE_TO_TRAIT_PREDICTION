@@ -8,8 +8,19 @@ growth value**. That matters more than it sounds, because of how the scripts cod
     scripts/fba_gapfill_carbon_recheck.py:71         d[gid] = (g != g) or (g < FRAC * wt)
 
 `g != g` is the NaN test, and cobrapy returns NaN exactly when a solve is non-optimal or infeasible. Both
-lines therefore code **"the solver failed" as "the gene is essential"** — silently. In an arm that forces
-off ~69% of gene-associated reactions before deleting anything, that is not a rounding concern.
+lines therefore code a failed solve as "the gene is essential", which looked like a silent defect.
+
+**It is not a defect — that suspicion was tested and REFUTED** (`scripts/fba_infeasibility_probe.py`).
+With a hard ATP-maintenance floor (iML1515: `ATPM lower_bound = 6.86`), deleting the only route to
+catabolise the sole carbon source leaves NO feasible flux distribution at all, so the LP is genuinely
+infeasible rather than feasible-with-zero-growth. All 39 such cells on the 25-carbon panel re-solve
+infeasible deterministically at `processes=1`, each is the canonical catabolic gene for exactly that
+source (galT/galE/galK on galactose, malEFGK/malQ on maltose, xylA on xylose, sdhABCD on succinate,
+kgtP on alpha-ketoglutarate ...), and **38 of 39 are experimentally essential in that very condition**.
+
+So this module's job is NOT to find cells to discard. It is to make the distinction VISIBLE so that
+"non-optimal" gets interrogated instead of assumed to mean either thing. An abstention arm built on
+these cells removes TRUE POSITIVES and is a biased lower bound.
 
 **Why cells and not counts.** The first audit added to this codebase counted non-optimal solves per
 condition. That found 39 across 15 of 25 carbon conditions — but the count alone cannot answer the

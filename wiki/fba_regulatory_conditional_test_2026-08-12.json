@@ -63,19 +63,25 @@
   "verdict": "REGULATORY_CONSTRAINT_MOVES_THE_CONDITIONAL_METRIC",
   "scope_note_2026-08-12": {
     "status": "STANDS AS MEASURED on the 4-media substrate; GENERALITY UNKNOWN",
-    "history": "A same-day memo asserted this result was 'now suspect' because it shared the narrow "
-               "4-media substrate. That assertion is WITHDRAWN -- it was itself an unverified claim. The "
-               "rate-matched null (0/200 draws reached the observed value) is internally valid on the "
-               "substrate it was run on. What is unknown is whether the gain GENERALISES to a wider "
-               "condition panel, which is untested.",
-    "named_weakness": "The rate-matched null samples cells INDEPENDENTLY, while real gene patterns are "
-                      "correlated across conditions. A null preserving gene-level and condition-level "
-                      "margins would be a stronger test, and should be built before the claim is extended."
+    "history": "A same-day memo asserted this result was 'now suspect' because it shared the narrow 4-media substrate. That assertion is WITHDRAWN -- it was itself an unverified claim. The rate-matched null (0/200 draws reached the observed value) is internally valid on the substrate it was run on. What is unknown is whether the gain GENERALISES to a wider condition panel, which is untested.",
+    "named_weakness": "The rate-matched null samples cells INDEPENDENTLY, while real gene patterns are correlated across conditions. A null preserving gene-level and condition-level margins would be a stronger test, and should be built before the claim is extended.",
+    "named_weakness_status": "STILL OPEN: the rate-matched null samples cells independently while real gene patterns are correlated across conditions. Unaffected by the 2026-08-13 work."
   },
   "caveats": [
     "pFBA restriction is a CRUDE proxy for regulation -- it forces off ~69% of gene-associated reactions. It is evidence about WHERE the deficit lives, not a deployable method.",
     "The gain is RECALL, not precision: precision does not improve, and the threshold-free AUROC gets WORSE, so the continuous ranking degrades even as the binary calls improve.",
     "Still only a handful of exact-set matches -- the switch is mostly still not reproduced.",
     "pFBA picks ONE optimal-flux solution; alternate optima of equal cost would force off a different route and could change which genes look essential."
-  ]
+  ],
+  "superseded_by": {
+    "artifact": "wiki/fba_regulatory_conditional_recheck_2026-08-13.json",
+    "memo": "wiki/fba_infeasibility_finding_2026-08-13.md",
+    "date": "2026-08-13",
+    "outcome": "NUMBERS UNCHANGED AND CONFIRMED -- superseded by a better-grounded artifact, not retracted.",
+    "what_was_tested": "Whether the lift was an artifact of NaN growth (= a non-optimal solve) being coded as ESSENTIAL. The restricted arm has 74 non-optimal cells of 268 (27.6%), so the concern was material.",
+    "result": "REFUTED. Those solves are deterministic ATPM-maintenance infeasibility, i.e. genuine essentiality -- verified by re-solving the 39 equivalent cells on the carbon panel one at a time (39/39 infeasible; each the canonical catabolic gene for that source; 38/39 experimentally essential there). Abstaining them removes TRUE POSITIVES: TP collapses 56 -> 12.",
+    "verdict_2026_08_13": "REGULATORY_LIFT_STANDS_ABSTENTION_IS_A_BIASED_LOWER_BOUND",
+    "note_on_the_precommitted_rule": "A rule authored BEFORE the run said 'A <= abstained-null-max -> SOLVER_ARTIFACT'. It fired. Its PREMISE -- that abstaining on non-optimal solves is the conservative move -- was false, so a correctly-fired rule produced a false label. Pre-committing a rule does not pre-commit its premise."
+  },
+  "json_validity_note_2026-08-13": "This file was INVALID JSON from 2026-08-12 until 2026-08-13: the scope note was hand-written using Python implicit string concatenation across lines, which JSON has no equivalent for. No consumer could parse it. Repaired; content unchanged."
 }

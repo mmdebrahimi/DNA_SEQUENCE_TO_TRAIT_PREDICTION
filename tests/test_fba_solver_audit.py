@@ -172,3 +172,55 @@ def test_strata_report_which_genes_touch_a_suspect_solve():
     got = commit_strata(recs, calls, keys, suspect={("gOne", "c1")})
     assert got["predicted_1_of_n"]["n_genes_touching_a_nonoptimal_cell"] == 1
     assert got["predicted_2plus"]["n_genes_touching_a_nonoptimal_cell"] == 0
+
+
+# --- what a non-optimal solve MEANS (the probe that reversed the plan's premise) ------------------
+
+def test_a_deterministic_infeasible_resolve_is_genuine_essentiality_not_a_failure():
+    """The finding that reversed this whole remediation. With ATPM lower_bound=6.86, deleting the only
+    catabolic route for the sole carbon source leaves NO feasible flux distribution -- so the LP is
+    genuinely infeasible rather than feasible-with-zero-growth."""
+    from scripts.fba_infeasibility_probe import classify_resolve, verdict_for
+
+    assert classify_resolve(None, "infeasible") == "still_infeasible"
+    assert classify_resolve(float("nan"), "infeasible") == "still_infeasible"
+    assert verdict_for({"still_infeasible": 39}) == "INFEASIBLE_IS_DETERMINISTIC_GENUINE_ESSENTIALITY"
+
+
+def test_an_ordinary_lethal_knockout_is_feasible_with_zero_growth():
+    """This is how essentiality normally presents, which is why 'infeasible' needed explaining."""
+    from scripts.fba_infeasibility_probe import classify_resolve
+
+    assert classify_resolve(0.0, "optimal") == "optimal_zero_growth"
+    assert classify_resolve(1e-12, "optimal") == "optimal_zero_growth"
+
+
+def test_a_cell_that_resolves_to_REAL_growth_would_have_been_a_spurious_call():
+    """The branch that would have vindicated the abstention arm. It did not fire: 0 of 39."""
+    from scripts.fba_infeasibility_probe import classify_resolve, verdict_for
+
+    assert classify_resolve(0.42, "optimal") == "optimal_real_growth"
+    assert verdict_for({"optimal_real_growth": 20, "still_infeasible": 19}) == \
+        "INFEASIBLE_SOLVES_ARE_SPURIOUS"
+
+
+def test_the_probe_refuses_to_guess_when_there_is_nothing_to_resolve():
+    from scripts.fba_infeasibility_probe import verdict_for
+
+    assert verdict_for({}) == "NO_SUSPECT_CELLS"
+
+
+def test_every_fba_wiki_artifact_is_parseable_json():
+    """A hand-edited artifact silently stopped being JSON for a day: the scope note was written with
+    Python implicit string concatenation across lines, which JSON has no equivalent for. Nothing read
+    the file, so nothing complained. An artifact no consumer can parse is not an artifact."""
+    import json as _json
+
+    root = Path(__file__).resolve().parent.parent
+    broken = []
+    for f in sorted((root / "wiki").glob("fba_*.json")):
+        try:
+            _json.loads(f.read_text(encoding="utf-8"))
+        except _json.JSONDecodeError as e:
+            broken.append(f"{f.name}: {e}")
+    assert not broken, "unparseable FBA artifacts: " + "; ".join(broken)

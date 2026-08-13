@@ -1,0 +1,406 @@
+{
+  "record": "fba-infeasibility-probe-v1",
+  "date": "2026-08-13",
+  "model": "iML1515",
+  "question": "is an `infeasible` deletion solve a solver failure or genuine essentiality?",
+  "n_suspect_cells": 39,
+  "resolve_counts": {
+    "still_infeasible": 39
+  },
+  "atpm_lower_bound": 6.86,
+  "verdict": "INFEASIBLE_IS_DETERMINISTIC_GENUINE_ESSENTIALITY",
+  "n_experimentally_essential_in_that_condition": 38,
+  "consequence": "Coding a NaN/infeasible solve as ESSENTIAL is correct, not a bug. An abstention arm that drops these cells removes the TRUE POSITIVES, not noise, and is a biased lower bound.",
+  "rows": [
+    {
+      "gene": "b0758",
+      "gene_name": "galT",
+      "condition": "D-Galactose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8676,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0757",
+      "gene_name": "galK",
+      "condition": "D-Galactose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8676,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0759",
+      "gene_name": "galE",
+      "condition": "D-Galactose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8676,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3526",
+      "gene_name": "kdgK",
+      "condition": "D-Galacturonic Acid monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3091",
+      "gene_name": "uxaA",
+      "condition": "D-Galacturonic Acid monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1850",
+      "gene_name": "eda",
+      "condition": "D-Galacturonic Acid monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3092",
+      "gene_name": "uxaC",
+      "condition": "D-Galacturonic Acid monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1818",
+      "gene_name": "manY",
+      "condition": "D-Glucosamine Hydrochloride",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8773,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0678",
+      "gene_name": "nagB",
+      "condition": "D-Glucosamine Hydrochloride",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8773,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1819",
+      "gene_name": "manZ",
+      "condition": "D-Glucosamine Hydrochloride",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8773,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1817",
+      "gene_name": "manX",
+      "condition": "D-Glucosamine Hydrochloride",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8773,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3526",
+      "gene_name": "kdgK",
+      "condition": "D-Glucuronic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4322",
+      "gene_name": "uxuA",
+      "condition": "D-Glucuronic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1850",
+      "gene_name": "eda",
+      "condition": "D-Glucuronic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3092",
+      "gene_name": "uxaC",
+      "condition": "D-Glucuronic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7047,
+      "experimentally_essential_here": false,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4035",
+      "gene_name": "malK",
+      "condition": "D-Maltose monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.7798,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4034",
+      "gene_name": "malE",
+      "condition": "D-Maltose monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.7798,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4032",
+      "gene_name": "malG",
+      "condition": "D-Maltose monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.7798,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4033",
+      "gene_name": "malF",
+      "condition": "D-Maltose monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.7798,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3416",
+      "gene_name": "malQ",
+      "condition": "D-Maltose monohydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.7798,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3600",
+      "gene_name": "mtlD",
+      "condition": "D-Mannitol",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.9428,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1818",
+      "gene_name": "manY",
+      "condition": "D-Mannose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.877,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1819",
+      "gene_name": "manZ",
+      "condition": "D-Mannose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.877,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1817",
+      "gene_name": "manX",
+      "condition": "D-Mannose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.877,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b1613",
+      "gene_name": "manA",
+      "condition": "D-Mannose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.877,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3752",
+      "gene_name": "rbsK",
+      "condition": "D-Ribose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.6889,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b2705",
+      "gene_name": "srlD",
+      "condition": "D-Sorbitol",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.9428,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b3565",
+      "gene_name": "xylA",
+      "condition": "D-Xylose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.7171,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b2979",
+      "gene_name": "glcD",
+      "condition": "Glycolic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.1531,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4467",
+      "gene_name": "glcF",
+      "condition": "Glycolic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.1531,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b4468",
+      "gene_name": "glcE",
+      "condition": "Glycolic Acid",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.1531,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b2803",
+      "gene_name": "fucK",
+      "condition": "L-Fucose",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.8621,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0677",
+      "gene_name": "nagA",
+      "condition": "N-Acetyl-D-Glucosamine",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.1313,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0678",
+      "gene_name": "nagB",
+      "condition": "N-Acetyl-D-Glucosamine",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 1.1313,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0721",
+      "gene_name": "sdhC",
+      "condition": "Sodium succinate dibasic hexahydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.4501,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0724",
+      "gene_name": "sdhB",
+      "condition": "Sodium succinate dibasic hexahydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.4501,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0723",
+      "gene_name": "sdhA",
+      "condition": "Sodium succinate dibasic hexahydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.4501,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b0722",
+      "gene_name": "sdhD",
+      "condition": "Sodium succinate dibasic hexahydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.4501,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    },
+    {
+      "gene": "b2587",
+      "gene_name": "kgtP",
+      "condition": "a-Ketoglutaric acid disodium salt hydrate",
+      "status": "infeasible",
+      "growth": null,
+      "wildtype_growth": 0.5474,
+      "experimentally_essential_here": true,
+      "resolve": "still_infeasible"
+    }
+  ]
+}
