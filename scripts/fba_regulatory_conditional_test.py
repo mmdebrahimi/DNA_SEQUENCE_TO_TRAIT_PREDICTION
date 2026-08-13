@@ -46,6 +46,7 @@ from dna_decode.fba.conditional_essentiality import (  # noqa: E402
     switch_accuracy,
 )
 from dna_decode.fba.model import load_model, wildtype_growth  # noqa: E402
+from dna_decode.fba.nulls import margin_preserving_null  # noqa: E402
 from dna_decode.fba.solver_audit import (  # noqa: E402
     audit_deletion_frame,
     merge_audits,
@@ -191,6 +192,7 @@ def score_model(model, records, gene_ids: list[str], restrict: bool,
         "n_cells_abstained": sw["n_cells_abstained"],
         "pfba_status": pfba_status,
         "solver_audit": merge_audits(audits) if audits else None,
+        "_calls": calls,          # internal: the margin-preserving null shuffles these; stripped below
     }
 
 
@@ -255,12 +257,32 @@ def main(argv: list[str] | None = None) -> int:
     rm_abs["p_empirical_vs_observed"] = (round(above_abs / len(scores_abs), 4)
                                          if scores_abs else None)
 
+    # THE STRONGER NULL. The rate-matched null preserves only the grand TOTAL, so a predictor can be
+    # credited for merely matching the base rate. This one preserves EVERY gene's number of essential
+    # conditions AND every condition's number of essential genes, so the only way to beat it is to place
+    # the calls on the RIGHT cells. This was the pFBA result's named open weakness.
+    reg_calls = reg.get("_calls") or {}
+    gene_ids = sorted({g for c in reg_calls for g in reg_calls[c]})
+
+    def _score(cs):
+        return switch_accuracy(records, cs, conditions=keys)["per_condition_agreement"]
+
+    mp = (margin_preserving_null(gene_ids, keys, reg_calls, _score, n_draws=a.null_draws)
+          if gene_ids else {"n_draws": 0, "mean": None})
+    mp_scores = mp.pop("scores", [])
+    mp_above = sum(1 for x in mp_scores if x >= (reg["per_condition_agreement"] or 0))
+    mp["p_empirical_vs_observed"] = round(mp_above / len(mp_scores), 4) if mp_scores else None
+
     print("\nCONTROLS:")
     print(f"   best constant predictor      per-cell {best_const}")
     print(f"   rate-matched random (k={rm['n_called_essential']}) per-cell mean {rm['mean']} "
           f"sd {rm['sd']} max {rm['max']}")
     print(f"   observed pFBA-restricted     per-cell {reg['per_condition_agreement']} -> "
           f"empirical p {rm['p_empirical_vs_observed']} ({above}/{len(scores)} draws reach it)")
+    print(f"   MARGIN-PRESERVING null       mean {mp['mean']} max {mp.get('max')} "
+          f"p95 {mp.get('p95')}")
+    print(f"   observed vs MARGIN null      {reg['per_condition_agreement']} -> "
+          f"empirical p {mp['p_empirical_vs_observed']} ({mp_above}/{len(mp_scores)} draws reach it)")
     print("   -- on the ABSTAINED denominator --")
     print(f"   best constant predictor      per-cell {best_const_abs}")
     print(f"   rate-matched random          mean {rm_abs['mean']} max {rm_abs['max']}")
@@ -318,10 +340,13 @@ def main(argv: list[str] | None = None) -> int:
         "supersedes": "wiki/fba_regulatory_conditional_test_2026-08-12.json",
         "intervention": "pFBA restriction -- force off every gene-associated reaction carrying no flux "
                         "in the parsimonious solution for that medium",
-        "baseline": base, "regulatory": reg, "regulatory_abstained": reg_abs,
+        "baseline": {k: v for k, v in base.items() if k != "_calls"},
+        "regulatory": {k: v for k, v in reg.items() if k != "_calls"},
+        "regulatory_abstained": {k: v for k, v in reg_abs.items() if k != "_calls"},
         "suspect_fraction_restricted_arm": f_suspect,
         "default_coding_reproduces_committed_baseline": reproduces,
-        "controls": {"best_constant_predictor_per_cell": best_const, "rate_matched_random": rm},
+        "controls": {"best_constant_predictor_per_cell": best_const, "rate_matched_random": rm,
+                     "margin_preserving": mp},
         "controls_abstained": {"best_constant_predictor_per_cell": best_const_abs,
                                "rate_matched_random": rm_abs},
         "verdict": verdict,
@@ -347,8 +372,9 @@ def main(argv: list[str] | None = None) -> int:
             "different route and could change which genes look essential.",
             "The DEFAULT arm codes a NaN growth (= a non-optimal solve) as ESSENTIAL. It is kept only "
             "to reproduce the committed numbers; the abstained arm is the honest one.",
-            "The rate-matched null samples cells INDEPENDENTLY while real gene patterns are correlated "
-            "across conditions. A margin-preserving null would be a stronger test and is not built.",
+            "The margin-preserving null (2026-08-13) CLOSES the previously-named weakness: it preserves "
+            "every gene's and every condition's essential-call count, so matching the marginal "
+            "shape earns no credit. Both nulls ship; the margin-preserving one is the binding test.",
         ],
     }
     outdir = Path(a.out_dir) if a.out_dir else Path(__file__).resolve().parent.parent / "wiki"

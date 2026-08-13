@@ -80,14 +80,28 @@ quantitatively dead for *this* metric, and should stop being proposed as the nex
 is that deletions do nothing; more routes make flatness worse, which is exactly what the gap-fill arms
 measured (154 flips of 5,425, exact-set −1).
 
-**Ruled IN — constraining which routes are available.** 77% flatness *is* the redundancy the pFBA
-restriction attacks, and that intervention moved the metric ~5× over its null on the 4-media substrate.
-These two results were produced independently and point the same way: **the deficit is too many routes,
-not too few, and not a badly-chosen cutoff.**
+**Pointed at — constraining which routes are available.** 77% flatness *is* the redundancy the pFBA
+restriction attacks. Two independently-produced results point the same way: **the deficit is too many
+routes, not too few, and not a badly-chosen cutoff.**
 
-The honest limit on that convergence: the pFBA result is 4-media and its own named weakness (an
-independent-sampling null against correlated gene patterns) is still open. This diagnostic strengthens the
-*direction* without validating the *method*.
+**But the pFBA result itself got weaker the same day, and the direction should not borrow its old
+strength.** Its named weakness — a null that sampled cells independently while real gene patterns are
+correlated — was closed by building the margin-preserving null (`dna_decode/fba/nulls.py`, Curveball swap
+randomization preserving every gene's and every condition's essential-call count):
+
+| null | mean | max | p vs observed 0.6157 |
+|---|---|---|---|
+| rate-matched (only the grand total fixed) | 0.5172 | 0.5933 | **0.0** — 0/200 draws reach it |
+| **margin-preserving (both margins fixed)** | **0.5946** | **0.6157** | **0.06** — 12/200 reach it |
+
+So the published "~5× lift over null, p < 0.005" was **substantially an artifact of a null that was too
+easy to beat**. Against the strong null the pFBA arm sits at roughly the 94th percentile and **does not
+clear p < 0.05**.
+
+The honest position: **this diagnostic establishes the direction on its own evidence** (77% of misses are
+deletions that changed nothing — that number owes nothing to pFBA). What it does **not** do is validate
+pFBA-restriction as the *method*; that intervention is now suggestive-but-not-significant, on 4 media,
+with a crude 69%-of-reactions-off proxy. Direction: supported. Method: open.
 
 ## Honest limits
 

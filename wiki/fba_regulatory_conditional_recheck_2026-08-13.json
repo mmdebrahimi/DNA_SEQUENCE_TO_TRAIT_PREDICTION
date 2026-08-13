@@ -10,7 +10,7 @@
     "n_scored_exact_set": 67,
     "per_condition_agreement": 0.5709,
     "mean_per_condition_mcc": 0.0611,
-    "auroc_threshold_free": 0.6014,
+    "auroc_threshold_free": 0.6009,
     "n_cells_called_essential": 16,
     "tp": 10,
     "fp": 6,
@@ -131,7 +131,7 @@
     "n_scored_exact_set": 67,
     "per_condition_agreement": 0.6157,
     "mean_per_condition_mcc": 0.217,
-    "auroc_threshold_free": 0.5773,
+    "auroc_threshold_free": 0.6213,
     "n_cells_called_essential": 96,
     "tp": 56,
     "fp": 40,
@@ -686,7 +686,7 @@
     "n_scored_exact_set": 44,
     "per_condition_agreement": 0.6237,
     "mean_per_condition_mcc": 0.128,
-    "auroc_threshold_free": 0.5845,
+    "auroc_threshold_free": 0.6315,
     "n_cells_called_essential": 22,
     "tp": 12,
     "fp": 10,
@@ -1246,6 +1246,14 @@
       "sd": 0.0284,
       "max": 0.5933,
       "p_empirical_vs_observed": 0.0
+    },
+    "margin_preserving": {
+      "n_draws": 200,
+      "mean": 0.5946,
+      "sd": 0.0104,
+      "max": 0.6157,
+      "p95": 0.6157,
+      "p_empirical_vs_observed": 0.06
     }
   },
   "controls_abstained": {
@@ -1275,6 +1283,6 @@
     "Still only a handful of exact-set matches -- the switch is mostly still not reproduced.",
     "pFBA picks ONE optimal-flux solution; alternate optima of equal cost would force off a different route and could change which genes look essential.",
     "The DEFAULT arm codes a NaN growth (= a non-optimal solve) as ESSENTIAL. It is kept only to reproduce the committed numbers; the abstained arm is the honest one.",
-    "The rate-matched null samples cells INDEPENDENTLY while real gene patterns are correlated across conditions. A margin-preserving null would be a stronger test and is not built."
+    "The margin-preserving null (2026-08-13) CLOSES the previously-named weakness: it preserves every gene's and every condition's essential-call count, so matching the marginal shape earns no credit. Both nulls ship; the margin-preserving one is the binding test."
   ]
 }

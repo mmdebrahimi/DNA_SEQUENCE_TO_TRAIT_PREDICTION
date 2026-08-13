@@ -133,6 +133,13 @@ ratios lack. pFBA never sees the labels, so it is label-blind in the same sense 
 **Lift over the constant null goes from +0.012 to +0.057 — nearly 5×**, and mean per-condition MCC more
 than triples.
 
+> **DOWNGRADED 2026-08-13.** That comparison used a rate-matched null which fixes only the GRAND
+> TOTAL of essential calls. A **margin-preserving** null (fixing every gene's and every condition's
+> call count) gives mean 0.5946 / max 0.6157 and **empirical p = 0.06** against the same observed
+> 0.6157 — versus p = 0.0 for the weak null. The lift is **suggestive, not significant**; much of
+> the apparent 5× was the null being too easy to beat. See
+> `wiki/fba_constant_gene_diagnostic_2026-08-13.md`.
+
 **The control is what makes that meaningful.** Forcing a unique route makes far more genes look essential,
 so the gain could be nothing but a better-matched base rate. Scoring a **rate-matched random** predictor —
 calling the same 96 cells essential, at random, 200 times — gives mean **0.5172** (sd 0.028, max 0.5933).
