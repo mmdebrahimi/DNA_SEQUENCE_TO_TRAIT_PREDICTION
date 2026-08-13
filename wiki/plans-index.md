@@ -491,7 +491,7 @@
 - WHO_CATALOGUE_ON_CRYPTIC_KNOWLEDGE_BASELINE label gated on the full per-drug prevalence-preserving cohort + callability (uncallable window → ABSTAIN, never S-by-absence).
 - New non-frozen dna_decode/organism_rules module (TMP-SMX overlay pattern); frozen E. coli surface byte-untouched + leak guard. Independent gold-set arm scored separately as INDEPENDENT_VALIDATION.
 
-**Status:** candidate
+**Status:** executed (as-built 2026-08-13) — **the plan's premise was REFUTED by its own Step 8.** It was written to test whether the pFBA regulatory lift was a solver artifact; the pre-committed rule fired `IS_A_SOLVER_ARTIFACT` and the label was WRONG. An unplanned re-solve probe (`scripts/fba_infeasibility_probe.py`) showed a non-optimal solve here is deterministic ATPM-maintenance infeasibility = genuine essentiality (39/39 deterministic; each the canonical catabolic gene for its carbon source; 38/39 experimentally essential there). All three claims STAND, the commit claim now with a mechanism instead of a bare count. Also found: `switch_accuracy` failed OPEN on dropped cells, and the 08-12 regulatory artifact had been invalid JSON since it was written. Suite 3,407 passed (+40). See `wiki/fba_infeasibility_finding_2026-08-13.md` + `executed_plans/FBA_Conditional_Essentiality_Remediation_Plan/execution-log.md`.
 
 ---
 
@@ -525,5 +525,18 @@
 - Validate reproduction of ProteinGym's `ProSST-2048` column (Spearman >= 0.70) as the PRIMARY bar, then the per-category hybrid lift as secondary (honest-limit framing per the MSA-T lesson: report final n; powered evidence = the N=95 sweep).
 - Recommend pre-quantized ProteinGym structures + masked-marginal scoring (transformer-only, avoids torch_geometric; matches ProteinGym's protocol to reproduce +0.05).
 - Real forward runs on Kaggle T4 (structure stack, same posture as ESM-IF); gain is small (+0.05 on one cell) — nice-to-have flagged against the labels-not-models north star.
+
+---
+
+## [plan_file: FBA_Conditional_Essentiality_Remediation_Plan/] 2026-08-13
+**Summary:** Remediate two published FBA conditional-essentiality claims that rest on unaudited foundations (the pFBA regulatory lift may be a solver artifact via NaN-to-essential coding) plus one factually false honest-limits sentence, then re-derive both claims under a pre-committed verdict set.
+**Key decisions:**
+- New pure `dna_decode/fba/solver_audit.py` records WHICH cells were non-optimal, not just counts — the committed 39-cell count cannot be crossed against the 33-gene commit set because only counts were kept.
+- The NaN-to-essential coding at `fba_regulatory_conditional_test.py:106` is NOT "fixed" — it is load-bearing for reproducing every committed number, and is quarantined behind a new `abstain_nonoptimal` arm instead.
+- Claim C's verdict is pre-committed BEFORE the run (CONFIRMED / IS_A_SOLVER_ARTIFACT / PARTIALLY_SURVIVES) per the project's verdict-vs-budget lesson; the abstained null must be recomputed on the abstained denominator or the control is invalid.
+- "Commit" is NOT redefined to mean multi-condition-only — that would rest the headline on 8 genes and swap one over-claim for an under-powered statistic; the memo gets a stratified table instead.
+- `continuous_readout` + `deployable_threshold` + `rate_matched_null` become condition-parametric (3rd/4th/5th instances of the hardcoded-4 bug class that caused the retraction; all three currently fail SILENTLY via `ratios.get(c, {})` → "degenerate: one class only").
+- Label-threshold sweep scoped OUT: Step 3 makes `GeneFitness.t` reachable, but the sweep can move the 217-gene denominator and belongs in its own plan once the metrics it consumes are trustworthy.
+**Status:** candidate
 
 ---
