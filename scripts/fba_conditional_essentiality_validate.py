@@ -120,6 +120,7 @@ def main(argv: list[str] | None = None) -> int:
 
     ours: dict[str, dict[str, bool]] = {}
     ratios: dict[str, dict[str, float]] = {}
+    nonoptimal: dict[str, int] = {}
     growth_by_condition = {}
     for c in CONDITIONS:
         with model:
@@ -138,6 +139,11 @@ def main(argv: list[str] | None = None) -> int:
                     ids = row["ids"] if "ids" in res.columns else idx
                     gid = next(iter(ids)) if not isinstance(ids, str) else ids
                     g = row["growth"]
+                    # cobrapy also returns `status`; without reading it a non-optimal solve is
+                    # indistinguishable from a real growth value. Audited, not acted on.
+                    st = row.get("status") if hasattr(row, "get") else None
+                    if st is not None and st != "optimal":
+                        nonoptimal[c] = nonoptimal.get(c, 0) + 1
                     # NaN (infeasible) is total loss of growth -> ratio 0, and counts as essential
                     rat[gid] = 0.0 if g != g else g / wt
                     calls[gid] = (g != g) or (g < a.frac * wt)
@@ -201,6 +207,7 @@ def main(argv: list[str] | None = None) -> int:
         "pattern_distribution": {"experimental": true_pat, "paper_fba": paper_pat},
         "model_scored": {
             "n_genes_scored": len(scored),
+            "n_solver_nonoptimal_by_condition": nonoptimal,
             "wildtype_growth_per_condition": growth_by_condition,
             "per_condition": our_per_cond,
             "switch": our_switch,

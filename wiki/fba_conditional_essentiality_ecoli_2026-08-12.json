@@ -132,6 +132,9 @@
   },
   "model_scored": {
     "n_genes_scored": 1064,
+    "n_solver_nonoptimal_by_condition": {
+      "succinate_aerobic": 4
+    },
     "wildtype_growth_per_condition": {
       "glucose_aerobic": 0.877,
       "glucose_anaerobic": 0.1575,
@@ -210,7 +213,7 @@
     "continuous_readout": {
       "n_cells": 268,
       "n_essential_cells": 119,
-      "auroc": 0.611,
+      "auroc": 0.5947,
       "deployed_threshold": 0.01,
       "deployed_confusion": {
         "tp": 10,
