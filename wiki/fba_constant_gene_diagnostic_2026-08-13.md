@@ -107,10 +107,13 @@ clear p < 0.05**.
 > So **all three levers are now closed**: gap-filling, threshold retuning, and pFBA route-constraining.
 > The diagnosis below stands on its own evidence; the treatment does not exist yet.
 
-The honest position: **this diagnostic establishes the direction on its own evidence** (77% of misses are
-deletions that changed nothing — that number owes nothing to pFBA). What it does **not** do is validate
-pFBA-restriction as the *method*; that intervention is now suggestive-but-not-significant, on 4 media,
-with a crude 69%-of-reactions-off proxy. Direction: supported. Method: open.
+The honest position, final: **this diagnostic establishes the direction on its own evidence** (77% of
+misses are deletions that changed nothing — that number owes nothing to pFBA). It does **not** validate
+pFBA-restriction as the method, and the wide-panel re-test then **rejected** that method outright.
+**Direction: supported. Method: closed.** Removing redundancy indiscriminately — ~1,868 reactions forced
+off per condition, chosen by cheapest-flux rather than by biology — makes the metric worse. A useful
+restriction would have to be *selective*, and the ~78 flat genes whose redundancy is not explained by
+isozyme GPR structure are where that would have to start. Stated as a hypothesis, not a finding.
 
 ## Honest limits
 
