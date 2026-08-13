@@ -98,6 +98,15 @@ So the published "~5× lift over null, p < 0.005" was **substantially an artifac
 easy to beat**. Against the strong null the pFBA arm sits at roughly the 94th percentile and **does not
 clear p < 0.05**.
 
+> **RESOLVED the same day, and it went the other way.** The intervention was re-run on the wide panel
+> (25 sources, 5,425 cells): per-cell **0.7368 → 0.6839 (−0.0529)**, precision 0.695 → 0.532, **+554 false
+> positives**, exact-set unchanged at 23/217. Verdict `REGULATORY_RESTRICTION_MAKES_IT_WORSE`. The 4-media
+> "lift" was the intervention compensating for an under-calling baseline (TP 10 / FP 6 on 268 cells), not
+> adding condition-specificity. See `wiki/fba_regulatory_carbon_test_2026-08-13.md`.
+>
+> So **all three levers are now closed**: gap-filling, threshold retuning, and pFBA route-constraining.
+> The diagnosis below stands on its own evidence; the treatment does not exist yet.
+
 The honest position: **this diagnostic establishes the direction on its own evidence** (77% of misses are
 deletions that changed nothing — that number owes nothing to pFBA). What it does **not** do is validate
 pFBA-restriction as the *method*; that intervention is now suggestive-but-not-significant, on 4 media,

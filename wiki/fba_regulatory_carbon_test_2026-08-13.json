@@ -1,0 +1,6158 @@
+{
+  "record": "fba-regulatory-carbon-test-v1",
+  "date": "2026-08-13",
+  "model": "iML1515",
+  "n_conditions": 25,
+  "n_cells": 5425,
+  "intervention": "pFBA restriction -- force off every gene-associated reaction carrying no flux in the parsimonious solution for that carbon source",
+  "preregistered_expectation": "will NOT clear p<0.05 (recorded before the run)",
+  "baseline": {
+    "exact_set_match": 23,
+    "n_conditionally_essential": 217,
+    "per_condition_agreement": 0.7368,
+    "mean_per_condition_mcc": 0.3864,
+    "n_cells_called_essential": 1038,
+    "tp": 721,
+    "fp": 317,
+    "precision": 0.6946,
+    "reactions_forced_off": {
+      "D-Fructose": 0,
+      "D-Galactose": 0,
+      "D-Galacturonic Acid monohydrate": 0,
+      "D-Gluconic Acid sodium salt": 0,
+      "D-Glucosamine Hydrochloride": 0,
+      "D-Glucose": 0,
+      "D-Glucose-6-Phosphate sodium salt": 0,
+      "D-Glucuronic Acid": 0,
+      "D-Maltose monohydrate": 0,
+      "D-Mannitol": 0,
+      "D-Mannose": 0,
+      "D-Ribose": 0,
+      "D-Serine": 0,
+      "D-Sorbitol": 0,
+      "D-Xylose": 0,
+      "Glycerol": 0,
+      "Glycolic Acid": 0,
+      "L-Fucose": 0,
+      "L-Malic acid disodium salt monohydrate": 0,
+      "N-Acetyl-D-Glucosamine": 0,
+      "Potassium acetate": 0,
+      "Sodium D-Lactate": 0,
+      "Sodium pyruvate": 0,
+      "Sodium succinate dibasic hexahydrate": 0,
+      "a-Ketoglutaric acid disodium salt hydrate": 0
+    },
+    "pfba_status": {},
+    "wildtype_growth": {
+      "D-Fructose": 0.877,
+      "D-Galactose": 0.8676,
+      "D-Galacturonic Acid monohydrate": 0.7047,
+      "D-Gluconic Acid sodium salt": 0.7971,
+      "D-Glucosamine Hydrochloride": 0.8773,
+      "D-Glucose": 0.877,
+      "D-Glucose-6-Phosphate sodium salt": 0.9052,
+      "D-Glucuronic Acid": 0.7047,
+      "D-Maltose monohydrate": 1.7798,
+      "D-Mannitol": 0.9428,
+      "D-Mannose": 0.877,
+      "D-Ribose": 0.6889,
+      "D-Serine": 0.3181,
+      "D-Sorbitol": 0.9428,
+      "D-Xylose": 0.7171,
+      "Glycerol": 0.4947,
+      "Glycolic Acid": 0.1531,
+      "L-Fucose": 0.8621,
+      "L-Malic acid disodium salt monohydrate": 0.4112,
+      "N-Acetyl-D-Glucosamine": 1.1313,
+      "Potassium acetate": 0.2101,
+      "Sodium D-Lactate": 0.3774,
+      "Sodium pyruvate": 0.3139,
+      "Sodium succinate dibasic hexahydrate": 0.4501,
+      "a-Ketoglutaric acid disodium salt hydrate": 0.5474
+    },
+    "solver_audit": {
+      "n_conditions": 25,
+      "n_rows_total": 5425,
+      "n_nonoptimal_total": 39,
+      "n_nan_growth_total": 39,
+      "n_suspect_total": 39,
+      "suspect_fraction": 0.007189,
+      "status_available": true,
+      "n_conditions_with_nonoptimal": 15,
+      "suspect_cells": [
+        [
+          "b0677",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0678",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0678",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0721",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0722",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0723",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0724",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0757",
+          "D-Galactose"
+        ],
+        [
+          "b0758",
+          "D-Galactose"
+        ],
+        [
+          "b0759",
+          "D-Galactose"
+        ],
+        [
+          "b1613",
+          "D-Mannose"
+        ],
+        [
+          "b1817",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1817",
+          "D-Mannose"
+        ],
+        [
+          "b1818",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1818",
+          "D-Mannose"
+        ],
+        [
+          "b1819",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1819",
+          "D-Mannose"
+        ],
+        [
+          "b1850",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b1850",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2587",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2705",
+          "D-Sorbitol"
+        ],
+        [
+          "b2803",
+          "L-Fucose"
+        ],
+        [
+          "b2979",
+          "Glycolic Acid"
+        ],
+        [
+          "b3091",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3092",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3092",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b3416",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b3526",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3526",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b3565",
+          "D-Xylose"
+        ],
+        [
+          "b3600",
+          "D-Mannitol"
+        ],
+        [
+          "b3752",
+          "D-Ribose"
+        ],
+        [
+          "b4032",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4033",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4034",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4035",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4322",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b4467",
+          "Glycolic Acid"
+        ],
+        [
+          "b4468",
+          "Glycolic Acid"
+        ]
+      ],
+      "per_condition": {
+        "D-Fructose": {
+          "condition": "D-Fructose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "D-Galactose": {
+          "condition": "D-Galactose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 3,
+            "optimal": 214
+          },
+          "n_nonoptimal": 3,
+          "n_nan_growth": 3,
+          "n_suspect": 3,
+          "nonoptimal_cells": [
+            "b0757",
+            "b0758",
+            "b0759"
+          ],
+          "nan_cells": [
+            "b0757",
+            "b0758",
+            "b0759"
+          ]
+        },
+        "D-Galacturonic Acid monohydrate": {
+          "condition": "D-Galacturonic Acid monohydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 4,
+            "optimal": 213
+          },
+          "n_nonoptimal": 4,
+          "n_nan_growth": 4,
+          "n_suspect": 4,
+          "nonoptimal_cells": [
+            "b1850",
+            "b3091",
+            "b3092",
+            "b3526"
+          ],
+          "nan_cells": [
+            "b1850",
+            "b3091",
+            "b3092",
+            "b3526"
+          ]
+        },
+        "D-Gluconic Acid sodium salt": {
+          "condition": "D-Gluconic Acid sodium salt",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "D-Glucosamine Hydrochloride": {
+          "condition": "D-Glucosamine Hydrochloride",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 4,
+            "optimal": 213
+          },
+          "n_nonoptimal": 4,
+          "n_nan_growth": 4,
+          "n_suspect": 4,
+          "nonoptimal_cells": [
+            "b0678",
+            "b1817",
+            "b1818",
+            "b1819"
+          ],
+          "nan_cells": [
+            "b0678",
+            "b1817",
+            "b1818",
+            "b1819"
+          ]
+        },
+        "D-Glucose": {
+          "condition": "D-Glucose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "D-Glucose-6-Phosphate sodium salt": {
+          "condition": "D-Glucose-6-Phosphate sodium salt",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "D-Glucuronic Acid": {
+          "condition": "D-Glucuronic Acid",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 4,
+            "optimal": 213
+          },
+          "n_nonoptimal": 4,
+          "n_nan_growth": 4,
+          "n_suspect": 4,
+          "nonoptimal_cells": [
+            "b1850",
+            "b3092",
+            "b3526",
+            "b4322"
+          ],
+          "nan_cells": [
+            "b1850",
+            "b3092",
+            "b3526",
+            "b4322"
+          ]
+        },
+        "D-Maltose monohydrate": {
+          "condition": "D-Maltose monohydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 5,
+            "optimal": 212
+          },
+          "n_nonoptimal": 5,
+          "n_nan_growth": 5,
+          "n_suspect": 5,
+          "nonoptimal_cells": [
+            "b3416",
+            "b4032",
+            "b4033",
+            "b4034",
+            "b4035"
+          ],
+          "nan_cells": [
+            "b3416",
+            "b4032",
+            "b4033",
+            "b4034",
+            "b4035"
+          ]
+        },
+        "D-Mannitol": {
+          "condition": "D-Mannitol",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 1,
+            "optimal": 216
+          },
+          "n_nonoptimal": 1,
+          "n_nan_growth": 1,
+          "n_suspect": 1,
+          "nonoptimal_cells": [
+            "b3600"
+          ],
+          "nan_cells": [
+            "b3600"
+          ]
+        },
+        "D-Mannose": {
+          "condition": "D-Mannose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 4,
+            "optimal": 213
+          },
+          "n_nonoptimal": 4,
+          "n_nan_growth": 4,
+          "n_suspect": 4,
+          "nonoptimal_cells": [
+            "b1613",
+            "b1817",
+            "b1818",
+            "b1819"
+          ],
+          "nan_cells": [
+            "b1613",
+            "b1817",
+            "b1818",
+            "b1819"
+          ]
+        },
+        "D-Ribose": {
+          "condition": "D-Ribose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 1,
+            "optimal": 216
+          },
+          "n_nonoptimal": 1,
+          "n_nan_growth": 1,
+          "n_suspect": 1,
+          "nonoptimal_cells": [
+            "b3752"
+          ],
+          "nan_cells": [
+            "b3752"
+          ]
+        },
+        "D-Serine": {
+          "condition": "D-Serine",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "D-Sorbitol": {
+          "condition": "D-Sorbitol",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 1,
+            "optimal": 216
+          },
+          "n_nonoptimal": 1,
+          "n_nan_growth": 1,
+          "n_suspect": 1,
+          "nonoptimal_cells": [
+            "b2705"
+          ],
+          "nan_cells": [
+            "b2705"
+          ]
+        },
+        "D-Xylose": {
+          "condition": "D-Xylose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 1,
+            "optimal": 216
+          },
+          "n_nonoptimal": 1,
+          "n_nan_growth": 1,
+          "n_suspect": 1,
+          "nonoptimal_cells": [
+            "b3565"
+          ],
+          "nan_cells": [
+            "b3565"
+          ]
+        },
+        "Glycerol": {
+          "condition": "Glycerol",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "Glycolic Acid": {
+          "condition": "Glycolic Acid",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 3,
+            "optimal": 214
+          },
+          "n_nonoptimal": 3,
+          "n_nan_growth": 3,
+          "n_suspect": 3,
+          "nonoptimal_cells": [
+            "b2979",
+            "b4467",
+            "b4468"
+          ],
+          "nan_cells": [
+            "b2979",
+            "b4467",
+            "b4468"
+          ]
+        },
+        "L-Fucose": {
+          "condition": "L-Fucose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 1,
+            "optimal": 216
+          },
+          "n_nonoptimal": 1,
+          "n_nan_growth": 1,
+          "n_suspect": 1,
+          "nonoptimal_cells": [
+            "b2803"
+          ],
+          "nan_cells": [
+            "b2803"
+          ]
+        },
+        "L-Malic acid disodium salt monohydrate": {
+          "condition": "L-Malic acid disodium salt monohydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "N-Acetyl-D-Glucosamine": {
+          "condition": "N-Acetyl-D-Glucosamine",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 2,
+            "optimal": 215
+          },
+          "n_nonoptimal": 2,
+          "n_nan_growth": 2,
+          "n_suspect": 2,
+          "nonoptimal_cells": [
+            "b0677",
+            "b0678"
+          ],
+          "nan_cells": [
+            "b0677",
+            "b0678"
+          ]
+        },
+        "Potassium acetate": {
+          "condition": "Potassium acetate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "Sodium D-Lactate": {
+          "condition": "Sodium D-Lactate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "Sodium pyruvate": {
+          "condition": "Sodium pyruvate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "optimal": 217
+          },
+          "n_nonoptimal": 0,
+          "n_nan_growth": 0,
+          "n_suspect": 0,
+          "nonoptimal_cells": [],
+          "nan_cells": []
+        },
+        "Sodium succinate dibasic hexahydrate": {
+          "condition": "Sodium succinate dibasic hexahydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 4,
+            "optimal": 213
+          },
+          "n_nonoptimal": 4,
+          "n_nan_growth": 4,
+          "n_suspect": 4,
+          "nonoptimal_cells": [
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724"
+          ],
+          "nan_cells": [
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724"
+          ]
+        },
+        "a-Ketoglutaric acid disodium salt hydrate": {
+          "condition": "a-Ketoglutaric acid disodium salt hydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 1,
+            "optimal": 216
+          },
+          "n_nonoptimal": 1,
+          "n_nan_growth": 1,
+          "n_suspect": 1,
+          "nonoptimal_cells": [
+            "b2587"
+          ],
+          "nan_cells": [
+            "b2587"
+          ]
+        }
+      }
+    }
+  },
+  "regulatory": {
+    "exact_set_match": 23,
+    "n_conditionally_essential": 217,
+    "per_condition_agreement": 0.6839,
+    "mean_per_condition_mcc": 0.3081,
+    "n_cells_called_essential": 1859,
+    "tp": 988,
+    "fp": 871,
+    "precision": 0.5315,
+    "reactions_forced_off": {
+      "D-Fructose": 1864,
+      "D-Galactose": 1860,
+      "D-Galacturonic Acid monohydrate": 1864,
+      "D-Gluconic Acid sodium salt": 1866,
+      "D-Glucosamine Hydrochloride": 1863,
+      "D-Glucose": 1864,
+      "D-Glucose-6-Phosphate sodium salt": 1864,
+      "D-Glucuronic Acid": 1863,
+      "D-Maltose monohydrate": 1859,
+      "D-Mannitol": 1862,
+      "D-Mannose": 1862,
+      "D-Ribose": 1864,
+      "D-Serine": 1866,
+      "D-Sorbitol": 1863,
+      "D-Xylose": 1863,
+      "Glycerol": 1868,
+      "Glycolic Acid": 1864,
+      "L-Fucose": 1860,
+      "L-Malic acid disodium salt monohydrate": 1868,
+      "N-Acetyl-D-Glucosamine": 1864,
+      "Potassium acetate": 1866,
+      "Sodium D-Lactate": 1866,
+      "Sodium pyruvate": 1868,
+      "Sodium succinate dibasic hexahydrate": 1869,
+      "a-Ketoglutaric acid disodium salt hydrate": 1868
+    },
+    "pfba_status": {
+      "D-Fructose": "optimal",
+      "D-Galactose": "optimal",
+      "D-Galacturonic Acid monohydrate": "optimal",
+      "D-Gluconic Acid sodium salt": "optimal",
+      "D-Glucosamine Hydrochloride": "optimal",
+      "D-Glucose": "optimal",
+      "D-Glucose-6-Phosphate sodium salt": "optimal",
+      "D-Glucuronic Acid": "optimal",
+      "D-Maltose monohydrate": "optimal",
+      "D-Mannitol": "optimal",
+      "D-Mannose": "optimal",
+      "D-Ribose": "optimal",
+      "D-Serine": "optimal",
+      "D-Sorbitol": "optimal",
+      "D-Xylose": "optimal",
+      "Glycerol": "optimal",
+      "Glycolic Acid": "optimal",
+      "L-Fucose": "optimal",
+      "L-Malic acid disodium salt monohydrate": "optimal",
+      "N-Acetyl-D-Glucosamine": "optimal",
+      "Potassium acetate": "optimal",
+      "Sodium D-Lactate": "optimal",
+      "Sodium pyruvate": "optimal",
+      "Sodium succinate dibasic hexahydrate": "optimal",
+      "a-Ketoglutaric acid disodium salt hydrate": "optimal"
+    },
+    "wildtype_growth": {
+      "D-Fructose": 0.877,
+      "D-Galactose": 0.8676,
+      "D-Galacturonic Acid monohydrate": 0.7047,
+      "D-Gluconic Acid sodium salt": 0.7971,
+      "D-Glucosamine Hydrochloride": 0.8773,
+      "D-Glucose": 0.877,
+      "D-Glucose-6-Phosphate sodium salt": 0.9052,
+      "D-Glucuronic Acid": 0.7047,
+      "D-Maltose monohydrate": 1.7798,
+      "D-Mannitol": 0.9428,
+      "D-Mannose": 0.877,
+      "D-Ribose": 0.6889,
+      "D-Serine": 0.3181,
+      "D-Sorbitol": 0.9428,
+      "D-Xylose": 0.7171,
+      "Glycerol": 0.4947,
+      "Glycolic Acid": 0.1531,
+      "L-Fucose": 0.8621,
+      "L-Malic acid disodium salt monohydrate": 0.4112,
+      "N-Acetyl-D-Glucosamine": 1.1313,
+      "Potassium acetate": 0.2101,
+      "Sodium D-Lactate": 0.3774,
+      "Sodium pyruvate": 0.3139,
+      "Sodium succinate dibasic hexahydrate": 0.4501,
+      "a-Ketoglutaric acid disodium salt hydrate": 0.5474
+    },
+    "solver_audit": {
+      "n_conditions": 25,
+      "n_rows_total": 5425,
+      "n_nonoptimal_total": 821,
+      "n_nan_growth_total": 821,
+      "n_suspect_total": 821,
+      "suspect_fraction": 0.151336,
+      "status_available": true,
+      "n_conditions_with_nonoptimal": 25,
+      "suspect_cells": [
+        [
+          "b0114",
+          "D-Fructose"
+        ],
+        [
+          "b0114",
+          "D-Galactose"
+        ],
+        [
+          "b0114",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0114",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0114",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0114",
+          "D-Glucose"
+        ],
+        [
+          "b0114",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0114",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0114",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0114",
+          "D-Mannitol"
+        ],
+        [
+          "b0114",
+          "D-Mannose"
+        ],
+        [
+          "b0114",
+          "D-Ribose"
+        ],
+        [
+          "b0114",
+          "D-Serine"
+        ],
+        [
+          "b0114",
+          "D-Sorbitol"
+        ],
+        [
+          "b0114",
+          "D-Xylose"
+        ],
+        [
+          "b0114",
+          "Glycerol"
+        ],
+        [
+          "b0114",
+          "Glycolic Acid"
+        ],
+        [
+          "b0114",
+          "L-Fucose"
+        ],
+        [
+          "b0114",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0114",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0114",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0114",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0114",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0114",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0429",
+          "D-Fructose"
+        ],
+        [
+          "b0429",
+          "D-Galactose"
+        ],
+        [
+          "b0429",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0429",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0429",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0429",
+          "D-Glucose"
+        ],
+        [
+          "b0429",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0429",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0429",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0429",
+          "D-Mannitol"
+        ],
+        [
+          "b0429",
+          "D-Mannose"
+        ],
+        [
+          "b0429",
+          "D-Ribose"
+        ],
+        [
+          "b0429",
+          "D-Serine"
+        ],
+        [
+          "b0429",
+          "D-Sorbitol"
+        ],
+        [
+          "b0429",
+          "D-Xylose"
+        ],
+        [
+          "b0429",
+          "Glycerol"
+        ],
+        [
+          "b0429",
+          "Glycolic Acid"
+        ],
+        [
+          "b0429",
+          "L-Fucose"
+        ],
+        [
+          "b0429",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0429",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0429",
+          "Potassium acetate"
+        ],
+        [
+          "b0429",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0429",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0429",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0429",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0430",
+          "D-Fructose"
+        ],
+        [
+          "b0430",
+          "D-Galactose"
+        ],
+        [
+          "b0430",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0430",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0430",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0430",
+          "D-Glucose"
+        ],
+        [
+          "b0430",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0430",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0430",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0430",
+          "D-Mannitol"
+        ],
+        [
+          "b0430",
+          "D-Mannose"
+        ],
+        [
+          "b0430",
+          "D-Ribose"
+        ],
+        [
+          "b0430",
+          "D-Serine"
+        ],
+        [
+          "b0430",
+          "D-Sorbitol"
+        ],
+        [
+          "b0430",
+          "D-Xylose"
+        ],
+        [
+          "b0430",
+          "Glycerol"
+        ],
+        [
+          "b0430",
+          "Glycolic Acid"
+        ],
+        [
+          "b0430",
+          "L-Fucose"
+        ],
+        [
+          "b0430",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0430",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0430",
+          "Potassium acetate"
+        ],
+        [
+          "b0430",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0430",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0430",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0430",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0431",
+          "D-Fructose"
+        ],
+        [
+          "b0431",
+          "D-Galactose"
+        ],
+        [
+          "b0431",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0431",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0431",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0431",
+          "D-Glucose"
+        ],
+        [
+          "b0431",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0431",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0431",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0431",
+          "D-Mannitol"
+        ],
+        [
+          "b0431",
+          "D-Mannose"
+        ],
+        [
+          "b0431",
+          "D-Ribose"
+        ],
+        [
+          "b0431",
+          "D-Serine"
+        ],
+        [
+          "b0431",
+          "D-Sorbitol"
+        ],
+        [
+          "b0431",
+          "D-Xylose"
+        ],
+        [
+          "b0431",
+          "Glycerol"
+        ],
+        [
+          "b0431",
+          "Glycolic Acid"
+        ],
+        [
+          "b0431",
+          "L-Fucose"
+        ],
+        [
+          "b0431",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0431",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0431",
+          "Potassium acetate"
+        ],
+        [
+          "b0431",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0431",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0431",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0431",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0432",
+          "D-Fructose"
+        ],
+        [
+          "b0432",
+          "D-Galactose"
+        ],
+        [
+          "b0432",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0432",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0432",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0432",
+          "D-Glucose"
+        ],
+        [
+          "b0432",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0432",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0432",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0432",
+          "D-Mannitol"
+        ],
+        [
+          "b0432",
+          "D-Mannose"
+        ],
+        [
+          "b0432",
+          "D-Ribose"
+        ],
+        [
+          "b0432",
+          "D-Serine"
+        ],
+        [
+          "b0432",
+          "D-Sorbitol"
+        ],
+        [
+          "b0432",
+          "D-Xylose"
+        ],
+        [
+          "b0432",
+          "Glycerol"
+        ],
+        [
+          "b0432",
+          "Glycolic Acid"
+        ],
+        [
+          "b0432",
+          "L-Fucose"
+        ],
+        [
+          "b0432",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0432",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0432",
+          "Potassium acetate"
+        ],
+        [
+          "b0432",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0432",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0432",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0432",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0507",
+          "Glycolic Acid"
+        ],
+        [
+          "b0677",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0678",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0678",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0720",
+          "D-Fructose"
+        ],
+        [
+          "b0720",
+          "D-Galactose"
+        ],
+        [
+          "b0720",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0720",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0720",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0720",
+          "D-Glucose"
+        ],
+        [
+          "b0720",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0720",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0720",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0720",
+          "D-Mannitol"
+        ],
+        [
+          "b0720",
+          "D-Mannose"
+        ],
+        [
+          "b0720",
+          "D-Ribose"
+        ],
+        [
+          "b0720",
+          "D-Serine"
+        ],
+        [
+          "b0720",
+          "D-Sorbitol"
+        ],
+        [
+          "b0720",
+          "D-Xylose"
+        ],
+        [
+          "b0720",
+          "Glycerol"
+        ],
+        [
+          "b0720",
+          "Glycolic Acid"
+        ],
+        [
+          "b0720",
+          "L-Fucose"
+        ],
+        [
+          "b0720",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0720",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0720",
+          "Potassium acetate"
+        ],
+        [
+          "b0720",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0720",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0720",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0720",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0721",
+          "D-Fructose"
+        ],
+        [
+          "b0721",
+          "D-Galactose"
+        ],
+        [
+          "b0721",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0721",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0721",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0721",
+          "D-Glucose"
+        ],
+        [
+          "b0721",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0721",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0721",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0721",
+          "D-Mannitol"
+        ],
+        [
+          "b0721",
+          "D-Mannose"
+        ],
+        [
+          "b0721",
+          "D-Ribose"
+        ],
+        [
+          "b0721",
+          "D-Serine"
+        ],
+        [
+          "b0721",
+          "D-Sorbitol"
+        ],
+        [
+          "b0721",
+          "D-Xylose"
+        ],
+        [
+          "b0721",
+          "Glycerol"
+        ],
+        [
+          "b0721",
+          "Glycolic Acid"
+        ],
+        [
+          "b0721",
+          "L-Fucose"
+        ],
+        [
+          "b0721",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0721",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0721",
+          "Potassium acetate"
+        ],
+        [
+          "b0721",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0721",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0721",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0721",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0722",
+          "D-Fructose"
+        ],
+        [
+          "b0722",
+          "D-Galactose"
+        ],
+        [
+          "b0722",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0722",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0722",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0722",
+          "D-Glucose"
+        ],
+        [
+          "b0722",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0722",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0722",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0722",
+          "D-Mannitol"
+        ],
+        [
+          "b0722",
+          "D-Mannose"
+        ],
+        [
+          "b0722",
+          "D-Ribose"
+        ],
+        [
+          "b0722",
+          "D-Serine"
+        ],
+        [
+          "b0722",
+          "D-Sorbitol"
+        ],
+        [
+          "b0722",
+          "D-Xylose"
+        ],
+        [
+          "b0722",
+          "Glycerol"
+        ],
+        [
+          "b0722",
+          "Glycolic Acid"
+        ],
+        [
+          "b0722",
+          "L-Fucose"
+        ],
+        [
+          "b0722",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0722",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0722",
+          "Potassium acetate"
+        ],
+        [
+          "b0722",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0722",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0722",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0722",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0723",
+          "D-Fructose"
+        ],
+        [
+          "b0723",
+          "D-Galactose"
+        ],
+        [
+          "b0723",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0723",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0723",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0723",
+          "D-Glucose"
+        ],
+        [
+          "b0723",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0723",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0723",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0723",
+          "D-Mannitol"
+        ],
+        [
+          "b0723",
+          "D-Mannose"
+        ],
+        [
+          "b0723",
+          "D-Ribose"
+        ],
+        [
+          "b0723",
+          "D-Serine"
+        ],
+        [
+          "b0723",
+          "D-Sorbitol"
+        ],
+        [
+          "b0723",
+          "D-Xylose"
+        ],
+        [
+          "b0723",
+          "Glycerol"
+        ],
+        [
+          "b0723",
+          "Glycolic Acid"
+        ],
+        [
+          "b0723",
+          "L-Fucose"
+        ],
+        [
+          "b0723",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0723",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0723",
+          "Potassium acetate"
+        ],
+        [
+          "b0723",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0723",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0723",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0723",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0724",
+          "D-Fructose"
+        ],
+        [
+          "b0724",
+          "D-Galactose"
+        ],
+        [
+          "b0724",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0724",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0724",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0724",
+          "D-Glucose"
+        ],
+        [
+          "b0724",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0724",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0724",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0724",
+          "D-Mannitol"
+        ],
+        [
+          "b0724",
+          "D-Mannose"
+        ],
+        [
+          "b0724",
+          "D-Ribose"
+        ],
+        [
+          "b0724",
+          "D-Serine"
+        ],
+        [
+          "b0724",
+          "D-Sorbitol"
+        ],
+        [
+          "b0724",
+          "D-Xylose"
+        ],
+        [
+          "b0724",
+          "Glycerol"
+        ],
+        [
+          "b0724",
+          "Glycolic Acid"
+        ],
+        [
+          "b0724",
+          "L-Fucose"
+        ],
+        [
+          "b0724",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0724",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0724",
+          "Potassium acetate"
+        ],
+        [
+          "b0724",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0724",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0724",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0724",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0728",
+          "D-Fructose"
+        ],
+        [
+          "b0728",
+          "D-Galactose"
+        ],
+        [
+          "b0728",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0728",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0728",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0728",
+          "D-Glucose"
+        ],
+        [
+          "b0728",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0728",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0728",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0728",
+          "D-Mannitol"
+        ],
+        [
+          "b0728",
+          "D-Mannose"
+        ],
+        [
+          "b0728",
+          "D-Ribose"
+        ],
+        [
+          "b0728",
+          "D-Serine"
+        ],
+        [
+          "b0728",
+          "D-Sorbitol"
+        ],
+        [
+          "b0728",
+          "D-Xylose"
+        ],
+        [
+          "b0728",
+          "Glycerol"
+        ],
+        [
+          "b0728",
+          "Glycolic Acid"
+        ],
+        [
+          "b0728",
+          "L-Fucose"
+        ],
+        [
+          "b0728",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0728",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0728",
+          "Potassium acetate"
+        ],
+        [
+          "b0728",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0728",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0728",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0728",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0729",
+          "D-Fructose"
+        ],
+        [
+          "b0729",
+          "D-Galactose"
+        ],
+        [
+          "b0729",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0729",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b0729",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0729",
+          "D-Glucose"
+        ],
+        [
+          "b0729",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0729",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0729",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0729",
+          "D-Mannitol"
+        ],
+        [
+          "b0729",
+          "D-Mannose"
+        ],
+        [
+          "b0729",
+          "D-Ribose"
+        ],
+        [
+          "b0729",
+          "D-Serine"
+        ],
+        [
+          "b0729",
+          "D-Sorbitol"
+        ],
+        [
+          "b0729",
+          "D-Xylose"
+        ],
+        [
+          "b0729",
+          "Glycerol"
+        ],
+        [
+          "b0729",
+          "Glycolic Acid"
+        ],
+        [
+          "b0729",
+          "L-Fucose"
+        ],
+        [
+          "b0729",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0729",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0729",
+          "Potassium acetate"
+        ],
+        [
+          "b0729",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0729",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0729",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0729",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b0757",
+          "D-Galactose"
+        ],
+        [
+          "b0758",
+          "D-Galactose"
+        ],
+        [
+          "b0759",
+          "D-Galactose"
+        ],
+        [
+          "b0888",
+          "D-Fructose"
+        ],
+        [
+          "b0888",
+          "D-Galactose"
+        ],
+        [
+          "b0888",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b0888",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b0888",
+          "D-Glucose"
+        ],
+        [
+          "b0888",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b0888",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b0888",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b0888",
+          "D-Mannitol"
+        ],
+        [
+          "b0888",
+          "D-Mannose"
+        ],
+        [
+          "b0888",
+          "D-Ribose"
+        ],
+        [
+          "b0888",
+          "D-Serine"
+        ],
+        [
+          "b0888",
+          "D-Sorbitol"
+        ],
+        [
+          "b0888",
+          "D-Xylose"
+        ],
+        [
+          "b0888",
+          "Glycerol"
+        ],
+        [
+          "b0888",
+          "L-Fucose"
+        ],
+        [
+          "b0888",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b0888",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b0888",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b0888",
+          "Sodium pyruvate"
+        ],
+        [
+          "b0888",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b0888",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b1415",
+          "L-Fucose"
+        ],
+        [
+          "b1613",
+          "D-Mannose"
+        ],
+        [
+          "b1817",
+          "D-Fructose"
+        ],
+        [
+          "b1817",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1817",
+          "D-Mannose"
+        ],
+        [
+          "b1818",
+          "D-Fructose"
+        ],
+        [
+          "b1818",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1818",
+          "D-Mannose"
+        ],
+        [
+          "b1819",
+          "D-Fructose"
+        ],
+        [
+          "b1819",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1819",
+          "D-Mannose"
+        ],
+        [
+          "b1850",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b1850",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b1854",
+          "D-Fructose"
+        ],
+        [
+          "b1854",
+          "D-Galactose"
+        ],
+        [
+          "b1854",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b1854",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b1854",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b1854",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b1854",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b1854",
+          "D-Mannitol"
+        ],
+        [
+          "b1854",
+          "D-Mannose"
+        ],
+        [
+          "b1854",
+          "D-Ribose"
+        ],
+        [
+          "b1854",
+          "D-Sorbitol"
+        ],
+        [
+          "b1854",
+          "D-Xylose"
+        ],
+        [
+          "b1854",
+          "L-Fucose"
+        ],
+        [
+          "b2276",
+          "D-Fructose"
+        ],
+        [
+          "b2276",
+          "D-Galactose"
+        ],
+        [
+          "b2276",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2276",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2276",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2276",
+          "D-Glucose"
+        ],
+        [
+          "b2276",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2276",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2276",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2276",
+          "D-Mannitol"
+        ],
+        [
+          "b2276",
+          "D-Mannose"
+        ],
+        [
+          "b2276",
+          "D-Ribose"
+        ],
+        [
+          "b2276",
+          "D-Serine"
+        ],
+        [
+          "b2276",
+          "D-Sorbitol"
+        ],
+        [
+          "b2276",
+          "D-Xylose"
+        ],
+        [
+          "b2276",
+          "Glycerol"
+        ],
+        [
+          "b2276",
+          "Glycolic Acid"
+        ],
+        [
+          "b2276",
+          "L-Fucose"
+        ],
+        [
+          "b2276",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2276",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2276",
+          "Potassium acetate"
+        ],
+        [
+          "b2276",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2276",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2276",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2276",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2277",
+          "D-Fructose"
+        ],
+        [
+          "b2277",
+          "D-Galactose"
+        ],
+        [
+          "b2277",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2277",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2277",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2277",
+          "D-Glucose"
+        ],
+        [
+          "b2277",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2277",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2277",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2277",
+          "D-Mannitol"
+        ],
+        [
+          "b2277",
+          "D-Mannose"
+        ],
+        [
+          "b2277",
+          "D-Ribose"
+        ],
+        [
+          "b2277",
+          "D-Serine"
+        ],
+        [
+          "b2277",
+          "D-Sorbitol"
+        ],
+        [
+          "b2277",
+          "D-Xylose"
+        ],
+        [
+          "b2277",
+          "Glycerol"
+        ],
+        [
+          "b2277",
+          "Glycolic Acid"
+        ],
+        [
+          "b2277",
+          "L-Fucose"
+        ],
+        [
+          "b2277",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2277",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2277",
+          "Potassium acetate"
+        ],
+        [
+          "b2277",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2277",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2277",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2277",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2278",
+          "D-Fructose"
+        ],
+        [
+          "b2278",
+          "D-Galactose"
+        ],
+        [
+          "b2278",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2278",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2278",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2278",
+          "D-Glucose"
+        ],
+        [
+          "b2278",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2278",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2278",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2278",
+          "D-Mannitol"
+        ],
+        [
+          "b2278",
+          "D-Mannose"
+        ],
+        [
+          "b2278",
+          "D-Ribose"
+        ],
+        [
+          "b2278",
+          "D-Serine"
+        ],
+        [
+          "b2278",
+          "D-Sorbitol"
+        ],
+        [
+          "b2278",
+          "D-Xylose"
+        ],
+        [
+          "b2278",
+          "Glycerol"
+        ],
+        [
+          "b2278",
+          "Glycolic Acid"
+        ],
+        [
+          "b2278",
+          "L-Fucose"
+        ],
+        [
+          "b2278",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2278",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2278",
+          "Potassium acetate"
+        ],
+        [
+          "b2278",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2278",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2278",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2278",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2279",
+          "D-Fructose"
+        ],
+        [
+          "b2279",
+          "D-Galactose"
+        ],
+        [
+          "b2279",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2279",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2279",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2279",
+          "D-Glucose"
+        ],
+        [
+          "b2279",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2279",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2279",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2279",
+          "D-Mannitol"
+        ],
+        [
+          "b2279",
+          "D-Mannose"
+        ],
+        [
+          "b2279",
+          "D-Ribose"
+        ],
+        [
+          "b2279",
+          "D-Serine"
+        ],
+        [
+          "b2279",
+          "D-Sorbitol"
+        ],
+        [
+          "b2279",
+          "D-Xylose"
+        ],
+        [
+          "b2279",
+          "Glycerol"
+        ],
+        [
+          "b2279",
+          "Glycolic Acid"
+        ],
+        [
+          "b2279",
+          "L-Fucose"
+        ],
+        [
+          "b2279",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2279",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2279",
+          "Potassium acetate"
+        ],
+        [
+          "b2279",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2279",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2279",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2279",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2280",
+          "D-Fructose"
+        ],
+        [
+          "b2280",
+          "D-Galactose"
+        ],
+        [
+          "b2280",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2280",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2280",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2280",
+          "D-Glucose"
+        ],
+        [
+          "b2280",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2280",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2280",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2280",
+          "D-Mannitol"
+        ],
+        [
+          "b2280",
+          "D-Mannose"
+        ],
+        [
+          "b2280",
+          "D-Ribose"
+        ],
+        [
+          "b2280",
+          "D-Serine"
+        ],
+        [
+          "b2280",
+          "D-Sorbitol"
+        ],
+        [
+          "b2280",
+          "D-Xylose"
+        ],
+        [
+          "b2280",
+          "Glycerol"
+        ],
+        [
+          "b2280",
+          "Glycolic Acid"
+        ],
+        [
+          "b2280",
+          "L-Fucose"
+        ],
+        [
+          "b2280",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2280",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2280",
+          "Potassium acetate"
+        ],
+        [
+          "b2280",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2280",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2280",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2280",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2281",
+          "D-Fructose"
+        ],
+        [
+          "b2281",
+          "D-Galactose"
+        ],
+        [
+          "b2281",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2281",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2281",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2281",
+          "D-Glucose"
+        ],
+        [
+          "b2281",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2281",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2281",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2281",
+          "D-Mannitol"
+        ],
+        [
+          "b2281",
+          "D-Mannose"
+        ],
+        [
+          "b2281",
+          "D-Ribose"
+        ],
+        [
+          "b2281",
+          "D-Serine"
+        ],
+        [
+          "b2281",
+          "D-Sorbitol"
+        ],
+        [
+          "b2281",
+          "D-Xylose"
+        ],
+        [
+          "b2281",
+          "Glycerol"
+        ],
+        [
+          "b2281",
+          "Glycolic Acid"
+        ],
+        [
+          "b2281",
+          "L-Fucose"
+        ],
+        [
+          "b2281",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2281",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2281",
+          "Potassium acetate"
+        ],
+        [
+          "b2281",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2281",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2281",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2281",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2282",
+          "D-Fructose"
+        ],
+        [
+          "b2282",
+          "D-Galactose"
+        ],
+        [
+          "b2282",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2282",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2282",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2282",
+          "D-Glucose"
+        ],
+        [
+          "b2282",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2282",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2282",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2282",
+          "D-Mannitol"
+        ],
+        [
+          "b2282",
+          "D-Mannose"
+        ],
+        [
+          "b2282",
+          "D-Ribose"
+        ],
+        [
+          "b2282",
+          "D-Serine"
+        ],
+        [
+          "b2282",
+          "D-Sorbitol"
+        ],
+        [
+          "b2282",
+          "D-Xylose"
+        ],
+        [
+          "b2282",
+          "Glycerol"
+        ],
+        [
+          "b2282",
+          "Glycolic Acid"
+        ],
+        [
+          "b2282",
+          "L-Fucose"
+        ],
+        [
+          "b2282",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2282",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2282",
+          "Potassium acetate"
+        ],
+        [
+          "b2282",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2282",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2282",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2282",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2283",
+          "D-Fructose"
+        ],
+        [
+          "b2283",
+          "D-Galactose"
+        ],
+        [
+          "b2283",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2283",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2283",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2283",
+          "D-Glucose"
+        ],
+        [
+          "b2283",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2283",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2283",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2283",
+          "D-Mannitol"
+        ],
+        [
+          "b2283",
+          "D-Mannose"
+        ],
+        [
+          "b2283",
+          "D-Ribose"
+        ],
+        [
+          "b2283",
+          "D-Serine"
+        ],
+        [
+          "b2283",
+          "D-Sorbitol"
+        ],
+        [
+          "b2283",
+          "D-Xylose"
+        ],
+        [
+          "b2283",
+          "Glycerol"
+        ],
+        [
+          "b2283",
+          "Glycolic Acid"
+        ],
+        [
+          "b2283",
+          "L-Fucose"
+        ],
+        [
+          "b2283",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2283",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2283",
+          "Potassium acetate"
+        ],
+        [
+          "b2283",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2283",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2283",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2283",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2284",
+          "D-Fructose"
+        ],
+        [
+          "b2284",
+          "D-Galactose"
+        ],
+        [
+          "b2284",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2284",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2284",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2284",
+          "D-Glucose"
+        ],
+        [
+          "b2284",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2284",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2284",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2284",
+          "D-Mannitol"
+        ],
+        [
+          "b2284",
+          "D-Mannose"
+        ],
+        [
+          "b2284",
+          "D-Ribose"
+        ],
+        [
+          "b2284",
+          "D-Serine"
+        ],
+        [
+          "b2284",
+          "D-Sorbitol"
+        ],
+        [
+          "b2284",
+          "D-Xylose"
+        ],
+        [
+          "b2284",
+          "Glycerol"
+        ],
+        [
+          "b2284",
+          "Glycolic Acid"
+        ],
+        [
+          "b2284",
+          "L-Fucose"
+        ],
+        [
+          "b2284",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2284",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2284",
+          "Potassium acetate"
+        ],
+        [
+          "b2284",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2284",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2284",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2284",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2285",
+          "D-Fructose"
+        ],
+        [
+          "b2285",
+          "D-Galactose"
+        ],
+        [
+          "b2285",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2285",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2285",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2285",
+          "D-Glucose"
+        ],
+        [
+          "b2285",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2285",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2285",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2285",
+          "D-Mannitol"
+        ],
+        [
+          "b2285",
+          "D-Mannose"
+        ],
+        [
+          "b2285",
+          "D-Ribose"
+        ],
+        [
+          "b2285",
+          "D-Serine"
+        ],
+        [
+          "b2285",
+          "D-Sorbitol"
+        ],
+        [
+          "b2285",
+          "D-Xylose"
+        ],
+        [
+          "b2285",
+          "Glycerol"
+        ],
+        [
+          "b2285",
+          "Glycolic Acid"
+        ],
+        [
+          "b2285",
+          "L-Fucose"
+        ],
+        [
+          "b2285",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2285",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2285",
+          "Potassium acetate"
+        ],
+        [
+          "b2285",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2285",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2285",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2285",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2286",
+          "D-Fructose"
+        ],
+        [
+          "b2286",
+          "D-Galactose"
+        ],
+        [
+          "b2286",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2286",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2286",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2286",
+          "D-Glucose"
+        ],
+        [
+          "b2286",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2286",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2286",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2286",
+          "D-Mannitol"
+        ],
+        [
+          "b2286",
+          "D-Mannose"
+        ],
+        [
+          "b2286",
+          "D-Ribose"
+        ],
+        [
+          "b2286",
+          "D-Serine"
+        ],
+        [
+          "b2286",
+          "D-Sorbitol"
+        ],
+        [
+          "b2286",
+          "D-Xylose"
+        ],
+        [
+          "b2286",
+          "Glycerol"
+        ],
+        [
+          "b2286",
+          "Glycolic Acid"
+        ],
+        [
+          "b2286",
+          "L-Fucose"
+        ],
+        [
+          "b2286",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2286",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2286",
+          "Potassium acetate"
+        ],
+        [
+          "b2286",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2286",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2286",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2286",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2287",
+          "D-Fructose"
+        ],
+        [
+          "b2287",
+          "D-Galactose"
+        ],
+        [
+          "b2287",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2287",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2287",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2287",
+          "D-Glucose"
+        ],
+        [
+          "b2287",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2287",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2287",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2287",
+          "D-Mannitol"
+        ],
+        [
+          "b2287",
+          "D-Mannose"
+        ],
+        [
+          "b2287",
+          "D-Ribose"
+        ],
+        [
+          "b2287",
+          "D-Serine"
+        ],
+        [
+          "b2287",
+          "D-Sorbitol"
+        ],
+        [
+          "b2287",
+          "D-Xylose"
+        ],
+        [
+          "b2287",
+          "Glycerol"
+        ],
+        [
+          "b2287",
+          "Glycolic Acid"
+        ],
+        [
+          "b2287",
+          "L-Fucose"
+        ],
+        [
+          "b2287",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2287",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2287",
+          "Potassium acetate"
+        ],
+        [
+          "b2287",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2287",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2287",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2287",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2288",
+          "D-Fructose"
+        ],
+        [
+          "b2288",
+          "D-Galactose"
+        ],
+        [
+          "b2288",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2288",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b2288",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2288",
+          "D-Glucose"
+        ],
+        [
+          "b2288",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2288",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2288",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2288",
+          "D-Mannitol"
+        ],
+        [
+          "b2288",
+          "D-Mannose"
+        ],
+        [
+          "b2288",
+          "D-Ribose"
+        ],
+        [
+          "b2288",
+          "D-Serine"
+        ],
+        [
+          "b2288",
+          "D-Sorbitol"
+        ],
+        [
+          "b2288",
+          "D-Xylose"
+        ],
+        [
+          "b2288",
+          "Glycerol"
+        ],
+        [
+          "b2288",
+          "Glycolic Acid"
+        ],
+        [
+          "b2288",
+          "L-Fucose"
+        ],
+        [
+          "b2288",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2288",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2288",
+          "Potassium acetate"
+        ],
+        [
+          "b2288",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2288",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2288",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2288",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2366",
+          "D-Serine"
+        ],
+        [
+          "b2587",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2705",
+          "D-Sorbitol"
+        ],
+        [
+          "b2751",
+          "D-Fructose"
+        ],
+        [
+          "b2751",
+          "D-Galactose"
+        ],
+        [
+          "b2751",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2751",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2751",
+          "D-Glucose"
+        ],
+        [
+          "b2751",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2751",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2751",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2751",
+          "D-Mannitol"
+        ],
+        [
+          "b2751",
+          "D-Mannose"
+        ],
+        [
+          "b2751",
+          "D-Ribose"
+        ],
+        [
+          "b2751",
+          "D-Serine"
+        ],
+        [
+          "b2751",
+          "D-Sorbitol"
+        ],
+        [
+          "b2751",
+          "D-Xylose"
+        ],
+        [
+          "b2751",
+          "Glycerol"
+        ],
+        [
+          "b2751",
+          "L-Fucose"
+        ],
+        [
+          "b2751",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2751",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2751",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2751",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2751",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2751",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2752",
+          "D-Fructose"
+        ],
+        [
+          "b2752",
+          "D-Galactose"
+        ],
+        [
+          "b2752",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2752",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2752",
+          "D-Glucose"
+        ],
+        [
+          "b2752",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2752",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2752",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2752",
+          "D-Mannitol"
+        ],
+        [
+          "b2752",
+          "D-Mannose"
+        ],
+        [
+          "b2752",
+          "D-Ribose"
+        ],
+        [
+          "b2752",
+          "D-Serine"
+        ],
+        [
+          "b2752",
+          "D-Sorbitol"
+        ],
+        [
+          "b2752",
+          "D-Xylose"
+        ],
+        [
+          "b2752",
+          "Glycerol"
+        ],
+        [
+          "b2752",
+          "L-Fucose"
+        ],
+        [
+          "b2752",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2752",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2752",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2752",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2752",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2752",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2763",
+          "D-Fructose"
+        ],
+        [
+          "b2763",
+          "D-Galactose"
+        ],
+        [
+          "b2763",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2763",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2763",
+          "D-Glucose"
+        ],
+        [
+          "b2763",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2763",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2763",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2763",
+          "D-Mannitol"
+        ],
+        [
+          "b2763",
+          "D-Mannose"
+        ],
+        [
+          "b2763",
+          "D-Ribose"
+        ],
+        [
+          "b2763",
+          "D-Serine"
+        ],
+        [
+          "b2763",
+          "D-Sorbitol"
+        ],
+        [
+          "b2763",
+          "D-Xylose"
+        ],
+        [
+          "b2763",
+          "Glycerol"
+        ],
+        [
+          "b2763",
+          "L-Fucose"
+        ],
+        [
+          "b2763",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2763",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2763",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2763",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2763",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2763",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2764",
+          "D-Fructose"
+        ],
+        [
+          "b2764",
+          "D-Galactose"
+        ],
+        [
+          "b2764",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b2764",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b2764",
+          "D-Glucose"
+        ],
+        [
+          "b2764",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b2764",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b2764",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b2764",
+          "D-Mannitol"
+        ],
+        [
+          "b2764",
+          "D-Mannose"
+        ],
+        [
+          "b2764",
+          "D-Ribose"
+        ],
+        [
+          "b2764",
+          "D-Serine"
+        ],
+        [
+          "b2764",
+          "D-Sorbitol"
+        ],
+        [
+          "b2764",
+          "D-Xylose"
+        ],
+        [
+          "b2764",
+          "Glycerol"
+        ],
+        [
+          "b2764",
+          "L-Fucose"
+        ],
+        [
+          "b2764",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b2764",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b2764",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b2764",
+          "Sodium pyruvate"
+        ],
+        [
+          "b2764",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b2764",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b2803",
+          "L-Fucose"
+        ],
+        [
+          "b2943",
+          "D-Galactose"
+        ],
+        [
+          "b2979",
+          "Glycolic Acid"
+        ],
+        [
+          "b3091",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3092",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3092",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b3124",
+          "Glycolic Acid"
+        ],
+        [
+          "b3236",
+          "D-Fructose"
+        ],
+        [
+          "b3236",
+          "D-Galactose"
+        ],
+        [
+          "b3236",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3236",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b3236",
+          "D-Glucosamine Hydrochloride"
+        ],
+        [
+          "b3236",
+          "D-Glucose"
+        ],
+        [
+          "b3236",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b3236",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b3236",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b3236",
+          "D-Mannitol"
+        ],
+        [
+          "b3236",
+          "D-Mannose"
+        ],
+        [
+          "b3236",
+          "D-Ribose"
+        ],
+        [
+          "b3236",
+          "D-Serine"
+        ],
+        [
+          "b3236",
+          "D-Sorbitol"
+        ],
+        [
+          "b3236",
+          "D-Xylose"
+        ],
+        [
+          "b3236",
+          "Glycerol"
+        ],
+        [
+          "b3236",
+          "Glycolic Acid"
+        ],
+        [
+          "b3236",
+          "L-Fucose"
+        ],
+        [
+          "b3236",
+          "L-Malic acid disodium salt monohydrate"
+        ],
+        [
+          "b3236",
+          "N-Acetyl-D-Glucosamine"
+        ],
+        [
+          "b3236",
+          "Potassium acetate"
+        ],
+        [
+          "b3236",
+          "Sodium D-Lactate"
+        ],
+        [
+          "b3236",
+          "Sodium pyruvate"
+        ],
+        [
+          "b3236",
+          "Sodium succinate dibasic hexahydrate"
+        ],
+        [
+          "b3236",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ],
+        [
+          "b3386",
+          "D-Gluconic Acid sodium salt"
+        ],
+        [
+          "b3386",
+          "D-Ribose"
+        ],
+        [
+          "b3416",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b3526",
+          "D-Galacturonic Acid monohydrate"
+        ],
+        [
+          "b3526",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b3565",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b3565",
+          "D-Xylose"
+        ],
+        [
+          "b3600",
+          "D-Mannitol"
+        ],
+        [
+          "b3752",
+          "D-Ribose"
+        ],
+        [
+          "b3916",
+          "D-Ribose"
+        ],
+        [
+          "b3916",
+          "D-Xylose"
+        ],
+        [
+          "b4025",
+          "D-Glucose-6-Phosphate sodium salt"
+        ],
+        [
+          "b4032",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4033",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4034",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4035",
+          "D-Maltose monohydrate"
+        ],
+        [
+          "b4322",
+          "D-Glucuronic Acid"
+        ],
+        [
+          "b4467",
+          "Glycolic Acid"
+        ],
+        [
+          "b4468",
+          "Glycolic Acid"
+        ]
+      ],
+      "per_condition": {
+        "D-Fructose": {
+          "condition": "D-Fructose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 35,
+            "optimal": 182
+          },
+          "n_nonoptimal": 35,
+          "n_nan_growth": 35,
+          "n_suspect": 35,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1817",
+            "b1818",
+            "b1819",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1817",
+            "b1818",
+            "b1819",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "D-Galactose": {
+          "condition": "D-Galactose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 36,
+            "optimal": 181
+          },
+          "n_nonoptimal": 36,
+          "n_nan_growth": 36,
+          "n_suspect": 36,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0757",
+            "b0758",
+            "b0759",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b2943",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0757",
+            "b0758",
+            "b0759",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b2943",
+            "b3236"
+          ]
+        },
+        "D-Galacturonic Acid monohydrate": {
+          "condition": "D-Galacturonic Acid monohydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 36,
+            "optimal": 181
+          },
+          "n_nonoptimal": 36,
+          "n_nan_growth": 36,
+          "n_suspect": 36,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1850",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3091",
+            "b3092",
+            "b3236",
+            "b3526"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1850",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3091",
+            "b3092",
+            "b3236",
+            "b3526"
+          ]
+        },
+        "D-Gluconic Acid sodium salt": {
+          "condition": "D-Gluconic Acid sodium salt",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 27,
+            "optimal": 190
+          },
+          "n_nonoptimal": 27,
+          "n_nan_growth": 27,
+          "n_suspect": 27,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b3236",
+            "b3386"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b3236",
+            "b3386"
+          ]
+        },
+        "D-Glucosamine Hydrochloride": {
+          "condition": "D-Glucosamine Hydrochloride",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 36,
+            "optimal": 181
+          },
+          "n_nonoptimal": 36,
+          "n_nan_growth": 36,
+          "n_suspect": 36,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0678",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1817",
+            "b1818",
+            "b1819",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0678",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1817",
+            "b1818",
+            "b1819",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "D-Glucose": {
+          "condition": "D-Glucose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "D-Glucose-6-Phosphate sodium salt": {
+          "condition": "D-Glucose-6-Phosphate sodium salt",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 33,
+            "optimal": 184
+          },
+          "n_nonoptimal": 33,
+          "n_nan_growth": 33,
+          "n_suspect": 33,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b4025"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b4025"
+          ]
+        },
+        "D-Glucuronic Acid": {
+          "condition": "D-Glucuronic Acid",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 36,
+            "optimal": 181
+          },
+          "n_nonoptimal": 36,
+          "n_nan_growth": 36,
+          "n_suspect": 36,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1850",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3092",
+            "b3236",
+            "b3526",
+            "b4322"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1850",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3092",
+            "b3236",
+            "b3526",
+            "b4322"
+          ]
+        },
+        "D-Maltose monohydrate": {
+          "condition": "D-Maltose monohydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 38,
+            "optimal": 179
+          },
+          "n_nonoptimal": 38,
+          "n_nan_growth": 38,
+          "n_suspect": 38,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3416",
+            "b3565",
+            "b4032",
+            "b4033",
+            "b4034",
+            "b4035"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3416",
+            "b3565",
+            "b4032",
+            "b4033",
+            "b4034",
+            "b4035"
+          ]
+        },
+        "D-Mannitol": {
+          "condition": "D-Mannitol",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 33,
+            "optimal": 184
+          },
+          "n_nonoptimal": 33,
+          "n_nan_growth": 33,
+          "n_suspect": 33,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3600"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3600"
+          ]
+        },
+        "D-Mannose": {
+          "condition": "D-Mannose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 36,
+            "optimal": 181
+          },
+          "n_nonoptimal": 36,
+          "n_nan_growth": 36,
+          "n_suspect": 36,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1613",
+            "b1817",
+            "b1818",
+            "b1819",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1613",
+            "b1817",
+            "b1818",
+            "b1819",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "D-Ribose": {
+          "condition": "D-Ribose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 35,
+            "optimal": 182
+          },
+          "n_nonoptimal": 35,
+          "n_nan_growth": 35,
+          "n_suspect": 35,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3386",
+            "b3752",
+            "b3916"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3386",
+            "b3752",
+            "b3916"
+          ]
+        },
+        "D-Serine": {
+          "condition": "D-Serine",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 32,
+            "optimal": 185
+          },
+          "n_nonoptimal": 32,
+          "n_nan_growth": 32,
+          "n_suspect": 32,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2366",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2366",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "D-Sorbitol": {
+          "condition": "D-Sorbitol",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 33,
+            "optimal": 184
+          },
+          "n_nonoptimal": 33,
+          "n_nan_growth": 33,
+          "n_suspect": 33,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2705",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2705",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "D-Xylose": {
+          "condition": "D-Xylose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 34,
+            "optimal": 183
+          },
+          "n_nonoptimal": 34,
+          "n_nan_growth": 34,
+          "n_suspect": 34,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3565",
+            "b3916"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236",
+            "b3565",
+            "b3916"
+          ]
+        },
+        "Glycerol": {
+          "condition": "Glycerol",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "Glycolic Acid": {
+          "condition": "Glycolic Acid",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0507",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2979",
+            "b3124",
+            "b3236",
+            "b4467",
+            "b4468"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0507",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2979",
+            "b3124",
+            "b3236",
+            "b4467",
+            "b4468"
+          ]
+        },
+        "L-Fucose": {
+          "condition": "L-Fucose",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 34,
+            "optimal": 183
+          },
+          "n_nonoptimal": 34,
+          "n_nan_growth": 34,
+          "n_suspect": 34,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1415",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b2803",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b1415",
+            "b1854",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b2803",
+            "b3236"
+          ]
+        },
+        "L-Malic acid disodium salt monohydrate": {
+          "condition": "L-Malic acid disodium salt monohydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "N-Acetyl-D-Glucosamine": {
+          "condition": "N-Acetyl-D-Glucosamine",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 33,
+            "optimal": 184
+          },
+          "n_nonoptimal": 33,
+          "n_nan_growth": 33,
+          "n_suspect": 33,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0677",
+            "b0678",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0677",
+            "b0678",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "Potassium acetate": {
+          "condition": "Potassium acetate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 25,
+            "optimal": 192
+          },
+          "n_nonoptimal": 25,
+          "n_nan_growth": 25,
+          "n_suspect": 25,
+          "nonoptimal_cells": [
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b3236"
+          ]
+        },
+        "Sodium D-Lactate": {
+          "condition": "Sodium D-Lactate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "Sodium pyruvate": {
+          "condition": "Sodium pyruvate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "Sodium succinate dibasic hexahydrate": {
+          "condition": "Sodium succinate dibasic hexahydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 31,
+            "optimal": 186
+          },
+          "n_nonoptimal": 31,
+          "n_nan_growth": 31,
+          "n_suspect": 31,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        },
+        "a-Ketoglutaric acid disodium salt hydrate": {
+          "condition": "a-Ketoglutaric acid disodium salt hydrate",
+          "n_rows": 217,
+          "status_available": true,
+          "statuses": {
+            "infeasible": 32,
+            "optimal": 185
+          },
+          "n_nonoptimal": 32,
+          "n_nan_growth": 32,
+          "n_suspect": 32,
+          "nonoptimal_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2587",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ],
+          "nan_cells": [
+            "b0114",
+            "b0429",
+            "b0430",
+            "b0431",
+            "b0432",
+            "b0720",
+            "b0721",
+            "b0722",
+            "b0723",
+            "b0724",
+            "b0728",
+            "b0729",
+            "b0888",
+            "b2276",
+            "b2277",
+            "b2278",
+            "b2279",
+            "b2280",
+            "b2281",
+            "b2282",
+            "b2283",
+            "b2284",
+            "b2285",
+            "b2286",
+            "b2287",
+            "b2288",
+            "b2587",
+            "b2751",
+            "b2752",
+            "b2763",
+            "b2764",
+            "b3236"
+          ]
+        }
+      }
+    }
+  },
+  "controls": {
+    "best_constant_predictor_per_cell": 0.6623,
+    "rate_matched_random_WEAK": {
+      "n_draws": 200,
+      "n_called_essential": 1859,
+      "mean": 0.551,
+      "sd": 0.006,
+      "max": 0.5666,
+      "p_empirical_vs_observed": 0.0
+    },
+    "margin_preserving_STRONG": {
+      "n_draws": 200,
+      "mean": 0.675,
+      "sd": 0.0016,
+      "max": 0.6794,
+      "p95": 0.6776,
+      "p_empirical_vs_observed": 0.0
+    }
+  },
+  "verdict": "REGULATORY_RESTRICTION_MAKES_IT_WORSE",
+  "four_media_prior": {
+    "weak_null_p": 0.0,
+    "strong_null_p": 0.06,
+    "n_cells": 268,
+    "observed_per_cell": 0.6157
+  },
+  "caveats": [
+    "The margin-preserving null is the BINDING test; the rate-matched one fixes only the grand total and is reported for the contrast that motivated building the stronger null.",
+    "pFBA picks ONE optimal-flux solution; alternate optima of equal cost would force off a different route and could change which genes look essential. Unaddressed here.",
+    "Forcing off ~69% of gene-associated reactions is a CRUDE proxy for regulation -- evidence about WHERE the deficit lives, never a deployable method.",
+    "All 25 conditions are aerobic carbon sources; no oxygen axis."
+  ],
+  "verdict_first_version_WRONG": "REGULATORY_LIFT_CONFIRMED_ON_WIDE_PANEL",
+  "delta_per_cell_vs_baseline": -0.0529,
+  "verdict_correction_note": "The first verdict function compared the observed value only against the NULLS and never against the BASELINE arm it was meant to improve on. It printed REGULATORY_LIFT_CONFIRMED_ON_WIDE_PANEL on a run where the restriction made per-cell agreement WORSE (0.7368 -> 0.6839, delta -0.0529), precision worse (0.6946 -> 0.5315) and MCC worse (0.3864 -> 0.3081). Caught by verify-in-batch before publication; the baseline check now precedes the null check and is pinned by tests."
+}
