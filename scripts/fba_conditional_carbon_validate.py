@@ -90,6 +90,7 @@ def main(argv: list[str] | None = None) -> int:
     from cobra.flux_analysis import single_gene_deletion  # noqa: PLC0415
     calls: dict[str, dict[str, bool]] = {}
     wt_by_cond: dict[str, float] = {}
+    nonoptimal: dict[str, int] = {}
     for n, cond in enumerate(keys, 1):
         with model:
             apply_carbon_condition(model, conds[cond], all_carbon=all_ex)
@@ -101,6 +102,11 @@ def main(argv: list[str] | None = None) -> int:
                 for _, row in res.iterrows():
                     gid = next(iter(row["ids"]))
                     g = row["growth"]
+                    # cobrapy returns a `status` column; a non-optimal solve is otherwise
+                    # indistinguishable from a real growth value, so count them as an audit field.
+                    st = row.get("status") if hasattr(row, "get") else None
+                    if st is not None and st != "optimal":
+                        nonoptimal[cond] = nonoptimal.get(cond, 0) + 1
                     d[gid] = (g != g) or (g < FRAC * wt)
             calls[cond] = d
         print(f"   [{n:2d}/{len(keys)}] {cond[:38]:40s} wt {wt:.4f} | {sum(d.values()):4d} called essential",
@@ -110,6 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     nulls = constant_baselines(subset, conditions=keys)
     best_null = max(g["per_condition_agreement"] for g in nulls.values())
     pat = pattern_distribution(subset, calls, conditions=keys)
+    true_pat = pattern_distribution(subset, None, conditions=keys)
     mccs = []
     for c in keys:
         cm = confusion_from_calls({r.gene_id: r.experimental[c] for r in subset}, calls[c])
@@ -124,6 +131,14 @@ def main(argv: list[str] | None = None) -> int:
     print(f"   mean per-condition MCC {sum(mccs) / len(mccs):.4f}")
     print(f"   model predicts a CONSTANT pattern for {pat['n_constant_pattern']}/{pat['n_genes']} "
           f"({pat['constant_pattern_fraction']}) across {pat['n_distinct_patterns']} shapes")
+    committed = pat["n_genes"] - pat["n_constant_pattern"]
+    print(f"   -> commits to a VARYING pattern for {committed}/{pat['n_genes']} genes; of those, "
+          f"{sw['exact_set_match']} are exactly right "
+          f"({100 * sw['exact_set_match'] / committed if committed else 0:.0f}% where it commits)")
+    print(f"   true patterns: {true_pat['n_distinct_patterns']} shapes, "
+          f"{true_pat['n_constant_pattern']} constant (0 by definition)")
+    if nonoptimal:
+        print(f"   NON-OPTIMAL solver statuses: {nonoptimal}")
     print("   (4-media baseline: exact-set 3/67 = 0.0448, per-cell 0.5709, lift +0.0121, constant 94.0%)")
 
     result = {
@@ -138,7 +153,9 @@ def main(argv: list[str] | None = None) -> int:
         "switch": sw, "null_controls": nulls,
         "lift_over_best_constant_null": round(sw["per_condition_agreement"] - best_null, 4),
         "mean_per_condition_mcc": round(sum(mccs) / len(mccs), 4),
-        "pattern_distribution": pat,
+        "pattern_distribution_predicted": pat,
+        "pattern_distribution_experimental": true_pat,
+        "n_solver_nonoptimal_by_condition": nonoptimal,
         "four_media_baseline": {"exact_set_match": "3/67", "per_condition_agreement": 0.5709,
                                 "lift": 0.0121, "constant_pattern_fraction": 0.9403},
         "caveats": [

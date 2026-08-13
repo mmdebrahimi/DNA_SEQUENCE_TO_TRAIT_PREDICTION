@@ -65,8 +65,9 @@
         ".......E.................": 1
       },
       "n_distinct_patterns": 20,
-      "n_constant_pattern": 0,
-      "constant_pattern_fraction": 0.0
+      "n_constant_pattern": 184,
+      "constant_pattern_fraction": 0.8479,
+      "correction_note": "recomputed 2026-08-12: the original run used a hardcoded 4-character constant test and reported 0 constant on a 25-condition panel"
     },
     "wildtype_growth": {
       "D-Fructose": 0.877,
@@ -153,8 +154,9 @@
         "...........E.............": 1
       },
       "n_distinct_patterns": 18,
-      "n_constant_pattern": 0,
-      "constant_pattern_fraction": 0.0
+      "n_constant_pattern": 185,
+      "constant_pattern_fraction": 0.8525,
+      "correction_note": "recomputed 2026-08-12: the original run used a hardcoded 4-character constant test and reported 0 constant on a 25-condition panel"
     },
     "wildtype_growth": {
       "D-Fructose": 1.3842,

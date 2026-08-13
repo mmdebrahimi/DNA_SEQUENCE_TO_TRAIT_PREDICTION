@@ -6,14 +6,18 @@
 the conditional metric AT ALL -- zero binary call flips at every dose up to adding all 1,125 Salmonella
 donor reactions. That was measured on the Orth **4-media** substrate.
 
-Hours later, `wiki/fba_conditional_carbon_2026-08-12.md` showed those 4 media were too narrow to see the
-model's conditional behaviour: on **25 carbon sources** the "94% constant / not switching" verdict reversed
-to **0% constant across 20 shapes**.
+Hours later, `wiki/fba_conditional_carbon_2026-08-12.md` re-measured on **25 carbon sources**. The
+accuracy metrics improved materially there, so the negative is worth re-asking on a substrate with more
+room.
 
-So the negative has to be re-asked on the substrate that has room. This runs the DECISIVE arm -- baseline
-vs **every** donor reaction absent from iML1515 -- across the 25 carbon sources. The maximal arm is the
-upper bound on "add more biochemistry"; if it moves nothing here, the negative holds on a substrate ~125x
-larger and materially wider, which is a much stronger claim than the original.
+**CORRECTED 2026-08-12:** an earlier version of this docstring said the 25-source panel "reversed" the
+4-media verdict "to 0% constant across 20 shapes". That figure was an artifact of a constant-pattern test
+hardcoded to FOUR characters (`p in ("....", "EEEE")`), which can never match a 25-character constant
+pattern. The true figures are **84.8% constant on the 25 sources vs 94.0% on the 4 media** — less
+collapsed, not switching. The claim is withdrawn; do not propagate it.
+
+This runs the DECISIVE arm -- baseline vs **every** donor reaction absent from iML1515 -- across the 25
+carbon sources. The maximal arm is the upper bound on "add more biochemistry".
 
 Reports binary call flips (the mechanism number) alongside the switch metric and its null, exactly as the
 4-media run did.

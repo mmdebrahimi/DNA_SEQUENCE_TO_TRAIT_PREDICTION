@@ -2,10 +2,14 @@
 
 > ## ⚠ PARTIALLY SUPERSEDED THE SAME DAY — read this first
 >
-> Everything below was measured on the Orth **4-media** substrate. Hours later
-> (`wiki/fba_conditional_carbon_2026-08-12.md`) those 4 media turned out to be too narrow to see the
-> model's conditional behaviour at all, and the re-test on **25 carbon sources**
-> (`scripts/fba_gapfill_carbon_recheck.py`) splits this document's conclusion in two:
+> Everything below was measured on the Orth **4-media** substrate. A re-test on **25 carbon sources**
+> (`scripts/fba_gapfill_carbon_recheck.py`) splits this document's conclusion in two.
+>
+> **Second correction (same day):** an earlier version of this banner said the 4 media had "no room to
+> move". That was based on a "0% constant" figure which was itself a bug — a constant-pattern test
+> hardcoded to four characters. Corrected, the model is constant for **84.8%** of switching genes on the
+> 25 sources against **94.0%** on the 4 media. The wider panel gives *somewhat* more room, not a
+> transformation. See `wiki/fba_conditional_carbon_2026-08-12.md`.
 >
 > | claim below | status on the wider panel |
 > |---|---|
@@ -13,11 +17,13 @@
 > | **Practical:** "gap-filling does not help" | **CONFIRMED, on much better evidence** — exact-set goes **23 → 22** (down 1) and per-cell moves **+0.0003** |
 >
 > So the *headline answer is unchanged and now better supported* — gap-filling still does not improve
-> conditional essentiality — but the **"it cannot move anything at all" framing was an artifact of a
-> substrate with no room to move**. The changed calls are noise, not signal.
+> conditional essentiality — but the **"it cannot move anything at all" framing was substrate-bounded**:
+> on a wider panel it moves 154 calls. The changed calls are noise, not signal.
 >
 > The mechanism paragraph below ("adding more routes cannot create a medium-specific dependency") is the
-> part to distrust: it is a clean argument that happened to be untestable on 4 near-identical media.
+> part to distrust: it is a clean argument that the 4-media substrate could not put under strain. Note the
+> wider panel differs in label modality, oxygen coverage and strain as well as breadth, so the difference
+> is **not** attributable to condition count alone.
 
 The open question left by `wiki/fba_conditional_essentiality_2026-08-12.md`. Answered by experiment, with
 the prediction registered before the run.

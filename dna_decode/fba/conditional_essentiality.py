@@ -320,7 +320,12 @@ def pattern_distribution(records: list[GeneRecord],
         else:
             p = pat({c: predicted.get(c, {}).get(r.gene_id, False) for c in keys})
         counts[p] = counts.get(p, 0) + 1
-        if p in ("....", "EEEE"):
+        # A pattern is CONSTANT iff every position agrees -- length-agnostic. The literal ("....", "EEEE")
+        # test that lived here was hardcoded to FOUR conditions, so on the 25-carbon-source panel a
+        # 25-character all-dispensable or all-essential pattern matched NEITHER and the run reported
+        # "0.0% constant" when the true figure was 184/217 = 84.8%. That is the SECOND hardcoded-4
+        # assumption found in this one function; generalising `keys` alone was not enough.
+        if len(set(p)) == 1:
             n_constant += 1
     return {
         "conditions_order": keys,

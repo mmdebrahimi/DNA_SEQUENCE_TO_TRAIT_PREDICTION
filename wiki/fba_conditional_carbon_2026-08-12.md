@@ -1,84 +1,106 @@
-# The "FBA can't switch" finding REVERSES at 25 carbon sources (2026-08-12)
+# FBA commits rarely, and is accurate when it commits — 25 carbon sources (2026-08-12)
 
-Two days ago, on the Orth 2011 4-media screen, iML1515 reproduced the medium-dependent essentiality switch
-for **3 of 67 genes (4.5%)** and predicted a **constant** pattern for **94%** of the genes whose
-essentiality actually depends on the medium — a lift of **+0.012** over a constant-predictor null. The
-conclusion recorded was that the model "is not switching at all."
+> **This memo was rewritten the same day it was written.** Its first version claimed the 4-media
+> "the model is not switching" finding had **reversed** — headline "0.0% constant across 20 shapes". That
+> figure was **an artifact of a bug**, and the reversal claim is **withdrawn**. See *The withdrawn claim*
+> below. What survives is real but narrower, and the corrected framing is more useful than either
+> previous headline.
 
-Re-asked against the Fitness Browser RB-TnSeq compendium — **25 carbon sources, 217 conditionally-essential
-genes**, ~125× the cell count — that conclusion does not survive.
+## The question
 
-| | 4 media (Orth 2011) | **25 carbon sources (Fitness Browser)** |
+Does iML1515 predict *conditional* gene essentiality — a gene dispensable on one carbon source and
+required on another? Measured two days ago on the Orth 2011 4-media screen (268 gene × condition cells),
+the answer looked like a flat no. This re-asks it on the Fitness Browser RB-TnSeq compendium:
+**25 carbon sources, 217 conditionally-essential genes, 5,425 cells**.
+
+## Result — the honest framing
+
+| | 4 media (Orth) | **25 carbon sources** |
 |---|---|---|
 | conditionally-essential genes | 67 | **217** |
 | exact-set match | 3/67 = 4.5% | **23/217 = 10.6%** |
 | per-cell agreement | 0.5709 | **0.7368** |
 | best constant null | 0.5588 | 0.6623 |
-| **lift over null** | **+0.0121** | **+0.0745** (6×) |
-| mean per-condition MCC | 0.0611 | **0.3864** (6×) |
-| **genes predicted with a CONSTANT pattern** | **94.0%** | **0.0%** |
-| distinct predicted shapes | 3 (truth had 12) | **20** |
+| lift over null | +0.0121 | **+0.0745** |
+| mean per-condition MCC | 0.0611 | **0.3864** |
+| **model predicts a CONSTANT pattern** | **94.0%** | **84.8%** |
 
-**The headline correction: the model is switching.** Zero of 217 genes get a constant prediction, across
-20 distinct patterns. The earlier "94% constant / not switching at all" was a real measurement of a real
-model — but on a substrate too small and too narrow to see the behaviour.
+**The model is constant for the large majority of switching genes on BOTH substrates.** It is *less*
+collapsed on the wider panel (84.8% vs 94.0%) and *more* accurate on every metric, but this is a
+difference of degree, not a reversal.
 
-## Why the 4-media result was pessimistic
+### The sharper reading — commit rate
 
-Not because it was wrong, but because of what those four media *are*. Two of the four are glucose
-(differing only in oxygen), and the other two are gluconeogenic (lactate, succinate). A model whose
-conditional resolution runs through **carbon-catabolic** pathways has very little room to express itself
-across that set — three of the four conditions enter metabolism at nearly the same point.
+A constant prediction can never exactly match a two-sided gene, so **all 23 exact matches must come from
+the 33 genes where the model predicts a varying pattern**:
 
-The 25 carbon sources span hexoses, pentoses, sugar acids, amino sugars, a disaccharide, polyols and
-organic acids. Different entry points into central metabolism, so different genes become load-bearing —
-and the model tracks that.
+- the model **commits** to a varying pattern for **33/217 = 15.2%** of genes
+- where it commits, it is **exactly right 23/33 = 70%** of the time
 
-Wild-type growth alone shows the range is real: maltose **1.78 /h** (a disaccharide, ~2× glucose, exactly
-as expected), glucose 0.877, glycerol 0.495, acetate **0.210**, glycolate **0.153**.
+That is the most informative statement available from this data: **FBA commits rarely, but is accurate
+when it commits.** Neither "it is not switching" (the old claim) nor "it is switching" (the withdrawn one)
+captures it.
 
-## The bug this run caught — and why the contradiction was the tell
+**With the honest caveat that its commitments are on the easy end.** 25 of the 33 varying predictions call
+essentiality in exactly 1 of 25 conditions, and the true labels are sparse in the same way — 54 genes are
+truly essential in exactly 1/25, 22 in 2/25, so 76/217 (35%) are essential in ≤2 conditions. The model
+commits where the answer is most concentrated.
 
-The first run printed `constant pattern for 217/217 (1.0) across 1 shape` **alongside** 23 exact-set
-matches. Those cannot both be true: an exact-set match requires the predicted set to equal the true set,
-and a two-sided gene's true set is by definition neither empty nor full, so a constant prediction can
-never match one.
+## The withdrawn claim, and why it survived a self-check
 
-Cause: `pattern_distribution` still iterated the four hardcoded media names while the prediction was keyed
-by carbon source. Every lookup missed, every gene read as `....`, and the function reported a fabricated
-"100% constant". `switch_accuracy` and `constant_baselines` had been generalised; this one had not.
+The first version reported **0.0% constant across 20 shapes** and concluded "the model is switching."
 
-Had the contradiction not been checked, this run would have published **"the model is 100% constant"** —
-a dramatic and completely false claim, and the exact opposite of the truth. Pinned by
-`test_pattern_distribution_MUST_use_the_callers_conditions`.
+`pattern_distribution` tested for constancy with `if p in ("....", "EEEE")` — **hardcoded to four
+characters**. On a 25-condition panel, all-dispensable is 25 dots and all-essential is 25 E's; neither
+matched, so the count came out zero. The true figure is **184/217 = 84.8%** (145 all-dispensable + 39
+all-essential).
 
-> **Reusable:** when two metrics from a single run disagree in a way that is logically impossible, that is
-> a bug signal, not a finding. Check the harness before writing the interpretation.
+This is painful for a specific reason: **earlier the same day I fixed a different hardcoded-4 bug in this
+same function** — `pattern_distribution` was iterating the four media names — and that fix created false
+confidence that the function was clean. Generalising the condition *keys* was not enough; the constant
+*test* was hardcoded too. One fix in a function is not a clearance of that function.
+
+The earlier bug was caught by an impossible self-contradiction in the run's own output. This one was not,
+because the artifact recorded only the *predicted* pattern distribution — the true distribution, which
+would have shown the mismatch immediately, was never persisted. It is now.
+
+**Blast radius: contained.** At 4 conditions the old literal test and the correct one agree, so the
+published 4-media figure (62/68 = 94.0%) needs no revision. Pinned by
+`test_the_four_media_constant_numbers_are_UNAFFECTED_by_the_fix`.
+
+## What this substrate is — and is not
+
+It is **not a re-measurement** of the 4-media result. Several things differ at once:
+
+| | 4 media | 25 carbon sources |
+|---|---|---|
+| label modality | binary growth/no-growth of individual deletion strains | pooled RB-TnSeq competitive fitness, thresholded at `fit < -2` |
+| oxygen | aerobic + anaerobic | **aerobic only** |
+| strain | MG1655-based model vs Orth screen | Keio / BW25113 |
+| reproduction gate | the paper's own iJO1366 FBA columns | **none** |
+
+So the accuracy improvement **cannot be attributed to condition breadth alone** — label modality,
+aerobicity, condition distribution and strain context all moved together. The defensible claim is
+substrate-bounded: *on a larger aerobic carbon-source thresholded-fitness substrate, the model is
+measurably more accurate and somewhat less collapsed.*
 
 ## Honest limits
 
-- **No reproduction gate.** The Orth substrate ships the paper's own iJO1366 FBA columns, so the pipeline
-  could be checked against a published prediction before any new number was trusted. The Fitness Browser
-  has no such column. This number has no equivalent prior check.
-- **Aerobicity is not varied.** All 25 are aerobic carbon-source assays, so the oxygen axis the 4-media set
-  carried is absent here. This measures **carbon-source specificity**, not oxygen response — the two
-  results are not strictly the same question, and the difference cuts both ways.
-- **RB-TnSeq fitness is a pooled competition readout**, not a growth/no-growth call. The `fit < -2` cutoff
-  is inherited from the shipped Keio validation (Bernstein 2023) for comparability, not re-derived here.
-- **10.6% exact-set is still low in absolute terms.** Six times the lift is a real improvement over a
-  near-null result; it is not a model that reproduces conditional essentiality well.
-- Replicates per carbon source are averaged (62 experiments over 25 sources).
-
-## What this changes
-
-The 4-media conclusion — "adding reactions can't help, regulation is the lever" — was drawn from a
-substrate where the model had almost no room to demonstrate conditional resolution. Both prior findings
-should be re-read in that light:
-
-- The **gap-filling negative** (0 binary flips at any dose) was measured on the same 4 media. Worth
-  re-running here before treating it as settled.
-- The **pFBA regulatory positive** (~5× lift over null) was also 4-media. If the model already switches on
-  a carbon panel, the headroom that intervention was filling may be smaller than it appeared.
+- **No label sensitivity analysis.** The 217-gene set rests on one inherited cutoff (`fit < -2`, from the
+  shipped Keio validation). Replicate fitness values are averaged and the mean thresholded; the
+  t-statistic that the loader reads is not used, and no threshold sweep was run.
+- **Exact-set is a weak headline metric here** given how concentrated the true patterns are. The commit-rate
+  decomposition above is the more honest summary.
+- **The null moved too** (0.5588 → 0.6623), so "lift" is being compared across different base rates.
+- **Non-optimal solver statuses exist and were previously invisible.** cobrapy's `single_gene_deletion`
+  returns a `status` column alongside `growth`; the original run read only `growth`, so a non-optimal solve
+  was indistinguishable from a real growth value. Now audited, and it fires immediately: **39 non-optimal
+  solves across 15 of the 25 conditions** (0.7% of 5,425 cells; worst is maltose at 5). Small enough not to
+  overturn the headline, large enough that it should never have been unrecorded — and the same gap exists
+  in the three other FBA deletion scripts.
+- **True patterns are far more diverse than predicted ones**: 141 distinct true shapes among 217 genes,
+  against 20 predicted shapes. That asymmetry, not the aggregate agreement, is the clearest statement of
+  the model's conditional resolution.
 
 ## Reproduce
 
@@ -87,4 +109,5 @@ uv run python scripts/fba_conditional_carbon_validate.py
 ```
 
 Needs `feba.db` (7.4 GB, not committed — figshare `10.6084/m9.figshare.25236931`, CC BY 4.0).
-Sidecar: `wiki/fba_conditional_carbon_2026-08-12.json`. Tests: `tests/test_fba_conditional_essentiality.py`.
+Sidecar: `wiki/fba_conditional_carbon_2026-08-12.json` (now carries both predicted **and** experimental
+pattern distributions). Tests: `tests/test_fba_conditional_essentiality.py`.

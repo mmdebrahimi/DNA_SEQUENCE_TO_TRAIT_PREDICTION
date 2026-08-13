@@ -316,3 +316,32 @@ def test_pattern_distribution_MUST_use_the_callers_conditions():
     stale = pattern_distribution([r], pred)          # default 4-media keys -> every lookup misses
     assert stale["n_constant_pattern"] == 1          # the false "constant" the bug produced
     assert got["n_constant_pattern"] != stale["n_constant_pattern"]
+
+
+def test_constant_detection_is_LENGTH_AGNOSTIC():
+    """The SECOND hardcoded-4 bug in this one function. The literal ("....","EEEE") test meant a
+    25-condition all-dispensable pattern matched NEITHER, so a 25-carbon-source run reported
+    '0.0% constant' when the true figure was 184/217 = 84.8%. Generalising the condition KEYS was not
+    enough -- the constant TEST was hardcoded too."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    keys = tuple(f"c{i}" for i in range(25))
+    r = GeneRecord("b1", "b1", {k: (k == "c0") for k in keys}, {}, True)
+
+    all_disp = {k: {"b1": False} for k in keys}          # 25 dots
+    assert pattern_distribution([r], all_disp, conditions=keys)["n_constant_pattern"] == 1
+    all_ess = {k: {"b1": True} for k in keys}            # 25 E's
+    assert pattern_distribution([r], all_ess, conditions=keys)["n_constant_pattern"] == 1
+    varying = {k: {"b1": (k == "c3")} for k in keys}
+    assert pattern_distribution([r], varying, conditions=keys)["n_constant_pattern"] == 0
+
+
+def test_the_four_media_constant_numbers_are_UNAFFECTED_by_the_fix():
+    """Blast-radius check: at 4 conditions the old literal test and the new length-agnostic test agree,
+    so the shipped 4-media result (94.0% constant) needs no revision."""
+    from dna_decode.fba.conditional_essentiality import pattern_distribution
+
+    records = load_labels()
+    got = pattern_distribution(records, {c: {r.gene_id: r.paper_fba[c] for r in records}
+                                         for c in CONDITIONS})
+    assert got["n_constant_pattern"] == 62          # the published iJO1366 figure, unchanged

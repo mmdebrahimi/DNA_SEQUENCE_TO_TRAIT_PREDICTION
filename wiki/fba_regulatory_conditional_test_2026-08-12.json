@@ -61,6 +61,17 @@
     }
   },
   "verdict": "REGULATORY_CONSTRAINT_MOVES_THE_CONDITIONAL_METRIC",
+  "scope_note_2026-08-12": {
+    "status": "STANDS AS MEASURED on the 4-media substrate; GENERALITY UNKNOWN",
+    "history": "A same-day memo asserted this result was 'now suspect' because it shared the narrow "
+               "4-media substrate. That assertion is WITHDRAWN -- it was itself an unverified claim. The "
+               "rate-matched null (0/200 draws reached the observed value) is internally valid on the "
+               "substrate it was run on. What is unknown is whether the gain GENERALISES to a wider "
+               "condition panel, which is untested.",
+    "named_weakness": "The rate-matched null samples cells INDEPENDENTLY, while real gene patterns are "
+                      "correlated across conditions. A null preserving gene-level and condition-level "
+                      "margins would be a stronger test, and should be built before the claim is extended."
+  },
   "caveats": [
     "pFBA restriction is a CRUDE proxy for regulation -- it forces off ~69% of gene-associated reactions. It is evidence about WHERE the deficit lives, not a deployable method.",
     "The gain is RECALL, not precision: precision does not improve, and the threshold-free AUROC gets WORSE, so the continuous ranking degrades even as the binary calls improve.",
