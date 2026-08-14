@@ -111,6 +111,41 @@ cover conventional lab conditions, not an exotic 25-carbon-source panel.
 > 93 tables — fitness, cofitness, specific phenotypes — and no transcriptomics). Someone should check
 > whether a carbon-source-panel transcriptome exists before this is treated as settled.
 
+> ### ⚠ FALSIFIED THE SAME DAY — the data blocker does not hold
+>
+> One search overturned it. **PRECISE-NP881** (Nucleic Acids Research / PNAS, SBRG) is an 881-condition
+> *E. coli* transcriptome compendium built around exactly this axis: **346 RNA-seq profiles generated
+> during growth on 43 individual carbon sources**, each added to M9 minimal medium, combined with 535
+> public MG1655 profiles from PRECISE-1K. It exists *because* PRECISE-1K lacked a carbon-source panel —
+> three carbon iModulons (CRP-3, dmlA, SgcABCEQX) only emerged once those substrate conditions were
+> added.
+>
+> **So the data-availability leg of the NO-GO is dead**, and this is the case I predicted would convert
+> an external wall into a code wall: E-Flux itself is roughly a day's work.
+>
+> **What is verified vs not:**
+> - **Verified:** a 43-carbon-source *E. coli* K-12 RNA-seq compendium exists, purpose-built for this axis.
+> - **NOT verified:** the concrete overlap with my 25 Biolog sources, and access/licence terms. Overlap is
+>   *likely* high — glucose, galactose, gluconate, glycerol, acetate, xylose, succinate, malate, pyruvate,
+>   lactate, mannitol, sorbitol, ribose, maltose, mannose, fucose, NAG, glucosamine, glucuronate and
+>   galacturonate are all standard carbon-panel members — but **that is an expectation, not a count.**
+>   The decisive check is the substrate list in the paper's Dataset S1 or the per-sample carbon-source
+>   annotations in `SBRG/precise1k`'s metadata table.
+>
+> **The other leg of the NO-GO still stands, and it is now the only one:** the Machado & Herrgård prior
+> is unfavourable (plain FBA + parsimony as good or better than expression integration) — though
+> indirect, since it benchmarked flux rather than essentiality and did not decompose by the flat-gene
+> stratum.
+>
+> **Revised verdict: NO-GO → CONDITIONAL GO**, gated on counting the overlap. If ≥10 of the 25 sources
+> match, the experiment is buildable now and the only remaining risk is the literature prior — which is
+> exactly the kind of risk worth spending a day to test, because the failure mode is informative either
+> way.
+>
+> **Process note worth keeping:** the blocker was recorded as an *unfalsified hypothesis* rather than a
+> finding, and checking it flipped the verdict in a single search. Had it been written as "no such data
+> exists", a whole direction would have been wrongly closed.
+
 **Why not substitute the fitness data itself as the selection signal:** RB-TnSeq fitness *does* say which
 genes the cell uses per condition, and it is sitting right there — but constraining the model with the
 same labels it is scored against is circular, and this project has a documented history of exactly that
