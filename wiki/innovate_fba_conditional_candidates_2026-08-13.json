@@ -1,0 +1,99 @@
+{
+  "candidates": [
+    {
+      "id": "C-G9-1",
+      "operator": "G9-abduce",
+      "input_frame": "original",
+      "claim": "The flat genes are flat because their products are not biomass precursors - the objective never demands what they make, so deleting them is free by construction. This explains the 71% of flat genes that isozyme GPR structure does not.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run python scripts/fba_flat_gene_biomass_killtest.py"
+      },
+      "evidence_tags": [
+        "inferred",
+        "explains-the-29-percent-residual",
+        "executable-falsifier",
+        "no-new-data-needed"
+      ]
+    },
+    {
+      "id": "C-G1-1",
+      "operator": "G1-reframe",
+      "input_frame": "reframed",
+      "claim": "The failure is not a defect to fix but a SCREEN to use: a gene FBA keeps flat everywhere while the data calls it conditionally essential is, by construction, a gene whose condition-dependence comes from REGULATION rather than stoichiometry. The 110 flat genes are therefore a label-free PREDICTION of regulatory control, testable against known regulons.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run python scripts/fba_flat_gene_regulon_killtest.py"
+      },
+      "evidence_tags": [
+        "speculative",
+        "inverts-the-failure",
+        "needs-regulondb",
+        "not-yet-built"
+      ]
+    },
+    {
+      "id": "C-G8-1",
+      "operator": "G8-recombine",
+      "input_frame": "original",
+      "claim": "Crossing the gap-fill dead-end with the pFBA dead-end inverts both: gap-fill showed ADDING reactions worsens flatness and pFBA showed removing them indiscriminately worsens accuracy, so the model is too LARGE - a smaller curated core E. coli model should predict conditional essentiality better than iML1515 despite covering less biochemistry.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run python scripts/fba_core_model_conditional_killtest.py"
+      },
+      "evidence_tags": [
+        "speculative",
+        "recombines-two-dead-ends",
+        "cheap-core-model-available-in-bigg",
+        "not-yet-built"
+      ]
+    },
+    {
+      "id": "C-G5-1",
+      "operator": "G5-relax",
+      "input_frame": "original",
+      "claim": "Relax the assumption that RB-TnSeq competitive fitness and FBA monoculture growth measure the same thing: a gene can be competitively unfit in a pool while remaining monoculture-viable, so the flatness is a label-modality mismatch rather than a model defect.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run python scripts/fba_label_modality_killtest.py"
+      },
+      "evidence_tags": [
+        "speculative",
+        "already-contradicted-by-the-4-media-monoculture-substrate",
+        "relax-a-constraint"
+      ]
+    },
+    {
+      "id": "C-G1-2",
+      "operator": "G1-reframe",
+      "input_frame": "reframed",
+      "claim": "The unit of prediction is wrong. FBA is a reaction-flux model and gene-level deletion is a lossy projection through the GPR; scoring conditional essentiality at the REACTION level rather than the gene level would remove the isozyme-masking that makes 29% of flat genes flat by construction.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run python scripts/fba_reaction_level_conditional_killtest.py"
+      },
+      "evidence_tags": [
+        "inferred",
+        "changes-the-unit",
+        "gpr-masking-is-measured-at-29-percent",
+        "not-yet-built"
+      ]
+    },
+    {
+      "id": "C-G5-2",
+      "operator": "G5-relax",
+      "input_frame": "reframed",
+      "claim": "Relax the single-objective assumption: iML1515 maximises one biomass reaction, but a cell on a poor carbon source is not maximising growth. Replacing the objective with a condition-appropriate one (e.g. ATP yield, or a measured growth-rate constraint) would restore the condition-specificity that flat ratios lack.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run python scripts/fba_objective_swap_conditional_killtest.py"
+      },
+      "evidence_tags": [
+        "speculative",
+        "relaxes-the-objective",
+        "wildtype-growth-varies-11x-across-the-panel",
+        "not-yet-built"
+      ]
+    }
+  ]
+}
