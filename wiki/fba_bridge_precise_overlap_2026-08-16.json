@@ -1,0 +1,54 @@
+{
+  "record": "fba-bridge-substrate-overlap-v1",
+  "date": "2026-08-16",
+  "question": "The 6th-advance CONDITIONAL GO gate: how many of our 25 Biolog carbon sources are covered by PRECISE-NP881's carbon panel?",
+  "verdict": "GATE_CLEARED_GO",
+  "baseline_to_beat": {"metric": "per_cell", "value": 0.7368},
+
+  "sources": {
+    "np881_paper": "PNAS 10.1073/pnas.2531884123 (systems-level atlas of carbon-response transcriptional states in E. coli)",
+    "np881_sra": ["PRJNA1273304", "PRJNA1273601"],
+    "np881_metadata_route": "ENA portal filereport read_run experiment_title (PNAS page is HTTP 403 bot-block; SRA metadata is the authoritative per-sample carbon annotation)",
+    "precise1k_metadata": "raw.githubusercontent.com/SBRG/precise1k/main/data/precise1k/metadata_qc.csv (1035 rows)",
+    "our_panel": "wiki/fba_conditional_carbon_2026-08-13.json conditions (n=25)"
+  },
+
+  "np881_design_decomposition": {
+    "note": "experiment_title encodes the arm; this was NOT documented in the abstract and is load-bearing",
+    "total_runs_fetched": 350,
+    "arms": {
+      "C_ (sole carbon source in M9)": {"runs": 82, "distinct_substrates": 41},
+      "Supp_ (M9 + GLUCOSE + supplement at 10mM)": {"runs": 228, "distinct_substrates": 114},
+      "N_ (nitrogen source)": {"runs": 38, "distinct_substrates": 19},
+      "UNPARSED (glucose/NH4Cl reference)": {"runs": 2}
+    },
+    "critical_caveat": "Only the C_ arm is physiologically comparable to our panel. The 228 Supp_ runs are glucose-grown with a 10mM supplement -- catabolite repression active, glucose is the carbon source. Using them as if they were sole-carbon conditions would silently confound the bridge."
+  },
+
+  "overlap": {
+    "strict_sole_carbon": {"matched": 16, "of": 25, "fraction": 0.64},
+    "union_with_precise1k": {"matched": 22, "of": 25, "fraction": 0.88},
+    "matched_np881_sole_carbon": [
+      "D-Galactose", "D-Galacturonic acid", "D-Gluconic acid", "D-Glucosamine",
+      "D-Glucose", "D-Glucose-6-Phosphate", "D-Glucuronic acid", "D-Maltose",
+      "D-Mannitol", "D-Mannose", "D-Serine", "D-Sorbitol", "L-Fucose",
+      "N-Acetyl-D-Glucosamine", "Pyruvate", "a-Ketoglutaric acid"
+    ],
+    "matched_only_via_precise1k": ["Potassium acetate", "D-Fructose", "Glycerol", "D-Ribose", "D-Xylose"],
+    "partial_racemic": [
+      {"ours": "L-Malic acid", "theirs": "DL-Malic_acid", "note": "racemic; supplies L-malate but is not an identical condition -- treat as partial"}
+    ],
+    "missing_entirely": ["Sodium succinate", "Sodium D-Lactate", "Glycolic Acid"]
+  },
+
+  "load_bearing_caveats": [
+    "SUCCINATE IS MISSING from the carbon panel -- and succinate is the substrate of the SHIPPED 4-media cell and of both fba_strain_design_succ artifacts. The bridge cannot be tested on the shipped cell's own substrate.",
+    "The 22/25 union figure mixes NP881's new profiles with 535 public PRECISE-1K profiles (different batches/submissions). The batch-confound risk is real; 16/25 single-provenance is the defensible panel and 22/25 is the optimistic ceiling.",
+    "Substrate name matching is normalized (salt forms, hydrates, D-/L- prefixes) -- reviewed by hand, but a chemistry check on the 16 before building E-Flux is cheap insurance.",
+    "The Machado & Herrgard 2014 prior (plain FBA + parsimony as good or better than expression-constrained FBA) is UNDISTURBED by this result. It bears on flux, not essentiality, so it stays an indirect prior -- not falsified, not confirmed."
+  ],
+
+  "what_this_changes": "The 6th advance recorded the bridge as CONDITIONAL GO gated on this count. The count clears: 16 single-provenance matched conditions is a workable panel (our whole conditional-essentiality result rests on 25). The remaining risk is the Machado prior, which is indirect. The blocker is now fully a CODE wall (~1 day of E-Flux work), not a data wall.",
+
+  "next_step_if_pursued": "E-Flux over the 16 matched conditions; compare per-cell against the 0.7368 baseline. Pre-register the bar BEFORE looking (the FBA epoch has already produced two self-inflicted verdict reversals from post-hoc filters)."
+}
