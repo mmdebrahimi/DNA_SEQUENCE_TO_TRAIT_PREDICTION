@@ -28,16 +28,30 @@ E-Flux demonstrably bit:
 So the expression layer changed the flux space materially, and the essentiality **classification** did
 not move at all.
 
-## Why (labelled hypothesis — NOT established)
+## Why — measured, and it killed my first explanation
 
-The essentiality call is a **ratio** test, `growth_knockout < 0.01 × growth_wildtype`, evaluated
-against each arm's *own* wildtype. If E-Flux's multiplicative bound scaling largely preserves
-knockout/wildtype ratios, a 1%-threshold ratio test is insensitive to it.
+My initial hypothesis was that E-Flux's multiplicative scaling **preserves** knockout/wildtype ratios,
+so a ratio test cancels it. **That is falsified.** The per-gene ratio diagnostic (40 genes × 2
+conditions, `processes=1`) shows ratios move *substantially*:
 
-**This mechanism is `unfalsified`.** The decisive diagnostic — comparing per-gene growth ratios
-between arms — exceeded its time budget and did not complete. The *result* above is measured; this
-*explanation* is a named hypothesis and should not be cited as fact. Finishing that diagnostic is the
-cheapest way to convert it.
+| condition | max \|Δratio\| | mean \|Δratio\| | genes with \|Δ\| > 0.01 |
+|---|---|---|---|
+| D-Galactose | 0.2710 | 0.054 | 10/40 |
+| Potassium acetate | 0.4337 | 0.059 | 9/40 |
+
+The actual mechanism is different and more useful: **the growth-ratio distribution is bimodal** —
+genes sit at ≈1.0 (dispensable) or ≈0.0 (lethal), with almost nothing in between. Sample ratios move
+`0.978 → 0.881`, `1.0 → 1.0`, `−0.0 → −0.0`. So E-Flux shifts magnitudes by up to 0.43 while
+essentially never moving a gene across the **0.01** line, because that line sits in a nearly empty
+region of the distribution.
+
+**The classification is robust to large flux-magnitude changes because the readout is a threshold on a
+bimodal quantity.** That is a property of the *readout*, not of E-Flux — and it predicts the null
+generalizes to any constraint layer that rescales flux without flipping a knockout between
+lethal and viable.
+
+*(Recorded honestly: this replaces a hypothesis I had labelled `unfalsified` in the first version of
+this memo. Measurement contradicted the expectation; the expectation was wrong.)*
 
 ## What this does and does not close
 
@@ -47,9 +61,14 @@ good or better, for *flux*) to *essentiality* — the exact prior the 5th advanc
 NO-GO, and which the 6th advance's CONDITIONAL GO had to argue around.
 
 **Does not:** close the bridge on the full 25-condition panel, and does not test NP881's 16-condition
-panel (see below). A structural reading — that a ratio-threshold readout is intrinsically insensitive
-to this class of constraint — would predict the null holds on any panel, but that is the hypothesis
-above, not a result.
+panel (see below). But the measured mechanism above — a threshold on a bimodal readout — now
+*predicts* the null holds on any panel, because it is a property of the essentiality readout rather
+than of this substrate. That prediction is testable cheaply on the full 25 panel (the baseline
+deletions already exist); it does not require NP881.
+
+**The actionable consequence:** if expression constraints are to help at all, the readout has to
+change — a continuous or graded essentiality measure rather than a 1% threshold on a bimodal ratio.
+That is a redesign of the metric, not more constraint engineering.
 
 ## Correction to this morning's artifact
 
