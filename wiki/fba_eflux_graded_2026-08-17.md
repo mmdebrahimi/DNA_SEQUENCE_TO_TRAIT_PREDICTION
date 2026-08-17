@@ -1,3 +1,13 @@
+> # RETRACTED 2026-08-17
+>
+> **The claim below is NOT supported.** The deterministic re-run (`processes=1`, the reproducible mode)
+> returns delta **-0.0133** with bootstrap CI **[-0.0352, +0.0087]**, P(d<=0)=0.902 -> `NO_SIGNAL_EVEN_GRADED`.
+> Three runs span -0.013 to +0.031: the run-to-run variance exceeds the effect and crosses zero, so no
+> direction was ever established. Offline corroboration: outside the lethal spike the baseline is at
+> CHANCE (AUROC 0.4963), and on cells that actually moved E-Flux is WORSE (0.4542 -> 0.4313).
+>
+> See `wiki/fba_eflux_graded_RETRACTION_2026-08-17.md`. Retained unedited below for the audit trail.
+
 # The binary null was a BINARIZATION ARTIFACT — E-Flux does carry graded signal
 
 **Date:** 2026-08-17 · **Verdict:** `EFLUX_CARRIES_GRADED_SIGNAL`
