@@ -100,3 +100,58 @@ the available panel**, so pursuing NP881 means paying ~50–250 GB of SRA proces
 hypothesis that just returned exactly zero on 11 conditions. The cheap move is instead to finish the
 ratio diagnostic and decide whether the null is mechanistic (predicting no panel will help) or
 panel-specific.
+
+---
+
+## Addendum 2026-08-17 — the mechanism was tested at scale, and it holds *more* strongly
+
+**Runner:** `scripts/fba_bimodality_at_scale.py` (verify-in-batch PASS)
+
+The bimodality mechanism above was derived from `conditionally_essential_genes(recs)[:40]` — **40 genes
+selected for being conditionally essential**, out of 1,516 in the model. That is precisely the population
+most likely to sit at the extremes by construction, so the observed bimodality could have been a property
+of the *sample* rather than of the *readout* — and the conclusion drawn from it ("metric redesign, not
+more constraint work") would not have followed.
+
+Re-ran the baseline arm over **all 1,516 genes × 11 conditions = 16,676 gene×condition cells**.
+
+### The load-bearing claim survives — and the threshold region is not merely sparse, it is empty
+
+| growth-ratio bin | cells | share |
+|---|---|---|
+| [0.000, 0.001) | 1,332 | 7.99 % |
+| **[0.001, 0.010)** | **0** | **0.00 %** |
+| **[0.010, 0.050)** | **0** | **0.00 %** |
+| [0.050, 0.200) | 8 | 0.05 % |
+| [0.200, 0.999) | 1,499 | 8.98 % |
+| [0.999, 1.000] | 13,837 | 82.98 % |
+
+**Zero of 16,676 cells lie between 0.001 and 0.05.** The `FRAC = 0.01` essentiality threshold sits in a
+region containing literally no genes, so a constraint layer that rescales flux magnitudes has nothing to
+flip. Only 8 cells (0.048 %) fall anywhere within (0.001, 0.1), and all 8 are on one condition
+(sodium pyruvate).
+
+### The selection concern was real, but pointed the opposite way
+
+| population | in intermediate band (0.05–0.95) |
+|---|---|
+| the CE-40 sample the mechanism came from | **11.59 %** |
+| all 1,516 model genes | **1.93 %** |
+
+The selected sample was **6× more spread out** than the full gene set. So the 40-gene measurement
+*understated* the bimodality; the readout is even more sharply two-valued than the mechanism claimed.
+
+### What this changes
+
+- **"Expression constraints can only help if the readout changes to something graded" is now supported
+  at scale**, not just on a selected sample. The metric-redesign conclusion stands.
+- The commit's further prediction — that the null **generalises to any constraint layer that rescales
+  flux without flipping a knockout across the lethal/viable line** — is strengthened, because the
+  emptiness is a property of the readout and has nothing to do with E-Flux specifically.
+
+### Honest limits
+
+Baseline arm only (the question is the readout's shape, so the E-Flux arm is not required); single-gene
+deletions on one model over 11 conditions; 66 lethal knockouts returned tiny **negative** growth from the
+LP (worst −3e−10) and were clamped to zero, with the clamp magnitude asserted below 1e−6 so a real
+negative could not be silently absorbed.
