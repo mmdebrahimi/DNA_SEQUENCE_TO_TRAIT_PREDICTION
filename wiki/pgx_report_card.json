@@ -1,6 +1,6 @@
 {
   "schema": "pgx-report-card-v0",
-  "analysis_date": "2026-07-07",
+  "analysis_date": "2026-08-13",
   "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
   "cells": [
     {
@@ -39,7 +39,7 @@
     {
       "gene": "CYP3A5",
       "trait": "expressor/non-expressor phenotype (tacrolimus)",
-      "getrm": "8/8",
+      "getrm": "88/88",
       "getrm_pct": 1.0,
       "pharmcat": null,
       "functional_evidence": "\u2014",

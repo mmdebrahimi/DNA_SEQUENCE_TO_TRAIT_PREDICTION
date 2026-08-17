@@ -116,3 +116,7 @@ wiki/gemme_holdout_tables.json
 /data/phage_ref/lbnl/
 # phageReceptor cross-lab test genomes (regenerable via scripts/phagereceptor_crosslab_validate.py)
 /data/phage_ref/phagereceptor_genomes/
+
+# downloaded reference papers (regenerable, ~87MB of duplicates)
+wiki/*.pdf
+wiki/*.full

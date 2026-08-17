@@ -3,12 +3,10 @@
   "date": "2026-07-28",
   "method": "offline_from_committed_getrm_truth",
   "headline_leak_exposure_samples": 0,
-  "headline_leak_scored_samples": 9,
-  "headline_leak_noncore_rate": 0.0,
+  "headline_leak_scored_samples": 0,
+  "headline_leak_noncore_rate": null,
   "guarded_noncore_correctly_withheld": 57,
-  "leak_genes": [
-    "cyp3a5"
-  ],
+  "leak_genes": [],
   "genes_no_committed_truth": [],
   "per_gene": [
     {
@@ -89,7 +87,7 @@
     {
       "gene": "cyp3a5",
       "status": "scored",
-      "guarded": false,
+      "guarded": true,
       "core_set": [
         "*1",
         "*3",
@@ -103,7 +101,7 @@
       "n_ambiguous_excluded": 0,
       "noncore_rate": 0.0,
       "noncore_alleles": {},
-      "interpretation": "non-core samples SILENTLY MIS-CALLED *1 today (the leak this exposure quantifies)"
+      "interpretation": "non-core samples correctly WITHHELD by the sentinel layer (control)"
     },
     {
       "gene": "tpmt",

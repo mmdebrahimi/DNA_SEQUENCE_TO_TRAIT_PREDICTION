@@ -37,7 +37,7 @@ receptor-class TRANSFERS reliably along genome homology within clade-conserved c
 ```bash
 uv run python scripts/build_phage_receptor_report.py
 # or just the number:
-uv run python -c "from scripts.phage_receptor_caller import _load_manifest, leave_one_out; \
+uv run python -c "from dna_decode.phage.receptor_caller import _load_manifest, leave_one_out; \
 r=leave_one_out(*_load_manifest('data/phage_ref/basel_manifest.tsv','data/phage_ref/basel')); \
 print(r.accuracy, r.per_receptor)"
 ```

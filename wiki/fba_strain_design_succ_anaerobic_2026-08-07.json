@@ -1,0 +1,96 @@
+{
+  "target_reaction": "EX_succ_e",
+  "target_name": "Succinate exchange",
+  "condition": "ANAEROBIC (O2 uptake closed)",
+  "growth_floor_frac": 0.1,
+  "growth_floor_per_h": 0.015754,
+  "wildtype_growth_per_h": 0.15754,
+  "baseline": {
+    "knockouts": [],
+    "n_knockouts": 0,
+    "min_product_flux": 0.005256,
+    "max_product_flux": 16.26593,
+    "growth_per_h": 0.15754,
+    "coupling": "OBLIGATORY",
+    "notes": [
+      "wild type (no knockouts)"
+    ]
+  },
+  "n_genes_scanned": 1516,
+  "n_nonviable_at_floor": 200,
+  "n_singles_evaluated": 1316,
+  "n_pairs_evaluated": 780,
+  "search": "exhaustive single knockouts over 1516 genes; pairs are a BOUNDED heuristic over the top 40 singles (780 pairs), NOT an exhaustive double-knockout search",
+  "wildtype_already_coupled": true,
+  "n_coupled_designs": 0,
+  "n_inheriting_baseline_only": 2096,
+  "designs": [],
+  "best_uncoupled": [
+    {
+      "knockouts": [
+        "b3290"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.005256,
+      "max_product_flux": 16.26593,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "b2094"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.005256,
+      "max_product_flux": 16.26593,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "b2497"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.005256,
+      "max_product_flux": 16.26593,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "b3093"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.005256,
+      "max_product_flux": 16.26593,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "b1488"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.005256,
+      "max_product_flux": 16.26593,
+      "growth_per_h": 0.15754,
+      "coupling": "OBLIGATORY",
+      "notes": [],
+      "improvement_over_wildtype": 0.0
+    }
+  ],
+  "scope": "STOICHIOMETRIC prediction. A coupled design is a HYPOTHESIS FOR THE BENCH, not a validated strain: FBA does not model regulation, enzyme kinetics, toxicity, metabolic burden, or whether the knockout strain is constructible.",
+  "record": "fba-strain-design-v1",
+  "date": "2026-08-07",
+  "model": "iML1515",
+  "organism": "Escherichia coli K-12 MG1655",
+  "method": "growth-coupled knockout search (two-sided LP at a fixed growth floor); mechanistic, deterministic"
+}

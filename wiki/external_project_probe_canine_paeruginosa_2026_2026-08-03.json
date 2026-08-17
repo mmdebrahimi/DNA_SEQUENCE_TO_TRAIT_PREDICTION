@@ -1,0 +1,43 @@
+{
+  "_schema": "external-preflight-v1",
+  "date": "2026-08-03",
+  "project": "PRJNA1475700",
+  "cohort_name": "canine_paeruginosa_2026",
+  "mode": "project_probe",
+  "scored_gate": false,
+  "verdict": "FAIL",
+  "reasons": [
+    "unresolved tuning fraction 0.4056 > 0.05",
+    "no FREE (assembly-resolvable) BioSamples \u2014 free pilot N is zero"
+  ],
+  "n_cohort_biosamples": 0,
+  "assembly_availability": {
+    "n_biosamples": 0,
+    "n_free": 0,
+    "n_assembly_required": 0,
+    "free": [],
+    "assembly_required": []
+  },
+  "leakage": {
+    "n_tuning": 1509,
+    "n_resolved": 897,
+    "n_unresolved": 612,
+    "unresolved_fraction": 0.4056,
+    "unresolved_threshold": 0.05,
+    "overlap_biosamples": [],
+    "fail_overlap": false,
+    "fail_unresolved": true,
+    "passed": false
+  },
+  "assembly_overlap": {
+    "overlap_biosamples": [],
+    "n_tuning_assembly_bases": 1509,
+    "fail_overlap": false,
+    "passed": true
+  },
+  "mic_open": true,
+  "manifest_complete": true,
+  "manifest_degraded": false,
+  "manifest_warnings": [],
+  "manifest_n_cohorts": 43
+}

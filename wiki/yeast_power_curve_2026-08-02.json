@@ -1,0 +1,38 @@
+{
+  "question": "does gbm-beats-TUNED-ridge persist as n shrinks to BXD's ~85?",
+  "traits": {
+    "Maltose": {
+      "85": 0.3681,
+      "200": 0.3423,
+      "500": 0.2424,
+      "1005": 0.1715
+    },
+    "Cadmium_Chloride": {
+      "85": 0.3996,
+      "200": 0.3693,
+      "500": 0.1717,
+      "799": 0.1177
+    },
+    "Copper": {
+      "85": 0.0579,
+      "200": 0.0479,
+      "500": 0.0633,
+      "972": 0.0845
+    },
+    "Indoleacetic_Acid": {
+      "85": 0.0656,
+      "200": 0.096,
+      "500": 0.1827,
+      "994": 0.164
+    }
+  },
+  "ns": [
+    85,
+    200,
+    500,
+    1008
+  ],
+  "mean_delta_small_n": 0.2228,
+  "mean_delta_large_n": 0.1344,
+  "verdict": "POWER_RULED_OUT_architecture"
+}
