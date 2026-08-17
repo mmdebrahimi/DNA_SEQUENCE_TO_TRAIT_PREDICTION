@@ -1,0 +1,32 @@
+{
+  "comparisons": [
+    {
+      "pair": "A vs B (in-process)",
+      "n_cells": 2015,
+      "n_differ_above_gate_tol": 58,
+      "max_abs_delta": 3.237998758010008e-11,
+      "median_abs_delta": 3.037070222602221e-12,
+      "n_call_flips": 0,
+      "call_flip_examples": []
+    },
+    {
+      "pair": "A vs C (fresh model)",
+      "n_cells": 2015,
+      "n_differ_above_gate_tol": 66,
+      "max_abs_delta": 3.0955682461808465e-11,
+      "median_abs_delta": 2.4760462956269203e-12,
+      "n_call_flips": 0,
+      "call_flip_examples": []
+    }
+  ],
+  "agreement_per_pass": {
+    "A": 0.679901,
+    "B": 0.679901,
+    "C": 0.679901
+  },
+  "n_genes": 155,
+  "n_conditions": 13,
+  "max_abs_delta": 3.237998758010008e-11,
+  "n_call_flips": 0,
+  "metric_stable_across_passes": true
+}

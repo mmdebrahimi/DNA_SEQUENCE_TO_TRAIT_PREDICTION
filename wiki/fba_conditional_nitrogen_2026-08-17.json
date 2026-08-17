@@ -1,0 +1,210 @@
+{
+  "record": "fba-conditional-nitrogen-v1",
+  "date": "2026-08-17",
+  "prereg": "wiki/fba_nitrogen_prereg_2026-08-17.md",
+  "model": "iML1515",
+  "labels": "Fitness Browser RB-TnSeq orgId=Keio, expGroup='nitrogen source', fit<-2.0",
+  "n_conditions": 13,
+  "conditions": {
+    "Adenosine": "EX_adn_e",
+    "Ammonium chloride": "EX_nh4_e",
+    "Cytidine": "EX_cytd_e",
+    "D-Alanine": "EX_ala__D_e",
+    "D-Serine": "EX_ser__D_e",
+    "Glycine": "EX_gly_e",
+    "L-Alanine": "EX_ala__L_e",
+    "L-Arginine": "EX_arg__L_e",
+    "L-Asparagine": "EX_asn__L_e",
+    "L-Aspartic Acid": "EX_asp__L_e",
+    "L-Glutamine": "EX_gln__L_e",
+    "L-Serine": "EX_ser__L_e",
+    "Putrescine Dihydrochloride": "EX_ptrc_e"
+  },
+  "excluded": {
+    "Gly-DL-Asp": "dipeptide; no iML1515 exchange",
+    "Gly-Glu": "dipeptide; no iML1515 exchange",
+    "casamino acids": "mixture, not a single compound (same exclusion the carbon panel makes)"
+  },
+  "n_genes_complete_rows": 1339,
+  "n_conditionally_essential": 155,
+  "deterministic": true,
+  "determinism_gate": {
+    "deterministic_at_claim_level": true,
+    "n_cells": 2015,
+    "n_call_flips": 0,
+    "call_flip_examples": [],
+    "max_abs_delta": 1.0331627553483713e-08,
+    "min_margin_to_threshold": 0.009999999986989644,
+    "safety_factor": 967901.7110540102,
+    "min_safety_factor": 1000.0,
+    "headline_metric_matches": true,
+    "headline_metric": [
+      0.6799,
+      0.6799
+    ],
+    "basis": "claim-level reproducibility: no cell crosses the call line, the headline metric is identical, and the nearest cell to the threshold is >= min_safety_factor times further from it than the largest observed numerical drift",
+    "wildtype_identical": true
+  },
+  "wildtype_growth": {
+    "Adenosine": 2.034978,
+    "Ammonium chloride": 0.876997,
+    "Cytidine": 1.6352,
+    "D-Alanine": 0.925933,
+    "D-Serine": 0.925933,
+    "Glycine": 0.925933,
+    "L-Alanine": 0.925933,
+    "L-Arginine": 1.654216,
+    "L-Asparagine": 1.332517,
+    "L-Aspartic Acid": 0.925933,
+    "L-Glutamine": 1.537705,
+    "L-Serine": 0.925933,
+    "Putrescine Dihydrochloride": 1.61346
+  },
+  "per_cell_agreement": 0.6799,
+  "best_constant_null": 0.5355,
+  "per_condition": {
+    "Adenosine": {
+      "agreement": 0.729,
+      "mcc": 0.4385,
+      "tp": 37,
+      "fp": 13,
+      "fn": 29,
+      "tn": 76,
+      "n": 155
+    },
+    "Ammonium chloride": {
+      "agreement": 0.7226,
+      "mcc": 0.4494,
+      "tp": 42,
+      "fp": 12,
+      "fn": 31,
+      "tn": 70,
+      "n": 155
+    },
+    "Cytidine": {
+      "agreement": 0.7419,
+      "mcc": 0.4831,
+      "tp": 40,
+      "fp": 10,
+      "fn": 30,
+      "tn": 75,
+      "n": 155
+    },
+    "D-Alanine": {
+      "agreement": 0.6452,
+      "mcc": 0.3759,
+      "tp": 46,
+      "fp": 8,
+      "fn": 47,
+      "tn": 54,
+      "n": 155
+    },
+    "D-Serine": {
+      "agreement": 0.6903,
+      "mcc": 0.4099,
+      "tp": 43,
+      "fp": 11,
+      "fn": 37,
+      "tn": 64,
+      "n": 155
+    },
+    "Glycine": {
+      "agreement": 0.6258,
+      "mcc": 0.2499,
+      "tp": 35,
+      "fp": 19,
+      "fn": 39,
+      "tn": 62,
+      "n": 155
+    },
+    "L-Alanine": {
+      "agreement": 0.6839,
+      "mcc": 0.3192,
+      "tp": 32,
+      "fp": 22,
+      "fn": 27,
+      "tn": 74,
+      "n": 155
+    },
+    "L-Arginine": {
+      "agreement": 0.6645,
+      "mcc": 0.1154,
+      "tp": 12,
+      "fp": 35,
+      "fn": 17,
+      "tn": 91,
+      "n": 155
+    },
+    "L-Asparagine": {
+      "agreement": 0.6516,
+      "mcc": 0.3461,
+      "tp": 42,
+      "fp": 12,
+      "fn": 42,
+      "tn": 59,
+      "n": 155
+    },
+    "L-Aspartic Acid": {
+      "agreement": 0.7355,
+      "mcc": 0.4621,
+      "tp": 41,
+      "fp": 13,
+      "fn": 28,
+      "tn": 73,
+      "n": 155
+    },
+    "L-Glutamine": {
+      "agreement": 0.7419,
+      "mcc": 0.4889,
+      "tp": 42,
+      "fp": 10,
+      "fn": 30,
+      "tn": 73,
+      "n": 155
+    },
+    "L-Serine": {
+      "agreement": 0.671,
+      "mcc": 0.2848,
+      "tp": 30,
+      "fp": 24,
+      "fn": 27,
+      "tn": 74,
+      "n": 155
+    },
+    "Putrescine Dihydrochloride": {
+      "agreement": 0.5355,
+      "mcc": 0.229,
+      "tp": 46,
+      "fp": 8,
+      "fn": 64,
+      "tn": 37,
+      "n": 155
+    }
+  },
+  "predictions": {
+    "P1_bimodality": {
+      "frac_in_band_0.001_0.05": 0.0,
+      "bar": "< 0.01",
+      "result": "REPLICATES"
+    },
+    "P2_flat_deficit": {
+      "frac_missed_essential_that_are_flat": 0.9107,
+      "n_missed": 448,
+      "bar": ">= 0.50",
+      "result": "REPLICATES"
+    },
+    "P3_beats_constant_null": {
+      "per_cell": 0.6799,
+      "best_constant_null": 0.5355,
+      "lift": 0.1444,
+      "bar": "> 0",
+      "result": "REPLICATES"
+    }
+  },
+  "verdict": "ALL_THREE_REPLICATE",
+  "caveats": [
+    "Several N sources (alanine/serine/aspartate/glutamine) also supply CARBON -- true of the real assay too (glucose minimal medium + test compound as sole N source), so these are NOT nitrogen-only perturbations.",
+    "13 of 16 assay sources; 2 dipeptides + casamino acids are unmappable to iML1515 exchanges.",
+    "2 replicates per source, averaged -- thinner than carbon's ~2.5."
+  ]
+}
