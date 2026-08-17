@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from dna_decode.fba.conditional_essentiality import (  # noqa: E402
     conditionally_essential_genes,
     confusion_from_calls,
+    continuous_readout,
     mcc,
 )
 from dna_decode.fba.fitness_browser import (  # noqa: E402
@@ -188,6 +189,74 @@ def build_condition_expression(conds: dict[str, str]) -> tuple[dict[str, dict[st
     return out, prov
 
 
+
+def _auroc(pairs):
+    """AUROC where LOWER score = more essential (positive class).
+
+    AUROC = P(score_pos < score_neg) + 0.5 * P(tie). Verified against hand-computed cases and
+    cross-checked against the tested `continuous_readout` implementation on the real run.
+    """
+    import bisect
+    pos = [sc for sc, y in pairs if y]
+    neg = sorted(sc for sc, y in pairs if not y)
+    if not pos or not neg:
+        return None
+    tot = 0.0
+    for sc in pos:
+        lo = bisect.bisect_left(neg, sc)
+        hi = bisect.bisect_right(neg, sc)
+        n_greater = len(neg) - hi
+        n_equal = hi - lo
+        tot += n_greater + 0.5 * n_equal
+    return tot / (len(pos) * len(neg))
+
+
+def gene_bootstrap(subset, ratios_a, ratios_b, keys, B=1000, seed=12345):
+    """Paired bootstrap RESAMPLING GENES, not cells.
+
+    The scored cells are genes x conditions; cells from one gene are correlated, so a cell-level
+    interval would be far too narrow. The GENE is the independent unit.
+    """
+    import random
+    rng = random.Random(seed)
+    per_gene = []
+    for r in subset:
+        cells = [(c, r.experimental[c]) for c in keys if r.gene_id in ratios_a.get(c, {})]
+        if cells:
+            per_gene.append((r.gene_id, cells))
+    if not per_gene:
+        return None
+
+    def delta_for(sample):
+        pa, pb = [], []
+        for gid, cells in sample:
+            for c, y in cells:
+                pa.append((ratios_a[c][gid], y))
+                pb.append((ratios_b[c][gid], y))
+        aa, bb = _auroc(pa), _auroc(pb)
+        return None if (aa is None or bb is None) else bb - aa
+
+    point = delta_for(per_gene)
+    deltas = []
+    ng = len(per_gene)
+    for _ in range(B):
+        samp = [per_gene[rng.randrange(ng)] for _ in range(ng)]
+        d = delta_for(samp)
+        if d is not None:
+            deltas.append(d)
+    if not deltas:
+        return None
+    deltas.sort()
+    lo = deltas[int(0.025 * len(deltas))]
+    hi = deltas[min(len(deltas) - 1, int(0.975 * len(deltas)))]
+    p_le_0 = sum(1 for d in deltas if d <= 0) / len(deltas)
+    verdict = ("CI_EXCLUDES_ZERO" if lo > 0
+               else "CI_INCLUDES_ZERO_UNDERPOWERED" if hi > 0 else "CI_BELOW_ZERO")
+    return {"B": len(deltas), "n_genes": ng, "point_delta": round(point, 4),
+            "ci_lo": round(lo, 4), "ci_hi": round(hi, 4), "p_le_0": round(p_le_0, 4),
+            "verdict": verdict,
+            "note": "paired bootstrap over GENES (the independent unit), not cells"}
+
 # ---------------------------------------------------------------- main
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
@@ -222,8 +291,10 @@ def main(argv: list[str] | None = None) -> int:
     genes = [r.gene_id for r in subset]
 
     arms: dict[str, dict] = {}
+    ratios_by_arm: dict[str, dict[str, dict[str, float]]] = {}
     for arm in ("baseline", "eflux"):
         calls: dict[str, dict[str, bool]] = {}
+        ratios: dict[str, dict[str, float]] = {}
         wt_by, eflux_stats = {}, {}
         print(f"\n=== ARM {arm}: {len(genes)} genes x {len(keys)} conditions ===", flush=True)
         for n, cond in enumerate(keys, 1):
@@ -234,18 +305,29 @@ def main(argv: list[str] | None = None) -> int:
                 wt = wildtype_growth(model)
                 wt_by[cond] = round(float(wt), 5)
                 d: dict[str, bool] = {}
+                rt: dict[str, float] = {}
                 if wt > 1e-9:
+                    # processes=1 is PINNED for reproducibility. Two runs of this script under the
+                    # default multiprocessing path returned different graded AUROCs (base 0.6193 vs
+                    # 0.6216) with nothing in between touching the solves. A within-process re-solve
+                    # at processes=1 is bit-identical (0/131 cells differ), so the variance comes from
+                    # the parallel path -- which also times out on this host (spawn storm, WinError 5).
                     res = single_gene_deletion(
-                        model, gene_list=[model.genes.get_by_id(g) for g in genes])
+                        model, gene_list=[model.genes.get_by_id(g) for g in genes], processes=1)
                     # Identical to the shipped validate script, NaN coding included: an infeasible
                     # solve is GENUINE essentiality (ATPM floor unmet), not a solver failure.
                     for _, row in res.iterrows():
                         gid = next(iter(row["ids"]))
                         g = row["growth"]
                         d[gid] = (g != g) or (g < FRAC * wt)
+                        # Retain the RAW ratio for the graded readout. NaN -> 0.0, consistent with the
+                        # shipped coding (infeasible == genuine lethality, not a solver failure).
+                        rt[gid] = 0.0 if g != g else max(0.0, float(g) / wt)
                 else:
                     d = {g: True for g in genes}
+                    rt = {g: 0.0 for g in genes}
                 calls[cond] = d
+                ratios[cond] = rt
             print(f"  [{n}/{len(keys)}] {cond:42} wt={wt_by[cond]:.4f}", flush=True)
 
         cells_right = cells_total = 0
@@ -271,6 +353,16 @@ def main(argv: list[str] | None = None) -> int:
             "per_condition": per_cond,
             **({"eflux": eflux_stats} if arm == "eflux" else {}),
         }
+        ratios_by_arm[arm] = ratios
+        # GRADED readout on the SAME cells. `conditions` is load-bearing: continuous_readout guards
+        # with ratios.get(c, {}), so a key mismatch silently accumulates zero cells and returns
+        # {"auroc": None, "note": "degenerate: one class only"} -- which reads as a claim about the
+        # DATA rather than about the caller. Pass the keys explicitly and assert n_cells > 0.
+        cont = continuous_readout(subset, ratios, conditions=tuple(keys))
+        if not cont.get("n_cells"):
+            raise SystemExit(f"continuous_readout accumulated 0 cells for arm {arm} "
+                             f"-- conditions/ratios key mismatch, NOT a data finding")
+        arms[arm]["continuous"] = cont
         print(f"  -> per-cell {arms[arm]['per_cell_agreement']} | exact-set {exact}/{len(subset)}")
 
     b, e = arms["baseline"]["per_cell_agreement"], arms["eflux"]["per_cell_agreement"]
@@ -278,6 +370,18 @@ def main(argv: list[str] | None = None) -> int:
     verdict = ("EFLUX_IMPROVES" if delta >= 0.02
                else "MACHADO_PRIOR_CONFIRMED_ON_ESSENTIALITY" if delta <= 0
                else "AMBIGUOUS_BELOW_PREREGISTERED_BAR")
+
+    boot = gene_bootstrap(subset, ratios_by_arm["baseline"], ratios_by_arm["eflux"], keys)
+    Path(a.out + "_ratios.json").write_text(
+        json.dumps({"conditions": keys, "arms": ratios_by_arm}), encoding="utf-8")
+
+    ca = arms["baseline"]["continuous"]["auroc"]
+    ce = arms["eflux"]["continuous"]["auroc"]
+    d_auroc = None if (ca is None or ce is None) else round(ce - ca, 4)
+    graded_verdict = ("INDETERMINATE_NO_AUROC" if d_auroc is None
+                      else "EFLUX_CARRIES_GRADED_SIGNAL" if d_auroc >= 0.02
+                      else "NO_SIGNAL_EVEN_GRADED" if d_auroc <= 0
+                      else "AMBIGUOUS_BELOW_PREREGISTERED_BAR")
 
     out = {
         "record": "fba-eflux-bridge-v1",
@@ -292,6 +396,13 @@ def main(argv: list[str] | None = None) -> int:
         "arms": arms,
         "delta_per_cell": delta,
         "verdict": verdict,
+        "graded": {
+            "prereg": "wiki/fba_eflux_continuous_prereg_2026-08-17.md",
+            "baseline_auroc": ca, "eflux_auroc": ce, "delta_auroc": d_auroc,
+            "verdict": graded_verdict,
+            "bar": {"carries_signal": ">= +0.02", "no_signal": "<= 0"},
+            "bootstrap": boot,
+        },
         "prereg_bar": {"go": ">= +0.02", "machado_confirmed": "<= 0"},
         "caveats": [
             "PRECISE-1K is K-12 MG1655; Fitness Browser labels are orgId=Keio (BW25113 parent).",
@@ -303,7 +414,11 @@ def main(argv: list[str] | None = None) -> int:
         ],
     }
     Path(a.out + ".json").write_text(json.dumps(out, indent=2), encoding="utf-8")
-    print(f"\nbaseline {b} | eflux {e} | delta {delta:+.4f}\nVERDICT: {verdict}")
+    print(f"\nBINARY : baseline {b} | eflux {e} | delta {delta:+.4f} -> {verdict}")
+    print("GRADED : AUROC base", ca, "| eflux", ce, "| delta", d_auroc, "->", graded_verdict)
+    if boot:
+        print("BOOTSTRAP gene-level B=", boot["B"], "95% CI [", boot["ci_lo"], ",",
+              boot["ci_hi"], "] P(d<=0)=", boot["p_le_0"], "->", boot["verdict"])
     print(f"wrote {a.out}.json")
     return 0
 

@@ -155,3 +155,18 @@ Baseline arm only (the question is the readout's shape, so the E-Flux arm is not
 deletions on one model over 11 conditions; 66 lethal knockouts returned tiny **negative** growth from the
 LP (worst −3e−10) and were clamped to zero, with the clamp magnitude asserted below 1e−6 so a real
 negative could not be silently absorbed.
+
+---
+
+## SUPERSEDED IN SCOPE 2026-08-17 — the null is BINARY-ONLY
+
+This memo's conclusion ("expression-constrained FBA adds nothing to conditional essentiality") is now
+**scoped to the binary call**, where it stands and reproduces exactly.
+
+Under a **graded** readout on the identical cells, E-Flux DOES carry signal: continuous AUROC
+0.6216 → 0.6428 (**Δ +0.0212**, gene-level bootstrap 95% CI **[+0.0019, +0.0397]**, P(Δ≤0)=0.015).
+The binary null was a **binarization artifact**, and this memo's own recommendation — "the readout has
+to change" — turns out to have a measured payoff rather than being a hopeful inference.
+
+See `wiki/fba_eflux_graded_2026-08-17.md`. Magnitude is run-variable (an earlier run gave +0.0305);
+read it as roughly +0.02–0.03, not a precise figure.

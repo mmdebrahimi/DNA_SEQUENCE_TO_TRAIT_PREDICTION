@@ -1,0 +1,414 @@
+{
+  "record": "fba-eflux-bridge-v1",
+  "date": "2026-08-17",
+  "prereg": "wiki/fba_eflux_bridge_prereg_2026-08-16.md",
+  "model": "iML1515",
+  "expression": "PRECISE-1K log_tpm_qc.csv (SBRG/precise1k)",
+  "labels": "Fitness Browser RB-TnSeq orgId=Keio, fit<-2.0",
+  "n_conditions": 11,
+  "conditions": {
+    "D-Fructose": {
+      "n_samples": 8
+    },
+    "D-Galactose": {
+      "n_samples": 2
+    },
+    "D-Gluconic Acid sodium salt": {
+      "n_samples": 2
+    },
+    "D-Glucose": {
+      "n_samples": 621
+    },
+    "D-Ribose": {
+      "n_samples": 2
+    },
+    "D-Sorbitol": {
+      "n_samples": 2
+    },
+    "D-Xylose": {
+      "n_samples": 5
+    },
+    "Glycerol": {
+      "n_samples": 111
+    },
+    "N-Acetyl-D-Glucosamine": {
+      "n_samples": 2
+    },
+    "Potassium acetate": {
+      "n_samples": 8
+    },
+    "Sodium pyruvate": {
+      "n_samples": 6
+    }
+  },
+  "n_conditionally_essential": 131,
+  "arms": {
+    "baseline": {
+      "per_cell_agreement": 0.6967,
+      "n_cells": 1441,
+      "exact_set_match": 8,
+      "exact_set_match_rate": 0.0611,
+      "wildtype_growth": {
+        "D-Fructose": 0.877,
+        "D-Galactose": 0.86759,
+        "D-Gluconic Acid sodium salt": 0.79714,
+        "D-Glucose": 0.877,
+        "D-Ribose": 0.68891,
+        "D-Sorbitol": 0.94283,
+        "D-Xylose": 0.71713,
+        "Glycerol": 0.49471,
+        "N-Acetyl-D-Glucosamine": 1.13131,
+        "Potassium acetate": 0.2101,
+        "Sodium pyruvate": 0.31394
+      },
+      "per_condition": {
+        "D-Fructose": {
+          "agreement": 0.7786,
+          "mcc": 0.4568,
+          "tp": 18,
+          "fp": 5,
+          "fn": 24,
+          "tn": 84,
+          "n": 131
+        },
+        "D-Galactose": {
+          "agreement": 0.7786,
+          "mcc": 0.4483,
+          "tp": 19,
+          "fp": 7,
+          "fn": 22,
+          "tn": 83,
+          "n": 131
+        },
+        "D-Gluconic Acid sodium salt": {
+          "agreement": 0.8092,
+          "mcc": 0.5009,
+          "tp": 18,
+          "fp": 5,
+          "fn": 20,
+          "tn": 88,
+          "n": 131
+        },
+        "D-Glucose": {
+          "agreement": 0.8855,
+          "mcc": 0.5735,
+          "tp": 13,
+          "fp": 10,
+          "fn": 5,
+          "tn": 103,
+          "n": 131
+        },
+        "D-Ribose": {
+          "agreement": 0.5649,
+          "mcc": 0.2118,
+          "tp": 18,
+          "fp": 6,
+          "fn": 51,
+          "tn": 56,
+          "n": 131
+        },
+        "D-Sorbitol": {
+          "agreement": 0.7099,
+          "mcc": 0.4052,
+          "tp": 20,
+          "fp": 4,
+          "fn": 34,
+          "tn": 73,
+          "n": 131
+        },
+        "D-Xylose": {
+          "agreement": 0.542,
+          "mcc": 0.2166,
+          "tp": 19,
+          "fp": 5,
+          "fn": 55,
+          "tn": 52,
+          "n": 131
+        },
+        "Glycerol": {
+          "agreement": 0.6641,
+          "mcc": 0.067,
+          "tp": 8,
+          "fp": 15,
+          "fn": 29,
+          "tn": 79,
+          "n": 131
+        },
+        "N-Acetyl-D-Glucosamine": {
+          "agreement": 0.7176,
+          "mcc": 0.4001,
+          "tp": 20,
+          "fp": 5,
+          "fn": 32,
+          "tn": 74,
+          "n": 131
+        },
+        "Potassium acetate": {
+          "agreement": 0.458,
+          "mcc": 0.1079,
+          "tp": 17,
+          "fp": 6,
+          "fn": 65,
+          "tn": 43,
+          "n": 131
+        },
+        "Sodium pyruvate": {
+          "agreement": 0.7557,
+          "mcc": 0.3108,
+          "tp": 13,
+          "fp": 10,
+          "fn": 22,
+          "tn": 86,
+          "n": 131
+        }
+      },
+      "continuous": {
+        "n_cells": 1441,
+        "n_essential_cells": 542,
+        "auroc": 0.6216,
+        "deployed_threshold": 0.01,
+        "deployed_confusion": {
+          "tp": 183,
+          "fp": 78,
+          "fn": 359,
+          "tn": 821,
+          "n": 1441
+        },
+        "deployed_mcc": 0.3156,
+        "oracle_threshold": 0.7688,
+        "oracle_confusion": {
+          "tp": 202,
+          "fp": 83,
+          "fn": 340,
+          "tn": 816,
+          "n": 1441
+        },
+        "oracle_mcc": 0.341,
+        "oracle_note": "the oracle threshold is fitted ON the evaluation set -- an UPPER BOUND, not a deployable number. A deployable one needs a disjoint tuning split."
+      }
+    },
+    "eflux": {
+      "per_cell_agreement": 0.6967,
+      "n_cells": 1441,
+      "exact_set_match": 8,
+      "exact_set_match_rate": 0.0611,
+      "wildtype_growth": {
+        "D-Fructose": 0.64288,
+        "D-Galactose": 0.53367,
+        "D-Gluconic Acid sodium salt": 0.65152,
+        "D-Glucose": 0.79556,
+        "D-Ribose": 0.38884,
+        "D-Sorbitol": 0.58643,
+        "D-Xylose": 0.65776,
+        "Glycerol": 0.4526,
+        "N-Acetyl-D-Glucosamine": 0.75398,
+        "Potassium acetate": 0.20772,
+        "Sodium pyruvate": 0.28132
+      },
+      "per_condition": {
+        "D-Fructose": {
+          "agreement": 0.7786,
+          "mcc": 0.4568,
+          "tp": 18,
+          "fp": 5,
+          "fn": 24,
+          "tn": 84,
+          "n": 131
+        },
+        "D-Galactose": {
+          "agreement": 0.7786,
+          "mcc": 0.4483,
+          "tp": 19,
+          "fp": 7,
+          "fn": 22,
+          "tn": 83,
+          "n": 131
+        },
+        "D-Gluconic Acid sodium salt": {
+          "agreement": 0.8092,
+          "mcc": 0.5009,
+          "tp": 18,
+          "fp": 5,
+          "fn": 20,
+          "tn": 88,
+          "n": 131
+        },
+        "D-Glucose": {
+          "agreement": 0.8855,
+          "mcc": 0.5735,
+          "tp": 13,
+          "fp": 10,
+          "fn": 5,
+          "tn": 103,
+          "n": 131
+        },
+        "D-Ribose": {
+          "agreement": 0.5649,
+          "mcc": 0.2118,
+          "tp": 18,
+          "fp": 6,
+          "fn": 51,
+          "tn": 56,
+          "n": 131
+        },
+        "D-Sorbitol": {
+          "agreement": 0.7099,
+          "mcc": 0.4052,
+          "tp": 20,
+          "fp": 4,
+          "fn": 34,
+          "tn": 73,
+          "n": 131
+        },
+        "D-Xylose": {
+          "agreement": 0.542,
+          "mcc": 0.2166,
+          "tp": 19,
+          "fp": 5,
+          "fn": 55,
+          "tn": 52,
+          "n": 131
+        },
+        "Glycerol": {
+          "agreement": 0.6641,
+          "mcc": 0.067,
+          "tp": 8,
+          "fp": 15,
+          "fn": 29,
+          "tn": 79,
+          "n": 131
+        },
+        "N-Acetyl-D-Glucosamine": {
+          "agreement": 0.7176,
+          "mcc": 0.4001,
+          "tp": 20,
+          "fp": 5,
+          "fn": 32,
+          "tn": 74,
+          "n": 131
+        },
+        "Potassium acetate": {
+          "agreement": 0.458,
+          "mcc": 0.1079,
+          "tp": 17,
+          "fp": 6,
+          "fn": 65,
+          "tn": 43,
+          "n": 131
+        },
+        "Sodium pyruvate": {
+          "agreement": 0.7557,
+          "mcc": 0.3108,
+          "tp": 13,
+          "fp": 10,
+          "fn": 22,
+          "tn": 86,
+          "n": 131
+        }
+      },
+      "eflux": {
+        "D-Fructose": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "D-Galactose": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "D-Gluconic Acid sodium salt": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "D-Glucose": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "D-Ribose": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "D-Sorbitol": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "D-Xylose": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "Glycerol": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "N-Acetyl-D-Glucosamine": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "Potassium acetate": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        },
+        "Sodium pyruvate": {
+          "n_constrained": 2210,
+          "n_skipped_unmeasured": 56
+        }
+      },
+      "continuous": {
+        "n_cells": 1441,
+        "n_essential_cells": 542,
+        "auroc": 0.6428,
+        "deployed_threshold": 0.01,
+        "deployed_confusion": {
+          "tp": 183,
+          "fp": 78,
+          "fn": 359,
+          "tn": 821,
+          "n": 1441
+        },
+        "deployed_mcc": 0.3156,
+        "oracle_threshold": 0.0,
+        "oracle_confusion": {
+          "tp": 182,
+          "fp": 72,
+          "fn": 360,
+          "tn": 827,
+          "n": 1441
+        },
+        "oracle_mcc": 0.3251,
+        "oracle_note": "the oracle threshold is fitted ON the evaluation set -- an UPPER BOUND, not a deployable number. A deployable one needs a disjoint tuning split."
+      }
+    }
+  },
+  "delta_per_cell": 0.0,
+  "verdict": "MACHADO_PRIOR_CONFIRMED_ON_ESSENTIALITY",
+  "graded": {
+    "prereg": "wiki/fba_eflux_continuous_prereg_2026-08-17.md",
+    "baseline_auroc": 0.6216,
+    "eflux_auroc": 0.6428,
+    "delta_auroc": 0.0212,
+    "verdict": "EFLUX_CARRIES_GRADED_SIGNAL",
+    "bar": {
+      "carries_signal": ">= +0.02",
+      "no_signal": "<= 0"
+    },
+    "bootstrap": {
+      "B": 1000,
+      "n_genes": 131,
+      "point_delta": 0.0212,
+      "ci_lo": 0.0019,
+      "ci_hi": 0.0397,
+      "p_le_0": 0.015,
+      "verdict": "CI_EXCLUDES_ZERO",
+      "note": "paired bootstrap over GENES (the independent unit), not cells"
+    }
+  },
+  "prereg_bar": {
+    "go": ">= +0.02",
+    "machado_confirmed": "<= 0"
+  },
+  "caveats": [
+    "PRECISE-1K is K-12 MG1655; Fitness Browser labels are orgId=Keio (BW25113 parent).",
+    "Sample counts are extremely imbalanced (glucose 621, glycerol 111, others 2-8).",
+    "This panel is 11 of the shipped 25 conditions; a null here does not close the bridge on the full panel.",
+    "The shipped 0.7368 per-cell figure is a 25-condition number and is NOT the comparator; the baseline arm here is recomputed on the same conditions."
+  ]
+}
