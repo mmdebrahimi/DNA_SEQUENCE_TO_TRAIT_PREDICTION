@@ -1,0 +1,207 @@
+{
+  "record": "fba-cross-organism-v1",
+  "date": "2026-08-20",
+  "prereg": "wiki/fba_cross_organism_prereg_2026-08-20.md",
+  "org_id": "Putida",
+  "organism": "Pseudomonas putida KT2440",
+  "model": "iJN1463",
+  "exp_group": "carbon source",
+  "labels": "Fitness Browser RB-TnSeq orgId=Putida, fit<-2.0",
+  "n_conditions": 13,
+  "conditions": {
+    "L-Arginine": "EX_arg__L_e",
+    "L-Histidine": "EX_his__L_e",
+    "D-Glucose": "EX_glc__D_e",
+    "Sodium succinate dibasic hexahydrate": "EX_succ_e",
+    "a-Ketoglutaric acid disodium salt hydrate": "EX_akg_e",
+    "Vanillin": "EX_vanln_e",
+    "L-Lysine": "EX_lys__L_e",
+    "Phenylacetic acid": "EX_pac_e",
+    "Ethanol": "EX_etoh_e",
+    "Potassium acetate": "EX_ac_e",
+    "D-Galacturonic Acid monohydrate": "EX_galur_e",
+    "D-Glucuronic Acid": "EX_glcur_e",
+    "D-Lysine": "EX_lys__D_e"
+  },
+  "n_genes_complete_rows": 1148,
+  "n_conditionally_essential": 168,
+  "deterministic": true,
+  "determinism": {
+    "deterministic_at_claim_level": true,
+    "n_cells": 2184,
+    "n_call_flips": 0,
+    "call_flip_examples": [],
+    "max_abs_delta": 1.3926304553990576e-11,
+    "min_margin_to_threshold": 0.009999999995056342,
+    "safety_factor": 718065582.745772,
+    "min_safety_factor": 1000.0,
+    "headline_metric_matches": true,
+    "headline_metric": [
+      0.794,
+      0.794
+    ],
+    "basis": "claim-level reproducibility: no cell crosses the call line, the headline metric is identical, and the nearest cell to the threshold is >= min_safety_factor times further from it than the largest observed numerical drift"
+  },
+  "wildtype_growth": {
+    "D-Galacturonic Acid monohydrate": 0.807903,
+    "D-Glucose": 0.979637,
+    "D-Glucuronic Acid": 0.807903,
+    "D-Lysine": 0.98263,
+    "Ethanol": 0.465348,
+    "L-Arginine": 0.934234,
+    "L-Histidine": 0.833084,
+    "L-Lysine": 0.98263,
+    "Phenylacetic acid": 1.254557,
+    "Potassium acetate": 0.26887,
+    "Sodium succinate dibasic hexahydrate": 0.528838,
+    "Vanillin": 1.00284,
+    "a-Ketoglutaric acid disodium salt hydrate": 0.664925
+  },
+  "per_cell_agreement": 0.794,
+  "best_constant_null": 0.6932,
+  "per_condition": {
+    "D-Galacturonic Acid monohydrate": {
+      "agreement": 0.8274,
+      "mcc": 0.6227,
+      "tp": 45,
+      "fp": 14,
+      "fn": 15,
+      "tn": 94,
+      "n": 168
+    },
+    "D-Glucose": {
+      "agreement": 0.7083,
+      "mcc": 0.2486,
+      "tp": 10,
+      "fp": 45,
+      "fn": 4,
+      "tn": 109,
+      "n": 168
+    },
+    "D-Glucuronic Acid": {
+      "agreement": 0.7857,
+      "mcc": 0.5115,
+      "tp": 33,
+      "fp": 26,
+      "fn": 10,
+      "tn": 99,
+      "n": 168
+    },
+    "D-Lysine": {
+      "agreement": 0.7798,
+      "mcc": 0.5072,
+      "tp": 38,
+      "fp": 17,
+      "fn": 20,
+      "tn": 93,
+      "n": 168
+    },
+    "Ethanol": {
+      "agreement": 0.8452,
+      "mcc": 0.6429,
+      "tp": 39,
+      "fp": 17,
+      "fn": 9,
+      "tn": 103,
+      "n": 168
+    },
+    "L-Arginine": {
+      "agreement": 0.8036,
+      "mcc": 0.5398,
+      "tp": 35,
+      "fp": 14,
+      "fn": 19,
+      "tn": 100,
+      "n": 168
+    },
+    "L-Histidine": {
+      "agreement": 0.8333,
+      "mcc": 0.5947,
+      "tp": 33,
+      "fp": 19,
+      "fn": 9,
+      "tn": 107,
+      "n": 168
+    },
+    "L-Lysine": {
+      "agreement": 0.7381,
+      "mcc": 0.4355,
+      "tp": 38,
+      "fp": 17,
+      "fn": 27,
+      "tn": 86,
+      "n": 168
+    },
+    "Phenylacetic acid": {
+      "agreement": 0.8214,
+      "mcc": 0.6333,
+      "tp": 54,
+      "fp": 12,
+      "fn": 18,
+      "tn": 84,
+      "n": 168
+    },
+    "Potassium acetate": {
+      "agreement": 0.7857,
+      "mcc": 0.5137,
+      "tp": 37,
+      "fp": 19,
+      "fn": 17,
+      "tn": 95,
+      "n": 168
+    },
+    "Sodium succinate dibasic hexahydrate": {
+      "agreement": 0.8452,
+      "mcc": 0.6372,
+      "tp": 35,
+      "fp": 20,
+      "fn": 6,
+      "tn": 107,
+      "n": 168
+    },
+    "Vanillin": {
+      "agreement": 0.7143,
+      "mcc": 0.4611,
+      "tp": 46,
+      "fp": 9,
+      "fn": 39,
+      "tn": 74,
+      "n": 168
+    },
+    "a-Ketoglutaric acid disodium salt hydrate": {
+      "agreement": 0.8333,
+      "mcc": 0.6181,
+      "tp": 31,
+      "fp": 25,
+      "fn": 3,
+      "tn": 109,
+      "n": 168
+    }
+  },
+  "predictions": {
+    "P1_bimodality": {
+      "frac_in_band": 0.0,
+      "bar": "< 0.01",
+      "result": "REPLICATES"
+    },
+    "P2_flat_deficit": {
+      "frac_flat": 0.7041,
+      "n_missed": 196,
+      "bar": ">= 0.50",
+      "result": "REPLICATES"
+    },
+    "P3_beats_constant_null": {
+      "per_cell": 0.794,
+      "best_constant_null": 0.6932,
+      "lift": 0.1008,
+      "bar": "> 0",
+      "result": "REPLICATES"
+    }
+  },
+  "verdict": "ALL_THREE_REPLICATE",
+  "caveats": [
+    "n=1 new organism -- a replication, not a survey.",
+    "13 of 47 assay carbon sources; the panel is biased toward central metabolism.",
+    "iJN1463 is less validated than iML1515; a weak result may reflect model quality."
+  ]
+}
