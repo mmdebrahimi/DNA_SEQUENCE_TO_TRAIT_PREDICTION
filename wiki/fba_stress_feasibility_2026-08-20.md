@@ -1,7 +1,7 @@
 # The stress axis is a structural NO-GO for iML1515 — and the reason is worth more than the panel
 
-**Date:** 2026-08-17 · **Verdict:** `STRESS_AXIS_NOT_REPRESENTABLE_IN_iML1515`
-**Artifact:** `wiki/fba_stress_feasibility_2026-08-17.json` · **Probe:** `scripts/fba_stress_feasibility_probe.py`
+**Date:** 2026-08-20 · **Verdict:** `STRESS_AXIS_NOT_REPRESENTABLE_IN_iML1515`
+**Artifact:** `wiki/fba_stress_feasibility_2026-08-20.json` · **Probe:** `scripts/fba_stress_feasibility_probe.py`
 
 The nitrogen axis replicated all three carbon findings, so stress was the named next axis — 55 experiments
 over 35 conditions, and a different perturbation *class* rather than just a different nutrient. The

@@ -224,3 +224,24 @@ def test_every_fba_wiki_artifact_is_parseable_json():
         except _json.JSONDecodeError as e:
             broken.append(f"{f.name}: {e}")
     assert not broken, "unparseable FBA artifacts: " + "; ".join(broken)
+
+
+def test_no_fba_memo_cites_a_json_artifact_that_does_not_exist():
+    """The sibling of the parseability guard: a memo must not point at a file that isn't there.
+
+    Caught live 2026-08-20. The stress memo was hand-named `..._2026-08-17.md` and cited
+    `..._2026-08-17.json`, but the probe -- correctly using the machine date -- had written
+    `..._2026-08-20.json`. The memo was committed citing an artifact that did not exist, which reads to a
+    reader exactly like a real citation. Hand-typed dates drift from `date.today()`; this catches it.
+    """
+    import re
+
+    root = Path(__file__).resolve().parent.parent
+    wiki = root / "wiki"
+    missing = []
+    for memo in sorted(wiki.glob("fba_*.md")):
+        text = memo.read_text(encoding="utf-8", errors="replace")
+        for cited in set(re.findall(r"wiki/(fba_[A-Za-z0-9_.\-]+\.json)", text)):
+            if not (wiki / cited).exists():
+                missing.append(f"{memo.name} -> {cited}")
+    assert not missing, "FBA memos citing non-existent artifacts: " + "; ".join(missing)
