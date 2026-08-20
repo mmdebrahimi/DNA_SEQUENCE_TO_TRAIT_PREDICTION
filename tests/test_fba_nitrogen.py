@@ -4,6 +4,8 @@ Pure/contract tests only -- no feba.db, no cobra solves, so these stay green wit
 """
 from __future__ import annotations
 
+import sqlite3
+
 import pytest
 
 from dna_decode.fba.nitrogen import (
@@ -238,3 +240,90 @@ def test_redaction_is_a_noop_when_deterministic():
     payload = {"per_cell_agreement": 0.68, "per_condition": {}, "predictions": {},
                "verdict": "ALL_THREE_REPLICATE"}
     assert redact_unverified(payload, deterministic=True) == payload
+
+
+# --------------------------------------------------- organism-agnostic condition builder (2x2 panel)
+from dna_decode.fba.nitrogen import (  # noqa: E402
+    exchange_name_index,
+    nitrogen_conditions_for_org,
+    normalize_compound,
+)
+
+
+class _Met2:
+    def __init__(self, name):
+        self.name = name
+
+
+class _ExRxn:
+    def __init__(self, rid, met_name):
+        self.id = rid
+        self.metabolites = [_Met2(met_name)]
+
+
+class _ModelWithMets:
+    def __init__(self, mapping):
+        self.id = "fake"
+        self.reactions = [_ExRxn(rid, nm) for rid, nm in mapping.items()]
+        self.exchanges = list(self.reactions)
+
+
+def test_normalize_strips_salt_and_hydrate_decoration():
+    assert normalize_compound("Adenine hydrochloride hydrate") == "adenine"
+    assert normalize_compound("Putrescine Dihydrochloride") == "putrescine"
+    assert normalize_compound("L-Aspartic Acid") == "lasparticacid"
+
+
+def test_dihydrochloride_is_stripped_whole_not_left_as_di():
+    """Order in _SALT_FORMS is load-bearing: a shorter form matching first would leave 'di' behind."""
+    assert "di" not in normalize_compound("Spermidine Dihydrochloride").replace("spermidine", "")
+
+
+def test_exchange_index_is_keyed_by_normalized_metabolite_name():
+    m = _ModelWithMets({"EX_ade_e": "adenine", "EX_spmd_e": "spermidine"})
+    assert exchange_name_index(m) == {"adenine": "EX_ade_e", "spermidine": "EX_spmd_e"}
+
+
+def _conn_with(conditions):
+    c = sqlite3.connect(":memory:")
+    c.execute("CREATE TABLE Experiment (orgId TEXT, expName TEXT, expGroup TEXT, condition_1 TEXT)")
+    c.executemany("INSERT INTO Experiment VALUES (?,?,?,?)",
+                  [("Putida", f"e{i}", "nitrogen source", n) for i, n in enumerate(conditions)])
+    return c
+
+
+def test_exact_name_match_admits_a_real_compound():
+    c = _conn_with(["Adenine hydrochloride hydrate"])
+    m = _ModelWithMets({"EX_ade_e": "adenine"})
+    assert nitrogen_conditions_for_org(c, m, "Putida") == {"Adenine hydrochloride hydrate": "EX_ade_e"}
+
+
+def test_a_substring_near_miss_is_REFUSED():
+    """The stress probe's fluoride->ferrous-iron error in miniature: only EXACT equality may map.
+
+    'Adenosine' must not bind to the exchange whose metabolite is 'adenine' just because one name
+    contains most of the other.
+    """
+    c = _conn_with(["Adenosine"])
+    m = _ModelWithMets({"EX_ade_e": "adenine"})
+    assert nitrogen_conditions_for_org(c, m, "Putida") == {}
+
+
+def test_curated_map_wins_over_name_matching():
+    c = _conn_with(["Ammonium chloride"])
+    m = _ModelWithMets({"EX_nh4_e": "ammonium", "EX_decoy_e": "ammonium"})
+    got = nitrogen_conditions_for_org(c, m, "Putida")
+    assert got == {"Ammonium chloride": "EX_nh4_e"}
+
+
+def test_a_compound_absent_from_the_model_is_excluded():
+    c = _conn_with(["Caprolactam"])
+    m = _ModelWithMets({"EX_ade_e": "adenine"})
+    assert nitrogen_conditions_for_org(c, m, "Putida") == {}
+
+
+def test_another_organisms_conditions_are_not_returned():
+    c = _conn_with(["Adenine hydrochloride hydrate"])
+    c.execute("INSERT INTO Experiment VALUES ('Keio','k1','nitrogen source','Cytosine')")
+    m = _ModelWithMets({"EX_ade_e": "adenine", "EX_csn_e": "cytosine"})
+    assert "Cytosine" not in nitrogen_conditions_for_org(c, m, "Putida")

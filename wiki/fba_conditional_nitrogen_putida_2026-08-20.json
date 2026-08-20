@@ -1,0 +1,365 @@
+{
+  "record": "fba-conditional-nitrogen-v1",
+  "date": "2026-08-20",
+  "prereg": "wiki/fba_nitrogen_prereg_2026-08-17.md",
+  "model": "iJN1463",
+  "org_id": "Putida",
+  "labels": "Fitness Browser RB-TnSeq orgId=Putida, expGroup='nitrogen source', fit<-2.0",
+  "n_conditions": 27,
+  "conditions": {
+    "Ammonium chloride": "EX_nh4_e",
+    "D-Lysine": "EX_lys__D_e",
+    "D-Alanine": "EX_ala__D_e",
+    "L-Arginine": "EX_arg__L_e",
+    "L-Aspartate": "EX_asp__L_e",
+    "Beta-alanine": "EX_ala_B_e",
+    "L-Glutamine": "EX_gln__L_e",
+    "L-Alanine": "EX_ala__L_e",
+    "L-Cysteine": "EX_cys__L_e",
+    "L-Lysine": "EX_lys__L_e",
+    "L-Asparagine": "EX_asn__L_e",
+    "L-Proline": "EX_pro__L_e",
+    "Glycine": "EX_gly_e",
+    "L-Methionine": "EX_met__L_e",
+    "L-Valine": "EX_val__L_e",
+    "L-Histidine": "EX_his__L_e",
+    "L-Phenylalanine": "EX_phe__L_e",
+    "L-Isoleucine": "EX_ile__L_e",
+    "L-Leucine": "EX_leu__L_e",
+    "L-Threonine": "EX_thr__L_e",
+    "L-Serine": "EX_ser__L_e",
+    "Ethanolamine": "EX_etha_e",
+    "Cytosine": "EX_csn_e",
+    "spermidine": "EX_spmd_e",
+    "Uracil": "EX_ura_e",
+    "Adenine hydrochloride hydrate": "EX_ade_e",
+    "Putrescine Dihydrochloride": "EX_ptrc_e"
+  },
+  "excluded": {
+    "Gly-DL-Asp": "dipeptide; no iML1515 exchange",
+    "Gly-Glu": "dipeptide; no iML1515 exchange",
+    "casamino acids": "mixture, not a single compound (same exclusion the carbon panel makes)"
+  },
+  "n_genes_complete_rows": 1148,
+  "n_conditionally_essential": 156,
+  "deterministic": true,
+  "determinism_gate": {
+    "deterministic_at_claim_level": true,
+    "n_cells": 4212,
+    "n_call_flips": 0,
+    "call_flip_examples": [],
+    "max_abs_delta": 9.799550060307638e-11,
+    "min_margin_to_threshold": 0.00999999998688032,
+    "safety_factor": 102045501.32750063,
+    "min_safety_factor": 1000.0,
+    "headline_metric_matches": true,
+    "headline_metric": [
+      0.7087,
+      0.7087
+    ],
+    "basis": "claim-level reproducibility: no cell crosses the call line, the headline metric is identical, and the nearest cell to the threshold is >= min_safety_factor times further from it than the largest observed numerical drift",
+    "wildtype_identical": true
+  },
+  "wildtype_growth": {
+    "Adenine hydrochloride hydrate": 1.402634,
+    "Ammonium chloride": 0.939482,
+    "Beta-alanine": 0.939482,
+    "Cytosine": 1.415183,
+    "D-Alanine": 0.939482,
+    "D-Lysine": 1.878964,
+    "Ethanolamine": 0.939482,
+    "Glycine": 0.939482,
+    "L-Alanine": 0.939482,
+    "L-Arginine": 1.954944,
+    "L-Asparagine": 1.49314,
+    "L-Aspartate": 0.939482,
+    "L-Cysteine": 0.939482,
+    "L-Glutamine": 1.744602,
+    "L-Histidine": 1.842426,
+    "L-Isoleucine": 0.939482,
+    "L-Leucine": 0.939482,
+    "L-Lysine": 1.878964,
+    "L-Methionine": 0.939482,
+    "L-Phenylalanine": 0.939482,
+    "L-Proline": 0.939482,
+    "L-Serine": 0.939482,
+    "L-Threonine": 0.939482,
+    "L-Valine": 0.939482,
+    "Putrescine Dihydrochloride": 1.836882,
+    "Uracil": 1.403828,
+    "spermidine": 2.201823
+  },
+  "per_cell_agreement": 0.7087,
+  "best_constant_null": 0.6757,
+  "per_condition": {
+    "Adenine hydrochloride hydrate": {
+      "agreement": 0.6923,
+      "mcc": 0.3561,
+      "tp": 36,
+      "fp": 29,
+      "fn": 19,
+      "tn": 72,
+      "n": 156
+    },
+    "Ammonium chloride": {
+      "agreement": 0.7179,
+      "mcc": 0.4105,
+      "tp": 38,
+      "fp": 27,
+      "fn": 17,
+      "tn": 74,
+      "n": 156
+    },
+    "Beta-alanine": {
+      "agreement": 0.6795,
+      "mcc": 0.3485,
+      "tp": 43,
+      "fp": 24,
+      "fn": 26,
+      "tn": 63,
+      "n": 156
+    },
+    "Cytosine": {
+      "agreement": 0.7051,
+      "mcc": 0.3766,
+      "tp": 34,
+      "fp": 30,
+      "fn": 16,
+      "tn": 76,
+      "n": 156
+    },
+    "D-Alanine": {
+      "agreement": 0.7372,
+      "mcc": 0.4505,
+      "tp": 38,
+      "fp": 27,
+      "fn": 14,
+      "tn": 77,
+      "n": 156
+    },
+    "D-Lysine": {
+      "agreement": 0.6667,
+      "mcc": 0.3114,
+      "tp": 38,
+      "fp": 27,
+      "fn": 25,
+      "tn": 66,
+      "n": 156
+    },
+    "Ethanolamine": {
+      "agreement": 0.8141,
+      "mcc": 0.619,
+      "tp": 51,
+      "fp": 16,
+      "fn": 13,
+      "tn": 76,
+      "n": 156
+    },
+    "Glycine": {
+      "agreement": 0.6859,
+      "mcc": 0.3416,
+      "tp": 35,
+      "fp": 30,
+      "fn": 19,
+      "tn": 72,
+      "n": 156
+    },
+    "L-Alanine": {
+      "agreement": 0.7244,
+      "mcc": 0.4276,
+      "tp": 41,
+      "fp": 24,
+      "fn": 19,
+      "tn": 72,
+      "n": 156
+    },
+    "L-Arginine": {
+      "agreement": 0.6795,
+      "mcc": 0.3185,
+      "tp": 34,
+      "fp": 25,
+      "fn": 25,
+      "tn": 72,
+      "n": 156
+    },
+    "L-Asparagine": {
+      "agreement": 0.75,
+      "mcc": 0.4789,
+      "tp": 37,
+      "fp": 28,
+      "fn": 11,
+      "tn": 80,
+      "n": 156
+    },
+    "L-Aspartate": {
+      "agreement": 0.7564,
+      "mcc": 0.4926,
+      "tp": 38,
+      "fp": 27,
+      "fn": 11,
+      "tn": 80,
+      "n": 156
+    },
+    "L-Cysteine": {
+      "agreement": 0.5962,
+      "mcc": 0.0223,
+      "tp": 1,
+      "fp": 62,
+      "fn": 1,
+      "tn": 92,
+      "n": 156
+    },
+    "L-Glutamine": {
+      "agreement": 0.7436,
+      "mcc": 0.4645,
+      "tp": 37,
+      "fp": 28,
+      "fn": 12,
+      "tn": 79,
+      "n": 156
+    },
+    "L-Histidine": {
+      "agreement": 0.7372,
+      "mcc": 0.4273,
+      "tp": 32,
+      "fp": 28,
+      "fn": 13,
+      "tn": 83,
+      "n": 156
+    },
+    "L-Isoleucine": {
+      "agreement": 0.7115,
+      "mcc": 0.3938,
+      "tp": 37,
+      "fp": 27,
+      "fn": 18,
+      "tn": 74,
+      "n": 156
+    },
+    "L-Leucine": {
+      "agreement": 0.6795,
+      "mcc": 0.3109,
+      "tp": 28,
+      "fp": 35,
+      "fn": 15,
+      "tn": 78,
+      "n": 156
+    },
+    "L-Lysine": {
+      "agreement": 0.6923,
+      "mcc": 0.367,
+      "tp": 41,
+      "fp": 24,
+      "fn": 24,
+      "tn": 67,
+      "n": 156
+    },
+    "L-Methionine": {
+      "agreement": 0.6987,
+      "mcc": 0.3556,
+      "tp": 21,
+      "fp": 41,
+      "fn": 6,
+      "tn": 88,
+      "n": 156
+    },
+    "L-Phenylalanine": {
+      "agreement": 0.6795,
+      "mcc": 0.3225,
+      "tp": 28,
+      "fp": 37,
+      "fn": 13,
+      "tn": 78,
+      "n": 156
+    },
+    "L-Proline": {
+      "agreement": 0.7564,
+      "mcc": 0.4974,
+      "tp": 38,
+      "fp": 28,
+      "fn": 10,
+      "tn": 80,
+      "n": 156
+    },
+    "L-Serine": {
+      "agreement": 0.7244,
+      "mcc": 0.4172,
+      "tp": 37,
+      "fp": 26,
+      "fn": 17,
+      "tn": 76,
+      "n": 156
+    },
+    "L-Threonine": {
+      "agreement": 0.6731,
+      "mcc": 0.3078,
+      "tp": 28,
+      "fp": 37,
+      "fn": 14,
+      "tn": 77,
+      "n": 156
+    },
+    "L-Valine": {
+      "agreement": 0.7179,
+      "mcc": 0.4086,
+      "tp": 34,
+      "fp": 31,
+      "fn": 13,
+      "tn": 78,
+      "n": 156
+    },
+    "Putrescine Dihydrochloride": {
+      "agreement": 0.7372,
+      "mcc": 0.4543,
+      "tp": 42,
+      "fp": 23,
+      "fn": 18,
+      "tn": 73,
+      "n": 156
+    },
+    "Uracil": {
+      "agreement": 0.7051,
+      "mcc": 0.3935,
+      "tp": 36,
+      "fp": 32,
+      "fn": 14,
+      "tn": 74,
+      "n": 156
+    },
+    "spermidine": {
+      "agreement": 0.6731,
+      "mcc": 0.3306,
+      "tp": 39,
+      "fp": 30,
+      "fn": 21,
+      "tn": 66,
+      "n": 156
+    }
+  },
+  "predictions": {
+    "P1_bimodality": {
+      "frac_in_band_0.001_0.05": 0.0,
+      "bar": "< 0.01",
+      "result": "REPLICATES"
+    },
+    "P2_flat_deficit": {
+      "frac_missed_essential_that_are_flat": 0.9552,
+      "n_missed": 424,
+      "bar": ">= 0.50",
+      "result": "REPLICATES"
+    },
+    "P3_beats_constant_null": {
+      "per_cell": 0.7087,
+      "best_constant_null": 0.6757,
+      "lift": 0.033,
+      "bar": "> 0",
+      "result": "REPLICATES"
+    }
+  },
+  "verdict": "ALL_THREE_REPLICATE",
+  "caveats": [
+    "Several N sources (alanine/serine/aspartate/glutamine) also supply CARBON -- true of the real assay too (glucose minimal medium + test compound as sole N source), so these are NOT nitrogen-only perturbations.",
+    "13 of 16 assay sources; 2 dipeptides + casamino acids are unmappable to iML1515 exchanges.",
+    "2 replicates per source, averaged -- thinner than carbon's ~2.5."
+  ]
+}

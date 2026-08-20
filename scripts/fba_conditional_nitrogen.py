@@ -31,6 +31,7 @@ from dna_decode.fba.nitrogen import (  # noqa: E402
     determinism_verdict,
     load_nitrogen_records,
     nitrogen_conditions,
+    nitrogen_conditions_for_org,
     redact_unverified,
 )
 
@@ -84,21 +85,30 @@ def run_panel(model, conds, keys, genes, single_gene_deletion):
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--threshold", type=float, default=ESSENTIAL_FITNESS)
-    ap.add_argument("--out", default=f"wiki/fba_conditional_nitrogen_{date.today().isoformat()}")
+    ap.add_argument("--org-id", default="Keio", help="Fitness Browser orgId")
+    ap.add_argument("--organism", default=None, help="BiGG registry alias (default: E. coli)")
+    ap.add_argument("--out", default=None)
     a = ap.parse_args(argv)
 
     from cobra.flux_analysis import single_gene_deletion
 
-    model = load_model()
+    out_base = a.out or (f"wiki/fba_conditional_nitrogen_{a.org_id.lower()}_"
+                         f"{date.today().isoformat()}" if a.org_id != "Keio"
+                         else f"wiki/fba_conditional_nitrogen_{date.today().isoformat()}")
+    model = load_model(organism=a.organism) if a.organism else load_model()
     conn = open_db()
-    conds = nitrogen_conditions(conn, model)
+    # Keio keeps the ORIGINAL curated-only path so the shipped E. coli result is byte-reproducible;
+    # any other organism uses the curated map PLUS exact metabolite-name matching.
+    conds = (nitrogen_conditions(conn, model) if a.org_id == "Keio"
+             else nitrogen_conditions_for_org(conn, model, a.org_id))
     keys = sorted(conds)
     print(f"nitrogen conditions mapped: {len(keys)} (excluded: {len(NITROGEN_UNMAPPABLE)})")
     for k in keys:
         print(f"   {k:30} {conds[k]}")
 
     model_genes = {g.id for g in model.genes}
-    records = load_nitrogen_records(conn, conds, gene_filter=model_genes, threshold=a.threshold)
+    records = load_nitrogen_records(conn, conds, gene_filter=model_genes,
+                                    threshold=a.threshold, org_id=a.org_id)
     subset = conditionally_essential_genes(records)
     print(f"\ngenes with complete rows: {len(records)} | conditionally essential (two-sided): {len(subset)}")
     if not subset:
@@ -165,7 +175,8 @@ def main(argv: list[str] | None = None) -> int:
         "date": date.today().isoformat(),
         "prereg": "wiki/fba_nitrogen_prereg_2026-08-17.md",
         "model": "iML1515",
-        "labels": f"Fitness Browser RB-TnSeq orgId=Keio, expGroup='nitrogen source', fit<{a.threshold}",
+        "org_id": a.org_id, "model": model.id,
+        "labels": f"Fitness Browser RB-TnSeq orgId={a.org_id}, expGroup='nitrogen source', fit<{a.threshold}",
         "n_conditions": len(keys),
         "conditions": conds,
         "excluded": NITROGEN_UNMAPPABLE,
@@ -195,7 +206,7 @@ def main(argv: list[str] | None = None) -> int:
     # numbers it invalidates is not a control.
     out = redact_unverified(out, deterministic)
 
-    Path(a.out + ".json").write_text(json.dumps(out, indent=2), encoding="utf-8")
+    Path(out_base + ".json").write_text(json.dumps(out, indent=2), encoding="utf-8")
     if not deterministic:
         print("\nDETERMINISM GATE FAILED -- every solve-derived number has been WITHHELD from the "
               "artifact per the pre-registration. Nothing here may be quoted.")
@@ -203,7 +214,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"\nper-cell {per_cell} | best-constant null {best_const}")
         for k, v in verdicts.items():
             print(f"  {k:24} {v.get('result')}")
-    print(f"VERDICT: {out['verdict']}\nwrote {a.out}.json")
+    print(f"VERDICT: {out['verdict']}\nwrote {out_base}.json")
     return 0 if deterministic else 1
 
 

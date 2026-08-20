@@ -11,6 +11,7 @@ mixture — all three are unmappable by design, the same exclusion the carbon pa
 """
 from __future__ import annotations
 
+import re
 import sqlite3
 
 from .conditional_essentiality import GeneRecord
@@ -45,6 +46,58 @@ NITROGEN_UNMAPPABLE: dict[str, str] = {
 }
 
 DEFAULT_CARBON = "EX_glc__D_e"
+
+#: Salt / hydrate forms stripped before an exact name comparison. Order matters: the longer forms must
+#: come first so "dihydrochloride" is not left as "di" by an earlier "hydrochloride" replacement.
+_SALT_FORMS = ("dihydrochloride", "hydrochloride", "monohydrate", "hexahydrate", "dihydrate",
+               "hydrate", "disodium salt", "sodium salt", "potassium salt", "chloride", "salt")
+
+
+def normalize_compound(name: str) -> str:
+    """Lowercase, strip salt/hydrate decoration, drop non-alphanumerics.
+
+    Used ONLY for EXACT equality against a model metabolite's own name. It is deliberately not a fuzzy
+    matcher: a hand-guessed mapping in the stress probe paired "sodium fluoride" with EX_fe2_e (ferrous
+    iron), which would have manufactured a data point out of an unrelated metabolite.
+    """
+    s = str(name).lower()
+    for j in _SALT_FORMS:
+        s = s.replace(j, " ")
+    return re.sub(r"[^a-z0-9]", "", s)
+
+
+def exchange_name_index(model) -> dict[str, str]:
+    """{normalized metabolite name -> EX_ id}. First writer wins, so the map is deterministic."""
+    idx: dict[str, str] = {}
+    for r in model.reactions:
+        if r.id.startswith("EX_") and r.id.endswith("_e"):
+            mets = list(r.metabolites)
+            if mets:
+                idx.setdefault(normalize_compound(mets[0].name), r.id)
+    return idx
+
+
+def nitrogen_conditions_for_org(conn: sqlite3.Connection, model, org_id: str) -> dict[str, str]:
+    """{nitrogen source -> exchange} for ANY organism: curated map first, then EXACT name match.
+
+    The curated `NITROGEN_EXCHANGES` entries win where they apply (they were hand-verified against
+    iML1515). Everything else is admitted only on exact post-normalization equality with the model's own
+    metabolite name -- never a substring or fuzzy match.
+    """
+    have = {r.id for r in model.exchanges}
+    idx = exchange_name_index(model)
+    out: dict[str, str] = {}
+    for (cond,) in conn.execute(
+            "SELECT DISTINCT condition_1 FROM Experiment WHERE orgId=? AND expGroup=?",
+            (org_id, NITROGEN_EXP_GROUP)):
+        curated = NITROGEN_EXCHANGES.get(cond)
+        if curated and curated in have:
+            out[cond] = curated
+            continue
+        ex = idx.get(normalize_compound(cond))
+        if ex and ex in have:
+            out[cond] = ex
+    return out
 
 
 def nitrogen_conditions(conn: sqlite3.Connection, model) -> dict[str, str]:
@@ -184,7 +237,8 @@ def redact_unverified(payload: dict, deterministic: bool) -> dict:
 
 def load_nitrogen_records(conn: sqlite3.Connection, conditions: dict[str, str],
                           gene_filter: set[str] | None = None,
-                          threshold: float = ESSENTIAL_FITNESS) -> list[GeneRecord]:
+                          threshold: float = ESSENTIAL_FITNESS,
+                          org_id: str = ORG_ID) -> list[GeneRecord]:
     """Experimental conditional essentiality per (gene, nitrogen source), as GeneRecords.
 
     Mirrors `fitness_browser.load_records` but scoped to `expGroup='nitrogen source'`. Replicates for the
@@ -195,14 +249,14 @@ def load_nitrogen_records(conn: sqlite3.Connection, conditions: dict[str, str],
     exp_to_cond = {}
     for name, cond in conn.execute(
             "SELECT expName, condition_1 FROM Experiment WHERE orgId=? AND expGroup=?",
-            (ORG_ID, NITROGEN_EXP_GROUP)):
+            (org_id, NITROGEN_EXP_GROUP)):
         if cond in conditions:
             exp_to_cond[name] = cond
 
     agg: dict[tuple[str, str], list[float]] = {}
     q = ("SELECT g.sysName, f.expName, f.fit FROM GeneFitness f "
          "JOIN Gene g ON g.orgId=f.orgId AND g.locusId=f.locusId WHERE f.orgId=?")
-    for sysname, expname, fit in conn.execute(q, (ORG_ID,)):
+    for sysname, expname, fit in conn.execute(q, (org_id,)):
         cond = exp_to_cond.get(expname)
         if cond is None or not sysname:
             continue
