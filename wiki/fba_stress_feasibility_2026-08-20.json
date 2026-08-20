@@ -1,0 +1,148 @@
+{
+  "record": "fba-stress-feasibility-v1",
+  "date": "2026-08-20",
+  "model": "iML1515",
+  "labels": "Fitness Browser RB-TnSeq orgId=Keio, expGroup='stress'",
+  "baseline_wildtype_growth": 0.87699721425716,
+  "L1_exchange_existence": {
+    "n_conditions": 35,
+    "n_with_candidate_exchange": 8,
+    "fraction": 0.2286
+  },
+  "L2_behaves_as_stress": {
+    "n_probed": 8,
+    "n_reducing_growth": 0,
+    "detail": {
+      "Sodium acetate": {
+        "exchange": "EX_ac_e",
+        "growth": 1.1215061744413752,
+        "delta": 0.2445089601842152,
+        "reduces_growth": false
+      },
+      "Sodium Chloride": {
+        "exchange": "EX_na1_e",
+        "growth": 0.8769972144269828,
+        "delta": 1.6982271144883043e-10,
+        "reduces_growth": false
+      },
+      "L-Lysine": {
+        "exchange": "EX_lys__L_e",
+        "growth": 0.9117157019224996,
+        "delta": 0.03471848766533958,
+        "reduces_growth": false
+      },
+      "Sodium nitrite": {
+        "exchange": "EX_no2_e",
+        "growth": 0.8769972144269772,
+        "delta": 1.698171603337073e-10,
+        "reduces_growth": false
+      },
+      "Dimethyl Sulfoxide": {
+        "exchange": "EX_dmso_e",
+        "growth": 0.8769972144269848,
+        "delta": 1.6982470985027476e-10,
+        "reduces_growth": false
+      },
+      "Cobalt chloride hexahydrate": {
+        "exchange": "EX_cobalt2_e",
+        "growth": 0.8769972144269848,
+        "delta": 1.6982470985027476e-10,
+        "reduces_growth": false
+      },
+      "Nickel (II) chloride hexahydrate": {
+        "exchange": "EX_ni2_e",
+        "growth": 0.8769972144269848,
+        "delta": 1.6982470985027476e-10,
+        "reduces_growth": false
+      },
+      "copper (II) chloride dihydrate": {
+        "exchange": "EX_cu2_e",
+        "growth": 0.8769972144269848,
+        "delta": 1.6982470985027476e-10,
+        "reduces_growth": false
+      }
+    },
+    "note": "an exchange models SUPPLEMENTATION; a stress must REDUCE growth"
+  },
+  "L3_target_directed": {
+    "n_panel_antibiotics_checked": 13,
+    "n_with_metabolic_target_in_model": 2,
+    "detail": {
+      "Phosphomycin disodium salt": {
+        "target": "MurA / UDP-GlcNAc enolpyruvyl transferase",
+        "in_model": [
+          "gene:murA",
+          "rxn:UAGCVT"
+        ],
+        "metabolic_target": true
+      },
+      "D-Cycloserine": {
+        "target": "alanine racemase + D-Ala-D-Ala ligase",
+        "in_model": [
+          "gene:alr",
+          "gene:ddlA",
+          "gene:ddlB",
+          "rxn:ALAALAr"
+        ],
+        "metabolic_target": true
+      },
+      "Chloramphenicol": {
+        "target": "50S ribosome",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Tetracycline hydrochloride": {
+        "target": "30S ribosome",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Doxycycline hyclate": {
+        "target": "30S ribosome",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Nalidixic acid sodium salt": {
+        "target": "DNA gyrase",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Spectinomycin dihydrochloride pentahydrate": {
+        "target": "30S ribosome",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Fusidic acid sodium salt": {
+        "target": "EF-G translation elongation",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Bacitracin": {
+        "target": "undecaprenyl-PP carrier recycling (membrane)",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "MreB Perturbing Compound A22": {
+        "target": "MreB cytoskeleton",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Cisplatin": {
+        "target": "DNA crosslinking",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Carbenicillin disodium salt": {
+        "target": "penicillin-binding proteins (transpeptidation)",
+        "in_model": [],
+        "metabolic_target": false
+      },
+      "Cephalothin sodium salt": {
+        "target": "penicillin-binding proteins (transpeptidation)",
+        "in_model": [],
+        "metabolic_target": false
+      }
+    },
+    "note": "the only remaining path, and it needs a target-directed reaction constraint -- a different experimental contract from the medium-swap used for carbon/nitrogen"
+  },
+  "verdict": "STRESS_AXIS_NOT_REPRESENTABLE_IN_iML1515"
+}
