@@ -22,11 +22,20 @@ So the honest state is: **falsifier defined, committed, hand-executed, engine-un
 
 ## What was measured (this is the real output of the run)
 
-### M1 — Zero-flux cells are unreachable by construction *(theorem, then tested)*
+### M1 — Zero-flux cells are unreachable by capacity-tightening *(theorem, then tested)*
+
+> **SCOPE CORRECTED 2026-08-21.** This section originally said *"No constraint-based method can move such
+> a cell."* That is too broad and is **refuted by a later measurement in this same repo**:
+> `wiki/fba_structural_blindspot_2026-08-21.md` found that of 58 genes pinned at zero flux in glucose,
+> **57 carry flux fine once other exchanges are opened** — and opening an exchange IS a constraint change.
+> The corrected claim is below; the numbers in this section are unaffected.
 
 If some optimal solution carries zero flux through every reaction of gene *g*, deleting *g* leaves that
-solution feasible and optimal, so the growth ratio is **exactly 1.0**. No constraint-based method can
-move such a cell, because constraints only reshape flux among reactions that carry it.
+solution feasible and optimal, so the growth ratio is **exactly 1.0**. **Holding the objective and the
+medium FIXED**, no intervention that merely tightens or removes capacity on reactions carrying no flux
+can move such a cell — that class of intervention only reshapes flux among reactions that already carry
+it. Changing the medium, changing the objective, or adding a demand term *can* remove the zero-flux
+optimum, and are not covered by this claim.
 
 Measured on the E. coli 25-carbon panel, each cell **in its own condition** (1,832 true-essential cells):
 
@@ -75,7 +84,7 @@ while in a real cell it is essential. *(Surfaced by the G5 operator; verified he
 
 | id | claim | evidence |
 |---|---|---|
-| S1 | zero-flux cells unreachable by any constraint method | `tests/test_fba_zero_flux_theorem.py` (2 pass) |
+| S1 | zero-flux cells unreachable by capacity-tightening (fixed objective + medium) | `tests/test_fba_zero_flux_theorem.py` (2 pass) |
 | S2 | capacity slack explains the E-Flux null | `tests/test_fba_capacity_slack.py` (3 pass, incl. positive control) |
 
 **Unfalsified — deferred, falsifier defined but blocked:** `D: is disconnected`, so `feba.db` (7.4 GB,

@@ -21,8 +21,14 @@ The classes matter because they imply DIFFERENT fixes, and one of them is a proo
   **A class-A cell is NECESSARILY missed -- this is a theorem, not a correlation.** If optimal solution
   S carries zero flux through reaction R, then deleting R's gene (forcing R to 0) leaves S feasible and
   still optimal, so the deletion objective EQUALS the wildtype objective and the ratio is exactly 1.0.
-  No constraint-based intervention can move such a cell, because constraints only reshape flux among
-  reactions that carry it. That is a mechanism for why the four levers failed identically.
+  Within a FIXED objective and a FIXED medium, no intervention that merely tightens or removes capacity
+  on reactions carrying no flux can move such a cell -- that class of intervention only reshapes flux
+  among reactions that already carry it. That is a mechanism for why the four levers failed identically.
+
+  **Do NOT broaden this to "no constraint-based method can move it."** Opening an exchange IS a
+  constraint change, and `wiki/fba_structural_blindspot_2026-08-21.md` measured that 57 of 58 genes
+  pinned at zero flux in glucose carry flux fine once other exchanges are opened. Changing the medium,
+  the objective, or adding a demand term can all remove the zero-flux optimum.
 
   Because the proof needs only SOME zero-flux optimum, class A is a LOWER BOUND on the
   necessarily-missed set: a cell in class B or C may also admit an alternative optimum with zero flux.
@@ -55,6 +61,10 @@ from dna_decode.fba.fitness_browser import (  # noqa: E402
 from dna_decode.fba.model import load_model  # noqa: E402
 
 FLUX_EPS = 1e-9
+
+SCOPE_NOTE = (
+    "Scope, stated because it is easy to overclaim and my own data refutes the broad version: this holds with the OBJECTIVE and the MEDIUM HELD FIXED, against interventions that only tighten or remove capacity on reactions not used by at least one optimal solution. It does NOT say the cell is beyond every constraint-based method -- opening exchanges is a constraint change, and wiki/fba_structural_blindspot_2026-08-21.md measured that 57 of 58 zero-flux-in-glucose genes carry flux fine in a richer medium."
+)
 
 
 def classify_cell(reactions, gpr_has_or: bool, fluxes, eps: float = FLUX_EPS) -> str:
@@ -128,7 +138,7 @@ def main(argv: list[str] | None = None) -> int:
         "class_A_is_necessarily_missed": True,
         "class_A_note": ("a reaction carrying no flux at the optimum cannot lower the optimal objective "
                          "when deleted -- the same flux distribution stays feasible -- so the ratio is "
-                         "1.0 and the gene is predicted dispensable. No constraint-based method can move "
+                         "1.0 and the gene is predicted dispensable. " + SCOPE_NOTE + " "
                          "these cells."),
         "caveats": [
             "Each cell is evaluated IN ITS OWN CONDITION. A glucose-only reference state gives 50.2% "

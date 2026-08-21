@@ -73,6 +73,22 @@ def classify_reaction(lo: float, hi: float, eps: float = EPS) -> str:
     return "CAPABLE"                   # zero attainable, but flux is possible
 
 
+def gpr_disabled_reactions(model, gene_id: str) -> list[str]:
+    """Reactions that ACTUALLY become non-functional when this gene is knocked out.
+
+    NOT the same as `gene.reactions`. cobrapy's `Gene.knock_out()` (cobra/core/gene.py) marks the gene
+    non-functional and then zeros a reaction only `if not reaction.functional`, where `Reaction.functional`
+    evaluates the FULL GPR: `self._gpr.eval({g.id for g in self.genes if not g.functional})`. So a reaction
+    behind an isozyme `or` stays functional when one of its genes is deleted.
+
+    Classifying over raw `gene.reactions` therefore attributes reactions to a gene that its deletion does
+    not disable -- the measured cause of the FVA-vs-deletion disagreements (16 of 29 carried an isozyme OR).
+    """
+    with model:
+        model.genes.get_by_id(gene_id).knock_out()
+        return [r.id for r in model.genes.get_by_id(gene_id).reactions if not r.functional]
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--condition", default="D-Glucose")
@@ -121,9 +137,22 @@ def main(argv: list[str] | None = None) -> int:
     rxn_class = {r.id: classify_reaction(float(fva.loc[r.id, "minimum"]),
                                          float(fva.loc[r.id, "maximum"])) for r in rxns}
 
+    # GPR-AWARE: classify over the reactions the KO actually disables, not raw association.
+    disabled_by = {gid: gpr_disabled_reactions(model, gid) for gid in genes}
     gene_class: dict[str, str] = {}
+    n_no_disabled = 0
     for gid in genes:
-        cls = {rxn_class[r.id] for r in model.genes.get_by_id(gid).reactions}
+        dis = disabled_by[gid]
+        if not dis:
+            # the KO disables NOTHING (fully isozyme-buffered) -> cannot be predicted essential
+            gene_class[gid] = "KO_DISABLES_NOTHING"
+            n_no_disabled += 1
+            continue
+        cls = {rxn_class[r] for r in dis if r in rxn_class}
+        if not cls:
+            gene_class[gid] = "KO_DISABLES_NOTHING"
+            n_no_disabled += 1
+            continue
         if "REQUIRED" in cls:
             gene_class[gid] = "REQUIRED"
         elif cls == {"INACTIVE_IN_CONDITION"}:
@@ -142,7 +171,7 @@ def main(argv: list[str] | None = None) -> int:
 
     total = len(genes)
     print(f"\ngene classes over {total} experimentally-essential genes ({a.condition}):")
-    for k in ("REQUIRED", "CAPABLE_BUT_IDLE", "INACTIVE_IN_CONDITION"):
+    for k in ("REQUIRED", "CAPABLE_BUT_IDLE", "INACTIVE_IN_CONDITION", "KO_DISABLES_NOTHING"):
         n = counts.get(k, 0)
         print(f"  {k:18} {n:4} ({n/total:.1%})")
     print(f"\nFVA-vs-deletion disagreements: {len(mism)} (expected 0 for single-reaction genes; "
@@ -166,6 +195,8 @@ def main(argv: list[str] | None = None) -> int:
         "n_genes": total,
         "counts": counts,
         "fractions": {k: round(v / total, 4) for k, v in counts.items()},
+        "gpr_aware": True,
+        "n_genes_whose_ko_disables_nothing": n_no_disabled,
         "n_fva_vs_deletion_disagreements": len(mism),
         "n_disagreements_with_isozyme_or": n_or,
         "disagreement_examples": mism[:20],
