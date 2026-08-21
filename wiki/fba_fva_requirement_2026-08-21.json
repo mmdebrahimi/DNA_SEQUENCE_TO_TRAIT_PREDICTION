@@ -1,0 +1,262 @@
+{
+  "record": "fba-fva-requirement-class-v1",
+  "date": "2026-08-21",
+  "model": "iML1515",
+  "condition": "D-Glucose",
+  "carbon_exchange": "EX_glc__D_e",
+  "wildtype_growth": 0.876997,
+  "n_genes": 131,
+  "counts": {
+    "REQUIRED": 55,
+    "INACTIVE_IN_CONDITION": 58,
+    "CAPABLE_BUT_IDLE": 18
+  },
+  "fractions": {
+    "REQUIRED": 0.4198,
+    "INACTIVE_IN_CONDITION": 0.4427,
+    "CAPABLE_BUT_IDLE": 0.1374
+  },
+  "n_fva_vs_deletion_disagreements": 29,
+  "n_disagreements_with_isozyme_or": 16,
+  "disagreement_examples": [
+    [
+      "b0077",
+      "REQUIRED",
+      1.0
+    ],
+    [
+      "b0078",
+      "REQUIRED",
+      1.0
+    ],
+    [
+      "b0928",
+      "REQUIRED",
+      1.0
+    ],
+    [
+      "b1291",
+      "REQUIRED",
+      1.0
+    ],
+    [
+      "b2215",
+      "REQUIRED",
+      1.0
+    ],
+    [
+      "b2276",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2277",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2278",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2279",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2280",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2281",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2282",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2283",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2284",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2285",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2286",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2287",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2288",
+      "CAPABLE_BUT_IDLE",
+      0.865
+    ],
+    [
+      "b2297",
+      "REQUIRED",
+      1.0
+    ],
+    [
+      "b2422",
+      "REQUIRED",
+      1.0
+    ]
+  ],
+  "gene_class": {
+    "b0077": "REQUIRED",
+    "b0078": "REQUIRED",
+    "b0114": "REQUIRED",
+    "b0142": "REQUIRED",
+    "b0200": "INACTIVE_IN_CONDITION",
+    "b0222": "INACTIVE_IN_CONDITION",
+    "b0428": "INACTIVE_IN_CONDITION",
+    "b0430": "REQUIRED",
+    "b0431": "REQUIRED",
+    "b0432": "REQUIRED",
+    "b0522": "REQUIRED",
+    "b0523": "REQUIRED",
+    "b0585": "INACTIVE_IN_CONDITION",
+    "b0588": "INACTIVE_IN_CONDITION",
+    "b0589": "INACTIVE_IN_CONDITION",
+    "b0590": "INACTIVE_IN_CONDITION",
+    "b0592": "INACTIVE_IN_CONDITION",
+    "b0630": "INACTIVE_IN_CONDITION",
+    "b0677": "INACTIVE_IN_CONDITION",
+    "b0678": "INACTIVE_IN_CONDITION",
+    "b0688": "INACTIVE_IN_CONDITION",
+    "b0721": "REQUIRED",
+    "b0722": "REQUIRED",
+    "b0723": "REQUIRED",
+    "b0724": "REQUIRED",
+    "b0728": "REQUIRED",
+    "b0729": "REQUIRED",
+    "b0750": "REQUIRED",
+    "b0757": "INACTIVE_IN_CONDITION",
+    "b0758": "INACTIVE_IN_CONDITION",
+    "b0759": "INACTIVE_IN_CONDITION",
+    "b0767": "REQUIRED",
+    "b0888": "CAPABLE_BUT_IDLE",
+    "b0928": "REQUIRED",
+    "b1185": "INACTIVE_IN_CONDITION",
+    "b1236": "INACTIVE_IN_CONDITION",
+    "b1252": "INACTIVE_IN_CONDITION",
+    "b1262": "REQUIRED",
+    "b1263": "REQUIRED",
+    "b1264": "REQUIRED",
+    "b1291": "REQUIRED",
+    "b1702": "INACTIVE_IN_CONDITION",
+    "b1850": "INACTIVE_IN_CONDITION",
+    "b1857": "INACTIVE_IN_CONDITION",
+    "b1858": "INACTIVE_IN_CONDITION",
+    "b1859": "INACTIVE_IN_CONDITION",
+    "b2103": "REQUIRED",
+    "b2168": "INACTIVE_IN_CONDITION",
+    "b2215": "REQUIRED",
+    "b2276": "CAPABLE_BUT_IDLE",
+    "b2277": "CAPABLE_BUT_IDLE",
+    "b2278": "CAPABLE_BUT_IDLE",
+    "b2279": "CAPABLE_BUT_IDLE",
+    "b2280": "CAPABLE_BUT_IDLE",
+    "b2281": "CAPABLE_BUT_IDLE",
+    "b2282": "CAPABLE_BUT_IDLE",
+    "b2283": "CAPABLE_BUT_IDLE",
+    "b2284": "CAPABLE_BUT_IDLE",
+    "b2285": "CAPABLE_BUT_IDLE",
+    "b2286": "CAPABLE_BUT_IDLE",
+    "b2287": "CAPABLE_BUT_IDLE",
+    "b2288": "CAPABLE_BUT_IDLE",
+    "b2297": "REQUIRED",
+    "b2312": "REQUIRED",
+    "b2422": "REQUIRED",
+    "b2423": "REQUIRED",
+    "b2424": "REQUIRED",
+    "b2463": "INACTIVE_IN_CONDITION",
+    "b2476": "REQUIRED",
+    "b2499": "REQUIRED",
+    "b2500": "REQUIRED",
+    "b2501": "INACTIVE_IN_CONDITION",
+    "b2518": "CAPABLE_BUT_IDLE",
+    "b2557": "REQUIRED",
+    "b2601": "REQUIRED",
+    "b2705": "INACTIVE_IN_CONDITION",
+    "b2751": "REQUIRED",
+    "b2752": "REQUIRED",
+    "b2784": "INACTIVE_IN_CONDITION",
+    "b2935": "REQUIRED",
+    "b2943": "INACTIVE_IN_CONDITION",
+    "b2947": "INACTIVE_IN_CONDITION",
+    "b3005": "INACTIVE_IN_CONDITION",
+    "b3052": "INACTIVE_IN_CONDITION",
+    "b3213": "REQUIRED",
+    "b3236": "REQUIRED",
+    "b3290": "REQUIRED",
+    "b3368": "REQUIRED",
+    "b3386": "REQUIRED",
+    "b3415": "INACTIVE_IN_CONDITION",
+    "b3426": "INACTIVE_IN_CONDITION",
+    "b3469": "INACTIVE_IN_CONDITION",
+    "b3564": "INACTIVE_IN_CONDITION",
+    "b3565": "INACTIVE_IN_CONDITION",
+    "b3566": "INACTIVE_IN_CONDITION",
+    "b3572": "CAPABLE_BUT_IDLE",
+    "b3600": "INACTIVE_IN_CONDITION",
+    "b3619": "INACTIVE_IN_CONDITION",
+    "b3620": "INACTIVE_IN_CONDITION",
+    "b3621": "INACTIVE_IN_CONDITION",
+    "b3630": "INACTIVE_IN_CONDITION",
+    "b3631": "INACTIVE_IN_CONDITION",
+    "b3650": "INACTIVE_IN_CONDITION",
+    "b3670": "REQUIRED",
+    "b3671": "REQUIRED",
+    "b3725": "INACTIVE_IN_CONDITION",
+    "b3726": "INACTIVE_IN_CONDITION",
+    "b3728": "INACTIVE_IN_CONDITION",
+    "b3748": "INACTIVE_IN_CONDITION",
+    "b3752": "INACTIVE_IN_CONDITION",
+    "b3781": "CAPABLE_BUT_IDLE",
+    "b3791": "INACTIVE_IN_CONDITION",
+    "b3792": "INACTIVE_IN_CONDITION",
+    "b3806": "INACTIVE_IN_CONDITION",
+    "b3844": "REQUIRED",
+    "b3849": "REQUIRED",
+    "b3870": "REQUIRED",
+    "b3916": "CAPABLE_BUT_IDLE",
+    "b3956": "REQUIRED",
+    "b3962": "INACTIVE_IN_CONDITION",
+    "b3991": "REQUIRED",
+    "b3993": "REQUIRED",
+    "b4005": "REQUIRED",
+    "b4013": "REQUIRED",
+    "b4015": "INACTIVE_IN_CONDITION",
+    "b4042": "INACTIVE_IN_CONDITION",
+    "b4177": "REQUIRED",
+    "b4232": "INACTIVE_IN_CONDITION",
+    "b4242": "INACTIVE_IN_CONDITION",
+    "b4245": "REQUIRED",
+    "b4407": "REQUIRED"
+  },
+  "caveats": [
+    "FVA is per-REACTION. Gene-level CAPABLE_BUT_IDLE means every reaction can individually reach zero at optimum; it does NOT prove they can all be zero simultaneously. The deletion cross-check is the gene-level ground truth and is reported alongside.",
+    "One condition at a time. A gene idle on this carbon source may be REQUIRED on another.",
+    "The essential-gene list is the committed 131-gene 11-condition E-Flux panel, not the full 217-gene set (which needs feba.db on the disconnected D:).",
+    "INACTIVE_IN_CONDITION is medium-induced, NOT structural: 57 of 58 such genes are unblocked once other exchanges are opened (cross-checked against fba_structural_blindspot)."
+  ]
+}
