@@ -1,3 +1,21 @@
+> # EXPLANATION CORRECTED 2026-08-21 (same day)
+>
+> The **INCONCLUSIVE verdict below stands** — closing `EX_fe2_e`/`EX_fe3_e` really does starve the model.
+> But the **explanation given for it was wrong**, and repair-then-close showed why.
+>
+> This memo said: *every ferri-siderophore exchange is export-only, so no loaded siderophore can be
+> imported.* True about the exchanges, **misleading as the cause** — the loaded siderophore never needs
+> importing from the medium. `FEENTERexs` forms it EXTRACELLULARLY (`enter_e + fe3_e -> feenter_e`) from
+> enterobactin the cell secretes, and `FEENTERtonex` (fepA/tonB/exbB/exbD) brings it in. The route is
+> fully present, gene-associated, and traversable.
+>
+> The real reason closing those exchanges starves the model is that **`fe3_e` is the shared input to BOTH
+> routes** — the siderophore path consumes extracellular ferric iron too, so closing the exchange kills
+> the alternative as well as the shortcut.
+>
+> The actual cause of the idle machinery is **route redundancy plus orphan reactions**. See
+> `wiki/fba_orphan_redundancy_2026-08-21.md`.
+
 # Bypass closure returns INCONCLUSIVE — and diagnosing why beats the flip it was looking for
 
 **Date:** 2026-08-21 · **Verdict:** `INCONCLUSIVE_WT_INFEASIBLE` (both bypasses)
