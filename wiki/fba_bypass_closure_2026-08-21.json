@@ -1,0 +1,42 @@
+{
+  "record": "fba-bypass-closure-v1",
+  "date": "2026-08-21",
+  "model": "iML1515",
+  "condition": "D-Glucose",
+  "discrimination": {
+    "flip": "MEDIUM_REALISM_IMPLICATED \u2014 the gene was idle only because of a free shortcut",
+    "no_flip": "OBJECTIVE_INCOMPLETENESS_IMPLICATED \u2014 nothing demands the product either way",
+    "wt_infeasible": "INCONCLUSIVE \u2014 closing the tap is starvation, not realism"
+  },
+  "results": {
+    "iron_zinc": {
+      "verdict": "INCONCLUSIVE_WT_INFEASIBLE",
+      "wt_open": 0.876997,
+      "wt_closed": null,
+      "closed": [
+        "EX_fe2_e",
+        "EX_fe3_e",
+        "EX_zn2_e"
+      ],
+      "rationale": "direct metal uptake is a free tap; real acquisition needs siderophore/ABC machinery",
+      "note": "the free tap is load-bearing: without it there is no route to the nutrient at all"
+    },
+    "iron_only": {
+      "verdict": "INCONCLUSIVE_WT_INFEASIBLE",
+      "wt_open": 0.876997,
+      "wt_closed": null,
+      "closed": [
+        "EX_fe2_e",
+        "EX_fe3_e"
+      ],
+      "rationale": "isolates iron from zinc so a joint infeasibility can be attributed",
+      "note": "the free tap is load-bearing: without it there is no route to the nutrient at all"
+    }
+  },
+  "caveats": [
+    "One condition. A bypass that matters on glucose may not on another carbon source.",
+    "Gene sets are curated by name, not exhaustive: other genes may also depend on the route.",
+    "A flip shows the gene BECOMES growth-reducing, not that it reaches the 1% essentiality cutoff. Magnitude is reported so a graded readout can use it.",
+    "Model-only: this does not consult experimental labels, so it identifies a MECHANISM, not a recovered true positive."
+  ]
+}
