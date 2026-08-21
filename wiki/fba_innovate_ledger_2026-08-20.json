@@ -1,0 +1,101 @@
+{
+  "candidates": [
+    {
+      "id": "S1-zero-flux-unreachable",
+      "operator": "G9-abduce",
+      "claim": "A gene whose reactions carry zero flux in some optimal solution is UNREACHABLE by any constraint-based method: deleting it leaves the optimum exactly unchanged (ratio 1.0), and tightening reaction bounds cannot make it matter. This is a mechanism for the four levers failing identically, and it covers a measured 25.1% of true-essential cells (42.4% of all misses).",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run pytest tests/test_fba_zero_flux_theorem.py -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "measured:459-of-1832-cells-per-condition",
+        "lower-bound-not-estimate",
+        "model-only-no-feba-db"
+      ]
+    },
+    {
+      "id": "S2-capacity-slack-explains-eflux",
+      "operator": "G9-abduce",
+      "claim": "The E-Flux exact null is explained by capacity slack: iML1515's internal reaction bounds are non-binding down to a 10x tightening, so scaling them by expression is absorbed entirely and never touches a binding constraint. Growth is limited by substrate UPTAKE, which E-Flux leaves alone.",
+      "kill_test": {
+        "kind": "test-exit-0",
+        "arg": "uv run pytest tests/test_fba_capacity_slack.py -q"
+      },
+      "evidence_tags": [
+        "grounded",
+        "measured:inert-at-0.5-0.2-0.1-bites-at-0.05",
+        "positive-control:halving-carbon-uptake-does-bite",
+        "found-by-a-vacuity-guard",
+        "model-only-no-feba-db"
+      ]
+    },
+    {
+      "id": "C1-gpr-layer-expression",
+      "operator": "G8-recombine",
+      "claim": "E-Flux failed because it inserts expression at the FLUX-BOUND layer; inserting it at the GPR layer instead (an 'A or B' isozyme rule is only redundant if B is actually transcribed in that condition) converts a measurable share of isozyme-redundant flat genes into correct essential calls with positive net TP-FP.",
+      "evidence_tags": [
+        "inferred",
+        "deferred:needs-feba-db-on-disconnected-D-drive",
+        "targets-class-B-27.9pct",
+        "named-falsifier:backup-gene-expression-percentile-vs-random-null"
+      ]
+    },
+    {
+      "id": "C2-metabolic-target-antibiotics",
+      "operator": "G8-recombine",
+      "claim": "The stress-axis NO-GO is over-broad: for antibiotics whose target IS metabolic, a model-derived gene set (drug-analog transport reactions + the target reaction's GPR neighborhood) ranks in the RB-TnSeq fitness tail, and does NOT for non-metabolic antibiotics. The dissociation is the claim, not the single number.",
+      "evidence_tags": [
+        "inferred",
+        "premise-spot-checked-by-me:glpT-+11.31-rank-1-on-fosfomycin-CONFIRMED",
+        "premise-PARTLY-OVERSTATED:D-cycloserine-top-negatives-are-fur/dps/ycfM-not-target-pathway",
+        "deferred:needs-feba-db-on-disconnected-D-drive"
+      ]
+    },
+    {
+      "id": "C3-cofitness-propagation",
+      "operator": "G8-recombine",
+      "claim": "Flat missed genes are cofit with genes the model DOES call essential in the same condition, so cofitness propagation from the FBA-essential seed recovers a share of flat cells at usable precision and transfers to P. putida via orthologs.",
+      "evidence_tags": [
+        "inferred",
+        "deferred:needs-feba-db-on-disconnected-D-drive",
+        "CIRCULARITY-WARNING:must-recompute-cofitness-leaving-the-target-condition-OUT",
+        "the-precomputed-Cofit-table-is-circular-for-this-use"
+      ]
+    },
+    {
+      "id": "R1-reaction-defect-map",
+      "operator": "G1-reframe",
+      "claim": "Stop predicting genes and start auditing the MODEL: the flat-essential cells implicate a small repeating set of reactions/GPR rules, so a fitness panel yields a ranked curation-target list for the reconstruction itself.",
+      "evidence_tags": [
+        "inferred",
+        "deferred:needs-feba-db-on-disconnected-D-drive",
+        "reframe:disagreement-becomes-the-product",
+        "trap-noted:concentration-is-shape-not-meaning-needs-a-hub-reaction-control"
+      ]
+    },
+    {
+      "id": "R2-conditional-redundancy",
+      "operator": "G1-reframe",
+      "claim": "The unit becomes the OR-rule x condition: whether an isozyme backup is actually available in a condition is decodable from the backup gene's expression, yielding a CONDITIONAL GPR annotation rather than a static one.",
+      "evidence_tags": [
+        "inferred",
+        "deferred:needs-feba-db-plus-precise1k-on-disconnected-D-drive",
+        "explicitly-NOT-the-eflux-null-restated:different-insertion-point",
+        "guards-against-over-generalizing-a-scoped-negative"
+      ]
+    },
+    {
+      "id": "R3-model-only-blindness-map",
+      "operator": "G1-reframe",
+      "claim": "Flatness is predictable from the model ALONE with no fitness data, and transfers across organism and nutrient axis, so a user gets a declared coverage map before running anything -- the same abstention architecture this repo already ships.",
+      "evidence_tags": [
+        "speculative",
+        "deferred:label-side-needs-feba-db-on-disconnected-D-drive",
+        "ablation-gate:must-survive-removing-the-trivial-no-flux-feature",
+        "abstention-gate:must-not-collapse-TP-the-way-the-infeasible-arm-did"
+      ]
+    }
+  ]
+}
