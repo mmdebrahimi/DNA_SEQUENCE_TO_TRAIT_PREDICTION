@@ -1,3 +1,23 @@
+> # GENERALISATION FALSIFIED 2026-08-21 (same day, by the screen this memo asked for)
+>
+> The **measurements below stand** — the iron routes, the growth numbers, `FE3abcpp`'s empty GPR. What
+> does **not** stand is the general claim in *"The mechanism, stated generally"*: that pathways duplicated
+> by an orphan reaction are a meaningful protected class.
+>
+> `scripts/fba_orphan_protection_screen.py` built the screen this memo's *Next* section named and ran it
+> over all 1,516 genes: **ZERO genes are protected by an orphan duplicate.** iML1515 has only 12
+> transformation groups with more than one reaction, so exact stoichiometric duplication barely exists.
+> The iron case was **functional** redundancy (`FE3abcpp` moves Fe(III) with ATP; `FE2tpp` symports
+> Fe(II) — different transformations), which is not the same thing and does not generalise.
+>
+> The screen did find a harder result in its place — 23 of 131 experimentally-essential genes are
+> provably uncallable by any constraint-based method, 17 of them via GPR redundancy rather than orphans.
+> See `wiki/fba_orphan_protection_screen_2026-08-21.md`.
+>
+> Also corrected there: "113 orphan non-exchange reactions" silently excluded the 2 biomass
+> pseudo-reactions. The raw count is **115**; 113 excludes biomass; 107 also excludes the 6 demand
+> reactions.
+
 # Route redundancy + orphan reactions — why a whole pathway can be permanently undeletable
 
 **Date:** 2026-08-21 · Model-only (D: disconnected) · **Supersedes the explanation in**
