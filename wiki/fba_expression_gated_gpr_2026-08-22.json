@@ -1,0 +1,336 @@
+{
+  "record": "fba-expression-gated-gpr-v1",
+  "date": "2026-08-22",
+  "prereg": "wiki/fba_expression_gated_gpr_prereg_2026-08-22.md",
+  "prereg_commit": "2e95b7d",
+  "model": "iML1515",
+  "n_conditions": 11,
+  "conditions": [
+    "D-Fructose",
+    "D-Galactose",
+    "D-Gluconic Acid sodium salt",
+    "D-Glucose",
+    "D-Ribose",
+    "D-Sorbitol",
+    "D-Xylose",
+    "Glycerol",
+    "N-Acetyl-D-Glucosamine",
+    "Potassium acetate",
+    "Sodium pyruvate"
+  ],
+  "expression_provenance": {
+    "D-Glucose": {
+      "n_samples": 621
+    },
+    "D-Fructose": {
+      "n_samples": 8
+    },
+    "D-Xylose": {
+      "n_samples": 5
+    },
+    "D-Galactose": {
+      "n_samples": 2
+    },
+    "D-Ribose": {
+      "n_samples": 2
+    },
+    "D-Gluconic Acid sodium salt": {
+      "n_samples": 2
+    },
+    "Potassium acetate": {
+      "n_samples": 8
+    },
+    "Sodium pyruvate": {
+      "n_samples": 6
+    },
+    "Glycerol": {
+      "n_samples": 111
+    },
+    "D-Sorbitol": {
+      "n_samples": 2
+    },
+    "N-Acetyl-D-Glucosamine": {
+      "n_samples": 2
+    }
+  },
+  "frozen_targets": [
+    "b0077",
+    "b0078",
+    "b2215",
+    "b2601",
+    "b2935",
+    "b3670",
+    "b3671",
+    "b3781"
+  ],
+  "targets_missing_from_panel": [],
+  "n_conditionally_essential_genes": 131,
+  "determinism": {
+    "runs": 2,
+    "per_arm": {
+      "baseline": {
+        "n_cells_differing": 0,
+        "identical": true
+      },
+      "gated_p10": {
+        "n_cells_differing": 0,
+        "identical": true
+      },
+      "gated_p20": {
+        "n_cells_differing": 0,
+        "identical": true
+      },
+      "gated_p30": {
+        "n_cells_differing": 0,
+        "identical": true
+      }
+    },
+    "passed": true
+  },
+  "baseline_confusion": {
+    "TP": 183,
+    "FP": 78,
+    "FN": 359,
+    "TN": 821
+  },
+  "arms": {
+    "gated_p10": {
+      "percentile": 10.0,
+      "confusion": {
+        "TP": 183,
+        "FP": 78,
+        "FN": 359,
+        "TN": 821
+      },
+      "recall": 0.3376,
+      "baseline_recall": 0.3376,
+      "n_recovered_of_8": 0,
+      "recovered": [],
+      "n_recovered_growth_feasible_only": 0,
+      "recovered_growth_feasible_only": [],
+      "n_conditions_wildtype_collapsed": 0,
+      "conditions_wildtype_collapsed": [],
+      "recovery_evidence": {},
+      "fp_relative_increase": 0.0,
+      "guardrail_breached": false,
+      "mean_genes_gated_off": 151.0
+    },
+    "gated_p20": {
+      "percentile": 20.0,
+      "confusion": {
+        "TP": 351,
+        "FP": 339,
+        "FN": 191,
+        "TN": 560
+      },
+      "recall": 0.6476,
+      "baseline_recall": 0.3376,
+      "n_recovered_of_8": 5,
+      "recovered": [
+        "b2215",
+        "b2601",
+        "b2935",
+        "b3671",
+        "b3781"
+      ],
+      "n_recovered_growth_feasible_only": 0,
+      "recovered_growth_feasible_only": [],
+      "n_conditions_wildtype_collapsed": 4,
+      "conditions_wildtype_collapsed": [
+        "D-Galactose",
+        "D-Ribose",
+        "Glycerol",
+        "Potassium acetate"
+      ],
+      "recovery_evidence": {
+        "b2215": [
+          {
+            "condition": "Potassium acetate",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b2601": [
+          {
+            "condition": "Potassium acetate",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b2935": [
+          {
+            "condition": "D-Ribose",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b3671": [
+          {
+            "condition": "D-Galactose",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "D-Ribose",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "Glycerol",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "Potassium acetate",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b3781": [
+          {
+            "condition": "Glycerol",
+            "target_gated_off": false,
+            "n_gated_off": 302,
+            "wildtype_collapsed": true
+          }
+        ]
+      },
+      "fp_relative_increase": 3.3462,
+      "guardrail_breached": true,
+      "mean_genes_gated_off": 302.0
+    },
+    "gated_p30": {
+      "percentile": 30.0,
+      "confusion": {
+        "TP": 409,
+        "FP": 496,
+        "FN": 133,
+        "TN": 403
+      },
+      "recall": 0.7546,
+      "baseline_recall": 0.3376,
+      "n_recovered_of_8": 5,
+      "recovered": [
+        "b2215",
+        "b2601",
+        "b2935",
+        "b3671",
+        "b3781"
+      ],
+      "n_recovered_growth_feasible_only": 0,
+      "recovered_growth_feasible_only": [],
+      "n_conditions_wildtype_collapsed": 6,
+      "conditions_wildtype_collapsed": [
+        "D-Fructose",
+        "D-Galactose",
+        "D-Ribose",
+        "D-Sorbitol",
+        "Glycerol",
+        "Potassium acetate"
+      ],
+      "recovery_evidence": {
+        "b2215": [
+          {
+            "condition": "Potassium acetate",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b2601": [
+          {
+            "condition": "Potassium acetate",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b2935": [
+          {
+            "condition": "D-Ribose",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b3671": [
+          {
+            "condition": "D-Fructose",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "D-Galactose",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "D-Ribose",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "D-Sorbitol",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "Glycerol",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "Potassium acetate",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          }
+        ],
+        "b3781": [
+          {
+            "condition": "D-Fructose",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "D-Sorbitol",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          },
+          {
+            "condition": "Glycerol",
+            "target_gated_off": false,
+            "n_gated_off": 453,
+            "wildtype_collapsed": true
+          }
+        ]
+      },
+      "fp_relative_increase": 5.359,
+      "guardrail_breached": true,
+      "mean_genes_gated_off": 453.0
+    }
+  },
+  "primary_gate_percentile": 20.0,
+  "primary_endpoint_bar": 4,
+  "verdict": "FAILURE_GUARDRAIL_BREACHED",
+  "caveats": [
+    "PRECISE-1K is K-12 MG1655; Fitness Browser labels are Keio (BW25113 parent).",
+    "A gate at the Nth percentile marks ~N% of measured genes absent BY CONSTRUCTION -- which is exactly why the false-positive guardrail is the binding endpoint, not the recovery count.",
+    "Low mRNA does not prove no protein. The claim is 'expression-gated GPR recovers n of 8', never 'the isozyme is absent in the cell'.",
+    "Only conditions with matched PRECISE-1K expression are scored; a target cannot be recovered in a condition that has no expression data."
+  ]
+}

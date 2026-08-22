@@ -102,3 +102,30 @@ outcome is `INDETERMINATE` — never the better of the two.
 
 `D:/dna_decode_cache/precise1k` (drive disconnected). Everything except the run is complete. **This is an
 external wall, not a code wall** — no further building closes it.
+
+---
+
+## AMENDMENT 1 — 2026-08-22, AFTER the run
+
+**Status: RUN COMPLETE. Verdict `FAILURE_GUARDRAIL_BREACHED` (§6 row 4).** Result:
+`wiki/fba_expression_gated_gpr_2026-08-22.json`; memo `wiki/fba_expression_gated_gpr_result_2026-08-22.md`.
+
+Two things are recorded here rather than edited in above, per this file's own rule.
+
+**(a) An unanticipated degenerate path, and a post-hoc diagnostic added for it.** §3 did not foresee that
+a genome-wide percentile gate could make the **wildtype itself infeasible**. It does: at the primary 20th
+percentile the wildtype collapses in **4 of 11** conditions, and every scoring path in this repo codes a
+zero-growth wildtype as "all genes essential". That manufactures recoveries with no biological content.
+
+I therefore added a **post-hoc, NOT pre-registered** diagnostic — the primary restricted to conditions
+where the model still grows. It is reported *alongside* the pre-registered number, never in place of it.
+**Direction matters and is the reason this is safe: it makes the negative STRONGER (5/8 → 0/8), never
+weaker.** A post-hoc restriction that rescued a positive would be metric-shopping; one that deepens a
+failure is not.
+
+**(b) The pre-registered primary was MET and is meaningless.** 5 of 8 recovered, recall 0.338 → 0.648 —
+and the false-positive guardrail caught it (+334.6 %). Had §4 carried only the recovery count, this run
+would have been published as a success. **The guardrail, not the primary, is what decided this
+experiment**, which is the strongest evidence available that pre-registering it was worth doing.
+
+Nothing in §§1–7 was altered. Determinism (§5) passed: 0 differing cells across both runs in all 4 arms.
