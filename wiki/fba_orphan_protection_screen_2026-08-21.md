@@ -87,12 +87,22 @@ re-optimise. If the function is genuinely essential, growth collapses.
 | **isozyme-masked** — function IS essential, only redundancy hides it | `ilvI` `ilvH` `ilvB` `ilvN` `aroF` `tktA` `trxA` `ompC` |
 | **not masked** — function dispensable in the model regardless | `pgm` `sapD` `ndk` `trkA` `gntT` `glpD` `rbsD` `trkH` `fbp` |
 
-The masked set is biologically legible: `ilvI/ilvH` and `ilvB/ilvN` are two of the three acetohydroxyacid
-synthase isozymes, and the third (`ilvG/ilvM`) is **frameshifted and non-functional in K-12** — the model
-does not know that, so it always has a working AHAS. `aroF` sits behind `aroG`/`aroH`; `tktA` behind
-`tktB`. These are curable by strain-aware GPR curation. The other 9 are not: their function is
-dispensable in the model no matter what, which is an objective/network problem that GPR work will not
-touch.
+The masked set is biologically legible: `ilvI/ilvH` (AHAS III) and `ilvB/ilvN` (AHAS I) are isozyme pairs
+behind the same two reactions; `aroF` sits behind `aroG`/`aroH`; `tktA` behind `tktB`; `ompC` behind
+`ompF` and seven other porins. The other 9 are not masked at all: their function is dispensable in the
+model no matter what, which is an objective/network problem that GPR work will not touch.
+
+> **Correction (2026-08-22).** An earlier version of this paragraph said the third AHAS isozyme
+> (`ilvG`/`ilvM`) is frameshifted in K-12 and that "the model does not know that". **Both halves are
+> wrong.** `ilvG` and `ilvM` are **absent from iML1515 entirely** — the model already excludes them — and
+> the measured GPR of `ACHBS`/`ACLS` is `(b3670 and b3671) or (b0077 and b0078)`, i.e. AHAS I *or*
+> AHAS III, two isozymes that are both genuinely functional in K-12. I asserted that from memory instead
+> of reading the model.
+>
+> The correction *strengthens* rather than weakens the follow-on: if the redundancy is between two real
+> isozymes, then an experimentally-essential `ilvI`/`ilvH` implies its partner is not **expressed** in the
+> tested condition — which is exactly what an expression-gated GPR would capture, and not something a
+> sequence-level curation fix would address.
 
 **Method note that changed the answer.** My first unmask test zeroed the gene's *reactions* instead of
 deleting the masking *genes*. That mis-scored both directions — it wrongly cleared `trxA` (10 reactions,
