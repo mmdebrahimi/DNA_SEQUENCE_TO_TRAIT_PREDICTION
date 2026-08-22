@@ -49,6 +49,49 @@ This is the same shape as the earlier FLAT finding (for ~91 % of missed cells th
 by *nothing*) — but where that was a symptom, this names the layer: **objective incompleteness**, and it
 is now quantified rather than inferred.
 
+## CORRECTION (same day) — "NEVER FIRES" is two classes, not one, and I labelled it too coarsely
+
+The table above assigns all 63 NEVER_FIRES genes to "the objective / network". **That is half wrong.**
+Measuring their worst-case deletion ratio across all 25 conditions splits them cleanly:
+
+| | genes | worst ratio | what it means |
+|---|---|---|---|
+| **NO EFFECT** | **34** | ~1.000 everywhere | the model genuinely does not care → **objective incompleteness** |
+| **SUB-THRESHOLD DEFECT** | **29** | 0.744 – 0.989 | the model **does** predict a real defect; the binary cutoff discards it |
+
+The sub-threshold set is not marginal noise — it is coherent respiratory and central metabolism:
+
+| genes | worst ratio | defect |
+|---|---|---|
+| `cyoA` `cyoB` `cyoC` (cytochrome *bo* oxidase) | 0.744 | **25.6 %** |
+| `nuoA`–`nuoN` (NADH dehydrogenase I, 13 subunits) | 0.769 | **23.1 %** |
+| `mdh` | 0.893 | 10.7 % |
+| `sucC` `sucD` | 0.900 | 10.0 % |
+| `rpe`, `aceE`, `galP`, `maeB`, `aceA` | 0.912–0.989 | 1–9 % |
+
+So the corrected partition of the 131:
+
+| class | genes | share | layer |
+|---|---|---|---|
+| provably uncallable | 31 | 23.7 % | unreachable |
+| **sub-threshold defect** | **29** | **22.1 %** | **the READOUT** |
+| **no effect anywhere** | **34** | **26.0 %** | **the OBJECTIVE** |
+| partial overlap | 37 | 28.2 % | working |
+| mis-conditioned | 0 | 0 % | empty |
+
+**The class name is also misleading and is worth restating plainly:** `NEVER_FIRES` means *never crosses
+the essentiality threshold*, **not** *never responds*. For 29 of 63 the model responds substantially and
+the binary rule throws the response away.
+
+**Restraint required on that 22.1 %.** This quantifies the earlier `nuo` observation — 13 genes at ratio
+0.865 scored dispensable — as **29 of 131**. But it is *adjacent* to a lever already measured
+quantitatively dead: the threshold sweep found ≤11 % of misses recoverable by moving the cutoff, and a
+single global cutoff cannot separate a real 23 % defect from noise near 1.0 without flooding false
+positives. The distinct, untried operation is transforming the prediction into the **label's own units**
+(fitness ≈ n·(r−1)) rather than picking a prettier cutoff — and that is a **new endpoint**, so it must be
+pre-registered before it is run. The expression-gating result earlier today is the reminder of why: a
+primary endpoint can be met and still be worthless.
+
 ## Honest limits
 
 1. **Denominator discipline.** This script's own panel is 25 conditions and yields **217** two-sided
@@ -70,10 +113,15 @@ is now quantified rather than inferred.
 |---|---|---|
 | provably uncallable | 31 | **closed** — proved + validated |
 | …of which isozyme-masked | 8 | **closed** — expression-gating measured and rejected |
-| never fires | 63 | **the frontier**, and now correctly labelled: objective, not constraints |
+| sub-threshold defect | 29 | readout layer; adjacent to a dead lever — **pre-register before touching** |
+| no effect anywhere | 34 | **the genuine frontier** — objective incompleteness |
 | partial overlap | 37 | working at 96.3 % per-cell |
 | mis-conditioned | 0 | **empty** |
 
 The remaining question is no longer "which constraint-based lever next?" — that family is exhausted and
-its ceiling is measured. It is **what does biomass fail to demand?**, which is a different kind of
-question about the objective function itself.
+its ceiling is measured. It splits in two, and only one half is fresh territory:
+
+- **34 genes (26.0 %) — what does biomass fail to demand?** LPS core biosynthesis, siderophore uptake,
+  the stringent response. A question about the objective function itself, and genuinely untried.
+- **29 genes (22.1 %) — the readout discards a real prediction.** Quantified, but neighbouring a lever
+  already found dead; it earns a pre-registration, not a promise.
