@@ -1,0 +1,579 @@
+{
+  "record": "fba-demand-completion-probe-v1",
+  "date": "2026-08-22",
+  "model": "iML1515",
+  "condition": "D-Glucose",
+  "biomass_reaction": "BIOMASS_Ec_iML1515_core_75p37M",
+  "wildtype_growth": 0.876997,
+  "growth_floor_fraction": 0.1,
+  "n_genes_probed": 34,
+  "n_genes_with_a_sole_route_metabolite": 21,
+  "n_verified_flip_to_essential_under_demand": 21,
+  "genes": [
+    {
+      "gene": "b0200",
+      "name": "gmhB",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "gmhep1p_c",
+          "max_with_gene": 6.869936,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "gmhep1p_c",
+        "wildtype_with_demand": 0.875999,
+        "growth_cost_of_demand": 0.000998,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0222",
+      "name": "gmhA",
+      "n_candidates": 1,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "gmhep7p_c",
+          "max_with_gene": 7.104806,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "gmhep7p_c",
+        "wildtype_with_demand": 0.876032,
+        "growth_cost_of_demand": 0.000965,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0428",
+      "name": "cyoE",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "hemeO_c",
+          "max_with_gene": 0.788708,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "hemeO_c",
+        "wildtype_with_demand": 0.868247,
+        "growth_cost_of_demand": 0.008751,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0585",
+      "name": "fes",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "23dhbzs_c",
+          "max_with_gene": 4.615181,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "fe3dhbzs3_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "23dhbzs_c",
+        "wildtype_with_demand": 0.875529,
+        "growth_cost_of_demand": 0.001468,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0588",
+      "name": "fepC",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "fe3dhbzs3_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "feenter_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "fe3dhbzs3_c",
+        "wildtype_with_demand": 0.87256,
+        "growth_cost_of_demand": 0.004437,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0589",
+      "name": "fepG",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "fe3dhbzs3_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "feenter_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "fe3dhbzs3_c",
+        "wildtype_with_demand": 0.87256,
+        "growth_cost_of_demand": 0.004437,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0590",
+      "name": "fepD",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "fe3dhbzs3_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "feenter_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "fe3dhbzs3_c",
+        "wildtype_with_demand": 0.87256,
+        "growth_cost_of_demand": 0.004437,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0592",
+      "name": "fepB",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "fe3dhbzs3_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "feenter_c",
+          "max_with_gene": 1.528186,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "fe3dhbzs3_c",
+        "wildtype_with_demand": 0.87256,
+        "growth_cost_of_demand": 0.004437,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b0630",
+      "name": "lipB",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b0888",
+      "name": "trxB",
+      "n_candidates": 0,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b1236",
+      "name": "galU",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "udpg_c",
+          "max_with_gene": 3.318269,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "udpg_c",
+        "wildtype_with_demand": 0.874927,
+        "growth_cost_of_demand": 0.00207,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b1252",
+      "name": "tonB",
+      "n_candidates": 16,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "fe3dcit_p",
+          "max_with_gene": 5.236423,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "feenter_p",
+          "max_with_gene": 1.538394,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "fe3dcit_p",
+        "wildtype_with_demand": 0.875752,
+        "growth_cost_of_demand": 0.001245,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b2168",
+      "name": "fruK",
+      "n_candidates": 1,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b2297",
+      "name": "pta",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b2501",
+      "name": "ppk",
+      "n_candidates": 0,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b2784",
+      "name": "relA",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "gdptp_c",
+          "max_with_gene": 4.421608,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "gdptp_c",
+        "wildtype_with_demand": 0.875443,
+        "growth_cost_of_demand": 0.001555,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b2947",
+      "name": "gshB",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b3005",
+      "name": "exbD",
+      "n_candidates": 16,
+      "n_sole_route_metabolites": 2,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "fe3dcit_p",
+          "max_with_gene": 5.236423,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "feenter_p",
+          "max_with_gene": 1.538394,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "fe3dcit_p",
+        "wildtype_with_demand": 0.875752,
+        "growth_cost_of_demand": 0.001245,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3052",
+      "name": "hldE",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 3,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "adphep_DD_c",
+          "max_with_gene": 2.754142,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "gmhep17bp_c",
+          "max_with_gene": 6.813625,
+          "max_without_gene": 0.0
+        },
+        {
+          "metabolite": "gmhep1p_c",
+          "max_with_gene": 6.869936,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "adphep_DD_c",
+        "wildtype_with_demand": 0.874502,
+        "growth_cost_of_demand": 0.002495,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3213",
+      "name": "gltD",
+      "n_candidates": 0,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b3469",
+      "name": "zntA",
+      "n_candidates": 4,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b3572",
+      "name": "avtA",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b3619",
+      "name": "hldD",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "adphep_LD_c",
+          "max_with_gene": 2.754142,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "adphep_LD_c",
+        "wildtype_with_demand": 0.874502,
+        "growth_cost_of_demand": 0.002495,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3620",
+      "name": "waaF",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "hhlipa_c",
+          "max_with_gene": 0.333907,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "hhlipa_c",
+        "wildtype_with_demand": 0.85628,
+        "growth_cost_of_demand": 0.020718,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3621",
+      "name": "waaC",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "hlipa_c",
+          "max_with_gene": 0.350923,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "hlipa_c",
+        "wildtype_with_demand": 0.857302,
+        "growth_cost_of_demand": 0.019695,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3630",
+      "name": "waaP",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "phhlipa_c",
+          "max_with_gene": 0.333321,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "phhlipa_c",
+        "wildtype_with_demand": 0.856238,
+        "growth_cost_of_demand": 0.020759,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3631",
+      "name": "waaG",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "gicolipa_c",
+          "max_with_gene": 0.280142,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "gicolipa_c",
+        "wildtype_with_demand": 0.852288,
+        "growth_cost_of_demand": 0.024709,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3650",
+      "name": "spoT",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b3791",
+      "name": "wecE",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "dtdp4addg_c",
+          "max_with_gene": 2.781108,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "dtdp4addg_c",
+        "wildtype_with_demand": 0.874527,
+        "growth_cost_of_demand": 0.00247,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3792",
+      "name": "wzxE",
+      "n_candidates": 2,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "unagamuf_p",
+          "max_with_gene": 0.475481,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "unagamuf_p",
+        "wildtype_with_demand": 0.86244,
+        "growth_cost_of_demand": 0.014557,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3806",
+      "name": "cyaA",
+      "n_candidates": 1,
+      "n_sole_route_metabolites": 1,
+      "sole_route_metabolites": [
+        {
+          "metabolite": "camp_c",
+          "max_with_gene": 4.566622,
+          "max_without_gene": 0.0
+        }
+      ],
+      "verification": {
+        "forced_metabolite": "camp_c",
+        "wildtype_with_demand": 0.875492,
+        "growth_cost_of_demand": 0.001505,
+        "ko_ratio_under_demand": 0.0,
+        "flips_to_essential": true
+      }
+    },
+    {
+      "gene": "b3916",
+      "name": "pfkA",
+      "n_candidates": 3,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b3962",
+      "name": "sthA",
+      "n_candidates": 0,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    },
+    {
+      "gene": "b4042",
+      "name": "dgkA",
+      "n_candidates": 14,
+      "n_sole_route_metabolites": 0,
+      "sole_route_metabolites": []
+    }
+  ],
+  "scope": "DIAGNOSTIC ONLY. Names which demand would flip which gene. Does NOT add demands to the objective and re-score, and makes NO recall claim -- that is a new endpoint and would need its own pre-registration.",
+  "method": "maximise a demand reaction on each non-currency metabolite the gene's reactions touch, subject to biomass >= the growth floor, with and without the gene",
+  "caveats": [
+    "Currency metabolites are excluded by an explicit list; a mis-classified entry there would hide or invent a result, so the list is pinned by test.",
+    "Sole-route is computed in ONE condition (glucose by default). A route available only on another carbon source would read as sole-route here.",
+    "The growth floor matters: without it, routes available only to a non-growing cell would count. 10% of wildtype is a choice, reported so it can be varied.",
+    "'Sole route to m' does not prove biomass SHOULD demand m -- it identifies the candidate, which is a modelling question a human answers, not a fact the reconstruction settles."
+  ],
+  "needs_fitness_browser_db": false
+}
