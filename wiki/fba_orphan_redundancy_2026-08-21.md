@@ -11,7 +11,9 @@
 > Fe(II) — different transformations), which is not the same thing and does not generalise.
 >
 > The screen did find a harder result in its place — 23 of 131 experimentally-essential genes are
-> provably uncallable by any constraint-based method, 17 of them via GPR redundancy rather than orphans.
+> provably uncallable *within the standard-FBA setting* (boolean GPR, free enzymes, fixed internal
+> bounds — see the scope correction in `wiki/fba_missed_gene_partition_2026-08-22.md`), 17 of them via
+> GPR redundancy rather than orphans.
 > See `wiki/fba_orphan_protection_screen_2026-08-21.md`.
 >
 > Also corrected there: "113 orphan non-exchange reactions" silently excluded the 2 biomass

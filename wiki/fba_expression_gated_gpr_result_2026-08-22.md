@@ -100,9 +100,16 @@ Of 131 experimentally-essential genes:
 
 | | genes | status |
 |---|---|---|
-| provably uncallable by any constraint-based method | 31 | closed — proved, validated |
+| provably uncallable *within the standard-FBA setting* † | 31 | proved, validated |
 | …of which isozyme-masked | 8 | **expression-gating does not recover them (this memo)** |
 | callable, still missed | 100 | the remaining frontier |
+
+† **Scope correction (2026-08-22, after adversarial review).** This row originally read "provably
+uncallable by **any constraint-based method**", which is false as written. The proofs assume boolean GPR,
+free enzyme capacity, fixed internal bounds, exchange-defined media, and a linear objective. A
+reaction-splitting enzyme-constrained reformulation (GECKO / ecFBA) breaks the free-enzyme assumption.
+Full correction, with the measured evidence on how far it bites, is in
+`wiki/fba_missed_gene_partition_2026-08-22.md` → *Scope correction*.
 
 The 8 masked genes are now the *best-characterised* failures in the set: the mechanism that hides them is
 understood exactly, the intervention that would unmask them is known to work in principle, and the only

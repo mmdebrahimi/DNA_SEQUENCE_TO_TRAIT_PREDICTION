@@ -11,7 +11,7 @@ arc uses) now partition **completely**, with no residue:
 
 | class | genes | share | what would fix it |
 |---|---|---|---|
-| **PROVABLY UNCALLABLE** | **31** | 23.7 % | nothing — no medium, objective or constraint layer reaches them |
+| **PROVABLY UNCALLABLE** | **31** | 23.7 % | nothing *within the standard-FBA setting* — see the scope correction below |
 | **NEVER FIRES** | **63** | 48.1 % | the objective / network — the model never demands the product |
 | **PARTIAL OVERLAP** | **37** | 28.2 % | already largely working |
 | **MIS-CONDITIONED** | **0** | **0 %** | — |
@@ -48,6 +48,40 @@ objective**. This partition says that is aimed at the wrong layer for essentiall
 This is the same shape as the earlier FLAT finding (for ~91 % of missed cells the deletion changes growth
 by *nothing*) — but where that was a symptom, this names the layer: **objective incompleteness**, and it
 is now quantified rather than inferred.
+
+## SCOPE CORRECTION (2026-08-22, after adversarial review) — the uncallability claim was too broad
+
+The row above originally read *"nothing — no medium, objective or constraint layer reaches them."*
+**That is false as written**, and the same overbroad phrasing appeared in
+`wiki/fba_expression_gated_gpr_result_2026-08-22.md`.
+
+The proofs assume **boolean GPR, free enzyme capacity, fixed internal bounds, exchange-defined media, and
+an objective linear over the retained reactions**. An enzyme-constrained reformulation (GECKO / ecFBA)
+breaks the second assumption: isozymes carry different kcat against a shared proteome budget, so deleting
+the *efficient* isozyme can reduce growth even when the boolean GPR is still satisfied.
+
+**Corrected claim:** the 31 is a floor over **any constraint layer applied to iML1515's own reaction
+set**, for any exchange-defined medium and any objective linear over the retained reactions. It does
+**not** survive a *reaction-splitting* enzyme-constrained reformulation.
+
+**How far that actually bites here — measured, not assumed:**
+
+| fact | measured |
+|---|---|
+| iML1515 reaction annotations | `ec-code`, `sabiork` present — **no kcat values** |
+| enzyme-pool / `prot_` / `draw_` reactions | **none** |
+| isozyme representation | both complexes share **ONE** reaction via an `or` rule (`ACHBS` = `(b3670 and b3671) or (b0077 and b0078)`) |
+| uncallable-essential genes sitting on an `or` rule | **22 of 23** |
+
+So a plain GEM **structurally cannot express per-isozyme capacity at all** — the guarantee is lost only
+under a model *transformation* (splitting each reaction per enzyme and assigning kcats), not under any
+constraint added to iML1515 as shipped. This repo has no such variant, and the `ec-code`/`sabiork`
+cross-references are the path to building one, not evidence that one exists.
+
+**Robustness split:** the 6 `ALL_DISABLED_BLOCKED` genes survive even a reformulation (a zero-capacity
+reaction stays zero under any tightening). The other 25 lose the **proof** — which is not the same as
+becoming callable; an alternate enzyme with ample capacity, equal cost, or no kcat annotation would leave
+them uncallable in practice. That remains untested.
 
 ## CORRECTION (same day) — "NEVER FIRES" is two classes, not one, and I labelled it too coarsely
 

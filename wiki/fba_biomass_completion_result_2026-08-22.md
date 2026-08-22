@@ -121,6 +121,29 @@ regulatory network. Each is a real design, and on this arc's record each needs a
 it is built — the last two runs both met their primary endpoint and both failed on a guardrail, which is
 the pattern that would repeat.
 
-Restraint worth stating plainly: this arc has now measured four ceilings in two days. The honest read is
-that the constraint-based family is **closed**, and the next genuinely new thing is a different class of
-model, not a fifth lever.
+## RETRACTION (2026-08-22, after adversarial review)
+
+I wrote here that *"the constraint-based family is **closed**, and the next genuinely new thing is a
+different class of model, not a fifth lever."* **I retract that.** It is the part of this arc that fails
+hardest under review, and it fails on a fact I could have checked before writing it.
+
+**Established in-family methods that were never tried**, verified by grepping `scripts/` and
+`dna_decode/`: **PROM, TRFBA, rFBA, GECKO, MOMENT, ecFBA, thermodynamic FBA — none present anywhere.**
+COBRApy's own deletion surface also offers **MOMA/ROOM**, untried. And what this repo *does* have —
+`scripts/fba_regulatory_conditional_test.py` — describes its own regulatory arm, at line 366, as *"a
+CRUDE proxy for regulation"* (a pFBA restriction). It is not a regulatory-network method.
+
+**The sharpest miss:** PROM consumes a TF–gene regulatory network plus an expression compendium and
+produces condition-specific GPR-level flux constraints. That is *precisely* the non-circular
+condition-selector named as the one remaining open question two paragraphs above — and it is an
+established **in-family** method, not a different class of model. This repo already holds the PRECISE-1K
+compendium PROM needs.
+
+**Corrected framing:** *the levers tested have measured ceilings; regulatory-network-constrained FBA is
+the named, untried, in-family method.* No closure claim. What was actually measured is a ceiling for:
+static objective edits, global thresholds, E-Flux bounds, percentile expression gating, pFBA restriction,
+and gap-fill — under boolean GPRs with free enzymes and fixed internal bounds.
+
+The pattern worth recording: across this arc the **artifacts were careful and the summaries overreached**,
+four separate times. The precise claim was usually already written one paragraph away from the sweeping
+one.
