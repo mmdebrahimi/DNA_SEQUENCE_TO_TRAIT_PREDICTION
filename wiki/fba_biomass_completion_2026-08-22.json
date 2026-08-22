@@ -1,0 +1,312 @@
+{
+  "record": "fba-biomass-completion-v1",
+  "date": "2026-08-22",
+  "prereg": "wiki/fba_biomass_completion_prereg_2026-08-22.md",
+  "prereg_commit": "abc8040",
+  "model": "iML1515",
+  "intervention": {
+    "verified_against": "BIOMASS_Ec_iML1515_WT_75p37M",
+    "add": {
+      "colipa_e": -0.008151,
+      "hemeO_c": -0.000223,
+      "enter_c": -0.000223
+    },
+    "drop": {
+      "kdo2lipid4_e": -0.019456
+    }
+  },
+  "n_conditions": 25,
+  "n_genes": 217,
+  "determinism": {
+    "runs": 2,
+    "per_arm": {
+      "baseline": {
+        "n_cells_differing": 0,
+        "identical": true
+      },
+      "completed": {
+        "n_cells_differing": 0,
+        "identical": true
+      }
+    },
+    "passed": true
+  },
+  "baseline_confusion": {
+    "TP": 721,
+    "FP": 317,
+    "FN": 1111,
+    "TN": 3276
+  },
+  "completed_confusion": {
+    "TP": 826,
+    "FP": 487,
+    "FN": 1006,
+    "TN": 3106
+  },
+  "recall": {
+    "baseline": 0.3936,
+    "completed": 0.4509
+  },
+  "fp_relative_increase": 0.5363,
+  "guardrail_breached": true,
+  "primary": {
+    "bar": 8,
+    "n_recovered": 10,
+    "of": 10,
+    "recovered": [
+      {
+        "name": "gmhA",
+        "gene": "b0222",
+        "conditions": [
+          "D-Fructose",
+          "D-Glucosamine Hydrochloride",
+          "D-Maltose monohydrate",
+          "D-Mannose",
+          "D-Ribose",
+          "D-Sorbitol",
+          "D-Xylose",
+          "Glycerol",
+          "Glycolic Acid",
+          "L-Fucose",
+          "L-Malic acid disodium salt monohydrate",
+          "N-Acetyl-D-Glucosamine",
+          "Potassium acetate",
+          "Sodium D-Lactate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "gmhB",
+        "gene": "b0200",
+        "conditions": [
+          "D-Fructose",
+          "D-Glucosamine Hydrochloride",
+          "D-Glucose-6-Phosphate sodium salt",
+          "D-Maltose monohydrate",
+          "D-Mannose",
+          "D-Ribose",
+          "D-Sorbitol",
+          "D-Xylose",
+          "Glycerol",
+          "Glycolic Acid",
+          "L-Fucose",
+          "L-Malic acid disodium salt monohydrate",
+          "N-Acetyl-D-Glucosamine",
+          "Potassium acetate",
+          "Sodium D-Lactate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "hldE",
+        "gene": "b3052",
+        "conditions": [
+          "D-Glucosamine Hydrochloride",
+          "D-Maltose monohydrate",
+          "D-Mannose",
+          "D-Ribose",
+          "D-Sorbitol",
+          "D-Xylose",
+          "Glycolic Acid",
+          "L-Malic acid disodium salt monohydrate",
+          "N-Acetyl-D-Glucosamine",
+          "Potassium acetate",
+          "Sodium D-Lactate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "hldD",
+        "gene": "b3619",
+        "conditions": [
+          "D-Glucosamine Hydrochloride",
+          "D-Glucose-6-Phosphate sodium salt",
+          "D-Maltose monohydrate",
+          "D-Ribose",
+          "D-Sorbitol",
+          "D-Xylose",
+          "Glycerol",
+          "Glycolic Acid",
+          "L-Malic acid disodium salt monohydrate",
+          "N-Acetyl-D-Glucosamine",
+          "Potassium acetate",
+          "Sodium D-Lactate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "waaC",
+        "gene": "b3621",
+        "conditions": [
+          "D-Glucosamine Hydrochloride",
+          "D-Maltose monohydrate",
+          "D-Ribose",
+          "D-Sorbitol",
+          "D-Xylose",
+          "Glycerol",
+          "Glycolic Acid",
+          "L-Malic acid disodium salt monohydrate",
+          "N-Acetyl-D-Glucosamine",
+          "Potassium acetate",
+          "Sodium D-Lactate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "waaF",
+        "gene": "b3620",
+        "conditions": [
+          "D-Maltose monohydrate",
+          "D-Ribose",
+          "D-Sorbitol",
+          "D-Xylose",
+          "Glycolic Acid",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "waaP",
+        "gene": "b3630",
+        "conditions": [
+          "D-Maltose monohydrate",
+          "D-Ribose",
+          "D-Xylose",
+          "Glycolic Acid",
+          "L-Malic acid disodium salt monohydrate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "waaG",
+        "gene": "b3631",
+        "conditions": [
+          "D-Ribose",
+          "Glycolic Acid",
+          "L-Malic acid disodium salt monohydrate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "galU",
+        "gene": "b1236",
+        "conditions": [
+          "D-Galactose",
+          "D-Galacturonic Acid monohydrate",
+          "Glycolic Acid",
+          "Potassium acetate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      },
+      {
+        "name": "cyoE",
+        "gene": "b0428",
+        "conditions": [
+          "D-Ribose",
+          "Glycolic Acid",
+          "L-Malic acid disodium salt monohydrate",
+          "Potassium acetate",
+          "Sodium succinate dibasic hexahydrate",
+          "a-Ketoglutaric acid disodium salt hydrate"
+        ]
+      }
+    ]
+  },
+  "mechanism_check": {
+    "expected": 0,
+    "n_flipped": 0,
+    "flipped": []
+  },
+  "constitutive_diagnostic": {
+    "per_gene": [
+      {
+        "name": "gmhA",
+        "gene": "b0222",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 16,
+        "new_false_positives": 9
+      },
+      {
+        "name": "gmhB",
+        "gene": "b0200",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 17,
+        "new_false_positives": 8
+      },
+      {
+        "name": "hldE",
+        "gene": "b3052",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 13,
+        "new_false_positives": 12
+      },
+      {
+        "name": "hldD",
+        "gene": "b3619",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 14,
+        "new_false_positives": 11
+      },
+      {
+        "name": "waaC",
+        "gene": "b3621",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 13,
+        "new_false_positives": 12
+      },
+      {
+        "name": "waaF",
+        "gene": "b3620",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 7,
+        "new_false_positives": 18
+      },
+      {
+        "name": "waaP",
+        "gene": "b3630",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 7,
+        "new_false_positives": 18
+      },
+      {
+        "name": "waaG",
+        "gene": "b3631",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 5,
+        "new_false_positives": 20
+      },
+      {
+        "name": "galU",
+        "gene": "b1236",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 5,
+        "new_false_positives": 20
+      },
+      {
+        "name": "cyoE",
+        "gene": "b0428",
+        "n_predicted_essential": 25,
+        "n_experimentally_essential": 6,
+        "new_false_positives": 19
+      }
+    ],
+    "fp_introduced_by_recovered_genes": 147,
+    "total_fp_increase": 170,
+    "share_of_guardrail_breach": 0.8647,
+    "reading": "a biomass coefficient is condition-INDEPENDENT, so a gene that is the sole route to the demanded metabolite in EVERY condition becomes constitutively essential -- trading a false negative in some conditions for a false positive in all the rest"
+  },
+  "genes_not_on_panel": [],
+  "verdict": "FAILURE_GUARDRAIL_BREACHED",
+  "caveats": [
+    "Model-side change: recovering a gene means the MODEL now calls it essential; it does not validate the biomass edit against measured composition.",
+    "Coefficients are transplanted from the model's own WT biomass, never fitted -- there is no free parameter to tune.",
+    "Growth goes slightly UP under the modification, so recovery cannot be a growth-burden effect."
+  ]
+}
