@@ -1,0 +1,977 @@
+{
+  "record": "fba-replaceability-lp-v1",
+  "date": "2026-08-22",
+  "model": "iML1515",
+  "n_callable_probed": 944,
+  "n_uncallable_already_proved": 572,
+  "fully_replaceable": {
+    "n": 73,
+    "genes": [
+      "b2242",
+      "b2243",
+      "b2241",
+      "b3614",
+      "b0871",
+      "b0033",
+      "b0032",
+      "b2210",
+      "b4161",
+      "b2206",
+      "b2203",
+      "b2204",
+      "b2205",
+      "b2202",
+      "b3566",
+      "b3567",
+      "b3568",
+      "b2308",
+      "b2310",
+      "b3460",
+      "b2306",
+      "b2307",
+      "b3456",
+      "b3455",
+      "b3454",
+      "b3457",
+      "b0653",
+      "b0655",
+      "b0654",
+      "b0652",
+      "b0978",
+      "b0979",
+      "b1858",
+      "b1859",
+      "b1857",
+      "b2392",
+      "b3654",
+      "b1900",
+      "b4460",
+      "b1901",
+      "b4242",
+      "b2150",
+      "b2149",
+      "b2148",
+      "b0696",
+      "b0698",
+      "b0697",
+      "b2130",
+      "b2131",
+      "b2128",
+      "b2129",
+      "b3409",
+      "b1186",
+      "b0019",
+      "b3726",
+      "b3728",
+      "b3727",
+      "b3725",
+      "b2679",
+      "b2677",
+      "b2678",
+      "b2938",
+      "b2133",
+      "b3028",
+      "b2309",
+      "b1488",
+      "b1710",
+      "b1473",
+      "b2660",
+      "b1592",
+      "b0606",
+      "b0605",
+      "b0463"
+    ],
+    "detail": [
+      {
+        "gene": "b2242",
+        "name": "glpB",
+        "n_disabled": 2,
+        "reactions": [
+          "G3PD6",
+          "G3PD7"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2243",
+        "name": "glpC",
+        "n_disabled": 2,
+        "reactions": [
+          "G3PD6",
+          "G3PD7"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2241",
+        "name": "glpA",
+        "n_disabled": 2,
+        "reactions": [
+          "G3PD6",
+          "G3PD7"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3614",
+        "name": "yibQ",
+        "n_disabled": 2,
+        "reactions": [
+          "CDPPH",
+          "NDP7"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0871",
+        "name": "poxB",
+        "n_disabled": 1,
+        "reactions": [
+          "POX"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0033",
+        "name": "carB",
+        "n_disabled": 1,
+        "reactions": [
+          "CBPS"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0032",
+        "name": "carA",
+        "n_disabled": 1,
+        "reactions": [
+          "CBPS"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2210",
+        "name": "mqo",
+        "n_disabled": 2,
+        "reactions": [
+          "MDH2",
+          "MDH3"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b4161",
+        "name": "rsgA",
+        "n_disabled": 1,
+        "reactions": [
+          "NTP5"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2206",
+        "name": "napA",
+        "n_disabled": 2,
+        "reactions": [
+          "NO3R1bpp",
+          "NO3R2bpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2203",
+        "name": "napB",
+        "n_disabled": 2,
+        "reactions": [
+          "NO3R1bpp",
+          "NO3R2bpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2204",
+        "name": "napH",
+        "n_disabled": 1,
+        "reactions": [
+          "NO3R1bpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2205",
+        "name": "napG",
+        "n_disabled": 1,
+        "reactions": [
+          "NO3R1bpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2202",
+        "name": "napC",
+        "n_disabled": 2,
+        "reactions": [
+          "NO3R1bpp",
+          "NO3R2bpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3566",
+        "name": "xylF",
+        "n_disabled": 1,
+        "reactions": [
+          "XYLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3567",
+        "name": "xylG",
+        "n_disabled": 1,
+        "reactions": [
+          "XYLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3568",
+        "name": "xylH",
+        "n_disabled": 1,
+        "reactions": [
+          "XYLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2308",
+        "name": "hisQ",
+        "n_disabled": 3,
+        "reactions": [
+          "HISabcpp",
+          "LYSabcpp",
+          "ORNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2310",
+        "name": "argT",
+        "n_disabled": 2,
+        "reactions": [
+          "LYSabcpp",
+          "ORNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3460",
+        "name": "livJ",
+        "n_disabled": 4,
+        "reactions": [
+          "ALAabcpp",
+          "ILEabcpp",
+          "THRabcpp",
+          "VALabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2306",
+        "name": "hisP",
+        "n_disabled": 3,
+        "reactions": [
+          "HISabcpp",
+          "LYSabcpp",
+          "ORNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2307",
+        "name": "hisM",
+        "n_disabled": 3,
+        "reactions": [
+          "HISabcpp",
+          "LYSabcpp",
+          "ORNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3456",
+        "name": "livM",
+        "n_disabled": 5,
+        "reactions": [
+          "ALAabcpp",
+          "ILEabcpp",
+          "LEUabcpp",
+          "THRabcpp",
+          "VALabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3455",
+        "name": "livG",
+        "n_disabled": 5,
+        "reactions": [
+          "ALAabcpp",
+          "ILEabcpp",
+          "LEUabcpp",
+          "THRabcpp",
+          "VALabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3454",
+        "name": "livF",
+        "n_disabled": 5,
+        "reactions": [
+          "ALAabcpp",
+          "ILEabcpp",
+          "LEUabcpp",
+          "THRabcpp",
+          "VALabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3457",
+        "name": "livH",
+        "n_disabled": 5,
+        "reactions": [
+          "ALAabcpp",
+          "ILEabcpp",
+          "LEUabcpp",
+          "THRabcpp",
+          "VALabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0653",
+        "name": "gltK",
+        "n_disabled": 2,
+        "reactions": [
+          "ASPabcpp",
+          "GLUabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0655",
+        "name": "gltI",
+        "n_disabled": 2,
+        "reactions": [
+          "ASPabcpp",
+          "GLUabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0654",
+        "name": "gltJ",
+        "n_disabled": 2,
+        "reactions": [
+          "ASPabcpp",
+          "GLUabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0652",
+        "name": "gltL",
+        "n_disabled": 2,
+        "reactions": [
+          "ASPabcpp",
+          "GLUabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0978",
+        "name": "cbdA",
+        "n_disabled": 1,
+        "reactions": [
+          "CYTBD2pp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0979",
+        "name": "cbdB",
+        "n_disabled": 1,
+        "reactions": [
+          "CYTBD2pp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1858",
+        "name": "znuC",
+        "n_disabled": 1,
+        "reactions": [
+          "ZNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1859",
+        "name": "znuB",
+        "n_disabled": 1,
+        "reactions": [
+          "ZNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1857",
+        "name": "znuA",
+        "n_disabled": 1,
+        "reactions": [
+          "ZNabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2392",
+        "name": "mntH",
+        "n_disabled": 2,
+        "reactions": [
+          "FE2t2pp",
+          "MNt2pp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3654",
+        "name": "xanP",
+        "n_disabled": 1,
+        "reactions": [
+          "GUAt2pp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1900",
+        "name": "araG",
+        "n_disabled": 1,
+        "reactions": [
+          "ARBabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b4460",
+        "name": "araH",
+        "n_disabled": 1,
+        "reactions": [
+          "ARBabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1901",
+        "name": "araF",
+        "n_disabled": 1,
+        "reactions": [
+          "ARBabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b4242",
+        "name": "mgtA",
+        "n_disabled": 1,
+        "reactions": [
+          "MG2uabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2150",
+        "name": "mglB",
+        "n_disabled": 1,
+        "reactions": [
+          "GLCabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2149",
+        "name": "mglA",
+        "n_disabled": 1,
+        "reactions": [
+          "GLCabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2148",
+        "name": "mglC",
+        "n_disabled": 1,
+        "reactions": [
+          "GLCabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0696",
+        "name": "kdpC",
+        "n_disabled": 1,
+        "reactions": [
+          "Kabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0698",
+        "name": "kdpA",
+        "n_disabled": 1,
+        "reactions": [
+          "Kabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0697",
+        "name": "kdpB",
+        "n_disabled": 1,
+        "reactions": [
+          "Kabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2130",
+        "name": "yehY",
+        "n_disabled": 1,
+        "reactions": [
+          "CHLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2131",
+        "name": "osmF",
+        "n_disabled": 1,
+        "reactions": [
+          "CHLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2128",
+        "name": "yehW",
+        "n_disabled": 1,
+        "reactions": [
+          "CHLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2129",
+        "name": "yehX",
+        "n_disabled": 1,
+        "reactions": [
+          "CHLabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3409",
+        "name": "feoB",
+        "n_disabled": 1,
+        "reactions": [
+          "FE2abcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1186",
+        "name": "nhaB",
+        "n_disabled": 1,
+        "reactions": [
+          "NAt3_1p5pp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0019",
+        "name": "nhaA",
+        "n_disabled": 1,
+        "reactions": [
+          "NAt3_2pp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3726",
+        "name": "pstA",
+        "n_disabled": 1,
+        "reactions": [
+          "PIuabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3728",
+        "name": "pstS",
+        "n_disabled": 1,
+        "reactions": [
+          "PIuabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3727",
+        "name": "pstC",
+        "n_disabled": 1,
+        "reactions": [
+          "PIuabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3725",
+        "name": "pstB",
+        "n_disabled": 1,
+        "reactions": [
+          "PIuabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2679",
+        "name": "proX",
+        "n_disabled": 4,
+        "reactions": [
+          "CRNDabcpp",
+          "CRNabcpp",
+          "CTBTabcpp",
+          "PROabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2677",
+        "name": "proV",
+        "n_disabled": 4,
+        "reactions": [
+          "CRNDabcpp",
+          "CRNabcpp",
+          "CTBTabcpp",
+          "PROabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2678",
+        "name": "proW",
+        "n_disabled": 4,
+        "reactions": [
+          "CRNDabcpp",
+          "CRNabcpp",
+          "CTBTabcpp",
+          "PROabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2938",
+        "name": "speA",
+        "n_disabled": 1,
+        "reactions": [
+          "ARGDCpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2133",
+        "name": "dld",
+        "n_disabled": 1,
+        "reactions": [
+          "LDH_D2"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b3028",
+        "name": "mdaB",
+        "n_disabled": 3,
+        "reactions": [
+          "NADPHQR2",
+          "NADPHQR3",
+          "NADPHQR4"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2309",
+        "name": "hisJ",
+        "n_disabled": 1,
+        "reactions": [
+          "HISabcpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1488",
+        "name": "ddpX",
+        "n_disabled": 1,
+        "reactions": [
+          "ALAALAD"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1710",
+        "name": "btuE",
+        "n_disabled": 1,
+        "reactions": [
+          "GTHPi"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1473",
+        "name": "yddG",
+        "n_disabled": 3,
+        "reactions": [
+          "PHEtipp",
+          "TRPtipp",
+          "TYRtipp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b2660",
+        "name": "lhgO",
+        "n_disabled": 1,
+        "reactions": [
+          "SHGO"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b1592",
+        "name": "clcB",
+        "n_disabled": 1,
+        "reactions": [
+          "CLtipp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0606",
+        "name": "ahpF",
+        "n_disabled": 1,
+        "reactions": [
+          "NADHPO"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0605",
+        "name": "ahpC",
+        "n_disabled": 1,
+        "reactions": [
+          "NADHPO"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      },
+      {
+        "gene": "b0463",
+        "name": "acrA",
+        "n_disabled": 7,
+        "reactions": [
+          "CMtpp",
+          "DOXRBCNtpp",
+          "FUSAtpp",
+          "MINCYCtpp",
+          "NOVBCNtpp",
+          "RFAMPtpp",
+          "TTRCYCtpp"
+        ],
+        "coverage": 1.0,
+        "loop_free": true
+      }
+    ]
+  },
+  "n_partially_replaceable": 4,
+  "loop_audit": {
+    "run": true,
+    "n_surviving": 73,
+    "genes": [
+      "b0019",
+      "b0032",
+      "b0033",
+      "b0463",
+      "b0605",
+      "b0606",
+      "b0652",
+      "b0653",
+      "b0654",
+      "b0655",
+      "b0696",
+      "b0697",
+      "b0698",
+      "b0871",
+      "b0978",
+      "b0979",
+      "b1186",
+      "b1473",
+      "b1488",
+      "b1592",
+      "b1710",
+      "b1857",
+      "b1858",
+      "b1859",
+      "b1900",
+      "b1901",
+      "b2128",
+      "b2129",
+      "b2130",
+      "b2131",
+      "b2133",
+      "b2148",
+      "b2149",
+      "b2150",
+      "b2202",
+      "b2203",
+      "b2204",
+      "b2205",
+      "b2206",
+      "b2210",
+      "b2241",
+      "b2242",
+      "b2243",
+      "b2306",
+      "b2307",
+      "b2308",
+      "b2309",
+      "b2310",
+      "b2392",
+      "b2660",
+      "b2677",
+      "b2678",
+      "b2679",
+      "b2938",
+      "b3028",
+      "b3409",
+      "b3454",
+      "b3455",
+      "b3456",
+      "b3457",
+      "b3460",
+      "b3566",
+      "b3567",
+      "b3568",
+      "b3614",
+      "b3654",
+      "b3725",
+      "b3726",
+      "b3727",
+      "b3728",
+      "b4161",
+      "b4242",
+      "b4460"
+    ]
+  },
+  "method": "shadow-reaction LP with every exchange closed: max rate at which internal reactions alone reproduce the target reaction's net conversion",
+  "caveats": [
+    "Exchanges are closed so the claim is medium-independent; a bypass that needs an exchange is deliberately not counted. Conservative -- routes are missed, never invented.",
+    "Full replaceability is required at the reaction's FULL capacity bound, which for a 1000-bound reaction is far more than any medium would ever demand. Conservative again.",
+    "Only the loop-audited subset is trustworthy: with exchanges shut, futile cycles can fake a route. Unaudited counts are reported separately and should not be quoted.",
+    "Replaceability of each disabled reaction is tested with the others also removed, so a gene's reactions cannot rescue each other."
+  ],
+  "needs_fitness_browser_db": false,
+  "impact_on_experimental_deficit": {
+    "n_essential_genes": 131,
+    "n_newly_uncallable_and_essential": 8,
+    "genes": [
+      "b1857",
+      "b1858",
+      "b1859",
+      "b3566",
+      "b3725",
+      "b3726",
+      "b3728",
+      "b4242"
+    ]
+  }
+}
