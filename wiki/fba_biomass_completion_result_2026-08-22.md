@@ -69,9 +69,28 @@ account of why four independent levers failed identically:
 | **Objective completion — right genes, wrong *shape*** | **measured here** |
 
 The residual is not waiting for a better constraint lever, a better threshold, or a richer objective.
-Each of those has now been tried and its ceiling measured. **Conditional essentiality needs a
-condition-dependent mechanism**, and every intervention tested so far — bounds, thresholds, GPR gating,
-biomass demands — is condition-*independent* by construction. That is the through-line.
+Each of those has now been tried and its ceiling measured.
+
+**Correction to my own first draft of this paragraph.** I wrote that *every* intervention tested is
+condition-independent, "GPR gating" included. **That is false** — expression-gated GPR reads per-condition
+expression and is condition-*dependent* by construction. Sorting the six honestly:
+
+| intervention | condition-dependent? | why it failed |
+|---|---|---|
+| gap-fill | no | adds reactions; ceiling measured |
+| threshold retune | no | ≤11 % of misses recoverable |
+| pFBA | no | reshapes flux under a fixed objective |
+| E-Flux | **yes** (bounds) | wrong *operator* — scaling bounds cannot flip an `or`-GPR boolean |
+| expression-gated GPR | **yes** (boolean) | right operator, **no usable selector** — inert at p10, lethal at p20 |
+| biomass completion | no | right genes, wrong *shape* — constitutive, not conditional |
+
+So the sharper and more useful through-line: **the shape that could work is a condition-dependent boolean
+intervention. It has been tried exactly once, and it failed on the selector, not on the concept.** A
+selector that worked would have to identify *which* isozyme is off in *which* condition — which a
+genome-wide expression percentile demonstrably cannot do, and which is circular to infer from the
+essentiality data being predicted.
+
+That is a much narrower and more actionable residue than "the objective is incomplete."
 
 ## Honest limits
 
@@ -91,6 +110,17 @@ biomass demands — is condition-*independent* by construction. That is the thro
 
 ## Next
 
-The one intervention shape not yet tested is a **condition-dependent** one. Everything tried so far is
-constitutive. That is a genuinely different design and, on this arc's record, it needs a pre-registration
-before it is built — not another lever applied to the same data.
+Not "a condition-dependent intervention" — that has been tried. The open question is one level down:
+
+> **Is there a selector that identifies the off isozyme per condition, without using the essentiality
+> labels being predicted?**
+
+Expression percentile is the only one tested and it has no working window. Candidates that are *not*
+circular: operon/regulon structure, a per-condition FVA of the isozyme's own reaction, or an external
+regulatory network. Each is a real design, and on this arc's record each needs a pre-registration before
+it is built — the last two runs both met their primary endpoint and both failed on a guardrail, which is
+the pattern that would repeat.
+
+Restraint worth stating plainly: this arc has now measured four ceilings in two days. The honest read is
+that the constraint-based family is **closed**, and the next genuinely new thing is a different class of
+model, not a fifth lever.
