@@ -54,3 +54,19 @@ modeling labor on it. The only ways forward that the map does NOT foreclose:
    by construction — an ACQUISITION decision, gated on a concrete named source in hand.
 2. **Prospective-lock validation** of the existing decoder against later-arriving independent data (needs
    no new label today; see `wiki/reproducibility_freeze_2026-06-13.md`).
+
+### The map runs in BOTH directions (added 2026-08-23)
+
+Every use of G1–G8 above was a rejection. The first worked example of a substrate that **passes** is
+recorded at `wiki/moderna_int_landscape_and_gate_screen_2026-08-23.md` — MHC-I peptide presentation, the
+label layer under the Merck/Moderna neoantigen therapy. It passes **G1 / G3 / G5** cleanly, which are
+exactly the gates that closed pathotype and the BV-BRC cohorts, and its residual risk sits on the
+*negative* class (G2/G6: MS non-detection ≠ non-presentation).
+
+Two things that makes usable:
+
+- **A passing screen is not a build recommendation.** That substrate was screened and then *declined* —
+  wrong layer for the north star (peptide→presentation, not DNA→trait), a mature field with strong
+  incumbents on the identical public corpora, and no data advantage. Record the screen; decide separately.
+- **It calibrates what "clears the gates" actually looks like**, so a future candidate can be compared
+  against a real positive rather than only against the failure record.
