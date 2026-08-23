@@ -81,7 +81,12 @@ def test_traits_registry_matches_console_entries():
                                "rabbitcolor", "mousecolor", "cattlecolor", "pigcolor", "sheepcolor",
                                "goatcolor", "alpacacolor", "guineapigcolor", "foxcolor", "donkeycolor",
                                "buffalocolor", "pigeoncolor", "camelcolor", "minkcolor", "roedeercolor",
-                               "fba", "motility"}
+                               "fba", "motility",
+                               # clinvar + hla (2026-08-23): they had console entries and cell_registry
+                               # contracts but NO TRAITS row, so they were unreachable via `dna-decode`
+                               # and invisible to `dna-decode list` -- while their sibling `pgx` (same
+                               # human/VCF shape) was routable. Routing parity, not a new decoder.
+                               "clinvar", "hla"}
     # "decode" (added 2026-07-23) is the input-aware ROUTER analysis -- handled inline in cli.py (no
     # delegate module), so it is an ANALYSES entry but not a console script. Conscious addition.
     assert set(uni.ANALYSES) == {"decode", "concordance", "profile", "coloc"}
@@ -92,8 +97,12 @@ def test_every_trait_has_an_evidence_contract():
     """The two registries must AGREE: a trait routable from the unified CLI needs a trust-surface contract.
 
     Without this, the pin above and the cell_registry coverage guard could drift apart -- each satisfied
-    while a decoder ships invisibly through the gap between them. (clinvar/hla are console entries but not
-    dna-decode TRAITS, so they are covered by their own registry tests, not this one.)
+    while a decoder ships invisibly through the gap between them.
+
+    (clinvar/hla WERE console entries but not dna-decode TRAITS, and this docstring used to say so. That
+    gap was closed 2026-08-23: both already had cell_registry contracts whose `route` is dna-clinvar /
+    dna-hla, so they satisfied this guard the whole time -- what they lacked was a TRAITS row, which made
+    them unreachable from the unified CLI and absent from `dna-decode list`.)
     """
     from dna_decode.data.cell_registry import cells
 

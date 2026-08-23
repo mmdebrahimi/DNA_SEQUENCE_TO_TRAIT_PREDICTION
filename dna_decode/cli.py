@@ -75,6 +75,14 @@ TRAITS = {
         "summary": "HUMAN pharmacogenomics (--gene): CYP2C19 / CYP2C9 diplotype + CPIC metabolizer phenotype, or VKORC1 warfarin sensitivity, from a phased VCF (GRCh38) -- the first human cells",
         "validation": "deterministic VCF->defining-SNP->star-allele->diplotype->CPIC phenotype. GeT-RM consensus concordance on real 1000G (caller independent of the consensus tools): CYP2C19 core 72/72, CYP2C9 core 73/73. CALLING independently validatable; PHENOTYPE faithful-to-CPIC (ref tool PharmCAT). v0 core SNP set; non-core star -> CYP2C19 withholds (sentinel), CYP2C9 mis-calls *1 (sentinel=v0.1). VKORC1 = single-SNP rs9923231 (minus-strand). NOT a clinical tool",
     },
+    "clinvar": {
+        "summary": "HUMAN Mendelian germline pathogenicity (ClinVar P/LP + B/LB) for every variant an individual carries, over the ACMG SF v3.2 + 5-carrier 86-gene panel, from a VCF - the sibling of `pgx`/`hla`. Fail-closed: out-of-panel -> INDETERMINATE (absence != benign). Build-agnostic via --panel",
+        "validation": "FAITHFUL-TO-TOOL, not an independent predictor: a deterministic ClinVar-catalog lookup with no independent truth beyond the curated DB. Deployment demonstration on real open-consent PGP-UK individuals (ENA PRJEB17529, N=5): 0 reportable pathogenic - the EXPECTED ACMG-SF base rate in a small healthy cohort, so there is NO positive-class validation - with benign carrier load 1410-1899 surfaced. VUS/conflicting excluded. NOT a clinical tool",
+    },
+    "hla": {
+        "summary": "HUMAN HLA drug-hypersensitivity carriage from a VCF via validated tag SNPs (--allele b5701 = HLA-B*57:01 / abacavir) -> CPIC drug action. NOT full sequence-based HLA typing",
+        "validation": "INDEPENDENTLY MEASURED vs the free 1000G HLA truth (20140702_hla_diversity, n=1103): sens 0.979 / spec 0.992 / PPV 0.855 for the deployed clinical abacavir screen (rs2395029). It is an LD PROXY, not typing - and the sibling provisional tags FAILED validation and are DEMOTED, not shipped (B*58:01 rs9263726 sens 0.61; A*31:01 rs1061235 not-paneled sens 0.0). NOT a clinical tool",
+    },
     "forward": {
         "summary": "FORWARD variant-effect (--mutation M69L --protein-seq/--protein-fasta): a protein point mutation -> predicted MOLECULAR-phenotype change (Regime B, enzyme fitness/stability) - the edit->effect complement to `amr`. v0 CLI = BLOSUM62 (deterministic, offline); learned methods (ESM2/AlphaMissense/ESM-IF) via the Python API",
         "validation": "IN-DISTRIBUTION vs measured Deep Mutational Scanning (ProteinGym): ESM2-650M Spearman TEM-1 0.732 / PTEN 0.518, AlphaMissense(human) 0.539, BLOSUM62 weaker (0.35/0.18) but instant+offline; calibrated-magnitude dosage head coverage 10/10 organisms. PROSPECTIVE (leakage-free: MaveDB DMS whose genes are NOT in the ProteinGym benchmark; R2 has no population-structure confound): ESM2-650M median |Spearman| 0.478 over 2383 held-out assays (0.492 on 978 human proteins; pharmacogenes CYP2C19/2C9/G6PD/NUDT15/VKOR 0.547), and beats BLOSUM62 90% paired (p=5e-15) (wiki/mavedb_full_esm2_2026-07-22 + wiki/mavedb_esm_vs_blosum_paired_2026-07-21). LEAKAGE-FREE HYBRID AT SCALE (N=76 held-out, Kaggle T4): ESM2 0.538 / ProSST 0.596 / hybrid 0.602 median |Spearman| -- the hybrid BEATS BOTH components PAIRED (70/76 vs ESM2 +0.063; 52/76 vs ProSST +0.011, sign-test p=0.0009 -- significant, confirmed by doubling N from 38), and structure (ProSST) is the strongest single modality, above AM 0.502 (wiki/mavedb_holdout_hybrid_2026-07-23). 3-WAY (ESM2+GEMME+ProSST, GEMME=evolution via the finalized Docker toolchain, TEM-1 0.719): on the held-out GEMME-covered subset (N=25) the 3-way beats the 2-way 21/25 (sign-p=0.0005) + beats GEMME-alone 22/25 -- adding evolution LIFTS the hybrid; modest N, orthogonal signal (wiki/gemme_threeway_holdout_2026-07-23). CLINICAL (ClinVar path/benign AUROC, actionable human genes): fitness-alignment CEILING (DMS-itself) TP53 0.996 / MSH2 0.955 vs BLOSUM floor 0.707/0.832; the deployable LEARNED decoders fill the gap near the top -- AlphaMissense 0.986/0.936 (no-GPU, best on TP53), shipped ESM2+ProSST hybrid 0.918/0.937 (wins MSH2); winner is gene-dependent. in-distribution-clinical NOT held-out; single-class genes (BRCA1/PTEN) AUROC-inapplicable by design (wiki/clinical_variant_effect_validation_2026-07-22 + wiki/clinical_am_hybrid_auroc_2026-07-22). Regime B molecular fitness RANK, NOT clinical resistance (use `amr` for R/S)",
@@ -243,6 +251,12 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "pgx":
         from dna_decode.pgx.cli import main as pgx_main
         return pgx_main(rest)
+    if trait == "clinvar":
+        from dna_decode.clinvar.cli import main as clinvar_main
+        return clinvar_main(rest)
+    if trait == "hla":
+        from dna_decode.hla.cli import main as hla_main
+        return hla_main(rest)
     if trait == "forward":
         from dna_decode.forward.cli import main as forward_main
         return forward_main(rest)
