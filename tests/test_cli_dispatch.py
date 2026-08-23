@@ -93,6 +93,45 @@ def test_traits_registry_matches_console_entries():
     assert not (set(uni.TRAITS) & set(uni.ANALYSES))   # disjoint namespaces
 
 
+def test_every_console_script_is_routable_from_the_unified_cli():
+    """The pin above is one-directional: it asserts TRAITS contains exactly a HAND-LISTED set. It cannot
+    notice a NEW console script that ships without a TRAITS row -- which is precisely how `clinvar` and
+    `hla` stayed unreachable from `dna-decode` (and invisible to `dna-decode list`) while both had console
+    entries AND cell_registry contracts. This closes that direction: pyproject is the source of truth for
+    what ships, and everything that ships must be reachable through the unified CLI.
+
+    Name mapping mirrors the dispatcher: `dna-pneumo-serotype` -> trait `pneumoserotype` (hyphens dropped).
+    """
+    import tomllib
+    root = Path(__file__).resolve().parent.parent
+    scripts = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["scripts"]
+    routable = set(uni.TRAITS) | set(uni.ANALYSES)
+    unroutable = sorted(name for name in scripts
+                        if name != "dna-decode"
+                        and name.removeprefix("dna-").replace("-", "") not in routable)
+    assert not unroutable, (
+        f"console scripts with no `dna-decode <trait>` route: {unroutable}. Add a TRAITS entry + dispatch "
+        f"in dna_decode/cli.py (and the pin above), or the decoder ships unreachable from the unified CLI.")
+
+
+def test_every_console_script_actually_imports():
+    """A console entry whose target module fails to import (or lacks its main) is a broken install-time
+    promise that no other test exercises -- nothing imports every decoder in one place."""
+    import importlib
+    import tomllib
+    root = Path(__file__).resolve().parent.parent
+    scripts = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]["scripts"]
+    broken = []
+    for name, spec in sorted(scripts.items()):
+        mod, _, fn = spec.partition(":")
+        try:
+            if not hasattr(importlib.import_module(mod), fn):
+                broken.append(f"{name}: {spec} (module lacks {fn}())")
+        except Exception as e:  # noqa: BLE001 -- any import failure is the defect
+            broken.append(f"{name}: {spec} ({type(e).__name__}: {e})")
+    assert not broken, "broken console entries: " + "; ".join(broken)
+
+
 def test_every_trait_has_an_evidence_contract():
     """The two registries must AGREE: a trait routable from the unified CLI needs a trust-surface contract.
 

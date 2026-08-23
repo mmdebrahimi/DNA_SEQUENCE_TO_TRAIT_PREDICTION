@@ -32,10 +32,10 @@ class Decoder:
 DECODERS: dict[str, list[Decoder]] = {
     "vcf_human": [
         Decoder("dna-pgx", "pharmacogenomics: CYP2C19/2C9 diplotype + CPIC metabolizer phenotype, VKORC1 warfarin",
-                "dna-pgx --gene CYP2C19 --vcf sample.vcf", "pgx"),
+                "dna-pgx --gene cyp2c19 sample.vcf", "pgx"),
         Decoder("dna-clinvar", "Mendelian: curated ClinVar pathogenic/benign calls for the variants carried",
-                "dna-clinvar --vcf sample.vcf", "mendelian"),
-        Decoder("dna-hla", "HLA typing from the VCF region", "dna-hla --vcf sample.vcf", "hla"),
+                "dna-clinvar sample.vcf", "mendelian"),
+        Decoder("dna-hla", "HLA typing from the VCF region", "dna-hla sample.vcf", "hla"),
         Decoder("dna-pigment", "visible-trait pigmentation: eye/hair/skin colour probabilities (IrisPlex + HIrisPlex-S)",
                 "dna-pigment --trait skin --vcf sample.vcf", "typing"),
     ],
@@ -66,7 +66,7 @@ DECODERS: dict[str, list[Decoder]] = {
 # nucleotide FASTA also admits the forward cell on a CDS (edit->effect on the translated protein)
 DECODERS["nucleotide_fasta"].append(
     Decoder("dna-forward", "variant-effect on a CDS via genome-nt edit (translate -> molecular phenotype)",
-            "dna-forward --mutation c.205G>A --genome-fasta cds.fna", "finder"))
+            "dna-forward --mutation c.205G>A --cds-fasta cds.fna", "finder"))
 
 
 def detect_input_kind(path: str | Path, *, max_bytes: int = 65536) -> str:
@@ -206,9 +206,9 @@ def run_decode_plan(path: str | Path, *, runner=None, sample_id: str | None = No
 
     elif kind == "vcf_human":
         print("  human VCF decoders need an explicit target -- not auto-run (never guess a gene):")
-        print(f"  - dna-decode pgx --gene CYP2C19 --vcf {p.name}   (also CYP2C9 / VKORC1)")
-        print(f"  - dna-clinvar --vcf {p.name}                     (curated ClinVar calls; standalone script)")
-        print(f"  - dna-hla     --vcf {p.name}                     (HLA typing; standalone script)")
+        print(f"  - dna-decode pgx --gene cyp2c19 {p.name}         (also cyp2c9 / cyp3a5 / tpmt / ...)")
+        print(f"  - dna-decode clinvar {p.name}                    (curated ClinVar calls; VCF is positional)")
+        print(f"  - dna-decode hla {p.name}                        (HLA typing; VCF is positional)")
 
     else:
         print("  No decoder recognizes this input kind. Supported: a nucleotide/protein FASTA, or a VCF.")

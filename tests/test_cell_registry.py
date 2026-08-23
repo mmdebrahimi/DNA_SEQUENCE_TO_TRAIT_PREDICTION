@@ -76,7 +76,13 @@ def test_every_hla_allele_has_a_contract():
 
 
 def test_every_typing_finder_trait_has_exactly_one_contract():
-    """COVERAGE: every dna_decode.cli TRAIT except amr/pgx is a typing/finder whole-tool cell."""
+    """COVERAGE: every whole-tool dna_decode.cli TRAIT is a typing/finder cell.
+
+    "whole-tool" = every routable trait that does NOT have its own per-target route key in
+    `cli_routable_manifest` (amr / pgx / clinvar / hla each enumerate their own targets). That exclusion is
+    DERIVED from the manifest, not hand-listed -- this test failed the day clinvar + hla became routable
+    traits because the manifest still subtracted a literal {"amr", "pgx"}.
+    """
     traits = cli_routable_manifest()["traits"]
     tf = [c for c in cells() if c.track in ("typing", "finder")]
     covered = {c.target for c in tf}

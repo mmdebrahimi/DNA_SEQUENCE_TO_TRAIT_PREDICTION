@@ -35,6 +35,51 @@ def translate_codon(codon: str) -> str:
     return _CODON[c]
 
 
+def parse_hgvs_c(spec: str) -> tuple[int, str, str]:
+    """Parse an HGVS coding-DNA substitution -> (1-based CDS position, ref base, alt base). PURE.
+
+    Accepts `c.205G>A` (canonical) and the bare `205G>A`. Deliberately NARROW: only single-base
+    substitutions on the coding sequence. Anything else — an indel (`c.205delG`), a genomic/protein
+    prefix (`g.` / `p.`), an interval, a `*`/`-` UTR offset, an intronic `+`/`-` offset — is REFUSED
+    rather than silently coerced, because every one of those has a different coordinate meaning and a
+    wrong coordinate is the failure mode this whole module exists to catch loudly.
+    """
+    import re
+    s = str(spec).strip()
+    m = re.fullmatch(r"(?:c\.)?(\d+)([ACGTacgt])>([ACGTacgt])", s)
+    if not m:
+        raise ValueError(
+            f"not an HGVS coding substitution: {spec!r}. Expected `c.<pos><REF>><ALT>` (e.g. c.205G>A). "
+            f"Only single-base CDS substitutions are supported — indels, `g.`/`p.` coordinates, and "
+            f"intronic/UTR offsets are refused rather than guessed."
+        )
+    pos = int(m.group(1))
+    if pos < 1:
+        raise ValueError(f"HGVS position must be 1-based and positive; got {pos}")
+    return pos, m.group(2).upper(), m.group(3).upper()
+
+
+def translate_cds(cds: str) -> str:
+    """Translate a full CDS -> protein, dropping ONE trailing stop. PURE.
+
+    A codon containing an ambiguity base (N/R/Y/...) becomes 'X' rather than raising, so a real genome
+    with Ns still translates; the edited codon itself is still held to strict ACGT by `cds_point_edit`.
+    An INTERNAL stop is left in the returned string as '*' — it is not silently trimmed, so a
+    wrong-frame or wrong-strand CDS surfaces as a loud WT-residue mismatch downstream instead of
+    quietly producing a truncated protein that verifies against nothing.
+    """
+    s = "".join(str(cds).split()).upper()
+    if len(s) % 3 != 0:
+        raise ValueError(
+            f"CDS length {len(s)} is not a multiple of 3 — not a coding sequence in frame "
+            f"(refusing rather than guessing the reading frame)"
+        )
+    aas = [_CODON.get(s[i:i + 3], "X") for i in range(0, len(s), 3)]
+    if aas and aas[-1] == "*":
+        aas.pop()
+    return "".join(aas)
+
+
 @dataclass
 class GenomeEditPrediction:
     nt_pos: int                 # 1-based CDS position of the edited base

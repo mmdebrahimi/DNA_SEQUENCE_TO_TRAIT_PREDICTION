@@ -1113,13 +1113,18 @@ def cli_routable_manifest() -> dict[str, set[str]]:
     amr_drugs = (set(supported_drugs()) | set(supported_fungal_drugs())
                  | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
                  | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs()))
-    return {
+    per_target = {
         "dna-amr": {d.lower() for d in amr_drugs},
         "dna-pgx": set(PGX_GENES),
         "dna-clinvar": {"germline_pathogenicity"},  # the Mendelian (ClinVar) single-decoder route
         "dna-hla": set(HLA_ALLELES),                 # HLA drug-hypersensitivity tag-SNP cells
-        "traits": set(TRAITS) - {"amr", "pgx"},  # the typing/finder whole-tool traits
     }
+    # "traits" = the WHOLE-TOOL (typing/finder) traits: every routable trait that does NOT already have a
+    # per-target route key above. DERIVED from `per_target`, never hand-listed -- it used to read
+    # `set(TRAITS) - {"amr", "pgx"}`, which silently went wrong the moment clinvar + hla became routable
+    # traits (2026-08-23): both have their own per-target key here, yet both landed in "traits" and broke
+    # the typing/finder coverage test. Adding a new per-target route now excludes its trait automatically.
+    return {**per_target, "traits": set(TRAITS) - {k.removeprefix("dna-") for k in per_target}}
 
 
 def cli_routable_cell_ids() -> set[str]:

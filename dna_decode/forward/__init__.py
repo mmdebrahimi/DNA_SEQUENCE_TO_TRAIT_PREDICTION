@@ -21,7 +21,9 @@ from .dosage import (  # noqa: F401
 from .genome_edit import (  # noqa: F401
     GenomeEditPrediction,
     cds_point_edit,
+    parse_hgvs_c,
     predict_genome_edit,
+    translate_cds,
     translate_codon,
 )
 from .structure_scorer import (  # noqa: F401

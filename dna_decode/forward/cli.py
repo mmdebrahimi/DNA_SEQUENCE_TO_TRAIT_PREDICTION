@@ -10,6 +10,14 @@ complement to the deterministic determinant->R/S AMR decoder (`dna-decode amr`),
     dna-decode forward --mutation M69L --protein-seq MSIQ... --method esm2        # learned (needs torch)
     dna-decode forward --mutation M69L --uniprot P00552 --method hybrid           # ESM2+ProSST (validated best)
     dna-decode forward --mutation M69L --protein-seq MSIQ... --method auto        # strongest runnable here
+    dna-decode forward --mutation c.205G>A --cds-fasta cds.fna                    # a GENOME edit (nt -> codon -> AA)
+
+The `--cds-*` form lifts the input from a protein mutation to a real nucleotide edit: it resolves the HGVS
+coding substitution to its codon, classifies it SILENT / MISSENSE / NONSENSE, and (for the two that change the
+protein) falls through to exactly the same predictor path — so a genome edit inherits every method and the same
+degradation behaviour. The reference base is verified against the CDS and a supplied protein must agree with the
+translation; both mismatches REFUSE rather than guess, because a wrong coordinate is the failure mode this path
+exists to catch. A SILENT edit returns the coding-consequence call and makes no effect prediction.
 
 The STRONG methods (esm2 / prosst / gemme / hybrid) are now first-class from the CLI — they compute their
 per-protein score table ONCE (heavy: minutes on CPU for ESM2, needs a structure for ProSST, Docker+an MSA for
@@ -58,6 +66,10 @@ def main(argv=None) -> int:
     src = ap.add_mutually_exclusive_group()
     src.add_argument("--protein-seq", help="protein amino-acid sequence (verifies the WT residue at the position)")
     src.add_argument("--protein-fasta", help="path to a protein FASTA whose sequence to use")
+    cds_src = ap.add_mutually_exclusive_group()
+    cds_src.add_argument("--cds-fasta", help="path to a CDS nucleotide FASTA — decode a genome edit given as "
+                                             "HGVS `c.<pos><REF>><ALT>` (e.g. c.205G>A)")
+    cds_src.add_argument("--cds-seq", help="CDS nucleotide sequence (alternative to --cds-fasta)")
     ap.add_argument("--protein", default="protein", help="protein name/label (default: protein)")
     ap.add_argument("--method", default="blosum62",
                     choices=["blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"],
@@ -99,6 +111,55 @@ def main(argv=None) -> int:
             return 2
     elif args.protein_seq:
         seq = "".join(c for c in args.protein_seq.upper() if c.isalpha())
+
+    # --- CDS / genome-edit path: `c.205G>A` on a coding sequence -> codon -> AA change ---------------
+    # Resolves the nucleotide edit to its amino-acid consequence, then FALLS THROUGH to the protein path
+    # below, so the genome-edit input inherits every method (esm2/prosst/gemme/hybrid + degradation)
+    # rather than becoming a second-class branch.
+    cds = ""
+    if args.cds_fasta:
+        try:
+            cds = _read_fasta_seq(args.cds_fasta)
+        except OSError as e:
+            print(f"error: cannot read --cds-fasta {args.cds_fasta}: {e}", file=sys.stderr)
+            return 2
+    elif args.cds_seq:
+        cds = "".join(c for c in args.cds_seq.upper() if c.isalpha())
+
+    if cds:
+        from dna_decode.forward import cds_point_edit, parse_hgvs_c, translate_cds
+        try:
+            nt_pos, ref_base, alt_base = parse_hgvs_c(args.mutation)
+            edit = cds_point_edit(cds, nt_pos, ref_base, alt_base)   # verifies REF against the CDS, loudly
+            translated = translate_cds(cds)
+        except (ValueError, KeyError) as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
+
+        wt_aa, alt_aa, aa_pos = edit["wt_aa"], edit["alt_aa"], edit["aa_pos"]
+        consequence = "silent" if wt_aa == alt_aa else ("nonsense" if alt_aa == "*" else "missense")
+        print("genome edit -> codon consequence")
+        print(f"  CDS: {len(cds)} nt ({len(translated)} aa)   edit: c.{nt_pos}{ref_base}>{alt_base}  "
+              f"(REF verified against the CDS)")
+        print(f"  codon {aa_pos}: {edit['wt_codon']} -> {edit['alt_codon']}   "
+              f"{wt_aa} -> {alt_aa}   consequence: {consequence.upper()}")
+
+        if consequence == "silent":
+            print("  synonymous — no protein change, so no variant-effect prediction is made.")
+            print("  [scope: this is a CODING-consequence call only. A synonymous edit can still matter via "
+                  "codon usage / mRNA structure / splicing — none of which this tool models.]")
+            return 0
+
+        # An independently-supplied protein must AGREE with the translation (double coordinate check);
+        # otherwise the translation IS the reference.
+        if seq and seq[:len(translated)] != translated[:len(seq)]:
+            print("error: --protein-* sequence disagrees with the translated --cds-* sequence "
+                  "(coordinate/frame mismatch — refusing rather than picking one)", file=sys.stderr)
+            return 2
+        if not seq:
+            seq = translated
+        args.mutation = f"{wt_aa}{aa_pos}{alt_aa}"
+        print(f"  -> protein mutation: {args.mutation}\n")
 
     want_strong = args.method in STRONG and args.regime != "C_organismal"
 
