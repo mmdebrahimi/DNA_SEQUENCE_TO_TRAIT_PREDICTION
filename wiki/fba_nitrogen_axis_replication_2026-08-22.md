@@ -72,8 +72,13 @@ first place.
    orthogonal one — the replication is weaker than a fully independent axis would be.
 2. **Continuity view.** Restricted to genes shared with the carbon 131 (74 overlap): NEVER_FIRES 48.6 %,
    PARTIAL_OVERLAP 27.0 %, PROVABLY_UNCALLABLE 24.3 % — same shape.
-3. **Stress (55 experiments) is still untouched** and is the more genuinely independent axis. It was not
-   run here.
+3. ~~**Stress (55 experiments) is still untouched** and is the more genuinely independent axis.~~
+   **CORRECTED, same day — this was wrong and would have sent a reader down a foreclosed path.** The
+   stress axis was already probed on 2026-08-20 and is a **structural NO-GO**
+   (`wiki/fba_stress_feasibility_2026-08-20.md`, verdict `STRESS_AXIS_NOT_REPRESENTABLE_IN_iML1515`):
+   only 8 of 35 conditions have an exchange at all, **0 of those 8 reduce growth**, and acetate — a
+   stressor in the assay — makes the model grow **28 % faster**. An exchange models *supplementation*, so
+   the medium-swap contract has the **wrong sign** for stress. I recommended it here without checking.
 4. **This is a partition of the model's failure modes**, not of biology.
 5. The uncallable set was carried over from the carbon-derived artifacts; 36 of the 155 nitrogen genes
    fall in it. It was not re-derived on nitrogen.
@@ -84,5 +89,18 @@ first place.
 - **The data ceiling is now a number, not an intuition:** 11 usable conditions, most on ≤5 expression
   samples, and 14 carbon sources with no expression data in principle. Expanding it needs a *different
   compendium*, which is an **external wall** — no amount of modelling closes it.
-- **The next genuinely independent test is the stress axis** (55 Keio experiments), which would also
-  address the aeration/pH caveat that has been carried as a limitation since the first partition memo.
+- **The environmental-axis expansion is EXHAUSTED.** Not a judgement — an enumeration of every
+  `expGroup` the `Keio` organism has:
+
+| axis | distinct conditions | status |
+|---|---|---|
+| carbon source | 28 (25 mappable) | **done** — the arc's primary panel |
+| nitrogen source | 16 (13 mappable) | **done — replicates (this memo)** |
+| stress | 35 | **structural NO-GO** (2026-08-20; wrong sign) |
+| sulfur source | **2** (`L-Cysteine`, `Sodium sulfate`) | too few — a two-condition panel cannot support a meaningful two-sided partition |
+| motility | 1 (`Agar`) | not a metabolic axis |
+| lb | 0 | — |
+
+There is no third usable axis. The aeration/pH caveat carried since the first partition memo therefore
+**cannot be discharged with this dataset at all** — it is not a task waiting to be done, it is outside
+what `feba.db` + iML1515 can express together.
