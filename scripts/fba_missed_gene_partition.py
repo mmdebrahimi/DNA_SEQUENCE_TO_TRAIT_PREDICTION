@@ -51,6 +51,19 @@ from dna_decode.fba.fitness_browser import (  # noqa: E402
     open_db,
 )
 from dna_decode.fba.model import load_model, wildtype_growth  # noqa: E402
+from dna_decode.fba.nitrogen import (  # noqa: E402
+    apply_nitrogen_condition,
+    load_nitrogen_records,
+    nitrogen_conditions,
+)
+
+#: The axis seam. Every result in this arc was measured on CARBON only; `MIS_CONDITIONED = 0` is
+#: therefore a ONE-AXIS result, which is exactly what the nitrogen arm tests. The three callables per
+#: axis are drop-in mirrors of each other (`nitrogen.py` documents the parallel deliberately).
+AXES = {
+    "carbon": (carbon_conditions, apply_carbon_condition, load_records, "all_carbon"),
+    "nitrogen": (nitrogen_conditions, apply_nitrogen_condition, load_nitrogen_records, "all_nitrogen"),
+}
 
 FRAC = 0.01
 SCREEN_ARTIFACT = Path("wiki/fba_orphan_protection_2026-08-21.json")
@@ -77,18 +90,25 @@ def classify(pred_conds: set[str], true_conds: set[str]) -> str:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--threshold", type=float, default=ESSENTIAL_FITNESS)
-    ap.add_argument("--out", default=f"wiki/fba_missed_partition_{date.today().isoformat()}")
+    ap.add_argument("--axis", choices=sorted(AXES), default="carbon",
+                    help="environmental axis; MIS_CONDITIONED=0 was only ever measured on carbon")
+    ap.add_argument("--out", default=None)
     a = ap.parse_args(argv)
+    if a.out is None:
+        suffix = "" if a.axis == "carbon" else f"_{a.axis}"
+        a.out = f"wiki/fba_missed_partition{suffix}_{date.today().isoformat()}"
 
     from cobra.flux_analysis import single_gene_deletion
 
+    cond_fn, apply_fn, load_fn, all_kw = AXES[a.axis]
     model = load_model()
     conn = open_db()
-    conds = carbon_conditions(conn, model)
+    conds = cond_fn(conn, model)
     all_ex = tuple(conds.values())
     keys = sorted(conds)
     model_genes = {g.id for g in model.genes}
-    records = load_records(conn, conds, gene_filter=model_genes, threshold=a.threshold)
+    print(f"axis: {a.axis}")
+    records = load_fn(conn, conds, gene_filter=model_genes, threshold=a.threshold)
     subset = conditionally_essential_genes(records)
     genes = [r.gene_id for r in subset]
     truth = {r.gene_id: {c for c, y in r.experimental.items() if y} for r in subset}
@@ -103,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
     pred: dict[str, set[str]] = {g: set() for g in genes}
     for n, cond in enumerate(keys, 1):
         with model:
-            apply_carbon_condition(model, conds[cond], all_carbon=all_ex)
+            apply_fn(model, conds[cond], **{all_kw: all_ex})
             wt = wildtype_growth(model)
             if not (wt > 1e-9):
                 print(f"  [{n}/{len(keys)}] {cond[:34]:36} WILDTYPE INFEASIBLE -- skipped")
@@ -172,6 +192,7 @@ def main(argv: list[str] | None = None) -> int:
 
     out = {
         "record": "fba-missed-gene-partition-v1",
+        "axis": a.axis,
         "date": date.today().isoformat(),
         "model": model.id,
         "n_conditions": len(keys), "conditions": keys,

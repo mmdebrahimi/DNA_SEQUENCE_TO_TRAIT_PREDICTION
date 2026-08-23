@@ -1,0 +1,3277 @@
+{
+  "record": "fba-missed-gene-partition-v1",
+  "axis": "nitrogen",
+  "date": "2026-08-22",
+  "model": "iML1515",
+  "n_conditions": 13,
+  "conditions": [
+    "Adenosine",
+    "Ammonium chloride",
+    "Cytidine",
+    "D-Alanine",
+    "D-Serine",
+    "Glycine",
+    "L-Alanine",
+    "L-Arginine",
+    "L-Asparagine",
+    "L-Aspartic Acid",
+    "L-Glutamine",
+    "L-Serine",
+    "Putrescine Dihydrochloride"
+  ],
+  "n_genes": 155,
+  "class_counts": {
+    "PROVABLY_UNCALLABLE": 36,
+    "PARTIAL_OVERLAP": 54,
+    "NEVER_FIRES": 65
+  },
+  "restricted_to_prior_gene_set": {
+    "gene_set": "the 131 from the 11-condition expression panel",
+    "n_genes": 74,
+    "class_counts": {
+      "PROVABLY_UNCALLABLE": 18,
+      "NEVER_FIRES": 36,
+      "PARTIAL_OVERLAP": 20
+    }
+  },
+  "denominator_warning": "This panel is 25 conditions and yields a LARGER two-sided gene set than the 11-condition expression panel used by every prior artifact in this arc. Do not mix the two denominators; `restricted_to_prior_gene_set` carries the continuity view.",
+  "genes": [
+    {
+      "gene": "b0002",
+      "name": "b0002",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0032",
+      "name": "b0032",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0033",
+      "name": "b0033",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0052",
+      "name": "b0052",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0071",
+      "name": "b0071",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0072",
+      "name": "b0072",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0073",
+      "name": "b0073",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0074",
+      "name": "b0074",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0078",
+      "name": "b0078",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 6,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Aspartic Acid",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b0088",
+      "name": "b0088",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 2,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "L-Arginine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0109",
+      "name": "b0109",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 2,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine"
+      ]
+    },
+    {
+      "gene": "b0114",
+      "name": "b0114",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 6,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "D-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0118",
+      "name": "b0118",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 11,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0131",
+      "name": "b0131",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 3,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "D-Alanine",
+        "D-Serine"
+      ]
+    },
+    {
+      "gene": "b0133",
+      "name": "b0133",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 3,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "D-Alanine",
+        "D-Serine"
+      ]
+    },
+    {
+      "gene": "b0134",
+      "name": "b0134",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 3,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Serine"
+      ]
+    },
+    {
+      "gene": "b0149",
+      "name": "b0149",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "D-Serine",
+        "Glycine"
+      ]
+    },
+    {
+      "gene": "b0200",
+      "name": "b0200",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 7,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0222",
+      "name": "b0222",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 5,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0242",
+      "name": "b0242",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0423",
+      "name": "b0423",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 1,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0428",
+      "name": "b0428",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0430",
+      "name": "b0430",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0431",
+      "name": "b0431",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0432",
+      "name": "b0432",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0451",
+      "name": "b0451",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "Glycine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0522",
+      "name": "b0522",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0523",
+      "name": "b0523",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0585",
+      "name": "b0585",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Cytidine",
+        "L-Asparagine",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b0588",
+      "name": "b0588",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride"
+      ]
+    },
+    {
+      "gene": "b0589",
+      "name": "b0589",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine"
+      ]
+    },
+    {
+      "gene": "b0590",
+      "name": "b0590",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 4,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "L-Asparagine"
+      ]
+    },
+    {
+      "gene": "b0592",
+      "name": "b0592",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride"
+      ]
+    },
+    {
+      "gene": "b0630",
+      "name": "b0630",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine",
+        "L-Glutamine"
+      ]
+    },
+    {
+      "gene": "b0674",
+      "name": "b0674",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine",
+        "L-Arginine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0720",
+      "name": "b0720",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 11,
+      "n_true_conditions": 9,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0726",
+      "name": "b0726",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 9,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b0750",
+      "name": "b0750",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 3,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0767",
+      "name": "b0767",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Serine"
+      ]
+    },
+    {
+      "gene": "b0928",
+      "name": "b0928",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 5,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0945",
+      "name": "b0945",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0957",
+      "name": "b0957",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Arginine",
+        "L-Asparagine"
+      ]
+    },
+    {
+      "gene": "b1062",
+      "name": "b1062",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1101",
+      "name": "b1101",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride"
+      ]
+    },
+    {
+      "gene": "b1189",
+      "name": "b1189",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine"
+      ]
+    },
+    {
+      "gene": "b1192",
+      "name": "b1192",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1262",
+      "name": "b1262",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 11,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1263",
+      "name": "b1263",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 11,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1264",
+      "name": "b1264",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 8,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine"
+      ]
+    },
+    {
+      "gene": "b1281",
+      "name": "b1281",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1291",
+      "name": "b1291",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1296",
+      "name": "b1296",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1297",
+      "name": "b1297",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1298",
+      "name": "b1298",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1300",
+      "name": "b1300",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1301",
+      "name": "b1301",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b1702",
+      "name": "b1702",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Serine"
+      ]
+    },
+    {
+      "gene": "b1745",
+      "name": "b1745",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Arginine"
+      ]
+    },
+    {
+      "gene": "b1746",
+      "name": "b1746",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Arginine"
+      ]
+    },
+    {
+      "gene": "b1747",
+      "name": "b1747",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Arginine"
+      ]
+    },
+    {
+      "gene": "b1748",
+      "name": "b1748",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Arginine"
+      ]
+    },
+    {
+      "gene": "b1767",
+      "name": "b1767",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Asparagine"
+      ]
+    },
+    {
+      "gene": "b1814",
+      "name": "b1814",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b1850",
+      "name": "b1850",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine"
+      ]
+    },
+    {
+      "gene": "b1865",
+      "name": "b1865",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 4,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Cytidine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine"
+      ]
+    },
+    {
+      "gene": "b2026",
+      "name": "b2026",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2103",
+      "name": "b2103",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 1,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "D-Alanine"
+      ]
+    },
+    {
+      "gene": "b2215",
+      "name": "b2215",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Arginine"
+      ]
+    },
+    {
+      "gene": "b2297",
+      "name": "b2297",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2312",
+      "name": "b2312",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2320",
+      "name": "b2320",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2366",
+      "name": "b2366",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Serine"
+      ]
+    },
+    {
+      "gene": "b2422",
+      "name": "b2422",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride",
+        "L-Glutamine"
+      ]
+    },
+    {
+      "gene": "b2424",
+      "name": "b2424",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride",
+        "L-Asparagine",
+        "L-Glutamine"
+      ]
+    },
+    {
+      "gene": "b2476",
+      "name": "b2476",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2499",
+      "name": "b2499",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2500",
+      "name": "b2500",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 7,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2501",
+      "name": "b2501",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2518",
+      "name": "b2518",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 4,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "Glycine",
+        "L-Asparagine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2564",
+      "name": "b2564",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 11,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2574",
+      "name": "b2574",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 2,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine"
+      ]
+    },
+    {
+      "gene": "b2599",
+      "name": "b2599",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 9,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2600",
+      "name": "b2600",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2750",
+      "name": "b2750",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2751",
+      "name": "b2751",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 7,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "L-Asparagine",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2752",
+      "name": "b2752",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 8,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2763",
+      "name": "b2763",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 9,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2764",
+      "name": "b2764",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 9,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2784",
+      "name": "b2784",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 10,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Serine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2818",
+      "name": "b2818",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 9,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2903",
+      "name": "b2903",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine"
+      ]
+    },
+    {
+      "gene": "b2904",
+      "name": "b2904",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine"
+      ]
+    },
+    {
+      "gene": "b2905",
+      "name": "b2905",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine"
+      ]
+    },
+    {
+      "gene": "b2906",
+      "name": "b2906",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2912",
+      "name": "b2912",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Glycine"
+      ]
+    },
+    {
+      "gene": "b2913",
+      "name": "b2913",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 11,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3008",
+      "name": "b3008",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 10,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3035",
+      "name": "b3035",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 6,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "Glycine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3052",
+      "name": "b3052",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Asparagine"
+      ]
+    },
+    {
+      "gene": "b3172",
+      "name": "b3172",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3212",
+      "name": "b3212",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 9,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3213",
+      "name": "b3213",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 9,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3236",
+      "name": "b3236",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3290",
+      "name": "b3290",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3368",
+      "name": "b3368",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 8,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3386",
+      "name": "b3386",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 7,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3429",
+      "name": "b3429",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3469",
+      "name": "b3469",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 4,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3619",
+      "name": "b3619",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Asparagine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3620",
+      "name": "b3620",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Asparagine"
+      ]
+    },
+    {
+      "gene": "b3621",
+      "name": "b3621",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Asparagine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3642",
+      "name": "b3642",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3650",
+      "name": "b3650",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 10,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b3670",
+      "name": "b3670",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3671",
+      "name": "b3671",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 8,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3725",
+      "name": "b3725",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 7,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3726",
+      "name": "b3726",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 6,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3728",
+      "name": "b3728",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 9,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3772",
+      "name": "b3772",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3774",
+      "name": "b3774",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3781",
+      "name": "b3781",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 5,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Asparagine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3791",
+      "name": "b3791",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3792",
+      "name": "b3792",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3844",
+      "name": "b3844",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 3,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Alanine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3870",
+      "name": "b3870",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 8,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3916",
+      "name": "b3916",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 10,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3939",
+      "name": "b3939",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 7,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Serine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3956",
+      "name": "b3956",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 9,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Glutamine",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b3957",
+      "name": "b3957",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 10,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3958",
+      "name": "b3958",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 10,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3959",
+      "name": "b3959",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 10,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3960",
+      "name": "b3960",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3962",
+      "name": "b3962",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 9,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3993",
+      "name": "b3993",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 1,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "D-Alanine"
+      ]
+    },
+    {
+      "gene": "b4005",
+      "name": "b4005",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4006",
+      "name": "b4006",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4013",
+      "name": "b4013",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 5,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4025",
+      "name": "b4025",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Alanine",
+        "L-Asparagine"
+      ]
+    },
+    {
+      "gene": "b4042",
+      "name": "b4042",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4138",
+      "name": "b4138",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "L-Aspartic Acid"
+      ]
+    },
+    {
+      "gene": "b4146",
+      "name": "b4146",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4177",
+      "name": "b4177",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 9,
+      "pred_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4214",
+      "name": "b4214",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4239",
+      "name": "b4239",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4242",
+      "name": "b4242",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4245",
+      "name": "b4245",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 12,
+      "n_true_conditions": 11,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4388",
+      "name": "b4388",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 11,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4390",
+      "name": "b4390",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b0077",
+      "name": "b0077",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 7,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Serine"
+      ]
+    },
+    {
+      "gene": "b2557",
+      "name": "b2557",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b2935",
+      "name": "b2935",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 2,
+      "pred_conditions": [],
+      "true_conditions": [
+        "D-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3390",
+      "name": "b3390",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 12,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3771",
+      "name": "b3771",
+      "class": "PARTIAL_OVERLAP",
+      "n_pred_conditions": 13,
+      "n_true_conditions": 12,
+      "pred_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Arginine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ],
+      "true_conditions": [
+        "Adenosine",
+        "Ammonium chloride",
+        "Cytidine",
+        "D-Alanine",
+        "D-Serine",
+        "Glycine",
+        "L-Alanine",
+        "L-Asparagine",
+        "L-Aspartic Acid",
+        "L-Glutamine",
+        "L-Serine",
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b4481",
+      "name": "b4481",
+      "class": "NEVER_FIRES",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    },
+    {
+      "gene": "b3849",
+      "name": "b3849",
+      "class": "PROVABLY_UNCALLABLE",
+      "n_pred_conditions": 0,
+      "n_true_conditions": 1,
+      "pred_conditions": [],
+      "true_conditions": [
+        "Putrescine Dihydrochloride"
+      ]
+    }
+  ],
+  "interpretation": {
+    "PROVABLY_UNCALLABLE": "no medium/objective/constraint layer can move them (prior work)",
+    "NEVER_FIRES": "structurally capable but the model never predicts essential in ANY labelled condition -- the objective never demands the product",
+    "MIS_CONDITIONED": "the model DOES fire, just never in a condition the experiment calls essential -- a condition-modelling / calibration problem",
+    "PARTIAL_OVERLAP": "fires in at least one correct condition; misses the rest"
+  },
+  "caveats": [
+    "The 'ever fires' test spans ALL labelled carbon conditions, not just the 11 with expression -- deliberately generous, so NEVER_FIRES is a conservative claim.",
+    "Condition modelling here is sole-carbon-source only. A gene whose true dependence is on aeration, pH or a nitrogen source cannot be caught by this panel and will read as NEVER_FIRES.",
+    "Model reach, not biology: this partitions the MODEL's failure modes, not the cell's."
+  ],
+  "needs_fitness_browser_db": true
+}
