@@ -51,9 +51,20 @@ uv sync
 
 # 2. Rerun the full validated test suite (the rerunnability guarantee)
 uv run pytest tests/ -q --ignore=tests/test_models_foundation.py
-#    test_models_foundation.py is excluded: it loads torch and fails to COLLECT on a memory-constrained
-#    host (OSError WinError 1455 paging-file) — a host limit, NOT a decoder regression. All decoder /
-#    validation / clonality / report-card tests run without it.
+#    test_models_foundation.py is excluded — a host/environment limit, NOT a decoder regression. All
+#    decoder / validation / clonality / report-card tests run without it.
+#
+#    CAUSE UPDATED 2026-08-23 (measured, the June description no longer matches):
+#      June 2026 : failed to COLLECT (OSError WinError 1455 paging-file) on a memory-constrained host.
+#      2026-08-23: it now COLLECTS FINE — a full run is 3548 passed / 1 failed / 10 skipped, and the
+#                  single failure is
+#                  `test_nt_embed_window_batch_matches_per_sequence`
+#                  ImportError: cannot import name 'find_pruneable_heads_and_indices'
+#                               from 'transformers.pytorch_utils'
+#                  i.e. TRUST_REMOTE_CODE LIBRARY DRIFT — the NT model's remote `modeling_esm.py`
+#                  imports a symbol the installed `transformers` no longer exports. Not memory.
+#      Impact LOW: the NT-embedding track is a closed negative, so nothing shipped depends on it.
+#      A `transformers` pin would touch every cell and is deliberately NOT applied here.
 
 # 3. Rebuild the trust surface from the on-disk scored artifacts (read-only roll-up; no network/Docker)
 uv run python scripts/build_validation_report_card.py
