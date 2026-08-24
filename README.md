@@ -141,21 +141,32 @@ that run end-to-end, each verified by `scripts/verify_quickstart.py`.
 ## Quickstart (verified output)
 
 ```text
-$ uv run dna-decode list
-dna-decode 0.5.0 - deterministic genotype->phenotype decoders
-  amr        antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem) + FUNGAL azole/echinocandin (C. auris) + ANTIMALARIAL artemisinin/K13 + chloroquine/pfcrt-K76T (P. falciparum)
-  pathotype  E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
+$ uv run dna-decode list          # 98 lines; first 2 of 44 traits shown
+dna-decode 0.12.1 - deterministic genotype->phenotype decoders
+
+  amr         antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem; E.coli/Klebsiella/Pseudomonas/S.aureus) + M. tuberculosis (rif/inh) + FUNGAL azole/echinocandin (fluconazole/voriconazole/caspofungin/micafungin; C. auris) + VIRAL target-site (HIV NNRTI/NRTI/PI/INSTI/CAI, SARS-CoV-2 Mpro, influenza NA, HCMV herpesvirus ganciclovir/cidofovir/foscarnet/letermovir via --observed) via --drug
+              validation: bacterial: cipro 0.925 (held-out 0.862, cross-source 1.0) | cef 0.933 | gent 0.945 | tet 0.833 | mero 0.867; cross-organism (capstone). fungal C. auris fluconazole G1: sens 1.0 across clades, label-limited spec (wiki/fungal_ep7_g1_closeout_2026-06-08)
+  pathotype   E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
+              validation: VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit
 
 $ uv run dna-decode amr --drug ceftriaxone --amrfinder-run data/amrfinder_runs/GCA_008727135.1
-sample: GCA_008727135.1  drug: ceftriaxone
+sample: GCA_008727135.1  drug: ceftriaxone  organism: Escherichia
 CALL: R  [MODERATE | 1 determinant(s)]
   driven by: blaCMY-2  (CEPHALOSPORIN, 100.00% id)
+  interpretable deterministic call from AMRFinder's curated database. Per-drug validated op-chars: N=60 acc 0.933/sens 0.962/spec 0.912 (extended-spectrum bla only). ceftriaxone counts only determinants whose AMRFinder Subclass indicates CARBAPENEM/CEPHALOSPORIN activity (broader-class genes that don't confer ceftriaxone resistance are excluded).
+  validation: INDEPENDENT_MEASURED -- acc 0.919 (N=8769)  (independent measured-AST cohort (provenance/BioSample-disjoint); non-circular; see wiki/amr_portal_independent_report_card.md)
 
 $ uv run dna-amr --drug fluconazole --observed ERG11:Y132F --sample-id isolate1   # fungal, pure (no BLAST)
 sample: isolate1  drug: fluconazole  organism: Candida_auris
 CALL: R  [high | 1 determinant(s)]
   driven by: ERG11:Y132F
+  deterministic target-site call (AZOLE). Hand-curated catalog (no AMRFinder-equivalent for fungi).
+  validation: NO_FREE_PHENOTYPE_SOURCE  (no free isolate-level measured-phenotype source exists; the catalog is curated but NOT validated here; see wiki/decoder_validation_report_card.md)
 ```
+
+Every call carries its own `validation:` line — including the honest `NO_FREE_PHENOTYPE_SOURCE` on the
+fungal cell. The block above is **regenerated from real runs** (2026-08-23); the `list` excerpt is the only
+abridgement and is marked as such.
 
 ```bash
 # Plasmid replicon typing on a genome assembly (blastn + PlasmidFinder DB; composes with amr):
