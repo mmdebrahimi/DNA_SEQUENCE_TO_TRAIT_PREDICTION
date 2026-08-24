@@ -314,3 +314,77 @@ def test_naive_value_add_loader_and_section(monkeypatch, tmp_path):
     assert "Curated layer value-over-naive-baseline" in md
     assert "CURATED_LAYER_ADDS_VALUE" in md
     assert "RECONCILE_MISMATCH" not in md  # mismatch cells excluded from the rendered table
+
+
+# --- prospective-lock disclosure layer (2026-08-24) ---
+
+
+def _prospective_artifact(org="Klebsiella", drug="ciprofloxacin", *, acc=0.60, sens=0.40,
+                          spec=0.90, n=50, generated="2026-08-24", verified=True):
+    return {
+        "artifact": "prospective_lock_validation", "generated": generated,
+        "organism": org, "drug": drug, "prospective_lock_verified": verified,
+        "lock_manifest": {"lock_date": "2026-06-13"},
+        "confusion": {"n_scored": n, "acc": acc, "sens": sens, "spec": spec, "abstain": 0},
+        "powering": {"status": "POWERED", "n_scored": n, "scored_R": 20, "scored_S": 30},
+    }
+
+
+def test_prospective_augments_a_scored_cell_without_overwriting_its_provdisjoint_numbers(
+        monkeypatch, tmp_path):
+    """THE shared-key trap: a prospective cell shares (organism, drug) with a provdisjoint cell.
+
+    Merging them would silently replace one number with the other. This pins that the provdisjoint
+    acc/n survive UNCHANGED while the prospective figures live in their own block -- deliberately using
+    DIFFERENT values so an overwrite could not pass by coincidence.
+    """
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "provenance_disjoint_validation_kleb_cipro_2026-06-10.json").write_text(json.dumps({
+        "organism": "Klebsiella", "drug": "ciprofloxacin",
+        "metrics": {"acc": 0.95, "sens": 0.93, "spec": 0.97, "n_scored": 60,
+                    "tp": 28, "fp": 1, "tn": 29, "fn": 2},
+    }), encoding="utf-8")
+    (wiki / "prospective_lock_validation_Klebsiella_ciprofloxacin_2026-08-24.json").write_text(
+        json.dumps(_prospective_artifact()), encoding="utf-8")
+
+    assert mod.main() == 0
+    doc = json.loads((wiki / "decoder_validation_report_card.json").read_text(encoding="utf-8"))
+    cell = next(c for c in doc["cells"] if (c["organism"], c["drug"]) == ("klebsiella", "ciprofloxacin"))
+
+    assert cell["state"] == "SCORED"            # prospective AUGMENTS; it never demotes a state
+    assert cell["acc"] == 0.95 and cell["n"] == 60          # provdisjoint numbers untouched
+    p = cell["prospective"]
+    assert p["status"] == "scored" and p["acc"] == 0.60 and p["n_scored"] == 50
+    assert p["lock_date"] == "2026-06-13"
+
+    md = (wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
+    assert "Prospective-lock disclosure" in md
+    assert "leakage-free BY CONSTRUCTION" in md
+    assert "0.95" in md and "0.600" in md       # BOTH arms rendered, neither replaced
+
+
+def test_prospective_section_absent_when_nothing_has_accrued(monkeypatch, tmp_path):
+    """Non-vacuity: the section must not render on an empty accrual, or it would imply a number exists."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    assert mod.main() == 0
+    assert "Prospective-lock disclosure" not in (
+        wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
+
+
+def test_load_prospective_keeps_the_newest_artifact_per_cell(monkeypatch, tmp_path):
+    """Cells are RE-scored as the cohort accrues, so several dated artifacts coexist."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    for gen, acc in (("2026-08-01", 0.10), ("2026-09-01", 0.90), ("2026-07-01", 0.50)):
+        (wiki / f"prospective_lock_validation_Klebsiella_ciprofloxacin_{gen}.json").write_text(
+            json.dumps(_prospective_artifact(acc=acc, generated=gen)), encoding="utf-8")
+    got = mod.load_prospective()
+    assert len(got) == 1
+    assert next(iter(got.values()))["confusion"]["acc"] == 0.90     # newest wins, not last-globbed
+
+
+def test_prospective_block_refuses_to_render_an_unverified_lock():
+    """A stale artifact from a DRIFTED decoder must never read as validating the current one."""
+    blk = mod.build_prospective_block(_prospective_artifact(verified=False))
+    assert blk["status"] == "lock_unverified"
+    assert "acc" not in blk                                        # no number leaks out of an unverified lock
+    assert mod.build_prospective_block(None)["status"] == "not_accrued"

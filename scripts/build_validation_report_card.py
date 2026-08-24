@@ -124,6 +124,51 @@ def load_lineage_metrics() -> dict:
     return out
 
 
+def load_prospective() -> dict:
+    """Read the prospective-lock scored artifacts -> {canonical_key: cell}. Empty if none.
+
+    NAMESPACE-SEPARATE from `load_scored()` on purpose. A prospective cell shares its (organism, drug)
+    key with a provenance-disjoint cell, so merging them would silently overwrite one with the other --
+    the documented shared-key trap that Fix C in the external-cohort arm exists to avoid. Prospective
+    AUGMENTS a cell (its own block + its own table); it never replaces the provdisjoint number, and never
+    changes a cell's state.
+
+    Keeps the NEWEST artifact per cell (they accrue over time and are re-scored as N grows).
+    """
+    out: dict = {}
+    for f in sorted(glob.glob(str(WIKI / "prospective_lock_validation_*.json"))):
+        try:
+            d = json.loads(Path(f).read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001 — a malformed artifact must not break the read-only roll-up
+            continue
+        org, drug = d.get("organism"), d.get("drug")
+        if not (org and drug):
+            continue
+        k = _key(org, drug)
+        prev = out.get(k)
+        if prev is None or str(d.get("generated", "")) >= str(prev.get("generated", "")):
+            out[k] = d
+    return out
+
+
+def build_prospective_block(pcell: dict | None) -> dict:
+    """Project a prospective-lock artifact into the report-card block. Never silently blank."""
+    if pcell is None:
+        return {"status": "not_accrued"}
+    if not pcell.get("prospective_lock_verified"):
+        # the scorer hard-fails on drift, so this should be unreachable -- but a stale artifact from a
+        # drifted decoder must never be rendered as if it validated the CURRENT one.
+        return {"status": "lock_unverified", "generated": pcell.get("generated")}
+    conf = pcell.get("confusion") or {}
+    pw = pcell.get("powering") or {}
+    return {"status": "scored" if conf.get("n_scored") else "not_accrued",
+            "generated": pcell.get("generated"),
+            "lock_date": (pcell.get("lock_manifest") or {}).get("lock_date"),
+            "n_scored": conf.get("n_scored"), "R": pw.get("scored_R"), "S": pw.get("scored_S"),
+            "acc": conf.get("acc"), "sens": conf.get("sens"), "spec": conf.get("spec"),
+            "abstain": conf.get("abstain"), "powering": pw.get("status")}
+
+
 def _assert_weighted_renderable(w: dict) -> None:
     """C3 emitter guard: a cluster-weighted point estimate may NEVER be rendered without its Wilson CI
     + effective-N. A bare weighted sens/spec is a honesty inversion (tiny-N point with no uncertainty)."""
@@ -231,14 +276,19 @@ def load_naive_value_add() -> list[dict]:
 def main() -> int:
     scored, census, registry = load_scored(), load_census(), load_registry()
     lineage = load_lineage_metrics()
+    prospective = load_prospective()
     surface = surface_index()
 
     rows = []
-    for key in sorted(set(surface) | set(scored) | set(census) | set(registry)):
+    for key in sorted(set(surface) | set(scored) | set(census) | set(registry) | set(prospective)):
         c = classify(key, scored, census, registry, surface.get(key))
         # Lineage augments (never demotes) the state machine: only SCORED cells carry a lineage block.
         if c["state"] == "SCORED":
             c["lineage"] = build_lineage_block(lineage.get(key))
+        # Prospective likewise AUGMENTS: attached wherever an artifact exists, regardless of state, so a
+        # prospective result can never be hidden by the cell's provdisjoint state.
+        if key in prospective:
+            c["prospective"] = build_prospective_block(prospective.get(key))
         rows.append((key, c))
 
     counts = {}
@@ -299,6 +349,39 @@ def main() -> int:
                      f"TP{c.get('tp')} FP{c.get('fp')} TN{c.get('tn')} FN{c.get('fn')} |")
         else:
             L.append(f"| {org} | {drug} | `{c['state']}` | — | — | — | — | — | {c.get('note','')} |")
+    # ---- Prospective-lock disclosure (temporal) ----
+    prosp_rows = [(k, c) for k, c in rows if c.get("prospective")]
+    if prosp_rows:
+        L.append("\n## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)\n")
+        L.append("A SEPARATE arm from the provenance-disjoint numbers above, not a replacement for them. "
+                 "Every isolate here became public STRICTLY AFTER the decoder was frozen and sha256-pinned "
+                 "(`wiki/prospective_lock_manifest_2026-06-22.json`), so the decoder cannot have been tuned "
+                 "to it — the leakage argument is temporal, not statistical. `verify_lock` re-hashes the "
+                 "live decoder on every scoring run and hard-fails on drift.\n")
+        L.append("HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, NOT "
+                 "lineage-independent clinical validation, and these rows are NOT clonality-corrected "
+                 "(the lineage table above applies to the provdisjoint cohorts only).\n")
+        L.append("| organism | drug | lock date | N (R/S) | acc | sens | spec | abstain | powering | as of |\n"
+                 "|---|---|---|---|---|---|---|---|---|---|")
+        for k, c in prosp_rows:
+            org, drug = k
+            p = c["prospective"]
+            if p.get("status") != "scored":
+                L.append(f"| {org} | {drug} | — | — | — | — | — | — | — | {p.get('status')} |")
+                continue
+
+            def _f(v):
+                return "—" if v is None else f"{v:.3f}"
+
+            L.append(f"| {org} | {drug} | {p.get('lock_date', '—')} | "
+                     f"{p.get('n_scored')} ({p.get('R')}R/{p.get('S')}S) | {_f(p.get('acc'))} | "
+                     f"{_f(p.get('sens'))} | {_f(p.get('spec'))} | {p.get('abstain')} | "
+                     f"{p.get('powering')} | {p.get('generated')} |")
+        L.append("\nA LOW prospective sens with HIGH spec means the rule under-calls — it is missing "
+                 "determinants, not mislabelling. Diagnose the false negatives' features before reading it "
+                 "as decay; see `wiki/prospective_lock_first_accrual_2026-08-24.md`, where exactly that "
+                 "diagnosis located a real catalog gap rather than drift.\n")
+
     # ---- Lineage disclosure (clonality-corrected) ----
     scored_rows = [(k, c) for k, c in rows if c["state"] == "SCORED"]
     L.append("\n## Lineage disclosure (clonality-corrected)\n")

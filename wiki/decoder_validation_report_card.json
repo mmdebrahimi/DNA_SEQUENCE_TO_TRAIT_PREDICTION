@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-07-21",
+  "date": "2026-08-24",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -347,6 +347,19 @@
           }
         },
         "grade": "scarce (3-7 effective lineages)"
+      },
+      "prospective": {
+        "status": "scored",
+        "generated": "2026-08-24",
+        "lock_date": "2026-06-13",
+        "n_scored": 61,
+        "R": 24,
+        "S": 37,
+        "acc": 0.967,
+        "sens": 0.917,
+        "spec": 1.0,
+        "abstain": 0,
+        "powering": "POWERED"
       }
     },
     {
@@ -410,6 +423,19 @@
           }
         },
         "grade": "scarce (3-7 effective lineages)"
+      },
+      "prospective": {
+        "status": "scored",
+        "generated": "2026-08-24",
+        "lock_date": "2026-06-13",
+        "n_scored": 62,
+        "R": 49,
+        "S": 13,
+        "acc": 0.532,
+        "sens": 0.429,
+        "spec": 0.923,
+        "abstain": 0,
+        "powering": "POWERED"
       }
     },
     {

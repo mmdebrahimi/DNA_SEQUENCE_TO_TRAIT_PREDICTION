@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-07-21
+# Decoder-suite provenance-disjoint validation report card — 2026-08-24
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -59,6 +59,20 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | salmonella | gentamicin | `UNDERPOWERED` | — | — | — | — | — | censused 5R/86S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | salmonella | tetracycline | `UNDERPOWERED` | — | — | — | — | — | censused 5R/81S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | staphylococcus_aureus | oxacillin | `LABEL_CONFOUNDED` | — | — | — | — | — | phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate) |
+
+## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)
+
+A SEPARATE arm from the provenance-disjoint numbers above, not a replacement for them. Every isolate here became public STRICTLY AFTER the decoder was frozen and sha256-pinned (`wiki/prospective_lock_manifest_2026-06-22.json`), so the decoder cannot have been tuned to it — the leakage argument is temporal, not statistical. `verify_lock` re-hashes the live decoder on every scoring run and hard-fails on drift.
+
+HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, NOT lineage-independent clinical validation, and these rows are NOT clonality-corrected (the lineage table above applies to the provdisjoint cohorts only).
+
+| organism | drug | lock date | N (R/S) | acc | sens | spec | abstain | powering | as of |
+|---|---|---|---|---|---|---|---|---|---|
+| escherichia_coli_shigella | ciprofloxacin | 2026-06-13 | 61 (24R/37S) | 0.967 | 0.917 | 1.000 | 0 | POWERED | 2026-08-24 |
+| escherichia_coli_shigella | gentamicin | 2026-06-13 | 62 (49R/13S) | 0.532 | 0.429 | 0.923 | 0 | POWERED | 2026-08-24 |
+
+A LOW prospective sens with HIGH spec means the rule under-calls — it is missing determinants, not mislabelling. Diagnose the false negatives' features before reading it as decay; see `wiki/prospective_lock_first_accrual_2026-08-24.md`, where exactly that diagnosis located a real catalog gap rather than drift.
+
 
 ## Lineage disclosure (clonality-corrected)
 
