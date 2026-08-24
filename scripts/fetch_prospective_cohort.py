@@ -115,11 +115,17 @@ def parse_datasets_report(report_json: dict) -> dict:
 
 
 def build_cohort_rows(amr: list[dict], gid_to_gca: dict[str, str],
-                      gca_release: dict[str, dict], lock_date: str) -> tuple[list[dict], dict]:
+                      gca_release: dict[str, dict], lock_date: str,
+                      organism: str = "") -> tuple[list[dict], dict]:
     """Assemble eligible cohort rows + a funnel-stats dict (PURE — release dates supplied, no network).
 
     A row is emitted IFF the isolate has a GCA, a resolved NCBI release_date+biosample, and is
-    prospective-eligible (release_date strictly after lock_date)."""
+    prospective-eligible (release_date strictly after lock_date).
+
+    `organism` is the registry organism this batch was swept under. It is LOAD-BEARING for scoring: a
+    sweep spans several organism groups, and `call_resistance` applies a per-organism rule (intrinsic
+    families differ), so a cohort without it cannot be scored correctly. Emitting it was missed until the
+    first non-zero accrual (2026-08-23) made the omission observable."""
     rows, stats = [], {"amr_records": len(amr), "with_gca": 0, "resolved": 0, "eligible": 0,
                        "excluded_pre_or_undatable": 0}
     for rec in amr:
@@ -137,14 +143,17 @@ def build_cohort_rows(amr: list[dict], gid_to_gca: dict[str, str],
             continue
         stats["eligible"] += 1
         rows.append({"biosample": rel["biosample"], "first_public_date": rel["release_date"],
-                     "gca": gca, "drug": rec["drug"], "label": rec["label"]})
+                     "gca": gca, "drug": rec["drug"], "label": rec["label"], "organism": organism})
     return rows, stats
 
 
 def write_cohort_tsv(rows: list[dict], out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    lines = ["biosample\tfirst_public_date\tgca\tdrug\tlabel"]
-    lines += [f"{r['biosample']}\t{r['first_public_date']}\t{r['gca']}\t{r['drug']}\t{r['label']}" for r in rows]
+    # `organism` is REQUIRED downstream: a sweep spans several organism groups and call_resistance is
+    # per-organism, so a cohort without it cannot be scored correctly (see build_cohort_rows).
+    lines = ["biosample\tfirst_public_date\tgca\tdrug\tlabel\torganism"]
+    lines += [f"{r['biosample']}\t{r['first_public_date']}\t{r['gca']}\t{r['drug']}\t{r['label']}"
+              f"\t{r.get('organism', '')}" for r in rows]
     out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -388,6 +397,7 @@ def fetch_live_ncbi_pd(lock_date: str, sleep: float, row_cap: int | None = None,
                     "gca": c["asm"],
                     "drug": drug,
                     "label": label,
+                    "organism": group,
                 })
             agg["eligible"] += 1
 
@@ -445,7 +455,7 @@ def fetch_live(lock_date: str, per_taxon_limit: int, amr_limit: int,
             except Exception as e:   # noqa: BLE001 — one bad GCA must not abort the sweep
                 print(f"  WARN datasets fetch failed for {gca}: {type(e).__name__}")
             time.sleep(sleep)
-        rows, stats = build_cohort_rows(amr, gid_to_gca, gca_release, lock_date)
+        rows, stats = build_cohort_rows(amr, gid_to_gca, gca_release, lock_date, organism=taxon)
         for k in stats:
             agg[k] = agg.get(k, 0) + stats[k]
         all_rows.extend(rows)

@@ -150,6 +150,15 @@ def main(argv=None) -> int:
         print(f"ERROR: cohort TSV not found at {args.cohort_tsv}", file=sys.stderr)
         return 2
     cohort = _read_cohort(args.cohort_tsv)
+    cohort, org_note = _scope_to_organism(cohort, args.organism)
+    if org_note:
+        print(f"[prospective-lock] {org_note}")
+    if not cohort:
+        print(f"ERROR: no cohort rows for organism {args.organism!r}. A sweep spans several organism "
+              f"groups and `call_resistance` is per-organism, so scoring the wrong subset would be a "
+              f"silent mis-call — refusing. Re-run with the organism that is actually present.",
+              file=sys.stderr)
+        return 2
     eligible, excluded = partition_by_eligibility(cohort, manifest["lock_date"])
     print(f"[prospective-lock] {len(eligible)} eligible (post-lock) / {len(excluded)} excluded "
           f"({_count_reasons(excluded)})")
@@ -174,6 +183,30 @@ def _read_cohort(path: Path) -> list[dict]:
             vals = line.rstrip("\n").split("\t")
             rows.append(dict(zip(header, vals)))
     return rows
+
+
+def _scope_to_organism(cohort: list[dict], organism: str) -> tuple[list[dict], str]:
+    """Keep only the rows swept under `organism`. PURE.
+
+    An accrual sweep spans SEVERAL organism groups (Campylobacter / Escherichia_coli_Shigella /
+    Klebsiella) while `--organism` selects ONE registry rule, and `call_resistance` is per-organism
+    (intrinsic gene families differ — a broad class rule over-calls on the wrong organism). Scoring the
+    whole file under one organism would therefore mis-call every foreign row, silently.
+
+    A cohort with NO `organism` column predates the 2026-08-23 fix. It is passed through UNFILTERED with
+    a loud warning rather than dropped, because refusing outright would break older cohorts — but such a
+    file cannot be trusted for a multi-organism sweep, and the warning says so.
+    """
+    if not cohort:
+        return cohort, ""
+    if "organism" not in cohort[0]:
+        return cohort, ("WARNING: cohort TSV has no `organism` column (pre-2026-08-23 format). Scoring "
+                        "ALL rows under --organism=" + organism + ". If this file came from a "
+                        "multi-organism sweep the foreign rows are being mis-called — re-fetch it.")
+    kept = [r for r in cohort if (r.get("organism") or "") == organism]
+    present = sorted({(r.get("organism") or "?") for r in cohort})
+    return kept, (f"scoped to organism={organism}: kept {len(kept)}/{len(cohort)} rows "
+                  f"(file contains {present})")
 
 
 def _predict_eligible(eligible: list[dict], args) -> list[dict]:

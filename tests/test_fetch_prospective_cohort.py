@@ -71,27 +71,65 @@ def test_build_cohort_rows_funnel():
         "GCA_2.1": {"release_date": "2026-05-01", "biosample": "SAMN2"},
         "GCA_3.1": {"release_date": "", "biosample": ""},
     }
-    rows, stats = build_cohort_rows(amr, gid_to_gca, gca_release, "2026-06-13")
+    rows, stats = build_cohort_rows(amr, gid_to_gca, gca_release, "2026-06-13", organism="Klebsiella")
     assert rows == [{"biosample": "SAMN1", "first_public_date": "2026-07-01", "gca": "GCA_1.1",
-                     "drug": "ciprofloxacin", "label": "R"}]
+                     "drug": "ciprofloxacin", "label": "R", "organism": "Klebsiella"}]
     assert stats["amr_records"] == 4 and stats["with_gca"] == 3 and stats["eligible"] == 1
     assert stats["excluded_pre_or_undatable"] == 1   # g2 (pre-lock); g3 fails at resolve (no date), not here
 
 
 def test_write_cohort_tsv_format(tmp_path):
     rows = [{"biosample": "SAMN1", "first_public_date": "2026-07-01", "gca": "GCA_1.1",
-             "drug": "ciprofloxacin", "label": "R"}]
+             "drug": "ciprofloxacin", "label": "R", "organism": "Klebsiella"}]
     p = tmp_path / "prospective_cohort.tsv"
     write_cohort_tsv(rows, p)
     lines = p.read_text(encoding="utf-8").splitlines()
-    assert lines[0] == "biosample\tfirst_public_date\tgca\tdrug\tlabel"
-    assert lines[1] == "SAMN1\t2026-07-01\tGCA_1.1\tciprofloxacin\tR"
+    assert lines[0] == "biosample\tfirst_public_date\tgca\tdrug\tlabel\torganism"
+    assert lines[1] == "SAMN1\t2026-07-01\tGCA_1.1\tciprofloxacin\tR\tKlebsiella"
 
 
 def test_write_cohort_tsv_header_only_when_empty(tmp_path):
     p = tmp_path / "empty.tsv"
     write_cohort_tsv([], p)
-    assert p.read_text(encoding="utf-8").splitlines() == ["biosample\tfirst_public_date\tgca\tdrug\tlabel"]
+    assert p.read_text(encoding="utf-8").splitlines() == [
+        "biosample\tfirst_public_date\tgca\tdrug\tlabel\torganism"]
+
+
+def test_cohort_rows_carry_the_organism_they_were_swept_under():
+    """The 2026-08-23 defect: a sweep spans SEVERAL organism groups but the TSV recorded none of them.
+
+    It stayed invisible while every accrual returned `eligible=0`. The first non-zero sweep (63 isolates
+    across Campylobacter + Escherichia_coli_Shigella + Klebsiella) produced a cohort that could not be
+    scored correctly, because `call_resistance` applies a per-organism rule and the scorer takes ONE
+    `--organism` for the whole file. Scoring it as-is would have mis-called every foreign row silently.
+    """
+    amr = [{"genome_id": "g1", "drug": "ciprofloxacin", "label": "R"}]
+    rows, _ = build_cohort_rows(amr, {"g1": "GCA_1.1"},
+                                {"GCA_1.1": {"release_date": "2026-07-01", "biosample": "SAMN1"}},
+                                "2026-06-13", organism="Campylobacter")
+    assert rows[0]["organism"] == "Campylobacter"
+
+
+def test_scorer_scopes_a_multi_organism_cohort_and_refuses_a_foreign_one(tmp_path):
+    """The scorer must FILTER by organism, not score the whole file under one rule."""
+    from scripts.prospective_lock_validate import _scope_to_organism
+    cohort = [
+        {"biosample": "S1", "drug": "ciprofloxacin", "label": "R", "organism": "Klebsiella"},
+        {"biosample": "S2", "drug": "ciprofloxacin", "label": "S", "organism": "Campylobacter"},
+        {"biosample": "S3", "drug": "ciprofloxacin", "label": "R", "organism": "Klebsiella"},
+    ]
+    kept, note = _scope_to_organism(cohort, "Klebsiella")
+    assert [r["biosample"] for r in kept] == ["S1", "S3"]
+    assert "kept 2/3" in note and "Campylobacter" in note
+
+    # an organism absent from the file yields NOTHING -- main() turns that into a refusal, never a
+    # zero-row "result" that would read as a real (and perfect) score
+    assert _scope_to_organism(cohort, "Escherichia_coli_Shigella")[0] == []
+
+    # a pre-fix cohort (no organism column) passes through, but LOUDLY
+    old = [{"biosample": "S1", "drug": "ciprofloxacin", "label": "R"}]
+    kept_old, note_old = _scope_to_organism(old, "Klebsiella")
+    assert kept_old == old and "WARNING" in note_old and "no `organism` column" in note_old
 
 
 if __name__ == "__main__":
