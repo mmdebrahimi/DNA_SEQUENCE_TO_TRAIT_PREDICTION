@@ -1,10 +1,17 @@
 """`dna-hla` — HLA drug-hypersensitivity carriage from a VCF (GRCh38), via validated tag SNPs.
 
-    dna-hla sample.vcf --allele b5701                 # HLA-B*57:01 / abacavir (default)
-    dna-hla cohort.vcf --allele b5801 --sample NA12878 --json-only
+    dna-hla sample.vcf --allele b5701                 # HLA-B*57:01 / abacavir (the only shipped tag)
+    dna-hla cohort.vcf --allele b5701 --sample NA12878 --json-only
 
 Deterministic tag-SNP -> HLA-allele-carriage -> CPIC drug action. Sibling of dna-pgx / dna-clinvar.
 NOT full sequence-based HLA typing; NOT a clinical tool.
+
+SHIPPED SURFACE IS ONE ALLELE. B*58:01/allopurinol and A*31:01/carbamazepine were MEASURED against real
+1000G HLA truth (2026-07-06) and DEMOTED: rs9263726 misses 39% of B*58:01 carriers (sens 0.61 / PPV 0.18 --
+unsafe for an SJS/TEN screen) and rs1061235 is not paneled on 1000G at all (sens 0.0). They are a documented
+negative in `catalog._UNVALIDATED_TAGS`, not a routable cell. This docstring used to show `--allele b5801`
+and the parser description used to claim "abacavir/allopurinol/carbamazepine" -- an advertisement of exactly
+the two screens the project's own validation rejected.
 """
 from __future__ import annotations
 
@@ -20,8 +27,11 @@ from dna_decode.hla.caller import call_hla
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(
         prog="dna-hla",
-        description="Deterministic HLA drug-hypersensitivity carriage (abacavir/allopurinol/carbamazepine) "
-                    "via validated tag SNPs, from a VCF (GRCh38). NOT sequence-based typing; NOT clinical.")
+        description="Deterministic HLA drug-hypersensitivity carriage via a validated tag SNP, from a VCF "
+                    "(GRCh38). Shipped surface is HLA-B*57:01 / abacavir ONLY (rs2395029; validated vs 1000G "
+                    "HLA truth: sens 0.979 / spec 0.992 / PPV 0.855, n=1103). The allopurinol (B*58:01) and "
+                    "carbamazepine (A*31:01) tags FAILED that same validation and are not shipped. "
+                    "NOT sequence-based typing; NOT clinical.")
     ap.add_argument("vcf", type=Path, help="VCF (GRCh38)")
     ap.add_argument("--allele", default="b5701", choices=list(HLA_ALLELES),
                     help="HLA allele to screen (default b5701 = HLA-B*57:01 / abacavir)")

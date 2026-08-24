@@ -5,7 +5,7 @@ phenotype label is consulted, which is the move that dodges this project's bindi
 
     dna-decode inverse --protein-seq MSIQ... --target-percentile 0.05          # the 5% most damaging
     dna-decode inverse --protein-fasta tem1.faa --target-percentile 0.5 --top-k 10
-    dna-decode inverse --protein-fasta tem1.faa --cds-fasta blatem.fna         # single-nt-reachable only
+    dna-decode inverse --protein-fasta tem1.faa --cds-fasta blatem.fna --target-percentile 0.05   # single-nt-reachable only
     dna-decode inverse --protein-seq MSIQ... --target-percentile 0.9 --json
 
 IT RANKS. IT DOES NOT DOSE. It proposes *edits near the top of the damaging tail*; it can never say

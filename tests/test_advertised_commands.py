@@ -31,7 +31,10 @@ own evidence contract (`cell_registry`) and validation artifact.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import importlib
+import io
+import re
 import shlex
 import sys
 import tomllib
@@ -68,12 +71,17 @@ def _assert_parses(command: str) -> None:
     tokens = shlex.split(command)
     route, argv = tokens[0], tokens[1:]
 
-    if route == "dna-decode":
+    if route == "dna-decode" and argv and not argv[0].startswith("-"):
         # resolve past the unified dispatcher to the SUB-parser, otherwise the outer parser would accept
         # anything after the trait and this guard would pass vacuously.
-        from dna_decode.cli import _delegate
+        from dna_decode.cli import TRAITS, _delegate
         trait, rest = argv[0], argv[1:]
-        call = lambda: _delegate(trait, rest)          # noqa: E731
+        if trait not in TRAITS:                        # an ANALYSES command or `list` -> the unified main
+            call = lambda: _resolve("dna-decode")(argv)    # noqa: E731
+        else:
+            call = lambda: _delegate(trait, rest)      # noqa: E731
+    elif route == "dna-decode":                        # a bare flag, e.g. `dna-decode --version`
+        call = lambda: _resolve("dna-decode")(argv)    # noqa: E731
     else:
         main = _resolve(route)
         call = lambda: main(argv)                      # noqa: E731
@@ -150,6 +158,85 @@ def test_commands_printed_by_the_run_path_are_also_valid(tmp_path, capsys):
         _assert_parses(c.split("   (")[0].strip())
     assert "standalone script" not in out, (
         "clinvar/hla are routable `dna-decode` traits now -- the 'standalone script' text is stale.")
+
+
+# --------------------------------------------------------------------------------------------------
+# The SAME promise, one level down: every CLI module's own docstring / --help examples.
+#
+# The router is not the only place that hands a user a command. Each decoder's module docstring opens with
+# a worked example block, and those reach the user through `--help` too. Sweeping them found two more:
+#   * `dna-decode inverse --protein-fasta X --cds-fasta Y`  -- omits the REQUIRED --target-percentile
+#   * `dna-hla cohort.vcf --allele b5801 ...`               -- b5801 is not a shipped allele
+# The second was the worse one: B*58:01/allopurinol and A*31:01/carbamazepine were MEASURED against 1000G
+# HLA truth and DEMOTED (sens 0.61 / PPV 0.18, and sens 0.0 -- see catalog._UNVALIDATED_TAGS), yet the
+# docstring example AND the argparse description still advertised those two screens. An over-claim in
+# --help is a trust-surface falsehood in the most-read place there is.
+# --------------------------------------------------------------------------------------------------
+
+# A docstring line is treated as a literal command only if it has no placeholder/prose markers. This is
+# deliberately conservative -- `<...>`, `...`, quotes, pipes and `$` mean "fill this in", and a template is
+# not a promise. The count assertion below stops the filter from quietly excluding everything.
+_PLACEHOLDER = ("...", "<", "|", "`", "'", '"', "$")
+_CMD_LINE = re.compile(r"^\s*(dna-[a-z0-9-]+ [^\n#]*?)\s*(?:#.*)?$")
+
+
+def _docstring_commands() -> list[tuple[str, str]]:
+    root = Path(__file__).resolve().parent.parent
+    out, seen = [], set()
+    for spec in sorted(set(_console_scripts().values())):
+        mod = spec.split(":")[0]
+        path = root / (mod.replace(".", "/") + ".py")
+        if not path.exists():
+            continue
+        for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+            m = _CMD_LINE.match(line)
+            if not m:
+                continue
+            cmd = m.group(1).strip()
+            if any(t in cmd for t in _PLACEHOLDER) or cmd in seen:
+                continue
+            seen.add(cmd)
+            out.append((mod, cmd))
+    return out
+
+
+_DOCSTRING_COMMANDS = _docstring_commands()
+
+
+def test_the_docstring_sweep_actually_finds_commands():
+    """Non-vacuity: if the placeholder filter ever swallowed the whole surface, every parametrized case
+    below would vanish and the sweep would silently pass while checking nothing."""
+    assert len(_DOCSTRING_COMMANDS) >= 60, f"docstring sweep collapsed to {len(_DOCSTRING_COMMANDS)} commands"
+    assert len({m for m, _ in _DOCSTRING_COMMANDS}) >= 15
+
+
+@pytest.mark.parametrize("mod,command", _DOCSTRING_COMMANDS, ids=lambda v: str(v)[:60])
+def test_every_command_in_a_cli_docstring_is_accepted_by_its_own_cli(mod, command):
+    _assert_parses(command)
+
+
+def test_hla_help_does_not_advertise_the_demoted_tags():
+    """The demotion must reach the user-facing surface, not only the catalog's internal comment.
+
+    `catalog._UNVALIDATED_TAGS` records that rs9263726 misses 39% of B*58:01 carriers ("unsafe for an
+    SJS/TEN screen") and rs1061235 cannot call A*31:01 at all -- while `dna-hla --help` claimed
+    "abacavir/allopurinol/carbamazepine". Only the abacavir screen ships.
+    """
+    from dna_decode.hla import HLA_ALLELES
+    from dna_decode.hla import cli as hla_cli
+    assert set(HLA_ALLELES) == {"b5701"}
+
+    err = io.StringIO()
+    with contextlib.redirect_stdout(err), pytest.raises(SystemExit):
+        hla_cli.main(["--help"])
+    helptext = err.getvalue().lower()
+    for demoted in ("b5801", "a3101"):
+        assert demoted not in helptext, f"--help advertises the DEMOTED tag {demoted}"
+    # the drug names may appear only while saying they are NOT shipped
+    for drug in ("allopurinol", "carbamazepine"):
+        if drug in helptext:
+            assert "failed" in helptext or "not shipped" in helptext, (
+                f"--help mentions {drug} without saying its tag failed validation")
 
 
 if __name__ == "__main__":
