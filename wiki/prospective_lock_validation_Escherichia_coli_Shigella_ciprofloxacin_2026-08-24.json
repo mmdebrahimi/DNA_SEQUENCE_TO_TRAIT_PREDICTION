@@ -1,0 +1,41 @@
+{
+  "artifact": "prospective_lock_validation",
+  "schema": "prospective-lock-result-v1",
+  "generated": "2026-08-24",
+  "organism": "Escherichia_coli_Shigella",
+  "drug": "ciprofloxacin",
+  "prospective_lock_verified": true,
+  "lock_manifest": {
+    "schema": "prospective-lock-manifest-v1",
+    "lock_date": "2026-06-13",
+    "frozen_commit": "b3761c8",
+    "surface_sha256": {
+      "dna_decode/eval/amr_rules.py": "a983bf28e4ff4f89034b152404e49ec3aa6b3907ac81c670b14e60e7cfe1fad4",
+      "dna_decode/data/calibrated_amr_rules.json": "0435b0e44b4a991830c770400f0f3677ab3521a0379f2e2caa37b1b11fb84428",
+      "dna_decode/data/mic_tiers.py": "47d6c70103673736580c510cf1484b09917665981c6f8594c3b8521e850bc283",
+      "dna_decode/data/shipped_decoder_surface.py": "9a10b198afdf6b9016f57d94ccbbed8a94badfe552b18dfe7274a8cd43569f52",
+      "dna_decode/eval/cohort_manifest.py": "74a3459402ecdebd45c80a4eb7468cbf8bc72d38fe6c5b76b426bb41a44a8005"
+    }
+  },
+  "n_eligible_post_lock": 61,
+  "n_excluded": 0,
+  "exclusion_reasons": {},
+  "confusion": {
+    "n_scored": 61,
+    "tp": 22,
+    "fp": 0,
+    "tn": 37,
+    "fn": 2,
+    "abstain": 0,
+    "acc": 0.967,
+    "sens": 0.917,
+    "spec": 1.0
+  },
+  "powering": {
+    "status": "POWERED",
+    "n_scored": 61,
+    "scored_R": 24,
+    "scored_S": 37
+  },
+  "honest_note": "leakage-free BY CONSTRUCTION (every scored isolate became public after lock_date); this is a temporal prospective stress test of the FROZEN decoder, accruing over time. Not lineage-independent clinical validation."
+}

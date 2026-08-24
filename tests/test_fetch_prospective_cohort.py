@@ -132,6 +132,28 @@ def test_scorer_scopes_a_multi_organism_cohort_and_refuses_a_foreign_one(tmp_pat
     assert kept_old == old and "WARNING" in note_old and "no `organism` column" in note_old
 
 
+def test_scorer_scopes_to_the_drug_being_predicted():
+    """A cohort is one row per (isolate, drug); the scorer predicts ONE drug.
+
+    Without this filter a ciprofloxacin PREDICTION is compared against a ceftriaxone / gentamicin /
+    tetracycline LABEL -- a cross-drug mismatch producing a confident, meaningless number. The real
+    2026-08-23 run reported n_scored=215 / R=164 / S=51 (exactly the ALL-drugs label sum) when only 61
+    rows were ciprofloxacin.
+    """
+    from scripts.prospective_lock_validate import _scope_to_drug
+    cohort = [
+        {"biosample": "S1", "drug": "ciprofloxacin", "label": "R"},
+        {"biosample": "S1", "drug": "gentamicin", "label": "S"},      # same isolate, different label
+        {"biosample": "S2", "drug": "ciprofloxacin", "label": "S"},
+        {"biosample": "S3", "drug": "tetracycline", "label": "R"},
+    ]
+    kept, note = _scope_to_drug(cohort, "ciprofloxacin")
+    assert [r["biosample"] for r in kept] == ["S1", "S2"]
+    assert [r["label"] for r in kept] == ["R", "S"]        # the gentamicin S for S1 must NOT come along
+    assert "kept 2/4" in note
+    assert _scope_to_drug(cohort, "meropenem")[0] == []    # main() turns this into a refusal
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))

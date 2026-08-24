@@ -159,6 +159,13 @@ def main(argv=None) -> int:
               f"silent mis-call — refusing. Re-run with the organism that is actually present.",
               file=sys.stderr)
         return 2
+    cohort, drug_note = _scope_to_drug(cohort, args.drug)
+    if drug_note:
+        print(f"[prospective-lock] {drug_note}")
+    if not cohort:
+        print(f"ERROR: no cohort rows for drug {args.drug!r} — refusing rather than scoring an empty "
+              f"set as a result.", file=sys.stderr)
+        return 2
     eligible, excluded = partition_by_eligibility(cohort, manifest["lock_date"])
     print(f"[prospective-lock] {len(eligible)} eligible (post-lock) / {len(excluded)} excluded "
           f"({_count_reasons(excluded)})")
@@ -207,6 +214,27 @@ def _scope_to_organism(cohort: list[dict], organism: str) -> tuple[list[dict], s
     present = sorted({(r.get("organism") or "?") for r in cohort})
     return kept, (f"scoped to organism={organism}: kept {len(kept)}/{len(cohort)} rows "
                   f"(file contains {present})")
+
+
+def _scope_to_drug(cohort: list[dict], drug: str) -> tuple[list[dict], str]:
+    """Keep only the rows whose LABEL is for `drug`. PURE.
+
+    An accrual cohort is one row per (isolate, drug). `_predict_eligible` predicts with a single
+    `--drug`, so an unfiltered cohort compares a ciprofloxacin PREDICTION against a ceftriaxone /
+    gentamicin / tetracycline LABEL -- a cross-drug mismatch that yields a confident, entirely
+    meaningless number.
+
+    Caught on the first real scoring run (2026-08-23): it reported n_scored=215 / R=164 / S=51, which is
+    exactly the ALL-drugs label sum, when only 61 rows were ciprofloxacin. Like the missing-organism
+    defect, it survived because every prior accrual returned zero rows to score.
+    """
+    if not cohort:
+        return cohort, ""
+    if "drug" not in cohort[0]:
+        return cohort, "WARNING: cohort has no `drug` column; scoring ALL rows under --drug=" + drug
+    kept = [r for r in cohort if (r.get("drug") or "") == drug]
+    present = sorted({(r.get("drug") or "?") for r in cohort})
+    return kept, (f"scoped to drug={drug}: kept {len(kept)}/{len(cohort)} rows (file contains {present})")
 
 
 def _predict_eligible(eligible: list[dict], args) -> list[dict]:
