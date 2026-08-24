@@ -11,13 +11,21 @@ complement to the deterministic determinant->R/S AMR decoder (`dna-decode amr`),
     dna-decode forward --mutation M69L --uniprot P00552 --method hybrid           # ESM2+ProSST (validated best)
     dna-decode forward --mutation M69L --protein-seq MSIQ... --method auto        # strongest runnable here
     dna-decode forward --mutation c.205G>A --cds-fasta cds.fna                    # a GENOME edit (nt -> codon -> AA)
+    dna-decode forward --mutation c.248C>T --genome-fasta g.fna --annotations a.gff3 --gene gyrA
 
-The `--cds-*` form lifts the input from a protein mutation to a real nucleotide edit: it resolves the HGVS
-coding substitution to its codon, classifies it SILENT / MISSENSE / NONSENSE, and (for the two that change the
-protein) falls through to exactly the same predictor path — so a genome edit inherits every method and the same
-degradation behaviour. The reference base is verified against the CDS and a supplied protein must agree with the
-translation; both mismatches REFUSE rather than guess, because a wrong coordinate is the failure mode this path
-exists to catch. A SILENT edit returns the coding-consequence call and makes no effect prediction.
+The nucleotide forms lift the input from a protein mutation to a real genome edit: resolve the HGVS coding
+substitution to its codon, classify it SILENT / MISSENSE / NONSENSE, and (for the two that change the protein)
+fall through to exactly the same predictor path — so a genome edit inherits every method and the same
+degradation behaviour. `--genome-fasta` + `--annotations` + `--gene` extracts that gene's CDS from a whole
+genome (strand-aware: a minus-strand gene is reverse-complemented), matching `--gene` on `gene_symbol` first —
+the CROSS-STRAIN identifier — then `locus_tag`, then `gene_id`.
+
+Everything here fails CLOSED, because a wrong coordinate is the failure mode this path exists to catch: the
+reference base must match the CDS, the CDS must be in frame, a separately supplied protein must agree with the
+translation, only single-base `c.` substitutions parse, and a gene name matching several CDS features (a
+multi-copy gene, alternative products of one locus, or a joined multi-segment CDS such as the dnaX programmed
+frameshift) is REFUSED with the field that actually separates them — never resolved to an arbitrary copy.
+A SILENT edit returns the coding-consequence call and makes no effect prediction.
 
 The STRONG methods (esm2 / prosst / gemme / hybrid) are now first-class from the CLI — they compute their
 per-protein score table ONCE (heavy: minutes on CPU for ESM2, needs a structure for ProSST, Docker+an MSA for
@@ -70,6 +78,11 @@ def main(argv=None) -> int:
     cds_src.add_argument("--cds-fasta", help="path to a CDS nucleotide FASTA — decode a genome edit given as "
                                              "HGVS `c.<pos><REF>><ALT>` (e.g. c.205G>A)")
     cds_src.add_argument("--cds-seq", help="CDS nucleotide sequence (alternative to --cds-fasta)")
+    cds_src.add_argument("--genome-fasta", help="whole-genome nucleotide FASTA -- with --annotations and "
+                                                "--gene, extracts that gene's CDS (strand-aware)")
+    ap.add_argument("--annotations", help="GFF3 for --genome-fasta")
+    ap.add_argument("--gene", help="gene to decode from --genome-fasta (matched on gene_symbol, e.g. gyrA, "
+                                   "then locus_tag, then gene_id)")
     ap.add_argument("--protein", default="protein", help="protein name/label (default: protein)")
     ap.add_argument("--method", default="blosum62",
                     choices=["blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"],
@@ -125,6 +138,22 @@ def main(argv=None) -> int:
             return 2
     elif args.cds_seq:
         cds = "".join(c for c in args.cds_seq.upper() if c.isalpha())
+    elif args.genome_fasta:
+        if not (args.annotations and args.gene):
+            ap.error("--genome-fasta requires --annotations <gff3> and --gene <name>")
+        # heavy import (pandas) deferred to the branch that needs it
+        from dna_decode.data.annotations import extract_cds_sequences, parse_gff3
+        from dna_decode.forward import cds_record_key, select_gene_cds
+        try:
+            table = parse_gff3(args.annotations)
+            rec = select_gene_cds(table.to_dict("records"), args.gene)
+            cds = extract_cds_sequences(args.genome_fasta, table)[cds_record_key(rec)]
+        except (OSError, ValueError, KeyError) as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 2
+        args.protein = args.protein if args.protein != "protein" else args.gene
+        print(f"gene lookup: {args.gene} -> {rec.get('seqid')}:{rec.get('start')}-{rec.get('end')} "
+              f"strand {rec.get('strand')}  (locus_tag {rec.get('locus_tag') or '-'})")
 
     if cds:
         from dna_decode.forward import cds_point_edit, parse_hgvs_c, translate_cds

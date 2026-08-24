@@ -177,5 +177,86 @@ def test_cli_cds_path_on_the_real_committed_blatem_cds(capsys):
     assert "codon 69: ACT -> TCT" in capsys.readouterr().out
 
 
+# --------------------------------------------------------------------------------------------------
+# Genome + GFF3 input: `--genome-fasta X.fna --annotations Y.gff3 --gene gyrA` (added 2026-08-23).
+# Lifts the input from "an isolated CDS" (which a user rarely has) to a real genome + its annotation.
+# --------------------------------------------------------------------------------------------------
+
+_REFSEQ = Path(__file__).resolve().parent.parent / "data" / "cache" / "refseq" / "GCF_000005845.2"
+
+
+def test_select_gene_cds_prefers_gene_symbol_over_gene_id():
+    """The priority is load-bearing, not cosmetic: `gene_id` is strain-unique by construction
+    (`gene-b0001`), so resolving a user's `gyrA` against it is the documented 0%-overlap trap."""
+    from dna_decode.forward import select_gene_cds
+    recs = [
+        {"type": "CDS", "gene_symbol": "gyrA", "locus_tag": "b2231", "gene_id": "cds-A", "seqid": "c", "start": 1, "end": 9},
+        {"type": "CDS", "gene_symbol": "parC", "locus_tag": "gyrA", "gene_id": "cds-B", "seqid": "c", "start": 10, "end": 18},
+        {"type": "gene", "gene_symbol": "gyrA", "locus_tag": "", "gene_id": "gene-x", "seqid": "c", "start": 1, "end": 9},
+    ]
+    assert select_gene_cds(recs, "gyrA")["gene_id"] == "cds-A"       # symbol beats the locus_tag collision
+    assert select_gene_cds(recs, "GYRA")["gene_id"] == "cds-A"       # case-insensitive
+    assert select_gene_cds(recs, "cds-B")["gene_symbol"] == "parC"   # falls through to gene_id
+
+
+def test_select_gene_cds_refuses_ambiguity_and_names_the_separating_field():
+    """A multi-copy / alternative-product gene must REFUSE, not silently decode an arbitrary copy."""
+    from dna_decode.forward import select_gene_cds
+    alt = [  # one locus, two protein accessions -- locus_tag is IDENTICAL, so gene_id is the separator
+        {"type": "CDS", "gene_symbol": "mrcB", "locus_tag": "b0149", "gene_id": "cds-NP_1", "seqid": "c", "start": 1, "end": 9},
+        {"type": "CDS", "gene_symbol": "mrcB", "locus_tag": "b0149", "gene_id": "cds-YP_1", "seqid": "c", "start": 4, "end": 9},
+    ]
+    with pytest.raises(ValueError) as e:
+        select_gene_cds(alt, "mrcB")
+    assert "--gene <gene_id>" in str(e.value) and "cds-NP_1" in str(e.value)
+    assert "locus_tag so the decoded copy" not in str(e.value)       # the old, useless advice
+
+    joined = [  # ONE accession over two rows: a -1 programmed frameshift, not a contiguous CDS
+        {"type": "CDS", "gene_symbol": "dnaX", "locus_tag": "b0470", "gene_id": "cds-YP_2", "seqid": "c", "start": 1, "end": 9},
+        {"type": "CDS", "gene_symbol": "dnaX", "locus_tag": "b0470", "gene_id": "cds-YP_2", "seqid": "c", "start": 9, "end": 21},
+    ]
+    with pytest.raises(ValueError, match="JOINED multi-segment"):
+        select_gene_cds(joined, "dnaX")
+
+
+def test_select_gene_cds_unknown_gene_suggests_neighbours():
+    from dna_decode.forward import select_gene_cds
+    recs = [{"type": "CDS", "gene_symbol": s, "locus_tag": "", "gene_id": f"cds-{s}",
+             "seqid": "c", "start": 1, "end": 9} for s in ("gyrA", "gyrB", "parC")]
+    with pytest.raises(ValueError, match="Did you mean: gyrA, gyrB"):
+        select_gene_cds(recs, "gyrZ")
+
+
+def test_cds_record_key_mirrors_the_extractor_rule():
+    """If this drifts from annotations.extract_cds_sequences the lookup silently misses."""
+    from dna_decode.forward import cds_record_key
+    assert cds_record_key({"gene_id": "g", "locus_tag": "l", "seqid": "c", "start": 1, "end": 2}) == "g"
+    assert cds_record_key({"gene_id": "", "locus_tag": "l", "seqid": "c", "start": 1, "end": 2}) == "l"
+    assert cds_record_key({"gene_id": "", "locus_tag": "", "seqid": "c", "start": 1, "end": 2}) == "c:1-2"
+
+
+@pytest.mark.parametrize("gene,hgvs,codon,call", [
+    ("gyrA", "c.248C>T", "codon 83: TCG -> TTG", "S83L"),   # THE cipro QRDR mutation
+    ("parC", "c.239G>T", "codon 80: AGC -> ATC", "S80I"),   # the second QRDR gene
+])
+def test_genome_plus_gff_decodes_the_real_qrdr_mutations(gene, hgvs, codon, call, capsys):
+    """END-TO-END on the REAL E. coli K-12 MG1655 reference genome + its RefSeq GFF3.
+
+    Both genes are on the MINUS strand, so this also proves the reverse-complement is applied: without
+    it, codon 83 is not TCG and the REF check would fail outright. These are the two mutations this
+    project's whole cipro arc is built on, so a silent coordinate error here would be maximally costly.
+    """
+    if not (_REFSEQ / "genome.fna").exists() or not (_REFSEQ / "annotations.gff3").exists():
+        pytest.skip("MG1655 reference fixture not present")
+    from dna_decode.forward.cli import main
+    rc = main(["--genome-fasta", str(_REFSEQ / "genome.fna"),
+               "--annotations", str(_REFSEQ / "annotations.gff3"),
+               "--gene", gene, "--mutation", hgvs])
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "strand -" in out                       # minus strand => revcomp actually exercised
+    assert codon in out and call in out and "MISSENSE" in out
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))

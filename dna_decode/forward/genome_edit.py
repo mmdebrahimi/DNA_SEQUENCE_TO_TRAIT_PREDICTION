@@ -80,6 +80,82 @@ def translate_cds(cds: str) -> str:
     return "".join(aas)
 
 
+def cds_record_key(rec: dict) -> str:
+    """The key `annotations.extract_cds_sequences` files a CDS row under. Kept in ONE place so the
+    lookup cannot drift from the extractor's own rule."""
+    return (rec.get("gene_id") or rec.get("locus_tag")
+            or f"{rec.get('seqid')}:{rec.get('start')}-{rec.get('end')}")
+
+
+def _ambiguous_message(gene: str, field: str, hits: list[dict]) -> str:
+    """Explain WHY a gene name matched several CDS rows, and name the field that actually separates them.
+
+    Two genuinely different situations, and telling them apart matters (both occur in the real E. coli
+    K-12 MG1655 RefSeq GFF3):
+
+      * ALTERNATIVE PRODUCTS -- one locus, several protein accessions (mrcB: NP_414691.1 + YP_010051172.1).
+        `locus_tag` is IDENTICAL across them, so advising a locus_tag would be useless; `gene_id` is what
+        separates them.
+      * JOINED / MULTI-SEGMENT CDS -- one accession spanning several GFF rows (dnaX YP_009518751.1 covers
+        492092-493375 and 493375-493386, the -1 programmed ribosomal frameshift that makes the tau/gamma
+        subunits). Such a product is NOT one contiguous CDS, so this path refuses it rather than decoding
+        an arbitrary segment. NOTE that `annotations.extract_cds_sequences` keys by gene_id and would
+        silently keep only the LAST segment (here a 12-nt "CDS") -- which is exactly why selection fails
+        closed here instead of trusting that lookup.
+    """
+    from collections import Counter
+    ids = [str(h.get("gene_id") or "") for h in hits]
+    counts = Counter(i for i in ids if i)
+    joined = sorted(k for k, v in counts.items() if v > 1)
+    single = sorted(k for k, v in counts.items() if v == 1)
+
+    span = lambda h: f"{h.get('seqid')}:{h.get('start')}-{h.get('end')}"          # noqa: E731
+    lines = [f"{gene!r} matches {len(hits)} CDS features by {field}:"]
+    for h in hits[:6]:
+        lines.append(f"    {h.get('gene_id') or '?'}  {span(h)}  (locus_tag {h.get('locus_tag') or '-'})")
+    if len(hits) > 6:
+        lines.append(f"    ... and {len(hits) - 6} more")
+
+    if field != "gene_id" and single:
+        lines.append(f"  -> alternative products of one locus. Re-run with --gene <gene_id>, e.g. {single[0]}.")
+    if joined:
+        lines.append(f"  -> {', '.join(joined)} is a JOINED multi-segment CDS (e.g. a programmed "
+                     f"frameshift); it is not one contiguous coding sequence and this path cannot decode "
+                     f"a `c.` coordinate on it. Supply the assembled CDS via --cds-fasta instead.")
+    if field == "gene_id" and not joined:
+        lines.append("  -> the same gene_id appears on several rows; supply the CDS via --cds-fasta.")
+    return "\n".join(lines)
+
+
+def select_gene_cds(records: list[dict], gene: str) -> dict:
+    """Pick the ONE CDS annotation row naming `gene`. PURE (operates on plain dicts, no pandas).
+
+    Matches `gene_symbol` FIRST -- that is the CROSS-STRAIN identifier (`gyrA`) -- then `locus_tag`, then
+    `gene_id`. This order is load-bearing: `gene_id` is strain-unique by construction (`gene-b0001`), so
+    resolving a user's `gyrA` against it is the documented 0%-overlap trap.
+
+    Raises on 0 matches (listing nearby symbols) and on >1 (a multi-copy gene -- e.g. the real 7-copy
+    tandem blaTEM array in the genome-map spike -- where silently taking the first copy would decode an
+    arbitrary one of them). Matching is case-insensitive; ties are refused, never guessed.
+    """
+    want = str(gene).strip().lower()
+    cds = [r for r in records if str(r.get("type", "")) == "CDS"]
+    for field in ("gene_symbol", "locus_tag", "gene_id"):
+        hits = [r for r in cds if str(r.get(field) or "").lower() == want]
+        if len(hits) == 1:
+            return hits[0]
+        if len(hits) > 1:
+            raise ValueError(_ambiguous_message(gene, field, hits))
+    known = sorted({str(r.get("gene_symbol")) for r in cds if r.get("gene_symbol")})
+    near = [s for s in known if want[:3] and s.lower().startswith(want[:3])][:8]
+    raise ValueError(
+        f"no CDS feature named {gene!r} (searched gene_symbol, locus_tag, gene_id over {len(cds)} CDS "
+        f"rows; {len(known)} carry a gene_symbol)."
+        + (f" Did you mean: {', '.join(near)}?" if near else
+           " Note that RefSeq GFF3 populates gene_symbol for only ~11% of CDSs -- try a locus_tag.")
+    )
+
+
 @dataclass
 class GenomeEditPrediction:
     nt_pos: int                 # 1-based CDS position of the edited base

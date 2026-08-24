@@ -65,8 +65,10 @@ DECODERS: dict[str, list[Decoder]] = {
 }
 # nucleotide FASTA also admits the forward cell on a CDS (edit->effect on the translated protein)
 DECODERS["nucleotide_fasta"].append(
-    Decoder("dna-forward", "variant-effect on a CDS via genome-nt edit (translate -> molecular phenotype)",
-            "dna-forward --mutation c.205G>A --cds-fasta cds.fna", "finder"))
+    Decoder("dna-forward", "variant-effect from a genome-nt edit: pick a gene, translate the codon -> "
+                           "molecular phenotype (or --cds-fasta if the file already IS a CDS)",
+            "dna-forward --mutation c.248C>T --genome-fasta genome.fna --annotations ann.gff3 --gene gyrA",
+            "finder"))
 
 
 def detect_input_kind(path: str | Path, *, max_bytes: int = 65536) -> str:
