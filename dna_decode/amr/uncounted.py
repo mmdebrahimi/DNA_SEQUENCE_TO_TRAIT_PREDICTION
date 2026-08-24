@@ -83,41 +83,115 @@ def uncounted_class_determinants(rows: list[dict], drug: str, counted: list | No
     return out
 
 
-def has_16s_methyltransferase(uncounted: list[dict]) -> bool:
-    """Is a 16S rRNA methyltransferase among the uncounted determinants? PURE.
+def primary_mechanism_misses(uncounted: list[dict], drug: str) -> list[dict]:
+    """The uncounted determinants that are a GENUINE miss rather than a deliberate exclusion. PURE.
 
-    rmtA-H / armA / npmA confer HIGH-LEVEL resistance to the 4,6-disubstituted deoxystreptamines
-    (gentamicin / tobramycin / amikacin), but AMRFinder files them under the generic `AMINOGLYCOSIDE`
-    subclass, so a Subclass=GENTAMICIN rule cannot see them. This is the ONE exclusion measured to be a
-    genuine miss rather than a deliberate one.
+    Two tests, both drug-general -- no gene name is hardcoded:
+
+    1. **The subclass must be GENERIC.** The frozen rules match a SPECIFIC drug Subclass. A determinant
+       whose Subclass names a DIFFERENT specific drug (`aph(3')-Ia` -> KANAMYCIN, `aadA5` -> STREPTOMYCIN)
+       is excluded CORRECTLY -- counting it would over-call. A determinant filed under the bare CLASS name
+       (`rmtE1` -> Class AMINOGLYCOSIDE, Subclass AMINOGLYCOSIDE) names no drug at all, and is therefore
+       invisible to ANY subclass rule by construction. That is the shape of a real miss.
+    2. **The mechanism must be a PRIMARY one for this drug**, via the curated
+       `mic_tiers.classify_gene_symbol` + `primary_mechanisms_for` catalogs.
+
+    Test 1 is load-bearing on its own: `classify_gene_symbol('gentamicin', "aph(3')-Ia")` returns
+    `aminoglycoside_modifying_enzymes`, which IS a primary gentamicin mechanism -- so the mechanism test
+    ALONE would flag a kanamycin gene as a miss and re-introduce exactly the noise this replaces.
+
+    Replaces an earlier `startswith('rmt'/'arma'/'npma')` prefix match, which hardcoded one gene family
+    and would mis-fire on any future symbol merely starting with those letters.
     """
+    try:
+        from dna_decode.data.mic_tiers import classify_gene_symbol, primary_mechanisms_for  # frozen; READ-only
+        primary = {m for m in primary_mechanisms_for(drug)}
+    except Exception:  # noqa: BLE001 -- a drug with no curated catalog simply has no primary-miss concept
+        return []
+    if not primary:
+        return []
+
+    out = []
     for u in uncounted:
-        s = str(u.get("symbol", "")).lower()
-        if s.startswith("rmt") or s.startswith("arma") or s.startswith("npma"):
-            return True
-    return False
+        cls, sub = str(u.get("class", "")), str(u.get("subclass", ""))
+        if sub and sub != cls:          # names a specific, DIFFERENT drug -> deliberate exclusion
+            continue
+        try:
+            mech = classify_gene_symbol(drug, str(u.get("symbol", "")))
+        except Exception:  # noqa: BLE001
+            mech = ""
+        if mech and mech in primary:
+            out.append({**u, "mechanism": mech})
+    return out
 
 
-def render_note(uncounted: list[dict], drug: str) -> str:
-    """Human-readable disclosure (empty when there is nothing to disclose).
+def disclosure_provenance() -> dict:
+    """Which catalog produced the warning. PURE-ish (hashes a frozen file).
 
-    The specific 16S-methyltransferase warning is emitted ONLY when one is actually detected. An earlier
-    version printed it unconditionally, so a ciprofloxacin call that correctly flagged `qnrB19` also
-    carried an irrelevant paragraph about gentamicin -- noise that trains a reader to skip the note.
+    The disclosure READS a sha256-pinned file (`mic_tiers.py`) without altering the frozen decision. That
+    boundary has to be auditable: without recording WHICH catalog spoke, two decoder generations could
+    silently share or diverge on the mechanism catalog and no consumer could tell.
     """
-    if not uncounted:
+    import hashlib
+    from pathlib import Path
+    p = Path(__file__).resolve().parent.parent / "data" / "mic_tiers.py"
+    try:
+        sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    except OSError:
+        sha = ""
+    return {"disclosure_schema": "amr-uncounted-disclosure-v1",
+            "disclosure_catalog": "dna_decode/data/mic_tiers.py",
+            "disclosure_catalog_sha256": sha,
+            "alters_frozen_decision": False}
+
+
+# (drug, mechanism) pairs where the project has MEASURED that the frozen rule misses real resistance.
+# Deliberately evidence-gated rather than inferred, and this is the third narrowing -- each earlier,
+# broader trigger was rejected by measurement, not by taste:
+#   * every uncounted class-relevant determinant       -> fired on 70% of gentamicin calls
+#   * every uncounted PRIMARY-mechanism determinant    -> still fired on 48% of CEFTRIAXONE calls,
+#     because a narrow-spectrum `blaTEM-1` also files under the generic BETA-LACTAM subclass and
+#     excluding it from ceftriaxone is CORRECT. A warning that fires on half of all calls is not a
+#     warning.
+# So the bar is a measured gap with a citable artifact. Adding a row is a claim and needs evidence.
+_MEASURED_GAPS: dict[str, dict[str, str]] = {
+    "gentamicin": {
+        "16S_rRNA_methyltransferase":
+            "measured prospective sens 0.429 -- 24 of 28 false negatives carried one "
+            "(wiki/prospective_lock_first_accrual_2026-08-24.md)",
+    },
+}
+
+
+def measured_gap_misses(uncounted: list[dict], drug: str) -> list[dict]:
+    """Primary-mechanism misses for which a MEASURED gap is on record. PURE."""
+    gaps = _MEASURED_GAPS.get(str(drug).lower(), {})
+    if not gaps:
+        return []
+    return [{**m, "evidence": gaps[m["mechanism"]]}
+            for m in primary_mechanism_misses(uncounted, drug) if m.get("mechanism") in gaps]
+
+
+def render_note(uncounted: list[dict], drug: str, prediction: str | None = None) -> str:
+    """Human-readable disclosure. Prints ONLY measured gaps (empty otherwise).
+
+    The full class-relevant list and the wider primary-mechanism list both remain in the JSON record as
+    audit metadata; only the HUMAN line is evidence-gated, because that is the surface that goes numb
+    when it cries wolf. Measured fire rates: 2% on gentamicin (the real gap) vs 70% / 48% for the two
+    broader triggers this replaced.
+    """
+    misses = measured_gap_misses(uncounted, drug)
+    if not misses:
         return ""
-    shown = ", ".join(f"{u['symbol']} [{u['subclass'] or u['class']}]" for u in uncounted[:6])
-    more = f" (+{len(uncounted) - 6} more)" if len(uncounted) > 6 else ""
-    head = (f"  note: {len(uncounted)} determinant(s) of a {drug}-relevant CLASS are present but were NOT "
-            f"counted by this rule: {shown}{more}.\n"
-            f"        Most such exclusions are DELIBERATE (a broader-class gene that does not confer this "
-            f"drug's resistance would over-call). This note does NOT change the call.")
-    if has_16s_methyltransferase(uncounted):
-        head += ("\n        ** One of these is a 16S rRNA METHYLTRANSFERASE (rmt*/armA/npmA) -- a real "
-                 "high-level aminoglycoside mechanism this rule MISSES, because AMRFinder files it under "
-                 "the generic AMINOGLYCOSIDE subclass. Measured prospective sens 0.429 on gentamicin; "
-                 "24/28 false negatives carried one. See "
-                 "wiki/prospective_lock_first_accrual_2026-08-24.md. Treat an S call on this isolate as "
-                 "UNRELIABLE. **")
-    return head
+    shown = ", ".join(f"{m['symbol']} [{m['mechanism']}]" for m in misses[:5])
+    more = f" (+{len(misses) - 5} more)" if len(misses) > 5 else ""
+    # evidence is per-(drug, mechanism), so a note can never cite another drug's measurement
+    evidence = "; ".join(sorted({m["evidence"] for m in misses}))
+    lead = (f"  ** {len(misses)} determinant(s) implicating a mechanism this {drug} rule is MEASURED to "
+            f"miss are present but were NOT counted: {shown}{more}.")
+    why = (f"\n     AMRFinder files these under the bare CLASS name rather than a specific drug subclass, "
+           f"so a subclass-matching rule cannot see them. Evidence: {evidence}.")
+    if str(prediction).upper() == "S":
+        return lead + why + ("\n     The call above is S. Treat that S as UNRELIABLE for this isolate. "
+                             "The prediction is left unchanged because the decoder rule is frozen. **")
+    return lead + why + "\n     This does NOT change the call. **"

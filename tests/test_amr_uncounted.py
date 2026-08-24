@@ -19,8 +19,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from dna_decode.amr.uncounted import (  # noqa: E402
-    has_16s_methyltransferase,
+    disclosure_provenance,
+    measured_gap_misses,
     parse_main_tsv_rows,
+    primary_mechanism_misses,
     render_note,
     uncounted_class_determinants,
 )
@@ -62,28 +64,67 @@ def test_a_determinant_of_an_unrelated_class_is_not_disclosed():
     assert got == {"rmtE1"}                        # the beta-lactam is irrelevant to gentamicin
 
 
-def test_16s_methyltransferase_detection():
-    assert has_16s_methyltransferase([{"symbol": "rmtE1"}])
-    assert has_16s_methyltransferase([{"symbol": "armA"}])
-    assert has_16s_methyltransferase([{"symbol": "npmA"}])
-    assert not has_16s_methyltransferase([{"symbol": "aph(3')-Ia"}, {"symbol": "aadA5"}])
+def test_primary_mechanism_misses_excludes_deliberate_exclusions():
+    """The subclass test is load-bearing and cannot be replaced by the mechanism test alone.
+
+    `classify_gene_symbol('gentamicin', "aph(3')-Ia")` returns `aminoglycoside_modifying_enzymes`, which IS
+    a primary gentamicin mechanism -- so a mechanism-only rule would flag a KANAMYCIN gene as a miss. What
+    separates them is that aph(3')-Ia carries a specific, different drug subclass while rmtE1 carries the
+    bare CLASS name and is therefore invisible to any subclass-matching rule.
+    """
+    rows = parse_main_tsv_rows(_tsv(("rmtE1", "AMINOGLYCOSIDE", "AMINOGLYCOSIDE"),
+                                    ("aph(3')-Ia", "AMINOGLYCOSIDE", "KANAMYCIN"),
+                                    ("aadA5", "AMINOGLYCOSIDE", "STREPTOMYCIN")))
+    u = uncounted_class_determinants(rows, "gentamicin", [])
+    assert len(u) == 3                                   # all three are class-relevant + uncounted
+    got = {m["symbol"]: m["mechanism"] for m in primary_mechanism_misses(u, "gentamicin")}
+    assert got == {"rmtE1": "16S_rRNA_methyltransferase"}
 
 
-def test_the_specific_warning_fires_only_when_a_methyltransferase_is_present():
-    """REGRESSION: the first version printed the gentamicin/rmt paragraph unconditionally, so a
-    ciprofloxacin call that correctly flagged `qnrB19` also carried an irrelevant gentamicin lecture --
-    noise that trains a reader to skip the note entirely."""
-    with_rmt = render_note([{"symbol": "rmtE1", "class": "AMINOGLYCOSIDE", "subclass": "AMINOGLYCOSIDE"}],
-                           "gentamicin")
-    assert "16S rRNA METHYLTRANSFERASE" in with_rmt and "UNRELIABLE" in with_rmt
+def test_measured_gap_gating_is_evidence_backed_not_inferred():
+    """Only (drug, mechanism) pairs with a MEASURED gap reach the human note.
 
-    without = render_note([{"symbol": "qnrB19", "class": "QUINOLONE", "subclass": "QUINOLONE"}],
-                          "ciprofloxacin")
-    assert "qnrB19" in without
-    assert "16S" not in without and "gentamicin" not in without    # no cross-drug lecture
-    assert "DELIBERATE" in without                                 # the honest generic framing survives
+    Both broader triggers were rejected BY MEASUREMENT: class-relevant fired on 70% of gentamicin calls,
+    and primary-mechanism still fired on 48% of CEFTRIAXONE calls (a narrow-spectrum blaTEM-1 also files
+    under the generic BETA-LACTAM subclass, and excluding it from ceftriaxone is correct).
+    """
+    rows = parse_main_tsv_rows(_tsv(("rmtE1", "AMINOGLYCOSIDE", "AMINOGLYCOSIDE")))
+    u = rows and uncounted_class_determinants(rows, "gentamicin", [])
+    assert [m["symbol"] for m in measured_gap_misses(u, "gentamicin")] == ["rmtE1"]
+    assert measured_gap_misses(u, "gentamicin")[0]["evidence"]
 
-    assert render_note([], "gentamicin") == ""                     # nothing to disclose -> silent
+    # a beta-lactamase under the generic BETA-LACTAM subclass IS a primary-mechanism miss, but ceftriaxone
+    # has no MEASURED gap on record -> it must not reach the human note
+    cef = parse_main_tsv_rows(_tsv(("blaTEM-1", "BETA-LACTAM", "BETA-LACTAM")))
+    ucef = uncounted_class_determinants(cef, "ceftriaxone", [])
+    assert measured_gap_misses(ucef, "ceftriaxone") == []
+
+
+def test_disclosure_provenance_names_and_hashes_the_catalog():
+    """Without recording WHICH catalog spoke, two decoder generations could silently diverge."""
+    p = disclosure_provenance()
+    assert p["disclosure_catalog"] == "dna_decode/data/mic_tiers.py"
+    assert len(p["disclosure_catalog_sha256"]) == 64
+    assert p["alters_frozen_decision"] is False
+
+
+def test_the_note_never_cites_another_drugs_measurement():
+    """REGRESSION, twice over. v1 printed the gentamicin/rmt paragraph on EVERY drug. v2 narrowed the
+    trigger but still hardcoded the gentamicin sentence, so a ciprofloxacin call flagging `qnrB19` cited
+    a gentamicin measurement. Evidence is now per-(drug, mechanism) and cannot travel."""
+    gent = parse_main_tsv_rows(_tsv(("rmtE1", "AMINOGLYCOSIDE", "AMINOGLYCOSIDE")))
+    note = render_note(uncounted_class_determinants(gent, "gentamicin", []), "gentamicin", "S")
+    assert "rmtE1" in note and "0.429" in note and "UNRELIABLE" in note
+
+    cip = parse_main_tsv_rows(_tsv(("qnrB19", "QUINOLONE", "QUINOLONE")))
+    cnote = render_note(uncounted_class_determinants(cip, "ciprofloxacin", []), "ciprofloxacin", "S")
+    assert cnote == "", "ciprofloxacin has no measured gap on record; the note must stay silent"
+
+    # an R call still discloses, but must not tell the reader to distrust an S it did not make
+    rnote = render_note(uncounted_class_determinants(gent, "gentamicin", []), "gentamicin", "R")
+    assert "does NOT change the call" in rnote and "UNRELIABLE" not in rnote
+
+    assert render_note([], "gentamicin", "S") == ""
 
 
 def test_disclosure_never_changes_a_prediction_and_never_touches_the_frozen_surface():
@@ -108,8 +149,17 @@ def test_disclosure_never_changes_a_prediction_and_never_touches_the_frozen_surf
                 for a in n.names if n.module != "__future__"}
     assert "call_resistance" not in called | imported, \
         "the disclosure layer must never invoke or import the deployed rule"
-    # the ONE frozen thing it may read is the per-drug class catalog (read-only, no decision)
-    assert imported <= {"amrfinder_classes_for"}, f"unexpected frozen-surface import: {imported}"
+
+    # It MAY read frozen CATALOGS (pure lookups, no decision); it may NOT touch the frozen DECISION
+    # module. Asserted by module, not by a literal name list -- an earlier version whitelisted exactly
+    # {"amrfinder_classes_for"} and had to be widened by hand the moment a second catalog lookup was
+    # added, which is the drift this guard is supposed to catch rather than commit.
+    frozen_decision_modules = {"dna_decode.eval.amr_rules"}
+    modules = {n.module for n in ast.walk(tree) if isinstance(n, ast.ImportFrom) and n.module}
+    assert not (modules & frozen_decision_modules), \
+        f"disclosure imports the frozen DECISION path: {modules & frozen_decision_modules}"
+    catalog_only = {m for m in modules if m.startswith("dna_decode.")} <= {"dna_decode.data.mic_tiers"}
+    assert catalog_only, f"unexpected dna_decode import in the disclosure layer: {modules}"
 
 
 @pytest.mark.parametrize("drug,sym,cls,sub,expect", [

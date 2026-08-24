@@ -69,7 +69,7 @@ HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, 
 | organism | drug | lock date | N (R/S) | acc | sens | spec | abstain | powering | as of |
 |---|---|---|---|---|---|---|---|---|---|
 | escherichia_coli_shigella | ciprofloxacin | 2026-06-13 | 61 (24R/37S) | 0.967 | 0.917 | 1.000 | 0 | POWERED | 2026-08-24 |
-| escherichia_coli_shigella | gentamicin | 2026-06-13 | 62 (49R/13S) | 0.532 | 0.429 | 0.923 | 0 | POWERED | 2026-08-24 |
+| escherichia_coli_shigella | gentamicin | 2026-06-13 | 62 (49R/13S) | 0.532 | 0.429  **REGRESSION** | 0.923 | 0 | POWERED | 2026-08-24 |
 
 A LOW prospective sens with HIGH spec means the rule under-calls — it is missing determinants, not mislabelling. Diagnose the false negatives' features before reading it as decay; see `wiki/prospective_lock_first_accrual_2026-08-24.md`, where exactly that diagnosis located a real catalog gap rather than drift.
 

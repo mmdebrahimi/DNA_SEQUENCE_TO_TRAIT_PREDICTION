@@ -142,7 +142,7 @@ that run end-to-end, each verified by `scripts/verify_quickstart.py`.
 
 ```text
 $ uv run dna-decode list          # 98 lines; first 2 of 44 traits shown
-dna-decode 0.13.0 - deterministic genotype->phenotype decoders
+dna-decode 0.13.1 - deterministic genotype->phenotype decoders
 
   amr         antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem; E.coli/Klebsiella/Pseudomonas/S.aureus) + M. tuberculosis (rif/inh) + FUNGAL azole/echinocandin (fluconazole/voriconazole/caspofungin/micafungin; C. auris) + VIRAL target-site (HIV NNRTI/NRTI/PI/INSTI/CAI, SARS-CoV-2 Mpro, influenza NA, HCMV herpesvirus ganciclovir/cidofovir/foscarnet/letermovir via --observed) via --drug
               validation: bacterial: cipro 0.925 (held-out 0.862, cross-source 1.0) | cef 0.933 | gent 0.945 | tet 0.833 | mero 0.867; cross-organism (capstone). fungal C. auris fluconazole G1: sens 1.0 across clades, label-limited spec (wiki/fungal_ep7_g1_closeout_2026-06-08)
@@ -447,8 +447,9 @@ uv run dna-pathotype path/to/assembly.fna --sample-id MY_STRAIN --out result.jso
 
 Emits provenance JSON + a human summary:
 - `derived_call` — 11-class honest surface (EHEC/STEC/tEPEC/aEPEC/ETEC/EAEC/UPEC/HYBRID/AMBIGUOUS/
-  UNCLASSIFIED/COMMENSAL) with `confidence_tier` + `external_validity` + abstention rules. `--legacy-6class`
-  preserves the original 6-class promise.
+  UNCLASSIFIED/COMMENSAL) with `confidence_tier` + `external_validity` + abstention rules. (An earlier
+  draft of this README advertised a legacy 6-class flag; it was never implemented and the 11-class
+  decision table is ledger-locked, so the promise is removed rather than invented after the fact.)
 - `cluster_profile` + `marker_hits` — which virulence clusters drove the call (k=15 k-mer-seed coverage
   over the VirulenceFinder E. coli allele DB; ≥0.80 = confident).
 - `vf_diff` — **canonical VirulenceFinder side-by-side** via real `blastn` over the SAME VF DB: per-gene +

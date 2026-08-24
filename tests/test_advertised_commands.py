@@ -284,3 +284,81 @@ def test_hla_help_does_not_advertise_the_demoted_tags():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# --------------------------------------------------------------------------------------------------
+# Flags named in PROSE (not in a full command line).
+#
+# The command-line guards above parse whole invocations, so they are blind to a flag mentioned in
+# running text -- which is how `docs/quickstart.md` and `examples/README.md` both came to advertise
+# `--json` for `dna-amr` when that CLI exposes only `--json-only` (2026-08-24). The union check below
+# then found a 4th instance: README advertised `--legacy-6class` for `dna-pathotype`, a flag that was
+# never implemented anywhere in the repo.
+#
+# SCOPE, honestly: this asserts every backticked flag in the docs is DECLARED SOMEWHERE in the repo.
+# It cannot tell that a flag real on one tool is wrong for the tool being described (`--json` IS real
+# on `dna-forward`). That attribution problem is deliberately NOT solved by a proximity heuristic --
+# a noisy guard gets disabled. The `--json` case is pinned explicitly below instead.
+# --------------------------------------------------------------------------------------------------
+
+_DOC_FILES = ("README.md", "QUICKSTART.md", "CLAUDE.md", "docs/quickstart.md", "examples/README.md")
+# flags that are not ours: argparse builtins + flags of external tools the docs legitimately show
+_FOREIGN_FLAGS = {"--help", "--version", "--rm", "--entrypoint", "--output", "--type", "-v"}
+
+
+def _declared_flags() -> set[str]:
+    """Every long flag declared anywhere in the repo, by static scan.
+
+    Static rather than by import: importing every analysis script is heavy and side-effecty. The
+    trade-off is that a flag handled by manual argv inspection instead of `add_argument` is invisible
+    here -- `dna-decode decode --run` is exactly that -- so those are allowlisted explicitly.
+    """
+    import re
+    root = Path(__file__).resolve().parent.parent
+    pat = re.compile(r"add_argument\(\s*[\"'](--[a-z][a-z0-9-]*)")
+    out: set[str] = set()
+    for sub in ("scripts", "dna_decode"):
+        for p in (root / sub).rglob("*.py"):
+            out |= set(pat.findall(p.read_text(encoding="utf-8", errors="replace")))
+    out.add("--run")        # dna-decode decode --run: parsed by hand in cli.py, not via add_argument
+    return out
+
+
+def test_every_flag_named_in_the_docs_is_declared_somewhere():
+    import re
+    root = Path(__file__).resolve().parent.parent
+    declared = _declared_flags() | _FOREIGN_FLAGS
+    pat = re.compile(r"`(--[a-z][a-z0-9-]*)`")
+    undeclared = {}
+    for doc in _DOC_FILES:
+        p = root / doc
+        if not p.exists():
+            continue
+        named = set(pat.findall(p.read_text(encoding="utf-8", errors="replace")))
+        missing = sorted(named - declared)
+        if missing:
+            undeclared[doc] = missing
+    assert not undeclared, (
+        f"docs name flags that are declared NOWHERE in the repo: {undeclared}. Either implement the "
+        f"flag or stop advertising it -- an advertised flag is a promise.")
+
+
+def test_the_docs_do_not_advertise_json_for_the_amr_cli():
+    """REGRESSION: `dna-amr` exposes `--json-only`, NOT `--json`.
+
+    `--json` IS a real flag on `dna-forward`, so the union check above cannot catch this -- the flag
+    exists, just not on the tool these files describe. Pinned explicitly because it shipped wrong in
+    two files at once.
+    """
+    root = Path(__file__).resolve().parent.parent
+    from dna_decode.amr import cli as amr_cli
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf), pytest.raises(SystemExit):
+        amr_cli.main(["--help"])
+    helptext = buf.getvalue()
+    assert "--json-only" in helptext and "--json " not in helptext.replace("--json-only", "")
+
+    for doc in ("docs/quickstart.md", "examples/README.md"):
+        text = (root / doc).read_text(encoding="utf-8", errors="replace")
+        assert "`--json`" not in text, (
+            f"{doc} advertises `--json`; the amr CLI exposes `--json-only`.")

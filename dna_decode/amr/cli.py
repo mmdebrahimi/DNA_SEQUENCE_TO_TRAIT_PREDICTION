@@ -53,7 +53,9 @@ from dna_decode.data.hiv_amr import (
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.data.trust_surface import one_line, trust_block
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
-from dna_decode.amr.uncounted import parse_main_tsv_rows, render_note, uncounted_class_determinants
+from dna_decode.amr.uncounted import (disclosure_provenance, measured_gap_misses,
+                                      parse_main_tsv_rows, primary_mechanism_misses, render_note,
+                                      uncounted_class_determinants)
 
 
 def _uncounted_for(run_dir, drug: str, counted) -> list[dict]:
@@ -544,6 +546,16 @@ def main(argv=None) -> int:
         "provenance": {"amrfinder_run": str(run_dir), "amrfinder_image": AMRFINDER_IMAGE_PINNED,
                        "amrfinder_organism": args.organism},
     }
+    # MACHINE-READABLE severity. The printed note reaches humans only; a pipeline branching on
+    # `prediction` alone would never learn the S is unreliable. `prediction` itself is left UNCHANGED --
+    # the rule is frozen -- so this is the field a consumer must check alongside it.
+    _u = rec["uncounted_class_determinants"]
+    rec["primary_mechanism_misses"] = primary_mechanism_misses(_u, args.drug)
+    _measured = measured_gap_misses(_u, args.drug)
+    rec["measured_gap_misses"] = _measured
+    rec["negative_call_reliability"] = (
+        "compromised" if (_measured and str(call["prediction"]).upper() == "S") else "nominal")
+    rec["disclosure"] = disclosure_provenance()
     if args.out:
         Path(args.out).write_text(json.dumps(rec, indent=2), encoding="utf-8")
     if args.json_only:
@@ -561,7 +573,7 @@ def main(argv=None) -> int:
             if not call["determinants"]:
                 print("  driven by: (no curated resistance determinants for this drug)")
             print(f"  {call['caveat']}")
-            note = render_note(rec["uncounted_class_determinants"], args.drug)
+            note = render_note(rec["uncounted_class_determinants"], args.drug, call["prediction"])
             if note:
                 print(note)
         print(f"  {one_line(rec['validation'])}")

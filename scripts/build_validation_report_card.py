@@ -161,12 +161,30 @@ def build_prospective_block(pcell: dict | None) -> dict:
         return {"status": "lock_unverified", "generated": pcell.get("generated")}
     conf = pcell.get("confusion") or {}
     pw = pcell.get("powering") or {}
-    return {"status": "scored" if conf.get("n_scored") else "not_accrued",
-            "generated": pcell.get("generated"),
-            "lock_date": (pcell.get("lock_manifest") or {}).get("lock_date"),
-            "n_scored": conf.get("n_scored"), "R": pw.get("scored_R"), "S": pw.get("scored_S"),
-            "acc": conf.get("acc"), "sens": conf.get("sens"), "spec": conf.get("spec"),
-            "abstain": conf.get("abstain"), "powering": pw.get("status")}
+    blk = {"status": "scored" if conf.get("n_scored") else "not_accrued",
+           "generated": pcell.get("generated"),
+           "lock_date": (pcell.get("lock_manifest") or {}).get("lock_date"),
+           "n_scored": conf.get("n_scored"), "R": pw.get("scored_R"), "S": pw.get("scored_S"),
+           "acc": conf.get("acc"), "sens": conf.get("sens"), "spec": conf.get("spec"),
+           "abstain": conf.get("abstain"), "powering": pw.get("status")}
+    blk["regression"] = _prospective_regression(blk)
+    return blk
+
+
+# CONVENTION, not a derived truth: a POWERED prospective cell whose sensitivity is below this detects
+# fewer than half of resistant isolates. It is chosen because it needs NO comparator and no distributional
+# assumption -- a threshold tuned against one cohort's provdisjoint delta would be exactly the
+# single-cohort inference this project's own gates reject. Stated here so it is arguable and changeable,
+# not buried.
+PROSPECTIVE_SENS_FLOOR = 0.5
+
+
+def _prospective_regression(blk: dict) -> bool:
+    """Does this prospective result contradict the cell's SCORED standing? Read-only, no state change."""
+    if blk.get("status") != "scored" or blk.get("powering") != "POWERED":
+        return False        # an accruing / underpowered cell makes no claim either way
+    sens = blk.get("sens")
+    return sens is not None and sens < PROSPECTIVE_SENS_FLOOR
 
 
 def _assert_weighted_renderable(w: dict) -> None:
@@ -289,6 +307,15 @@ def main() -> int:
         # prospective result can never be hidden by the cell's provdisjoint state.
         if key in prospective:
             c["prospective"] = build_prospective_block(prospective.get(key))
+            # TOP-LEVEL so a consumer filtering on `state == SCORED` cannot miss it. The state itself is
+            # deliberately NOT demoted -- the provenance-disjoint result is still what it was; this says
+            # the cell has a CONTRADICTING prospective result, which is a different fact.
+            if c["prospective"].get("regression"):
+                c["prospective_regression"] = True
+                c["deployment_caveat"] = (
+                    f"prospective sens {c['prospective'].get('sens')} on {c['prospective'].get('n_scored')} "
+                    f"post-lock isolates -- the frozen rule under-calls this cell; see the "
+                    f"Prospective-lock disclosure table")
         rows.append((key, c))
 
     counts = {}
@@ -373,9 +400,10 @@ def main() -> int:
             def _f(v):
                 return "—" if v is None else f"{v:.3f}"
 
+            flag = "  **REGRESSION**" if p.get("regression") else ""
             L.append(f"| {org} | {drug} | {p.get('lock_date', '—')} | "
                      f"{p.get('n_scored')} ({p.get('R')}R/{p.get('S')}S) | {_f(p.get('acc'))} | "
-                     f"{_f(p.get('sens'))} | {_f(p.get('spec'))} | {p.get('abstain')} | "
+                     f"{_f(p.get('sens'))}{flag} | {_f(p.get('spec'))} | {p.get('abstain')} | "
                      f"{p.get('powering')} | {p.get('generated')} |")
         L.append("\nA LOW prospective sens with HIGH spec means the rule under-calls — it is missing "
                  "determinants, not mislabelling. Diagnose the false negatives' features before reading it "

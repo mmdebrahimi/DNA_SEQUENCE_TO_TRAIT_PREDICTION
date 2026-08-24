@@ -58,7 +58,7 @@ Every call prints, in order:
 - **validation:** the tier (e.g. `INDEPENDENT_MEASURED`, `INDEPENDENT_WETLAB`, faithful-to-tool,
   `NOT_CENSUSED`) + the provenance (which report card / cohort backs it).
 
-`--json` / `--out result.json` emit the machine-readable record for agent pipelines.
+`--json-only` / `--out result.json` emit the machine-readable record for agent pipelines.
 
 ## 5. Genome-FASTA input (optional, needs external tools)
 

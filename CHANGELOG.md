@@ -5,6 +5,31 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+## [0.13.1] — the frozen decoder now says where it is MEASURED to under-call (2026-08-24)
+
+The first prospective-lock cohort exposed E. coli x gentamicin at **sens 0.429**, traced to 16S rRNA
+methyltransferases (`rmt*`/`armA`) that AMRFinder files under the generic `AMINOGLYCOSIDE` subclass, where
+a `Subclass=GENTAMICIN` rule cannot see them. This release makes that visible **without changing a single
+prediction** — the decoder rule stays sha256-pinned and byte-identical to its 2026-06-13 lock.
+
+- **A call now discloses determinants the rule did not count**, and says so loudest where the gap is
+  *measured*: an `S` call on an isolate carrying a mechanism the rule is known to miss prints an explicit
+  "treat that S as UNRELIABLE". Gating is evidence-backed — two broader triggers were rejected **by
+  measurement**, not taste (class-relevant fired on 70% of gentamicin calls; primary-mechanism still fired
+  on 48% of *ceftriaxone* calls, where excluding a narrow-spectrum `blaTEM-1` is correct). The shipped
+  trigger fires on 2%.
+- **Machine consumers get a severity field, not just prose.** `negative_call_reliability` is `compromised`
+  when an S call carries a measured-gap mechanism, alongside `measured_gap_misses` /
+  `primary_mechanism_misses` / `uncounted_class_determinants` as widening audit tiers, plus a `disclosure`
+  block naming and sha256-hashing the catalog that produced the warning. `prediction` is untouched.
+- **The report card surfaces prospective results** in a namespace-separate table, and raises a top-level
+  `prospective_regression` + `deployment_caveat` on a powered cell that under-calls — so a consumer
+  filtering `state == SCORED` cannot miss it. The state itself is not demoted: the provenance-disjoint
+  result is still what it was.
+- **Docs fixes:** `docs/quickstart.md` and `examples/README.md` advertised `--json` for `dna-amr`, which
+  exposes `--json-only`; README advertised a `--legacy-6class` pathotype flag that was never implemented.
+  A new guard asserts every flag named in the docs is declared somewhere in the repo.
+
 ## [0.13.0] — reachability: two shipped decoders were unrunnable, and `dna-forward` now takes real DNA (2026-08-24)
 
 - **`clinvar` + `hla` are routable from `dna-decode`.** Both had console entries AND `cell_registry`

@@ -32,7 +32,7 @@ dna-decode list
 
 ## Machine-readable output
 
-Add `--json` (or `--out result.json`) to any call to emit the structured record (call, determinants,
+Add `--json-only` (or `--out result.json`) to any call to emit the structured record (call, determinants,
 validation tier, provenance) for agent pipelines.
 
 > These commands are exercised by `make example-observed` / `make example-amr`. Genome-FASTA input

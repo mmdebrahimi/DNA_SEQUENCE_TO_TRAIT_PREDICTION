@@ -359,7 +359,8 @@
         "sens": 0.917,
         "spec": 1.0,
         "abstain": 0,
-        "powering": "POWERED"
+        "powering": "POWERED",
+        "regression": false
       }
     },
     {
@@ -435,8 +436,11 @@
         "sens": 0.429,
         "spec": 0.923,
         "abstain": 0,
-        "powering": "POWERED"
-      }
+        "powering": "POWERED",
+        "regression": true
+      },
+      "prospective_regression": true,
+      "deployment_caveat": "prospective sens 0.429 on 62 post-lock isolates -- the frozen rule under-calls this cell; see the Prospective-lock disclosure table"
     },
     {
       "organism": "escherichia_coli_shigella",

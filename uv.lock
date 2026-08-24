@@ -716,7 +716,7 @@ wheels = [
 
 [[package]]
 name = "dna-decode"
-version = "0.13.0"
+version = "0.13.1"
 source = { editable = "." }
 dependencies = [
     { name = "biopython" },

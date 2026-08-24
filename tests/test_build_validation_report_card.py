@@ -388,3 +388,49 @@ def test_prospective_block_refuses_to_render_an_unverified_lock():
     assert blk["status"] == "lock_unverified"
     assert "acc" not in blk                                        # no number leaks out of an unverified lock
     assert mod.build_prospective_block(None)["status"] == "not_accrued"
+
+
+def test_a_powered_prospective_regression_raises_a_TOP_LEVEL_flag(monkeypatch, tmp_path):
+    """A consumer filtering `state == SCORED` must not be able to miss a contradicting prospective result.
+
+    The state is deliberately NOT demoted -- the provenance-disjoint result is still what it was. The flag
+    says something different: this cell has a prospective result that contradicts its standing.
+    """
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "provenance_disjoint_validation_kleb_gent_2026-06-10.json").write_text(json.dumps({
+        "organism": "Klebsiella", "drug": "gentamicin",
+        "metrics": {"acc": 0.95, "sens": 0.93, "spec": 0.97, "n_scored": 60,
+                    "tp": 28, "fp": 1, "tn": 29, "fn": 2},
+    }), encoding="utf-8")
+    (wiki / "prospective_lock_validation_Klebsiella_gentamicin_2026-08-24.json").write_text(
+        json.dumps(_prospective_artifact(org="Klebsiella", drug="gentamicin",
+                                         acc=0.53, sens=0.429, spec=0.92, n=62)), encoding="utf-8")
+    assert mod.main() == 0
+    doc = json.loads((wiki / "decoder_validation_report_card.json").read_text(encoding="utf-8"))
+    cell = next(c for c in doc["cells"] if (c["organism"], c["drug"]) == ("klebsiella", "gentamicin"))
+
+    assert cell["state"] == "SCORED"                 # NOT demoted -- augment, never demote
+    assert cell["prospective_regression"] is True
+    assert "under-calls" in cell["deployment_caveat"]
+    assert cell["prospective"]["regression"] is True
+    md = (wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
+    assert "**REGRESSION**" in md
+
+
+def test_a_healthy_or_underpowered_prospective_cell_raises_no_flag(monkeypatch, tmp_path):
+    """Non-vacuity in both directions: a good result and an unpowered one must both stay silent."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "prospective_lock_validation_Klebsiella_ciprofloxacin_2026-08-24.json").write_text(
+        json.dumps(_prospective_artifact(sens=0.917, acc=0.967)), encoding="utf-8")
+    assert mod.main() == 0
+    doc = json.loads((wiki / "decoder_validation_report_card.json").read_text(encoding="utf-8"))
+    cell = next(c for c in doc["cells"] if c.get("prospective"))
+    assert cell.get("prospective_regression") is None and cell["prospective"]["regression"] is False
+
+    # an UNDERPOWERED prospective cell makes no claim either way, even at a terrible sens
+    blk = mod.build_prospective_block({
+        "prospective_lock_verified": True, "generated": "2026-08-24",
+        "lock_manifest": {"lock_date": "2026-06-13"},
+        "confusion": {"n_scored": 4, "acc": 0.1, "sens": 0.1, "spec": 0.1, "abstain": 0},
+        "powering": {"status": "UNDERPOWERED", "scored_R": 2, "scored_S": 2}})
+    assert blk["regression"] is False
