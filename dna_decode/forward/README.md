@@ -204,6 +204,28 @@ AA change → the Regime-B predictor, classified silent / missense / nonsense. R
 translated-WT double-check fail loudly. Validated end-to-end on a real blaTEM CDS (Spearman 0.76 vs measured
 DMS over 1,715 real single-nt-accessible variants; `wiki/blatem_genome_demo_*.md`).
 
+**Reachable from the CLI since v0.13.0** (it was library-only before, despite being validated):
+
+```bash
+dna-decode forward --mutation c.205G>A --cds-fasta cds.fna                    # a CDS + HGVS
+dna-decode forward --mutation c.248C>T --genome-fasta g.fna --annotations a.gff3 --gene gyrA
+dna-decode forward --genomic-pos 2339173 --ref G --alt A --genome-fasta g.fna --annotations a.gff3
+```
+
+`--genome-fasta` extracts the named gene's CDS strand-aware (matching `gene_symbol` FIRST — the
+cross-strain identifier; resolving a user's `gyrA` against `gene_id` is the documented 0%-overlap trap).
+`--genomic-pos` takes a VCF-style coordinate and finds the covering CDS itself; on a minus-strand gene
+BOTH the coordinate and the bases flip, so `--ref`/`--alt` are given in genome orientation. Verified on
+the real E. coli K-12 MG1655 reference: that exact call decodes **gyrA S83L**, the cipro QRDR mutation,
+and `parC c.239G>T` → S80I — both minus-strand, so the reverse-complement is genuinely exercised.
+
+Everything fails CLOSED: REF must match the CDS, the CDS must be in frame, a separately supplied protein
+must AGREE with the translation, only single-base `c.` substitutions parse (indels / `g.` / `p.` are
+refused, never coerced), and a gene name matching several CDS features is refused with the field that
+actually separates them — alternative products of one locus (identical `locus_tag`, so `gene_id` is the
+separator) vs a JOINED multi-segment CDS (e.g. the dnaX −1 programmed frameshift). A SILENT edit returns
+the coding-consequence call and makes no effect prediction.
+
 ## Dosage head (`evaluate_dosage`) — calibrated MAGNITUDE, not just rank
 
 Turns a rank-score into a calibrated magnitude prediction: isotonic score→effect calibrator + **split-
@@ -300,7 +322,7 @@ uv run python scripts/forward_dosage_sweep.py        # cross-organism dosage gen
 # wiki/forward_esm_if_kaggle_result_2026-07-15.md for the 5 install traps.
 ```
 
-Tests: `tests/test_forward_{variant_effect,genome_edit,router,alphamissense,structure,dosage}.py` (35).
+Tests: `tests/test_forward_{variant_effect,genome_edit,router,alphamissense,structure,dosage}.py` (55).
 Frozen decoder surface byte-unchanged throughout; `dna_decode/forward` is NON-frozen.
 
 ## Trust surface — the validation report card

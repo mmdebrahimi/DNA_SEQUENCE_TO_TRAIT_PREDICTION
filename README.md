@@ -21,7 +21,7 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 
 ## Start here — point at your file, get told what you can decode
 
-Have a file and don't know which of the ~20 decoders apply? Ask the router:
+Have a file and don't know which of the **44** decoders apply? Ask the router:
 
 ```
 dna-decode decode my_genome.fna         # -> the applicable decoders + the exact command for each
@@ -58,7 +58,7 @@ full per-trait validation surface.
 | `dna-decode mlst` (**new**) | **MLST sequence type** (PubMLST; v0 E. coli Achtman 7-gene) — exact-allele → profile → ST | deterministic blastn 100/100 + PubMLST profile lookup; **validated: K-12 MG1655 → ST10**; `dna-mlst --fetch-db` installs the scheme; novel/incomplete → ST not guessed; offline-safe |
 | `dna-decode ktype` (**new**) | **Klebsiella K-antigen (capsule) type** via the wzi allele scheme (BIGSdb Pasteur, Kleborate-bundled) — the `serotype` sibling | deterministic wzi-blastn caller (identity 90 / coverage 80); **self-consistency 15/15** across the DB; faithful-to-tool (wzi→K ~94%, NOT one-to-one); a **free measured serological label exists** (KlebNET-GSP 731-isolate set) → validatable, full caller-vs-serology run scoped (`wiki/ktype_report_card.md`); offline-safe |
 
-915+ tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
+3672 tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
 + codon-mapping `dna_decode/typing/codon_map.py`) **+ 3 cross-decoder analyses** that compose them:
 
 | Analysis | What | |
@@ -408,6 +408,13 @@ uv run dna-decode list                                  # what it decodes + per-
 uv run dna-decode pathotype path/to/assembly.fna --sample-id MY_STRAIN
 uv run dna-decode amr --drug ciprofloxacin --amrfinder-run data/amrfinder_runs/GCA_xxx.x
 uv run dna-decode forward --mutation M69L --protein-seq MSIQHFRVALIPFFAAFCLPVFA...   # edit -> effect
+# ...or give it real DNA instead of a protein mutation (v0.13.0):
+uv run dna-decode forward --mutation c.205G>A --cds-fasta cds.fna                     # a CDS + HGVS
+uv run dna-decode forward --mutation c.248C>T --genome-fasta g.fna --annotations a.gff3 --gene gyrA
+uv run dna-decode forward --genomic-pos 2339173 --ref G --alt A --genome-fasta g.fna --annotations a.gff3
+#   ^ a VCF-style coordinate: finds the covering CDS itself, and on a minus-strand gene flips BOTH the
+#     coordinate and the bases. Verified on real MG1655: that call decodes gyrA S83L, the cipro QRDR
+#     mutation. Fails closed -- REF must match the CDS, and an ambiguous gene is refused, never guessed.
 uv run dna-decode inverse --protein-fasta tem1.faa --target-percentile 0.05 --top-k 5 # effect -> edit
 uv run dna-decode inverse --protein-fasta tem1.faa --cds-fasta blatem.fna       --target-percentile 0.05                          # ...restricted to single-nt-reachable edits
 

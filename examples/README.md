@@ -9,7 +9,11 @@ network, no large FASTA download.
 dna-decode amr --drug efavirenz --observed RT:K103N
 ```
 Expected: `CALL: R` driven by `RT:K103N`, validation tier `INDEPENDENT_WETLAB` (Stanford HIVDB PhenoSense).
-Try also `--drug fluconazole --observed ERG11:Y132F` (C. auris) or `--drug ciprofloxacin --observed gyrA:S83L` (E. coli).
+Try also `--drug fluconazole --observed ERG11:Y132F` (C. auris) or `--drug nirmatrelvir --observed Mpro:E166V`
+(SARS-CoV-2). `--observed` is for the **target-site** engines (viral + fungal), where resistance is a known
+substitution in one protein. **Bacterial** drugs are determinant-scan cells and take `--amrfinder-run` or
+`--genome-fasta` instead — `--drug ciprofloxacin --observed gyrA:S83L` is rejected, by design, with
+`--observed is fungal-only`. (Example 2 is the bacterial path.)
 
 ## 2. From a committed AMRFinder run (bacterial; no Docker)
 
