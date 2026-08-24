@@ -53,6 +53,18 @@ from dna_decode.data.hiv_amr import (
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.data.trust_surface import one_line, trust_block
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
+from dna_decode.amr.uncounted import parse_main_tsv_rows, render_note, uncounted_class_determinants
+
+
+def _uncounted_for(run_dir, drug: str, counted) -> list[dict]:
+    """Read the run's main.tsv and disclose drug-class-relevant determinants the rule did not count.
+    Fail-soft: a disclosure layer must never break a call."""
+    try:
+        from pathlib import Path as _P
+        text = (_P(run_dir) / "main.tsv").read_text(encoding="utf-8", errors="replace")
+        return uncounted_class_determinants(parse_main_tsv_rows(text), drug, counted)
+    except Exception:  # noqa: BLE001
+        return []
 
 # Fungal target-site path (BLAST ERG11/FKS1 -> catalog), NOT AMRFinder (no AMRFinder-for-fungi). Routed by
 # drug: fluconazole/voriconazole/caspofungin/micafungin -> fungal engine. G1-validated on C. auris
@@ -523,6 +535,11 @@ def main(argv=None) -> int:
         "caller": {"name": "dna_decode-amr-rules-v1", "rule": call["rule"],
                    "source": "AMRFinderPlus curated main.tsv", "caller_is_independent_baseline": False},
         "caveat": call["caveat"],
+        # DISCLOSURE (never changes the call): determinants of a drug-relevant CLASS that the deployed
+        # rule did not count. Most exclusions are deliberate, but the measured gentamicin blind spot
+        # (16S methyltransferases under the generic AMINOGLYCOSIDE subclass) is real -- see
+        # dna_decode/amr/uncounted.py. Outside the sha-pinned frozen surface.
+        "uncounted_class_determinants": _uncounted_for(run_dir, args.drug, call["determinants"]),
         "validation": trust_block(args.drug, args.organism),
         "provenance": {"amrfinder_run": str(run_dir), "amrfinder_image": AMRFINDER_IMAGE_PINNED,
                        "amrfinder_organism": args.organism},
@@ -544,6 +561,9 @@ def main(argv=None) -> int:
             if not call["determinants"]:
                 print("  driven by: (no curated resistance determinants for this drug)")
             print(f"  {call['caveat']}")
+            note = render_note(rec["uncounted_class_determinants"], args.drug)
+            if note:
+                print(note)
         print(f"  {one_line(rec['validation'])}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
