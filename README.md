@@ -142,7 +142,7 @@ that run end-to-end, each verified by `scripts/verify_quickstart.py`.
 
 ```text
 $ uv run dna-decode list          # 98 lines; first 2 of 44 traits shown
-dna-decode 0.12.1 - deterministic genotype->phenotype decoders
+dna-decode 0.13.0 - deterministic genotype->phenotype decoders
 
   amr         antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem; E.coli/Klebsiella/Pseudomonas/S.aureus) + M. tuberculosis (rif/inh) + FUNGAL azole/echinocandin (fluconazole/voriconazole/caspofungin/micafungin; C. auris) + VIRAL target-site (HIV NNRTI/NRTI/PI/INSTI/CAI, SARS-CoV-2 Mpro, influenza NA, HCMV herpesvirus ganciclovir/cidofovir/foscarnet/letermovir via --observed) via --drug
               validation: bacterial: cipro 0.925 (held-out 0.862, cross-source 1.0) | cef 0.933 | gent 0.945 | tet 0.833 | mero 0.867; cross-organism (capstone). fungal C. auris fluconazole G1: sens 1.0 across clades, label-limited spec (wiki/fungal_ep7_g1_closeout_2026-06-08)

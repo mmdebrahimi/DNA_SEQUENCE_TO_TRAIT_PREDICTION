@@ -5,6 +5,34 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+## [0.13.0] — reachability: two shipped decoders were unrunnable, and `dna-forward` now takes real DNA (2026-08-24)
+
+- **`clinvar` + `hla` are routable from `dna-decode`.** Both had console entries AND `cell_registry`
+  evidence contracts but no `cli.py::TRAITS` row, so `dna-decode clinvar` failed and `dna-decode list`
+  hid them — while their sibling `pgx` (same human/VCF shape) worked. Routing parity, not new decoders.
+- **`dna-forward` decodes a GENOME edit, not just a protein mutation.** `predict_genome_edit` shipped
+  validated (0.7611 over 1,715 variants) but was reachable only as a library import. Now:
+  `--cds-fasta`/`--cds-seq` with HGVS `c.205G>A`; `--genome-fasta` + `--annotations` + `--gene gyrA`
+  (strand-aware CDS extraction, `gene_symbol` matched first — the cross-strain identifier); and
+  `--genomic-pos N --ref B --alt B` straight off a VCF row, which finds the covering CDS itself and flips
+  both coordinate and bases on a minus-strand gene. Verified end-to-end on the real E. coli K-12 MG1655
+  reference: `gyrA` → S83L and `parC` → S80I, both minus-strand. Everything fails CLOSED — REF must match
+  the CDS, frame must be a multiple of 3, a supplied protein must agree with the translation, only
+  single-base `c.` substitutions parse, and an ambiguous gene name is refused with the field that
+  actually separates the hits (alternative products vs a joined multi-segment CDS).
+- **`dna-hla --help` no longer advertises two DEMOTED clinical screens.** It claimed
+  "abacavir/allopurinol/carbamazepine" and showed `--allele b5801`, when only B\*57:01/abacavir ships:
+  the allopurinol (B\*58:01) and carbamazepine (A\*31:01) tags were measured against 1000G HLA truth and
+  rejected (sens 0.61 / PPV 0.18 — "unsafe for an SJS/TEN screen"; and sens 0.0). An over-claim in
+  `--help` is a trust-surface falsehood.
+- **Fixed 5 commands the input router advertised that its own CLIs reject** (positional-vs-`--vcf`,
+  an uppercase `--gene` choice, and a flag that never existed), plus 2 more in CLI docstrings.
+- **Fixed 3 `print()` lines that CRASH on a Windows cp1252 console** — all terminal *verdict* lines, so
+  the crash landed after the analysis had finished. All 48 shipped console scripts' `--help` swept: clean.
+- **Guards added** so none of the above can regress: every advertised command must parse through its real
+  parser; every console script must be routable and importable; every shipped `--help` must survive a
+  legacy console encoding; the README's "verified output" must really be the output.
+
 - **Track B complete — a novel regulatory part CAN be scored from its sequence, for BOTH elements.**
   Kosuri 2013 (12,563 promoter x RBS constructs, measured protein). 25 repeated GroupShuffleSplits held
   out by element; the held-out element is never seen in training. **Held-out RBS: 0.7762 +/- 0.034**
