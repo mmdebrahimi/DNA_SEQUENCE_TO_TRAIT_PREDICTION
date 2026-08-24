@@ -154,7 +154,7 @@ def run_smoke(fixtures_dir: Path, output_dir: Path) -> dict[str, object]:
     print(f"[smoke] cohort size: {len(cohort_strain_ids)} strains")
 
     # Pool features
-    print(f"[smoke] mean-pooling per-gene embeddings → strain features")
+    print(f"[smoke] mean-pooling per-gene embeddings -> strain features")
     X = _pool_strain_features(strain_embeddings, cohort_strain_ids, gene_ids)
     y = np.array([labels_dict[sid] for sid in cohort_strain_ids], dtype=int)
 

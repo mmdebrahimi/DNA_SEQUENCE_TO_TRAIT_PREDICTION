@@ -215,6 +215,49 @@ def test_every_command_in_a_cli_docstring_is_accepted_by_its_own_cli(mod, comman
     _assert_parses(command)
 
 
+def test_every_shipped_help_text_survives_a_legacy_console_encoding():
+    """`--help` must not CRASH on a Windows console. Measured 2026-08-23, not assumed.
+
+    On this host `sys.stdout` is **cp1252 with errors=surrogateescape**, so a plain `print()` of a
+    character outside cp1252 raises UnicodeEncodeError -- it does not degrade to mojibake. Empirically
+    `-> (U+2192)`, `>= (U+2265)`, `<= (U+2264)`, Greek letters, `~= (U+2248)` and `!= (U+2260)` all
+    CRASH, while em-dash, en-dash, curly quotes, bullet and `x (U+00D7)` are all IN cp1252 and are fine.
+    So this is not "avoid Unicode" -- it is a specific, small, checkable set.
+
+    The shipped console surface was swept and is CLEAN (0 of 48 broken), which is exactly why this guard
+    is worth having: it pins a property that currently holds. 24 internal `scripts/*.py` modules DO crash
+    on `--help` (an arrow in the module docstring that argparse uses as its description); those are
+    developer analysis scripts, not the shipped product, and are deliberately out of scope here.
+
+    Checked by rendering each parser's real help text and encoding it -- no subprocess, no console needed.
+    """
+    scripts = _console_scripts()
+    broken = []
+    for name, spec in sorted(scripts.items()):
+        main = _resolve(name)
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(io.StringIO()):
+                main(["--help"])
+        except SystemExit:
+            pass
+        except Exception:                       # a main that cannot even render help is another test's job
+            continue
+        text = buf.getvalue()
+        if not text:
+            continue
+        try:
+            text.encode("cp1252")
+        except UnicodeEncodeError as e:
+            offender = text[e.start:e.end]
+            broken.append(f"{name} (U+{ord(offender[0]):04X})")
+    assert not broken, (
+        "these shipped console scripts print a `--help` that CRASHES on a cp1252 console: "
+        f"{broken}. Replace the character with its ASCII form (-> for an arrow, >= for U+2265); "
+        "em/en-dashes and curly quotes are safe."
+    )
+
+
 def test_hla_help_does_not_advertise_the_demoted_tags():
     """The demotion must reach the user-facing surface, not only the catalog's internal comment.
 

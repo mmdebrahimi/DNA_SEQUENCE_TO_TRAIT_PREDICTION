@@ -167,11 +167,11 @@ def main():
     if go:
         print(f"VERDICT: GO — blind-spot R are {enrich:.1f}x enriched for known-functional NNRTI-pocket")
         print("  mutations vs S, and {:.0%} carry one. Uncatalogued binding-site DRMs EXIST on the".format(r_ext))
-        print("  blind spot → a binding-ΔΔG scorer has real targets. A FoldX/Rosetta pilot is warranted.")
+        print("  blind spot -> a binding-ddG scorer has real targets. A FoldX/Rosetta pilot is warranted.")
     else:
         print("VERDICT: NO-GO — blind-spot R are NOT meaningfully enriched for known-functional")
         print(f"  NNRTI-pocket mutations vs S (enrichment {enrich:.2f}x, only {r_ext:.0%} of R carry one).")
-        print("  Their resistance is NOT pocket-mediated → binding-ΔΔG is structurally blind to it.")
+        print("  Their resistance is NOT pocket-mediated -> binding-ddG is structurally blind to it.")
         print("  The HIV EFV blind spot is the WRONG test set for a competitive-binding physics scorer;")
         print("  do NOT install FoldX/Rosetta for this test.")
     print("=" * 74)
