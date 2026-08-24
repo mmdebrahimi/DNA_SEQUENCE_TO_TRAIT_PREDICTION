@@ -198,6 +198,11 @@ def run_decode_plan(path: str | Path, *, runner=None, sample_id: str | None = No
         rc = runner("profile", [str(p), "--sample-id", sample_id]) or rc
         print("\n  note: sections needing blastn / a DB / Docker show 'unavailable' offline -- install the "
               "tool/DB or run the per-decoder command from `dna-decode decode` to enable them.")
+        print("\n=== forward (edit -> effect): NOT auto-run -- needs a specific edit + an annotation ===")
+        print(f"  run: dna-decode forward --genomic-pos <n> --ref <B> --alt <B> --genome-fasta {p.name} "
+              f"--annotations <gff3>")
+        print("       (or name the gene: --gene gyrA --mutation c.248C>T . From a genomic coordinate the "
+              "covering CDS is found for you, and a minus-strand gene is complemented.)")
 
     elif kind == "protein_fasta":
         print("=== inverse design (effect -> candidate edits; blosum62, offline) ===")
