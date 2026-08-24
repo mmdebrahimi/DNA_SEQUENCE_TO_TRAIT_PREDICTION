@@ -258,5 +258,76 @@ def test_genome_plus_gff_decodes_the_real_qrdr_mutations(gene, hgvs, codon, call
     assert codon in out and call in out and "MISSENSE" in out
 
 
+# --------------------------------------------------------------------------------------------------
+# GENOMIC coordinates (VCF-style): --genomic-pos / --ref / --alt (added 2026-08-23).
+# A user holding a VCF has genome coordinates, not `c.` ones. The strand math is the whole risk.
+# --------------------------------------------------------------------------------------------------
+
+def test_complement_base_refuses_ambiguity_codes():
+    from dna_decode.forward import complement_base
+    assert (complement_base("a"), complement_base("G")) == ("T", "C")
+    for bad in ("N", "R", "", "AT"):
+        with pytest.raises(ValueError):
+            complement_base(bad)
+
+
+def test_genomic_to_cds_edit_plus_and_minus_strand():
+    """On a MINUS-strand gene BOTH the coordinate and the bases flip; on a plus strand neither does."""
+    from dna_decode.forward import genomic_to_cds_edit
+    plus = {"start": 337, "end": 2799, "strand": "+"}
+    assert genomic_to_cds_edit(plus, 340, "C", "T") == (4, "C", "T")
+    assert genomic_to_cds_edit(plus, 337, "A", "G") == (1, "A", "G")
+
+    minus = {"start": 2336793, "end": 2339420, "strand": "-"}          # real MG1655 gyrA
+    assert genomic_to_cds_edit(minus, 2339173, "G", "A") == (248, "C", "T")
+    assert genomic_to_cds_edit(minus, 2339420, "T", "C") == (1, "A", "G")   # first CDS base = last genomic
+
+    with pytest.raises(ValueError, match="outside"):
+        genomic_to_cds_edit(plus, 1, "A", "T")
+
+
+def test_cds_at_genomic_position_refuses_none_and_overlaps():
+    from dna_decode.forward import cds_at_genomic_position
+    recs = [
+        {"type": "CDS", "seqid": "c1", "start": 10, "end": 20, "strand": "+", "gene_symbol": "a"},
+        {"type": "CDS", "seqid": "c1", "start": 18, "end": 30, "strand": "-", "gene_symbol": "b"},
+        {"type": "gene", "seqid": "c1", "start": 1, "end": 100, "strand": "+", "gene_symbol": "g"},
+    ]
+    assert cds_at_genomic_position(recs, 12)["gene_symbol"] == "a"
+    with pytest.raises(ValueError, match="no CDS feature covers"):
+        cds_at_genomic_position(recs, 5)                 # intergenic -> no codon to decode
+    with pytest.raises(ValueError, match="2 CDS features cover"):
+        cds_at_genomic_position(recs, 19)                # overlapping reading frames -> refuse, don't pick
+
+
+def test_genomic_coordinate_decode_on_the_real_reference(capsys):
+    """END-TO-END from a bare VCF-style coordinate: no gene named, no `c.` coordinate computed by hand.
+
+    gyrA is MINUS strand, so the genome carries G where the CDS carries C -- if the complement were
+    skipped the REF check would reject it, which is exactly why this is the decisive test.
+    """
+    if not (_REFSEQ / "genome.fna").exists():
+        pytest.skip("MG1655 reference fixture not present")
+    from dna_decode.forward.cli import main
+    base = ["--genome-fasta", str(_REFSEQ / "genome.fna"),
+            "--annotations", str(_REFSEQ / "annotations.gff3")]
+
+    assert main([*base, "--genomic-pos", "2339173", "--ref", "G", "--alt", "A"]) == 0
+    out = capsys.readouterr().out
+    assert "gyrA" in out                                  # gene auto-identified from the coordinate alone
+    assert "c.248C>T (reverse-complemented onto the minus strand)" in out
+    assert "S83L" in out and "MISSENSE" in out
+
+    # plus strand: no complement, and the conversion is a plain offset
+    assert main([*base, "--genomic-pos", "340", "--ref", "C", "--alt", "T"]) == 0
+    out = capsys.readouterr().out
+    assert "thrA" in out and "-> c.4C>T" in out and "reverse-complemented" not in out
+    assert "R2*" in out and "NONSENSE" in out
+
+    # a REF the genome does not carry is refused, not silently decoded
+    assert main([*base, "--genomic-pos", "2339173", "--ref", "A", "--alt", "T"]) == 2
+    assert "REF mismatch" in capsys.readouterr().err
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))

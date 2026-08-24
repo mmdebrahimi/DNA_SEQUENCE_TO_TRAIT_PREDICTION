@@ -87,6 +87,65 @@ def cds_record_key(rec: dict) -> str:
             or f"{rec.get('seqid')}:{rec.get('start')}-{rec.get('end')}")
 
 
+_COMPLEMENT = {"A": "T", "T": "A", "G": "C", "C": "G"}
+
+
+def complement_base(b: str) -> str:
+    """Watson-Crick complement of one base. Raises on anything else (an ambiguity code has no single
+    complement that could be checked against the CDS, so guessing would defeat the REF check)."""
+    c = str(b).upper()
+    if c not in _COMPLEMENT:
+        raise ValueError(f"not a complementable DNA base: {b!r}")
+    return _COMPLEMENT[c]
+
+
+def cds_at_genomic_position(records: list[dict], pos: int, seqid: str | None = None) -> dict:
+    """The ONE CDS feature covering a 1-based GENOMIC coordinate. PURE.
+
+    Refuses 0 hits and >1. Overlapping CDS features are ordinary in bacteria (nested/overlapping ORFs,
+    alternative products), and picking the first would silently decode a coordinate against the wrong
+    reading frame -- the exact class of error this module exists to make loud.
+    """
+    hits = [r for r in records
+            if str(r.get("type", "")) == "CDS"
+            and (seqid is None or str(r.get("seqid")) == seqid)
+            and int(r.get("start", 0)) <= int(pos) <= int(r.get("end", 0))]
+    if len(hits) == 1:
+        return hits[0]
+    where = f"{seqid}:{pos}" if seqid else str(pos)
+    if not hits:
+        raise ValueError(
+            f"no CDS feature covers {where}"
+            + ("" if seqid else " (searched every sequence -- pass --seqid to scope it)")
+            + ". An intergenic / non-coding position has no codon to decode."
+        )
+    desc = ", ".join(f"{h.get('gene_symbol') or h.get('locus_tag') or h.get('gene_id')}"
+                     f" [{h.get('seqid')}:{h.get('start')}-{h.get('end')} {h.get('strand')}]"
+                     for h in hits[:5])
+    raise ValueError(
+        f"{len(hits)} CDS features cover {where}: {desc}. Overlapping reading frames -- pass --gene "
+        f"(and --seqid if needed) to say which one to decode."
+    )
+
+
+def genomic_to_cds_edit(rec: dict, pos: int, ref: str, alt: str) -> tuple[int, str, str]:
+    """Map a GENOME-orientation substitution onto its CDS coordinate. PURE.
+
+    -> (1-based CDS position, CDS-orientation ref, CDS-orientation alt).
+
+    On a MINUS-strand gene both the coordinate and the bases flip: `c_pos = end - pos + 1`, and the ref/alt
+    are complemented, because the CDS is the reverse complement of the genomic interval. Verified against
+    the real MG1655 gyrA (2336793-2339420, minus strand): c.248 <-> genomic 2339173, where the genome
+    carries G and the CDS carries its complement C.
+    """
+    start, end, strand = int(rec["start"]), int(rec["end"]), str(rec.get("strand", "+"))
+    if not start <= int(pos) <= end:
+        raise ValueError(f"genomic position {pos} is outside {start}-{end}")
+    if strand == "-":
+        return end - int(pos) + 1, complement_base(ref), complement_base(alt)
+    return int(pos) - start + 1, str(ref).upper(), str(alt).upper()
+
+
 def _ambiguous_message(gene: str, field: str, hits: list[dict]) -> str:
     """Explain WHY a gene name matched several CDS rows, and name the field that actually separates them.
 

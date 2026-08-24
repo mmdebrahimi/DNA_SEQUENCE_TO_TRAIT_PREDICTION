@@ -20,8 +20,11 @@ from .dosage import (  # noqa: F401
 )
 from .genome_edit import (  # noqa: F401
     GenomeEditPrediction,
+    cds_at_genomic_position,
     cds_point_edit,
     cds_record_key,
+    complement_base,
+    genomic_to_cds_edit,
     parse_hgvs_c,
     predict_genome_edit,
     select_gene_cds,

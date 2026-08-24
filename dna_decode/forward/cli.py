@@ -12,6 +12,7 @@ complement to the deterministic determinant->R/S AMR decoder (`dna-decode amr`),
     dna-decode forward --mutation M69L --protein-seq MSIQ... --method auto        # strongest runnable here
     dna-decode forward --mutation c.205G>A --cds-fasta cds.fna                    # a GENOME edit (nt -> codon -> AA)
     dna-decode forward --mutation c.248C>T --genome-fasta g.fna --annotations a.gff3 --gene gyrA
+    dna-decode forward --genomic-pos 2339173 --ref G --alt A --genome-fasta g.fna --annotations a.gff3
 
 The nucleotide forms lift the input from a protein mutation to a real genome edit: resolve the HGVS coding
 substitution to its codon, classify it SILENT / MISSENSE / NONSENSE, and (for the two that change the protein)
@@ -19,6 +20,12 @@ fall through to exactly the same predictor path — so a genome edit inherits ev
 degradation behaviour. `--genome-fasta` + `--annotations` + `--gene` extracts that gene's CDS from a whole
 genome (strand-aware: a minus-strand gene is reverse-complemented), matching `--gene` on `gene_symbol` first —
 the CROSS-STRAIN identifier — then `locus_tag`, then `gene_id`.
+
+`--genomic-pos N --ref B --alt B` takes the coordinate straight off a VCF row: it finds the CDS covering that
+position (no `--gene` needed) and converts to a `c.` coordinate. On a minus-strand gene BOTH the coordinate and
+the bases flip, so `--ref`/`--alt` are given in GENOME orientation and complemented for you; the REF check
+against the CDS is the safety net that proves the conversion landed right. A position covered by no CDS, or by
+more than one (overlapping reading frames are ordinary in bacteria), is refused rather than guessed.
 
 Everything here fails CLOSED, because a wrong coordinate is the failure mode this path exists to catch: the
 reference base must match the CDS, the CDS must be in frame, a separately supplied protein must agree with the
@@ -83,6 +90,11 @@ def main(argv=None) -> int:
     ap.add_argument("--annotations", help="GFF3 for --genome-fasta")
     ap.add_argument("--gene", help="gene to decode from --genome-fasta (matched on gene_symbol, e.g. gyrA, "
                                    "then locus_tag, then gene_id)")
+    ap.add_argument("--genomic-pos", type=int, help="1-based GENOMIC coordinate of the edit (VCF-style) "
+                                                    "instead of --mutation; needs --ref and --alt")
+    ap.add_argument("--ref", help="reference base at --genomic-pos, in GENOME orientation")
+    ap.add_argument("--alt", help="alternate base at --genomic-pos, in GENOME orientation")
+    ap.add_argument("--seqid", help="sequence/contig name for --genomic-pos (needed on a multi-contig genome)")
     ap.add_argument("--protein", default="protein", help="protein name/label (default: protein)")
     ap.add_argument("--method", default="blosum62",
                     choices=["blosum62", "esm2", "prosst", "gemme", "hybrid", "auto"],
@@ -112,8 +124,15 @@ def main(argv=None) -> int:
         print(render_capabilities())
         return 0
 
-    if not args.mutation:
-        ap.error("--mutation is required (unless --capabilities)")
+    if args.genomic_pos is not None:
+        if not (args.ref and args.alt):
+            ap.error("--genomic-pos requires --ref and --alt (the bases in GENOME orientation)")
+        if not (args.genome_fasta and args.annotations):
+            ap.error("--genomic-pos requires --genome-fasta and --annotations")
+        if args.mutation:
+            ap.error("--genomic-pos and --mutation are alternatives; pass one")
+    elif not args.mutation:
+        ap.error("--mutation is required (unless --capabilities or --genomic-pos)")
 
     seq = ""
     if args.protein_fasta:
@@ -139,21 +158,37 @@ def main(argv=None) -> int:
     elif args.cds_seq:
         cds = "".join(c for c in args.cds_seq.upper() if c.isalpha())
     elif args.genome_fasta:
-        if not (args.annotations and args.gene):
-            ap.error("--genome-fasta requires --annotations <gff3> and --gene <name>")
+        if not args.annotations or not (args.gene or args.genomic_pos is not None):
+            ap.error("--genome-fasta requires --annotations <gff3> plus either --gene <name> or "
+                     "--genomic-pos <n> --ref <B> --alt <B>")
         # heavy import (pandas) deferred to the branch that needs it
         from dna_decode.data.annotations import extract_cds_sequences, parse_gff3
-        from dna_decode.forward import cds_record_key, select_gene_cds
+        from dna_decode.forward import (cds_at_genomic_position, cds_record_key, genomic_to_cds_edit,
+                                        select_gene_cds)
         try:
             table = parse_gff3(args.annotations)
-            rec = select_gene_cds(table.to_dict("records"), args.gene)
+            records = table.to_dict("records")
+            if args.gene:
+                rec = select_gene_cds(records, args.gene)
+            else:
+                rec = cds_at_genomic_position(records, args.genomic_pos, args.seqid)
             cds = extract_cds_sequences(args.genome_fasta, table)[cds_record_key(rec)]
+            if args.genomic_pos is not None:
+                # GENOME orientation -> CDS orientation. On a minus-strand gene BOTH the coordinate and
+                # the bases flip; the REF check downstream is the safety net that proves it landed right.
+                c_pos, c_ref, c_alt = genomic_to_cds_edit(rec, args.genomic_pos, args.ref, args.alt)
+                args.mutation = f"c.{c_pos}{c_ref}>{c_alt}"
         except (OSError, ValueError, KeyError) as e:
             print(f"error: {e}", file=sys.stderr)
             return 2
-        args.protein = args.protein if args.protein != "protein" else args.gene
-        print(f"gene lookup: {args.gene} -> {rec.get('seqid')}:{rec.get('start')}-{rec.get('end')} "
+        label = args.gene or (rec.get("gene_symbol") or rec.get("locus_tag") or rec.get("gene_id"))
+        args.protein = args.protein if args.protein != "protein" else str(label)
+        print(f"gene lookup: {label} -> {rec.get('seqid')}:{rec.get('start')}-{rec.get('end')} "
               f"strand {rec.get('strand')}  (locus_tag {rec.get('locus_tag') or '-'})")
+        if args.genomic_pos is not None:
+            flipped = " (reverse-complemented onto the minus strand)" if rec.get("strand") == "-" else ""
+            print(f"coordinate: genomic {rec.get('seqid')}:{args.genomic_pos} "
+                  f"{args.ref.upper()}>{args.alt.upper()} -> {args.mutation}{flipped}")
 
     if cds:
         from dna_decode.forward import cds_point_edit, parse_hgvs_c, translate_cds
