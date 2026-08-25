@@ -101,3 +101,67 @@ def test_the_renamed_guard_file_is_not_still_cited_under_its_old_name():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# --------------------------------------------------------------------------------------------------
+# STALE-DEFERRAL regressions (2026-08-25).
+#
+# The guard above checks a cited FILE exists. It cannot check that CLAUDE.md's CLAIM about the file is
+# still true -- and that is the half which has now bitten four times: the TB gold-set candidate row, the
+# ProSST "deferred to a Kaggle run" line, and the three pinned below.
+#
+# WHY THERE IS NO GENERAL SCREEN FOR THIS (measured, not assumed)
+# The obvious rule -- "a deferral marker within N chars of an existing repo path is a contradiction" --
+# was built and run: it returned 5 hits, ALL false positives. The marker and the path sit in the same
+# prose region but refer to different things (`tests/test_genome_map_browser.py` near "Still deferred:
+# pathway/KEGG"), and three of the five were inside the correction text explaining a fix. A guard with a
+# ~100% false-positive rate gets disabled, so it was NOT shipped. Natural-language claims about artifacts
+# resist mechanical checking; reading the artifact before repeating a claim stays model discipline.
+#
+# What IS worth pinning is each specific correction, so a stale claim cannot silently return.
+# --------------------------------------------------------------------------------------------------
+
+def _md() -> str:
+    return CLAUDE_MD.read_text(encoding="utf-8", errors="replace")
+
+
+@pytest.mark.skipif(not CLAUDE_MD.exists(), reason="CLAUDE.md absent")
+def test_the_genome_map_browser_is_not_described_as_deferred():
+    """CLAUDE.md CONTRADICTED ITSELF: one line said "a visual browser deferred" while the next bullet said
+    "GRAPHICAL BROWSER SHIPPED 2026-07-11". Both files exist."""
+    text = _md()
+    assert (ROOT / "dna_decode" / "genome_map" / "browser.py").exists()
+    assert (ROOT / "scripts" / "genome_map_browser.py").exists()
+    assert "a visual browser deferred" not in text
+    assert "GRAPHICAL BROWSER SHIPPED" in text
+
+
+@pytest.mark.skipif(not CLAUDE_MD.exists(), reason="CLAUDE.md absent")
+def test_the_bvbrc_census_is_not_described_as_a_deferred_3_drug_run():
+    """It RAN 2026-05-18, as a FOUR-drug census -- the old line was stale on both count and status."""
+    assert (ROOT / "wiki" / "bvbrc_strict_mic_4drug_census_2026-05-18.md").exists()
+    text = _md()
+    assert "strict-MIC 3-drug feasibility census" not in text
+    assert "RAN 2026-05-18 as a FOUR-drug census" in text
+
+
+@pytest.mark.skipif(not CLAUDE_MD.exists(), reason="CLAUDE.md absent")
+def test_the_tb_pending_data_runs_header_records_that_both_blockers_resolved():
+    """The header still read "PENDING ... BLOCKED-gated by design" while its OWN sub-bullets already
+    recorded the resolution: the parquet adapter sidestepped the regeno fetch, the AMR-Portal cohort
+    delivered the independent number, and the callability probe measured the correction."""
+    text = _md()
+    assert (ROOT / "wiki" / "tb_independent_amr_portal_scores.json").exists()
+    assert (ROOT / "wiki" / "tb_callability_probe_2026-07-10.json").exists()
+    assert "PENDING DATA RUNS (BLOCKED-gated by design, not incomplete code)" not in text
+    assert "BOTH BLOCKERS SINCE RESOLVED" in text
+
+
+@pytest.mark.skipif(not CLAUDE_MD.exists(), reason="CLAUDE.md absent")
+def test_the_prosst_forward_pass_is_not_described_as_deferred():
+    """The 2026-08-25 case: the line said "deferred to a Kaggle run"; it had run locally on CPU the same
+    day it shipped, and that stale claim was repeated as a recommendation."""
+    assert (ROOT / "wiki" / "prosst_lift_2026-07-18.md").exists()
+    text = _md()
+    assert "the real forward pass is deferred to a Kaggle run" not in text
+    assert "RAN the same day, LOCALLY on CPU" in text
