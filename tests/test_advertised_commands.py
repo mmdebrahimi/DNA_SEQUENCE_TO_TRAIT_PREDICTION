@@ -303,7 +303,11 @@ if __name__ == "__main__":
 
 _DOC_FILES = ("README.md", "QUICKSTART.md", "CLAUDE.md", "docs/quickstart.md", "examples/README.md")
 # flags that are not ours: argparse builtins + flags of external tools the docs legitimately show
-_FOREIGN_FLAGS = {"--help", "--version", "--rm", "--entrypoint", "--output", "--type", "-v"}
+_FOREIGN_FLAGS = {"--help", "--version", "--rm", "--entrypoint", "--output", "--type", "-v",
+                  # flags of the AGENT tooling the docs describe, not of this package: `--advance` is a
+                  # Soraya skill mode. A dna-decode user never types it, so it is not a promise this
+                  # repo makes -- but it IS legitimately named when CLAUDE.md records how a run went.
+                  "--advance", "--until-mvp", "--no-spillover"}
 
 
 def _declared_flags() -> set[str]:
