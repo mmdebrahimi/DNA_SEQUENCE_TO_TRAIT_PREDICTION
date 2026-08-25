@@ -105,3 +105,84 @@ if __name__ == "__main__":
         except Exception as e:  # pragma: no cover
             print(f"FAIL {fn.__name__}: {e}")
     print(f"\n{len(fns)} tests")
+
+
+# --- prospective-regression annotation (2026-08-24) -------------------------------------------------
+# A cell's badge tier resolves from whichever card has the best evidence, so a prospective regression
+# recorded on the validation card would never reach E. coli x gentamicin -- that cell resolves at the
+# AMR-Portal card and quotes acc 0.987, while its own post-lock cohort measured sens 0.429. The
+# annotation is therefore CROSS-CUTTING (applied in trust_block, after any card wins).
+
+
+def _fake_card(tmp_path, monkeypatch, *, regression=True):
+    import json as _json
+    import dna_decode.data.trust_surface as ts
+    cells = [{"organism": "escherichia_coli_shigella", "drug": "gentamicin", "state": "SCORED",
+              "acc": 0.95, "n": 60,
+              "prospective": {"status": "scored", "sens": 0.429, "n_scored": 62,
+                              "lock_date": "2026-06-13", "regression": regression}},
+             {"organism": "escherichia_coli_shigella", "drug": "ciprofloxacin", "state": "SCORED",
+              "acc": 0.95, "n": 60,
+              "prospective": {"status": "scored", "sens": 0.917, "n_scored": 61,
+                              "lock_date": "2026-06-13", "regression": False}}]
+    if regression:
+        cells[0]["prospective_regression"] = True
+        cells[0]["deployment_caveat"] = "prospective sens 0.429 -- the frozen rule under-calls this cell"
+    # distinct filename per variant + an explicit cache clear: `_load` is @lru_cache'd, so rewriting the
+    # same path silently returns the FIRST variant and the fixture would test nothing.
+    card = tmp_path / f"card_{'reg' if regression else 'clean'}.json"
+    card.write_text(_json.dumps({"cells": cells}), encoding="utf-8")
+    ts._load.cache_clear()
+    monkeypatch.setattr(ts, "_card_path",
+                        lambda name: card if name == "decoder_validation_report_card.json"
+                        else tmp_path / "absent.json")
+    return ts
+
+
+def test_prospective_regression_is_attached_without_changing_tier_or_metric(tmp_path, monkeypatch):
+    ts = _fake_card(tmp_path, monkeypatch)
+    raw = ts.lookup_trust("gentamicin", "Escherichia_coli_Shigella")
+    badge = ts.trust_block("gentamicin", "Escherichia_coli_Shigella")
+    assert badge["tier"] == raw["tier"] and badge["metric"] == raw["metric"]   # augment, never demote
+    assert badge["prospective_regression"]["sens"] == 0.429
+    assert "PROSPECTIVE REGRESSION" in badge["caveat"] and "UNDER-CALLS" in badge["caveat"]
+    assert "PROSPECTIVE REGRESSION" in ts.one_line(badge)
+
+
+def test_a_healthy_cell_gets_no_annotation(tmp_path, monkeypatch):
+    """Non-vacuity: the note must be selective, or it means nothing."""
+    ts = _fake_card(tmp_path, monkeypatch)
+    badge = ts.trust_block("ciprofloxacin", "Escherichia_coli_Shigella")
+    assert badge.get("prospective_regression") is None
+    assert "PROSPECTIVE REGRESSION" not in badge["caveat"]
+
+    ts2 = _fake_card(tmp_path, monkeypatch, regression=False)
+    assert ts2.trust_block("gentamicin", "Escherichia_coli_Shigella").get("prospective_regression") is None
+
+
+def test_prospective_regressions_listing_and_missing_card_are_safe(tmp_path, monkeypatch):
+    ts = _fake_card(tmp_path, monkeypatch)
+    assert [(r["organism"], r["drug"]) for r in ts.prospective_regressions()] == [
+        ("escherichia_coli_shigella", "gentamicin")]
+
+    import dna_decode.data.trust_surface as ts2
+    monkeypatch.setattr(ts2, "_card_path", lambda name: tmp_path / "nope.json")
+    ts2._load.cache_clear()
+    assert ts2.prospective_regressions() == []                      # absent card -> silent, not a crash
+    assert ts2.prospective_regression_for("gentamicin", "Escherichia_coli_Shigella") is None
+    ts2._load.cache_clear()                                         # leave no stale card for other tests
+
+
+def test_dna_decode_list_surfaces_the_regression_on_the_authoritative_surface(capsys, monkeypatch):
+    """`dna-decode list` is the project's stated authoritative support surface, and its per-trait
+    validation strings are STATIC (they quote in-distribution "gent 0.945"). Without this the one place a
+    user checks before trusting a call would never mention that a post-lock cohort contradicts it."""
+    import dna_decode.cli as uni
+    import dna_decode.data.trust_surface as ts
+    monkeypatch.setattr(ts, "prospective_regressions",
+                        lambda: [{"organism": "escherichia_coli_shigella", "drug": "gentamicin",
+                                  "sens": 0.429, "n": 62, "lock_date": "2026-06-13", "caveat": "x"}])
+    assert uni.main(["list"]) == 0
+    out = capsys.readouterr().out
+    assert "PROSPECTIVE REGRESSION" in out and "0.429" in out
+    assert "IN-DISTRIBUTION" in out                       # names WHY the quoted accuracy is not it

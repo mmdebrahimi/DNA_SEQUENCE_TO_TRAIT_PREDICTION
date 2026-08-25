@@ -338,9 +338,24 @@ ANALYSES = {
 
 def _print_list() -> int:
     print(f"dna-decode {_version()} - deterministic genotype->phenotype decoders\n")
+    # LIVE prospective-lock regressions, read from the report card at run time. The per-trait
+    # `validation` strings below are STATIC and quote in-distribution accuracy ("gent 0.945"); a cell whose
+    # post-lock cohort contradicts that would otherwise be invisible on the tool's own authoritative
+    # support surface, which is the one place a user checks before trusting a call.
+    try:
+        from dna_decode.data.trust_surface import prospective_regressions
+        _regressions = prospective_regressions()
+    except Exception:  # noqa: BLE001 -- the listing must never fail on a missing/malformed card
+        _regressions = []
+
     for name, meta in TRAITS.items():
         print(f"  {name:11} {meta['summary']}")
         print(f"  {'':11} validation: {meta['validation']}")
+        if name == "amr" and _regressions:
+            for r in _regressions:
+                print(f"  {'':11} ** PROSPECTIVE REGRESSION -- {r['organism']} x {r['drug']}: post-lock "
+                      f"sens {r['sens']} on N={r['n']} isolates public after {r['lock_date']}. The "
+                      f"accuracy quoted above is IN-DISTRIBUTION and does not describe this cell. **")
     print("\nanalyses (compose the decoders):")
     for name, summary in ANALYSES.items():
         print(f"  {name:11} {summary}")

@@ -258,9 +258,55 @@ def lookup_trust(drug: str, organism: str | None = None) -> dict:
     return _rec(UNKNOWN, "", requested_cell=req, evidence_cell=None)
 
 
+def prospective_regressions() -> list[dict]:
+    """Every cell whose PROSPECTIVE-lock result contradicts its standing validation. Read-only.
+
+    Sourced from the report card's top-level `prospective_regression` flag (a POWERED post-lock cohort
+    whose sensitivity is below the card's floor). Empty when the card is absent or nothing regressed.
+    """
+    deck = _load("decoder_validation_report_card.json")
+    out = []
+    for c in (deck or {}).get("cells", []):
+        if not c.get("prospective_regression"):
+            continue
+        p = c.get("prospective") or {}
+        out.append({"organism": c.get("organism"), "drug": c.get("drug"),
+                    "sens": p.get("sens"), "n": p.get("n_scored"), "lock_date": p.get("lock_date"),
+                    "caveat": c.get("deployment_caveat", "")})
+    return out
+
+
+def prospective_regression_for(drug: str, organism: str | None = None) -> dict | None:
+    """The prospective regression on THIS cell, if any. Reuses the card's own organism matcher."""
+    deck = _load("decoder_validation_report_card.json")
+    if not deck:
+        return None
+    c, status = _pick_bacterial_cell(deck.get("cells", []), str(drug).strip().lower(), organism)
+    if not c or status == "ambiguous" or not c.get("prospective_regression"):
+        return None
+    p = c.get("prospective") or {}
+    return {"organism": c.get("organism"), "drug": c.get("drug"),
+            "sens": p.get("sens"), "n": p.get("n_scored"), "lock_date": p.get("lock_date"),
+            "caveat": c.get("deployment_caveat", "")}
+
+
 def trust_block(drug: str, organism: str | None = None) -> dict:
-    """Public always-safe accessor for embedding in an amr-mechanism-call-v1 record's `validation` field."""
-    return lookup_trust(drug, organism)
+    """Public always-safe accessor for embedding in an amr-mechanism-call-v1 record's `validation` field.
+
+    CROSS-CUTTING prospective annotation: a cell's badge tier may resolve from ANY card (AMR-Portal, TB,
+    HIV, ...), so the prospective-regression note is attached HERE rather than inside one card's branch --
+    E. coli x gentamicin resolves at the AMR-Portal card and would otherwise never learn that its own
+    post-lock cohort contradicts it. The tier and metric are UNCHANGED; this only adds the contradiction.
+    """
+    badge = lookup_trust(drug, organism)
+    pr = prospective_regression_for(drug, organism)
+    if pr:
+        badge["prospective_regression"] = pr
+        badge["caveat"] = (
+            f"{badge.get('caveat', '')} || PROSPECTIVE REGRESSION: post-lock sens {pr['sens']} on "
+            f"N={pr['n']} isolates public after {pr['lock_date']} -- the frozen rule UNDER-CALLS this "
+            f"cell; the accuracy above is in-distribution and does not describe it")
+    return badge
 
 
 def one_line(badge: dict) -> str:
