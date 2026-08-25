@@ -1,0 +1,79 @@
+{
+  "_schema": "epistasis-pooling-correction-v1",
+  "source_sweep": "forward_epistasis_sweep_2026-07-27.json",
+  "honest_scope": "within-order Delta is the honest number when a sweep spans mutation orders; the pooled Delta flatters any scorer that scales with k. H1 falsified, H2 underpowered (n=3), density confounded (n=1 protein above 3% k/L).",
+  "per_protein": [
+    {
+      "protein": "GFP_AEQVI_Sarkisyan_2016",
+      "seqlen": 238,
+      "orders": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "within_additive": 0.0185,
+      "pooled_additive": 0.1007,
+      "within_joint": 0.0285,
+      "pooled_joint": 0.0869,
+      "additive_pooling_gain": 0.0822,
+      "joint_pooling_gain": 0.0583,
+      "within_delta": 0.01,
+      "pooled_delta": -0.0139
+    },
+    {
+      "protein": "HIS7_YEAST_Pokusaeva_2019",
+      "seqlen": 220,
+      "orders": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "within_additive": 0.2732,
+      "pooled_additive": 0.3418,
+      "within_joint": 0.2819,
+      "pooled_joint": 0.3465,
+      "additive_pooling_gain": 0.0686,
+      "joint_pooling_gain": 0.0646,
+      "within_delta": 0.0087,
+      "pooled_delta": 0.0047
+    },
+    {
+      "protein": "F7YBW8_MESOW_Aakre_2015",
+      "seqlen": 93,
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "within_additive": 0.259,
+      "pooled_additive": 0.5428,
+      "within_joint": 0.2061,
+      "pooled_joint": 0.2597,
+      "additive_pooling_gain": 0.2838,
+      "joint_pooling_gain": 0.0537,
+      "within_delta": -0.0529,
+      "pooled_delta": -0.2831
+    }
+  ],
+  "order_structure": {
+    "GFP_AEQVI_Sarkisyan_2016": {
+      "spearman_k_fitness": -0.4757,
+      "eta2_k": 0.2541,
+      "n": 45623
+    },
+    "HIS7_YEAST_Pokusaeva_2019": {
+      "spearman_k_fitness": -0.1218,
+      "eta2_k": 0.0159,
+      "n": 194161
+    },
+    "F7YBW8_MESOW_Aakre_2015": {
+      "spearman_k_fitness": -0.4104,
+      "eta2_k": 0.4317,
+      "n": 9155
+    }
+  }
+}

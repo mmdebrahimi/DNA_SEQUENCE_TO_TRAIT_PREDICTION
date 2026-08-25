@@ -61,7 +61,7 @@ maxdeg = max((abs(r.get("delta", 0)) for r in sw), default=0)
 rows.append({"capability": "epistasis characterization (joint vs additive)", "regime": "B_molecular",
              "tier": "CHARACTERIZED",
              "metric": f"{n_prot} proteins x orders 2-6: joint ~= additive (delta ~+-0.005); 'grows with order' FALSIFIED",
-             "scope": "novel: joint can be MUCH worse OOD (F7YBW8/ParD delta -0.283, degrades with order); additive is robust",
+             "scope": "novel: joint can be worse OOD (ParD WITHIN-ORDER delta -0.053, degrades with order); additive is robust. The pooled -0.283 was a mutation-order POOLING artifact -- corrected 2026-08-25, wiki/forward_epistasis_pooling_correction_2026-08-25.md",
              "source": "forward_epistasis_sweep_2026-07-27.json"})
 # --- inverse cell ---
 inv_h = inv.get("headline", {})

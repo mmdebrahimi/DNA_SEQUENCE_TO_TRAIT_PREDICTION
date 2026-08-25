@@ -33,7 +33,8 @@ joint-ESM2 advantage over the additive null (a) vary by protein, (b) GROW with m
    essentially nothing on average. Extends the GB1-doubles result (row 579, +0.0096) to a 5-protein panel.
    **`predict_multi_effect`'s additive null is the robust default.**
 
-3. **NEW: joint can be MUCH WORSE than additive, and degrade WITH order (F7YBW8/ParD: Δ = −0.283; k2 +0.054
+3. **CORRECTED 2026-08-25 — the −0.283 below is a POOLING ARTIFACT; the within-order Δ is −0.053** (5x smaller). ParD's pooled additive ρ 0.543 exceeds its ρ at EVERY individual order (0.301/0.356/0.120) — the signature of a confounder, and mutation order is it. Joint's pooling gain is near-constant across all 3 proteins (+0.054/+0.058/+0.065) while additive's swings 4x (+0.069→+0.284), so the anomaly is *additive getting an outsized pooling bonus on ParD*, NOT joint collapsing. The per-order trend below (+0.054 → −0.086 → −0.126) SURVIVES the correction. See `wiki/forward_epistasis_pooling_correction_2026-08-25.md`. Original text follows:
+   **NEW: joint can be MUCH WORSE than additive, and degrade WITH order (F7YBW8/ParD: Δ = −0.283; k2 +0.054
    → k4 −0.126).** On this small 93-aa protein, masking a position in a heavily-mutated background produces
    worse predictions than the WT-anchored additive. **Hypothesis (unfalsified mechanism):** the multi-mutant
    background is far out-of-distribution for ESM2 (many substitutions in a short sequence), so its conditional
