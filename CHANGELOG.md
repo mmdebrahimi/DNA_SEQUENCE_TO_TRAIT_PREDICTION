@@ -22,6 +22,12 @@ prediction** — the decoder rule stays sha256-pinned and byte-identical to its 
   when an S call carries a measured-gap mechanism, alongside `measured_gap_misses` /
   `primary_mechanism_misses` / `uncounted_class_determinants` as widening audit tiers, plus a `disclosure`
   block naming and sha256-hashing the catalog that produced the warning. `prediction` is untouched.
+- **The authoritative support surface admits it too.** `dna-decode list` prints a live prospective-regression
+  line read from the report card at run time (its per-trait validation strings are static and quote
+  in-distribution accuracy), and every call's badge carries the contradiction beside the metric it
+  contradicts. The annotation is applied where the badge is ASSEMBLED, not inside one evidence card's
+  branch -- E. coli x gentamicin resolves at the AMR-Portal card, so a card-local fix would have reached
+  nothing. Tier and metric are unchanged.
 - **The report card surfaces prospective results** in a namespace-separate table, and raises a top-level
   `prospective_regression` + `deployment_caveat` on a powered cell that under-calls — so a consumer
   filtering `state == SCORED` cannot miss it. The state itself is not demoted: the provenance-disjoint
