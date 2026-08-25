@@ -154,6 +154,11 @@ def disclosure_provenance() -> dict:
 #     excluding it from ceftriaxone is CORRECT. A warning that fires on half of all calls is not a
 #     warning.
 # So the bar is a measured gap with a citable artifact. Adding a row is a claim and needs evidence.
+# SCOPE IS NOW EVIDENCE-BACKED, not an unexamined default: `scripts/rule_gap_screen.py` screened all 12
+# NCBI-PD external-validation cells for the same shape and found NO second actionable gap
+# (wiki/rule_gap_screen_2026-08-25.md). Its one real hit -- gonococcal porB1b on tetracycline -- is a
+# ceiling the rule ALREADY discloses ('rpsJ + mtrR + penB cumulative ... not a rule bug'), and counting
+# it would repeat a measured spec-0.0 over-call on the very cohort that rule was validated against.
 _MEASURED_GAPS: dict[str, dict[str, str]] = {
     "gentamicin": {
         "16S_rRNA_methyltransferase":

@@ -1,0 +1,166 @@
+{
+  "_schema": "rule-gap-screen-v1",
+  "date": "2026-08-25",
+  "thresholds": {
+    "min_missed_R": 3,
+    "min_miss_rate": 0.5,
+    "max_s_rate": 0.2
+  },
+  "honest_scope": "DESCRIPTIVE co-occurrence on ONE cohort; hypothesis-generating only. A hit may still be a clonal passenger. Nothing here may enter _MEASURED_GAPS without its own validation.",
+  "cells": [
+    {
+      "drug": "gentamicin",
+      "n_R": 31,
+      "n_missed_R": 1,
+      "n_called_R": 30,
+      "n_S": 90,
+      "candidates": [],
+      "status": "underpowered",
+      "organism": "Campylobacter"
+    },
+    {
+      "drug": "tetracycline",
+      "n_R": 66,
+      "n_missed_R": 0,
+      "n_called_R": 66,
+      "n_S": 55,
+      "candidates": [],
+      "status": "no_missed_R",
+      "organism": "Campylobacter"
+    },
+    {
+      "drug": "azithromycin",
+      "n_R": 110,
+      "n_missed_R": 110,
+      "n_called_R": 0,
+      "n_S": 46,
+      "candidates": [],
+      "status": "screened",
+      "organism": "Neisseria gonorrhoeae"
+    },
+    {
+      "drug": "cefixime",
+      "n_R": 19,
+      "n_missed_R": 4,
+      "n_called_R": 15,
+      "n_S": 147,
+      "candidates": [
+        {
+          "determinant": "porB1b_A121D",
+          "n_in_missed_R": 2,
+          "miss_rate": 0.5,
+          "s_rate": 0.082,
+          "gap": 0.418,
+          "also_in_called_R": true
+        },
+        {
+          "determinant": "porB1b_G120K",
+          "n_in_missed_R": 2,
+          "miss_rate": 0.5,
+          "s_rate": 0.17,
+          "gap": 0.33,
+          "also_in_called_R": true
+        }
+      ],
+      "status": "screened",
+      "organism": "Neisseria gonorrhoeae"
+    },
+    {
+      "drug": "ceftriaxone",
+      "n_R": 2,
+      "n_missed_R": 2,
+      "n_called_R": 0,
+      "n_S": 167,
+      "candidates": [],
+      "status": "underpowered",
+      "organism": "Neisseria gonorrhoeae"
+    },
+    {
+      "drug": "ciprofloxacin",
+      "n_R": 94,
+      "n_missed_R": 1,
+      "n_called_R": 93,
+      "n_S": 69,
+      "candidates": [],
+      "status": "underpowered",
+      "organism": "Neisseria gonorrhoeae"
+    },
+    {
+      "drug": "penicillin",
+      "n_R": 14,
+      "n_missed_R": 1,
+      "n_called_R": 13,
+      "n_S": 17,
+      "candidates": [],
+      "status": "underpowered",
+      "organism": "Neisseria gonorrhoeae"
+    },
+    {
+      "drug": "tetracycline",
+      "n_R": 34,
+      "n_missed_R": 23,
+      "n_called_R": 11,
+      "n_S": 26,
+      "candidates": [
+        {
+          "determinant": "porB1b_G120K",
+          "n_in_missed_R": 14,
+          "miss_rate": 0.609,
+          "s_rate": 0.038,
+          "gap": 0.57,
+          "also_in_called_R": true
+        },
+        {
+          "determinant": "gyrA_D95A",
+          "n_in_missed_R": 12,
+          "miss_rate": 0.522,
+          "s_rate": 0.192,
+          "gap": 0.329,
+          "also_in_called_R": true
+        }
+      ],
+      "status": "screened",
+      "organism": "Neisseria gonorrhoeae"
+    },
+    {
+      "drug": "erythromycin",
+      "n_R": 43,
+      "n_missed_R": 1,
+      "n_called_R": 42,
+      "n_S": 70,
+      "candidates": [],
+      "status": "underpowered",
+      "organism": "Streptococcus pneumoniae"
+    },
+    {
+      "drug": "tetracycline",
+      "n_R": 10,
+      "n_missed_R": 0,
+      "n_called_R": 10,
+      "n_S": 103,
+      "candidates": [],
+      "status": "no_missed_R",
+      "organism": "Streptococcus pneumoniae"
+    },
+    {
+      "drug": "ciprofloxacin",
+      "n_R": 22,
+      "n_missed_R": 0,
+      "n_called_R": 22,
+      "n_S": 60,
+      "candidates": [],
+      "status": "no_missed_R",
+      "organism": "Staphylococcus aureus"
+    },
+    {
+      "drug": "rifampin",
+      "n_R": 8,
+      "n_missed_R": 1,
+      "n_called_R": 7,
+      "n_S": 101,
+      "candidates": [],
+      "status": "underpowered",
+      "organism": "Staphylococcus aureus"
+    }
+  ]
+}
