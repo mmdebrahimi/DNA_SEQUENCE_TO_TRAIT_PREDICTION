@@ -1,0 +1,684 @@
+{
+  "_schema": "colour-cell-substrate-screen-v1",
+  "ground_truth": "wiki/dog_coat_darwins_ark_measured_2026-07-30.md",
+  "self_check_failures": [],
+  "catalog_gaps_vs_measured_artifact": {
+    "dog/A": "measured artifact records ASIP A^y/a^t as a SINE insertion + coding change (STRUCTURAL, absent from a biallelic-SNV panel); the catalog `source` names only the locus and papers"
+  },
+  "honest_scope": "Derived from the causal variant each locus records in its OWN catalog `source` string. UNRECORDED means the catalog does not write the causal variant down -- that cell cannot be screened at all, which is a finding about the catalog, NOT evidence about the substrate. A blocked locus means a biallelic-SNV panel cannot REPRESENT the variant; it does not by itself predict a cell would fail, and no cell here has been measured except dog.",
+  "cells": {
+    "alpaca": {
+      "n_loci": 2,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 2,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | alpaca/llama E (MC1R): E coloured > e; e/e = recessive WHITE | e"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "A | ASIP | agouti | alpaca Agouti (ASIP): A functional -> fawn (phaeomelanin) > a loss-of-function -> black (eumelanin) | a"
+        }
+      ]
+    },
+    "buffalo": {
+      "n_loci": 1,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 1,
+      "n_unrecorded": 0,
+      "n_snv_panel_blocked": 1,
+      "verdict": "NO_LOCUS_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "STRUCTURAL",
+          "snv_panel_scorable": false,
+          "source": "A | ASIP | agouti | water buffalo A (ASIP, OMIA 000213-89462): A^W dominant WHITE (2809-bp LINE-1 insertion -> ASIP overexpression, Liang 2020) > a black/wild | a"
+        }
+      ]
+    },
+    "camel": {
+      "n_loci": 2,
+      "n_snv": 1,
+      "n_indel": 1,
+      "n_structural": 0,
+      "n_unrecorded": 0,
+      "n_snv_panel_blocked": 1,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "MC1R",
+          "gene": "MC1R",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "MC1R | MC1R | dominant_white | camel MC1R (Almathen 2018): c.901C>T W dominant white (dominant-negative) > E+ wild | W"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "A | ASIP | agouti | camel Agouti (ASIP, Almathen 2018): A wild light-brown > a recessive black (23delT exon-2 frameshift) | a"
+        }
+      ]
+    },
+    "cat": {
+      "n_loci": 6,
+      "n_snv": 0,
+      "n_indel": 2,
+      "n_structural": 0,
+      "n_unrecorded": 4,
+      "n_snv_panel_blocked": 2,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "W",
+          "gene": "KIT",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "W | KIT | OMIA 000209-9685 (dominant white, FERV1 LTR) / 001737-9685 (white spotting, full FERV1); David 2014 | W dominant-white EPISTATIC (masks all colour); ws = white spotting (bicolor/calico); w = none"
+        },
+        {
+          "locus": "O",
+          "gene": "ARHGAP36",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "O | ARHGAP36 | Toh 2025 / Kaelin 2025 Current Biology (X-linked; 5.1-kb ARHGAP36 intron-1 deletion) | X-linked orange: O -> orange (EPISTATIC over B). Female O/o -> TORTOISESHELL mosaic (XCI)"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "A | ASIP | OMIA (Agouti/ASIP; Eizirik 2003) | A_ = agouti (tabby visible), a/a = non-agouti (solid); orange fur shows tabby regardless"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | TYRP1 | OMIA (TYRP1; Schmidt-Kuntzel 2005) b=chocolate, bl=cinnamon (premature stop) | eumelanin colour: B black > b chocolate > bl cinnamon"
+        },
+        {
+          "locus": "D",
+          "gene": "MLPH",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "D | MLPH | OMIA (MLPH single-base deletion; Ishida 2006) | d/d dilute: black->blue, chocolate->lilac, cinnamon->fawn, orange->cream"
+        },
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | TYR | OMIA 000202-9685 (TYR; Lyons 2005) cs Siamese G302R, cb Burmese, c albino | C full > cb Burmese-sepia = cs Siamese-points > c albino; cs/cb = mink"
+        }
+      ]
+    },
+    "cattle": {
+      "n_loci": 2,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 2,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | cattle E (MC1R): ED dominant-black > E+ wild(red-brown) > e recessive-red | e"
+        },
+        {
+          "locus": "PMEL",
+          "gene": "PMEL/SILV",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "PMEL | PMEL/SILV | dilution_incomplete | cattle dilution (PMEL/SILV): Dc Charolais / Dh Highland, incompletely dominant -> dun/silver"
+        }
+      ]
+    },
+    "chicken": {
+      "n_loci": 7,
+      "n_snv": 0,
+      "n_indel": 1,
+      "n_structural": 0,
+      "n_unrecorded": 6,
+      "n_snv_panel_blocked": 1,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | OMIA 000374-9031 (MC1R; E extended black G274A/E92K; buttercup H215P; rec-wheaten R213C) | EXTENSION canvas by decreasing eumelanin: E extended-black > ER birchen > EWh wheaten > e+ wild (partridge) > eb brown"
+        },
+        {
+          "locus": "B",
+          "gene": "CDKN2A",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | CDKN2A | OMIA 000102-9031 (CDKN2A; B1 V9D barring); Hellstrom 2010 / Schwochow 2017 | Z-LINKED barring (white bars across eumelanin); FEMALE (ZW) hemizygous, MALE (ZZ) 2 alleles"
+        },
+        {
+          "locus": "S",
+          "gene": "SLC45A2",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "S | SLC45A2 | OMIA 000370-9031 (SLC45A2/MATP; Y277C/L347M silver); Gunnarsson 2007 | Z-LINKED silver: S restricts pheomelanin (gold -> silver/white); s+ = gold"
+        },
+        {
+          "locus": "I",
+          "gene": "PMEL17",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "I | PMEL17 | OMIA 000373-9031 (PMEL17; 9-bp exon-10 insertion); Kerje 2004 | DOMINANT WHITE (incompletely dominant): inhibits black eumelanin -> white (red/gold shows)"
+        },
+        {
+          "locus": "BL",
+          "gene": "PMEL-locus",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "BL | PMEL-locus | Blue/Andalusian (incompletely dominant eumelanin dilution) | Bl/bl+ = blue, Bl/Bl = splash, bl+/bl+ = black (undiluted)"
+        },
+        {
+          "locus": "LAV",
+          "gene": "MLPH",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "LAV | MLPH | OMIA (MLPH; lavender/self-blue) \u2014 same gene as mammal dilute | lav/lav = lavender (recessive further dilution of black)"
+        },
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | TYR | OMIA (TYR; recessive white/albino series) | c/c = recessive white (distinct from dominant white)"
+        }
+      ]
+    },
+    "dog": {
+      "n_loci": 5,
+      "n_snv": 3,
+      "n_indel": 1,
+      "n_structural": 0,
+      "n_unrecorded": 1,
+      "n_snv_panel_blocked": 1,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "E | MC1R | OMIA 001199-9615 (MC1R p.Arg306Ter = recessive red `e`); Everts 2000; Schmutz 2003 | pigment-type switch: e/e -> phaeomelanin (red/yellow), EPISTATIC over K/A/B in the coat. Em = melanistic mask, Eg = grizzle/"
+        },
+        {
+          "locus": "K",
+          "gene": "CBD103",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "K | CBD103 | OMIA (K locus / dominant black, CBD103 beta-defensin c.67_69delGGT); Candille 2007 Science | K^B dominant black -> solid eumelanin, MASKS A; kbr brindle; ky/ky -> A expressed"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "A | ASIP | OMIA (A locus ASIP); Dreger & Schmutz 2011; Bannasch 2021 (ASIP promoter) | agouti pattern, expressed only if E- and ky/ky: Ay fawn/sable > aw wild > at tan-points > a recessive-black"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "B | TYRP1 | OMIA 001249-9615 (TYRP1; bs p.Gln331Ter, bd, bc); Schmutz 2002 | b-family (bs/bd/bc/b) recessive to B: b/b -> brown/liver eumelanin + brown nose"
+        },
+        {
+          "locus": "D",
+          "gene": "MLPH",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "D | MLPH | OMIA 000031-9615 (MLPH c.-22G>A `d`; a second variant `d2`); Drogemuller 2007; Bauer 2018 | d-family (d/d2) recessive to D: d/d -> dilute (black->blue, brown->isabella/lilac)"
+        }
+      ]
+    },
+    "donkey": {
+      "n_loci": 3,
+      "n_snv": 3,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 0,
+      "n_snv_panel_blocked": 0,
+      "verdict": "FULLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "E | MC1R | extension | donkey E (MC1R, OMIA 001199-9793): E+ > e recessive red (c.629T>C p.Met210Thr, Abitbol 2014) | e"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "A | ASIP | agouti | donkey A (ASIP, OMIA 000201-9793): A light-points/grey-dun (T-allele) > a solid-black/no-light-points (c.349T>C p.Cys117Arg, Sun 2017) | a"
+        },
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "C | TYR | albino | donkey C (TYR): c/c Asinara white albinism (c.604C>G p.His202Asp, recessive) | c"
+        }
+      ]
+    },
+    "fox": {
+      "n_loci": 2,
+      "n_snv": 0,
+      "n_indel": 1,
+      "n_structural": 0,
+      "n_unrecorded": 1,
+      "n_snv_panel_blocked": 1,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | fox E (MC1R): EA Alaska Silver dominant-black (Cys125Arg gain-of-function) > E+ wild red (Vage 1997)"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "A | ASIP | agouti | fox A (ASIP, OMIA 000201-9627): A wild -> red (phaeomelanin) > a Standard Silver (recessive black, 166-nt exon-1 deletion; non-epistatic with E, Vage 1997) | a"
+        }
+      ]
+    },
+    "goat": {
+      "n_loci": 2,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 1,
+      "n_unrecorded": 1,
+      "n_snv_panel_blocked": 1,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "STRUCTURAL",
+          "snv_panel_scorable": false,
+          "source": "A | ASIP | agouti | goat Agouti (ASIP, OMIA 000201-9925): A^Wt dominant white/tan (CNV) > a recessive nonagouti black; ~11 pattern alleles collapsed to the two poles | a"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | TYRP1 | brown | goat B (TYRP1): b/b brown (e.g. Copperneck) | b"
+        }
+      ]
+    },
+    "guineapig": {
+      "n_loci": 5,
+      "n_snv": 0,
+      "n_indel": 2,
+      "n_structural": 0,
+      "n_unrecorded": 3,
+      "n_snv_panel_blocked": 2,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "A | ASIP | agouti | guinea pig A (ASIP, OMIA 000201-10141): A light-bellied agouti > a non-agouti black (c.181_184delTTCA, Lai 2019) | a"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | TYRP1 | brown | guinea pig B (TYRP1): b/b brown (cinnamon-agouti with A) | b"
+        },
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | TYR | albino | guinea pig C (TYR): reduced-pigment series; c/c depigmented | c"
+        },
+        {
+          "locus": "D",
+          "gene": "MLPH",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "D | MLPH | dilute | guinea pig dilute factor: d/d dilute | d"
+        },
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "E | MC1R | extension | guinea pig E (MC1R, OMIA 001199-10141): E > e recessive red (Vidal 2018: L250Q / 2760-bp deletion) | e"
+        }
+      ]
+    },
+    "horse": {
+      "n_loci": 5,
+      "n_snv": 2,
+      "n_indel": 2,
+      "n_structural": 1,
+      "n_unrecorded": 0,
+      "n_snv_panel_blocked": 3,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "E | MC1R | OMIA 001199-9796 (MC1R p.Ser83Phe = recessive red `e`, Marklund 1996 C901T) | pigment-type switch: e/e -> chestnut (red), RECESSIVE-EPISTATIC over A"
+        },
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "A | ASIP | OMIA (Agouti/ASIP; a = 11-bp deletion, Rieder 2001) | black distribution, expressed only if E-: A_ = bay, a/a = uniform black"
+        },
+        {
+          "locus": "CR",
+          "gene": "SLC45A2",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "CR | SLC45A2 | OMIA 001344-9796 (SLC45A2/MATP c.457G>A p.Asp153Asn, Mariat 2003) | cream dilution, INCOMPLETE-DOMINANT: 1 copy dilutes red, 2 copies dilute red+black"
+        },
+        {
+          "locus": "D",
+          "gene": "TBX3",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "D | TBX3 | OMIA (TBX3 regulatory; Imsland 2016 Nat Genet; nd2 = 1617-bp deletion) | dun dilution + primitive markings; D > nd1 > nd2 (nd1/nd2 non-dun)"
+        },
+        {
+          "locus": "G",
+          "gene": "STX17",
+          "variant_class": "STRUCTURAL",
+          "snv_panel_scorable": false,
+          "source": "G | STX17 | OMIA 001356-9796 (STX17 4.6-kb intron-6 duplication, Rosengren Pielberg 2008) | grey, DOMINANT + progressive: born base colour, greys to white with age (EPISTATIC adult)"
+        }
+      ]
+    },
+    "mink": {
+      "n_loci": 3,
+      "n_snv": 1,
+      "n_indel": 1,
+      "n_structural": 0,
+      "n_unrecorded": 1,
+      "n_snv_panel_blocked": 1,
+      "verdict": "PARTIALLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | TYR | albino | mink C (TYR, OMIA 000202-452646): C > ch Himalayan > c albino (nonsense) | c"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "INDEL",
+          "snv_panel_scorable": false,
+          "source": "B | TYRP1 | brown | mink B (TYRP1): b/b American Palomino brown (intron-2 insertion) | b"
+        },
+        {
+          "locus": "D",
+          "gene": "MLPH",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "D | MLPH | dilute | mink D (MLPH, OMIA 000031-452646): d/d Silverblue dilute (c.901+1G>A splice, Manakhov 2019) | d"
+        }
+      ]
+    },
+    "mouse": {
+      "n_loci": 6,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 6,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "A | ASIP | agouti | mouse a locus (ASIP): A agouti > at > a non-agouti | a"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | TYRP1 | brown | mouse b (Tyrp1): B black > b brown | b"
+        },
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | TYR | albino | mouse c (Tyr): C full > cch chinchilla > ch himalayan > c albino | c"
+        },
+        {
+          "locus": "D",
+          "gene": "MYO5A",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "D | MYO5A | dilute | mouse d (Myo5a): d/d dilute | d"
+        },
+        {
+          "locus": "P",
+          "gene": "OCA2",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "P | OCA2 | pink_eye | mouse p (Oca2): p/p pink-eyed dilution | p"
+        },
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | mouse e (Mc1r): E extension > e recessive yellow | e"
+        }
+      ]
+    },
+    "pig": {
+      "n_loci": 2,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 2,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "KIT",
+          "gene": "KIT",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "KIT | KIT | dominant_white | pig Dominant White (KIT): I dominant-white (epistatic over E) > i+ | I"
+        },
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | pig E (MC1R, OMIA 001199-9823): ED dominant-black > E+ wild > e recessive-red | e"
+        }
+      ]
+    },
+    "pigeon": {
+      "n_loci": 4,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 4,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | TYRP1 | Domyan 2014 Curr Biol (TYRP1, VAAST): B^A ash-red > B+ blue/black (wild) > b brown | Z-LINKED base colour; FEMALE (ZW) hemizygous, MALE (ZZ) 2 alleles"
+        },
+        {
+          "locus": "E",
+          "gene": "SOX10",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | SOX10 | Domyan 2014 (SOX10): e/e recessive red, EPISTATIC over B/TYRP1 | e/e -> red regardless of the B-locus base colour"
+        },
+        {
+          "locus": "D",
+          "gene": "SLC45A2",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "D | SLC45A2 | Domyan 2014 (SLC45A2): d/d dilute (ash-red->ash-yellow, blue->dun, brown->khaki) | Z-LINKED dilution"
+        },
+        {
+          "locus": "C",
+          "gene": "NDP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | NDP | Vickrey 2018 eLife (NDP): C^T T-check > C checker > + bar (ancestral) > c barless | wing pattern series; barless c = NDP start-codon mutation (vision defects in homozygotes)"
+        }
+      ]
+    },
+    "rabbit": {
+      "n_loci": 5,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 5,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "A | ASIP | agouti | rabbit A locus (ASIP): A agouti > at tan > a self | a"
+        },
+        {
+          "locus": "B",
+          "gene": "TYRP1",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "B | TYRP1 | brown | rabbit B (TYRP1): B black > b chocolate | b"
+        },
+        {
+          "locus": "C",
+          "gene": "TYR",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "C | TYR | albino | rabbit C (TYR): C full > chinchilla > Himalayan > c albino | c"
+        },
+        {
+          "locus": "D",
+          "gene": "MLPH",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "D | MLPH | dilute | rabbit D (MLPH): d/d dilute (blue/lilac) | d"
+        },
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | rabbit E (MC1R): Ed dominant-black > Es steel > E > ej Japanese > e red | e"
+        }
+      ]
+    },
+    "roedeer": {
+      "n_loci": 1,
+      "n_snv": 1,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 0,
+      "n_snv_panel_blocked": 0,
+      "verdict": "FULLY_SNV_TRACTABLE",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "SNV",
+          "snv_panel_scorable": true,
+          "source": "A | ASIP | agouti | roe deer Agouti (ASIP, OMIA 000201-9858, Reissmann 2020): A chestnut (G, phaeomelanin) > a recessive black (T, c.33G>T) | a"
+        }
+      ]
+    },
+    "sheep": {
+      "n_loci": 2,
+      "n_snv": 0,
+      "n_indel": 0,
+      "n_structural": 0,
+      "n_unrecorded": 2,
+      "n_snv_panel_blocked": 0,
+      "verdict": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED",
+      "loci": [
+        {
+          "locus": "A",
+          "gene": "ASIP",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "A | ASIP | agouti | sheep Agouti (ASIP): A^Wt dominant white/tan > a recessive black | a"
+        },
+        {
+          "locus": "E",
+          "gene": "MC1R",
+          "variant_class": "UNRECORDED",
+          "snv_panel_scorable": null,
+          "source": "E | MC1R | extension | sheep E (MC1R): ED dominant-black (M73K/D121N) > E+ > e (R67C) | e"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "n_cells": 19,
+    "n_loci": 65,
+    "n_snv": 11,
+    "n_indel": 11,
+    "n_structural": 3,
+    "n_unrecorded": 40,
+    "n_snv_panel_blocked": 14
+  }
+}

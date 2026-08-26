@@ -11,7 +11,7 @@ This map is the scientific contribution that accompanies the shipped determinist
 the boundary of what public G2P can honestly support, so the tool is never overextended into a dishonest
 regime.
 
-## The 8 rejection gates (screen every candidate against these)
+## The 10 rejection gates (screen every candidate against these)
 
 | # | Gate | Trips when | How to check (cheap) |
 |---|---|---|---|
@@ -23,6 +23,8 @@ regime.
 | G6 | **Phenotype censoring** | the quantitative label is interval-censored exactly where it matters (MIC `>X` / `<=X` at the breakpoint) | tally exact vs censored values among the in-class subset; majority-censored = trip |
 | G7 | **Provenance not separable** | metadata is too thin to build a leakage-clean provenance-disjoint split | are submitter / center / collection fields populated per-record? absent = trip |
 | G8 | **Dedup collapses balance** | after Mash-lineage clonality correction, one class drops below usable effective-N (clonally dominated) | greedy-representative Mash cluster per class; <~3 effective lineages = trip |
+| G9 | **Causal variant unrecorded** (added 2026-08-26) | the decoder's rule names allele SYMBOLS and dominance order but never the causal VARIANT, so no genotype file can be scored against it — unvalidatable as written, and no cohort fixes it | for each locus, does the catalog record a concrete variant (`c.` / `p.` / a named indel)? Count unrecorded loci; a majority = trip. Measured: **40 of 65 colour-cell loci (62%) record none**, and 7 of 19 cells record none for ANY locus (`wiki/colour_cell_substrate_screen_2026-08-26.md`) |
+| G10 | **Variant class off-panel** (added 2026-08-26) | the causal variants ARE recorded but are indels / structural / CNV, which a SNP array or imputed biallelic-SNV panel cannot represent — so the commonest free genotype cohorts cannot score the rule however good it is | classify each recorded causal variant as SNV vs indel/structural; count the off-panel share. Measured: **14 of 25 recorded colour-cell variants (56%) are indel/structural**, and this is what sank the dog cell empirically — black 0.994 but every other base colour unscorable (`wiki/dog_coat_darwins_ark_measured_2026-07-30.md`) |
 
 ## The verified failure record (each row = a closed track + the gates it tripped)
 
@@ -47,13 +49,17 @@ card's lineage table). See `wiki/decoder_validation_report_card.md`.
 
 ## How to use this map
 
-Before proposing any new trait/organism/label source, screen it against G1–G8. A candidate that trips any
+Before proposing any new trait/organism/label source, screen it against G1–G10. A candidate that trips any
 gate is not a viable honest-decoder substrate on available public data — do NOT spend acquisition or
 modeling labor on it. The only ways forward that the map does NOT foreclose:
 1. A **non-public** label source (clinical/biobank/collaborator wet-lab measurements) that clears G1/G3/G7
    by construction — an ACQUISITION decision, gated on a concrete named source in hand.
 2. **Prospective-lock validation** of the existing decoder against later-arriving independent data (needs
    no new label today; see `wiki/reproducibility_freeze_2026-06-13.md`).
+
+### G1–G8 gate the LABEL; G9–G10 gate the DECODER (added 2026-08-26)
+
+G9/G10 (added 2026-08-26) are the DECODER-SIDE gates: G1–G8 all ask whether a usable LABEL exists, while G9/G10 ask whether the decoder's own rule is scoreable against a genotype at all. Screen a new curated-catalog cell against them BEFORE building it — the animal-colour family reached 19 cells before anyone checked, and 7 of them cannot be validated on any substrate as written.
 
 ### The map runs in BOTH directions (added 2026-08-23)
 
