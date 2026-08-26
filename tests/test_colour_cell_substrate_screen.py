@@ -20,9 +20,11 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 # The pure logic moved to `dna_decode/pigment/substrate_screen.py` (the freeze module cannot import from
 # `scripts/`); the script keeps the self-check anchor + the catalog-gap record + artifact writing.
-from colour_cell_substrate_screen import _CATALOG_GAPS, self_check  # noqa: E402
+import colour_cell_substrate_screen as screen_cli  # noqa: E402
+from colour_cell_substrate_screen import _CATALOG_GAPS, _DOG_TRUTH, self_check  # noqa: E402
 from dna_decode.pigment.substrate_screen import (  # noqa: E402
-    classify_variant, collect, snv_panel_scorable, summarise, trait_for_species, verdicts,
+    _loci_of, _source_of, classify_variant, collect, snv_panel_scorable, summarise,
+    trait_for_species, verdicts,
 )
 
 SCREEN_MD = ROOT / "wiki" / "colour_cell_substrate_screen_2026-08-26.md"
@@ -221,6 +223,225 @@ def test_the_trait_and_species_key_spaces_agree():
     """The screen keys by species, the CLI by trait; `trait_for_species` bridges them. If a new colour
     cell forgets the mapping it surfaces here rather than silently dropping out of the screen."""
     assert {trait_for_species(sp) for sp in collect()} == set(_colour_traits())
+
+
+# ------------------------------------------------------- the readers `collect` is built on
+# `_loci_of` and `_source_of` are private, but they are the ONLY place a catalog's text reaches the
+# classifier. A silent shrink there re-classifies real variants as UNRECORDED, which is precisely the
+# direction that would OVERSTATE the curation wall this family was frozen for. The headline-count test
+# nets that in aggregate; these pin the mechanism, so a regression names its own cause.
+
+def test_loci_of_reads_both_catalog_shapes():
+    """Two conventions coexist: the 14 mammal cells expose `.loci` on a MammalCatalog instance, the 5
+    bird/dog/cat/horse cells expose a module-level `LOCI` dict. Reading only one silently drops 5 or 14
+    cells from the screen."""
+    from dna_decode.pigment import dog_coat
+    from dna_decode.pigment.mammal_color import MAMMAL_CATALOGS
+
+    assert _loci_of(MAMMAL_CATALOGS["rabbit"]), "the `.loci` attribute shape returned nothing"
+    assert _loci_of(dog_coat), "the module-level LOCI shape returned nothing"
+    assert set(_loci_of(dog_coat)) >= set(_DOG_TRUTH)
+
+
+def test_loci_of_on_something_with_neither_shape_is_empty_not_a_crash():
+    """A catalog that grows a third convention must drop out visibly (the freeze roster guard fails),
+    never take the screen down with it."""
+    assert _loci_of(object()) == {}
+
+
+def test_loci_of_ignores_a_non_dict_loci_attribute():
+    class Weird:
+        loci = ["A", "B"]
+        LOCI = {"K": "real"}
+
+    assert _loci_of(Weird()) == {"K": "real"}
+
+
+def test_source_of_reads_every_string_field_not_a_hand_listed_few():
+    """REGRESSION on the bug the module docstring records: an early reader looked for `notes` while the
+    dataclass field is `note` (SINGULAR), and silently returned less text. A hand-listed field tuple
+    cannot survive a rename; iterating `dataclasses.fields` can. This asserts the mechanism by giving a
+    locus a field NO reader would have thought to list."""
+    import dataclasses
+
+    @dataclasses.dataclass
+    class Locus:
+        gene: str
+        note: str
+        some_field_added_next_year: str
+        not_a_string: int = 7
+
+    src = _source_of(Locus(gene="MLPH", note="c.-22G>A",
+                           some_field_added_next_year="frameshift"))
+    assert "MLPH" in src and "c.-22G>A" in src
+    assert "frameshift" in src, "a newly added string field was dropped — the hand-listed bug is back"
+    assert "7" not in src
+
+
+def test_source_of_skips_empty_strings_so_they_cannot_pad_the_evidence():
+    import dataclasses
+
+    @dataclasses.dataclass
+    class Locus:
+        gene: str = "TYR"
+        note: str = ""
+
+    assert _source_of(Locus()) == "TYR"
+
+
+def test_source_of_falls_back_to_named_attributes_on_a_non_dataclass():
+    """Not every future catalog must be a dataclass; the fallback keeps such a locus screenable."""
+    class Plain:
+        gene = "CBD103"
+        source = "c.67_69delGGT"
+        note = ""
+
+    src = _source_of(Plain())
+    assert "CBD103" in src and "c.67_69delGGT" in src
+
+
+def test_a_locus_carrying_no_text_at_all_is_unrecorded_end_to_end():
+    """The two readers and the classifier must compose to UNRECORDED rather than to a crash or a guess."""
+    class Blank:
+        pass
+
+    assert classify_variant(_source_of(Blank())) == "UNRECORDED"
+
+
+# ------------------------------------------------------------------------ collect / verdicts contracts
+
+def test_collect_emits_the_row_shape_its_three_consumers_read():
+    """`self_check`, the CLI table, and the JSON artifact all index these keys by name."""
+    rows = collect()["dog"]
+    for r in rows:
+        assert set(r) == {"locus", "gene", "variant_class", "snv_panel_scorable", "source"}
+        assert r["variant_class"] in {"SNV", "INDEL", "STRUCTURAL", "UNRECORDED"}
+        assert r["snv_panel_scorable"] is snv_panel_scorable(r["variant_class"])
+        assert len(r["source"]) <= 220, "the artifact-size truncation moved"
+
+
+def test_collect_omits_a_catalog_with_no_loci_rather_than_emitting_an_empty_cell():
+    """An empty cell would count toward `n_cells` and dilute every headline the freeze rests on."""
+    assert all(rows for rows in collect().values())
+
+
+def test_verdicts_is_pure_given_data_and_does_not_re_read_the_catalogs():
+    """THE single derivation every consumer reads. If a future edit made it ignore its argument and always
+    call `collect()`, the freeze module and the contract guards would silently stop being testable against
+    anything but the live catalogs."""
+    out = verdicts({"unicorn": [{"variant_class": "SNV"}],
+                    "dog": [{"variant_class": "UNRECORDED"}]})
+    assert out == {"unicorncolor": "FULLY_SNV_TRACTABLE",
+                   "coatcolor": "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED"}
+
+
+def test_verdicts_is_keyed_by_trait_not_species():
+    """It is joined against `cli.TRAITS` and the cell registry, whose keys are TRAITS. Keying by species
+    would make `dog` and `chicken` silently miss every join."""
+    live = verdicts()
+    assert "coatcolor" in live and "plumage" in live
+    assert "dog" not in live and "chicken" not in live
+
+
+def test_trait_for_species_names_the_two_exceptions_and_defaults_for_the_rest():
+    assert trait_for_species("dog") == "coatcolor"
+    assert trait_for_species("chicken") == "plumage"
+    assert trait_for_species("rabbit") == "rabbitcolor"
+
+
+def test_snv_panel_scorable_on_an_unknown_class_is_none_not_false():
+    """Same tri-state discipline as UNRECORDED: an unrecognised class is unknowable, and calling it False
+    would assert a substrate limit nobody derived."""
+    assert snv_panel_scorable("SOMETHING_NEW") is None
+
+
+# ------------------------------------------------------------------- the self-check anchor can FAIL
+# `test_self_check_against_the_dog_catalog_passes` proves the anchor is satisfied. These prove it is not
+# VACUOUS -- an anchor for a text heuristic that could never fail would certify the heuristic against
+# nothing, the same defect `test_the_freeze_guard_is_not_vacuous` exists to rule out for the roster guard.
+
+def test_the_self_check_reports_a_mismatch_rather_than_agreeing_with_itself():
+    wrong = [{"locus": k, "variant_class": "SNV"} for k in _DOG_TRUTH]
+    fails = self_check({"dog": wrong})
+    assert fails, "the anchor accepted a classifier that got the dog catalog wrong"
+    assert any("classifier said SNV" in f and "records INDEL" in f for f in fails), fails
+
+
+def test_the_self_check_reports_a_missing_locus_distinctly_from_a_wrong_one():
+    """A locus vanishing from the catalog is a different failure from a mis-classified one, and the
+    message must say which -- a screen that reads zero loci would otherwise look merely 'mismatched'."""
+    fails = self_check({})
+    assert len(fails) == len(_DOG_TRUTH)
+    assert all("absent from the screen" in f for f in fails), fails
+
+
+def test_the_self_check_anchors_on_a_mixture_of_classes():
+    """Anchoring on five loci that were all SNV would not exercise the ordering that makes the classifier
+    correct. The dog cell is the anchor precisely because it spans SNV, INDEL and UNRECORDED."""
+    assert set(_DOG_TRUTH.values()) >= {"SNV", "INDEL", "UNRECORDED"}
+
+
+# ------------------------------------------------------------------------ the script CLI (argparse)
+# `--self-check` was converted from `"--self-check" in sys.argv` to argparse so the repo's
+# `test_every_flag_named_in_the_docs_is_declared_somewhere` guard (a static scan for `add_argument`) can
+# SEE it. That guard proves the flag is declared; these prove it is also WIRED -- per the repo rule that
+# an advertised command is a promise, validated through its real parser.
+
+def test_self_check_flag_runs_the_anchor_and_writes_no_artifact(tmp_path, monkeypatch, capsys):
+    untouched = tmp_path / "must-not-be-written.json"
+    monkeypatch.setattr(screen_cli, "OUT", untouched)
+    assert screen_cli.main(["--self-check"]) == 0
+    assert not untouched.exists(), "--self-check wrote the artifact; it is meant to check and exit"
+    assert "self-check: PASS" in capsys.readouterr().out
+
+
+def test_the_flag_is_parsed_by_argparse_not_by_inspecting_the_real_sys_argv(tmp_path, monkeypatch):
+    """The conversion's actual behaviour change: argv is an ARGUMENT. Under the old `in sys.argv` form
+    this test's own pytest command line would leak into the decision."""
+    monkeypatch.setattr(screen_cli, "OUT", tmp_path / "out.json")
+    monkeypatch.setattr(sys, "argv", ["prog", "--self-check"])
+    assert screen_cli.main([]) == 0
+    assert (tmp_path / "out.json").exists(), "an empty argv must take the artifact path, not the flag path"
+
+
+def test_an_unknown_flag_is_rejected_rather_than_silently_ignored():
+    with pytest.raises(SystemExit) as e:
+        screen_cli.main(["--no-such-flag"])
+    assert e.value.code == 2
+
+
+def test_the_artifact_totals_agree_with_the_pinned_headline_counts(tmp_path, monkeypatch):
+    """The script recomputes the totals by counting rows, INDEPENDENTLY of `summarise` — which is what
+    `EXPECTED_TOTALS` is pinned from. Two computations of one headline can disagree; this is the only
+    place they meet."""
+    import json
+
+    from dna_decode.data.colour_cell_freeze import EXPECTED_TOTALS
+
+    out = tmp_path / "screen.json"
+    monkeypatch.setattr(screen_cli, "OUT", out)
+    assert screen_cli.main([]) == 0
+
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert report["_schema"] == "colour-cell-substrate-screen-v1"
+    assert report["self_check_failures"] == []
+    for k, v in EXPECTED_TOTALS.items():
+        assert report["totals"][k] == v, f"{k}: artifact says {report['totals'][k]}, pinned {v}"
+
+
+def test_the_artifact_records_its_scope_caveat_and_the_catalog_gap(tmp_path, monkeypatch):
+    """The caveat is the artifact's load-bearing honesty: UNRECORDED is a finding about the CATALOG, not
+    evidence about the substrate. A machine-readable report that dropped it would be read as the stronger
+    claim."""
+    import json
+
+    out = tmp_path / "screen.json"
+    monkeypatch.setattr(screen_cli, "OUT", out)
+    screen_cli.main([])
+    report = json.loads(out.read_text(encoding="utf-8"))
+    assert "NOT evidence about the" in report["honest_scope"]
+    assert "dog/A" in report["catalog_gaps_vs_measured_artifact"]
+    assert report["ground_truth"].endswith("dog_coat_darwins_ark_measured_2026-07-30.md")
 
 
 if __name__ == "__main__":
