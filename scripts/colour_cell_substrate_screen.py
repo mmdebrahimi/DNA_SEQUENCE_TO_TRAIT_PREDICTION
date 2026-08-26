@@ -15,6 +15,7 @@ Run: uv run python scripts/colour_cell_substrate_screen.py [--self-check]
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -67,11 +68,20 @@ def self_check(data: dict) -> list[str]:
     return fails
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    # argparse rather than `"--self-check" in sys.argv`: an advertised flag is a promise, and the repo's
+    # `test_every_flag_named_in_the_docs_is_declared_somewhere` guard can only see flags that are
+    # DECLARED. Manual argv inspection works but is invisible to it -- which is how this flag ended up
+    # documented in CLAUDE.md while reading as undeclared.
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--self-check", action="store_true",
+                    help="anchor the classifier against the dog catalog and exit (no artifact written)")
+    args = ap.parse_args(argv)
+
     data = collect()
     fails = self_check(data)
 
-    if "--self-check" in sys.argv:
+    if args.self_check:
         for f in fails:
             print("FAIL:", f)
         print("self-check:", "PASS" if not fails else f"{len(fails)} mismatch(es)")

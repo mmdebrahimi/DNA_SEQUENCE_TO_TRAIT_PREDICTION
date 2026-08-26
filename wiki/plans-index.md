@@ -540,3 +540,17 @@
 **Status:** candidate
 
 ---
+
+## [plan_file: Colour_Cell_Family_Freeze_Plan/] 2026-08-26
+**Summary:** Freeze the animal colour/plumage family at 19 cells, make each cell's contract state its real substrate-screen verdict, and make adding a 20th cell fail loudly — after the screen found 40 of 65 loci (62%) record no causal variant at all, leaving 7 of 19 cells unvalidatable as written.
+**Key decisions:**
+- The freeze is ATTENTION/SCOPE, not enforcement — a guard test is ratifiable by editing one literal, which is intentional friction, and the plan says so rather than claiming a hard invariant.
+- `FROZEN_COLOUR_ROUTES` is a hand-listed literal, but the cross-check that guards it is DERIVED from the live catalogs — without that derived test this reintroduces the hardcoded-exclusion-list bug for a fourth time in this repo.
+- Step 1's package relocation is FORCED, not gratuitous: `dna_decode/data/colour_cell_freeze.py` cannot import from `scripts/`, so the screen's pure logic must move in-package; the byte-identical-JSON assertion proves it is a pure move.
+- 7 cells' `demotion_rule` strings promise a promotion path that cannot work ("get a cohort") — corrected to state the real precondition, since a cohort is necessary and NOT sufficient when zero causal variants are recorded.
+- The 7 unscreenable cells keep `evidence_tier=KNOWLEDGE_BASELINE` — no existing tier fits (`NO_FREE_SOURCE` is about labels, `NOT_CENSUSED` means never-scored), and adding one touches the report-card state machine. Left as an Open Question.
+- The CURATE branch (recording causal variants for the 40 unrecorded loci) is deliberately EXCLUDED — it means writing curated biological facts into shipped catalogs, a fabrication hazard unless every locus is sourced and verified. Needs its own plan; not foreclosed.
+- The freeze guard must be proved NON-VACUOUS by simulating a 20th cell — the exact defect caught twice already this session (a vacuous control fixture; a substring retraction guard).
+**Status:** candidate
+
+---

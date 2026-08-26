@@ -156,7 +156,11 @@ def test_falsifier_refs_resolve_or_none():
 
 
 def test_incoming_gate_subset_of_known_gates():
-    known = {f"G{i}" for i in range(1, 9)}
+    # G1-G8 gate whether a usable LABEL exists. G9/G10 (added 2026-08-26) are the DECODER-side gates --
+    # is the rule scoreable against a genotype at all? -- see wiki/negative_results_map_2026-06-13.md.
+    # The field's contract is a comma-separated list of BARE ids or "n/a"; reasoning belongs in
+    # demotion_rule / the CLI validation string, not here.
+    known = {f"G{i}" for i in range(1, 11)}
     for c in cells():
         if c.incoming_data_gate != "n/a":
             assert {t.strip() for t in c.incoming_data_gate.split(",")} <= known, f"{c.cell_id}: unknown gate"

@@ -39,31 +39,55 @@ def test_all_nineteen_colour_cells_have_a_contract():
     assert set(got) == set(FROZEN_COLOUR_ROUTES), sorted(set(FROZEN_COLOUR_ROUTES) - set(got))
 
 
-def test_no_colour_contract_still_declares_gate_n_a():
-    """The field exists for exactly this and was empty on all 19."""
-    stale = [t for t, c in _colour_contracts().items() if c.incoming_data_gate.strip() == "n/a"]
-    assert not stale, f"colour cells still declaring no incoming data gate: {sorted(stale)}"
+def test_no_gated_colour_contract_still_declares_n_a():
+    """The field exists for exactly this and was "n/a" on all 19 before 2026-08-26.
+
+    SCOPED to cells a gate actually applies to. donkey + roe deer pass G9 and G10, so "n/a" is the
+    CORRECT value for them -- asserting "no colour cell says n/a" would force a false gate onto the two
+    cells that cleared the screen. That they were screened-and-passed is carried by the CLI validation
+    string ("screened CLEAR"), not by inventing a gate id here.
+    """
+    stale = [t for t, c in _colour_contracts().items()
+             if c.incoming_data_gate.strip() == "n/a" and freeze_status(t)["gates"]]
+    assert not stale, f"colour cells with a live gate still declaring 'n/a': {sorted(stale)}"
+    # and the guard must be non-vacuous: 17 of 19 DO carry a gate
+    gated = [t for t in _colour_contracts() if freeze_status(t)["gates"]]
+    assert len(gated) == 17, f"expected 17 gated colour cells, found {len(gated)}"
 
 
 @pytest.mark.parametrize("trait", sorted(FROZEN_COLOUR_ROUTES))
 def test_each_declared_gate_matches_the_live_screen_verdict(trait):
-    """The declared gate must agree with what the screen DERIVES for that cell right now, so a future
-    catalog change that flips a verdict fails HERE instead of drifting silently."""
-    c = _colour_contracts()[trait]
+    """The declared gate must agree EXACTLY with what the screen DERIVES right now, so a future catalog
+    change that flips a verdict fails HERE instead of drifting silently.
+
+    The field's contract is a comma-separated list of BARE gate ids, or "n/a" when none applies -- the
+    same shape the pre-existing cells use ('G1,G7,G8'). Reasoning and counts live in `demotion_rule`, the
+    CLI `validation` string, and the memo; this field is the machine-readable projection. Writing prose
+    here broke `test_incoming_gate_subset_of_known_gates`, which parses it by splitting on commas.
+    """
+    declared = _colour_contracts()[trait].incoming_data_gate
     gates = freeze_status(trait)["gates"]
-    declared = c.incoming_data_gate
-    for g in gates:
-        assert g in declared, f"{trait}: screen says {gates}, contract omits {g}: {declared!r}"
-    if not gates:
-        # donkey / roe deer pass both gates; the contract must say CLEAR, not invent a gate
-        assert "CLEAR" in declared, f"{trait} passes G9+G10 but its contract does not say so: {declared!r}"
-        assert "G9 causal-variant-unrecorded" not in declared
-        assert "G10 variant-class-off-panel" not in declared
+    expected = ",".join(gates) if gates else "n/a"
+    assert declared == expected, f"{trait}: screen derives {expected!r}, contract declares {declared!r}"
 
 
-def test_every_declared_gate_cites_the_screen_artifact():
+def test_the_declared_gates_parse_under_the_registry_wide_contract():
+    """Pins the interop that the first version of this edit broke: every colour gate must survive the
+    comma-split the registry-wide guard performs, against the known G1-G10 vocabulary."""
+    known = {f"G{i}" for i in range(1, 11)}
     for trait, c in _colour_contracts().items():
-        assert "colour_cell_substrate_screen_2026-08-26" in c.incoming_data_gate, trait
+        if c.incoming_data_gate == "n/a":
+            continue
+        assert {t.strip() for t in c.incoming_data_gate.split(",")} <= known, trait
+
+
+def test_the_two_clear_cells_declare_n_a_rather_than_inventing_a_gate():
+    """donkey + roe deer pass G9 and G10; 'n/a' is the honest value. That they were SCREENED and passed
+    (rather than never screened) is carried by the CLI validation string, which says 'screened CLEAR'."""
+    from dna_decode.cli import TRAITS
+    for trait in ("donkeycolor", "roedeercolor"):
+        assert _colour_contracts()[trait].incoming_data_gate == "n/a"
+        assert "screened CLEAR" in TRAITS[trait]["validation"]
 
 
 @pytest.mark.parametrize("trait", sorted(
