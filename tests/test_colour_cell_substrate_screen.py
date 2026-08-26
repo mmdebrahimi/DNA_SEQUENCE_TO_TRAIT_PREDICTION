@@ -18,8 +18,11 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from colour_cell_substrate_screen import (  # noqa: E402
-    _CATALOG_GAPS, classify_variant, collect, self_check, snv_panel_scorable, summarise,
+# The pure logic moved to `dna_decode/pigment/substrate_screen.py` (the freeze module cannot import from
+# `scripts/`); the script keeps the self-check anchor + the catalog-gap record + artifact writing.
+from colour_cell_substrate_screen import _CATALOG_GAPS, self_check  # noqa: E402
+from dna_decode.pigment.substrate_screen import (  # noqa: E402
+    classify_variant, collect, snv_panel_scorable, summarise, trait_for_species, verdicts,
 )
 
 SCREEN_MD = ROOT / "wiki" / "colour_cell_substrate_screen_2026-08-26.md"
