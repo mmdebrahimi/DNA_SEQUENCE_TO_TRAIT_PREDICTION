@@ -75,6 +75,71 @@
           "status": "ok"
         }
       ],
+      "slate_sensitivity": {
+        "order_sizes": {
+          "2": 12777,
+          "3": 12336,
+          "4": 9387,
+          "5": 6825,
+          "6": 4298,
+          "7": 2526,
+          "8": 1364,
+          "9": 627,
+          "10": 299,
+          "11": 118,
+          "12": 43
+        },
+        "slates": {
+          "most_populous_5_SHIPPED": {
+            "n_subsets": 26,
+            "rho_gain_eta2_fitness": 0.9733,
+            "rho_gain_eta2_score": 0.9911,
+            "rho_eta2_fitness_eta2_score": 0.9815,
+            "partial_fitness_given_score": 0.0204,
+            "partial_score_given_fitness": 0.8147,
+            "orders": [
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "n_variants": 45623
+          },
+          "least_populous_5": {
+            "n_subsets": 26,
+            "rho_gain_eta2_fitness": 0.4897,
+            "rho_gain_eta2_score": 0.5612,
+            "rho_eta2_fitness_eta2_score": 0.5164,
+            "partial_fitness_given_score": 0.2821,
+            "partial_score_given_fitness": 0.4129,
+            "orders": [
+              8,
+              9,
+              10,
+              11,
+              12
+            ],
+            "n_variants": 2451
+          },
+          "every_other_k": {
+            "n_subsets": 26,
+            "rho_gain_eta2_fitness": 0.9631,
+            "rho_gain_eta2_score": 0.9058,
+            "rho_eta2_fitness_eta2_score": 0.9366,
+            "partial_fitness_given_score": 0.7726,
+            "partial_score_given_fitness": 0.0403,
+            "orders": [
+              2,
+              4,
+              6,
+              8,
+              10
+            ],
+            "n_variants": 28125
+          }
+        }
+      },
       "subsets": [
         {
           "orders": [
@@ -487,6 +552,77 @@
           "status": "ok"
         }
       ],
+      "slate_sensitivity": {
+        "order_sizes": {
+          "2": 1475,
+          "3": 7627,
+          "4": 20000,
+          "5": 20000,
+          "6": 20000,
+          "7": 20000,
+          "8": 20000,
+          "9": 20000,
+          "10": 20000,
+          "11": 6370,
+          "12": 1354,
+          "13": 245,
+          "14": 71,
+          "15": 40,
+          "16": 39,
+          "18": 35,
+          "19": 38
+        },
+        "slates": {
+          "most_populous_5_SHIPPED": {
+            "n_subsets": 26,
+            "rho_gain_eta2_fitness": 0.9952,
+            "rho_gain_eta2_score": 0.9932,
+            "rho_eta2_fitness_eta2_score": 0.9986,
+            "partial_fitness_given_score": 0.5586,
+            "partial_score_given_fitness": -0.1351,
+            "orders": [
+              4,
+              5,
+              6,
+              7,
+              8
+            ],
+            "n_variants": 100000
+          },
+          "least_populous_5": {
+            "n_subsets": 26,
+            "rho_gain_eta2_fitness": NaN,
+            "rho_gain_eta2_score": NaN,
+            "rho_eta2_fitness_eta2_score": 0.2068,
+            "partial_fitness_given_score": NaN,
+            "partial_score_given_fitness": NaN,
+            "orders": [
+              14,
+              15,
+              16,
+              18,
+              19
+            ],
+            "n_variants": 223
+          },
+          "every_other_k": {
+            "n_subsets": 26,
+            "rho_gain_eta2_fitness": 0.9937,
+            "rho_gain_eta2_score": 0.9865,
+            "rho_eta2_fitness_eta2_score": 0.9925,
+            "partial_fitness_given_score": 0.7281,
+            "partial_score_given_fitness": 0.0213,
+            "orders": [
+              2,
+              4,
+              6,
+              8,
+              10
+            ],
+            "n_variants": 81475
+          }
+        }
+      },
       "subsets": [
         {
           "orders": [
@@ -860,6 +996,7 @@
           "n_subsets": 1
         }
       ],
+      "slate_sensitivity": null,
       "subsets": [
         {
           "orders": [

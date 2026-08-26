@@ -1,6 +1,6 @@
 {
   "schema": "pgx-trio-mendelian-v0",
-  "analysis_date": "2026-08-25",
+  "analysis_date": "2026-08-26",
   "cohort": "1000 Genomes 30x panel trios (20130606_g1k_3202_samples ped)",
   "n_trios_total": 603,
   "scope": "Every STAR-ALLELE PGx gene (CYP2C19/CYP2C9/CYP2C8/CYP3A5/CYP2B6/TPMT/CYP2D6). VKORC1 + SLCO1B1 are single-SNP genotype readouts with no diplotype-assembly step -> a trio check is tautological (the phased panel is already Mendelian-clean at a single biallelic SNP) -> out of scope.",

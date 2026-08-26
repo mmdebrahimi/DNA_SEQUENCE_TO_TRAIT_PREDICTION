@@ -48,6 +48,34 @@ The relationship between the gain and between-order structure is **robust to ord
 the *attribution* between the two sides fails. The H2 memo's underlying finding stands; its causal wording
 does not.
 
+### Slate sensitivity — falsifying a post-hoc justification
+
+`MAX_ORDERS=5` keeps the **most populous** orders. That began as a fix for a runtime blow-up (GFP carries
+orders 2–12 → 2036 subsets) and was *then* justified as "also the statistically right call" — a post-hoc
+justification of a performance fix, and selection on sample size. Both proteins carry more than 5 orders, so
+alternative slates are available:
+
+| protein | slate | orders | n | ρ(gain, η²_fit) | ρ(gain, η²_score) |
+|---|---|---|---:|---:|---:|
+| GFP | most-populous-5 *(shipped)* | 2,3,4,5,6 | 45,623 | +0.973 | +0.991 |
+| GFP | **every-other-k** | 2,4,6,8,10 | 28,125 | **+0.963** | +0.906 |
+| GFP | least-populous-5 | 8,9,10,11,12 | 2,451 | **+0.490** | +0.561 |
+| HIS7 | most-populous-5 *(shipped)* | 4,5,6,7,8 | 100,000 | +0.995 | +0.993 |
+| HIS7 | **every-other-k** | 2,4,6,8,10 | 81,475 | **+0.994** | +0.987 |
+| HIS7 | least-populous-5 | 14,15,16,18,19 | 223 | **nan** | nan |
+
+**`every_other_k` is the discriminating slate** — it deliberately *includes* sparse orders (8, 10) yet holds
+at +0.963 / +0.994 on both proteins. So the result is **not an artifact of popularity selection**.
+
+What degrades is the **all-sparse** slate, and it degrades exactly the way the original justification
+predicted: GFP's high-k tail weakens to +0.490, and HIS7's is so thin (n=223 across 5 orders) that an order
+has constant score input and the correlation is **undefined**. That is the honest return value, not a bug.
+
+Two readings of GFP's +0.490 stay entangled and this design cannot separate them: the relationship may be
+genuinely weaker at high k, or merely noisier at low n. Note leave-one-order-out never reaches this regime —
+it drops *one* order from the populous slate. **Scope limit, recorded:** the relationship is measured where
+the orders are populous; it is positive but weakly estimated where every order is sparse.
+
 ## The mechanism, now grounded rather than asserted
 
 The additive score is a **sum of k per-mutation log-ratios**, so its mean scales with k *by construction*.

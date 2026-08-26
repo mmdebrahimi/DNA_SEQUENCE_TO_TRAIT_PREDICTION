@@ -21,7 +21,8 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from epistasis_eta2_identifiability import (  # noqa: E402
-    eta2_of, fitness_groups, mean_score_by_order, partial_spearman, score_groups,
+    eta2_of, fitness_groups, mean_score_by_order, order_slates, partial_spearman, score_groups,
+    slate_sensitivity,
 )
 
 H2_MEMO = ROOT / "wiki" / "forward_epistasis_h2_confirmed_2026-08-25.md"
@@ -72,6 +73,25 @@ def test_mean_score_by_order_exposes_the_sum_of_k_scaling():
     assert means == {"2": -2.0, "3": -3.0, "4": -4.0}
     vals = [means[k] for k in sorted(means, key=int)]
     assert all(b < a for a, b in zip(vals, vals[1:])), "monotone decline in k is the claim under test"
+
+
+def test_order_slates_picks_a_slate_that_is_not_selected_on_popularity():
+    """`every_other_k` is the DISCRIMINATING slate -- it must include sparse orders, or it cannot falsify
+    the popularity selection at all. A slate that happened to equal the populous one would be vacuous."""
+    sizes = {2: 12777, 3: 12336, 4: 9387, 5: 6825, 6: 4298, 7: 2526, 8: 1364, 9: 627, 10: 299}
+    s = order_slates(sizes)
+    assert s["most_populous_5_SHIPPED"] == [2, 3, 4, 5, 6]
+    assert s["least_populous_5"] == [6, 7, 8, 9, 10]
+    assert s["every_other_k"] == [2, 4, 6, 8, 10]
+    assert s["every_other_k"] != s["most_populous_5_SHIPPED"], "the falsifier slate must differ"
+    assert any(sizes[k] < 2000 for k in s["every_other_k"]), "must include a SPARSE order to be a test"
+
+
+def test_slate_sensitivity_is_skipped_when_a_protein_has_no_alternative_slate():
+    """ParD carries only 3 orders, so there is no 5-order slate to compare. Returning None is correct --
+    fabricating a comparison from 3 orders would invent a falsifier that never ran."""
+    by_all = {2: [(0.1, -1.0)] * 40, 3: [(0.2, -2.0)] * 40, 4: [(0.3, -3.0)] * 40}
+    assert slate_sensitivity(by_all) is None
 
 
 # ------------------------------------------------------------------- withdrawn-claim regressions

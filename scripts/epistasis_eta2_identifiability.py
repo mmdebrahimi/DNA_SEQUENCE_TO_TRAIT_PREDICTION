@@ -137,6 +137,51 @@ def leave_one_order_out(by_order: dict) -> list[dict]:
     return out
 
 
+def order_slates(sizes: dict) -> dict:
+    """Alternative 5-order slates for a protein that carries more than 5 orders. PURE.
+
+    `epistasis_pooling_h2_test.MAX_ORDERS=5` keeps the MOST POPULOUS orders. That began as a fix for a
+    runtime blow-up (GFP carries orders 2..12 -> 2036 subsets) and was THEN justified as "also the
+    statistically right call". A post-hoc justification of a performance fix deserves a falsifier: it is
+    selection on SAMPLE SIZE, and per-order Spearman precision scales with n.
+    """
+    by_pop = sorted(sizes, key=lambda k: -sizes[k])
+    by_k = sorted(sizes)
+    return {
+        "most_populous_5_SHIPPED": sorted(by_pop[:5]),
+        "least_populous_5": sorted(by_pop[-5:]),
+        "every_other_k": by_k[::2][:5],
+    }
+
+
+def slate_sensitivity(by_all: dict) -> dict | None:
+    """Re-correlate on alternative order slates -- does popularity-selection drive the result? PURE.
+
+    MEASURED on GFP (2026-08-25): the relationship stays POSITIVE on every slate but is markedly weaker on
+    the all-sparse tail -- most-populous [2-6] n=45623 rho +0.973, least-populous [8-12] n=2451 rho +0.490,
+    every-other-k [2,4,6,8,10] n=28125 rho +0.963. `every_other_k` is the discriminating slate: it INCLUDES
+    sparse orders yet holds, so the weakening concentrates where EVERY order is sparse. Two readings remain
+    entangled -- genuinely weaker at high k, vs noisier at low n -- and this design cannot separate them.
+    Note leave-one-order-out never reaches this regime: it drops ONE order from the populous slate.
+    """
+    sizes = {k: len(v) for k, v in by_all.items()}
+    if len(sizes) <= 5:
+        return None
+    out = {"order_sizes": {str(k): v for k, v in sorted(sizes.items())}, "slates": {}}
+    for label, orders in order_slates(sizes).items():
+        sub = {k: by_all[k] for k in orders if k in by_all}
+        if len(sub) < 3:
+            continue
+        rows = subset_rows(sub)
+        if len(rows) < MIN_SUBSETS:
+            continue
+        c = correlate(rows)
+        c["orders"] = sorted(sub)
+        c["n_variants"] = sum(len(v) for v in sub.values())
+        out["slates"][label] = c
+    return out
+
+
 def mean_score_by_order(by_order: dict) -> dict:
     """Mean additive score per mutation order -- the STRUCTURAL claim, checkable directly. PURE.
 
@@ -164,8 +209,13 @@ def main() -> int:
            f"{'collin':>8s} {'part FIT|sc':>12s} {'part SCORE|fit':>15s}")
     print(hdr)
 
+    import epistasis_pooling_h2_test as H2
     for name in PROTEINS:
         by_order = load_protein(name)
+        # Load EVERY order (not just the most populous 5) purely to falsify the popularity selection.
+        saved, H2.MAX_ORDERS = H2.MAX_ORDERS, 99
+        by_all = load_protein(name)
+        H2.MAX_ORDERS = saved
         if not by_order:
             print(f"{name[:26]:26s} (assay or ESM cache absent -- skipped)")
             report["proteins"][name] = {"status": "cache_absent"}
@@ -177,10 +227,11 @@ def main() -> int:
             continue
         c = correlate(rows)
         loo = leave_one_order_out(by_order)
+        slates = slate_sensitivity(by_all) if by_all else None
         report["proteins"][name] = {
             "status": "ok", "orders": sorted(by_order), **c,
             "mean_additive_score_by_order": mean_score_by_order(by_order),
-            "leave_one_order_out": loo, "subsets": rows,
+            "leave_one_order_out": loo, "slate_sensitivity": slates, "subsets": rows,
         }
         print(f"{name[:26]:26s} {c['n_subsets']:4d} {c['rho_gain_eta2_fitness']:11.3f} "
               f"{c['rho_gain_eta2_score']:13.3f} {c['rho_eta2_fitness_eta2_score']:8.3f} "
@@ -195,6 +246,12 @@ def main() -> int:
                   f"rho(g,SCORE) {los:+.3f}..{his:+.3f}   ({len(ok)} drops)")
         print(f"{'':26s}      mean additive score by order: "
               f"{report['proteins'][name]['mean_additive_score_by_order']}")
+        if slates and slates["slates"]:
+            print(f"{'':26s}      SLATE SENSITIVITY (does popularity-selection drive it?):")
+            for lbl, s in slates["slates"].items():
+                print(f"{'':30s}{lbl:26s} k={str(s['orders']):20s} n={s['n_variants']:6d} "
+                      f"rho(g,FIT)={s['rho_gain_eta2_fitness']:+.3f} "
+                      f"rho(g,SCORE)={s['rho_gain_eta2_score']:+.3f}")
 
     OUT.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"\n-> {OUT}")
