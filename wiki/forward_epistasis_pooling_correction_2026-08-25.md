@@ -54,6 +54,8 @@ should harvest cross-order signal wherever fitness declines steeply with k. Meas
 **GFP has the STEEPER slope and the far SMALLER gain.** H1 is dead as stated — the rank slope is not the
 governing quantity.
 
+**H2 — SINCE CONFIRMED (2026-08-25, `wiki/forward_epistasis_h2_confirmed_2026-08-25.md`):** tested WITHIN protein across order-subsets (which removes the protein-identity confound below) it holds at Spearman +0.973 / +0.995 on GFP / HIS7 over 26 subsets each, and two negative controls make it causal — shuffling ORDER LABELS drives the gain to exactly 0.000 on all three proteins, while shuffling FITNESS WITHIN order leaves it intact. The pooling gain is **entirely** between-order structure. Original underpowered reading follows:
+
 **H2 (CONSISTENT, UNDERPOWERED — not established).** What should govern pooling inflation is not the slope
 but how much of the total fitness variance sits *between* orders — η²(k):
 

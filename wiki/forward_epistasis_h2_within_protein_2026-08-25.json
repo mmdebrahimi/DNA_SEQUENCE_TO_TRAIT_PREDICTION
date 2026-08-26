@@ -1,0 +1,835 @@
+{
+  "_schema": "epistasis-pooling-h2-v1",
+  "per_order_cap": 20000,
+  "proteins": {
+    "GFP_AEQVI_Sarkisyan_2016": {
+      "n_subsets": 26,
+      "orders": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "spearman_eta2_vs_gain": 0.9733,
+      "p": 0.0,
+      "controls": {
+        "real": {
+          "orders": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 45623,
+          "eta2": 0.2541,
+          "pooled_rho": 0.076,
+          "within_rho": 0.01,
+          "pooling_gain": 0.066
+        },
+        "ctl_a_order_labels_shuffled": {
+          "orders": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 45623,
+          "eta2": 0.0002,
+          "pooled_rho": 0.076,
+          "within_rho": 0.0762,
+          "pooling_gain": -0.0002
+        },
+        "ctl_b_fitness_shuffled_within_order": {
+          "orders": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 45623,
+          "eta2": 0.2541,
+          "pooled_rho": 0.0636,
+          "within_rho": -0.0012,
+          "pooling_gain": 0.0648
+        }
+      },
+      "subsets": [
+        {
+          "orders": [
+            2,
+            3
+          ],
+          "n": 25113,
+          "eta2": 0.0398,
+          "pooled_rho": 0.0205,
+          "within_rho": 0.0076,
+          "pooling_gain": 0.0129
+        },
+        {
+          "orders": [
+            2,
+            4
+          ],
+          "n": 22164,
+          "eta2": 0.1712,
+          "pooled_rho": 0.0532,
+          "within_rho": 0.0049,
+          "pooling_gain": 0.0484
+        },
+        {
+          "orders": [
+            2,
+            5
+          ],
+          "n": 19602,
+          "eta2": 0.3474,
+          "pooled_rho": 0.0966,
+          "within_rho": 0.0088,
+          "pooling_gain": 0.0878
+        },
+        {
+          "orders": [
+            2,
+            6
+          ],
+          "n": 17075,
+          "eta2": 0.4623,
+          "pooled_rho": 0.1017,
+          "within_rho": 0.0054,
+          "pooling_gain": 0.0963
+        },
+        {
+          "orders": [
+            3,
+            4
+          ],
+          "n": 21723,
+          "eta2": 0.0508,
+          "pooled_rho": 0.0231,
+          "within_rho": 0.0105,
+          "pooling_gain": 0.0126
+        },
+        {
+          "orders": [
+            3,
+            5
+          ],
+          "n": 19161,
+          "eta2": 0.1717,
+          "pooled_rho": 0.0564,
+          "within_rho": 0.0153,
+          "pooling_gain": 0.0411
+        },
+        {
+          "orders": [
+            3,
+            6
+          ],
+          "n": 16634,
+          "eta2": 0.2589,
+          "pooled_rho": 0.0672,
+          "within_rho": 0.0128,
+          "pooling_gain": 0.0544
+        },
+        {
+          "orders": [
+            4,
+            5
+          ],
+          "n": 16212,
+          "eta2": 0.0442,
+          "pooled_rho": 0.0239,
+          "within_rho": 0.0129,
+          "pooling_gain": 0.0109
+        },
+        {
+          "orders": [
+            4,
+            6
+          ],
+          "n": 13685,
+          "eta2": 0.1143,
+          "pooled_rho": 0.0335,
+          "within_rho": 0.0095,
+          "pooling_gain": 0.024
+        },
+        {
+          "orders": [
+            5,
+            6
+          ],
+          "n": 11123,
+          "eta2": 0.0265,
+          "pooled_rho": 0.0214,
+          "within_rho": 0.0175,
+          "pooling_gain": 0.004
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 34500,
+          "eta2": 0.1113,
+          "pooled_rho": 0.0394,
+          "within_rho": 0.0076,
+          "pooling_gain": 0.0317
+        },
+        {
+          "orders": [
+            2,
+            3,
+            5
+          ],
+          "n": 31938,
+          "eta2": 0.2267,
+          "pooled_rho": 0.0661,
+          "within_rho": 0.0103,
+          "pooling_gain": 0.0559
+        },
+        {
+          "orders": [
+            2,
+            3,
+            6
+          ],
+          "n": 29411,
+          "eta2": 0.2827,
+          "pooled_rho": 0.0676,
+          "within_rho": 0.0084,
+          "pooling_gain": 0.0592
+        },
+        {
+          "orders": [
+            2,
+            4,
+            5
+          ],
+          "n": 28989,
+          "eta2": 0.2487,
+          "pooled_rho": 0.0802,
+          "within_rho": 0.0084,
+          "pooling_gain": 0.0717
+        },
+        {
+          "orders": [
+            2,
+            4,
+            6
+          ],
+          "n": 26462,
+          "eta2": 0.3112,
+          "pooled_rho": 0.0865,
+          "within_rho": 0.0062,
+          "pooling_gain": 0.0803
+        },
+        {
+          "orders": [
+            2,
+            5,
+            6
+          ],
+          "n": 23900,
+          "eta2": 0.4181,
+          "pooled_rho": 0.1184,
+          "within_rho": 0.0096,
+          "pooling_gain": 0.1088
+        },
+        {
+          "orders": [
+            3,
+            4,
+            5
+          ],
+          "n": 28548,
+          "eta2": 0.1184,
+          "pooled_rho": 0.0422,
+          "within_rho": 0.0128,
+          "pooling_gain": 0.0294
+        },
+        {
+          "orders": [
+            3,
+            4,
+            6
+          ],
+          "n": 26021,
+          "eta2": 0.1691,
+          "pooled_rho": 0.0486,
+          "within_rho": 0.011,
+          "pooling_gain": 0.0376
+        },
+        {
+          "orders": [
+            3,
+            5,
+            6
+          ],
+          "n": 23459,
+          "eta2": 0.2411,
+          "pooled_rho": 0.0706,
+          "within_rho": 0.0149,
+          "pooling_gain": 0.0556
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6
+          ],
+          "n": 20510,
+          "eta2": 0.0873,
+          "pooled_rho": 0.0317,
+          "within_rho": 0.013,
+          "pooling_gain": 0.0187
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "n": 41325,
+          "eta2": 0.1923,
+          "pooled_rho": 0.0621,
+          "within_rho": 0.0097,
+          "pooling_gain": 0.0524
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4,
+            6
+          ],
+          "n": 38798,
+          "eta2": 0.2319,
+          "pooled_rho": 0.0649,
+          "within_rho": 0.0083,
+          "pooling_gain": 0.0566
+        },
+        {
+          "orders": [
+            2,
+            3,
+            5,
+            6
+          ],
+          "n": 36236,
+          "eta2": 0.3124,
+          "pooled_rho": 0.0871,
+          "within_rho": 0.0106,
+          "pooling_gain": 0.0765
+        },
+        {
+          "orders": [
+            2,
+            4,
+            5,
+            6
+          ],
+          "n": 33287,
+          "eta2": 0.3056,
+          "pooled_rho": 0.0931,
+          "within_rho": 0.0091,
+          "pooling_gain": 0.084
+        },
+        {
+          "orders": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 32846,
+          "eta2": 0.1739,
+          "pooled_rho": 0.0536,
+          "within_rho": 0.0129,
+          "pooling_gain": 0.0407
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 45623,
+          "eta2": 0.2541,
+          "pooled_rho": 0.076,
+          "within_rho": 0.01,
+          "pooling_gain": 0.066
+        }
+      ]
+    },
+    "HIS7_YEAST_Pokusaeva_2019": {
+      "n_subsets": 26,
+      "orders": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "spearman_eta2_vs_gain": 0.9952,
+      "p": 0.0,
+      "controls": {
+        "real": {
+          "orders": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 100000,
+          "eta2": 0.0354,
+          "pooled_rho": 0.3772,
+          "within_rho": 0.334,
+          "pooling_gain": 0.0432
+        },
+        "ctl_a_order_labels_shuffled": {
+          "orders": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 100000,
+          "eta2": 0.0,
+          "pooled_rho": 0.3772,
+          "within_rho": 0.3773,
+          "pooling_gain": -0.0
+        },
+        "ctl_b_fitness_shuffled_within_order": {
+          "orders": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 100000,
+          "eta2": 0.0354,
+          "pooled_rho": 0.0525,
+          "within_rho": 0.0007,
+          "pooling_gain": 0.0518
+        }
+      },
+      "subsets": [
+        {
+          "orders": [
+            4,
+            5
+          ],
+          "n": 40000,
+          "eta2": 0.0054,
+          "pooled_rho": 0.3361,
+          "within_rho": 0.33,
+          "pooling_gain": 0.006
+        },
+        {
+          "orders": [
+            4,
+            6
+          ],
+          "n": 40000,
+          "eta2": 0.019,
+          "pooled_rho": 0.3477,
+          "within_rho": 0.3246,
+          "pooling_gain": 0.0231
+        },
+        {
+          "orders": [
+            4,
+            7
+          ],
+          "n": 40000,
+          "eta2": 0.042,
+          "pooled_rho": 0.3784,
+          "within_rho": 0.3271,
+          "pooling_gain": 0.0513
+        },
+        {
+          "orders": [
+            4,
+            8
+          ],
+          "n": 40000,
+          "eta2": 0.0705,
+          "pooled_rho": 0.4175,
+          "within_rho": 0.3344,
+          "pooling_gain": 0.0831
+        },
+        {
+          "orders": [
+            5,
+            6
+          ],
+          "n": 40000,
+          "eta2": 0.0043,
+          "pooled_rho": 0.3395,
+          "within_rho": 0.3339,
+          "pooling_gain": 0.0056
+        },
+        {
+          "orders": [
+            5,
+            7
+          ],
+          "n": 40000,
+          "eta2": 0.0177,
+          "pooled_rho": 0.3593,
+          "within_rho": 0.3364,
+          "pooling_gain": 0.0228
+        },
+        {
+          "orders": [
+            5,
+            8
+          ],
+          "n": 40000,
+          "eta2": 0.038,
+          "pooled_rho": 0.3902,
+          "within_rho": 0.3438,
+          "pooling_gain": 0.0465
+        },
+        {
+          "orders": [
+            6,
+            7
+          ],
+          "n": 40000,
+          "eta2": 0.0047,
+          "pooled_rho": 0.337,
+          "within_rho": 0.3309,
+          "pooling_gain": 0.0061
+        },
+        {
+          "orders": [
+            6,
+            8
+          ],
+          "n": 40000,
+          "eta2": 0.0171,
+          "pooled_rho": 0.3593,
+          "within_rho": 0.3383,
+          "pooling_gain": 0.021
+        },
+        {
+          "orders": [
+            7,
+            8
+          ],
+          "n": 40000,
+          "eta2": 0.004,
+          "pooled_rho": 0.3454,
+          "within_rho": 0.3408,
+          "pooling_gain": 0.0047
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6
+          ],
+          "n": 60000,
+          "eta2": 0.0127,
+          "pooled_rho": 0.345,
+          "within_rho": 0.3295,
+          "pooling_gain": 0.0155
+        },
+        {
+          "orders": [
+            4,
+            5,
+            7
+          ],
+          "n": 60000,
+          "eta2": 0.0295,
+          "pooled_rho": 0.3668,
+          "within_rho": 0.3312,
+          "pooling_gain": 0.0356
+        },
+        {
+          "orders": [
+            4,
+            5,
+            8
+          ],
+          "n": 60000,
+          "eta2": 0.0523,
+          "pooled_rho": 0.3962,
+          "within_rho": 0.3361,
+          "pooling_gain": 0.0601
+        },
+        {
+          "orders": [
+            4,
+            6,
+            7
+          ],
+          "n": 60000,
+          "eta2": 0.0285,
+          "pooled_rho": 0.3634,
+          "within_rho": 0.3275,
+          "pooling_gain": 0.0358
+        },
+        {
+          "orders": [
+            4,
+            6,
+            8
+          ],
+          "n": 60000,
+          "eta2": 0.0471,
+          "pooled_rho": 0.389,
+          "within_rho": 0.3324,
+          "pooling_gain": 0.0565
+        },
+        {
+          "orders": [
+            4,
+            7,
+            8
+          ],
+          "n": 60000,
+          "eta2": 0.0499,
+          "pooled_rho": 0.396,
+          "within_rho": 0.3341,
+          "pooling_gain": 0.0619
+        },
+        {
+          "orders": [
+            5,
+            6,
+            7
+          ],
+          "n": 60000,
+          "eta2": 0.0119,
+          "pooled_rho": 0.3491,
+          "within_rho": 0.3338,
+          "pooling_gain": 0.0154
+        },
+        {
+          "orders": [
+            5,
+            6,
+            8
+          ],
+          "n": 60000,
+          "eta2": 0.0267,
+          "pooled_rho": 0.3711,
+          "within_rho": 0.3387,
+          "pooling_gain": 0.0324
+        },
+        {
+          "orders": [
+            5,
+            7,
+            8
+          ],
+          "n": 60000,
+          "eta2": 0.0261,
+          "pooled_rho": 0.3732,
+          "within_rho": 0.3403,
+          "pooling_gain": 0.0329
+        },
+        {
+          "orders": [
+            6,
+            7,
+            8
+          ],
+          "n": 60000,
+          "eta2": 0.0114,
+          "pooled_rho": 0.3508,
+          "within_rho": 0.3367,
+          "pooling_gain": 0.0141
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "n": 80000,
+          "eta2": 0.0232,
+          "pooled_rho": 0.3592,
+          "within_rho": 0.3305,
+          "pooling_gain": 0.0288
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6,
+            8
+          ],
+          "n": 80000,
+          "eta2": 0.0393,
+          "pooled_rho": 0.3804,
+          "within_rho": 0.3342,
+          "pooling_gain": 0.0462
+        },
+        {
+          "orders": [
+            4,
+            5,
+            7,
+            8
+          ],
+          "n": 80000,
+          "eta2": 0.0442,
+          "pooled_rho": 0.389,
+          "within_rho": 0.3354,
+          "pooling_gain": 0.0536
+        },
+        {
+          "orders": [
+            4,
+            6,
+            7,
+            8
+          ],
+          "n": 80000,
+          "eta2": 0.0381,
+          "pooled_rho": 0.3801,
+          "within_rho": 0.3327,
+          "pooling_gain": 0.0474
+        },
+        {
+          "orders": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 80000,
+          "eta2": 0.0214,
+          "pooled_rho": 0.364,
+          "within_rho": 0.3374,
+          "pooling_gain": 0.0267
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 100000,
+          "eta2": 0.0354,
+          "pooled_rho": 0.3772,
+          "within_rho": 0.334,
+          "pooling_gain": 0.0432
+        }
+      ]
+    },
+    "F7YBW8_MESOW_Aakre_2015": {
+      "n_subsets": 4,
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "spearman_eta2_vs_gain": 0.6,
+      "p": 0.4,
+      "controls": {
+        "real": {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 9155,
+          "eta2": 0.4317,
+          "pooled_rho": 0.3755,
+          "within_rho": 0.2271,
+          "pooling_gain": 0.1483
+        },
+        "ctl_a_order_labels_shuffled": {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 9155,
+          "eta2": 0.0002,
+          "pooled_rho": 0.3755,
+          "within_rho": 0.3755,
+          "pooling_gain": -0.0
+        },
+        "ctl_b_fitness_shuffled_within_order": {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 9155,
+          "eta2": 0.4317,
+          "pooled_rho": 0.189,
+          "within_rho": 0.0037,
+          "pooling_gain": 0.1853
+        }
+      },
+      "subsets": [
+        {
+          "orders": [
+            2,
+            3
+          ],
+          "n": 3297,
+          "eta2": 0.3726,
+          "pooled_rho": 0.4697,
+          "within_rho": 0.3996,
+          "pooling_gain": 0.0701
+        },
+        {
+          "orders": [
+            2,
+            4
+          ],
+          "n": 6357,
+          "eta2": 0.5067,
+          "pooled_rho": 0.2617,
+          "within_rho": 0.1449,
+          "pooling_gain": 0.1167
+        },
+        {
+          "orders": [
+            3,
+            4
+          ],
+          "n": 8656,
+          "eta2": 0.0726,
+          "pooled_rho": 0.3156,
+          "within_rho": 0.2218,
+          "pooling_gain": 0.0938
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 9155,
+          "eta2": 0.4317,
+          "pooled_rho": 0.3755,
+          "within_rho": 0.2271,
+          "pooling_gain": 0.1483
+        }
+      ]
+    }
+  }
+}
