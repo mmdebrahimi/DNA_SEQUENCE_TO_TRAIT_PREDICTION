@@ -170,5 +170,58 @@ def test_the_memo_does_not_claim_unrecorded_loci_are_evidence_about_substrate():
     assert "unvalidatable as written" in t.lower()
 
 
+# --------------------------------------------------------------- CLI trust-surface strings (Step 4)
+# A user reading "deterministic curated OMIA epistatic rule" learns nothing about the fact that when this
+# family was measured, only the eumelanin default call survived -- or that 7 cells cannot be validated at
+# all as written. These assert against the LIVE derivation, not a copy of the prose.
+
+def _colour_traits() -> dict:
+    from dna_decode.cli import TRAITS
+    return {k: v for k, v in TRAITS.items() if k.endswith("color") or k == "plumage"}
+
+
+def test_every_colour_trait_cites_the_screen_artifact():
+    missing = [k for k, v in _colour_traits().items()
+               if "colour_cell_substrate_screen_2026-08-26" not in v["validation"]]
+    assert not missing, f"colour traits with no screen verdict on the trust surface: {sorted(missing)}"
+
+
+def test_the_seven_unscreenable_traits_say_unvalidatable_as_written():
+    """The strongest claim the screen supports, and the one a user most needs to see."""
+    unscreenable = {t for t, v in verdicts().items()
+                    if v == "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED"}
+    assert len(unscreenable) == 7
+    traits = _colour_traits()
+    for t in unscreenable:
+        assert "UNVALIDATABLE AS WRITTEN" in traits[t]["validation"], t
+        assert "NO COHORT WOULD HELP" in traits[t]["validation"], t
+
+
+def test_the_two_clear_traits_are_not_described_as_gated():
+    """donkey + roe deer pass G9 and G10. Saying otherwise would overstate the wall."""
+    for t in ("donkeycolor", "roedeercolor"):
+        v = _colour_traits()[t]["validation"]
+        assert "screened CLEAR" in v
+        assert "UNVALIDATABLE AS WRITTEN" not in v
+
+
+def test_each_colour_trait_verdict_matches_the_live_screen():
+    """A wording-only change is trivial to fake green, so tie the strings to the derivation: a cell whose
+    screen verdict is not UNSCREENABLE must NOT claim to be, and vice versa."""
+    live = verdicts()
+    for t, v in _colour_traits().items():
+        claims_unscreenable = "UNVALIDATABLE AS WRITTEN" in v["validation"]
+        is_unscreenable = live[t] == "UNSCREENABLE_NO_CAUSAL_VARIANTS_RECORDED"
+        assert claims_unscreenable == is_unscreenable, (
+            f"{t}: screen says {live[t]} but its CLI string "
+            f"{'claims' if claims_unscreenable else 'does not claim'} unvalidatable")
+
+
+def test_the_trait_and_species_key_spaces_agree():
+    """The screen keys by species, the CLI by trait; `trait_for_species` bridges them. If a new colour
+    cell forgets the mapping it surfaces here rather than silently dropping out of the screen."""
+    assert {trait_for_species(sp) for sp in collect()} == set(_colour_traits())
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
