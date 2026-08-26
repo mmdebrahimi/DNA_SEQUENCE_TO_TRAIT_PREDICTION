@@ -61,7 +61,7 @@ maxdeg = max((abs(r.get("delta", 0)) for r in sw), default=0)
 rows.append({"capability": "epistasis characterization (joint vs additive)", "regime": "B_molecular",
              "tier": "CHARACTERIZED",
              "metric": f"{n_prot} proteins x orders 2-6: joint ~= additive (delta ~+-0.005); 'grows with order' FALSIFIED",
-             "scope": "novel: joint can be worse OOD (ParD WITHIN-ORDER delta -0.053, degrades with order); additive is robust. The pooled -0.283 was a mutation-order POOLING artifact -- corrected 2026-08-25, wiki/forward_epistasis_pooling_correction_2026-08-25.md",
+             "scope": "novel: joint can be worse OOD (ParD WITHIN-ORDER delta -0.053, degrades with order); additive is robust. The pooled -0.283 was a mutation-order POOLING artifact -- corrected 2026-08-25, wiki/forward_epistasis_pooling_correction_2026-08-25.md. Mechanism: the additive score is a SUM of k terms so its mean scales with k BY CONSTRUCTION (measured linear in k on all 3 proteins) -- which is why additive's pooling gain swings 4x while joint's stays flat; label-side vs predictor-side eta^2 are NOT separably identifiable, see wiki/forward_epistasis_eta2_identifiability_2026-08-25.md",
              "source": "forward_epistasis_sweep_2026-07-27.json"})
 # --- inverse cell ---
 inv_h = inv.get("headline", {})

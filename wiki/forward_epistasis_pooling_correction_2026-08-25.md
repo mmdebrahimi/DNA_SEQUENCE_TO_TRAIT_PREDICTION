@@ -54,7 +54,27 @@ should harvest cross-order signal wherever fitness declines steeply with k. Meas
 **GFP has the STEEPER slope and the far SMALLER gain.** H1 is dead as stated — the rank slope is not the
 governing quantity.
 
-**H2 — SINCE CONFIRMED (2026-08-25, `wiki/forward_epistasis_h2_confirmed_2026-08-25.md`):** tested WITHIN protein across order-subsets (which removes the protein-identity confound below) it holds at Spearman +0.973 / +0.995 on GFP / HIS7 over 26 subsets each, and two negative controls make it causal — shuffling ORDER LABELS drives the gain to exactly 0.000 on all three proteins, while shuffling FITNESS WITHIN order leaves it intact. The pooling gain is **entirely** between-order structure. Original underpowered reading follows:
+**What H1 was groping toward (resolved 2026-08-25).** It measured the **fitness** slope vs k. The quantity
+that matters is the **score's** separation by k. The additive score is a SUM of k per-mutation log-ratios,
+so its mean scales with k *by construction* — measured directly, it is linear in k on all three proteins
+(GFP −0.329→−1.002, HIS7 −6.618→−11.895, ParD −5.751→−11.853). That is why the additive score separates by
+order at all, and why the **joint** score's pooling gain stays near-constant (+0.054/+0.058/+0.065) while
+additive's swings 4×: one forward pass on a multi-mutant carries no such summation. Grounded on the additive
+side; INFERRED on the joint side (the 2026-07-27 sweep persisted only aggregate per-order ρ, not per-variant
+joint scores).
+
+**H2 — REFINED AND PARTLY SUPERSEDED (2026-08-25, `wiki/forward_epistasis_eta2_identifiability_2026-08-25.md`).**
+Tested WITHIN protein across order-subsets (which removes the protein-identity confound below), the gain
+tracks between-order structure at Spearman +0.973 / +0.995 on GFP / HIS7 over 26 subsets each, and it is
+**robust to leave-one-order-out** (+0.955..+1.000) — that much stands. **But H2 as stated credits the wrong
+η².** A pooling gain needs BOTH the label and the predictor to separate by group; the additive score's own
+between-order η² was never measured. Measured, the two are near-collinear (ρ +0.982 / +0.999) and the two
+well-powered proteins point in OPPOSITE directions when partialled (GFP score-side +0.815 / fitness +0.020;
+HIS7 fitness +0.559 / score −0.135). The supportable claim is the JOINT condition — aligned between-order
+separation in label AND predictor — with the two sides **not separably identifiable** here. The
+"two negative controls make it causal" framing is also withdrawn: Control A re-deals the same group sizes
+from one shuffled pool, so its collapse to 0.000 is definitional (a pipeline check), and Control B did not
+leave the gain "intact" — it rose 21% / 25% on HIS7 / ParD. Original underpowered reading follows:
 
 **H2 (CONSISTENT, UNDERPOWERED — not established).** What should govern pooling inflation is not the slope
 but how much of the total fitness variance sits *between* orders — η²(k):

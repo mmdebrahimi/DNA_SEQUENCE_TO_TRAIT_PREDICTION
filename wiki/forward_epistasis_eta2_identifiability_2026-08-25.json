@@ -1,0 +1,917 @@
+{
+  "_schema": "epistasis-eta2-identifiability-v1",
+  "proteins": {
+    "GFP_AEQVI_Sarkisyan_2016": {
+      "status": "ok",
+      "orders": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "n_subsets": 26,
+      "rho_gain_eta2_fitness": 0.9733,
+      "rho_gain_eta2_score": 0.9911,
+      "rho_eta2_fitness_eta2_score": 0.9815,
+      "partial_fitness_given_score": 0.0204,
+      "partial_score_given_fitness": 0.8147,
+      "mean_additive_score_by_order": {
+        "2": -0.3292,
+        "3": -0.4973,
+        "4": -0.6742,
+        "5": -0.8538,
+        "6": -1.002
+      },
+      "leave_one_order_out": [
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9818,
+          "rho_gain_eta2_score": 0.9636,
+          "rho_eta2_fitness_eta2_score": 0.9636,
+          "partial_fitness_given_score": 0.7454,
+          "partial_score_given_fitness": 0.3454,
+          "dropped_order": 2,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9818,
+          "rho_gain_eta2_score": 0.9818,
+          "rho_eta2_fitness_eta2_score": 1.0,
+          "partial_fitness_given_score": NaN,
+          "partial_score_given_fitness": NaN,
+          "dropped_order": 3,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9545,
+          "rho_gain_eta2_score": 0.9636,
+          "rho_eta2_fitness_eta2_score": 0.9909,
+          "partial_fitness_given_score": -0.0092,
+          "partial_score_given_fitness": 0.4431,
+          "dropped_order": 4,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9727,
+          "rho_gain_eta2_score": 1.0,
+          "rho_eta2_fitness_eta2_score": 0.9727,
+          "partial_fitness_given_score": NaN,
+          "partial_score_given_fitness": 1.0,
+          "dropped_order": 5,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9545,
+          "rho_gain_eta2_score": 1.0,
+          "rho_eta2_fitness_eta2_score": 0.9545,
+          "partial_fitness_given_score": NaN,
+          "partial_score_given_fitness": 1.0,
+          "dropped_order": 6,
+          "status": "ok"
+        }
+      ],
+      "subsets": [
+        {
+          "orders": [
+            2,
+            3
+          ],
+          "n": 25113,
+          "pooled_rho": 0.0205,
+          "within_rho": 0.0076,
+          "pooling_gain": 0.0129,
+          "eta2_fitness": 0.0398,
+          "eta2_score": 0.0044
+        },
+        {
+          "orders": [
+            2,
+            4
+          ],
+          "n": 22164,
+          "pooled_rho": 0.0532,
+          "within_rho": 0.0049,
+          "pooling_gain": 0.0484,
+          "eta2_fitness": 0.1712,
+          "eta2_score": 0.0152
+        },
+        {
+          "orders": [
+            2,
+            5
+          ],
+          "n": 19602,
+          "pooled_rho": 0.0966,
+          "within_rho": 0.0088,
+          "pooling_gain": 0.0878,
+          "eta2_fitness": 0.3474,
+          "eta2_score": 0.03
+        },
+        {
+          "orders": [
+            2,
+            6
+          ],
+          "n": 17075,
+          "pooled_rho": 0.1017,
+          "within_rho": 0.0054,
+          "pooling_gain": 0.0963,
+          "eta2_fitness": 0.4623,
+          "eta2_score": 0.0405
+        },
+        {
+          "orders": [
+            3,
+            4
+          ],
+          "n": 21723,
+          "pooled_rho": 0.0231,
+          "within_rho": 0.0105,
+          "pooling_gain": 0.0126,
+          "eta2_fitness": 0.0508,
+          "eta2_score": 0.0034
+        },
+        {
+          "orders": [
+            3,
+            5
+          ],
+          "n": 19161,
+          "pooled_rho": 0.0564,
+          "within_rho": 0.0153,
+          "pooling_gain": 0.0411,
+          "eta2_fitness": 0.1717,
+          "eta2_score": 0.0119
+        },
+        {
+          "orders": [
+            3,
+            6
+          ],
+          "n": 16634,
+          "pooled_rho": 0.0672,
+          "within_rho": 0.0128,
+          "pooling_gain": 0.0544,
+          "eta2_fitness": 0.2589,
+          "eta2_score": 0.0193
+        },
+        {
+          "orders": [
+            4,
+            5
+          ],
+          "n": 16212,
+          "pooled_rho": 0.0239,
+          "within_rho": 0.0129,
+          "pooling_gain": 0.0109,
+          "eta2_fitness": 0.0442,
+          "eta2_score": 0.0027
+        },
+        {
+          "orders": [
+            4,
+            6
+          ],
+          "n": 13685,
+          "pooled_rho": 0.0335,
+          "within_rho": 0.0095,
+          "pooling_gain": 0.024,
+          "eta2_fitness": 0.1143,
+          "eta2_score": 0.0073
+        },
+        {
+          "orders": [
+            5,
+            6
+          ],
+          "n": 11123,
+          "pooled_rho": 0.0214,
+          "within_rho": 0.0175,
+          "pooling_gain": 0.004,
+          "eta2_fitness": 0.0265,
+          "eta2_score": 0.0014
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 34500,
+          "pooled_rho": 0.0394,
+          "within_rho": 0.0076,
+          "pooling_gain": 0.0317,
+          "eta2_fitness": 0.1113,
+          "eta2_score": 0.0099
+        },
+        {
+          "orders": [
+            2,
+            3,
+            5
+          ],
+          "n": 31938,
+          "pooled_rho": 0.0661,
+          "within_rho": 0.0103,
+          "pooling_gain": 0.0559,
+          "eta2_fitness": 0.2267,
+          "eta2_score": 0.0191
+        },
+        {
+          "orders": [
+            2,
+            3,
+            6
+          ],
+          "n": 29411,
+          "pooled_rho": 0.0676,
+          "within_rho": 0.0084,
+          "pooling_gain": 0.0592,
+          "eta2_fitness": 0.2827,
+          "eta2_score": 0.0245
+        },
+        {
+          "orders": [
+            2,
+            4,
+            5
+          ],
+          "n": 28989,
+          "pooled_rho": 0.0802,
+          "within_rho": 0.0084,
+          "pooling_gain": 0.0717,
+          "eta2_fitness": 0.2487,
+          "eta2_score": 0.0211
+        },
+        {
+          "orders": [
+            2,
+            4,
+            6
+          ],
+          "n": 26462,
+          "pooled_rho": 0.0865,
+          "within_rho": 0.0062,
+          "pooling_gain": 0.0803,
+          "eta2_fitness": 0.3112,
+          "eta2_score": 0.0269
+        },
+        {
+          "orders": [
+            2,
+            5,
+            6
+          ],
+          "n": 23900,
+          "pooled_rho": 0.1184,
+          "within_rho": 0.0096,
+          "pooling_gain": 0.1088,
+          "eta2_fitness": 0.4181,
+          "eta2_score": 0.0348
+        },
+        {
+          "orders": [
+            3,
+            4,
+            5
+          ],
+          "n": 28548,
+          "pooled_rho": 0.0422,
+          "within_rho": 0.0128,
+          "pooling_gain": 0.0294,
+          "eta2_fitness": 0.1184,
+          "eta2_score": 0.008
+        },
+        {
+          "orders": [
+            3,
+            4,
+            6
+          ],
+          "n": 26021,
+          "pooled_rho": 0.0486,
+          "within_rho": 0.011,
+          "pooling_gain": 0.0376,
+          "eta2_fitness": 0.1691,
+          "eta2_score": 0.0123
+        },
+        {
+          "orders": [
+            3,
+            5,
+            6
+          ],
+          "n": 23459,
+          "pooled_rho": 0.0706,
+          "within_rho": 0.0149,
+          "pooling_gain": 0.0556,
+          "eta2_fitness": 0.2411,
+          "eta2_score": 0.0162
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6
+          ],
+          "n": 20510,
+          "pooled_rho": 0.0317,
+          "within_rho": 0.013,
+          "pooling_gain": 0.0187,
+          "eta2_fitness": 0.0873,
+          "eta2_score": 0.0052
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "n": 41325,
+          "pooled_rho": 0.0621,
+          "within_rho": 0.0097,
+          "pooling_gain": 0.0524,
+          "eta2_fitness": 0.1923,
+          "eta2_score": 0.016
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4,
+            6
+          ],
+          "n": 38798,
+          "pooled_rho": 0.0649,
+          "within_rho": 0.0083,
+          "pooling_gain": 0.0566,
+          "eta2_fitness": 0.2319,
+          "eta2_score": 0.0198
+        },
+        {
+          "orders": [
+            2,
+            3,
+            5,
+            6
+          ],
+          "n": 36236,
+          "pooled_rho": 0.0871,
+          "within_rho": 0.0106,
+          "pooling_gain": 0.0765,
+          "eta2_fitness": 0.3124,
+          "eta2_score": 0.026
+        },
+        {
+          "orders": [
+            2,
+            4,
+            5,
+            6
+          ],
+          "n": 33287,
+          "pooled_rho": 0.0931,
+          "within_rho": 0.0091,
+          "pooling_gain": 0.084,
+          "eta2_fitness": 0.3056,
+          "eta2_score": 0.025
+        },
+        {
+          "orders": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 32846,
+          "pooled_rho": 0.0536,
+          "within_rho": 0.0129,
+          "pooling_gain": 0.0407,
+          "eta2_fitness": 0.1739,
+          "eta2_score": 0.0118
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "n": 45623,
+          "pooled_rho": 0.076,
+          "within_rho": 0.01,
+          "pooling_gain": 0.066,
+          "eta2_fitness": 0.2541,
+          "eta2_score": 0.0208
+        }
+      ]
+    },
+    "HIS7_YEAST_Pokusaeva_2019": {
+      "status": "ok",
+      "orders": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "n_subsets": 26,
+      "rho_gain_eta2_fitness": 0.9952,
+      "rho_gain_eta2_score": 0.9932,
+      "rho_eta2_fitness_eta2_score": 0.9986,
+      "partial_fitness_given_score": 0.5586,
+      "partial_score_given_fitness": -0.1351,
+      "mean_additive_score_by_order": {
+        "4": -6.6181,
+        "5": -7.96,
+        "6": -9.2877,
+        "7": -10.6434,
+        "8": -11.8947
+      },
+      "leave_one_order_out": [
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9909,
+          "rho_gain_eta2_score": 0.9818,
+          "rho_eta2_fitness_eta2_score": 0.9909,
+          "partial_fitness_given_score": 0.7055,
+          "partial_score_given_fitness": -0.0046,
+          "dropped_order": 4,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 1.0,
+          "rho_gain_eta2_score": 1.0,
+          "rho_eta2_fitness_eta2_score": 1.0,
+          "partial_fitness_given_score": NaN,
+          "partial_score_given_fitness": NaN,
+          "dropped_order": 5,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9909,
+          "rho_gain_eta2_score": 0.9909,
+          "rho_eta2_fitness_eta2_score": 1.0,
+          "partial_fitness_given_score": NaN,
+          "partial_score_given_fitness": NaN,
+          "dropped_order": 6,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9909,
+          "rho_gain_eta2_score": 0.9909,
+          "rho_eta2_fitness_eta2_score": 1.0,
+          "partial_fitness_given_score": NaN,
+          "partial_score_given_fitness": NaN,
+          "dropped_order": 7,
+          "status": "ok"
+        },
+        {
+          "n_subsets": 11,
+          "rho_gain_eta2_fitness": 0.9818,
+          "rho_gain_eta2_score": 0.9636,
+          "rho_eta2_fitness_eta2_score": 0.9909,
+          "partial_fitness_given_score": 0.7494,
+          "partial_score_given_fitness": -0.3625,
+          "dropped_order": 8,
+          "status": "ok"
+        }
+      ],
+      "subsets": [
+        {
+          "orders": [
+            4,
+            5
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3361,
+          "within_rho": 0.33,
+          "pooling_gain": 0.006,
+          "eta2_fitness": 0.0054,
+          "eta2_score": 0.0124
+        },
+        {
+          "orders": [
+            4,
+            6
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3477,
+          "within_rho": 0.3246,
+          "pooling_gain": 0.0231,
+          "eta2_fitness": 0.019,
+          "eta2_score": 0.0436
+        },
+        {
+          "orders": [
+            4,
+            7
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3784,
+          "within_rho": 0.3271,
+          "pooling_gain": 0.0513,
+          "eta2_fitness": 0.042,
+          "eta2_score": 0.087
+        },
+        {
+          "orders": [
+            4,
+            8
+          ],
+          "n": 40000,
+          "pooled_rho": 0.4175,
+          "within_rho": 0.3344,
+          "pooling_gain": 0.0831,
+          "eta2_fitness": 0.0705,
+          "eta2_score": 0.1331
+        },
+        {
+          "orders": [
+            5,
+            6
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3395,
+          "within_rho": 0.3339,
+          "pooling_gain": 0.0056,
+          "eta2_fitness": 0.0043,
+          "eta2_score": 0.0101
+        },
+        {
+          "orders": [
+            5,
+            7
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3593,
+          "within_rho": 0.3364,
+          "pooling_gain": 0.0228,
+          "eta2_fitness": 0.0177,
+          "eta2_score": 0.0373
+        },
+        {
+          "orders": [
+            5,
+            8
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3902,
+          "within_rho": 0.3438,
+          "pooling_gain": 0.0465,
+          "eta2_fitness": 0.038,
+          "eta2_score": 0.0728
+        },
+        {
+          "orders": [
+            6,
+            7
+          ],
+          "n": 40000,
+          "pooled_rho": 0.337,
+          "within_rho": 0.3309,
+          "pooling_gain": 0.0061,
+          "eta2_fitness": 0.0047,
+          "eta2_score": 0.0091
+        },
+        {
+          "orders": [
+            6,
+            8
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3593,
+          "within_rho": 0.3383,
+          "pooling_gain": 0.021,
+          "eta2_fitness": 0.0171,
+          "eta2_score": 0.0313
+        },
+        {
+          "orders": [
+            7,
+            8
+          ],
+          "n": 40000,
+          "pooled_rho": 0.3454,
+          "within_rho": 0.3408,
+          "pooling_gain": 0.0047,
+          "eta2_fitness": 0.004,
+          "eta2_score": 0.0069
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6
+          ],
+          "n": 60000,
+          "pooled_rho": 0.345,
+          "within_rho": 0.3295,
+          "pooling_gain": 0.0155,
+          "eta2_fitness": 0.0127,
+          "eta2_score": 0.0293
+        },
+        {
+          "orders": [
+            4,
+            5,
+            7
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3668,
+          "within_rho": 0.3312,
+          "pooling_gain": 0.0356,
+          "eta2_fitness": 0.0295,
+          "eta2_score": 0.0631
+        },
+        {
+          "orders": [
+            4,
+            5,
+            8
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3962,
+          "within_rho": 0.3361,
+          "pooling_gain": 0.0601,
+          "eta2_fitness": 0.0523,
+          "eta2_score": 0.1034
+        },
+        {
+          "orders": [
+            4,
+            6,
+            7
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3634,
+          "within_rho": 0.3275,
+          "pooling_gain": 0.0358,
+          "eta2_fitness": 0.0285,
+          "eta2_score": 0.06
+        },
+        {
+          "orders": [
+            4,
+            6,
+            8
+          ],
+          "n": 60000,
+          "pooled_rho": 0.389,
+          "within_rho": 0.3324,
+          "pooling_gain": 0.0565,
+          "eta2_fitness": 0.0471,
+          "eta2_score": 0.0922
+        },
+        {
+          "orders": [
+            4,
+            7,
+            8
+          ],
+          "n": 60000,
+          "pooled_rho": 0.396,
+          "within_rho": 0.3341,
+          "pooling_gain": 0.0619,
+          "eta2_fitness": 0.0499,
+          "eta2_score": 0.0956
+        },
+        {
+          "orders": [
+            5,
+            6,
+            7
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3491,
+          "within_rho": 0.3338,
+          "pooling_gain": 0.0154,
+          "eta2_fitness": 0.0119,
+          "eta2_score": 0.0252
+        },
+        {
+          "orders": [
+            5,
+            6,
+            8
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3711,
+          "within_rho": 0.3387,
+          "pooling_gain": 0.0324,
+          "eta2_fitness": 0.0267,
+          "eta2_score": 0.0523
+        },
+        {
+          "orders": [
+            5,
+            7,
+            8
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3732,
+          "within_rho": 0.3403,
+          "pooling_gain": 0.0329,
+          "eta2_fitness": 0.0261,
+          "eta2_score": 0.0505
+        },
+        {
+          "orders": [
+            6,
+            7,
+            8
+          ],
+          "n": 60000,
+          "pooled_rho": 0.3508,
+          "within_rho": 0.3367,
+          "pooling_gain": 0.0141,
+          "eta2_fitness": 0.0114,
+          "eta2_score": 0.021
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "n": 80000,
+          "pooled_rho": 0.3592,
+          "within_rho": 0.3305,
+          "pooling_gain": 0.0288,
+          "eta2_fitness": 0.0232,
+          "eta2_score": 0.0498
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6,
+            8
+          ],
+          "n": 80000,
+          "pooled_rho": 0.3804,
+          "within_rho": 0.3342,
+          "pooling_gain": 0.0462,
+          "eta2_fitness": 0.0393,
+          "eta2_score": 0.0791
+        },
+        {
+          "orders": [
+            4,
+            5,
+            7,
+            8
+          ],
+          "n": 80000,
+          "pooled_rho": 0.389,
+          "within_rho": 0.3354,
+          "pooling_gain": 0.0536,
+          "eta2_fitness": 0.0442,
+          "eta2_score": 0.0871
+        },
+        {
+          "orders": [
+            4,
+            6,
+            7,
+            8
+          ],
+          "n": 80000,
+          "pooled_rho": 0.3801,
+          "within_rho": 0.3327,
+          "pooling_gain": 0.0474,
+          "eta2_fitness": 0.0381,
+          "eta2_score": 0.0746
+        },
+        {
+          "orders": [
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 80000,
+          "pooled_rho": 0.364,
+          "within_rho": 0.3374,
+          "pooling_gain": 0.0267,
+          "eta2_fitness": 0.0214,
+          "eta2_score": 0.0419
+        },
+        {
+          "orders": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "n": 100000,
+          "pooled_rho": 0.3772,
+          "within_rho": 0.334,
+          "pooling_gain": 0.0432,
+          "eta2_fitness": 0.0354,
+          "eta2_score": 0.0708
+        }
+      ]
+    },
+    "F7YBW8_MESOW_Aakre_2015": {
+      "status": "ok",
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "n_subsets": 4,
+      "rho_gain_eta2_fitness": 0.6,
+      "rho_gain_eta2_score": 1.0,
+      "rho_eta2_fitness_eta2_score": 0.6,
+      "partial_fitness_given_score": NaN,
+      "partial_score_given_fitness": 1.0,
+      "mean_additive_score_by_order": {
+        "2": -5.7506,
+        "3": -8.7015,
+        "4": -11.8534
+      },
+      "leave_one_order_out": [
+        {
+          "dropped_order": 2,
+          "status": "too_few_subsets",
+          "n_subsets": 1
+        },
+        {
+          "dropped_order": 3,
+          "status": "too_few_subsets",
+          "n_subsets": 1
+        },
+        {
+          "dropped_order": 4,
+          "status": "too_few_subsets",
+          "n_subsets": 1
+        }
+      ],
+      "subsets": [
+        {
+          "orders": [
+            2,
+            3
+          ],
+          "n": 3297,
+          "pooled_rho": 0.4697,
+          "within_rho": 0.3996,
+          "pooling_gain": 0.0701,
+          "eta2_fitness": 0.3726,
+          "eta2_score": 0.0716
+        },
+        {
+          "orders": [
+            2,
+            4
+          ],
+          "n": 6357,
+          "pooled_rho": 0.2617,
+          "within_rho": 0.1449,
+          "pooling_gain": 0.1167,
+          "eta2_fitness": 0.5067,
+          "eta2_score": 0.1763
+        },
+        {
+          "orders": [
+            3,
+            4
+          ],
+          "n": 8656,
+          "pooled_rho": 0.3156,
+          "within_rho": 0.2218,
+          "pooling_gain": 0.0938,
+          "eta2_fitness": 0.0726,
+          "eta2_score": 0.1411
+        },
+        {
+          "orders": [
+            2,
+            3,
+            4
+          ],
+          "n": 9155,
+          "pooled_rho": 0.3755,
+          "within_rho": 0.2271,
+          "pooling_gain": 0.1483,
+          "eta2_fitness": 0.4317,
+          "eta2_score": 0.2037
+        }
+      ]
+    }
+  },
+  "honest_scope": "The two eta^2 are near-collinear, so label-side and predictor-side contributions are NOT separably identifiable on this data. The supportable claim is the JOINT condition (aligned between-order separation in BOTH label and predictor), not that fitness eta^2 governs the gain -- and not that score eta^2 does either. Effective sample size is the number of ORDERS, so leave-one-order-out is reported instead of a subset p-value. The joint score's own eta^2 is NOT computable here: the 2026-07-27 sweep persisted only aggregate per-order rho, not per-variant joint scores."
+}

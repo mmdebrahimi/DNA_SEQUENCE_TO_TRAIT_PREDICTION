@@ -1,4 +1,22 @@
-# H2 CONFIRMED: the pooling gain is made entirely of between-order structure (2026-08-25)
+# H2: the pooling gain is made of between-order structure (2026-08-25)
+
+> **AMENDED 2026-08-25 — this memo OVERCLAIMED; read
+> `wiki/forward_epistasis_eta2_identifiability_2026-08-25.md` first.** Four corrections, all load-bearing:
+> **(1)** The governing quantity is **NOT** η² of fitness. A pooling gain needs BOTH the label and the
+> predictor to separate by group, and the additive score's own between-order η² was never measured. Measured,
+> the two are near-collinear (ρ +0.982 / +0.999) and the two well-powered proteins point in OPPOSITE
+> directions when partialled (GFP score-side +0.815 / fitness +0.020; HIS7 fitness +0.559 / score **−0.135**).
+> The supportable claim is the JOINT one — aligned between-order separation in label AND predictor — and which
+> side carries it is **not separably identifiable** here. **(2)** The p-values below are **not inferential**:
+> the 26 subsets are nested and share most of their variants, so n_eff ≈ the number of ORDERS (5). Treat them
+> as descriptive. The honest resampling unit is leave-one-order-out, and the relationship IS robust to it
+> (ρ stays +0.955..+1.000). **(3)** "confirmed", "causal", "entirely", "100%" are **overstated** — Control A
+> re-deals the same group sizes from one shuffled pool, so gain → 0 *by construction*; it checks the
+> arithmetic, not a mechanism. **(4)** Control B did **not** leave the gain "untouched" — it rose on 2 of 3
+> (HIS7 +0.043→+0.052, ParD +0.148→+0.185), which is explainable but was asserted past.
+>
+> The original text is preserved below unedited except for these markers. What still stands: **the pooling
+> gain is between-order structure, and the ParD anomaly is a pooling artifact** (`wiki/forward_epistasis_pooling_correction_2026-08-25.md`).
 
 Follow-up to `wiki/forward_epistasis_pooling_correction_2026-08-25.md`, which showed the epistasis sweep's
 ParD anomaly (Δ = −0.283) was a mutation-order **pooling artifact** (within-order Δ = −0.053) and that the
@@ -19,9 +37,13 @@ protein. Each (protein, order-subset) is a point:
 
 | protein | orders used | subsets | Spearman(η², pooling gain) | p |
 |---|---|---:|---:|---:|
-| GFP | 2,3,4,5,6 | 26 | **+0.973** | 7.4e-17 |
-| HIS7 | 4,5,6,7,8 | 26 | **+0.995** | 9.3e-26 |
+| GFP | 2,3,4,5,6 | 26 | **+0.973** | 7.4e-17 *(NOT inferential — see banner)* |
+| HIS7 | 4,5,6,7,8 | 26 | **+0.995** | 9.3e-26 *(NOT inferential — see banner)* |
 | ParD | 2,3,4 | 4 | +0.600 | 0.40 (underpowered — only 4 subsets) |
+
+> These p-values assume the 26 subsets are independent. They are not — they are nested and share most of
+> their variants. n_eff ≈ 5 orders. Use the leave-one-order-out sweep in
+> `wiki/forward_epistasis_eta2_identifiability_2026-08-25.md` instead.
 
 Two proteins, 26 subsets each, near-perfect monotone relationships. ParD has only 3 orders so it yields 4
 subsets and stays underpowered — reported, not hidden.
@@ -33,7 +55,9 @@ A correlation between η² and the gain could still be incidental, so the struct
 - **Control A** — permute ORDER LABELS across all variants. Every marginal distribution is preserved; only
   the fitness↔order association dies. H2 predicts the gain collapses.
 - **Control B** — permute FITNESS WITHIN each order. The within-order score↔fitness signal dies; the
-  per-order means survive. H2 predicts the gain is untouched.
+  per-order means survive. H2 predicts the gain is untouched. *(AMENDED: it was not — the gain ROSE on 2 of
+  3, HIS7 +21% and ParD +25%. Explainable, since gain = pooled − within and B zeroes a positive within term
+  that was diluting the difference; but the prediction as stated did not hold exactly.)*
 
 | protein | condition | η² | within ρ | **pooling gain** |
 |---|---|---:|---:|---:|
@@ -48,8 +72,17 @@ A correlation between η² and the gain could still be incidental, so the struct
 | ParD | B | 0.432 | +0.004 | **+0.185** |
 
 **Both predictions hold on all three proteins.** Destroy between-order structure → the gain is exactly
-zero. Destroy within-order signal → the gain is untouched (it was never made of that). The pooling gain is
-**entirely** between-order structure.
+zero. Destroy within-order signal → the gain survives. The pooling gain is dominated by between-order
+structure.
+
+> **AMENDED.** Two walk-backs. **Control A is near-definitional** — it re-deals the SAME group sizes from one
+> shuffled pool, so every group becomes an i.i.d. draw from the same population, pooled and within estimate
+> the same quantity, and the gain → 0 *by construction*. What A establishes is that the arithmetic is
+> implemented correctly: a pipeline check, not a causal intervention. **Control B did NOT leave the gain
+> "untouched"** — it rose on 2 of 3 (HIS7 +0.043→+0.052 = +21%, ParD +0.148→+0.185 = +25%). The direction is
+> explainable and should have been explained: B zeroes the within-order ρ (HIS7 +0.334→+0.001, ParD
+> +0.227→+0.004), and since gain = pooled − within, removing a positive within term that was *diluting* the
+> difference raises the gain. "entirely" and "100%" below are withdrawn.
 
 Note ParD carries the highest η² (0.432) and the largest real gain (+0.148) — the outlier is not special,
 it is simply the far end of the same axis.
@@ -61,20 +94,29 @@ correlation is textbook. The non-obvious parts are the specific ones:
 
 1. It **quantitatively accounts for the ParD outlier** — ParD is not anomalous, it just has the largest η².
 2. η² gives a **number** for how much of a pooled metric is order-separation rather than ranking skill.
-3. The controls show the gain is **100%** between-order, not partly — so a pooled figure computed across a
-   grouping variable is not "somewhat inflated", it is inflated by exactly that structure.
+   *(AMENDED: η²(label) ALONE is under-specified — the predictor's own η² matters equally and is not
+   separable from it here. Disclose both.)*
+3. ~~The controls show the gain is **100%** between-order~~ — **WITHDRAWN**, see the control amendment above.
+   The controls show the gain is dominated by between-order structure; Control A cannot establish the
+   proportion because its collapse is definitional.
 
 **Scope:** three proteins, one score family (additive ESM2 log-ratio), one grouping variable (mutation
 order). The mechanism is general in principle; this is the evidence actually in hand.
 
 ## Deployment rule
 
-- Report the **within-order** metric whenever a sweep spans mutation orders.
+- Report the **within-order** metric whenever a sweep spans mutation orders. *(AMENDED: state the estimand
+  first — this is right for "which scorer ranks at fixed mutation burden?", which IS the deployed question,
+  but not for "can this score rank a realistic mixed-order pool?", where cross-order ranking is the target.)*
 - If a pooled figure is reported anyway, **report η²(k) beside it** so a reader can see how much of the
-  number is group separation.
+  number is group separation. *(AMENDED: disclose η² of the **label AND the predictor** — a pooled metric is
+  inflated only where the two are aligned, and one alone cannot tell you.)*
 - This generalises past mutation order: it is the same rule as the AMR side's clonality disclosure — any
-  grouping variable both the predictor and the label track will inflate a pooled metric, and η² is the
-  cheap way to say by how much.
+  grouping variable both the predictor and the label track will inflate a pooled metric. *(AMENDED: η² is
+  the cheap way to FLAG exposure, not to "say by how much". `dna_decode/eval/clonality.py` computes a
+  corrected estimator with uncertainty — one lineage vote, `wilson_ci`, `effective_lineage_n`, DISCORDANT
+  clusters excluded rather than majority-voted. η² is a scalar flag with no CI and no corrected estimate;
+  the corrected number is the within-group metric itself.)*
 
 ## Reproduce
 

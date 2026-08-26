@@ -386,7 +386,11 @@ def predict_multi_effect(protein_seq: str, mutations: list[str], *, protein: str
     (function-loss is rarely rescued additively) -> `damaging`; all `preserved` -> `preserved`; else `uncertain`.
 
     HONESTY: this is the additive null — it does NOT capture epistasis (non-additivity). Scoring the fully
-    mutated sequence jointly (e.g. ESM2 on the multi-mutant) is the epistasis test, deferred to a GPU run.
+    mutated sequence jointly (e.g. ESM2 on the multi-mutant) is the epistasis test, and it HAS BEEN RUN —
+    `wiki/forward_epistasis_sweep_2026-07-27.md` scored joint-vs-additive on 5 proteins across mutation
+    orders 2-6. Verdict: joint ~= additive (delta ~+-0.005), so the additive null stays the deployed default.
+    The one apparent exception (ParD, pooled delta -0.283) was a MUTATION-ORDER POOLING ARTIFACT; the honest
+    within-order delta is -0.053 (`wiki/forward_epistasis_pooling_correction_2026-08-25.md`).
     Distinct positions are required (two edits at one position = a conflicting spec -> ValueError).
     """
     if not mutations:
