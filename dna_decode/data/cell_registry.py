@@ -465,7 +465,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         label_provenance=("OMIA-curated causal loci (rule); Darwin's Ark/Dryad owner-reported coat colour "
                           "(measured); causal-variant coords OMIA canFam3.1 -> UCSC canFam3ToCanFam4 liftover -> .bim-verified"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="scripts/dog_coat_darwins_ark_validate.py", incoming_data_gate="n/a",
+        falsifier_ref="scripts/dog_coat_darwins_ark_validate.py", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (1/5 loci record no causal variant); G10 variant-class-off-panel (1/5 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule=(
             "MEASURED but SUBSTRATE-LIMITED: black validated 0.994, other colours unscorable on the biallelic-SNV "
             "imputed panel (causal indels/SVs absent). A full-colour measured tier needs a substrate that "
@@ -522,7 +523,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         label_provenance=("OMIA-curated causal variants (rule); base E x A = deployed VGL/Rieder rule; no free "
                           "independent-colour per-individual cohort scored (documented data wall)"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="scripts/horse_coat_validate.py", incoming_data_gate="n/a",
+        falsifier_ref="scripts/horse_coat_validate.py", incoming_data_gate=(
+            "G10 variant-class-off-panel (3/5 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule=(
             "KNOWLEDGE_BASELINE curated catalog + validation-data wall. To reach a MEASURED tier, feed "
             "scripts/horse_coat_validate.py a TSV of mc1r,asip,INDEPENDENTLY-OBSERVED colour (not genotype-derived "
@@ -551,7 +553,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "per-individual validation substrate"),
         label_provenance="OMIA-curated causal variants (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (4/6 loci record no causal variant); G10 variant-class-off-panel (2/6 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule=(
             "KNOWLEDGE_BASELINE curated catalog. To reach a MEASURED tier, score per-individual vs a public cat "
             "genotype+phenotype cohort (the open risk: a FREE such substrate may not exist — the Darwin's-Ark-"
@@ -578,7 +581,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "(3) dominant/recessive white mask eumelanin. KNOWLEDGE_BASELINE — no free per-individual validation substrate"),
         label_provenance="OMIA-curated causal variants (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (6/7 loci record no causal variant); G10 variant-class-off-panel (1/7 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule=(
             "KNOWLEDGE_BASELINE curated catalog. To reach a MEASURED tier, score per-individual vs a public "
             "chicken genotype+phenotype cohort (the open risk: a FREE such substrate may not exist — the Darwin's-"
@@ -596,8 +600,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "agouti / Ed-self-black. KNOWLEDGE_BASELINE — no free per-individual validation substrate"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free rabbit genotype+observed-colour cohort. Spotting (En/Du) ABSTAIN",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (5/5 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
+        demotion_rule=(
+            "UNVALIDATABLE AS WRITTEN: none of its 5 loci record a causal variant, so no genotype file can be scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants (OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help. Spotting (En/Du) ABSTAIN"),
     ),
     CellContract(
         cell_id="typing:mouse:mousecolor", track="typing", route="dna-mousecolor",
@@ -609,8 +615,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "shared engine; reference_integrity_ok pins albino-masks / e-e-yellow. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free mouse genotype+colour cohort. Spotting (s/piebald) ABSTAIN",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (6/6 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
+        demotion_rule=(
+            "UNVALIDATABLE AS WRITTEN: none of its 6 loci record a causal variant, so no genotype file can be scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants (OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help. Spotting (s/piebald) ABSTAIN"),
     ),
     CellContract(
         cell_id="typing:cattle:cattlecolor", track="typing", route="dna-cattlecolor",
@@ -623,8 +631,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free cattle cohort. Roan (KITLG)/spotting (MITF)/COPA-dom-red ABSTAIN",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (2/2 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
+        demotion_rule=(
+            "UNVALIDATABLE AS WRITTEN: none of its 2 loci record a causal variant, so no genotype file can be scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants (OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help. Roan (KITLG)/spotting (MITF)/COPA-dom-red ABSTAIN"),
     ),
     CellContract(
         cell_id="typing:pig:pigcolor", track="typing", route="dna-pigcolor",
@@ -636,8 +646,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "shared engine; reference_integrity_ok pins KIT-masks / ED-black / e-e-red. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free pig cohort. KIT belt/patch/roan sub-alleles ABSTAIN",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (2/2 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
+        demotion_rule=(
+            "UNVALIDATABLE AS WRITTEN: none of its 2 loci record a causal variant, so no genotype file can be scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants (OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help. KIT belt/patch/roan sub-alleles ABSTAIN"),
     ),
     CellContract(
         cell_id="typing:sheep:sheepcolor", track="typing", route="dna-sheepcolor",
@@ -650,8 +662,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "ED-overrides-ASIP-white / dominant-white-tan / recessive-black. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free sheep cohort. Badgerface/spotting ASIP sub-alleles ABSTAIN",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (2/2 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
+        demotion_rule=(
+            "UNVALIDATABLE AS WRITTEN: none of its 2 loci record a causal variant, so no genotype file can be scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants (OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help. Badgerface/spotting ASIP sub-alleles ABSTAIN"),
     ),
     CellContract(
         cell_id="typing:goat:goatcolor", track="typing", route="dna-goatcolor",
@@ -664,7 +678,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "literature so ASIP is the modeled driver. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (1/2 loci record no causal variant); G10 variant-class-off-panel (1/2 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free goat cohort. The ~11 ASIP pattern sub-alleles (badgerface/swiss/grey) ABSTAIN",
     ),
     CellContract(
@@ -678,8 +693,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "ASIP) / black-if-aa / fawn-if-A. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
-        demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free alpaca cohort. KIT grey/blue-eyed-white (open question) ABSTAINs",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (2/2 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
+        demotion_rule=(
+            "UNVALIDATABLE AS WRITTEN: none of its 2 loci record a causal variant, so no genotype file can be scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants (OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help. KIT grey/blue-eyed-white (open question) ABSTAINs"),
     ),
     CellContract(
         cell_id="typing:guineapig:guineapigcolor", track="typing", route="dna-guineapigcolor",
@@ -692,7 +709,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "engine. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (3/5 loci record no causal variant); G10 variant-class-off-panel (2/5 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free guinea pig cohort. White spotting (OMIA 000214) ABSTAINs",
     ),
     CellContract(
@@ -707,7 +725,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "wild red. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (1/2 loci record no causal variant); G10 variant-class-off-panel (1/2 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free fox cohort. Platinum (KIT) + other farm morphs ABSTAIN",
     ),
     CellContract(
@@ -722,7 +741,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9/G10 screened CLEAR (3/3 loci record an SNV causal variant) -- frozen on SCOPE grounds, not evidence grounds (wiki/colour_cell_substrate_screen_2026-08-26.md)"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free donkey cohort. KIT dominant-white/SLC45A2-cream/the residual ASIP-het gene ABSTAIN",
     ),
     CellContract(
@@ -736,7 +756,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal gene (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G10 variant-class-off-panel (1/1 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free buffalo cohort. KIT white-spotting (OMIA 001737) + the disputed ASIP-black SNP ABSTAIN",
     ),
     CellContract(
@@ -749,7 +770,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "2019; ASIP 23delT exon-2 frameshift recessive-black) via the shared engine. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G10 variant-class-off-panel (1/2 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free camel cohort. KIT white-spotting + SLC45A2/TYR modifiers ABSTAIN",
     ),
     CellContract(
@@ -763,7 +785,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "via the shared engine. KNOWLEDGE_BASELINE"),
         label_provenance="OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (1/3 loci record no causal variant); G10 variant-class-off-panel (1/3 loci indel/structural, absent from any biallelic-SNV panel) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule="KNOWLEDGE_BASELINE; MEASURED needs a free mink cohort. LYST Aleutian + MITF Hedlund-white + the 30+ other fur colours ABSTAIN",
     ),
     CellContract(
@@ -775,7 +798,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
                           "/ GG-GT chestnut) via the shared engine. KNOWLEDGE_BASELINE — a WILDLIFE cell"),
         label_provenance="OMIA-curated causal gene (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9/G10 screened CLEAR (1/1 loci record an SNV causal variant) -- frozen on SCOPE grounds, not evidence grounds (wiki/colour_cell_substrate_screen_2026-08-26.md)"),
         demotion_rule="KNOWLEDGE_BASELINE; the single confirmed roe-deer colour variant is ASIP (chestnut vs black); other coat variation ABSTAINs",
     ),
     CellContract(
@@ -795,10 +819,13 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "free per-individual validation substrate"),
         label_provenance="Shapiro-lab/OMIA-curated causal genes (rule only); no measured per-individual cohort scored",
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
-        falsifier_ref="none", incoming_data_gate="n/a",
+        falsifier_ref="none", incoming_data_gate=(
+            "G9 causal-variant-unrecorded (4/4 loci record no causal variant -- NO locus does, so no cohort can score this rule) -- wiki/colour_cell_substrate_screen_2026-08-26.md"),
         demotion_rule=(
-            "KNOWLEDGE_BASELINE curated catalog. To reach a MEASURED tier, score per-individual vs a public pigeon "
-            "genotype+phenotype cohort (the open risk: a FREE such substrate may not exist). Modifiers (spread/"
+            "UNVALIDATABLE AS WRITTEN: none of its 4 loci record a causal variant, so no genotype file can be "
+            "scored against this rule -- a cohort is NECESSARY and NOT SUFFICIENT. Curating the causal variants "
+            "(OMIA/literature, per-locus, sourced) is the precondition; only then does a free cohort help (and the "
+            "open risk remains that a FREE pigeon genotype+phenotype substrate may not exist). Modifiers (spread/"
             "grizzle/almond/indigo) + shade ABSTAIN by design"),
     ),
     CellContract(
