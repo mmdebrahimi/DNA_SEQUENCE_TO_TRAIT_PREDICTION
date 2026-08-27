@@ -58,7 +58,7 @@ full per-trait validation surface.
 | `dna-decode mlst` (**new**) | **MLST sequence type** (PubMLST; v0 E. coli Achtman 7-gene) — exact-allele → profile → ST | deterministic blastn 100/100 + PubMLST profile lookup; **validated: K-12 MG1655 → ST10**; `dna-mlst --fetch-db` installs the scheme; novel/incomplete → ST not guessed; offline-safe |
 | `dna-decode ktype` (**new**) | **Klebsiella K-antigen (capsule) type** via the wzi allele scheme (BIGSdb Pasteur, Kleborate-bundled) — the `serotype` sibling | deterministic wzi-blastn caller (identity 90 / coverage 80); **self-consistency 15/15** across the DB; faithful-to-tool (wzi→K ~94%, NOT one-to-one); a **free measured serological label exists** (KlebNET-GSP 731-isolate set) → validatable, full caller-vs-serology run scoped (`wiki/ktype_report_card.md`); offline-safe |
 
-3838 tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
+3843 tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
 + codon-mapping `dna_decode/typing/codon_map.py`) **+ 3 cross-decoder analyses** that compose them:
 
 | Analysis | What | |
