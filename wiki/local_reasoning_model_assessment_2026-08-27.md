@@ -1,15 +1,48 @@
-# Would adding a local reasoning model (qwen9b-class) improve the answers? (2026-08-27)
+# Would adding a reasoning model (qwen9b-class) improve the answers? (2026-08-27)
 
-**Short verdict: your instinct is right and already implemented — but not by a local 9B.**
-The "second reasoning model" slot exists, is filled by Codex via `/brainstorm`, and demonstrably worked
-this session. A local 9B cannot fit this host, and the error class it would target is not the one that
-actually bites. One narrow variant is worth a cheap bounded test; three others are recommended against.
+> ## ⚠️ CORRECTED same-day — the first version scoped this to LOCAL hardware and was wrong to
+>
+> User: *"we can run it on the online free resource(s) that we have and are available."* Correct, and it
+> changes the recommendation. This project already uses **free Kaggle T4 GPU** (creds live at
+> `~/.kaggle/access_token`; 6+ kernel scripts in `scripts/`) and Databricks. A T4 has **16 GB VRAM**, so
+> the 4 GB local-VRAM ceiling I built the analysis on is **irrelevant for batch work** — a 9B (5.0 GB Q4)
+> fits trivially, and so does a 14B.
+>
+> What survives: the interactive-review slot is still filled by Codex, and **F3/F4 stay closed on
+> evidence, not compute**. What flips: **F2 (batch work) goes from "no current workload" to the top
+> recommendation** — because there IS a 525k-token workload that targets the dominant error class, and it
+> is batch-shaped, which is exactly what free GPU is good for. The corrected reason F1 stays blocked is
+> **latency, not VRAM**.
+>
+> The original local-hardware analysis is kept below (§1) because it is still the right answer for
+> *interactive* use, and because the reasoning trail matters.
 
-Every number below is measured on this host today, not recalled.
+**Verdict: your instinct is right. A second reasoning model already catches real errors — that slot is
+filled by Codex. The new, genuinely open opportunity is a BATCH semantic-staleness audit on free GPU,
+which targets the error class that actually dominates (10 of 11 this session) and has a ready-made
+pass/fail benchmark.**
+
+Every number below is measured today, not recalled.
 
 ---
 
-## 1. Hardware: the specific ask does not fit, and neither does the configured default
+## 0. The compute picture, corrected — two tiers, and they answer different questions
+
+| tier | VRAM | 9B Q4 (5.0 GB) fits? | latency | good for |
+|---|---|---|---|---|
+| **Local** (GTX 860M) | 4.0 GB | **NO** | interactive | nothing here — see §1 |
+| **Kaggle T4** (free, creds live) | **16 GB** | **YES**, easily | **batch**: push → queue → boot → run → poll | **bulk/offline work** |
+
+The T4 removes the capacity objection completely. It does **not** remove the *latency* objection: a Kaggle
+kernel is a batch job with no inbound endpoint — you cannot call into a running kernel, so a cold round
+trip (queue + boot + ~5 GB model pull + inference) is tens of minutes. Codex returns a `/brainstorm`
+critique in ~1–2 minutes. **So free GPU rescues batch work and cannot rescue in-the-loop review.**
+
+That single distinction is what re-sorts the four families below.
+
+## 1. Local hardware: the specific ask does not fit, and neither does the configured default
+
+*(Still the correct answer for INTERACTIVE use, which is why it stands. Superseded only for batch — see §0.)*
 
 | model | Q4 weights | fits 4.0 GB VRAM? | fits 15.9 GB RAM? |
 |---|---:|---|---|
@@ -67,12 +100,35 @@ consequential one. The slot has real value. It is just already occupied by somet
 
 ## 4. Decomposition — four candidate families, three recommended against
 
-| # | family | what it would do | verdict |
+| # | family | what it would do | verdict (corrected) |
 |---|---|---|---|
-| **F1** | **Adversarial-review diversity / offline voice** | a third opinion alongside Codex + me; works with no network | **worth a bounded test** — the only live candidate |
-| F2 | Bulk triage | thousands of cheap classifications where frontier calls are wasteful | **no current workload** — nothing in the project needs volume judgment today, and any output would still need sourced verification, which is the expensive half |
-| F3 | **Decoder-side prediction** (an LLM inside `dna_decode`) | predict phenotype / score variants | **closed negative — do not build** |
-| F4 | Curation assistance | draft the 40 unrecorded colour-cell causal variants | **no** — this is precisely the fabrication hazard; each locus needs OMIA/literature sourcing and verification regardless, so the model removes none of the cost and adds a plausible-looking-but-wrong failure mode |
+| **F2** | **Batch semantic-staleness audit** (free GPU) | read each claim + the artifact it cites; flag claims the artifact no longer supports | **TOP CANDIDATE — build the falsifier** (was "no workload"; that was wrong) |
+| F1 | Adversarial-review diversity / offline voice | a third opinion alongside Codex + me | **still blocked — but on LATENCY, not VRAM.** Kaggle has no inbound endpoint, so it cannot be in-the-loop. Local is capped at ~4B. Marginal: Codex already fills it and worked |
+| F3 | **Decoder-side prediction** (an LLM inside `dna_decode`) | predict phenotype / score variants | **closed negative — do not build.** Evidence-based, so free GPU changes nothing |
+| F4 | Curation assistance | draft the 40 unrecorded colour-cell causal variants | **no** — the fabrication hazard by construction; each locus needs OMIA/literature sourcing and verification regardless, so the model removes none of the cost. Compute-independent |
+
+### Why F2 flipped — the workload is real and it targets the dominant error class
+
+I called this "no current workload." Measured, that was wrong:
+
+- **The corpus:** `wiki/` holds **542 memos / ~525,000 tokens**, plus `CLAUDE.md` at ~22k tokens loaded
+  into *every* session. Too large to hand-audit; batch-shaped by nature.
+- **The target:** §3 shows ~91% of this session's errors were **stale or unverified semantic claims**.
+- **The gap is documented, not speculative.** `tests/test_claude_md_citations.py` says in its own
+  docstring: *"It checks that cited FILES exist. It cannot check that a cited file still says what
+  CLAUDE.md claims it says — the ProSST case would NOT have been caught here… Reading the artifact before
+  repeating a claim remains model discipline."* That is precisely the job.
+- **Independence matters here.** The stale claims were *mine*. A checker that is not me is worth more than
+  me re-reading my own work.
+- **Safe failure profile.** Every flag is adjudicated against the artifact, so a false positive costs one
+  check; it cannot install a false belief.
+
+### The honest counter-evidence — a mechanical version of this already failed
+
+A proximity-based screen ("a deferral marker within N chars of an existing repo path") was built and run:
+**5 hits, 100% false positives**, and was deliberately not shipped, because a guard with that FP rate gets
+disabled. So the open question is narrow and real: **does a semantic model do better than the mechanical
+rule that failed?** That is exactly what the benchmark in §5 decides — it is not assumed.
 
 ### Why F3 is closed, specifically
 
@@ -88,25 +144,49 @@ structural prior over protein sequences at all. The regime map is explicit: cura
 wins; organism-polygenic → neither; molecular-property → learned wins only when fitness-aligned.
 **Drug resistance inverts the signal.** Adding an LLM to the decoder is the closed arm, re-entered.
 
-## 5. The plan for F1 — a bounded test with a decisive backtest
+## 5. The plan -- F2 on free GPU, with a pre-registered benchmark that already exists
 
-The point is not "install a model and see if it feels smart". It is a **retrospective backtest against a
-case whose ground truth is known**: this session's wrong-η² error, which Codex caught and I had missed.
+The benchmark is the good news: **both classes of ground truth are already in the repo**, so this is a
+falsifiable experiment, not a hopeful build.
+
+**Ground-truth POSITIVES** -- known stale claims, each pinned as a regression test in
+`tests/test_claude_md_citations.py`, plus one found today:
+
+| # | the stale claim | why mechanically invisible |
+|---|---|---|
+| 1 | ProSST "the real forward pass is deferred to a Kaggle run" | it had RUN locally on CPU the same day; the cited file existed the whole time |
+| 2 | TB "PENDING DATA RUNS (BLOCKED-gated by design)" | both blockers had been resolved -- by its own sub-bullets |
+| 3 | genome-map "a visual browser deferred" | the browser had SHIPPED; the same file said so two bullets later |
+| 4 | BV-BRC "strict-MIC 3-drug census ... deferred" | it ran as a FOUR-drug census; stale on count *and* status |
+| 5 | C. auris `no_free_source` (found today) | a POWERED result exists -- 12 isolates, sens 1.00 |
+
+**Ground-truth NEGATIVES** -- the 5 hits the mechanical proximity screen produced, all confirmed false
+positives (marker and path in the same prose region but referring to different things; 3 of the 5 were
+inside *correction* text explaining a fix).
 
 | step | action | gate |
 |---|---|---|
-| 1 | Install a runtime (ollama or LM Studio), **with the model dir forced to D:** — `OLLAMA_MODELS=D:/models/ollama`. C: has 8.1 GB left and a default install will eat it | dep-install → `irreversible`/reversible-outward, runs un-gated; Care resource check done |
-| 2 | Pull **Qwen3-4B** (2.2 GB, GPU-resident) *and* an 8B (4.5 GB, CPU) — the two feasible tiers | auto |
-| 3 | Measure real tok/s on each. A reasoning model emitting 1–3k thinking tokens at <5 tok/s is ~10 min/answer — that number decides usability, and I will not estimate it | auto |
-| 4 | Point `LMSTUDIO_AUDITOR_MODEL` (or an ollama OpenAI-compatible endpoint) at whichever passes step 3 | auto |
-| 5 | **The decisive test:** feed it the H2 memo *as it stood before the correction* and ask whether the η² attribution is sound. Codex caught this; I did not. Score: does the local model flag the score-side η² confound, the nested-subset p-values, or the definitional Control A? | auto |
-| 6 | Verdict — **PASS** only if it catches ≥1 of the three real defects. Anything less means it adds noise to a slot Codex already covers | auto |
+| 1 | Build the claim-to-artifact extraction pass locally: for each `(claim, cited artifact)` pair in `CLAUDE.md`, emit the claim sentence + the cited file's relevant section. Pure text, no model | auto |
+| 2 | Write a Kaggle kernel (mirroring the 6 existing `scripts/kaggle_*.py`) that runs a **9B-14B reasoning model** over those pairs, emitting `{claim, verdict: supported/stale/unclear, evidence}` | auto |
+| 3 | **Run it on the 10-item benchmark FIRST**, not the full corpus | auto |
+| 4 | **Pre-registered pass condition: >=3 of 5 true positives AND <=1 of 5 false positives.** The mechanical screen scored 0/5 TP and 5/5 FP -- that is the bar to beat, and it is a low one | auto |
+| 5 | **PASS** -> run the full 542-memo / 525k-token corpus; every flag adjudicated against its artifact before any doc is edited. **FAIL** -> close F2, record the negative beside the mechanical screen's, and keep artifact-reading as model discipline | auto |
 
-**Pre-registered so the result cannot be rationalised:** if the local model catches none of the three, F1
-is closed and the auditor hook should be documented as unusable on this host rather than left as dead
-config. If it catches one or more, it earns the auxiliary-voice slot in `/brainstorm`.
+**Why the pass condition sits there:** the value is catching real staleness, and a false positive costs one
+adjudication. <=1/5 FP keeps signal-to-noise above the threshold at which a guard gets ignored -- the
+failure mode that killed the mechanical version.
 
-**Cost:** ~3 GB download, ~1 hour. Fully reversible. No money.
+**Cost:** free (Kaggle T4, creds live). Two kernel runs. Fully reversible. No money.
+
+**Kaggle gotchas already recorded, applied here:** pin `machine_shape: NvidiaTeslaT4` (`enable_gpu: true`
+alone provisions a P100 that current Kaggle torch cannot run in fp16); max 2 concurrent kernels; set
+`PYTHONUTF8=1` or logs return 0-byte.
+
+### F1, for completeness
+
+Not worth building now. Free GPU does not rescue it (batch latency, no inbound endpoint), local is capped
+at ~4B, and Codex already fills the slot and demonstrably worked. If you want the offline voice anyway,
+the original plan is in git history -- but it is a convenience, not a capability gain.
 
 ## 6. The variant worth more than the one asked about
 
@@ -115,15 +195,18 @@ frontier voice with a different lineage**. Codex already provides one. A third d
 would add more diversity per unit effort than a 4B, and needs no install, no VRAM, and no tok/s
 measurement. The local model's genuine and *only* edge is **working with no network**.
 
-## 7. Recommendation
+## 7. Recommendation (corrected)
 
-1. **Do not add a 9B.** It does not fit the GPU, and the reasoning slot is already filled by something
-   stronger that demonstrably worked this session.
-2. **Do not put an LLM in the decoder** (F3) — that is a measured closed negative, and a general LLM is a
-   worse fit than the protein model that already failed.
-3. **If you want the local voice anyway**, run the §5 plan with a 4B and hold it to the §5 backtest. It is
-   cheap, bounded, and pre-registered — but expect it to be a diversity/offline convenience, not a
-   capability gain.
-4. **The highest-leverage version of your instinct** is more verification, not more reasoning: ~91% of this
-   session's errors were unverified assertions caught by running things. Anything that makes checking
-   cheaper beats anything that makes thinking longer.
+1. **Build the F2 falsifier on Kaggle** (§5). It is free, batch-shaped, targets the error class that
+   actually dominates, has a ready-made 10-item benchmark, and a pre-registered pass condition so a null
+   result closes the family instead of being rationalised. **This is the answer to your question.**
+2. **Do not put an LLM in the decoder** (F3) -- a measured closed negative (ESM2 0.454, below chance, vs
+   the catalog's 0.926), and a general LLM has weaker sequence priors than the protein model that failed.
+   Free GPU does not change this; it was never a compute problem.
+3. **Do not build F1 (interactive review) now.** Codex fills that slot and worked this session; free GPU
+   cannot rescue it because Kaggle is batch with no inbound endpoint, and local is capped at ~4B.
+4. **Do not use a model to curate the 40 colour loci** (F4). Each locus needs sourcing and verification
+   regardless, so the model removes none of the cost and adds a plausible-looking-but-wrong failure mode.
+5. **Standing principle, unchanged by any of this:** ~91% of this session's errors were unverified
+   assertions caught by *running* things. Anything that makes checking cheaper beats anything that makes
+   thinking longer -- which is exactly why F2 (a checker) outranks F1 (a thinker).
