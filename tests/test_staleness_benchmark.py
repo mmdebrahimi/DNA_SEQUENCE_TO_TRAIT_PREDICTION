@@ -305,3 +305,35 @@ def test_the_corpus_kernel_uses_the_BENCHMARKED_prompt_verbatim():
     assert f"MAX_NEW_TOKENS = {MAX_NEW_TOKENS}" in k
     for field in ("CLAIM (from project documentation)", "ARTIFACT FACTS", "ARTIFACT EXCERPT"):
         assert field in k
+
+
+# --- the adjudication record + the base-rate arithmetic that explains the benchmark-vs-field gap ---
+
+def test_adjudication_covers_every_flag_the_pass_raised():
+    from scripts.staleness_adjudication import ADJUDICATIONS, tally
+    assert tally()["flags"] == len(ADJUDICATIONS) == 9
+    assert {a.verdict for a in ADJUDICATIONS} <= {"true_positive", "false_positive"}
+    # every adjudication must carry a REASON -- a bare verdict is not an adjudication
+    for a in ADJUDICATIONS:
+        assert len(a.why) > 60, f"{a.artifact} has no substantive reasoning"
+
+
+def test_base_rate_explains_the_precision_gap_not_a_regression():
+    """The load-bearing claim: the SAME detector posts 0.8 on a 50/50 benchmark and 0.22 in the field.
+
+    If this ever fails, the "it's the base rate" explanation is wrong and the detector really did regress.
+    """
+    from scripts.staleness_adjudication import precision_from_base_rate, specificity
+    spec = specificity()
+    at_benchmark = precision_from_base_rate(0.50, sens=1.0, spec=spec)
+    at_field = precision_from_base_rate(0.025, sens=1.0, spec=spec)
+    assert at_benchmark > 0.85, "a 50/50 set should flatter precision"
+    assert at_field < 0.35, "a 2.5%-positive corpus should crush precision at the same specificity"
+    # and the field specificity is NOT worse than the benchmark's 4/5 -- the detector did not degrade
+    assert spec >= 0.80
+
+
+def test_field_specificity_beats_the_benchmark_so_precision_drop_is_not_degradation():
+    from scripts.staleness_adjudication import specificity, precision
+    assert specificity() > 0.80 > precision(), (
+        "the whole point: specificity went UP while precision went DOWN")
