@@ -255,3 +255,53 @@ def test_the_kernel_prompt_matches_the_local_prompt_shape():
                   "ARTIFACT FACTS", "ARTIFACT EXCERPT"):
         assert field in local, f"local prompt lost {field!r}"
         assert field in k, f"kernel prompt lost {field!r}"
+
+
+# ------------------------------------------------------- the corpus extractor (full-run input)
+
+def test_every_extracted_pair_mentions_its_own_artifact():
+    """THE PAIRING BUG THIS CAUGHT. The first extractor paired a bullet with EVERY path it cited, so a
+    claim about `viz/browser.py` got paired with `config/datasources.yaml` -- sending the model to judge
+    a claim against the wrong file. The local-window rule fixed it; this pins that it stays fixed."""
+    from staleness_corpus import extract_pairs
+    from pathlib import Path as _P
+    text = (ROOT / "CLAUDE.md").read_text(encoding="utf-8", errors="replace")
+    bad = [p.pair_id for p in extract_pairs(text) if p.artifact not in p.claim]
+    assert not bad, f"pairs whose claim does not mention their artifact: {bad[:5]}"
+
+
+def test_a_pointer_without_a_status_word_is_not_extracted():
+    """"see X for the schema" asserts nothing about X, so it has nothing to be stale about. Auditing it
+    would spend GPU to learn nothing."""
+    from staleness_corpus import extract_pairs
+    pointer = "- The format is described in `docs/schema.md` for reference.\n"
+    assert extract_pairs(pointer) == []
+
+
+def test_a_status_claim_near_a_path_IS_extracted():
+    from staleness_corpus import extract_pairs
+    claim = "- The browser is deferred; see `dna_decode/genome_map/browser.py`.\n"
+    pairs = extract_pairs(claim)
+    assert len(pairs) == 1
+    assert pairs[0].artifact == "dna_decode/genome_map/browser.py"
+
+
+def test_one_bullet_citing_two_files_yields_two_separately_judged_pairs():
+    """A bullet can be accurate about one artifact and stale about another -- the ProSST case was exactly
+    that shape, so they must be judged separately rather than collapsed."""
+    from staleness_corpus import extract_pairs
+    b = ("- Work shipped in `dna_decode/a.py` but the run is still deferred per "
+         "`wiki/b.md` pending review.\n")
+    pairs = extract_pairs(b)
+    assert {p.artifact for p in pairs} == {"dna_decode/a.py", "wiki/b.md"}
+
+
+def test_the_corpus_kernel_uses_the_BENCHMARKED_prompt_verbatim():
+    """The full run inherits the benchmark's measured performance ONLY if it runs the same prompt. If
+    these drift, the 5/5-TP result does not transfer and the run means nothing."""
+    from kaggle_staleness_auditor import MAX_NEW_TOKENS, SYSTEM_PROMPT
+    k = (ROOT / "scripts/kaggle/staleness_corpus_kernel.py").read_text(encoding="utf-8")
+    assert SYSTEM_PROMPT in k, "corpus kernel's system prompt drifted from the benchmarked one"
+    assert f"MAX_NEW_TOKENS = {MAX_NEW_TOKENS}" in k
+    for field in ("CLAIM (from project documentation)", "ARTIFACT FACTS", "ARTIFACT EXCERPT"):
+        assert field in k
