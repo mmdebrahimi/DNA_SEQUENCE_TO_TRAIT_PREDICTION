@@ -1,0 +1,85 @@
+{
+  "_schema": "staleness-auditor-result-v1",
+  "model": "Qwen/Qwen3-8B",
+  "model_score": {
+    "tp": 5,
+    "fn": 0,
+    "fp": 1,
+    "tn": 4,
+    "n_positives": 5,
+    "n_negatives": 5,
+    "pass_condition": "tp>=3 and fp<=1",
+    "passed": true,
+    "unanswered": []
+  },
+  "mechanical_baseline": {
+    "tp": 0,
+    "fn": 5,
+    "fp": 5,
+    "tn": 0,
+    "n_positives": 5,
+    "n_negatives": 5,
+    "pass_condition": "tp>=3 and fp<=1",
+    "passed": false,
+    "unanswered": []
+  },
+  "beat_baseline": true,
+  "n_unparseable": 0,
+  "per_item": {
+    "P1_prosst_deferred": {
+      "verdict": "stale",
+      "evidence": "The artifact's 'Local, not Kaggle' section explicitly states the Step-6 run was executed LOCALLY on CPU with no Kaggle involvement, contradicting the claim that the forward pass is deferred to Kaggle.",
+      "truth": "stale"
+    },
+    "P2_tb_pending": {
+      "verdict": "stale",
+      "evidence": "The artifact contains completed metrics (sensitivity, specificity, accuracy) for drug resistance analysis, contradicting the claim that data runs are 'pending' and 'blocked'.",
+      "truth": "stale"
+    },
+    "P3_genome_map_browser": {
+      "verdict": "stale",
+      "evidence": "The artifact describes an implemented standalone graphical browser with code for HTML generation, feature styling, and contig rendering, contradicting the claim that it is 'deferred'.",
+      "truth": "stale"
+    },
+    "P4_bvbrc_census": {
+      "verdict": "stale",
+      "evidence": "The artifact shows completed analysis with verdicts for four drugs, contradicting the claim that the 3-drug census is deferred.",
+      "truth": "stale"
+    },
+    "P5_caur_no_free_source": {
+      "verdict": "stale",
+      "evidence": "The artifact explicitly references the CDC AR Isolate Bank as a source of phenotype data (MIC measurements) for C. auris, contradicting the claim that 'no free isolate-level phenotype source exists (fungal)'",
+      "truth": "stale"
+    },
+    "N1_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact's database table explicitly confirms the Bakta light DB is at `C:/Users/Farshad/dna_decode_stage2/bakta_db/db-light/` (4.0 GB) with version 6.0 and Zenodo DOI 10.5281/zenodo.14916843, matching the claim's specifics.",
+      "truth": "supported"
+    },
+    "N2_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "Mid-term (3-12 months) section states: \"REPLACED 2026-05-15 with Evidence Packet framework (per Pending Decisions row 8 framing reset)\" directly supporting the claim's assertion about Phase labels being retrospective-only after 2026-05-15",
+      "truth": "supported"
+    },
+    "N3_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact explicitly states 'External publication deferred' and 'No Databricks burst on cipro' matching the claim's assertions about EP1 closure status and deferral rationale.",
+      "truth": "supported"
+    },
+    "N4_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact explicitly states that certain steps (e.g., PC artifacts, Mash-clade baseline) are deferred to a hypothetical future N\u2265150 cohort, aligning with the claim's deferral of the mini-cohort unless a BV-BRC-wide cohort is built. The smoke-runner bug fix is also directly addressed in the Imple",
+      "truth": "supported"
+    },
+    "N5_mechanical_fp": {
+      "verdict": "stale",
+      "evidence": "The artifact's code includes Gentamicin (gent) breakpoints and strict-MIC classification logic, directly contradicting the claim that '4th-mechanism-class falsifier (gent) substrate also infeasible' and implying ongoing work on this task.",
+      "truth": "supported"
+    }
+  },
+  "variant": "v2",
+  "changes": [
+    "max_new_tokens 1200->2500",
+    "ARTIFACT FACTS line + weighting rule"
+  ]
+}
