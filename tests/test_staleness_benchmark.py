@@ -337,3 +337,41 @@ def test_field_specificity_beats_the_benchmark_so_precision_drop_is_not_degradat
     from scripts.staleness_adjudication import specificity, precision
     assert specificity() > 0.80 > precision(), (
         "the whole point: specificity went UP while precision went DOWN")
+
+
+# --- v3: the pre-registration and the scorer that grades against it ---
+
+def test_v3_predictions_were_committed_before_the_fix():
+    """The predictions must be falsifiable and must include a must-hold, or it is not a real test."""
+    from scripts.staleness_v3_preregistration import PREDICTIONS, BAR, targeted, must_hold
+    assert len(targeted()) == 3, "one prediction per arm of the diagnosed mechanism"
+    assert len(must_hold()) >= 1, "a fix with no must-hold can pass by silencing everything"
+    assert BAR["min_true_positives"] == 2, "both real catches must survive -- non-negotiable"
+    for p in PREDICTIONS:
+        assert p.predict in {"stale", "supported"} and len(p.because) > 50
+
+
+def test_the_v3_scorer_reproduces_the_v2_baseline():
+    """CONTROL: the scorer must reproduce the hand-adjudicated v2 result on the committed v2 raw output.
+
+    If it cannot recover 2 true positives from a run I checked by hand, it is measuring something other
+    than what I adjudicated, and any v3 number it produces would be meaningless.
+    """
+    from pathlib import Path
+    from scripts.score_v3 import score
+    raw = Path(__file__).resolve().parent.parent / "wiki" / "staleness_corpus_run_2026-08-27_raw.json"
+    if not raw.exists():
+        import pytest
+        pytest.skip("v2 raw output not present")
+    r = score(raw)
+    assert r["n_scored"] == 110
+    assert len(r["true_positives"]) == 2, "the two hand-checked real catches must be recovered"
+    assert not r["aggregate_pass"], "v2 must FAIL the v3 bar -- otherwise the bar is not a bar"
+
+
+def test_scorer_never_loses_a_true_positive_to_the_shared_key_trap():
+    """negative_results_map carries TWO claims with opposite verdicts. Keying by artifact could drop the
+    real one; the scorer must keep the true positive. Same shared-key overwrite trap as the report card."""
+    from scripts.score_v3 import _truth
+    t = _truth()
+    assert t["wiki/negative_results_map_2026-06-13.md"] == "true_positive"
