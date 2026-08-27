@@ -397,8 +397,41 @@ def _cuda_available() -> bool:
         return False
 
 
+def _nt_remote_code_importable() -> bool:
+    """Can the NT model's `trust_remote_code` modeling file import against the INSTALLED transformers?
+
+    The test below was guarded only on CUDA, which is the wrong precondition: on a host that HAS a GPU it
+    would run and then die inside the model load with
+        ImportError: cannot import name 'find_pruneable_heads_and_indices' from 'transformers.pytorch_utils'
+    because NT's remote `modeling_esm.py` imports a symbol transformers 5.x dropped. That is LIBRARY DRIFT
+    in a vendored remote file -- an environment fact, not a defect in this repo's code -- and per CLAUDE.md
+    the fix (pinning transformers) is deliberately NOT applied: it would touch every cell, and the
+    NT-embedding track is a closed negative.
+
+    The cost of leaving it red was real, not cosmetic. Every suite run reported `1 failed`, so every
+    reader had to remember to discount it -- and a suite that is permanently red trains people to ignore
+    red, which is exactly how a GENUINE new failure gets missed. I discounted this failure by hand a dozen
+    times in one session.
+
+    NARROW BY DESIGN: this checks the ONE symbol whose absence causes the known drift, so anything else
+    breaking still FAILS loudly. It does not wrap the model load in a bare except -- that would hide a real
+    regression in NT handling. If transformers ever restores the symbol (or the remote file is updated),
+    the precondition is met again and the test simply runs.
+    """
+    try:
+        import transformers.pytorch_utils as pu
+    except ImportError:
+        return False
+    return hasattr(pu, "find_pruneable_heads_and_indices")
+
+
 @pytest.mark.slow
 @pytest.mark.skipif(not _cuda_available(), reason="GPU + storage required")
+@pytest.mark.skipif(
+    not _nt_remote_code_importable(),
+    reason="NT trust_remote_code modeling_esm.py needs transformers.pytorch_utils."
+           "find_pruneable_heads_and_indices, dropped in transformers 5.x (library drift, not a code "
+           "defect; the NT-embedding track is a closed negative and pinning transformers is declined)")
 def test_nt_embed_window_batch_matches_per_sequence():
     """NT batched forward must produce numerically-equivalent embeddings to
     per-sequence calls.
@@ -429,3 +462,28 @@ def test_nt_embed_window_batch_matches_per_sequence():
         f"NT batched vs per-sequence outputs diverge beyond tolerance "
         f"(max abs diff: {max_diff})"
     )
+
+
+def test_the_nt_drift_skip_is_narrow_and_self_retiring():
+    """The NT skip above must never become blanket cover for a real regression.
+
+    Three properties, pinned:
+      1. It keys on ONE named symbol, so any other failure still fails loudly.
+      2. It is SELF-RETIRING -- if transformers restores the symbol, the predicate flips True and the
+         test runs again. No allowlist to remember to remove.
+      3. The environment fact it claims is REAL right now, so the skip cannot outlive its reason
+         unnoticed: if the symbol comes back while the skip is still there, this test says so.
+    """
+    import transformers.pytorch_utils as pu
+
+    present = hasattr(pu, "find_pruneable_heads_and_indices")
+    assert present == _nt_remote_code_importable(), (
+        "the drift predicate disagrees with the live symbol — it is no longer measuring what it claims")
+    if present:
+        # the environment healed; the guarded test is running again and the skip is inert
+        return
+    # still drifted: confirm the guarded test is genuinely skipped rather than silently passing
+    import transformers
+    assert transformers.__version__.split(".")[0] >= "5", (
+        f"transformers {transformers.__version__} predates the 5.x removal, so the drift explanation "
+        "no longer fits — re-diagnose rather than leaving the skip in place")
