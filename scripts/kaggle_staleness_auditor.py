@@ -37,6 +37,11 @@ sys.path.insert(0, str(ROOT / "scripts"))
 DEFAULT_MODEL = "Qwen/Qwen3-8B"
 ARTIFACT_HEAD_CHARS = 6000     # how much of the cited artifact to show the model
 
+# Generation budget. The 2026-08-27 run capped at 1200 and exactly one item (P4) blew it: its output was
+# 5207 chars and never closed `</think>`, while all nine others closed at ~1600-3000. So the cap bound on
+# ONE hard item, not on the task -- 2500 gives that item room without inviting the model to ramble.
+MAX_NEW_TOKENS = 2500
+
 
 SYSTEM_PROMPT = """You audit documentation claims for STALENESS.
 
@@ -57,8 +62,34 @@ file. Do not flag on keyword proximity. Flag only when the artifact's CONTENT co
 SUBSTANCE. A sentence that says "X was deferred, and here is the correction recording that it shipped" is
 `supported` -- it is accurate text about a past error, not a stale claim.
 
+ALSO CRITICAL: weigh ARTIFACT FACTS as evidence, not just the excerpt text. If a claim says work is
+"deferred"/"pending"/"not built" and the ARTIFACT FACTS show implemented code exists, the claim is `stale`
+-- EVEN IF the excerpt's own prose repeats the word "deferred". A module frequently describes ITSELF as
+"the deferred X" because it is the thing that finally implemented X; that phrasing is about what it
+implements, and its existence refutes the claim that X is still deferred.
+
 Reply with STRICT JSON only, no prose outside it:
 {"verdict": "stale|supported|unclear", "evidence": "<one sentence quoting what decided it>"}"""
+
+
+def structural_facts(artifact_path: str, artifact_text: str) -> str:
+    """Facts about the artifact's EXISTENCE and SHAPE, which no excerpt can convey. PURE.
+
+    THE P3 FIX, and it is not 'show more text'. The genome-map miss was structural: the claim was 'a
+    visual browser deferred', and `browser.py`'s own docstring calls itself "the deferred v1 'graphical
+    browser'" -- describing what it IMPLEMENTS. The file contains ZERO textual evidence it shipped (0
+    occurrences of "SHIPPED"), so a bigger excerpt would have supplied more of the same misleading prose.
+    The refutation is that the module EXISTS and defines `build_genome_map_html` plus 9 functions.
+
+    Stating that explicitly is honest context, not a thumb on the scale: it is checkable fact about the
+    artifact, given for every item alike, and it does not tell the model which verdict to reach.
+    """
+    facts = [f"exists: yes ({len(artifact_text)} chars)"]
+    if artifact_path.endswith(".py"):
+        n_def = len(re.findall(r"^\s*def \w+", artifact_text, re.M))
+        n_cls = len(re.findall(r"^\s*class \w+", artifact_text, re.M))
+        facts.append(f"implemented code: {n_def} function(s), {n_cls} class(es)")
+    return "; ".join(facts)
 
 
 def build_prompt(claim: str, artifact_path: str, artifact_text: str) -> str:
@@ -66,6 +97,7 @@ def build_prompt(claim: str, artifact_path: str, artifact_text: str) -> str:
     excerpt = artifact_text[:ARTIFACT_HEAD_CHARS]
     return (f"CLAIM (from project documentation):\n{claim}\n\n"
             f"ARTIFACT the claim is about: {artifact_path}\n"
+            f"ARTIFACT FACTS: {structural_facts(artifact_path, artifact_text)}\n"
             f"ARTIFACT EXCERPT:\n{excerpt}\n\n"
             f"Does the artifact still support the claim?")
 
@@ -107,11 +139,12 @@ def load_items_with_artifacts() -> list[dict]:
         p = ROOT / it.artifact
         text = p.read_text(encoding="utf-8", errors="replace") if p.exists() else ""
         out.append({"item_id": it.item_id, "claim": it.claim, "artifact": it.artifact,
+                    "facts": structural_facts(it.artifact, text),
                     "artifact_text": text[:ARTIFACT_HEAD_CHARS], "label": it.label})
     return out
 
 
-def render_kernel(model: str = DEFAULT_MODEL) -> str:
+def render_kernel(model: str = DEFAULT_MODEL, max_new: int = MAX_NEW_TOKENS) -> str:
     """The Kaggle kernel body. Reads items.json (uploaded as a dataset or inlined), writes results.json.
 
     Kaggle gotchas applied, all previously recorded in this repo: pin machine_shape NvidiaTeslaT4
@@ -149,7 +182,7 @@ for it in items:
     text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
     ids = tok([text], return_tensors="pt").to(model.device)
     with torch.no_grad():
-        gen = model.generate(**ids, max_new_tokens=1200, do_sample=False)
+        gen = model.generate(**ids, max_new_tokens={max_new}, do_sample=False)
     raw = tok.decode(gen[0][ids.input_ids.shape[-1]:], skip_special_tokens=True)
     out.append({{"item_id": it["item_id"], "raw": raw}})
     print(f"{{it['item_id']}}: {{raw[:160]!r}}", flush=True)

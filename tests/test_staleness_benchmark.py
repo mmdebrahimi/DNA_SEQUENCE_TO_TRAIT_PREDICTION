@@ -193,3 +193,65 @@ def test_the_pass_condition_is_pinned_where_a_reader_can_see_it():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ------------------------------------------------------- the two v2 fixes (2026-08-27), pinned
+
+def test_structural_facts_state_existence_and_shape():
+    """THE P3 FIX. The genome-map miss was structural, not textual: browser.py calls ITSELF 'the deferred
+    v1 graphical browser' (describing what it implements) and contains ZERO occurrences of 'SHIPPED', so a
+    bigger excerpt would only have supplied more of the same misleading prose. What refutes the claim is
+    that the module EXISTS and defines functions."""
+    from kaggle_staleness_auditor import structural_facts
+    body = "def a():\n    pass\ndef b():\n    pass\nclass C:\n    pass\n"
+    f = structural_facts("dna_decode/x.py", body)
+    assert "exists: yes" in f
+    assert "2 function(s)" in f and "1 class(es)" in f
+
+
+def test_structural_facts_do_not_leak_a_verdict():
+    """Honest context, not a thumb on the scale: the facts must never name a verdict, or the benchmark
+    would be measuring the prompt rather than the model."""
+    from kaggle_staleness_auditor import structural_facts
+    f = structural_facts("dna_decode/genome_map/browser.py",
+                         (ROOT / "dna_decode/genome_map/browser.py").read_text(encoding="utf-8"))
+    low = f.lower()
+    assert "stale" not in low and "supported" not in low and "deferred" not in low
+
+
+def test_the_p3_item_now_carries_its_structural_refutation():
+    """The item the model got wrong must now ship the fact that decides it."""
+    from kaggle_staleness_auditor import load_items_with_artifacts
+    p3 = {i["item_id"]: i for i in load_items_with_artifacts()}["P3_genome_map_browser"]
+    assert "exists: yes" in p3["facts"]
+    assert "function(s)" in p3["facts"], "a .py artifact must report its implemented-code count"
+
+
+def test_every_item_carries_nonempty_facts():
+    """A blank facts line would silently un-do the fix for that item."""
+    from kaggle_staleness_auditor import load_items_with_artifacts
+    blank = [i["item_id"] for i in load_items_with_artifacts() if not i["facts"].strip()]
+    assert not blank, f"items shipping empty ARTIFACT FACTS: {blank}"
+
+
+def test_the_generation_budget_was_raised_off_the_value_that_truncated():
+    """THE P4 FIX, and it is evidence-driven: at 1200 tokens exactly ONE item blew the cap (5207 chars,
+    `</think>` never closed) while the other nine closed at ~1600-3000. The cap bound on one hard item,
+    not on the task."""
+    from kaggle_staleness_auditor import MAX_NEW_TOKENS, render_kernel
+    assert MAX_NEW_TOKENS >= 2000, "P4 truncated at 1200; the budget must clear it with margin"
+    k = render_kernel()
+    assert f"max_new_tokens={MAX_NEW_TOKENS}" in k
+    assert "max_new_tokens=1200" not in k, "the kernel still carries the cap that truncated P4"
+
+
+def test_the_kernel_prompt_matches_the_local_prompt_shape():
+    """The kernel builds its prompt inline; if it drifts from build_prompt, the locally-tested prompt is
+    not the one that runs on the GPU — and the tests would be measuring a different system."""
+    from kaggle_staleness_auditor import build_prompt, render_kernel
+    k = render_kernel()
+    local = build_prompt("c", "x.py", "body")
+    for field in ("CLAIM (from project documentation)", "ARTIFACT the claim is about",
+                  "ARTIFACT FACTS", "ARTIFACT EXCERPT"):
+        assert field in local, f"local prompt lost {field!r}"
+        assert field in k, f"kernel prompt lost {field!r}"
