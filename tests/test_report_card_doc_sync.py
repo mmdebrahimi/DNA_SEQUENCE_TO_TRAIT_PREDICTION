@@ -45,12 +45,17 @@ _LIVE_DOC_DIRS = (Path("."), Path("docs"))
 # A dated artifact records a moment; see the module docstring. Matched by SHAPE, not by name.
 _DATED = re.compile(r"_?\d{4}-\d{2}-\d{2}")
 
-# HISTORY files are exempt for the SAME reason dated artifacts are: each entry is scoped to the release
-# it documents. CHANGELOG.md line ~533 records "Current card: 25 cells (6 SCORED / 4 NOT_CENSUSED ...)"
-# INSIDE a past release entry, where it was TRUE. Forcing it to today's numbers would falsify the release
-# history -- the guard would be making the file lie in order to go green. Found by the widened guard on
-# its first run, and verified by reading the file rather than exempted to get a pass.
-_HISTORY_FILES = {"CHANGELOG.md"}
+# APPEND-ONLY DATED-ENTRY LOGS are exempt for the SAME reason dated artifacts are: each entry is scoped
+# to the moment it records. CHANGELOG.md line ~533 records "Current card: 25 cells (6 SCORED /
+# 4 NOT_CENSUSED ...)" INSIDE a past release entry, where it was TRUE; LESSONS_LEARNED.md quotes the same
+# superseded figure inside the dated lesson ABOUT that correction. Forcing either to today's numbers
+# would falsify the record -- the guard making a file lie so it could go green.
+#
+# BOTH were found by this guard rather than anticipated, and BOTH were verified by reading the file
+# before exempting. LESSONS_LEARNED.md in particular caught me writing the lesson that describes this
+# very guard: the blanket rule demanded a HISTORY log enumerate every CURRENT count, which is the
+# "blanket guard forces a false claim on the exempt" failure -- scope to the records the rule applies to.
+_HISTORY_FILES = {"CHANGELOG.md", "LESSONS_LEARNED.md"}
 
 
 def live_docs() -> list[Path]:
@@ -187,20 +192,31 @@ def test_dated_artifacts_are_exempt_because_they_record_a_moment():
     assert not [p for p in live_docs() if _DATED.search(p.name)]
 
 
-def test_the_changelog_is_exempt_for_a_verified_reason_not_a_convenience():
-    """The widened guard flagged CHANGELOG.md on its first run. It is exempt because each entry is scoped
-    to the release it documents -- a past entry recording the then-current card is TRUE in place, and
-    rewriting it to today's numbers would falsify the release history.
+@pytest.mark.parametrize("name", sorted(_HISTORY_FILES))
+def test_each_history_log_is_exempt_for_a_verified_reason_not_a_convenience(name):
+    """Both exemptions were found BY this guard, not anticipated, and both were verified by reading the
+    file. Each is an append-only dated-entry log: a past entry recording the then-current card is TRUE in
+    place, and rewriting it to today's numbers would falsify the record.
 
-    This pins the FACT that justifies the exemption. If the changelog ever stops carrying superseded
-    figures inside past entries, the exemption should be revisited rather than assumed.
+    This pins the FACT that justifies each exemption. If a log ever stops carrying superseded figures
+    inside past entries, the carve-out should be revisited rather than assumed to still apply.
     """
-    ch = Path("CHANGELOG.md")
-    if not ch.exists():
-        pytest.skip("CHANGELOG.md absent")
-    assert ch not in live_docs()
-    text = ch.read_text(encoding="utf-8", errors="replace")
-    # the superseded figure really is present, inside a past release entry
+    p = Path(name)
+    if not p.exists():
+        pytest.skip(f"{name} absent")
+    assert p not in live_docs()
+    text = p.read_text(encoding="utf-8", errors="replace")
     assert "6 SCORED" in text, (
-        "CHANGELOG.md no longer records a superseded card figure — re-check whether it still needs the "
-        "history exemption, rather than leaving a stale carve-out in place")
+        f"{name} no longer records a superseded card figure — re-check whether it still needs the "
+        f"history exemption, rather than leaving a stale carve-out in place")
+
+
+def test_the_history_exemption_is_narrow_enough_to_still_catch_the_real_defect():
+    """NON-VACUITY for the exemption itself. Two files are now exempt; the guard is worthless if the
+    headline-carrying docs drifted into that set."""
+    live = {p.name for p in live_docs()}
+    assert "CLAUDE.md" in live and "ARCHITECTURE.md" in live
+    assert not (_HISTORY_FILES & live), "a history file leaked into the live set"
+    assert len(_HISTORY_FILES) <= 3, (
+        "the history exemption is growing — each addition must be a verified append-only dated-entry "
+        "log, not a file that was easier to exempt than to fix")
