@@ -301,6 +301,16 @@ if __name__ == "__main__":
 # a noisy guard gets disabled. The `--json` case is pinned explicitly below instead.
 # --------------------------------------------------------------------------------------------------
 
+# SCOPED BY PURPOSE, not hand-listed laziness -- do NOT widen this to every markdown file. These are the
+# "run this command" surfaces, the only docs whose backticked flags are PROMISES to a user. Measured
+# 2026-08-26 by scanning the 9 unscanned live docs: every hit was a non-promise, so widening would be
+# 100% false positives, and this file's own docstring records that a noisy guard gets disabled.
+#   CHANGELOG.md `--legacy-6class`      -- a release entry recording the flag's REMOVAL (history)
+#   LESSONS_LEARNED.md `--fix`          -- a code-review skill's flag, quoted in a lesson
+#   LESSONS_LEARNED.md `--flags`        -- not a flag at all; a generic placeholder ("which --flags")
+#   TODOS.md `--refresh-frame`          -- a /project-state SKILL flag (agent tooling, like --advance)
+# Contrast test_report_card_doc_sync, where deriving the doc set WAS right: a stale COUNT is wrong in any
+# live doc, whereas a flag NAME is only a promise on a surface that tells a user to run something.
 _DOC_FILES = ("README.md", "QUICKSTART.md", "CLAUDE.md", "docs/quickstart.md", "examples/README.md")
 # flags that are not ours: argparse builtins + flags of external tools the docs legitimately show
 _FOREIGN_FLAGS = {"--help", "--version", "--rm", "--entrypoint", "--output", "--type", "-v",
