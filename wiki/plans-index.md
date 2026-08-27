@@ -551,6 +551,6 @@
 - The 7 unscreenable cells keep `evidence_tier=KNOWLEDGE_BASELINE` — no existing tier fits (`NO_FREE_SOURCE` is about labels, `NOT_CENSUSED` means never-scored), and adding one touches the report-card state machine. Left as an Open Question.
 - The CURATE branch (recording causal variants for the 40 unrecorded loci) is deliberately EXCLUDED — it means writing curated biological facts into shipped catalogs, a fabrication hazard unless every locus is sourced and verified. Needs its own plan; not foreclosed.
 - The freeze guard must be proved NON-VACUOUS by simulating a 20th cell — the exact defect caught twice already this session (a vacuous control fixture; a substring retraction guard).
-**Status:** candidate
+**Status:** executed (archived to executed_plans/Colour_Cell_Family_Freeze_Plan/)
 
 ---
