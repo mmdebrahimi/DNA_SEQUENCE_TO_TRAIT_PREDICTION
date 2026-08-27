@@ -123,6 +123,42 @@ Code + offline unit tests shipped; the network/Docker run is a deferred manual s
 - [x] **Oxford MIC-INGESTION layer shipped 2026-06-15** — config-driven MIC-table ingester `dna_decode/data/external_mic_ingest.py` + alias→BioSample crosswalk w/ conflict taxonomy `dna_decode/data/external_crosswalk.py` + W0 empirical probe `scripts/oxford_w0_probe.py` + label driver `scripts/build_oxford_labels.py` (emits `cohort_manifest_external_<run_id>.json`, ABORTS on crosswalk HARD CONFLICT) + one-command live driver `scripts/run_oxford_revalidation.py`. Additive: operator-aware MIC censoring (`MicValue` in `external_mic_labels.py`), `read_run_records_for_project` (`biosample_resolver.py`), exact-set preflight mode (`external_cohort_preflight.py`), scorer manifest drift-guard + run-id (`external_cohort_revalidate.py`), run-scoped roll-up (`build_external_validation_report.py`). The 5 frozen files stay byte-unchanged. Runbook: `wiki/oxford_revalidation_runbook.md`. Plan: `plans/Oxford_MIC_Ingester_Plan/` (→ `executed_plans/`).
 - [ ] **[OPEN, manual post-build step]** Run the actual external re-validation (network + Docker required). Fastest path = the one-command driver `scripts/run_oxford_revalidation.py` (chains W0 probe → ingest → crosswalk → labels → preflight → per-drug scorer → roll-up). Or run the stages by hand: (1) `oxford_w0_probe.py` — empirical reachability/MIC-openness probe; (2) `build_oxford_labels.py --run-id <id>` — ingest + crosswalk-resolve + emit `cohort_manifest_external_<id>.json` (aborts on HARD CONFLICT); (3) `external_cohort_preflight.py --project <PRJ> --cohort-name <name>` (exact-set mode) — Gate-0 BioSample-level leakage + assembly-availability go/no-go; (4) on preflight PASS, `external_cohort_revalidate.py --cohort <name> --drug <drug> --labels-dir D --preflight-json P.json` per drug; (5) `build_external_validation_report.py` for the run-scoped roll-up. Step 3 is the empirical go/no-go — only proceed past it if leakage is clean and assemblies are reachable.
 
+## Animal colour/plumage family — frozen at 19 (2026-08-26)
+
+The family is frozen (`dna_decode/data/colour_cell_freeze.py`; adding a 20th cell trips
+`tests/test_colour_cell_freeze.py`). Screen + memo: `dna_decode/pigment/substrate_screen.py` →
+`wiki/colour_cell_substrate_screen_2026-08-26.{md,json}`. The three items below were left deliberately
+unresolved by `plans/Colour_Cell_Family_Freeze_Plan/technical-plan.md` and are **user calls**, not
+executor tasks.
+
+- [x] **Colour-cell substrate screen + family freeze shipped 2026-08-26.** `substrate_screen.py` derives
+  per-cell scoreability from the committed catalogs (40 of 65 loci record no causal variant; 7 of 19 cells
+  record none for any locus → unvalidatable as written; 14 of the 25 recorded variants are indel/structural
+  → off-panel for any SNP array; only donkey + roe deer fully SNV-tractable). Gates **G9** (causal variant
+  unrecorded) + **G10** (variant class off-panel) added to `wiki/negative_results_map_2026-06-13.md`. All 19
+  `CellContract.incoming_data_gate` values now name the real gate; 7 false cohort-only `demotion_rule`
+  promises corrected. 19 CLI `TRAITS` validation strings carry their screen verdict.
+- [ ] **[OPEN, user call] Curate the 40 unrecorded loci.** Recording a concrete causal variant for each
+  would convert the 7 unvalidatable cells to screenable. Deliberately excluded from the freeze plan: it
+  means writing curated biological facts into shipped catalogs, which is a fabrication hazard unless every
+  locus is OMIA/literature-sourced and verified. Needs its own plan with that sourcing discipline pinned.
+  Not foreclosed.
+- [ ] **[OPEN, user call] Should the 7 unscreenable cells drop below `KNOWLEDGE_BASELINE`?** No existing
+  `EvidenceTier` fits — `NO_FREE_SOURCE` is about *labels*, `NOT_CENSUSED` means "never scored". The freeze
+  kept `KNOWLEDGE_BASELINE` and carries the distinction in `incoming_data_gate` instead. Adding a tier
+  (e.g. `UNSCOREABLE_AS_WRITTEN`) touches the report-card state machine.
+- [ ] **[OPEN, user call] Should `donkeycolor` / `roedeercolor` be exempt from the freeze?** Both are
+  fully SNV-tractable (clear G9 and G10), so they are genuinely promotable if a cohort appears. The freeze
+  currently covers all 19 uniformly.
+- [ ] **[OPEN, deferred] `coatcolor` (dog) is the family's only measured cell but still tiers as
+  `KNOWLEDGE_BASELINE`.** Its measured result now *is* on the trust surface (the CLI validation string
+  reports black 160/161 = 0.994 + blue/grey 11/31 + every other base colour unscorable, per
+  `wiki/dog_coat_darwins_ark_measured_2026-07-30.md`), so the memo's under-claiming complaint is addressed
+  in prose. What is unresolved is whether "measured on one colour, unscorable on the rest" warrants a tier
+  of its own — same state-machine question as the unscreenable-cell tier item above. A full-colour measured
+  tier needs a substrate that genotypes CBD103/ASIP/TYRP1-bs directly (Embark/VGL panel or WGS), not
+  imputed SNVs.
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.

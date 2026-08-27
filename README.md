@@ -58,7 +58,7 @@ full per-trait validation surface.
 | `dna-decode mlst` (**new**) | **MLST sequence type** (PubMLST; v0 E. coli Achtman 7-gene) — exact-allele → profile → ST | deterministic blastn 100/100 + PubMLST profile lookup; **validated: K-12 MG1655 → ST10**; `dna-mlst --fetch-db` installs the scheme; novel/incomplete → ST not guessed; offline-safe |
 | `dna-decode ktype` (**new**) | **Klebsiella K-antigen (capsule) type** via the wzi allele scheme (BIGSdb Pasteur, Kleborate-bundled) — the `serotype` sibling | deterministic wzi-blastn caller (identity 90 / coverage 80); **self-consistency 15/15** across the DB; faithful-to-tool (wzi→K ~94%, NOT one-to-one); a **free measured serological label exists** (KlebNET-GSP 731-isolate set) → validatable, full caller-vs-serology run scoped (`wiki/ktype_report_card.md`); offline-safe |
 
-3672 tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
+3838 tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
 + codon-mapping `dna_decode/typing/codon_map.py`) **+ 3 cross-decoder analyses** that compose them:
 
 | Analysis | What | |
@@ -99,6 +99,35 @@ HIV efavirenz, `IN_DISTRIBUTION` for SARS-CoV-2, `NO_FREE_PHENOTYPE_SOURCE` for 
 `ABSTAINS_BY_DESIGN` for the carbapenem abstainers. The honesty discipline is now *user-facing* at the
 CLI, not buried in the wiki (`dna_decode/data/trust_surface.py`; tiers never averaged, metrics never
 fabricated).
+
+### Animal colour / plumage — 19 cells, deliberately FROZEN
+
+**19 of the 44 traits** are curated animal coat-colour / plumage decoders (`dna-decode coatcolor`,
+`catcolor`, `horsecolor`, `plumage`, …) — deterministic OMIA/literature epistasis rules that take observed
+genotypes at the pigmentation loci and return the predicted colour. All 19 ship as `KNOWLEDGE_BASELINE`,
+and the family is **frozen at 19** (`dna_decode/data/colour_cell_freeze.py`; adding a 20th trips
+`tests/test_colour_cell_freeze.py`).
+
+The freeze records an honest limit, not a paused roadmap. A screen derived from the committed catalogs
+(`dna_decode/pigment/substrate_screen.py`, run via `scripts/colour_cell_substrate_screen.py`) found **two
+walls, the curation one in front**:
+
+- **40 of 65 loci (62%) record no causal variant at all** — only allele symbols and dominance order
+  (`rabbit C (TYR): C full > chinchilla > Himalayan > c albino`). **7 of the 19 cells** (alpaca, cattle,
+  mouse, pig, pigeon, rabbit, sheep) record none for *any* locus, which makes them **unvalidatable as
+  written**: a locus whose causal variant is unspecified cannot be scored against any genotype file, so no
+  cohort would help. The blocker is curation, not data.
+- Of the 25 loci that *do* record one, **14 (56%) are indel/structural** — off-panel for any SNP array or
+  imputed biallelic-SNV panel. That is empirically what sank the family's one measured cell: dog coat
+  colour on Darwin's Ark scored black **160/161 = 0.994** and left every other base colour unscorable.
+
+Only **donkey** (3/3 loci) and **roe deer** (1/1) are fully SNV-tractable. Each cell's CLI `validation:`
+line carries its own screen verdict, so `dna-decode list` reports this per cell rather than burying it.
+Memo: `wiki/colour_cell_substrate_screen_2026-08-26.md`. The decoder-side rejection gates this family
+needed and did not have — **G9** (causal variant unrecorded) and **G10** (variant class off-panel) — are in
+`wiki/negative_results_map_2026-06-13.md`; G1–G8 gate whether a usable *label* exists, G9/G10 gate whether
+the decoder's own *rule* is scoreable against a genotype at all. Screen any new curated-catalog cell
+against them before building it.
 
 ### Organism-aware AMR calling (`dna-amr --organism`)
 
