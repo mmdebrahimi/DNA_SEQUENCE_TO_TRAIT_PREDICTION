@@ -47,8 +47,17 @@ implements, and its existence refutes the claim that X is still deferred.
 Reply with STRICT JSON only, no prose outside it:
 {"verdict": "stale|supported|unclear", "evidence": "<one sentence quoting what decided it>"}"""
 
-items = json.load(open("/kaggle/input/dna-staleness-corpus/staleness_corpus_items.json",
-                       encoding="utf-8"))
+# DISCOVER the input rather than trusting a hardcoded mount path. The first run died with
+# FileNotFoundError on /kaggle/input/dna-staleness-corpus/... -- a dataset that did not attach where
+# expected looks exactly like a model failure in the results, which is the failure mode the benchmark
+# avoided by inlining. Search, and if nothing is found, say so loudly instead of dying on a path.
+import glob
+cands = sorted(glob.glob("/kaggle/input/**/staleness_corpus_items.json", recursive=True))
+print("available under /kaggle/input:", sorted(glob.glob("/kaggle/input/*")), flush=True)
+if not cands:
+    raise SystemExit("corpus dataset did not attach -- no staleness_corpus_items.json under /kaggle/input")
+print("using:", cands[0], flush=True)
+items = json.load(open(cands[0], encoding="utf-8"))
 print(f"loaded {len(items)} pairs", flush=True)
 print("device:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU", flush=True)
 
