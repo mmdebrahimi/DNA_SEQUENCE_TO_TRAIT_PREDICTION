@@ -1,0 +1,80 @@
+{
+  "_schema": "staleness-auditor-result-v1",
+  "model": "Qwen/Qwen3-8B",
+  "model_score": {
+    "tp": 3,
+    "fn": 2,
+    "fp": 0,
+    "tn": 5,
+    "n_positives": 5,
+    "n_negatives": 5,
+    "pass_condition": "tp>=3 and fp<=1",
+    "passed": true,
+    "unanswered": []
+  },
+  "mechanical_baseline": {
+    "tp": 0,
+    "fn": 5,
+    "fp": 5,
+    "tn": 0,
+    "n_positives": 5,
+    "n_negatives": 5,
+    "pass_condition": "tp>=3 and fp<=1",
+    "passed": false,
+    "unanswered": []
+  },
+  "beat_baseline": true,
+  "n_unparseable": 1,
+  "per_item": {
+    "P1_prosst_deferred": {
+      "verdict": "stale",
+      "evidence": "The artifact explicitly states the Step-6 run was executed LOCALLY on CPU 'no Kaggle' (see 'Local, not Kaggle' section), contradicting the claim that the forward pass is 'deferred to a Kaggle run'.",
+      "truth": "stale"
+    },
+    "P2_tb_pending": {
+      "verdict": "stale",
+      "evidence": "The artifact contains completed data metrics (e.g., 'sens', 'spec', 'accuracy') for drugs, contradicting the claim of 'PENDING DATA RUNS (BLOCKED-gated by design)'.",
+      "truth": "stale"
+    },
+    "P3_genome_map_browser": {
+      "verdict": "supported",
+      "evidence": "The artifact explicitly states 'Standalone graphical browser for a genome-map JSON \u2014 the deferred v1 \"graphical browser\"' which directly supports the claim that the visual browser is deferred.",
+      "truth": "stale"
+    },
+    "P4_bvbrc_census": {
+      "verdict": "unclear",
+      "evidence": "<think>\nOkay, let's tackle this. The user is asking whether the artifact supports the claim that \"strict-MIC 3-drug feasibility census ... deferred to a fresh session.\" \n\nFirst, I need to understand t",
+      "truth": "stale"
+    },
+    "P5_caur_no_free_source": {
+      "verdict": "stale",
+      "evidence": "The artifact explicitly references the CDC AR Isolate Bank as a source of phenotype data (MIC measurements) for fungal isolates, directly contradicting the claim that 'no free isolate-level phenotype source exists (fungal)'.",
+      "truth": "stale"
+    },
+    "N1_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact's 'Databases' section explicitly confirms the Bakta light DB path (`C:/Users/Farshad/dna_decode_stage2/bakta_db/db-light/`), size (4.0 GB), version (6.0), and Zenodo DOI matches the claim. The entrypoint workaround command is directly quoted in the 'Smoke-test results' section.",
+      "truth": "supported"
+    },
+    "N2_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact explicitly states that the Mid-term goal hierarchy was replaced on 2026-05-15 with the Evidence Packet framework (per Pending Decisions row 8 framing reset), aligning with the claim's assertion that Phase labels are now retrospective-only and new work uses Evidence Packets.",
+      "truth": "supported"
+    },
+    "N3_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact explicitly states 'External publication deferred' and 'No Databricks burst' matching the claim's assertions about EP1 cipro closure and deferral status.",
+      "truth": "supported"
+    },
+    "N4_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact's Implementation Plan Step 1 explicitly describes fixing the smoke-runner silent-variant-drop bug in scripts/smoke_gate_12strain_cipro.py:374-382 with named-exception handling, matching the claim's description of the fix.",
+      "truth": "supported"
+    },
+    "N5_mechanical_fp": {
+      "verdict": "supported",
+      "evidence": "The artifact's code implements the 4-drug feasibility census described in the claim, including handling of Gentamicin (4th-mechanism-class) breakpoints and cohort construction stages, consistent with the documented context of BV-BRC infeasibility findings.",
+      "truth": "supported"
+    }
+  }
+}
