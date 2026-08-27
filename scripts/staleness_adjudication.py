@@ -6,7 +6,7 @@ its artifact by hand, and that verdict is the actual product. Keeping the verdic
 later run can be scored against the same rubric.
 
 THE HEADLINE THIS FILE EXISTS TO MAKE HONEST. The benchmark measured 4/5 precision on a 50%-positive test
-set. The real corpus ran at 2/9. That is not a contradiction and not a regression -- it is the base-rate
+set. The real corpus ran at 2/11. That is not a contradiction and not a regression -- it is the base-rate
 effect, and `precision_from_base_rate` computes it, so the claim is arithmetic rather than hand-waving.
 A screen with excellent specificity still returns mostly false positives when the thing it screens for is
 rare, which is exactly the regime a documentation corpus is in.
@@ -26,7 +26,7 @@ class Adjudicated:
     why: str
 
 
-# Every flag the 80-item pass raised, checked against its artifact by hand on 2026-08-27.
+# Every flag the full 110-item pass raised, checked against its artifact by hand on 2026-08-27.
 ADJUDICATIONS: tuple[Adjudicated, ...] = (
     Adjudicated(
         "wiki/negative_results_map_2026-06-13.md",
@@ -94,11 +94,30 @@ ADJUDICATIONS: tuple[Adjudicated, ...] = (
         "The heading is 'Explicit non-criteria for v0' and the claim says v0 trains on CATEGORICAL labels. "
         "The artifact AGREES; the model read the heading correctly and inverted the conclusion.",
     ),
+    Adjudicated(
+        "dna_decode/genome_map/browser.py",
+        "FACTS show browser.py exists with 9 implemented functions, contradicting the claim it was 'deferred'",
+        "false_positive",
+        "THE MOST DIAGNOSTIC FLAG OF THE RUN. The only 'deferred'+browser text in CLAUDE.md IS the "
+        "correction recording that the browser shipped 2026-07-11 -- exactly the case the system prompt "
+        "explicitly calls `supported` ('a sentence that says X was deferred, and here is the correction "
+        "recording that it shipped'). The v2 ARTIFACT FACTS rule OVERRODE its own stated exception. Third "
+        "instance of the same unscoped rule (after the benchmark's N5 and the field census flag).",
+    ),
+    Adjudicated(
+        "wiki/negative_results_map_2026-06-13.md",
+        "G9 exists, contradicting the claim the family 'did not have' G9/G10",
+        "false_positive",
+        "The claim is HISTORICAL -- the colour family lacked decoder-side gates before G9/G10 were added "
+        "for it on 2026-08-26. A past-tense statement about what was missing is not refuted by the thing "
+        "now existing. Same file as the run's first true positive, opposite verdict: the pass flagged the "
+        "corrected bullet AND the accurate historical one.",
+    ),
 )
 
-N_SCORED = 80          # verdicts recovered before the OOM
-N_SUPPORTED = 65
-N_UNCLEAR = 6
+N_SCORED = 110         # 80 from the first pass + 30 from the capped-excerpt rerun (0 unparseable)
+N_SUPPORTED = 91
+N_UNCLEAR = 8
 N_UNPARSEABLE = 4
 
 

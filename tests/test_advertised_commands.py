@@ -317,7 +317,12 @@ _FOREIGN_FLAGS = {"--help", "--version", "--rm", "--entrypoint", "--output", "--
                   # flags of the AGENT tooling the docs describe, not of this package: `--advance` is a
                   # Soraya skill mode. A dna-decode user never types it, so it is not a promise this
                   # repo makes -- but it IS legitimately named when CLAUDE.md records how a run went.
-                  "--advance", "--until-mvp", "--no-spillover"}
+                  "--advance", "--until-mvp", "--no-spillover",
+                  # pytest's own flags, quoted when CLAUDE.md records how the suite is run. `--ignore`
+                  # appears in the sentence saying it is NOT needed any more (the suite went green) --
+                  # so the guard was demanding we implement a flag whose whole point is that nobody
+                  # types it. A foreign tool's flag named in prose is not a promise this repo makes.
+                  "--ignore", "--collect-only", "--tb"}
 
 
 def _declared_flags() -> set[str]:

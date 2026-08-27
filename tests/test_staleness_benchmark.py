@@ -311,7 +311,7 @@ def test_the_corpus_kernel_uses_the_BENCHMARKED_prompt_verbatim():
 
 def test_adjudication_covers_every_flag_the_pass_raised():
     from scripts.staleness_adjudication import ADJUDICATIONS, tally
-    assert tally()["flags"] == len(ADJUDICATIONS) == 9
+    assert tally()["flags"] == len(ADJUDICATIONS) == 11
     assert {a.verdict for a in ADJUDICATIONS} <= {"true_positive", "false_positive"}
     # every adjudication must carry a REASON -- a bare verdict is not an adjudication
     for a in ADJUDICATIONS:
