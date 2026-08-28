@@ -375,3 +375,30 @@ def test_scorer_never_loses_a_true_positive_to_the_shared_key_trap():
     from scripts.score_v3 import _truth
     t = _truth()
     assert t["wiki/negative_results_map_2026-06-13.md"] == "true_positive"
+
+
+def test_the_deployed_prompt_is_the_MEASURED_one_not_the_failed_v3():
+    """v3 failed its pre-registered bar (1 true positive, bar required 2), so it must not be deployed.
+
+    Shipping an unvalidated prompt because its aggregate numbers looked nicer is exactly what the
+    pre-registration exists to prevent. v3 stays recoverable from git; it is not the live config.
+    """
+    from scripts.kaggle_staleness_auditor import SYSTEM_PROMPT
+    # the v2 wording -- unscoped, and the reason v3 was attempted. Its PRESENCE is the marker that the
+    # deployed prompt is the one whose 5/5-TP-1-FP benchmark actually ran.
+    assert "ALSO CRITICAL: weigh ARTIFACT FACTS as evidence" in SYSTEM_PROMPT
+    assert "When you cannot tell whether a claim is CAPABILITY or FINDING" not in SYSTEM_PROMPT
+
+
+def test_v3_scored_below_its_own_bar():
+    """Pin the FAIL so a later reader cannot mistake v3's nicer flag count for a passing result."""
+    from pathlib import Path
+    from scripts.score_v3 import score
+    raw = Path(__file__).resolve().parent.parent / "wiki" / "staleness_v3_run_2026-08-27_raw.json"
+    if not raw.exists():
+        import pytest
+        pytest.skip("v3 raw output not present")
+    r = score(raw)
+    assert not r["aggregate_pass"], "v3 FAILED its pre-registered bar -- do not record it as a pass"
+    assert len(r["true_positives"]) < 2, "the bar required both hand-verified true positives to survive"
+    assert r["targeted_hits"] >= 2, "the diagnosed arms did flip -- the idea is supported, just unproven"

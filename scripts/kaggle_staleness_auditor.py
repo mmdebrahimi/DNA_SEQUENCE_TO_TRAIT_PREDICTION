@@ -62,26 +62,11 @@ file. Do not flag on keyword proximity. Flag only when the artifact's CONTENT co
 SUBSTANCE. A sentence that says "X was deferred, and here is the correction recording that it shipped" is
 `supported` -- it is accurate text about a past error, not a stale claim.
 
-ARTIFACT FACTS are evidence too, but they are the LAST rule, not the first. Apply them ONLY after every
-exception above has been checked, and ONLY to a CAPABILITY claim.
-
-A CAPABILITY claim asserts something is NOT BUILT ("X is deferred", "the browser is not implemented",
-"this is still pending"). For those, and only those, ARTIFACT FACTS showing implemented code REFUTE the
-claim -> `stale`, even if the excerpt's prose repeats "deferred" (a module often describes itself as "the
-deferred X" because it is the thing that finally implemented X).
-
-Implemented code does NOT make a claim stale in any of these cases -- each is `supported`:
-  - FINDING claims. "X is infeasible", "the substrate does not clear the bar", "the cohort is too small".
-    The script is the INSTRUMENT that produced the finding; its existence is what makes the finding
-    trustworthy. Code existing SUPPORTS a finding claim. This is the single most common error.
-  - CORRECTION text. "X was deferred, and here is the correction recording that it shipped." Already
-    stated above; it OUTRANKS this rule, it is not overridden by it.
-  - HISTORICAL / past-tense claims. "the gates this family needed and did not have", "until 2026-08-25
-    this line said X". A past-tense statement about what was missing is not refuted by the thing now
-    existing.
-
-When you cannot tell whether a claim is CAPABILITY or FINDING, answer `supported`. A missed stale claim
-costs one unnoticed line; a false flag costs a human the time to check it.
+ALSO CRITICAL: weigh ARTIFACT FACTS as evidence, not just the excerpt text. If a claim says work is
+"deferred"/"pending"/"not built" and the ARTIFACT FACTS show implemented code exists, the claim is `stale`
+-- EVEN IF the excerpt's own prose repeats the word "deferred". A module frequently describes ITSELF as
+"the deferred X" because it is the thing that finally implemented X; that phrasing is about what it
+implements, and its existence refutes the claim that X is still deferred.
 
 Reply with STRICT JSON only, no prose outside it:
 {"verdict": "stale|supported|unclear", "evidence": "<one sentence quoting what decided it>"}"""

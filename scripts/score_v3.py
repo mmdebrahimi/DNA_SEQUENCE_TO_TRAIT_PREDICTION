@@ -46,12 +46,23 @@ def score(results_path: Path) -> dict:
     from staleness_v3_preregistration import BAR, PREDICTIONS
 
     raw = json.load(open(results_path, encoding="utf-8"))
-    verdicts = {r["artifact"]: parse_verdict(r["raw"]) for r in raw}
-    flagged = {a for a, p in verdicts.items() if p["verdict"] == "stale"}
+    # Key by ITEM, not artifact. One artifact can carry SEVERAL distinct claims -- negative_results_map
+    # holds both a genuinely stale bullet and an accurate historical one -- and a {artifact: verdict}
+    # dict silently keeps only the last, which DELETED a correctly-caught true positive from the first
+    # version of this scorer. The same shared-key overwrite trap the _truth() test already guards.
+    per_item = [(r.get("item_id", r["artifact"]), r["artifact"], parse_verdict(r["raw"])) for r in raw]
+    flagged_items = [(i, a) for i, a, p in per_item if p["verdict"] == "stale"]
+    flagged = {a for _, a in flagged_items}
+    # an artifact's verdict for the PREDICTION check: stale if ANY of its claims was flagged, so a
+    # predicted flip is only a HIT when every claim on that artifact stopped being flagged.
+    verdicts: dict[str, dict] = {}
+    for _, a, p in per_item:
+        if a not in verdicts or p["verdict"] == "stale":
+            verdicts[a] = p
     truth = _truth()
 
-    tp = sorted(a for a in flagged if truth.get(a) == "true_positive")
-    fp = sorted(a for a in flagged if truth.get(a) != "true_positive")
+    tp = sorted({a for _, a in flagged_items if truth.get(a) == "true_positive"})
+    fp = sorted({a for _, a in flagged_items if truth.get(a) != "true_positive"})
 
     targeted = []
     for pr in PREDICTIONS:
@@ -63,7 +74,7 @@ def score(results_path: Path) -> dict:
                       and len(tp) >= BAR["min_true_positives"]
                       and len(fp) <= BAR["max_false_positives"])
     core = [t for t in targeted if t["kind"] in {"finding", "correction", "historical", "must-hold-TP"}]
-    return {"n_scored": len(raw), "flags": sorted(flagged), "true_positives": tp, "false_positives": fp,
+    return {"n_scored": len(raw), "n_flagged_items": len(flagged_items), "flags": sorted(flagged), "true_positives": tp, "false_positives": fp,
             "aggregate_pass": aggregate_pass, "targeted": targeted,
             "targeted_hits": sum(t["hit"] for t in core), "targeted_total": len(core),
             "unparseable": sum(1 for p in verdicts.values() if not p["parse_ok"])}
