@@ -39,6 +39,15 @@ ROOT = Path(__file__).resolve().parent.parent
 # this project has been bitten by loose prefix matching before.
 METHYLTRANSFERASE = re.compile(r"^(rmt[A-H]\d*|armA|npmA\d*)$", re.I)
 
+# THE ACTUAL GAP is narrower than "16S methyltransferases", and the difference is measured, not assumed.
+# Across 158 cached methyltransferase rows the AMRFinder Subclass is PERFECTLY consistent per gene:
+#   armA  -> "GENTAMICIN"     24/24   ALREADY counted by the frozen rule
+#   rmt*  -> "AMINOGLYCOSIDE" 134/134 invisible to it
+# So the frozen rule already sees 15% of methyltransferase rows, and the `armA` clause of the candidate
+# is a NO-OP. Keeping armA in METHYLTRANSFERASE (used for CENSUS/reporting) is right -- it is one; but
+# the RULE gap is rmt-only, and conflating them overstates what the change does.
+RMT_GAP = re.compile(r"^(rmt[A-H]\d*|npmA\d*)$", re.I)
+
 COHORTS = ("escherichia_coli_shigella_provdisjoint_gentamicin",
            "klebsiella_provdisjoint_gentamicin",
            "klebsiella_gentamicin")
@@ -93,9 +102,18 @@ def frozen_call(rows: list[dict]) -> bool:
     return False
 
 
+def in_rmt_gap(symbol: str) -> bool:
+    """PURE. True for the genes the frozen rule actually cannot see (rmt*/npmA, NOT armA)."""
+    return bool(RMT_GAP.match(symbol.strip()))
+
+
 def candidate_call(rows: list[dict]) -> bool:
-    """FROZEN rule OR a 16S methyltransferase. Scorer-local; the frozen module is untouched."""
-    return frozen_call(rows) or any(is_methyltransferase(gene_symbol(r)) for r in rows)
+    """FROZEN rule OR a gene in the measured gap. Scorer-local; the frozen module is untouched.
+
+    Uses RMT_GAP rather than METHYLTRANSFERASE deliberately: armA already carries the GENTAMICIN token in
+    every one of 24 cached rows, so including it would change nothing while implying it did.
+    """
+    return frozen_call(rows) or any(in_rmt_gap(gene_symbol(r)) for r in rows)
 
 
 def score(cohort: str) -> dict | None:

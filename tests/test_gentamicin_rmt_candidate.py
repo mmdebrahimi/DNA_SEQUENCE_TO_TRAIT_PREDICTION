@@ -67,3 +67,31 @@ def test_the_specificity_claim_reports_its_own_vacuity():
     src = (ROOT / "scripts" / "gentamicin_rmt_candidate.py").read_text(encoding="utf-8")
     assert "VACUOUS" in src and "UNTESTED, not zero" in src
     assert "_s_labelled_carriers" in src
+
+
+def test_the_gap_is_rmt_only_armA_is_already_counted():
+    """MEASURED, not assumed: across 158 cached methyltransferase rows the AMRFinder Subclass is
+    perfectly consistent per GENE -- armA -> GENTAMICIN 24/24 (already counted by the frozen rule),
+    rmt* -> AMINOGLYCOSIDE 134/134 (invisible). So the rule gap is rmt-only and an armA clause is a
+    no-op. The accrual memo phrasing "rmtE1/rmtE/armA-family" lumps in a gene that was never missing.
+    """
+    from gentamicin_rmt_candidate import in_rmt_gap, is_methyltransferase
+    assert is_methyltransferase("armA") and not in_rmt_gap("armA")
+    for g in ("rmtB1", "rmtE1", "rmtF1", "npmA"):
+        assert in_rmt_gap(g) and is_methyltransferase(g)
+
+
+def test_narrowing_to_the_gap_changes_no_score():
+    """If dropping armA from the RULE changed a call, armA would not have been a no-op and the per-gene
+    subclass measurement would be wrong."""
+    from gentamicin_rmt_candidate import frozen_call, candidate_call
+    arma = [{"Class": "AMINOGLYCOSIDE", "Subclass": "GENTAMICIN", "Element symbol": "armA"}]
+    assert frozen_call(arma) and candidate_call(arma)
+
+
+def test_label_hunt_draws_no_conclusion_from_a_failed_sweep():
+    """A partial sweep zero means the sweep failed, not that none exist. The first version printed a
+    confident "still ZERO S-labelled carriers" immediately after printing INCOMPLETE."""
+    src = (ROOT / "scripts" / "gentamicin_rmt_label_hunt.py").read_text(encoding="utf-8")
+    assert "NO CONCLUSION" in src and "COMPLETE sweep" in src
+    assert "parse_ast_phenotypes" in src, "must reuse the fixed PD parser, not re-split the field"

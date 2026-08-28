@@ -1,0 +1,18 @@
+{
+  "drug": "gentamicin",
+  "n_carriers": 109,
+  "n_labelled": 63,
+  "n_R": 62,
+  "n_S": 1,
+  "per_group": {
+    "Klebsiella": 17,
+    "Escherichia_coli_Shigella": 43,
+    "Acinetobacter": 2,
+    "Salmonella": 1
+  },
+  "errors": {},
+  "s_labelled": [
+    "GCA_020406995.1"
+  ],
+  "complete": true
+}
