@@ -1,0 +1,95 @@
+{
+  "cohorts": [
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
+      "n": 60,
+      "frozen": {
+        "tp": 27,
+        "fp": 0,
+        "tn": 30,
+        "fn": 3
+      },
+      "candidate": {
+        "tp": 27,
+        "fp": 0,
+        "tn": 30,
+        "fn": 3
+      },
+      "no_amrfinder": 0,
+      "carries_mtase": 0,
+      "mtase_genes": {},
+      "changed": []
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_gentamicin",
+      "n": 60,
+      "frozen": {
+        "tp": 28,
+        "fp": 2,
+        "tn": 28,
+        "fn": 2
+      },
+      "candidate": {
+        "tp": 28,
+        "fp": 2,
+        "tn": 28,
+        "fn": 2
+      },
+      "no_amrfinder": 0,
+      "carries_mtase": 2,
+      "mtase_genes": {
+        "armA": 5
+      },
+      "changed": []
+    },
+    {
+      "cohort": "klebsiella_gentamicin",
+      "n": 30,
+      "frozen": {
+        "tp": 13,
+        "fp": 2,
+        "tn": 13,
+        "fn": 2
+      },
+      "candidate": {
+        "tp": 14,
+        "fp": 2,
+        "tn": 13,
+        "fn": 1
+      },
+      "no_amrfinder": 0,
+      "carries_mtase": 2,
+      "mtase_genes": {
+        "rmtF1": 2,
+        "rmtB1": 2
+      },
+      "changed": [
+        {
+          "accession": "GCA_022316245.1",
+          "label": "R",
+          "mtase": [
+            "rmtB1",
+            "rmtB1"
+          ]
+        }
+      ]
+    }
+  ],
+  "pooled": {
+    "frozen": {
+      "tp": 68,
+      "fp": 4,
+      "tn": 71,
+      "fn": 7
+    },
+    "candidate": {
+      "tp": 69,
+      "fp": 4,
+      "tn": 71,
+      "fn": 6
+    }
+  },
+  "regresses_specificity": false,
+  "s_labelled_carriers": 0,
+  "specificity_check_vacuous": true
+}
