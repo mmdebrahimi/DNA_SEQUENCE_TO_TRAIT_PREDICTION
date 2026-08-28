@@ -121,9 +121,17 @@ def build_corpus(limit: int | None = None) -> list[dict]:
     out = []
     for p in pairs:
         text = (ROOT / p.artifact).read_text(encoding="utf-8", errors="replace")
+        # A DATA file is summarised by SHAPE, never by a raw head. The claim about a .tsv is about its
+        # row count and columns; 6000 characters of accession IDs answer nothing and tokenize so badly
+        # they crashed two full-corpus runs at the same item. See tabular_digest for the measurement.
+        from kaggle_staleness_auditor import TABULAR_SUFFIXES, tabular_digest
+        if p.artifact.endswith(TABULAR_SUFFIXES):
+            body = tabular_digest(text[:ARTIFACT_HEAD_CHARS])
+        else:
+            body = text[:ARTIFACT_HEAD_CHARS]
         out.append({"item_id": p.pair_id, "claim": p.claim, "artifact": p.artifact,
                     "facts": structural_facts(p.artifact, text),
-                    "artifact_text": text[:ARTIFACT_HEAD_CHARS]})
+                    "artifact_text": body})
     return out
 
 

@@ -87,6 +87,37 @@ Reply with STRICT JSON only, no prose outside it:
 {"verdict": "stale|supported|unclear", "evidence": "<one sentence quoting what decided it>"}"""
 
 
+TABULAR_SUFFIXES = (".tsv", ".csv", ".bed")
+
+
+def tabular_digest(artifact_text: str, max_rows: int = 8) -> str:
+    """A data file's SHAPE, which is the actual evidence for a claim about it. PURE.
+
+    WHY THIS EXISTS, and why it is not merely an OOM workaround. A claim about a data file is a claim
+    about its shape -- "39,193 isolates with measured RIF/INH DST and a leaked flag" is answered by the
+    row count and the header, never by reading 6000 characters of accession IDs. So the digest is
+    STRICTLY BETTER evidence than the raw head, and it happens to also fix a crash.
+
+    The crash: a 6000-char slice of `amr_portal_tb_disjoint_cohort.tsv` (2% whitespace, 39 distinct
+    characters, dense out-of-vocabulary accessions like SAMN03648746) killed two full-corpus runs at the
+    same item with an identical 3.94 GiB allocation. Dense ID text tokenizes many times worse than prose,
+    so a character cap is not a token cap -- my 3.3-chars/token estimate was wildly wrong for this shape.
+    """
+    lines = artifact_text.splitlines()
+    if not lines:
+        return "empty file"
+    header = lines[0]
+    sep = "	" if "	" in header else ","
+    cols = header.split(sep)
+    body = lines[1:]
+    out = [f"tabular file: {len(cols)} columns, >={len(body)} data rows in the sampled head",
+           f"columns: {', '.join(c.strip()[:40] for c in cols[:20])}"]
+    if body:
+        out.append("sample rows:")
+        out.extend("  " + r[:200] for r in body[:max_rows])
+    return chr(10).join(out)
+
+
 def structural_facts(artifact_path: str, artifact_text: str) -> str:
     """Facts about the artifact's EXISTENCE and SHAPE, which no excerpt can convey. PURE.
 

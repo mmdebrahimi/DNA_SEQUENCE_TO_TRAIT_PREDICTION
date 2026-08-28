@@ -506,3 +506,37 @@ def test_score_v3_is_marked_superseded_so_it_is_not_reused():
     s = (Path(__file__).resolve().parent.parent / "scripts" / "score_v3.py").read_text(encoding="utf-8")
     assert "SUPERSEDED by scripts/score_ab.py" in s
     assert "ARTIFACT-keyed" in s
+
+
+def test_data_files_are_summarised_by_shape_not_raw_head():
+    """A claim about a .tsv is a claim about its SHAPE, so the digest is better evidence than a raw head.
+
+    It also fixes a real crash: 6000 chars of `amr_portal_tb_disjoint_cohort.tsv` (2% whitespace, 39
+    distinct characters, dense out-of-vocabulary accessions) killed TWO full-corpus runs at the identical
+    item with an identical 3.94 GiB allocation. Dense ID text tokenizes far worse than prose, so a
+    character cap is not a token cap.
+    """
+    from scripts.kaggle_staleness_auditor import tabular_digest
+    raw = "a\tb\tc\n" + "\n".join(f"SAMN0364874{i}\tSAMEA101592{i}\tGCA_00132166{i}.1" for i in range(400))
+    d = tabular_digest(raw)
+    assert len(d) < len(raw) / 4, "the digest must be far smaller than the raw head"
+    assert "3 columns" in d and "a, b, c" in d, "shape and column names are the evidence"
+    assert "sample rows:" in d
+
+
+def test_the_corpus_digests_tabular_artifacts():
+    from scripts.staleness_corpus import build_corpus
+    from scripts.kaggle_staleness_auditor import TABULAR_SUFFIXES
+    tab = [c for c in build_corpus() if c["artifact"].endswith(TABULAR_SUFFIXES)]
+    if not tab:
+        import pytest
+        pytest.skip("no tabular artifacts cited in CLAUDE.md")
+    for c in tab:
+        assert "tabular file:" in c["artifact_text"], f"{c['artifact']} was not digested"
+        assert len(c["artifact_text"]) < 2000
+
+
+def test_tabular_digest_handles_degenerate_inputs():
+    from scripts.kaggle_staleness_auditor import tabular_digest
+    assert tabular_digest("") == "empty file"
+    assert "1 columns" in tabular_digest("onlyheader")   # header with no rows must not crash
