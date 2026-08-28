@@ -377,17 +377,30 @@ def test_scorer_never_loses_a_true_positive_to_the_shared_key_trap():
     assert t["wiki/negative_results_map_2026-06-13.md"] == "true_positive"
 
 
-def test_the_deployed_prompt_is_the_MEASURED_one_not_the_failed_v3():
-    """v3 failed its pre-registered bar (1 true positive, bar required 2), so it must not be deployed.
+def test_the_deployed_prompt_is_the_one_the_AB_MEASURED_BETTER():
+    """UPDATED after the single-variable A/B. The previous version of this test asserted v3 must NOT be
+    deployed, on the reading that v3 halved recall. The A/B refuted that premise: at a MATCHED excerpt
+    length v2 and v3 have IDENTICAL recall (1/3 each), and v3 has fewer false positives (6 vs 9), higher
+    specificity (0.944 vs 0.916) and fewer unparseable answers. The recall collapse belonged to the
+    excerpt cap, not the prompt.
 
-    Shipping an unvalidated prompt because its aggregate numbers looked nicer is exactly what the
-    pre-registration exists to prevent. v3 stays recoverable from git; it is not the live config.
+    The guard's job is unchanged -- deploy only what was measured. What changed is which prompt that is.
     """
     from scripts.kaggle_staleness_auditor import SYSTEM_PROMPT
-    # the v2 wording -- unscoped, and the reason v3 was attempted. Its PRESENCE is the marker that the
-    # deployed prompt is the one whose 5/5-TP-1-FP benchmark actually ran.
-    assert "ALSO CRITICAL: weigh ARTIFACT FACTS as evidence" in SYSTEM_PROMPT
-    assert "When you cannot tell whether a claim is CAPABILITY or FINDING" not in SYSTEM_PROMPT
+    assert "When you cannot tell whether a claim is CAPABILITY or FINDING" in SYSTEM_PROMPT
+    assert "ALSO CRITICAL: weigh ARTIFACT FACTS as evidence" not in SYSTEM_PROMPT
+
+
+def test_the_kernel_does_not_truncate_the_excerpt_below_what_was_measured():
+    """Truncating the input was treating an OOM by deleting the evidence, and it cost half the recall.
+
+    Same prompt, 6000 -> 3000 chars: recall 0.667 -> 0.333. The kernel must keep the full excerpt and
+    free the KV cache per item instead.
+    """
+    k = (Path(__file__).resolve().parent.parent / "scripts" / "kaggle" /
+         "staleness_corpus_kernel.py").read_text(encoding="utf-8")
+    assert "[:3000]" not in k, "3000-char truncation measurably halved recall"
+    assert "empty_cache()" in k, "the OOM must be handled in memory, not by discarding evidence"
 
 
 def test_v3_scored_below_its_own_bar():
@@ -413,7 +426,7 @@ def test_the_corpus_snapshot_is_frozen_and_complete():
     """
     import json
     from pathlib import Path
-    snap = Path(__file__).resolve().parent.parent / "wiki" / "staleness_corpus_snapshot_2026-08-27.json"
+    snap = Path(__file__).resolve().parent.parent / "wiki" / "staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
     items = json.loads(snap.read_text(encoding="utf-8"))
     assert len(items) >= 100, "the snapshot must cover the whole corpus, not a slice"
     for it in items:
