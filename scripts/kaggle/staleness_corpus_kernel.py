@@ -18,6 +18,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 MODEL = "Qwen/Qwen3-8B"
 MAX_NEW_TOKENS = 2500
+# Total prompt+generation ceiling. NOT YET VERIFIED at full-corpus scale -- the value is derived from
+# the observed failure (a 6000-char prompt plus 2500 new tokens peaked at 3.94 GiB on a 14.56 GiB T4),
+# not measured. Treat as a hypothesis until a clean 110/110 run lands.
+TOTAL_TOKEN_BUDGET = 4200
 
 SYSTEM = """You audit documentation claims for STALENESS.
 
@@ -90,8 +94,15 @@ for n, it in enumerate(items, 1):
     msgs = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
     text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
     ids = tok([text], return_tensors="pt").to(model.device)
+    # Bound the TOTAL sequence, not the input. The OOM is a per-item PEAK (one 3.94 GiB allocation), so
+    # empty_cache() between items does not prevent it -- measured: the cache-clearing version still died
+    # at the same item. Truncating the excerpt does prevent it but costs half the recall. So cap the
+    # generation for the few longest prompts instead, which trades reasoning length (cheap: the P4 fix
+    # showed ~1600-3000 tokens is typical) for input length (expensive: it is the evidence).
+    n_in = ids.input_ids.shape[-1]
+    budget = max(600, min(MAX_NEW_TOKENS, TOTAL_TOKEN_BUDGET - n_in))
     with torch.no_grad():
-        gen = model.generate(**ids, max_new_tokens=MAX_NEW_TOKENS, do_sample=False)
+        gen = model.generate(**ids, max_new_tokens=budget, do_sample=False)
     raw = tok.decode(gen[0][ids.input_ids.shape[-1]:], skip_special_tokens=True)
     # Free the KV cache per item rather than truncating the excerpt. The 6000->3000 cap "fixed" the
     # OOM by removing the evidence the model needs -- measured at HALF the recall (0.667 -> 0.333 on

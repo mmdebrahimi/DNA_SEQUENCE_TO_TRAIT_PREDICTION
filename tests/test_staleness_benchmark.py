@@ -462,3 +462,20 @@ def test_ab_ground_truth_is_derived_from_the_corpus_not_hardcoded():
     assert all(isinstance(m, str) and m for m in STALE_MARKERS)
     ids = truth_items()
     assert all(isinstance(i, str) for i in ids)
+
+
+def test_the_oom_mitigation_bounds_generation_not_the_excerpt():
+    """The excerpt is evidence; the generation length is not. Measured: truncating the excerpt halved
+    recall (0.667 -> 0.333) while empty_cache() alone did NOT prevent the OOM (the cache-clearing
+    version died at the same item). So the mitigation must bound the TOTAL sequence by shortening the
+    generation for long prompts, never by shortening the input.
+    """
+    k = (Path(__file__).resolve().parent.parent / "scripts" / "kaggle" /
+         "staleness_corpus_kernel.py").read_text(encoding="utf-8")
+    assert "TOTAL_TOKEN_BUDGET" in k
+    assert "NOT YET VERIFIED" in k, "an unmeasured mitigation must say so in the file"
+    # the kernel must not truncate at all -- excerpt length is the corpus builder's business, and
+    # keeping it in one place is what stops a truncation being reintroduced as a local OOM patch.
+    assert "artifact_text'][:" not in k and 'artifact_text"][:' not in k
+    from scripts.staleness_corpus import ARTIFACT_HEAD_CHARS
+    assert ARTIFACT_HEAD_CHARS >= 6000, "3000 chars measurably halved recall"

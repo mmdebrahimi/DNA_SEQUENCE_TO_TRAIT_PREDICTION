@@ -38,14 +38,42 @@ Same prompt (v2), same corpus, only the excerpt length changed:
 to judge — and the model said so plainly at the time (*"the artifact's content is cut off mid-test"*),
 which I read as a model failure rather than as a description of what I had done to its input.
 
+## Result 3 — the deployed config measured, and it is the best cell
+
+I adopted v3 @ 6000 without having measured that exact combination, which is the gap my own guards exist
+to prevent, so I ran it. It OOM'd at item ~80 (below), but all three ground-truth items completed, so the
+80 that finished are a valid like-for-like set:
+
+| config (same 80 items) | recall | false positives |
+|---|---:|---:|
+| v2 @ 6000 | 2/3 | 7 |
+| v2 @ 3000 | 1/3 | 7 |
+| v3 @ 3000 | 1/3 | 5 |
+| **v3 @ 6000** | **2/3** | **3** |
+
+A clean 2x2: **excerpt length drives recall, prompt drives precision, and the two are independent.** The
+deployed cell more than halves false positives at equal recall.
+
+## CORRECTION — the memory fix I claimed does not work
+
+I wrote, in the previous commit, that the OOM was handled "where it belongs" with a per-item
+`empty_cache()`. **That is wrong and the run disproved it**: the cache-clearing version died at the same
+item. The OOM is a single-item PEAK (one 3.94 GiB allocation on a 14.56 GiB T4), not fragmentation
+accumulating between items, so freeing between items cannot help.
+
+The mitigation now bounds the TOTAL sequence — capping the *generation* for long prompts rather than the
+input — because the excerpt is evidence and the reasoning length is not (the P4 fix showed ~1600-3000
+tokens is typical, so the cap rarely binds). **It is NOT YET VERIFIED at full-corpus scale**, is labelled
+so in the file, and a test requires that label to stay until a clean 110/110 run lands.
+
 ## What changed as a result
 
 - **v3 is adopted.** At matched conditions it costs nothing and cuts false positives by a third. The
   guard that said "do not deploy v3" is updated — its *premise* was refuted, its job is unchanged: deploy
   only what was measured.
-- **The 3000-char cap is reverted to 6000**, with the OOM handled where it belongs: `del gen, ids` +
-  `torch.cuda.empty_cache()` per item. A memory problem gets a memory fix, not a truncated input. Pinned
-  by a test that fails if `[:3000]` ever returns.
+- **The 3000-char cap is reverted to 6000.** The excerpt is evidence; the OOM is bounded by capping the
+  GENERATION for long prompts instead (see the correction above — the `empty_cache()` idea did not work).
+  Pinned by a test asserting the kernel truncates nothing and that the corpus builder keeps >= 6000.
 
 ## Power — the caveat that keeps this honest
 
@@ -73,8 +101,9 @@ silently leave the truth set pointing at nothing.
 
 ## Standing status
 
-- deployed prompt: **v3**, excerpt **6000**, OOM handled by cache-clearing
-- best measured recall on the pre-repair set: **0.667** (v2 @ 6000). v3 @ 6000 is **not yet measured** —
-  the obvious next run, and the one that would tell us whether v3 keeps its precision edge at full excerpt.
+- deployed prompt: **v3**, excerpt **6000**, OOM bounded by an adaptive generation budget (unverified)
+- **v3 @ 6000 is now measured** and is the best cell: recall 2/3 with 3 false positives, against v2 @
+  6000's 2/3 with 7. It keeps its precision edge at full excerpt.
+- the OOM mitigation is a **hypothesis**, not a result: a clean 110/110 run has not happened.
 - the flagging pass remains a **triage funnel**: every flag adjudicated by hand, no doc edited on the
   model's say-so.
