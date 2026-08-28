@@ -498,3 +498,11 @@ def test_the_generation_budget_clips_outliers_not_the_typical_item():
     assert total - 3000 >= max_new, (
         f"budget {total} leaves only {total-3000} generation tokens at p90 prompt length, "
         f"below the measured {max_new}")
+
+
+def test_score_v3_is_marked_superseded_so_it_is_not_reused():
+    """score_v3 keys truth by ARTIFACT and cannot separate two claims citing one file. score_ab does it
+    right. The limitation is documented in-file so the next reader does not reach for the wrong scorer."""
+    s = (Path(__file__).resolve().parent.parent / "scripts" / "score_v3.py").read_text(encoding="utf-8")
+    assert "SUPERSEDED by scripts/score_ab.py" in s
+    assert "ARTIFACT-keyed" in s

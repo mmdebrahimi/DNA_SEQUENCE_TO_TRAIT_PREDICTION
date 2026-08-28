@@ -27,8 +27,18 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 
+# SUPERSEDED by scripts/score_ab.py, which is item-level end to end. Kept because two committed tests
+# grade the v2/v3 raw outputs through it; do NOT use it for new comparisons. Its truth lookup is
+# ARTIFACT-keyed, which cannot distinguish two claims that cite the same file -- the exact case
+# negative_results_map presents. The mitigation below keeps the true positive rather than letting the
+# false-positive entry overwrite it, but that is a patch on a shape that is wrong for the job.
+
+
 def _truth() -> dict[str, str]:
-    """artifact -> the hand verdict, from the committed adjudication record."""
+    """artifact -> the hand verdict, from the committed adjudication record.
+
+    ARTIFACT-KEYED, and that is a known limitation (see the module note above), not an oversight.
+    """
     from staleness_adjudication import ADJUDICATIONS
     # negative_results_map appears TWICE with opposite verdicts (a real stale bullet AND an accurate
     # historical one). Keying by artifact alone would silently drop one -- the shared-key overwrite trap.
