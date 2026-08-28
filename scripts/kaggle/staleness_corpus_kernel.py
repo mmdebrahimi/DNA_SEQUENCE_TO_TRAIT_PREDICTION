@@ -18,10 +18,15 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 MODEL = "Qwen/Qwen3-8B"
 MAX_NEW_TOKENS = 2500
-# Total prompt+generation ceiling. NOT YET VERIFIED at full-corpus scale -- the value is derived from
-# the observed failure (a 6000-char prompt plus 2500 new tokens peaked at 3.94 GiB on a 14.56 GiB T4),
-# not measured. Treat as a hypothesis until a clean 110/110 run lands.
-TOTAL_TOKEN_BUDGET = 4200
+# Total prompt+generation ceiling. RAISED 4200 -> 5500 after measuring how often it actually binds:
+# at 4200 it clipped 107 of 110 items to a median 1292 generated tokens, against the 2500 every measured
+# run used. That is not an outlier guard, it is a different configuration -- and 1292 sits right on the
+# v1 cap of 1200 that produced a truncated, unparseable answer, so it would have re-created a failure
+# mode already measured and fixed. At 5500 it binds on 9/110 (8%), which is the intended shape: clip the
+# genuine outliers, leave the typical item on the measured 2500.
+# Prompt tokens measured over the real corpus: median 2906, p90 3000, max 3003 (chars/3.3 estimate).
+# STILL NOT YET VERIFIED end-to-end: no clean 110/110 run has completed with this value.
+TOTAL_TOKEN_BUDGET = 5500
 
 SYSTEM = """You audit documentation claims for STALENESS.
 
@@ -98,7 +103,9 @@ for n, it in enumerate(items, 1):
     # empty_cache() between items does not prevent it -- measured: the cache-clearing version still died
     # at the same item. Truncating the excerpt does prevent it but costs half the recall. So cap the
     # generation for the few longest prompts instead, which trades reasoning length (cheap: the P4 fix
-    # showed ~1600-3000 tokens is typical) for input length (expensive: it is the evidence).
+    # showed ~1600-3000 tokens is typical) for input length (expensive: it is the evidence). The budget
+    # must be set so this clips OUTLIERS only -- see the TOTAL_TOKEN_BUDGET note; a budget that binds on
+    # nearly every item silently changes the configuration rather than guarding it.
     n_in = ids.input_ids.shape[-1]
     budget = max(600, min(MAX_NEW_TOKENS, TOTAL_TOKEN_BUDGET - n_in))
     with torch.no_grad():

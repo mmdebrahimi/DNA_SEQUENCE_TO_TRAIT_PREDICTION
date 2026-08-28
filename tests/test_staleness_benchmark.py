@@ -479,3 +479,22 @@ def test_the_oom_mitigation_bounds_generation_not_the_excerpt():
     assert "artifact_text'][:" not in k and 'artifact_text"][:' not in k
     from scripts.staleness_corpus import ARTIFACT_HEAD_CHARS
     assert ARTIFACT_HEAD_CHARS >= 6000, "3000 chars measurably halved recall"
+
+
+def test_the_generation_budget_clips_outliers_not_the_typical_item():
+    """A budget that binds on nearly every item is a different CONFIG, not an outlier guard.
+
+    At TOTAL_TOKEN_BUDGET=4200 the cap bound on 107/110 real items, cutting generation to a median 1292
+    tokens against the 2500 every measured run used -- and 1292 sits on the v1 cap of 1200 that produced
+    a truncated, unparseable answer. This pins the budget high enough that the typical item keeps the
+    measured generation length.
+    """
+    import re
+    k = (Path(__file__).resolve().parent.parent / "scripts" / "kaggle" /
+         "staleness_corpus_kernel.py").read_text(encoding="utf-8")
+    total = int(re.search(r"TOTAL_TOKEN_BUDGET = (\d+)", k).group(1))
+    max_new = int(re.search(r"MAX_NEW_TOKENS = (\d+)", k).group(1))
+    # measured prompt-token p90 over the real corpus was 3000; the typical item must still get max_new
+    assert total - 3000 >= max_new, (
+        f"budget {total} leaves only {total-3000} generation tokens at p90 prompt length, "
+        f"below the measured {max_new}")

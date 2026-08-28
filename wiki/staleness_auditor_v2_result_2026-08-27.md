@@ -1,5 +1,22 @@
 # v2: both fixes worked, and one of them introduced a new failure mode (2026-08-27)
 
+> **CORRECTION (2026-08-28) — the P3 attribution below is FALSIFIED.** The 10-item benchmark kernel
+> BUILDS an `ARTIFACT FACTS` field into every item and then never puts it in the user turn. Verified by
+> `git show cea7fdd:scripts/kaggle/staleness_auditor_kernel.py | grep -c 'ARTIFACT FACTS: {it'` → **0**,
+> and the same at `aeb1114` — the only two commits that ever touched that file. So the model never
+> received the facts, and the P3 flip cannot have been caused by adding them. Its real cause is
+> unidentified (the token-cap raise 1200→2500, or run-to-run variation).
+>
+> **Damage is bounded and verified by grep across every kernel:** `staleness_corpus_kernel.py`,
+> `staleness_ab_v2/v3/v3_6000_kernel.py` all pass facts (`facts-in-prompt = 1`); only
+> `staleness_auditor_kernel.py` does not (`= 0`). Every corpus and A/B run — which is what the current
+> conclusions rest on — is unaffected. What is wrong is *this memo's causal story* and the claim that
+> the benchmark validated the prompt surface the corpus runs use. It did not: it validated a
+> **no-facts** user prompt.
+>
+> The section headed "Each fix hit exactly its predicted target" is therefore **half right**: P4 (the
+> token cap) stands; **P3 does not**.
+
 Follow-up to `wiki/staleness_auditor_result_2026-08-27.md`. The v1 run passed at 3/5 TP / 0 FP, and I said
 both misses looked fixable and that the fixes had to be **tested, not assumed**. They were. Both landed on
 their predicted targets — **and the P3 fix created a false positive I did not predict.**

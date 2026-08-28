@@ -51,8 +51,15 @@ to prevent, so I ran it. It OOM'd at item ~80 (below), but all three ground-trut
 | v3 @ 3000 | 1/3 | 5 |
 | **v3 @ 6000** | **2/3** | **3** |
 
-A clean 2x2: **excerpt length drives recall, prompt drives precision, and the two are independent.** The
-deployed cell more than halves false positives at equal recall.
+**Stated at the strength the evidence supports:** on this completed 80-item prefix, the longer excerpt
+recovered one additional positive in both prompt arms, and v3 reduced false positives in both excerpt
+arms. That is a descriptive interaction check, **not** an independence result — with 3 positives, recall
+moves in single-item jumps. The deployed cell more than halves false positives at equal recall.
+
+The missing 30 are a **contiguous document-order tail** (completed items are exactly positions 0-79), not
+a length-selected subset — measured, median prompt 6522 chars completed vs 6794 missing. So the cut is not
+OOM-length bias; it is a recency gradient (CLAUDE.md is roughly chronological, so the tail is the newest
+and least-rotted content). All 3 known positives fall in the prefix, and the tail is unadjudicated.
 
 ## CORRECTION — the memory fix I claimed does not work
 
@@ -102,8 +109,10 @@ silently leave the truth set pointing at nothing.
 ## Standing status
 
 - deployed prompt: **v3**, excerpt **6000**, OOM bounded by an adaptive generation budget (unverified)
-- **v3 @ 6000 is now measured** and is the best cell: recall 2/3 with 3 false positives, against v2 @
-  6000's 2/3 with 7. It keeps its precision edge at full excerpt.
+- **v3 @ 6000 is measured for PROMPT and EXCERPT only** — recall 2/3 with 3 false positives against v2 @
+  6000's 2/3 with 7 — and it was measured under a FIXED 2500-token generation. The deployed kernel adds an
+  adaptive generation budget that no measured run used, so "deployed = measured" holds for the prompt and
+  excerpt, not for the runtime policy.
 - the OOM mitigation is a **hypothesis**, not a result: a clean 110/110 run has not happened.
 - the flagging pass remains a **triage funnel**: every flag adjudicated by hand, no doc edited on the
   model's say-so.
