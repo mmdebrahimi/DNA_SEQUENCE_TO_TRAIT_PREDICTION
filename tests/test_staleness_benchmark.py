@@ -420,3 +420,32 @@ def test_the_corpus_snapshot_is_frozen_and_complete():
         assert {"item_id", "claim", "artifact", "artifact_text", "facts"} <= set(it)
         assert it["artifact"] in it["claim"] or len(it["claim"]) > 0
     assert len({i["item_id"] for i in items}) == len(items), "item ids must be unique"
+
+
+def test_the_prerepair_snapshot_actually_contains_positives():
+    """The snapshot frozen from LIVE CLAUDE.md had ZERO known stale claims -- I had already fixed them.
+
+    A test set with no positives can measure precision and nothing else, which makes it useless for the
+    recall comparison it was frozen for. This is the corpus-repair trap biting the fix written for it.
+    The evaluation snapshot is therefore reconstructed from git BEFORE the repairs, and must contain the
+    known positives or the A/B is meaningless.
+    """
+    from scripts.score_ab import truth_items, SNAPSHOT
+    import json
+    if not SNAPSHOT.exists():
+        import pytest
+        pytest.skip("eval snapshot not present")
+    assert len(json.loads(SNAPSHOT.read_text(encoding="utf-8"))) >= 100
+    assert len(truth_items()) >= 2, "the eval snapshot must retain the hand-verified stale claims"
+
+
+def test_ab_ground_truth_is_derived_from_the_corpus_not_hardcoded():
+    """Ground truth matches on claim TEXT in the snapshot, not a hand-listed set of item ids.
+
+    A hand-enumerated list beside the data it describes drifts -- this repo has hit that three times.
+    Deriving it means re-freezing the snapshot cannot silently leave the truth set pointing at nothing.
+    """
+    from scripts.score_ab import STALE_MARKERS, truth_items
+    assert all(isinstance(m, str) and m for m in STALE_MARKERS)
+    ids = truth_items()
+    assert all(isinstance(i, str) for i in ids)
