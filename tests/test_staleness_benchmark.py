@@ -402,3 +402,21 @@ def test_v3_scored_below_its_own_bar():
     assert not r["aggregate_pass"], "v3 FAILED its pre-registered bar -- do not record it as a pass"
     assert len(r["true_positives"]) < 2, "the bar required both hand-verified true positives to survive"
     assert r["targeted_hits"] >= 2, "the diagnosed arms did flip -- the idea is supported, just unproven"
+
+
+def test_the_corpus_snapshot_is_frozen_and_complete():
+    """The snapshot is the fixed test set every future prompt version scores against.
+
+    Scoring against LIVE CLAUDE.md is what made v2-vs-v3 unresolvable: fixing a flagged claim removes a
+    positive from the test set, so two versions are never graded on the same thing. This file must not be
+    regenerated to "refresh" it -- a new measurement campaign gets a NEW dated snapshot.
+    """
+    import json
+    from pathlib import Path
+    snap = Path(__file__).resolve().parent.parent / "wiki" / "staleness_corpus_snapshot_2026-08-27.json"
+    items = json.loads(snap.read_text(encoding="utf-8"))
+    assert len(items) >= 100, "the snapshot must cover the whole corpus, not a slice"
+    for it in items:
+        assert {"item_id", "claim", "artifact", "artifact_text", "facts"} <= set(it)
+        assert it["artifact"] in it["claim"] or len(it["claim"]) > 0
+    assert len({i["item_id"] for i in items}) == len(items), "item ids must be unique"
