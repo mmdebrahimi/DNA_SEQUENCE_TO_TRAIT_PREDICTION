@@ -9,7 +9,8 @@
     "n_known": 66,
     "distinct": 5,
     "largest_share": 0.682,
-    "dominant": "PRJNA717739"
+    "dominant": "PRJNA717739",
+    "effective_sources": 1.97
   },
   "diversity_verdict": "largest source holds 68%, bar is 60%",
   "status": "source_concentrated"

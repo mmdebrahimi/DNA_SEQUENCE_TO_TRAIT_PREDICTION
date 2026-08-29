@@ -9,7 +9,8 @@
     "n_known": 73,
     "distinct": 3,
     "largest_share": 0.575,
-    "dominant": "PRJNA1142533"
+    "dominant": "PRJNA1142533",
+    "effective_sources": 2.0
   },
   "diversity_verdict": "only 3 BioProject(s), bar is 5",
   "status": "source_concentrated"

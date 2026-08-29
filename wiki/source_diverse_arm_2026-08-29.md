@@ -12,14 +12,14 @@ cohort of its own, or it is just a second opinion from a differently-biased samp
 cell on its own bar — **≥5 BioProjects and no source above 60%** — and a cell that fails emits
 `status: source_concentrated` with **no metrics at all**.
 
-**It refused 6 of 10 cells.**
+**It refused 6 of 10 cells** (7 after the effective-sources gate added later the same day — see the Update at the end; `E. coli x meropenem` moved from `underpowered` to refused).
 
 | cell | n | sources | largest share | verdict |
 |---|---:|---:|---:|---|
 | E. coli × ciprofloxacin | 131 | 8 | 31% | **scored** — acc 0.977 / sens 0.958 / spec 0.988 |
 | E. coli × gentamicin | 131 | 8 | 32% | **scored** — acc 0.756 / sens 0.523 / spec 0.985 |
 | E. coli × ceftriaxone | 117 | 6 | 36% | underpowered (S class < 20) |
-| E. coli × meropenem | 71 | 5 | 48% | underpowered |
+| E. coli × meropenem | 71 | 5 | 48% | **refused** (see Update) — 2.42 effective sources |
 | E. coli × tetracycline | 73 | 3 | 58% | **refused** — 3 BioProjects |
 | Klebsiella × ceftriaxone | 66 | 5 | **68%** | **refused** — over the 60% share bar |
 | Klebsiella × ciprofloxacin | 44 | 2 | 98% | **refused** |
@@ -44,11 +44,11 @@ run and then failed to apply it to my own number in the same run.
 
 The two cells that clear the bar are exactly the two that carry the findings:
 
-- **E. coli × gentamicin** — sens **0.523** against the frozen cell's 0.893. This is the number the whole
-  `rmt` thread rests on, and it is now produced by an arm that would have refused it had the cohort been
+- **E. coli × gentamicin** — sens **0.523** against the frozen cell's 0.893, on 8 sources (4.25
+  effective). This is the number the whole `rmt` thread rests on, and it is now produced by an arm that would have refused it had the cohort been
   concentrated.
-- **E. coli × ciprofloxacin** — spec **0.988** against the frozen cell's 0.700, on 8 sources vs the frozen
-  cell's 2.
+- **E. coli × ciprofloxacin** — spec **0.988** against the frozen cell's 0.700, on 8 sources (4.32
+  effective) vs the frozen cell's 2.
 
 Nothing about the `rmt` conclusion changes. What changed is that the number now comes with a checkable
 statement about the cohort that produced it.
@@ -72,3 +72,48 @@ These **augment** the frozen cells. No frozen metric changes, no cell state chan
 
 Reproduce: `uv run python scripts/source_diverse_validate.py` (offline, given the census + provenance
 sidecars).
+
+
+---
+
+## Update (same day): the bar had a loophole, found by trying to use it
+
+**The target was `campylobacter x ciprofloxacin`** — the most concentrated SCORED cell (100% one
+BioProject, n=40) and the only flagged cell with no source-diverse replication. Sizing it first, before
+spending any AMRFinder time, produced two findings.
+
+### 1. Campylobacter cannot be meaningfully source-diversified from public data
+
+All of NCBI-PD's Campylobacter holdings, after the leakage manifest, are **6 BioProjects** — and one holds
+**79%**:
+
+| BioProject | R | S | |
+|---|---:|---:|---|
+| PRJNA292664 | 617 | 2449 | |
+| PRJNA292668 | 145 | 559 | |
+| PRJNA560409 | 13 | 110 | ← **the source of the existing SCORED cell** |
+| PRJNA562719 | 2 | 3 | |
+| PRJNA287430 | 0 | 2 | |
+| PRJNA239251 | 1 | 1 | |
+
+Excluding the cell's own project leaves **2 substantial projects plus scraps of 1–3 genomes**. A 20R/20S
+cohort is constructible in the letter of the bar and not in its substance. **This is a data-availability
+wall, not a code wall** — no amount of building fixes it, and it is why no replication was attempted.
+
+### 2. My own bar would have accepted that cohort — so the bar changed
+
+A cohort of `18/18/2/1/1` passes **both** shipped rules (5 projects; largest 45% ≤ 60%) while being two
+real projects wearing three tokens. Added **inverse-Simpson effective sources** (`MIN_EFFECTIVE_SOURCES =
+3.0`), the same effective-N idiom the lineage layer already uses for clonality:
+
+| cohort | projects | largest share | **effective** |
+|---|---:|---:|---:|
+| 18/18/2/1/1 | 5 | 45% | **2.45** |
+| 12/10/8/6/4 | 5 | 30% | **4.44** |
+
+**It fired on real data immediately.** `E. coli x meropenem` — 5 nominal sources, 48% share, **2.42
+effective** — moved from `underpowered` to `source_concentrated`. Refusals went 6 → 7 of 10. The two
+scored cells (E. coli cipro and gentamicin, 8 sources each) are unaffected, so **no finding changes**.
+
+I added this rule because my own gate would have accepted a cohort I would not defend. Count and share
+are both necessary and neither is sufficient.

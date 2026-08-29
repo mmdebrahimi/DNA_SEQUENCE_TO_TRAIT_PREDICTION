@@ -41,6 +41,7 @@ WIKI = ROOT / "wiki"
 # 1-4 BioProjects with 95-100% concentration, and the set that exposed them had 8 at 31%.
 MIN_BIOPROJECTS = 5
 MAX_SOURCE_SHARE = 0.60
+MIN_EFFECTIVE_SOURCES = 3.0
 MIN_PER_CLASS = 20
 
 REGISTRY_ORGANISM = {"Escherichia_coli_Shigella": "Escherichia_coli_Shigella",
@@ -58,6 +59,24 @@ def load_pool() -> dict:
     return d.get("labels") or {}
 
 
+def effective_sources(counts) -> float:
+    """Inverse-Simpson effective number of sources. PURE.
+
+    WHY COUNT AND SHARE ARE NOT ENOUGH -- and this was found by the bar failing on a real case, not by
+    theory. Campylobacter's entire PD holdings are 2 substantial BioProjects plus scraps of 1-3 genomes.
+    A cohort of 18/18/2/1/1 passes BOTH shipped rules (5 projects, largest 45%) while being 2 real
+    projects wearing 3 tokens. Inverse-Simpson scores it 2.45 against 4.44 for a genuinely spread
+    12/10/8/6/4 -- it is the same effective-N idiom the lineage layer already uses for clonality.
+
+    Adding a rule because my own gate would have accepted a cohort I would not defend.
+    """
+    counts = [c for c in counts if c > 0]
+    n = sum(counts)
+    if not n:
+        return 0.0
+    return 1.0 / sum((c / n) ** 2 for c in counts)
+
+
 def source_profile(accessions: list[str], provenance: dict) -> dict:
     """Distinct BioProjects + the largest one's share, over the SCORED set. PURE.
 
@@ -67,9 +86,11 @@ def source_profile(accessions: list[str], provenance: dict) -> dict:
     bps = [provenance.get(a, {}).get("bioproject_acc", "").strip() for a in accessions]
     known = [b for b in bps if b]
     c = Counter(known)
-    return {"n": len(accessions), "n_known": len(known), "distinct": len(c),
-            "largest_share": round(c.most_common(1)[0][1] / len(known), 3) if known else None,
-            "dominant": c.most_common(1)[0][0] if c else None}
+    n = len(known)
+    return {"n": len(accessions), "n_known": n, "distinct": len(c),
+            "largest_share": round(c.most_common(1)[0][1] / n, 3) if known else None,
+            "dominant": c.most_common(1)[0][0] if c else None,
+            "effective_sources": round(effective_sources(c.values()), 2) if known else None}
 
 
 def diversity_verdict(prof: dict) -> tuple[bool, str]:
@@ -80,6 +101,11 @@ def diversity_verdict(prof: dict) -> tuple[bool, str]:
         return False, f"only {prof['distinct']} BioProject(s), bar is {MIN_BIOPROJECTS}"
     if prof["largest_share"] is not None and prof["largest_share"] > MAX_SOURCE_SHARE:
         return False, f"largest source holds {prof['largest_share']:.0%}, bar is {MAX_SOURCE_SHARE:.0%}"
+    eff = prof.get("effective_sources")
+    if eff is not None and eff < MIN_EFFECTIVE_SOURCES:
+        # count + share can both pass on 2 real projects plus token ones; this is what catches that.
+        return False, (f"only {eff:.2f} effective sources (bar {MIN_EFFECTIVE_SOURCES}) despite "
+                       f"{prof['distinct']} nominal -- concentrated behind a diverse-looking count")
     return True, "source-diverse"
 
 

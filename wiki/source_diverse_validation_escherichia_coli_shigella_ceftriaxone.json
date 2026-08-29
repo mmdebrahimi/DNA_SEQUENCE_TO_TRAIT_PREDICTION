@@ -9,7 +9,8 @@
     "n_known": 117,
     "distinct": 6,
     "largest_share": 0.359,
-    "dominant": "PRJNA1142533"
+    "dominant": "PRJNA1142533",
+    "effective_sources": 3.46
   },
   "diversity_verdict": "source-diverse",
   "confusion": {

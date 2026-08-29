@@ -66,3 +66,30 @@ def test_refused_cells_carry_no_metrics():
     assert refused, "expected at least one refusal -- the bar is not exercised otherwise"
     for d in refused:
         assert "acc" not in d and "sens" not in d and "spec" not in d
+
+
+def test_effective_sources_catches_a_cohort_that_passes_count_and_share():
+    """THE LOOPHOLE, found on real data. A cohort of 2 real BioProjects plus 3 token ones passes both
+    the count bar (5) and the share bar (45% <= 60%) while being 2 sources wearing 5 badges.
+    Inverse-Simpson scores it 2.45 vs 4.44 for a genuinely spread cohort.
+
+    Not hypothetical: E. coli x meropenem in the live pool has 5 nominal sources at 48% share and 2.42
+    effective, and this rule is what moved it from `underpowered` to `source_concentrated`.
+    """
+    from source_diverse_validate import effective_sources, diversity_verdict
+    assert round(effective_sources([18, 18, 2, 1, 1]), 2) == 2.45
+    assert round(effective_sources([12, 10, 8, 6, 4]), 2) == 4.44
+    gameable = {"n": 40, "n_known": 40, "distinct": 5, "largest_share": 0.45,
+                "dominant": "P", "effective_sources": 2.45}
+    ok, why = diversity_verdict(gameable)
+    assert not ok and "effective sources" in why
+    honest = {"n": 40, "n_known": 40, "distinct": 5, "largest_share": 0.30,
+              "dominant": "P", "effective_sources": 4.44}
+    assert diversity_verdict(honest)[0]
+
+
+def test_effective_sources_is_degenerate_safe():
+    from source_diverse_validate import effective_sources
+    assert effective_sources([]) == 0.0
+    assert effective_sources([0, 0]) == 0.0
+    assert round(effective_sources([10]), 2) == 1.0     # one source is one source
