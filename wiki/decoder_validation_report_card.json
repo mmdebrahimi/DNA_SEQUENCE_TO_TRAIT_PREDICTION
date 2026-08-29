@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-08-24",
+  "date": "2026-08-29",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -197,6 +197,16 @@
           }
         },
         "grade": "moderate (>=15 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 40,
+        "distinct_bioprojects": 1,
+        "largest_share": 1.0,
+        "dominant": "PRJNA560409",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 1,
+        "single_source": true
       }
     },
     {
@@ -284,6 +294,16 @@
           }
         },
         "grade": "limited (8-14 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 4,
+        "largest_share": 0.55,
+        "dominant": "PRJNA278886",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 3,
+        "single_source": false
       }
     },
     {
@@ -347,6 +367,16 @@
           }
         },
         "grade": "scarce (3-7 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 2,
+        "largest_share": 0.967,
+        "dominant": "PRJNA278886",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 2,
+        "single_source": true
       },
       "prospective": {
         "status": "scored",
@@ -424,6 +454,16 @@
           }
         },
         "grade": "scarce (3-7 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 4,
+        "largest_share": 0.95,
+        "dominant": "PRJNA278886",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 2,
+        "single_source": true
       },
       "prospective": {
         "status": "scored",
@@ -503,6 +543,16 @@
           }
         },
         "grade": "moderate (>=15 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 6,
+        "largest_share": 0.533,
+        "dominant": "PRJNA662792",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 3,
+        "single_source": false
       }
     },
     {
@@ -584,6 +634,16 @@
           }
         },
         "grade": "moderate (>=15 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 2,
+        "largest_share": 0.5,
+        "dominant": "PRJNA278886",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 2,
+        "single_source": false
       }
     },
     {
@@ -647,6 +707,16 @@
           }
         },
         "grade": "clonal (<3 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 36,
+        "largest_share": 0.183,
+        "dominant": "PRJNA529587",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 3,
+        "single_source": false
       }
     },
     {
@@ -710,6 +780,16 @@
           }
         },
         "grade": "limited (8-14 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 32,
+        "largest_share": 0.483,
+        "dominant": "PRJNA278886",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 3,
+        "single_source": false
       }
     },
     {
@@ -773,6 +853,16 @@
           }
         },
         "grade": "scarce (3-7 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 15,
+        "largest_share": 0.367,
+        "dominant": "PRJNA504784",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 1,
+        "single_source": false
       }
     },
     {
@@ -836,6 +926,16 @@
           }
         },
         "grade": "moderate (>=15 effective lineages)"
+      },
+      "source_concentration": {
+        "status": "measured",
+        "n_cohort": 60,
+        "distinct_bioprojects": 2,
+        "largest_share": 0.5,
+        "dominant": "PRJNA278886",
+        "n_unknown_provenance": 0,
+        "distinct_centers": 3,
+        "single_source": false
       }
     },
     {

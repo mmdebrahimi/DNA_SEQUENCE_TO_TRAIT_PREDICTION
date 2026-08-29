@@ -434,3 +434,65 @@ def test_a_healthy_or_underpowered_prospective_cell_raises_no_flag(monkeypatch, 
         "confusion": {"n_scored": 4, "acc": 0.1, "sens": 0.1, "spec": 0.1, "abstain": 0},
         "powering": {"status": "UNDERPOWERED", "scored_R": 2, "scored_S": 2}})
     assert blk["regression"] is False
+
+
+# --- source-concentration disclosure layer ---
+
+def test_source_concentration_never_overwrites_a_provdisjoint_metric():
+    """ANTI-OVERWRITE, with deliberately DIFFERENT values so a merge bug cannot pass by coincidence.
+
+    A source-concentration row shares its (organism, drug) key with a provdisjoint cell. Feeding it into
+    load_scored() would silently replace one number with the other -- the documented shared-key trap. This
+    asserts the block ATTACHES and the metrics survive untouched.
+    """
+    from scripts.build_validation_report_card import build_source_block
+    blk = build_source_block({"organism": "x", "drug": "y", "n_cohort": 60, "spec": 0.111,
+                              "bioproject": {"distinct": 2, "largest": ["PRJNA1", 58],
+                                             "largest_share": 0.967, "n_unknown": 0},
+                              "sra_center": {"distinct": 2}})
+    assert blk["status"] == "measured"
+    assert blk["single_source"] is True
+    # the block must not carry a competing metric that a consumer could mistake for THE cell metric
+    assert "spec" not in blk and "sens" not in blk and "acc" not in blk
+
+
+def test_single_source_flag_is_a_disclosure_not_a_demotion():
+    """A flagged cell keeps its state. The flag says the estimate rests on one source, which is a
+    different fact from the estimate being wrong -- and the error is not even directional."""
+    import json
+    from pathlib import Path as _P
+    card = _P(__file__).resolve().parent.parent / "wiki" / "decoder_validation_report_card.json"
+    if not card.exists():
+        import pytest
+        pytest.skip("card absent")
+    cells = json.loads(card.read_text(encoding="utf-8"))["cells"]
+    flagged = [c for c in cells if c.get("source_concentration", {}).get("single_source")]
+    if not flagged:
+        import pytest
+        pytest.skip("no single-source cells in the current card")
+    for c in flagged:
+        assert c["state"] == "SCORED", "the disclosure must not demote a cell"
+        assert c.get("sens") is not None, "metrics must survive the disclosure"
+
+
+def test_an_incomplete_provenance_sweep_renders_nothing():
+    """A partial sweep cannot support a concentration claim. Rendering a floor that reads like a
+    measurement is the failure this refuses -- same rule as the fail-closed leakage manifest."""
+    import json
+    from unittest import mock
+    from pathlib import Path as _P
+    from scripts import build_validation_report_card as B
+    payload = json.dumps({"complete": False, "cells": [{"organism": "x", "drug": "y"}]})
+    with mock.patch.object(_P, "exists", lambda self: True),          mock.patch.object(_P, "read_text", lambda self, **k: payload):
+        assert B.load_source_concentration() == {}
+
+
+def test_unknown_provenance_is_surfaced_not_hidden():
+    """n_unknown must reach the block: a cell whose provenance is mostly missing looks diverse only
+    because the metadata is absent, and the reader has to be able to see that."""
+    from scripts.build_validation_report_card import build_source_block
+    blk = build_source_block({"organism": "x", "drug": "y", "n_cohort": 60,
+                              "bioproject": {"distinct": 3, "largest": ["P", 5],
+                                             "largest_share": 0.5, "n_unknown": 50},
+                              "sra_center": {"distinct": 1}})
+    assert blk["n_unknown_provenance"] == 50

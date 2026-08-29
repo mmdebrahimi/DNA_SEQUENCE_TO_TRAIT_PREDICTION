@@ -124,6 +124,56 @@ def load_lineage_metrics() -> dict:
     return out
 
 
+def load_source_concentration() -> dict:
+    """Read the source-concentration measurement -> {canonical_key: cell}. Empty if absent.
+
+    NAMESPACE-SEPARATE for the same reason as `load_prospective`: this shares its (organism, drug) key
+    with a provenance-disjoint cell, so merging it would silently overwrite one number with the other --
+    the shared-key trap. It AUGMENTS a cell; it never replaces a metric and never changes a state.
+
+    WHAT IT ADDS, and why it is not redundant with the lineage layer. Lineage discloses clonal domination
+    WITHIN a cohort. This discloses how many independent SOURCES the cohort draws on at all, which bounds
+    what the cohort could ever have detected. Measured case: the e.coli x gentamicin cell is 95% one
+    BioProject and contains ZERO carriers of the `rmt` determinant family, so it reported sens 0.893 while
+    two source-diverse measurements of the same cell reported 0.429 and 0.523. The number was never wrong
+    about its cohort; it was a statement about one hospital's isolates.
+    """
+    f = WIKI / "provdisjoint_source_concentration.json"
+    if not f.exists():
+        return {}
+    try:
+        d = json.loads(f.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 — a malformed sidecar must not break the read-only roll-up
+        return {}
+    if not d.get("complete"):
+        # A partial provenance sweep cannot support a concentration claim; render nothing rather than a
+        # floor that reads like a measurement.
+        return {}
+    return {_key(c["organism"], c["drug"]): c for c in d.get("cells", []) if c.get("organism")}
+
+
+SINGLE_SOURCE_SHARE = 0.80
+
+
+def build_source_block(scell: dict | None) -> dict:
+    """Project the concentration measurement into a report-card block. Never silently blank."""
+    if scell is None:
+        return {"status": "not_measured"}
+    bp = scell.get("bioproject") or {}
+    share = bp.get("largest_share")
+    blk = {"status": "measured",
+           "n_cohort": scell.get("n_cohort"),
+           "distinct_bioprojects": bp.get("distinct"),
+           "largest_share": share,
+           "dominant": (bp.get("largest") or [None])[0],
+           "n_unknown_provenance": bp.get("n_unknown"),
+           "distinct_centers": (scell.get("sra_center") or {}).get("distinct")}
+    # A DISCLOSURE flag, not a demotion: the cell's state and metrics are untouched. It says the estimate
+    # rests on one source, which is a different fact from the estimate being wrong.
+    blk["single_source"] = bool(share is not None and share >= SINGLE_SOURCE_SHARE)
+    return blk
+
+
 def load_prospective() -> dict:
     """Read the prospective-lock scored artifacts -> {canonical_key: cell}. Empty if none.
 
@@ -295,6 +345,7 @@ def main() -> int:
     scored, census, registry = load_scored(), load_census(), load_registry()
     lineage = load_lineage_metrics()
     prospective = load_prospective()
+    source_conc = load_source_concentration()
     surface = surface_index()
 
     rows = []
@@ -305,6 +356,10 @@ def main() -> int:
             c["lineage"] = build_lineage_block(lineage.get(key))
         # Prospective likewise AUGMENTS: attached wherever an artifact exists, regardless of state, so a
         # prospective result can never be hidden by the cell's provdisjoint state.
+        # Source concentration AUGMENTS too, and only where it was measured. It never demotes: a
+        # single-source cell keeps its state and its published metrics.
+        if key in source_conc:
+            c["source_concentration"] = build_source_block(source_conc.get(key))
         if key in prospective:
             c["prospective"] = build_prospective_block(prospective.get(key))
             # TOP-LEVEL so a consumer filtering on `state == SCORED` cannot miss it. The state itself is
@@ -376,6 +431,37 @@ def main() -> int:
                      f"TP{c.get('tp')} FP{c.get('fp')} TN{c.get('tn')} FN{c.get('fn')} |")
         else:
             L.append(f"| {org} | {drug} | `{c['state']}` | — | — | — | — | — | {c.get('note','')} |")
+    # ---- Source-concentration disclosure (how many independent sources back each number) ----
+    src_rows = [(k, c) for k, c in rows if c.get("source_concentration", {}).get("status") == "measured"]
+    if src_rows:
+        L.append("\n## Source-concentration disclosure (how many sources back each SCORED number)\n")
+        L.append("The lineage table above corrects for clonal domination WITHIN a cohort. This asks the "
+                 "question one level up: how many independent SOURCES does the cohort draw on at all? "
+                 "Every cell here is provenance-DISJOINT from the tuning data — that was the design goal "
+                 "and it was met. Provenance-DIVERSE is a different property, was never claimed, and is "
+                 "what this measures.\n")
+        L.append("WHY IT MATTERS, measured: `escherichia_coli_shigella x gentamicin` is 95% one "
+                 "BioProject and contains ZERO carriers of the `rmt` determinant family. It reports "
+                 "sens 0.893; two source-diverse measurements of the same cell with the same frozen rule "
+                 "report 0.429 and 0.523. A cohort with no carriers of a determinant family cannot detect "
+                 "a rule blind to that family.\n")
+        L.append("The error is NOT directional: a 97%-single-source cipro cell reads PESSIMISTIC "
+                 "(spec 0.700 vs 0.988 on an 8-BioProject set). A single-site estimate is an estimate of "
+                 "that site. **These rows change no metric and no cell state.**\n")
+        L.append("| organism | drug | N | BioProjects | largest share | dominant | unknown provenance |\n"
+                 "|---|---|---|---|---|---|---|")
+        for k, c in src_rows:
+            org, drug = k
+            s = c["source_concentration"]
+            share = s.get("largest_share")
+            share_s = "—" if share is None else f"{share:.0%}"
+            flag = "  **SINGLE-SOURCE**" if s.get("single_source") else ""
+            L.append(f"| {org} | {drug} | {s.get('n_cohort', '—')} | {s.get('distinct_bioprojects', '—')} "
+                     f"| {share_s}{flag} | {s.get('dominant') or '—'} | {s.get('n_unknown_provenance', 0)} |")
+        n_single = sum(1 for _, c in src_rows if c["source_concentration"].get("single_source"))
+        L.append(f"\n**{n_single} of {len(src_rows)}** cells rest on ONE BioProject holding "
+                 f"≥{int(SINGLE_SOURCE_SHARE * 100)}% of the cohort.\n")
+
     # ---- Prospective-lock disclosure (temporal) ----
     prosp_rows = [(k, c) for k, c in rows if c.get("prospective")]
     if prosp_rows:

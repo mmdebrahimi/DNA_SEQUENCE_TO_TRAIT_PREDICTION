@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-08-24
+# Decoder-suite provenance-disjoint validation report card — 2026-08-29
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -59,6 +59,30 @@ Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Ro
 | salmonella | gentamicin | `UNDERPOWERED` | — | — | — | — | — | censused 5R/86S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | salmonella | tetracycline | `UNDERPOWERED` | — | — | — | — | — | censused 5R/81S provenance-disjoint (< MIN/class) — surveillance-dominated |
 | staphylococcus_aureus | oxacillin | `LABEL_CONFOUNDED` | — | — | — | — | — | phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate) |
+
+## Source-concentration disclosure (how many sources back each SCORED number)
+
+The lineage table above corrects for clonal domination WITHIN a cohort. This asks the question one level up: how many independent SOURCES does the cohort draw on at all? Every cell here is provenance-DISJOINT from the tuning data — that was the design goal and it was met. Provenance-DIVERSE is a different property, was never claimed, and is what this measures.
+
+WHY IT MATTERS, measured: `escherichia_coli_shigella x gentamicin` is 95% one BioProject and contains ZERO carriers of the `rmt` determinant family. It reports sens 0.893; two source-diverse measurements of the same cell with the same frozen rule report 0.429 and 0.523. A cohort with no carriers of a determinant family cannot detect a rule blind to that family.
+
+The error is NOT directional: a 97%-single-source cipro cell reads PESSIMISTIC (spec 0.700 vs 0.988 on an 8-BioProject set). A single-site estimate is an estimate of that site. **These rows change no metric and no cell state.**
+
+| organism | drug | N | BioProjects | largest share | dominant | unknown provenance |
+|---|---|---|---|---|---|---|
+| campylobacter | ciprofloxacin | 40 | 1 | 100%  **SINGLE-SOURCE** | PRJNA560409 | 0 |
+| escherichia_coli_shigella | ceftriaxone | 60 | 4 | 55% | PRJNA278886 | 0 |
+| escherichia_coli_shigella | ciprofloxacin | 60 | 2 | 97%  **SINGLE-SOURCE** | PRJNA278886 | 0 |
+| escherichia_coli_shigella | gentamicin | 60 | 4 | 95%  **SINGLE-SOURCE** | PRJNA278886 | 0 |
+| escherichia_coli_shigella | tetracycline | 60 | 6 | 53% | PRJNA662792 | 0 |
+| klebsiella | ceftriaxone | 60 | 2 | 50% | PRJNA278886 | 0 |
+| klebsiella | ciprofloxacin | 60 | 36 | 18% | PRJNA529587 | 0 |
+| klebsiella | gentamicin | 60 | 32 | 48% | PRJNA278886 | 0 |
+| klebsiella | meropenem | 60 | 15 | 37% | PRJNA504784 | 0 |
+| klebsiella | tetracycline | 60 | 2 | 50% | PRJNA278886 | 0 |
+
+**3 of 10** cells rest on ONE BioProject holding ≥80% of the cohort.
+
 
 ## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)
 
