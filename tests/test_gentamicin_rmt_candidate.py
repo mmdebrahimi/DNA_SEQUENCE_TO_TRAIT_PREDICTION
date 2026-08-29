@@ -95,3 +95,28 @@ def test_label_hunt_draws_no_conclusion_from_a_failed_sweep():
     src = (ROOT / "scripts" / "gentamicin_rmt_label_hunt.py").read_text(encoding="utf-8")
     assert "NO CONCLUSION" in src and "COMPLETE sweep" in src
     assert "parse_ast_phenotypes" in src, "must reuse the fixed PD parser, not re-split the field"
+
+
+def test_the_disjoint_pool_is_manifest_gated_not_selected_tsv_gated():
+    """The cheap check under-covered by two thirds: 956 -> 311 once the accession manifest ran.
+
+    Pinned because the manifest is fail-closed and the hand-rolled version is not, and because an
+    unasserted edit once left the gate un-applied while the numbers looked plausible.
+    """
+    src = (ROOT / "scripts" / "unscored_genome_label_census.py").read_text(encoding="utf-8")
+    assert "prior_accessions" in src and "INCOMPLETE_MANIFEST" in src
+    assert "DISJOINT candidate pool" in src
+
+
+def test_disjoint_validation_numbers_are_recorded_with_their_vacuity_caveat():
+    """The rescue is measured (+0.369 sens on 131 disjoint isolates) but the specificity result is still
+    vacuous on rmt -- zero S-labelled carriers in any of three datasets. Both must be stated together;
+    reporting the gain without the caveat would overclaim safety."""
+    memo = ROOT / "wiki" / "gentamicin_rmt_disjoint_validation_2026-08-28.md"
+    if not memo.exists():
+        import pytest
+        pytest.skip("memo absent")
+    text = memo.read_text(encoding="utf-8")
+    assert "0.892" in text and "0.523" in text
+    assert "arithmetic, not evidence" in text
+    assert "an absence is not a bound" in text

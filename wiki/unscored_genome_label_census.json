@@ -1,0 +1,1837 @@
+{
+  "n_cached": 1818,
+  "n_unscored": 311,
+  "n_with_ast": 200,
+  "per_group": {
+    "Klebsiella": 66,
+    "Escherichia_coli_Shigella": 134,
+    "Acinetobacter": 0,
+    "Salmonella": 0
+  },
+  "errors": {},
+  "complete": true,
+  "cells": {
+    "Klebsiella|ceftriaxone": {
+      "R": 45,
+      "S": 21
+    },
+    "Klebsiella|ciprofloxacin": {
+      "R": 25,
+      "S": 19
+    },
+    "Klebsiella|gentamicin": {
+      "R": 19,
+      "S": 24
+    },
+    "Klebsiella|tetracycline": {
+      "R": 25,
+      "S": 16
+    },
+    "Klebsiella|meropenem": {
+      "R": 15,
+      "S": 29
+    },
+    "Escherichia_coli_Shigella|ciprofloxacin": {
+      "R": 48,
+      "S": 83
+    },
+    "Escherichia_coli_Shigella|gentamicin": {
+      "R": 65,
+      "S": 66
+    },
+    "Escherichia_coli_Shigella|ceftriaxone": {
+      "R": 101,
+      "S": 16
+    },
+    "Escherichia_coli_Shigella|meropenem": {
+      "S": 71
+    },
+    "Escherichia_coli_Shigella|tetracycline": {
+      "R": 57,
+      "S": 16
+    }
+  },
+  "labels": {
+    "GCA_003203435.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_003952905.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022286355.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022284815.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S"
+      }
+    },
+    "GCA_022284775.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S"
+      }
+    },
+    "GCA_022284755.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S"
+      }
+    },
+    "GCA_022284635.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S"
+      }
+    },
+    "GCA_022284675.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S"
+      }
+    },
+    "GCA_022284695.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S"
+      }
+    },
+    "GCA_022284475.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022283805.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022283845.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022089275.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022091615.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022090975.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022115195.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022089205.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022088785.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022088705.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022088285.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_022086675.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R"
+      }
+    },
+    "GCA_019927805.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019927905.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019927945.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928005.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928045.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928105.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928145.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928165.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928185.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928205.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928215.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "meropenem": "R"
+      }
+    },
+    "GCA_019928245.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928285.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928365.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928405.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928395.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928445.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019928465.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928485.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019928505.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_019928525.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928545.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019928565.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019928585.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928595.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019928635.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928625.2": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019928665.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928685.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019928705.3": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930085.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019930125.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_019930145.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930175.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930225.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930265.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019930285.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_019930345.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930405.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930445.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930485.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019930505.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_020406995.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "R"
+      }
+    },
+    "GCA_020407015.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "R",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_020407035.1": {
+      "group": "Klebsiella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_013994675.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R"
+      }
+    },
+    "GCA_004116595.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_004116795.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_004116835.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_004569695.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004681485.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004569745.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R"
+      }
+    },
+    "GCA_004567615.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567725.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567605.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567755.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567505.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567695.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567595.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004568895.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004569875.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004568935.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567415.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004568035.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567445.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567275.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567565.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004568575.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567185.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567145.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567815.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567355.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567055.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567365.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567255.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567005.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004567045.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566795.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566555.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566565.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566875.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566535.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566375.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_004566675.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_015672195.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672185.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672245.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672275.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672295.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672315.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672335.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672345.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672375.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672385.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672435.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672475.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672505.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672785.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015672835.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015672865.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015672995.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015672985.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "meropenem": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_015673135.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673505.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673555.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673645.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673625.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673775.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673815.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673805.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673845.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015673895.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015674035.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_015674175.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_019915545.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_023856835.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "meropenem": "S",
+        "tetracycline": "S"
+      }
+    },
+    "GCA_059498185.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059498205.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059498225.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_059498245.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_059498265.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059498285.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059498305.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059498325.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R"
+      }
+    },
+    "GCA_059498345.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_059498365.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_059498385.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_059498405.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059498425.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ciprofloxacin": "R",
+        "gentamicin": "S"
+      }
+    },
+    "GCA_059754775.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754755.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754725.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754675.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754645.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754615.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754555.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754535.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059934275.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754495.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754445.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754425.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754395.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754345.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754285.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754295.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754245.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754195.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754175.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754155.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754095.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754115.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754075.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059934285.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754015.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059754005.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753995.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753925.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753915.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "S",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753895.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753825.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753785.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753775.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753705.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753675.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753635.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753595.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753545.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753515.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753475.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059753395.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059934255.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "R",
+        "tetracycline": "R"
+      }
+    },
+    "GCA_059819935.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_059819965.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059819985.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_059819995.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "S",
+        "meropenem": "S"
+      }
+    },
+    "GCA_059820025.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R"
+      }
+    },
+    "GCA_059820055.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_059820045.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "R",
+        "gentamicin": "R",
+        "meropenem": "S"
+      }
+    },
+    "GCA_059997365.1": {
+      "group": "Escherichia_coli_Shigella",
+      "calls": {
+        "ceftriaxone": "R",
+        "ciprofloxacin": "S",
+        "gentamicin": "S"
+      }
+    }
+  },
+  "powered_cells": [
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin",
+      "R": 48,
+      "S": 83
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "R": 65,
+      "S": 66
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ceftriaxone",
+      "R": 45,
+      "S": 21
+    }
+  ]
+}
