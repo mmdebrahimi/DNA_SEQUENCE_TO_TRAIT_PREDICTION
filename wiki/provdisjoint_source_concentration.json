@@ -1,0 +1,297 @@
+{
+  "cells": [
+    {
+      "organism": "campylobacter",
+      "drug": "ciprofloxacin",
+      "n_cohort": 40,
+      "spec": 1.0,
+      "sens": 1.0,
+      "bioproject": {
+        "n_resolved": 40,
+        "n_known": 40,
+        "n_unknown": 0,
+        "distinct": 1,
+        "largest": [
+          "PRJNA560409",
+          40
+        ],
+        "largest_share": 1.0
+      },
+      "sra_center": {
+        "n_resolved": 40,
+        "n_known": 40,
+        "n_unknown": 0,
+        "distinct": 1,
+        "largest": [
+          "THE UNIVERSITY OF MELBOURNE",
+          40
+        ],
+        "largest_share": 1.0
+      }
+    },
+    {
+      "organism": "escherichia_coli_shigella",
+      "drug": "ceftriaxone",
+      "n_cohort": 60,
+      "spec": 0.967,
+      "sens": 0.967,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 4,
+        "largest": [
+          "PRJNA278886",
+          33
+        ],
+        "largest_share": 0.55
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 3,
+        "largest": [
+          "BRIGHAM & WOMEN'S HOSPITAL",
+          33
+        ],
+        "largest_share": 0.55
+      }
+    },
+    {
+      "organism": "escherichia_coli_shigella",
+      "drug": "ciprofloxacin",
+      "n_cohort": 60,
+      "spec": 0.7,
+      "sens": 0.933,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 2,
+        "largest": [
+          "PRJNA278886",
+          58
+        ],
+        "largest_share": 0.967
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 2,
+        "largest": [
+          "BRIGHAM & WOMEN'S HOSPITAL",
+          58
+        ],
+        "largest_share": 0.967
+      }
+    },
+    {
+      "organism": "escherichia_coli_shigella",
+      "drug": "gentamicin",
+      "n_cohort": 60,
+      "spec": 1.0,
+      "sens": 0.9,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 4,
+        "largest": [
+          "PRJNA278886",
+          57
+        ],
+        "largest_share": 0.95
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 2,
+        "largest": [
+          "BRIGHAM & WOMEN'S HOSPITAL",
+          57
+        ],
+        "largest_share": 0.95
+      }
+    },
+    {
+      "organism": "escherichia_coli_shigella",
+      "drug": "tetracycline",
+      "n_cohort": 60,
+      "spec": 0.933,
+      "sens": 0.933,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 6,
+        "largest": [
+          "PRJNA662792",
+          32
+        ],
+        "largest_share": 0.533
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 3,
+        "largest": [
+          "NULL",
+          46
+        ],
+        "largest_share": 0.767
+      }
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "ceftriaxone",
+      "n_cohort": 60,
+      "spec": 0.9,
+      "sens": 1.0,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 2,
+        "largest": [
+          "PRJNA278886",
+          30
+        ],
+        "largest_share": 0.5
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 2,
+        "largest": [
+          "BRIGHAM & WOMEN'S HOSPITAL",
+          30
+        ],
+        "largest_share": 0.5
+      }
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "ciprofloxacin",
+      "n_cohort": 60,
+      "spec": 0.967,
+      "sens": 0.967,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 36,
+        "largest": [
+          "PRJNA529587",
+          11
+        ],
+        "largest_share": 0.183
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 3,
+        "largest": [
+          "NULL",
+          51
+        ],
+        "largest_share": 0.85
+      }
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "gentamicin",
+      "n_cohort": 60,
+      "spec": 0.933,
+      "sens": 0.933,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 32,
+        "largest": [
+          "PRJNA278886",
+          29
+        ],
+        "largest_share": 0.483
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 3,
+        "largest": [
+          "NULL",
+          31
+        ],
+        "largest_share": 0.517
+      }
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "meropenem",
+      "n_cohort": 60,
+      "spec": 0.9,
+      "sens": 0.467,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 15,
+        "largest": [
+          "PRJNA504784",
+          22
+        ],
+        "largest_share": 0.367
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 1,
+        "largest": [
+          "NULL",
+          60
+        ],
+        "largest_share": 1.0
+      }
+    },
+    {
+      "organism": "klebsiella",
+      "drug": "tetracycline",
+      "n_cohort": 60,
+      "spec": 0.967,
+      "sens": 0.8,
+      "bioproject": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 2,
+        "largest": [
+          "PRJNA278886",
+          30
+        ],
+        "largest_share": 0.5
+      },
+      "sra_center": {
+        "n_resolved": 60,
+        "n_known": 60,
+        "n_unknown": 0,
+        "distinct": 3,
+        "largest": [
+          "NULL",
+          31
+        ],
+        "largest_share": 0.517
+      }
+    }
+  ],
+  "errors": {},
+  "complete": true,
+  "n_single_source": 3
+}
