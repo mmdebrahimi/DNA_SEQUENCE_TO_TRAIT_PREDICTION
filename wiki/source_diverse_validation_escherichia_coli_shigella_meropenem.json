@@ -1,0 +1,29 @@
+{
+  "schema": "source-diverse-validation-v1",
+  "organism": "Escherichia_coli_Shigella",
+  "drug": "meropenem",
+  "generated": "2026-08-29",
+  "n_candidates": 71,
+  "source_profile": {
+    "n": 71,
+    "n_known": 71,
+    "distinct": 5,
+    "largest_share": 0.479,
+    "dominant": "PRJNA510429"
+  },
+  "diversity_verdict": "source-diverse",
+  "confusion": {
+    "n_scored": 71,
+    "tp": 0,
+    "fp": 1,
+    "tn": 70,
+    "fn": 0,
+    "indeterminate": 0
+  },
+  "status": "underpowered",
+  "powering": {
+    "R": 0,
+    "S": 71,
+    "bar": 20
+  }
+}

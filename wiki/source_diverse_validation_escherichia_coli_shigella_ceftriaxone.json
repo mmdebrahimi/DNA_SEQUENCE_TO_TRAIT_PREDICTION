@@ -1,0 +1,29 @@
+{
+  "schema": "source-diverse-validation-v1",
+  "organism": "Escherichia_coli_Shigella",
+  "drug": "ceftriaxone",
+  "generated": "2026-08-29",
+  "n_candidates": 117,
+  "source_profile": {
+    "n": 117,
+    "n_known": 117,
+    "distinct": 6,
+    "largest_share": 0.359,
+    "dominant": "PRJNA1142533"
+  },
+  "diversity_verdict": "source-diverse",
+  "confusion": {
+    "n_scored": 117,
+    "tp": 101,
+    "fp": 1,
+    "tn": 15,
+    "fn": 0,
+    "indeterminate": 0
+  },
+  "status": "underpowered",
+  "powering": {
+    "R": 101,
+    "S": 16,
+    "bar": 20
+  }
+}

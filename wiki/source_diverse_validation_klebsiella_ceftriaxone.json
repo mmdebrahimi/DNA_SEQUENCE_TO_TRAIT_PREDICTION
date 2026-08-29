@@ -1,0 +1,16 @@
+{
+  "schema": "source-diverse-validation-v1",
+  "organism": "Klebsiella",
+  "drug": "ceftriaxone",
+  "generated": "2026-08-29",
+  "n_candidates": 66,
+  "source_profile": {
+    "n": 66,
+    "n_known": 66,
+    "distinct": 5,
+    "largest_share": 0.682,
+    "dominant": "PRJNA717739"
+  },
+  "diversity_verdict": "largest source holds 68%, bar is 60%",
+  "status": "source_concentrated"
+}

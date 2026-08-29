@@ -28,10 +28,16 @@ below the frozen cohort's 0.893. Three datasets now say the same thing.
 
 ## The other two cells (frozen rule, previously unscored, disjoint)
 
+> **CORRECTION (2026-08-29).** The Klebsiella × ceftriaxone row below should not have been reported. The
+> `source_diverse_validate.py` arm applies a source-diversity bar to its OWN cohorts, and that cohort
+> fails it: **5 BioProjects but 68% from one**, over the 60% bar. Reporting a number from a cohort as
+> concentrated as the ones this work criticises is exactly the error being exposed. It is now emitted as
+> `status: source_concentrated` with **no metrics**. The E. coli cipro row stands (8 sources, 31% share).
+
 | cell | n | acc | sens | spec |
 |---|---:|---:|---:|---:|
 | E. coli × ciprofloxacin | 131 | 0.977 | 0.958 | 0.988 |
-| Klebsiella × ceftriaxone | 66 | 0.924 | 0.978 | 0.810 |
+| ~~Klebsiella × ceftriaxone~~ | ~~66~~ | — | — | — (retracted: source-concentrated) |
 
 Cipro holds up strongly on data it has never seen. These are **not** added to the report card — they are
 scored here, not censused through the provdisjoint arm, and conflating the two is the shared-key trap.

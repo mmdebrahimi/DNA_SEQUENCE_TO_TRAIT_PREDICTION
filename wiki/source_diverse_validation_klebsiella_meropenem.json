@@ -1,0 +1,16 @@
+{
+  "schema": "source-diverse-validation-v1",
+  "organism": "Klebsiella",
+  "drug": "meropenem",
+  "generated": "2026-08-29",
+  "n_candidates": 44,
+  "source_profile": {
+    "n": 44,
+    "n_known": 44,
+    "distinct": 1,
+    "largest_share": 1.0,
+    "dominant": "PRJNA717739"
+  },
+  "diversity_verdict": "only 1 BioProject(s), bar is 5",
+  "status": "source_concentrated"
+}

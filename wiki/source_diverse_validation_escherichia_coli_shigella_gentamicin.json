@@ -1,0 +1,27 @@
+{
+  "schema": "source-diverse-validation-v1",
+  "organism": "Escherichia_coli_Shigella",
+  "drug": "gentamicin",
+  "generated": "2026-08-29",
+  "n_candidates": 131,
+  "source_profile": {
+    "n": 131,
+    "n_known": 131,
+    "distinct": 8,
+    "largest_share": 0.321,
+    "dominant": "PRJNA1142533"
+  },
+  "diversity_verdict": "source-diverse",
+  "confusion": {
+    "n_scored": 131,
+    "tp": 34,
+    "fp": 1,
+    "tn": 65,
+    "fn": 31,
+    "indeterminate": 0
+  },
+  "status": "scored",
+  "acc": 0.756,
+  "sens": 0.523,
+  "spec": 0.985
+}

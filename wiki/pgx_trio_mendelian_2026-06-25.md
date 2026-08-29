@@ -1,4 +1,4 @@
-# PGx trio Mendelian co-segregation QC (2026-08-28)
+# PGx trio Mendelian co-segregation QC (2026-08-29)
 
 **Cohort:** 1000 Genomes 30x panel trios (20130606_g1k_3202_samples ped) (603 trios)
 
