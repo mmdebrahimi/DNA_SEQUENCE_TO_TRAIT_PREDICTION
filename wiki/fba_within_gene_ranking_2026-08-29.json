@@ -2,6 +2,7 @@
   "schema": "fba-within-gene-ranking-v1",
   "generated": "2026-08-29",
   "organism": "ecoli",
+  "axis": "media4",
   "pre_registered": {
     "bar_mean_auroc_nonflat": 0.6,
     "bar_perm_p": 0.05,
@@ -14,19 +15,23 @@
   "mean_auroc_all": 0.5896,
   "oracle_relative_exact_set": 11,
   "oracle_relative_exact_set_nonflat": 11,
-  "deployed_exact_set_for_comparison": 3,
+  "deployed_exact_set_this_axis": {
+    "match": 3,
+    "n": 67,
+    "rate": 0.0448,
+    "source": "fba_conditional_essentiality_ecoli_2026-08-12.json"
+  },
   "oracle_note": "the relative-rule exact-set is handed each gene's TRUE essential-condition count k, which a deployed rule must infer. It is a CEILING, not a number that could ship.",
   "mean_auroc_nonflat": 0.7308,
   "permutation_p": 0.001,
   "n_permutations": 2000,
-  "repeats": 2,
+  "repeats": 1,
   "repeat_values": [
-    0.7308,
     0.7308
   ],
-  "between_run_spread": 0.0,
+  "between_run_spread": null,
   "margin_over_bar_worst_run": 0.1308,
-  "spread_smaller_than_margin": true,
+  "spread_smaller_than_margin": null,
   "must_hold_flat_fraction_reproduced": true,
   "verdict": "PASS",
   "interpretation": "Within-gene AUROC conditions on the gene, removing the gene main effect that the pooled readout's ~0.59 cannot separate from a real switch. PASS would mean the 1% cutoff discards genuine conditional signal and a per-gene RELATIVE rule is worth building. FAIL means the model's cross-condition variation is uninformative even where it exists, so the readout is not the bottleneck.",

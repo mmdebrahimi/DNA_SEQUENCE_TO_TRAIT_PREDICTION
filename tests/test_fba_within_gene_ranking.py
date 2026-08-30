@@ -124,3 +124,39 @@ def test_flat_eps_is_shared_by_both_tests():
     assert FLAT_EPS > 0
     just_inside = [0.5, 0.5 + FLAT_EPS / 2, 0.5, 0.5]
     assert within_gene_auroc([True, False, True, False], just_inside) == 0.5
+
+
+# --- the deployed-comparator lookup: an axis must be compared against its OWN baseline ---
+
+def test_each_axis_reads_its_own_deployed_exact_set():
+    """Quoting the 4-media 3/67 beside a 25-condition carbon result would compare a ceiling against the
+    wrong baseline and make the ranking lever look ~4x more valuable than it is. Each axis reads its own
+    committed artifact."""
+    from fba_within_gene_ranking import deployed_exact_set
+
+    m4, carbon = deployed_exact_set("media4"), deployed_exact_set("carbon")
+    for got in (m4, carbon):
+        if got is None:
+            continue                                    # artifact not committed on this checkout
+        assert got["match"] <= got["n"] and got["n"] > 0
+    if m4 and carbon:
+        assert (m4["match"], m4["n"]) != (carbon["match"], carbon["n"]), \
+            "the two axes must not resolve to the same baseline"
+
+
+def test_deployed_lookup_tolerates_both_artifact_schemas():
+    """Schema drift between two generations of the same producer: the carbon artifact carries
+    `n_scored_exact_set` (added with `exclude_cells`), the older 4-media one only
+    `n_conditionally_essential`. Reading one key alone silently reported 'unknown'."""
+    from fba_within_gene_ranking import deployed_exact_set
+
+    for axis, expect_n in (("media4", 67), ("carbon", 217)):
+        got = deployed_exact_set(axis)
+        if got is not None:
+            assert got["n"] == expect_n, f"{axis} resolved n={got['n']}, expected {expect_n}"
+
+
+def test_unknown_axis_returns_none_rather_than_a_wrong_baseline():
+    from fba_within_gene_ranking import deployed_exact_set
+
+    assert deployed_exact_set("nitrogen_not_wired_yet") is None

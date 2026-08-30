@@ -50,6 +50,42 @@ PRIMARY_BAR = 0.60
 N_PERM = 2000
 
 
+# Where each axis's DEPLOYED exact-set number lives. Read from the artifact, never hardcoded: quoting the
+# 4-media 3/67 beside a 25-condition carbon result would compare a ceiling against the wrong baseline and
+# make the ranking lever look ~4x more valuable than it is on the axis where it is best measured.
+DEPLOYED_SOURCE = {
+    "media4": ("fba_conditional_essentiality_ecoli_*.json", ("model_scored", "switch")),
+    "carbon": ("fba_conditional_carbon_*.json", ("switch",)),
+}
+
+
+def deployed_exact_set(axis: str) -> dict | None:
+    """Pull this axis's own deployed exact-set from its newest committed artifact."""
+    import glob
+
+    pattern, path = DEPLOYED_SOURCE.get(axis, (None, None))
+    if not pattern:
+        return None
+    files = sorted(glob.glob(str(ROOT / "wiki" / pattern)))
+    if not files:
+        return None
+    node = json.loads(pathlib_read(files[-1]))
+    for key in path:
+        node = node.get(key, {})
+    # Schema drift between two generations of the same producer: the carbon artifact carries
+    # `n_scored_exact_set` (added with `exclude_cells`), the older 4-media one only
+    # `n_conditionally_essential`. Accept either rather than silently reporting "unknown".
+    m = node.get("exact_set_match")
+    n = node.get("n_scored_exact_set", node.get("n_conditionally_essential"))
+    if m is None or n is None:
+        return None
+    return {"match": m, "n": n, "rate": round(m / n, 4), "source": Path(files[-1]).name}
+
+
+def pathlib_read(f: str) -> str:
+    return Path(f).read_text(encoding="utf-8")
+
+
 def within_gene_auroc(essential: list[bool], ratio: list[float],
                       tol: float = FLAT_EPS) -> float | None:
     """AUROC over ONE gene's conditions: does a lower ratio mark the essential ones? PURE.
@@ -95,6 +131,59 @@ def permutation_p(genes: list[tuple[list[bool], list[float]]], observed: float,
     return (ge + 1) / (n_perm + 1)
 
 
+def compute_ratios_carbon(db: str | None, threshold: float) -> tuple[dict, list, list[str]]:
+    """The 25-source Fitness Browser Keio CARBON axis -- an INDEPENDENT, far better-powered replication.
+
+    The 4-media Orth panel gives each gene only 4 conditions, so its within-gene AUROC can take just a
+    handful of discrete values and rests on 26 varying genes. 25 conditions over ~200 genes is a
+    materially finer measurement of the same quantity, on a different substrate with a different label
+    source (Keio transposon fitness, not Orth's curated E/N calls).
+
+    Loading mirrors `scripts/fba_conditional_carbon_validate.py` exactly so the two are comparable --
+    same `carbon_conditions` mapping, same `load_records` gene filter and threshold, same
+    `apply_carbon_condition(all_carbon=...)` which closes every OTHER carbon exchange (without that the
+    conditions are not actually distinct media).
+    """
+    from cobra.flux_analysis import single_gene_deletion
+
+    from dna_decode.fba.conditional_essentiality import conditionally_essential_genes
+    from dna_decode.fba.fitness_browser import (apply_carbon_condition, carbon_conditions, load_records,
+                                                open_db)
+    from dna_decode.fba.model import load_model, wildtype_growth
+
+    conn = open_db(db)
+    model = load_model()
+    conds = carbon_conditions(conn, model)
+    keys = sorted(conds)
+    records = load_records(conn, conds, gene_filter={g.id for g in model.genes}, threshold=threshold)
+    subset = conditionally_essential_genes(records)
+    print(f"  {len(conds)} mappable carbon sources | {len(records)} complete rows | "
+          f"{len(subset)} conditionally essential", flush=True)
+    if not subset:
+        return {}, [], keys
+
+    genes = [r.gene_id for r in subset]
+    all_ex = tuple(conds.values())
+    ratios: dict[str, dict[str, float]] = {}
+    for n, cond in enumerate(keys, 1):
+        with model:
+            apply_carbon_condition(model, conds[cond], all_carbon=all_ex)
+            wt = wildtype_growth(model)
+            rat: dict[str, float] = {}
+            if wt > 1e-9:
+                res = single_gene_deletion(
+                    model, gene_list=[model.genes.get_by_id(g) for g in genes], processes=1)
+                for idx, row in res.iterrows():
+                    key = row["ids"] if "ids" in res.columns else idx
+                    gid = next(iter(key)) if not isinstance(key, str) else key
+                    g = row["growth"]
+                    rat[gid] = 0.0 if g != g else g / wt
+            ratios[cond] = rat
+        if n % 5 == 0 or n == len(keys):
+            print(f"    [{n:2d}/{len(keys)}] deletions done", flush=True)
+    return ratios, subset, keys
+
+
 def compute_ratios(organism: str = "ecoli") -> tuple[dict, list, dict]:
     """Re-solve the deletion panel. Single-process by design (see the determinism note in the docstring)."""
     from cobra.flux_analysis import single_gene_deletion
@@ -130,10 +219,10 @@ def compute_ratios(organism: str = "ecoli") -> tuple[dict, list, dict]:
     return ratios, conditionally_essential_genes(scored), wt_by_cond
 
 
-def score(ratios: dict, cond_genes: list) -> dict:
-    from dna_decode.fba.conditional_essentiality import CONDITIONS
-
-    keys = sorted(CONDITIONS)
+def score(ratios: dict, cond_genes: list, keys: list[str] | None = None) -> dict:
+    if keys is None:
+        from dna_decode.fba.conditional_essentiality import CONDITIONS
+        keys = sorted(CONDITIONS)
     per_gene: list[dict] = []
     for r in cond_genes:
         if not all(r.gene_id in ratios.get(c, {}) for c in keys):
@@ -199,13 +288,21 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--repeat", type=int, default=2, help="independent re-solves; determinism check")
     ap.add_argument("--organism", default="ecoli")
+    ap.add_argument("--axis", default="media4", choices=("media4", "carbon"),
+                    help="media4 = the 4-media Orth panel; carbon = the 25-source Keio axis")
+    ap.add_argument("--db", default=None, help="feba.db path (carbon axis only)")
+    ap.add_argument("--threshold", type=float, default=-2.0)
     args = ap.parse_args()
 
     runs = []
     for i in range(args.repeat):
         print(f"solving deletion panel, run {i + 1}/{args.repeat} (single-process) ...", flush=True)
-        ratios, cond_genes, wt = compute_ratios(args.organism)
-        s = score(ratios, cond_genes)
+        if args.axis == "carbon":
+            ratios, cond_genes, keys = compute_ratios_carbon(args.db, args.threshold)
+        else:
+            ratios, cond_genes, _ = compute_ratios(args.organism)
+            keys = None
+        s = score(ratios, cond_genes, keys)
         runs.append(s)
         print(f"  genes {s['n_genes_scored']}  flat {s['n_flat']} ({s['flat_fraction']})  "
               f"mean AUROC all {s['mean_auroc_all']}  nonflat {s['mean_auroc_nonflat']}")
@@ -227,10 +324,14 @@ def main() -> int:
     # The WORST repeat must clear the bar, not the first one -- otherwise the verdict is a coin flip on
     # which run happened to be reported.
     passed = bool(vals) and min(vals) > PRIMARY_BAR and p < 0.05 and (agree is not False)
-    must_hold = primary["flat_fraction"] is not None and 0.55 <= primary["flat_fraction"] <= 0.75
+    # The ~64% flat-fraction must-hold pins the 4-media panel to the 2026-08-12 artifact. The carbon axis
+    # is a DIFFERENT substrate with 25 conditions, so it has no prior to reproduce -- asserting one there
+    # would be inventing a bar. Reported as None rather than silently passing or failing.
+    must_hold = (primary["flat_fraction"] is not None and 0.55 <= primary["flat_fraction"] <= 0.75
+                 ) if args.axis == "media4" else None
 
     out = {"schema": "fba-within-gene-ranking-v1", "generated": date.today().isoformat(),
-           "organism": args.organism, "pre_registered": {"bar_mean_auroc_nonflat": PRIMARY_BAR,
+           "organism": args.organism, "axis": args.axis, "pre_registered": {"bar_mean_auroc_nonflat": PRIMARY_BAR,
                                                          "bar_perm_p": 0.05,
                                                          "must_hold_flat_fraction": "0.55-0.75 (~0.64)"},
            "n_genes_scored": primary["n_genes_scored"], "n_flat": primary["n_flat"],
@@ -238,7 +339,7 @@ def main() -> int:
            "mean_auroc_all": primary["mean_auroc_all"],
            "oracle_relative_exact_set": primary["oracle_relative_exact_set"],
            "oracle_relative_exact_set_nonflat": primary["oracle_relative_exact_set_nonflat"],
-           "deployed_exact_set_for_comparison": 3,
+           "deployed_exact_set_this_axis": deployed_exact_set(args.axis),
            "oracle_note": ("the relative-rule exact-set is handed each gene's TRUE essential-condition "
                            "count k, which a deployed rule must infer. It is a CEILING, not a number "
                            "that could ship."),
@@ -256,16 +357,21 @@ def main() -> int:
                "not the bottleneck."),
            "per_gene": primary["per_gene"]}
 
-    for f in (ROOT / "wiki" / f"fba_within_gene_ranking_{out['generated']}.json",):
+    tag = "" if args.axis == "media4" else f"_{args.axis}"
+    for f in (ROOT / "wiki" / f"fba_within_gene_ranking{tag}_{out['generated']}.json",):
         f.write_text(json.dumps(out, indent=2), encoding="utf-8")
 
     print(f"\n  pooled comparison ....... continuous_readout AUROC ~0.59 (gene main effect NOT removed)")
     print(f"  within-gene, all genes .. {out['mean_auroc_all']}   (n={out['n_genes_scored']})")
     print(f"  within-gene, non-flat ... {obs}   (n={out['n_nonflat']})  <- PRE-REGISTERED PRIMARY")
     print(f"  permutation p ........... {out['permutation_p']}")
+    dep = out["deployed_exact_set_this_axis"]
+    dep_s = f"{dep['match']}/{dep['n']}" if dep else "unknown"
+    head = (out["oracle_relative_exact_set"] - dep["match"]) if dep else None
     print(f"  oracle relative exact-set {out['oracle_relative_exact_set']}/{out['n_genes_scored']} "
-          f"(non-flat {out['oracle_relative_exact_set_nonflat']}/{out['n_nonflat']}) "
-          f"vs deployed 3/67  <- CEILING, handed true k")
+          f"vs THIS AXIS's deployed {dep_s}"
+          + (f"  -> headroom {head:+d} genes" if head is not None else "")
+          + "   <- CEILING, handed true k")
     print(f"  flat fraction ........... {out['flat_fraction']}  must-hold reproduced: {must_hold}")
     print(f"  repeats ................. {vals}  spread {spread} vs margin-over-bar {margin} "
           f"-> spread<margin: {agree}")

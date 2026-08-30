@@ -35,11 +35,13 @@ _Last updated: 2026-08-29._
 - ~~FBA conditional switch — continuous ratio as a ranking~~ **DONE 2026-08-29, bounded PASS.**
   Within-gene AUROC 0.7308 (non-flat, n=26, p=0.001); all-genes 0.5896 because 61% are flat. Oracle
   ceiling 11/67 exact-set vs deployed 3/67, and it ranks rather than calls. The failure is silence, not
-  error. `wiki/fba_within_gene_ranking_2026-08-29.md`. **Follow-on, still untried:** estimate k (a gene's
-  essential-condition count) so the ranking becomes a callable rule — that is the only thing standing
-  between 3/67 and 11/67.
-- **FBA axis choice is a free lever** — the nitrogen axis has almost no dynamic range by construction
-  (6 of 13 conditions give identical wildtype growth 0.92593). Carbon has real condition-specificity.
+  error. **REPLICATED on the 25-source Keio carbon axis: AUROC 0.8133 (n=69, p=0.0005), flatness 68.2%.**
+  `wiki/fba_within_gene_ranking_2026-08-29.md`. **The follow-on is now CLOSED, not open:** on carbon the
+  deployed rule already gets 23/217 and the oracle ceiling is 27/217 (+4 genes, +1.8pp), so estimating k
+  would buy almost nothing. The 4-media "3->11" was a small-axis artifact. Do not build it.
+- ~~FBA axis choice is a free lever~~ **PARTLY SPENT 2026-08-29** — the carbon axis is now measured with
+  the within-gene metric (above). The nitrogen axis remains unmeasured on it, but has almost no dynamic
+  range by construction (6 of 13 conditions give identical wildtype growth 0.92593), so expect little.
 - **Staleness auditor** — one clean 110/110 corpus run at `TOTAL_TOKEN_BUDGET=5500` to verify the OOM
   mitigation. Still labelled unverified in `scripts/kaggle/staleness_corpus_kernel.py`.
 

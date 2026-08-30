@@ -108,3 +108,69 @@ per-clade metrics, HIV within-subtype transfer, the lineage-collapse layer). Gen
 repeated-measure design in the repo, which is exactly why this cell was the gap.
 
 An honest negative, recorded so the check does not get repeated.
+
+---
+
+# Replication on the 25-source carbon axis — the direction result strengthens, the LEVER nearly vanishes
+
+The result above rests on 26 varying genes across **4** conditions, where a within-gene AUROC can take
+only a handful of discrete values. The repo already has an independent, far better-powered axis: the
+Fitness Browser **Keio carbon panel — 25 mappable sources, 217 conditionally-essential genes**, with a
+different substrate and a different label source (transposon fitness, not Orth's curated E/N calls).
+
+Same metric, same code path (`--axis carbon`).
+
+| | media4 (Orth) | carbon (Keio) |
+|---|---:|---:|
+| conditions | 4 | **25** |
+| conditionally-essential genes | 67 | **217** |
+| flat (one ratio for every condition) | 61.2% | **68.2%** |
+| **within-gene AUROC, non-flat** | 0.7308 (n=26) | **0.8133 (n=69)** |
+| permutation p | 0.001 | **0.0005** |
+| within-gene AUROC, all genes | 0.5896 | 0.5996 |
+| deployed exact-set (that axis's own) | 3/67 = 4.5% | 23/217 = 10.6% |
+| oracle relative-rule ceiling | 11/67 = 16.4% | 27/217 = 12.4% |
+| **headroom** | **+8 genes (+11.9 pp)** | **+4 genes (+1.8 pp)** |
+
+Deterministic: 0.8133 on both repeats, spread 0.0.
+
+## Two findings, pulling opposite ways
+
+**1. The direction result replicates and strengthens.** Where the model's ratio varies across conditions,
+it points the right way **81%** of the time on 69 genes — better than the 4-media 73% on 26, on different
+data with a different label source. And the flatness finding replicates and *worsens*: **68% of these
+genes emit one identical growth ratio across all 25 carbon sources.** "Silence, not error" is now a
+two-substrate result.
+
+**2. The practical lever nearly vanishes on the better-measured axis.** This corrects the impression the
+4-media ceiling gave. There, ranking looked like a 3→11 win (~3.7×). On carbon the deployed absolute
+threshold already reaches 23/217 and the oracle ceiling is 27/217 — **+4 genes, +1.8 pp, with an oracle
+that is handed each gene's true essential-condition count.**
+
+The 4-media "3.7×" was a **small-axis artifact**: with only four conditions the absolute threshold does
+badly, so a relative rule looks like a large relative win over a tiny base. Given 25 conditions the
+threshold does much better and the headroom collapses.
+
+**So: build the relative rule? No.** A deployable version must also infer *k*, would recover at most 4 of
+217 genes, and inferring *k* is the original problem restated. The honest conclusion is that the readout
+is **not** where the deficit lives — measured on the axis best able to say so.
+
+## What this does and does not change
+
+- **Unchanged:** the switch cell stays open, and its bottleneck stays the one already measured — the
+  conditioning signal is not measured in the conditions the phenotype data uses.
+- **Sharpened:** "the readout costs real signal" is now bounded at **+1.8 pp** on the better axis, against
+  +11.9 pp on the smaller one. Quote the carbon number.
+- **Strengthened:** flatness is the dominant term on both axes and grows with condition count
+  (61% → 68%). A model that emits one number for 25 different carbon sources is the thing to fix.
+
+## One defect, same family as the other four
+
+The first carbon run printed its oracle ceiling against **`deployed 3/67`** — the *4-media* baseline —
+which made the lever look roughly four times more valuable than it is. `deployed_exact_set(axis)` now
+reads each axis's own committed artifact. It also had to tolerate schema drift between two generations of
+the same producer (`n_scored_exact_set` on carbon, only `n_conditionally_essential` on the older 4-media
+artifact); reading one key alone reported a silent `unknown`. 3 tests added (12 total).
+
+Reproduce: `uv run python scripts/fba_within_gene_ranking.py --axis carbon --repeat 2`
+(needs `D:/dna_decode_cache/fitness_browser/feba.db`).
