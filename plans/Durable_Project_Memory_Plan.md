@@ -57,7 +57,13 @@ never a gate.
 
 ## Remaining
 
-**F3 — scope tags on L1 claims.** Every count in the CLAUDE.md body should name the arm it covers. The
+**F3 — PARTLY DONE 2026-08-30.** `scripts/claude_md_weight.py` + `tests/test_claude_md_citations.py`
+measure the always-loaded surface (~36,800 tokens/session) and guard that every citation resolves — which
+immediately caught a plan that moved to `executed_plans/` while its pointer stayed at `plans/`. The
+session's own 1,022-word bullet was compressed to 309. Remaining: 17 candidate bullets (~9,100 words),
+deliberately left as a user call (see `NEXT.md`). Memo `wiki/claude_md_weight_2026-08-30.md`.
+
+**F3 (original framing) — scope tags on L1 claims.** Every count in the CLAUDE.md body should name the arm it covers. The
 report-card bullet already does this (corrected 2026-08-23). Cheapest form: a convention, checked by the
 staleness auditor rather than by a new test.
 

@@ -26,7 +26,14 @@ _Last updated: 2026-08-29._
    BioProject (`wiki/provdisjoint_source_concentration_2026-08-28.md`). Current answer is *disclose*, in a
    namespace-separate layer. Demoting them is a scope decision.
 
-3. **The 7 unscreenable colour cells** — no existing evidence tier fits (`NO_FREE_SOURCE` is about labels;
+3. **Whether to compress the other 17 long CLAUDE.md bullets (~9,100 words).** The file costs ~36,800
+   tokens EVERY session; 18 bullets are long AND cite a resolvable memo, so their derivations could become
+   pointers without losing anything. I compressed only my own (1,022 → 309). The rest is other sessions'
+   institutional memory and rewriting it wholesale is a call about what belongs in the always-loaded
+   surface. Measure first: `uv run python scripts/claude_md_weight.py`.
+   *Two long bullets have NO external store and must stay whole — the tool already protects them.*
+
+4. **The 7 unscreenable colour cells** — no existing evidence tier fits (`NO_FREE_SOURCE` is about labels;
    `NOT_CENSUSED` means never-scored). And whether curating the 40 unrecorded colour loci is worth doing
    (fabrication hazard unless every locus is OMIA/literature-sourced).
 
@@ -44,6 +51,9 @@ _Last updated: 2026-08-29._
   42 LP solves, seconds — `scripts/fba_axis_dynamic_range.py`). Flatness 61.2/68.2/75.5% tracks it
   monotonically on both summaries. Nitrogen was the worst available choice. n=3, so a direction that
   survived a common yardstick, not an established relationship.
+- ~~Abstaining conditional-essentiality CLI~~ — checked 2026-08-30: there is **no shipped surface** to fix
+  (`dna-fba`'s `conditional` is the variant-LOF-uncertain case; `carbon` is utilization). Shipping it would
+  be a NEW phenotype-claiming surface on a published package = authority, listed above.
 - **Staleness auditor** — one clean 110/110 corpus run at `TOTAL_TOKEN_BUDGET=5500` to verify the OOM
   mitigation. Still labelled unverified in `scripts/kaggle/staleness_corpus_kernel.py`.
 
