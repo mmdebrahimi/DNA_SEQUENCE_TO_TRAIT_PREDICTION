@@ -1,6 +1,7 @@
 # Durable project memory — surviving compaction without lying to the next session
 
-**Status:** F1/F2/F5 shipped 2026-08-29. F3/F4 remaining.
+**Status:** F1/F2/F5 shipped 2026-08-29; F3 partly done 2026-08-30 (measurement + citation guard shipped;
+the 17-bullet compression is a user call). F4b remaining.
 
 ## The problem, stated correctly
 
