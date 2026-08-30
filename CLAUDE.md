@@ -2,11 +2,39 @@
 
 Project-specific guidance for Claude Code (claude.ai/code) when working in this repo.
 
-## What this is
+## READ THIS FIRST — orientation, and how to not get it wrong
 
-Personal solo Phase 1 of an E. coli genotype-to-phenotype prediction platform. Predicts antibiotic resistance (ciprofloxacin / ceftriaxone / tetracycline) from genomic DNA + identifies which genomic regions drive predictions. Biologically interpretable; **not** causal-claim-making.
+**Run `uv run python scripts/project_status.py` before making ANY claim about this project's scope.**
+Read-only, offline, ~2s. Every figure below is written down and therefore goes stale; that script derives
+the same figures live from `pyproject.toml` + `dna_decode.cli.TRAITS` + `cell_registry.cells()`. When they
+disagree, **the script is right**.
 
-Long-term vision: multimodal genotype-phenotype platform expanding to eukaryotes + image-paired phenotype data. Phase 1 is foundation infrastructure, NOT a stepping stone to "DNA → animal image" prediction.
+**What this is:** a **published** (`v0.13.x`, PyPI) multi-kingdom **deterministic** genotype→phenotype
+decoder CLI — bacteria, viruses (HIV / SARS-CoV-2 / influenza), fungi, TB, plus human clinical
+(pgx / clinvar / hla), molecular typing, metabolic FBA, variant-effect forward/inverse, and genome maps.
+~48 console entry points across 7 tracks. Not a research repo, and **not an E. coli AMR project** — AMR is
+one track of seven.
+
+**The three orientation errors this file has actually caused** (all 2026-08-29, all in one session):
+
+1. **Scope collapse.** `wiki/decoder_validation_report_card.json` is the **AMR provenance-disjoint arm
+   only** — **27 rows / 10 SCORED**. The tool's evidence surface is `cell_registry` — **110 cells, 28 `INDEPENDENT_MEASURED`**. Quoting the card as the whole understates it ~4x. Any count you cite must
+   name the arm it covers.
+2. **Over-compression of a scoped negative.** Organism-level g→p is **not** a closed negative. What is
+   closed is *zero-shot embeddings on natural populations* (0-for-5, de-confounded). Constructed-variation
+   designs work — yeast segregant cross **12/12 traits at r 0.46–0.80**. The discriminating variable is
+   **population design, not organism complexity**. See `wiki/organism_gp_regime_correction_2026-08-29.md`.
+3. **Proposing built work as novel.** The FBA/Keio conditional-essentiality line (~25 `wiki/fba_*`
+   artifacts) is the deepest line here, with a measured bottleneck — not an unexplored direction.
+
+**In-flight work + user-authority calls live in `NEXT.md`** (transient; prune it, don't grow it).
+
+**The rule those three share:** a claim asserted from memory or from prose sounds right and is wrong. This
+file and `wiki/` were true when written. **Re-derive from the artifact before publishing a claim** —
+`scripts/project_status.py` for scope, the named script under each bullet below for anything else.
+
+Long-term vision: multimodal genotype-phenotype platform expanding to eukaryotes + image-paired phenotype
+data.
 
 ## Architecture (one level of depth that matters)
 
