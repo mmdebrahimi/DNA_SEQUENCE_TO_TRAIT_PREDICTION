@@ -1,0 +1,278 @@
+"""Does the model's growth ratio rank a gene's OWN conditions correctly? The de-confounded switch test.
+
+THE LEVER THIS CLOSES. `conditional_essentiality.continuous_readout` scores the raw knockout growth ratio
+as a ranking POOLED over every gene x condition cell and reports AUROC ~0.59 -- above chance, which reads
+as "the 1% cutoff is discarding real signal". But a pooled ranking is dominated by the GENE MAIN EFFECT: a
+gene that is essential in all four media has a low ratio in all four, and contributes four correctly-ranked
+positives without the model ever having switched. A pooled 0.59 is achievable with EXACTLY ZERO
+within-gene signal.
+
+The conditional-switch question is strictly within-gene: for one gene, is the ratio LOWER in the conditions
+where that gene is actually essential? Conditioning on the gene removes its main effect by construction --
+the same de-confounding idiom this project already uses for lineage, clonality and ancestry, applied to the
+axis that was never conditioned on.
+
+PRE-REGISTERED BEFORE THE FIRST RUN:
+  * PRIMARY: mean within-gene AUROC over NON-FLAT conditionally-essential genes.
+  * PASS  : > 0.60 AND permutation-null p < 0.05  -> the cutoff discards real switch signal; a per-gene
+            RELATIVE rule (rank a gene's own conditions) is worth building.
+  * FAIL  : ~0.5 -> the model's cross-condition variation is uninformative even where it exists; the
+            bottleneck is the model/data, not the readout, and this lever closes.
+  * MUST-HOLD: the flat fraction reproduces the 2026-08-12 artifact's ~64%, proving this runs on the same
+            subset. If it does not, the numbers are not comparable and nothing here is interpretable.
+
+FLAT GENES ARE THE POINT, NOT AN EXCLUSION. A gene whose ratio is identical across all four media has
+within-gene AUROC exactly 0.5 by ties -- including it would drag the mean toward chance and hide whatever
+the varying genes do. Both are reported: `mean_auroc_all` (honest headline over every gene) and
+`mean_auroc_nonflat` (the pre-registered primary, which asks whether variation, WHERE IT EXISTS, points
+the right way).
+
+DETERMINISM FIRST. Degenerate LP optima shift mid-range ratios between processes, which is why the
+committed artifact quotes AUROC as ~0.60 rather than to four decimals. This runs single-process and
+`--repeat 2` re-solves everything independently and reports whether the primary agrees to 3 decimals. A
+bar cleared by a run whose variance exceeds the effect is not a result.
+
+Run: uv run python scripts/fba_within_gene_ranking.py [--repeat 2]
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from datetime import date
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+FLAT_EPS = 1e-9
+PRIMARY_BAR = 0.60
+N_PERM = 2000
+
+
+def within_gene_auroc(essential: list[bool], ratio: list[float],
+                      tol: float = FLAT_EPS) -> float | None:
+    """AUROC over ONE gene's conditions: does a lower ratio mark the essential ones? PURE.
+
+    Returns None when the gene is not two-sided (all-essential or all-dispensable) -- undefined, not 0.5.
+
+    THE TIE TOLERANCE IS LOAD-BEARING, and the first version got it wrong. Flatness was judged with a
+    1e-9 tolerance while the tie test used exact float equality, so a gene whose four ratios differ in the
+    15th decimal was called flat AND scored as if its ordering meant something: 36 of 41 flat genes
+    returned an AUROC other than 0.5, purely from LP noise. The two tests must share one tolerance. The
+    arithmetic that exposed it: 41 genes at exactly 0.5 plus 26 at 0.718 cannot average 0.6045.
+    """
+    pos = [r for r, e in zip(ratio, essential) if e]
+    neg = [r for r, e in zip(ratio, essential) if not e]
+    if not pos or not neg:
+        return None
+    # P(ratio_essential < ratio_dispensable), ties counted a half. Lower ratio = more essential.
+    wins = sum(0.5 if abs(p - n) <= tol else (1.0 if p < n else 0.0) for p in pos for n in neg)
+    return wins / (len(pos) * len(neg))
+
+
+def permutation_p(genes: list[tuple[list[bool], list[float]]], observed: float,
+                  n_perm: int = N_PERM, seed: int = 0) -> float:
+    """Shuffle the essential/dispensable labels WITHIN each gene; how often does chance beat observed?
+
+    Within-gene shuffling holds each gene's ratio profile AND its number of essential conditions fixed, so
+    the null isolates exactly one thing: whether the pairing of condition to ratio is informative.
+    """
+    import random
+
+    rng = random.Random(seed)
+    ge = 0
+    for _ in range(n_perm):
+        vals = []
+        for ess, rat in genes:
+            shuffled = ess[:]
+            rng.shuffle(shuffled)
+            a = within_gene_auroc(shuffled, rat)
+            if a is not None:
+                vals.append(a)
+        if vals and sum(vals) / len(vals) >= observed:
+            ge += 1
+    return (ge + 1) / (n_perm + 1)
+
+
+def compute_ratios(organism: str = "ecoli") -> tuple[dict, list, dict]:
+    """Re-solve the deletion panel. Single-process by design (see the determinism note in the docstring)."""
+    from cobra.flux_analysis import single_gene_deletion
+
+    from dna_decode.fba.conditional_essentiality import (CONDITIONS, apply_condition,
+                                                         conditionally_essential_genes, load_labels)
+    from dna_decode.fba.model import load_model, wildtype_growth
+
+    records = load_labels()
+    model = load_model(organism=organism)
+    ids = {g.id for g in model.genes}
+    scored = [r for r in records if r.gene_id in ids]
+
+    ratios: dict[str, dict[str, float]] = {}
+    wt_by_cond: dict[str, float] = {}
+    for c in CONDITIONS:
+        with model:
+            apply_condition(model, c)
+            wt = wildtype_growth(model)
+            wt_by_cond[c] = round(wt, 6)
+            rat: dict[str, float] = {}
+            if wt > 1e-6:
+                res = single_gene_deletion(
+                    model, gene_list=[model.genes.get_by_id(r.gene_id) for r in scored], processes=1)
+                for idx, row in res.iterrows():
+                    key = row["ids"] if "ids" in res.columns else idx
+                    gid = next(iter(key)) if not isinstance(key, str) else key
+                    g = row["growth"]
+                    # NaN is a genuinely infeasible LP -> total loss of growth. Documented at length in
+                    # wiki/fba_infeasibility_finding_2026-08-13.md: do NOT "fix" this to a skip.
+                    rat[gid] = 0.0 if g != g else g / wt
+            ratios[c] = rat
+    return ratios, conditionally_essential_genes(scored), wt_by_cond
+
+
+def score(ratios: dict, cond_genes: list) -> dict:
+    from dna_decode.fba.conditional_essentiality import CONDITIONS
+
+    keys = sorted(CONDITIONS)
+    per_gene: list[dict] = []
+    for r in cond_genes:
+        if not all(r.gene_id in ratios.get(c, {}) for c in keys):
+            continue
+        ess = [bool(r.experimental[c]) for c in keys]
+        rat = [ratios[c][r.gene_id] for c in keys]
+        a = within_gene_auroc(ess, rat)
+        if a is None:                       # not two-sided -> the switch question is undefined for it
+            continue
+        per_gene.append({"gene_id": r.gene_id, "auroc": a,
+                         "flat": (max(rat) - min(rat)) < FLAT_EPS,
+                         "spread": round(max(rat) - min(rat), 6), "_ess": ess, "_rat": rat})
+
+    # What could a RELATIVE rule buy in the metric this project tracks (exact-set match)? For each gene
+    # take k = its TRUE number of essential conditions and call the k lowest-ratio conditions essential.
+    # It is handed k, which a deployed rule would have to infer, so this is a strict CEILING on any
+    # rank-based per-gene rule and NEVER a deployable number -- the same rail `continuous_readout`
+    # carries on its oracle threshold.
+    def oracle_hit(e: list[bool], rt: list[float]) -> bool:
+        """A FLAT gene has no ordering, so the oracle is UNDEFINED for it -- never a hit.
+
+        The first version omitted this and reported 23/67. On a flat gene every ratio is equal, so
+        `sorted` falls back to stable index order and "the k lowest conditions" means "the first k
+        conditions"; 12 of the 41 flat genes matched their true pattern purely because of how the
+        condition list happens to be ordered. That is tie-breaking luck presented as a ceiling. Flat
+        genes are structurally unreachable by ANY change of readout -- the model emits one number for
+        all four media -- so they belong in the denominator and never in the numerator.
+        """
+        if (max(rt) - min(rt)) < FLAT_EPS:
+            return False
+        k = sum(e)
+        order = sorted(range(len(rt)), key=lambda i: rt[i])
+        # An AMBIGUOUS top-k boundary is not a hit either -- the partial version of the flat-gene trap.
+        # If the k-th and (k+1)-th ratios tie, which condition lands inside the selection is decided by
+        # stable-sort index order, not by the model. Two genes at AUROC 0.833 were "hitting" that way.
+        # With this guard the ceiling equals the count of AUROC==1.0 genes exactly, as it must: top-k
+        # selection is right precisely when every essential condition ranks below every dispensable one.
+        if k < len(rt) and abs(rt[order[k - 1]] - rt[order[k]]) <= FLAT_EPS:
+            return False
+        pred = [False] * len(rt)
+        for i in order[:k]:
+            pred[i] = True
+        return pred == e
+
+    hits = [oracle_hit(g["_ess"], g["_rat"]) for g in per_gene]
+    nonflat = [(g["_ess"], g["_rat"]) for g in per_gene if not g["flat"]]
+    aurocs_all = [g["auroc"] for g in per_gene]
+    aurocs_nf = [g["auroc"] for g in per_gene if not g["flat"]]
+    n_flat = sum(1 for g in per_gene if g["flat"])
+
+    return {"n_genes_scored": len(per_gene), "n_flat": n_flat, "n_nonflat": len(nonflat),
+            "flat_fraction": round(n_flat / len(per_gene), 4) if per_gene else None,
+            "mean_auroc_all": round(sum(aurocs_all) / len(aurocs_all), 4) if aurocs_all else None,
+            "mean_auroc_nonflat": round(sum(aurocs_nf) / len(aurocs_nf), 4) if aurocs_nf else None,
+            "oracle_relative_exact_set": sum(hits),
+            "oracle_relative_exact_set_nonflat": sum(
+                h for h, g in zip(hits, per_gene) if not g["flat"]),
+            "per_gene": [{k: v for k, v in g.items() if not k.startswith("_")} for g in per_gene],
+            "_nonflat_pairs": nonflat}
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--repeat", type=int, default=2, help="independent re-solves; determinism check")
+    ap.add_argument("--organism", default="ecoli")
+    args = ap.parse_args()
+
+    runs = []
+    for i in range(args.repeat):
+        print(f"solving deletion panel, run {i + 1}/{args.repeat} (single-process) ...", flush=True)
+        ratios, cond_genes, wt = compute_ratios(args.organism)
+        s = score(ratios, cond_genes)
+        runs.append(s)
+        print(f"  genes {s['n_genes_scored']}  flat {s['n_flat']} ({s['flat_fraction']})  "
+              f"mean AUROC all {s['mean_auroc_all']}  nonflat {s['mean_auroc_nonflat']}")
+
+    primary = runs[0]
+    # Determinism is a TOLERANCE question, not an equality one: degenerate LP optima shift mid-range
+    # ratios between processes, so bit-identical repeats are not achievable and demanding them would
+    # reject a real effect. The honest test is whether the between-run SPREAD is small against the
+    # distance from the bar -- a bar cleared by a run whose variance exceeds the effect is not a result.
+    vals = [r["mean_auroc_nonflat"] for r in runs if r["mean_auroc_nonflat"] is not None]
+    spread = round(max(vals) - min(vals), 4) if len(vals) > 1 else None
+    margin = round(min(vals) - PRIMARY_BAR, 4) if vals else None
+    agree = (spread is not None and margin is not None and spread < margin) if len(vals) > 1 else None
+
+    print("\npermutation null (within-gene label shuffle) ...", flush=True)
+    p = permutation_p(primary["_nonflat_pairs"], primary["mean_auroc_nonflat"] or 0.5)
+
+    obs = primary["mean_auroc_nonflat"]
+    # The WORST repeat must clear the bar, not the first one -- otherwise the verdict is a coin flip on
+    # which run happened to be reported.
+    passed = bool(vals) and min(vals) > PRIMARY_BAR and p < 0.05 and (agree is not False)
+    must_hold = primary["flat_fraction"] is not None and 0.55 <= primary["flat_fraction"] <= 0.75
+
+    out = {"schema": "fba-within-gene-ranking-v1", "generated": date.today().isoformat(),
+           "organism": args.organism, "pre_registered": {"bar_mean_auroc_nonflat": PRIMARY_BAR,
+                                                         "bar_perm_p": 0.05,
+                                                         "must_hold_flat_fraction": "0.55-0.75 (~0.64)"},
+           "n_genes_scored": primary["n_genes_scored"], "n_flat": primary["n_flat"],
+           "n_nonflat": primary["n_nonflat"], "flat_fraction": primary["flat_fraction"],
+           "mean_auroc_all": primary["mean_auroc_all"],
+           "oracle_relative_exact_set": primary["oracle_relative_exact_set"],
+           "oracle_relative_exact_set_nonflat": primary["oracle_relative_exact_set_nonflat"],
+           "deployed_exact_set_for_comparison": 3,
+           "oracle_note": ("the relative-rule exact-set is handed each gene's TRUE essential-condition "
+                           "count k, which a deployed rule must infer. It is a CEILING, not a number "
+                           "that could ship."),
+           "mean_auroc_nonflat": obs, "permutation_p": round(p, 5), "n_permutations": N_PERM,
+           "repeats": args.repeat, "repeat_values": vals,
+           "between_run_spread": spread, "margin_over_bar_worst_run": margin,
+           "spread_smaller_than_margin": agree,
+           "must_hold_flat_fraction_reproduced": must_hold,
+           "verdict": ("PASS" if passed else "FAIL"),
+           "interpretation": (
+               "Within-gene AUROC conditions on the gene, removing the gene main effect that the pooled "
+               "readout's ~0.59 cannot separate from a real switch. PASS would mean the 1% cutoff discards "
+               "genuine conditional signal and a per-gene RELATIVE rule is worth building. FAIL means the "
+               "model's cross-condition variation is uninformative even where it exists, so the readout is "
+               "not the bottleneck."),
+           "per_gene": primary["per_gene"]}
+
+    for f in (ROOT / "wiki" / f"fba_within_gene_ranking_{out['generated']}.json",):
+        f.write_text(json.dumps(out, indent=2), encoding="utf-8")
+
+    print(f"\n  pooled comparison ....... continuous_readout AUROC ~0.59 (gene main effect NOT removed)")
+    print(f"  within-gene, all genes .. {out['mean_auroc_all']}   (n={out['n_genes_scored']})")
+    print(f"  within-gene, non-flat ... {obs}   (n={out['n_nonflat']})  <- PRE-REGISTERED PRIMARY")
+    print(f"  permutation p ........... {out['permutation_p']}")
+    print(f"  oracle relative exact-set {out['oracle_relative_exact_set']}/{out['n_genes_scored']} "
+          f"(non-flat {out['oracle_relative_exact_set_nonflat']}/{out['n_nonflat']}) "
+          f"vs deployed 3/67  <- CEILING, handed true k")
+    print(f"  flat fraction ........... {out['flat_fraction']}  must-hold reproduced: {must_hold}")
+    print(f"  repeats ................. {vals}  spread {spread} vs margin-over-bar {margin} "
+          f"-> spread<margin: {agree}")
+    print(f"\n  VERDICT: {out['verdict']} against the pre-registered bar "
+          f"(>{PRIMARY_BAR} and p<0.05)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

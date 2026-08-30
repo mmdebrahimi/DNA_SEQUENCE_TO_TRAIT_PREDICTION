@@ -1,0 +1,437 @@
+{
+  "schema": "fba-within-gene-ranking-v1",
+  "generated": "2026-08-29",
+  "organism": "ecoli",
+  "pre_registered": {
+    "bar_mean_auroc_nonflat": 0.6,
+    "bar_perm_p": 0.05,
+    "must_hold_flat_fraction": "0.55-0.75 (~0.64)"
+  },
+  "n_genes_scored": 67,
+  "n_flat": 41,
+  "n_nonflat": 26,
+  "flat_fraction": 0.6119,
+  "mean_auroc_all": 0.5896,
+  "oracle_relative_exact_set": 11,
+  "oracle_relative_exact_set_nonflat": 11,
+  "deployed_exact_set_for_comparison": 3,
+  "oracle_note": "the relative-rule exact-set is handed each gene's TRUE essential-condition count k, which a deployed rule must infer. It is a CEILING, not a number that could ship.",
+  "mean_auroc_nonflat": 0.7308,
+  "permutation_p": 0.001,
+  "n_permutations": 2000,
+  "repeats": 2,
+  "repeat_values": [
+    0.7308,
+    0.7308
+  ],
+  "between_run_spread": 0.0,
+  "margin_over_bar_worst_run": 0.1308,
+  "spread_smaller_than_margin": true,
+  "must_hold_flat_fraction_reproduced": true,
+  "verdict": "PASS",
+  "interpretation": "Within-gene AUROC conditions on the gene, removing the gene main effect that the pooled readout's ~0.59 cannot separate from a real switch. PASS would mean the 1% cutoff discards genuine conditional signal and a per-gene RELATIVE rule is worth building. FAIL means the model's cross-condition variation is uninformative even where it exists, so the readout is not the bottleneck.",
+  "per_gene": [
+    {
+      "gene_id": "b0723",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 1.0
+    },
+    {
+      "gene_id": "b3605",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0115",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.037269
+    },
+    {
+      "gene_id": "b0721",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 1.0
+    },
+    {
+      "gene_id": "b0722",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 1.0
+    },
+    {
+      "gene_id": "b0724",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 1.0
+    },
+    {
+      "gene_id": "b0726",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.02942
+    },
+    {
+      "gene_id": "b0727",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.02942
+    },
+    {
+      "gene_id": "b0728",
+      "auroc": 0.0,
+      "flat": false,
+      "spread": 0.027309
+    },
+    {
+      "gene_id": "b0902",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0903",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b1241",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b1702",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.008672
+    },
+    {
+      "gene_id": "b2277",
+      "auroc": 0.3333333333333333,
+      "flat": false,
+      "spread": 0.134954
+    },
+    {
+      "gene_id": "b2283",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.134954
+    },
+    {
+      "gene_id": "b3236",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.044848
+    },
+    {
+      "gene_id": "b3916",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0688",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0734",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0114",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.037269
+    },
+    {
+      "gene_id": "b4232",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2296",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0957",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0516",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0662",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b1677",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0484",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0585",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0588",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2421",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0586",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0594",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0595",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3844",
+      "auroc": 0.0,
+      "flat": false,
+      "spread": 0.009403
+    },
+    {
+      "gene_id": "b3732",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b0418",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b1232",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2168",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3734",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b3735",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b3736",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b3737",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b0590",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0592",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0933",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2415",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.137817
+    },
+    {
+      "gene_id": "b2416",
+      "auroc": 0.8333333333333334,
+      "flat": false,
+      "spread": 0.137817
+    },
+    {
+      "gene_id": "b2417",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3528",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3290",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0077",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3052",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b1252",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2264",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2708",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b2907",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0729",
+      "auroc": 0.0,
+      "flat": false,
+      "spread": 0.027309
+    },
+    {
+      "gene_id": "b0596",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b1054",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3733",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b3956",
+      "auroc": 0.8333333333333334,
+      "flat": false,
+      "spread": 0.278594
+    },
+    {
+      "gene_id": "b0116",
+      "auroc": 1.0,
+      "flat": false,
+      "spread": 0.072777
+    },
+    {
+      "gene_id": "b0159",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b0522",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b3738",
+      "auroc": 0.6666666666666666,
+      "flat": false,
+      "spread": 0.650662
+    },
+    {
+      "gene_id": "b3809",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    },
+    {
+      "gene_id": "b4039",
+      "auroc": 0.5,
+      "flat": true,
+      "spread": 0.0
+    }
+  ]
+}
