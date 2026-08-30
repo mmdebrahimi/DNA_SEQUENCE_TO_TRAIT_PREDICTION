@@ -39,11 +39,22 @@ _Last updated: 2026-08-29._
   `wiki/fba_within_gene_ranking_2026-08-29.md`. **The follow-on is now CLOSED, not open:** on carbon the
   deployed rule already gets 23/217 and the oracle ceiling is 27/217 (+4 genes, +1.8pp), so estimating k
   would buy almost nothing. The 4-media "3->11" was a small-axis artifact. Do not build it.
-- ~~FBA axis choice is a free lever~~ **PARTLY SPENT 2026-08-29** — the carbon axis is now measured with
-  the within-gene metric (above). The nitrogen axis remains unmeasured on it, but has almost no dynamic
-  range by construction (6 of 13 conditions give identical wildtype growth 0.92593), so expect little.
+- ~~FBA axis choice is a free lever~~ **SPENT + QUANTIFIED 2026-08-29.** All three axes measured; the
+  lever is now a rule: **pick an axis whose WILDTYPE growth spreads** (distinct-growth fraction / CV,
+  42 LP solves, seconds — `scripts/fba_axis_dynamic_range.py`). Flatness 61.2/68.2/75.5% tracks it
+  monotonically on both summaries. Nitrogen was the worst available choice. n=3, so a direction that
+  survived a common yardstick, not an established relationship.
 - **Staleness auditor** — one clean 110/110 corpus run at `TOTAL_TOKEN_BUDGET=5500` to verify the OOM
   mitigation. Still labelled unverified in `scripts/kaggle/staleness_corpus_kernel.py`.
+
+## The FBA switch cell, as it now stands (2026-08-29)
+
+Open, and its two terms are separated. **Direction is fine** — where the model varies it points the right
+way (AUROC 0.71–0.81 on three substrates, all p≤0.001). **Silence is the problem** — 61–76% of genes emit
+one identical ratio for every condition, unreachable by any readout change, and predicted by the axis's
+own dynamic range. The readout lever is closed (+1.8 pp on the best-measured axis). The remaining
+bottleneck is the one already measured: the conditioning signal is not measured in the conditions the
+phenotype data uses (PRECISE-1K ∩ Keio carbon = 11 of 28, 621 of 1,035 samples glucose).
 
 ## Known-stale / do not trust without re-deriving
 
