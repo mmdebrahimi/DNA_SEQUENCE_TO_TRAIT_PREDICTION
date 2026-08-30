@@ -160,3 +160,57 @@ def test_unknown_axis_returns_none_rather_than_a_wrong_baseline():
     from fba_within_gene_ranking import deployed_exact_set
 
     assert deployed_exact_set("nitrogen_not_wired_yet") is None
+
+
+# --- the three-stratum anatomy: a constant call can never match a two-sided truth ---
+
+def _score_one(ess, rat):
+    ratios, recs = _mk(ess, rat)
+    return score(ratios, recs)
+
+
+def test_flat_gene_lands_in_the_flat_stratum_and_never_hits():
+    out = _score_one([True, False, False, False], [0.5, 0.5, 0.5, 0.5])
+    assert out["strata"]["flat"]["n_genes"] == 1
+    assert out["deployed_exact_set_recomputed"] == 0
+
+
+def test_varying_ratio_that_never_crosses_the_cutoff_is_its_own_stratum():
+    """The stratum a ranking rule could rescue: the ordering moves, the CALL does not."""
+    out = _score_one([True, False, False, False], [0.30, 0.60, 0.70, 0.80])
+    assert out["strata"]["varies_subthr"]["n_genes"] == 1
+    assert out["strata"]["commits"]["n_genes"] == 0
+    assert out["deployed_exact_set_recomputed"] == 0, "nothing crosses 1%, so the call is constant"
+
+
+def test_a_committing_gene_that_is_right_is_the_only_way_to_score():
+    out = _score_one([True, False, False, False], [0.001, 0.60, 0.70, 0.80])
+    assert out["strata"]["commits"]["n_genes"] == 1
+    assert out["strata"]["commits"]["deployed_exact"] == 1
+
+
+def test_strata_partition_every_scored_gene_exactly_once():
+    """If these stop summing, a gene is being double-counted or dropped and every rate is wrong."""
+    keys = _conds()
+    recs, ratios = [], {c: {} for c in keys}
+    specs = [("flat", [0.5] * 4), ("subthr", [0.3, 0.6, 0.7, 0.8]), ("commits", [0.001, 0.6, 0.7, 0.8])]
+    for gid, rat in specs:
+        recs.append(_Rec(gid, {c: e for c, e in zip(keys, [True, False, False, False])}))
+        for c, r in zip(keys, rat):
+            ratios[c][gid] = r
+    out = score(ratios, recs)
+    total = sum(out["strata"][k]["n_genes"] for k in ("flat", "varies_subthr", "commits"))
+    assert total == out["n_genes_scored"] == 3
+
+
+def test_chance_null_ignores_genes_whose_predicted_count_differs_from_truth():
+    """A gene predicting 2 essential conditions against a truth of 1 cannot match at ANY placement, so it
+    contributes 0 to the chance expectation -- part of why the observed hit count is hard to reach."""
+    out = _score_one([True, False, False, False], [0.001, 0.002, 0.7, 0.8])   # predicts 2, truth is 1
+    assert out["strata"]["commits"]["n_genes"] == 1
+    assert out["chance_exact_hits_among_committing"] == 0.0
+
+
+def test_chance_null_is_one_over_n_choose_k_when_the_counts_agree():
+    out = _score_one([True, False, False, False], [0.001, 0.6, 0.7, 0.8])     # predicts 1, truth is 1
+    assert out["chance_exact_hits_among_committing"] == round(1 / 4, 4)

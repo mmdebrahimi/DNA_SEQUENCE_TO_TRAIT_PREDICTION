@@ -49,12 +49,17 @@ _Last updated: 2026-08-29._
 
 ## The FBA switch cell, as it now stands (2026-08-29)
 
-Open, and its two terms are separated. **Direction is fine** — where the model varies it points the right
-way (AUROC 0.71–0.81 on three substrates, all p≤0.001). **Silence is the problem** — 61–76% of genes emit
-one identical ratio for every condition, unreachable by any readout change, and predicted by the axis's
-own dynamic range. The readout lever is closed (+1.8 pp on the best-measured axis). The remaining
-bottleneck is the one already measured: the conditioning signal is not measured in the conditions the
-phenotype data uses (PRECISE-1K ∩ Keio carbon = 11 of 28, 621 of 1,035 samples glucose).
+Open, and its terms are now separated. **Direction is fine** — where the model varies it points the right
+way (AUROC 0.71–0.81 on three substrates, all p≤0.001). **Accuracy when it commits is fine too** — 23/33
+= 70% exact-set on carbon against a chance expectation of 0.78, ~30× chance. **Coverage is the whole
+problem** — the model's call is constant for 85–94% of genes, so it is silent rather than wrong, and that
+silence is structural (flat stoichiometry), unreachable by any readout change, and predicted in seconds by
+the axis's own dynamic range. The readout lever is closed (+1.8 pp on the best-measured axis).
+
+**Do not quote "10.6% exact-set" for this cell** — that scores the model against a target it cannot hit
+for most genes. Quote the anatomy. The remaining bottleneck is the one already measured: the conditioning
+signal is not measured in the conditions the phenotype data uses (PRECISE-1K ∩ Keio carbon = 11 of 28,
+621 of 1,035 samples glucose).
 
 ## Known-stale / do not trust without re-deriving
 

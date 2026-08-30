@@ -46,6 +46,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 FLAT_EPS = 1e-9
+DEPLOYED_FRAC = 0.01   # the shipped essentiality cutoff: growth below 1% of wildtype = essential
 PRIMARY_BAR = 0.60
 N_PERM = 2000
 
@@ -327,6 +328,50 @@ def score(ratios: dict, cond_genes: list, keys: list[str] | None = None) -> dict
         return pred == e
 
     hits = [oracle_hit(g["_ess"], g["_rat"]) for g in per_gene]
+
+    # THE DENOMINATOR QUESTION, and it is not cosmetic. A gene whose ratio is flat gets a CONSTANT
+    # threshold call, and a constant call can never match a two-sided truth -- every conditionally
+    # essential gene is essential in some conditions and not others by definition. Scoring the model
+    # against all 217 genes therefore scores it against a target it structurally cannot hit, and the
+    # published 23/217 = 10.6% is that number. Verified on the committed carbon artifact before relying
+    # on it: `commit_strata.predicted_constant` = 184 genes, 0 exact-set matches.
+    #
+    # Three nested strata, each answering a different question:
+    #   flat            -- the model emits ONE ratio for every condition. It cannot distinguish them.
+    #   varies_subthr   -- the ratio moves but never crosses the cutoff, so the CALL is still constant.
+    #                      This is exactly the stratum a ranking rule could rescue.
+    #   commits         -- the call itself varies. The only stratum where an exact-set hit is possible.
+    for g in per_gene:
+        rat = g["_rat"]
+        call = [r < DEPLOYED_FRAC for r in rat]
+        g["deployed_hit"] = (call == g["_ess"])
+        g["stratum"] = ("flat" if g["flat"]
+                        else "commits" if len(set(call)) > 1
+                        else "varies_subthr")
+    # Is "70% right when it commits" impressive? Unanchored it is just a number. The null: if the model
+    # kept the SAME number of essential conditions it actually predicted but placed them at random, how
+    # many exact matches would it get? A gene whose predicted count differs from the truth's count can
+    # never match at all, so its chance contribution is 0 -- which is itself part of the difficulty.
+    from math import comb
+
+    chance_hits = 0.0
+    for g in per_gene:
+        call = [r < DEPLOYED_FRAC for r in g["_rat"]]
+        if len(set(call)) <= 1:
+            continue                       # a constant call cannot match a two-sided truth, chance 0
+        k_pred, k_true, n = sum(call), sum(g["_ess"]), len(call)
+        if k_pred == k_true and 0 < k_true < n:
+            chance_hits += 1.0 / comb(n, k_true)
+
+    strata = {}
+    for name in ("flat", "varies_subthr", "commits"):
+        members = [g for g in per_gene if g["stratum"] == name]
+        strata[name] = {
+            "n_genes": len(members),
+            "deployed_exact": sum(1 for g in members if g["deployed_hit"]),
+            "oracle_exact": sum(1 for g, h in zip(per_gene, hits)
+                                if g["stratum"] == name and h),
+        }
     nonflat = [(g["_ess"], g["_rat"]) for g in per_gene if not g["flat"]]
     aurocs_all = [g["auroc"] for g in per_gene]
     aurocs_nf = [g["auroc"] for g in per_gene if not g["flat"]]
@@ -336,6 +381,9 @@ def score(ratios: dict, cond_genes: list, keys: list[str] | None = None) -> dict
             "flat_fraction": round(n_flat / len(per_gene), 4) if per_gene else None,
             "mean_auroc_all": round(sum(aurocs_all) / len(aurocs_all), 4) if aurocs_all else None,
             "mean_auroc_nonflat": round(sum(aurocs_nf) / len(aurocs_nf), 4) if aurocs_nf else None,
+            "strata": strata,
+            "deployed_exact_set_recomputed": sum(1 for g in per_gene if g["deployed_hit"]),
+            "chance_exact_hits_among_committing": round(chance_hits, 4),
             "oracle_relative_exact_set": sum(hits),
             "oracle_relative_exact_set_nonflat": sum(
                 h for h, g in zip(hits, per_gene) if not g["flat"]),
@@ -398,6 +446,9 @@ def main() -> int:
            "n_genes_scored": primary["n_genes_scored"], "n_flat": primary["n_flat"],
            "n_nonflat": primary["n_nonflat"], "flat_fraction": primary["flat_fraction"],
            "mean_auroc_all": primary["mean_auroc_all"],
+           "strata": primary["strata"],
+           "deployed_exact_set_recomputed": primary["deployed_exact_set_recomputed"],
+           "chance_exact_hits_among_committing": primary["chance_exact_hits_among_committing"],
            "oracle_relative_exact_set": primary["oracle_relative_exact_set"],
            "oracle_relative_exact_set_nonflat": primary["oracle_relative_exact_set_nonflat"],
            "deployed_exact_set_this_axis": deployed_exact_set(args.axis),
@@ -433,6 +484,23 @@ def main() -> int:
           f"vs THIS AXIS's deployed {dep_s}"
           + (f"  -> headroom {head:+d} genes" if head is not None else "")
           + "   <- CEILING, handed true k")
+    st = out["strata"]
+    print("")
+    print("  ANATOMY -- three nested strata (a constant call can NEVER match a two-sided truth):")
+    for name, label in (("flat", "flat: one ratio for all conds"),
+                        ("varies_subthr", "varies, never crosses cutoff"),
+                        ("commits", "call varies -- MODEL COMMITS")):
+        r = st[name]
+        rate = f"{r['deployed_exact'] / r['n_genes']:.0%}" if r["n_genes"] else "  -"
+        print(f"    {label:32} n={r['n_genes']:>4}  deployed {r['deployed_exact']:>3} ({rate:>4})  "
+              f"oracle {r['oracle_exact']:>3}")
+    c = st["commits"]
+    if c["n_genes"]:
+        print(f"  WHEN THE MODEL COMMITS it is exactly right "
+              f"{c['deployed_exact']}/{c['n_genes']} = {c['deployed_exact'] / c['n_genes']:.0%}, "
+              f"and it commits on {c['n_genes'] / out['n_genes_scored']:.0%} of genes.")
+        print(f"  CHANCE baseline: a random placement keeping the model's own essential-condition count "
+              f"would land {out['chance_exact_hits_among_committing']} exact hits.")
     print(f"  flat fraction ........... {out['flat_fraction']}  must-hold reproduced: {must_hold}")
     print(f"  repeats ................. {vals}  spread {spread} vs margin-over-bar {margin} "
           f"-> spread<margin: {agree}")

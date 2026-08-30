@@ -226,3 +226,72 @@ axes the model resolves poorly are also axes whose *genes* are peripheral to its
 
 Reproduce: `uv run python scripts/fba_axis_dynamic_range.py` (seconds) and
 `uv run python scripts/fba_within_gene_ranking.py --axis nitrogen` (needs `feba.db` on D:).
+
+---
+
+# The denominator was wrong: the model is SILENT on ~90% of genes and ~70% right when it commits
+
+Everything above quotes exact-set match as *"23 of 217"* on carbon, 10.6%. That denominator scores the
+model against a target it **structurally cannot hit** for most of those genes.
+
+Every conditionally-essential gene is, by definition, essential in some conditions and not others. So a
+**constant** prediction can never match one — not on a good day, not with a better threshold. And the
+model's call is constant for any gene whose ratio is flat, plus any gene whose ratio moves but never
+crosses the 1% cutoff.
+
+Verified before relying on it, in the committed carbon artifact: `commit_strata.predicted_constant` =
+**184 genes, 0 exact-set matches**. My independent recomputation reproduces it exactly (184 constant-call
+genes → 0 hits; 33 committing genes → 23 hits).
+
+## Three nested strata, all three axes
+
+| axis | flat (one ratio for every condition) | varies, never crosses cutoff | **call varies — model commits** | exact when committing | commit rate |
+|---|---:|---:|---:|---:|---:|
+| media4 | 41 | 22 | 4 | 3/4 = 75% | 6% |
+| **carbon** | 148 | 36 | **33** | **23/33 = 70%** | **15%** |
+| nitrogen | 117 | 22 | 16 | 8/16 = 50% | 10% |
+
+**media4's 75% is on four genes and means nothing on its own.** Carbon (n=33) is the powered one;
+nitrogen (n=16) sits between.
+
+## Is 70% impressive? Anchored, not asserted
+
+An exact-set "hit" means naming *precisely* the right subset of 25 conditions. The null: keep the model's
+own count of essential conditions but place them at random. A gene whose predicted count differs from the
+truth's cannot match at any placement and contributes zero.
+
+| axis | observed exact hits | chance expectation |
+|---|---:|---:|
+| media4 | 3 | 0.75 |
+| **carbon** | **23** | **0.78** |
+| nitrogen | 8 | 0.62 |
+
+Carbon is **~30× chance**. The placement is real.
+
+## What this does and does not say
+
+**It does not say the model is good.** It says the model is a **high-precision, very-low-coverage**
+conditional predictor: it declines to answer for 85–94% of genes, and is right about 70% of the time on
+the rest. Coverage is the deficit, and coverage is capped by flatness — which is structural, unreachable
+by any readout change, and predicted by the axis's own dynamic range (previous section).
+
+**It does say the published headline mis-states which thing is broken.** *"10.6% exact-set"* reads as *the
+model is bad at conditional essentiality*. The measured decomposition is *the model is accurate when it
+speaks and almost always silent*. Those imply different next moves: the first says fix the predictor, the
+second says the predictor's reachable set is small and the question is whether it can be widened at all.
+
+It is also the **fourth** independent corroboration of `MIS_CONDITIONED = 0` — the model does not fire in
+the wrong place. Four measurements, four different metrics, same shape.
+
+## Honest limits
+
+- The strata are defined by the model's own output, not by the truth, so they are not a post-hoc
+  cherry-pick — but "when it commits" is still a **conditional** accuracy and must never be quoted as the
+  model's accuracy.
+- Committing-stratum sizes are small on two of three axes (4 and 16). Only carbon's 33 is reasonably
+  powered.
+- The chance null holds the model's own predicted count fixed. A null that also let the count vary would
+  be even lower, so this is the conservative choice.
+
+Reproduce: `uv run python scripts/fba_within_gene_ranking.py --axis carbon` — the anatomy block prints
+with every run.
