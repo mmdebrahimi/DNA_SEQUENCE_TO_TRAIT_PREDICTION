@@ -174,3 +174,55 @@ artifact); reading one key alone reported a silent `unknown`. 3 tests added (12 
 
 Reproduce: `uv run python scripts/fba_within_gene_ranking.py --axis carbon --repeat 2`
 (needs `D:/dna_decode_cache/fitness_browser/feba.db`).
+
+---
+
+# Third axis, and a mechanism: flatness is predicted by the axis's own dynamic range
+
+Nitrogen was run to test a **pre-registered prediction**, not to repeat a result. Flatness had risen
+61.2% → 68.2% from 4 media to 25 carbon sources; if a gene's ratio is flat because the *axis* carries
+little dynamic range, nitrogen should be flattest of all — six of its thirteen conditions were already
+known to give identical wildtype growth.
+
+**It is.** And the direction result holds a third time.
+
+| axis | conditions | genes | **flatness** | within-gene AUROC (non-flat) | p |
+|---|---:|---:|---:|---:|---:|
+| media4 (Orth) | 4 | 67 | 61.2% | 0.7308 (n=26) | 0.001 |
+| carbon (Keio) | 25 | 217 | 68.2% | 0.8133 (n=69) | 0.0005 |
+| **nitrogen (Keio)** | 13 | 155 | **75.5%** | 0.7088 (n=38) | 0.0005 |
+
+## The predictor, measured on all three with one yardstick
+
+The prediction was fired with dynamic range measured on nitrogen *only*, which makes it an ordering with
+one measured predictor rather than a relationship. `scripts/fba_axis_dynamic_range.py` measures it on all
+three — cheaply, since it needs **wildtype** growth per condition only (42 LP solves, no deletion panel):
+
+| axis | distinct growths | distinct fraction | CV | flatness |
+|---|---:|---:|---:|---:|
+| media4 | 4 / 4 | **1.00** | 0.574 | 61.2% |
+| carbon | 21 / 25 | 0.84 | 0.473 | 68.2% |
+| nitrogen | 8 / 13 | **0.615** | **0.308** | 75.5% |
+
+**Monotonic on both summaries.** Two are reported because they answer different questions —
+`distinct_fraction` asks whether the model can tell the conditions apart *at all*, CV asks *by how much*;
+an axis can score 1.0 on the first while barely spreading.
+
+## What this buys
+
+Flatness is the dominant term in the switch failure — it is 61–76% of the genes on every axis, and it is
+unreachable by any change of readout. It now has a **predictor that can be measured before committing to
+an axis, in seconds, without running a single deletion.**
+
+That is the honest, quantified version of "axis choice is a free lever": **to look for conditional signal,
+pick an axis whose wildtype growth actually spreads.** Nitrogen was the worst available choice and is now
+measured as such rather than suspected.
+
+**Honest limits.** n=3 axes cannot establish a relationship — this says only that the pre-registered
+direction survives a common yardstick. The three axes also differ in substrate, label source and gene set,
+any of which could drive flatness instead; the dynamic-range summaries are simply the one thing now
+measured identically across all three. And the causal story is unverified: a plausible alternative is that
+axes the model resolves poorly are also axes whose *genes* are peripheral to its stoichiometry.
+
+Reproduce: `uv run python scripts/fba_axis_dynamic_range.py` (seconds) and
+`uv run python scripts/fba_within_gene_ranking.py --axis nitrogen` (needs `feba.db` on D:).

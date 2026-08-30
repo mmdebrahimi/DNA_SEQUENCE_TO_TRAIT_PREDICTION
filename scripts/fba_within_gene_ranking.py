@@ -184,6 +184,65 @@ def compute_ratios_carbon(db: str | None, threshold: float) -> tuple[dict, list,
     return ratios, subset, keys
 
 
+def compute_ratios_nitrogen(db: str | None, threshold: float) -> tuple[dict, list, list[str]]:
+    """The Keio NITROGEN axis -- a THIRD substrate, run to test a PREDICTION rather than to repeat a result.
+
+    PRE-REGISTERED PREDICTION: flatness rose 61.2% (4 media) -> 68.2% (25 carbon sources). If a gene's
+    ratio is flat because the AXIS itself carries little dynamic range, nitrogen should be flatter still --
+    six of its thirteen conditions give an IDENTICAL wildtype growth (0.92593), so the model literally
+    cannot distinguish those media. A confirmation turns flatness from an observation into a mechanism
+    with a predictor; a refutation means flatness is a property of the genes, not of the axis.
+
+    Mirrors `dna_decode/fba/nitrogen.py`'s own loaders exactly (`nitrogen_conditions` +
+    `load_nitrogen_records` + `apply_nitrogen_condition(all_nitrogen=...)`, which closes every OTHER
+    nitrogen exchange while holding glucose as the carbon source).
+    """
+    from cobra.flux_analysis import single_gene_deletion
+
+    from dna_decode.fba.conditional_essentiality import conditionally_essential_genes
+    from dna_decode.fba.fitness_browser import open_db
+    from dna_decode.fba.model import load_model, wildtype_growth
+    from dna_decode.fba.nitrogen import (apply_nitrogen_condition, load_nitrogen_records,
+                                         nitrogen_conditions)
+
+    conn = open_db(db)
+    model = load_model()
+    conds = nitrogen_conditions(conn, model)
+    keys = sorted(conds)
+    records = load_nitrogen_records(conn, conds, gene_filter={g.id for g in model.genes},
+                                    threshold=threshold)
+    subset = conditionally_essential_genes(records)
+    print(f"  {len(conds)} mappable nitrogen sources | {len(records)} complete rows | "
+          f"{len(subset)} conditionally essential", flush=True)
+    if not subset:
+        return {}, [], keys
+
+    genes = [r.gene_id for r in subset]
+    all_ex = tuple(conds.values())
+    ratios: dict[str, dict[str, float]] = {}
+    wt_seen: list[float] = []
+    for n, cond in enumerate(keys, 1):
+        with model:
+            apply_nitrogen_condition(model, conds[cond], all_nitrogen=all_ex)
+            wt = wildtype_growth(model)
+            wt_seen.append(round(wt, 5))
+            rat: dict[str, float] = {}
+            if wt > 1e-9:
+                res = single_gene_deletion(
+                    model, gene_list=[model.genes.get_by_id(g) for g in genes], processes=1)
+                for idx, row in res.iterrows():
+                    key = row["ids"] if "ids" in res.columns else idx
+                    gid = next(iter(key)) if not isinstance(key, str) else key
+                    g = row["growth"]
+                    rat[gid] = 0.0 if g != g else g / wt
+            ratios[cond] = rat
+        if n % 4 == 0 or n == len(keys):
+            print(f"    [{n:2d}/{len(keys)}] deletions done", flush=True)
+    print(f"  distinct wildtype growths across the axis: {len(set(wt_seen))}/{len(wt_seen)} "
+          f"<- the axis's own dynamic range", flush=True)
+    return ratios, subset, keys
+
+
 def compute_ratios(organism: str = "ecoli") -> tuple[dict, list, dict]:
     """Re-solve the deletion panel. Single-process by design (see the determinism note in the docstring)."""
     from cobra.flux_analysis import single_gene_deletion
@@ -288,7 +347,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--repeat", type=int, default=2, help="independent re-solves; determinism check")
     ap.add_argument("--organism", default="ecoli")
-    ap.add_argument("--axis", default="media4", choices=("media4", "carbon"),
+    ap.add_argument("--axis", default="media4", choices=("media4", "carbon", "nitrogen"),
                     help="media4 = the 4-media Orth panel; carbon = the 25-source Keio axis")
     ap.add_argument("--db", default=None, help="feba.db path (carbon axis only)")
     ap.add_argument("--threshold", type=float, default=-2.0)
@@ -299,6 +358,8 @@ def main() -> int:
         print(f"solving deletion panel, run {i + 1}/{args.repeat} (single-process) ...", flush=True)
         if args.axis == "carbon":
             ratios, cond_genes, keys = compute_ratios_carbon(args.db, args.threshold)
+        elif args.axis == "nitrogen":
+            ratios, cond_genes, keys = compute_ratios_nitrogen(args.db, args.threshold)
         else:
             ratios, cond_genes, _ = compute_ratios(args.organism)
             keys = None

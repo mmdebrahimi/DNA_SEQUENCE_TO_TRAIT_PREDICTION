@@ -1,0 +1,45 @@
+{
+  "schema": "fba-axis-dynamic-range-v1",
+  "generated": "2026-08-29",
+  "axes": [
+    {
+      "axis": "media4",
+      "n_conditions": 4,
+      "n_distinct_growths": 4,
+      "distinct_fraction": 1.0,
+      "cv": 0.574,
+      "min": 0.15754,
+      "max": 0.877,
+      "flatness_of_knockout_ratios": 0.6119
+    },
+    {
+      "axis": "carbon",
+      "n_conditions": 25,
+      "n_distinct_growths": 21,
+      "distinct_fraction": 0.84,
+      "cv": 0.4732,
+      "min": 0.15309,
+      "max": 1.7798,
+      "flatness_of_knockout_ratios": 0.682
+    },
+    {
+      "axis": "nitrogen",
+      "n_conditions": 13,
+      "n_distinct_growths": 8,
+      "distinct_fraction": 0.6154,
+      "cv": 0.3075,
+      "min": 0.877,
+      "max": 2.03498,
+      "flatness_of_knockout_ratios": 0.7548
+    }
+  ],
+  "flatness_ascending": [
+    0.6119,
+    0.682,
+    0.7548
+  ],
+  "distinct_fraction_monotonically_decreasing": true,
+  "cv_monotonically_decreasing": true,
+  "verdict": "dynamic range tracks flatness on both summaries",
+  "honest_limit": "n=3 axes. This cannot establish a relationship; it says only whether the pre-registered direction survives a common yardstick. The three axes also differ in substrate, label source and gene set, any of which could drive flatness instead."
+}
