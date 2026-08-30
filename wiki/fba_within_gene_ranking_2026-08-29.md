@@ -96,3 +96,15 @@ All four are pinned by `tests/test_fba_within_gene_ranking.py` (9 tests, offline
 
 Reproduce: `uv run python scripts/fba_within_gene_ranking.py --repeat 2` (cobrapy, ~2 min/repeat,
 single-process by design).
+
+## Does the same confound bite anywhere else? Audited: no
+
+The failure mode generalises — *a pooled ranking cannot answer a within-group question* — so every other
+AUROC in the package was checked for a repeated-measure grouping where within-group is the real question.
+
+**No second instance.** The others are either single-measure per unit (`essentiality`: one call per gene,
+so there is no within-gene structure to confound) or already group-aware by construction (clade baseline,
+per-clade metrics, HIV within-subtype transfer, the lineage-collapse layer). Gene × condition is the only
+repeated-measure design in the repo, which is exactly why this cell was the gap.
+
+An honest negative, recorded so the check does not get repeated.
