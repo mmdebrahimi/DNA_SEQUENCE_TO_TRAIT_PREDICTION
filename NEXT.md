@@ -26,9 +26,17 @@ scored 0 survivors in the framing sweep. Measured shape: **CALL / DOUBT / EVIDEN
 twice the same way (gentamicin `rmt`, HIV NNRTI), both invisible until independent labels arrived. Nobody
 in the field ships "my catalog might be wrong here."
 
-**Critical path F-A → F-B.** F-A (generalize + surface the completeness signal) carries no authority and is
-ready to execute; F-B (curation) is blocked on it *by construction* — without a measured baseline you
-cannot say what curation recovered.
+**Critical path F-A → F-B.** **F-A step 1 is DONE 2026-08-31** —
+`scripts/determinant_completeness_screen.py` (+9 tests, `wiki/determinant_completeness_screen_2026-08-31.md`).
+It detects the shared shape of the `rmt` and HIV gaps generically from cached AMRFinder output, and
+**rediscovers the known gap blind: `rmtE1` 36R/0S ranked first for gentamicin**, with the deliberate
+exclusions (`aph`, `aadA`) correctly sorting below as `mixed`. No other deployed drug shows an `rmt_like`
+family with meaningful support. It asks the DEPLOYED rule (verbatim one-row probe) rather than
+reimplementing it, so it cannot drift from `DRUG_RULE`.
+
+**Remaining F-A:** step 2 full-index run (cheap, unrun — this was 220 genomes/drug); step 3 wire a `doubt`
+block into the record behind a guard test that it can never contain a call; step 4 register augment-only.
+F-B (curation) stays blocked on a measured baseline.
 
 ## Waiting on the user (authority calls — not executor tasks)
 

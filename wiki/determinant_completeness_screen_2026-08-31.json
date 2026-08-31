@@ -1,0 +1,2827 @@
+{
+  "schema": "determinant-completeness-screen-v1",
+  "generated": "2026-08-31",
+  "n_cached_genomes": 1818,
+  "n_labelled_genomes": 200,
+  "contract": "A DOUBT signal, never a call. An uncounted determinant is a CANDIDATE gap for human review; many exclusions are deliberate and correct.",
+  "drugs": [
+    {
+      "drug": "ceftriaxone",
+      "n_genomes_scanned": 220,
+      "n_distinct_determinants_probed": 83,
+      "n_counted_by_rule": 40,
+      "candidates": [
+        {
+          "symbol": "blaTEM",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 13,
+          "r_carriers": 9,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "rmt_like"
+        },
+        {
+          "symbol": "blaOXA",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 21,
+          "r_carriers": 6,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "rmt_like"
+        },
+        {
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 65,
+          "r_carriers": 57,
+          "s_carriers": 5,
+          "r_purity": 0.919,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-11",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 36,
+          "r_carriers": 24,
+          "s_carriers": 6,
+          "r_purity": 0.8,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 16,
+          "r_carriers": 10,
+          "s_carriers": 6,
+          "r_purity": 0.625,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-28",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 5,
+          "r_carriers": 4,
+          "s_carriers": 1,
+          "r_purity": 0.8,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 7,
+          "r_carriers": 4,
+          "s_carriers": 2,
+          "r_purity": 0.667,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 9,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaLAP-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29PfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-27",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 4,
+          "r_carriers": 2,
+          "s_carriers": 2,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_E150RfsTer1",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_N69QfsTer3",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_R106HfsTer20",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50LfsTer4",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCARB-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-1397",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-827",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-108",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-168",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-202",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-71",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-76",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaTEM-190",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaTEMp_C32T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_A414GfsTer2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_G413AfsTer34",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_Q56Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_W243Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_I115PfsTer40",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_L111RfsTer13",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29HfsTer18",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 3,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_L447RfsTer35",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 2,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-36",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-37",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_A415RfsTer32",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_S90RfsTer9",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaTEMp_G162T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_W124Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        }
+      ]
+    },
+    {
+      "drug": "ciprofloxacin",
+      "n_genomes_scanned": 220,
+      "n_distinct_determinants_probed": 51,
+      "n_counted_by_rule": 20,
+      "candidates": [
+        {
+          "symbol": "qnrA1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 4,
+          "r_carriers": 4,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "rmt_like"
+        },
+        {
+          "symbol": "oqxA10",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 4,
+          "r_carriers": 3,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "rmt_like"
+        },
+        {
+          "symbol": "aac(6')-Ib-cr5",
+          "class": "AMINOGLYCOSIDE/QUINOLONE",
+          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
+          "n_genomes": 24,
+          "r_carriers": 22,
+          "s_carriers": 1,
+          "r_purity": 0.957,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxA",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 75,
+          "r_carriers": 19,
+          "s_carriers": 17,
+          "r_purity": 0.528,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 59,
+          "r_carriers": 14,
+          "s_carriers": 7,
+          "r_purity": 0.667,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrB1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 10,
+          "r_carriers": 8,
+          "s_carriers": 2,
+          "r_purity": 0.8,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB19",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 7,
+          "r_carriers": 4,
+          "s_carriers": 3,
+          "r_purity": 0.571,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrS1",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 9,
+          "r_carriers": 4,
+          "s_carriers": 5,
+          "r_purity": 0.444,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrB4",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrB6",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29PfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_C205Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_E150RfsTer1",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_N69QfsTer3",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_R106HfsTer20",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50LfsTer4",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB20",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxR_Q11L",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrB",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrS",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrS2",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_L111RfsTer13",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29HfsTer18",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB5",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 4,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "qnrB19",
+          "class": "QUINOLONE",
+          "subclass": "QUINOLONE",
+          "n_genomes": 2,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB32",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 3,
+          "r_carriers": 1,
+          "s_carriers": 2,
+          "r_purity": 0.333,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB25",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 6,
+          "r_carriers": 1,
+          "s_carriers": 5,
+          "r_purity": 0.167,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxA11",
+          "class": "PHENICOL/QUINOLONE",
+          "subclass": "PHENICOL/QUINOLONE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        }
+      ]
+    },
+    {
+      "drug": "gentamicin",
+      "n_genomes_scanned": 220,
+      "n_distinct_determinants_probed": 41,
+      "n_counted_by_rule": 11,
+      "candidates": [
+        {
+          "symbol": "rmtE1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMINOGLYCOSIDE",
+          "n_genomes": 36,
+          "r_carriers": 36,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "rmt_like"
+        },
+        {
+          "symbol": "aph(6)-Id",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 97,
+          "r_carriers": 62,
+          "s_carriers": 28,
+          "r_purity": 0.689,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aph(3'')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 95,
+          "r_carriers": 62,
+          "s_carriers": 29,
+          "r_purity": 0.681,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aph(3')-Ia",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "KANAMYCIN",
+          "n_genomes": 60,
+          "r_carriers": 43,
+          "s_carriers": 10,
+          "r_purity": 0.811,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA5",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 71,
+          "r_carriers": 38,
+          "s_carriers": 31,
+          "r_purity": 0.551,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA6",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 40,
+          "r_carriers": 36,
+          "s_carriers": 4,
+          "r_purity": 0.9,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA2",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 58,
+          "r_carriers": 24,
+          "s_carriers": 7,
+          "r_purity": 0.774,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aac(6')-Ib-cr5",
+          "class": "AMINOGLYCOSIDE/QUINOLONE",
+          "subclass": "AMIKACIN/KANAMYCIN/QUINOLONE/TOBRAMYCIN",
+          "n_genomes": 26,
+          "r_carriers": 21,
+          "s_carriers": 4,
+          "r_purity": 0.84,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 33,
+          "r_carriers": 8,
+          "s_carriers": 15,
+          "r_purity": 0.348,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA22",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 4,
+          "r_carriers": 3,
+          "s_carriers": 1,
+          "r_purity": 0.75,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA12",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "rmtE",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMINOGLYCOSIDE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "rmtF1",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMINOGLYCOSIDE",
+          "n_genomes": 2,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aph(4)-Ia",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "HYGROMYCIN",
+          "n_genomes": 15,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_C205Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_E150RfsTer1",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_R106HfsTer20",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50LfsTer4",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aph(3')-VIb",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_L111RfsTer13",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aadA16",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "STREPTOMYCIN",
+          "n_genomes": 2,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29PfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aph(3')-VI",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN",
+          "n_genomes": 3,
+          "r_carriers": 1,
+          "s_carriers": 2,
+          "r_purity": 0.333,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aac(6')-Ib",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "n_genomes": 25,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "aac(6')-Ib3",
+          "class": "AMINOGLYCOSIDE",
+          "subclass": "AMIKACIN/KANAMYCIN/TOBRAMYCIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_N69QfsTer3",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29HfsTer18",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        }
+      ]
+    },
+    {
+      "drug": "meropenem",
+      "n_genomes_scanned": 220,
+      "n_distinct_determinants_probed": 98,
+      "n_counted_by_rule": 28,
+      "candidates": [
+        {
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 43,
+          "r_carriers": 11,
+          "s_carriers": 27,
+          "r_purity": 0.289,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-11",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 30,
+          "r_carriers": 10,
+          "s_carriers": 6,
+          "r_purity": 0.625,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 56,
+          "r_carriers": 9,
+          "s_carriers": 31,
+          "r_purity": 0.225,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 33,
+          "r_carriers": 5,
+          "s_carriers": 1,
+          "r_purity": 0.833,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 26,
+          "r_carriers": 5,
+          "s_carriers": 17,
+          "r_purity": 0.227,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCTX-M-14",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 12,
+          "r_carriers": 4,
+          "s_carriers": 7,
+          "r_purity": 0.364,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaTEM",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 11,
+          "r_carriers": 3,
+          "s_carriers": 1,
+          "r_purity": 0.75,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 13,
+          "r_carriers": 3,
+          "s_carriers": 9,
+          "r_purity": 0.25,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 24,
+          "r_carriers": 2,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_L111RfsTer13",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-28",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 4,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaLAP-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 3,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 9,
+          "r_carriers": 1,
+          "s_carriers": 2,
+          "r_purity": 0.333,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-12",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "n_genomes": 54,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCTX-M-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 18,
+          "r_carriers": 0,
+          "s_carriers": 18,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCTX-M-27",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 12,
+          "r_carriers": 0,
+          "s_carriers": 12,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-27",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 4,
+          "r_carriers": 0,
+          "s_carriers": 3,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaDHA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaTEMp_C32T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_L447RfsTer35",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29PfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 2,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_E150RfsTer1",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_N69QfsTer3",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_R106HfsTer20",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W50LfsTer4",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_W63Ter",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCARB-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCMY",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCTX-M",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaCTX-M-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaFOX-5",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaOXA-1397",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-108",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-168",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-187",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-202",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-36",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-71",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV-76",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "blaSHV_C-112A",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_A414GfsTer2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_A415RfsTer32",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_G413AfsTer34",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_Q56Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_S90RfsTer9",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "cirA_W243Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ampC_Kaer-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 6,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ampC-Kaer",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC-191",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "acrR_S30HfsTer59",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC-30",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaLAP-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaLEN-16",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-663",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-26",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-62",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-7",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaTEMp_G162T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_E388Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_Q562Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_W124Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "marR_V84WfsTer14",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_Q11TfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_Q122Ter",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_R98HfsTer2",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_W185Ter",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        }
+      ]
+    },
+    {
+      "drug": "oxacillin",
+      "n_genomes_scanned": 220,
+      "n_distinct_determinants_probed": 84,
+      "n_counted_by_rule": 0,
+      "candidates": [
+        {
+          "symbol": "ompK35_E42RfsTer47",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 62,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaTEM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 60,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-12",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL/CEPHALOSPORIN",
+          "n_genomes": 55,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaKPC-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 35,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 29,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_D135DGD",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 27,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaKPC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 25,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-9",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 22,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-11",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 17,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 14,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC-76",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 12,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-68",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 12,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaTEM",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 11,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCTX-M-15",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 9,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCARB-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 8,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-23",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 8,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-58",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 8,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaPSE",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 8,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-69",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 7,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ampC_Kaer-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 6,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 6,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 5,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCMY-2",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 4,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCMY-30",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-28",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_R284AfsTer13",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "nalC_G71E",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 3,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ampC-Kaer",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC-191",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCTX-M-27",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaKPC",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-10",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-48",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaPDC-3",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "nalC_S209R",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK35_E312Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC-162",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaADC-30",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCTX-M-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCTX-M-14",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaCTX-M-55",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaIMP",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaIMP-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaKPC-7",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaLAP-1",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaLAP-2",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaLEN-16",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaMCA",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaNDM-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-113",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-181",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-395",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-396",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-486",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-66",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-663",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaOXA-847",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaPDC-1",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaPDC-36",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-26",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-27",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-62",
+          "class": "BETA-LACTAM",
+          "subclass": "BETA-LACTAM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaSHV-7",
+          "class": "BETA-LACTAM",
+          "subclass": "CEPHALOSPORIN",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaTEMp_C32T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaTEMp_G162T",
+          "class": "BETA-LACTAM",
+          "subclass": "AMOXICILLIN-CLAVULANIC_ACID/PIPERACILLIN-TAZOBACTAM/TICARCILLIN-CLAVULANIC_ACID",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaVIM-11",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "blaVIM-6",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_E388Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_Q562Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "cirA_W124Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CEFIDEROCOL",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompF_Y253EfsTer3",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK35_E132K",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK35_Q275Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_D290TfsTer18",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_E181Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_G198RfsTer9",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_G36GALLNKTer",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_Q313Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ompK36_T136TDT",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "oprD_V359L",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "oprD_W339Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "oprD_W417Ter",
+          "class": "BETA-LACTAM",
+          "subclass": "CARBAPENEM",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        }
+      ]
+    },
+    {
+      "drug": "tetracycline",
+      "n_genomes_scanned": 220,
+      "n_distinct_determinants_probed": 25,
+      "n_counted_by_rule": 6,
+      "candidates": [
+        {
+          "symbol": "oqxA",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 109,
+          "r_carriers": 23,
+          "s_carriers": 12,
+          "r_purity": 0.657,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxB",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 89,
+          "r_carriers": 9,
+          "s_carriers": 9,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxR_L122FfsTer32",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_L111RfsTer13",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29HfsTer18",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 1,
+          "s_carriers": 0,
+          "r_purity": 1.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_S29PfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 1,
+          "s_carriers": 1,
+          "r_purity": 0.5,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "ramR_A19V",
+          "class": "TETRACYCLINE",
+          "subclass": "TIGECYCLINE",
+          "n_genomes": 5,
+          "r_carriers": 1,
+          "s_carriers": 2,
+          "r_purity": 0.333,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "marR_S3N",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 2,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "oqxR_Q11L",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 1,
+          "r_purity": 0.0,
+          "signature": "mixed"
+        },
+        {
+          "symbol": "acrR_S30HfsTer59",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "marR_V84WfsTer14",
+          "class": "MULTIDRUG",
+          "subclass": "AMPICILLIN/CHLORAMPHENICOL/QUINOLONE/RIFAMPIN/TETRACYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "oqxR_D95E",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "oqxR_V113I",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "oqxR_V96AfsTer5",
+          "class": "NITROFURAN/PHENICOL/QUINOLONE/TETRACYCLINE",
+          "subclass": "NITROFURANTOIN/PHENICOL/QUINOLONE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_Q11TfsTer42",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_Q122Ter",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_R98HfsTer2",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "ramR_W185Ter",
+          "class": "MULTIDRUG",
+          "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        },
+        {
+          "symbol": "rpsJ_V57L",
+          "class": "TETRACYCLINE",
+          "subclass": "TIGECYCLINE",
+          "n_genomes": 1,
+          "r_carriers": 0,
+          "s_carriers": 0,
+          "r_purity": 0.0,
+          "signature": "unlabelled"
+        }
+      ]
+    }
+  ]
+}
