@@ -496,3 +496,55 @@ def test_unknown_provenance_is_surfaced_not_hidden():
                                              "largest_share": 0.5, "n_unknown": 50},
                               "sra_center": {"distinct": 1}})
     assert blk["n_unknown_provenance"] == 50
+
+
+# --- L2 doubt disclosure layer (added 2026-08-31) -------------------------------------------------
+
+def test_doubt_block_never_reports_absence_as_clean():
+    """An unscreened drug must be distinguishable from a screened-and-clean one."""
+    build_doubt_block = mod.build_doubt_block
+    b = build_doubt_block(None)
+    assert b["status"] == "not_measured"
+    assert "unassessable" in b["note"]
+
+
+def test_doubt_block_stamps_its_drug_level_scope():
+    """The screen is index-wide, not per-cohort. Without the scope stamp a drug-level result would
+    read as a statement about one cell's cohort — which it is not."""
+    build_doubt_block = mod.build_doubt_block
+    b = build_doubt_block({"drug": "gentamicin", "status": "scored", "n_families_uncounted": 131,
+                           "n_strong": 1, "n_raw_signature": 1, "known_gap_recovered": True,
+                           "strong": [{"evidence": {"symbol": "rmtE1"}}]})
+    assert b["status"] == "measured"
+    assert "NOT this cell's cohort" in b["scope"]
+    assert b["strong_families"] == ["rmtE1"] and b["known_gap_recovered"] is True
+
+
+def test_doubt_layer_is_augment_only_on_the_committed_card():
+    """AUGMENT-ONLY, checked against the artifact: the block lives under its own key and carries no
+    state, tier or metric. Merging it into a cell's own fields is the shared-key overwrite trap."""
+    import json
+    from pathlib import Path
+    p = Path("wiki/decoder_validation_report_card.json")
+    if not p.exists():
+        pytest.skip("report card artifact absent")
+    cells = json.loads(p.read_text(encoding="utf-8"))["cells"]
+    with_doubt = [c for c in cells if "doubt_layer" in c]
+    assert with_doubt, "no cell carries a doubt_layer — this guard would be vacuous"
+    for c in with_doubt:
+        d = c["doubt_layer"]
+        forbidden = {"state", "tier", "acc", "sens", "spec", "n_scored", "cell_state"}
+        assert not (forbidden & set(d)), f"{c['organism']}x{c['drug']}: doubt block carries {forbidden & set(d)}"
+
+
+def test_the_known_gap_is_the_only_strong_signal_on_the_card():
+    """The measured result, pinned. If a second family ever goes STRONG that is a real finding and
+    this test should fail loudly rather than let it pass unnoticed."""
+    import json
+    from pathlib import Path
+    p = Path("wiki/decoder_validation_report_card.json")
+    if not p.exists():
+        pytest.skip("report card artifact absent")
+    cells = json.loads(p.read_text(encoding="utf-8"))["cells"]
+    fams = {f for c in cells for f in (c.get("doubt_layer", {}).get("strong_families") or [])}
+    assert fams == {"rmtE1"}, f"the set of STRONG completeness families changed: {sorted(fams)}"

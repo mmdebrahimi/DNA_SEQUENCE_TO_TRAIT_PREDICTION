@@ -40,6 +40,12 @@ the confirmed gap.** The raw signature flagged 5; the correction drops 4 and kee
 - **A position-BASED catalog can never fire the position-novelty flag** (every substitution at a
   catalogued position is already called), so those cells report `not-applicable`, never "no doubt".
 
+Registered augment-only on **both** trust surfaces — the inline badge and the standing report card
+(a 4th disclosure layer beside lineage / source-concentration / prospective). Augment-only was
+**verified by diff**: 27 cells before and after, zero non-doubt fields changed, all state counts
+identical. Card rows are **drug-level**, which is why `rmtE1` renders against three organisms — it is
+a property of the rule, not of those cohorts.
+
 **Now unblocked: F-B (curation) has its measured baseline** — but both of its terminal moves are user
 authority calls (below).
 

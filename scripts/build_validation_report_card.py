@@ -152,6 +152,53 @@ def load_source_concentration() -> dict:
     return {_key(c["organism"], c["drug"]): c for c in d.get("cells", []) if c.get("organism")}
 
 
+def load_doubt_layer() -> dict:
+    """Read the L2 doubt-layer measurement -> {drug: cell}. Empty if absent.
+
+    NAMESPACE-SEPARATE, and keyed by DRUG rather than by (organism, drug) — which is the honest shape,
+    because the completeness screen runs across the whole cached index and is NOT a per-cohort
+    measurement. `build_doubt_block` stamps that scope so a drug-level result can never be read as a
+    statement about one cell's cohort.
+
+    WHAT IT ADDS, and why it is not redundant with the three layers above. Lineage discloses clonal
+    domination inside a cohort; source concentration discloses how few sources the cohort drew on;
+    prospective discloses a temporally-clean re-score. All three ask *how good is the evidence for this
+    cell's number*. This asks a different question: **does the deployed RULE fail to represent a
+    determinant family present in the data at all?** — the completeness failure that produced the
+    gentamicin `rmt` blind spot, which no amount of better cohort evidence would have surfaced.
+    """
+    hits = sorted(WIKI.glob("doubt_layer_per_cell_*.json"))
+    if not hits:
+        return {}
+    try:
+        d = json.loads(hits[-1].read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 — a malformed sidecar must not break the read-only roll-up
+        return {}
+    return {str(c["drug"]).strip().lower(): c
+            for c in d.get("determinant_completeness_arm", []) if c.get("drug")}
+
+
+def build_doubt_block(dcell: dict | None) -> dict:
+    """Project the doubt measurement into a report-card block. Never silently blank."""
+    if dcell is None:
+        return {"status": "not_measured",
+                "note": "the completeness screen has not run for this drug — unassessable, not clean"}
+    if dcell.get("status") != "scored":
+        return {"status": dcell.get("status", "unknown"), "note": dcell.get("note", "")}
+    strong = dcell.get("strong") or []
+    return {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index — NOT this cell's cohort",
+        "n_families_uncounted": dcell.get("n_families_uncounted"),
+        "n_strong": dcell.get("n_strong", 0),
+        "n_raw_signature": dcell.get("n_raw_signature"),
+        "strong_families": [s["evidence"]["symbol"] for s in strong],
+        "known_gap_recovered": dcell.get("known_gap_recovered", False),
+        "note": ("families the deployed rule cannot represent whose labelled carriers are uniformly "
+                 "resistant, family-wise corrected. Changes no metric and no cell state."),
+    }
+
+
 SINGLE_SOURCE_SHARE = 0.80
 
 
@@ -346,6 +393,7 @@ def main() -> int:
     lineage = load_lineage_metrics()
     prospective = load_prospective()
     source_conc = load_source_concentration()
+    doubt = load_doubt_layer()
     surface = surface_index()
 
     rows = []
@@ -360,6 +408,11 @@ def main() -> int:
         # single-source cell keeps its state and its published metrics.
         if key in source_conc:
             c["source_concentration"] = build_source_block(source_conc.get(key))
+        # L2 DOUBT augments too, under its OWN key. Keyed by DRUG (the screen is index-wide, not
+        # per-cohort), and attached only where the drug was actually screened -- an unmeasured drug
+        # gets no block rather than one reading as a clean bill.
+        if key[1] in doubt:
+            c["doubt_layer"] = build_doubt_block(doubt.get(key[1]))
         if key in prospective:
             c["prospective"] = build_prospective_block(prospective.get(key))
             # TOP-LEVEL so a consumer filtering on `state == SCORED` cannot miss it. The state itself is
@@ -461,6 +514,43 @@ def main() -> int:
         n_single = sum(1 for _, c in src_rows if c["source_concentration"].get("single_source"))
         L.append(f"\n**{n_single} of {len(src_rows)}** cells rest on ONE BioProject holding "
                  f"≥{int(SINGLE_SOURCE_SHARE * 100)}% of the cohort.\n")
+
+    # ---- L2 doubt disclosure (does the RULE fail to represent a determinant family?) ----
+    doubt_rows = [(k, c) for k, c in rows if c.get("doubt_layer", {}).get("status") == "measured"]
+    if doubt_rows:
+        L.append("\n## Catalog-completeness disclosure (L2 doubt — can the RULE even represent it?)\n")
+        L.append("The three tables above all ask *how good is the evidence for this cell's number*. "
+                 "This asks a different question: **does the deployed rule fail to represent a "
+                 "determinant family that is present in the data at all?** That is the failure which "
+                 "produced the gentamicin `rmt` blind spot, and no amount of better cohort evidence "
+                 "would have surfaced it.\n")
+        L.append("Rows are **drug-level** — the screen runs across the whole cached determinant index, "
+                 "NOT this cell's cohort. `STRONG` means a family the rule cannot represent whose "
+                 "labelled carriers are uniformly resistant, **after a family-wise correction** over "
+                 "the families screened for that drug. The correction is load-bearing: the raw purity "
+                 "signature fires on 5 families and 4 are coincidences (cipro `qnrA1` at 4R/0S is "
+                 "p=0.030 against ~125 families screened).\n")
+        L.append("**These rows change no metric and no cell state.**\n")
+        L.append("| organism | drug | families rule can't represent | raw signature | **STRONG** | "
+                 "families |\n|---|---|---|---|---|---|")
+
+        for k, c in doubt_rows:
+            org, drug = k
+            d = c["doubt_layer"]
+            fams = ", ".join(f"`{s}`" for s in d.get("strong_families") or []) or "—"
+            mark = "  **KNOWN GAP**" if d.get("known_gap_recovered") else ""
+            L.append(f"| {org} | {drug} | {d.get('n_families_uncounted', '—')} | "
+                     f"{d.get('n_raw_signature', '—')} | {d.get('n_strong', 0)}{mark} | {fams} |")
+
+        # Per DRUG, not per row: a drug spans several organism cells and summing rows would multiply
+        # one screen result by however many cells happen to share that drug.
+        per_drug = {k[1]: c["doubt_layer"].get("n_strong", 0) for k, c in doubt_rows}
+        n_strong = sum(per_drug.values())
+        noun = "family survives" if n_strong == 1 else "families survive"
+        L.append(f"\nAcross {len(per_drug)} screened drugs, **{n_strong or 'no'}** determinant {noun} "
+                 "the correction. **Honest limit:** this project has exactly ONE independently "
+                 "confirmed completeness gap, so recovering it is a single case and **not a rate** — "
+                 "it bounds nothing about gaps never confirmed.\n")
 
     # ---- Prospective-lock disclosure (temporal) ----
     prosp_rows = [(k, c) for k, c in rows if c.get("prospective")]

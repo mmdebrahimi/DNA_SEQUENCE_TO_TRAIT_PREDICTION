@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-08-29
+# Decoder-suite provenance-disjoint validation report card — 2026-08-31
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -82,6 +82,35 @@ The error is NOT directional: a 97%-single-source cipro cell reads PESSIMISTIC (
 | klebsiella | tetracycline | 60 | 2 | 50% | PRJNA278886 | 0 |
 
 **3 of 10** cells rest on ONE BioProject holding ≥80% of the cohort.
+
+
+## Catalog-completeness disclosure (L2 doubt — can the RULE even represent it?)
+
+The three tables above all ask *how good is the evidence for this cell's number*. This asks a different question: **does the deployed rule fail to represent a determinant family that is present in the data at all?** That is the failure which produced the gentamicin `rmt` blind spot, and no amount of better cohort evidence would have surfaced it.
+
+Rows are **drug-level** — the screen runs across the whole cached determinant index, NOT this cell's cohort. `STRONG` means a family the rule cannot represent whose labelled carriers are uniformly resistant, **after a family-wise correction** over the families screened for that drug. The correction is load-bearing: the raw purity signature fires on 5 families and 4 are coincidences (cipro `qnrA1` at 4R/0S is p=0.030 against ~125 families screened).
+
+**These rows change no metric and no cell state.**
+
+| organism | drug | families rule can't represent | raw signature | **STRONG** | families |
+|---|---|---|---|---|---|
+| acinetobacter | meropenem | 317 | 0 | 0 | — |
+| campylobacter | ciprofloxacin | 125 | 2 | 0 | — |
+| escherichia_coli_shigella | ceftriaxone | 216 | 2 | 0 | — |
+| escherichia_coli_shigella | ciprofloxacin | 125 | 2 | 0 | — |
+| escherichia_coli_shigella | gentamicin | 131 | 1 | 1  **KNOWN GAP** | `rmtE1` |
+| escherichia_coli_shigella | tetracycline | 89 | 0 | 0 | — |
+| klebsiella | ceftriaxone | 216 | 2 | 0 | — |
+| klebsiella | ciprofloxacin | 125 | 2 | 0 | — |
+| klebsiella | gentamicin | 131 | 1 | 1  **KNOWN GAP** | `rmtE1` |
+| klebsiella | meropenem | 317 | 0 | 0 | — |
+| klebsiella | tetracycline | 89 | 0 | 0 | — |
+| pseudomonas_aeruginosa | meropenem | 317 | 0 | 0 | — |
+| salmonella | ciprofloxacin | 125 | 2 | 0 | — |
+| salmonella | gentamicin | 131 | 1 | 1  **KNOWN GAP** | `rmtE1` |
+| salmonella | tetracycline | 89 | 0 | 0 | — |
+
+Across 5 screened drugs, **1** determinant family survives the correction. **Honest limit:** this project has exactly ONE independently confirmed completeness gap, so recovering it is a single case and **not a rate** — it bounds nothing about gaps never confirmed.
 
 
 ## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)

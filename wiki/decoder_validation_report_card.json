@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-08-29",
+  "date": "2026-08-31",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -134,7 +134,17 @@
       "organism": "acinetobacter",
       "drug": "meropenem",
       "state": "ABSTAINS_BY_DESIGN",
-      "note": "registry verdict EXPRESSION_FLOOR (broad@1) \u2014 rule refuses expression-driven R it cannot decode"
+      "note": "registry verdict EXPRESSION_FLOOR (broad@1) \u2014 rule refuses expression-driven R it cannot decode",
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 317,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
+      }
     },
     {
       "organism": "campylobacter",
@@ -207,6 +217,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 1,
         "single_source": true
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 125,
+        "n_strong": 0,
+        "n_raw_signature": 2,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -304,6 +324,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 216,
+        "n_strong": 0,
+        "n_raw_signature": 2,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -377,6 +407,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 2,
         "single_source": true
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 125,
+        "n_strong": 0,
+        "n_raw_signature": 2,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       },
       "prospective": {
         "status": "scored",
@@ -464,6 +504,18 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 2,
         "single_source": true
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 131,
+        "n_strong": 1,
+        "n_raw_signature": 1,
+        "strong_families": [
+          "rmtE1"
+        ],
+        "known_gap_recovered": true,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       },
       "prospective": {
         "status": "scored",
@@ -553,6 +605,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 89,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -644,6 +706,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 2,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 216,
+        "n_strong": 0,
+        "n_raw_signature": 2,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -717,6 +789,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 125,
+        "n_strong": 0,
+        "n_raw_signature": 2,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -790,6 +872,18 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 131,
+        "n_strong": 1,
+        "n_raw_signature": 1,
+        "strong_families": [
+          "rmtE1"
+        ],
+        "known_gap_recovered": true,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -863,6 +957,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 1,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 317,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -936,6 +1040,16 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 89,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
     {
@@ -966,31 +1080,77 @@
       "organism": "pseudomonas_aeruginosa",
       "drug": "meropenem",
       "state": "ABSTAINS_BY_DESIGN",
-      "note": "registry verdict EXPRESSION_FLOOR (broad@3) \u2014 rule refuses expression-driven R it cannot decode"
+      "note": "registry verdict EXPRESSION_FLOOR (broad@3) \u2014 rule refuses expression-driven R it cannot decode",
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 317,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
+      }
     },
     {
       "organism": "salmonella",
       "drug": "ciprofloxacin",
       "state": "UNDERPOWERED",
-      "note": "censused 4R/100S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
+      "note": "censused 4R/100S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated",
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 125,
+        "n_strong": 0,
+        "n_raw_signature": 2,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
+      }
     },
     {
       "organism": "salmonella",
       "drug": "gentamicin",
       "state": "UNDERPOWERED",
-      "note": "censused 5R/86S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
+      "note": "censused 5R/86S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated",
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 131,
+        "n_strong": 1,
+        "n_raw_signature": 1,
+        "strong_families": [
+          "rmtE1"
+        ],
+        "known_gap_recovered": true,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
+      }
     },
     {
       "organism": "salmonella",
       "drug": "tetracycline",
       "state": "UNDERPOWERED",
-      "note": "censused 5R/81S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated"
+      "note": "censused 5R/81S provenance-disjoint (< MIN/class) \u2014 surveillance-dominated",
+      "doubt_layer": {
+        "status": "measured",
+        "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
+        "n_families_uncounted": 89,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
+        "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
+      }
     },
     {
       "organism": "staphylococcus_aureus",
       "drug": "oxacillin",
       "state": "LABEL_CONFOUNDED",
-      "note": "phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate)"
+      "note": "phenotype LABEL is an unreliable surrogate (oxacillin AST vs mecA; cefoxitin is the CLSI surrogate)",
+      "doubt_layer": {
+        "status": "no_labels",
+        "note": "no labelled genome carries a call for this drug -- unassessable, which is not the same as clean"
+      }
     }
   ]
 }

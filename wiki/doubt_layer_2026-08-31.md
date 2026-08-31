@@ -89,13 +89,30 @@ output and raises rather than emit anything call-shaped — recursively, keys an
 may qualify a call and explain itself; it may never overrule L1 or emit one. That is what keeps L2 out
 of the learned-predictor regime that is 0-for-5 de-confounded.
 
-## Registered augment-only
+## Registered augment-only, on BOTH trust surfaces
 
-`trust_surface.doubt_layer_for(drug)` attaches under its own `doubt_layer` key. "Does this cell have a
-known completeness gap?" and "how well is this cell validated?" are different questions; merging them
-is the shared-key silent-overwrite trap. The guard compares each badge computed with the layer on
-versus off and requires every pre-existing field to be byte-identical — with a non-vacuity test, since
-a layer that attached nothing would make that guard prove nothing.
+There are two, and registering on one is a half-done job:
+
+**Inline** (what a call carries) — `trust_surface.doubt_layer_for(drug)` attaches under its own
+`doubt_layer` key. The guard compares each badge computed with the layer on versus off and requires
+every pre-existing field to be byte-identical, plus a non-vacuity test, since a layer that attached
+nothing would make that guard prove nothing.
+
+**Standing report card** — a fourth namespace-separate disclosure layer beside lineage, source
+concentration and prospective. The first three all ask *how good is the evidence for this cell's
+number*; this asks whether the **rule** can represent a determinant family present in the data at all
+— the failure no amount of better cohort evidence would surface.
+
+Augment-only **verified by diff**, not asserted: 27 cells before and after, identical key set, **zero
+non-doubt fields changed**, every state count identical, 16 cells gained a block.
+
+Rows are **drug-level** and say so in the section text, the column header and each block's own `scope`
+field — the screen runs across the whole cached index, not one cell's cohort. That is why `rmtE1`
+renders against E. coli, Klebsiella *and* Salmonella gentamicin: it is a property of the rule, not of
+those cohorts.
+
+"Does this cell have a known completeness gap?" and "how well is this cell validated?" are different
+questions; merging them is the shared-key silent-overwrite trap.
 
 ## Artifacts
 
