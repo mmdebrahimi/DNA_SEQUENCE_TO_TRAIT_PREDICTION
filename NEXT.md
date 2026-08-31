@@ -62,9 +62,20 @@ published, and it scores variants with no catalog entry) · **positive-selection
 **drug-conditioned** ConPLex (PNAS 2023, code public) · Potts/DCA (fixes independence, not the
 plausibility framing) · inverse folding (a *stability* specialist; resistance is *binding*).
 
-**Proposed first move — one orthogonality test, not a build:** score ΔΔG_bind on the HIV NNRTI
-**catalog-negative** subset (the 53 resistant isolates the catalog misses) against the same PhenoSense
-labels, vs catalog (AUC 0.962) and vs ESM2. Targets a MEASURED product gap; fails cheaply.
+~~**Proposed first move — score ΔΔG_bind on the catalog-negative subset**~~ — **KILLED 2026-08-31 by an
+executed kill-test** (`wiki/innovate_blindspot_framing_sweep_2026-08-31.md`). A **zero-tool deterministic
+position-novelty flag already recovers 60.4%** of the EFV blind spot (lift 4.69). ΔΔG's *premise* is sound
+— the blind spot IS pocket-mediated, 3.05× burden-adjusted enrichment, `VERDICT: GO` — but it is **not the
+cheapest move**, and the comparator is the free flag's **0.604**, not the catalog's 0.962.
+
+**WINNING framing instead: the blind spot is a CURATION gap.** The drivers are named and counted
+(V179D ×12, A98G ×10, H221Y ×7, F227C ×5, V108I ×4, V179E ×3) and sit at positions **absent from** the
+deployed 8-position `NNRTI_RT_MAJOR_DRMS`. And `hiv_amr.py` is **NOT** pinned by the prospective lock, so
+curating it does **not** invalidate the lock or the freeze — unlike the gentamicin `rmt` fix. **Whether to
+edit a shipped catalog is a scope decision → user call.**
+
+**Second, independent move (F3):** the position-novelty flag lives in `dna_decode/eval/` and is **never
+surfaced** in `hiv_amr.py` or `cli.py`; `AbstentionVocab` already exists to carry it. Wiring only.
 
 **Sixth family added after re-running a safeguard-blocked search (2026-08-31):** temporal /
 frequency-trajectory selection inference (Wright-Fisher HMM, `WFABC`, Beta-with-Spikes; multinomial-logistic
