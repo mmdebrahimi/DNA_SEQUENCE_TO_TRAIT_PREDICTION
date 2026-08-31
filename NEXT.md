@@ -52,6 +52,24 @@ a hand-written determinant catalog on constructed variation, that answers the id
 **Open user questions:** token level · training objective · natural vs constructed regime (drafted answers
 in the anchor).
 
+## Borrowable methods for the resistance blind spot (searched 2026-08-31, none tested)
+
+`wiki/borrowable_methods_resistance_scoring_2026-08-31.md`. The mechanism (conservative substitutions at
+average-conservation sites) says we need a signal that is NOT sequence plausibility. Ranked candidates:
+**ΔΔG of BINDING** (Rosetta `flex_ddG` / FoldX — physics, maximally orthogonal, RMSE 1.2 kcal/mol
+published, and it scores variants with no catalog entry) · **positive-selection scans** (HyPhy
+`MEME`/`FUBAR`, free, no GPU — but codon scans MISS HGT-mediated resistance, so target-site cells only) ·
+**drug-conditioned** ConPLex (PNAS 2023, code public) · Potts/DCA (fixes independence, not the
+plausibility framing) · inverse folding (a *stability* specialist; resistance is *binding*).
+
+**Proposed first move — one orthogonality test, not a build:** score ΔΔG_bind on the HIV NNRTI
+**catalog-negative** subset (the 53 resistant isolates the catalog misses) against the same PhenoSense
+labels, vs catalog (AUC 0.962) and vs ESM2. Targets a MEASURED product gap; fails cheaply.
+
+**Acquisition target found:** PEAR — ~23,000 E. coli strains, each a unique single-copy `blaCTX-M-14`
+variant, growth measured under cefotaxime/ceftazidime, with prospective/retrospective model split.
+Constructed variation at scale on an AMR target with measured phenotype — the regime this repo says works.
+
 ## Cheap untried levers (executor work, no authority needed)
 
 - ~~FBA conditional switch — continuous ratio as a ranking~~ **DONE 2026-08-29, bounded PASS.**
