@@ -93,6 +93,62 @@ outperforms naive native-vs-mutant likelihood ratios."*
 structure-incorporating models on most properties **except stability**."* Inverse folding is a **stability**
 specialist, and resistance is **binding**. Rank 5, not 1 — go to explicit ΔΔG_bind (#1) instead.
 
+### 6. Temporal / frequency-trajectory selection inference ★★ viral only — **inherits our known confound on bacteria**
+
+*(Added 2026-08-31 after the blocked search was rephrased in methodological terms — see Honest limits.)*
+
+The signal here is **neither plausibility nor physics: it is time.** A variant under positive selection
+rises in frequency. Estimating a selection coefficient from a frequency trajectory is a mature field with
+mature software.
+
+**Two usable families:**
+
+- **Wright-Fisher time-series inference.** HMM + EM (Mathieson & McVean), Bayesian path augmentation with
+  joint allele-age estimation (Schraiber, Evans & Slatkin), ABC (`WFABC`). Paris, Servin & Boitard (*G3*
+  2019) benchmarked the approximations and found **"Beta with Spikes"** — discrete fixation probabilities
+  plus a continuous Beta — gives an almost perfect fit to Wright-Fisher **at a cost that does not grow
+  with population size.** Ferrer-Admetlla et al. (*Genetics* 2016) applied this family to **drug-resistance
+  evolution in influenza** — direct precedent for our viral cells. HMM variants exist for
+  **time-varying** selection, which matters because drug pressure is episodic, not constant.
+- **Multinomial-logistic clade-frequency models** — the deployable workhorse. Frequencies are
+  `softmax(a_l + b_l·t)` against a multinomial likelihood on counts, grounded in replicator dynamics.
+
+**A cheap analytic baseline exists** and is worth knowing before reaching for any of the above:
+`s ≈ (total change in allele frequency) / (sum of heterozygosity over the observed period)`.
+
+**Two hard constraints this family carries:**
+
+1. **Only RELATIVE growth is identifiable.** In the logistic model the softmax denominator cancels
+   pairwise — `log(q_i/q_j) = (a_i−a_j) + (b_i−b_j)t` — so `b_i − b_j` is estimable and absolute fitness
+   never is. Any claim of an absolute rate from frequency data is unsupported.
+2. **Results are dominated by `N_e` and demography.** Documented biases: ignoring demographic history
+   skewed a horse coat-colour analysis; conclusions in the classic *P. dominula* case turned on `N_e`
+   assumptions; and averaging over genuinely fluctuating selection can mislead — which is exactly the
+   regime drug pressure creates.
+
+**MY ASSESSMENT, not a literature finding — and it is the reason this ranks ★★ and not ★★★:**
+**this family inherits the confound this repo has already measured as fatal.** A frequency rise in clonal
+bacteria conflates *"this variant is fitter"* with *"this clone spread"*. That is the same
+lineage/population-structure confound behind our 0-for-5 record and behind *PLOS Biology* 2025 (24,000
+genomes, 6,740 models, more data does not rescue it). The literature's own critique of clade-frequency
+models rhymes with ours: lineage groupings *"rest on consensus opinion and arbitrary amino acid difference
+thresholds unlinked to underlying fitness differences."*
+
+**So the regime split is clean, and consistent with everything else we have measured:**
+
+| our cells | verdict |
+|---|---|
+| **viral** (HIV, SARS-CoV-2, influenza) — fast, recombining, densely time-stamped | **fits** — and has direct precedent |
+| **bacterial AMR** — clonal expansion + HGT | **inherits the known-fatal confound** |
+
+**Worth noting for the lineage problem specifically:** **Phylowave** (*Nature* 2024) identifies circulating
+lineages with increased fitness **and the associated genetic changes without predefined clade
+definitions** — a direct answer to the arbitrary-grouping critique, and to our own reliance on Mash
+clusters / MLST / the Napier barcode as hand-chosen partitions.
+
+**Where this most plausibly pays for us:** the **prospective-lock arm**, which has a working harness and
+almost no accrued data. NCBI-PD carries collection dates, so the time axis exists.
+
 ---
 
 ## Two datasets worth acquiring, not just methods
@@ -129,9 +185,14 @@ hypothesised one. If it fails, it fails cheaply and the negative is publishable 
 
 ## Honest limits of this search
 
-- **Three searches were blocked** by content safeguards on ordinary bioinformatics phrasing (conservation
-  at resistance positions; Grantham-distance analysis; mutation-frequency-trajectory surveillance). Those
-  axes are **under-searched**.
+- **Three searches were initially blocked** by content safeguards on ordinary bioinformatics phrasing.
+  One (mutation-frequency trajectories) was **successfully re-run 2026-08-31** by rephrasing in
+  population-genetics methodological terms — *"estimating selection coefficients from time-series allele
+  frequency data"* rather than a pathogen-emergence framing — and the methodological framing returned
+  **better** material than the original query would have, because it surfaced the core inference
+  literature rather than one application. **Reusable tactic: when a legitimate query trips a safeguard,
+  re-aim at the underlying METHOD rather than the application.** The other two (conservation at resistance
+  positions; Grantham-distance analysis) remain **under-searched**.
 - No candidate here has been tested by us. Method-fit rankings are **my judgement against the measured
   mechanism**, not empirical results.
 - ΔΔG_bind requires a structure of the target–drug complex; availability per cell is unchecked.

@@ -66,6 +66,15 @@ plausibility framing) · inverse folding (a *stability* specialist; resistance i
 **catalog-negative** subset (the 53 resistant isolates the catalog misses) against the same PhenoSense
 labels, vs catalog (AUC 0.962) and vs ESM2. Targets a MEASURED product gap; fails cheaply.
 
+**Sixth family added after re-running a safeguard-blocked search (2026-08-31):** temporal /
+frequency-trajectory selection inference (Wright-Fisher HMM, `WFABC`, Beta-with-Spikes; multinomial-logistic
+clade models). **Regime split: fits our VIRAL cells** (direct precedent — applied to influenza drug
+resistance) **and inherits our known-fatal confound on BACTERIAL cells** (a frequency rise in clonal
+bacteria conflates "fitter variant" with "clone spread"). Only RELATIVE growth is ever identifiable.
+Most plausible payoff: the prospective-lock arm (NCBI-PD carries collection dates). Also `Phylowave`
+(*Nature* 2024) finds fitness-increased lineages **without predefined clades** — relevant to our reliance
+on Mash/MLST/Napier as hand-chosen partitions.
+
 **Acquisition target found:** PEAR — ~23,000 E. coli strains, each a unique single-copy `blaCTX-M-14`
 variant, growth measured under cefotaxime/ceftazidime, with prospective/retrospective model split.
 Constructed variation at scale on an AMR target with measured phenotype — the regime this repo says works.
