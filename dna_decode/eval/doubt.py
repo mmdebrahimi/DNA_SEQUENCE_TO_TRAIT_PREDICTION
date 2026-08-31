@@ -131,6 +131,32 @@ class DoubtBlock:
         return out
 
 
+def doubt_one_line(block: dict) -> str | None:
+    """Compact human-readable doubt line, or None when silence is the honest answer.
+
+    WHY SILENCE IS ONLY EVER HONEST IN ONE CASE. A machine-readable block a human never sees is not
+    a disclosure -- the target-site CLI carried the block in JSON for a day while its human output
+    showed only a STATIC blind-spot list ("an S call can't rule out an uncatalogued substitution"),
+    never that this genotype actually HAS one. So a line prints whenever the block has something to
+    say, and is omitted ONLY for the assessed-and-quiet case, which is the single situation where "we
+    checked and found nothing" is what silence would truthfully mean.
+    """
+    if not block or not block.get("signals"):
+        return None
+    sig = block["signals"][0]
+    ev = sig.get("evidence") or {}
+    tier = block.get("max_tier", NONE)
+    if tier in (STRONG, WEAK):
+        return f"DOUBT [{tier}]: {sig['reason']}"
+    if ev.get("applicable") is False:
+        return ("doubt: n/a -- this catalog is position-based, so the completeness flag could never "
+                "fire here (NOT an absence of doubt)")
+    if ev.get("assessed") is False:
+        return ("doubt: NOT ASSESSED -- this input path does not surface the observed substitutions, "
+                "so the completeness flag could not be evaluated (NOT a clean result)")
+    return None                     # assessed, nothing found: the one honest silence
+
+
 def assert_no_call(obj, _path: str = "doubt") -> None:
     """Raise if anything call-shaped appears anywhere in a doubt block. Recursive, fail-closed."""
     if isinstance(obj, dict):

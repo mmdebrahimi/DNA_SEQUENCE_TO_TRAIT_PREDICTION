@@ -1,0 +1,43 @@
+{
+  "schema": "evidence-surface-layer-inventory-v1",
+  "generated": "2026-08-31",
+  "contract": "Reachability, not correctness. A layer that renders on the card but reaches no decoder call is not a disclosure to anyone using the tool.",
+  "n_cells": 27,
+  "layers": [
+    {
+      "layer": "doubt_layer",
+      "cells_on_card": 16,
+      "cells_reaching_record": 16,
+      "record_reachable": true,
+      "human_readable": "doubt_one_line (target-site paths) + render_note (bacterial uncounted-determinant path)",
+      "human_reachable": true
+    },
+    {
+      "layer": "lineage",
+      "cells_on_card": 10,
+      "cells_reaching_record": 10,
+      "record_reachable": true,
+      "human_readable": "lineage_one_line \u2014 effective lineage N + cluster-weighted metrics, CI mandatory",
+      "human_reachable": true
+    },
+    {
+      "layer": "prospective",
+      "cells_on_card": 2,
+      "cells_reaching_record": 2,
+      "record_reachable": true,
+      "human_readable": "folded into the validation caveat via trust_block's prospective-regression note",
+      "human_reachable": true
+    },
+    {
+      "layer": "source_concentration",
+      "cells_on_card": 10,
+      "cells_reaching_record": 10,
+      "record_reachable": true,
+      "human_readable": "concentration_one_line, printed only for a SINGLE-SOURCE cell",
+      "human_reachable": true
+    }
+  ],
+  "layers_undeclared_in_DISCLOSURE_LAYERS": [],
+  "all_record_reachable": true,
+  "layers_without_a_human_renderer": []
+}

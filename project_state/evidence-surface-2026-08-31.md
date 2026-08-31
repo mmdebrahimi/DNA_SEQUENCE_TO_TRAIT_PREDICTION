@@ -101,14 +101,17 @@ Machinery built and load-bearing; reach is the gap — most of it is visible onl
 Every disclosure layer is CLI-reachable and every cell answers "what could this not have seen?" in machine-readable form.
 
 ### Progress proxy
-- **v0.1 metric:** `unknowns-retired` + `gates-passed`. At init: 0 retired, 0 of 2 MVP criteria met.
+- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-08-31: 2 / 2 MVP criteria met (reachability test suite + layer inventory artifact). C1 + C2 met at record AND human level; C3 (rejection gates as a runnable screen) remains open.
 
 ### Candidate next actions
+Actions 1-3 completed 2026-08-31 (Action Log rows 2-4). C1 + C2 are met at the record level AND the
+human-readable level; the follow-on set is below.
+
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Enumerate layers vs their reachability | research | med | high | low | 1-2hr |
-| 2 | Add missing CLI routes (augment-only) | edit-local-code | high | med | low | 1-2hr |
-| 3 | Guard test: no layer without a route | run-tests | med | med | low | 30min |
+| 1 | C3: make the ten rejection gates runnable as a screen, not just a memo | edit-local-code | high | high | high | rest of horizon |
+| 2 | Check reachability of the NON-report-card surfaces (hiv/tb/pgx cards) | research | med | med | med | 1-2hr |
+| 3 | Decide whether the doubt/lineage lines belong in `dna-decode` routes too | propose | low | med | med | 1-2hr |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
@@ -128,6 +131,9 @@ Attempt budget: 3.
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
 | 1 | 2026-08-31 | propose | ledger created (project-init protocol applied by hand) | eligible; independent of F-A |
+| 2 | 2026-08-31 | research | enumerate the 4 card disclosure layers vs CLI reachability | 2 of 4 card-only; prospective surfaced only when it CONTRADICTED |
+| 3 | 2026-08-31 | edit-local-code | attach lineage + source_concentration + full prospective to trust_block | all 4 now record-reachable; augment-only verified by diff |
+| 4 | 2026-08-31 | edit-local-code | human-readable renderers (doubt / lineage / source concentration) | all 4 now print; a JSON-only disclosure is not one |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

@@ -337,6 +337,29 @@ def doubt_layer_for(drug: str) -> dict | None:
     return None
 
 
+def _cell_layer_for(drug: str, organism: str | None, key: str) -> dict | None:
+    """A named disclosure block from this cell's report-card row, or None. Read-only.
+
+    Reuses the card's own organism matcher so a layer can never be attached to the wrong cell, and
+    returns None on an ambiguous match rather than guessing.
+    """
+    deck = _load("decoder_validation_report_card.json")
+    if not deck:
+        return None
+    c, status = _pick_bacterial_cell(deck.get("cells", []), str(drug).strip().lower(), organism)
+    if not c or status == "ambiguous":
+        return None
+    block = c.get(key)
+    return block if isinstance(block, dict) else None
+
+
+# Every per-cell disclosure block the report card can carry. DERIVED consumers key off this rather
+# than hand-listing, so a new layer cannot silently stay CLI-unreachable -- which is exactly what
+# happened to `lineage` and `source_concentration`: both rendered on the card for cells whose calls
+# never mentioned them, and the gap was invisible until the layers were enumerated against the CLI.
+DISCLOSURE_LAYERS = ("lineage", "source_concentration", "prospective", "doubt_layer")
+
+
 def trust_block(drug: str, organism: str | None = None) -> dict:
     """Public always-safe accessor for embedding in an amr-mechanism-call-v1 record's `validation` field.
 
@@ -360,6 +383,20 @@ def trust_block(drug: str, organism: str | None = None) -> dict:
     dl = doubt_layer_for(drug)
     if dl:
         badge["doubt_layer"] = dl
+    # LINEAGE + SOURCE CONCENTRATION + the full PROSPECTIVE block, each under its own key. These
+    # rendered on the standing report card while every CLI call stayed silent about them, which
+    # matters most where it is worst: `escherichia_coli_shigella x gentamicin` is 95% ONE BioProject
+    # and holds zero carriers of the `rmt` family, so its 0.893 is a statement about one hospital's
+    # isolates (source-diverse measurements of the same cell report 0.523). A caller deciding on that
+    # number could not see the caveat that explains it.
+    #
+    # `prospective` is attached WHENEVER it exists, not only when it regresses: the pre-existing
+    # `prospective_regression` key surfaces bad news only, so a caller could not distinguish "no
+    # post-lock data" from "post-lock data that AGREED". Both keys ship; neither replaces the other.
+    for _layer in ("lineage", "source_concentration", "prospective"):
+        _b = _cell_layer_for(drug, organism, _layer)
+        if _b:
+            badge[_layer] = _b
     return badge
 
 
@@ -367,3 +404,58 @@ def one_line(badge: dict) -> str:
     """Compact human-readable badge for CLI output."""
     head = f" -- {badge['headline']}" if badge.get("headline") else ""
     return f"validation: {badge['tier']}{head}  ({badge['caveat']}; see {badge['source_card'] or 'n/a'})"
+
+
+def lineage_one_line(badge: dict) -> str | None:
+    """The clonality correction, compactly. None when there is nothing renderable.
+
+    A cell's raw sens/spec counts one vote per ISOLATE, so an over-sampled clone carries the metric;
+    the lineage layer collapses each same-label lineage to one vote. Every SCORED R class here is
+    clonally dominated, which is why this belongs beside the headline rather than only in the wiki.
+
+    NEVER prints a weighted point without its interval — the effective N is tiny, so the CI IS the
+    result. That mirrors `build_validation_report_card._assert_weighted_renderable`, which refuses to
+    render such a point at all; a compact renderer that quietly dropped the CI would undo the guard.
+    """
+    lin = badge.get("lineage")
+    if not isinstance(lin, dict) or lin.get("status") != "scored":
+        return None
+    weighted = lin.get("cluster_weighted") or {}
+    if not weighted:
+        return None
+    thr = min(weighted, key=lambda t: float(t))       # finest available: least collapsed
+    w = weighted[thr] or {}
+    eff = (lin.get("effective_lineage_N") or {}).get(thr) or {}
+    head = (f"clonality: raw N={lin.get('raw_N')} collapses to {eff.get('R', '?')}R/"
+            f"{eff.get('S', '?')}S effective lineages at Mash {thr}")
+    sens, s_ci = w.get("sens"), w.get("sens_ci")
+    spec, p_ci = w.get("spec"), w.get("spec_ci")
+    if sens is not None and s_ci and spec is not None and p_ci:
+        head += (f"; cluster-weighted sens {sens} [{s_ci[0]}-{s_ci[1]}], "
+                 f"spec {spec} [{p_ci[0]}-{p_ci[1]}]")
+    grade = lin.get("grade")
+    return f"{head}{f' -- {grade}' if grade else ''}"
+
+
+def concentration_one_line(badge: dict) -> str | None:
+    """The source-concentration caveat, when it is decision-relevant. None otherwise.
+
+    Printed only for a SINGLE-SOURCE cell, because that is where the headline metric stops describing
+    the population a caller is applying it to. The measured case: `escherichia_coli_shigella x
+    gentamicin` reports sens 0.893 from a cohort that is 95% one BioProject and contains no carriers
+    of the `rmt` family; source-diverse measurements of the same cell with the same frozen rule report
+    0.523. The number was never wrong about its cohort -- it was a statement about one hospital.
+
+    The direction is NOT always optimistic: a 97%-single-source ciprofloxacin cell reads PESSIMISTIC
+    (spec 0.700 vs 0.988 on an 8-BioProject set). So this says the estimate is narrow, never that it
+    is inflated.
+    """
+    s = badge.get("source_concentration")
+    if not isinstance(s, dict) or s.get("status") != "measured" or not s.get("single_source"):
+        return None
+    share = s.get("largest_share")
+    share_s = "" if share is None else f" ({share:.0%} of the cohort)"
+    n_bp = s.get("distinct_bioprojects")
+    return (f"source concentration: SINGLE-SOURCE -- {n_bp} BioProject(s), one dominant{share_s}. "
+            "The metric above describes that source's isolates; it is a narrow estimate, in either "
+            "direction, not necessarily an inflated one")

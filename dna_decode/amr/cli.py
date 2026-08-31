@@ -51,9 +51,10 @@ from dna_decode.data.hiv_amr import (
     gene_for_hiv_drug,
 )
 from dna_decode.data.mic_tiers import supported_drugs
-from dna_decode.data.trust_surface import one_line, trust_block
+from dna_decode.data.trust_surface import (concentration_one_line, lineage_one_line,
+                                            one_line, trust_block)
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
-from dna_decode.eval.doubt import target_site_doubt
+from dna_decode.eval.doubt import doubt_one_line, target_site_doubt
 from dna_decode.amr.uncounted import (disclosure_provenance, measured_gap_misses,
                                       parse_main_tsv_rows, primary_mechanism_misses, render_note,
                                       uncounted_class_determinants)
@@ -189,8 +190,17 @@ def _emit_target_site(rec: dict, call, sample_id: str, args) -> int:
             print("  driven by: (no catalogued target-site resistance mutation)")
         if call.undetectable_mechanisms:
             print(f"  blind spots (an S call can't rule out): {', '.join(call.undetectable_mechanisms)}")
+        # The static line above says an S call CAN'T RULE OUT an uncatalogued substitution; this says
+        # whether this genotype actually HAS one. A block carried only in JSON is not a disclosure.
+        _doubt = doubt_one_line(rec.get("doubt") or {})
+        if _doubt:
+            print(f"  {_doubt}")
         print(f"  {call.caveat}")
         print(f"  {one_line(rec['validation'])}")
+        for _extra in (lineage_one_line(rec["validation"]),
+                       concentration_one_line(rec["validation"])):
+            if _extra:
+                print(f"  {_extra}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if call.prediction != "INDETERMINATE" else 4
@@ -595,6 +605,10 @@ def main(argv=None) -> int:
             if note:
                 print(note)
         print(f"  {one_line(rec['validation'])}")
+        for _extra in (lineage_one_line(rec["validation"]),
+                       concentration_one_line(rec["validation"])):
+            if _extra:
+                print(f"  {_extra}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return {"INDETERMINATE": 4, "ABSTAIN": 5}.get(call["prediction"], 0)

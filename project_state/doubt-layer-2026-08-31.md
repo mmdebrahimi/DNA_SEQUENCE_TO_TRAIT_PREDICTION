@@ -118,13 +118,15 @@ C1 + C2 + C3 all met: a pure doubt module with tests, a guarded `doubt` block in
 - **v0.2+:** weighted combination of unknowns-retired, gates-passed, evidence-confidence-improved, hypotheses-falsified (TBD via v0.2 design)
 
 ### Candidate next actions
+Steps 1-5 all completed 2026-08-31 (see Action Log rows 2-7); the table below is the FOLLOW-ON set.
+A stale candidate table is not cosmetic — `advance_ranker` reads the FIRST row as the family's next
+action, so leaving completed work here made a finished family rank first on the portfolio frontier.
+
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Full-index completeness run | run-tests | med | high | low | minutes |
-| 2 | Per-cell doubt measurement vs 0.604 | edit-local-code | high | high | med | 1-2hr |
-| 3 | dna_decode/eval/doubt.py pure signals | edit-local-code | high | med | low | 1-2hr |
-| 4 | Guard test: block can never carry a call | run-tests | high | low | low | 30min |
-| 5 | Trust-surface augment-only registration | edit-local-code | med | med | med | 1-2hr |
+| 1 | Measure the doubt layer's FALSE-POSITIVE rate on cells with no known gap | run-tests | med | high | high | 1-2hr |
+| 2 | Extend the completeness screen to the target-site catalogs (one vocabulary or two?) | edit-local-code | med | high | med | 1-2hr |
+| 3 | Re-screen when any NEW independent label set lands (both known gaps needed one) | research | low | high | high | ongoing |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
