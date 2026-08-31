@@ -143,7 +143,12 @@ I did **not** surface a paper stating the specific mechanism this repo measured 
 mutations are reached via chemically *conservative* substitutions at *averagely-conserved* sites, with
 **BLOSUM62 reproducing the error** (which rules out memorisation). The nearest published statement is that
 PLMs implicitly encode substitution conservativeness. The BLOSUM62 control may be genuinely novel.
-**Not established — search absence is not proof.** Worth a targeted literature check before any claim.
+**RESOLVED 2026-08-31 by a targeted check — see `wiki/prior_art_conservative_resistance_blosum_2026-08-31.md`.**
+The finding is a COMPOSITE: three of four components are prior art (conservativeness published by Friedman
+2013 for Abl1 — **with EGFR/ALK as a published RADICAL counterexample**; the drug-agnostic zero-shot PLM
+framing is in print; BLOSUM62-as-baseline is standard). **Two moves appear unreported:** BLOSUM62 as a
+*memorisation control*, and the *refutation* of the standard "the site is poorly conserved" explanation
+for VEP false negatives (measured entropy percentile 0.494 = exactly average).
 
 ---
 
