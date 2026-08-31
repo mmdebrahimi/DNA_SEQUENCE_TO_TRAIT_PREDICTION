@@ -61,6 +61,22 @@ learned-narrow, F-E label-acquisition) are eligible and untouched. Self-init acc
 ledger records the corrected regime map (population design, not organism complexity) so the compression
 error that has bitten three times has somewhere durable to live.
 
+## F-C and F-D advanced 2026-08-31 (same run)
+
+**F-C (evidence surface).** Four disclosure layers rendered on the report card; only **two** reached a
+decoder call. `lineage` + `source_concentration` were card-only; `prospective` surfaced only when it
+CONTRADICTED. All four now reach the record **and** print. The case that matters: e.coli x gentamicin
+reports sens 0.893 from a cohort 95% one BioProject with zero `rmt` carriers (source-diverse: 0.523),
+and that caveat is now on the call. Memo `wiki/evidence_surface_reachability_2026-08-31.md`.
+*Not audited:* the HIV / TB / pgx cards — named follow-on.
+
+**F-D (learned-narrow, the RESTRAINT family).** The regime boundary is now a function, not prose:
+`dna_decode/eval/regime.py::screen_proposal(population, endpoint, method)`. **Exactly one regime
+refuses** (natural x organism x ZERO-SHOT); a SUPERVISED natural-population proposal returns
+`REQUIRES_DECONFOUNDING` **with conditions, never a refusal** — compressing that scope IS the error,
+made three times. `uv run python scripts/regime_map.py` refuses to certify a regime whose cited
+artifact is missing. Screen before proposing a learned decoder.
+
 ## Waiting on the user (authority calls — not executor tasks)
 
 1. **v2 gentamicin lock.** The frozen AMR rule matches AMRFinder `Subclass == GENTAMICIN`, which cannot

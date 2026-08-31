@@ -105,14 +105,17 @@ Boundary correct and measured, but enforced only by memory — and memory has fa
 A regime screen exists, is derived from artifacts, and is wired where new cells register.
 
 ### Progress proxy
-- **v0.1 metric:** `unknowns-retired` + `gates-passed`. At init: 0 retired, 0 of 2 MVP criteria met.
+- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-08-31: 2 / 2 MVP criteria met (regime-boundary tests + derived map artifact). C1 + C3 met; C2 (wiring the screen into cell registration) remains open.
 
 ### Candidate next actions
+Actions 1-2 completed 2026-08-31 (Action Log rows 2-3). C2 -- wiring the screen where new cells
+register -- is the remaining build.
+
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Derive the regime map from artifacts | edit-local-code | med | med | low | 1-2hr |
-| 2 | Pin the corrected regime statement by test | run-tests | high | low | low | 30min |
-| 3 | Score gLM2-650M vs the curated baseline | research | med | high | high | days |
+| 1 | C2: require a regime field where a new cell registers | edit-local-code | high | med | med | 1-2hr |
+| 2 | Score gLM2-650M vs the curated baseline (the cheapest gene-LLM test) | research | med | high | high | days |
+| 3 | Resolve where the constructed/natural line sits for an intermediate design | research | low | high | high | days |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
@@ -132,6 +135,8 @@ Attempt budget: 3.
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
 | 1 | 2026-08-31 | propose | ledger created (project-init protocol applied by hand) | restraint family; eligible |
+| 2 | 2026-08-31 | edit-local-code | dna_decode/eval/regime.py + scripts/regime_map.py | 6 measured regimes; every cited artifact verified to exist |
+| 3 | 2026-08-31 | run-tests | tests/test_regime_boundary.py (13) | all 3 historical compressions now fail loudly |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
