@@ -53,6 +53,7 @@ from dna_decode.data.hiv_amr import (
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.data.trust_surface import one_line, trust_block
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
+from dna_decode.eval.doubt import target_site_doubt
 from dna_decode.amr.uncounted import (disclosure_provenance, measured_gap_misses,
                                       parse_main_tsv_rows, primary_mechanism_misses, render_note,
                                       uncounted_class_determinants)
@@ -107,12 +108,21 @@ def _parse_observed(observed: str) -> dict[str, set[str]]:
 
 
 def _target_site_record(call, sample_id: str, drug: str, organism: str, provenance: dict, *,
-                        caller_name: str, source: str) -> dict:
+                        caller_name: str, source: str, observed: dict | None = None) -> dict:
     """Map a target-site Call (fungal OR antimalarial — same shape) onto the uniform
-    amr-mechanism-call-v1 record (same shape as the bacterial path)."""
+    amr-mechanism-call-v1 record (same shape as the bacterial path).
+
+    `observed` = {gene: {substitutions}} when the input path surfaced them (`--observed` mode). It
+    feeds the L2 `doubt` block ONLY; it never touches the call. Left None (genome/BLAST modes) the
+    block reports NOT-ASSESSABLE rather than silently reading as "no doubt" — the bacterial path has
+    carried an equivalent disclosure since the gentamicin gap; this is its target-site counterpart.
+    """
     dets = [{"symbol": d.split(":", 1)[0], "subclass": d.split(":", 1)[1] if ":" in d else "",
              "class": "TARGET_SITE_MUTATION", "pct_identity": None} for d in call.determinants]
     return {
+        # DISCLOSURE, never a call. `doubt` may qualify the prediction and explain itself; it can
+        # never contain one — `DoubtBlock.as_dict` raises rather than emit anything call-shaped.
+        "doubt": target_site_doubt(drug, observed).as_dict(),
         "sample_id": sample_id, "drug": drug,
         "analysis_date": datetime.date.today().isoformat(), "schema": "amr-mechanism-call-v1",
         "prediction": call.prediction,
@@ -134,6 +144,7 @@ def _fungal_main(args) -> int:
     # to the validated fungal organism unless the user explicitly set one.
     if args.organism == "Escherichia":
         args.organism = "Candida_auris"
+    obs = None                       # stays None on the genome path -> doubt block = NOT-ASSESSABLE
     if args.observed is not None:
         obs = _parse_observed(args.observed)
         call = call_from_observed_substitutions(args.drug, obs)
@@ -158,7 +169,8 @@ def _fungal_main(args) -> int:
 
     rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
                               caller_name="dna_decode-fungal-target-mutation-v0",
-                              source="hand-curated fungal catalog (no AMRFinder-for-fungi)")
+                              source="hand-curated fungal catalog (no AMRFinder-for-fungi)",
+                              observed=obs)
     return _emit_target_site(rec, call, sample_id, args)
 
 
@@ -236,8 +248,10 @@ def _hiv_main(args) -> int:
     gene = gene_for_hiv_drug(args.drug)            # RT / PR / IN / CA
     ref_by_gene = {"RT": args.hiv_rt_ref, "PR": args.hiv_pr_ref,
                    "IN": args.hiv_in_ref, "CA": args.hiv_ca_ref}
+    obs = None                       # stays None on the genome path -> doubt block = NOT-ASSESSABLE
     if args.observed is not None:
-        call = call_hiv_observed(args.drug, _parse_observed(args.observed))
+        obs = _parse_observed(args.observed)
+        call = call_hiv_observed(args.drug, obs)
         sample_id = args.sample_id or "observed"
         prov = {"mode": "observed-substitutions", "observed": args.observed, "gene": gene}
     elif args.genome_fasta is not None:
@@ -264,7 +278,8 @@ def _hiv_main(args) -> int:
         return 2
     rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
                               caller_name="dna_decode-" + call.rule.replace("_", "-"),
-                              source="HIVDB-PhenoSense-validated (in-distribution; see hiv_decoder_report_card)")
+                              source="HIVDB-PhenoSense-validated (in-distribution; see hiv_decoder_report_card)",
+                              observed=obs)
     return _emit_target_site(rec, call, sample_id, args)
 
 
@@ -311,8 +326,10 @@ def _sarscov2_main(args) -> int:
     if args.organism == "Escherichia":            # relabel the bacterial default on this path
         args.organism = "SARS-CoV-2"
     gene = gene_for_sarscov2_drug(args.drug)       # Mpro
+    obs = None                       # stays None on the genome path -> doubt block = NOT-ASSESSABLE
     if args.observed is not None:
-        call = call_sarscov2_observed(args.drug, _parse_observed(args.observed))
+        obs = _parse_observed(args.observed)
+        call = call_sarscov2_observed(args.drug, obs)
         sample_id = args.sample_id or "observed"
         prov = {"mode": "observed-substitutions", "observed": args.observed}
     elif args.genome_fasta is not None:
@@ -339,7 +356,8 @@ def _sarscov2_main(args) -> int:
         return 2
     rec = _target_site_record(call, sample_id, args.drug, args.organism, prov,
                               caller_name="dna_decode-sarscov2-mpro-target-mutation-v0",
-                              source="Stanford CoV-RDB selection-derived Mpro catalog (validate vs measured fold-change)")
+                              source="Stanford CoV-RDB selection-derived Mpro catalog (validate vs measured fold-change)",
+                              observed=obs)
     return _emit_target_site(rec, call, sample_id, args)
 
 

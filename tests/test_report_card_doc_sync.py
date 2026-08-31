@@ -69,11 +69,18 @@ def live_docs() -> list[Path]:
     return out
 
 
+_STATE_COUNT = re.compile(r"\b\d+\s+(SCORED|UNDERPOWERED|NOT_CENSUSED|LABEL_CONFOUNDED|"
+                          r"ABSTAINS_BY_DESIGN|NO_FREE_PHENOTYPE_SOURCE)\b")
+
+
+def cited_states(text: str) -> set[str]:
+    """The cell-states this text actually states a count for. Pure."""
+    return {m.group(1) for m in _STATE_COUNT.finditer(text)}
+
+
 def docs_citing_counts() -> list[Path]:
-    """The live docs that actually state a report-card count -- the ones a stale number can hide in."""
-    pat = re.compile(r"\b\d+\s+(?:SCORED|UNDERPOWERED|NOT_CENSUSED|LABEL_CONFOUNDED|"
-                     r"ABSTAINS_BY_DESIGN|NO_FREE_PHENOTYPE_SOURCE)\b")
-    return [p for p in live_docs() if pat.search(p.read_text(encoding="utf-8", errors="replace"))]
+    """The live docs that state at least one report-card count -- where a stale number can hide."""
+    return [p for p in live_docs() if cited_states(p.read_text(encoding="utf-8", errors="replace"))]
 
 
 def _states() -> Counter:
@@ -148,7 +155,17 @@ def test_every_live_doc_that_cites_a_count_agrees_with_the_artifact():
         text = p.read_text(encoding="utf-8", errors="replace")
         # a doc may quote a superseded figure while EXPLAINING the correction; that is honest, so a
         # stale number is only a failure when the CORRECT one is absent from the same file.
-        missing = [f"{n} {s}" for s, n in sorted(states.items()) if n and f"{n} {s}" not in text]
+        # SCOPED to the states the doc actually cites (narrowed 2026-08-31). The blanket rule -- every
+        # doc mentioning any count must enumerate ALL of them -- failed NEXT.md's "3 of 10 SCORED AMR
+        # cells rest on one BioProject" for not also stating `2 ABSTAINS_BY_DESIGN` and `11
+        # NO_FREE_PHENOTYPE_SOURCE`, forcing a scoped source-concentration sentence to assert a census
+        # it never made. That is this guard's OWN documented failure mode (see the LESSONS_LEARNED note
+        # above). Every count a doc DOES state is still checked, so a stale figure anywhere still fails;
+        # CLAUDE.md's completeness is separately enforced by
+        # `test_claude_md_states_the_correct_count_for_every_populated_state`.
+        cited = cited_states(text)
+        missing = [f"{n} {s}" for s, n in sorted(states.items())
+                   if n and s in cited and f"{n} {s}" not in text]
         if missing:
             wrong[str(p)] = missing
     assert not wrong, (
@@ -220,3 +237,39 @@ def test_the_history_exemption_is_narrow_enough_to_still_catch_the_real_defect()
     assert len(_HISTORY_FILES) <= 3, (
         "the history exemption is growing — each addition must be a verified append-only dated-entry "
         "log, not a file that was easier to exempt than to fix")
+
+
+# --- the count check was SCOPED to cited states (2026-08-31); pin it still catches the defect ---
+
+def test_a_stale_count_still_fails_even_when_only_one_state_is_cited():
+    """The narrowing must not create a hiding place. A doc citing ONE state is still checked on it."""
+    states = _states()
+    n_scored = states.get("SCORED", 0)
+    assert n_scored, "precondition: the artifact has SCORED cells"
+    stale = f"the card holds {n_scored + 1} SCORED cells"
+    cited = cited_states(stale)
+    assert cited == {"SCORED"}
+    assert f"{n_scored} SCORED" not in stale        # exactly what the assertion checks -> would fail
+
+
+def test_a_doc_is_not_forced_to_state_counts_it_never_claimed():
+    """The false positive that motivated the narrowing: NEXT.md's source-concentration sentence.
+
+    Demanding it also state `2 ABSTAINS_BY_DESIGN` and `11 NO_FREE_PHENOTYPE_SOURCE` would force the
+    file to assert a census it never made -- the blanket-guard-forces-a-false-claim failure.
+    """
+    cited = cited_states("3 of 10 SCORED AMR cells rest on one BioProject; 110 cells are registered")
+    assert cited == {"SCORED"}, "a passing SCORED mention must not drag in the other states"
+    assert cited_states("no counts here at all") == set()
+
+
+def test_the_defect_this_guard_was_built_for_is_still_in_scope():
+    """`docs/ARCHITECTURE.md` carried "25 cells / 6 SCORED / 4 NOT_CENSUSED" stale for three days."""
+    assert cited_states("25 cells -- 6 SCORED / 4 NOT_CENSUSED") == {"SCORED", "NOT_CENSUSED"}
+
+
+def test_the_scoped_check_is_not_vacuous():
+    """A predicate that selected nothing would make every check above pass while guarding nothing."""
+    scoped = docs_citing_counts()
+    assert scoped, "no live doc is checked -- the guard is vacuous"
+    assert CLAUDE_MD in scoped, "CLAUDE.md carries the full census and must stay in scope"

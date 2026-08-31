@@ -1,7 +1,12 @@
 {
   "ceiling": 25,
   "created_ids": [
-    "eukaryotic-trait-decoding-cycle-2026-06-07"
+    "eukaryotic-trait-decoding-cycle-2026-06-07",
+    "doubt-layer-2026-08-31",
+    "catalog-curation-2026-08-31",
+    "evidence-surface-2026-08-31",
+    "learned-narrow-2026-08-31",
+    "label-acquisition-2026-08-31"
   ],
-  "spent": 1
+  "spent": 6
 }

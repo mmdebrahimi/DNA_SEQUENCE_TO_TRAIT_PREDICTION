@@ -290,6 +290,53 @@ def prospective_regression_for(drug: str, organism: str | None = None) -> dict |
             "caveat": c.get("deployment_caveat", "")}
 
 
+@lru_cache(maxsize=1)
+def _doubt_card() -> dict | None:
+    """Newest committed per-cell doubt-layer measurement, or None. Read-only, never fabricated."""
+    for base in (_PKG_CARDS, _WIKI):
+        hits = sorted(base.glob("doubt_layer_per_cell_*.json")) if base.exists() else []
+        if hits:
+            try:
+                return json.loads(hits[-1].read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                return None
+    return None
+
+
+def doubt_layer_for(drug: str) -> dict | None:
+    """This cell's standing L2 doubt-layer status, or None when it has never been measured.
+
+    AUGMENT-ONLY, and that is the whole discipline: this reports whether the cell has a known
+    CATALOG-COMPLETENESS gap, which is a different question from how well the cell is VALIDATED. It
+    must never move a tier or a metric — the same rule the lineage, prospective and
+    source-concentration layers hold. Absence returns None (never-measured), never a clean bill.
+    """
+    card = _doubt_card()
+    if not card:
+        return None
+    d = str(drug).strip().lower()
+    for cell in card.get("determinant_completeness_arm", []):
+        if str(cell.get("drug", "")).lower() != d:
+            continue
+        if cell.get("status") != "scored":
+            return {"arm": "determinant_completeness", "status": cell.get("status"),
+                    "note": cell.get("note", ""), "source": "doubt_layer_per_cell"}
+        strong = cell.get("strong") or []
+        return {"arm": "determinant_completeness", "status": "scored",
+                "n_strong_completeness_signals": cell.get("n_strong", 0),
+                "n_families_uncounted": cell.get("n_families_uncounted"),
+                "known_gap_recovered": cell.get("known_gap_recovered", False),
+                "strong_families": [s["evidence"]["symbol"] for s in strong],
+                "source": "doubt_layer_per_cell"}
+    for cell in card.get("position_novelty_arm", []):
+        if str(cell.get("drug", "")).lower() == d:
+            return {"arm": "position_novelty", "status": "scored",
+                    "sens_on_blindspot": cell.get("sens_on_blindspot"),
+                    "fp_on_catalog_negative_S": cell.get("fp_on_catalog_negative_S"),
+                    "lift": cell.get("lift"), "source": "doubt_layer_per_cell"}
+    return None
+
+
 def trust_block(drug: str, organism: str | None = None) -> dict:
     """Public always-safe accessor for embedding in an amr-mechanism-call-v1 record's `validation` field.
 
@@ -306,6 +353,13 @@ def trust_block(drug: str, organism: str | None = None) -> dict:
             f"{badge.get('caveat', '')} || PROSPECTIVE REGRESSION: post-lock sens {pr['sens']} on "
             f"N={pr['n']} isolates public after {pr['lock_date']} -- the frozen rule UNDER-CALLS this "
             f"cell; the accuracy above is in-distribution and does not describe it")
+    # L2 DOUBT, augment-only. Attached under its OWN key and NEVER folded into `tier`/`headline`/the
+    # metrics: "does this cell have a known catalog-completeness gap" is a different question from
+    # "how well is this cell validated", and merging them would silently overwrite one with the
+    # other -- the shared-key trap this project has hit before. Absent -> the key is simply absent.
+    dl = doubt_layer_for(drug)
+    if dl:
+        badge["doubt_layer"] = dl
     return badge
 
 

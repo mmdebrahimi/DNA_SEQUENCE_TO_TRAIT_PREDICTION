@@ -26,17 +26,34 @@ scored 0 survivors in the framing sweep. Measured shape: **CALL / DOUBT / EVIDEN
 twice the same way (gentamicin `rmt`, HIV NNRTI), both invisible until independent labels arrived. Nobody
 in the field ships "my catalog might be wrong here."
 
-**Critical path F-A → F-B.** **F-A step 1 is DONE 2026-08-31** —
-`scripts/determinant_completeness_screen.py` (+9 tests, `wiki/determinant_completeness_screen_2026-08-31.md`).
-It detects the shared shape of the `rmt` and HIV gaps generically from cached AMRFinder output, and
-**rediscovers the known gap blind: `rmtE1` 36R/0S ranked first for gentamicin**, with the deliberate
-exclusions (`aph`, `aadA`) correctly sorting below as `mixed`. No other deployed drug shows an `rmt_like`
-family with meaningful support. It asks the DEPLOYED rule (verbatim one-row probe) rather than
-reimplementing it, so it cannot drift from `DRUG_RULE`.
+**Critical path F-A → F-B. F-A IS COMPLETE 2026-08-31** — all four steps.
+`wiki/doubt_layer_2026-08-31.md` is the memo; `dna_decode/eval/doubt.py` + `scripts/doubt_layer_per_cell.py`
++ 30 tests are the artifact. Headline: across 1,818 genomes / 1,279 uncounted determinant families /
+six drugs, **exactly one family survives the family-wise correction — `rmtE1`, p = 4.11e-12 — and it is
+the confirmed gap.** The raw signature flagged 5; the correction drops 4 and keeps the true one.
 
-**Remaining F-A:** step 2 full-index run (cheap, unrun — this was 220 genomes/drug); step 3 wire a `doubt`
-block into the record behind a guard test that it can never contain a call; step 4 register augment-only.
-F-B (curation) stays blocked on a measured baseline.
+**Two things it is easy to get wrong here, both measured:**
+- **Enrichment is the WRONG null.** A lower-tail binomial on the observed S count calls `aph(6)-Id`
+  (62R/28S) STRONG at p≈5e-5 — and that is a CORRECT exclusion (a streptomycin gene travelling with
+  gentamicin resistance by linkage). Every co-occurring determinant is R-enriched. The signature is
+  **purity**; one S carrier ENDS the signal. Pinned by test.
+- **A position-BASED catalog can never fire the position-novelty flag** (every substitution at a
+  catalogued position is already called), so those cells report `not-applicable`, never "no doubt".
+
+**Now unblocked: F-B (curation) has its measured baseline** — but both of its terminal moves are user
+authority calls (below).
+
+## The five project families exist now (seeded 2026-08-31, user-authorized)
+
+Ledgers at `project_state/{doubt-layer,catalog-curation,evidence-surface,learned-narrow,label-acquisition}-2026-08-31.md`;
+the frontier lives in `project_state/dna-decode-2026-05-11.md` under `## Project Families` +
+`## Requirements Flow-down` and is **machine-readable** — `advance_ranker.rank()` parses it, ranks F-A
+first, and correctly reports F-B blocked on F-A. Three families (F-C evidence-surface, F-D
+learned-narrow, F-E label-acquisition) are eligible and untouched. Self-init account 6 / ceiling 25.
+
+**F-D is a RESTRAINT family** — its deliverable is a boundary that stays enforced, not a build. Its
+ledger records the corrected regime map (population design, not organism complexity) so the compression
+error that has bitten three times has somewhere durable to live.
 
 ## Waiting on the user (authority calls — not executor tasks)
 

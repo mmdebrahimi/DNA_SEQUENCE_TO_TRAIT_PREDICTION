@@ -1,0 +1,189 @@
+{
+  "schema": "doubt-layer-per-cell-v1",
+  "generated": "2026-08-31",
+  "incumbent": {
+    "source": "wiki/hiv_blindspot_position_novelty_2026-07-11.json",
+    "metric": "median flag sensitivity on the EFV catalog-negative blind spot",
+    "value": 0.604,
+    "lift": 3.98
+  },
+  "contract": "A DOUBT signal qualifies a call and explains itself; it never emits one. The two arms measure different objects and are deliberately NOT pooled.",
+  "screen_source": "determinant_completeness_screen_2026-08-31.json",
+  "determinant_completeness_arm": [
+    {
+      "cell_kind": "determinant_completeness",
+      "drug": "ceftriaxone",
+      "status": "scored",
+      "n_genomes_scanned": 1818,
+      "n_determinants_probed": 479,
+      "n_counted_by_rule": 263,
+      "n_families_uncounted": 216,
+      "n_raw_signature": 2,
+      "n_strong": 0,
+      "n_weak": 0,
+      "base_s_rate": 0.2022,
+      "n_labelled_r": 146,
+      "n_labelled_s": 37,
+      "known_gap_recovered": false,
+      "strong": []
+    },
+    {
+      "cell_kind": "determinant_completeness",
+      "drug": "ciprofloxacin",
+      "status": "scored",
+      "n_genomes_scanned": 1818,
+      "n_determinants_probed": 178,
+      "n_counted_by_rule": 53,
+      "n_families_uncounted": 125,
+      "n_raw_signature": 2,
+      "n_strong": 0,
+      "n_weak": 1,
+      "base_s_rate": 0.5829,
+      "n_labelled_r": 73,
+      "n_labelled_s": 102,
+      "known_gap_recovered": false,
+      "strong": []
+    },
+    {
+      "cell_kind": "determinant_completeness",
+      "drug": "gentamicin",
+      "status": "scored",
+      "n_genomes_scanned": 1818,
+      "n_determinants_probed": 148,
+      "n_counted_by_rule": 17,
+      "n_families_uncounted": 131,
+      "n_raw_signature": 1,
+      "n_strong": 1,
+      "n_weak": 0,
+      "base_s_rate": 0.5172,
+      "n_labelled_r": 84,
+      "n_labelled_s": 90,
+      "known_gap_recovered": true,
+      "strong": [
+        {
+          "kind": "determinant_completeness",
+          "tier": "strong",
+          "reason": "determinant 'rmtE1' (AMINOGLYCOSIDE) is present but the deployed rule cannot represent it; 36/36 labelled carriers are resistant against a cohort base susceptible-rate of 0.517",
+          "evidence": {
+            "symbol": "rmtE1",
+            "subclass": "AMINOGLYCOSIDE",
+            "carriers_labelled_r": 36,
+            "carriers_labelled_s": 0,
+            "base_s_rate": 0.5172,
+            "purity_surprise_p": 4.1141617300070706e-12,
+            "n_families_tested": 131,
+            "familywise_alpha": 0.05
+          }
+        }
+      ]
+    },
+    {
+      "cell_kind": "determinant_completeness",
+      "drug": "meropenem",
+      "status": "scored",
+      "n_genomes_scanned": 1818,
+      "n_determinants_probed": 479,
+      "n_counted_by_rule": 162,
+      "n_families_uncounted": 317,
+      "n_raw_signature": 0,
+      "n_strong": 0,
+      "n_weak": 1,
+      "base_s_rate": 0.8696,
+      "n_labelled_r": 15,
+      "n_labelled_s": 100,
+      "known_gap_recovered": false,
+      "strong": []
+    },
+    {
+      "cell_kind": "determinant_completeness",
+      "drug": "oxacillin",
+      "status": "no_labels",
+      "n_families_uncounted": 401,
+      "note": "no labelled genome carries a call for this drug -- unassessable, which is not the same as clean"
+    },
+    {
+      "cell_kind": "determinant_completeness",
+      "drug": "tetracycline",
+      "status": "scored",
+      "n_genomes_scanned": 1818,
+      "n_determinants_probed": 103,
+      "n_counted_by_rule": 14,
+      "n_families_uncounted": 89,
+      "n_raw_signature": 0,
+      "n_strong": 0,
+      "n_weak": 0,
+      "base_s_rate": 0.2807,
+      "n_labelled_r": 82,
+      "n_labelled_s": 32,
+      "known_gap_recovered": false,
+      "strong": []
+    }
+  ],
+  "position_novelty_arm": [
+    {
+      "cell_kind": "position_novelty",
+      "drug": "doravirine",
+      "status": "scored",
+      "organism": "HIV-1",
+      "sens_on_blindspot": 0.714,
+      "fp_on_catalog_negative_S": 0.375,
+      "lift": 1.259,
+      "powered": true,
+      "n_blindspot_true_R": 21,
+      "n_catalog_negative": 37
+    },
+    {
+      "cell_kind": "position_novelty",
+      "drug": "efavirenz",
+      "status": "scored",
+      "organism": "HIV-1",
+      "sens_on_blindspot": 0.604,
+      "fp_on_catalog_negative_S": 0.105,
+      "lift": 4.691,
+      "powered": true,
+      "n_blindspot_true_R": 53,
+      "n_catalog_negative": 1111
+    },
+    {
+      "cell_kind": "position_novelty",
+      "drug": "etravirine",
+      "status": "scored",
+      "organism": "HIV-1",
+      "sens_on_blindspot": 0.688,
+      "fp_on_catalog_negative_S": 0.132,
+      "lift": 3.98,
+      "powered": true,
+      "n_blindspot_true_R": 32,
+      "n_catalog_negative": 440
+    },
+    {
+      "cell_kind": "position_novelty",
+      "drug": "nevirapine",
+      "status": "scored",
+      "organism": "HIV-1",
+      "sens_on_blindspot": 0.515,
+      "fp_on_catalog_negative_S": 0.077,
+      "lift": 4.417,
+      "powered": true,
+      "n_blindspot_true_R": 99,
+      "n_catalog_negative": 1089
+    },
+    {
+      "cell_kind": "position_novelty",
+      "drug": "rilpivirine",
+      "status": "scored",
+      "organism": "HIV-1",
+      "sens_on_blindspot": 0.571,
+      "fp_on_catalog_negative_S": 0.267,
+      "lift": 1.8,
+      "powered": true,
+      "n_blindspot_true_R": 21,
+      "n_catalog_negative": 126
+    }
+  ],
+  "amr_arm_known_gap_recall": {
+    "n_known_gaps": 1,
+    "n_recovered": 1,
+    "note": "One known gap exists in this arm, so this is a single case, NOT a rate. It bounds nothing about gaps that have never been independently confirmed."
+  }
+}

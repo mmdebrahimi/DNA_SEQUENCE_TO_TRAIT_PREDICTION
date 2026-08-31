@@ -3,6 +3,44 @@
 
 > Initialized 2026-05-11. Project ID: dna-decode-2026-05-11. Originating goal (verbatim user input): "use AI to decode and understand any DNA code which is a programming language written in the language of 3-5 proteins".
 
+## Project Families
+
+Added 2026-08-31 (user-authorized). This umbrella now carries the portfolio frontier for the
+CALL / DOUBT / EVIDENCE architecture — see `plans/Hybrid_Decoder_Architecture_Plan.md`. Each family
+has its own ledger at `project_state/<family slug>.md`.
+
+| # | Family | Family slug | Status | blocked_by | Scope |
+|---|---|---|---|---|---|
+| F-A | Doubt layer (L2) | doubt-layer-2026-08-31 | ACCEPTED | none | generalize + surface the catalog-completeness signals; never a competing call |
+| F-B | Catalog curation | catalog-curation-2026-08-31 | ACCEPTED | doubt-layer-2026-08-31 | close the measured gaps; define what may enter a shipped catalog |
+| F-C | Evidence surface (L3) | evidence-surface-2026-08-31 | ACCEPTED | none | expose de-confounding / nulls / leakage / provenance as a product surface |
+| F-D | Learned, narrow (L4) | learned-narrow-2026-08-31 | ACCEPTED | none | RESTRAINT family — hold L4 to its measured regime, checkably |
+| F-E | Label acquisition | label-acquisition-2026-08-31 | ACCEPTED | none | screen + rank label sources against the ten rejection gates (screening only) |
+
+**Critical path: F-A → F-B.** Everything else runs in parallel or is authority-held.
+
+## Requirements Flow-down
+
+- **F-A → F-B (hard).** Curation must be MEASURED, not asserted. Without a doubt-layer baseline there
+  is no way to say what curation recovered, so F-B is blocked on F-A by construction — not by preference.
+- **F-A consumes L1's existing `AbstentionVocab`** and the shipped position-novelty flag. It introduces
+  **no new evidence-tier concept**; a doubt signal augments a cell, never re-tiers it.
+- **F-C is independent.** It exposes machinery that already exists and builds no new evaluation method.
+- **F-D is a restraint.** Its deliverable is a boundary that stays enforced. It constrains F-A and F-E
+  (neither may propose a learned decoder outside the measured regime) but blocks neither.
+- **F-E is external at its terminal.** Screening is executor scope; acquisition is authority + possibly
+  money. **Nothing downstream may be planned as if an acquisition will land.**
+
+## Mission Terminal Condition
+
+Every decoder call the tool ships carries (a) a deterministic CALL, (b) an honest machine-readable
+statement of where its own catalog is least trustworthy, and (c) a reachable account of how it was
+validated and what that validation could not have seen — with the learned layer held to the regimes
+where it has a measured positive.
+
+**Not** terminal: a learned predictor that beats the curated catalog in the natural-population regime.
+That is a closed negative (0-for-5, de-confounded) and is deliberately outside the terminal condition.
+
 ## Project Context
 - **Project ID:** dna-decode-2026-05-11
 - **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
