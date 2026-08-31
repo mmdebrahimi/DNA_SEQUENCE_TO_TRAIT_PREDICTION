@@ -10,6 +10,26 @@ _Last updated: 2026-08-29._
 
 ---
 
+## The system design (drafted 2026-08-31, awaiting ratification)
+
+`plans/Hybrid_Decoder_Architecture_Plan.md`. **The hybrid is NOT "catalog + ML predictor"** — that framing
+scored 0 survivors in the framing sweep. Measured shape: **CALL / DOUBT / EVIDENCE**.
+
+| layer | status |
+|---|---|
+| **L1 CALL** — deterministic curated rules | shipped, 110 cells |
+| **L2 DOUBT** — "this call may be incomplete, and why"; **never a competing call** | **mostly missing**, one unwired prototype |
+| **L3 EVIDENCE** — de-confounding, nulls, denominators, leakage, provenance | built, under-exposed |
+| **L4 LEARNED** — forward/inverse, orthogonal modalities; molecular + constructed ONLY | shipped, bounded |
+
+**L2 is the innovation and it is cheap.** The catalog's failure mode is COMPLETENESS, not accuracy — found
+twice the same way (gentamicin `rmt`, HIV NNRTI), both invisible until independent labels arrived. Nobody
+in the field ships "my catalog might be wrong here."
+
+**Critical path F-A → F-B.** F-A (generalize + surface the completeness signal) carries no authority and is
+ready to execute; F-B (curation) is blocked on it *by construction* — without a measured baseline you
+cannot say what curation recovered.
+
 ## Waiting on the user (authority calls — not executor tasks)
 
 1. **v2 gentamicin lock.** The frozen AMR rule matches AMRFinder `Subclass == GENTAMICIN`, which cannot
