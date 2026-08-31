@@ -37,6 +37,21 @@ _Last updated: 2026-08-29._
    `NOT_CENSUSED` means never-scored). And whether curating the 40 unrecorded colour loci is worth doing
    (fabrication hazard unless every locus is OMIA/literature-sourced).
 
+## The gene-LLM idea (raised 2026-08-30, prior-art-checked 2026-08-31)
+
+Draft anchor `wiki/idea_anchor_genomic_language_model_2026-08-30.md` (**NOT ANCHORED** — user-confirmed
+skill). Prior-art check `wiki/prior_art_genomic_language_models_2026-08-31.md`: **the field is crowded.**
+gLM / gLM2 / GenSyntax already build gene-token models, and four of this repo's findings (650M peak,
+fluency≠function, population-structure confounding, curated-rules-beat-ML) are already published.
+
+**Cheapest decisive experiment, no training run:** score off-the-shelf `tattabio/gLM2_650M` on our
+de-confounded benchmarks against the curated-catalog baseline. If a published gene-token model can't beat
+a hand-written determinant catalog on constructed variation, that answers the idea for an inference pass
+— and it is exactly the comparison the critique literature says nobody runs.
+
+**Open user questions:** token level · training objective · natural vs constructed regime (drafted answers
+in the anchor).
+
 ## Cheap untried levers (executor work, no authority needed)
 
 - ~~FBA conditional switch — continuous ratio as a ranking~~ **DONE 2026-08-29, bounded PASS.**
