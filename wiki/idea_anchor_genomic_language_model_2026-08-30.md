@@ -5,6 +5,12 @@
 > downstream should treat it as anchored.
 >
 > Drafted 2026-08-30 against the repo's own measured record, not from first principles.
+>
+> **REVISED 2026-08-31 after a prior-art check — see `wiki/prior_art_genomic_language_models_2026-08-31.md`.
+> The check materially changed this document: the field is CROWDED, the proposed model class already
+> exists with open weights (`tattabio/gLM2_650M`), and four findings this repo derived independently are
+> already published. Corrections are marked PRIOR-ART inline. Read the check before acting on any part
+> of this.**
 
 ---
 
@@ -35,7 +41,9 @@ exists and works in a bounded regime while (A) has failed five times under de-co
 Under the conventional analogy the letters are nucleotides and proteins are closer to *words*. But taken
 literally, your version describes something genuinely different from what has failed here: a model whose
 **tokens are whole genes/proteins**, and whose "text" is a genome — not a nucleotide-level model. That is
-a different model class, and it is the one this repo has *not* tested. Keep the instinct; move the label.
+a different model class from the one that failed here. Keep the instinct; move the label.
+**PRIOR-ART 2026-08-31:** that class is not untested in the world — gLM, gLM2 and GenSyntax all build it.
+It is untested **by this repo**, and untested **against an organismal endpoint** by anyone.
 
 ---
 
@@ -48,6 +56,9 @@ Nucleotide · codon · protein-domain · **whole gene/protein**.
 > repo's *working* decoders operate at (gene presence/absence, determinant catalogs, pathotype
 > resolvers), and it is the level whose LM version has **not** been falsified here. Nucleotide-level is
 > where the 0-for-5 record lives. **Risk of the alternative:** rebuilding the arm that already failed.
+> **PRIOR-ART:** pretrained gene-token weights already exist (`tattabio/gLM2_650M`), so the honest first
+> move at this level is to EVALUATE an existing model on our de-confounded benchmarks, not to pretrain
+> one. Note its best checkpoint is 650M — the same size we measured as the ceiling.
 
 **Q2 — What is the training objective?**
 Likelihood/masked-reconstruction (*fluency*) · or something function-supervised (*meaning*).
@@ -81,8 +92,12 @@ Likelihood/masked-reconstruction (*fluency*) · or something function-supervised
   parameters**.
 - **That "predict phenotype" is one task.** It is at least three: molecular effect, cellular state,
   organismal trait. Only the first currently works.
-- **That this would be novel.** Gene-level genomic language models exist in the literature.
-  **Unverified — check the prior art before assuming a clear field.**
+- ~~**That this would be novel.**~~ **RESOLVED 2026-08-31 — FALSE.** Gene-token models exist and are
+  downloadable: **gLM** (Hwang et al., *Nat Comms* 2024 — genes as ESM2 embeddings, masked prediction,
+  learned operons), **gLM2** (Tatta Bio, 3.1 Tbp corpus, best checkpoint **650M**, beats ESM2 on most
+  protein tasks, weights on HuggingFace), **GenSyntax** (49,250 prokaryote genomes, gene-product
+  descriptors; validated on essentiality), plus the whole single-cell fleet (Geneformer / scGPT /
+  scBERT / scFoundation / UCE) which tokenises **genes** by expression rank. The field is crowded.
 
 ---
 
@@ -104,15 +119,22 @@ makes the *same* error, slightly worse.** The blindness is a property of the **p
 capacity. It is not fixable by scale, by conservation filtering, or by a better likelihood model.
 
 **So: your idea is a training-objective question wearing a scale question's clothes.** "Fluency ≠
-function" is the finding. A model that predicts the next token well has learned what evolution has
+function" is the finding — **and PRIOR-ART: it is a NAMED, ACTIVE research programme, not ours.** See
+Hou et al. (*Nature Computational Science*, "Goldilocks" effect), Gordon/Lu/Abbeel (ICLR 2025, "Protein
+Language Model Fitness is a Matter of Preference"), and Pugh et al. (bioRxiv 2025, "From Likelihood to
+Fitness"), which states the diagnosis almost exactly as written here and ships a no-retraining fix with
+public code. The insight is right; it is not novel, and there is an off-the-shelf mitigation to beat. A model that predicts the next token well has learned what evolution has
 already accepted; phenotype often lives exactly where evolution has *not* been sampled. That reframing is
 the valuable part of your instinct and it is genuinely open.
 
 **Three further hard edges:**
 
 1. **"Proteins as letters" is a level error in the standard analogy — but your literal version is the
-   less-tested and more promising one.** Say "tokens are genes/proteins; a genome is the text" and the
-   idea stops colliding with the failed arm.
+   less-tested one.** Say "tokens are genes/proteins; a genome is the text" and the idea stops colliding
+   with the failed arm. **PRIOR-ART CORRECTION:** it is less-tested *for phenotype*, not untested — gLM,
+   gLM2 and GenSyntax all build it, and all target MOLECULAR or CELLULAR endpoints (co-regulation,
+   operons, protein–protein interfaces, function, gene essentiality, cell type). **None targets
+   organismal phenotype.** That, not the token level, is the actual gap.
 2. **The generative half (B) already exists here and its honest limit is instructive.** `dna-decode
    inverse` proposes edits toward a target effect — and it **ranks, it does not dose**. Magnitude needs a
    calibrator fit on the target protein's own measurements, which would make the tool unnecessary.
@@ -124,9 +146,21 @@ the valuable part of your instinct and it is genuinely open.
 
 **What I would not fund:** a nucleotide-level foundation model trained on likelihood, evaluated on
 natural-population phenotype. That is the 0-for-5 arm.
-**What is genuinely open:** a **gene/protein-token** model over **genomic context**, trained on an
-objective that is **not pure likelihood**, evaluated on **constructed variation**. Nothing in this repo
-falsifies that, and the three constraints are each earned from a measurement.
+**What is genuinely open (NARROWED 2026-08-31):** a **gene/protein-token** model over **genomic
+context**, trained on an objective that is **not pure likelihood** (or LFB-corrected), evaluated on
+**constructed variation**, **against a curated-catalog baseline**, and aimed at an **ORGANISMAL**
+endpoint — the one place every published gene-token model has not gone. Each constraint is now backed by
+published evidence, not only ours.
+
+**And the uncomfortable strategic read.** The field independently reached all four of our conclusions
+(650M peak; fluency≠function; population-structure confounding — *PLOS Biology* 2025, 24,000 genomes,
+6,740 models, **more data does not rescue it**; curated rules beating ML on divergent genomes). Our
+findings are sound and our methods are good, but the obvious versions are taken and others have more
+compute. **What the critique literature says the field LACKS is the evaluation discipline this repo
+already practises** — de-confounding by construction, margin-preserving nulls, denominator audits,
+curated-catalog comparators, refusing to report a number from a concentrated cohort. DART-Eval,
+Kedzierska and Ahlmann-Eltze are in effect papers *about the absence of that discipline*. That is a more
+defensible differentiator than another model.
 
 ---
 
@@ -135,6 +169,12 @@ falsifies that, and the three constraints are each earned from a measurement.
 **Stay in conversation and answer Q1–Q3 first.** Q1 in particular is a genuine fork — nucleotide-level
 and gene-token-level are different projects with different evidence, and probing the repo before that is
 settled would ground the wrong one.
+
+**PRIOR-ART ADDENDUM:** whatever the answers, the cheapest decisive experiment is now clear and it is
+not a training run — **take `tattabio/gLM2_650M` off the shelf and score it on this repo's own
+de-confounded benchmarks against the curated-catalog baseline.** If a published gene-token model cannot
+beat a hand-written determinant catalog on constructed variation, that answers the whole idea for the
+price of an inference pass, and it is exactly the comparison the critique literature says nobody runs.
 
 Then `/probe` — specifically against the closed-negative artifacts, so the design is forced to state how
 it differs from each: `wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md`,
