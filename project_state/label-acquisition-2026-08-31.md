@@ -9,6 +9,11 @@
 - **Captured:** 2026-08-31
 - **Originating goal:** Address the binding constraint — labels, not models — by identifying and, if authorized, acquiring a label source that clears the eight rejection gates by construction
 - **Refined goal:** Maintain a screened, ranked list of candidate label sources scored against the ten rejection gates, so that IF the user authorizes an acquisition the target is already chosen and its gate profile already known. Executor scope is screening only; acquisition is authority.
+- **SCOPE CORRECTION 2026-08-31:** screening PEAR reclassified it OUT of this family's premise. PEAR is
+  constructed variation with a continuous molecular endpoint (`constructed_molecular` -> regime `WORKS`),
+  it is PUBLIC and FREE, and it therefore neither needs acquisition authority nor addresses the AMR label
+  wall. It is a candidate **L4 forward-cell replication** substrate. This family retains the screening
+  METHOD; PEAR itself belongs to the forward/inverse line. See `wiki/pear_substrate_screen_2026-08-31.md`.
 - **Horizon (months):** 12
 - **Schema:** project-schema 0.1
 - **Family of:** dna-decode-2026-05-11 · **blocked_by:** (none — but its terminal move is external/authority)
@@ -66,17 +71,32 @@ When a label source is worth acquiring, the target is already screened, verified
 | E2 | Ten reusable rejection gates exist and screen candidates | wiki/negative_results_map_2026-06-13.md | high | 2026-08-26 |
 | E3 | The prospective lock produced real scores on 63 post-lock isolates | wiki/prospective_lock_first_accrual_2026-08-24.md | high | 2026-08-24 |
 | E4 | Constructed variation is the regime with measured positives | wiki/organism_gp_regime_correction_2026-08-29.md | high | 2026-08-29 |
+| E5 | PEAR BioProject PRJNA687219 resolves: E. coli K-12 MG1655, 45 SRA experiments, 478 Gbases raw reads | NCBI BioProject (fetched) | high | 2026-08-31 |
+| E6 | PEAR is constructed single-gene variants w/ continuous relative-growth readout -> constructed_molecular regime | wiki/pear_substrate_screen_2026-08-31.md | high | 2026-08-31 |
+| E7 | PEAR clears every applicable rejection gate; the blocker is ARTIFACT FORMAT, not a gate | wiki/pear_substrate_screen_2026-08-31.md | high | 2026-08-31 |
 <!-- project-state:end:evidence -->
 
 ### Unknowns
-- **U1** — Whether PEAR's accessions actually resolve, to the right organism, with data attached. UNVERIFIED. A paper's cited accessions have been empty or wrong-organism before; verify 2-3 on both ENA and NCBI BEFORE any multi-hour fetch.
-- Whether PEAR's growth measurements survive gate G6 (MIC censoring) and G10 (rule scoreability against genotype).
+- ~~**U1** — Whether PEAR's accessions resolve~~ **RETIRED 2026-08-31.** BioProject `PRJNA687219`
+  resolves: *E. coli* K-12 MG1655 (taxid 511145), correct title, 45 SRA experiments, Sun Yat-sen
+  University. GitHub `woson2020/CTXM-14` exists. The discipline paid, but not as written — the
+  accessions are fine; the ARTIFACT FORMAT is the blocker (see U4).
+- **U4 (new)** — Whether the per-variant fitness values are extractable. The repo's only data files are
+  two `.RData` workspaces; `Data_for_Figure2.RData` is a serialized **ggplot2 plot object** (`Figure.2A`),
+  not a table — both `pyreadr` and `rdata` fail on its bytecode/weakrefs. Needs R (not installed;
+  C: at 99%), or the journal supplementary tables (UNREAD — PMC cookie-gated, Oxford truncated).
+- **U5 (new)** — Whether the plot object carries all ~23,000 variants or only the Figure-2A subset.
+- **U6 (new)** — G6 censoring: a selection-growth assay has a floor. Run `assay_degeneracy()` from
+  `scripts/forward_inverse_roundtrip.py` BEFORE believing any score (the CcdB lesson: 79.3% tied at
+  ceiling posted the sweep's BEST number).
 - Whether any acquisition target is reachable without money.
 
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
 |---|---|---|---|
-| H1 | PEAR clears all ten gates | open | (unscored) |
+| H1 | PEAR clears all ten gates | confirmed | 2026-08-31 |
+| H4 | PEAR is an L1 label source that helps the AMR label wall | falsified | 2026-08-31 |
+| H5 | PEAR's processed per-variant fitness table is directly downloadable | falsified | 2026-08-31 |
 | H2 | A free path exists that clears the label wall (prospective accrual) | confirmed | 2026-08-24 |
 | H3 | Some acquisition target is reachable without money | open | (untested) |
 <!-- project-state:end:hypotheses -->
@@ -92,7 +112,7 @@ When a label source is worth acquiring, the target is already screened, verified
 ### Pending Decisions
 | Decision | Proposer | Blocker | Notes |
 |---|---|---|---|
-| Authorize a PEAR acquisition? | Soraya | **user authority** + possible money | ~23,000 E. coli, single-copy blaCTX-M-14 variants, measured growth |
+| RESOLVED 2026-08-31: Authorize a PEAR acquisition? | Soraya | none -- moot | PEAR is PUBLIC and FREE (SRA + GitHub, no DUA). The authority gate was a consequence of misclassifying it as an acquisition. |
 | Authorize any non-public wet-lab/clinical label source? | Soraya | **user authority** + money | clears the label gates by construction |
 <!-- project-state:end:pending-decisions -->
 
@@ -133,6 +153,9 @@ Attempt budget: 3.
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
 | 1 | 2026-08-31 | propose | ledger created (project-init protocol applied by hand) | screening scope only; acquisition is authority |
+| 2 | 2026-08-31 | research | screen PEAR: resolve accessions + classify its regime | RECLASSIFIED -- not an L1 label source and NOT an acquisition; see wiki/pear_substrate_screen_2026-08-31.md |
+| 3 | 2026-08-31 | research | score PEAR against all ten rejection gates | clears every gate that applies; G6 (censoring) is the one open risk |
+| 4 | 2026-08-31 | research | verify the processed data is reachable | BLOCKED on format: the GitHub .RData is a serialized ggplot object, not a table; R not installed |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

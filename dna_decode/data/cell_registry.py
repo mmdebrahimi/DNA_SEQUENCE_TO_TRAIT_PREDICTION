@@ -71,7 +71,12 @@ class CellContract:
     abstention_vocab: AbstentionVocab  # this cell's abstention KIND, collapsed to the controlled vocab
     native_abstention: str     # the cell's own raw in-tree abstention term
     falsifier_ref: str         # path to a falsifier script, or "none" (DECLARED, not executed)
-    incoming_data_gate: str    # which of the 8 rejection gates apply, or "n/a" (DECLARED)
+    # which of the TEN rejection gates apply, or "n/a" (DECLARED, never executed here).
+    # Was "8" until 2026-08-31: G9/G10 were added 2026-08-26 and 17 cells already declare them
+    # (7 x "G9,G10", 7 x "G9", 3 x "G10"), so the count was stale against data in this same repo.
+    # G1-G8 gate whether a usable LABEL exists; G9-G10 gate whether the decoder's own rule is
+    # scoreable against a genotype at all. See wiki/negative_results_map_2026-06-13.md.
+    incoming_data_gate: str
     demotion_rule: str         # free-text v0: the trigger that would demote this cell's tier
     # AMR-only surface fields (carried so surface_index() re-exports the surface-shaped dict from the registry):
     engine: str | None = None

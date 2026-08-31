@@ -140,3 +140,60 @@ def test_position_novelty_signal_is_quiet_on_an_empty_genotype():
     sig = position_novelty_signal([], "hiv-nnrti-rt")
     assert sig.tier == NONE
     assert sig.evidence["n_catalog_positions"] > 0, "precondition: the cell has a real catalog"
+
+
+# --- AMR-arm firing rate: predeclared categories, never called a false-positive rate ---
+
+def _spec(rows):
+    import sys as _s
+    _s.path.insert(0, str(ROOT / "scripts"))
+    from doubt_layer_per_cell import amr_arm_specificity
+    return amr_arm_specificity(rows)
+
+
+def test_a_drug_with_no_confirmed_gap_is_unconfirmed_never_clean():
+    """Both known gaps were invisible until independent labels arrived, so absence of a confirmed gap
+    is absence of EVIDENCE. Calling it clean would assert the negative this project has twice been
+    wrong about."""
+    s = _spec([{"drug": "tetracycline", "status": "scored", "n_families_uncounted": 89,
+                "n_strong": 0, "n_raw_signature": 0}])
+    assert s["predeclared_categories"]["unconfirmed"] == ["tetracycline"]
+    assert "clean" not in str(s["predeclared_categories"]).lower()
+    assert "NOT a false-positive rate" in s["interpretation"]
+    assert "ambiguous" in s["interpretation"].lower()
+
+
+def test_the_confirmed_gap_drug_is_scored_separately_from_the_rest():
+    """Pooling the drug that HAS the gap with the drugs that do not would hide both numbers."""
+    s = _spec([
+        {"drug": "gentamicin", "status": "scored", "n_families_uncounted": 131, "n_strong": 1,
+         "n_raw_signature": 1},
+        {"drug": "ciprofloxacin", "status": "scored", "n_families_uncounted": 125, "n_strong": 0,
+         "n_raw_signature": 2},
+    ])
+    assert s["confirmed_gap_drugs"] == {"n_drugs": 1, "n_families_screened": 131, "n_strong": 1}
+    assert s["unconfirmed_drugs"]["n_strong_after_correction"] == 0
+    assert s["unconfirmed_drugs"]["correction_removed"] == 2
+
+
+def test_an_unlabelled_drug_is_unassessable_not_counted_as_a_pass():
+    """Oxacillin has no labels; folding it into either bucket would fabricate evidence."""
+    s = _spec([{"drug": "oxacillin", "status": "no_labels", "n_families_uncounted": 401}])
+    assert s["predeclared_categories"]["unassessable_no_labels"] == ["oxacillin"]
+    assert s["unconfirmed_drugs"]["n_families_screened"] == 0
+
+
+def test_the_real_run_fires_once_across_every_screened_family():
+    """The measured result, pinned. If the screen ever fires on an unconfirmed drug that is a real
+    finding needing adjudication -- it must fail loudly, not pass unnoticed."""
+    import json
+    hits = sorted(ROOT.glob("wiki/doubt_layer_per_cell_*.json"))
+    if not hits:
+        pytest.skip("per-cell artifact not generated on this checkout")
+    s = json.loads(hits[-1].read_text(encoding="utf-8")).get("amr_arm_specificity")
+    if not s:
+        pytest.skip("artifact predates the specificity block")
+    assert s["confirmed_gap_drugs"]["n_strong"] == 1
+    assert s["unconfirmed_drugs"]["n_strong_after_correction"] == 0, (
+        "the screen fired on a drug with no confirmed gap -- adjudicate it, do not silence it")
+    assert s["unconfirmed_drugs"]["correction_removed"] >= 1, "the correction must be doing work"

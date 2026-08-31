@@ -160,6 +160,7 @@ Attempt budget: 3.
 | 5 | 2026-08-31 | edit-local-code | step 3: doubt block wired at the _target_site_record seam | verified on the real CLI; guard raises rather than emit a call |
 | 6 | 2026-08-31 | edit-local-code | step 4: trust_surface.doubt_layer_for, augment-only | badge-with-vs-without diff green + non-vacuity pinned |
 | 7 | 2026-08-31 | run-tests | full suite | 4029 passed, 0 failed; frozen surface byte-unchanged; lock re-verified |
+| 8 | 2026-08-31 | propose | /project-state --update-last-evaluation | 3 of 3 MVP criteria MET (doubt module + tests; guarded doubt block in the record; per-cell artifact vs the 0.604 incumbent). 1 unknown retired: the rmt_like heuristic's false-positive rate is measured -- 4 of 5 raw-signature hits are noise. Corrects a contradiction: this section said 1-of-3-not-yet-met while Progress proxy said 3/3. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
@@ -168,4 +169,4 @@ Attempt budget: 3.
 
 ## Last Evaluation (v0.2 placeholder — not enforced in v0.1)
 - **Date:** 2026-08-31
-- **Progress signal:** 1 of 3 MVP criteria addressed (step 1 shipped); criteria themselves not yet met.
+- **Progress signal:** 3 of 3 MVP criteria MET (doubt module + tests; guarded doubt block in the record; per-cell artifact vs the 0.604 incumbent). 1 unknown retired: the rmt_like heuristic's false-positive rate is measured -- 4 of 5 raw-signature hits are noise. Corrects a contradiction: this section said 1-of-3-not-yet-met while Progress proxy said 3/3.

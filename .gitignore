@@ -120,3 +120,6 @@ wiki/gemme_holdout_tables.json
 # downloaded reference papers (regenerable, ~87MB of duplicates)
 wiki/*.pdf
 wiki/*.full
+
+# PEAR screening download (public, regenerable; a ggplot object, not a usable table)
+data/raw/pear/

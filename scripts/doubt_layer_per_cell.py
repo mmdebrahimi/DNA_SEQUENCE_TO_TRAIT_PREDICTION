@@ -95,6 +95,55 @@ def score_amr_arm(screen: dict, rates: dict) -> list[dict]:
     return out
 
 
+def amr_arm_specificity(amr: list[dict]) -> dict:
+    """How often does the AMR arm fire where no gap has ever been confirmed?
+
+    THE CATEGORIES ARE PREDECLARED AND DELIBERATELY NOT CALLED "CLEAN". A drug with no confirmed
+    completeness gap is `unconfirmed`, not gap-free -- both known gaps in this project were invisible
+    until an independent label set arrived, so absence of a confirmed gap is absence of evidence. A
+    STRONG hit on an `unconfirmed` drug is therefore AMBIGUOUS between a false positive and a new
+    discovery, and nothing here can separate them without new labels. Reporting it as a false-positive
+    RATE would assert the negative this project has twice been wrong about.
+
+    What the number does bound: the screen's firing rate on the surface where no gap is known. Zero
+    hits across that surface is the honest statement -- it is compatible with a specific screen AND
+    with undiscovered gaps, and says so.
+    """
+    confirmed = {d for d, _fam in KNOWN_AMR_GAPS}
+    conf_rows = [c for c in amr if c["drug"] in confirmed and c.get("status") == "scored"]
+    unconf = [c for c in amr if c["drug"] not in confirmed and c.get("status") == "scored"]
+    unassessable = [c["drug"] for c in amr if c.get("status") != "scored"]
+
+    fam_unconf = sum(c.get("n_families_uncounted") or 0 for c in unconf)
+    strong_unconf = sum(c.get("n_strong") or 0 for c in unconf)
+    raw_unconf = sum(c.get("n_raw_signature") or 0 for c in unconf)
+    return {
+        "predeclared_categories": {
+            "confirmed_gap": sorted(confirmed),
+            "unconfirmed": sorted(c["drug"] for c in unconf),
+            "unassessable_no_labels": sorted(unassessable),
+        },
+        "confirmed_gap_drugs": {
+            "n_drugs": len(conf_rows),
+            "n_families_screened": sum(c.get("n_families_uncounted") or 0 for c in conf_rows),
+            "n_strong": sum(c.get("n_strong") or 0 for c in conf_rows),
+        },
+        "unconfirmed_drugs": {
+            "n_drugs": len(unconf),
+            "n_families_screened": fam_unconf,
+            "n_strong_after_correction": strong_unconf,
+            "n_raw_signature_before_correction": raw_unconf,
+            "correction_removed": raw_unconf - strong_unconf,
+        },
+        "interpretation": (
+            f"Across {fam_unconf} candidate families on {len(unconf)} drugs with no CONFIRMED "
+            f"completeness gap, the corrected screen fires {strong_unconf} time(s); the raw purity "
+            f"signature fired {raw_unconf}. This is NOT a false-positive rate -- a hit here would be "
+            "ambiguous between a false positive and an undiscovered gap, and no evidence in hand can "
+            "separate those."),
+    }
+
+
 def read_target_site_arm() -> list[dict]:
     """Reproduce the position-novelty arm from its committed artifact. Never recomputed here."""
     p = WIKI / "hiv_blindspot_position_novelty_2026-07-11.json"
@@ -141,6 +190,7 @@ def main() -> int:
             "note": ("One known gap exists in this arm, so this is a single case, NOT a rate. It "
                      "bounds nothing about gaps that have never been independently confirmed."),
         },
+        "amr_arm_specificity": amr_arm_specificity(amr),
     }
 
     print(f"\nincumbent: {INCUMBENT['metric']} = {INCUMBENT['value']} (lift {INCUMBENT['lift']})\n")
@@ -163,6 +213,19 @@ def main() -> int:
     for c in tgt:
         print(f"  {c['drug']:16} {c['sens_on_blindspot']:>6.3f} {c['fp_on_catalog_negative_S']:>6.3f} "
               f"{c['lift']:>6.2f}  {c['powered']}")
+
+    sp = out["amr_arm_specificity"]
+    u, c = sp["unconfirmed_drugs"], sp["confirmed_gap_drugs"]
+    print(f"\nAMR-arm firing rate (predeclared categories, NOT a false-positive rate)")
+    print(f"  confirmed-gap drugs   {c['n_drugs']} drug(s), {c['n_families_screened']:>4} families "
+          f"-> {c['n_strong']} STRONG")
+    print(f"  unconfirmed drugs     {u['n_drugs']} drug(s), {u['n_families_screened']:>4} families "
+          f"-> {u['n_strong_after_correction']} STRONG "
+          f"(raw signature fired {u['n_raw_signature_before_correction']}; "
+          f"correction removed {u['correction_removed']})")
+    print(f"  unassessable          {sp['predeclared_categories']['unassessable_no_labels']}")
+    print("  A hit on an unconfirmed drug would be AMBIGUOUS between a false positive and a new")
+    print("  gap -- both known gaps were invisible until independent labels arrived.")
 
     dest = WIKI / f"doubt_layer_per_cell_{out['generated']}.json"
     dest.write_text(json.dumps(out, indent=2), encoding="utf-8")

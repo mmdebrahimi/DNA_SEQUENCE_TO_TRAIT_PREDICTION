@@ -185,5 +185,34 @@
     "n_known_gaps": 1,
     "n_recovered": 1,
     "note": "One known gap exists in this arm, so this is a single case, NOT a rate. It bounds nothing about gaps that have never been independently confirmed."
+  },
+  "amr_arm_specificity": {
+    "predeclared_categories": {
+      "confirmed_gap": [
+        "gentamicin"
+      ],
+      "unconfirmed": [
+        "ceftriaxone",
+        "ciprofloxacin",
+        "meropenem",
+        "tetracycline"
+      ],
+      "unassessable_no_labels": [
+        "oxacillin"
+      ]
+    },
+    "confirmed_gap_drugs": {
+      "n_drugs": 1,
+      "n_families_screened": 131,
+      "n_strong": 1
+    },
+    "unconfirmed_drugs": {
+      "n_drugs": 4,
+      "n_families_screened": 747,
+      "n_strong_after_correction": 0,
+      "n_raw_signature_before_correction": 4,
+      "correction_removed": 4
+    },
+    "interpretation": "Across 747 candidate families on 4 drugs with no CONFIRMED completeness gap, the corrected screen fires 0 time(s); the raw purity signature fired 4. This is NOT a false-positive rate -- a hit here would be ambiguous between a false positive and an undiscovered gap, and no evidence in hand can separate those."
   }
 }
