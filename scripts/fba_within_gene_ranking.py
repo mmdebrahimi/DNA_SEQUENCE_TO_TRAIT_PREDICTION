@@ -363,6 +363,31 @@ def score(ratios: dict, cond_genes: list, keys: list[str] | None = None) -> dict
         if k_pred == k_true and 0 < k_true < n:
             chance_hits += 1.0 / comb(n, k_true)
 
+    # SECOND NULL, and a strictly harder one. The comb-based null treats conditions as INTERCHANGEABLE:
+    # it asks only "how many placements of k essential conditions are there". If true essentiality is
+    # concentrated in a few substrates AND the model tends to break on those same substrates, a model
+    # could beat that null by learning the marginal shape rather than the per-gene placement.
+    # This one shuffles the TRUTH matrix preserving BOTH margins -- every gene keeps its number of
+    # essential conditions and every condition keeps its number of essential genes -- while the model's
+    # predictions stay fixed. It reuses the repo's tested curveball implementation, which raises if a
+    # margin ever breaks rather than silently returning an invalid null.
+    from dna_decode.fba.nulls import margin_preserving_null
+
+    gene_ids = [g["gene_id"] for g in per_gene]
+    conds = tuple(keys)
+    # `nulls` consumes {condition: {gene: bool}} -- the orientation every FBA caller uses. Building it
+    # gene-keyed raised KeyError on the first shuffle, which is the right way for this to fail.
+    truth_calls = {c: {g["gene_id"]: g["_ess"][i] for g in per_gene} for i, c in enumerate(keys)}
+    model_call = {g["gene_id"]: [r < DEPLOYED_FRAC for r in g["_rat"]] for g in per_gene}
+    committing = {g["gene_id"] for g in per_gene if len(set(model_call[g["gene_id"]])) > 1}
+
+    def _exact_hits(shuffled_truth: dict) -> float:
+        return float(sum(1 for gid in committing
+                         if model_call[gid] == [bool(shuffled_truth[c][gid]) for c in keys]))
+
+    marginal = margin_preserving_null(gene_ids, conds, truth_calls, _exact_hits,
+                                      n_draws=200, seed0=0) if committing else None
+
     strata = {}
     for name in ("flat", "varies_subthr", "commits"):
         members = [g for g in per_gene if g["stratum"] == name]
@@ -384,6 +409,7 @@ def score(ratios: dict, cond_genes: list, keys: list[str] | None = None) -> dict
             "strata": strata,
             "deployed_exact_set_recomputed": sum(1 for g in per_gene if g["deployed_hit"]),
             "chance_exact_hits_among_committing": round(chance_hits, 4),
+            "marginal_preserving_null": marginal,
             "oracle_relative_exact_set": sum(hits),
             "oracle_relative_exact_set_nonflat": sum(
                 h for h, g in zip(hits, per_gene) if not g["flat"]),
@@ -449,6 +475,7 @@ def main() -> int:
            "strata": primary["strata"],
            "deployed_exact_set_recomputed": primary["deployed_exact_set_recomputed"],
            "chance_exact_hits_among_committing": primary["chance_exact_hits_among_committing"],
+           "marginal_preserving_null": primary["marginal_preserving_null"],
            "oracle_relative_exact_set": primary["oracle_relative_exact_set"],
            "oracle_relative_exact_set_nonflat": primary["oracle_relative_exact_set_nonflat"],
            "deployed_exact_set_this_axis": deployed_exact_set(args.axis),
@@ -499,8 +526,12 @@ def main() -> int:
         print(f"  WHEN THE MODEL COMMITS it is exactly right "
               f"{c['deployed_exact']}/{c['n_genes']} = {c['deployed_exact'] / c['n_genes']:.0%}, "
               f"and it commits on {c['n_genes'] / out['n_genes_scored']:.0%} of genes.")
-        print(f"  CHANCE baseline: a random placement keeping the model's own essential-condition count "
-              f"would land {out['chance_exact_hits_among_committing']} exact hits.")
+        print(f"  CHANCE baseline (conditions interchangeable): {out['chance_exact_hits_among_committing']}"
+              f" expected exact hits.")
+        mp = out["marginal_preserving_null"]
+        if mp and mp.get("mean") is not None:
+            print(f"  CHANCE baseline (BOTH margins preserved, {mp['n_draws']} curveball draws): "
+                  f"mean {mp['mean']}  sd {mp.get('sd')}  p95 {mp.get('p95')}  max {mp['max']}")
     print(f"  flat fraction ........... {out['flat_fraction']}  must-hold reproduced: {must_hold}")
     print(f"  repeats ................. {vals}  spread {spread} vs margin-over-bar {margin} "
           f"-> spread<margin: {agree}")

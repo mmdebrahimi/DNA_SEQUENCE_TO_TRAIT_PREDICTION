@@ -214,3 +214,30 @@ def test_chance_null_ignores_genes_whose_predicted_count_differs_from_truth():
 def test_chance_null_is_one_over_n_choose_k_when_the_counts_agree():
     out = _score_one([True, False, False, False], [0.001, 0.6, 0.7, 0.8])     # predicts 1, truth is 1
     assert out["chance_exact_hits_among_committing"] == round(1 / 4, 4)
+
+
+# --- the margin-preserving null: conditions are NOT interchangeable ---
+
+def test_marginal_null_uses_the_condition_keyed_orientation():
+    """The nulls module consumes {condition: {gene: bool}} -- the orientation every FBA caller uses.
+    Building it gene-keyed raised KeyError on the first shuffle. This pins the wiring end-to-end."""
+    out = _score_one([True, False, False, False], [0.001, 0.6, 0.7, 0.8])
+    mp = out["marginal_preserving_null"]
+    assert mp is not None and mp["n_draws"] > 0
+    assert mp["mean"] is not None
+
+
+def test_marginal_null_is_absent_when_nothing_commits():
+    """With no committing gene there is no exact-set question, so the null is None rather than a
+    meaningless 0.0 that would read as 'the model beat chance'."""
+    out = _score_one([True, False, False, False], [0.5, 0.5, 0.5, 0.5])   # flat -> constant call
+    assert out["strata"]["commits"]["n_genes"] == 0
+    assert out["marginal_preserving_null"] is None
+
+
+def test_the_two_nulls_are_reported_separately():
+    """They answer different questions -- interchangeable-conditions vs both-margins-preserved -- and the
+    stricter one changed a verdict (media4's 3 observed sits at the margin-preserving null's own max)."""
+    out = _score_one([True, False, False, False], [0.001, 0.6, 0.7, 0.8])
+    assert "chance_exact_hits_among_committing" in out
+    assert "marginal_preserving_null" in out

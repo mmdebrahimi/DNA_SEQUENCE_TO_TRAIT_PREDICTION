@@ -295,3 +295,98 @@ the wrong place. Four measurements, four different metrics, same shape.
 
 Reproduce: `uv run python scripts/fba_within_gene_ranking.py --axis carbon` — the anatomy block prints
 with every run.
+
+---
+
+# Adversarial review, 2026-08-30: the mechanism was unnamed, one null was too easy, and one axis fails
+
+An adversarial pass over the committed conclusions produced three findings. Two are corrections to
+what I published; one concern I raised turned out to be refuted by measurement.
+
+## 1. ACCEPTED, and the most valuable finding: the mechanism is INFEASIBILITY, and I did not name it
+
+Verified in `wiki/fba_conditional_carbon_2026-08-13.json` — an independently produced, previously
+committed artifact:
+
+| | |
+|---|---:|
+| committing genes | 33 |
+| committing genes touching a nonoptimal/infeasible cell | **32** |
+| exact-set matches | 23 |
+| exact matches whose essential calls are **ALL** suspect | **23 / 23** |
+
+**Every single exact match is driven entirely by infeasibility events.** Under this repo's prior
+finding (an infeasible deletion LP is genuine essentiality — hard ATPM floor, 38 of 39 such cells
+experimentally confirmed) that is not an artifact. It is the **mechanism**, and calling the result
+"a high-precision conditional predictor" invited a general reading it does not support.
+
+**Corrected phrasing:** *the model's conditional signal is essentially all hard feasibility breaks —
+deleting the gene makes growth infeasible on some media and not others. Where that happens it names
+the exact set ~70% of the time. Everywhere else it is silent.*
+
+This also explains the rest better than my framing did: "flat" means no feasibility break anywhere on
+the axis, and the signal is **binary, not graded** — which independently predicts that a ranking rule
+cannot help. It **strengthens** "do not build the relative rule" rather than weakening it.
+
+## 2. ACCEPTED: the chance null treated conditions as interchangeable
+
+The original null asks only "how many placements of *k* essential conditions exist" — `1/C(n,k)`. If
+true essentiality concentrates in a few substrates *and* the model tends to break on those same
+substrates, a model could beat that null by matching the marginal shape rather than the per-gene
+placement.
+
+Added a **second, strictly harder null**: shuffle the TRUTH matrix preserving **both** margins (every
+gene keeps its essential-condition count, every condition keeps its essential-gene count) with the
+model's predictions held fixed. Reuses the repo's tested `nulls.curveball_shuffle`, which raises if a
+margin ever breaks rather than returning an invalid null. 200 draws.
+
+| axis | observed | interchangeable null | **both-margins null** (mean / p95 / max) | verdict |
+|---|---:|---:|---|---|
+| media4 | 3 | 0.75 | 1.275 / 2.0 / **3.0** | **NOT distinguishable — the null's max equals the observed** |
+| carbon | **23** | 0.78 | 1.035 / 3.0 / 4.0 | clears it decisively |
+| nitrogen | **8** | 0.62 | 1.615 / 3.0 / 4.0 | clears it |
+
+The concern was directionally right — the harder null is higher on all three axes — and **immaterial
+on carbon** (23 against a 200-draw maximum of 4). But it **changes the verdict on media4**: its 3
+observed hits sit exactly at the stricter null's own maximum. I had already flagged media4's "75%" as
+meaningless on n=4; it is now quantitatively confirmed as not significant, and should not be quoted.
+
+## 3. REFUTED BY MEASUREMENT: the tiny-spread concern runs the other way
+
+The worry: `FLAT_EPS = 1e-9` may count numerical noise as signal, inflating the primary. Sweeping the
+spread floor (mean within-gene AUROC over non-flat genes):
+
+| axis | ≥1e-9 | ≥1e-6 | ≥1e-4 | ≥1e-2 |
+|---|---|---|---|---|
+| media4 | 0.7308 (26) | 0.7308 (26) | 0.7308 (26) | **0.7500** (24) |
+| carbon | 0.8144 (68) | 0.8144 (68) | 0.8163 (67) | **0.8345** (62) |
+| nitrogen | 0.7088 (38) | 0.7088 (38) | 0.7280 (37) | **0.8196** (29) |
+
+**Tightening the floor RAISES the primary on all three axes** — the near-noise genes were diluting the
+result, not inflating it, so the published numbers are conservative. Carbon's non-flat spreads have
+median 0.178 and max 1.0; only 2 of 69 fall below 1e-4.
+
+(The `≥1e-9` column shows carbon n=68 against the published n=69 because the artifact's `spread` field
+is rounded to 6dp and one gene's true spread lies between 1e-9 and 5e-7. A reporting-precision
+artifact, not a second number.)
+
+## 4. PARTIALLY ACCEPTED: demote distinct-growth fraction, lead with CV
+
+**Distinct-growth fraction is mechanically confounded with condition count** — with 4 conditions,
+all-distinct is nearly automatic; with 25 it is not. That half of the dynamic-range evidence is weak
+and is demoted. **CV is scale-free and not mechanically tied to condition count**, and is
+independently monotonic (0.574 / 0.473 / 0.308), so it carries the claim.
+
+The prose is also softened: **"pick an axis whose wildtype growth spreads" is a pre-run TRIAGE SCREEN,
+not a predictor.** Knockout flatness can also be driven by gene-set composition, substrate biology and
+label source, none of which n=3 axes can separate. The script's own `honest_limit` already said n=3
+cannot establish a relationship; the prose now stays at that level.
+
+## Still open
+
+- Of the 10 carbon committing MISSES, are they also infeasibility-driven but on the wrong substrate,
+  or are they the genuinely graded threshold cases?
+- Are condition marginals highly uneven across the 25 carbon sources, especially for singleton true
+  essentiality? The margin-preserving null bounds the answer's consequence but does not describe it.
+- Does ratio-spread filtering hide absolute-growth issues, where a low wildtype growth makes a small
+  absolute change look like a large ratio change?
