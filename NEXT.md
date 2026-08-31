@@ -77,6 +77,35 @@ refuses** (natural x organism x ZERO-SHOT); a SUPERVISED natural-population prop
 made three times. `uv run python scripts/regime_map.py` refuses to certify a regime whose cited
 artifact is missing. Screen before proposing a learned decoder.
 
+## PEAR is reclassified — F-E's premise was wrong (2026-08-31)
+
+`wiki/pear_substrate_screen_2026-08-31.md`. Screened after a review flagged the ranking. Two corrections:
+
+- **Not an L1 label source.** ~200k constructed MG1655 strains, single-copy `blaCTX-M-14` at a fixed
+  chromosomal site, **relative growth** for ~23k under cefotaxime/ceftazidime, >90% of single mutations.
+  That is `constructed_molecular` → regime **`WORKS`** (TEM-1 path, Spearman 0.761). **It cannot address
+  the AMR label wall**, which lives in the natural×organism regime.
+- **Not an acquisition.** Public and free — SRA + GitHub, no DUA, no money. The authority gate was a
+  consequence of the misclassification.
+
+**What it is:** the natural external replication of the one working learned regime — same shape as TEM-1,
+different β-lactamase, different drugs. It **clears every applicable rejection gate**.
+
+**The blocker is ARTIFACT FORMAT, not availability.** `PRJNA687219` resolves correctly but is 478 Gbases
+of raw reads; the GitHub repo has no CSV/TSV at all — its two `.RData` files are serialized **ggplot2
+plot objects** (`Figure.2A`), which is why `pyreadr` and `rdata` both fail. Needs R (not installed;
+**C: at 99%**). **Cheapest untried route: the journal supplementary tables** (unread — PMC cookie-gated).
+**Run `assay_degeneracy()` before believing any PEAR score** — a selection-growth assay has a floor, and
+CcdB (79.3% tied at ceiling) posted the sweep's best number for exactly that reason.
+
+## Doubt-layer firing rate measured (2026-08-31)
+
+**0 STRONG across 747 candidate families on 4 drugs with no confirmed gap**, against **1 STRONG across
+131 families** on the one drug that has one. The raw signature fired 4 times on those same 747; the
+family-wise correction removed all 4. **Deliberately NOT a false-positive rate** — a hit on an
+unconfirmed drug is ambiguous between a false positive and an undiscovered gap. Categories are
+predeclared `confirmed` / `unconfirmed` / `unassessable`, never "clean".
+
 ## Waiting on the user (authority calls — not executor tasks)
 
 1. **v2 gentamicin lock.** The frozen AMR rule matches AMRFinder `Subclass == GENTAMICIN`, which cannot
