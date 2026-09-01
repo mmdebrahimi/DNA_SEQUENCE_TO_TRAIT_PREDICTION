@@ -2,7 +2,10 @@
 
 **Verdict: PEAR is a constructed-variation DMS for the L4 forward cell, NOT a label source for the
 deterministic AMR decoder — and NOT an acquisition. It is public and free. It clears every rejection
-gate that applies to it. The blocker is ARTIFACT FORMAT.**
+gate that applies to it **except G6, which is UNSCREENED** — so the honest status is *incomplete*, not
+*cleared*. (Corrected 2026-09-01, when `scripts/screen_candidate_gates.py` re-derived this verdict
+mechanically. The gate table and honest-limits section below always said G6 was open; this headline
+overstated it.) The blocker is ARTIFACT FORMAT.**
 
 Screened 2026-08-31 per F-E's recorded discipline: *resolve accessions before recommending, never after.*
 That discipline paid — but not in the way it was written for.

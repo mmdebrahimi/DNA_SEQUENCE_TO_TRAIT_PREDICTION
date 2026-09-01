@@ -101,7 +101,10 @@ Machinery built and load-bearing; reach is the gap — most of it is visible onl
 Every disclosure layer is CLI-reachable and every cell answers "what could this not have seen?" in machine-readable form.
 
 ### Progress proxy
-- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-08-31: 2 / 2 MVP criteria met (reachability test suite + layer inventory artifact). C1 + C2 met at record AND human level; C3 (rejection gates as a runnable screen) remains open.
+- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-08-31: 2 / 2 MVP criteria met (reachability test suite + layer inventory artifact). C1 + C2 met at record AND human level. **2026-09-01: C3 MET** — the ten gates run
+(`scripts/screen_candidate_gates.py`), refuse on the 2 judgment gates, and reproduce both committed hand
+verdicts; the reproduction check caught a G2 applicability-ordering bug and an overstated PEAR headline.
+All three refinement candidates are now closed; residual work is n=2 schema breadth, not the mechanism.
 
 ### Candidate next actions
 Actions 1-3 completed 2026-08-31 (Action Log rows 2-4). C1 + C2 are met at the record level AND the
@@ -109,7 +112,8 @@ human-readable level; the follow-on set is below.
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | C3: make the ten rejection gates runnable as a screen, not just a memo | edit-local-code | high | high | high | rest of horizon |
+| 1 | DONE 2026-09-01 — C3 shipped: `eval/rejection_gates.py` + `scripts/screen_candidate_gates.py --verify` | edit-local-code | high | high | resolved | — |
+| 1b | Screen a THIRD candidate (n=2 worked examples is the schema's stated limit) | research | med | high | med | 1-2hr |
 | 2 | Check reachability of the NON-report-card surfaces (hiv/tb/pgx cards) | research | med | med | med | 1-2hr |
 | 3 | Decide whether the doubt/lineage lines belong in `dna-decode` routes too | propose | low | med | med | 1-2hr |
 <!-- project-state:end:candidate-actions -->
@@ -134,6 +138,7 @@ Attempt budget: 3.
 | 2 | 2026-08-31 | research | enumerate the 4 card disclosure layers vs CLI reachability | 2 of 4 card-only; prospective surfaced only when it CONTRADICTED |
 | 3 | 2026-08-31 | edit-local-code | attach lineage + source_concentration + full prospective to trust_block | all 4 now record-reachable; augment-only verified by diff |
 | 4 | 2026-08-31 | edit-local-code | human-readable renderers (doubt / lineage / source concentration) | all 4 now print; a JSON-only disclosure is not one |
+| 5 | 2026-09-01 | edit-local-code | C3: rejection gates as a runnable screen (eval/rejection_gates.py + scripts/screen_candidate_gates.py) | 8 mechanical / 2 judgment; G1+G3 REFUSE without a human reading. Reproduces both hand verdicts; caught a G2 applicability-ordering bug + an overstated PEAR headline |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
