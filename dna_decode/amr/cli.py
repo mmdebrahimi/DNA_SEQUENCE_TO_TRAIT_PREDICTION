@@ -51,6 +51,7 @@ from dna_decode.data.hiv_amr import (
     gene_for_hiv_drug,
 )
 from dna_decode.data.mic_tiers import supported_drugs
+from dna_decode.data.routable_drugs import all_routable_amr_drugs
 from dna_decode.data.trust_surface import (concentration_one_line, lineage_one_line,
                                             one_line, trust_block)
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
@@ -434,10 +435,11 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="dna-amr",
                                  description="Deterministic AMR R/S decoder from AMRFinder curated determinants")
     ap.add_argument("--drug", required=True,
-                    choices=sorted(set(supported_drugs()) | set(supported_fungal_drugs())
-                                   | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
-                                   | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs())
-                                   | set(all_supported_hcmv_drugs())),
+                    # ONE definition, shared with cell_registry.cli_routable_manifest(). These two
+                    # unions were written out separately and drifted: HCMV was added here and missed
+                    # there, so five shipped decoders had no evidence contract and the coverage test
+                    # could not see them. See dna_decode/data/routable_drugs.py.
+                    choices=sorted(all_routable_amr_drugs()),
                     metavar="DRUG", help="bacterial (AMRFinder engine), fungal (BLAST-ERG11 engine), "
                                          "antimalarial (BLAST-Pfkelch13 engine), or antiviral "
                                          "(BLAST-influenza-NA engine) drug")

@@ -138,6 +138,21 @@ HIV_NOT_CENSUSED_DURABLE_REASON = {
 }
 
 
+def _hcmv_card_drugs() -> dict[str, dict]:
+    """{drug: card_row} from the PACKAGED HCMV report card (wheel-safe; force-included in pyproject).
+
+    HCMV shipped 2026-07-23 with its own report card and five CLI-routable drugs, but no contract here --
+    influenza NA is PROJECTED automatically from the frozen shipped surface, while HIV/SARS-CoV-2 are
+    hand-declared in this block, and HCMV was neither. Data-driven from its card for the same reason HIV
+    is: so the tier is read from the evidence rather than asserted.
+    """
+    from dna_decode.data import trust_surface
+    card = trust_surface._load("hcmv_decoder_report_card.json")
+    if not card:
+        return {}
+    return {c["drug"]: c for c in card.get("cells", []) if c.get("drug")}
+
+
 def _viral_contracts() -> list[CellContract]:
     from dna_decode.data.hiv_amr import all_supported_hiv_drugs
     from dna_decode.data.sarscov2_amr import all_supported_sarscov2_drugs
@@ -184,6 +199,45 @@ def _viral_contracts() -> list[CellContract]:
             falsifier_ref="scripts/sarscov2_mpro_validate.py", incoming_data_gate="n/a",
             demotion_rule="held-out CoV-RDB or clinical fold would re-tier toward independent",
         ))
+    # HCMV (UL97/UL54/UL56) — the first herpesvirus cell. Tier read from its own card, never asserted.
+    from dna_decode.data.hcmv_amr import all_supported_hcmv_drugs
+    hcard = _hcmv_card_drugs()
+    for d in sorted(all_supported_hcmv_drugs()):
+        row = hcard.get(d)
+        if row is None:
+            out.append(CellContract(
+                cell_id=f"viral:HCMV:{d}", track="viral", route="dna-amr", organism="HCMV", target=d,
+                claim=f"HCMV antiviral-resistance call for {d}",
+                evidence_tier=EvidenceTier.NOT_CENSUSED, claim_status="cli_routable_not_validated",
+                validation_slice="CLI-routable; NOT in the HCMV report card (uncensused)",
+                label_provenance="none (CLI-routable, not yet validated)",
+                abstention_vocab=AbstentionVocab.NOT_CENSUSED, native_abstention="NOT_CENSUSED",
+                falsifier_ref="none", incoming_data_gate="n/a",
+                demotion_rule="re-tiers from the HCMV report card on validation"))
+            continue
+        genes = "/".join(row.get("genes") or [])
+        out.append(CellContract(
+            cell_id=f"viral:HCMV:{d}", track="viral", route="dna-amr", organism="HCMV", target=d,
+            claim=f"HCMV {genes} target-site antiviral-resistance call for {d}",
+            # IN_DISTRIBUTION on its own card -> KNOWLEDGE_BASELINE here. Its independence field records
+            # the closure explicitly: HCMV phenotyping IS per-mutation recombinant marker-transfer and the
+            # Chou compilations are its consensus, so no held-out per-isolate set disjoint from the
+            # catalog exists. Structurally in-distribution, exactly like SARS-CoV-2 CoV-RDB -- NOT a
+            # pending validation.
+            evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE, claim_status="chou_recombinant_in_distribution",
+            # NO scored metric exists for this cell -- the card carries catalog CENSUS counts
+            # (n_resistance / n_benign) and no acc/sens/spec/n_scored. So `SCORED` would be an
+            # overclaim; the slice says so plainly rather than letting a tier imply a number.
+            validation_slice=(f"Chou recombinant fold-change on {genes}: catalog CENSUS of "
+                              f"{row.get('n_resistance')} resistance + {row.get('n_benign')} "
+                              "phenotyped-benign entries. NO acc/sens/spec exists for this cell"),
+            label_provenance="Chou recombinant marker-transfer compilations (PMC3262590 / PMC5483911 / AAC 2018)",
+            # NO_FREE_PHENOTYPE, not UNDERPOWERED: HCMV phenotyping is per-MUTATION marker transfer, so
+            # there is no isolate-level phenotype source to be underpowered ON. The card's own
+            # `independence` field records this as CLOSED for free data, not pending work.
+            abstention_vocab=AbstentionVocab.NO_FREE_SOURCE, native_abstention="NO_FREE_PHENOTYPE",
+            falsifier_ref="none", incoming_data_gate="G1",
+            demotion_rule="a held-out clinical-isolate fold-change set would re-tier toward independent"))
     return out
 
 
@@ -1117,15 +1171,11 @@ def cli_routable_manifest() -> dict[str, set[str]]:
     from dna_decode.cli import TRAITS
     from dna_decode.hla import HLA_ALLELES
     from dna_decode.pgx import PGX_GENES
-    from dna_decode.data.antimalarial_amr import supported_antimalarial_drugs
-    from dna_decode.data.antiviral_amr import supported_antiviral_drugs
-    from dna_decode.data.fungal_amr import supported_fungal_drugs
-    from dna_decode.data.hiv_amr import all_supported_hiv_drugs
-    from dna_decode.data.mic_tiers import supported_drugs
-    from dna_decode.data.sarscov2_amr import all_supported_sarscov2_drugs
-    amr_drugs = (set(supported_drugs()) | set(supported_fungal_drugs())
-                 | set(supported_antimalarial_drugs()) | set(supported_antiviral_drugs())
-                 | set(all_supported_hiv_drugs()) | set(all_supported_sarscov2_drugs()))
+    from dna_decode.data.routable_drugs import all_routable_amr_drugs
+    # SHARED with the CLI's argparse choices (2026-09-01). This union used to be spelled out here as
+    # well, and it drifted: HCMV's five drugs were added to the CLI and missed here, so they never
+    # entered the routable set and the coverage test below could not notice they had no contracts.
+    amr_drugs = all_routable_amr_drugs()
     per_target = {
         "dna-amr": {d.lower() for d in amr_drugs},
         "dna-pgx": set(PGX_GENES),
