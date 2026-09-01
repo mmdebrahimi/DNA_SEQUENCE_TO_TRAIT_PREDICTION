@@ -202,8 +202,11 @@ def run(path: Path = DEFAULT_DATA) -> dict:
     return {
         "artifact": "hiv_nnrti_mutant_specific_v0_1", "schema": "hiv-nnrti-mutant-catalog-v0_1",
         "generated": _date.today().isoformat(),
-        "method": ("data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= log10(1.5) "
-                   "(independent >=1.5x effect after controlling for co-occurrence -> deconfounds accessory "
+        # DERIVED from the constant, never restated. The literal previously read log10(1.5) while the
+        # constant was log10(3.0) -- the artifact misdescribed its own method after the threshold was swept.
+        "method": (f"data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= "
+                   f"log10({10 ** RESIST_COEF_MIN:.1f}) "
+                   f"(independent >={10 ** RESIST_COEF_MIN:.1f}x effect after controlling for co-occurrence -> deconfounds accessory "
                    "riders), >=5 carriers, candidates spanning the WHOLE RT from CompMutList; 5-fold "
                    "CROSS-VALIDATED held-out -> out-of-sample, not in-sample"),
         "why_whole_rt": ("the shipped catalog covers 8 RT positions; restricting candidates to those could "

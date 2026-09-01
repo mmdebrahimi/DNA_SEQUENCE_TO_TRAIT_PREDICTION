@@ -2,7 +2,7 @@
   "artifact": "hiv_nnrti_mutant_specific_v0_1",
   "schema": "hiv-nnrti-mutant-catalog-v0_1",
   "generated": "2026-09-01",
-  "method": "data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= log10(1.5) (independent >=1.5x effect after controlling for co-occurrence -> deconfounds accessory riders), >=5 carriers, candidates spanning the WHOLE RT from CompMutList; 5-fold CROSS-VALIDATED held-out -> out-of-sample, not in-sample",
+  "method": "data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= log10(3.0) (independent >=3.0x effect after controlling for co-occurrence -> deconfounds accessory riders), >=5 carriers, candidates spanning the WHOLE RT from CompMutList; 5-fold CROSS-VALIDATED held-out -> out-of-sample, not in-sample",
   "why_whole_rt": "the shipped catalog covers 8 RT positions; restricting candidates to those could never reach the blind spot, whose drivers sit elsewhere",
   "cutoff_note": "ABSOLUTE, not delta-honest: EFV/NVP/ETR/RPV are scored at their OWN Stanford DRMcv.R clinical lower cutoff. Doravirine postdates DRMcv.R -> CUTOFF_UNAVAILABLE, reported as a wall, never guessed. This is stronger than the PI/INSTI v0.1 arc, which had no per-drug cutoff and could only claim a delta.",
   "n_drugs_scored": 4,
