@@ -99,6 +99,7 @@ When a label source is worth acquiring, the target is already screened, verified
 | H5 | PEAR's processed per-variant fitness table is directly downloadable | falsified | 2026-08-31 |
 | H2 | A free path exists that clears the label wall (prospective accrual) | confirmed | 2026-08-24 |
 | H3 | Some acquisition target is reachable without money | open | (untested) |
+| H6 | HBV has a free measured-phenotype source usable as a decoder label | falsified | 2026-09-01 |
 <!-- project-state:end:hypotheses -->
 
 ### Decisions Made
@@ -156,6 +157,7 @@ Attempt budget: 3.
 | 2 | 2026-08-31 | research | screen PEAR: resolve accessions + classify its regime | RECLASSIFIED -- not an L1 label source and NOT an acquisition; see wiki/pear_substrate_screen_2026-08-31.md |
 | 3 | 2026-08-31 | research | score PEAR against all ten rejection gates | clears every gate that applies; G6 (censoring) is the one open risk |
 | 4 | 2026-08-31 | research | verify the processed data is reachable | BLOCKED on format: the GitHub .RData is a serialized ggplot object, not a table; R not installed |
+| 5 | 2026-09-01 | research | screen HBV as a 6th viral cell against G1 (label source) | NO-BUILD: every free HBV resource is a rule or a prevalence table; no measured-phenotype source |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

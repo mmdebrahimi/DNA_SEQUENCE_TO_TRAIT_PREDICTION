@@ -106,6 +106,22 @@ family-wise correction removed all 4. **Deliberately NOT a false-positive rate**
 unconfirmed drug is ambiguous between a false positive and an undiscovered gap. Categories are
 predeclared `confirmed` / `unconfirmed` / `unassessable`, never "clean".
 
+## HCMV contracted + HBV screened NO-BUILD (2026-09-01)
+
+**HCMV had 5 CLI-routable drugs and ZERO evidence contracts** since 2026-07-23 —
+`wiki/hcmv_registry_gap_2026-09-01.md`. The coverage guard was correct; its INPUT was hand-maintained
+and omitted HCMV's catalog, so it compared a set that already excluded them. `routable_drugs.py` is now
+the single definition shared by the CLI parser and the registry. Registry **110 → 115 cells**, viral
+**29 → 34**. Touches no frozen file; the v2 lock and the AMR card are unchanged.
+
+**HBV screened as a 6th viral cell → NO-BUILD** (`wiki/hbv_cell_gate_screen_2026-09-01.md`). The engine
+fits and the catalog is curatable, but every free HBV resource is an *interpretation rule*
+(geno2pheno/HIV-GRADE) or a *prevalence table* (Stanford HBVrtDB, dormant since 2012) — **G1 circular
+label**. The field's own reason: no simple cell-culture system, so the genotype–phenotype dataset is
+thin. My prediction that it would resemble HCMV was **wrong in the informative direction** — HCMV at
+least has measured per-mutation fold-changes; HBV's free tier has none. Building it would repeat the
+colour-cell pattern the freeze exists to stop. *Bounded screen: two searches were safeguard-blocked.*
+
 ## Waiting on the user (authority calls — not executor tasks)
 
 1. ~~**v2 gentamicin lock**~~ — **DECIDED AND SHIPPED 2026-08-31** (user-authorized).
