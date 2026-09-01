@@ -77,7 +77,7 @@ Every decoder call in the tool carries an honest, machine-readable statement of 
 
 ### Unknowns
 - Whether the completeness screen's `rmt_like` heuristic (>=3 R carriers, 0 S) generalizes beyond the one family it was tuned to recognise.
-- What the doubt layer's false-positive rate is on cells with no known gap — unmeasured.
+- RESOLVED 2026-08-31: the doubt layer's false-positive rate. Family-wise (Bonferroni) correction over families screened per drug drops 4 of 5 raw-signature hits; the single survivor is the confirmed `rmtE1` gap. Residual: 1 confirmed gap is a single case, NOT a rate.
 - Whether the AMR-side signal (determinant unrepresentable by the rule) and the target-site signal (novel substitution at a catalogued position) belong in one vocabulary or two.
 - Whether a doubt block changes user behaviour at all, or is ignored like every other caveat.
 
@@ -124,7 +124,7 @@ action, so leaving completed work here made a finished family rank first on the 
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Measure the doubt layer's FALSE-POSITIVE rate on cells with no known gap | run-tests | med | high | high | 1-2hr |
+| 1 | DONE 2026-08-31 -- FP rate measured: family-wise correction drops 4 of 5 raw-signature hits; 1 survivor is the confirmed `rmtE1` gap | run-tests | med | high | resolved | -- |
 | 2 | Extend the completeness screen to the target-site catalogs (one vocabulary or two?) | edit-local-code | med | high | med | 1-2hr |
 | 3 | Re-screen when any NEW independent label set lands (both known gaps needed one) | research | low | high | high | ongoing |
 <!-- project-state:end:candidate-actions -->

@@ -54,7 +54,7 @@ When a label source is worth acquiring, the target is already screened, verified
 ### Short-term (≤1 month)
 | # | Action | Class | Owner | Horizon |
 |---|---|---|---|---|
-| 1 | Score PEAR against all ten gates, explicitly | research | Soraya | days |
+| 1 | DONE 2026-09-01 -- PEAR scored mechanically by `scripts/screen_candidate_gates.py`; verdict INCOMPLETE (G6 unscreened), not `clears` | research | Soraya | done |
 | 2 | Resolve 2-3 PEAR accessions on ENA + NCBI before recommending | research | Soraya | days |
 | 3 | Re-run the prospective accrual sweep (free, no authority) | run-tests | Soraya | days |
 
@@ -73,7 +73,7 @@ When a label source is worth acquiring, the target is already screened, verified
 | E4 | Constructed variation is the regime with measured positives | wiki/organism_gp_regime_correction_2026-08-29.md | high | 2026-08-29 |
 | E5 | PEAR BioProject PRJNA687219 resolves: E. coli K-12 MG1655, 45 SRA experiments, 478 Gbases raw reads | NCBI BioProject (fetched) | high | 2026-08-31 |
 | E6 | PEAR is constructed single-gene variants w/ continuous relative-growth readout -> constructed_molecular regime | wiki/pear_substrate_screen_2026-08-31.md | high | 2026-08-31 |
-| E7 | PEAR clears every applicable rejection gate; the blocker is ARTIFACT FORMAT, not a gate | wiki/pear_substrate_screen_2026-08-31.md | high | 2026-08-31 |
+| E7 | PEAR clears every applicable gate EXCEPT G6, which is UNSCREENED -> status INCOMPLETE, not `clears` (corrected 2026-09-01 by the mechanical screen; the memo headline overstated it, its own table did not). Blocker remains ARTIFACT FORMAT | wiki/pear_substrate_screen_2026-08-31.md + wiki/rejection_gate_screen_2026-09-01.md | high | 2026-09-01 |
 <!-- project-state:end:evidence -->
 
 ### Unknowns
@@ -94,7 +94,7 @@ When a label source is worth acquiring, the target is already screened, verified
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
 |---|---|---|---|
-| H1 | PEAR clears all ten gates | confirmed | 2026-08-31 |
+| H1 | PEAR clears all ten gates | open | 2026-09-01 |
 | H4 | PEAR is an L1 label source that helps the AMR label wall | falsified | 2026-08-31 |
 | H5 | PEAR's processed per-variant fitness table is directly downloadable | falsified | 2026-08-31 |
 | H2 | A free path exists that clears the label wall (prospective accrual) | confirmed | 2026-08-24 |
@@ -131,7 +131,7 @@ A gate-scored, accession-verified, ranked candidate list exists — so an acquis
 ### Candidate next actions
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Score PEAR against all ten gates | research | med | high | med | 1-2hr |
+| 1 | Screen PEAR's G6 degeneracy -- the ONE gate still open on it; needs the fitness values, which need the R extraction route | research | med | high | high | days |
 | 2 | Resolve PEAR accessions on ENA + NCBI (retires U1) | research | high | high | med | hours |
 | 3 | Re-run the prospective accrual sweep | run-tests | med | med | low | hours |
 <!-- project-state:end:candidate-actions -->

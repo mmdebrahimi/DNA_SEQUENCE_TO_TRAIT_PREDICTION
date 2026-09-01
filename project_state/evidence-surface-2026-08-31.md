@@ -112,8 +112,7 @@ human-readable level; the follow-on set is below.
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | DONE 2026-09-01 — C3 shipped: `eval/rejection_gates.py` + `scripts/screen_candidate_gates.py --verify` | edit-local-code | high | high | resolved | — |
-| 1b | Screen a THIRD candidate (n=2 worked examples is the schema's stated limit) | research | med | high | med | 1-2hr |
+| 1 | Screen a THIRD candidate through the gate screen (n=2 worked examples is the schema's stated limit) | research | med | high | med | 1-2hr |
 | 2 | Check reachability of the NON-report-card surfaces (hiv/tb/pgx cards) | research | med | med | med | 1-2hr |
 | 3 | Decide whether the doubt/lineage lines belong in `dna-decode` routes too | propose | low | med | med | 1-2hr |
 <!-- project-state:end:candidate-actions -->

@@ -105,7 +105,7 @@ Boundary correct and measured, but enforced only by memory — and memory has fa
 A regime screen exists, is derived from artifacts, and is wired where new cells register.
 
 ### Progress proxy
-- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-08-31: 2 / 2 MVP criteria met (regime-boundary tests + derived map artifact). C1 + C3 met; C2 (wiring the screen into cell registration) remains open.
+- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-08-31: 2 / 2 MVP criteria met (regime-boundary tests + derived map artifact). C1 + C3 met. **2026-09-01: C2 MET** -- the regime screen is wired at the ROUTE boundary (`dna_decode/data/cell_regime.py`), where a new decoder cannot register without being classified; `regime_for_route` raises rather than defaulting to 'curated catalog', which is the silent path a learned decoder would otherwise take. All 3 refinement candidates now closed.
 
 ### Candidate next actions
 Actions 1-2 completed 2026-08-31 (Action Log rows 2-3). C2 -- wiring the screen where new cells
@@ -113,7 +113,7 @@ register -- is the remaining build.
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | C2: require a regime field where a new cell registers | edit-local-code | high | med | med | 1-2hr |
+| 1 | DONE 2026-09-01 -- C2 shipped as a ROUTE-level tripwire (`dna_decode/data/cell_regime.py`): `regime_for_route` RAISES on an undeclared route. A per-cell field was measured first and rejected as 52 edits of a near-constant column -- but the census proved the column is NOT constant (3 regimes over 44 routes) | edit-local-code | high | med | resolved | -- |
 | 2 | Score gLM2-650M vs the curated baseline (the cheapest gene-LLM test) | research | med | high | high | days |
 | 3 | Resolve where the constructed/natural line sits for an intermediate design | research | low | high | high | days |
 <!-- project-state:end:candidate-actions -->
@@ -137,6 +137,7 @@ Attempt budget: 3.
 | 1 | 2026-08-31 | propose | ledger created (project-init protocol applied by hand) | restraint family; eligible |
 | 2 | 2026-08-31 | edit-local-code | dna_decode/eval/regime.py + scripts/regime_map.py | 6 measured regimes; every cited artifact verified to exist |
 | 3 | 2026-08-31 | run-tests | tests/test_regime_boundary.py (13) | all 3 historical compressions now fail loudly |
+| 4 | 2026-09-01 | edit-local-code | C2: dna_decode/data/cell_regime.py -- route-level regime tripwire + 10 tests | 44 routes classified, 3 regimes (40 catalog / 2 constructed-molecular / 2 constructed-organism); an undeclared route RAISES. dna-flowering + dna-pathotype carry a closed-learned-attempt note |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

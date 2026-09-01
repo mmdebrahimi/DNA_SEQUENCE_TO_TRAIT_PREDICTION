@@ -72,7 +72,7 @@ No curated biological fact enters a shipped catalog without a named source, a me
 ### Unknowns
 - **U1** — Over-calling risk of the `rmt` rule. "Specificity unchanged" is ARITHMETIC over an absence, not evidence: no S-labelled `rmt` carrier exists in any dataset checked, so the denominator is empty.
 - Whether curating HIV NNRTI positions recovers the 53 or merely relabels them.
-- Whether a curation procedure can be enforced by test at all, or is irreducibly a review discipline.
+- RESOLVED 2026-09-01: PARTLY. 1 of 4 conditions is enforced by test (per-MODULE external authority; `tests/test_catalog_provenance.py`, all 8 shipped catalogs already pass). The other 3 -- per-ENTRY sourcing, measurement against the doubt-layer baseline, and reviewing a derivation as biology -- are review discipline. Per-entry is not representable without restructuring the bare `set[str]` catalogs. Stating the split is load-bearing: a green suite checking only the weak condition reads as more assurance than it is.
 
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
@@ -111,7 +111,7 @@ A written, tested curation procedure exists, and each measured gap is either clo
 ### Candidate next actions
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Write curation procedure + refusal test | edit-local-code | med | med | low | 1-2hr |
+| 1 | DONE 2026-09-01 -- wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py (18). Resolves U3: per-ENTRY citation is NOT representable (bare set[str] catalogs); per-MODULE authority IS, and all 8 already pass -> a regression guard, not a migration | edit-local-code | med | med | resolved | -- |
 | 2 | Draft HIV NNRTI entries with citations | propose | med | med | med | 1-2hr |
 | 3 | Seek S-labelled `rmt` carriers in a new source (retires U1) | research | high | high | high | days |
 <!-- project-state:end:candidate-actions -->
@@ -136,6 +136,7 @@ Attempt budget: 3.
 | 2 | 2026-09-01 | edit-local-code | scripts/hiv_nnrti_mutant_catalog.py -- deconfounded NNRTI derivation | built; NNRTI was the only HIV class without one |
 | 3 | 2026-09-01 | run-tests | measure curation vs the F-A doubt-layer baseline, 3 ways | NO-SHIP: every variant recovers < the free flag's 0.604 |
 | 4 | 2026-09-01 | edit-local-code | fix self-to-self CompMutList parsing defect (L234L/K238K/M230M/R72R) | headline was flattering by 8->5 additions before the fix |
+| 5 | 2026-09-01 | edit-local-code | C3: wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py | 4 conditions from 2 executed instances (gentamicin shipped / NNRTI declined); 1 enforced, 3 review discipline -- split stated explicitly |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
