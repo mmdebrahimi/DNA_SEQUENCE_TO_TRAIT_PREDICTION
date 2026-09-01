@@ -122,6 +122,30 @@ thin. My prediction that it would resemble HCMV was **wrong in the informative d
 least has measured per-mutation fold-changes; HBV's free tier has none. Building it would repeat the
 colour-cell pattern the freeze exists to stop. *Bounded screen: two searches were safeguard-blocked.*
 
+## F-B answered: the HIV NNRTI curation is DECLINED on measurement (2026-09-01)
+
+`wiki/hiv_nnrti_curation_verdict_2026-09-01.md`. This is the payoff of F-B being **blocked_by F-A** —
+curation had to be measured against a baseline, and the baseline won.
+
+NNRTI was the only HIV class without a deconfounded mutant catalog, so
+`scripts/hiv_nnrti_mutant_catalog.py` builds one (whole-RT candidates from `CompMutList`; multivariate
+OLS; 5-fold CV; scored at the REAL Stanford DRMcv.R clinical cutoffs — DOR reported
+`CUTOFF_UNAVAILABLE`, never guessed). Measured three ways, all negative:
+
+| variant | result |
+|---|---|
+| inherited 1.5x threshold | EFV spec **0.904 → 0.579** — catastrophic over-call |
+| swept 3x threshold | +0.006 balacc, but **drops canonical Y181C/A/I**; blind-spot 0.415 |
+| additive-only, no drops, biologically anchored | mean **−0.003** balacc, in-sample-optimistic; blind-spot 0.29–0.50 |
+
+**Every blind-spot recovery (0.000–0.500) is below the free position-novelty flag's 0.604.** `hiv_amr.py`
+is **unmodified**. A defect in my own parser (self-to-self `L234L`/`K238K` entries admitted as mutations)
+would have flattered the headline; fixing it moved the result the *unflattering* way.
+
+**Still open, and NOT foreclosed:** a *literature-anchored* curation (each entry sourced per-mutation to a
+named authority rather than to an OLS coefficient). `V179D` surviving deconfounding independently is
+corroboration for it. Not recommended on these numbers; a curation project, not a decoder change.
+
 ## Waiting on the user (authority calls — not executor tasks)
 
 1. ~~**v2 gentamicin lock**~~ — **DECIDED AND SHIPPED 2026-08-31** (user-authorized).

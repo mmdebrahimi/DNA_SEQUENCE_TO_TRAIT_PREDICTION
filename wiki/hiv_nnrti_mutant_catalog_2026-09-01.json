@@ -1,0 +1,258 @@
+{
+  "artifact": "hiv_nnrti_mutant_specific_v0_1",
+  "schema": "hiv-nnrti-mutant-catalog-v0_1",
+  "generated": "2026-09-01",
+  "method": "data-derived resistant mutants = MULTIVARIATE OLS log10-fold coefficient >= log10(1.5) (independent >=1.5x effect after controlling for co-occurrence -> deconfounds accessory riders), >=5 carriers, candidates spanning the WHOLE RT from CompMutList; 5-fold CROSS-VALIDATED held-out -> out-of-sample, not in-sample",
+  "why_whole_rt": "the shipped catalog covers 8 RT positions; restricting candidates to those could never reach the blind spot, whose drivers sit elsewhere",
+  "cutoff_note": "ABSOLUTE, not delta-honest: EFV/NVP/ETR/RPV are scored at their OWN Stanford DRMcv.R clinical lower cutoff. Doravirine postdates DRMcv.R -> CUTOFF_UNAVAILABLE, reported as a wall, never guessed. This is stronger than the PI/INSTI v0.1 arc, which had no per-drug cutoff and could only claim a delta.",
+  "n_drugs_scored": 4,
+  "n_drugs_improved_or_held": 3,
+  "mean_balacc_gain": 0.042,
+  "label_source": "Stanford HIVDB PhenoSense fold-change (independent wet-lab; NOT Sierra)",
+  "dataset": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv\\NNRTI_DataSet.txt",
+  "citation": "Rhee 2003 Nucleic Acids Res 31:298-303; method Stanford DRMcv.R",
+  "shipped_catalog_size": 16,
+  "per_drug": {
+    "efavirenz": {
+      "n_isolates": 2168,
+      "prevalence_R": 0.46,
+      "shipped_catalog_v0": {
+        "tp": 945,
+        "fp": 112,
+        "tn": 1058,
+        "fn": 53,
+        "sens": 0.947,
+        "spec": 0.904,
+        "accuracy": 0.924,
+        "balanced_accuracy": 0.926
+      },
+      "data_derived_v0_1_heldout": {
+        "tp": 917,
+        "fp": 63,
+        "tn": 1107,
+        "fn": 81,
+        "sens": 0.919,
+        "spec": 0.946,
+        "accuracy": 0.934,
+        "balanced_accuracy": 0.932
+      },
+      "blind_spot": {
+        "n_catalog_negative_true_R": 53,
+        "recovered_by_v0_1": 22,
+        "recovery_rate": 0.415,
+        "incumbent_position_novelty_flag": 0.604,
+        "note": "recovery_rate is comparable to the position-novelty flag's measured median 0.604 on the EFV blind spot -- the free zero-tool incumbent this curation must beat"
+      },
+      "clinical_lower_cutoff_fold": 3.0,
+      "balacc_gain_v0_1_minus_v0": 0.006,
+      "sens_gain": -0.028,
+      "spec_change": 0.042
+    },
+    "nevirapine": {
+      "n_isolates": 2052,
+      "prevalence_R": 0.513,
+      "shipped_catalog_v0": {
+        "tp": 954,
+        "fp": 9,
+        "tn": 990,
+        "fn": 99,
+        "sens": 0.906,
+        "spec": 0.991,
+        "accuracy": 0.947,
+        "balanced_accuracy": 0.948
+      },
+      "data_derived_v0_1_heldout": {
+        "tp": 960,
+        "fp": 32,
+        "tn": 967,
+        "fn": 93,
+        "sens": 0.912,
+        "spec": 0.968,
+        "accuracy": 0.939,
+        "balanced_accuracy": 0.94
+      },
+      "blind_spot": {
+        "n_catalog_negative_true_R": 99,
+        "recovered_by_v0_1": 20,
+        "recovery_rate": 0.202,
+        "incumbent_position_novelty_flag": 0.604,
+        "note": "recovery_rate is comparable to the position-novelty flag's measured median 0.604 on the EFV blind spot -- the free zero-tool incumbent this curation must beat"
+      },
+      "clinical_lower_cutoff_fold": 3.0,
+      "balacc_gain_v0_1_minus_v0": -0.008,
+      "sens_gain": 0.006,
+      "spec_change": -0.023
+    },
+    "etravirine": {
+      "n_isolates": 998,
+      "prevalence_R": 0.284,
+      "shipped_catalog_v0": {
+        "tp": 251,
+        "fp": 307,
+        "tn": 408,
+        "fn": 32,
+        "sens": 0.887,
+        "spec": 0.571,
+        "accuracy": 0.66,
+        "balanced_accuracy": 0.729
+      },
+      "data_derived_v0_1_heldout": {
+        "tp": 222,
+        "fp": 90,
+        "tn": 625,
+        "fn": 61,
+        "sens": 0.784,
+        "spec": 0.874,
+        "accuracy": 0.849,
+        "balanced_accuracy": 0.829
+      },
+      "blind_spot": {
+        "n_catalog_negative_true_R": 32,
+        "recovered_by_v0_1": 0,
+        "recovery_rate": 0.0,
+        "incumbent_position_novelty_flag": 0.604,
+        "note": "recovery_rate is comparable to the position-novelty flag's measured median 0.604 on the EFV blind spot -- the free zero-tool incumbent this curation must beat"
+      },
+      "clinical_lower_cutoff_fold": 3.0,
+      "balacc_gain_v0_1_minus_v0": 0.1,
+      "sens_gain": -0.103,
+      "spec_change": 0.303
+    },
+    "rilpivirine": {
+      "n_isolates": 311,
+      "prevalence_R": 0.379,
+      "shipped_catalog_v0": {
+        "tp": 97,
+        "fp": 88,
+        "tn": 105,
+        "fn": 21,
+        "sens": 0.822,
+        "spec": 0.544,
+        "accuracy": 0.65,
+        "balanced_accuracy": 0.683
+      },
+      "data_derived_v0_1_heldout": {
+        "tp": 100,
+        "fp": 66,
+        "tn": 127,
+        "fn": 18,
+        "sens": 0.847,
+        "spec": 0.658,
+        "accuracy": 0.73,
+        "balanced_accuracy": 0.753
+      },
+      "blind_spot": {
+        "n_catalog_negative_true_R": 21,
+        "recovered_by_v0_1": 8,
+        "recovery_rate": 0.381,
+        "incumbent_position_novelty_flag": 0.604,
+        "note": "recovery_rate is comparable to the position-novelty flag's measured median 0.604 on the EFV blind spot -- the free zero-tool incumbent this curation must beat"
+      },
+      "clinical_lower_cutoff_fold": 3.0,
+      "balacc_gain_v0_1_minus_v0": 0.07,
+      "sens_gain": 0.025,
+      "spec_change": 0.114
+    },
+    "doravirine": {
+      "status": "CUTOFF_UNAVAILABLE",
+      "n_isolates": 130,
+      "note": "doravirine POSTDATES Stanford DRMcv.R, so no clinical lower cutoff is sourced in-repo. Reported as a wall rather than scored at a guessed boundary."
+    }
+  },
+  "deliverable_catalog_all_data": {
+    "efavirenz": [
+      "G190A",
+      "G190E",
+      "G190Q",
+      "G190S",
+      "G335D",
+      "K101E",
+      "K101H",
+      "K101P",
+      "K103N",
+      "K103S",
+      "L100I",
+      "M230L",
+      "V106A",
+      "V106M",
+      "V179D",
+      "Y188C",
+      "Y188H",
+      "Y188L"
+    ],
+    "nevirapine": [
+      "G190A",
+      "G190E",
+      "G190Q",
+      "G190S",
+      "I31L",
+      "K101H",
+      "K101P",
+      "K103N",
+      "K103S",
+      "K219H",
+      "K238T",
+      "M230L",
+      "T107S",
+      "V106A",
+      "V106M",
+      "Y181C",
+      "Y181I",
+      "Y181V",
+      "Y188C",
+      "Y188L"
+    ],
+    "etravirine": [
+      "K101P",
+      "L100I",
+      "M230L",
+      "T215L",
+      "Y181C",
+      "Y181I",
+      "Y181V",
+      "Y188L"
+    ],
+    "rilpivirine": [
+      "E248D",
+      "F227C",
+      "K101P",
+      "L100I",
+      "L228H",
+      "M230L",
+      "V179D",
+      "Y181C",
+      "Y181I",
+      "Y188L"
+    ],
+    "doravirine": [
+      "F227C",
+      "P225H",
+      "V106A",
+      "Y188L"
+    ]
+  },
+  "candidate_additions_not_in_shipped_catalog": [
+    "E248D",
+    "F227C",
+    "G335D",
+    "I31L",
+    "K101E",
+    "K101H",
+    "K103S",
+    "K219H",
+    "K238T",
+    "L228H",
+    "P225H",
+    "T107S",
+    "T215L",
+    "V179D",
+    "Y181V"
+  ],
+  "provenance_caveat": "These candidates are DATA-DERIVED from measured fold-change, NOT curated from a guideline. That is a different provenance from the shipped catalog, which is sourced verbatim from the Stanford NNRTI major-DRM list. Any entry promoted into the shipped catalog must carry which of the two it came from; a literature cross-check is a SEPARATE step and is not asserted here.",
+  "honest_caveats": [
+    "in-distribution vs HIVDB-PhenoSense; NOT provenance-disjoint external validation",
+    "the deliverable catalog is derived on ALL data and is therefore NOT what the CV metrics describe",
+    "censored folds ('>'/'<') are kept at their numeric bound (v0 convention, inherited)",
+    "a recovery_rate below the position-novelty flag's 0.604 means the free zero-tool incumbent is still the better blind-spot instrument and this curation should NOT ship on sensitivity grounds"
+  ]
+}

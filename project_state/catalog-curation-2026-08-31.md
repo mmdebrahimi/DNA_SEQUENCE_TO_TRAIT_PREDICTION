@@ -77,8 +77,9 @@ No curated biological fact enters a shipped catalog without a named source, a me
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
 |---|---|---|---|
-| H1 | The blind spot is a curation gap, not a computation gap | under-investigation | 2026-08-31 |
-| H2 | Curation recovery exceeds the F-A doubt-layer baseline | open | blocked on F-A |
+| H1 | The blind spot is a curation gap, not a computation gap | falsified | 2026-09-01 |
+| H2 | Curation recovery exceeds the F-A doubt-layer baseline | falsified | 2026-09-01 |
+| H4 | A literature-anchored (not data-derived) curation could still be worth it | open | (untested) |
 | H3 | An empty S denominator can be filled from a new source | open | (untested) |
 <!-- project-state:end:hypotheses -->
 
@@ -92,20 +93,20 @@ No curated biological fact enters a shipped catalog without a named source, a me
 ### Pending Decisions
 | Decision | Proposer | Blocker | Notes |
 |---|---|---|---|
-| Edit a shipped catalog at all (C1)? | Soraya | **user authority** | lock-safe, but a scope call about what ships |
-| Gentamicin v2 lock (C2)? | Soraya | **user authority** | invalidates the prospective lock AND the reproducibility freeze |
+| RESOLVED 2026-09-01: Edit a shipped catalog at all (C1)? | Soraya | none -- measured | Answered by measurement, not authority: data-derived curation LOSES to the free doubt layer on every variant tested (recovery 0.000-0.500 vs 0.604) and the 3x variant would drop canonical Y181C. No edit made. `wiki/hiv_nnrti_curation_verdict_2026-09-01.md` |
+| RESOLVED 2026-08-31: Gentamicin v2 lock (C2)? | Soraya | none -- authorized + shipped | User-authorized; deployed with symbol_rescue + a NEW lock manifest (prospective_lock_manifest_2026-08-31.json). E. coli N=131 sens 0.523 -> 0.892. `wiki/gentamicin_v2_lock_2026-08-31.md` |
 <!-- project-state:end:pending-decisions -->
 
 ## Bellman-Inspired Decision Frame
 
 ### Current state (one-line summary)
-Blocked on F-A by construction; both curation targets named and counted; both terminal moves are user-authority calls.
+Both named curation targets are RESOLVED: gentamicin `rmt` shipped under a v2 lock (2026-08-31); HIV NNRTI measured and DECLINED (2026-09-01, loses to the free doubt layer). Only C3, the curation procedure itself, remains open -- and is lower-value now that the first candidate was rejected on measurement.
 
 ### Target state / terminal condition
 A written, tested curation procedure exists, and each measured gap is either closed under it or explicitly declined.
 
 ### Progress proxy
-- **v0.1 metric:** `unknowns-retired` + `gates-passed`. At init: 0 retired, 0 of 2 MVP criteria met.
+- **v0.1 metric:** `unknowns-retired` + `gates-passed`. 2026-09-01: the family's central question is ANSWERED (curation does not earn its place; measured 3 ways). 2 hypotheses falsified. The MVP criteria as written (a curation PROCEDURE + its refusal test) are now lower-value than when drafted, since the first candidate curation was measured and rejected.
 
 ### Candidate next actions
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
@@ -132,6 +133,9 @@ Attempt budget: 3.
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
 | 1 | 2026-08-31 | propose | ledger created (project-init protocol applied by hand) | blocked_by doubt-layer-2026-08-31 |
+| 2 | 2026-09-01 | edit-local-code | scripts/hiv_nnrti_mutant_catalog.py -- deconfounded NNRTI derivation | built; NNRTI was the only HIV class without one |
+| 3 | 2026-09-01 | run-tests | measure curation vs the F-A doubt-layer baseline, 3 ways | NO-SHIP: every variant recovers < the free flag's 0.604 |
+| 4 | 2026-09-01 | edit-local-code | fix self-to-self CompMutList parsing defect (L234L/K238K/M230M/R72R) | headline was flattering by 8->5 additions before the fix |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
