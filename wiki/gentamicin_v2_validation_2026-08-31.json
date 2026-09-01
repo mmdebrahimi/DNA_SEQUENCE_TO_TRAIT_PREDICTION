@@ -1,0 +1,221 @@
+{
+  "schema": "gentamicin-v2-validation-v1",
+  "generated": "2026-08-31",
+  "deployed_rule": {
+    "symbol_rescue": "^(rmt[A-H]\\d*|npmA\\d*)$",
+    "subclass_any": [
+      "GENTAMICIN"
+    ],
+    "threshold": 1
+  },
+  "cohort": "wiki/unscored_genome_label_census.json (leakage-gated via cohort_manifest)",
+  "scored_against": "the DEPLOYED dna_decode.eval.amr_rules.call_resistance, not a re-implementation",
+  "cells": [
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin",
+      "v1": {
+        "n": 131,
+        "tp": 34,
+        "fp": 1,
+        "tn": 65,
+        "fn": 31,
+        "acc": 0.756,
+        "sens": 0.523,
+        "spec": 0.985
+      },
+      "v2": {
+        "n": 131,
+        "tp": 58,
+        "fp": 1,
+        "tn": 65,
+        "fn": 7,
+        "acc": 0.939,
+        "sens": 0.892,
+        "spec": 0.985
+      },
+      "delta_sens": 0.369,
+      "delta_spec": 0.0,
+      "rmt_carriers_R": 37,
+      "rmt_carriers_S": 0,
+      "n_calls_changed": 24,
+      "changed": [
+        {
+          "accession": "GCA_059753515.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059753595.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059753635.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059753675.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059753785.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059753895.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754005.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754015.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754075.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754095.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754155.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754175.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754195.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754285.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754345.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754425.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754445.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754495.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754535.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754615.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754645.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754675.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754755.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        },
+        {
+          "accession": "GCA_059754775.1",
+          "label": "R",
+          "v1": "S",
+          "v2": "R"
+        }
+      ]
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "gentamicin",
+      "v1": {
+        "n": 43,
+        "tp": 19,
+        "fp": 3,
+        "tn": 21,
+        "fn": 0,
+        "acc": 0.93,
+        "sens": 1.0,
+        "spec": 0.875
+      },
+      "v2": {
+        "n": 43,
+        "tp": 19,
+        "fp": 3,
+        "tn": 21,
+        "fn": 0,
+        "acc": 0.93,
+        "sens": 1.0,
+        "spec": 0.875
+      },
+      "delta_sens": 0.0,
+      "delta_spec": 0.0,
+      "rmt_carriers_R": 2,
+      "rmt_carriers_S": 0,
+      "n_calls_changed": 0,
+      "changed": []
+    }
+  ],
+  "specificity_caveat": "Zero S-labelled rmt carriers exist in this cohort or in any other dataset checked, so an unchanged specificity is an ABSENCE of counter-examples, not a bound on over-calling. The over-call risk of the rescue is UNTESTED, not measured to be zero."
+}

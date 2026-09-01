@@ -183,9 +183,9 @@ def test_an_unlabelled_drug_is_unassessable_not_counted_as_a_pass():
     assert s["unconfirmed_drugs"]["n_families_screened"] == 0
 
 
-def test_the_real_run_fires_once_across_every_screened_family():
-    """The measured result, pinned. If the screen ever fires on an unconfirmed drug that is a real
-    finding needing adjudication -- it must fail loudly, not pass unnoticed."""
+def test_the_screen_is_silent_on_drugs_with_no_confirmed_gap():
+    """If the screen ever fires on an unconfirmed drug that is a real finding needing adjudication --
+    it must fail loudly, not pass unnoticed."""
     import json
     hits = sorted(ROOT.glob("wiki/doubt_layer_per_cell_*.json"))
     if not hits:
@@ -193,7 +193,30 @@ def test_the_real_run_fires_once_across_every_screened_family():
     s = json.loads(hits[-1].read_text(encoding="utf-8")).get("amr_arm_specificity")
     if not s:
         pytest.skip("artifact predates the specificity block")
-    assert s["confirmed_gap_drugs"]["n_strong"] == 1
     assert s["unconfirmed_drugs"]["n_strong_after_correction"] == 0, (
         "the screen fired on a drug with no confirmed gap -- adjudicate it, do not silence it")
     assert s["unconfirmed_drugs"]["correction_removed"] >= 1, "the correction must be doing work"
+
+
+def test_the_confirmed_gap_reads_ZERO_now_because_the_fix_SHIPPED():
+    """This pinned `n_strong == 1` until 2026-08-31, and the change is the finding, not a regression.
+
+    The screen surfaced `rmtE1` (36R/0S, p=4.11e-12) as the one determinant family the deployed rule
+    could not represent. The user authorized the v2 lock, the rule now counts `rmt*`/`npmA`, and the
+    screen correctly no longer reports it -- gentamicin went from 17 to 24 counted determinants and its
+    candidate list is empty. A doubt layer that kept flagging a gap after the gap was closed would be
+    measuring its own history rather than the deployed rule.
+    """
+    import json
+    from dna_decode.eval.amr_rules import rule_for
+    hits = sorted(ROOT.glob("wiki/doubt_layer_per_cell_*.json"))
+    if not hits:
+        pytest.skip("per-cell artifact not generated on this checkout")
+    s = json.loads(hits[-1].read_text(encoding="utf-8")).get("amr_arm_specificity")
+    if not s:
+        pytest.skip("artifact predates the specificity block")
+    deployed = bool(rule_for("gentamicin").get("symbol_rescue"))
+    expected = 0 if deployed else 1
+    assert s["confirmed_gap_drugs"]["n_strong"] == expected, (
+        f"rescue deployed={deployed} but the screen reports "
+        f"{s['confirmed_gap_drugs']['n_strong']} STRONG -- artifact and rule disagree")

@@ -3435,18 +3435,8 @@
       "drug": "gentamicin",
       "n_genomes_scanned": 1818,
       "n_distinct_determinants_probed": 148,
-      "n_counted_by_rule": 17,
+      "n_counted_by_rule": 24,
       "candidates": [
-        {
-          "symbol": "rmtE1",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
-          "n_genomes": 36,
-          "r_carriers": 36,
-          "s_carriers": 0,
-          "r_purity": 1.0,
-          "signature": "rmt_like"
-        },
         {
           "symbol": "aph(6)-Id",
           "class": "AMINOGLYCOSIDE",
@@ -3538,16 +3528,6 @@
           "signature": "mixed"
         },
         {
-          "symbol": "rmtF1",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
-          "n_genomes": 9,
-          "r_carriers": 2,
-          "s_carriers": 0,
-          "r_purity": 1.0,
-          "signature": "mixed"
-        },
-        {
           "symbol": "aadA12",
           "class": "AMINOGLYCOSIDE",
           "subclass": "STREPTOMYCIN",
@@ -3561,16 +3541,6 @@
           "symbol": "acrR_W50Ter",
           "class": "MULTIDRUG",
           "subclass": "AMPICILLIN/CHLORAMPHENICOL/FLUOROQUINOLONE/RIFAMPIN/TETRACYCLINE",
-          "n_genomes": 2,
-          "r_carriers": 2,
-          "s_carriers": 0,
-          "r_purity": 1.0,
-          "signature": "mixed"
-        },
-        {
-          "symbol": "rmtE",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
           "n_genomes": 2,
           "r_carriers": 2,
           "s_carriers": 0,
@@ -3758,16 +3728,6 @@
           "signature": "unlabelled"
         },
         {
-          "symbol": "rmtB1",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
-          "n_genomes": 36,
-          "r_carriers": 0,
-          "s_carriers": 0,
-          "r_purity": 0.0,
-          "signature": "unlabelled"
-        },
-        {
           "symbol": "aph(3')-IIa",
           "class": "AMINOGLYCOSIDE",
           "subclass": "KANAMYCIN",
@@ -3852,16 +3812,6 @@
           "class": "AMINOGLYCOSIDE",
           "subclass": "STREPTOMYCIN",
           "n_genomes": 10,
-          "r_carriers": 0,
-          "s_carriers": 0,
-          "r_purity": 0.0,
-          "signature": "unlabelled"
-        },
-        {
-          "symbol": "rmtC",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
-          "n_genomes": 7,
           "r_carriers": 0,
           "s_carriers": 0,
           "r_purity": 0.0,
@@ -4691,26 +4641,6 @@
           "symbol": "ramR_Y59CfsTer13",
           "class": "MULTIDRUG",
           "subclass": "CHLORAMPHENICOL/FLUOROQUINOLONE/TEMOCILLIN/TETRACYCLINE/TIGECYCLINE",
-          "n_genomes": 1,
-          "r_carriers": 0,
-          "s_carriers": 0,
-          "r_purity": 0.0,
-          "signature": "unlabelled"
-        },
-        {
-          "symbol": "rmtF",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
-          "n_genomes": 1,
-          "r_carriers": 0,
-          "s_carriers": 0,
-          "r_purity": 0.0,
-          "signature": "unlabelled"
-        },
-        {
-          "symbol": "rmtG",
-          "class": "AMINOGLYCOSIDE",
-          "subclass": "AMINOGLYCOSIDE",
           "n_genomes": 1,
           "r_carriers": 0,
           "s_carriers": 0,

@@ -115,7 +115,7 @@ def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--manifest", type=Path,
-                    default=REPO / "wiki" / "prospective_lock_manifest_2026-06-22.json")
+                    default=REPO / "wiki" / "prospective_lock_manifest_2026-08-31.json")
     ap.add_argument("--cohort-tsv", type=Path, default=None,
                     help="post-lock cohort TSV: columns biosample, first_public_date, gca, drug, label "
                          "(measured R/S). Omit to run a lock-only verification (no scoring).")

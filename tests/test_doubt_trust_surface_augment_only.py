@@ -47,15 +47,27 @@ def test_the_guard_is_not_vacuous_some_cell_actually_gets_a_doubt_layer():
     assert attached, "no cell carries a doubt_layer -- the augment-only guard would be vacuous"
 
 
-def test_the_known_gap_cell_reports_its_completeness_signal():
-    """Gentamicin is the one cell with an independently-confirmed completeness gap."""
+def test_the_gentamicin_doubt_block_tracks_the_deployed_rule():
+    """Gentamicin was the one cell with an independently-confirmed completeness gap.
+
+    This asserted `known_gap_recovered is True` with an `rmt` family listed until 2026-08-31. The user
+    then authorized the v2 lock; the rule now counts `rmt*`/`npmA`, so the gap is CLOSED and the block
+    must stop reporting it. Written against the deployed rule so it cannot drift either way.
+    """
+    import pytest
+
+    from dna_decode.eval.amr_rules import rule_for
     dl = ts.doubt_layer_for("gentamicin")
     if dl is None:
-        import pytest
         pytest.skip("doubt-layer artifact not generated on this checkout")
     assert dl["arm"] == "determinant_completeness"
-    assert dl["known_gap_recovered"] is True
-    assert any(s.lower().startswith("rmt") for s in dl["strong_families"]), dl["strong_families"]
+    if rule_for("gentamicin").get("symbol_rescue"):
+        assert not any(s.lower().startswith(("rmt", "npma")) for s in dl["strong_families"]), (
+            f"the rescue ships but the doubt block still flags {dl['strong_families']}")
+        assert dl["known_gap_recovered"] is False, "the closed gap must stop reading as recovered"
+    else:
+        assert dl["known_gap_recovered"] is True
+        assert any(s.lower().startswith("rmt") for s in dl["strong_families"]), dl["strong_families"]
 
 
 def test_a_cell_with_no_measurement_returns_none_not_a_clean_bill():

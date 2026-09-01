@@ -50,32 +50,16 @@
       "status": "scored",
       "n_genomes_scanned": 1818,
       "n_determinants_probed": 148,
-      "n_counted_by_rule": 17,
-      "n_families_uncounted": 131,
-      "n_raw_signature": 1,
-      "n_strong": 1,
+      "n_counted_by_rule": 24,
+      "n_families_uncounted": 124,
+      "n_raw_signature": 0,
+      "n_strong": 0,
       "n_weak": 0,
       "base_s_rate": 0.5172,
       "n_labelled_r": 84,
       "n_labelled_s": 90,
-      "known_gap_recovered": true,
-      "strong": [
-        {
-          "kind": "determinant_completeness",
-          "tier": "strong",
-          "reason": "determinant 'rmtE1' (AMINOGLYCOSIDE) is present but the deployed rule cannot represent it; 36/36 labelled carriers are resistant against a cohort base susceptible-rate of 0.517",
-          "evidence": {
-            "symbol": "rmtE1",
-            "subclass": "AMINOGLYCOSIDE",
-            "carriers_labelled_r": 36,
-            "carriers_labelled_s": 0,
-            "base_s_rate": 0.5172,
-            "purity_surprise_p": 4.1141617300070706e-12,
-            "n_families_tested": 131,
-            "familywise_alpha": 0.05
-          }
-        }
-      ]
+      "known_gap_recovered": false,
+      "strong": []
     },
     {
       "cell_kind": "determinant_completeness",
@@ -183,7 +167,7 @@
   ],
   "amr_arm_known_gap_recall": {
     "n_known_gaps": 1,
-    "n_recovered": 1,
+    "n_recovered": 0,
     "note": "One known gap exists in this arm, so this is a single case, NOT a rate. It bounds nothing about gaps that have never been independently confirmed."
   },
   "amr_arm_specificity": {
@@ -203,8 +187,8 @@
     },
     "confirmed_gap_drugs": {
       "n_drugs": 1,
-      "n_families_screened": 131,
-      "n_strong": 1
+      "n_families_screened": 124,
+      "n_strong": 0
     },
     "unconfirmed_drugs": {
       "n_drugs": 4,

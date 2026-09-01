@@ -15,6 +15,7 @@ low-level determinant; multi-determinant strains are high-confidence). See tests
 from __future__ import annotations
 
 import csv
+import re
 from pathlib import Path
 
 from dna_decode.data.mic_tiers import CO_RESISTANCE_MECHANISMS, amrfinder_classes_for
@@ -66,7 +67,8 @@ def qrdr_point_count(main_tsv: Path) -> int:
 
 
 def cipro_determinants_from_main(main_tsv: Path, drug: str,
-                                 subclass_any: frozenset | None = None) -> list[dict]:
+                                 subclass_any: frozenset | None = None,
+                                 symbol_rescue: str | None = None) -> list[dict]:
     """Return the curated AMRFinder determinants (main.tsv rows) relevant to `drug`.
 
     A row is drug-relevant iff any token of its Class or Subclass matches the drug's AMRFinder class set
@@ -79,9 +81,22 @@ def cipro_determinants_from_main(main_tsv: Path, drug: str,
     spectrum determinants (Subclass CEPHALOSPORIN/CARBAPENEM — real 3rd-gen-cephalosporin resistance:
     blaCTX-M, blaCMY, blaNDM…) from intrinsic/narrow-spectrum BETA-LACTAM (blaTEM-1, blaEC) that confer
     ampicillin-R but NOT ceftriaxone-R. Validated: the broad class match gave cef spec 0.41; the
-    extended-spectrum refinement gives acc 0.933 / sens 0.962 / spec 0.912 on N=60 (see DRUG_RULE)."""
+    extended-spectrum refinement gives acc 0.933 / sens 0.962 / spec 0.912 on N=60 (see DRUG_RULE).
+
+    `symbol_rescue` (v2, 2026-08-31 — the gentamicin `rmt` fix) is the FIRST widening refinement. Both
+    prior refinements NARROW and compose as AND, which is why the `rmt` gap could not be expressed as a
+    config change: AMRFinder files 16S rRNA methyltransferases (`rmtB/E/F`, `npmA`) under the GENERIC
+    `AMINOGLYCOSIDE` subclass, so `subclass_any={'GENTAMICIN'}` filters out determinants that genuinely
+    confer high-level gentamicin resistance. A row that PASSES the class gate but FAILS the subclass
+    refinement is kept when its SYMBOL matches this pattern.
+
+    SAFETY, and it is structural rather than conventional: the rescue is evaluated INSIDE the class gate
+    above, so it can only ever re-admit a determinant already relevant to this drug. It cannot widen the
+    rule beyond the drug's own AMRFinder class set, and `test_symbol_rescue_cannot_escape_the_class_gate`
+    pins that. Default None ⇒ byte-identical behaviour for every drug that does not set it."""
     classes = {c.upper() for c in amrfinder_classes_for(drug)}
     refine = {t.upper() for t in subclass_any} if subclass_any else None
+    rescue = re.compile(symbol_rescue, re.I) if symbol_rescue else None
     out: list[dict] = []
     p = Path(main_tsv)
     if not p.exists():
@@ -90,9 +105,10 @@ def cipro_determinants_from_main(main_tsv: Path, drug: str,
         cls = (r.get("Class") or "").upper()
         sub = (r.get("Subclass") or "").upper()
         if not any(c in cls or c in sub for c in classes):
-            continue
+            continue                      # not drug-relevant at all — the rescue never sees this row
         if refine is not None and not any(t in sub for t in refine):
-            continue
+            if not (rescue and rescue.match((r.get("Element symbol") or "").strip())):
+                continue
         out.append({
             "symbol": (r.get("Element symbol") or "").strip(),
             "name": (r.get("Element name") or "").strip(),
@@ -117,8 +133,18 @@ DRUG_RULE: dict[str, dict] = {
                       "validated": "N=60 acc 0.933/sens 0.962/spec 0.912 (extended-spectrum bla only)"},
     "tetracycline":  {"threshold": 1, "subclass_any": None, "gene_prefixes": ("tet",),
                       "validated": "E.coli N=12 acc 0.917/sens 1.0/spec 0.833; Klebsiella N=30 acc 0.8/spec 1.0/sens 0.6 (acquired tet* genes only — excludes intrinsic oqxAB efflux; sens-limited by efflux-mediated tet-R, a curated-determinant blind spot)"},
+    # v2 (2026-08-31): + the 16S rRNA methyltransferase rescue. NOT armA -- AMRFinder already files armA
+    # under Subclass GENTAMICIN (24/24 rows), so the frozen rule always counted it; the gap was rmt*/npmA
+    # (134/134 rows filed under the generic AMINOGLYCOSIDE). Conflating the two overstates the change.
     "gentamicin":    {"threshold": 1, "subclass_any": frozenset({"GENTAMICIN"}),
-                      "validated": "N=128 acc 0.945/sens 0.893/spec 0.96 (GENTAMICIN-subclass only; aph/aadA streptomycin-kanamycin genes excluded)"},
+                      "symbol_rescue": r"^(rmt[A-H]\d*|npmA\d*)$",
+                      "validated": "v2 2026-08-31 (+rmt*/npmA rescue). E.coli N=131 leakage-gated disjoint: "
+                                   "acc 0.939/sens 0.892/spec 0.985 vs frozen-v1 0.756/0.523/0.985 "
+                                   "(+0.369 sens, 24 of 31 FN rescued). v1's 0.893 sens came from cohorts "
+                                   "containing ~no rmt carriers; on rmt-bearing populations v1 measured "
+                                   "0.523 (disjoint) and 0.429 (post-lock prospective). SPECIFICITY IS "
+                                   "UNTESTED, NOT ZERO-COST: no S-labelled rmt carrier exists in any of "
+                                   "three datasets, so 'spec unchanged' is an absence, not a bound."},
     "meropenem":     {"threshold": 1, "subclass_any": frozenset({"CARBAPENEM"}),
                       "validated": "Klebsiella N=30 acc 0.867/sens 1.0/spec 0.733 (acquired carbapenemase, CARBAPENEM-subclass: blaKPC/NDM/OXA-48; vs naive 0.533). Excludes ESBL/AmpC; blind to porin-loss-mediated R (expected FN mode)."},
     "oxacillin":     {"threshold": 1, "subclass_any": frozenset({"METHICILLIN"}),
@@ -214,7 +240,8 @@ def call_resistance(main_tsv: Path, drug: str, resistance_threshold: int | None 
     if cfg.get("counter") == "qrdr_point":
         dets = qrdr_point_determinants(p)
     else:
-        dets = cipro_determinants_from_main(p, drug, subclass_any=cfg.get("subclass_any"))
+        dets = cipro_determinants_from_main(p, drug, subclass_any=cfg.get("subclass_any"),
+                                            symbol_rescue=cfg.get("symbol_rescue"))
         # gene_prefixes: keep only determinants whose SYMBOL starts with one of these (acquired-gene
         # refinement) — excludes intrinsic chromosomal genes that share the drug's broad Subclass but
         # don't confer acquired resistance (e.g. tet excludes K. pneumoniae oqxAB efflux). Cross-organism.

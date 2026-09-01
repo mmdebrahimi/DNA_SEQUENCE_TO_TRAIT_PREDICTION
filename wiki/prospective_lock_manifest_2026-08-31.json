@@ -1,0 +1,72 @@
+{
+  "schema": "prospective-lock-manifest-v1",
+  "lock_date": "2026-08-31",
+  "manifest_created": "2026-08-31",
+  "cutoff_justification": "v2 of the AMR decoder lock. lock_date is TODAY, not the 2026-06-13 freeze date, because the gentamicin rule CHANGED: v1 matched AMRFinder Subclass GENTAMICIN only and was structurally blind to 16S rRNA methyltransferases (rmt*/npmA), which AMRFinder files under the generic AMINOGLYCOSIDE subclass. v2 adds a symbol_rescue for exactly that family (NOT armA -- already counted). Because the decoder is no longer byte-identical to b3761c8, no isolate public before today can be claimed unseen by THIS decoder, so the eligibility cutoff resets to the v2 freeze. WHAT THIS COST: the v1 gentamicin prospective result (sens 0.429 on 62 post-lock isolates, 2026-08-24 accrual) describes the RETIRED rule and is NOT inherited by v2; that cell must accrue fresh post-2026-08-31 isolates. The cipro prospective result is likewise scoped to v1. JUSTIFICATION for the change: E.coli N=131 leakage-gated disjoint isolates, sens 0.523 -> 0.892 (+0.369) at spec 0.985 unchanged (wiki/gentamicin_v2_validation_2026-08-31.json), corroborated by the post-lock accrual (0.429) and a label hunt (methyltransferase PPV for gentamicin-R 62/63). HONEST LIMIT: zero S-labelled rmt carriers exist in any dataset checked, so the unchanged specificity is an ABSENCE of counter-examples, not a bound on over-calling.",
+  "frozen_commit": "",
+  "lock_commit": "",
+  "eligibility_rule": "an isolate is a leakage-free prospective test case IFF its earliest possible public date (INSDC first_public / release_date) is STRICTLY AFTER lock_date; missing / year-only / pre-lock dates are INELIGIBLE (fail-closed)",
+  "protocol": "verify_lock (decoder == frozen) -> filter cohort to prospective-eligible -> frozen call_resistance(organism, drug) -> independent_cohort_validate._conf; the result is stamped with this manifest's surface hashes + lock_date so it is provably prospective",
+  "surface_sha256": {
+    "dna_decode/eval/amr_rules.py": "8007129fe9c617ed0a943061bc661c977c93792ba2ea7c71853cac704cf40b90",
+    "dna_decode/data/calibrated_amr_rules.json": "0435b0e44b4a991830c770400f0f3677ab3521a0379f2e2caa37b1b11fb84428",
+    "dna_decode/data/mic_tiers.py": "47d6c70103673736580c510cf1484b09917665981c6f8594c3b8521e850bc283",
+    "dna_decode/data/shipped_decoder_surface.py": "9a10b198afdf6b9016f57d94ccbbed8a94badfe552b18dfe7274a8cd43569f52",
+    "dna_decode/eval/cohort_manifest.py": "74a3459402ecdebd45c80a4eb7468cbf8bc72d38fe6c5b76b426bb41a44a8005"
+  },
+  "scored_cells": [
+    {
+      "organism": "Campylobacter",
+      "drug": "ciprofloxacin"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ciprofloxacin"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "ceftriaxone"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "gentamicin"
+    },
+    {
+      "organism": "Escherichia_coli_Shigella",
+      "drug": "tetracycline"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ciprofloxacin"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "ceftriaxone"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "gentamicin"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "meropenem"
+    },
+    {
+      "organism": "Klebsiella",
+      "drug": "tetracycline"
+    }
+  ],
+  "what_this_is_not": "NOT a validation number today \u2014 the number accrues as post-lock measured-AST genomes appear. This artifact is the tamper-evident commitment + eligibility rule that makes any later score PROVABLY prospective (leakage-free by time).",
+  "supersedes": {
+    "manifest": "wiki/prospective_lock_manifest_2026-06-22.json",
+    "lock_date": "2026-06-13",
+    "frozen_commit": "b3761c8",
+    "note": "RETIRED 2026-08-31, not deleted. It remains the tamper-evident record of what was locked between 2026-06-13 and 2026-08-31, and the v1 prospective scores are only interpretable against it."
+  },
+  "rule_change": {
+    "drug": "gentamicin",
+    "field": "symbol_rescue",
+    "value": "^(rmt[A-H]\\d*|npmA\\d*)$",
+    "engine_change": "cipro_determinants_from_main gained symbol_rescue -- the FIRST WIDENING refinement; subclass_any and gene_prefixes both narrow and compose as AND, so the rmt gap was not expressible as config. The rescue is evaluated INSIDE the drug class gate, so it cannot admit an out-of-class determinant."
+  }
+}

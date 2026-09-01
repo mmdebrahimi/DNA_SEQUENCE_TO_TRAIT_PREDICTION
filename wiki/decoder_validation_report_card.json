@@ -419,18 +419,13 @@
         "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       },
       "prospective": {
-        "status": "scored",
+        "status": "superseded_by_surface_change",
         "generated": "2026-08-24",
         "lock_date": "2026-06-13",
-        "n_scored": 61,
-        "R": 24,
-        "S": 37,
-        "acc": 0.967,
-        "sens": 0.917,
-        "spec": 1.0,
-        "abstain": 0,
-        "powering": "POWERED",
-        "regression": false
+        "drifted_files": [
+          "dna_decode/eval/amr_rules.py"
+        ],
+        "note": "scored against a decoder that has since been revised; its numbers describe the RETIRED rule and are withheld. The prospective clock restarts at the new lock date -- these isolates are pre-lock for the current decoder."
       }
     },
     {
@@ -508,31 +503,22 @@
       "doubt_layer": {
         "status": "measured",
         "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
-        "n_families_uncounted": 131,
-        "n_strong": 1,
-        "n_raw_signature": 1,
-        "strong_families": [
-          "rmtE1"
-        ],
-        "known_gap_recovered": true,
+        "n_families_uncounted": 124,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
         "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       },
       "prospective": {
-        "status": "scored",
+        "status": "superseded_by_surface_change",
         "generated": "2026-08-24",
         "lock_date": "2026-06-13",
-        "n_scored": 62,
-        "R": 49,
-        "S": 13,
-        "acc": 0.532,
-        "sens": 0.429,
-        "spec": 0.923,
-        "abstain": 0,
-        "powering": "POWERED",
-        "regression": true
-      },
-      "prospective_regression": true,
-      "deployment_caveat": "prospective sens 0.429 on 62 post-lock isolates -- the frozen rule under-calls this cell; see the Prospective-lock disclosure table"
+        "drifted_files": [
+          "dna_decode/eval/amr_rules.py"
+        ],
+        "note": "scored against a decoder that has since been revised; its numbers describe the RETIRED rule and are withheld. The prospective clock restarts at the new lock date -- these isolates are pre-lock for the current decoder."
+      }
     },
     {
       "organism": "escherichia_coli_shigella",
@@ -876,13 +862,11 @@
       "doubt_layer": {
         "status": "measured",
         "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
-        "n_families_uncounted": 131,
-        "n_strong": 1,
-        "n_raw_signature": 1,
-        "strong_families": [
-          "rmtE1"
-        ],
-        "known_gap_recovered": true,
+        "n_families_uncounted": 124,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
         "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },
@@ -1116,13 +1100,11 @@
       "doubt_layer": {
         "status": "measured",
         "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
-        "n_families_uncounted": 131,
-        "n_strong": 1,
-        "n_raw_signature": 1,
-        "strong_families": [
-          "rmtE1"
-        ],
-        "known_gap_recovered": true,
+        "n_families_uncounted": 124,
+        "n_strong": 0,
+        "n_raw_signature": 0,
+        "strong_families": [],
+        "known_gap_recovered": false,
         "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
       }
     },

@@ -108,15 +108,16 @@ predeclared `confirmed` / `unconfirmed` / `unassessable`, never "clean".
 
 ## Waiting on the user (authority calls — not executor tasks)
 
-1. **v2 gentamicin lock.** The frozen AMR rule matches AMRFinder `Subclass == GENTAMICIN`, which cannot
-   see 16S rRNA methyltransferases (`rmtB/E`, `npmA`) — AMRFinder files those under the generic
-   `AMINOGLYCOSIDE`. Measured cost: **+0.369 sensitivity** recoverable on 131 leakage-gated disjoint
-   isolates at **zero measured specificity cost** (`wiki/gentamicin_rmt_disjoint_validation_2026-08-28.md`).
-   Patching the frozen surface **invalidates the prospective lock and the reproducibility freeze** — a fix
-   is an unfrozen revision needing its own validation and a NEW lock. Evidence is now substantially
-   stronger than when this was first raised.
-   *Honest limit:* **zero S-labelled `rmt` carriers exist in any of the three datasets**, so "specificity
-   unchanged" is arithmetic, not evidence. Over-calling risk is untested, not bounded.
+1. ~~**v2 gentamicin lock**~~ — **DECIDED AND SHIPPED 2026-08-31** (user-authorized).
+   `wiki/gentamicin_v2_lock_2026-08-31.md`. Rule is now `subclass_any={GENTAMICIN}` +
+   `symbol_rescue=^(rmt[A-H]\d*|npmA\d*)$`; needed an ENGINE change (the first WIDENING refinement)
+   because both prior refinements narrow and compose as AND. **E. coli N=131: sens 0.523 -> 0.892
+   (+0.369), spec 0.985 unchanged.** Freeze + lock RETIRED, not broken —
+   `prospective_lock_manifest_2026-08-31.json` supersedes; v1 manifest preserved.
+   *Cost, now enforced in code:* the prospective evidence is SPENT for both E. coli cells; the card
+   returns `superseded_by_surface_change` with numbers withheld and the clock restarts at 2026-08-31.
+   *Honest limit, unchanged:* zero S-labelled `rmt` carriers anywhere, so the unchanged specificity is
+   an absence, not a bound.
 
 2. **Whether a single-source cell warrants more than disclosure.** 3 of 10 SCORED AMR cells rest on one
    BioProject (`wiki/provdisjoint_source_concentration_2026-08-28.md`). Current answer is *disclose*, in a

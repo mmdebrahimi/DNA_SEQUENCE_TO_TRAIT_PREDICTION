@@ -6,6 +6,7 @@ pure parts (partition / powering / artifact stamp) behave; (5) the scorer HARD-F
 runs the lock-only path clean.
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -21,7 +22,7 @@ from scripts.prospective_lock_validate import (  # noqa: E402
 import scripts.prospective_lock_validate as plv  # noqa: E402
 
 _REPO = Path(__file__).resolve().parent.parent
-_MANIFEST = _REPO / "wiki" / "prospective_lock_manifest_2026-06-22.json"
+_MANIFEST = _REPO / "wiki" / "prospective_lock_manifest_2026-08-31.json"
 
 
 def _manifest() -> dict:
@@ -41,10 +42,16 @@ def test_manifest_pins_all_surface_files_and_cells():
     m = _manifest()
     assert set(m["surface_sha256"]) == set(FROZEN_SURFACE_FILES)
     assert len(m["scored_cells"]) == len(SCORED_CELLS)
-    # cutoff = the FREEZE date (decoder byte-identical to b3761c8 since); manifest created 2026-06-22.
-    assert m["lock_date"] == "2026-06-13" and m["schema"] == "prospective-lock-manifest-v1"
-    assert m["manifest_created"] == "2026-06-22" and m["frozen_commit"] == "b3761c8"
-    assert m["cutoff_justification"]   # the byte-identity rationale must be recorded
+    assert m["schema"] == "prospective-lock-manifest-v1"
+    # DERIVED, not duplicated (2026-08-31). These previously hardcoded v1's "2026-06-13" / "b3761c8",
+    # so minting the v2 lock broke them for no reason a reader could act on. The cutoff is the FREEZE
+    # date and the manifest is named for its creation date, so both are checkable against the file
+    # itself -- a lock v3 will not need this test edited.
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", m["lock_date"]), m["lock_date"]
+    assert m["manifest_created"] in _MANIFEST.name, (
+        f"manifest_created {m['manifest_created']} must match the filename {_MANIFEST.name}")
+    assert m["lock_date"] <= m["manifest_created"], "a lock cannot be created before it takes effect"
+    assert m["cutoff_justification"]   # the rationale must be recorded
 
 
 def test_verify_lock_detects_tamper():
@@ -114,7 +121,7 @@ def test_build_artifact_stamps_lock_provenance():
                          powering={"status": "ACCRUING"}, generated="2026-06-22")
     assert art["prospective_lock_verified"] is True
     assert art["lock_manifest"]["surface_sha256"] == m["surface_sha256"]   # provably the locked decoder
-    assert art["lock_manifest"]["lock_date"] == "2026-06-13"
+    assert art["lock_manifest"]["lock_date"] == m["lock_date"]   # derived from the loaded manifest
 
 
 # ---- scorer CLI gates ----
@@ -137,3 +144,58 @@ def test_scorer_hard_fails_on_broken_lock(tmp_path, capsys):
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# --- superseded-by-surface-change (added 2026-08-31 with the gentamicin v2 lock) ---
+
+def test_a_prospective_artifact_from_a_revised_decoder_withholds_its_numbers():
+    """`prospective_lock_verified` records that the lock held WHEN WRITTEN and is never re-checked, so
+    after a rule revision every prior score keeps saying True while describing a RETIRED rule. That is
+    the exact failure the lock exists to prevent, arriving through the back door."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_card", _REPO / "scripts" / "build_validation_report_card.py")
+    card = importlib.util.module_from_spec(spec); spec.loader.exec_module(card)
+
+    stale = {"prospective_lock_verified": True, "generated": "2026-08-24",
+             "confusion": {"n_scored": 62, "acc": 0.532, "sens": 0.429, "spec": 0.923},
+             "powering": {"status": "POWERED", "scored_R": 49, "scored_S": 13},
+             "lock_manifest": {"lock_date": "2026-06-13",
+                               "surface_sha256": {"dna_decode/eval/amr_rules.py": "deadbeef" * 8}}}
+    blk = card.build_prospective_block(stale)
+    assert blk["status"] == "superseded_by_surface_change"
+    assert "sens" not in blk and "acc" not in blk, "a superseded artifact must WITHHOLD its numbers"
+    assert blk["drifted_files"] == ["dna_decode/eval/amr_rules.py"]
+
+
+def test_an_artifact_matching_the_live_surface_is_still_rendered():
+    """NON-VACUITY: if the check rejected everything, withholding would prove nothing."""
+    import importlib.util
+    from dna_decode.eval.prospective_lock import surface_hashes
+    spec = importlib.util.spec_from_file_location(
+        "_card2", _REPO / "scripts" / "build_validation_report_card.py")
+    card = importlib.util.module_from_spec(spec); spec.loader.exec_module(card)
+
+    live = {"prospective_lock_verified": True, "generated": "2026-08-31",
+            "confusion": {"n_scored": 10, "acc": 0.9, "sens": 0.9, "spec": 0.9},
+            "powering": {"status": "POWERED", "scored_R": 5, "scored_S": 5},
+            "lock_manifest": {"lock_date": "2026-08-31", "surface_sha256": surface_hashes()}}
+    blk = card.build_prospective_block(live)
+    assert blk["status"] == "scored" and blk["sens"] == 0.9
+
+
+def test_the_committed_v1_artifacts_are_correctly_superseded():
+    """Real data: both 2026-08-24 accrual artifacts were scored against v1 and must now withhold."""
+    import importlib.util
+    import json as _json
+    spec = importlib.util.spec_from_file_location(
+        "_card3", _REPO / "scripts" / "build_validation_report_card.py")
+    card = importlib.util.module_from_spec(spec); spec.loader.exec_module(card)
+
+    arts = sorted((_REPO / "wiki").glob("prospective_lock_validation_*2026-08-24.json"))
+    if not arts:
+        pytest.skip("v1 accrual artifacts absent on this checkout")
+    for a in arts:
+        blk = card.build_prospective_block(_json.loads(a.read_text(encoding="utf-8")))
+        assert blk["status"] == "superseded_by_surface_change", a.name
+        assert "sens" not in blk, f"{a.name} still exposes a number from the retired rule"

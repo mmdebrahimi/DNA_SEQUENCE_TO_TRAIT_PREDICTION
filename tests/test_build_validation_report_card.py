@@ -537,14 +537,24 @@ def test_doubt_layer_is_augment_only_on_the_committed_card():
         assert not (forbidden & set(d)), f"{c['organism']}x{c['drug']}: doubt block carries {forbidden & set(d)}"
 
 
-def test_the_known_gap_is_the_only_strong_signal_on_the_card():
-    """The measured result, pinned. If a second family ever goes STRONG that is a real finding and
-    this test should fail loudly rather than let it pass unnoticed."""
+def test_the_strong_family_set_tracks_the_deployed_rule():
+    """Pinned `{"rmtE1"}` until 2026-08-31; now EMPTY because the v2 lock deployed the fix.
+
+    If a family ever goes STRONG that is a real finding needing adjudication, so this must fail loudly
+    rather than pass unnoticed. Expressed against the deployed rule so it cannot drift: while the
+    gentamicin rescue ships, `rmtE1` is counted and must NOT appear as an uncounted gap.
+    """
     import json
     from pathlib import Path
+
+    from dna_decode.eval.amr_rules import rule_for
     p = Path("wiki/decoder_validation_report_card.json")
     if not p.exists():
         pytest.skip("report card artifact absent")
     cells = json.loads(p.read_text(encoding="utf-8"))["cells"]
     fams = {f for c in cells for f in (c.get("doubt_layer", {}).get("strong_families") or [])}
-    assert fams == {"rmtE1"}, f"the set of STRONG completeness families changed: {sorted(fams)}"
+    if rule_for("gentamicin").get("symbol_rescue"):
+        assert "rmtE1" not in fams, "the rescue ships but rmtE1 still reads as an uncounted gap"
+        assert fams == set(), f"a NEW strong completeness family appeared -- adjudicate it: {sorted(fams)}"
+    else:
+        assert fams == {"rmtE1"}, f"the set of STRONG completeness families changed: {sorted(fams)}"

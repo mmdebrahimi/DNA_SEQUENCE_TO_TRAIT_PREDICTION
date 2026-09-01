@@ -256,6 +256,35 @@ def build_prospective_block(pcell: dict | None) -> dict:
         # the scorer hard-fails on drift, so this should be unreachable -- but a stale artifact from a
         # drifted decoder must never be rendered as if it validated the CURRENT one.
         return {"status": "lock_unverified", "generated": pcell.get("generated")}
+
+    # SUPERSEDED-BY-SURFACE-CHANGE (added 2026-08-31 with the gentamicin v2 lock).
+    # `prospective_lock_verified` records that the lock held WHEN THE ARTIFACT WAS WRITTEN. It is not
+    # re-checked afterwards, so once the decoder is revised every prior prospective score keeps saying
+    # True while silently describing a RETIRED rule. That is the whole failure the lock exists to
+    # prevent, arriving through the back door. Re-verify against the LIVE surface and withhold the
+    # numbers on mismatch.
+    #
+    # This resets the prospective clock rather than merely relabelling: the v2 cutoff is later, so the
+    # isolates that were prospective for v1 are PRE-lock for v2 and cannot be re-scored into evidence.
+    # That cost is real and is the honest price of the revision -- it applies to the ciprofloxacin cell
+    # too, whose RULE did not change but whose pinned surface did; behavioural sameness is an argument,
+    # and hash-pinning exists so evidence never rests on one.
+    stamped = ((pcell.get("lock_manifest") or {}).get("surface_sha256")) or {}
+    if stamped:
+        try:
+            from dna_decode.eval.prospective_lock import surface_hashes
+            live = surface_hashes()
+            drifted = sorted(f for f, h in stamped.items() if live.get(f) != h)
+        except Exception:  # noqa: BLE001 — a read-only roll-up must not break on an import failure
+            drifted = []
+        if drifted:
+            return {"status": "superseded_by_surface_change",
+                    "generated": pcell.get("generated"),
+                    "lock_date": (pcell.get("lock_manifest") or {}).get("lock_date"),
+                    "drifted_files": drifted,
+                    "note": ("scored against a decoder that has since been revised; its numbers describe "
+                             "the RETIRED rule and are withheld. The prospective clock restarts at the "
+                             "new lock date -- these isolates are pre-lock for the current decoder.")}
     conf = pcell.get("confusion") or {}
     pw = pcell.get("powering") or {}
     blk = {"status": "scored" if conf.get("n_scored") else "not_accrued",

@@ -19,7 +19,12 @@ ROOT = Path(__file__).resolve().parents[1]
 # Frozen surface, byte-frozen at commit b3761c8 (2026-06-13). The TB work must never edit these.
 FROZEN_SHA = {
     "dna_decode/eval/amr_rules.py":
-        "a983bf28e4ff4f89034b152404e49ec3aa6b3907ac81c670b14e60e7cfe1fad4",
+        # RE-PINNED 2026-08-31 for the gentamicin v2 lock (a983bf28 -> 8007129f). This guard exists so
+        # TB work can never touch the AMR surface, and it still does exactly that: the surface changed by
+        # a DELIBERATE, separately-validated AMR revision (wiki/gentamicin_v2_validation_2026-08-31.json)
+        # with its own new lock manifest -- not by TB work. Re-pinning is correct here; relaxing the
+        # assertion would have destroyed the guard.
+        "8007129fe9c617ed0a943061bc661c977c93792ba2ea7c71853cac704cf40b90",
     "dna_decode/data/calibrated_amr_rules.json":
         # canonical repo-blob (LF) hash; re-pinned 2026-06-27 from the stale CRLF hash that
         # passed only on a Windows working tree (.gitattributes now forces LF). Frozen CONTENT

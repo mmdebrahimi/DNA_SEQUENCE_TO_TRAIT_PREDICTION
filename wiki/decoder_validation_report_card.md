@@ -98,19 +98,19 @@ Rows are **drug-level** — the screen runs across the whole cached determinant 
 | campylobacter | ciprofloxacin | 125 | 2 | 0 | — |
 | escherichia_coli_shigella | ceftriaxone | 216 | 2 | 0 | — |
 | escherichia_coli_shigella | ciprofloxacin | 125 | 2 | 0 | — |
-| escherichia_coli_shigella | gentamicin | 131 | 1 | 1  **KNOWN GAP** | `rmtE1` |
+| escherichia_coli_shigella | gentamicin | 124 | 0 | 0 | — |
 | escherichia_coli_shigella | tetracycline | 89 | 0 | 0 | — |
 | klebsiella | ceftriaxone | 216 | 2 | 0 | — |
 | klebsiella | ciprofloxacin | 125 | 2 | 0 | — |
-| klebsiella | gentamicin | 131 | 1 | 1  **KNOWN GAP** | `rmtE1` |
+| klebsiella | gentamicin | 124 | 0 | 0 | — |
 | klebsiella | meropenem | 317 | 0 | 0 | — |
 | klebsiella | tetracycline | 89 | 0 | 0 | — |
 | pseudomonas_aeruginosa | meropenem | 317 | 0 | 0 | — |
 | salmonella | ciprofloxacin | 125 | 2 | 0 | — |
-| salmonella | gentamicin | 131 | 1 | 1  **KNOWN GAP** | `rmtE1` |
+| salmonella | gentamicin | 124 | 0 | 0 | — |
 | salmonella | tetracycline | 89 | 0 | 0 | — |
 
-Across 5 screened drugs, **1** determinant family survives the correction. **Honest limit:** this project has exactly ONE independently confirmed completeness gap, so recovering it is a single case and **not a rate** — it bounds nothing about gaps never confirmed.
+Across 5 screened drugs, **no** determinant families survive the correction. **Honest limit:** this project has exactly ONE independently confirmed completeness gap, so recovering it is a single case and **not a rate** — it bounds nothing about gaps never confirmed.
 
 
 ## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)
@@ -121,8 +121,8 @@ HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, 
 
 | organism | drug | lock date | N (R/S) | acc | sens | spec | abstain | powering | as of |
 |---|---|---|---|---|---|---|---|---|---|
-| escherichia_coli_shigella | ciprofloxacin | 2026-06-13 | 61 (24R/37S) | 0.967 | 0.917 | 1.000 | 0 | POWERED | 2026-08-24 |
-| escherichia_coli_shigella | gentamicin | 2026-06-13 | 62 (49R/13S) | 0.532 | 0.429  **REGRESSION** | 0.923 | 0 | POWERED | 2026-08-24 |
+| escherichia_coli_shigella | ciprofloxacin | — | — | — | — | — | — | — | superseded_by_surface_change |
+| escherichia_coli_shigella | gentamicin | — | — | — | — | — | — | — | superseded_by_surface_change |
 
 A LOW prospective sens with HIGH spec means the rule under-calls — it is missing determinants, not mislabelling. Diagnose the false negatives' features before reading it as decay; see `wiki/prospective_lock_first_accrual_2026-08-24.md`, where exactly that diagnosis located a real catalog gap rather than drift.
 

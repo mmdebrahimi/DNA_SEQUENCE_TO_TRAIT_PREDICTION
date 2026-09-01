@@ -132,7 +132,7 @@ def test_disclosure_never_changes_a_prediction_and_never_touches_the_frozen_surf
     import hashlib
     import json
     root = Path(__file__).resolve().parent.parent
-    manifest = json.loads((root / "wiki" / "prospective_lock_manifest_2026-06-22.json")
+    manifest = json.loads((root / "wiki" / "prospective_lock_manifest_2026-08-31.json")
                           .read_text(encoding="utf-8"))
     for rel, want in manifest["surface_sha256"].items():
         got = hashlib.sha256((root / rel).read_bytes()).hexdigest()

@@ -187,8 +187,16 @@ def main() -> int:
         print("no cohorts on disk")
         return 1
 
-    # CONTROL: the local re-implementation must agree with the real frozen rule, or nothing below means
+    # CONTROL: a local re-implementation must agree with the DEPLOYED rule, or nothing below means
     # anything. Checked on every genome that has cached AMRFinder output.
+    #
+    # WHICH re-implementation is the reference CHANGED when v2 shipped (2026-08-31), and that is the
+    # point of this script rather than a bug in it. Before deployment the deployed rule WAS `frozen_call`,
+    # so the control compared against that. After deployment the deployed rule is `candidate_call`, and
+    # the control caught the switch immediately -- it reported 149/150 and refused, the one disagreement
+    # being exactly the rmtB1 isolate the candidate exists to rescue. The reference is now the CANDIDATE;
+    # `frozen_call` is retained as the v1 REFERENCE implementation so the before/after table below stays
+    # computable. Weakening this control instead of re-pointing it would have destroyed the guard.
     checked = mismatch = 0
     for cohort in COHORTS:
         base = ROOT / "data" / "raw" / cohort
@@ -200,13 +208,14 @@ def main() -> int:
             if main is None or not main.exists():
                 continue
             real = call_resistance(main, "gentamicin")["prediction"] == "R"
-            if real != frozen_call(read_rows(main)):
+            if real != candidate_call(read_rows(main)):
                 mismatch += 1
             checked += 1
-    print(f"CONTROL: local frozen re-implementation vs call_resistance -> "
+    print(f"CONTROL: local v2 re-implementation vs deployed call_resistance -> "
           f"{checked - mismatch}/{checked} agree")
     if mismatch:
-        print("  REFUSING to report: the re-implementation does not match the frozen rule.")
+        print("  REFUSING to report: the re-implementation does not match the DEPLOYED rule. If the "
+              "deployed rule was just changed, re-point this control rather than relaxing it.")
         return 2
 
     print()

@@ -46,18 +46,43 @@ def test_compound_gentamicin_subclasses_are_already_counted_by_the_frozen_rule()
         assert frozen_call([{"Class": "AMINOGLYCOSIDE", "Subclass": sub, "Element symbol": "x"}])
 
 
-def test_the_frozen_amr_surface_is_untouched_by_this_work():
-    """The prospective lock pins amr_rules.py + calibrated_amr_rules.json. The candidate is scorer-local
-    and must not have edited either; if it did, the lock and the freeze are both invalidated."""
-    from dna_decode.eval import prospective_lock as pl  # noqa: F401  (import proves the module loads)
-    for rel in ("dna_decode/eval/amr_rules.py", "dna_decode/data/calibrated_amr_rules.json"):
-        p = ROOT / rel
-        if not p.exists():
-            continue
-        # the candidate must appear NOWHERE in the frozen files
-        text = p.read_text(encoding="utf-8", errors="replace")
-        assert "rmt" not in text.lower() or "npmA" not in text, (
-            f"{rel} appears to have been edited to include the candidate -- that breaks the lock")
+def test_the_candidate_is_now_deployed_under_its_own_lock():
+    """SUPERSEDED 2026-08-31, and the supersession is the point.
+
+    This test used to assert the candidate appeared NOWHERE in the frozen surface -- correct while the
+    candidate was scorer-local. The user then authorized the v2 lock, so the candidate IS the deployed
+    rule and the old assertion is simply false. The honest replacement is not deletion: it is to guard
+    the NEW invariant, which is that a surface change of this kind never happens WITHOUT its own lock.
+
+    So: if amr_rules.py carries the rescue, a v2 manifest must exist, pin the live file, and carry a
+    later lock_date than v1. That makes an undocumented edit to the frozen surface fail here.
+    """
+    import hashlib
+    import json
+
+    from dna_decode.eval.amr_rules import rule_for
+
+    text = (ROOT / "dna_decode/eval/amr_rules.py").read_text(encoding="utf-8", errors="replace")
+    deployed = bool(rule_for("gentamicin").get("symbol_rescue"))
+    if not deployed:
+        assert "npmA" not in text, "the rescue is in the surface but not in the rule -- half-applied edit"
+        return
+
+    manifests = sorted((ROOT / "wiki").glob("prospective_lock_manifest_*.json"))
+    assert len(manifests) >= 2, "the rescue is deployed but no NEW lock manifest was minted"
+    v2 = json.loads(manifests[-1].read_text(encoding="utf-8"))
+    live = hashlib.sha256((ROOT / "dna_decode/eval/amr_rules.py").read_bytes()).hexdigest()
+    assert v2["surface_sha256"]["dna_decode/eval/amr_rules.py"] == live, (
+        "the deployed surface does not match the newest lock manifest -- the lock is stale")
+    v1 = json.loads(manifests[0].read_text(encoding="utf-8"))
+    assert v2["lock_date"] > v1["lock_date"], "a superseding lock must carry a later cutoff"
+    assert v2.get("supersedes"), "a superseding lock must name what it retires"
+
+
+def test_the_retired_v1_lock_is_preserved_not_deleted():
+    """The v1 manifest is the only record of what was locked 2026-06-13..2026-08-31, and the v1
+    prospective scores are interpretable ONLY against it. Deleting it would erase the audit trail."""
+    assert (ROOT / "wiki" / "prospective_lock_manifest_2026-06-22.json").exists()
 
 
 def test_the_specificity_claim_reports_its_own_vacuity():

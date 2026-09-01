@@ -99,29 +99,58 @@ def test_probe_replicates_the_row_to_the_rules_threshold():
     assert rule_counts_determinant(header, row, "ciprofloxacin", None) is True
 
 
+_HDR = ["Element symbol", "Element name", "Class", "Subclass", "% Identity to reference",
+        "Element type", "Method"]
+
+
 def test_probe_still_rejects_a_determinant_the_rule_cannot_represent():
     """The screen must not become a rubber stamp: repeating an out-of-scope determinant to threshold
-    must NOT make it count."""
-    header = ["Element symbol", "Element name", "Class", "Subclass", "% Identity to reference",
-              "Element type", "Method"]
+    must NOT make it count.
+
+    The example CHANGED 2026-08-31 and the change is the point. This used to use `rmtE1`, which the
+    frozen rule genuinely could not represent -- the very gap this screen found. The user then
+    authorized the v2 lock, so `rmtE1` IS now counted and the old assertion became false by design.
+    `aph(6)-Id` is the right replacement: a streptomycin determinant that does NOT confer gentamicin
+    resistance and is excluded DELIBERATELY, which is exactly the case this test exists to protect.
+    """
+    row = {"Element symbol": "aph(6)-Id", "Element name": "aminoglycoside phosphotransferase",
+           "Class": "AMINOGLYCOSIDE", "Subclass": "STREPTOMYCIN", "% Identity to reference": "100",
+           "Element type": "AMR", "Method": "EXACTX"}
+    assert rule_counts_determinant(_HDR, row, "gentamicin", None) is False
+
+
+def test_the_gap_this_screen_FOUND_is_now_closed_by_the_deployed_rule():
+    """The loop closes. The screen surfaced `rmtE1` (36R/0S, p=4.11e-12) as the one determinant family
+    the deployed rule could not represent; v2 shipped the fix. The probe must now agree it is counted --
+    if this ever regresses, the fix was silently reverted."""
     row = {"Element symbol": "rmtE1", "Element name": "16S methyltransferase",
            "Class": "AMINOGLYCOSIDE", "Subclass": "AMINOGLYCOSIDE", "% Identity to reference": "100",
            "Element type": "AMR", "Method": "EXACTX"}
-    assert rule_counts_determinant(header, row, "gentamicin", None) is False
+    assert rule_counts_determinant(_HDR, row, "gentamicin", None) is True
 
 
 # --- real-data regression: the screen must rediscover the known gap ---
 
-def test_screen_artifact_ranks_rmt_first_for_gentamicin():
-    """End-to-end: a general screen that knows nothing about gentamicin must still surface the known
-    blind family at the top."""
+def test_the_screen_tracks_the_deployed_gentamicin_rule():
+    """END-TO-END, and it flipped 2026-08-31 for the right reason.
+
+    Before the v2 lock this asserted an `rmt` family ranked FIRST -- a general screen that knew nothing
+    about gentamicin still surfacing the known blind family. The user then authorized the fix, so the
+    rule counts `rmt*` and the screen must no longer offer it as an uncounted candidate. Expressed
+    against the deployed rule, so whichever way the rule goes the screen has to agree with it.
+    """
+    from dna_decode.eval.amr_rules import rule_for
     hits = sorted(ROOT.glob("wiki/determinant_completeness_screen_*.json"))
     if not hits:
         pytest.skip("screen artifact not generated on this checkout")
     d = json.loads(hits[-1].read_text(encoding="utf-8"))
     gent = [x for x in d["drugs"] if x["drug"] == "gentamicin"]
-    if not gent or not gent[0]["candidates"]:
+    if not gent:
         pytest.skip("gentamicin not in the committed run")
-    top = gent[0]["candidates"][0]
-    assert top["symbol"].lower().startswith("rmt"), f"expected an rmt family on top, got {top['symbol']}"
-    assert top["s_carriers"] == 0
+    cands = gent[0]["candidates"]
+    if rule_for("gentamicin").get("symbol_rescue"):
+        rmt = [c for c in cands if c["symbol"].lower().startswith(("rmt", "npma"))]
+        assert not rmt, f"the rescue ships but the screen still lists {[c['symbol'] for c in rmt]}"
+    else:
+        assert cands and cands[0]["symbol"].lower().startswith("rmt")
+        assert cands[0]["s_carriers"] == 0
