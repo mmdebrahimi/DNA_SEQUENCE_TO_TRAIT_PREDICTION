@@ -125,7 +125,8 @@ action, so leaving completed work here made a finished family rank first on the 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
 | 1 | DONE 2026-08-31 -- FP rate measured: family-wise correction drops 4 of 5 raw-signature hits; 1 survivor is the confirmed `rmtE1` gap | run-tests | med | high | resolved | -- |
-| 2 | Extend the completeness screen to the target-site catalogs (one vocabulary or two?) | edit-local-code | med | high | med | 1-2hr |
+| 2 | ANSWERED 2026-09-02 -- ONE vocabulary: the purity signature is well-formed on HIV NNRTI (the best case) and fires (V179F, 15 carriers all R, p=8.8e-06 over 638 units) | run-tests | med | high | resolved | -- |
+| 2b | WIRE the target-site completeness screen into the shipped doubt block (augment-only, verified by diff) -- the probe answered the design question, not the integration | edit-local-code | med | med | low | 1-2hr |
 | 3 | Re-screen when any NEW independent label set lands (both known gaps needed one) | research | low | high | high | ongoing |
 <!-- project-state:end:candidate-actions -->
 
@@ -161,6 +162,7 @@ Attempt budget: 3.
 | 6 | 2026-08-31 | edit-local-code | step 4: trust_surface.doubt_layer_for, augment-only | badge-with-vs-without diff green + non-vacuity pinned |
 | 7 | 2026-08-31 | run-tests | full suite | 4029 passed, 0 failed; frozen surface byte-unchanged; lock re-verified |
 | 8 | 2026-08-31 | propose | /project-state --update-last-evaluation | 3 of 3 MVP criteria MET (doubt module + tests; guarded doubt block in the record; per-cell artifact vs the 0.604 incumbent). 1 unknown retired: the rmt_like heuristic's false-positive rate is measured -- 4 of 5 raw-signature hits are noise. Corrects a contradiction: this section said 1-of-3-not-yet-met while Progress proxy said 3/3. |
+| 9 | 2026-09-02 | run-tests | target-site denominator probe (HIV NNRTI, best case) | ONE_VOCABULARY: shape holds (1170 S / 638 units / 12 pure) and fires -- V179F p=8.8e-06; V179D+V179E independently named by the 09-01 OLS curation |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

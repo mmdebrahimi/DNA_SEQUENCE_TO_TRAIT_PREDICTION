@@ -1,0 +1,43 @@
+{
+  "schema": "doubt-target-site-denominator-probe-v1",
+  "cell": "HIV NNRTI / EFV",
+  "fold_cutoff": 3.0,
+  "n_isolates_scored": 2168,
+  "n_R": 998,
+  "n_S": 1170,
+  "base_susceptible_rate": 0.5396678966789668,
+  "catalogued_positions": [
+    100,
+    101,
+    103,
+    106,
+    181,
+    188,
+    190,
+    230
+  ],
+  "n_candidate_units": 1654,
+  "n_units_with_min_carriers": 638,
+  "n_pure_units": 12,
+  "n_surviving_familywise": 1,
+  "surviving": [
+    {
+      "substitution": "V179F",
+      "carriers": 15,
+      "p": 8.832201148515509e-06
+    }
+  ],
+  "shape": {
+    "negative_class_present": true,
+    "enough_units": true,
+    "purity_discriminating": true
+  },
+  "verdict": "ONE_VOCABULARY",
+  "why": "the purity signature has a real denominator here AND fires, so the AMR screen's vocabulary transfers to the target-site arm.",
+  "honest_limits": [
+    "Measured on ONE target-site cell (HIV NNRTI) -- deliberately the BEST case, since it is the only one with a free independent isolate-level wet-lab label. A negative here generalises downward; a positive would need re-checking per cell.",
+    "The R/S split is a threshold on a continuous fold-change at the sourced DRMcv.R cutoff; the AMR arm's labels are categorical AST. The two are not the same measurement.",
+    "In-distribution: catalog and label both trace to Stanford HIVDB.",
+    "This probe answers whether the SHAPE supports the screen. It is not itself a curation recommendation -- data-derived NNRTI curation was measured and DECLINED on 2026-09-01."
+  ]
+}
