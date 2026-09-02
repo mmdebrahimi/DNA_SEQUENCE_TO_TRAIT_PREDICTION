@@ -74,6 +74,8 @@ When a label source is worth acquiring, the target is already screened, verified
 | E5 | PEAR BioProject PRJNA687219 resolves: E. coli K-12 MG1655, 45 SRA experiments, 478 Gbases raw reads | NCBI BioProject (fetched) | high | 2026-08-31 |
 | E6 | PEAR is constructed single-gene variants w/ continuous relative-growth readout -> constructed_molecular regime | wiki/pear_substrate_screen_2026-08-31.md | high | 2026-08-31 |
 | E7 | PEAR clears every applicable gate EXCEPT G6, which is UNSCREENED -> status INCOMPLETE, not `clears` (corrected 2026-09-01 by the mechanical screen; the memo headline overstated it, its own table did not). Blocker remains ARTIFACT FORMAT | wiki/pear_substrate_screen_2026-08-31.md + wiki/rejection_gate_screen_2026-09-01.md | high | 2026-09-01 |
+| E8 | PEAR G6 PASSES on real values: mode-share 0.0019 / 2,106 distinct levels (n=2,114); ten-gate verdict CLEARS | wiki/pear_g6_screen_2026-09-01.md | high | 2026-09-01 |
+| E9 | The "C: at 99%" blocker was a wrong-drive problem: D: has 4.1 TB; R installed there in minutes | wiki/pear_g6_screen_2026-09-01.md | high | 2026-09-01 |
 <!-- project-state:end:evidence -->
 
 ### Unknowns
@@ -81,20 +83,29 @@ When a label source is worth acquiring, the target is already screened, verified
   resolves: *E. coli* K-12 MG1655 (taxid 511145), correct title, 45 SRA experiments, Sun Yat-sen
   University. GitHub `woson2020/CTXM-14` exists. The discipline paid, but not as written — the
   accessions are fine; the ARTIFACT FORMAT is the blocker (see U4).
-- **U4 (new)** — Whether the per-variant fitness values are extractable. The repo's only data files are
-  two `.RData` workspaces; `Data_for_Figure2.RData` is a serialized **ggplot2 plot object** (`Figure.2A`),
-  not a table — both `pyreadr` and `rdata` fail on its bytecode/weakrefs. Needs R (not installed;
-  C: at 99%), or the journal supplementary tables (UNREAD — PMC cookie-gated, Oxford truncated).
-- **U5 (new)** — Whether the plot object carries all ~23,000 variants or only the Figure-2A subset.
-- **U6 (new)** — G6 censoring: a selection-growth assay has a floor. Run `assay_degeneracy()` from
-  `scripts/forward_inverse_roundtrip.py` BEFORE believing any score (the CcdB lesson: 79.3% tied at
-  ceiling posted the sweep's BEST number).
+- ~~**U4** — Whether the per-variant fitness values are extractable~~ **RETIRED 2026-09-01: YES.**
+  R 4.6.1 installed via micromamba to `D:/tools/r_env` (D: has 4.1 TB free — the "C: at 99%" blocker was
+  a WRONG-DRIVE problem, not a real wall). The ggplot objects carry their source data in `$data`;
+  extracted to `D:/dna_decode_cache/pear/extracted/*.tsv` by `scripts/pear_extract_fitness.R`.
+  Journal supplementary tables never needed.
+- ~~**U5**~~ **ANSWERED 2026-09-01, partly unfavourably.** The plot objects carry the AGGREGATED
+  per-variant effect sizes for the full scanned range — Figure.2A/2B nucleotide-level (792 positions x
+  A/C/G/T = 3,168 substitutions per drug) and Figure3.A per-variant (2,114 in `C648T` notation with CTX
+  + CAZ). They do **NOT** carry the ~23,000 raw barcoded strains. Quoting "23,000 variants" off this
+  extraction would be wrong.
+- ~~**U6** — G6 censoring~~ **RETIRED 2026-09-01 by measurement.** `assay_degeneracy` run on the real
+  extracted values: mode-share **0.0019** over **2,106 distinct levels** (Figure3.A cefotaxime, n=2,114);
+  all four variant tables pass. **G6 PASSES**; the ten-gate screen now returns CLEARS.
+  TRAP RECORDED: including the wild-type baseline rows (`gt == isWt`, relative growth 1.0 by
+  construction) alone puts mode-share at 0.2678 and TRIPS the bar — a censored-assay verdict manufactured
+  entirely by the normalizer. Same defect class as the NNRTI `L234L` self-to-self entries, opposite
+  direction. `wiki/pear_g6_screen_2026-09-01.md`.
 - Whether any acquisition target is reachable without money.
 
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
 |---|---|---|---|
-| H1 | PEAR clears all ten gates | open | 2026-09-01 |
+| H1 | PEAR clears all ten gates | confirmed | 2026-09-01 |
 | H4 | PEAR is an L1 label source that helps the AMR label wall | falsified | 2026-08-31 |
 | H5 | PEAR's processed per-variant fitness table is directly downloadable | falsified | 2026-08-31 |
 | H2 | A free path exists that clears the label wall (prospective accrual) | confirmed | 2026-08-24 |
@@ -131,7 +142,8 @@ A gate-scored, accession-verified, ranked candidate list exists — so an acquis
 ### Candidate next actions
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Screen PEAR's G6 degeneracy -- the ONE gate still open on it; needs the fitness values, which need the R extraction route | research | med | high | high | days |
+| 1 | DONE 2026-09-01 -- G6 screened on real extracted values; PASSES (mode-share 0.0019 / 2,106 levels). Ten-gate verdict CLEARS | research | med | high | resolved | -- |
+| 1b | Run the shipped genome-edit forward path against PEAR's 2,114 measured variants (external replication of the one working learned regime) | run-tests | high | high | med | 1-2hr |
 | 2 | Resolve PEAR accessions on ENA + NCBI (retires U1) | research | high | high | med | hours |
 | 3 | Re-run the prospective accrual sweep | run-tests | med | med | low | hours |
 <!-- project-state:end:candidate-actions -->

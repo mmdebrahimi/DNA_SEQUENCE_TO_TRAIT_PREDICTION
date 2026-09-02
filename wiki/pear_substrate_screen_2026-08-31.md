@@ -1,11 +1,17 @@
 # PEAR screened — it is not what F-E assumed, and the blocker is not a gate
 
 **Verdict: PEAR is a constructed-variation DMS for the L4 forward cell, NOT a label source for the
-deterministic AMR decoder — and NOT an acquisition. It is public and free. It clears every rejection
-gate that applies to it **except G6, which is UNSCREENED** — so the honest status is *incomplete*, not
-*cleared*. (Corrected 2026-09-01, when `scripts/screen_candidate_gates.py` re-derived this verdict
-mechanically. The gate table and honest-limits section below always said G6 was open; this headline
-overstated it.) The blocker is ARTIFACT FORMAT.**
+deterministic AMR decoder — and NOT an acquisition. It is public and free. **It clears every rejection
+gate that applies to it, G6 now included** — see the update note below. The blocker is ARTIFACT FORMAT.**
+
+> **Update 2026-09-01 — G6 is CLOSED, and the artifact blocker is GONE.** This headline was corrected
+> *downward* earlier today (to "incomplete") because G6 was unscreened and the mechanical screen said so.
+> It is now corrected *upward*, on measurement rather than on assertion. R was installed on D: (4.1 TB
+> free, which is what made the "C: at 99%" blocker evaporate), the authors' `.RData` was read, and the
+> per-variant fitness values were extracted. **G6 passes:** mode-share 0.0019 over 2,106 distinct levels
+> on 2,114 cefotaxime measurements — nowhere near the >25% / <20-level degeneracy bars. The ten-gate
+> screen now returns **CLEARS**. Detail, including a trap that nearly produced the opposite verdict:
+> `wiki/pear_g6_screen_2026-09-01.md`.
 
 Screened 2026-08-31 per F-E's recorded discipline: *resolve accessions before recommending, never after.*
 That discipline paid — but not in the way it was written for.

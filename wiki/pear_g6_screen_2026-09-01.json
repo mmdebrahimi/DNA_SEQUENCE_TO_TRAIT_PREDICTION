@@ -1,0 +1,128 @@
+{
+  "schema": "pear-g6-screen-v1",
+  "substrate": "ggplot $data slots extracted from the authors' .RData via R 4.6.1",
+  "measured": {
+    "figure2A_ceftazidime_per_nt": {
+      "n": 2165,
+      "n_distinct_values": 2105,
+      "mode_value": 1.05971000385057,
+      "mode_share": 0.0051,
+      "degenerate": false
+    },
+    "figure2B_cefotaxime_per_nt": {
+      "n": 2163,
+      "n_distinct_values": 2151,
+      "mode_value": 0.958138227197626,
+      "mode_share": 0.0018,
+      "degenerate": false
+    },
+    "figure3A_cefotaxime_per_variant": {
+      "n": 2114,
+      "n_distinct_values": 2106,
+      "mode_value": -0.0185718322797877,
+      "mode_share": 0.0019,
+      "degenerate": false
+    },
+    "figure3A_ceftazidime_per_variant": {
+      "n": 2114,
+      "n_distinct_values": 2066,
+      "mode_value": 0.0251870341718129,
+      "mode_share": 0.0047,
+      "degenerate": false
+    },
+    "figure2A_ceftazidime_WT_INCLUDED_diagnostic": {
+      "n": 2957,
+      "n_distinct_values": 2106,
+      "mode_value": 1.0,
+      "mode_share": 0.2678,
+      "degenerate": true
+    }
+  },
+  "g6_screened_on": "figure3A_cefotaxime_per_variant",
+  "screen": {
+    "candidate": "PEAR (Zhang 2022 blaCTX-M-14 DMS)",
+    "intended_layer": "L4_forward_continuous",
+    "verdict": "CLEARS",
+    "reason": "every applicable gate passes. This bounds the LABEL question only \u2014 not artifact reachability, regime fit, or whether the work is worth doing.",
+    "gates": [
+      {
+        "gate": "G1",
+        "verdict": "pass",
+        "reason": "label recorded as a measurement: relative growth of constructed blaCTX-M-14 variants under cefotaxime/ceftazidime selection, read out by barcode sequencing (Zhang 2022 MBE). No genomic tool produced the label.",
+        "evidence": {
+          "label_provenance_evidence": "relative growth of constructed blaCTX-M-14 variants under cefotaxime/ceftazidime selection, read out by barcode sequencing (Zhang 2022 MBE). No genomic tool produced the label."
+        }
+      },
+      {
+        "gate": "G2",
+        "verdict": "not_applicable",
+        "reason": "variation is constructed, so there is no source-vs-class confound to have",
+        "evidence": {}
+      },
+      {
+        "gate": "G3",
+        "verdict": "pass",
+        "reason": "label is an assay reading: relative growth is an assay reading, not a collection context",
+        "evidence": {
+          "label_semantics_evidence": "relative growth is an assay reading, not a collection context"
+        }
+      },
+      {
+        "gate": "G4",
+        "verdict": "not_applicable",
+        "reason": "not a surveillance corpus; there is no ecosystem to exclude",
+        "evidence": {}
+      },
+      {
+        "gate": "G5",
+        "verdict": "not_applicable",
+        "reason": "genotypes are known by construction; no assembly needs fetching",
+        "evidence": {}
+      },
+      {
+        "gate": "G6",
+        "verdict": "pass",
+        "reason": "assay degeneracy: 0.2% of values at the mode over 2106 distinct levels (bars 25% / 20)",
+        "evidence": {
+          "mode_share": 0.0019,
+          "n_distinct_values": 2106.0
+        }
+      },
+      {
+        "gate": "G7",
+        "verdict": "not_applicable",
+        "reason": "no provenance-disjoint split is needed; the split is by position/variant",
+        "evidence": {}
+      },
+      {
+        "gate": "G8",
+        "verdict": "not_applicable",
+        "reason": "ancestry is randomised by construction, so there is no clonality to collapse",
+        "evidence": {}
+      },
+      {
+        "gate": "G9",
+        "verdict": "pass",
+        "reason": "0% of loci record no concrete causal variant (bar 50%)",
+        "evidence": {
+          "loci_without_recorded_variant_fraction": 0.0
+        }
+      },
+      {
+        "gate": "G10",
+        "verdict": "pass",
+        "reason": "0% of recorded causal variants are indel/structural (bar 50%)",
+        "evidence": {
+          "off_panel_variant_fraction": 0.0
+        }
+      }
+    ],
+    "contract": "A PASS bounds only whether a usable LABEL exists and whether the rule is scoreable. It is NOT a build recommendation: reachability of the artifact, regime fit (eval/regime.py) and worth-doing are separate questions."
+  },
+  "honest_limits": [
+    "These are the AGGREGATED per-variant effect sizes the authors plotted, NOT the ~23,000 raw barcoded strains. U5 is answered: the plot objects carry the full per-variant scan for the positions shown, not the raw library.",
+    "Figure.2A/2B are NUCLEOTIDE-level (gt in A/C/G/T over 792 positions = 3,168 real substitutions per drug, plus 789 per-position means which are excluded here).",
+    "Figure3.A is per-variant in C648T notation (2,114 variants) with CTX and CAZ columns -- the shape our genome-edit forward path consumes.",
+    "A passing G6 bounds the ASSAY. It is not a build recommendation and says nothing about whether the forward cell will transfer to this protein."
+  ]
+}

@@ -44,14 +44,18 @@ PEAR = {
         "genotype_defined_by_construction": True,
         "loci_without_recorded_variant_fraction": 0.0,   # every variant known by construction
         "off_panel_variant_fraction": 0.0,               # single substitutions in one gene
-        # mode_share / n_distinct_values DELIBERATELY ABSENT: the memo's own honest limit is
-        # "I have not read one PEAR fitness value. G6 is unscreened."
+        # G6 MEASURED 2026-09-01 (was absent while no PEAR fitness value had been read). Values from
+        # wiki/pear_g6_screen_2026-09-01.json, Figure3.A cefotaxime, 2,114 per-variant effect sizes
+        # extracted from the authors' .RData via R. Wild-type baseline rows excluded -- left in, they
+        # alone put mode-share at 0.2678 and trip the bar.
+        "mode_share": 0.0019,
+        "n_distinct_values": 2106.0,
     },
-    # what the memo's gate table actually recorded
+    # what the memo's gate table records, with G6 now closed by measurement
     "expected": {"G1": PASS, "G2": NOT_APPLICABLE, "G3": PASS, "G4": NOT_APPLICABLE,
-                 "G5": NOT_APPLICABLE, "G6": INSUFFICIENT_DATA, "G7": NOT_APPLICABLE,
+                 "G5": NOT_APPLICABLE, "G6": PASS, "G7": NOT_APPLICABLE,
                  "G8": NOT_APPLICABLE, "G9": PASS, "G10": PASS},
-    "expected_verdict": "INCOMPLETE",
+    "expected_verdict": "CLEARS",
 }
 
 HBV = {
