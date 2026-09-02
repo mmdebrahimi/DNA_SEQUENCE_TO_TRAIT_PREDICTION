@@ -101,3 +101,34 @@ def test_pear_coordinates_are_reference_based_not_offset():
     assert total == 2114
     assert ok_ref == total, "reference-coordinate reading must match every variant"
     assert ok_off < total // 2, "the offset reading must NOT match (it is the wrong convention)"
+
+
+# --- the genome-edit path must forward EVERY method's table (found 2026-09-02) ---------------------
+
+def test_predict_genome_edit_forwards_prosst_and_hybrid_tables():
+    """It used to accept only `esm_table`, so method='prosst'/'hybrid' raised TypeError per variant and
+    a caller saw '0 scored' rather than an unsupported-method error. blaTEM demo aside, this is the
+    shipped `dna-forward --cds-fasta --method hybrid` surface."""
+    import inspect
+
+    from dna_decode.forward.genome_edit import predict_genome_edit
+    params = inspect.signature(predict_genome_edit).parameters
+    assert "prosst_table" in params
+    assert "hybrid_tables" in params
+
+
+def test_genome_edit_hybrid_actually_scores_a_variant():
+    """Non-vacuity: the parameters existing is not the same as them reaching predict_effect."""
+    from dna_decode.forward.genome_edit import predict_genome_edit, translate_cds
+    cds = "ATG" + "GCT" * 40 + "TAA"
+    prot = translate_cds(cds).rstrip("*")
+    muts = [f"{prot[i]}{i + 1}{alt}" for i in range(len(prot))
+            for alt in "ACDEFGHIKLMNPQRSTVWY" if alt != prot[i]]
+    t1 = {m: float(i) for i, m in enumerate(muts)}
+    t2 = {m: float(len(muts) - i) for i, m in enumerate(muts)}
+    ge = predict_genome_edit(cds, 5, cds[4], "A", protein_seq=prot, method="hybrid",
+                             hybrid_tables=[t1, t2])
+    assert ge.consequence in ("missense", "silent", "nonsense")
+    if ge.consequence == "missense":
+        assert ge.protein_prediction is not None
+        assert ge.protein_prediction.raw_score is not None

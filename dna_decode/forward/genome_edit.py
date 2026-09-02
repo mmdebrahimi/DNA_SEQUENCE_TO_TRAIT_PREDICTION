@@ -269,7 +269,9 @@ def cds_point_edit(cds: str, nt_pos: int, ref_base: str, alt_base: str) -> dict:
 def predict_genome_edit(cds: str, nt_pos: int, ref_base: str, alt_base: str, *,
                         protein_seq: str | None = None, protein: str = "protein",
                         phenotype_axis: str = "molecular fitness (DMS-measured)",
-                        method: str = "blosum62", esm_table: dict | None = None) -> GenomeEditPrediction:
+                        method: str = "blosum62", esm_table: dict | None = None,
+                        prosst_table: dict | None = None,
+                        hybrid_tables: list[dict] | None = None) -> GenomeEditPrediction:
     """Full genome-edit -> phenotype path: CDS base substitution -> codon -> AA change -> Regime-B predictor.
 
     - SILENT (synonymous): no protein change -> protein_prediction=None (predicted neutral at the protein level).
@@ -285,7 +287,12 @@ def predict_genome_edit(cds: str, nt_pos: int, ref_base: str, alt_base: str, *,
 
     consequence = "nonsense" if alt_aa == "*" else "missense"
     aa_mut = f"{wt_aa}{aa_pos}{'*' if alt_aa == '*' else alt_aa}"
+    # Forward EVERY method-specific table `predict_effect` understands. Passing only `esm_table` made
+    # the genome-edit path silently unable to reach method="prosst"/"hybrid" -- it raised TypeError per
+    # variant, so a caller saw "0 scored" rather than an unsupported-method error (found 2026-09-02
+    # running the PEAR hybrid).
     pred = predict_effect(protein_seq or "", aa_mut, protein=protein, phenotype_axis=phenotype_axis,
-                          method=method, esm_table=esm_table)
+                          method=method, esm_table=esm_table, prosst_table=prosst_table,
+                          hybrid_tables=hybrid_tables)
     return GenomeEditPrediction(nt_pos, ref_base.upper(), alt_base.upper(), aa_pos, wt_aa, alt_aa,
                                 info["wt_codon"], info["alt_codon"], consequence, aa_mut, pred)

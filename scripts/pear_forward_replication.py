@@ -80,6 +80,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--method", default="blosum62", help="blosum62 | esm2 | prosst | hybrid")
     ap.add_argument("--esm-table", type=Path, default=None, help="precomputed ESM score table (JSON)")
+    ap.add_argument("--prosst-table", type=Path, default=None,
+                    help="ProSST variant table (JSON, 'wt{pos}alt' -> log-ratio); with --method hybrid "
+                         "it is rank-averaged with the ESM table by the shipped rank_average_hybrid")
     ap.add_argument("--out", type=Path, default=None)
     a = ap.parse_args()
 
@@ -99,6 +102,24 @@ def main() -> int:
     if a.esm_table:
         esm_table = {int(k): v for k, v in json.loads(a.esm_table.read_text()).items()}
 
+    # For the hybrid: convert the ESM POSITION table to a VARIANT table so both modalities are keyed
+    # the same way, then hand both to the shipped rank_average_hybrid via predict_effect.
+    prosst_table = json.loads(a.prosst_table.read_text()) if a.prosst_table else None
+
+    hybrid_tables = None
+    if a.method == "hybrid":
+        from dna_decode.forward.variant_effect import esm_pos_table_to_variant_table
+        if not (esm_table and a.prosst_table):
+            print("method=hybrid needs BOTH --esm-table and --prosst-table")
+            return 2
+        hybrid_tables = [esm_pos_table_to_variant_table(esm_table, protein), prosst_table]
+        inter = set(hybrid_tables[0]) & set(hybrid_tables[1])
+        print(f"hybrid tables: esm={len(hybrid_tables[0])} prosst={len(prosst_table)} "
+              f"intersection={len(inter)}")
+        if len(inter) < 1000:
+            print("REFUSING: hybrid intersection too small; the tables are not keyed compatibly.")
+            return 3
+
     rows = list(csv.DictReader(TABLE.open(encoding="utf-8"), delimiter="\t"))
     recs, skipped = [], []
     for r in rows:
@@ -110,7 +131,8 @@ def main() -> int:
         try:
             p = predict_genome_edit(cds, pos, wt, alt, protein_seq=protein,
                                     protein="blaCTX-M-14 (mature)", method=a.method,
-                                    esm_table=esm_table)
+                                    esm_table=esm_table, prosst_table=prosst_table,
+                                    hybrid_tables=hybrid_tables)
         except Exception as e:                      # a REF mismatch must surface, never be swallowed
             skipped.append((r["genotype"], f"{type(e).__name__}: {e}"))
             continue

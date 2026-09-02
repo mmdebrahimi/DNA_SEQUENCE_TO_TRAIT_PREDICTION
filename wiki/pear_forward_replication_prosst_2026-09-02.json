@@ -1,0 +1,80 @@
+{
+  "schema": "pear-forward-replication-v1",
+  "method": "prosst",
+  "reference": {
+    "path": "D:\\dna_decode_cache\\pear\\CTXM-14\\Genotype_barcode_calling\\Ref_CTXM.fasta",
+    "n_nt": 795,
+    "n_aa": 264,
+    "note": "mature protein; the full gene's 81-nt signal peptide is trimmed. aa_pos is NOT Ambler numbering."
+  },
+  "coordinate_basis": "1-based on the authors' 795-nt reference; 2114/2114 ref-base matches (the +81 Figure-2 axis convention matches only 452/2114)",
+  "n_scored": 2051,
+  "n_skipped": 63,
+  "skipped_examples": [
+    [
+      "G677A",
+      "ValueError: method='prosst' needs prosst_table with 'W226*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "C502T",
+      "ValueError: method='prosst' needs prosst_table with 'Q168*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "G739T",
+      "ValueError: method='prosst' needs prosst_table with 'E247*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "G400T",
+      "ValueError: method='prosst' needs prosst_table with 'E134*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "G424T",
+      "ValueError: method='prosst' needs prosst_table with 'E142*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "C175T",
+      "ValueError: method='prosst' needs prosst_table with 'Q59*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "C187T",
+      "ValueError: method='prosst' needs prosst_table with 'Q63*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "C193T",
+      "ValueError: method='prosst' needs prosst_table with 'Q65*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "C648G",
+      "ValueError: method='prosst' needs prosst_table with 'Y216*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ],
+    [
+      "G615A",
+      "ValueError: method='prosst' needs prosst_table with 'W205*' (structure-based; build via prosst_scorer.prosst_variant_table)"
+    ]
+  ],
+  "by_consequence": {
+    "missense": 1513,
+    "silent": 538
+  },
+  "sanity_check": {
+    "n_silent": 538,
+    "n_nonsense": 0,
+    "passed": null,
+    "note": "not evaluable: no silent and/or nonsense variants in the table"
+  },
+  "correlation": {
+    "ctx": {
+      "n": 1513,
+      "spearman_score_vs_fitness": -0.0404
+    },
+    "caz": {
+      "n": 1513,
+      "spearman_score_vs_fitness": 0.0249
+    }
+  },
+  "sign_convention": "predict_effect returns a score where MORE NEGATIVE = more damaging; measured fitness is relative growth where HIGHER = fitter. A working predictor therefore gives a POSITIVE Spearman.",
+  "benchmark": {
+    "tem1_ampicillin_genome_edit_spearman": 0.7611,
+    "note": "the forward cell's own validation, on a DIFFERENT beta-lactamase and a DIFFERENT drug. Not a target; a reference point."
+  }
+}

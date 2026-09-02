@@ -9,11 +9,21 @@ independent lab. Nothing was re-fit: `predict_genome_edit` was called exactly as
 |---|---|---|---|
 | BLOSUM62 | 0.198 | 0.020 | 1,513 |
 | **ESM2-650M** | **0.352** | 0.078 | 1,513 |
+| ProSST-2048 (structure) | **−0.040** | 0.025 | 1,513 |
+| ESM2 + ProSST rank-average hybrid | 0.204 | 0.083 | 1,513 |
 | *TEM-1 + ampicillin, ESM2 (the cell's own validation)* | *0.761* | — | *1,715* |
 
 **Two things are true at once, and both matter.** The learned model earns its keep — ESM2 nearly doubles
 BLOSUM62 (0.352 vs 0.198), exactly as the regime map predicts for constructed→molecular. And **0.761 does
 not transfer**: on a second enzyme in the same family, the same shipped path reaches less than half of it.
+
+**And a third: the modality hybrid does NOT transfer either.** The published finding is that a naive
+rank-average of orthogonal modalities beats ESM2-650M on 84–90% of ProteinGym proteins. Here it **loses**,
+0.204 vs 0.352 — because the premise fails: **ProSST alone is at chance (−0.040)**, so rank-averaging it
+in halves the signal ESM2 had. Structure is not an orthogonal modality on this protein; it is noise.
+
+That was worth measuring rather than assuming. The prior expectation was that the hybrid would *raise*
+0.352 and might change this memo's conclusion. It did the opposite.
 
 ---
 
@@ -71,11 +81,29 @@ uncorrected against 0.761 and the gap cannot be attributed to assay noise on thi
 - **It is genuinely independent.** Different enzyme, different drugs, different lab, no re-fitting, and a
   substrate that cleared all ten rejection gates first.
 
+## Why ProSST is at chance — the structure is exonerated, the toolchain is not
+
+The obvious suspect is a bad structure. AlphaFold has **no model for any CTX-M-14 UniProt entry** (all 9
+that contain the mature sequence 404 — AlphaFold DB covers reference proteomes and these are plasmid-borne
+entries from clinical isolates), so the structure was **folded with ESMFold v1 from the mature sequence**.
+That is also what removed the numbering risk entirely: the structure is of exactly the sequence being
+scored, so the offset is 0 by construction rather than a cross-database alignment to verify.
+
+**The fold is high-confidence: mean pLDDT 0.954, with 95.5% of residues above 0.90 and 99.6% above 0.70**
+(only the N-terminal residue is low, 0.53). A bad structure does not explain a chance result.
+
+**What is NOT excluded:** `torch_cluster` failed to install on the Kaggle image (`OSError`), so
+`torch_geometric` fell back for graph construction inside ProSST's quantizer. The quantizer path itself
+was validated locally on GRB2 (self-quantized == ProteinGym's pre-quantized tokens, 217/217), but **not
+with that fallback and not on this protein**. So the honest statement is *ProSST scored at chance here,
+and a quantizer-fallback artefact is the leading un-excluded alternative to "structure adds nothing on
+CTX-M-14"*. Resolving it needs a working `torch_cluster` build, or ProteinGym-style pre-quantized tokens.
+
 ## Honest limits
 
-- **ESM2-650M only.** ProSST/GEMME/hybrid were not run; the modality-hybrid work found rank-averaging
-  orthogonal modalities beats ESM2 alone on 84–90% of proteins, so 0.352 is a floor for this substrate,
-  not the best achievable.
+- **The hybrid was RUN and it lowered the number** — 0.352 is not a floor, as this memo first assumed.
+  GEMME (the evolution modality) was still not run; it needs an MSA pipeline.
+- **ProSST's chance result carries the quantizer-fallback caveat above.**
 - **No noise ceiling**, as above.
 - **Aggregated effect sizes**, ~2,100 per drug — not the ~23,000 raw barcoded strains.
 - **Comparability caveat:** the TEM-1 number came from a different DMS with its own normalization. Both

@@ -1,0 +1,80 @@
+{
+  "schema": "pear-forward-replication-v1",
+  "method": "hybrid",
+  "reference": {
+    "path": "D:\\dna_decode_cache\\pear\\CTXM-14\\Genotype_barcode_calling\\Ref_CTXM.fasta",
+    "n_nt": 795,
+    "n_aa": 264,
+    "note": "mature protein; the full gene's 81-nt signal peptide is trimmed. aa_pos is NOT Ambler numbering."
+  },
+  "coordinate_basis": "1-based on the authors' 795-nt reference; 2114/2114 ref-base matches (the +81 Figure-2 axis convention matches only 452/2114)",
+  "n_scored": 2051,
+  "n_skipped": 63,
+  "skipped_examples": [
+    [
+      "G677A",
+      "ValueError: method='hybrid': 'W226*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "C502T",
+      "ValueError: method='hybrid': 'Q168*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "G739T",
+      "ValueError: method='hybrid': 'E247*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "G400T",
+      "ValueError: method='hybrid': 'E134*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "G424T",
+      "ValueError: method='hybrid': 'E142*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "C175T",
+      "ValueError: method='hybrid': 'Q59*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "C187T",
+      "ValueError: method='hybrid': 'Q63*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "C193T",
+      "ValueError: method='hybrid': 'Q65*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "C648G",
+      "ValueError: method='hybrid': 'Y216*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ],
+    [
+      "G615A",
+      "ValueError: method='hybrid': 'W205*' not present in all modality tables (rank-hybrid scores only the shared candidate set)"
+    ]
+  ],
+  "by_consequence": {
+    "missense": 1513,
+    "silent": 538
+  },
+  "sanity_check": {
+    "n_silent": 538,
+    "n_nonsense": 0,
+    "passed": null,
+    "note": "not evaluable: no silent and/or nonsense variants in the table"
+  },
+  "correlation": {
+    "ctx": {
+      "n": 1513,
+      "spearman_score_vs_fitness": 0.2042
+    },
+    "caz": {
+      "n": 1513,
+      "spearman_score_vs_fitness": 0.0827
+    }
+  },
+  "sign_convention": "predict_effect returns a score where MORE NEGATIVE = more damaging; measured fitness is relative growth where HIGHER = fitter. A working predictor therefore gives a POSITIVE Spearman.",
+  "benchmark": {
+    "tem1_ampicillin_genome_edit_spearman": 0.7611,
+    "note": "the forward cell's own validation, on a DIFFERENT beta-lactamase and a DIFFERENT drug. Not a target; a reference point."
+  }
+}
