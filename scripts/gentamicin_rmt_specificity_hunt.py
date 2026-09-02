@@ -107,10 +107,15 @@ def scan_group(group: str, drug: str, row_cap: int | None) -> dict:
         n_labelled += 1
         syms = parse_amr_genotypes(f[gi])
         acc = f[acc_i] if acc_i is not None and len(f) > acc_i else ""
+        # PD writes the literal string "NULL" for a missing assembly accession. Carrying it through as
+        # an identifier makes any later substring search match unrelated files (it flagged 8 committed
+        # artifacts as contaminated before this was caught). Normalise it to a non-matching placeholder.
+        if acc.strip().upper() in {"", "NULL", "NA"}:
+            acc = "<no-accession>"
         has_rmt = any(RESCUE_RE.match(s) for s in syms)
         has_arma = any(ARMA_RE.match(s) for s in syms)
         if has_rmt:
-            rec = {"acc": acc or "?",
+            rec = {"acc": acc,
                    "rmt": sorted(s for s in syms if RESCUE_RE.match(s)),
                    "has_gent_aac3": any(s.startswith("aac(3)") for s in syms)}
             for col in ("bioproject_acc", "bioproject_center", "collected_by", "sra_center",

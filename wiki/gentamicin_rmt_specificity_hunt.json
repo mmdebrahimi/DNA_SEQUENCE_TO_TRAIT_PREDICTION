@@ -54,7 +54,7 @@
     "GCA_060300475.1",
     "GCA_060297895.1",
     "GCA_060297935.1",
-    "NULL",
+    "<no-accession>",
     "GCA_060268465.1",
     "GCA_060270435.1",
     "GCA_060270475.1",
@@ -689,7 +689,7 @@
       "geo_loc_name": "Pakistan"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB1"
       ],
@@ -1296,7 +1296,7 @@
       "geo_loc_name": "Pakistan"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtC"
       ],
@@ -1310,7 +1310,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF1"
       ],
@@ -1324,7 +1324,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF1"
       ],
@@ -1338,7 +1338,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF1"
       ],
@@ -1352,7 +1352,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF1"
       ],
@@ -1792,7 +1792,7 @@
       "geo_loc_name": "USA:Boston"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB1"
       ],
@@ -1806,7 +1806,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB1"
       ],
@@ -1820,7 +1820,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtC"
       ],
@@ -1834,7 +1834,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB1"
       ],
@@ -1848,7 +1848,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB1"
       ],
@@ -1862,7 +1862,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtC"
       ],
@@ -1876,7 +1876,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtC"
       ],
@@ -2310,7 +2310,7 @@
       "geo_loc_name": "USA"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtE1"
       ],
@@ -2759,7 +2759,7 @@
       "geo_loc_name": "Ireland"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtC"
       ],
@@ -2773,7 +2773,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB4"
       ],
@@ -2787,7 +2787,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtD"
       ],
@@ -2801,7 +2801,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtD"
       ],
@@ -2815,7 +2815,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB4"
       ],
@@ -2829,7 +2829,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF",
         "rmtF2"
@@ -2844,7 +2844,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB4"
       ],
@@ -2858,7 +2858,7 @@
       "geo_loc_name": "NULL"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF2"
       ],
@@ -2872,7 +2872,7 @@
       "geo_loc_name": "USA"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtF2"
       ],
@@ -2900,7 +2900,7 @@
       "geo_loc_name": "USA: Cleveland, Ohio"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtB1"
       ],
@@ -2928,7 +2928,7 @@
       "geo_loc_name": "Ireland"
     },
     {
-      "acc": "NULL",
+      "acc": "<no-accession>",
       "rmt": [
         "rmtC"
       ],
@@ -3955,7 +3955,7 @@
           "geo_loc_name": "Pakistan"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtC"
           ],
@@ -3969,7 +3969,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF1"
           ],
@@ -3983,7 +3983,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF1"
           ],
@@ -3997,7 +3997,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF1"
           ],
@@ -4011,7 +4011,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF1"
           ],
@@ -4333,7 +4333,7 @@
       },
       "arma_only_S_accessions": [
         "GCA_020406995.1",
-        "NULL",
+        "<no-accession>",
         "GCA_060269415.1",
         "GCA_060271935.1",
         "GCA_060271995.1",
@@ -4512,7 +4512,7 @@
           "geo_loc_name": "USA:Boston"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB1"
           ],
@@ -4526,7 +4526,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB1"
           ],
@@ -4540,7 +4540,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtC"
           ],
@@ -4554,7 +4554,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB1"
           ],
@@ -4568,7 +4568,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB1"
           ],
@@ -4582,7 +4582,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtC"
           ],
@@ -4596,7 +4596,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtC"
           ],
@@ -5030,7 +5030,7 @@
           "geo_loc_name": "USA"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtE1"
           ],
@@ -5599,7 +5599,7 @@
       "rmt_S_records": [],
       "rmt_R_records": [
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtC"
           ],
@@ -5613,7 +5613,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB4"
           ],
@@ -5648,7 +5648,7 @@
       },
       "rmt_S_records": [
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB1"
           ],
@@ -5874,7 +5874,7 @@
       ],
       "rmt_R_records": [
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtD"
           ],
@@ -5888,7 +5888,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtD"
           ],
@@ -5902,7 +5902,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB4"
           ],
@@ -5916,7 +5916,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF",
             "rmtF2"
@@ -5931,7 +5931,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB4"
           ],
@@ -5945,7 +5945,7 @@
           "geo_loc_name": "NULL"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF2"
           ],
@@ -5959,7 +5959,7 @@
           "geo_loc_name": "USA"
         },
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtF2"
           ],
@@ -6030,7 +6030,7 @@
       "rmt_S_records": [],
       "rmt_R_records": [
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtB1"
           ],
@@ -6080,7 +6080,7 @@
       "rmt_S_records": [],
       "rmt_R_records": [
         {
-          "acc": "NULL",
+          "acc": "<no-accession>",
           "rmt": [
             "rmtC"
           ],

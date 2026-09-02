@@ -112,3 +112,14 @@ def test_the_artifact_records_that_specificity_stays_untested():
     """A label artifact means the counter-examples cannot TEST the rule -- never that it is vindicated."""
     d = json.loads(HUNT.read_text(encoding="utf-8"))
     assert any("tool-derived" in lim for lim in d["honest_limits"])
+
+
+@pytest.mark.skipif(not HUNT.is_file(), reason="hunt artifact not present")
+def test_no_carrier_record_carries_a_matchable_placeholder_accession():
+    """PD writes the literal "NULL" for a missing assembly accession. Kept as an identifier it makes any
+    later substring search match unrelated files -- it falsely flagged 8 committed artifacts as
+    contaminated before it was caught. Placeholders must not look like data."""
+    d = json.loads(HUNT.read_text(encoding="utf-8"))
+    for rec in d["rmt_S_records"] + d["rmt_R_records"]:
+        acc = rec["acc"]
+        assert acc.startswith("GC") or acc == "<no-accession>", f"unusable accession {acc!r}"
