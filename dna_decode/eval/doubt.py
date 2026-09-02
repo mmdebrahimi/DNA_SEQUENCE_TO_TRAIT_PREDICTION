@@ -143,9 +143,14 @@ def doubt_one_line(block: dict) -> str | None:
     """
     if not block or not block.get("signals"):
         return None
-    sig = block["signals"][0]
-    ev = sig.get("evidence") or {}
+    sigs = block["signals"]
     tier = block.get("max_tier", NONE)
+    # Report the reason belonging to the signal that ACTUALLY fired, not signals[0]. A block now
+    # carries more than one signal (position-novelty + target-site completeness, added 2026-09-02),
+    # and hardcoding the first paired a STRONG tier with the other signal's "found nothing" prose --
+    # a self-contradicting line, and the worst possible failure for a human-facing disclosure.
+    sig = next((s for s in sigs if s.get("tier") == tier), sigs[0])
+    ev = sig.get("evidence") or {}
     if tier in (STRONG, WEAK):
         return f"DOUBT [{tier}]: {sig['reason']}"
     if ev.get("applicable") is False:
@@ -243,12 +248,59 @@ def target_site_doubt(drug: str, observed_by_gene: dict | None) -> DoubtBlock:
     if observed_by_gene is None:
         return DoubtBlock([DoubtSignal(
             kind="position_novelty", tier=NONE,
-            reason=("observed substitutions were not surfaced on this input path, so the "
-                    "position-novelty flag could not be evaluated -- not assessable, NOT clean"),
+            reason=("observed substitutions were not surfaced on this input path, so NEITHER the "
+                    "position-novelty flag nor the catalog-completeness screen could be evaluated "
+                    "-- not assessable, NOT clean"),
             evidence={"cell": cell, "applicable": True, "assessed": False})])
     subs = observed_by_gene.get(_CELL_GENE.get(cell, ""), set()) or set()
     sig = position_novelty_signal(sorted(subs), cell)
-    return DoubtBlock([sig])
+    # SECOND, COMPLEMENTARY signal (2026-09-02). position-novelty fires only at CATALOGUED positions,
+    # so it is silent on a gap at a position the catalog does not carry -- verified: V179F returns
+    # position_novel=False. Appended, never merged: the two answer different questions and collapsing
+    # them would hide whichever fired.
+    return DoubtBlock([sig, target_site_completeness_signal(sorted(subs), cell)])
+
+
+def target_site_completeness_signal(observed_substitutions, cell: str) -> DoubtSignal:
+    """Doubt from a substitution at a position the target-site catalog does NOT carry (the V179F shape).
+
+    Mirrors the AMR arm's `completeness_signal` vocabulary -- the 2026-09-02 probe measured that the
+    purity signature is well-formed here, so this is one vocabulary rather than two. Three states, never
+    collapsed: not-measured for this cell / measured-and-no-hit / hit.
+    """
+    from ..data.target_site_completeness import (completeness_units_for, is_measured,
+                                                  matching_units)
+
+    if not is_measured(cell):
+        return DoubtSignal(
+            kind="target_site_completeness", tier=NONE,
+            reason=(f"catalog-completeness has NOT been measured for {cell} -- no free isolate-level "
+                    "phenotype source, or measured and found underpowered. This is an absence of "
+                    "measurement, NOT an absence of doubt"),
+            evidence={"cell": cell, "measured": False})
+
+    hits = matching_units(observed_substitutions, cell)
+    if not hits:
+        return DoubtSignal(
+            kind="target_site_completeness", tier=NONE,
+            reason=(f"no observed substitution matches a measured completeness gap in {cell}; the "
+                    "screen ran and found nothing, which is a result rather than an assumption"),
+            evidence={"cell": cell, "measured": True,
+                      "n_known_gaps": len(completeness_units_for(cell))})
+
+    sub, st = hits[0]
+    n = st["carriers_labelled_r"] + st["carriers_labelled_s"]
+    tier = completeness_tier(st["purity_surprise_p"], st["n_units_tested"])
+    reason = (f"substitution {sub} sits at a position the {cell} catalog does not carry, and "
+              f"{st['carriers_labelled_r']}/{n} of its labelled carriers are resistant against a base "
+              f"susceptible-rate of {st['base_s_rate']:.3f} -- a measured catalog-completeness gap, so a "
+              "susceptible call here is the least trustworthy kind")
+    return DoubtSignal(kind="target_site_completeness", tier=tier, reason=reason,
+                       evidence={"cell": cell, "measured": True, "substitution": sub,
+                                 "all_matches": [h[0] for h in hits], **{
+                                     k: st[k] for k in ("carriers_labelled_r", "carriers_labelled_s",
+                                                        "purity_surprise_p", "n_units_tested",
+                                                        "base_s_rate", "scored_on", "artifact")}})
 
 
 def position_novelty_signal(observed_substitutions, cell: str) -> DoubtSignal:

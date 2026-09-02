@@ -126,7 +126,8 @@ action, so leaving completed work here made a finished family rank first on the 
 |---|---|---|---|---|---|---|
 | 1 | DONE 2026-08-31 -- FP rate measured: family-wise correction drops 4 of 5 raw-signature hits; 1 survivor is the confirmed `rmtE1` gap | run-tests | med | high | resolved | -- |
 | 2 | ANSWERED 2026-09-02 -- ONE vocabulary: the purity signature is well-formed on HIV NNRTI (the best case) and fires (V179F, 15 carriers all R, p=8.8e-06 over 638 units) | run-tests | med | high | resolved | -- |
-| 2b | WIRE the target-site completeness screen into the shipped doubt block (augment-only, verified by diff) -- the probe answered the design question, not the integration | edit-local-code | med | med | low | 1-2hr |
+| 2b | DONE 2026-09-02 -- `dna_decode/data/target_site_completeness.py` + a 2nd signal in `target_site_doubt`; V179F now surfaces STRONG doubt on the real CLI. Augment-only VERIFIED by diff (6 cases, 8 fields differ, 0 non-doubt, calls identical) | edit-local-code | med | med | resolved | -- |
+| 2c | Measure the screen on the OTHER mutant-level cells (sarscov2-mpro is TN-starved 37R/5S; fungal has no free phenotype source) -- currently declared UNMEASURED, which is honest but incomplete | research | low | med | high | days |
 | 3 | Re-screen when any NEW independent label set lands (both known gaps needed one) | research | low | high | high | ongoing |
 <!-- project-state:end:candidate-actions -->
 
@@ -163,6 +164,7 @@ Attempt budget: 3.
 | 7 | 2026-08-31 | run-tests | full suite | 4029 passed, 0 failed; frozen surface byte-unchanged; lock re-verified |
 | 8 | 2026-08-31 | propose | /project-state --update-last-evaluation | 3 of 3 MVP criteria MET (doubt module + tests; guarded doubt block in the record; per-cell artifact vs the 0.604 incumbent). 1 unknown retired: the rmt_like heuristic's false-positive rate is measured -- 4 of 5 raw-signature hits are noise. Corrects a contradiction: this section said 1-of-3-not-yet-met while Progress proxy said 3/3. |
 | 9 | 2026-09-02 | run-tests | target-site denominator probe (HIV NNRTI, best case) | ONE_VOCABULARY: shape holds (1170 S / 638 units / 12 pure) and fires -- V179F p=8.8e-06; V179D+V179E independently named by the 09-01 OLS curation |
+| 10 | 2026-09-02 | edit-local-code | wire the target-site completeness screen into the shipped doubt block | V179F surfaces STRONG on the real CLI (call stays S); augment-only verified by diff; fixed doubt_one_line printing signals[0]'s reason under another signal's tier |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
