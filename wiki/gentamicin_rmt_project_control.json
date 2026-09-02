@@ -1,0 +1,173 @@
+{
+  "schema": "gentamicin-rmt-project-control-v1",
+  "project": "PRJNA1322038",
+  "drug": "gentamicin",
+  "deployed_rescue_pattern": "^(rmt[A-H]\\d*|npmA\\d*)$",
+  "per_group": [
+    {
+      "group": "Klebsiella",
+      "inside": {
+        "all": {
+          "S": 130,
+          "R": 125
+        },
+        "rmt": {
+          "S": 42
+        },
+        "aac3_no_rmt": {
+          "S": 78,
+          "R": 3
+        },
+        "arma_no_rmt": {
+          "S": 4,
+          "R": 2
+        },
+        "no_known_gent": {
+          "R": 120,
+          "S": 6
+        }
+      },
+      "outside": {
+        "all": {
+          "S": 537,
+          "R": 496
+        },
+        "rmt": {
+          "R": 53
+        },
+        "aac3_no_rmt": {
+          "R": 347,
+          "S": 16
+        }
+      },
+      "other_drugs_inside": {
+        "ciprofloxacin:S": 245,
+        "ceftriaxone:S": 251,
+        "meropenem:S": 181,
+        "ampicillin:S": 266,
+        "meropenem:R": 77,
+        "ciprofloxacin:R": 19,
+        "ceftriaxone:R": 16,
+        "ampicillin:R": 1
+      }
+    },
+    {
+      "group": "Pseudomonas_aeruginosa",
+      "inside": {
+        "all": {
+          "S": 38,
+          "R": 25
+        },
+        "rmt": {
+          "S": 16
+        },
+        "aac3_no_rmt": {},
+        "arma_no_rmt": {},
+        "no_known_gent": {
+          "S": 22,
+          "R": 25
+        }
+      },
+      "outside": {
+        "all": {
+          "S": 288,
+          "R": 350
+        },
+        "rmt": {
+          "R": 8
+        },
+        "aac3_no_rmt": {
+          "R": 25,
+          "S": 4
+        }
+      },
+      "other_drugs_inside": {
+        "ciprofloxacin:S": 46,
+        "meropenem:S": 37,
+        "meropenem:R": 14,
+        "ciprofloxacin:R": 16
+      }
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "inside": {
+        "all": {
+          "R": 74,
+          "S": 63
+        },
+        "rmt": {
+          "S": 2
+        },
+        "aac3_no_rmt": {
+          "S": 52
+        },
+        "arma_no_rmt": {},
+        "no_known_gent": {
+          "R": 74,
+          "S": 9
+        }
+      },
+      "outside": {
+        "all": {
+          "S": 6414,
+          "R": 1235
+        },
+        "rmt": {
+          "R": 70
+        },
+        "aac3_no_rmt": {
+          "R": 1080,
+          "S": 30
+        }
+      },
+      "other_drugs_inside": {
+        "ciprofloxacin:R": 13,
+        "ceftriaxone:R": 27,
+        "meropenem:R": 121,
+        "ampicillin:R": 19,
+        "meropenem:S": 10,
+        "ciprofloxacin:S": 105,
+        "ceftriaxone:S": 110,
+        "ampicillin:S": 118
+      }
+    }
+  ],
+  "inside_totals": {
+    "all": {
+      "S": 231,
+      "R": 224
+    },
+    "rmt": {
+      "S": 60
+    },
+    "aac3_no_rmt": {
+      "S": 130,
+      "R": 3
+    },
+    "no_known_gent_gene": {
+      "R": 219,
+      "S": 37
+    }
+  },
+  "outside_totals": {
+    "all": {
+      "S": 7239,
+      "R": 2081
+    },
+    "rmt": {
+      "R": 131
+    },
+    "aac3_no_rmt": {
+      "R": 1452,
+      "S": 50
+    }
+  },
+  "aac3_R_rate_inside": 0.022556390977443608,
+  "aac3_R_rate_outside": 0.966711051930759,
+  "verdict": "LABEL_ARTIFACT",
+  "why": "the project calls its aac(3) carriers R only 2% of the time vs 97% elsewhere -- a determinant nobody disputes. Its gentamicin column does not behave like the rest of PD, so its rmt S calls cannot test the rule.",
+  "honest_limits": [
+    "This tests INTERNAL consistency of one project's gentamicin column against a determinant nobody disputes. It cannot prove the labels wrong -- only that they do or do not behave like every other submission.",
+    "A LABEL_ARTIFACT verdict leaves the deployed rule's specificity UNTESTED, not vindicated. It means these 60 isolates cannot serve as the test, not that no counter-example exists."
+  ]
+}

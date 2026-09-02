@@ -70,7 +70,7 @@ No curated biological fact enters a shipped catalog without a named source, a me
 <!-- project-state:end:evidence -->
 
 ### Unknowns
-- **U1** — Over-calling risk of the `rmt` rule. "Specificity unchanged" is ARITHMETIC over an absence, not evidence: no S-labelled `rmt` carrier exists in any dataset checked, so the denominator is empty.
+- **U1 (SHARPENED 2026-09-02, still open)** — Over-calling risk of the deployed `rmt` rule. The denominator is no longer empty *by absence*: a cache-independent sweep of 20,816 gentamicin-labelled PD isolates found **60** S-labelled carriers — the first ever. But **all 60 come from a single BioProject (PRJNA1322038)**, and a pre-registered `aac(3)` control shows that project calls the undisputed gentamicin determinant R only **2%** of the time vs **97%** elsewhere (and calls no-gene isolates R 86%) → `LABEL_ARTIFACT`; they cannot test the rule. Outside it: **146/146 carriers are R** across 23 BioProjects (was 62/63, cache-bounded). So the rule's evidence is stronger AND its over-call risk is still UNTESTED. Next lever is an INDEPENDENT archive, not PD. `wiki/gentamicin_rmt_specificity_hunt_2026-09-02.md`
 - Whether curating HIV NNRTI positions recovers the 53 or merely relabels them.
 - RESOLVED 2026-09-01: PARTLY. 1 of 4 conditions is enforced by test (per-MODULE external authority; `tests/test_catalog_provenance.py`, all 8 shipped catalogs already pass). The other 3 -- per-ENTRY sourcing, measurement against the doubt-layer baseline, and reviewing a derivation as biology -- are review discipline. Per-entry is not representable without restructuring the bare `set[str]` catalogs. Stating the split is load-bearing: a green suite checking only the weak condition reads as more assurance than it is.
 
@@ -113,7 +113,8 @@ A written, tested curation procedure exists, and each measured gap is either clo
 |---|---|---|---|---|---|---|
 | 1 | DONE 2026-09-01 -- wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py (18). Resolves U3: per-ENTRY citation is NOT representable (bare set[str] catalogs); per-MODULE authority IS, and all 8 already pass -> a regression guard, not a migration | edit-local-code | med | med | resolved | -- |
 | 2 | Draft HIV NNRTI entries with citations | propose | med | med | med | 1-2hr |
-| 3 | Seek S-labelled `rmt` carriers in a new source (retires U1) | research | high | high | high | days |
+| 3 | DONE 2026-09-02 -- 60 S-labelled carriers FOUND (first ever) over 20,816 labelled isolates; ALL 60 from ONE BioProject and killed by an aac(3) control -> LABEL_ARTIFACT. U1 SHARPENED, not retired | research | high | high | resolved | -- |
+| 4 | Test specificity on an INDEPENDENT archive (clinical MIC collection), since PD is now exhausted for this question | research | med | high | high | days |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
@@ -137,6 +138,7 @@ Attempt budget: 3.
 | 3 | 2026-09-01 | run-tests | measure curation vs the F-A doubt-layer baseline, 3 ways | NO-SHIP: every variant recovers < the free flag's 0.604 |
 | 4 | 2026-09-01 | edit-local-code | fix self-to-self CompMutList parsing defect (L234L/K238K/M230M/R72R) | headline was flattering by 8->5 additions before the fix |
 | 5 | 2026-09-01 | edit-local-code | C3: wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py | 4 conditions from 2 executed instances (gentamicin shipped / NNRTI declined); 1 enforced, 3 review discipline -- split stated explicitly |
+| 6 | 2026-09-02 | run-tests | inverted rmt specificity hunt over PD AMR_genotypes + aac(3) project control | 60 counter-examples found and killed by the control (LABEL_ARTIFACT); PPV outside 146/146; v2 validation verified uncontaminated (0 overlap) |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

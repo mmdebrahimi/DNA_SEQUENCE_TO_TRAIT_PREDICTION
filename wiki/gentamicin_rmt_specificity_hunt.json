@@ -1,0 +1,6164 @@
+{
+  "schema": "gentamicin-rmt-specificity-hunt-v1",
+  "drug": "gentamicin",
+  "deployed_rescue_pattern": "^(rmt[A-H]\\d*|npmA\\d*)$",
+  "population": "ALL PD isolates carrying a gentamicin AST label -- NOT restricted to the local AMRFinder cache, which is what the previous hunt could not escape",
+  "n_labelled_isolates": 20816,
+  "rmt_carrier_counts": {
+    "R": 146,
+    "S": 60,
+    "I": 0
+  },
+  "rmt_S_accessions": [
+    "GCA_054470995.1",
+    "GCA_060269315.1",
+    "GCA_060271455.1",
+    "GCA_060271855.1",
+    "GCA_060272055.1",
+    "GCA_060272155.1",
+    "GCA_060272235.1",
+    "GCA_060272245.1",
+    "GCA_060272295.1",
+    "GCA_060272335.1",
+    "GCA_060272415.1",
+    "GCA_060272475.1",
+    "GCA_060272545.1",
+    "GCA_060272575.1",
+    "GCA_060272615.1",
+    "GCA_060272715.1",
+    "GCA_060272825.1",
+    "GCA_060272855.1",
+    "GCA_060272875.1",
+    "GCA_060272895.1",
+    "GCA_060272915.1",
+    "GCA_060272935.1",
+    "GCA_060272955.1",
+    "GCA_060273015.1",
+    "GCA_060273095.1",
+    "GCA_060273135.1",
+    "GCA_060273165.1",
+    "GCA_060273225.1",
+    "GCA_060273215.1",
+    "GCA_060273275.1",
+    "GCA_060273285.1",
+    "GCA_060273355.1",
+    "GCA_060273375.1",
+    "GCA_060273515.1",
+    "GCA_060273575.1",
+    "GCA_060273755.1",
+    "GCA_060273795.1",
+    "GCA_060293245.1",
+    "GCA_060293265.1",
+    "GCA_060293765.1",
+    "GCA_060294295.1",
+    "GCA_060300475.1",
+    "GCA_060297895.1",
+    "GCA_060297935.1",
+    "NULL",
+    "GCA_060268465.1",
+    "GCA_060270435.1",
+    "GCA_060270475.1",
+    "GCA_060270495.1",
+    "GCA_060270515.1",
+    "GCA_060270535.1",
+    "GCA_060270545.1",
+    "GCA_060270575.1",
+    "GCA_060270615.1",
+    "GCA_060270635.1",
+    "GCA_060270675.1",
+    "GCA_060270735.1",
+    "GCA_060270835.1",
+    "GCA_060270855.1",
+    "GCA_060270895.1"
+  ],
+  "rmt_S_records": [
+    {
+      "acc": "GCA_054470995.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NHTD (Hanoi, Vietnam)",
+      "sra_center": "CARB-X LMIC",
+      "epi_type": "clinical",
+      "collection_date": "2021-10-03",
+      "geo_loc_name": "Viet Nam"
+    },
+    {
+      "acc": "GCA_060269315.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IHMA",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-12-31",
+      "geo_loc_name": "Ukraine"
+    },
+    {
+      "acc": "GCA_060271455.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "CIDRZ, Lusaka (Zambia)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-04-14",
+      "geo_loc_name": "Zambia"
+    },
+    {
+      "acc": "GCA_060271855.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060272055.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272155.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272235.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272245.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272295.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272335.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272415.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272475.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272545.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272575.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "SRTACity (Alexandria, Egypt)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Egypt"
+    },
+    {
+      "acc": "GCA_060272615.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NMH (Lalitpur, Nepal)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nepal"
+    },
+    {
+      "acc": "GCA_060272715.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NMH (Lalitpur, Nepal)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nepal"
+    },
+    {
+      "acc": "GCA_060272825.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-12-04",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060272855.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-10-31",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060272875.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-08-12",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060272895.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-01-03",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060272915.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-11-05",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060272935.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-09-30",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060272955.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IDPC (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-01-16",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273015.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-05-08",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273095.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-06-15",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273135.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-06-13",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273165.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-06-04",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273225.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-05-28",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273215.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-04-26",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273275.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-01-29",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273285.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-01-20",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273355.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-06-17",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273375.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-05-22",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273515.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-06-04",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273575.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-03-10",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273755.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-10-26",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060273795.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-10-18",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060293245.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-10-26",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060293265.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-11-07",
+      "geo_loc_name": "Brazil"
+    },
+    {
+      "acc": "GCA_060293765.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "Mahidol University (Bangkok, Thailand)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2017-03-11",
+      "geo_loc_name": "Thailand"
+    },
+    {
+      "acc": "GCA_060294295.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "Mahidol University (Bangkok, Thailand)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016-12-19",
+      "geo_loc_name": "Thailand"
+    },
+    {
+      "acc": "GCA_060300475.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NHTD (Hanoi, Vietnam)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-07-09",
+      "geo_loc_name": "Viet Nam"
+    },
+    {
+      "acc": "GCA_060297895.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NIBGE (Faisalabad, Pakistan)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_060297935.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NIBGE (Faisalabad, Pakistan)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "NHTD (Hanoi, Vietnam)",
+      "sra_center": "CARB-X LMIC",
+      "epi_type": "clinical",
+      "collection_date": "2021-07-01",
+      "geo_loc_name": "Viet Nam"
+    },
+    {
+      "acc": "GCA_060268465.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "IHMA",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-12-31",
+      "geo_loc_name": "Viet Nam"
+    },
+    {
+      "acc": "GCA_060270435.1",
+      "rmt": [
+        "rmtF"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "CIDRZ, Lusaka (Zambia)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-07-08",
+      "geo_loc_name": "Zambia"
+    },
+    {
+      "acc": "GCA_060270475.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270495.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270515.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270535.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270545.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270575.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270615.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270635.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270675.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270735.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270835.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270855.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    },
+    {
+      "acc": "GCA_060270895.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1322038",
+      "bioproject_center": "University of Queensland",
+      "collected_by": "ICL (Lagos, Nigeria)",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12-31",
+      "geo_loc_name": "Nigeria"
+    }
+  ],
+  "rmt_R_records": [
+    {
+      "acc": "GCA_022316325.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA312972",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "United States Army",
+      "sra_center": "WRAIR-MRSN",
+      "epi_type": "clinical",
+      "collection_date": "2012-12-20",
+      "geo_loc_name": "Afghanistan"
+    },
+    {
+      "acc": "GCA_022316245.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA312972",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "United States Army",
+      "sra_center": "WRAIR-MRSN",
+      "epi_type": "clinical",
+      "collection_date": "2013-08-13",
+      "geo_loc_name": "Honduras"
+    },
+    {
+      "acc": "GCA_022316015.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA296771",
+      "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+      "collected_by": "CT State Health Department",
+      "sra_center": "EMORY UNIVERSITY",
+      "epi_type": "clinical",
+      "collection_date": "2014-03-01",
+      "geo_loc_name": "USA: Connecticut"
+    },
+    {
+      "acc": "GCA_022315915.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA296771",
+      "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+      "collected_by": "OK State Health Department",
+      "sra_center": "EMORY UNIVERSITY",
+      "epi_type": "clinical",
+      "collection_date": "2013-07-01",
+      "geo_loc_name": "USA: Oklahoma"
+    },
+    {
+      "acc": "GCA_022315935.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA296771",
+      "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+      "collected_by": "OK State Health Department",
+      "sra_center": "EMORY UNIVERSITY",
+      "epi_type": "clinical",
+      "collection_date": "2013-07-01",
+      "geo_loc_name": "USA: Oklahoma"
+    },
+    {
+      "acc": "GCA_022315615.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA296771",
+      "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+      "collected_by": "IL State Health Department",
+      "sra_center": "EMORY UNIVERSITY",
+      "epi_type": "clinical",
+      "collection_date": "2013-04-29",
+      "geo_loc_name": "USA: Illinois"
+    },
+    {
+      "acc": "GCA_022315575.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA296771",
+      "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+      "collected_by": "TX State Health Department",
+      "sra_center": "EMORY UNIVERSITY",
+      "epi_type": "clinical",
+      "collection_date": "2013-06-25",
+      "geo_loc_name": "USA: Texas"
+    },
+    {
+      "acc": "GCA_001720745.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2013",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_001720755.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2013",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_001720815.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2013",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_001720905.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2013",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_001922465.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292904",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002192375.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA292902",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002202255.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292902",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002202275.1",
+      "rmt": [
+        "rmtG"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA292904",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_003073335.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292904",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_003571605.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA292904",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_014840295.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840305.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840315.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840345.1",
+      "rmt": [
+        "rmtC",
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840405.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2015",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840435.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2015",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840555.1",
+      "rmt": [
+        "rmtC",
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840575.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2015",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014840635.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2015",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "GCA_014946935.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA308116",
+      "bioproject_center": "FDA",
+      "collected_by": "Aga Khan University, Karachi",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Pakistan"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523429",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA523429",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523730",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CDC-HAISEQ",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523730",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CDC-HAISEQ",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_019927625.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA717739",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "United States Army Medical Research Directorate - Kenya",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2018-04-12",
+      "geo_loc_name": "Kenya: Nairobi"
+    },
+    {
+      "acc": "GCA_019928405.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA717739",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "Aga Khan University Hospital",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2015-07-12",
+      "geo_loc_name": "Kenya: Nairobi"
+    },
+    {
+      "acc": "GCA_019928395.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA717739",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "Armed Forces Research Institute of Medical Sciences",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016-01-27",
+      "geo_loc_name": "Thailand"
+    },
+    {
+      "acc": "GCA_019930385.1",
+      "rmt": [
+        "rmtH"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA717739",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "Walter Reed Army Medical Center",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "missing",
+      "geo_loc_name": "USA: District of Columbia"
+    },
+    {
+      "acc": "GCA_031045875.2",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA278886",
+      "bioproject_center": "Brigham & Women's Hospital",
+      "collected_by": "Brigham and Women's Hospital",
+      "sra_center": "BRIGHAM AND WOMEN'S HOSPITAL",
+      "epi_type": "clinical",
+      "collection_date": "2022",
+      "geo_loc_name": "USA:Boston"
+    },
+    {
+      "acc": "GCA_031044835.2",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA278886",
+      "bioproject_center": "Brigham & Women's Hospital",
+      "collected_by": "Brigham and Women's Hospital",
+      "sra_center": "BRIGHAM AND WOMEN'S HOSPITAL",
+      "epi_type": "clinical",
+      "collection_date": "2023",
+      "geo_loc_name": "USA:Boston"
+    },
+    {
+      "acc": "GCA_043905625.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2022",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_043905665.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2022",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_043905425.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2021",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_043863385.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2017",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_043863185.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_043861645.1",
+      "rmt": [
+        "rmtF",
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2015",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_050956655.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2023-02",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956725.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-04",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956915.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-06",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957305.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2023-02",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957565.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-11",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549635.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-07",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549675.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2023-01",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549725.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-03",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549735.1",
+      "rmt": [
+        "rmtF1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-05",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_001874845.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA292904",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002055635.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292902",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002180095.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292902",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002180275.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292902",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002202175.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292904",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_002860085.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA360014",
+      "bioproject_center": "The University of Hong Kong",
+      "collected_by": "Pak-Leung Ho",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2014-06",
+      "geo_loc_name": "Hong Kong"
+    },
+    {
+      "acc": "GCA_003031735.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA278886",
+      "bioproject_center": "Brigham & Women's Hospital",
+      "collected_by": "Xiaomin Zhao",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2015",
+      "geo_loc_name": "USA:Boston"
+    },
+    {
+      "acc": "GCA_003031775.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA278886",
+      "bioproject_center": "Brigham & Women's Hospital",
+      "collected_by": "Xiaomin Zhao",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "USA:Boston"
+    },
+    {
+      "acc": "GCA_003031815.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA278886",
+      "bioproject_center": "Brigham & Women's Hospital",
+      "collected_by": "Xiaomin Zhao",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2016",
+      "geo_loc_name": "USA:Boston"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523425",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CDC-HAISEQ",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA523730",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA635420",
+      "bioproject_center": "Centers for disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_026420885.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA893175",
+      "bioproject_center": "University Hospital of Larissa",
+      "collected_by": "Hospital of Larissa, Greece",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-01-01",
+      "geo_loc_name": "Greece"
+    },
+    {
+      "acc": "GCA_032536185.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA988283",
+      "bioproject_center": "SASTRA Deemed University",
+      "collected_by": "Sundaram Medical Foundation Dr. Rangarajan Memmorial Hospital",
+      "sra_center": "SASTRA DEEMED UNIVERSITY",
+      "epi_type": "clinical",
+      "collection_date": "2016-01",
+      "geo_loc_name": "India: Anna Nagar, Chennai, TN"
+    },
+    {
+      "acc": "GCA_032337975.2",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA278886",
+      "bioproject_center": "Brigham & Women's Hospital",
+      "collected_by": "Brigham and Women's Hospital",
+      "sra_center": "BRIGHAM AND WOMEN'S HOSPITAL",
+      "epi_type": "clinical",
+      "collection_date": "2023",
+      "geo_loc_name": "USA:Boston"
+    },
+    {
+      "acc": "GCA_050956705.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-10",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956715.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956765.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-04",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956785.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-03",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956805.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-05",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956825.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-08",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956835.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-10",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050956855.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-09",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957365.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2023-03",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957385.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-02",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549655.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-11",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549665.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-10",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549685.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2019-10",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_059754775.1",
+      "rmt": [
+        "rmtE"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754755.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754725.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754675.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754645.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754615.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754555.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754535.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059934275.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754495.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754445.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754425.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754395.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754345.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754285.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754245.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754195.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754175.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754155.1",
+      "rmt": [
+        "rmtE",
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754095.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754115.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-07-28",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754075.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-07-28",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059934285.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-07-28",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754015.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059754005.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753925.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753895.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753785.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753775.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753705.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753675.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-07-28",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753635.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-20",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753595.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753545.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753515.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059753395.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_059934255.1",
+      "rmt": [
+        "rmtE1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1142533",
+      "bioproject_center": "Bart C Weimer",
+      "collected_by": "UC Davis",
+      "sra_center": "UCD-100K",
+      "epi_type": "clinical",
+      "collection_date": "2020-08-16",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_009090945.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA292661",
+      "bioproject_center": "FDA",
+      "collected_by": "CO",
+      "sra_center": "PULSENET",
+      "epi_type": "environmental/other",
+      "collection_date": "2019-04-16",
+      "geo_loc_name": "USA:CO"
+    },
+    {
+      "acc": "GCA_003288475.1",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA316321",
+      "bioproject_center": "FDA/CDC",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_043905735.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1160997",
+      "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+      "collected_by": "Habib Bourguiba Hospital",
+      "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+      "epi_type": "clinical",
+      "collection_date": "2018",
+      "geo_loc_name": "Tunisia: Sfax"
+    },
+    {
+      "acc": "GCA_050957085.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-02",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957105.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-02",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957345.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2021-12",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957685.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-12",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_051549645.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-08",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523429",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA635420",
+      "bioproject_center": "Centers for disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtD"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA317143",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtD"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA317143",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF",
+        "rmtF2"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB4"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF2"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523425",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CDC",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtF2"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523425",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "CDC",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_030253475.1",
+      "rmt": [
+        "rmtF2"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA952532",
+      "bioproject_center": "Case Western Reserve University",
+      "collected_by": "Jaskirat Takhar",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-11-12",
+      "geo_loc_name": "USA: Cleveland, Ohio"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": true,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "UNIVERSITY OF GALWAY",
+      "epi_type": "clinical",
+      "collection_date": "2023-02",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "GCA_050957425.1",
+      "rmt": [
+        "rmtB1"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-10",
+      "geo_loc_name": "Ireland"
+    },
+    {
+      "acc": "NULL",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA523433",
+      "bioproject_center": "Centers for Disease Control and Prevention",
+      "collected_by": "NULL",
+      "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+      "epi_type": "clinical",
+      "collection_date": "NULL",
+      "geo_loc_name": "NULL"
+    },
+    {
+      "acc": "GCA_016512695.1",
+      "rmt": [
+        "rmtB2"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA683918",
+      "bioproject_center": "Walter Reed Army Institute of Research",
+      "collected_by": "Brooke Army Medical Center",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2020-11-01",
+      "geo_loc_name": "USA"
+    },
+    {
+      "acc": "GCA_051549715.1",
+      "rmt": [
+        "rmtC"
+      ],
+      "has_gent_aac3": false,
+      "bioproject_acc": "PRJNA1219142",
+      "bioproject_center": "University of Galway",
+      "collected_by": "NULL",
+      "sra_center": "NULL",
+      "epi_type": "clinical",
+      "collection_date": "2022-08",
+      "geo_loc_name": "Ireland"
+    }
+  ],
+  "ppv_rmt_to_R": 0.7087378640776699,
+  "per_group": [
+    {
+      "group": "Klebsiella",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Klebsiella/latest_snps/Metadata/PDG000000012.2514.metadata.tsv",
+      "n_rows_scanned": 173935,
+      "n_labelled": 1288,
+      "rmt_counts": {
+        "R": 53,
+        "S": 42,
+        "I": 0
+      },
+      "rmt_S_records": [
+        {
+          "acc": "GCA_054470995.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NHTD (Hanoi, Vietnam)",
+          "sra_center": "CARB-X LMIC",
+          "epi_type": "clinical",
+          "collection_date": "2021-10-03",
+          "geo_loc_name": "Viet Nam"
+        },
+        {
+          "acc": "GCA_060269315.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IHMA",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-12-31",
+          "geo_loc_name": "Ukraine"
+        },
+        {
+          "acc": "GCA_060271455.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "CIDRZ, Lusaka (Zambia)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-04-14",
+          "geo_loc_name": "Zambia"
+        },
+        {
+          "acc": "GCA_060271855.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060272055.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272155.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272235.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272245.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272295.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272335.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272415.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272475.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272545.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272575.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "SRTACity (Alexandria, Egypt)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Egypt"
+        },
+        {
+          "acc": "GCA_060272615.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NMH (Lalitpur, Nepal)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nepal"
+        },
+        {
+          "acc": "GCA_060272715.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NMH (Lalitpur, Nepal)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nepal"
+        },
+        {
+          "acc": "GCA_060272825.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-12-04",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060272855.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-10-31",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060272875.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-08-12",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060272895.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-01-03",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060272915.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-11-05",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060272935.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-09-30",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060272955.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IDPC (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-01-16",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273015.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-05-08",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273095.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-06-15",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273135.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-06-13",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273165.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-06-04",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273225.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-05-28",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273215.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-04-26",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273275.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-01-29",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273285.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-01-20",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273355.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-06-17",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273375.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-05-22",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273515.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-06-04",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273575.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-03-10",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273755.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-10-26",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060273795.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-10-18",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060293245.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-10-26",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060293265.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "UNIFESP (Sao Paulo, Brazil)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-11-07",
+          "geo_loc_name": "Brazil"
+        },
+        {
+          "acc": "GCA_060293765.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "Mahidol University (Bangkok, Thailand)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2017-03-11",
+          "geo_loc_name": "Thailand"
+        },
+        {
+          "acc": "GCA_060294295.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "Mahidol University (Bangkok, Thailand)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016-12-19",
+          "geo_loc_name": "Thailand"
+        },
+        {
+          "acc": "GCA_060300475.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NHTD (Hanoi, Vietnam)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-07-09",
+          "geo_loc_name": "Viet Nam"
+        }
+      ],
+      "rmt_R_records": [
+        {
+          "acc": "GCA_022316325.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA312972",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "United States Army",
+          "sra_center": "WRAIR-MRSN",
+          "epi_type": "clinical",
+          "collection_date": "2012-12-20",
+          "geo_loc_name": "Afghanistan"
+        },
+        {
+          "acc": "GCA_022316245.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA312972",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "United States Army",
+          "sra_center": "WRAIR-MRSN",
+          "epi_type": "clinical",
+          "collection_date": "2013-08-13",
+          "geo_loc_name": "Honduras"
+        },
+        {
+          "acc": "GCA_022316015.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA296771",
+          "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+          "collected_by": "CT State Health Department",
+          "sra_center": "EMORY UNIVERSITY",
+          "epi_type": "clinical",
+          "collection_date": "2014-03-01",
+          "geo_loc_name": "USA: Connecticut"
+        },
+        {
+          "acc": "GCA_022315915.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA296771",
+          "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+          "collected_by": "OK State Health Department",
+          "sra_center": "EMORY UNIVERSITY",
+          "epi_type": "clinical",
+          "collection_date": "2013-07-01",
+          "geo_loc_name": "USA: Oklahoma"
+        },
+        {
+          "acc": "GCA_022315935.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA296771",
+          "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+          "collected_by": "OK State Health Department",
+          "sra_center": "EMORY UNIVERSITY",
+          "epi_type": "clinical",
+          "collection_date": "2013-07-01",
+          "geo_loc_name": "USA: Oklahoma"
+        },
+        {
+          "acc": "GCA_022315615.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA296771",
+          "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+          "collected_by": "IL State Health Department",
+          "sra_center": "EMORY UNIVERSITY",
+          "epi_type": "clinical",
+          "collection_date": "2013-04-29",
+          "geo_loc_name": "USA: Illinois"
+        },
+        {
+          "acc": "GCA_022315575.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA296771",
+          "bioproject_center": "Centers for Disease Control and Prevention. Division of Healthcare Quality Promotion",
+          "collected_by": "TX State Health Department",
+          "sra_center": "EMORY UNIVERSITY",
+          "epi_type": "clinical",
+          "collection_date": "2013-06-25",
+          "geo_loc_name": "USA: Texas"
+        },
+        {
+          "acc": "GCA_001720745.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2013",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_001720755.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2013",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_001720815.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2013",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_001720905.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2013",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_001922465.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292904",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002192375.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA292902",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002202255.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292902",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002202275.1",
+          "rmt": [
+            "rmtG"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA292904",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_003073335.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292904",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_003571605.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA292904",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_014840295.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840305.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840315.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840345.1",
+          "rmt": [
+            "rmtC",
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840405.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2015",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840435.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2015",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840555.1",
+          "rmt": [
+            "rmtC",
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840575.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2015",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014840635.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2015",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_014946935.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA308116",
+          "bioproject_center": "FDA",
+          "collected_by": "Aga Khan University, Karachi",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523429",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA523429",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523730",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CDC-HAISEQ",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523730",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CDC-HAISEQ",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_019927625.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA717739",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "United States Army Medical Research Directorate - Kenya",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2018-04-12",
+          "geo_loc_name": "Kenya: Nairobi"
+        },
+        {
+          "acc": "GCA_019928405.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA717739",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "Aga Khan University Hospital",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2015-07-12",
+          "geo_loc_name": "Kenya: Nairobi"
+        },
+        {
+          "acc": "GCA_019928395.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA717739",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "Armed Forces Research Institute of Medical Sciences",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016-01-27",
+          "geo_loc_name": "Thailand"
+        },
+        {
+          "acc": "GCA_019930385.1",
+          "rmt": [
+            "rmtH"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA717739",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "Walter Reed Army Medical Center",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "missing",
+          "geo_loc_name": "USA: District of Columbia"
+        },
+        {
+          "acc": "GCA_031045875.2",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA278886",
+          "bioproject_center": "Brigham & Women's Hospital",
+          "collected_by": "Brigham and Women's Hospital",
+          "sra_center": "BRIGHAM AND WOMEN'S HOSPITAL",
+          "epi_type": "clinical",
+          "collection_date": "2022",
+          "geo_loc_name": "USA:Boston"
+        },
+        {
+          "acc": "GCA_031044835.2",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA278886",
+          "bioproject_center": "Brigham & Women's Hospital",
+          "collected_by": "Brigham and Women's Hospital",
+          "sra_center": "BRIGHAM AND WOMEN'S HOSPITAL",
+          "epi_type": "clinical",
+          "collection_date": "2023",
+          "geo_loc_name": "USA:Boston"
+        },
+        {
+          "acc": "GCA_043905625.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2022",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_043905665.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2022",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_043905425.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2021",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_043863385.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2017",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_043863185.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_043861645.1",
+          "rmt": [
+            "rmtF",
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2015",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_050956655.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2023-02",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956725.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-04",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956915.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-06",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957305.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2023-02",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957565.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-11",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549635.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-07",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549675.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2023-01",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549725.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-03",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549735.1",
+          "rmt": [
+            "rmtF1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-05",
+          "geo_loc_name": "Ireland"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 79,
+        "S": 9,
+        "I": 0
+      },
+      "arma_only_S_accessions": [
+        "GCA_020406995.1",
+        "NULL",
+        "GCA_060269415.1",
+        "GCA_060271935.1",
+        "GCA_060271995.1",
+        "GCA_060272015.1",
+        "GCA_060272315.1",
+        "GCA_060272355.1",
+        "GCA_060272365.1"
+      ],
+      "truncated": false
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Escherichia_coli_Shigella/latest_snps/Metadata/PDG000000004.6276.metadata.tsv",
+      "n_rows_scanned": 577745,
+      "n_labelled": 7786,
+      "rmt_counts": {
+        "R": 70,
+        "S": 2,
+        "I": 0
+      },
+      "rmt_S_records": [
+        {
+          "acc": "GCA_060297895.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NIBGE (Faisalabad, Pakistan)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Pakistan"
+        },
+        {
+          "acc": "GCA_060297935.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NIBGE (Faisalabad, Pakistan)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Pakistan"
+        }
+      ],
+      "rmt_R_records": [
+        {
+          "acc": "GCA_001874845.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA292904",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002055635.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292902",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002180095.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292902",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002180275.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292902",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002202175.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292904",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_002860085.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA360014",
+          "bioproject_center": "The University of Hong Kong",
+          "collected_by": "Pak-Leung Ho",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2014-06",
+          "geo_loc_name": "Hong Kong"
+        },
+        {
+          "acc": "GCA_003031735.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA278886",
+          "bioproject_center": "Brigham & Women's Hospital",
+          "collected_by": "Xiaomin Zhao",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2015",
+          "geo_loc_name": "USA:Boston"
+        },
+        {
+          "acc": "GCA_003031775.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA278886",
+          "bioproject_center": "Brigham & Women's Hospital",
+          "collected_by": "Xiaomin Zhao",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "USA:Boston"
+        },
+        {
+          "acc": "GCA_003031815.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA278886",
+          "bioproject_center": "Brigham & Women's Hospital",
+          "collected_by": "Xiaomin Zhao",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2016",
+          "geo_loc_name": "USA:Boston"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523425",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CDC-HAISEQ",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA523730",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA635420",
+          "bioproject_center": "Centers for disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_026420885.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA893175",
+          "bioproject_center": "University Hospital of Larissa",
+          "collected_by": "Hospital of Larissa, Greece",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-01-01",
+          "geo_loc_name": "Greece"
+        },
+        {
+          "acc": "GCA_032536185.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA988283",
+          "bioproject_center": "SASTRA Deemed University",
+          "collected_by": "Sundaram Medical Foundation Dr. Rangarajan Memmorial Hospital",
+          "sra_center": "SASTRA DEEMED UNIVERSITY",
+          "epi_type": "clinical",
+          "collection_date": "2016-01",
+          "geo_loc_name": "India: Anna Nagar, Chennai, TN"
+        },
+        {
+          "acc": "GCA_032337975.2",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA278886",
+          "bioproject_center": "Brigham & Women's Hospital",
+          "collected_by": "Brigham and Women's Hospital",
+          "sra_center": "BRIGHAM AND WOMEN'S HOSPITAL",
+          "epi_type": "clinical",
+          "collection_date": "2023",
+          "geo_loc_name": "USA:Boston"
+        },
+        {
+          "acc": "GCA_050956705.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-10",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956715.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956765.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-04",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956785.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-03",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956805.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-05",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956825.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-08",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956835.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-10",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050956855.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-09",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957365.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2023-03",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957385.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-02",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549655.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-11",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549665.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-10",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549685.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-10",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_059754775.1",
+          "rmt": [
+            "rmtE"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754755.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754725.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754675.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754645.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754615.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754555.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754535.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059934275.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754495.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754445.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754425.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754395.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754345.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754285.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754245.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754195.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754175.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754155.1",
+          "rmt": [
+            "rmtE",
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754095.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754115.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-07-28",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754075.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-07-28",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059934285.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-07-28",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754015.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059754005.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753925.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753895.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753785.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753775.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753705.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753675.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-07-28",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753635.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-20",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753595.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753545.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753515.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059753395.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_059934255.1",
+          "rmt": [
+            "rmtE1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1142533",
+          "bioproject_center": "Bart C Weimer",
+          "collected_by": "UC Davis",
+          "sra_center": "UCD-100K",
+          "epi_type": "clinical",
+          "collection_date": "2020-08-16",
+          "geo_loc_name": "USA"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 11,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Acinetobacter",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Acinetobacter/latest_snps/Metadata/PDG000000010.1941.metadata.tsv",
+      "n_rows_scanned": 61087,
+      "n_labelled": 1161,
+      "rmt_counts": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 70,
+        "S": 32,
+        "I": 0
+      },
+      "arma_only_S_accessions": [
+        "GCA_060269835.1",
+        "GCA_060269845.1",
+        "GCA_060269875.1",
+        "GCA_060269895.1",
+        "GCA_060269915.1",
+        "GCA_060269925.1",
+        "GCA_060269975.1",
+        "GCA_060270015.1",
+        "GCA_060298595.1",
+        "GCA_060298635.1",
+        "GCA_060298655.1",
+        "GCA_060298755.1",
+        "GCA_060298775.1",
+        "GCA_060298785.1",
+        "GCA_060298815.1",
+        "GCA_060298835.1",
+        "GCA_060298845.1",
+        "GCA_060298875.1",
+        "GCA_060298895.1",
+        "GCA_060299455.1",
+        "GCA_060299495.1",
+        "GCA_060299525.1",
+        "GCA_060299555.1",
+        "GCA_060299575.1",
+        "GCA_060299595.1",
+        "GCA_060299615.1",
+        "GCA_060299675.1",
+        "GCA_060299735.1",
+        "GCA_060299765.1",
+        "GCA_060299795.1",
+        "GCA_060299815.1",
+        "GCA_060299835.1"
+      ],
+      "truncated": false
+    },
+    {
+      "group": "Salmonella",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Salmonella/latest_snps/Metadata/PDG000000002.4212.metadata.tsv",
+      "n_rows_scanned": 876351,
+      "n_labelled": 9502,
+      "rmt_counts": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [
+        {
+          "acc": "GCA_009090945.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA292661",
+          "bioproject_center": "FDA",
+          "collected_by": "CO",
+          "sra_center": "PULSENET",
+          "epi_type": "environmental/other",
+          "collection_date": "2019-04-16",
+          "geo_loc_name": "USA:CO"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 5,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Enterobacter_hormaechei",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Enterobacter_hormaechei/latest_snps/Metadata/PDG000000105.842.metadata.tsv",
+      "n_rows_scanned": 13846,
+      "n_labelled": 122,
+      "rmt_counts": {
+        "R": 7,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [
+        {
+          "acc": "GCA_003288475.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA316321",
+          "bioproject_center": "FDA/CDC",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_043905735.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1160997",
+          "bioproject_center": "Laboratoire de Microbiologie, CHU Habib Bourguiba",
+          "collected_by": "Habib Bourguiba Hospital",
+          "sra_center": "LABORATOIRE DE MICROBIOLOGIE, CHU HABIB BOURGUIBA",
+          "epi_type": "clinical",
+          "collection_date": "2018",
+          "geo_loc_name": "Tunisia: Sfax"
+        },
+        {
+          "acc": "GCA_050957085.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-02",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957105.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-02",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957345.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2021-12",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957685.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_051549645.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-08",
+          "geo_loc_name": "Ireland"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Enterobacter_cloacae",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Enterobacter_cloacae/latest_snps/Metadata/PDG000000028.1422.metadata.tsv",
+      "n_rows_scanned": 6587,
+      "n_labelled": 80,
+      "rmt_counts": {
+        "R": 2,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523429",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA635420",
+          "bioproject_center": "Centers for disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Pseudomonas_aeruginosa",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Pseudomonas_aeruginosa/latest_snps/Metadata/PDG000000036.1776.metadata.tsv",
+      "n_rows_scanned": 64419,
+      "n_labelled": 701,
+      "rmt_counts": {
+        "R": 8,
+        "S": 16,
+        "I": 0
+      },
+      "rmt_S_records": [
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "NHTD (Hanoi, Vietnam)",
+          "sra_center": "CARB-X LMIC",
+          "epi_type": "clinical",
+          "collection_date": "2021-07-01",
+          "geo_loc_name": "Viet Nam"
+        },
+        {
+          "acc": "GCA_060268465.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "IHMA",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2019-12-31",
+          "geo_loc_name": "Viet Nam"
+        },
+        {
+          "acc": "GCA_060270435.1",
+          "rmt": [
+            "rmtF"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "CIDRZ, Lusaka (Zambia)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-07-08",
+          "geo_loc_name": "Zambia"
+        },
+        {
+          "acc": "GCA_060270475.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270495.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270515.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270535.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270545.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270575.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270615.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270635.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270675.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270735.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270835.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270855.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        },
+        {
+          "acc": "GCA_060270895.1",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1322038",
+          "bioproject_center": "University of Queensland",
+          "collected_by": "ICL (Lagos, Nigeria)",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-12-31",
+          "geo_loc_name": "Nigeria"
+        }
+      ],
+      "rmt_R_records": [
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtD"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA317143",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtD"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA317143",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF",
+            "rmtF2"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB4"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF2"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523425",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CDC",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtF2"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523425",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "CDC",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_030253475.1",
+          "rmt": [
+            "rmtF2"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA952532",
+          "bioproject_center": "Case Western Reserve University",
+          "collected_by": "Jaskirat Takhar",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-11-12",
+          "geo_loc_name": "USA: Cleveland, Ohio"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Serratia",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Serratia/latest_snps/Metadata/PDG000000016.1036.metadata.tsv",
+      "n_rows_scanned": 5697,
+      "n_labelled": 62,
+      "rmt_counts": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Citrobacter_freundii",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Citrobacter_freundii/latest_snps/Metadata/PDG000000039.1307.metadata.tsv",
+      "n_rows_scanned": 7129,
+      "n_labelled": 62,
+      "rmt_counts": {
+        "R": 2,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": true,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "UNIVERSITY OF GALWAY",
+          "epi_type": "clinical",
+          "collection_date": "2023-02",
+          "geo_loc_name": "Ireland"
+        },
+        {
+          "acc": "GCA_050957425.1",
+          "rmt": [
+            "rmtB1"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-10",
+          "geo_loc_name": "Ireland"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Providencia",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Providencia/latest_snps/Metadata/PDG000000021.1234.metadata.tsv",
+      "n_rows_scanned": 7602,
+      "n_labelled": 36,
+      "rmt_counts": {
+        "R": 3,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [
+        {
+          "acc": "NULL",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA523433",
+          "bioproject_center": "Centers for Disease Control and Prevention",
+          "collected_by": "NULL",
+          "sra_center": "US CENTERS FOR DISEASE CONTROL AND PREVENTION",
+          "epi_type": "clinical",
+          "collection_date": "NULL",
+          "geo_loc_name": "NULL"
+        },
+        {
+          "acc": "GCA_016512695.1",
+          "rmt": [
+            "rmtB2"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA683918",
+          "bioproject_center": "Walter Reed Army Institute of Research",
+          "collected_by": "Brooke Army Medical Center",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2020-11-01",
+          "geo_loc_name": "USA"
+        },
+        {
+          "acc": "GCA_051549715.1",
+          "rmt": [
+            "rmtC"
+          ],
+          "has_gent_aac3": false,
+          "bioproject_acc": "PRJNA1219142",
+          "bioproject_center": "University of Galway",
+          "collected_by": "NULL",
+          "sra_center": "NULL",
+          "epi_type": "clinical",
+          "collection_date": "2022-08",
+          "geo_loc_name": "Ireland"
+        }
+      ],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 6,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    },
+    {
+      "group": "Morganella",
+      "url": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Morganella/latest_snps/Metadata/PDG000000020.541.metadata.tsv",
+      "n_rows_scanned": 1705,
+      "n_labelled": 16,
+      "rmt_counts": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      },
+      "rmt_S_records": [],
+      "rmt_R_records": [],
+      "rmt_I_records": [],
+      "arma_only_counts": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      },
+      "arma_only_S_accessions": [],
+      "truncated": false
+    }
+  ],
+  "errors": {},
+  "complete": true,
+  "honest_limits": [
+    "The CARRIER call is NCBI's own AMRFinder run (PD's AMR_genotypes), not ours -- a different version/DB. That makes it independent of our pipeline, but it is still a tool-derived feature; only the PHENOTYPE is measured.",
+    "Same archive (NCBI-PD) as the earlier hunt, but a DIFFERENT population: every labelled isolate rather than our 109 cached carriers. It can reach counter-examples the previous search structurally could not.",
+    "A run with errors or --row-cap is NOT a specificity bound; `complete` records which.",
+    "An S label is a phenotype claim from a submitting lab; a single S carrier warrants inspection (co-carriage, method, breakpoint) before it is treated as a rule defect."
+  ]
+}

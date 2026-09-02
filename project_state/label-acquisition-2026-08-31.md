@@ -149,8 +149,8 @@ A gate-scored, accession-verified, ranked candidate list exists — so an acquis
 |---|---|---|---|---|---|---|
 | 1 | DONE 2026-09-01 -- G6 screened on real extracted values; PASSES (mode-share 0.0019 / 2,106 levels). Ten-gate verdict CLEARS | research | med | high | resolved | -- |
 | 1b | DONE 2026-09-02 -- ESM2 CTX rho 0.352 (BLOSUM62 0.198) vs the TEM-1 benchmark 0.761; regime DIRECTION holds, MAGNITUDE is protein-specific | run-tests | high | high | resolved | -- |
-| 1c | Run the orthogonal-modality hybrid (ESM2+GEMME+ProSST) on PEAR -- 0.352 is an ESM2-only FLOOR, and the hybrid beat ESM2 on 84-90% of proteins | run-tests | med | high | med | 2-4hr |
-| 2 | Resolve PEAR accessions on ENA + NCBI (retires U1) | research | high | high | med | hours |
+| 1c | DONE 2026-09-02 (Kaggle T4) -- ESM2+ProSST hybrid LOSES here (0.204 vs ESM2 0.352) because ProSST alone is at chance (-0.040); orthogonality premise fails on this protein. GEMME (MSA) not run | run-tests | med | high | resolved | -- |
+| 2 | DONE 2026-08-31 -- U1 retired; PRJNA687219 resolves (E. coli K-12 MG1655, 45 SRA experiments) | research | high | high | resolved | -- |
 | 3 | Re-run the prospective accrual sweep | run-tests | med | med | low | hours |
 <!-- project-state:end:candidate-actions -->
 
