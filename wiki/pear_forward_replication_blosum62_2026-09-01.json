@@ -1,0 +1,45 @@
+{
+  "schema": "pear-forward-replication-v1",
+  "method": "blosum62",
+  "reference": {
+    "path": "D:\\dna_decode_cache\\pear\\CTXM-14\\Genotype_barcode_calling\\Ref_CTXM.fasta",
+    "n_nt": 795,
+    "n_aa": 264,
+    "note": "mature protein; the full gene's 81-nt signal peptide is trimmed. aa_pos is NOT Ambler numbering."
+  },
+  "coordinate_basis": "1-based on the authors' 795-nt reference; 2114/2114 ref-base matches (the +81 Figure-2 axis convention matches only 452/2114)",
+  "n_scored": 2114,
+  "n_skipped": 0,
+  "skipped_examples": [],
+  "by_consequence": {
+    "missense": 1513,
+    "nonsense": 63,
+    "silent": 538
+  },
+  "sanity_check": {
+    "n_silent": 538,
+    "n_nonsense": 63,
+    "median_silent_ctx": 0.00091,
+    "median_nonsense_ctx": -0.12856,
+    "nonsense_below_silent_ctx": true,
+    "median_silent_caz": 0.00521,
+    "median_nonsense_caz": -0.0221,
+    "nonsense_below_silent_caz": true,
+    "passed": true
+  },
+  "correlation": {
+    "ctx": {
+      "n": 1513,
+      "spearman_score_vs_fitness": 0.1982
+    },
+    "caz": {
+      "n": 1513,
+      "spearman_score_vs_fitness": 0.0199
+    }
+  },
+  "sign_convention": "predict_effect returns a score where MORE NEGATIVE = more damaging; measured fitness is relative growth where HIGHER = fitter. A working predictor therefore gives a POSITIVE Spearman.",
+  "benchmark": {
+    "tem1_ampicillin_genome_edit_spearman": 0.7611,
+    "note": "the forward cell's own validation, on a DIFFERENT beta-lactamase and a DIFFERENT drug. Not a target; a reference point."
+  }
+}

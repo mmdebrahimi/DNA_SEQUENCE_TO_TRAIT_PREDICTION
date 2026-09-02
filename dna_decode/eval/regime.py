@@ -66,10 +66,15 @@ REGIMES: tuple[Regime, ...] = (
            "Pooled accuracy is dominated by any grouping variable the genotype tracks (clone, ancestry, "
            "submitter). Pooled numbers here are uninformative, not encouraging."),
     Regime("constructed_molecular", "constructed", "molecular", "supervised", WORKS,
-           "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness",
-           "wiki/organism_gp_regime_correction_2026-08-29.md",
-           "The one working molecular regime. Lift comes from ORTHOGONAL MODALITIES, not scale: "
-           "ESM2+GEMME+ProSST beats ESM2 on 90.5% of proteins paired, while 650M > 3B > 15B."),
+           "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally "
+           "replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+           "wiki/pear_forward_replication_2026-09-02.md",
+           "The one working molecular regime -- but the MAGNITUDE is protein-specific. Measured range "
+           "0.35-0.76 across two beta-lactamases; do not quote 0.761 as the path's general strength. "
+           "Direction holds in both (ESM2 beats BLOSUM62: 0.352 vs 0.198 on CTX-M-14). Lift comes from "
+           "ORTHOGONAL MODALITIES, not scale: ESM2+GEMME+ProSST beats ESM2 on 90.5% of proteins paired, "
+           "while 650M > 3B > 15B. A DAMAGE predictor cannot score a GAIN-of-function axis -- CTX-M-14 "
+           "on ceftazidime is 0.078 for exactly that reason."),
     Regime("constructed_organism_per_condition", "constructed", "organism", "supervised", WORKS,
            "FBA iML1515 conditional essentiality, MCC 0.70-0.74 across four media",
            "wiki/organism_gp_regime_correction_2026-08-29.md",

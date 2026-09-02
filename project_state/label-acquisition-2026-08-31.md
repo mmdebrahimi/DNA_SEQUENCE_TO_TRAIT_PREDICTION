@@ -76,6 +76,10 @@ When a label source is worth acquiring, the target is already screened, verified
 | E7 | PEAR clears every applicable gate EXCEPT G6, which is UNSCREENED -> status INCOMPLETE, not `clears` (corrected 2026-09-01 by the mechanical screen; the memo headline overstated it, its own table did not). Blocker remains ARTIFACT FORMAT | wiki/pear_substrate_screen_2026-08-31.md + wiki/rejection_gate_screen_2026-09-01.md | high | 2026-09-01 |
 | E8 | PEAR G6 PASSES on real values: mode-share 0.0019 / 2,106 distinct levels (n=2,114); ten-gate verdict CLEARS | wiki/pear_g6_screen_2026-09-01.md | high | 2026-09-01 |
 | E9 | The "C: at 99%" blocker was a wrong-drive problem: D: has 4.1 TB; R installed there in minutes | wiki/pear_g6_screen_2026-09-01.md | high | 2026-09-01 |
+| E10 | Forward cell EXTERNALLY replicated on a 2nd beta-lactamase: ESM2 CTX-M-14/cefotaxime rho 0.352 vs TEM-1 0.761 -- magnitude is protein-specific | wiki/pear_forward_replication_2026-09-02.md | high | 2026-09-02 |
+| E11 | ESM2 beats BLOSUM62 on PEAR (0.352 vs 0.198): the learned model earns its keep, so the regime's DIRECTION holds | wiki/pear_forward_replication_2026-09-02.md | high | 2026-09-02 |
+| E12 | Ceftazidime rho 0.078 is STRUCTURAL: CTX-M-14 is a cefotaximase and CAZ resistance is gain-of-function (IQR 0.080 vs CTX 0.180, max +3.68); a damage predictor cannot score gain | wiki/pear_forward_replication_2026-09-02.md | high | 2026-09-02 |
+| E13 | No noise ceiling is derivable from PEAR's published tables -- Figure2B vs Figure3A correlate at EXACTLY 1.0 (same numbers, monotone transform, not replicates) | wiki/pear_forward_replication_2026-09-02.md | high | 2026-09-02 |
 <!-- project-state:end:evidence -->
 
 ### Unknowns
@@ -109,6 +113,7 @@ When a label source is worth acquiring, the target is already screened, verified
 | H4 | PEAR is an L1 label source that helps the AMR label wall | falsified | 2026-08-31 |
 | H5 | PEAR's processed per-variant fitness table is directly downloadable | falsified | 2026-08-31 |
 | H2 | A free path exists that clears the label wall (prospective accrual) | confirmed | 2026-08-24 |
+| H7 | The forward cell's 0.761 is a general property of the genome-edit path | falsified | 2026-09-02 |
 | H3 | Some acquisition target is reachable without money | open | (untested) |
 | H6 | HBV has a free measured-phenotype source usable as a decoder label | falsified | 2026-09-01 |
 <!-- project-state:end:hypotheses -->
@@ -143,7 +148,8 @@ A gate-scored, accession-verified, ranked candidate list exists — so an acquis
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
 | 1 | DONE 2026-09-01 -- G6 screened on real extracted values; PASSES (mode-share 0.0019 / 2,106 levels). Ten-gate verdict CLEARS | research | med | high | resolved | -- |
-| 1b | Run the shipped genome-edit forward path against PEAR's 2,114 measured variants (external replication of the one working learned regime) | run-tests | high | high | med | 1-2hr |
+| 1b | DONE 2026-09-02 -- ESM2 CTX rho 0.352 (BLOSUM62 0.198) vs the TEM-1 benchmark 0.761; regime DIRECTION holds, MAGNITUDE is protein-specific | run-tests | high | high | resolved | -- |
+| 1c | Run the orthogonal-modality hybrid (ESM2+GEMME+ProSST) on PEAR -- 0.352 is an ESM2-only FLOOR, and the hybrid beat ESM2 on 84-90% of proteins | run-tests | med | high | med | 2-4hr |
 | 2 | Resolve PEAR accessions on ENA + NCBI (retires U1) | research | high | high | med | hours |
 | 3 | Re-run the prospective accrual sweep | run-tests | med | med | low | hours |
 <!-- project-state:end:candidate-actions -->

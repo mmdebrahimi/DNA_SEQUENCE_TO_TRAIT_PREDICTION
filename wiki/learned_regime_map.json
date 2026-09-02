@@ -1,6 +1,6 @@
 {
   "schema": "learned-regime-map-v1",
-  "generated": "2026-08-31",
+  "generated": "2026-09-02",
   "discriminating_variable": "population design (constructed vs natural), NOT organism complexity",
   "scope_warning": "the natural-population negative is ZERO-SHOT-scoped. A supervised complement is the shipped architecture; refusing it would re-commit the over-generalisation this map exists to prevent.",
   "regimes": [
@@ -32,9 +32,9 @@
       "endpoint": "molecular",
       "method": "supervised",
       "verdict": "WORKS",
-      "evidence": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness",
-      "artifact": "wiki/organism_gp_regime_correction_2026-08-29.md",
-      "note": "The one working molecular regime. Lift comes from ORTHOGONAL MODALITIES, not scale: ESM2+GEMME+ProSST beats ESM2 on 90.5% of proteins paired, while 650M > 3B > 15B.",
+      "evidence": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+      "artifact": "wiki/pear_forward_replication_2026-09-02.md",
+      "note": "The one working molecular regime -- but the MAGNITUDE is protein-specific. Measured range 0.35-0.76 across two beta-lactamases; do not quote 0.761 as the path's general strength. Direction holds in both (ESM2 beats BLOSUM62: 0.352 vs 0.198 on CTX-M-14). Lift comes from ORTHOGONAL MODALITIES, not scale: ESM2+GEMME+ProSST beats ESM2 on 90.5% of proteins paired, while 650M > 3B > 15B. A DAMAGE predictor cannot score a GAIN-of-function axis -- CTX-M-14 on ceftazidime is 0.078 for exactly that reason.",
       "artifact_exists": true
     },
     {
