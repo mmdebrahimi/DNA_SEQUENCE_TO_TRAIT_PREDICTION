@@ -73,6 +73,33 @@ encoding in that one submission, and not comparable to the rest of PD.
   in `wiki/gentamicin_v2_validation_2026-08-31.json` — checked, not assumed.
 - **Nothing was changed in the frozen surface**, and the v2 lock is untouched. This is measurement.
 
+## Update 2026-09-03 — SOLO grading strengthens this, and the pooled number was the wrong denominator
+
+A prior-art scan (`wiki/prior_art_decoder_landscape_2026-09-03.md`) surfaced the WHO TB catalogue's
+**SOLO** method: grade a determinant only on isolates where it appears WITHOUT another known determinant
+for the same drug. By that standard the pooled 146/206 above credits `rmt` for **47 resistant carriers
+that also carry `aac(3)`** — the classic gentamicin-modifying enzyme — which cannot tell you what `rmt`
+did.
+
+| stratum | R | S | PPV | 95% CI (Wilson) |
+|---|---|---|---|---|
+| pooled (as first reported) | 146 | 60 | 0.709 | [0.643, 0.767] |
+| **SOLO — no `aac(3)` co-carriage** | 99 | 21 | 0.825 | [0.747, 0.883] |
+| co-carriage with `aac(3)` | 47 | 39 | 0.547 | [0.442, 0.647] |
+| **SOLO, artifact project excluded** | **99** | **0** | **1.000** | **[0.963, 1.000]** |
+
+The co-carriage stratum at 0.547 is where the pooled number's dilution came from. The properly-controlled
+evidence for the rule is **99 solo carriers, all resistant**, clearing WHO's grade-1 bar (≥5 solo
+occurrences, PPV CI lower ≥ 0.25) by a wide margin — stronger and better controlled than what was first
+published here. It does **not** touch the specificity question: zero susceptible solo carriers outside the
+artifact project remains an absence of counter-examples, not a bound. Reproduce with
+`uv run python scripts/solo_ppv.py`.
+
+*Solo is the conservative estimator — it discards data to buy an uncontaminated denominator; a Nature
+Communications 2025 analysis found penalised multivariable regression beats SOLO on sensitivity for TB.
+And "solo" here means no co-carried `aac(3)` only, because that is the single co-carriage flag the hunt
+recorded; a wider co-determinant screen would lower the solo count further.*
+
 ## Honest limits
 
 - The **carrier** call is NCBI's AMRFinder (PD's `AMR_genotypes`), a different version/DB from ours —

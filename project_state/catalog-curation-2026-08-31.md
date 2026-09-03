@@ -72,7 +72,7 @@ No curated biological fact enters a shipped catalog without a named source, a me
 ### Unknowns
 - **U1 (SHARPENED 2026-09-02, still open)** — Over-calling risk of the deployed `rmt` rule. The denominator is no longer empty *by absence*: a cache-independent sweep of 20,816 gentamicin-labelled PD isolates found **60** S-labelled carriers — the first ever. But **all 60 come from a single BioProject (PRJNA1322038)**, and a pre-registered `aac(3)` control shows that project calls the undisputed gentamicin determinant R only **2%** of the time vs **97%** elsewhere (and calls no-gene isolates R 86%) → `LABEL_ARTIFACT`; they cannot test the rule. Outside it: **146/146 carriers are R** across 23 BioProjects (was 62/63, cache-bounded). So the rule's evidence is stronger AND its over-call risk is still UNTESTED. Next lever is an INDEPENDENT archive, not PD. `wiki/gentamicin_rmt_specificity_hunt_2026-09-02.md`
 - Whether curating HIV NNRTI positions recovers the 53 or merely relabels them.
-- RESOLVED 2026-09-01: PARTLY. 1 of 4 conditions is enforced by test (per-MODULE external authority; `tests/test_catalog_provenance.py`, all 8 shipped catalogs already pass). The other 3 -- per-ENTRY sourcing, measurement against the doubt-layer baseline, and reviewing a derivation as biology -- are review discipline. Per-entry is not representable without restructuring the bare `set[str]` catalogs. Stating the split is load-bearing: a green suite checking only the weak condition reads as more assurance than it is.
+- RESOLVED 2026-09-01: PARTLY. 1 of 4 conditions is enforced by test (per-MODULE external authority; `tests/test_catalog_provenance.py`, all 8 shipped catalogs already pass). The other 3 -- per-ENTRY sourcing, measurement against the doubt-layer baseline, and reviewing a derivation as biology -- are review discipline. Per-entry is not representable without restructuring the bare `set[str]` catalogs -- **but AMRrules (2026-09-03 prior-art scan) is the existence proof that it IS representable at production scale: 24 fields per rule incl. PMID, ECO `evidence code`, `evidence grade`, `evidence limitations`. The constraint was OUR schema, not the problem.** Stating the split is load-bearing: a green suite checking only the weak condition reads as more assurance than it is.
 
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
@@ -115,6 +115,7 @@ A written, tested curation procedure exists, and each measured gap is either clo
 | 2 | Draft HIV NNRTI entries with citations | propose | med | med | med | 1-2hr |
 | 3 | DONE 2026-09-02 -- 60 S-labelled carriers FOUND (first ever) over 20,816 labelled isolates; ALL 60 from ONE BioProject and killed by an aac(3) control -> LABEL_ARTIFACT. U1 SHARPENED, not retired | research | high | high | resolved | -- |
 | 4 | Test specificity on an INDEPENDENT archive (clinical MIC collection), since PD is now exhausted for this question | research | med | high | high | days |
+| 5 | Adopt an AMRrules-shaped per-entry schema for ONE catalog as a pilot (PMID + ECO evidence code + grade + limitations); costed against touching the frozen surface | propose | med | high | med | days |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger

@@ -1,0 +1,56 @@
+{
+  "schema": "solo-ppv-v1",
+  "method": "WHO M. tuberculosis mutation catalogue SOLO grading, applied to a determinant family: score only occurrences where the determinant appears WITHOUT another known determinant for the same drug. Grade-1 bar: >=5 solo occurrences and a PPV 95% CI lower bound >= 0.25.",
+  "who_bar": {
+    "min_solo": 5,
+    "min_ppv_ci_lower": 0.25
+  },
+  "result": {
+    "determinant": "rmt* / npmA (gentamicin v2 symbol_rescue)",
+    "excluded_project": "PRJNA1322038",
+    "strata": {
+      "pooled_all_carriers": {
+        "n": 206,
+        "resistant": 146,
+        "susceptible": 60,
+        "ppv": 0.7087378640776699,
+        "ci95_lower": 0.6433232968558285,
+        "ci95_upper": 0.7665096438003618,
+        "meets_who_grade1_bar": true
+      },
+      "solo_no_aac3": {
+        "n": 120,
+        "resistant": 99,
+        "susceptible": 21,
+        "ppv": 0.825,
+        "ci95_lower": 0.7472413105195714,
+        "ci95_upper": 0.8825955132940744,
+        "meets_who_grade1_bar": true
+      },
+      "co_carriage_with_aac3": {
+        "n": 86,
+        "resistant": 47,
+        "susceptible": 39,
+        "ppv": 0.5465116279069767,
+        "ci95_lower": 0.44155981420304113,
+        "ci95_upper": 0.6474857949579709,
+        "meets_who_grade1_bar": true
+      },
+      "solo_no_aac3_artifact_project_excluded": {
+        "n": 99,
+        "resistant": 99,
+        "susceptible": 0,
+        "ppv": 1.0,
+        "ci95_lower": 0.9626454664260378,
+        "ci95_upper": 1.0,
+        "meets_who_grade1_bar": true
+      }
+    }
+  },
+  "honest_limits": [
+    "SOLO is the CONSERVATIVE estimator: it discards co-carriage data to buy an uncontaminated denominator. Multivariable penalised regression has been shown to beat SOLO grading on sensitivity for TB, recovering compensatory variants solo misses.",
+    "'Solo' here means no co-carried aac(3), the classic gentamicin-modifying enzyme -- it is NOT a full co-determinant screen, because the committed hunt records only that one co-carriage flag per isolate. A wider screen would lower the solo count further.",
+    "The carrier call is NCBI's own AMRFinder (PD AMR_genotypes), a tool-derived feature; only the phenotype is measured.",
+    "Excluding the artifact project is justified by a separate pre-registered control (wiki/gentamicin_rmt_project_control.json), not by the numbers being inconvenient."
+  ]
+}

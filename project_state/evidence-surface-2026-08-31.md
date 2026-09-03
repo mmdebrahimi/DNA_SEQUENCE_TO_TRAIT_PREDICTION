@@ -115,6 +115,8 @@ human-readable level; the follow-on set is below.
 | 1 | Screen a THIRD candidate through the gate screen (n=2 worked examples is the schema's stated limit) | research | med | high | med | 1-2hr |
 | 2 | Check reachability of the NON-report-card surfaces (hiv/tb/pgx cards) | research | med | med | med | 1-2hr |
 | 3 | Decide whether the doubt/lineage lines belong in `dna-decode` routes too | propose | low | med | med | 1-2hr |
+| 4 | Report VME/ME (very major = R called S) beside sens/spec on the report card -- the clinical-microbiology convention that puts the dangerous error in the headline | edit-local-code | med | med | low | 1-2hr |
+| 5 | Evaluate ECOFF-anchored tiering vs our clinical-breakpoint-only `mic_tiers.py` (EUCAST WGS subcommittee principle; ResFinder 4.0 errors cluster one dilution above the ECOFF) | research | med | high | med | days |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
