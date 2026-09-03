@@ -1,0 +1,4267 @@
+{
+  "schema": "gentamicin-rmt-bvbrc-hunt-v1",
+  "drug": "gentamicin",
+  "archive": "BV-BRC",
+  "deployed_rescue": "^(rmt[A-H]\\d*|npmA\\d*)$",
+  "genotype_caller": "BV-BRC sp_gene (CARD/BLAT) -- a DIFFERENT tool from our AMRFinder and from NCBI-PD's AMR_genotypes",
+  "phenotype_filter": "evidence = Laboratory Method (excludes BV-BRC's ML-predicted phenotypes, which would be a circular label)",
+  "n_rmtase_carrier_genomes": 9960,
+  "n_measured_ast_records": 49553,
+  "n_carriers_with_measured_phenotype": 169,
+  "counts": {
+    "Resistant": 96,
+    "Susceptible": 67,
+    "Intermediate": 6
+  },
+  "ppv_rmt_to_R": 0.588957055214724,
+  "susceptible_carriers": [
+    {
+      "genome_id": "573.66487",
+      "genome_name": "Klebsiella pneumoniae 27261_8#106",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66351",
+      "genome_name": "Klebsiella pneumoniae 26994_7#32",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66376",
+      "genome_name": "Klebsiella pneumoniae 26994_7#124",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66384",
+      "genome_name": "Klebsiella pneumoniae 26994_8#19",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66535",
+      "genome_name": "Klebsiella pneumoniae 27322_4#117",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66301",
+      "genome_name": "Klebsiella pneumoniae 26975_5#105",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66383",
+      "genome_name": "Klebsiella pneumoniae 26994_7#161",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66404",
+      "genome_name": "Klebsiella pneumoniae 26994_8#124",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66426",
+      "genome_name": "Klebsiella pneumoniae 27097_7#44",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66444",
+      "genome_name": "Klebsiella pneumoniae 27261_7#64",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66490",
+      "genome_name": "Klebsiella pneumoniae 27261_8#115",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24766",
+      "genome_name": "Salmonella enterica IndS155",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66309",
+      "genome_name": "Klebsiella pneumoniae 26975_5#141",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66323",
+      "genome_name": "Klebsiella pneumoniae 26994_6#77",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66410",
+      "genome_name": "Klebsiella pneumoniae 26994_8#157",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66362",
+      "genome_name": "Klebsiella pneumoniae 26994_7#89",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66506",
+      "genome_name": "Klebsiella pneumoniae 27261_8#179",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66422",
+      "genome_name": "Klebsiella pneumoniae 27097_7#3",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24650",
+      "genome_name": "Salmonella enterica IndS56",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66254",
+      "genome_name": "Klebsiella pneumoniae 26968_6#62",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66319",
+      "genome_name": "Klebsiella pneumoniae 26994_6#72",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66352",
+      "genome_name": "Klebsiella pneumoniae 26994_7#26",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66381",
+      "genome_name": "Klebsiella pneumoniae 26994_7#168",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66454",
+      "genome_name": "Klebsiella pneumoniae 27261_7#59",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66493",
+      "genome_name": "Klebsiella pneumoniae 27261_8#121",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66405",
+      "genome_name": "Klebsiella pneumoniae 26994_8#154",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66375",
+      "genome_name": "Klebsiella pneumoniae 26994_7#126",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66374",
+      "genome_name": "Klebsiella pneumoniae 26994_7#122",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66491",
+      "genome_name": "Klebsiella pneumoniae 27261_8#111",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66315",
+      "genome_name": "Klebsiella pneumoniae 26975_5#179",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66429",
+      "genome_name": "Klebsiella pneumoniae 27097_7#48",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66441",
+      "genome_name": "Klebsiella pneumoniae 27261_7#51",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66344",
+      "genome_name": "Klebsiella pneumoniae 26994_7#22",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66445",
+      "genome_name": "Klebsiella pneumoniae 27261_7#140",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66385",
+      "genome_name": "Klebsiella pneumoniae 26994_8#21",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66237",
+      "genome_name": "Klebsiella pneumoniae 26968_5#165",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66222",
+      "genome_name": "Klebsiella pneumoniae 26968_5#42",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66320",
+      "genome_name": "Klebsiella pneumoniae 26994_6#71",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66316",
+      "genome_name": "Klebsiella pneumoniae 26994_6#75",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66504",
+      "genome_name": "Klebsiella pneumoniae 27261_8#173",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66419",
+      "genome_name": "Klebsiella pneumoniae 26994_8#164",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24788",
+      "genome_name": "Salmonella enterica IndS122",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66389",
+      "genome_name": "Klebsiella pneumoniae 26994_8#28",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66372",
+      "genome_name": "Klebsiella pneumoniae 26994_7#121",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66302",
+      "genome_name": "Klebsiella pneumoniae 26975_5#96",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66324",
+      "genome_name": "Klebsiella pneumoniae 26994_6#78",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66366",
+      "genome_name": "Klebsiella pneumoniae 26994_7#92",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66368",
+      "genome_name": "Klebsiella pneumoniae 26994_7#117",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66369",
+      "genome_name": "Klebsiella pneumoniae 26994_7#115",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66270",
+      "genome_name": "Klebsiella pneumoniae 26968_6#183",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66382",
+      "genome_name": "Klebsiella pneumoniae 26994_7#171",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66398",
+      "genome_name": "Klebsiella pneumoniae 26994_8#123",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66438",
+      "genome_name": "Klebsiella pneumoniae 27261_7#8",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66437",
+      "genome_name": "Klebsiella pneumoniae 27261_7#14",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66310",
+      "genome_name": "Klebsiella pneumoniae 26975_5#138",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66304",
+      "genome_name": "Klebsiella pneumoniae 26975_5#39",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66448",
+      "genome_name": "Klebsiella pneumoniae 27261_7#145",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66360",
+      "genome_name": "Klebsiella pneumoniae 26994_7#78",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66370",
+      "genome_name": "Klebsiella pneumoniae 26994_7#119",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66386",
+      "genome_name": "Klebsiella pneumoniae 26994_8#18",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66268",
+      "genome_name": "Klebsiella pneumoniae 26968_6#180",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66533",
+      "genome_name": "Klebsiella pneumoniae 27322_4#115",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66421",
+      "genome_name": "Klebsiella pneumoniae 27097_7#1",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66387",
+      "genome_name": "Klebsiella pneumoniae 26994_8#22",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66330",
+      "genome_name": "Klebsiella pneumoniae 26994_6#76",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66371",
+      "genome_name": "Klebsiella pneumoniae 26994_7#120",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.31065",
+      "genome_name": "Klebsiella pneumoniae strain PH124",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    }
+  ],
+  "all_hits": [
+    {
+      "genome_id": "562.42677",
+      "genome_name": "Escherichia coli strain 219",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "573.18088",
+      "genome_name": "Klebsiella pneumoniae strain AR_0079",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "562.28131",
+      "genome_name": "Escherichia coli strain CRE1540",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "==6",
+      "measurement_value": "6",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "573.26166",
+      "genome_name": "Klebsiella pneumoniae strain 5012STDY7312603",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        31038449
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23196",
+      "genome_name": "Klebsiella pneumoniae strain KP_317",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66487",
+      "genome_name": "Klebsiella pneumoniae 27261_8#106",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24672",
+      "genome_name": "Salmonella enterica s15D048",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66351",
+      "genome_name": "Klebsiella pneumoniae 26994_7#32",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66243",
+      "genome_name": "Klebsiella pneumoniae 26968_5#192",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66376",
+      "genome_name": "Klebsiella pneumoniae 26994_7#124",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66384",
+      "genome_name": "Klebsiella pneumoniae 26994_8#19",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "562.144239",
+      "genome_name": "Escherichia coli ERR7221496",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "573.66334",
+      "genome_name": "Klebsiella pneumoniae 26994_6#117",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66535",
+      "genome_name": "Klebsiella pneumoniae 27322_4#117",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66301",
+      "genome_name": "Klebsiella pneumoniae 26975_5#105",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66313",
+      "genome_name": "Klebsiella pneumoniae 26975_5#166",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Intermediate",
+      "measurement": "4",
+      "measurement_value": "4",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66383",
+      "genome_name": "Klebsiella pneumoniae 26994_7#161",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66404",
+      "genome_name": "Klebsiella pneumoniae 26994_8#124",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66426",
+      "genome_name": "Klebsiella pneumoniae 27097_7#44",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66444",
+      "genome_name": "Klebsiella pneumoniae 27261_7#64",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66490",
+      "genome_name": "Klebsiella pneumoniae 27261_8#115",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24766",
+      "genome_name": "Salmonella enterica IndS155",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24674",
+      "genome_name": "Salmonella enterica s13069",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24717",
+      "genome_name": "Salmonella enterica IndS58",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24711",
+      "genome_name": "Salmonella enterica IndS94",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.23218",
+      "genome_name": "Klebsiella pneumoniae strain KP_310",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23225",
+      "genome_name": "Klebsiella pneumoniae strain KP_307",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24715",
+      "genome_name": "Salmonella enterica IndS93",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "470.16224",
+      "genome_name": "Acinetobacter baumannii BAL_214",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2011,
+      "pmid": [
+        28348846
+      ],
+      "taxon_id": 470
+    },
+    {
+      "genome_id": "573.66309",
+      "genome_name": "Klebsiella pneumoniae 26975_5#141",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66323",
+      "genome_name": "Klebsiella pneumoniae 26994_6#77",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66410",
+      "genome_name": "Klebsiella pneumoniae 26994_8#157",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66397",
+      "genome_name": "Klebsiella pneumoniae 26994_8#116",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66362",
+      "genome_name": "Klebsiella pneumoniae 26994_7#89",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66506",
+      "genome_name": "Klebsiella pneumoniae 27261_8#179",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66422",
+      "genome_name": "Klebsiella pneumoniae 27097_7#3",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24761",
+      "genome_name": "Salmonella enterica IndS174",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24650",
+      "genome_name": "Salmonella enterica IndS56",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66250",
+      "genome_name": "Klebsiella pneumoniae 26968_6#31",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66254",
+      "genome_name": "Klebsiella pneumoniae 26968_6#62",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66262",
+      "genome_name": "Klebsiella pneumoniae 26968_6#112",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66319",
+      "genome_name": "Klebsiella pneumoniae 26994_6#72",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66352",
+      "genome_name": "Klebsiella pneumoniae 26994_7#26",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66357",
+      "genome_name": "Klebsiella pneumoniae 26994_7#74",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66381",
+      "genome_name": "Klebsiella pneumoniae 26994_7#168",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66454",
+      "genome_name": "Klebsiella pneumoniae 27261_7#59",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24795",
+      "genome_name": "Salmonella enterica IndS112",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66451",
+      "genome_name": "Klebsiella pneumoniae 27261_7#70",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66493",
+      "genome_name": "Klebsiella pneumoniae 27261_8#121",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23199",
+      "genome_name": "Klebsiella pneumoniae strain KP_121",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24817",
+      "genome_name": "Salmonella enterica s12177",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24598",
+      "genome_name": "Salmonella enterica IndS30",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Intermediate",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "573.66405",
+      "genome_name": "Klebsiella pneumoniae 26994_8#154",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66375",
+      "genome_name": "Klebsiella pneumoniae 26994_7#126",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66374",
+      "genome_name": "Klebsiella pneumoniae 26994_7#122",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66491",
+      "genome_name": "Klebsiella pneumoniae 27261_8#111",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66315",
+      "genome_name": "Klebsiella pneumoniae 26975_5#179",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66429",
+      "genome_name": "Klebsiella pneumoniae 27097_7#48",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66441",
+      "genome_name": "Klebsiella pneumoniae 27261_7#51",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66344",
+      "genome_name": "Klebsiella pneumoniae 26994_7#22",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66353",
+      "genome_name": "Klebsiella pneumoniae 26994_7#34",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Intermediate",
+      "measurement": "4",
+      "measurement_value": "4",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66445",
+      "genome_name": "Klebsiella pneumoniae 27261_7#140",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66385",
+      "genome_name": "Klebsiella pneumoniae 26994_8#21",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "562.144305",
+      "genome_name": "Escherichia coli ERR7221569",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "562.144304",
+      "genome_name": "Escherichia coli ERR7221564",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "562.144311",
+      "genome_name": "Escherichia coli ERR7221583",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "573.66232",
+      "genome_name": "Klebsiella pneumoniae 26968_5#140",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66235",
+      "genome_name": "Klebsiella pneumoniae 26968_5#137",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66237",
+      "genome_name": "Klebsiella pneumoniae 26968_5#165",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66222",
+      "genome_name": "Klebsiella pneumoniae 26968_5#42",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66311",
+      "genome_name": "Klebsiella pneumoniae 26975_5#169",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Intermediate",
+      "measurement": "4",
+      "measurement_value": "4",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66320",
+      "genome_name": "Klebsiella pneumoniae 26994_6#71",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66316",
+      "genome_name": "Klebsiella pneumoniae 26994_6#75",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66504",
+      "genome_name": "Klebsiella pneumoniae 27261_8#173",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66419",
+      "genome_name": "Klebsiella pneumoniae 26994_8#164",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24712",
+      "genome_name": "Salmonella enterica IndS117",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24751",
+      "genome_name": "Salmonella enterica IndS202",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24788",
+      "genome_name": "Salmonella enterica IndS122",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "550.1584",
+      "genome_name": "Enterobacter cloacae strain AR_038",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 550
+    },
+    {
+      "genome_id": "573.23204",
+      "genome_name": "Klebsiella pneumoniae strain KP_346",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23205",
+      "genome_name": "Klebsiella pneumoniae strain KP_301",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23228",
+      "genome_name": "Klebsiella pneumoniae strain KP_343",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23216",
+      "genome_name": "Klebsiella pneumoniae strain KP_063",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23217",
+      "genome_name": "Klebsiella pneumoniae strain KP_158",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "562.144161",
+      "genome_name": "Escherichia coli ERR1981377",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "28901.24618",
+      "genome_name": "Salmonella enterica s15D135",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "470.16204",
+      "genome_name": "Acinetobacter baumannii BAL_103",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2011,
+      "pmid": [
+        28348846
+      ],
+      "taxon_id": 470
+    },
+    {
+      "genome_id": "573.66389",
+      "genome_name": "Klebsiella pneumoniae 26994_8#28",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66349",
+      "genome_name": "Klebsiella pneumoniae 26994_7#37",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Intermediate",
+      "measurement": "4",
+      "measurement_value": "4",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66372",
+      "genome_name": "Klebsiella pneumoniae 26994_7#121",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66264",
+      "genome_name": "Klebsiella pneumoniae 26968_6#113",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66302",
+      "genome_name": "Klebsiella pneumoniae 26975_5#96",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66324",
+      "genome_name": "Klebsiella pneumoniae 26994_6#78",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66359",
+      "genome_name": "Klebsiella pneumoniae 26994_7#55",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66366",
+      "genome_name": "Klebsiella pneumoniae 26994_7#92",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66399",
+      "genome_name": "Klebsiella pneumoniae 26994_8#114",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66356",
+      "genome_name": "Klebsiella pneumoniae 26994_7#52",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66358",
+      "genome_name": "Klebsiella pneumoniae 26994_7#73",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66368",
+      "genome_name": "Klebsiella pneumoniae 26994_7#117",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66365",
+      "genome_name": "Klebsiella pneumoniae 26994_7#93",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66369",
+      "genome_name": "Klebsiella pneumoniae 26994_7#115",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24813",
+      "genome_name": "Salmonella enterica s15D023",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "562.57450",
+      "genome_name": "Escherichia coli strain PB231",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": null,
+      "pmid": [
+        28877757,
+        30550564
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "573.23213",
+      "genome_name": "Klebsiella pneumoniae strain KP_123",
+      "rmt_genes": [
+        "rmtB",
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "562.42660",
+      "genome_name": "Escherichia coli strain 165",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "4",
+      "measurement_value": "4",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "470.16226",
+      "genome_name": "Acinetobacter baumannii BAL_216",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2011,
+      "pmid": [
+        28348846
+      ],
+      "taxon_id": 470
+    },
+    {
+      "genome_id": "573.24323",
+      "genome_name": "Klebsiella pneumoniae strain MRSN19181",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "8",
+      "measurement_value": "8",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66291",
+      "genome_name": "Klebsiella pneumoniae 26975_4#152",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66270",
+      "genome_name": "Klebsiella pneumoniae 26968_6#183",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66382",
+      "genome_name": "Klebsiella pneumoniae 26994_7#171",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66252",
+      "genome_name": "Klebsiella pneumoniae 26968_6#38",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66398",
+      "genome_name": "Klebsiella pneumoniae 26994_8#123",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66438",
+      "genome_name": "Klebsiella pneumoniae 27261_7#8",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66437",
+      "genome_name": "Klebsiella pneumoniae 27261_7#14",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66310",
+      "genome_name": "Klebsiella pneumoniae 26975_5#138",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "2",
+      "measurement_value": "2",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66304",
+      "genome_name": "Klebsiella pneumoniae 26975_5#39",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66448",
+      "genome_name": "Klebsiella pneumoniae 27261_7#145",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66354",
+      "genome_name": "Klebsiella pneumoniae 26994_7#36",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Intermediate",
+      "measurement": "4",
+      "measurement_value": "4",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66360",
+      "genome_name": "Klebsiella pneumoniae 26994_7#78",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66370",
+      "genome_name": "Klebsiella pneumoniae 26994_7#119",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66386",
+      "genome_name": "Klebsiella pneumoniae 26994_8#18",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66268",
+      "genome_name": "Klebsiella pneumoniae 26968_6#180",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66533",
+      "genome_name": "Klebsiella pneumoniae 27322_4#115",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66421",
+      "genome_name": "Klebsiella pneumoniae 27097_7#1",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66387",
+      "genome_name": "Klebsiella pneumoniae 26994_8#22",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66330",
+      "genome_name": "Klebsiella pneumoniae 26994_6#76",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66371",
+      "genome_name": "Klebsiella pneumoniae 26994_7#120",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "<=1",
+      "measurement_value": "1",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66373",
+      "genome_name": "Klebsiella pneumoniae 26994_7#146",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">=16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "MIC",
+      "testing_standard": null,
+      "testing_standard_year": null,
+      "pmid": [
+        36801013
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "28901.24685",
+      "genome_name": "Salmonella enterica s10100",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24748",
+      "genome_name": "Salmonella enterica IndS194",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "28901.24622",
+      "genome_name": "Salmonella enterica s13051",
+      "rmt_genes": [
+        "rmtB"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Agar dilution",
+      "testing_standard": "CLSI, EUCAST",
+      "testing_standard_year": 2018,
+      "pmid": [
+        35861536
+      ],
+      "taxon_id": 28901
+    },
+    {
+      "genome_id": "562.144297",
+      "genome_name": "Escherichia coli ERR7221555",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "1703250.3",
+      "genome_name": "Citrobacter sp. CRE-46 strain AR_0157",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 1703250
+    },
+    {
+      "genome_id": "562.42665",
+      "genome_name": "Escherichia coli strain 190",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "573.31072",
+      "genome_name": "Klebsiella pneumoniae strain PH44",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.67257",
+      "genome_name": "Klebsiella pneumoniae ERR7221247",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "550.4577",
+      "genome_name": "Enterobacter cloacae ERR7419359",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 550
+    },
+    {
+      "genome_id": "550.4581",
+      "genome_name": "Enterobacter cloacae ERR7419375",
+      "rmt_genes": [
+        "rmtC"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 550
+    },
+    {
+      "genome_id": "287.8529",
+      "genome_name": "Pseudomonas aeruginosa strain FDA-CDC-AR_0250",
+      "rmt_genes": [
+        "rmtD"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 287
+    },
+    {
+      "genome_id": "287.8525",
+      "genome_name": "Pseudomonas aeruginosa strain FDA-CDC-AR_0246",
+      "rmt_genes": [
+        "rmtD"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 287
+    },
+    {
+      "genome_id": "573.23207",
+      "genome_name": "Klebsiella pneumoniae strain KP_215",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.24252",
+      "genome_name": "Klebsiella pneumoniae strain 16",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.31070",
+      "genome_name": "Klebsiella pneumoniae strain PH9",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.24265",
+      "genome_name": "Klebsiella pneumoniae strain 22",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23201",
+      "genome_name": "Klebsiella pneumoniae strain KP_109",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.31064",
+      "genome_name": "Klebsiella pneumoniae strain PH25",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23221",
+      "genome_name": "Klebsiella pneumoniae strain KP_044",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66151",
+      "genome_name": "Klebsiella pneumoniae ERR2106419",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.66154",
+      "genome_name": "Klebsiella pneumoniae ERR2109184",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.24248",
+      "genome_name": "Klebsiella pneumoniae strain 13",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23206",
+      "genome_name": "Klebsiella pneumoniae strain KP_241",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23214",
+      "genome_name": "Klebsiella pneumoniae strain KP_093",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.67220",
+      "genome_name": "Klebsiella pneumoniae ERR7221200",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.31060",
+      "genome_name": "Klebsiella pneumoniae strain PH139",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "287.7684",
+      "genome_name": "Pseudomonas aeruginosa strain PA_041",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 287
+    },
+    {
+      "genome_id": "573.23229",
+      "genome_name": "Klebsiella pneumoniae strain KP_328",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.31063",
+      "genome_name": "Klebsiella pneumoniae strain PH24-1",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.24251",
+      "genome_name": "Klebsiella pneumoniae strain 15",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.24321",
+      "genome_name": "Klebsiella pneumoniae strain MRSN14170",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "8",
+      "measurement_value": "8",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "562.144219",
+      "genome_name": "Escherichia coli ERR7221473",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 562
+    },
+    {
+      "genome_id": "287.7677",
+      "genome_name": "Pseudomonas aeruginosa strain PA_038",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 287
+    },
+    {
+      "genome_id": "573.31066",
+      "genome_name": "Klebsiella pneumoniae strain PH102",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23222",
+      "genome_name": "Klebsiella pneumoniae strain KP_040",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.67187",
+      "genome_name": "Klebsiella pneumoniae ERR7221157",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.67182",
+      "genome_name": "Klebsiella pneumoniae ERR7221160",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "EUCAST",
+      "testing_standard_year": 2016,
+      "pmid": [
+        36916881
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.31065",
+      "genome_name": "Klebsiella pneumoniae strain PH124",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Susceptible",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2015,
+      "pmid": [
+        27965630
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.24254",
+      "genome_name": "Klebsiella pneumoniae strain 17",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.23200",
+      "genome_name": "Klebsiella pneumoniae strain KP_116",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": "",
+      "measurement_value": "",
+      "laboratory_typing_method": "Disk diffusion",
+      "testing_standard": "CLSI",
+      "testing_standard_year": 2016,
+      "pmid": [
+        31594927
+      ],
+      "taxon_id": 573
+    },
+    {
+      "genome_id": "573.20062",
+      "genome_name": "Klebsiella pneumoniae strain AR_0075",
+      "rmt_genes": [
+        "rmtF"
+      ],
+      "rescued_by_deployed_rule": true,
+      "phenotype": "Resistant",
+      "measurement": ">16",
+      "measurement_value": "16",
+      "laboratory_typing_method": "Broth dilution",
+      "testing_standard": "CLSI",
+      "testing_standard_year": null,
+      "pmid": null,
+      "taxon_id": 573
+    }
+  ],
+  "pd_overlap": {
+    "checked": true,
+    "n_with_assembly_accession": 48,
+    "n_shared_with_pd_sweep": 7,
+    "n_new_relative_to_pd": 162,
+    "shared_genome_ids": [
+      "550.1584",
+      "562.28131",
+      "562.42660",
+      "562.42665",
+      "562.42677",
+      "573.18088",
+      "573.20062"
+    ]
+  },
+  "honest_limits": [
+    "The CARRIER call is CARD/BLAT, not AMRFinder. That makes it independent of our pipeline but it is still a tool-derived feature, and CARD's thresholds differ -- a carrier here is not guaranteed to be a carrier under AMRFinder.",
+    "BV-BRC and NCBI-PD both ultimately draw on public assemblies, so overlap is expected; the measured overlap count is what makes the independence claim checkable.",
+    "Only `evidence = Laboratory Method` rows are used. BV-BRC also ships ML-predicted phenotypes; scoring a deterministic rule against those would be circular.",
+    "A susceptible carrier found here still needs the same scrutiny the PD hunt applied: source concentration, and an aac(3) control on the submitting study's own labels."
+  ]
+}

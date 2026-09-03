@@ -1,0 +1,46 @@
+{
+  "schema": "gentamicin-rmt-bvbrc-control-v1",
+  "archive": "BV-BRC",
+  "pmid": "36801013",
+  "drug": "gentamicin",
+  "inside": {
+    "aac3_no_rmt": {
+      "R": 154,
+      "S": 2,
+      "I": 0,
+      "n": 156,
+      "r_rate": 0.9871794871794872
+    },
+    "rmt": {
+      "R": 18,
+      "S": 63,
+      "I": 5,
+      "n": 81,
+      "r_rate": 0.2222222222222222
+    },
+    "no_known_determinant": {
+      "R": 4,
+      "S": 110,
+      "I": 1,
+      "n": 114,
+      "r_rate": 0.03508771929824561
+    }
+  },
+  "outside_aac3_no_rmt": {
+    "R": 147,
+    "S": 31,
+    "n": 178,
+    "r_rate": 0.8258426966292135,
+    "n_genomes_sampled": 6000
+  },
+  "aac3_R_rate_inside": 0.9871794871794872,
+  "aac3_R_rate_outside": 0.8258426966292135,
+  "verdict": "SPECIFIC_TO_RMT",
+  "why": "the study calls its aac(3) carriers R 99% of the time vs 83% elsewhere, and its isolates with no known determinant R 4% of the time -- its labels TRACK genotype, so susceptibility on rmt carriers is a specific signal that needs explaining",
+  "honest_limits": [
+    "This tests whether ONE study's gentamicin column tracks genotype, using a determinant nobody disputes. It cannot prove any individual label correct.",
+    "The outside comparator is a bounded sample of genomes, not a full census -- it is a reference rate, not an archive-wide statistic.",
+    "Carrier calls are CARD/BLAT via BV-BRC sp_gene, a different tool from our AMRFinder.",
+    "A SPECIFIC_TO_RMT verdict makes the susceptible carriers real counter-examples; it does NOT by itself say the deployed rule is wrong in its own validated organism scope, which must be read per-organism."
+  ]
+}

@@ -114,8 +114,9 @@ A written, tested curation procedure exists, and each measured gap is either clo
 | 1 | DONE 2026-09-01 -- wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py (18). Resolves U3: per-ENTRY citation is NOT representable (bare set[str] catalogs); per-MODULE authority IS, and all 8 already pass -> a regression guard, not a migration | edit-local-code | med | med | resolved | -- |
 | 2 | Draft HIV NNRTI entries with citations | propose | med | med | med | 1-2hr |
 | 3 | DONE 2026-09-02 -- 60 S-labelled carriers FOUND (first ever) over 20,816 labelled isolates; ALL 60 from ONE BioProject and killed by an aac(3) control -> LABEL_ARTIFACT. U1 SHARPENED, not retired | research | high | high | resolved | -- |
-| 4 | Test specificity on an INDEPENDENT archive (clinical MIC collection), since PD is now exhausted for this question | research | med | high | high | days |
-| 5 | Adopt an AMRrules-shaped per-entry schema for ONE catalog as a pilot (PMID + ECO evidence code + grade + limitations); costed against touching the frozen surface | propose | med | high | med | days |
+| 4 | DONE 2026-09-03 -- BV-BRC (independent on BOTH axes; 162/169 carriers new). 67 S carriers found; control verdict SPECIFIC_TO_RMT. Klebsiella PPV 0.475, E. coli 12/12 clean | research | high | high | resolved | -- |
+| 5 | Re-call the 67 BV-BRC S-carrier genomes with AMRFinder -- the deployed rule consumes AMRFinder, not CARD | run-tests | high | high | med | 1-2hr |
+| 6 | Investigate WHY a full-length rmtB sits at MIC<=1 in Klebsiella (silencing / expression / plasmid context) | research | med | high | high | days || 5 | Adopt an AMRrules-shaped per-entry schema for ONE catalog as a pilot (PMID + ECO evidence code + grade + limitations); costed against touching the frozen surface | propose | med | high | med | days |
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
