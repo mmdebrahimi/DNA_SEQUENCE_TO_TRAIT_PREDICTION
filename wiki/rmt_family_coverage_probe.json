@@ -1,0 +1,989 @@
+{
+  "schema": "rmt-family-coverage-probe-v1",
+  "drug": "gentamicin",
+  "deployed_rescue": "^(rmt[A-H]\\d*|npmA\\d*)$",
+  "family_pattern": "^(rmt[A-Z]\\d*|npm[A-Z]\\d*|warA\\d*)$",
+  "note": "armA is deliberately excluded from the family pattern -- AMRFinder files it under Subclass GENTAMICIN, so the frozen rule already counts it and including it would misattribute coverage.",
+  "per_group": [
+    {
+      "group": "Klebsiella",
+      "n_rows": 173935,
+      "symbols": [
+        {
+          "symbol": "rmtB1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 19244,
+          "labelled": {
+            "R": 7,
+            "S": 28,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 4802,
+          "labelled": {
+            "R": 34,
+            "S": 8,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtC",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1735,
+          "labelled": {
+            "R": 11,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1349,
+          "labelled": {
+            "R": 7,
+            "S": 6,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 565,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 248,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtG",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 107,
+          "labelled": {
+            "R": 1,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB4",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 38,
+          "labelled": {
+            "R": 1,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 20,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 13,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtH",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 9,
+          "labelled": {
+            "R": 1,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 6,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 4,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 4,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB3",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        }
+      ]
+    },
+    {
+      "group": "Escherichia_coli_Shigella",
+      "n_rows": 578305,
+      "symbols": [
+        {
+          "symbol": "rmtB1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 5388,
+          "labelled": {
+            "R": 22,
+            "S": 2,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtC",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 443,
+          "labelled": {
+            "R": 10,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 190,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 100,
+          "labelled": {
+            "R": 37,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 97,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 37,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "npmB2",
+          "rescued_by_deployed_rule": false,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtG",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "npmB1",
+          "rescued_by_deployed_rule": false,
+          "n_genomes": 2,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 2,
+          "labelled": {
+            "R": 2,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB3",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB4",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtH",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        }
+      ]
+    },
+    {
+      "group": "Acinetobacter",
+      "n_rows": 61103,
+      "symbols": [
+        {
+          "symbol": "rmtG",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 27,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 6,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtC",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        }
+      ]
+    },
+    {
+      "group": "Enterobacter_hormaechei",
+      "n_rows": 13850,
+      "symbols": [
+        {
+          "symbol": "rmtC",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 263,
+          "labelled": {
+            "R": 4,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 75,
+          "labelled": {
+            "R": 2,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtG",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 17,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 10,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 7,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB4",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 6,
+          "labelled": {
+            "R": 1,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 5,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB3",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        }
+      ]
+    },
+    {
+      "group": "Pseudomonas_aeruginosa",
+      "n_rows": 64427,
+      "symbols": [
+        {
+          "symbol": "rmtB4",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 829,
+          "labelled": {
+            "R": 2,
+            "S": 13,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 521,
+          "labelled": {
+            "R": 4,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 221,
+          "labelled": {
+            "R": 0,
+            "S": 2,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 160,
+          "labelled": {
+            "R": 1,
+            "S": 1,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 133,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 29,
+          "labelled": {
+            "R": 2,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtC",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 13,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 12,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 7,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtG",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 6,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtD2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 2,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE2",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtA",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        }
+      ]
+    },
+    {
+      "group": "Salmonella",
+      "n_rows": 876351,
+      "symbols": [
+        {
+          "symbol": "rmtB1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 494,
+          "labelled": {
+            "R": 1,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 151,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtB",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 24,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtC",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 5,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtE",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 3,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF1",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtF",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        },
+        {
+          "symbol": "rmtG",
+          "rescued_by_deployed_rule": true,
+          "n_genomes": 1,
+          "labelled": {
+            "R": 0,
+            "S": 0,
+            "I": 0
+          }
+        }
+      ]
+    }
+  ],
+  "aggregate": [
+    {
+      "symbol": "rmtB1",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 25428,
+      "labelled": {
+        "R": 32,
+        "S": 32,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtF1",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 4908,
+      "labelled": {
+        "R": 34,
+        "S": 8,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtC",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 2462,
+      "labelled": {
+        "R": 25,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtF",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 1548,
+      "labelled": {
+        "R": 8,
+        "S": 7,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtB4",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 874,
+      "labelled": {
+        "R": 4,
+        "S": 13,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtB",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 797,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtF2",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 770,
+      "labelled": {
+        "R": 4,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtE1",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 264,
+      "labelled": {
+        "R": 37,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtG",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 161,
+      "labelled": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtD1",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 154,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtD",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 30,
+      "labelled": {
+        "R": 2,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtE",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 22,
+      "labelled": {
+        "R": 2,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtD2",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 16,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtE2",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 11,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtH",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 10,
+      "labelled": {
+        "R": 1,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtB2",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 5,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtB3",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 5,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "npmB2",
+      "rescued_by_deployed_rule": false,
+      "n_genomes": 3,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "npmB1",
+      "rescued_by_deployed_rule": false,
+      "n_genomes": 2,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "rmtA",
+      "rescued_by_deployed_rule": true,
+      "n_genomes": 1,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    }
+  ],
+  "unrescued": [
+    {
+      "symbol": "npmB2",
+      "rescued_by_deployed_rule": false,
+      "n_genomes": 3,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    },
+    {
+      "symbol": "npmB1",
+      "rescued_by_deployed_rule": false,
+      "n_genomes": 2,
+      "labelled": {
+        "R": 0,
+        "S": 0,
+        "I": 0
+      }
+    }
+  ],
+  "n_unrescued_genomes": 5,
+  "n_unrescued_labelled": 0,
+  "errors": {},
+  "complete": true,
+  "honest_limits": [
+    "This measures COVERAGE (does the rule see the determinant), not correctness. Every member of both RMTase families confers gentamicin resistance by mechanism, so a missed carrier is a SENSITIVITY loss -- it can never cause an over-call.",
+    "It therefore does NOT bear on the deployed rule's untested over-call/specificity risk.",
+    "Carrier calls are NCBI's own AMRFinder (PD AMR_genotypes), a tool-derived feature.",
+    "A symbol absent here may still exist in nature; absence in PD is not absence in the world."
+  ]
+}
