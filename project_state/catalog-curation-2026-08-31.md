@@ -95,6 +95,7 @@ No curated biological fact enters a shipped catalog without a named source, a me
 |---|---|---|---|
 | RESOLVED 2026-09-01: Edit a shipped catalog at all (C1)? | Soraya | none -- measured | Answered by measurement, not authority: data-derived curation LOSES to the free doubt layer on every variant tested (recovery 0.000-0.500 vs 0.604) and the 3x variant would drop canonical Y181C. No edit made. `wiki/hiv_nnrti_curation_verdict_2026-09-01.md` |
 | RESOLVED 2026-08-31: Gentamicin v2 lock (C2)? | Soraya | none -- authorized + shipped | User-authorized; deployed with symbol_rescue + a NEW lock manifest (prospective_lock_manifest_2026-08-31.json). E. coli N=131 sens 0.523 -> 0.892. `wiki/gentamicin_v2_lock_2026-08-31.md` |
+| Restrict the gentamicin `rmt` rescue to E. coli (L1), or keep the L2 organism-scope warning only? | Soraya | **user authority** | Measured: Klebsiella PPV 0.475 vs E. coli 1.000; rule is organism-agnostic in code. An L1 fix invalidates the v2 prospective lock and needs a v3, exactly as the rescue itself did. L2 disclosure shipped 2026-09-03 and is augment-only. |
 <!-- project-state:end:pending-decisions -->
 
 ## Bellman-Inspired Decision Frame
@@ -115,7 +116,8 @@ A written, tested curation procedure exists, and each measured gap is either clo
 | 2 | Draft HIV NNRTI entries with citations | propose | med | med | med | 1-2hr |
 | 3 | DONE 2026-09-02 -- 60 S-labelled carriers FOUND (first ever) over 20,816 labelled isolates; ALL 60 from ONE BioProject and killed by an aac(3) control -> LABEL_ARTIFACT. U1 SHARPENED, not retired | research | high | high | resolved | -- |
 | 4 | DONE 2026-09-03 -- BV-BRC (independent on BOTH axes; 162/169 carriers new). 67 S carriers found; control verdict SPECIFIC_TO_RMT. Klebsiella PPV 0.475, E. coli 12/12 clean | research | high | high | resolved | -- |
-| 5 | Re-call the 67 BV-BRC S-carrier genomes with AMRFinder -- the deployed rule consumes AMRFinder, not CARD | run-tests | high | high | med | 1-2hr |
+| 5 | DONE 2026-09-03 -- resolved FREE via PD's AMR_genotypes (an AMRFinder call), joined on BIOSAMPLE not accession: CALLERS_AGREE 66/66; the rule would fire on all of them | run-tests | high | high | resolved | -- |
+| 7 | USER AUTHORITY: restrict the gentamicin rescue to E. coli? Edits the frozen surface + invalidates the v2 lock. L2 warning shipped meanwhile | ask-user | high | med | low | -- |
 | 6 | Investigate WHY a full-length rmtB sits at MIC<=1 in Klebsiella (silencing / expression / plasmid context) | research | med | high | high | days || 5 | Adopt an AMRrules-shaped per-entry schema for ONE catalog as a pilot (PMID + ECO evidence code + grade + limitations); costed against touching the frozen surface | propose | med | high | med | days |
 <!-- project-state:end:candidate-actions -->
 

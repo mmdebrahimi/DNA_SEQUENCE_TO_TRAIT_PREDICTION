@@ -22,6 +22,7 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
+from .organism_scope import overcall_for
 
 # Report cards load from the PACKAGED copy first (a built wheel force-includes them at
 # dna_decode/report_cards/ -- see pyproject), falling back to the repo-root wiki/ in an editable checkout.
@@ -357,7 +358,8 @@ def _cell_layer_for(drug: str, organism: str | None, key: str) -> dict | None:
 # than hand-listing, so a new layer cannot silently stay CLI-unreachable -- which is exactly what
 # happened to `lineage` and `source_concentration`: both rendered on the card for cells whose calls
 # never mentioned them, and the gap was invisible until the layers were enumerated against the CLI.
-DISCLOSURE_LAYERS = ("lineage", "source_concentration", "prospective", "doubt_layer")
+DISCLOSURE_LAYERS = ("lineage", "source_concentration", "prospective", "doubt_layer",
+                     "organism_scope")
 
 
 def trust_block(drug: str, organism: str | None = None) -> dict:
@@ -397,6 +399,15 @@ def trust_block(drug: str, organism: str | None = None) -> dict:
         _b = _cell_layer_for(drug, organism, _layer)
         if _b:
             badge[_layer] = _b
+    # ORGANISM-SCOPE over-call, augment-only and under its OWN key. A rule can be organism-AGNOSTIC in
+    # code while its evidence is organism-SPECIFIC: the gentamicin `rmt` rescue has no calibrated entry
+    # for any organism, so Klebsiella falls through to the default rule and gets a rescue measured at
+    # PPV 0.475 there against 1.000 in the E. coli scope it was validated on. This DISCLOSES that; the
+    # call, the tier and every metric are untouched. Restricting the rule is an L1 change that would
+    # invalidate the v2 lock -- a user-authority decision, deliberately not taken here.
+    _os = overcall_for(drug, organism)
+    if _os:
+        badge["organism_scope"] = _os
     return badge
 
 

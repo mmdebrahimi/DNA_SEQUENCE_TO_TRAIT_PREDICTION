@@ -59,12 +59,41 @@ def test_the_declared_layer_list_matches_what_the_card_actually_carries():
     assert not missing, f"the card carries layers absent from DISCLOSURE_LAYERS: {sorted(missing)}"
 
 
+# Every function `trust_block` consults to attach a disclosure layer. The "layers off" state is
+# simulated by disabling ALL of them: this list was hand-enumerated and went stale the moment a fifth
+# layer (`organism_scope`) was added -- the guard then compared a badge WITH that layer against one
+# where it had been popped, and failed on a layer that was in fact augment-only. A stale disable-list
+# makes the guard cry wolf; a missing entry makes it blind. Keep it in step with DISCLOSURE_LAYERS,
+# which `test_every_disclosure_layer_has_a_disable_hook` pins.
+_LAYER_SOURCES = {
+    "doubt_layer_for": lambda *_a, **_k: None,
+    "_cell_layer_for": lambda *_a, **_k: None,
+    "overcall_for": lambda *_a, **_k: None,
+}
+
+
+def _disable_all_layer_sources(monkeypatch):
+    for name, stub in _LAYER_SOURCES.items():
+        monkeypatch.setattr(ts, name, stub)
+
+
+def test_every_disclosure_layer_has_a_disable_hook():
+    """A layer with no entry in _LAYER_SOURCES silently escapes the augment-only guard above."""
+    assert len(_LAYER_SOURCES) >= 2
+    for name in _LAYER_SOURCES:
+        assert hasattr(ts, name), f"{name} no longer exists on trust_surface"
+    # organism_scope + doubt_layer are attached by their own named functions; lineage /
+    # source_concentration / prospective all route through _cell_layer_for.
+    covered = {"doubt_layer", "organism_scope", "lineage", "source_concentration", "prospective"}
+    assert set(ts.DISCLOSURE_LAYERS) <= covered, (
+        f"a disclosure layer has no disable hook: {set(ts.DISCLOSURE_LAYERS) - covered}")
+
+
 def test_attaching_the_layers_changes_no_pre_existing_badge_field(monkeypatch):
     """AUGMENT-ONLY, by direct comparison: same badge, layers on vs off."""
     cells = _cells()
     with_layers = {(c["organism"], c["drug"]): ts.trust_block(c["drug"], c["organism"]) for c in cells}
-    monkeypatch.setattr(ts, "doubt_layer_for", lambda _d: None)
-    monkeypatch.setattr(ts, "_cell_layer_for", lambda _d, _o, _k: None)
+    _disable_all_layer_sources(monkeypatch)
     without = {(c["organism"], c["drug"]): ts.trust_block(c["drug"], c["organism"]) for c in cells}
 
     for k, a in with_layers.items():

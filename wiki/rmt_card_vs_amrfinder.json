@@ -1,0 +1,678 @@
+{
+  "schema": "rmt-card-vs-amrfinder-v1",
+  "question": "do CARD (BV-BRC sp_gene) and AMRFinder (NCBI-PD AMR_genotypes) agree that the 67 gentamicin-susceptible BV-BRC isolates carry an RMTase?",
+  "n_susceptible_carriers": 67,
+  "n_with_biosample": 66,
+  "n_resolved_in_pd": 66,
+  "n_amrfinder_agrees": 66,
+  "n_would_be_rescued": 66,
+  "per_biosample": {
+    "SAMEA5378654": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378780": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378870": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378998": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5379001": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378063": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378120": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378130": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378166": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378170": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378209": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5377698": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5377699": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5377702": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5377703": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5377704": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5377705": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378244": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378248": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378254": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378300": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378311": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378314": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378329": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378331": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378333": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378334": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378335": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378336": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378338": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378340": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378383": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378390": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378393": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378432": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378433": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378435": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378436": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378442": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378542": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378543": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378573": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378576": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5378595": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5379012": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5379014": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5379056": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA5379060": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938480": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938483": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938399": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938404": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938520": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938449": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938562": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938737": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938740": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938742": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938745": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938675": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938678": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938841": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMEA4938842": {
+      "group": "Klebsiella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": false,
+      "pd_gentamicin_label": null
+    },
+    "SAMN29179568": {
+      "group": "Salmonella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": true,
+      "pd_gentamicin_label": null
+    },
+    "SAMN29179661": {
+      "group": "Salmonella",
+      "amrfinder_rmt_family": [
+        "rmtB1"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": true,
+      "pd_gentamicin_label": null
+    },
+    "SAMN29179628": {
+      "group": "Salmonella",
+      "amrfinder_rmt_family": [
+        "rmtB"
+      ],
+      "amrfinder_would_be_rescued": true,
+      "amrfinder_has_armA": false,
+      "amrfinder_has_aac3": true,
+      "pd_gentamicin_label": null
+    }
+  },
+  "verdict": "CALLERS_AGREE",
+  "why": "AMRFinder independently calls an RMTase in 66/66 of them and the deployed rule would fire on 66/66 -- so these ARE counter-examples to the deployed rule, not a caller artefact.",
+  "honest_limits": [
+    "PD's AMR_genotypes is NCBI's AMRFinder run, not ours -- same tool, possibly a different version and database than the deployed pipeline uses.",
+    "Isolates absent from PD are UNRESOLVED by this route, never counted as agreement.",
+    "This tests CARRIER-CALL agreement only. It does not re-examine the phenotypes, which the aac(3) control already cleared (wiki/gentamicin_rmt_bvbrc_control.json)."
+  ]
+}
