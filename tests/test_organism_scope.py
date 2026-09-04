@@ -80,3 +80,39 @@ def test_the_one_liner_names_the_measured_gap_and_the_artifact():
     line = one_line(overcall_for("gentamicin", "Klebsiella"))
     assert "ORGANISM-SCOPE WARNING" in line and "0.475" in line and "wiki/" in line
     assert one_line(None) is None
+
+
+# --- source-concentration qualification (added 2026-09-03) -------------------------------------
+# The published PPV 0.475 does not clear this project's own source-diversity bar. These pin the
+# qualification so the warning can never silently revert to an archive-level claim.
+
+def test_the_concentration_qualification_is_carried_in_the_block():
+    sc = overcall_for("gentamicin", "Klebsiella")["source_concentration"]
+    assert sc["passes_own_bar"] is False
+    assert sc["largest_source_share"] > sc["own_bar"], "must record WHY it fails the bar"
+    # The susceptible carriers are what carry the finding; their concentration is the load-bearing number.
+    assert sc["susceptible_largest_source_share"] >= 0.90
+    assert sc["ppv_excluding_largest_source"] > 0.9, (
+        "excluding the dominant source the over-call largely disappears -- that is the whole point")
+
+
+def test_the_one_liner_REFUSES_to_state_the_overcall_without_its_scope_caveat():
+    """A bare 'PPV 0.475 in Klebsiella' overstates what 6 sources at 66% can support."""
+    line = one_line(overcall_for("gentamicin", "Klebsiella"))
+    assert "SINGLE-SOURCE-DOMINATED" in line
+    assert "not for this organism generally" in line
+    assert "0.976" in line, "the leave-one-source-out PPV must be visible, not just the headline"
+
+
+def test_the_bar_is_the_projects_own_and_has_not_drifted():
+    """The qualification is only meaningful against the bar the project actually enforces."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from source_diverse_validate import MAX_SOURCE_SHARE
+    sc = overcall_for("gentamicin", "Klebsiella")["source_concentration"]
+    assert sc["own_bar"] == MAX_SOURCE_SHARE
+
+
+def test_the_qualification_does_not_leak_into_the_validated_scope():
+    """E. coli passes the bar; it must stay silent, or the warning cries wolf where the rule is safe."""
+    assert overcall_for("gentamicin", "Escherichia_coli_Shigella") is None

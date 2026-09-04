@@ -1,0 +1,139 @@
+{
+  "schema": "rmt-source-concentration-v1",
+  "question": "does the published Klebsiella rmt over-call clear the source-diversity bar this project enforces on its own validation cells?",
+  "bar_imported_from": "scripts/source_diverse_validate.py::MAX_SOURCE_SHARE",
+  "bar": 0.6,
+  "cells": {
+    "escherichia": {
+      "n": 12,
+      "R": 12,
+      "S": 0,
+      "ppv": 1.0,
+      "n_sources": 3,
+      "largest_source": "36916881",
+      "largest_source_share": 0.5833333333333334,
+      "susceptible_largest_source": null,
+      "susceptible_largest_source_share": null,
+      "excluding_largest_source": {
+        "n": 5,
+        "R": 5,
+        "S": 0,
+        "ppv": 1.0
+      },
+      "passes_own_diversity_bar": true,
+      "bar": 0.6
+    },
+    "klebsiella": {
+      "n": 122,
+      "R": 58,
+      "S": 64,
+      "ppv": 0.47540983606557374,
+      "n_sources": 6,
+      "largest_source": "36801013",
+      "largest_source_share": 0.6639344262295082,
+      "susceptible_largest_source": "36801013",
+      "susceptible_largest_source_share": 0.984375,
+      "excluding_largest_source": {
+        "n": 41,
+        "R": 40,
+        "S": 1,
+        "ppv": 0.975609756097561
+      },
+      "passes_own_diversity_bar": false,
+      "bar": 0.6
+    },
+    "salmonella": {
+      "n": 18,
+      "R": 15,
+      "S": 3,
+      "ppv": 0.8333333333333334,
+      "n_sources": 1,
+      "largest_source": "35861536",
+      "largest_source_share": 1.0,
+      "susceptible_largest_source": "35861536",
+      "susceptible_largest_source_share": 1.0,
+      "excluding_largest_source": null,
+      "passes_own_diversity_bar": false,
+      "bar": 0.6
+    },
+    "acinetobacter": {
+      "n": 3,
+      "R": 3,
+      "S": 0,
+      "ppv": 1.0,
+      "n_sources": 1,
+      "largest_source": "28348846",
+      "largest_source_share": 1.0,
+      "susceptible_largest_source": null,
+      "susceptible_largest_source_share": null,
+      "excluding_largest_source": null,
+      "passes_own_diversity_bar": false,
+      "bar": 0.6
+    },
+    "enterobacter": {
+      "n": 3,
+      "R": 3,
+      "S": 0,
+      "ppv": 1.0,
+      "n_sources": 2,
+      "largest_source": "36916881",
+      "largest_source_share": 0.6666666666666666,
+      "susceptible_largest_source": null,
+      "susceptible_largest_source_share": null,
+      "excluding_largest_source": {
+        "n": 1,
+        "R": 1,
+        "S": 0,
+        "ppv": 1.0
+      },
+      "passes_own_diversity_bar": false,
+      "bar": 0.6
+    },
+    "citrobacter": {
+      "n": 1,
+      "R": 1,
+      "S": 0,
+      "ppv": 1.0,
+      "n_sources": 1,
+      "largest_source": "NO_PMID",
+      "largest_source_share": 1.0,
+      "susceptible_largest_source": null,
+      "susceptible_largest_source_share": null,
+      "excluding_largest_source": null,
+      "passes_own_diversity_bar": false,
+      "bar": 0.6
+    },
+    "pseudomonas": {
+      "n": 4,
+      "R": 4,
+      "S": 0,
+      "ppv": 1.0,
+      "n_sources": 2,
+      "largest_source": "NO_PMID",
+      "largest_source_share": 0.5,
+      "susceptible_largest_source": null,
+      "susceptible_largest_source_share": null,
+      "excluding_largest_source": {
+        "n": 2,
+        "R": 2,
+        "S": 0,
+        "ppv": 1.0
+      },
+      "passes_own_diversity_bar": true,
+      "bar": 0.6
+    }
+  },
+  "verdict": "OVERCALL_SINGLE_SOURCE_DOMINATED",
+  "why": "the Klebsiella over-call FAILS this project's own source-diversity bar (66.4% from 36801013, bar 60%); 98.4% of the SUSCEPTIBLE carriers that carry the entire finding come from that one study, and excluding it the PPV is 0.976 (40R/1S) -- indistinguishable from the validated E. coli scope. The over-call is established in ONE population, NOT for Klebsiella generally.",
+  "does_not_overturn": [
+    "The organism_scope WARNING stays. An over-call warning that proves over-cautious costs far less than a missing one, and the safe direction is to keep it.",
+    "The signal looks real INSIDE that study's population: it splits its own rmt carriers 18R/63S rather than calling them all susceptible, and the pre-registered aac(3) control passed (99% R inside vs 83% elsewhere), so a global label inversion is excluded.",
+    "The E. coli scope is untouched -- 12/12 here, 146/146 on NCBI-PD."
+  ],
+  "what_it_does_overturn": "the SCOPE of the claim. 'In Klebsiella the rescue over-calls on more than half of carriers' is an archive-level statement that a 66%-single-source carrier set cannot support.",
+  "honest_limits": [
+    "Source unit is the curating publication (BV-BRC `pmid`), not BioProject -- comparable in spirit to the BioProject-based bar but not the identical unit.",
+    "A single source cannot distinguish a real regional/population effect from something specific to that study's isolates. Both remain open.",
+    "Excluding the largest source leaves n=41, which is a small comparator, not a refutation."
+  ]
+}

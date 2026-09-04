@@ -1,4 +1,19 @@
-# The over-call risk is no longer untested — and it is real, in Klebsiella
+# The over-call risk is no longer untested — and it is real, in one Klebsiella population
+
+> **SCOPE CORRECTION, same day.** This memo originally claimed the over-call for *Klebsiella*. Applying
+> **this project's own source-diversity bar** (`source_diverse_validate.MAX_SOURCE_SHARE` = 0.60) to the
+> carrier set shows it **FAILS**: largest-source share **0.664**, and **98.4% of the susceptible carriers
+> — the ones carrying the entire finding — come from a single study.** Excluding that source, Klebsiella
+> carriers are **40R/1S, PPV 0.976**, indistinguishable from the validated E. coli scope.
+>
+> The warning **stays** (over-cautious costs far less than missing, and inside that study the signal
+> looks real — it splits its own carriers 18R/63S rather than calling them all susceptible, and the
+> pre-registered `aac(3)` control passed). What changes is the **claim**: the over-call is established
+> in **one population**, not for *Klebsiella* generally. The same bar also fails Salmonella (100%
+> single-source). See [`rmt_source_concentration_2026-09-03.json`](rmt_source_concentration_2026-09-03.json).
+>
+> This is the recorded lesson *apply your own standard to your own cohort* biting the author of the
+> standard. The tool that would have refused this number existed and was not run on it.
 
 **The independent archive was found, the counter-examples exist, and this time they survive the control.**
 BV-BRC yields **67 gentamicin-susceptible `rmt` carriers with measured MICs**, 162 of 169 carriers new

@@ -15,6 +15,16 @@ question is surfaced rather than decided. This module NEVER changes a call, a ti
 EVERY FIELD IS TRACEABLE. Nothing here is asserted from mechanism or memory: the counts come from the
 committed BV-BRC artifacts, the labels survived a pre-registered `aac(3)` control, and the carrier calls
 were confirmed by a SECOND tool (AMRFinder agreed with CARD on 66/66).
+
+SCOPE QUALIFICATION ADDED 2026-09-03, and it narrows what this warning may claim. Running this project's
+OWN source-diversity bar (`source_diverse_validate.MAX_SOURCE_SHARE`, 0.60) over the same artifact, the
+Klebsiella carrier set FAILS it: largest-source share 0.664, and 98.4% of the SUSCEPTIBLE carriers --
+the ones carrying the entire finding -- come from a single study. Excluding that source, Klebsiella
+carriers are 40R/1S (PPV 0.976), indistinguishable from the validated E. coli scope. The warning STAYS
+(an over-cautious over-call warning costs far less than a missing one, and inside that study the signal
+looks real: it splits its own carriers 18R/63S rather than calling them all susceptible, and the
+pre-registered control passed). What changed is the CLAIM: the over-call is established in ONE
+population, NOT for Klebsiella generally. See `wiki/rmt_source_concentration_2026-09-03.json`.
 """
 from __future__ import annotations
 
@@ -42,6 +52,21 @@ OVERCALL_SCOPE: tuple[dict, ...] = (
         ],
         "not_settled": "the mechanism: a full-length rmtB at gentamicin MIC <=1 is unexplained "
                        "(silencing / expression / plasmid context untested)",
+        # The measured over-call does NOT clear this project's own source-diversity bar. Carried as a
+        # first-class field so the warning can never be read as an archive-level claim.
+        "source_concentration": {
+            "n_sources": 6,
+            "largest_source_share": 0.664,
+            "susceptible_largest_source_share": 0.984,
+            "own_bar": 0.60,
+            "passes_own_bar": False,
+            "ppv_excluding_largest_source": 0.976,
+            "counts_excluding_largest_source": {"R": 40, "S": 1},
+            "meaning": "the over-call is established in ONE study's population, NOT for Klebsiella "
+                       "generally; excluding that source the PPV is indistinguishable from the "
+                       "validated E. coli scope",
+            "artifact": "wiki/rmt_source_concentration_2026-09-03.json",
+        },
     },
 )
 
@@ -75,6 +100,7 @@ def overcall_for(drug: str, organism: str | None) -> dict | None:
                 "controls_passed": list(row["controls_passed"]),
                 "not_settled": row["not_settled"],
                 "artifact": row["artifact"],
+                "source_concentration": dict(row["source_concentration"]),
                 "note": ("DISCLOSURE ONLY -- this never changes the call, the tier, or any metric. The "
                          "rule still fires; this says its positive predictive value was MEASURED far "
                          "lower in this organism than in the one it was validated on."),
@@ -86,8 +112,18 @@ def one_line(block: dict | None) -> str | None:
     """Human-readable warning, or None when there is nothing measured to say."""
     if not block:
         return None
+    sc = block.get("source_concentration") or {}
+    # The concentration caveat is NOT optional prose -- without it the line reads as an archive-level
+    # claim, which is exactly the over-reach this field was added to prevent.
+    caveat = ""
+    if sc and not sc.get("passes_own_bar", True):
+        caveat = (f" SINGLE-SOURCE-DOMINATED: {sc['susceptible_largest_source_share']:.0%} of the "
+                  f"susceptible carriers come from one study and excluding it the PPV is "
+                  f"{sc['ppv_excluding_largest_source']:.3f}, so this is established in ONE population, "
+                  f"not for this organism generally.")
     return (f"ORGANISM-SCOPE WARNING: this rule's {block['rule_component']} was validated on "
             f"{block['validated_on']} (PPV {block['ppv_in_validated_scope']:.3f}) but MEASURED at PPV "
             f"{block['ppv_in_this_organism']:.3f} here "
             f"({block['counts_in_this_organism']['R']}R/{block['counts_in_this_organism']['S']}S) -- "
-            f"a resistant call on this determinant is the least trustworthy kind. See {block['artifact']}")
+            f"a resistant call on this determinant is the least trustworthy kind.{caveat} "
+            f"See {block['artifact']}")
