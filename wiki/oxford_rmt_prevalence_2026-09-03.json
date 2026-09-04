@@ -1,0 +1,72 @@
+{
+  "schema": "oxford-rmt-prevalence-v1",
+  "question": "how prevalent is the gentamicin rescue's rmt/npmA target in a broadly-ascertained, resistance-independent E. coli collection?",
+  "cohort": "Oxford E. coli bacteraemia (Lipworth et al.; ENA PRJNA604975 + the ecoli_mic_arg deposit). Oxford's own broth-microdilution MIC and Oxford's OWN AMRFinder run.",
+  "n_isolates_scanned": 4979,
+  "n_with_gentamicin_mic": 2873,
+  "n_rmt_npma_carriers": 0,
+  "n_arma_carriers": 1,
+  "arma_carriers": {
+    "bfeb0a98-3879-495e-83aa-5b8057c9f9e6": {
+      "symbols": [
+        "armA"
+      ],
+      "subclass": [
+        "GENTAMICIN"
+      ],
+      "gentamicin_mic": 32.0,
+      "call": "R"
+    }
+  },
+  "aminoglycoside_symbols": {
+    "aph(3'')-Ib": 1099,
+    "aph(6)-Id": 1095,
+    "aadA5": 499,
+    "aadA1": 469,
+    "aac(3)-IId": 196,
+    "aadA2": 121,
+    "aph(3')-Ia": 121,
+    "aac(3)-IIe": 113,
+    "ant(2'')-Ia": 13,
+    "aac(3)-VIa": 10,
+    "aac(3)-IVa": 6,
+    "aadA22": 5,
+    "aac(6')-Ib": 4,
+    "aadA25": 4,
+    "aph(4)-Ia": 3,
+    "aac(6')-Ib3": 2,
+    "aadA8": 2,
+    "aph(6)-Ic": 1,
+    "aph(3')-IIa": 1,
+    "aadA4": 1,
+    "aac(6')-Ib4": 1,
+    "aac(2')-IIa": 1,
+    "aadA16": 1,
+    "aadA15": 1,
+    "aph(3')-Ib": 1,
+    "armA": 1
+  },
+  "non_vacuity": {
+    "distinct_aminoglycoside_symbols": 26,
+    "symbols_detected_once": [
+      "aac(2')-IIa",
+      "aac(6')-Ib4",
+      "aadA15",
+      "aadA16",
+      "aadA4",
+      "aph(3')-IIa",
+      "aph(3')-Ib",
+      "aph(6)-Ic",
+      "armA"
+    ],
+    "argument": "genes present exactly once ARE detected, so a gene present once would have been found. The zero is absence, not a parse failure."
+  },
+  "verdict": "NO_CARRIERS_CANNOT_TEST",
+  "why": "Oxford contains no rmt/npmA carrier at all, so it cannot test the rescue's specificity. It BOUNDS the prevalence instead: <1 in 4979 broadly-ascertained E. coli.",
+  "what_this_does_not_show": [
+    "It does NOT test the rescue's specificity. Zero carriers means no test -- neither support nor counter-evidence for the rule. A cohort with no carriers of a determinant is structurally incapable of detecting a rule that keys on it.",
+    "It does NOT generalise past this population: one UK region, 2008-2018 bacteraemia. rmt is substantially more prevalent in Asia and in Klebsiella, where the measured over-call lives.",
+    "AMRFinder DB coverage is version-dependent and this deposit's version is not recorded. Total blindness to 16S methyltransferases is unlikely -- armA, the same gene family and curation era, IS detected -- but rmt-specific DB coverage here is unverified."
+  ],
+  "corroborated_incidentally": "armA is filed under Subclass=GENTAMICIN by this independent, older AMRFinder run, confirming on a second version the premise the v2 rescue was built on: the frozen rule already counted armA, so the gap was the rmt family only."
+}
