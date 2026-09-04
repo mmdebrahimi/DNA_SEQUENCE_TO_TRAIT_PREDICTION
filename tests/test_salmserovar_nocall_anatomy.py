@@ -60,3 +60,45 @@ def test_the_real_priority_and_its_cost_are_stated():
     assert d["fix_priority_by_measured_size"][0] == "O_antigen_unresolved"
     assert any("data engineering" in s for s in d["honest_limits"]), (
         "the O-antigen fix is DB coverage, not a code change -- that cost must be stated")
+
+
+# --- O-antigen threshold-vs-coverage probe ------------------------------------------------------
+# The second asserted cause ("DB coverage / data engineering") was also wrong. These pin the measured
+# replacement AND the refusal to assert a third cause without measuring it.
+
+O_PROBE = ROOT / "wiki" / "salmserovar_o_antigen_probe_2026-09-04.json"
+
+
+@pytest.mark.skipif(not O_PROBE.exists(), reason="O-probe artifact absent")
+def test_the_db_coverage_claim_was_measured_and_refuted():
+    d = json.loads(O_PROBE.read_text(encoding="utf-8"))
+    assert d["verdict"] == "THRESHOLD_IS_THE_BINDING_CONSTRAINT"
+    v = d["verdicts"]
+    assert v["sub_threshold_hit_exists"] > v.get("no_O_hit_at_any_threshold", 0)
+    assert "tests_the_claim" in d, "the artifact must name the claim it tests"
+
+
+@pytest.mark.skipif(not O_PROBE.exists(), reason="O-probe artifact absent")
+def test_sub_threshold_hits_are_CORRECT_not_merely_present():
+    """A rejected hit only matters if it names the right O group; presence alone proves nothing."""
+    c = json.loads(O_PROBE.read_text(encoding="utf-8"))["sub_threshold_correctness"]
+    assert c["names_wrong_O_group"] == 0 and c["names_correct_O_group"] == c["n"]
+
+
+@pytest.mark.skipif(not O_PROBE.exists(), reason="O-probe artifact absent")
+def test_the_finding_is_scoped_to_its_actual_shape_not_generalised():
+    """11 of 14 are one O group -- calling this a uniform threshold problem would over-generalise."""
+    s = json.loads(O_PROBE.read_text(encoding="utf-8"))["sub_threshold_shape"]
+    assert max(s["O_group_counts"].values()) > sum(s["O_group_counts"].values()) / 2
+    assert s["coverage_max"] < 80.0, "all sub-threshold hits must be below the deployed coverage cut"
+    assert s["identity_median"] > 95.0, "the point is near-perfect identity at partial coverage"
+
+
+@pytest.mark.skipif(not O_PROBE.exists(), reason="O-probe artifact absent")
+def test_it_REFUSES_to_assert_a_third_cause():
+    """Two asserted causes were measured wrong; the third must stay explicitly open."""
+    d = json.loads(O_PROBE.read_text(encoding="utf-8"))
+    open_qs = d["what_is_still_NOT_established"]
+    assert any("NOT measured" in q for q in open_qs)
+    assert any("wrong-call" in q.lower() or "wrong call" in q.lower() for q in open_qs)
+    assert any("Infantis" in q for q in open_qs), "the unexplained within-serovar split must be kept"
