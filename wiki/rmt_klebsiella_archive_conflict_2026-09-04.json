@@ -1,0 +1,52 @@
+{
+  "schema": "rmt-klebsiella-archive-conflict-v1",
+  "question": "do NCBI-PD and BV-BRC agree about the gentamicin rmt rescue in Klebsiella?",
+  "bar_imported_from": "scripts/source_diverse_validate.py::MAX_SOURCE_SHARE",
+  "bar": 0.6,
+  "ncbi_pd": {
+    "R": 53,
+    "S": 0,
+    "ppv": 1.0,
+    "excluded_project": "PRJNA1322038",
+    "S_before_exclusion": 42,
+    "concentration": {
+      "n": 53,
+      "n_sources": 12,
+      "largest_source": "PRJNA308116",
+      "largest_share": 0.2641509433962264,
+      "passes_bar": true
+    }
+  },
+  "bvbrc": {
+    "R": 58,
+    "S": 64,
+    "ppv": 0.47540983606557374,
+    "dominant_source_kept": "36801013",
+    "concentration": {
+      "n": 122,
+      "n_sources": 6,
+      "largest_source": "36801013",
+      "largest_share": 0.6639344262295082,
+      "passes_bar": false
+    }
+  },
+  "consistency_test": {
+    "question": "under BV-BRC's Klebsiella PPV, how likely is PD's zero-susceptible result?",
+    "p_susceptible_under_bvbrc": 0.5245901639344263,
+    "n_pd_carriers": 53,
+    "p_observing_zero_susceptible_per_isolate": 7.666773500336487e-18,
+    "per_isolate_caveat": "assumes independence between carriers, which is FALSE under clonality -- carriers within a BioProject may be near-clonal, so this OVERSTATES the evidence and should not be the quoted figure.",
+    "n_effective_sources": 12,
+    "p_observing_zero_susceptible_per_source": 0.00013329625706020746,
+    "quote_this": "p_observing_zero_susceptible_per_source -- one vote per BioProject, which discards all within-project replication and is the clonality-safe bound."
+  },
+  "verdict": "ARCHIVES_CONFLICT_DIVERSE_SIDE_SHOWS_NO_OVERCALL",
+  "why": "the two archives disagree about Klebsiella, and the one that CLEARS the source-diversity bar (12 BioProjects, largest 26%) shows 53R/0S -- no over-call. The archive reporting the over-call FAILS that bar (66% from one study). The over-call is NOT retracted, but it is now contradicted by the more source-diverse evidence and rests on a single study.",
+  "why_the_exclusions_are_not_special_pleading": "both archives had a dominant source and both got the SAME pre-registered aac(3) control. PD's PRJNA1322038 FAILED it (aac(3) carriers called R 2% vs 97% elsewhere) and was excluded; BV-BRC's pmid 36801013 PASSED it (99% vs 83%) and was kept. The asymmetry is the control's output, not a choice made after seeing which way it cut.",
+  "honest_limits": [
+    "PD's 42 susceptible Klebsiella carriers ALL live in the excluded project, so PD's zero is a zero-after-exclusion. If that exclusion were wrong, PD would read 53R/42S = PPV 0.558 and would CORROBORATE the over-call rather than contradict it.",
+    "Absence of susceptible carriers is weaker than presence of resistant ones; 53R/0S bounds the over-call but does not prove the rule safe in Klebsiella.",
+    "Clonality is not corrected here. The binomial p-value assumes independent carriers and is therefore optimistic; a lineage-collapsed version would have a smaller effective N.",
+    "Different label provenance: PD's AST_phenotypes vs BV-BRC's publication-curated MICs. A systematic difference between those label sources is not excluded."
+  ]
+}

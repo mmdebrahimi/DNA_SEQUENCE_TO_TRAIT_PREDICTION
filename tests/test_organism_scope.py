@@ -116,3 +116,36 @@ def test_the_bar_is_the_projects_own_and_has_not_drifted():
 def test_the_qualification_does_not_leak_into_the_validated_scope():
     """E. coli passes the bar; it must stay silent, or the warning cries wolf where the rule is safe."""
     assert overcall_for("gentamicin", "Escherichia_coli_Shigella") is None
+
+
+# --- two-sided evidence (added 2026-09-04) ------------------------------------------------------
+# A warning that presents only the evidence that motivated it is half a finding. The other archive
+# disagrees AND clears the diversity bar, so both must ship together.
+
+def test_the_contradicting_archive_is_carried():
+    ce = overcall_for("gentamicin", "Klebsiella")["contradicting_evidence"]
+    assert ce["counts"]["S"] == 0 and ce["counts"]["R"] > 0
+    assert ce["passes_own_bar"] is True, (
+        "the contradicting evidence is only load-bearing BECAUSE it clears the bar the over-call fails")
+    assert ce["n_sources"] > overcall_for("gentamicin", "Klebsiella")["source_concentration"]["n_sources"]
+
+
+def test_the_one_liner_REFUSES_to_report_only_the_side_that_motivated_it():
+    line = one_line(overcall_for("gentamicin", "Klebsiella"))
+    assert "CONTRADICTED by" in line
+    assert "53R/0S" in line
+
+
+def test_the_contradicting_evidence_names_what_it_hinges_on():
+    """The PD zero exists only after an exclusion; if that exclusion is wrong the sign flips."""
+    ce = overcall_for("gentamicin", "Klebsiella")["contradicting_evidence"]
+    assert "PRJNA1322038" in ce["hinges_on"]
+    assert "CORROBORATE" in ce["hinges_on"], "the sign-flip risk must be stated, not implied"
+
+
+def test_the_quoted_p_value_is_the_clonality_safe_one():
+    """Per-isolate independence is false under clonality; the per-source bound is what may be quoted."""
+    ce = overcall_for("gentamicin", "Klebsiella")["contradicting_evidence"]
+    assert ce["p_zero_under_the_overcall_estimate"] > 1e-6, (
+        "the per-isolate 7.7e-18 assumes independence and must not be the carried figure")
+    assert "clonality-safe" in ce["p_basis"]

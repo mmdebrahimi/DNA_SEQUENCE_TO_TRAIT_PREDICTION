@@ -67,6 +67,24 @@ OVERCALL_SCOPE: tuple[dict, ...] = (
                        "validated E. coli scope",
             "artifact": "wiki/rmt_source_concentration_2026-09-03.json",
         },
+        # The OTHER archive disagrees, and it is the one that clears the diversity bar. Carried here
+        # so the warning cannot present only the side that motivated it.
+        "contradicting_evidence": {
+            "archive": "NCBI Pathogen Detection",
+            "counts": {"R": 53, "S": 0},
+            "ppv": 1.000,
+            "n_sources": 12,
+            "largest_source_share": 0.264,
+            "passes_own_bar": True,
+            "p_zero_under_the_overcall_estimate": 1.333e-04,
+            "p_basis": "one vote per BioProject (clonality-safe); the per-isolate figure is 7.7e-18 "
+                       "but assumes independence and overstates the evidence",
+            "hinges_on": "PD's 42 susceptible Klebsiella carriers ALL sit in PRJNA1322038, excluded "
+                         "because it FAILED the same pre-registered aac(3) control that BV-BRC's "
+                         "dominant study PASSED. If that exclusion were wrong, PD would read 53R/42S "
+                         "= PPV 0.558 and would CORROBORATE the over-call instead.",
+            "artifact": "wiki/rmt_klebsiella_archive_conflict_2026-09-04.json",
+        },
     },
 )
 
@@ -101,6 +119,7 @@ def overcall_for(drug: str, organism: str | None) -> dict | None:
                 "not_settled": row["not_settled"],
                 "artifact": row["artifact"],
                 "source_concentration": dict(row["source_concentration"]),
+                "contradicting_evidence": dict(row["contradicting_evidence"]),
                 "note": ("DISCLOSURE ONLY -- this never changes the call, the tier, or any metric. The "
                          "rule still fires; this says its positive predictive value was MEASURED far "
                          "lower in this organism than in the one it was validated on."),
@@ -121,6 +140,11 @@ def one_line(block: dict | None) -> str | None:
                   f"susceptible carriers come from one study and excluding it the PPV is "
                   f"{sc['ppv_excluding_largest_source']:.3f}, so this is established in ONE population, "
                   f"not for this organism generally.")
+    # A warning that reports only the evidence that motivated it is half a finding.
+    ce = block.get("contradicting_evidence") or {}
+    if ce:
+        caveat += (f" CONTRADICTED by {ce['archive']} ({ce['counts']['R']}R/{ce['counts']['S']}S over "
+                   f"{ce['n_sources']} sources, which DOES clear the diversity bar).")
     return (f"ORGANISM-SCOPE WARNING: this rule's {block['rule_component']} was validated on "
             f"{block['validated_on']} (PPV {block['ppv_in_validated_scope']:.3f}) but MEASURED at PPV "
             f"{block['ppv_in_this_organism']:.3f} here "
