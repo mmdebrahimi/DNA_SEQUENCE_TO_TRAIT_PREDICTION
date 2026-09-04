@@ -49,7 +49,10 @@ ROUTE_REGIME: dict[str, str] = {
 CATALOG_ROUTES: frozenset[str] = frozenset({
     "dna-amr", "dna-clinvar", "dna-hla", "dna-pgx", "dna-pathotype", "dna-phage",
     "dna-plasmid", "dna-serotype", "dna-mlst", "dna-ktype", "dna-salmserovar",
-    "dna-pneumoserotype", "dna-resfinder", "dna-pointfinder", "dna-disinfinder",
+    # CORRECTED 2026-09-04: this read "dna-pneumoserotype", which is not a console script. The old
+    # registry shorthand derived the route as dna-<trait> and produced the same wrong name, so two
+    # artifacts agreed on a route that does not exist. The real entry point is hyphenated.
+    "dna-pneumo-serotype", "dna-resfinder", "dna-pointfinder", "dna-disinfinder",
     "dna-kleb", "dna-motility", "dna-metabolic", "dna-morphology", "dna-pigment",
     "dna-flowering",
     # the frozen 19-cell colour/plumage family

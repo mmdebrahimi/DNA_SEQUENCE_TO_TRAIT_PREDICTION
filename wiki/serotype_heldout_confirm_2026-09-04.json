@@ -1,0 +1,97 @@
+{
+  "schema": "serotype-heldout-confirm-v1",
+  "date": "2026-09-04",
+  "preregistered": {
+    "primary": "H accuracy under identity-primary exceeds coverage-only on held-out isolates",
+    "quantitative_bar": 0.05,
+    "secondary": "resolution (no_call) unchanged between rules",
+    "falsified_if": "H gain <= 0, or resolution changes materially",
+    "registered_before_run": true
+  },
+  "discovery": {
+    "n": 150,
+    "seed": 23,
+    "H_before": 0.7703,
+    "H_after": 0.9257,
+    "note": "UNBLINDED -- the fix was chosen after seeing this cohort's failures"
+  },
+  "heldout": {
+    "n_requested": 250,
+    "n_called": 250,
+    "seed": 77,
+    "n_excluded_as_discovery_overlap": 31,
+    "statuses": {
+      "ok": 250
+    },
+    "cohort_meta": {
+      "source": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Escherichia_coli_Shigella/latest_snps/Metadata/PDG000000004.6281.metadata.tsv",
+      "funnel": {
+        "rows": 250001,
+        "has_O_label": 6343,
+        "has_OH_label": 4388,
+        "has_assembly": 6186
+      },
+      "n": 400,
+      "n_distinct_O": 108,
+      "n_with_H_label": 400,
+      "n_bioprojects": 47,
+      "largest_source_share": 0.165,
+      "passes_source_diversity_bar": true
+    }
+  },
+  "coverage_primary": {
+    "O": {
+      "hit": 223,
+      "no_call": 18,
+      "miss": 9
+    },
+    "H": {
+      "miss": 45,
+      "hit": 201,
+      "no_call": 4
+    }
+  },
+  "identity_primary": {
+    "O": {
+      "hit": 221,
+      "no_call": 18,
+      "miss": 11
+    },
+    "H": {
+      "hit": 227,
+      "miss": 19,
+      "no_call": 4
+    }
+  },
+  "H_accuracy_coverage_primary": 0.8170731707317073,
+  "H_accuracy_identity_primary": 0.9227642276422764,
+  "H_gain": 0.10569105691056913,
+  "O_gain": -0.008620689655172376,
+  "no_call_delta": 0.0,
+  "verdict": "CONFIRMED",
+  "why": "identity-primary beats coverage-only by +0.1057 on isolates the fix was never chosen from, clearing the pre-registered +0.05 bar.",
+  "honest_limits": [
+    "Both rules are scored from ONE blastn pass per isolate, so the only difference is the sort key -- but that also means shared blast parameters/DB limits affect both equally.",
+    "Disjointness is by accession against the discovery checkpoint; two accessions could still be near-identical genomes, so this is held-out by ISOLATE, not by lineage.",
+    "Still no in-silico incumbent for E. coli (PD leaves computed_types null), so the ABSOLUTE accuracy remains weakly anchored; the RULE COMPARISON is what this run tests.",
+    "O-only labels score the O axis alone -- the axes have different denominators."
+  ],
+  "net_effect": {
+    "H_misses_fixed": 26,
+    "O_misses_introduced": 2,
+    "net_calls_corrected": 24,
+    "note": "the O axis is very slightly WORSE under identity-primary (-0.0086, 2 isolates). Reported rather than buried: the net is strongly positive but the trade-off is real."
+  },
+  "regression_from_discovery": {
+    "discovery_H_gain": 0.1554,
+    "heldout_H_gain": 0.10569105691056913,
+    "shrinkage": 0.0497,
+    "interpretation": "the gain shrank on held-out isolates exactly as an UNBLINDED choice predicts. This CONFIRMS the discovery caveat rather than undermining it -- quote the held-out +0.106, not the discovery +0.155."
+  },
+  "secondary_prediction_outcome": {
+    "predicted": "resolution unchanged between rules",
+    "observed_no_call_delta": 0.0,
+    "met": true,
+    "why_it_matters": "the mechanism claim was that the rule picks WHICH allele wins, not WHETHER one does. An exactly-zero no_call delta on 250 isolates is direct corroboration of that mechanism, not just of the effect."
+  }
+}

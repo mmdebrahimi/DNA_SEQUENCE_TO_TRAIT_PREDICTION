@@ -1,0 +1,522 @@
+{
+  "schema": "pneumo-selection-rule-probe-v1",
+  "date": "2026-09-04",
+  "question": "does coverage-primary vs identity-primary change any pneumococcal serotype call?",
+  "n_cached_scored": 25,
+  "n_flipped": 1,
+  "n_winner_at_max_both_axes": 5,
+  "flip_outcomes_vs_measured_serogroup": {
+    "improved": 0,
+    "worsened": 0,
+    "neither_right": 1
+  },
+  "cache_integrity": {
+    "n_files": 48,
+    "n_usable": 25,
+    "n_corrupt": 23,
+    "corrupt": [
+      {
+        "file": "ERS628877.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS628897.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS628916.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS628918.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS628920.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS628940.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS628993.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS628995.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS628996.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS629001.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629027.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629063.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS629082.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629083.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS629097.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629099.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS629118.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629119.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS629123.fa.gz",
+        "why": "EOFError: Compressed file ended before the end-of-stream marker was reached"
+      },
+      {
+        "file": "ERS629124.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629126.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629127.fa.gz",
+        "why": "too small (199 bytes)"
+      },
+      {
+        "file": "ERS629142.fa.gz",
+        "why": "too small (199 bytes)"
+      }
+    ],
+    "note": "the ENA fetcher wrote server responses verbatim, so HTTP 403 pages and zero-byte files are cached under genome filenames"
+  },
+  "rows": [
+    {
+      "ers": "ERS628874",
+      "status": "ok",
+      "measured": "23F",
+      "coverage_primary": "23F",
+      "identity_primary": "23F",
+      "cov_primary_metrics": [
+        99.4,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.4,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628889",
+      "status": "ok",
+      "measured": "14",
+      "coverage_primary": "14",
+      "identity_primary": "14",
+      "cov_primary_metrics": [
+        99.9,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.9,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628891",
+      "status": "ok",
+      "measured": "19A",
+      "coverage_primary": "19F",
+      "identity_primary": "19F",
+      "cov_primary_metrics": [
+        98.7,
+        100.0
+      ],
+      "id_primary_metrics": [
+        98.7,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628900",
+      "status": "ok",
+      "measured": "6B",
+      "coverage_primary": "06E",
+      "identity_primary": "06E",
+      "cov_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "id_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628938",
+      "status": "ok",
+      "measured": "6B",
+      "coverage_primary": "06E",
+      "identity_primary": "06E",
+      "cov_primary_metrics": [
+        99.0,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.0,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628974",
+      "status": "ok",
+      "measured": "20",
+      "coverage_primary": "20",
+      "identity_primary": "20",
+      "cov_primary_metrics": [
+        99.9,
+        87.4
+      ],
+      "id_primary_metrics": [
+        99.9,
+        87.4
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628977",
+      "status": "ok",
+      "measured": "14",
+      "coverage_primary": "14",
+      "identity_primary": "14",
+      "cov_primary_metrics": [
+        99.8,
+        91.2
+      ],
+      "id_primary_metrics": [
+        99.8,
+        91.2
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628980",
+      "status": "ok",
+      "measured": "1",
+      "coverage_primary": "01",
+      "identity_primary": "01",
+      "cov_primary_metrics": [
+        100.0,
+        72.1
+      ],
+      "id_primary_metrics": [
+        100.0,
+        72.1
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628988",
+      "status": "ok",
+      "measured": "19F",
+      "coverage_primary": "19F",
+      "identity_primary": "19F",
+      "cov_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628989",
+      "status": "ok",
+      "measured": "14",
+      "coverage_primary": "14",
+      "identity_primary": "14",
+      "cov_primary_metrics": [
+        98.9,
+        91.2
+      ],
+      "id_primary_metrics": [
+        98.9,
+        91.2
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS628991",
+      "status": "ok",
+      "measured": "23F",
+      "coverage_primary": "23F",
+      "identity_primary": "23F",
+      "cov_primary_metrics": [
+        99.3,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.3,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629010",
+      "status": "ok",
+      "measured": "9V",
+      "coverage_primary": "09A",
+      "identity_primary": "09A",
+      "cov_primary_metrics": [
+        99.6,
+        100.2
+      ],
+      "id_primary_metrics": [
+        99.6,
+        100.2
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629013",
+      "status": "ok",
+      "measured": "19F",
+      "coverage_primary": "19F",
+      "identity_primary": "19F",
+      "cov_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629017",
+      "status": "ok",
+      "measured": "9N",
+      "coverage_primary": "09N",
+      "identity_primary": "09N",
+      "cov_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "id_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629033",
+      "status": "ok",
+      "measured": "9V",
+      "coverage_primary": "09A",
+      "identity_primary": "09A",
+      "cov_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "id_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629035",
+      "status": "ok",
+      "measured": "3",
+      "coverage_primary": "03",
+      "identity_primary": "03",
+      "cov_primary_metrics": [
+        99.7,
+        99.7
+      ],
+      "id_primary_metrics": [
+        99.7,
+        99.7
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629036",
+      "status": "ok",
+      "measured": "19F",
+      "coverage_primary": "19F",
+      "identity_primary": "19F",
+      "cov_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629038",
+      "status": "ok",
+      "measured": "10A",
+      "coverage_primary": "10A",
+      "identity_primary": "10A",
+      "cov_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "id_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629056",
+      "status": "ok",
+      "measured": "14",
+      "coverage_primary": "14",
+      "identity_primary": "14",
+      "cov_primary_metrics": [
+        99.8,
+        91.2
+      ],
+      "id_primary_metrics": [
+        99.8,
+        91.2
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629072",
+      "status": "ok",
+      "measured": "15C",
+      "coverage_primary": "15B",
+      "identity_primary": "15B",
+      "cov_primary_metrics": [
+        99.3,
+        100.1
+      ],
+      "id_primary_metrics": [
+        99.3,
+        100.1
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629073",
+      "status": "ok",
+      "measured": "1",
+      "coverage_primary": "19AF",
+      "identity_primary": "19A",
+      "cov_primary_metrics": [
+        96.4,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.3,
+        93.7
+      ],
+      "flipped": true
+    },
+    {
+      "ers": "ERS629074",
+      "status": "ok",
+      "measured": "14",
+      "coverage_primary": "14",
+      "identity_primary": "14",
+      "cov_primary_metrics": [
+        99.8,
+        89.3
+      ],
+      "id_primary_metrics": [
+        99.8,
+        89.3
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629075",
+      "status": "ok",
+      "measured": "9V",
+      "coverage_primary": "09A",
+      "identity_primary": "09A",
+      "cov_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "id_primary_metrics": [
+        100.0,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629112",
+      "status": "ok",
+      "measured": "19F",
+      "coverage_primary": "19F",
+      "identity_primary": "19F",
+      "cov_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.8,
+        100.0
+      ],
+      "flipped": false
+    },
+    {
+      "ers": "ERS629116",
+      "status": "ok",
+      "measured": "7F",
+      "coverage_primary": "07A",
+      "identity_primary": "07A",
+      "cov_primary_metrics": [
+        99.9,
+        100.0
+      ],
+      "id_primary_metrics": [
+        99.9,
+        100.0
+      ],
+      "flipped": false
+    }
+  ],
+  "verdict": "RULE_FLIPS_BUT_NEVER_IMPROVES_ON_SAMPLE",
+  "why": "1 of 25 calls change with the ordering, but NONE of the flips turns a wrong serogroup into a right one (1 swap one miss for another). On this sample there is no evidence identity-primary helps the pneumococcal cell, which is the opposite of the E. coli result and consistent with its misses having a DIFFERENT cause (a single-best-reference v0 ceiling, not cross-hybridization).",
+  "honest_limits": [
+    "SMALL SAMPLE: only the assemblies still cached on disk, not the 260-isolate cohort. A zero-flip result is weak evidence of inertness, never proof.",
+    "This measures whether the CALL changes, not whether it changes for the BETTER. Only the measured Quellung labels can decide that, and that needs the full run.",
+    "The pneumococcal cell's documented misses are WITHIN-serogroup (9A/9V, 6B/6E, 15B/15C) and are attributed to a single-best-reference v0 ceiling -- a different cause from the cross-hybridization defect that the E. coli fix addressed."
+  ]
+}

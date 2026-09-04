@@ -381,7 +381,9 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     # salmserovar MOVED to _TRAIT_CONTRACTS 2026-09-04: it now has an individually-earned tier
     # (measured against a wet-lab label), and leaving it on the shared faithful-to-tool default would
     # both overstate its evidence class and HIDE that it underperforms the tool it wraps.
-    ("typing", "pneumoserotype", "Streptococcus_pneumoniae", "pneumococcal capsular serotype", "ABSTAIN"),
+    # pneumoserotype MOVED to _TRAIT_CONTRACTS 2026-09-04: it was registered FAITHFUL_TO_TOOL while its
+    # report card recorded INDEPENDENT Quellung validation (n=230). Under-claiming is as much a
+    # trust-surface falsehood as over-claiming, so it gets its individually-earned tier.
     ("finder", "plasmid", "bacteria", "plasmid Inc-replicon typing (PlasmidFinder allele DB)", "ABSTAIN"),
     ("finder", "resfinder", "bacteria", "acquired AMR genes (ResFinder allele DB) — independent cross-tool check vs amr", "ABSTAIN"),
     ("finder", "pointfinder", "Escherichia_coli", "chromosomal AMR point mutations (PointFinder) — independent vs amr POINT", "ABSTAIN"),
@@ -1131,12 +1133,53 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         falsifier_ref="scripts/serotype_oh_validate.py", incoming_data_gate="n/a",
         demotion_rule=(
             "The ABSOLUTE accuracy is weakly anchored (no incumbent); what is solid is the "
-            "internally-controlled before/after on a fixed cohort. The before/after is NOT blinded -- "
-            "the fix was chosen after seeing the failure pattern -- so treat +0.155 as a strong but "
-            "not pre-registered result. Re-score if the allele DB changes. The SAME coverage-primary "
+            "internally-controlled rule comparison. REPLICATED 2026-09-04 on 250 HELD-OUT isolates "
+            "(seed 77, 31 discovery-overlapping accessions excluded, 47 BioProjects) with the "
+            "prediction registered BEFORE the run: H accuracy 0.8171 -> 0.9228, gain +0.106, clearing "
+            "the pre-registered +0.05 bar; no-call delta EXACTLY 0.0000, corroborating the mechanism "
+            "(the rule picks WHICH allele wins, not WHETHER one does). QUOTE +0.106, NOT the "
+            "discovery +0.155 -- the gain shrank by 0.050 on held-out data exactly as an unblinded "
+            "choice predicts. The O axis is very slightly WORSE (-0.0086, 2 isolates); net is 26 H "
+            "misses fixed vs 2 O misses introduced. Re-score if the allele DB changes. The SAME coverage-primary "
             "pattern is present in pneumoserotype and plasmid and was deliberately NOT fixed there "
             "(no validation cohort, and different biology: whole-locus cps / Inc replicon matching is "
             "not per-antigen flagellin) -- do not propagate the fix without measuring it"),
+    ),
+    CellContract(
+        cell_id="typing:Streptococcus_pneumoniae:pneumoserotype", track="typing",
+        route="dna-pneumo-serotype", organism="Streptococcus_pneumoniae", target="pneumoserotype",
+        claim="pneumococcal capsular serotype from blastn of the assembly against cps reference loci",
+        # Was registered FAITHFUL_TO_TOOL while its report card recorded independent Quellung
+        # validation. The tier records EVIDENCE CLASS; the headline carries the resolution limit.
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
+        claim_status="serogroup_validated_vs_wetlab_quellung_exact_serotype_is_a_v0_ceiling",
+        validation_slice=(
+            "GPS Poland cohort, wet-lab phenotypic serotype (Nat Commun 2025 Supplementary Data 1, "
+            "`Phenotypic_serotype`), scored on GPS-deposited ENA assemblies -- label AND assembly both "
+            "independent of this caller. 260 total = 230 SCORED + 25 assembly-unavailable + 5 no-call. "
+            "On the 230: SEROGROUP concordance 0.939, EXACT serotype 0.661. Explicit-QUELLUNG-method "
+            "subset n=42: serogroup 0.952 / exact 0.690 (consistent). The honest headline is the "
+            "SEROGROUP number -- exact-serotype misses are systematically WITHIN-serogroup (9A/9V, "
+            "6B/6E, 15B/15C), which is a single-best-reference v0 ceiling (the full GPS pipeline does "
+            "allele-level within-serogroup resolution this v0 does not), NOT a bug. Selection-rule "
+            "probe 2026-09-04 (scripts/pneumo_selection_rule_probe.py, 25 freshly-fetched assemblies): "
+            "coverage-primary vs identity-primary flips 1 of 25 calls and that flip is wrong under "
+            "BOTH orderings -- no evidence the E. coli fix transfers here, consistent with a different "
+            "cause"),
+        label_provenance=(
+            "wet-lab phenotypic serotype (Quellung-explicit for n=42; method unspecified but still "
+            "serology for the rest) -- NOT the in-silico Monocle field. The label is independent, but "
+            "the cps DB and the serotype universe are a shared REFERENCE SYSTEM: reference-coupled, "
+            "not circular"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/pneumo_gps_quellung_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "Quote the SEROGROUP number (0.939) as this v0's resolution; exact-serotype 0.661 is the "
+            "within-serogroup-limited LOWER bound and must not be presented as the cell's accuracy. "
+            "~2.1% no-call rate is excluded from accuracy by construction (a utility fact, not an "
+            "error). Promote only on allele-level within-serogroup typing (a v0.1). The cached GPS "
+            "assemblies on D: are CORRUPT (HTTP 403 pages / truncated gzip) -- re-fetch with "
+            "validation, never reuse them"),
     ),
 ]
 

@@ -17,9 +17,9 @@
     },
     "by_evidence_tier": {
       "near_independent": 24,
-      "faithful_to_tool": 11,
+      "faithful_to_tool": 10,
       "no_free_source": 11,
-      "independent_measured": 30,
+      "independent_measured": 31,
       "not_censused": 1,
       "knowledge_baseline": 38
     },
