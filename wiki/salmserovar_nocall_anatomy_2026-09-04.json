@@ -1,0 +1,35 @@
+{
+  "schema": "salmserovar-nocall-anatomy-v1",
+  "date": "2026-09-04",
+  "question": "which axis actually causes the serovar caller to abstain?",
+  "supersedes": "the 2026-09-04 claim that phase-2 flagellin handling is this cell's single largest defect -- the COUNT of empty-H2 formulas was right, the causal attribution was not",
+  "n_scored": 200,
+  "n_abstentions": 59,
+  "causes": {
+    "O_antigen_unresolved": 21,
+    "H1_phase1_flagellin_unresolved": 16,
+    "O_H1_valid_only_H2_blocks_it": 13,
+    "O_H1_called_but_pair_absent_from_table": 8,
+    "no_formula_at_all": 1
+  },
+  "phase2_reachable_bucket": 13,
+  "oh1_unique_fallback_headroom": {
+    "recoverable": 0,
+    "would_match_label": 0
+  },
+  "verdict": "H2_IS_NOT_THE_DOMINANT_CAUSE",
+  "why": "the largest cause is `O_antigen_unresolved` at 21 of 59 (35.6%); the phase-2-reachable bucket is 13 (22.0%). The O:H1-unique fallback recovers 0 formulas, so its headroom is zero -- do not build it.",
+  "fix_priority_by_measured_size": [
+    "O_antigen_unresolved",
+    "H1_phase1_flagellin_unresolved",
+    "O_H1_valid_only_H2_blocks_it",
+    "O_H1_called_but_pair_absent_from_table",
+    "no_formula_at_all"
+  ],
+  "honest_limits": [
+    "One cohort (N=200, reference-lab-filtered) and one antigen DB build. The cause mix would differ with a different O-antigen allele set.",
+    "This partitions by the FIRST failing axis. A formula can be wrong on more than one axis; the counts are of first-failure, not of independent defects.",
+    "It measures WHY the caller abstains, NOT whether a resolved call would be correct -- abstention and error are different failures and are counted separately throughout.",
+    "The O-antigen bucket is the largest but its fix is DB coverage (data engineering on the wzx/wzy allele set), not a code change -- sized here, not attempted."
+  ]
+}

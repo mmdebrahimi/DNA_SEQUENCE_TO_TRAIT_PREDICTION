@@ -1086,10 +1086,13 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "dna_decode.salmserovar.equivalence (notation normalisation + the committed W-K-L formula "
             "table), applied IDENTICALLY to both callers. RESULT: ours 0.702 (99 hit / 42 miss / 59 "
             "no-call) vs the in-silico incumbent 0.925 (184/15/1) on the SAME isolates -- DELTA "
-            "-0.222, and a 29.5% abstention rate. Diagnosed failure modes: phase-2 flagellin (H2) "
-            "undetected in 33 of 59 no-calls (Salmonella is diphasic; '4:i:-' cannot resolve where the "
-            "table wants '4:i:1,2'), O-antigen unresolved ('O?', e.g. Infantis/Rissen) or mis-grouped "
-            "(Typhi called 1,3,19 not 9,12), plus a malformed DB antigen name ('22-gene2')"),
+            "-0.222, and a 29.5% abstention rate. Abstention causes, partitioned by the FIRST axis "
+            "that failed (scripts/salmserovar_nocall_anatomy.py -- CORRECTING an earlier reading that "
+            "counted trailing '-' and wrongly named phase-2 the dominant defect): O antigen unresolved "
+            "21/59 (35.6%, the largest), H1 phase-1 flagellin unresolved 16 (27.1%), O:H1 valid so only "
+            "H2 blocks it 13 (22.0%), O:H1 called but pair absent 8 (13.6%). The O:H1-unique fallback "
+            "has MEASURED HEADROOM ZERO. Also seen: O mis-grouped (Typhi called 1,3,19 not 9,12) and a "
+            "malformed DB antigen name ('22-gene2')"),
         label_provenance=(
             "NCBI-PD submitter `serovar` (traditional Kauffmann-White slide agglutination is the gold "
             "standard for this trait) restricted to reference labs; the in-silico comparator is PD's "

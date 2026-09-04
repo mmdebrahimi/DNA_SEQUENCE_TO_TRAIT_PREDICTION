@@ -40,11 +40,29 @@ afterwards.
 
 ## Diagnosed failure modes — specific, not "it underperforms"
 
+> **CORRECTION, same day.** The claim below that phase-2 flagellin is "the single largest defect" is
+> **wrong, and it was measured wrong by counting the wrong thing**. Counting formulas that *end* in `-`
+> conflates "phase 2 is genuinely absent" with "nothing resolved on the H axes at all" — `4:H?:-` has an
+> empty H2 only because H1 failed first. Partitioning by the **first axis that actually failed**
+> ([`salmserovar_nocall_anatomy_2026-09-04.json`](salmserovar_nocall_anatomy_2026-09-04.json)):
+>
+> | cause | n | share |
+> |---|---|---|
+> | **O antigen unresolved** | **21** | **35.6%** |
+> | H1 (phase-1 flagellin) unresolved | 16 | 27.1% |
+> | O:H1 valid — only H2 blocks it | 13 | 22.0% |
+> | O:H1 called but pair absent from table | 8 | 13.6% |
+>
+> **Only 22% is reachable by a phase-2 fix**, and the obvious such fix — resolving on O:H1 alone when
+> that pair is unique — has **measured headroom of zero**, because the H2-blocked formulas are precisely
+> the *ambiguous* ones, which is why they need H2. The real priority is **O-antigen DB coverage**, whose
+> cost is data engineering on the wzx/wzy allele set, not a code change.
+
 Of the 59 no-calls:
 
-- **33 have an empty H2 (phase-2 flagellin).** *Salmonella* is diphasic; a genome expressing only phase 1
-  yields `4:i:-`, which cannot resolve where the White-Kauffmann table expects `4:i:1,2`. This is the
-  single largest defect.
+- ~~**33 have an empty H2 (phase-2 flagellin).** This is the single largest defect.~~ **Superseded — see
+  the correction above.** The count of trailing `-` is real; the causal attribution and the priority
+  ordering were not.
 - **O-antigen unresolved** (`O?:r:1,5` for Infantis, `O?:f,g:-` for Rissen) — allele coverage gaps.
 - **O-antigen mis-grouped** — Typhi called `1,3,19` (should be 9,12); Enteritidis called `9,46` (should
   be 9), which resolved to the wrong serovar "Hillingdon".
