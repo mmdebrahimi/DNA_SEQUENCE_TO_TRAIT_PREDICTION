@@ -91,9 +91,12 @@ threshold, opposite verdict** — which is exactly what a control is for.
   lock. It is now **measured**: in Klebsiella, PPV 0.475.
 - **The deployed rule's own scope survives.** E. coli is 12/12 here and 146/146 on PD. The v2 validation
   (N=131 E. coli, sens 0.523 → 0.892 at unchanged specificity) is not contradicted by any of this.
-- **The rule must not be extended to Klebsiella**, and CLAUDE.md's note that non-E. coli carriers are
-  "outside the validated organism scope" turns out to have been load-bearing rather than cautious
-  boilerplate.
+- **The rule should not be extended to Klebsiella** — but *(corrected 2026-09-04)* as a **precaution
+  under contradictory evidence, not as a measured conclusion**. The over-call measured here fails the
+  source-diversity bar, and NCBI-PD's Klebsiella carriers are **53R/0S across 12 BioProjects** — see
+  [the archive conflict](rmt_klebsiella_archive_conflict_2026-09-04.md). CLAUDE.md's note that non-E.
+  coli carriers are "outside the validated organism scope" was still load-bearing rather than cautious
+  boilerplate; what is no longer supportable is citing PPV 0.475 as an established organism-level fact.
 - **`gene context: core | acquired` is the shape of the explanation.** This is exactly the pattern the
   [AMRrules schema](prior_art_decoder_landscape_2026-09-03.md) encodes as a first-class field and that our
   own recorded lesson names — a determinant's phenotypic consequence is organism-dependent. Whether
