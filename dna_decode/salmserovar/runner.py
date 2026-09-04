@@ -25,7 +25,21 @@ from dna_decode.typing.blast_caller import call_alleles
 
 # Salmonella antigen alleles are near-exact; SeqSero2 uses high-identity matching.
 SEROVAR_IDENTITY_THRESHOLD = 90.0
-SEROVAR_COVERAGE_THRESHOLD = 80.0
+
+# COVERAGE lowered 80.0 -> 40.0 on 2026-09-04, against a bar registered BEFORE the sweep ran
+# (scripts/salmserovar_threshold_tradeoff.py::PREREGISTERED: adopt iff >=7 rescued AND <=2 newly wrong
+# AND net >= +5). Measured on the 200-isolate wet-lab-labelled cohort: 36 abstentions became CORRECT
+# calls for exactly 1 new error, net +35, plus 7 wrong->correct the rule did not even count.
+#
+# WHY COVERAGE AND NOT IDENTITY. The O-antigen alleles that were being discarded hit at near-perfect
+# identity (median 99.8) but partial coverage (median 58.4, max 78.9) -- a partial-alignment/allele-
+# length mismatch, concentrated on the O7 wzx/wzy reference. Identity stays at 90 because identity was
+# never the failing axis; relaxing it would admit genuinely different alleles.
+#
+# THE TRADE WAS NOT ASSUMED FREE. Coverage rose 0.705 -> 0.900 AND accuracy-on-covered rose
+# 0.702 -> 0.783 -- both improved, which is not the usual selective-classification trade and is the
+# reason the change is safe rather than merely favourable.
+SEROVAR_COVERAGE_THRESHOLD = 40.0
 
 
 def parse_axis_antigen(allele_id: str) -> tuple[str, str] | None:

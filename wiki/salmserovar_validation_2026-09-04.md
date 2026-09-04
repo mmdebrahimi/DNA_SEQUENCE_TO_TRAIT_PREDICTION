@@ -1,4 +1,4 @@
-# The serovar caller met a wet-lab label for the first time, and lost to the tool it wraps
+# The serovar caller met a wet-lab label for the first time, and lost to the incumbent field
 
 **`typing:Salmonella:salmserovar` shipped at `FAITHFUL_TO_TOOL` — checked against the reference method,
 never against reality.** Measured now against a free, independent, wet-lab label on 200 isolates:
@@ -6,10 +6,12 @@ never against reality.** Measured now against a free, independent, wet-lab label
 | comparison | hit | miss | no-call | accuracy |
 |---|---|---|---|---|
 | **our caller vs wet-lab label** | 99 | 42 | **59** | **0.702** |
-| **in-silico incumbent vs the same labels** | 184 | 15 | 1 | **0.925** |
+| **NCBI-PD's published in-silico field, same labels** | 184 | 15 | 1 | **0.925** |
 | our caller vs the incumbent (the old number) | 98 | 43 | 59 | 0.695 |
 
-**Delta −0.222, with a 29.5% abstention rate.** The cell is worse than naive use of the tool it mimics.
+**Delta −0.222, with a 29.5% abstention rate.** The cell is worse than NCBI-PD's published in-silico field — see the comparator correction immediately below for what that does and does not license.
+
+> **COMPARATOR CORRECTION (same day).** The comparator is **NCBI-PD's published `computed_types` field** — NCBI's production serovar call of *undocumented tool, version and configuration*. It is **not** a locally pinned SeqSero2/SISTR run. This matters beyond wording: a production-field delta **cannot distinguish** "our caller is worse than the reference method" from "our caller diverges from an undocumented NCBI pipeline". The original phrasing ("the in-silico tool it mimics") licensed the first reading; only the second is supported. What survives unchanged: it is a real ours-vs-incumbent-field delta, and the incumbent's 0.925 remains a sound circularity probe on the wet-lab labels.
 
 That delta is the whole point of running both. Our 0.702 would look respectable in isolation; against an
 incumbent scoring 0.925 **on the same isolates** it is a clear underperformance. This is the recorded
@@ -55,21 +57,24 @@ afterwards.
 >
 > **Only 22% is reachable by a phase-2 fix**, and the obvious such fix — resolving on O:H1 alone when
 > that pair is unique — has **measured headroom of zero**, because the H2-blocked formulas are precisely
-> the *ambiguous* ones, which is why they need H2. The real priority is **O-antigen DB coverage**, whose
-> cost is data engineering on the wzx/wzy allele set, not a code change.
+> the *ambiguous* ones, which is why they need H2. **A SECOND correction:** the replacement claim that the
+> priority is "O-antigen **DB coverage** — data engineering" was ALSO asserted and ALSO measured wrong.
+> 14 of the 21 O-unresolved isolates DO hit the correct O allele, below threshold (identity median 99.8,
+> coverage median 58.4, all under the deployed 80 cut). See
+> [`salmserovar_o_antigen_probe_2026-09-04.md`](salmserovar_o_antigen_probe_2026-09-04.md).
 
 Of the 59 no-calls:
 
 - ~~**33 have an empty H2 (phase-2 flagellin).** This is the single largest defect.~~ **Superseded — see
   the correction above.** The count of trailing `-` is real; the causal attribution and the priority
   ordering were not.
-- **O-antigen unresolved** (`O?:r:1,5` for Infantis, `O?:f,g:-` for Rissen) — allele coverage gaps.
+- **O-antigen unresolved** (`O?:r:1,5` for Infantis, `O?:f,g:-` for Rissen) — mostly sub-threshold hits, NOT coverage gaps (14 of 21 measured).
 - **O-antigen mis-grouped** — Typhi called `1,3,19` (should be 9,12); Enteritidis called `9,46` (should
   be 9), which resolved to the wrong serovar "Hillingdon".
 - **A malformed antigen name leaking from DB construction**: `22-gene2:z:1,6`.
 
-The H-antigen calls were frequently correct where O failed, so **the O-antigen axis and the H2 phase are
-where the work is** — not the formula lookup, which resolved correctly whenever given a complete formula.
+The H-antigen calls were frequently correct where O failed, so **the O-antigen axis is where the work is**
+— not the formula lookup, which resolved correctly whenever given a complete formula.
 
 ## Fairness of the comparison
 

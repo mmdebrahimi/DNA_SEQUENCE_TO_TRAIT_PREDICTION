@@ -2,7 +2,7 @@
   "schema": "salmserovar-validation-v1",
   "date": "2026-09-04",
   "cell": "typing:Salmonella:salmserovar",
-  "question": "does the shipped serovar caller match a WET-LAB serovar label, and how does it compare to naive use of the in-silico tool it mimics?",
+  "question": "does the shipped serovar caller match a WET-LAB serovar label, and how does it compare to NCBI-PD's published in-silico serovar field on the same isolates?",
   "cohort": {
     "n_requested": 200,
     "n_completed": 200,
@@ -192,9 +192,17 @@
   ],
   "honest_limits": [
     "The label is NCBI-PD's submitter `serovar` restricted to reference public-health labs. It cannot be proven per isolate that any given string came from slide agglutination; the provenance filter is a judgment.",
+    "THE COMPARATOR IS A PRODUCTION FIELD, NOT THE REFERENCE TOOL. `computed_types` is NCBI-PD's own serovar call of undocumented tool/version/config, so the delta cannot separate 'our caller is worse than SeqSero2' from 'our caller diverges from an undocumented NCBI pipeline'. Measuring against the reference tool requires installing and pinning it locally, which was not done.",
     "Residual circularity is bounded, not eliminated -- but both callers are scored against the SAME labels, so contamination inflates both and the DELTA survives it.",
     "Equivalence is notation-normalisation plus the committed White-Kauffmann table, applied identically to both callers. It refuses fuzzy near-misses (Newport/Newbrunswick).",
     "A per-serovar cap flattens the natural prevalence, so this is per-isolate accuracy on a deliberately diverse mix, NOT population-weighted accuracy.",
     "no_call is reported separately from miss: abstention is not error."
-  ]
+  ],
+  "comparator_identity_CORRECTION_2026-09-04": {
+    "what_the_comparator_actually_is": "NCBI Pathogen Detection's published `computed_types` field -- NCBI's production sequence-based serovar call.",
+    "what_it_is_NOT": "a locally pinned SeqSero2/SISTR run at a known version and configuration. The tool, version and parameters behind `computed_types` are not documented by NCBI.",
+    "why_this_matters_beyond_wording": "a production-field delta CANNOT distinguish \"our caller is worse than the reference method\" from \"our simplified caller diverges from an undocumented NCBI pipeline\". The original framing (\"the in-silico tool it mimics\") licensed the first reading; only the second is supported.",
+    "what_survives": "the comparison is still a valid ours-vs-a-real-incumbent-field delta, and the incumbent score remains a sound circularity probe on the wet-lab labels (0.925 against a published ~0.95 in-silico-vs-agglutination accuracy).",
+    "what_does_not": "any claim that this measures our caller against the reference TOOL. It does not."
+  }
 }
