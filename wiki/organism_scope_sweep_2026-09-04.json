@@ -1,0 +1,142 @@
+{
+  "schema": "organism-scope-sweep-v1",
+  "question": "is the gentamicin organism-agnostic-code / organism-specific-evidence gap systemic?",
+  "spread_flag": 0.15,
+  "diversity_bar": 0.6,
+  "n_multi_organism_drugs": 4,
+  "findings": [
+    {
+      "drug": "ceftriaxone",
+      "organisms": [
+        {
+          "organism": "escherichia_coli_shigella",
+          "sens": 0.967,
+          "spec": 0.967,
+          "n": 60,
+          "largest_source_share": 0.55,
+          "distinct_bioprojects": 4,
+          "passes_diversity_bar": true
+        },
+        {
+          "organism": "klebsiella",
+          "sens": 1.0,
+          "spec": 0.9,
+          "n": 60,
+          "largest_source_share": 0.5,
+          "distinct_bioprojects": 2,
+          "passes_diversity_bar": true
+        }
+      ],
+      "spec_spread": 0.06699999999999995,
+      "flagged": false,
+      "concentrated_cells": [],
+      "attributable_to_concentration": false,
+      "already_disclosed": false
+    },
+    {
+      "drug": "ciprofloxacin",
+      "organisms": [
+        {
+          "organism": "campylobacter",
+          "sens": 1.0,
+          "spec": 1.0,
+          "n": 40,
+          "largest_source_share": 1.0,
+          "distinct_bioprojects": 1,
+          "passes_diversity_bar": false
+        },
+        {
+          "organism": "escherichia_coli_shigella",
+          "sens": 0.933,
+          "spec": 0.7,
+          "n": 60,
+          "largest_source_share": 0.967,
+          "distinct_bioprojects": 2,
+          "passes_diversity_bar": false
+        },
+        {
+          "organism": "klebsiella",
+          "sens": 0.967,
+          "spec": 0.967,
+          "n": 60,
+          "largest_source_share": 0.183,
+          "distinct_bioprojects": 36,
+          "passes_diversity_bar": true
+        }
+      ],
+      "spec_spread": 0.30000000000000004,
+      "flagged": true,
+      "concentrated_cells": [
+        "campylobacter",
+        "escherichia_coli_shigella"
+      ],
+      "attributable_to_concentration": true,
+      "already_disclosed": false
+    },
+    {
+      "drug": "gentamicin",
+      "organisms": [
+        {
+          "organism": "escherichia_coli_shigella",
+          "sens": 0.9,
+          "spec": 1.0,
+          "n": 60,
+          "largest_source_share": 0.95,
+          "distinct_bioprojects": 4,
+          "passes_diversity_bar": false
+        },
+        {
+          "organism": "klebsiella",
+          "sens": 0.933,
+          "spec": 0.933,
+          "n": 60,
+          "largest_source_share": 0.483,
+          "distinct_bioprojects": 32,
+          "passes_diversity_bar": true
+        }
+      ],
+      "spec_spread": 0.06699999999999995,
+      "flagged": false,
+      "concentrated_cells": [
+        "escherichia_coli_shigella"
+      ],
+      "attributable_to_concentration": false,
+      "already_disclosed": true
+    },
+    {
+      "drug": "tetracycline",
+      "organisms": [
+        {
+          "organism": "escherichia_coli_shigella",
+          "sens": 0.933,
+          "spec": 0.933,
+          "n": 60,
+          "largest_source_share": 0.533,
+          "distinct_bioprojects": 6,
+          "passes_diversity_bar": true
+        },
+        {
+          "organism": "klebsiella",
+          "sens": 0.8,
+          "spec": 0.967,
+          "n": 60,
+          "largest_source_share": 0.5,
+          "distinct_bioprojects": 2,
+          "passes_diversity_bar": true
+        }
+      ],
+      "spec_spread": 0.03399999999999992,
+      "flagged": false,
+      "concentrated_cells": [],
+      "attributable_to_concentration": false,
+      "already_disclosed": false
+    }
+  ],
+  "verdict": "ISOLATED_TO_GENTAMICIN",
+  "why": "no other deployed drug shows an organism-dependent over-call. Every other multi-organism spec spread is small, and the one large spread is attributable to a cohort that fails the source-diversity bar rather than to the rule. The gentamicin gap is isolated, not the first instance of a systemic pattern.",
+  "what_this_does_not_show": [
+    "A drug scored on only ONE organism cannot show a spread at all -- absence of a flag is not evidence of organism-independence for meropenem or oxacillin.",
+    "The scored cells were produced by the FROZEN rule. A cell can only reveal an over-call for a determinant its cohort actually CONTAINS; a cohort holding no carriers of a determinant is structurally incapable of detecting a rule keyed on it (the Oxford result exactly).",
+    "Specificity is the over-call axis but not the only axis; a rule could be organism-dependent in sensitivity while looking flat here."
+  ]
+}
