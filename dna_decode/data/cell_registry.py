@@ -377,7 +377,9 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     ("typing", "serotype", "Escherichia_coli", "E. coli O:H serotype (SerotypeFinder allele DB)", "O?"),
     ("typing", "mlst", "bacteria", "multi-locus sequence type (PubMLST allele->profile->ST)", "ABSTAIN"),
     ("typing", "ktype", "Klebsiella", "Klebsiella K/O capsule type (Kaptive)", "ABSTAIN"),
-    ("typing", "salmserovar", "Salmonella", "Salmonella serovar (antigenic-formula resolver)", "ABSTAIN"),
+    # salmserovar MOVED to _TRAIT_CONTRACTS 2026-09-04: it now has an individually-earned tier
+    # (measured against a wet-lab label), and leaving it on the shared faithful-to-tool default would
+    # both overstate its evidence class and HIDE that it underperforms the tool it wraps.
     ("typing", "pneumoserotype", "Streptococcus_pneumoniae", "pneumococcal capsular serotype", "ABSTAIN"),
     ("finder", "plasmid", "bacteria", "plasmid Inc-replicon typing (PlasmidFinder allele DB)", "ABSTAIN"),
     ("finder", "resfinder", "bacteria", "acquired AMR genes (ResFinder allele DB) — independent cross-tool check vs amr", "ABSTAIN"),
@@ -1063,6 +1065,43 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "shipped CLI default is blosum62 at 0.35/0.18, NOT the 0.73 headline -- the learned methods need "
             "a precomputed score table and stay in the Python API. Demote if a DMS re-score drops the rank "
             "materially, or if any path emits an organism-level or clinical call"),
+    ),
+    CellContract(
+        cell_id="typing:Salmonella:salmserovar", track="typing", route="dna-salmserovar",
+        organism="Salmonella", target="salmserovar",
+        claim="Salmonella enterica serovar from the antigenic formula (O:H1:H2) via blastn over the "
+              "antigen allele DB + White-Kauffmann-Le Minor lookup",
+        # The tier records EVIDENCE CLASS, not performance: this cell HAS now been measured against a
+        # free, independent, wet-lab label. The headline carries the (poor) number.
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
+        claim_status="measured_vs_wetlab_label_UNDERPERFORMS_the_tool_it_wraps",
+        validation_slice=(
+            "N=200 NCBI-PD isolates from reference public-health labs (CDC/PHE/FDA/USDA-FSIS/state "
+            "health depts), 74 distinct serovars, 29 BioProjects, largest-source share 0.125 (CLEARS "
+            "the project's own 0.60 diversity bar). Scored 2026-09-04 by "
+            "scripts/salmserovar_validate.py with equivalence decided by "
+            "dna_decode.salmserovar.equivalence (notation normalisation + the committed W-K-L formula "
+            "table), applied IDENTICALLY to both callers. RESULT: ours 0.702 (99 hit / 42 miss / 59 "
+            "no-call) vs the in-silico incumbent 0.925 (184/15/1) on the SAME isolates -- DELTA "
+            "-0.222, and a 29.5% abstention rate. Diagnosed failure modes: phase-2 flagellin (H2) "
+            "undetected in 33 of 59 no-calls (Salmonella is diphasic; '4:i:-' cannot resolve where the "
+            "table wants '4:i:1,2'), O-antigen unresolved ('O?', e.g. Infantis/Rissen) or mis-grouped "
+            "(Typhi called 1,3,19 not 9,12), plus a malformed DB antigen name ('22-gene2')"),
+        label_provenance=(
+            "NCBI-PD submitter `serovar` (traditional Kauffmann-White slide agglutination is the gold "
+            "standard for this trait) restricted to reference labs; the in-silico comparator is PD's "
+            "own `computed_types`. LABEL INDEPENDENCE IS CORROBORATED, not assumed: the incumbent "
+            "scores 0.925 against these labels, matching published in-silico-vs-agglutination accuracy "
+            "(~0.95) -- had the labels been copied from the tool it would score ~1.000"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/salmserovar_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "ALREADY DEMOTED BY MEASUREMENT relative to its wrapper claim: it is WORSE than naive use "
+            "of the tool it mimics (-0.222) and abstains on ~30%. Do NOT present it as a drop-in "
+            "serovar caller. Residual circularity is bounded not eliminated (per-isolate agglutination "
+            "provenance is unprovable), but both callers are scored on the SAME labels so the DELTA "
+            "survives contamination even where the absolute levels are optimistic. Re-score after any "
+            "H2/O-antigen DB fix; promote the claim only if the delta closes"),
     ),
 ]
 

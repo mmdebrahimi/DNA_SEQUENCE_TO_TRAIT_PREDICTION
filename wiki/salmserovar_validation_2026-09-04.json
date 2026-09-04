@@ -1,0 +1,200 @@
+{
+  "schema": "salmserovar-validation-v1",
+  "date": "2026-09-04",
+  "cell": "typing:Salmonella:salmserovar",
+  "question": "does the shipped serovar caller match a WET-LAB serovar label, and how does it compare to naive use of the in-silico tool it mimics?",
+  "cohort": {
+    "n_requested": 200,
+    "n_completed": 200,
+    "statuses": {
+      "ok": 200
+    },
+    "n_bioprojects": 29,
+    "largest_source_share": 0.125,
+    "passes_source_diversity_bar": true,
+    "n_distinct_serovars": 74
+  },
+  "ours_vs_wetlab_label": {
+    "miss": 42,
+    "no_call": 59,
+    "hit": 99
+  },
+  "ours_accuracy": 0.7021276595744681,
+  "insilico_tool_vs_wetlab_label": {
+    "hit": 184,
+    "miss": 15,
+    "no_call": 1
+  },
+  "tool_accuracy": 0.9246231155778895,
+  "ours_vs_insilico_tool": {
+    "miss": 43,
+    "no_call": 59,
+    "hit": 98
+  },
+  "faithfulness": 0.6950354609929078,
+  "delta_ours_minus_incumbent": -0.22249545600342135,
+  "equivalence_reasons": {
+    "not-equivalent": 42,
+    "caller returned no serovar": 59,
+    "exact-after-notation-normalisation": 99
+  },
+  "sample_misses": [
+    {
+      "asm": "GCA_009152955.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_016328505.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_014758405.1",
+      "label": "hvittingfoss",
+      "ours": "II 16:b:e,n,x",
+      "tool": "Hvittingfoss"
+    },
+    {
+      "asm": "GCA_009144565.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_008112745.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_016369685.1",
+      "label": "bovismorbificans",
+      "ours": "Hindmarsh",
+      "tool": "Bovismorbificans"
+    },
+    {
+      "asm": "GCA_009086365.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_007383525.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_009123945.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_009099205.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_009032025.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_009324015.1",
+      "label": "muenchen",
+      "ours": "Umbadah",
+      "tool": "Muenchen"
+    },
+    {
+      "asm": "GCA_009471725.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_009283685.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_007654475.1",
+      "label": "enteritidis",
+      "ours": "Hillingdon",
+      "tool": "Enteritidis"
+    },
+    {
+      "asm": "GCA_010555225.1",
+      "label": "johannesburg",
+      "ours": "Agoueve",
+      "tool": "Cubana"
+    },
+    {
+      "asm": "GCA_008981725.1",
+      "label": "schwarzengrund",
+      "ours": "Wanatah",
+      "tool": "Schwarzengrund"
+    },
+    {
+      "asm": "GCA_007853055.1",
+      "label": "kiambu",
+      "ours": "Korlebu",
+      "tool": "Kiambu"
+    },
+    {
+      "asm": "GCA_016324325.1",
+      "label": "typhimurium",
+      "ours": "Stratford",
+      "tool": "Typhimurium"
+    },
+    {
+      "asm": "GCA_008537895.1",
+      "label": "derby",
+      "ours": "Rideau",
+      "tool": "Derby"
+    },
+    {
+      "asm": "GCA_008535055.1",
+      "label": "kentucky",
+      "ours": "Taksony",
+      "tool": "Kentucky"
+    },
+    {
+      "asm": "GCA_011084375.1",
+      "label": "senftenberg",
+      "ours": "Westhampton",
+      "tool": "Senftenberg"
+    },
+    {
+      "asm": "GCA_010468965.1",
+      "label": "bredeney",
+      "ours": "Parkroyal",
+      "tool": "Bredeney"
+    },
+    {
+      "asm": "GCA_005837185.1",
+      "label": "typhimurium",
+      "ours": "Stratford",
+      "tool": "Typhimurium"
+    },
+    {
+      "asm": "GCA_011471415.1",
+      "label": "schwarzengrund",
+      "ours": "Wanatah",
+      "tool": "Schwarzengrund"
+    }
+  ],
+  "honest_limits": [
+    "The label is NCBI-PD's submitter `serovar` restricted to reference public-health labs. It cannot be proven per isolate that any given string came from slide agglutination; the provenance filter is a judgment.",
+    "Residual circularity is bounded, not eliminated -- but both callers are scored against the SAME labels, so contamination inflates both and the DELTA survives it.",
+    "Equivalence is notation-normalisation plus the committed White-Kauffmann table, applied identically to both callers. It refuses fuzzy near-misses (Newport/Newbrunswick).",
+    "A per-serovar cap flattens the natural prevalence, so this is per-isolate accuracy on a deliberately diverse mix, NOT population-weighted accuracy.",
+    "no_call is reported separately from miss: abstention is not error."
+  ]
+}
