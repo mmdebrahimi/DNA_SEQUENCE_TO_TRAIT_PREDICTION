@@ -40,7 +40,18 @@ def call_serotype(fasta: str | Path, db: str | Path, *,
         return {"status": "unavailable", "tool": res.get("tool"), "o_antigen": None, "h_antigen": None,
                 "serotype": None, "antigens": [], "reason": res.get("reason")}
 
-    # best-coverage called allele per antigen
+    # Best called allele per antigen, ranked by IDENTITY then coverage.
+    #
+    # Identity-PRIMARY is load-bearing for the H antigens, and this is the same defect the sibling
+    # Salmonella caller already fixed: flagellin (fliC) alleles CROSS-HYBRIDIZE at near-full COVERAGE
+    # across different antigen types, so a coverage-only tiebreak picks the WRONG antigen while looking
+    # perfectly confident. The true antigen is the highest-IDENTITY hit.
+    #
+    # Measured here before the change (N=150 wet-lab-labelled isolates, 2026-09-04): the H axis
+    # resolved 98.7% of the time but was only 77.0% ACCURATE, and its errors were concentrated rather
+    # than diffuse -- H21->H8 alone was 9 of 34 misses (26%), the top four pairs 65%. That is the
+    # signature of systematic allele confusion, not noise. The O axis, which uses wzx/wzy rather than
+    # flagellin and cross-hybridizes far less, was 93.1% accurate.
     ag_best: dict[str, dict] = {}
     for allele_id, hit in res["per_allele"].items():
         if not hit["called"]:
@@ -48,15 +59,16 @@ def call_serotype(fasta: str | Path, db: str | Path, *,
         ag = antigen_of(allele_id)
         if ag is None:
             continue
-        cov = hit["percent_coverage"]
+        key = (hit["percent_identity"], hit["percent_coverage"])
         cur = ag_best.get(ag)
-        if cur is None or cov > cur["percent_coverage"]:
+        if cur is None or key > (cur["percent_identity"], cur["percent_coverage"]):
             ag_best[ag] = {"antigen": ag, "gene": gene_of(allele_id), "best_allele": allele_id,
-                           "percent_identity": hit["percent_identity"], "percent_coverage": cov}
+                           "percent_identity": hit["percent_identity"],
+                           "percent_coverage": hit["percent_coverage"]}
 
     def _top(prefix):
         cands = [v for k, v in ag_best.items() if k.startswith(prefix)]
-        return max(cands, key=lambda v: v["percent_coverage"]) if cands else None
+        return max(cands, key=lambda v: (v["percent_identity"], v["percent_coverage"])) if cands else None
 
     o, h = _top("O"), _top("H")
     o_ag = o["antigen"] if o else None

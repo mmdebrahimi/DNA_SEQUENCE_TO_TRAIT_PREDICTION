@@ -78,3 +78,30 @@ def test_partial_serotype_O_only(tmp_path):
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# --- identity-primary allele selection (fixed 2026-09-04) ---------------------------------------
+# Coverage-only selection let cross-hybridizing fliC alleles win at full coverage, so the caller
+# picked the WRONG H antigen confidently. Measured on 150 wet-lab-labelled isolates: H accuracy
+# 0.770 -> 0.926 (misses 34 -> 11) with resolution unchanged. These pin the rule so it cannot regress
+# to coverage-only, which is the SAME defect the sibling Salmonella caller had already fixed.
+
+def test_selection_prefers_identity_over_coverage():
+    """The true antigen is the highest-IDENTITY hit even when a rival ties on coverage."""
+    import inspect
+    from dna_decode.serotype import runner
+    src = inspect.getsource(runner.call_serotype)
+    assert 'key = (hit["percent_identity"], hit["percent_coverage"])' in src, (
+        "per-antigen selection must be identity-primary")
+    assert 'key=lambda v: (v["percent_identity"], v["percent_coverage"])' in src, (
+        "the cross-antigen _top() tiebreak must ALSO be identity-primary -- fixing only one of the "
+        "two selection points leaves the bug live")
+    assert 'cov > cur["percent_coverage"]' not in src, "coverage-only selection must not return"
+
+
+def test_the_sibling_salmonella_caller_uses_the_same_rule():
+    """The defect existed because the fix was never propagated; pin both so they cannot diverge."""
+    import inspect
+    from dna_decode.salmserovar import runner as salm
+    assert 'key = (hit["percent_identity"], hit["percent_coverage"])' in inspect.getsource(
+        salm._best_per_axis)

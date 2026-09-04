@@ -1,0 +1,244 @@
+{
+  "schema": "serotype-oh-validation-v1",
+  "date": "2026-09-04",
+  "cell": "typing:Escherichia_coli:serotype",
+  "hypothesis": "the O-antigen axis is the systematic weak point of the serotyping cells, as suggested by the Salmonella serovar result (H often right where O failed)",
+  "cohort": {
+    "source": "https://ftp.ncbi.nlm.nih.gov/pathogen/Results/Escherichia_coli_Shigella/latest_snps/Metadata/PDG000000004.6281.metadata.tsv",
+    "funnel": {
+      "rows": 250001,
+      "has_O_label": 6343,
+      "has_OH_label": 4388,
+      "has_assembly": 6186
+    },
+    "n": 150,
+    "n_distinct_O": 55,
+    "n_with_H_label": 150,
+    "n_bioprojects": 33,
+    "largest_source_share": 0.16666666666666666,
+    "passes_source_diversity_bar": true
+  },
+  "n_called": 150,
+  "statuses": {
+    "ok": 150
+  },
+  "O_axis": {
+    "hit": 126,
+    "no_call": 19,
+    "miss": 5
+  },
+  "H_axis": {
+    "hit": 137,
+    "miss": 11,
+    "no_call": 2
+  },
+  "O_accuracy": 0.9618320610687023,
+  "H_accuracy": 0.9256756756756757,
+  "O_resolved_rate": 0.8733333333333333,
+  "H_resolved_rate": 0.9866666666666667,
+  "resolved_gap_H_minus_O": 0.1133333333333334,
+  "accuracy_gap_H_minus_O": -0.03615638539302668,
+  "verdict": "O_AXIS_IS_THE_WEAK_ONE_REPRODUCES",
+  "why": "the O antigen resolves on 87.3% of scoreable isolates against the H antigen's 98.7% (gap +0.113) -- the same asymmetry seen in the Salmonella cell, on an independent cell with a different allele database. The weakness travels with the O-antigen axis, not with one caller.",
+  "sample_misses": [
+    {
+      "asm": "GCA_012751735.1",
+      "axis": "H",
+      "label": "H17",
+      "call": "H4"
+    },
+    {
+      "asm": "GCA_017783885.1",
+      "axis": "H",
+      "label": "H-",
+      "call": "H17"
+    },
+    {
+      "asm": "GCA_012732985.1",
+      "axis": "H",
+      "label": "H17",
+      "call": "H4"
+    },
+    {
+      "asm": "GCA_900447975.1",
+      "axis": "H",
+      "label": "H-",
+      "call": "H4"
+    },
+    {
+      "asm": "GCA_012501955.1",
+      "axis": "H",
+      "label": "H-",
+      "call": "H8"
+    },
+    {
+      "asm": "GCA_012756635.1",
+      "axis": "H",
+      "label": "H17",
+      "call": "H4"
+    },
+    {
+      "asm": "GCA_012758995.1",
+      "axis": "H",
+      "label": "H17",
+      "call": "H4"
+    },
+    {
+      "asm": "GCA_012745895.1",
+      "axis": "O",
+      "label": "O179",
+      "call": "O8"
+    },
+    {
+      "asm": "GCA_017817715.1",
+      "axis": "H",
+      "label": "H-",
+      "call": "H28"
+    },
+    {
+      "asm": "GCA_012753475.1",
+      "axis": "O",
+      "label": "O42",
+      "call": "O28"
+    },
+    {
+      "asm": "GCA_011032485.1",
+      "axis": "O",
+      "label": "O121",
+      "call": "O17"
+    },
+    {
+      "asm": "GCA_011032485.1",
+      "axis": "H",
+      "label": "H7",
+      "call": "H18"
+    },
+    {
+      "asm": "GCA_021501255.1",
+      "axis": "O",
+      "label": "O25",
+      "call": "O16"
+    },
+    {
+      "asm": "GCA_021501255.1",
+      "axis": "H",
+      "label": "H4",
+      "call": "H5"
+    },
+    {
+      "asm": "GCA_011032625.1",
+      "axis": "O",
+      "label": "O121",
+      "call": "O9"
+    },
+    {
+      "asm": "GCA_011032625.1",
+      "axis": "H",
+      "label": "H7",
+      "call": "H4"
+    }
+  ],
+  "honest_limits": [
+    "NO IN-SILICO INCUMBENT: NCBI-PD does not populate `computed_types` for E. coli, so unlike the Salmonella cell there is no comparator and the ABSOLUTE accuracy here is much less interpretable. The internally-controlled O-vs-H contrast is what this run supports.",
+    "The label is PD's submitter `serovar` parsed to a strict O:H shape. E. coli O:H serotyping is traditionally agglutination-based, but per-isolate provenance is unprovable here and -- unlike the Salmonella run -- there is no incumbent score to use as a circularity probe.",
+    "O-only labels are scored on the O axis alone; they cannot score H. The two axes therefore have DIFFERENT denominators, which is why resolved-rate and accuracy are reported per axis rather than pooled.",
+    "'H-' (non-motile) is a MEANINGFUL label, not a missing value, and is scored as such.",
+    "Per-O-group and per-BioProject caps deliberately flatten prevalence away from O157."
+  ],
+  "selection_rule_fix": {
+    "defect": "coverage-only allele selection (the SAME defect the sibling Salmonella caller had already fixed with identity-primary, never propagated here)",
+    "mechanism": "fliC flagellin alleles cross-hybridize at near-full COVERAGE across antigen types, so a coverage tiebreak picks the wrong antigen while looking confident",
+    "confirmed_by": "code inspection of dna_decode/serotype/runner.py before the change, not inferred from the numbers alone",
+    "before": {
+      "O": {
+        "hit": 122,
+        "no_call": 19,
+        "miss": 9
+      },
+      "H": {
+        "hit": 114,
+        "miss": 34,
+        "no_call": 2
+      },
+      "O_accuracy": 0.9313,
+      "H_accuracy": 0.7703
+    },
+    "after": {
+      "O": {
+        "hit": 126,
+        "no_call": 19,
+        "miss": 5
+      },
+      "H": {
+        "hit": 137,
+        "miss": 11,
+        "no_call": 2
+      },
+      "O_accuracy": 0.9618,
+      "H_accuracy": 0.9257
+    },
+    "H_accuracy_gain": 0.1554,
+    "O_accuracy_gain": 0.0305,
+    "resolution_unchanged": "the fix changes WHICH allele is picked, not WHETHER one is -- no_call counts are identical",
+    "top_H_confusions_before": [
+      {
+        "label": "H21",
+        "called": "H8",
+        "n": 9
+      },
+      {
+        "label": "H8",
+        "called": "H27",
+        "n": 5
+      },
+      {
+        "label": "H17",
+        "called": "H4",
+        "n": 5
+      },
+      {
+        "label": "H30",
+        "called": "H32",
+        "n": 3
+      },
+      {
+        "label": "H-",
+        "called": "H4",
+        "n": 2
+      }
+    ],
+    "top_H_confusions_after": [
+      {
+        "label": "H17",
+        "called": "H4",
+        "n": 4
+      },
+      {
+        "label": "H-",
+        "called": "H17",
+        "n": 1
+      },
+      {
+        "label": "H-",
+        "called": "H4",
+        "n": 1
+      },
+      {
+        "label": "H-",
+        "called": "H8",
+        "n": 1
+      },
+      {
+        "label": "H-",
+        "called": "H28",
+        "n": 1
+      }
+    ],
+    "same_pattern_present_elsewhere_NOT_fixed": {
+      "pneumoserotype": "key=(coverage,identity) -- coverage-PRIMARY",
+      "plasmid": "cov > cur[percent_coverage] -- coverage-ONLY",
+      "ktype": "already identity-primary, correct",
+      "why_not_fixed": "no wet-lab validation cohort exists for either, and the biology differs (whole-locus cps reference matching / Inc replicon families vs per-antigen flagellin alleles), so identity-primary is NOT automatically correct there. Changing them blind would be an unvalidated behaviour change."
+    }
+  }
+}

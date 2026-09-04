@@ -374,7 +374,8 @@ _PGX_CONTRACTS: list[CellContract] = [
 # (track, trait, organism-scope, one-line claim, native-abstention)
 _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     ("typing", "pathotype", "Escherichia_coli", "E. coli pathotype compatibility call + abstention (VirulenceFinder resolver)", "ABSTAIN"),
-    ("typing", "serotype", "Escherichia_coli", "E. coli O:H serotype (SerotypeFinder allele DB)", "O?"),
+    # serotype MOVED to _TRAIT_CONTRACTS 2026-09-04: measured against wet-lab O:H labels, which found
+    # and closed a live coverage-only selection bug. It has an individually-earned tier now.
     ("typing", "mlst", "bacteria", "multi-locus sequence type (PubMLST allele->profile->ST)", "ABSTAIN"),
     ("typing", "ktype", "Klebsiella", "Klebsiella K/O capsule type (Kaptive)", "ABSTAIN"),
     # salmserovar MOVED to _TRAIT_CONTRACTS 2026-09-04: it now has an individually-earned tier
@@ -1102,6 +1103,40 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "provenance is unprovable), but both callers are scored on the SAME labels so the DELTA "
             "survives contamination even where the absolute levels are optimistic. Re-score after any "
             "H2/O-antigen DB fix; promote the claim only if the delta closes"),
+    ),
+    CellContract(
+        cell_id="typing:Escherichia_coli:serotype", track="typing", route="dna-serotype",
+        organism="Escherichia_coli", target="serotype",
+        claim="E. coli O:H serotype from blastn over the SerotypeFinder allele DB",
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
+        claim_status="measured_vs_wetlab_OH_labels_and_a_live_selection_bug_was_found_and_fixed",
+        validation_slice=(
+            "N=150 NCBI-PD isolates with a strict O:H label, 55 O-groups, 33 BioProjects, "
+            "largest-source share 0.167 (clears the project's own 0.60 bar). Scored 2026-09-04 by "
+            "scripts/serotype_oh_validate.py, O and H axes SEPARATELY (different denominators; never "
+            "pooled). THE RUN FOUND A LIVE DEFECT: the caller selected alleles by COVERAGE ONLY -- the "
+            "same bug the sibling Salmonella caller had already fixed with identity-primary selection, "
+            "never propagated -- and fliC flagellin alleles cross-hybridize at near-full coverage, so "
+            "the wrong H antigen won confidently. Confirmed by CODE INSPECTION before the fix, not "
+            "inferred from numbers. Same 150 isolates, before -> after: H accuracy 0.770 -> 0.926 "
+            "(misses 34 -> 11), O accuracy 0.931 -> 0.962, resolution UNCHANGED (the rule picks which "
+            "allele, not whether). Misses were concentrated not diffuse (H21->H8 was 9 of 34 = 26%), "
+            "which is what pointed at systematic allele confusion"),
+        label_provenance=(
+            "NCBI-PD submitter `serovar` parsed to a strict O:H shape; E. coli O:H serotyping is "
+            "traditionally slide agglutination. WEAKER PROVENANCE THAN THE SALMONELLA CELL: PD does "
+            "NOT populate `computed_types` for E. coli, so there is no in-silico incumbent -- neither "
+            "as a comparator nor as the circularity probe the Salmonella run used"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="O?",
+        falsifier_ref="scripts/serotype_oh_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "The ABSOLUTE accuracy is weakly anchored (no incumbent); what is solid is the "
+            "internally-controlled before/after on a fixed cohort. The before/after is NOT blinded -- "
+            "the fix was chosen after seeing the failure pattern -- so treat +0.155 as a strong but "
+            "not pre-registered result. Re-score if the allele DB changes. The SAME coverage-primary "
+            "pattern is present in pneumoserotype and plasmid and was deliberately NOT fixed there "
+            "(no validation cohort, and different biology: whole-locus cps / Inc replicon matching is "
+            "not per-antigen flagellin) -- do not propagate the fix without measuring it"),
     ),
 ]
 
