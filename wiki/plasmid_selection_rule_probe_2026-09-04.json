@@ -1,0 +1,409 @@
+{
+  "schema": "plasmid-selection-rule-probe-v1",
+  "date": "2026-09-04",
+  "question": "does coverage-primary vs identity-primary change the plasmid caller's output?",
+  "structural_prediction": "the caller reports a SET of replicon families -- every family with a called allele -- so the ordering should only pick WHICH allele represents an already-reported family, never the set itself",
+  "prediction_survived": true,
+  "thresholds": {
+    "identity": 80.0,
+    "coverage": 60.0
+  },
+  "n_assemblies_scored": 40,
+  "total_replicon_calls": 446,
+  "n_assemblies_with_different_replicon_set": 0,
+  "n_assemblies_with_moved_best_allele": 12,
+  "rows": [
+    {
+      "asm": "GCA_000258635.1",
+      "status": "ok",
+      "n_replicons": 11,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_000350005.1",
+      "status": "ok",
+      "n_replicons": 17,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_000353545.1",
+      "status": "ok",
+      "n_replicons": 18,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_000442085.2",
+      "status": "ok",
+      "n_replicons": 15,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_000617405.2",
+      "status": "ok",
+      "n_replicons": 13,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_000618925.2",
+      "status": "ok",
+      "n_replicons": 14,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_000948515.1",
+      "status": "ok",
+      "n_replicons": 4,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_000948835.1",
+      "status": "ok",
+      "n_replicons": 12,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_001012615.1",
+      "status": "ok",
+      "n_replicons": 16,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_001455025.1",
+      "status": "ok",
+      "n_replicons": 17,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_002765855.1",
+      "status": "ok",
+      "n_replicons": 13,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_002765875.1",
+      "status": "ok",
+      "n_replicons": 6,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_002766015.1",
+      "status": "ok",
+      "n_replicons": 5,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_002767405.1",
+      "status": "ok",
+      "n_replicons": 6,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_002769415.1",
+      "status": "ok",
+      "n_replicons": 5,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_002769835.1",
+      "status": "ok",
+      "n_replicons": 8,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_003362635.1",
+      "status": "ok",
+      "n_replicons": 16,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_004664315.1",
+      "status": "ok",
+      "n_replicons": 14,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_004664425.1",
+      "status": "ok",
+      "n_replicons": 13,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_004664435.1",
+      "status": "ok",
+      "n_replicons": 14,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_004664565.1",
+      "status": "ok",
+      "n_replicons": 13,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_011032165.1",
+      "status": "ok",
+      "n_replicons": 15,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_011032275.1",
+      "status": "ok",
+      "n_replicons": 12,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_011032335.1",
+      "status": "ok",
+      "n_replicons": 9,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_011032485.1",
+      "status": "ok",
+      "n_replicons": 10,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_011032625.1",
+      "status": "ok",
+      "n_replicons": 0,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012018425.1",
+      "status": "ok",
+      "n_replicons": 13,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012499825.1",
+      "status": "ok",
+      "n_replicons": 14,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012501955.1",
+      "status": "ok",
+      "n_replicons": 11,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012732985.1",
+      "status": "ok",
+      "n_replicons": 15,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    },
+    {
+      "asm": "GCA_012733475.1",
+      "status": "ok",
+      "n_replicons": 2,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012744775.1",
+      "status": "ok",
+      "n_replicons": 16,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012745135.1",
+      "status": "ok",
+      "n_replicons": 12,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012745815.1",
+      "status": "ok",
+      "n_replicons": 12,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012745895.1",
+      "status": "ok",
+      "n_replicons": 2,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012748035.2",
+      "status": "ok",
+      "n_replicons": 13,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012750705.1",
+      "status": "ok",
+      "n_replicons": 11,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncX1"
+      ]
+    },
+    {
+      "asm": "GCA_012751115.1",
+      "status": "ok",
+      "n_replicons": 1,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012751135.1",
+      "status": "ok",
+      "n_replicons": 12,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": []
+    },
+    {
+      "asm": "GCA_012751735.1",
+      "status": "ok",
+      "n_replicons": 16,
+      "replicon_set_identical": true,
+      "set_only_in_coverage_first": [],
+      "set_only_in_identity_first": [],
+      "families_whose_best_allele_moved": [
+        "IncB/O/K/Z"
+      ]
+    }
+  ],
+  "verdict": "STRUCTURALLY_INERT_FOR_THE_REPORTED_SET",
+  "why": "the reported replicon set is IDENTICAL under both orderings on all 40 assemblies (446 replicon calls). The structural prediction survived: the ordering only decides WHICH allele represents a family the caller has already decided to report, so it moves secondary fields (best_allele / the printed identity+coverage) on 12 assemblies but never the primary output. The E. coli fix does NOT transfer here, and no labelled cohort is needed to establish that.",
+  "honest_limits": [
+    "This answers WHETHER the ordering changes the answer, NOT which ordering is better. The latter needs wet-lab replicon labels (PCR-based replicon typing), which are rare in public metadata -- but it is only needed if the set actually moves.",
+    "Secondary fields DO move (best_allele and the identity/coverage printed per family). A consumer that reads those rather than the replicon set is affected even when the set is not.",
+    "Assemblies are E. coli and Salmonella from other cohorts, not a plasmid-focused set; replicon content is therefore whatever those genomes happen to carry.",
+    "One DB build (enterobacteriales). A different allele set could behave differently."
+  ]
+}

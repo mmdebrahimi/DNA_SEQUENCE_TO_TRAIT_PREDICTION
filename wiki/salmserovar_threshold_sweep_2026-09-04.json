@@ -156,5 +156,67 @@
     "why_this_is_NOT_rule_breaking": "the design was CHOOSE on SELECT, CHECK on CONFIRM. The check ran and reported the pick is dominated. Acting on that is exactly what the held-out half is FOR. Note also that 40 was NOT selected from CONFIRM -- it was already deployed from an earlier, independent pre-registered run on the full 200, so this compares two pre-existing candidates on held-out data rather than selecting a new winner from the test set.",
     "action": "KEEP the deployed cut 40. Do NOT move to 70.",
     "reusable_lesson": "an anti-overfitting rule can itself be a source of error. A conservative selection rule is correct when candidate differences are noise and WRONG when the response is graded -- so check which regime you are in before trusting the rule's output."
+  },
+  "fine_grid_on_confirm": {
+    "n": 98,
+    "grid": {
+      "55": {
+        "correct": 62,
+        "wrong": 25,
+        "abstain": 11,
+        "accuracy_on_covered": 0.7126436781609196
+      },
+      "50": {
+        "correct": 63,
+        "wrong": 24,
+        "abstain": 11,
+        "accuracy_on_covered": 0.7241379310344828
+      },
+      "45": {
+        "correct": 66,
+        "wrong": 23,
+        "abstain": 9,
+        "accuracy_on_covered": 0.7415730337078652
+      },
+      "42": {
+        "correct": 68,
+        "wrong": 22,
+        "abstain": 8,
+        "accuracy_on_covered": 0.7555555555555555
+      },
+      "40": {
+        "correct": 68,
+        "wrong": 22,
+        "abstain": 8,
+        "accuracy_on_covered": 0.7555555555555555
+      },
+      "38": {
+        "correct": 68,
+        "wrong": 22,
+        "abstain": 8,
+        "accuracy_on_covered": 0.7555555555555555
+      },
+      "35": {
+        "correct": 68,
+        "wrong": 25,
+        "abstain": 5,
+        "accuracy_on_covered": 0.7311827956989247
+      },
+      "32": {
+        "correct": 68,
+        "wrong": 25,
+        "abstain": 5,
+        "accuracy_on_covered": 0.7311827956989247
+      },
+      "30": {
+        "correct": 68,
+        "wrong": 25,
+        "abstain": 5,
+        "accuracy_on_covered": 0.7311827956989247
+      }
+    },
+    "finding": "cuts 42 / 40 / 38 are IDENTICAL (68 correct, 22 wrong) -- 40 sits on a FLAT OPTIMUM. Below 38 the correct count stays at 68 while wrong rises 22 -> 25, so going lower buys nothing and costs accuracy. No cut in the grid beats the deployed value.",
+    "closes": "the optimality debt. 40 is not merely defensible, it is on the optimal plateau [38,42] for this cohort and DB build. Still not a claim about other cohorts.",
+    "note": "computed OFFLINE from the cached permissive blastn pass -- no new alignment work."
   }
 }
