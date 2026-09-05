@@ -1,0 +1,69 @@
+{
+  "schema": "serotype-lineage-disjoint-v1",
+  "date": "2026-09-04",
+  "closes": "the named limit that the +0.106 replication was held out BY ISOLATE, not by lineage -- two accessions can be near-identical genomes",
+  "lineage_unit": "multi-locus sequence type (E. coli Achtman 7-locus). Chosen over Mash because Docker was unavailable AND because ST is the canonical, interpretable lineage unit for this organism",
+  "split_rule": "whole STs assigned to TRAIN/TEST by deterministic hash; no ST on both sides",
+  "n_labelled": 400,
+  "n_scored": 400,
+  "n_excluded_no_complete_st": 2,
+  "n_distinct_st": 145,
+  "largest_st_isolates": 53,
+  "test": {
+    "n_st": 71,
+    "n_isolates": 169
+  },
+  "train": {
+    "n_st": 74,
+    "n_isolates": 229
+  },
+  "test_half": {
+    "coverage_primary": {
+      "O": {
+        "hit": 145,
+        "miss": 3,
+        "no_call": 21,
+        "accuracy": 0.9797297297297297
+      },
+      "H": {
+        "hit": 131,
+        "miss": 36,
+        "no_call": 2,
+        "accuracy": 0.7844311377245509
+      }
+    },
+    "identity_primary": {
+      "O": {
+        "hit": 144,
+        "miss": 4,
+        "no_call": 21,
+        "accuracy": 0.972972972972973
+      },
+      "H": {
+        "hit": 158,
+        "miss": 9,
+        "no_call": 2,
+        "accuracy": 0.9461077844311377
+      }
+    }
+  },
+  "H_gain": 0.16167664670658688,
+  "O_gain": -0.006756756756756688,
+  "n_H_calls_differing_between_rules": 28,
+  "isolate_disjoint_reference_gain": 0.1057,
+  "verdict": "SURVIVES_LINEAGE_DISJOINT",
+  "why": "the fix holds with no sequence type shared between halves (H gain +0.1617). The named isolate-vs-lineage limit is closed in the direction the claim needed.",
+  "honest_limits": [
+    "Isolates without a complete 7-locus ST are EXCLUDED, not pooled -- they cannot be placed disjointly. That shrinks the test set and could bias it toward well-assembled genomes.",
+    "ST is a lineage unit, not a clonality guarantee: two isolates of the SAME ST are near-clonal, but different STs can still be closely related, so this is stronger than isolate-disjoint and weaker than a full phylogenetic split.",
+    "Both rules are scored from ONE alignment pass per genome, so only the sort key differs -- but both share any limitation of that pass.",
+    "The fix is NOT re-chosen here; this only asks whether its gain survives. A smaller number is an honest correction rather than a failure."
+  ],
+  "comparison_to_the_isolate_disjoint_run": {
+    "isolate_disjoint_H_gain": 0.1057,
+    "lineage_disjoint_H_gain": 0.16167664670658688,
+    "reading": "the gain is at least as large with lineage overlap removed, so lineage overlap was NOT carrying the earlier result -- the named limit resolves in the direction the claim needed.",
+    "do_not_over_read": "the two numbers are NOT directly comparable as estimates of one quantity: different test sets (250 isolate-disjoint vs 169 lineage-disjoint), different composition. The correct claim is \"survives lineage-disjointness\", NOT \"the fix is bigger than we thought\".",
+    "o_axis_consistency": "the small O-axis cost replicates too (-0.0068 here vs -0.0086 isolate-disjoint), so the trade-off is stable across both splits rather than an artifact of one."
+  }
+}

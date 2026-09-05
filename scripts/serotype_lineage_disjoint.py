@@ -50,6 +50,43 @@ SERO_DB = ROOT / "data" / "serotypefinder_db" / "serotypefinder.fsa"
 MLST_DIR = ROOT / "data" / "mlst_db" / "ecoli_achtman"
 
 
+def lineage_side(st: str) -> str:
+    """Which half a sequence type belongs to.
+
+    DISJOINTNESS IS BY CONSTRUCTION, NOT BY OBSERVATION. The side is a deterministic function of the ST
+    alone, so no ST can land on both halves -- there is no code path that could place one there. That is
+    a stronger guarantee than checking the two lists for overlap after the fact, which would only tell
+    you it did not happen this time.
+    """
+    return "TEST" if int(hashlib.md5(f"st{st}".encode()).hexdigest(), 16) % 2 == 0 else "TRAIN"
+
+
+def verdict_for(n_flips: int, h_gain: float, n_test: int) -> tuple[str, str]:
+    """The four branches, written BEFORE the run so the result could not choose its own reading.
+
+    The power guard comes FIRST and outranks the sign of the gain: if the two orderings never produced a
+    different H call, a gain of 0 is an absence of evidence, not evidence the fix fails.
+    """
+    if n_flips == 0:
+        return ("UNDERPOWERED_RULES_NEVER_DIFFERED",
+                f"the two orderings produced identical H calls on all {n_test} test isolates, so the "
+                "split never exercised the difference. A gain of 0 here is an absence of evidence, NOT "
+                "evidence the fix fails.")
+    if h_gain <= 0:
+        return ("FALSIFIED_ON_LINEAGE_DISJOINT",
+                f"the fix does NOT survive a lineage-disjoint split (H gain {h_gain:+.4f}). The earlier "
+                "isolate-held-out gain was carried by lineage overlap, and the deployed rule should be "
+                "reconsidered.")
+    if h_gain >= 0.05:
+        return ("SURVIVES_LINEAGE_DISJOINT",
+                f"the fix holds with no sequence type shared between halves (H gain {h_gain:+.4f}). The "
+                "named isolate-vs-lineage limit is closed in the direction the claim needed.")
+    return ("SURVIVES_BUT_SMALLER_ON_LINEAGE_DISJOINT",
+            f"the gain is positive but attenuated ({h_gain:+.4f} vs +0.1057 isolate-disjoint), so "
+            "part of the earlier margin WAS lineage overlap. The fix still helps; quote the "
+            "lineage-disjoint number.")
+
+
 def call_both_rules(per_allele: dict) -> dict:
     """Both orderings from ONE set of alignments -- only the sort key differs."""
     out = {}
@@ -169,9 +206,7 @@ def main() -> int:
     for r in typed:
         by_st[str(r["st"])].append(r)
 
-    def side(st: str) -> str:
-        return "TEST" if int(hashlib.md5(f"st{st}".encode()).hexdigest(), 16) % 2 == 0 else "TRAIN"
-
+    side = lineage_side
     test = [r for st, rs in by_st.items() if side(st) == "TEST" for r in rs]
     train = [r for st, rs in by_st.items() if side(st) == "TRAIN" for r in rs]
     st_test = {st for st in by_st if side(st) == "TEST"}
@@ -228,25 +263,7 @@ def main() -> int:
                   if norm_call(r["calls"]["identity_primary"]["H"], "H")
                   != norm_call(r["calls"]["coverage_primary"]["H"], "H"))
     print(f"  H calls that DIFFER between the rules on the test half: {n_flips}")
-    if n_flips == 0:
-        verdict = "UNDERPOWERED_RULES_NEVER_DIFFERED"
-        why = (f"the two orderings produced identical H calls on all {len(test)} test isolates, so the "
-               "split never exercised the difference. A gain of 0 here is an absence of evidence, NOT "
-               "evidence the fix fails.")
-    elif h_gain <= 0:
-        verdict = "FALSIFIED_ON_LINEAGE_DISJOINT"
-        why = (f"the fix does NOT survive a lineage-disjoint split (H gain {h_gain:+.4f}). The earlier "
-               "isolate-held-out gain was carried by lineage overlap, and the deployed rule should be "
-               "reconsidered.")
-    elif h_gain >= 0.05:
-        verdict = "SURVIVES_LINEAGE_DISJOINT"
-        why = (f"the fix holds with no sequence type shared between halves (H gain {h_gain:+.4f}). The "
-               "named isolate-vs-lineage limit is closed in the direction the claim needed.")
-    else:
-        verdict = "SURVIVES_BUT_SMALLER_ON_LINEAGE_DISJOINT"
-        why = (f"the gain is positive but attenuated ({h_gain:+.4f} vs +0.1057 isolate-disjoint), so "
-               "part of the earlier margin WAS lineage overlap. The fix still helps; quote the "
-               "lineage-disjoint number.")
+    verdict, why = verdict_for(n_flips, h_gain, len(test))
     print(f"\nVERDICT: {verdict}\n  {why}")
 
     out = {"schema": "serotype-lineage-disjoint-v1", "date": _date.today().isoformat(),
