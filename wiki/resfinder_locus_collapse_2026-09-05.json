@@ -1,0 +1,42 @@
+{
+  "schema": "resfinder-locus-collapse-v1",
+  "date": "2026-09-05",
+  "question": "does collapsing ResFinder allele hits to one call per genomic LOCUS improve agreement with an independent curated caller (AMRFinder)?",
+  "comparator": "AMRFinder committed per-genome output for the SAME accession. Independent curated implementation; acquired genes only (POINT rows excluded, since a ResFinder allele DB cannot represent a point mutation).",
+  "n_genomes": 648,
+  "summary": {
+    "aminoglycoside": {
+      "n_genomes": 648,
+      "total_alleles_called": 11705,
+      "mean_genes_old": 9.158950617283951,
+      "mean_genes_new": 2.4367283950617282,
+      "mean_genes_amrfinder": 2.455246913580247,
+      "jaccard_vs_amrfinder_exact_old": 0.41258143278556536,
+      "jaccard_vs_amrfinder_exact_new": 0.7785793095793094,
+      "jaccard_vs_amrfinder_normalized_old": 0.41258143278556536,
+      "jaccard_vs_amrfinder_normalized_new": 0.7785793095793094,
+      "n_genomes_where_old_multireported_a_locus": 400
+    },
+    "beta-lactam": {
+      "n_genomes": 648,
+      "total_alleles_called": 107653,
+      "mean_genes_old": 165.52469135802468,
+      "mean_genes_new": 1.587962962962963,
+      "mean_genes_amrfinder": 1.9351851851851851,
+      "jaccard_vs_amrfinder_exact_old": 0.01004571144990494,
+      "jaccard_vs_amrfinder_exact_new": 0.426899150232484,
+      "jaccard_vs_amrfinder_normalized_old": 0.012539994544812407,
+      "jaccard_vs_amrfinder_normalized_new": 0.775388007054674,
+      "n_genomes_where_old_multireported_a_locus": 522
+    }
+  },
+  "verdict": "LOCUS_COLLAPSE_IMPROVES_AGREEMENT_WITH_AN_INDEPENDENT_CALLER",
+  "why": "collapsing called alleles to one entry per genomic locus raises agreement with AMRFinder in EVERY drug class measured, on identical inputs. The pre-fix caller reported a single locus as many separately-present genes, which for beta-lactamases means reporting ESBLs in a genome that carries only a narrow-spectrum enzyme.",
+  "honest_limits": [
+    "The comparator is a TOOL, not a wet-lab label. This measures agreement with an independent implementation, NOT correctness -- both callers could be wrong together. The cell stays FAITHFUL_TO_TOOL; what changes is WHICH tool it is faithful to and how closely.",
+    "Only two ResFinder class DBs are committed (aminoglycoside, beta-lactam), so this says nothing about the other resistance classes the real ResFinder DB covers.",
+    "The normalized Jaccard strips a trailing variant letter (blaTEM-1B -> blaTEM-1) to avoid scoring a correct agreement as a miss. It is the LENIENT reading; the exact number is reported beside it.",
+    "Genomes are whatever this project already had cached, drawn from AMR cohorts -- they are enriched for resistance and are NOT a random sample of the species.",
+    "Locus clustering uses a 50% reciprocal-overlap bar on the shorter interval. A tandem array whose copies overlap more than that would still collapse into one call."
+  ]
+}

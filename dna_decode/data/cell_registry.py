@@ -385,7 +385,10 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     # report card recorded INDEPENDENT Quellung validation (n=230). Under-claiming is as much a
     # trust-surface falsehood as over-claiming, so it gets its individually-earned tier.
     ("finder", "plasmid", "bacteria", "plasmid Inc-replicon typing (PlasmidFinder allele DB)", "ABSTAIN"),
-    ("finder", "resfinder", "bacteria", "acquired AMR genes (ResFinder allele DB) — independent cross-tool check vs amr", "ABSTAIN"),
+    # resfinder MOVED to _TRAIT_CONTRACTS 2026-09-05: the shared faithful-to-tool default asserts the
+    # cell was never measured, which stopped being true -- it was measured against AMRFinder on 648
+    # genomes, a SEVERE live defect was found and fixed, and the default would hide both. The TIER is
+    # unchanged (the comparator is a tool, not a wet-lab label); what it now carries is the evidence.
     ("finder", "pointfinder", "Escherichia_coli", "chromosomal AMR point mutations (PointFinder) — independent vs amr POINT", "ABSTAIN"),
     ("finder", "disinfinder", "bacteria", "biocide/disinfectant resistance genes (DisinFinder)", "ABSTAIN"),
 ]
@@ -395,6 +398,50 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 # --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
 # --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
 _TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="finder:bacteria:resfinder", track="finder", route="dna-resfinder",
+        organism="bacteria", target="resfinder",
+        claim="acquired AMR genes from blastn over the ResFinder allele DB, one call per genomic LOCUS",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="cross_tool_agreement_measured_and_a_severe_overcall_was_found_and_fixed",
+        validation_slice=(
+            "648 cached assemblies that also carry a committed AMRFinder run, scored 2026-09-05 by "
+            "scripts/resfinder_locus_collapse_validate.py; both rules from ONE blastn pass per genome so "
+            "only the grouping differs. THE RUN FOUND A SEVERE LIVE DEFECT. beta-lactamase variants "
+            "differ by 1-3 point mutations, so a single blaTEM locus matches ~180 catalog TEM alleles "
+            "above the 90% identity bar -- and the caller keyed its output on the ALLELE name, so every "
+            "one cleared independently and was reported as a separately present gene. Mean beta-lactam "
+            "genes/genome was 165.52 against AMRFinder's 1.94; on the reference genome 191 called "
+            "alleles resolved to 2 actual loci. NOT COSMETIC: a genome carrying only narrow-spectrum "
+            "blaTEM-1B (100.0/100.0) was ALSO reported to carry blaTEM-52B/52C/12/10/24 at 99.0-99.8% "
+            "identity -- ESBLs -- which is a wrong clinical reading of the genome. FIXED by collapsing "
+            "to one call per genomic LOCUS (position, not name: blaOXA-1 and blaOXA-48 share a prefix, "
+            "are functionally unrelated and can genuinely co-occur), winner IDENTITY-PRIMARY, clustering "
+            "GREEDY-REPRESENTATIVE so a real tandem array cannot chain into one call. Before -> after "
+            "vs AMRFinder: beta-lactam mean genes 165.52 -> 1.59 (AMRFinder 1.94), normalized Jaccard "
+            "0.0125 -> 0.7754; aminoglycoside 9.16 -> 2.44 (AMRFinder 2.46), Jaccard 0.4126 -> 0.7786. "
+            "The defect fired on 522/648 genomes in the beta-lactam class"),
+        label_provenance=(
+            "AMRFinder's committed per-genome output for the SAME accession -- an independent curated "
+            "implementation, acquired genes only (POINT rows excluded: a ResFinder allele DB cannot "
+            "represent a point mutation). A TOOL, NOT A WET-LAB LABEL, which is why the tier does not "
+            "move: this measures agreement with an independent caller, never correctness -- both could "
+            "be wrong together"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/resfinder_locus_collapse_validate.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL -- an independent wet-lab label (PCR gene detection) would be needed "
+            "to earn a measured tier, and none is reachable free. Quote the NORMALIZED Jaccard as the "
+            "lenient reading and the exact one beside it (beta-lactam exact 0.4269 vs normalized 0.7754; "
+            "the gap is naming, blaTEM-1B vs AMRFinder's blaTEM-1). Post-fix the caller sits slightly "
+            "BELOW AMRFinder (1.59 vs 1.94 beta-lactam genes/genome), so some under-call remains -- "
+            "reported, not buried. Only 2 class DBs are committed (aminoglycoside, beta-lactam); this "
+            "says nothing about the other ResFinder classes. Genomes are AMR-cohort leftovers, ENRICHED "
+            "for resistance and not a random species sample. `disinfinder` shares the defective pattern "
+            "LITERALLY (it imports resfinder.gene_of) and was MEASURED before being touched: 16 alleles "
+            "in its DB, 40 genomes, old == new (34 loci), 0 multi-reported -- inert, left UNCHANGED, "
+            "re-measure if that DB grows. Re-score if either allele DB changes"),
+    ),
     CellContract(
         cell_id="typing:arabidopsis:flowering", track="typing", route="dna-flowering",
         organism="Arabidopsis_thaliana", target="flowering",
