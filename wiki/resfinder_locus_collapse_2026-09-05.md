@@ -99,8 +99,13 @@ One real bug out of four suspects, again. **The pattern-match is a lead, not a d
   other classes the full ResFinder DB covers.
 - Genomes are whatever this project had cached, drawn from AMR cohorts — **enriched for resistance**, not
   a random sample.
-- AMRFinder `POINT` rows are excluded from the comparison: a ResFinder allele DB cannot represent a point
-  mutation, so scoring against them would charge the caller with missing something it cannot express.
+- **Correction to this memo's first version.** It said AMRFinder `POINT` rows were excluded so the caller
+  would not be charged with missing something an allele DB cannot represent. The *reasoning* is right, but
+  the control was **vacuous here**: measured across all 1,818 committed runs, `main.tsv` `Type` takes only
+  `AMR` (26,219 rows) and `STRESS` (1,220) — **zero POINT rows**. AMRFinder writes its point-mutation
+  screen to a separate `mutations.tsv` that this comparison never reads. Nothing was excluded, and
+  presenting it as an active control over-claimed it. The filter stays in the code as a guard for other
+  AMRFinder output shapes.
 - The 50% reciprocal-overlap bar means a tandem array whose copies overlap more than that would still
   collapse into one call.
 

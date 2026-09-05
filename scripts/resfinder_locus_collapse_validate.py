@@ -76,11 +76,16 @@ def new_rule_genes(called: list[tuple[str, dict]]) -> set[str]:
 
 
 def amrfinder_genes(main_tsv: Path, amr_class: str) -> set[str]:
-    """Acquired genes AMRFinder called in this class. Point mutations are EXCLUDED.
+    """Acquired genes AMRFinder called in this class.
 
-    A ResFinder allele DB contains acquired GENES only, so scoring it against AMRFinder rows that are
-    point mutations (`Element type` == POINT, e.g. the promoter variant blaTEMp_G162T) would charge the
-    caller with missing something it cannot represent.
+    The POINT filter below is a NO-OP ON THIS DATA and is kept only as a guard for other AMRFinder
+    output shapes. Measured 2026-09-05 across all 1818 committed runs: `main.tsv` `Type` takes only
+    AMR (26,219 rows) and STRESS (1,220) -- there are ZERO POINT rows. AMRFinder writes its
+    point-mutation screen to a SEPARATE `mutations.tsv`, which this comparison never reads. So the
+    original framing ("point mutations are excluded, which would otherwise charge the caller with
+    missing something it cannot represent") described a control that excluded nothing. The REASONING
+    is still right -- an allele DB cannot represent a point mutation -- but on this data the exclusion
+    was never load-bearing, and saying otherwise over-claims a control.
     """
     out = set()
     with open(main_tsv, encoding="utf-8", errors="replace") as f:

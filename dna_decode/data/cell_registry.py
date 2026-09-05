@@ -473,8 +473,11 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "The defect fired on 522/648 genomes in the beta-lactam class"),
         label_provenance=(
             "AMRFinder's committed per-genome output for the SAME accession -- an independent curated "
-            "implementation, acquired genes only (POINT rows excluded: a ResFinder allele DB cannot "
-            "represent a point mutation). A TOOL, NOT A WET-LAB LABEL, which is why the tier does not "
+            "implementation, acquired genes only. (The code's POINT-row exclusion is a NO-OP on this "
+            "data and was over-claimed as a control in the first write-up: across all 1818 runs "
+            "main.tsv Type is only AMR/STRESS with ZERO POINT rows -- AMRFinder writes its point screen "
+            "to a separate mutations.tsv this comparison never reads.) A TOOL, NOT A WET-LAB LABEL, "
+            "which is why the tier does not "
             "move: this measures agreement with an independent caller, never correctness -- both could "
             "be wrong together"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",

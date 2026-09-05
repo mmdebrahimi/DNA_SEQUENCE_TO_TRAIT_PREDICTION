@@ -2,7 +2,7 @@
   "schema": "resfinder-locus-collapse-v1",
   "date": "2026-09-05",
   "question": "does collapsing ResFinder allele hits to one call per genomic LOCUS improve agreement with an independent curated caller (AMRFinder)?",
-  "comparator": "AMRFinder committed per-genome output for the SAME accession. Independent curated implementation; acquired genes only (POINT rows excluded, since a ResFinder allele DB cannot represent a point mutation).",
+  "comparator": "AMRFinder committed per-genome main.tsv for the SAME accession. Independent curated implementation. NOTE (measured 2026-09-05): main.tsv carries NO POINT rows at all across all 1818 committed runs (Type is only AMR 26219 / STRESS 1220) -- AMRFinder writes its point-mutation screen to a separate mutations.tsv this comparison never reads. The code's POINT filter is therefore a NO-OP on this data, kept as a guard for other output shapes.",
   "n_genomes": 648,
   "summary": {
     "aminoglycoside": {
@@ -37,6 +37,7 @@
     "Only two ResFinder class DBs are committed (aminoglycoside, beta-lactam), so this says nothing about the other resistance classes the real ResFinder DB covers.",
     "The normalized Jaccard strips a trailing variant letter (blaTEM-1B -> blaTEM-1) to avoid scoring a correct agreement as a miss. It is the LENIENT reading; the exact number is reported beside it.",
     "Genomes are whatever this project already had cached, drawn from AMR cohorts -- they are enriched for resistance and are NOT a random sample of the species.",
-    "Locus clustering uses a 50% reciprocal-overlap bar on the shorter interval. A tandem array whose copies overlap more than that would still collapse into one call."
+    "Locus clustering uses a 50% reciprocal-overlap bar on the shorter interval. A tandem array whose copies overlap more than that would still collapse into one call.",
+    "CORRECTION to the first write-up: it said AMRFinder POINT rows were excluded so the caller would not be charged with missing something an allele DB cannot represent. The REASONING is right but the control was VACUOUS here -- main.tsv contains zero POINT rows, so nothing was excluded. Stating it as an active control over-claimed it."
   ]
 }
