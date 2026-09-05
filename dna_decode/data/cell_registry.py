@@ -392,7 +392,9 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     # cell was never measured, which stopped being true -- it was measured against AMRFinder on 648
     # genomes, a SEVERE live defect was found and fixed, and the default would hide both. The TIER is
     # unchanged (the comparator is a tool, not a wet-lab label); what it now carries is the evidence.
-    ("finder", "pointfinder", "Escherichia_coli", "chromosomal AMR point mutations (PointFinder) — independent vs amr POINT", "ABSTAIN"),
+    # pointfinder MOVED to _TRAIT_CONTRACTS 2026-09-05: the shared faithful-to-tool default asserts the
+    # cell was never checked against anything. It has now been measured against AMRFinder's independent
+    # point screen on 648 genomes. TIER unchanged (a tool comparator is not a wet-lab label).
     ("finder", "disinfinder", "bacteria", "biocide/disinfectant resistance genes (DisinFinder)", "ABSTAIN"),
 ]
 
@@ -401,6 +403,54 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 # --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
 # --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
 _TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="finder:Escherichia_coli:pointfinder", track="finder", route="dna-pointfinder",
+        organism="Escherichia_coli", target="pointfinder",
+        claim="chromosomal AMR point mutations (PointFinder catalogue) — QRDR gyrA/gyrB/parC/parE",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="cross_tool_concordance_measured_near_perfect_on_catalogued_positions",
+        validation_slice=(
+            "648 cached assemblies that also carry a committed AMRFinder run, scored 2026-09-05 by "
+            "scripts/pointfinder_amrfinder_concordance.py. LOAD-BEARING BEYOND THIS CELL: the "
+            "catalogued genes are the QRDR and the FROZEN cipro rule (`qrdr_point`) consumes exactly "
+            "these determinants from AMRFinder, so this independently re-derives a determinant class "
+            "the DEPLOYED surface depends on (read-only; frozen surface untouched). The comparator is "
+            "AMRFinder's SEPARATE mutations.tsv -- main.tsv carries ZERO POINT rows across all 1818 "
+            "runs -- in --mutation_all form, so the [WILDTYPE] rows (a row per SCREENED position) are "
+            "filtered out; keeping them would turn 'screened and found nothing' into a called "
+            "mutation. RESULT on the 646 genomes that aligned >=1 reference gene: 1524 agree / 3 "
+            "PointFinder-only / 3 AMRFinder-only, exact set match 641/646 = 0.9923, mean per-genome "
+            "Jaccard 0.9967. Per-determinant: gyrA_S83L 418 both/1 PF-only/0 AMR-only; parC_S80I "
+            "353/0/0; gyrA_D87N 324/1/0"),
+        label_provenance=(
+            "AMRFinder's committed per-genome mutations.tsv for the SAME accession -- an independent "
+            "curated implementation. A TOOL, NOT A WET-LAB LABEL, and both callers ultimately derive "
+            "from the same published QRDR literature, so this bounds AGREEMENT and never correctness"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/pointfinder_amrfinder_concordance.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL -- an independent wet-lab label (phenotypic quinolone AST tied to "
+            "sequenced QRDR) would be needed to earn a measured tier. THE DISCORDANCES WERE READ, NOT "
+            "AVERAGED AWAY: all 3 AMRFinder-only calls are CATALOGUE DIFFERENCES rather than misses -- "
+            "each sits at a catalogued POSITION but names a residue PointFinder does not list as "
+            "resistance-conferring (parE S458 -> A/T not W; L445 -> H not F; E460 -> D not A), so "
+            "abstaining is correct by its own catalogue. Across the 646 scored genomes the calling "
+            "logic therefore has ZERO genuine misses. THE ONE REAL FALSE NEGATIVE IN THE RUN "
+            "(parC_S80I) sits in a genome where NO reference gene aligned -- 2 genomes (0.3%), one a "
+            "137-contig draft -- so it traces to the ALIGNMENT abstention, not the calling logic. That "
+            "is NOT filed as a defect because the CLI prints '(genes aligned: none)' so a human can "
+            "tell an abstention from a clean result; what is undistinguished is the machine-readable "
+            "`status`, which stays 'ok' either way while the signal lives in `genes_aligned`. "
+            "ACCOUNTING: abstained genomes are EXCLUDED from the agreement metrics -- an earlier "
+            "version scored an all-empty comparison as a perfect match, counting a genome the caller "
+            "did no work on as a success. The position restriction is PROVABLY LIVE (removed 3424 of "
+            "4951 AMRFinder calls), reported because a restriction that removes nothing is not a "
+            "control. LIMITS: only the 4 genes with a committed reference CDS (the catalogue also "
+            "lists rpoB/16S/23S/ampC-promoter/pmrAB/folP positions with NO reference on disk); "
+            "agreement on a position BOTH catalogue does not validate either CATALOGUE; epistasis "
+            "(Required_mut) is recorded but NOT enforced; genomes are AMR-cohort leftovers, ENRICHED "
+            "for resistance. Re-score if either catalogue changes"),
+    ),
     CellContract(
         cell_id="typing:bacteria:mlst", track="typing", route="dna-mlst",
         organism="bacteria", target="mlst",

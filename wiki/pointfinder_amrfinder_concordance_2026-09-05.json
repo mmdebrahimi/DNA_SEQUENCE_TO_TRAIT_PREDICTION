@@ -1,0 +1,179 @@
+{
+  "schema": "pointfinder-amrfinder-concordance-v1",
+  "date": "2026-09-05",
+  "question": "does the shipped PointFinder caller reproduce an independent curated caller's QRDR point-mutation calls on catalogued positions?",
+  "comparator": "AMRFinder's committed per-genome mutations.tsv for the SAME accession -- NOT main.tsv, which carries zero POINT rows. --mutation_all output, so WILDTYPE rows are filtered out before comparison. A TOOL, NOT A WET-LAB LABEL.",
+  "position_restriction": {
+    "why": "PointFinder can only report positions in its own resistens-overview.txt, so scoring it against AMRFinder calls at uncatalogued positions would charge it with missing what it structurally cannot express",
+    "n_catalogued_reachable": 30,
+    "n_amrfinder_calls_removed": 3424,
+    "restriction_is_live": true,
+    "note": "reported explicitly because a restriction that removes nothing is not a fairness control -- that exact over-claim was corrected in the ResFinder write-up the day before"
+  },
+  "abstention": {
+    "why_separated": "on a fragmented draft assembly the reference genes may not align at all; the caller returns status 'ok' with zero mutations (the CLI does print 'genes aligned: none', so it is visible to a human). A genome that aligned NOTHING has not AGREED with anything -- counting it as an exact set match would score an abstention as a success",
+    "n_genomes_ran": 648,
+    "n_scored": 646,
+    "n_abstained": 2,
+    "abstention_rate": 0.0030864197530864196,
+    "n_abstained_where_amrfinder_found_catalogued_mutations": 2,
+    "n_calls_missed_via_abstention": 3,
+    "abstained_accessions": [
+      "GCA_000417105.1",
+      "GCF_900093145.1"
+    ]
+  },
+  "n_genomes": 646,
+  "n_pointfinder_calls": 1527,
+  "n_amrfinder_calls_all": 4951,
+  "n_amrfinder_calls_catalogued": 1527,
+  "n_agree": 1524,
+  "n_pointfinder_only": 3,
+  "n_amrfinder_only": 3,
+  "n_genomes_exact_set_match": 641,
+  "exact_set_match_rate": 0.9922600619195047,
+  "mean_per_genome_jaccard": 0.9966666666666667,
+  "per_mutation": {
+    "gyrA_S83L": {
+      "both": 418,
+      "pf_only": 1,
+      "amr_only": 0
+    },
+    "parC_S80I": {
+      "both": 353,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "gyrA_D87N": {
+      "both": 324,
+      "pf_only": 1,
+      "amr_only": 0
+    },
+    "parE_S458A": {
+      "both": 139,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parE_I529L": {
+      "both": 48,
+      "pf_only": 1,
+      "amr_only": 0
+    },
+    "parC_E84V": {
+      "both": 48,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_E84G": {
+      "both": 38,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_A56T": {
+      "both": 33,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parE_L416F": {
+      "both": 33,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "gyrA_D87Y": {
+      "both": 22,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parE_I355T": {
+      "both": 16,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_S57T": {
+      "both": 9,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_E84K": {
+      "both": 7,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parE_E460D": {
+      "both": 6,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parE_S458T": {
+      "both": 6,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_E84A": {
+      "both": 5,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "gyrA_D87G": {
+      "both": 4,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_S80R": {
+      "both": 4,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_A108T": {
+      "both": 3,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parC_A108V": {
+      "both": 3,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "gyrA_S83A": {
+      "both": 2,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "gyrA_D87H": {
+      "both": 2,
+      "pf_only": 0,
+      "amr_only": 0
+    },
+    "parE_S458W": {
+      "both": 0,
+      "pf_only": 0,
+      "amr_only": 1
+    },
+    "parE_L445F": {
+      "both": 0,
+      "pf_only": 0,
+      "amr_only": 1
+    },
+    "parE_E460A": {
+      "both": 0,
+      "pf_only": 0,
+      "amr_only": 1
+    },
+    "parE_I464F": {
+      "both": 1,
+      "pf_only": 0,
+      "amr_only": 0
+    }
+  },
+  "verdict": "POINTFINDER_AGREES_WITH_AN_INDEPENDENT_CALLER",
+  "why": "on catalogued QRDR positions the two independent callers agree on 641/646 genomes exactly (mean Jaccard 0.9967). The cell reproduces an independent implementation of the same determinant class the FROZEN cipro rule consumes.",
+  "honest_limits": [
+    "The comparator is a TOOL, not a wet-lab label. This measures agreement with an independent implementation, NOT correctness -- both callers could be wrong together, and both ultimately derive from the same published QRDR literature. The cell stays FAITHFUL_TO_TOOL.",
+    "Scope is the four genes with a committed reference CDS (gyrA/gyrB/parC/parE). The PointFinder catalogue also lists rpoB / 16S / 23S / ampC-promoter / pmrAB / folP positions that have NO reference sequence on disk, so this says nothing about them.",
+    "Genomes are whatever this project had cached, drawn from AMR cohorts -- ENRICHED for resistance and not a random sample of the species.",
+    "Agreement on a position both callers catalogue does not validate either one's CATALOGUE. A resistance position missing from both would be invisible here.",
+    "Epistasis ('Required_mut' in the overview) is recorded but NOT enforced by the v0 caller, so a mutation whose resistance effect depends on a partner is still reported as conferring resistance.",
+    "Genomes where no reference gene aligned are EXCLUDED from the agreement metrics and reported separately as abstentions. The agreement figures therefore describe the caller WHEN IT ALIGNS, and the abstention rate is the separate coverage question -- quoting the agreement alone would overstate the cell.",
+    "A discordance at a catalogued POSITION can still be a catalogue difference rather than a caller defect: PointFinder emits only when the observed residue is in that position's Res_codon set, so e.g. gyrA_S83I (AMRFinder) is not callable because PointFinder lists only S83 A/L/V/W. Position-level restriction does not equalize the two catalogues."
+  ]
+}
