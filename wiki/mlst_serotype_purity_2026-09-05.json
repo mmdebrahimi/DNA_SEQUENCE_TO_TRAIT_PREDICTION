@@ -1,0 +1,176 @@
+{
+  "schema": "mlst-serotype-purity-v1",
+  "date": "2026-09-05",
+  "question": "do the shipped MLST caller's sequence types group genomes that share a WET-LAB serotype, more than a random partition of the same shape would?",
+  "why_no_curated_biology": "scoring against remembered ST<->serotype associations would mean asserting biology from memory as the scoring key; per-ST purity against a shuffle null needs none",
+  "null": "wet-lab serotype labels shuffled across genomes with the OBSERVED ST partition held fixed -- identical group sizes and serotype frequencies, association destroyed. Over-splitting inflates null and observation equally, so it cannot manufacture a result",
+  "min_st_size": 3,
+  "n_shuffles": 1000,
+  "n_genomes_typed_with_serotype": 398,
+  "n_distinct_st": 145,
+  "largest_st_size": 53,
+  "largest_st_fraction": 0.13316582914572864,
+  "n_st_scored": 27,
+  "n_genomes_scored": 271,
+  "fraction_of_cohort_in_qualifying_sts": 0.6809045226130653,
+  "n_distinct_serotypes": 170,
+  "observed_purity": 0.7859778597785978,
+  "null_mean": 0.21555350553505556,
+  "null_max": 0.25830258302583026,
+  "p_value": 0.000999000999000999,
+  "additional_statistics": [
+    {
+      "statistic": "top2_serotype_purity",
+      "top_k": 2,
+      "observed": 0.9188191881918819,
+      "null_mean": 0.36986715867158476,
+      "null_max": 0.41697416974169743,
+      "p_value": 0.000999000999000999,
+      "exceeds_null_max": true
+    },
+    {
+      "statistic": "O_antigen_only_purity",
+      "top_k": 1,
+      "observed": 0.8265682656826568,
+      "null_mean": 0.22353505535055354,
+      "null_max": 0.2693726937269373,
+      "p_value": 0.000999000999000999,
+      "exceeds_null_max": true
+    }
+  ],
+  "st_composition_for_low_purity_sts": {
+    "16": {
+      "O111:H8": 8,
+      "O111:H-": 4
+    },
+    "342": {
+      "O177:H-": 1,
+      "O5:H-": 1,
+      "O5:H9": 1
+    },
+    "23": {
+      "O45:H9": 1,
+      "O8:H30": 1,
+      "O78:H4": 1
+    },
+    "446": {
+      "O22:H8": 2,
+      "O103:H8": 2
+    },
+    "10": {
+      "O21:H12": 2,
+      "O153:H10": 2,
+      "O144:H4": 2,
+      "O5:H32": 1,
+      "O145:H40": 1,
+      "O42:H37": 1,
+      "O169:H45": 1,
+      "O117:H4": 1,
+      "O88:H12": 1,
+      "O132:H28": 1,
+      "O35:H10": 1
+    },
+    "69": {
+      "O15:H18": 4,
+      "O121:H7": 1,
+      "O117:H17": 1
+    },
+    "131": {
+      "O25:H4": 11,
+      "O16:H5": 9,
+      "O25:H17": 2,
+      "O62:H4": 1
+    },
+    "88": {
+      "O9:H17": 1,
+      "O8:H-": 1,
+      "O8:H12": 1
+    },
+    "73": {
+      "O6:H1": 3,
+      "O25:H1": 2,
+      "O2:H1": 1
+    },
+    "58": {
+      "O25:H51": 1,
+      "O8:H25": 1,
+      "O136:H25": 1
+    },
+    "38": {
+      "O1:H15": 2,
+      "O7:H15": 1,
+      "O25:H18": 1
+    }
+  },
+  "top_sts": [
+    {
+      "st": "11",
+      "n": 53,
+      "modal_serotype": "O157:H7",
+      "modal_fraction": 1.0
+    },
+    {
+      "st": "21",
+      "n": 50,
+      "modal_serotype": "O26:H11",
+      "modal_fraction": 0.96
+    },
+    {
+      "st": "17",
+      "n": 23,
+      "modal_serotype": "O103:H2",
+      "modal_fraction": 0.8695652173913043
+    },
+    {
+      "st": "131",
+      "n": 23,
+      "modal_serotype": "O25:H4",
+      "modal_fraction": 0.4782608695652174
+    },
+    {
+      "st": "10",
+      "n": 14,
+      "modal_serotype": "O21:H12",
+      "modal_fraction": 0.14285714285714285
+    },
+    {
+      "st": "16",
+      "n": 12,
+      "modal_serotype": "O111:H8",
+      "modal_fraction": 0.6666666666666666
+    },
+    {
+      "st": "442",
+      "n": 12,
+      "modal_serotype": "O146:H21",
+      "modal_fraction": 0.75
+    },
+    {
+      "st": "655",
+      "n": 7,
+      "modal_serotype": "O121:H19",
+      "modal_fraction": 1.0
+    },
+    {
+      "st": "33",
+      "n": 7,
+      "modal_serotype": "O91:H14",
+      "modal_fraction": 0.8571428571428571
+    },
+    {
+      "st": "678",
+      "n": 6,
+      "modal_serotype": "O104:H4",
+      "modal_fraction": 0.8333333333333334
+    }
+  ],
+  "verdict": "MLST_RECOVERS_REAL_LINEAGES",
+  "why": "sequence-type groups are serotype-pure at 0.7860, above the LARGEST of 1000 shuffles of the same partition (0.2583, mean 0.2156). The caller is recovering real clonal structure, not carving the cohort arbitrarily. This is a coherence check against a wet-lab label, NOT a correctness check against a reference MLST implementation.",
+  "honest_limits": [
+    "This is a COHERENCE check, not a correctness check. It shows the sequence types track real clonal structure; it does NOT show they carry the SAME NUMBERS a reference MLST implementation would assign. A caller with a systematically shifted profile table would pass this and still report wrong ST numbers -- that needs the reference tool installed and pinned locally, which was NOT done. The cell stays FAITHFUL_TO_TOOL.",
+    "One organism (E. coli), one scheme (Achtman 7-locus), one cohort.",
+    "Genomes within a sequence type are clonal, so the genome-level p-value overstates independence. The result does not rest on the p-value -- the observation exceeding the null's MAXIMUM over 1000 shuffles is the claim.",
+    "Serotype labels are NCBI-PD submitter strings; E. coli O:H typing is traditionally slide agglutination, but per-isolate method is not provable from the metadata.",
+    "STs below the size floor are excluded, so this says nothing about the caller's behaviour on singleton or near-singleton lineages."
+  ]
+}

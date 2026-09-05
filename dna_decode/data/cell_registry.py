@@ -376,7 +376,10 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     ("typing", "pathotype", "Escherichia_coli", "E. coli pathotype compatibility call + abstention (VirulenceFinder resolver)", "ABSTAIN"),
     # serotype MOVED to _TRAIT_CONTRACTS 2026-09-04: measured against wet-lab O:H labels, which found
     # and closed a live coverage-only selection bug. It has an individually-earned tier now.
-    ("typing", "mlst", "bacteria", "multi-locus sequence type (PubMLST allele->profile->ST)", "ABSTAIN"),
+    # mlst MOVED to _TRAIT_CONTRACTS 2026-09-05: the shared faithful-to-tool default asserts the cell
+    # was never checked against anything real. It has now been measured against a WET-LAB serotype
+    # label on 398 E. coli genomes. The TIER is unchanged (coherence, not correctness -- see the
+    # contract's demotion_rule); what it carries now is the evidence.
     ("typing", "ktype", "Klebsiella", "Klebsiella K/O capsule type (Kaptive)", "ABSTAIN"),
     # salmserovar MOVED to _TRAIT_CONTRACTS 2026-09-04: it now has an individually-earned tier
     # (measured against a wet-lab label), and leaving it on the shared faithful-to-tool default would
@@ -398,6 +401,53 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 # --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
 # --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
 _TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="typing:bacteria:mlst", track="typing", route="dna-mlst",
+        organism="bacteria", target="mlst",
+        claim="multi-locus sequence type (PubMLST allele->profile->ST)",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="coherence_measured_vs_wetlab_serotype_beats_shape_matched_null",
+        validation_slice=(
+            "398 E. coli genomes from the serotype lineage-disjoint checkpoint that ALSO carry a "
+            "wet-lab O:H serotype label, scored 2026-09-05 by scripts/mlst_serotype_purity.py (offline; "
+            "no new compute). PREMISE: clonal lineages conserve their O:H antigens, so a working caller "
+            "must produce SEROTYPE-PURE sequence types while a broken allele-match or profile lookup "
+            "carves the cohort arbitrarily. DELIBERATELY NO CURATED BIOLOGY -- scoring against "
+            "remembered associations (`ST131 is O25:H4`) would assert biology from memory as the "
+            "scoring key, so purity is compared against a SHUFFLE NULL that holds the observed ST "
+            "partition FIXED and shuffles only the labels (identical group sizes + serotype "
+            "frequencies), which is what makes it un-gameable: over-splitting inflates null and "
+            "observation equally. 145 STs, 27 reaching the size-3 floor covering 271 genomes (68.1%), "
+            "against 170 distinct wet-lab serotypes. RESULT, each statistic against its OWN matched "
+            "null (scoring top-2 against a top-1 null would manufacture significance): serotype purity "
+            "0.7860 vs null mean 0.2156 / null MAX 0.2583; top-2 purity 0.9188 vs null max 0.4170; "
+            "O-antigen-only 0.8266 vs null max 0.2694. All three exceed the null's MAXIMUM over 1000 "
+            "shuffles, ~3x over. CORROBORATION NOT SUPPLIED BY THE CODE: the modal serotypes fell out "
+            "of the data as the textbook pairings -- ST11 -> O157:H7 on 53/53, ST21 -> O26:H11 48/50, "
+            "ST655 -> O121:H19 7/7, ST678 -> O104:H4"),
+        label_provenance=(
+            "NCBI-PD submitter `serovar` parsed to a strict O:H shape; E. coli O:H serotyping is "
+            "traditionally slide agglutination, though per-isolate method is not provable from the "
+            "metadata. The serotype label is INDEPENDENT of the MLST loci (7 housekeeping genes vs the "
+            "O/H antigen loci), which is what makes it usable as a check at all"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/mlst_serotype_purity.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL, and the reason is load-bearing: this is a COHERENCE check, NOT a "
+            "correctness check. It shows the sequence types track real clonal structure; it does NOT "
+            "show they carry the SAME NUMBERS a reference MLST implementation would assign -- a caller "
+            "with a systematically shifted profile table would PASS this and still report wrong ST "
+            "numbers. Earning a measured tier needs the reference tool installed and pinned locally, "
+            "which was NOT done. The claim rests on exceeding the null's MAXIMUM, not on the p-value "
+            "(genomes within an ST are clonal, so a genome-level p overstates independence). LOW-PURITY "
+            "STs are real biology and are recorded, not explained away: ST131 splits O25:H4 (11) / "
+            "O16:H5 (9) = its two canonical clades (top-2 0.87, which is what the top-2 STATISTIC "
+            "measures rather than assumes); ST16 is O111:H8 (8) / O111:H- (4), one O antigen split only "
+            "on the H/motility axis (what the O-only statistic captures); ST10 carries 11 serotypes in "
+            "14 genomes at purity 0.14 -- the generalist commensal lineage, where LOW purity is the "
+            "CORRECT answer and a pure ST10 would be more suspicious. One organism, one scheme, one "
+            "cohort; 31.9% of the cohort sits below the size-3 floor and is unmeasured"),
+    ),
     CellContract(
         cell_id="finder:bacteria:resfinder", track="finder", route="dna-resfinder",
         organism="bacteria", target="resfinder",
