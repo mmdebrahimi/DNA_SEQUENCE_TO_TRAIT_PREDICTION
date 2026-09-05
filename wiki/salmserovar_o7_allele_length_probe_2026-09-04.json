@@ -1,0 +1,35 @@
+{
+  "schema": "salmserovar-o7-allele-length-probe-v1",
+  "date": "2026-09-04",
+  "hypothesis_tested": "the O-antigen sub-threshold hits concentrate on O7 (11 of 14), suggesting the O7 wzx/wzy REFERENCE ALLELE has a length or structure mismatch causing systematically partial coverage",
+  "verdict": "ALLELE_LENGTH_HYPOTHESIS_FALSIFIED",
+  "why": "the O7 reference is 1080 bp against an O-allele median of 1164 bp (range 130-4477) -- entirely unremarkable. Length is not the explanation.",
+  "o7_reference_length": 1080,
+  "o_allele_length_median": 1164,
+  "o_allele_length_range": [
+    130,
+    4477
+  ],
+  "what_the_pattern_actually_is": {
+    "n_near_perfect_identity_partial_coverage_hits": 39,
+    "by_o_group": {
+      "3,10": 13,
+      "7": 12,
+      "4": 7,
+      "9,46": 2,
+      "8": 2,
+      "40": 1,
+      "18": 1,
+      "35": 1
+    },
+    "note": "the pattern is NOT O7-exclusive -- O group 3,10 has MORE such hits (13) than O7 (12). The earlier 'concentrated on O7' reading came from the 14 sub-threshold hits that happened to drive abstentions, not from the underlying alignment population.",
+    "o7_median_coverage": 62.8,
+    "o7_aligned_bp_of_reference": 678
+  },
+  "revised_reading": "near-perfect identity over roughly 60%% of the reference is the signature of genuine partial homology -- the genomic wzx/wzy diverges from the reference over part of its length, or the reference carries a segment these genomes lack. That is a DB-content question, not a length artifact, and it is why relaxing the COVERAGE cut (not identity) was the change that paid.",
+  "honest_limits": [
+    "This tests the LENGTH hypothesis only. It does not establish what the divergent region IS -- that needs aligning the reference against a genomic hit and inspecting where the alignment stops.",
+    "Alignment population is from one cohort (200 Salmonella) and one DB build.",
+    "'Concentrated on O7' was true of the 14 abstention-driving hits and FALSE of the wider alignment population; both statements are in the record so the scope of each is visible."
+  ]
+}
