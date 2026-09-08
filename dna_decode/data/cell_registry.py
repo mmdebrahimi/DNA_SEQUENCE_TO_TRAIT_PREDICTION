@@ -373,7 +373,10 @@ _PGX_CONTRACTS: list[CellContract] = [
 # --- Typing + determinant-finder whole-tool cells (route dna-<trait>). Faithful-to-tool curated-DB callers. ---
 # (track, trait, organism-scope, one-line claim, native-abstention)
 _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
-    ("typing", "pathotype", "Escherichia_coli", "E. coli pathotype compatibility call + abstention (VirulenceFinder resolver)", "ABSTAIN"),
+    # pathotype MOVED to _TRAIT_CONTRACTS 2026-09-05: it HAS an enforced measured gate (ExPEC recall
+    # 10/12, precision 1.0, EPEC recall 1.0) while carrying the shared "never measured" default. The
+    # tier legitimately does NOT move -- its labels fail gates G1 and G3 -- but "never measured" and
+    # "measured against labels that cannot support a tier" are different statements.
     # serotype MOVED to _TRAIT_CONTRACTS 2026-09-04: measured against wet-lab O:H labels, which found
     # and closed a live coverage-only selection bug. It has an individually-earned tier now.
     # mlst MOVED to _TRAIT_CONTRACTS 2026-09-05: the shared faithful-to-tool default asserts the cell
@@ -407,6 +410,46 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 # --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
 # --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
 _TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="typing:Escherichia_coli:pathotype", track="typing", route="dna-pathotype",
+        organism="Escherichia_coli", target="pathotype",
+        claim="E. coli pathotype compatibility call + abstention (VirulenceFinder resolver)",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="measured_on_a_cohort_whose_labels_fail_gates_G1_and_G3",
+        validation_slice=(
+            "24-genome Horesh-2021 H4 cohort, run OFFLINE from two committed caches "
+            "(data/pathotype_cov_cache/ + data/pathotype_pergene_cache/) with no ENA fetch and no "
+            "sklearn; ENFORCED by tests/test_pathotype_expec_recall.py with EXACT-equality asserts, "
+            "not a soft bar. ExPEC recall == 10/12 = 0.833 (`EXPEC_RECALL_CAP`), confident-supported "
+            "precision == 1.0, EPEC recall == 1.0. THE 0.833 IS A DELIBERATE STRATEGY CAP, NOT A "
+            "CEILING THE RULE FAILED TO REACH: the earlier flat-K=1 support rule scored 0.917 (11/12) "
+            "but OVER-RESCUED a capsule-only genome (JSPG, lone traT) on a single axis, so the LIVE "
+            "rule is CROSS-AXIS (>=1 iron-acquisition AND >=1 capsule/serum gene, each >=0.80) on the "
+            "committed decision 'a clean 0.833 beats an overfit 0.917'. QUOTE 0.833 -- the shipped "
+            "code does not achieve 0.917 and is not trying to. The two un-rescued strains are exactly "
+            "JSPG (structurally excluded) and JSLG (no support). `meets_support_burden` (flat K=1) "
+            "survives ONLY to pin the K=1-vs-cross-axis divergence in tests"),
+        label_provenance=(
+            "Horesh-2021 F1 roster: ExPEC from Salipante ISOLATION SITE, EPEC from Hazen DECA "
+            "curation. BOTH LABEL AXES FAIL THE PROJECT'S OWN REJECTION GATES -- the ExPEC label IS "
+            "the sampling context (gate G3, sampling-defined phenotype: an irremediable study==class "
+            "confound, not a fixable sampling problem) and the EPEC label is partly tool-derived "
+            "(gate G1). `eval/cell_regime.py` records the same: 'pathotype labels are sampling-defined "
+            "(G3) and partly tool-derived (G1)'"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="tests/test_pathotype_expec_recall.py", incoming_data_gate="G1, G3",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL, and this cell CANNOT be tiered up by more work on this substrate "
+            "-- the blocker is the LABEL, not the measurement. A sampling-defined phenotype cannot be "
+            "de-confounded by a bigger or cleaner cohort, so this is a CLOSED label question, not a "
+            "to-do. NOTE THE SCOPE OF THE ADJACENT CLOSED NEGATIVE: `cell_regime.LEARNED_ATTEMPT_CLOSED` "
+            "closes the LEARNED pathotype attempt; THIS deterministic catalog cell is unaffected by "
+            "that and is separately label-blocked -- do not collapse the two into 'pathotype is a "
+            "closed negative'. Numbers are IN-SAMPLE on N=24 (the cross-axis rule was chosen on this "
+            "cohort), so they bound internal consistency, never out-of-cohort specificity; the named "
+            "residual risk is a commensal drawing a LOW_CONFIDENCE ExPEC call, bounded by the LOW tier "
+            "plus the DEC-module gate resolving above the ExPEC branch"),
+    ),
     CellContract(
         cell_id="finder:bacteria:plasmid", track="finder", route="dna-plasmid",
         organism="bacteria", target="plasmid",
