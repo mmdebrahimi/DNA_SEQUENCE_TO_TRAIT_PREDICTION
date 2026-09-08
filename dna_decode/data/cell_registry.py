@@ -387,7 +387,9 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     # pneumoserotype MOVED to _TRAIT_CONTRACTS 2026-09-04: it was registered FAITHFUL_TO_TOOL while its
     # report card recorded INDEPENDENT Quellung validation (n=230). Under-claiming is as much a
     # trust-surface falsehood as over-claiming, so it gets its individually-earned tier.
-    ("finder", "plasmid", "bacteria", "plasmid Inc-replicon typing (PlasmidFinder allele DB)", "ABSTAIN"),
+    # plasmid MOVED to _TRAIT_CONTRACTS 2026-09-05: it WAS measured (the selection-rule probe, 40
+    # assemblies / 446 replicon calls) while still carrying the shared "never measured" default.
+    # Under-claiming is as much a trust-surface falsehood as over-claiming.
     # resfinder MOVED to _TRAIT_CONTRACTS 2026-09-05: the shared faithful-to-tool default asserts the
     # cell was never measured, which stopped being true -- it was measured against AMRFinder on 648
     # genomes, a SEVERE live defect was found and fixed, and the default would hide both. The TIER is
@@ -395,7 +397,9 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     # pointfinder MOVED to _TRAIT_CONTRACTS 2026-09-05: the shared faithful-to-tool default asserts the
     # cell was never checked against anything. It has now been measured against AMRFinder's independent
     # point screen on 648 genomes. TIER unchanged (a tool comparator is not a wet-lab label).
-    ("finder", "disinfinder", "bacteria", "biocide/disinfectant resistance genes (DisinFinder)", "ABSTAIN"),
+    # disinfinder MOVED to _TRAIT_CONTRACTS 2026-09-05: same under-claim. It shares the ResFinder
+    # allele-name-keying pattern LITERALLY (it imports resfinder.gene_of) and was measured rather than
+    # patched by analogy -- the rule is inert on this DB, and that is now a committed artifact.
 ]
 
 # --- Non-AMR trait cells (route dna-<trait>). Registered SEPARATELY from _TYPING_FINDER because each has an
@@ -403,6 +407,66 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 # --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
 # --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
 _TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="finder:bacteria:plasmid", track="finder", route="dna-plasmid",
+        organism="bacteria", target="plasmid",
+        claim="plasmid Inc-replicon typing (PlasmidFinder allele DB)",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="selection_rule_measured_structurally_inert_for_the_reported_set",
+        validation_slice=(
+            "40 cached assemblies / 446 replicon calls, scored 2026-09-04 by "
+            "scripts/plasmid_selection_rule_probe.py. THE QUESTION WAS NARROWED SO NO COHORT WAS "
+            "NEEDED: labels are required to say which allele-selection ordering is BETTER, NOT whether "
+            "the ordering changes the ANSWER at all -- and if it never does, the concern is moot. The "
+            "caller reports a SET of replicon families (every family with a called allele), so a "
+            "coverage-vs-identity tiebreak only picks WHICH allele represents an ALREADY-reported "
+            "family. That structural prediction was EXECUTED, not published: the replicon SET is "
+            "IDENTICAL under both orderings on all 40 assemblies (0 differences) while `best_allele` "
+            "MOVED on 12, so the rule was genuinely exercised and the prediction survived. Verdict "
+            "STRUCTURALLY_INERT_FOR_THE_REPORTED_SET -- no fix, no cohort, no change"),
+        label_provenance=(
+            "none -- this is a rule-vs-rule comparison on identical alignments, not a label-scored "
+            "measurement. Which ordering is correct remains unmeasured and would need wet-lab "
+            "PCR-based replicon typing, which is rare in public metadata"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/plasmid_selection_rule_probe.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL -- nothing here validates the calls against reality. CAVEAT NOT "
+            "BURIED: secondary fields DO move (`best_allele` and the printed identity/coverage on 12 "
+            "of 40), so a consumer reading THOSE rather than the replicon set IS affected -- which is "
+            "why the verdict is scoped to 'the reported set' rather than blanket inertness. 40 "
+            "assemblies, one DB build (enterobacteriales), borrowed from E. coli/Salmonella cohorts "
+            "rather than a plasmid-focused set. Re-measure if the DB changes"),
+    ),
+    CellContract(
+        cell_id="finder:bacteria:disinfinder", track="finder", route="dna-disinfinder",
+        organism="bacteria", target="disinfinder",
+        claim="biocide/disinfectant resistance genes (DisinFinder allele DB)",
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="locus_collapse_rule_measured_inert_on_this_db",
+        validation_slice=(
+            "40 cached assemblies / 34 gene calls, scored 2026-09-05 by "
+            "scripts/disinfinder_locus_collapse_probe.py. WHY IT WAS MEASURED RATHER THAN PATCHED: "
+            "disinfinder shares the ResFinder over-reporting pattern LITERALLY -- it imports "
+            "`resfinder.gene_of` and keys its output on the allele name exactly as ResFinder did "
+            "before the 2026-09-05 locus-collapse fix -- and the obvious move was to propagate the "
+            "fix. A shared code pattern is a LEAD, not a diagnosis (the same discipline applied to "
+            "plasmid and pneumoserotype). RESULT: the reported gene set is IDENTICAL under both rules "
+            "on all 40 genomes, 0 differences. The ResFinder failure needed a DENSE variant family "
+            "(~180 catalogued blaTEM alleles clearing a 90% identity bar against ONE locus); this DB "
+            "holds 16 alleles total with no such family, so there is nothing to over-report. Caller "
+            "left UNCHANGED"),
+        label_provenance=(
+            "none -- a rule-vs-rule comparison run from ONE blastn pass per genome so only the "
+            "grouping differs. It says nothing about whether the calls are correct"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/disinfinder_locus_collapse_probe.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL -- nothing validates the calls against a biocide-resistance "
+            "phenotype. The inertness is a property of THIS DB BUILD: a larger disinfectant catalogue "
+            "with dense variant families would behave like the beta-lactamases, so RE-MEASURE if the "
+            "DB grows. 40 genomes, cached AMR-cohort assemblies rather than a biocide-focused set"),
+    ),
     CellContract(
         cell_id="finder:Escherichia_coli:pointfinder", track="finder", route="dna-pointfinder",
         organism="Escherichia_coli", target="pointfinder",

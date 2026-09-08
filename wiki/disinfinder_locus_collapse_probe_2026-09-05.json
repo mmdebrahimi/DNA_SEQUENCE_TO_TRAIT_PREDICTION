@@ -1,0 +1,420 @@
+{
+  "schema": "disinfinder-locus-collapse-probe-v1",
+  "date": "2026-09-05",
+  "question": "does the ResFinder locus-collapse fix change DisinFinder's reported gene set? DisinFinder imports resfinder.gene_of and keys on the allele name the same way, so the pattern is present -- but a shared pattern is a LEAD, not a diagnosis",
+  "n_db_alleles": 16,
+  "n_genomes_scored": 40,
+  "total_gene_calls_old_rule": 34,
+  "total_gene_calls_new_rule": 34,
+  "n_genomes_with_different_gene_set": 0,
+  "n_genomes_where_old_reported_more": 0,
+  "rows": [
+    {
+      "acc": "GCA_000023665.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000164515.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000179075.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000226585.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000267845.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000352865.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000353165.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000354835.2",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000354895.2",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000356305.2",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000356365.2",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000356545.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000387865.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000408125.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000408265.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000417105.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000446785.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000456285.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000456645.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000458215.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000459875.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000460695.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000478215.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000488415.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000488555.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000488595.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000488735.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000492655.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000522205.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000522325.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000522345.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000601135.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000617465.1",
+      "status": "ok",
+      "n_alleles_called": 1,
+      "n_old": 1,
+      "n_new": 1,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000617545.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000619585.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000619625.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000622595.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000633675.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000692695.1",
+      "status": "ok",
+      "n_alleles_called": 2,
+      "n_old": 2,
+      "n_new": 2,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    },
+    {
+      "acc": "GCA_000692735.1",
+      "status": "ok",
+      "n_alleles_called": 0,
+      "n_old": 0,
+      "n_new": 0,
+      "identical": true,
+      "only_old": [],
+      "only_new": []
+    }
+  ],
+  "verdict": "LOCUS_COLLAPSE_IS_INERT_FOR_DISINFINDER",
+  "why": "the reported gene set is IDENTICAL under both rules on all 40 genomes (34 calls). The DisinFinder DB holds only 16 alleles with no dense variant family, so there is nothing for the allele-name keying to over-report. The ResFinder fix does NOT transfer here and the caller is left UNCHANGED -- but re-measure if this DB ever grows.",
+  "honest_limits": [
+    "This answers WHETHER the rule changes the reported set, NOT which rule is better. That would need wet-lab biocide-resistance labels, and it is only worth asking if the set actually moves.",
+    "The DB holds 16 alleles. The finding is a property of THIS DB build -- a larger disinfectant catalogue with dense variant families could behave like the beta-lactamases and would need re-measuring.",
+    "Genomes are cached AMR-cohort assemblies, not a biocide-focused set; disinfectant-gene content is whatever they happen to carry."
+  ]
+}
