@@ -52,6 +52,7 @@ from dna_decode.data.hiv_amr import (
 )
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.data.routable_drugs import all_routable_amr_drugs
+from dna_decode.data.organism_scope import one_line as organism_scope_one_line
 from dna_decode.data.trust_surface import (concentration_one_line, lineage_one_line,
                                             one_line, trust_block)
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
@@ -199,7 +200,8 @@ def _emit_target_site(rec: dict, call, sample_id: str, args) -> int:
         print(f"  {call.caveat}")
         print(f"  {one_line(rec['validation'])}")
         for _extra in (lineage_one_line(rec["validation"]),
-                       concentration_one_line(rec["validation"])):
+                       concentration_one_line(rec["validation"]),
+                       organism_scope_one_line((rec["validation"] or {}).get("organism_scope"))):
             if _extra:
                 print(f"  {_extra}")
         if args.out:
@@ -607,8 +609,14 @@ def main(argv=None) -> int:
             if note:
                 print(note)
         print(f"  {one_line(rec['validation'])}")
+        # ORGANISM-SCOPE prints LAST and is the reason this loop exists in its current form: the layer
+        # says a rule component was MEASURED to over-call in the organism being asked about, and it was
+        # reaching the JSON via trust_block and stopping there. That is precisely the failure the
+        # sibling comment on the target-site path names -- "a block carried only in JSON is not a
+        # disclosure". `one_line(None)` is a no-op, so this is silent wherever nothing is measured.
         for _extra in (lineage_one_line(rec["validation"]),
-                       concentration_one_line(rec["validation"])):
+                       concentration_one_line(rec["validation"]),
+                       organism_scope_one_line((rec["validation"] or {}).get("organism_scope"))):
             if _extra:
                 print(f"  {_extra}")
         if args.out:
