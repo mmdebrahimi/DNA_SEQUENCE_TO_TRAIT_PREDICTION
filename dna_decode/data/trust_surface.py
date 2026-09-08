@@ -470,3 +470,49 @@ def concentration_one_line(badge: dict) -> str | None:
     return (f"source concentration: SINGLE-SOURCE -- {n_bp} BioProject(s), one dominant{share_s}. "
             "The metric above describes that source's isolates; it is a narrow estimate, in either "
             "direction, not necessarily an inflated one")
+
+
+def prospective_one_line(badge: dict) -> str | None:
+    """The prospective-lock status, when a reader must know it. None otherwise.
+
+    WHY THIS BELONGS AT CALL TIME. Prospective is the project's STRONGEST evidence tier -- an isolate
+    whose earliest possible public date is strictly after the lock could not have been tuned to, so it
+    is leakage-free BY CONSTRUCTION rather than by an argument about provenance. `trust_block` attaches
+    the block beside `lineage` and `source_concentration`, both of which render; this one did not, so
+    the tier that is hardest to earn was the only one a CLI reader never saw.
+
+    The state that makes it urgent is `superseded_by_surface_change`. When the decoder is revised the
+    accrued isolates become PRE-lock for the new rule, so their numbers describe the RETIRED rule and
+    are withheld and the clock restarts. That is live right now for both E. coli cells after the v2
+    gentamicin lock drifted `amr_rules.py`. A reader who remembers "this cell has prospective
+    validation" is, until told otherwise, relying on evidence for a rule that no longer ships.
+
+    SILENT on `not_accrued`: a lock that is armed with nothing accrued yet has no call-time
+    consequence, and printing it on every call would be noise. Silence here means "nothing to add",
+    exactly as it does for the lineage and concentration renderers -- it never means "validated".
+    """
+    p = badge.get("prospective")
+    if not isinstance(p, dict):
+        return None
+    status = p.get("status")
+
+    if status == "superseded_by_surface_change":
+        drifted = ", ".join(p.get("drifted_files") or []) or "the frozen surface"
+        return (f"prospective-lock: SUPERSEDED -- this cell HAS post-lock evidence (locked "
+                f"{p.get('lock_date', '?')}, scored {p.get('generated', '?')}) but {drifted} has since "
+                "changed, so those numbers describe the RETIRED rule and are WITHHELD. The clock "
+                "restarts: those isolates are pre-lock for the decoder shipping now")
+    if status == "lock_unverified":
+        return ("prospective-lock: UNVERIFIED -- the stamped surface hashes do not match the live "
+                f"decoder, so the numbers from {p.get('generated', '?')} are WITHHELD rather than "
+                "attributed to a decoder they may not describe")
+    if status == "scored":
+        n = p.get("n_scored")
+        bits = [f"{k} {p[k]}" for k in ("acc", "sens", "spec") if p.get(k) is not None]
+        metrics = ("; " + ", ".join(bits)) if bits else ""
+        powering = p.get("powering")
+        warn = "" if powering == "POWERED" else f" -- {powering or 'UNDERPOWERED'}, treat as indicative"
+        return (f"prospective-lock: SCORED on {n} post-lock isolate(s){metrics}{warn}. Leakage-free "
+                "BY CONSTRUCTION (these post-date the lock), which is a stronger claim than "
+                "provenance-disjoint")
+    return None
