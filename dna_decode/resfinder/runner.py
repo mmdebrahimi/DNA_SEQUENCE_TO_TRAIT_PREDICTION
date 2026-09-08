@@ -2,7 +2,13 @@
 
 ResFinder allele headers: '<gene>_<allele#>_<accession>', e.g. 'blaNDM-19_1_MF370080', 'aac(6')-Ib_2_M23634'
 (gene names carry hyphens/parens/primes). The gene is captured lazily up to the first _<digits>_ separator.
-A gene is CALLED when its best allele clears thresholds (ResFinder defaults 90% identity / 60% coverage).
+Alleles clearing the thresholds (ResFinder defaults 90% identity / 60% coverage) are then collapsed to one
+call per genomic LOCUS, and the best-matching allele there names the gene. That second step is load-bearing,
+not tidying: beta-lactamase variants differ by 1-3 point mutations, so a single blaTEM locus clears the 90%
+bar against ~180 catalog TEM alleles. Keying the output on the ALLELE NAME -- which this module did until
+2026-09-05 -- reported all of them as separately present, including ESBLs in a genome carrying only the
+narrow-spectrum blaTEM-1 (measured: 165.5 beta-lactam "genes" per genome against AMRFinder's 1.9; see
+`cluster_alleles_by_locus` and wiki/resfinder_locus_collapse_2026-09-05.md).
 Per-class grouping comes from which DB file the allele lived in (caller passes class labels alongside).
 
 This is an INDEPENDENT acquired-gene caller (different curated DB than AMRFinder) — use the per-gene calls as

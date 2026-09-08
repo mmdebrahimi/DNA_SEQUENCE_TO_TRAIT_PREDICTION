@@ -2,8 +2,16 @@
 
 SerotypeFinder allele headers: '<gene>_<allele#>_<accession>_<antigen>', e.g. 'wzx_1_GU299791_O1',
 'fliC_307_AY249994_H9'. The serotype antigen is the LAST '_'-token (O# / H#). The O antigen is
-determined by any of wzx/wzy/wzm/wzt; the H antigen by fliC (+ a few others). The call = best-coverage
-called O antigen + best-coverage called H antigen -> "O1:H9" (either may be missing -> reported as O?/H?).
+determined by any of wzx/wzy/wzm/wzt; the H antigen by fliC (+ a few others). The call = the best called
+O antigen + the best called H antigen -> "O1:H9" (either may be missing -> reported as O?/H?).
+
+Selection is IDENTITY-PRIMARY, coverage only as the tiebreak. That is load-bearing, not a preference:
+fliC flagellin alleles CROSS-HYBRIDIZE at near-full coverage across different H types, so a
+coverage-only ranking -- which this module used until 2026-09-04 -- picks the WRONG antigen
+confidently. Measured on 150 wet-lab-labelled isolates, H accuracy 0.770 -> 0.926 (misses 34 -> 11)
+with resolution UNCHANGED, since the rule decides WHICH allele wins and never WHETHER one does;
+replicated +0.106 on 250 held-out isolates and +0.162 on a lineage-disjoint split. The sibling
+Salmonella caller carries the same rule for the same reason.
 
 PlasmidFinder/SerotypeFinder default thresholds: identity 85 / coverage 60 (serotype alleles are more
 divergent than plasmid replicons; SerotypeFinder uses 85% identity). Offline-safe via the engine.
