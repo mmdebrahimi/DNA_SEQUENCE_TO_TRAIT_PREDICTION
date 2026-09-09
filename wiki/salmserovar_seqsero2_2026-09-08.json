@@ -1,0 +1,55 @@
+{
+  "schema": "salmserovar-seqsero2-v1",
+  "date": "2026-09-08",
+  "closes": "the 2026-09-04 limit that the comparator was NCBI-PD `computed_types`, a production call of undocumented tool/version/config",
+  "reference_tool": {
+    "name": "SeqSero2",
+    "version": "1.3.2",
+    "image": "quay.io/biocontainers/seqsero2:1.3.2--pyhdfd78af_0",
+    "mode": "-m k -t 4 (k-mer, assembly input)"
+  },
+  "label": "wet-lab agglutination serovar from the committed 2026-09-04 cohort; the gold standard is an antisera reaction, so no in-silico caller produced it",
+  "fairness": "all three callers scored through the SAME equivalence.equivalent (notation normalisation + the committed Kauffmann-White formula table, no fuzzy near-misses); abstentions counted separately from misses for each",
+  "n_cohort": 200,
+  "n_assembly_missing": 0,
+  "n_seqsero2_errors": 0,
+  "n_comparable": 200,
+  "ours": {
+    "hit": 141,
+    "miss": 39,
+    "no_call": 20,
+    "n": 200,
+    "accuracy": 0.705,
+    "accuracy_on_called": 0.7833333333333333,
+    "abstention_rate": 0.1
+  },
+  "seqsero2": {
+    "hit": 176,
+    "miss": 24,
+    "no_call": 0,
+    "n": 200,
+    "accuracy": 0.88,
+    "accuracy_on_called": 0.88,
+    "abstention_rate": 0.0
+  },
+  "ncbi_computed_types": {
+    "hit": 184,
+    "miss": 15,
+    "no_call": 1,
+    "n": 200,
+    "accuracy": 0.92,
+    "accuracy_on_called": 0.9246231155778895,
+    "abstention_rate": 0.005
+  },
+  "delta_vs_reference_tool": -0.17500000000000004,
+  "delta_vs_ncbi_computed_types": -0.21500000000000008,
+  "verdict": "OURS_TRAILS_THE_REFERENCE_TOOL",
+  "why": "against SeqSero2 1.3.2 -- a pinned, versioned reference implementation rather than an undocumented production field -- our caller scores 0.7050 vs 0.8800 (-0.1750) on 200 isolates with wet-lab agglutination labels. This resolves the ambiguity the previous artifact recorded: the earlier delta was measured against NCBI's `computed_types` and could not distinguish 'worse than the reference method' from 'diverges from an undocumented pipeline'.",
+  "honest_limits": [
+    "SeqSero2 is a TOOL, not the wet-lab assay. It is scored against the same agglutination labels as our caller, so this is a like-for-like comparison of two in-silico callers against a shared external truth -- not a claim that SeqSero2 is correct.",
+    "Per-serovar cap 12 in the cohort flattens prevalence, so these are per-isolate accuracies on a deliberately diverse mix, NOT population-weighted rates.",
+    "Isolates whose assembly is absent, or where SeqSero2 errored, are EXCLUDED so all three callers share one denominator; the excluded counts are reported.",
+    "Residual label circularity is bounded, not eliminated: per-isolate agglutination provenance is unprovable from metadata. Contamination would inflate every caller, so the DELTA is more trustworthy than the absolute levels.",
+    "SeqSero2 was run in k-mer mode on assemblies (-m k -t 4). Its read-based or microassembly modes could score differently."
+  ]
+}
