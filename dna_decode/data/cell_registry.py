@@ -383,7 +383,10 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
     # was never checked against anything real. It has now been measured against a WET-LAB serotype
     # label on 398 E. coli genomes. The TIER is unchanged (coherence, not correctness -- see the
     # contract's demotion_rule); what it carries now is the evidence.
-    ("typing", "ktype", "Klebsiella", "Klebsiella K/O capsule type (Kaptive)", "ABSTAIN"),
+    # ktype MOVED to _TRAIT_CONTRACTS 2026-09-08 -- the LAST cell on the shared "never measured"
+    # default. Its claim text here also said "(Kaptive)", which was wrong: the caller is a single-gene
+    # wzi allele lookup, NOT Kaptive. That mis-description is exactly what made the cell look
+    # cohort-blocked, since a Kaptive wrapper could not be checked against Kaptive.
     # salmserovar MOVED to _TRAIT_CONTRACTS 2026-09-04: it now has an individually-earned tier
     # (measured against a wet-lab label), and leaving it on the shared faithful-to-tool default would
     # both overstate its evidence class and HIDE that it underperforms the tool it wraps.
@@ -410,6 +413,52 @@ _TYPING_FINDER: list[tuple[str, str, str, str, str]] = [
 # --- two of them. These three shipped CLI-routable before this registration; the coverage guard caught it —
 # --- which is the guard working as designed ("a new decoder cannot ship invisibly to the trust surface").
 _TRAIT_CONTRACTS: list[CellContract] = [
+    CellContract(
+        cell_id="typing:Klebsiella:ktype", track="typing", route="dna-ktype",
+        organism="Klebsiella", target="ktype",
+        claim=("Klebsiella K (capsule) type predicted from the single conserved wzi gene "
+               "(BIGSdb Pasteur allele scheme via Kleborate) -- NOT full-locus Kaptive typing"),
+        evidence_tier=EvidenceTier.FAITHFUL_TO_TOOL,
+        claim_status="measured_vs_full_locus_kaptive_near_the_published_wzi_ceiling",
+        validation_slice=(
+            "307 Klebsiella genomes from this project's committed AMR cohorts, every one with a cached "
+            "assembly, scored 2026-09-08 by scripts/ktype_kaptive_concordance.py against Kaptive 3.3.2 "
+            "(db kpsc_k). THE COMPARATOR IS GENUINELY INDEPENDENT: our caller types the capsule from "
+            "ONE conserved gene (wzi) and maps the allele to a K locus; Kaptive types the FULL K "
+            "locus -- different methods over different sequence, the AMRFinder-to-ResFinder "
+            "relationship. That is why NO wet-lab cohort was needed, and why this cell was wrongly "
+            "believed cohort-blocked. THE BAR IS NOT 100% AND CANNOT BE: wzi -> K-type is ~94% "
+            "predictive and NOT one-to-one, because isolates with distinct K types can share a wzi "
+            "allele (Brisse 2013 JCM). The measurable question is whether the implementation reaches "
+            "the METHOD's ceiling. RESULT: Kaptive returned a confident call on 307/307 (0 errors, 0 "
+            "untypeable); our caller abstained on 43 (14.0%) and called 264; agreement 232/264 = "
+            "0.8788 STRICT, 0.8902 crediting the 3 ambiguous multi-KL calls whose string contains "
+            "Kaptive's answer (all KL22/KL37 vs KL22, all from wzi_37). Verdict "
+            "NEAR_THE_WZI_METHOD_CEILING -- about 6 points below, within 10, so consistent with the "
+            "method's own limit plus cohort composition and NOT clean evidence of an implementation "
+            "defect; it is also NOT 'reaches the ceiling' and is not claimed as such"),
+        label_provenance=(
+            "Kaptive 3.3.2 full-K-locus calls on the same assemblies -- an independent implementation, "
+            "but a TOOL, not a wet-lab label. Kaptive rows it does not call typeable would be excluded "
+            "from the denominator as an uncertain reference cannot adjudicate; here there were none"),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
+        falsifier_ref="scripts/ktype_kaptive_concordance.py", incoming_data_gate="n/a",
+        demotion_rule=(
+            "STILL FAITHFUL_TO_TOOL -- this bounds agreement with an independent implementation, never "
+            "correctness; both callers could be wrong together. A serology/Quellung-labelled "
+            "Klebsiella cohort is what an INDEPENDENT_MEASURED tier needs and none is free. QUOTE THE "
+            "STRICT 0.8788: an ambiguous multi-KL string is not a resolved call, and the lenient "
+            "figure is reported beside it only because a wzi allele mapping to two K types is the "
+            "caller stating the method's limit rather than guessing wrong. THE ~0.94 CEILING IS A "
+            "PUBLISHED PROPERTY OF OTHER COHORTS, NOT A CONSTANT -- treating it as an exact bar would "
+            "over-read it, which is why the verdict has a near-ceiling band. LEAD, NOT A DIAGNOSIS: "
+            "the disagreements are CONCENTRATED, with KL15 accounting for 10 of the 29 genuine misses "
+            "(KL15->KL52 x6, KL15->KL51 x4) -- concentration is the tell that located the serotype "
+            "defect, but a single wzi allele legitimately mapping to several K loci is ALSO exactly "
+            "the published non-one-to-one behaviour, so the two readings are not yet separated. "
+            "Genomes are AMR-cohort Klebsiella, ENRICHED for resistance, so the K-type distribution "
+            "need not match a population. Re-score if either allele DB or Kaptive changes"),
+    ),
     CellContract(
         cell_id="typing:Escherichia_coli:pathotype", track="typing", route="dna-pathotype",
         organism="Escherichia_coli", target="pathotype",

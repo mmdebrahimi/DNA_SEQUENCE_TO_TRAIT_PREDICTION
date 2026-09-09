@@ -1,0 +1,111 @@
+{
+  "schema": "ktype-kaptive-concordance-v1",
+  "date": "2026-09-08",
+  "question": "does the single-gene wzi ktype caller reach the published ceiling of the wzi method itself, measured against full-K-locus Kaptive?",
+  "comparator": {
+    "tool": "Kaptive",
+    "db": "kpsc_k",
+    "why_independent": "Kaptive types the FULL K locus; our caller types one conserved gene (wzi) and maps the allele to a K type. Different methods over different sequence, so this is an independent implementation -- but still a TOOL, not a wet-lab label"
+  },
+  "published_ceiling": 0.94,
+  "ceiling_source": "Brisse 2013 JCM; wzi->K-type ~94% predictive and NOT one-to-one",
+  "n_genomes": 307,
+  "n_kaptive_error": 0,
+  "n_kaptive_untypeable_excluded": 0,
+  "n_confident_reference": 307,
+  "n_our_abstentions": 43,
+  "n_comparable": 264,
+  "n_agree": 232,
+  "n_disagree": 32,
+  "agreement": 0.8787878787878788,
+  "n_ambiguous_calls_scored_as_miss": 3,
+  "n_ambiguous_containing_kaptive_answer": 3,
+  "agreement_lenient_crediting_ambiguous": 0.8901515151515151,
+  "which_figure_is_the_headline": "strict -- an ambiguous multi-KL string is not a resolved call. The lenient figure is reported beside it because a wzi allele that maps to two K types is the caller stating the method's limit, not guessing wrong",
+  "top_disagreements": [
+    {
+      "ours": "KL15",
+      "kaptive": "KL52",
+      "n": 6
+    },
+    {
+      "ours": "KL19",
+      "kaptive": "KL57",
+      "n": 4
+    },
+    {
+      "ours": "KL15",
+      "kaptive": "KL51",
+      "n": 4
+    },
+    {
+      "ours": "KL22/KL37",
+      "kaptive": "KL22",
+      "n": 3
+    },
+    {
+      "ours": "KL163",
+      "kaptive": "KL183",
+      "n": 2
+    },
+    {
+      "ours": "KL18",
+      "kaptive": "KL10",
+      "n": 2
+    },
+    {
+      "ours": "KL143",
+      "kaptive": "KL43",
+      "n": 1
+    },
+    {
+      "ours": "KL35",
+      "kaptive": "KL61",
+      "n": 1
+    },
+    {
+      "ours": "KL?",
+      "kaptive": "KL13",
+      "n": 1
+    },
+    {
+      "ours": "KL27",
+      "kaptive": "KL46",
+      "n": 1
+    },
+    {
+      "ours": "KL?",
+      "kaptive": "KL30",
+      "n": 1
+    },
+    {
+      "ours": "KL?",
+      "kaptive": "KL57",
+      "n": 1
+    },
+    {
+      "ours": "KL122",
+      "kaptive": "KL140",
+      "n": 1
+    },
+    {
+      "ours": "KL20",
+      "kaptive": "KL123",
+      "n": 1
+    },
+    {
+      "ours": "KL35?",
+      "kaptive": "KL122",
+      "n": 1
+    }
+  ],
+  "verdict": "NEAR_THE_WZI_METHOD_CEILING",
+  "why": "agreement 0.8788 sits below the published ~0.94 ceiling but within 10 points. Consistent with the method's own limit plus cohort composition; not clean evidence of an implementation defect. Read the disagreement table before concluding.",
+  "honest_limits": [
+    "The comparator is a TOOL, not a wet-lab label. This measures agreement with an independent implementation, never correctness -- both could be wrong together. The cell stays FAITHFUL_TO_TOOL; a Quellung/serology-labelled Klebsiella cohort is what an INDEPENDENT_MEASURED tier would need, and none is free.",
+    "Genomes are Klebsiella drawn from this project's AMR cohorts, so they are ENRICHED FOR RESISTANCE and are not a random sample of the species; K-type prevalence here need not match a population.",
+    "Kaptive rows it does not call typeable are EXCLUDED from the denominator, so the agreement figure describes genomes where a confident reference exists. The excluded count is reported beside it and is part of the result.",
+    "Our caller's abstentions are counted separately from disagreements. Abstention is not error, and folding the two together would understate the caller.",
+    "The ~94% ceiling is a published property of the wzi method on ITS cohorts, not a constant. Treating it as an exact bar would over-read it; it is an expectation, which is why the verdict has a near-ceiling band rather than a single threshold."
+  ]
+}
