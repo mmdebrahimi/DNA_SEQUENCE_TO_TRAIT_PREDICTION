@@ -1,0 +1,105 @@
+{
+  "schema": "salmserovar-db-audit-v1",
+  "date": "2026-09-09",
+  "db": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\salmserovar_db\\salmonella_antigens.fasta",
+  "n_o_alleles": 62,
+  "n_distinct_o_antigens": 49,
+  "o_length_median_bp": 1155.0,
+  "o_length_range_bp": [
+    130,
+    4477
+  ],
+  "thresholds": {
+    "short_allele_bp": 300,
+    "promiscuity_over_prevalence": 5.0,
+    "promiscuity_floor": 0.1
+  },
+  "short_alleles": [
+    {
+      "allele": "O__1,3,19__126",
+      "length_bp": 130
+    },
+    {
+      "allele": "O__9,46__362",
+      "length_bp": 216
+    }
+  ],
+  "promiscuous_alleles": [
+    {
+      "allele": "O__1,3,19__126",
+      "hits": 121,
+      "of": 200,
+      "fraction": 0.605,
+      "antigen_true_prevalence": 0.0213903743315508,
+      "times_over_prevalence": 28.28375,
+      "length_bp": 130
+    }
+  ],
+  "missing_antigens": [
+    {
+      "antigen": "9",
+      "reference_called_it_on": 17,
+      "of_genomes": 187
+    }
+  ],
+  "distinct_o_antigens": [
+    "1,3,19",
+    "11",
+    "13",
+    "16",
+    "17",
+    "18",
+    "21",
+    "22-gene1",
+    "22-gene2",
+    "22-gene3",
+    "23-gene1",
+    "23-gene2",
+    "23-gene3",
+    "28",
+    "3,10",
+    "30",
+    "35",
+    "38",
+    "39",
+    "4",
+    "40",
+    "41",
+    "42",
+    "43",
+    "44",
+    "45",
+    "47",
+    "48",
+    "50",
+    "51",
+    "52",
+    "53",
+    "55",
+    "56",
+    "57",
+    "58",
+    "59",
+    "6,14",
+    "60",
+    "61",
+    "62",
+    "63",
+    "65",
+    "66",
+    "67",
+    "7",
+    "8",
+    "9,46",
+    "9,46,27"
+  ],
+  "verdict": "DB_CONTENT_DEFECTS_FOUND",
+  "why": "1 antigen(s) the reference tool calls on our own cohort have NO allele in this DB, 1 allele(s) hit far more often than their antigen's true prevalence in the same cohort, and 2 are under 300 bp against a 1155 bp median. These are REFERENCE-DATA defects: no threshold or selection change can fix a missing allele, and a 130 bp sequence present in most Salmonella is not typing an antigen.",
+  "what_this_does_not_do": "It does not fix either defect. Adding a genuine O9 wzx/wzy reference, or replacing the 130 bp 1,3,19 fragment with a full-length allele, requires SOURCED sequences; writing biological reference data from memory is a fabrication hazard.",
+  "honest_limits": [
+    "The missing-antigen check is data-driven, not curated: it lists only antigens the REFERENCE TOOL actually emitted on our own 200-genome cohort. An antigen neither the cohort nor the tool exercised would not be flagged, so absence of a flag is not proof of completeness.",
+    "The promiscuity check needs the cached permissive blastn sweep; without it that section is skipped rather than reported as clean.",
+    "Promiscuity is measured against each antigen's OWN reference prevalence, not a flat hit-rate: a first version used a flat 25% bar and flagged O__4__231, whose 32% hit rate exactly matches O=4 being 32% of this cohort -- the check was wrong, not the allele. The 300 bp / 5x / 10% bars are hygiene tripwires separating clear outliers from the bulk, NOT derived constants; they flag for inspection, never adjudicate.",
+    "Removing the flagged 1,3,19 allele is NOT proposed here: it is the DB's ONLY 1,3,19 entry, so deleting it would trade ~10 false positives for the loss of all E4 calling, which the reference says is correct on 4 cohort genomes."
+  ]
+}
