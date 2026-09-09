@@ -1,0 +1,49 @@
+{
+  "schema": "salmserovar-o-fix-acceptance-bar-v1",
+  "frozen": "2026-09-09",
+  "status": "REGISTERED_BEFORE_IMPLEMENTATION",
+  "why_frozen_now": "the bar is registered before any differential-O-typing code exists, so it cannot be tuned to the result. A prior version guarded H axes 'where both resolve', a denominator that SHRINKS if the fix adds abstentions -- a fix converting wrong calls into no-calls could have passed.",
+  "baseline_2026-09-08": {
+    "n_cohort": 200,
+    "ours_overall": {
+      "hit": 141,
+      "miss": 39,
+      "no_call": 20,
+      "accuracy": 0.705
+    },
+    "seqsero2_overall": {
+      "hit": 176,
+      "miss": 24,
+      "no_call": 0,
+      "accuracy": 0.88
+    },
+    "per_axis_vs_seqsero2": {
+      "O": {
+        "differ": 33,
+        "agree": 159,
+        "ours_unresolved": 8
+      },
+      "H1": {
+        "agree": 200
+      },
+      "H2": {
+        "ours_unresolved": 54,
+        "agree": 146
+      }
+    }
+  },
+  "accuracy_denominator": "ALL 200 cohort isolates, and accuracy means WET-LAB-LABEL accuracy, never agreement with SeqSero2. A SeqSero2-agreement bar would be circular once we port its logic.",
+  "adopt_if_ALL_hold": [
+    "O-axis agreement with SeqSero2 rises by >= +15 isolates over the baseline 159, on the fixed 200-isolate denominator (not on rows where both resolve)",
+    "H1 agreement does not fall below baseline AND H1 ours_unresolved does not rise above baseline",
+    "H2 agreement does not fall below baseline AND H2 ours_unresolved does not rise above baseline",
+    "overall wet-lab accuracy does not fall below the baseline 0.7050",
+    "overall no_call does not rise above the baseline 20"
+  ],
+  "reject_if_ANY_fails": true,
+  "explicitly_not_a_success_signal": [
+    "a rise in O agreement achieved by converting wrong calls into abstentions",
+    "any improvement measured on a denominator restricted to post-change resolved rows",
+    "agreement with SeqSero2 used as the accuracy metric"
+  ]
+}
