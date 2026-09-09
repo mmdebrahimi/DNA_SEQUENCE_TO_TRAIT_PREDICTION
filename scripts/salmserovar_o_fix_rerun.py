@@ -94,18 +94,38 @@ def main() -> int:
     ap.add_argument("--asm-root", type=Path, default=Path("D:/dna_decode_cache/salm_asm"))
     ap.add_argument("--db-dir", type=Path, default=SEROVAR_DB)
     ap.add_argument("--blastn", default=BLASTN)
+    ap.add_argument("--coverage", type=float, default=None,
+                    help="override the coverage threshold. Exists to MEASURE what the shipped CLI was "
+                         "actually doing: `dna-salmserovar` shipped --coverage default 80.0 and was "
+                         "never updated when the constant moved to 40.0, so a probe at 80 is the only "
+                         "way to size that defect rather than assert it.")
+    ap.add_argument("--skip-bar", action="store_true",
+                    help="probe mode: report the numbers without judging them against the frozen bar "
+                         "(the bar's baseline is defined at the shipped threshold, so scoring a "
+                         "different-threshold probe against it would be a category error)")
     ap.add_argument("--ss2-checkpoint", type=Path,
                     default=Path("D:/dna_decode_cache/ss2_checkpoint/rows.jsonl"))
     ap.add_argument("--checkpoint", type=Path,
                     default=Path("D:/dna_decode_cache/ss2_checkpoint/ofix_rows.jsonl"))
     ap.add_argument("--bar", type=Path, default=BAR)
+    ap.add_argument("--baseline-checkpoint", type=Path, default=None,
+                    help="the PREVIOUS run's checkpoint. Its serovar names are re-scored under the "
+                         "CURRENT equivalence index to separate a scoring-function move from a "
+                         "caller move -- without it, an index change is credited to the fix.")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--out", type=Path, default=ROOT / "wiki" /
                     f"salmserovar_o_fix_result_{_date.today().isoformat()}.json")
     a = ap.parse_args()
 
     bar = json.loads(a.bar.read_text(encoding="utf-8"))
-    base = bar["baseline_2026-09-08"]
+    # Each bar names its baseline block with the date it was frozen, so the key is resolved rather
+    # than hardcoded -- a second bar must not require editing the scorer that reads the first.
+    base_keys = [k for k in bar if k.startswith("baseline")]
+    if len(base_keys) != 1:
+        print(f"REFUSING: {a.bar} has {len(base_keys)} baseline blocks {base_keys}; expected exactly 1",
+              file=sys.stderr)
+        return 3
+    base = bar[base_keys[0]]
     idx = load_formula_index(a.db_dir / "serovar_table.tsv")
 
     cached = {}
@@ -153,7 +173,8 @@ def main() -> int:
             rec["error"] = "assembly_missing"
         else:
             try:
-                out = call_serovar(fa, a.db_dir, blastn_bin=a.blastn)
+                kw = {} if a.coverage is None else {"coverage_threshold": a.coverage}
+                out = call_serovar(fa, a.db_dir, blastn_bin=a.blastn, **kw)
                 rec.update({"serovar": out.get("serovar"), "formula": out.get("antigenic_formula"),
                             "o_antigen_rule": out.get("o_antigen_rule"), "status": out.get("status")})
             except Exception as e:                            # noqa: BLE001
@@ -188,32 +209,98 @@ def main() -> int:
         axes[name] = {"after": axis_agreement([axis_of(f, i) for f in new_formula], theirs),
                       "before": axis_agreement([axis_of(f, i) for f in old_formula], theirs)}
 
-    # --- the frozen bar, applied ------------------------------------------------------------------
-    b_o = base["per_axis_vs_seqsero2"]["O"]
-    checks = [
-        ("O agreement rises by >= +15 over 159 on the fixed 200 denominator",
-         axes["O"]["after"]["agree"] >= b_o["agree"] + 15,
-         f"{b_o['agree']} -> {axes['O']['after']['agree']} "
-         f"({axes['O']['after']['agree'] - b_o['agree']:+d})"),
-    ]
-    for name in ("H1", "H2"):
-        wb = base["per_axis_vs_seqsero2"][name]
-        aft = axes[name]["after"]
-        checks.append((f"{name} agreement does not fall below baseline",
-                       aft["agree"] >= wb.get("agree", 0),
-                       f"{wb.get('agree', 0)} -> {aft['agree']}"))
-        checks.append((f"{name} ours_unresolved does not rise above baseline",
-                       aft["ours_unresolved"] <= wb.get("ours_unresolved", 0),
-                       f"{wb.get('ours_unresolved', 0)} -> {aft['ours_unresolved']}"))
-    wo = base["ours_overall"]
-    checks.append(("overall wet-lab accuracy does not fall below 0.7050",
-                   ours_tally["accuracy"] >= wo["accuracy"],
-                   f"{wo['accuracy']:.4f} -> {ours_tally['accuracy']:.4f}"))
-    checks.append(("overall no_call does not rise above 20",
-                   ours_tally["no_call"] <= wo["no_call"],
-                   f"{wo['no_call']} -> {ours_tally['no_call']}"))
+    # The PER-ISOLATE transition table. A tally cannot distinguish "20 misses became hits" from
+    # "20 hits became misses and 20 misses became hits", and the bar's `no_call` ceiling is a NET
+    # quantity -- so the net figure alone cannot say whether a rise came from laundering wrong calls
+    # into abstentions (which the bar forbids) or from rescuing abstentions into hits (which it
+    # wants). Only the transitions separate those, so they are computed here rather than argued.
+    trans: dict[str, int] = {}
+    for r, call in zip(rows, new_serovar):
+        before = score(r.get("ours"), r["truth"], idx)
+        after = score(call, r["truth"], idx)
+        trans[f"{before}->{after}"] = trans.get(f"{before}->{after}", 0) + 1
+    regressions = sum(v for k, v in trans.items() if k.startswith("hit->") and k != "hit->hit")
+    print("\n  per-isolate transitions:")
+    for k, v in sorted(trans.items(), key=lambda kv: -kv[1]):
+        tag = "  <-- REGRESSION" if k.startswith("hit->") and k != "hit->hit" else ""
+        print(f"    {k:20s} x{v:3d}{tag}")
+    print(f"    regressions (hit -> anything else): {regressions}")
 
-    verdict = "ADOPT" if all(ok for _, ok, _ in checks) else "REJECT"
+    # --- the frozen bar, applied ------------------------------------------------------------------
+    # TWO bars exist and they are NOT interchangeable. The O-port bar judges the antigen axes; the
+    # name-table bar judges the formula->name lookup and writes every clause DIRECTIONALLY (on
+    # per-isolate transitions) because the O-port bar's NET no_call ceiling misfired on a strictly
+    # dominant change. The schema selects which clause set applies; a bar is never re-derived here.
+    if bar["schema"].startswith("salmserovar-name-table"):
+        nb = base["ours_overall"]
+        # INDEX-MATCHED CONTROL. This change rebuilds serovar_table.tsv, which is ALSO the input to
+        # `load_formula_index` -- so it moves the SCORING FUNCTION, not only the caller. Re-scoring
+        # the previous run's UNCHANGED serovar names under the current index isolates that: any
+        # difference is equivalence, not calling, and crediting it to the fix would be false.
+        prev = a.baseline_checkpoint
+        if prev and prev.exists():
+            prev_names = {json.loads(ln)["asm_acc"]: json.loads(ln).get("serovar")
+                          for ln in prev.read_text(encoding="utf-8").splitlines() if ln.strip()}
+            matched = tally([prev_names.get(r["asm_acc"]) for r in rows], truths, idx)
+            index_only_delta = matched["hit"] - nb["hit"]
+            print(f"\n  index-matched control: previous run's names re-scored under the CURRENT "
+                  f"index -> hit {matched['hit']} (bar baseline {nb['hit']}, "
+                  f"index-only delta {index_only_delta:+d})")
+        else:
+            matched, index_only_delta = None, None
+        h2m = trans.get("hit->miss", 0)
+        h2n = trans.get("hit->no_call", 0)
+        checks = [
+            ("hits rise by >= +4 over the baseline 165",
+             ours_tally["hit"] >= nb["hit"] + 4,
+             f"{nb['hit']} -> {ours_tally['hit']} ({ours_tally['hit'] - nb['hit']:+d})"),
+            ("ZERO regressions: hit->miss is 0", h2m == 0, f"hit->miss = {h2m}"),
+            ("ZERO regressions: hit->no_call is 0", h2n == 0, f"hit->no_call = {h2n}"),
+            ("confident errors do not increase: miss <= 14",
+             ours_tally["miss"] <= nb["miss"], f"{nb['miss']} -> {ours_tally['miss']}"),
+        ]
+        for name in ("H1", "H2"):
+            b = base["per_axis_vs_seqsero2"][name]
+            checks.append((f"{name} agreement not below baseline (this change must not touch the axes)",
+                           axes[name]["after"]["agree"] >= b.get("agree", 0),
+                           f"{b.get('agree', 0)} -> {axes[name]['after']['agree']}"))
+        name_table_bar = True
+    else:
+        name_table_bar = False
+
+    if not name_table_bar:
+        b_o = base["per_axis_vs_seqsero2"]["O"]
+        checks = [
+            ("O agreement rises by >= +15 over 159 on the fixed 200 denominator",
+             axes["O"]["after"]["agree"] >= b_o["agree"] + 15,
+             f"{b_o['agree']} -> {axes['O']['after']['agree']} "
+             f"({axes['O']['after']['agree'] - b_o['agree']:+d})"),
+        ]
+        for name in ("H1", "H2"):
+            wb = base["per_axis_vs_seqsero2"][name]
+            aft = axes[name]["after"]
+            checks.append((f"{name} agreement does not fall below baseline",
+                           aft["agree"] >= wb.get("agree", 0),
+                           f"{wb.get('agree', 0)} -> {aft['agree']}"))
+            checks.append((f"{name} ours_unresolved does not rise above baseline",
+                           aft["ours_unresolved"] <= wb.get("ours_unresolved", 0),
+                           f"{wb.get('ours_unresolved', 0)} -> {aft['ours_unresolved']}"))
+        wo = base["ours_overall"]
+        checks.append(("overall wet-lab accuracy does not fall below 0.7050",
+                       ours_tally["accuracy"] >= wo["accuracy"],
+                       f"{wo['accuracy']:.4f} -> {ours_tally['accuracy']:.4f}"))
+        checks.append(("overall no_call does not rise above 20",
+                       ours_tally["no_call"] <= wo["no_call"],
+                       f"{wo['no_call']} -> {ours_tally['no_call']}"))
+
+    if a.skip_bar:
+        # A probe at a non-shipped threshold is not a candidate for adoption; the frozen bar's
+        # baseline was measured at the shipped one, so applying it here would compare two different
+        # experiments and produce a verdict that means nothing.
+        checks = []
+        verdict = "PROBE_NOT_JUDGED_AGAINST_THE_BAR"
+    else:
+        verdict = "ADOPT" if all(ok for _, ok, _ in checks) else "REJECT"
 
     print(f"\n=== {len(rows)} isolates, wet-lab labels ===")
     print(f"  ours BEFORE  acc {old_tally['accuracy']:.4f}  "
@@ -238,26 +325,11 @@ def main() -> int:
         rule = done[r["asm_acc"]].get("o_antigen_rule") or "?"
         rules[rule] = rules.get(rule, 0) + 1
 
-    # The PER-ISOLATE transition table. A tally cannot distinguish "20 misses became hits" from
-    # "20 hits became misses and 20 misses became hits", and the bar's `no_call` ceiling is a NET
-    # quantity -- so the net figure alone cannot say whether a rise came from laundering wrong calls
-    # into abstentions (which the bar forbids) or from rescuing abstentions into hits (which it
-    # wants). Only the transitions separate those, so they are computed here rather than argued.
-    trans: dict[str, int] = {}
-    for r, call in zip(rows, new_serovar):
-        before = score(r.get("ours"), r["truth"], idx)
-        after = score(call, r["truth"], idx)
-        trans[f"{before}->{after}"] = trans.get(f"{before}->{after}", 0) + 1
-    regressions = sum(v for k, v in trans.items() if k.startswith("hit->") and k != "hit->hit")
-    print("\n  per-isolate transitions:")
-    for k, v in sorted(trans.items(), key=lambda kv: -kv[1]):
-        tag = "  <-- REGRESSION" if k.startswith("hit->") and k != "hit->hit" else ""
-        print(f"    {k:20s} x{v:3d}{tag}")
-    print(f"    regressions (hit -> anything else): {regressions}")
 
     out = {
         "schema": "salmserovar-o-fix-result-v1", "date": _date.today().isoformat(),
-        "bar": str(a.bar.relative_to(ROOT)), "bar_status": bar["status"],
+        "bar": str(Path(a.bar).resolve().relative_to(ROOT)) if str(Path(a.bar).resolve()).startswith(str(ROOT)) else str(a.bar),
+        "bar_status": bar["status"],
         "change": ("ported SeqSero2 1.3.2's three-branch O decision procedure "
                    "(call_O_and_H_type) and restored the SeqSero2 role to the antigen DB header"),
         "n": len(rows),
@@ -272,6 +344,14 @@ def main() -> int:
                                       if old_tally["hit"] + old_tally["miss"] else None),
         "accuracy_on_called_after": (ours_tally["hit"] / (ours_tally["hit"] + ours_tally["miss"])
                                      if ours_tally["hit"] + ours_tally["miss"] else None),
+        "index_matched_control": (
+            None if not locals().get("matched") else
+            {"previous_run_names_rescored_under_current_index": matched,
+             "bar_baseline_hit": base.get("ours_overall", {}).get("hit"),
+             "index_only_delta": index_only_delta,
+             "note": ("the bar's baseline was measured under the PREVIOUS equivalence index. This "
+                      "change rebuilds serovar_table.tsv, which is that index's input, so this many "
+                      "hits move for scoring reasons alone and must NOT be credited to the caller.")}),
         "bar_checks": [{"check": c, "pass": ok, "detail": d} for c, ok, d in checks],
         "verdict": verdict,
         "verdict_is_mechanical": ("computed from the frozen bar with no judgment applied. If this "

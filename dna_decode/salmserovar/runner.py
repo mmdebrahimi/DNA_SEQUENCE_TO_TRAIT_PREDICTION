@@ -302,9 +302,18 @@ def call_serovar(fasta: str | Path, db_dir: str | Path, *,
             cands = {sv for (to, th1, _), sv in table.items() if to == o and th1 == h1}
             serovar = next(iter(cands)) if len(cands) == 1 else None
 
+    # The evidence rows are the BEST HIT per axis. Since the O procedure landed, the best O hit is
+    # frequently NOT the O call -- a `wbaV` hit at 99.7% identity is the evidence FOR calling plain O9,
+    # and rendering it beside a `9` call with no marking reads as a contradiction. Each row therefore
+    # says whether it IS the call, and the O best hit is surfaced separately.
+    for _row in axis_best.values():
+        _row["is_call"] = (_row["antigen"] == {"O": o, "H1": h1, "H2": h2}.get(_row["axis"]))
+    o_best = axis_best.get("O", {}).get("antigen")
+
     base = {"status": "ok", "tool": "blastn", "method": "seqsero2_o_procedure_port_v1",
             "parameters": {"identity_threshold": identity_threshold, "coverage_threshold": coverage_threshold},
             "o_antigen": o, "h1_antigen": h1, "h2_antigen": h2, "o_antigen_rule": o_rule,
+            "o_antigen_best_hit": o_best,
             "antigenic_formula": formula, "serovar": serovar,
             "antigens": sorted(axis_best.values(), key=lambda v: v["axis"])}
     return base

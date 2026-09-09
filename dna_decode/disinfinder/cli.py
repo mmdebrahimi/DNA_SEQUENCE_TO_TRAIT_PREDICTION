@@ -16,7 +16,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.disinfinder.runner import call_disinfectant_genes
+from dna_decode.disinfinder.runner import (
+    DISIN_COVERAGE_THRESHOLD,
+    DISIN_IDENTITY_THRESHOLD,
+    call_disinfectant_genes,
+)
 
 DEFAULT_DB = "data/disinfinder_db/disinfectants.fsa"
 _DB_URL = "https://bitbucket.org/genomicepidemiology/disinfinder_db/raw/HEAD/disinfectants.fsa"
@@ -28,8 +32,8 @@ def main(argv=None) -> int:
     ap.add_argument("fasta", type=Path, help="genome assembly FASTA")
     ap.add_argument("--db", default=DEFAULT_DB, help=f"DisinFinder allele .fsa (default {DEFAULT_DB})")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=90.0, help="min %% identity (default 90)")
-    ap.add_argument("--coverage", type=float, default=60.0, help="min %% coverage (default 60)")
+    ap.add_argument("--identity", type=float, default=DISIN_IDENTITY_THRESHOLD, help="min %% identity (default 90)")
+    ap.add_argument("--coverage", type=float, default=DISIN_COVERAGE_THRESHOLD, help="min %% coverage (default 60)")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)

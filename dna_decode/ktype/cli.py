@@ -20,7 +20,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.ktype.runner import call_ktype
+from dna_decode.ktype.runner import (
+    WZI_COVERAGE_THRESHOLD,
+    WZI_IDENTITY_THRESHOLD,
+    call_ktype,
+)
 
 DEFAULT_DB_DIR = "data/ktype_db"
 
@@ -31,8 +35,8 @@ def main(argv=None) -> int:
     ap.add_argument("fasta", type=Path, help="genome assembly FASTA")
     ap.add_argument("--db-dir", default=DEFAULT_DB_DIR, help=f"dir with wzi.fasta + wzi.txt (default {DEFAULT_DB_DIR})")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=90.0, help="min %% identity (default 90)")
-    ap.add_argument("--coverage", type=float, default=80.0, help="min %% coverage (default 80)")
+    ap.add_argument("--identity", type=float, default=WZI_IDENTITY_THRESHOLD, help="min %% identity (default 90)")
+    ap.add_argument("--coverage", type=float, default=WZI_COVERAGE_THRESHOLD, help="min %% coverage (default 80)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)

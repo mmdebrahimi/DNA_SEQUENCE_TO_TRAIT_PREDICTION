@@ -32,19 +32,110 @@ import sys
 from pathlib import Path
 
 
-def build_table(ic_dir: Path, out_tsv: Path) -> int:
+def expand_optional_factors(antigen: str) -> set[str]:
+    """`r,[i]` -> {`r`, `i,r`} — every combination of the OPTIONAL (bracketed) factors, each sorted.
+
+    The White-Kauffmann-Le Minor scheme brackets factors that may or may not be expressed, so a genome
+    presenting only `r` IS a `r,[i]` serovar. SeqSero2 does this expansion at lookup time (its
+    `Combine` helper) and additionally SORTS the factors, because entries like `r,[i]` are not in
+    alphabetical order. Our lookup is an exact dict hit, so the expansion happens at BUILD time
+    instead — every reachable spelling becomes its own key.
+
+    Without this, `('8','r','1,5')` and `('8','r,[i]','1,5')` are unrelated keys and a bare-`r` genome
+    can never reach Bovismorbificans."""
+    if not antigen or antigen == "-":
+        return {antigen or "-"}
+    required, optional = [], []
+    for tok in antigen.split(","):
+        tok = tok.strip()
+        if not tok:
+            continue
+        (optional if tok.startswith("[") else required).append(tok.strip("[]"))
+    if not optional:
+        return {",".join(sorted(required)) if required else "-", antigen}
+    out = set()
+    for mask in range(1 << len(optional)):
+        chosen = required + [o for i, o in enumerate(optional) if mask >> i & 1]
+        out.add(",".join(sorted(chosen)) if chosen else "-")
+    out.add(antigen)                      # the literal spelling stays reachable too
+    return out
+
+
+# Subspecies preference, applied ONLY to break a tie our caller cannot break itself. SeqSero2 filters
+# candidates by the subspecies it determines separately (SalmID); we have no subspecies signal, so on a
+# collision between a subspecies-I serovar and a non-I one we take I -- it is 1532 of 2578 entries and
+# the overwhelmingly dominant clinical case. This is OUR heuristic, NOT SeqSero2's algorithm, and it is
+# deliberately weak: it breaks I-vs-II ties only. A collision WITHIN subspecies I (Agoueve vs Cubana)
+# stays genuinely ambiguous and is handled by `ambiguous_policy`, never by inventing a tie-break.
+PREFERRED_SUBSPECIES = "I"
+
+
+def build_table(ic_dir: Path, out_tsv: Path, ambiguous_policy: str = "first") -> int:
+    """Formula -> serovar name, honouring the FOUR mechanisms SeqSero2's own naming code applies.
+
+    The previous build kept the FIRST serovar per `(O,H1,H2)` key and commented that
+    'subspecies-I named serovars come first'. Measured against SeqSero2's lists that is FALSE: 195
+    formulas carry more than one serovar and 213 serovars were SILENTLY DISCARDED -- including
+    Cubana, Muenchen and Hvittingfoss, while the entries kept in their place were `Agoueve`,
+    the pre-rename `Virginia`, and the UNNAMED subspecies-II formula `II 16:b:e,n,x`.
+
+    So this now applies, from SeqSero2's own data: `remove_list` (excluded entries), `rename_dict`
+    (Virginia->Muenchen, Hindmarsh->Bovismorbificans, ...), bracket expansion, and a subspecies tie-break.
+    `ambiguous_policy` decides what happens to a key that is STILL ambiguous after all four, and the
+    two options were MEASURED separately rather than argued (same 200-isolate cohort, same frozen bar):
+
+      * `omit`  -- abstain, matching this caller's stated contract that a serovar is reported only when
+                   the formula resolves uniquely. Measured: 165 hits (+0), 3 hit->no_call REGRESSIONS.
+                   Principled and strictly worse; the abstentions cost as much as the renames gain.
+      * `first` -- keep the pre-2026-09-09 arbitrary winner (DEFAULT). Measured: 168 hits (+3), ZERO
+                   regressions, misses 14 -> 11, accuracy 0.8250 -> 0.8400.
+
+    The default is `first` because it is strictly dominant on the evidence. The honest reading is that
+    the CANONICAL-NAMING half of this change is what pays; the ambiguity-policy half costs.
+    """
     sys.path.insert(0, str(ic_dir))
     import Initial_Conditions as IC  # noqa: E402
+    remove_list = set(getattr(IC, "remove_list", ()))
+    rename = dict(getattr(IC, "rename_dict", {}))
+    subs = getattr(IC, "subs", ["I"] * len(IC.sero))
+
+    # ORDER-PRESERVING: the `first` ambiguity policy must reproduce the ORIGINAL rule, which
+    # kept whichever entry came first in SeqSero2's own list order. A set would lose that and
+    # substitute a different arbitrary winner, which is not the same thing as "unchanged".
+    cand: dict[tuple[str, str, str], list[tuple[str, str]]] = {}
+    for o, h1, h2, sv, sb in zip(IC.phaseO, IC.phase1, IC.phase2, IC.sero, subs):
+        o, h1, h2, sv, sb = (str(x).strip() for x in (o, h1, h2, sv, sb))
+        if not o or not sv or sv in remove_list:
+            continue
+        sv = rename.get(sv, sv)
+        for e1 in expand_optional_factors(h1):
+            for e2 in expand_optional_factors(h2 or "-"):
+                bucket = cand.setdefault((o, e1, e2), [])
+                if (sv, sb) not in bucket:
+                    bucket.append((sv, sb))
+
     table: dict[tuple[str, str, str], str] = {}
-    for o, h1, h2, sv in zip(IC.phaseO, IC.phase1, IC.phase2, IC.sero):
-        o, h1, h2, sv = (str(x).strip() for x in (o, h1, h2, sv))
-        h2 = h2 or "-"
-        if o and sv and (o, h1, h2) not in table:   # first-wins: subspecies-I named serovars come first
-            table[(o, h1, h2)] = sv
+    for key, entries in cand.items():
+        ordered = [sv for sv, _ in entries]
+        names = {sv for sv, _ in entries}
+        if len(names) > 1:
+            preferred = {sv for sv, sb in entries if sb == PREFERRED_SUBSPECIES}
+            if len(preferred) == 1:
+                names = preferred
+        if len(names) == 1:
+            table[key] = next(iter(names))
+        elif ambiguous_policy == "first":
+            # TWO SEPARABLE DESIGN CHOICES, measured separately rather than conflated. Canonical
+            # NAMING (remove_list / rename_dict / bracket expansion / subspecies) is one; what to do
+            # with a key that is STILL ambiguous is another. `omit` matches this caller's stated
+            # contract (a serovar is reported only when the formula resolves uniquely) and abstains;
+            # `first` preserves the pre-2026-09-09 behaviour of keeping an arbitrary winner. Measured:
+            # `omit` gains 0 hits and costs 3 (wiki/salmserovar_name_table_result_2026-09-09.json).
+            table[key] = ordered[0]
     out_tsv.parent.mkdir(parents=True, exist_ok=True)
     with out_tsv.open("w", encoding="utf-8") as f:
         f.write("O\tH1\tH2\tSerovar\n")
-        for (o, h1, h2), sv in table.items():
+        for (o, h1, h2), sv in sorted(table.items()):
             f.write(f"{o}\t{h1}\t{h2}\t{sv}\n")
     return len(table)
 

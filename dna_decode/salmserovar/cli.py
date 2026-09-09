@@ -17,7 +17,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.salmserovar.runner import call_serovar
+from dna_decode.salmserovar.runner import (
+    SEROVAR_COVERAGE_THRESHOLD,
+    SEROVAR_IDENTITY_THRESHOLD,
+    call_serovar,
+)
 
 DEFAULT_DB_DIR = "data/salmserovar_db"
 
@@ -29,8 +33,15 @@ def main(argv=None) -> int:
     ap.add_argument("--db-dir", default=DEFAULT_DB_DIR,
                     help=f"dir with salmonella_antigens.fasta + serovar_table.tsv (default {DEFAULT_DB_DIR})")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=90.0, help="min %% identity (default 90)")
-    ap.add_argument("--coverage", type=float, default=80.0, help="min %% coverage (default 80)")
+    # DERIVED, never restated. This CLI shipped `--coverage default=80.0` from the cell's first commit
+    # and was NOT updated when SEROVAR_COVERAGE_THRESHOLD was lowered 80 -> 40 on 2026-09-04 against a
+    # pre-registered bar. Because `main` passes `args.coverage` explicitly, the shipped entry point kept
+    # overriding the validated value with the old one: every validation ran through `call_serovar`
+    # (which uses the constant), so nothing exercised the seam. Defaults now come FROM the constants.
+    ap.add_argument("--identity", type=float, default=SEROVAR_IDENTITY_THRESHOLD,
+                    help=f"min %% identity (default {SEROVAR_IDENTITY_THRESHOLD:g})")
+    ap.add_argument("--coverage", type=float, default=SEROVAR_COVERAGE_THRESHOLD,
+                    help=f"min %% coverage (default {SEROVAR_COVERAGE_THRESHOLD:g})")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)
@@ -49,6 +60,12 @@ def main(argv=None) -> int:
         "status": res["status"], "serovar": res.get("serovar"),
         "antigenic_formula": res.get("antigenic_formula"),
         "o_antigen": res.get("o_antigen"), "h1_antigen": res.get("h1_antigen"), "h2_antigen": res.get("h2_antigen"),
+        # WHICH RULE produced the O antigen is part of the call, not decoration: a differential-marker
+        # decision, a branch default and an ordinary best-allele pick are three different kinds of
+        # evidence, and reporting only the antigen string collapses them.
+        "o_antigen_rule": res.get("o_antigen_rule"),
+        "o_antigen_best_hit": res.get("o_antigen_best_hit"),
+        # Best hit PER AXIS -- for O this is often NOT the call (each row carries `is_call`).
         "antigen_detail": res.get("antigens", []),
         "caller": {"name": "dna_decode-salmserovar-blastn-v0", "method": res.get("method"),
                    "source": "SeqSero2 antigen DB + Kauffmann-White-Le Minor scheme",
@@ -75,8 +92,15 @@ def main(argv=None) -> int:
             print(f"SEROVAR: {res.get('serovar') or '(formula unresolved)'}  "
                   f"[formula {res.get('antigenic_formula')}]")
             for a in res.get("antigens", []):
+                # An evidence row that is NOT the call must say so. The O procedure routinely calls an
+                # antigen that has no allele of its own (plain O9 is reached from a `wbaV` hit), so an
+                # unmarked `O 9,46` line beside a `9:...` formula reads as a contradiction.
+                label = "" if a.get("is_call", True) else "  <- best hit, NOT the call"
                 print(f"  {a['axis']:3} {a['antigen']:8} {a['percent_identity']}% id / "
-                      f"{a['percent_coverage']}% cov  ({a['best_allele']})")
+                      f"{a['percent_coverage']}% cov  ({a['best_allele']}){label}")
+            if res.get("o_antigen_rule"):
+                print(f"  O call: {res.get('o_antigen') or 'unresolved'}"
+                      f"   [rule: {res['o_antigen_rule']}]")
             print(f"  {rec['caveat']}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")

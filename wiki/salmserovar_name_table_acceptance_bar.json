@@ -1,0 +1,64 @@
+{
+  "schema": "salmserovar-name-table-acceptance-bar-v1",
+  "frozen": "2026-09-09",
+  "status": "REGISTERED_BEFORE_IMPLEMENTATION",
+  "target": "the formula -> serovar-NAME lookup, not the antigen calling",
+  "why_this_target": "After the O-procedure port, 13 of the 14 remaining misses carry a formula BYTE-IDENTICAL to SeqSero2's. The antigen axes now agree; what diverges is the name lookup. The registry's standing line that 'the formula lookup is not the problem' was true when the O axis dominated and is now stale.",
+  "diagnosed_cause": {
+    "first_wins_dedup": "scripts/build_salmserovar_db.py::build_table keys on (O,H1,H2) and keeps the FIRST serovar per key. Measured against SeqSero2's own lists: 2578 entries -> 2365 distinct formulas, 195 formulas carry >1 serovar, 213 serovars are SILENTLY DISCARDED. Its comment claims 'subspecies-I named serovars come first'; that is FALSIFIED by the data -- for 16:b:e,n,x the first entry is the UNNAMED subspecies-II formula and the named Hvittingfoss is second. Cubana, Muenchen and Hvittingfoss are absent from our table entirely.",
+    "four_dropped_mechanisms": "SeqSero2's own naming code (SeqSero2_package.py ~L286-380) uses (1) remove_list to exclude entries, (2) rename_dict, (3) bracket EXPANSION so 'r,[i]' matches a bare 'r' (this is the Bovismorbificans/Hindmarsh collision), (4) a subspecies filter. build_table applies none of them."
+  },
+  "baseline_2026-09-09_after_the_O_port": {
+    "n_cohort": 200,
+    "ours_overall": {
+      "hit": 165,
+      "miss": 14,
+      "no_call": 21,
+      "accuracy": 0.825
+    },
+    "seqsero2_overall": {
+      "hit": 176,
+      "miss": 24,
+      "no_call": 0,
+      "accuracy": 0.88
+    },
+    "actionable_set": {
+      "n": 9,
+      "definition": "isolates where our formula EQUALS SeqSero2's profile, SeqSero2 is right and we are not",
+      "dedup_or_bracket": 5,
+      "no_table_row_monophasic_4_i_dash": 4
+    },
+    "per_axis_vs_seqsero2": {
+      "O": {
+        "agree": 183,
+        "differ": 2,
+        "ours_unresolved": 15
+      },
+      "H1": {
+        "agree": 200
+      },
+      "H2": {
+        "agree": 146,
+        "ours_unresolved": 54
+      }
+    }
+  },
+  "accuracy_denominator": "ALL 200 cohort isolates. Accuracy means WET-LAB-LABEL accuracy, never agreement with SeqSero2.",
+  "clauses_are_DIRECTIONAL_not_net": "A net count cannot separate laundering from rescue. The 2026-09-09 O-port bar failed on a NET no_call ceiling by one isolate while the change was strictly dominant, and shipping it required a recorded override. Every clause below is written on per-isolate TRANSITIONS instead.",
+  "adopt_if_ALL_hold": [
+    "hits rise by >= +4 over the baseline 165 on the fixed 200-isolate denominator",
+    "ZERO regressions: the hit->miss transition count is 0",
+    "ZERO regressions: the hit->no_call transition count is 0",
+    "confident errors do not increase: miss count <= 14",
+    "H1 and H2 agreement with SeqSero2 do not fall below baseline (this change must not touch the antigen axes at all)"
+  ],
+  "deliberately_absent": [
+    "any NET no_call ceiling -- a multi-valued name table can legitimately convert a formerly-unique-by-accident call into an honest abstention, and the hit->no_call clause already forbids the harmful direction"
+  ],
+  "explicitly_not_a_success_signal": [
+    "recovering a name by picking a different arbitrary winner from an ambiguous formula",
+    "any improvement measured on a denominator restricted to post-change resolved rows",
+    "agreement with SeqSero2 used as the accuracy metric"
+  ],
+  "reject_if_ANY_fails": true
+}

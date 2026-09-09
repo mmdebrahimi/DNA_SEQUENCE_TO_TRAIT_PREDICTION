@@ -15,7 +15,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.resfinder.runner import call_resistance_genes
+from dna_decode.resfinder.runner import (
+    RES_COVERAGE_THRESHOLD,
+    RES_IDENTITY_THRESHOLD,
+    call_resistance_genes,
+)
 
 DEFAULT_DB_DIR = "data/resfinder_db"
 _DB_BASE = "https://bitbucket.org/genomicepidemiology/resfinder_db/raw/HEAD"
@@ -30,8 +34,8 @@ def main(argv=None) -> int:
     ap.add_argument("--db-dir", default=DEFAULT_DB_DIR, help=f"dir of ResFinder class .fsa (default {DEFAULT_DB_DIR})")
     ap.add_argument("--drug-class", default=None, help="label for a single --db (e.g. beta-lactam)")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=90.0, help="min %% identity (ResFinder default 90)")
-    ap.add_argument("--coverage", type=float, default=60.0, help="min %% coverage (default 60)")
+    ap.add_argument("--identity", type=float, default=RES_IDENTITY_THRESHOLD, help="min %% identity (ResFinder default 90)")
+    ap.add_argument("--coverage", type=float, default=RES_COVERAGE_THRESHOLD, help="min %% coverage (default 60)")
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)

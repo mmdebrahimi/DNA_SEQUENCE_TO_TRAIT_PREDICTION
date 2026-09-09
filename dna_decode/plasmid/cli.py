@@ -20,7 +20,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.plasmid.runner import call_replicons
+from dna_decode.plasmid.runner import (
+    PLASMID_COVERAGE_THRESHOLD,
+    PLASMID_IDENTITY_THRESHOLD,
+    call_replicons,
+)
 
 DEFAULT_DB = "data/plasmidfinder_db/enterobacteriales.fsa"
 _DB_URL = "https://bitbucket.org/genomicepidemiology/plasmidfinder_db/raw/HEAD/enterobacteriales.fsa"
@@ -32,8 +36,8 @@ def main(argv=None) -> int:
     ap.add_argument("fasta", type=Path, help="genome assembly FASTA")
     ap.add_argument("--db", default=DEFAULT_DB, help=f"PlasmidFinder allele .fsa (default {DEFAULT_DB})")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=95.0, help="min %% identity (PlasmidFinder default 95)")
-    ap.add_argument("--coverage", type=float, default=60.0, help="min %% coverage (PlasmidFinder default 60)")
+    ap.add_argument("--identity", type=float, default=PLASMID_IDENTITY_THRESHOLD, help="min %% identity (PlasmidFinder default 95)")
+    ap.add_argument("--coverage", type=float, default=PLASMID_COVERAGE_THRESHOLD, help="min %% coverage (PlasmidFinder default 60)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)

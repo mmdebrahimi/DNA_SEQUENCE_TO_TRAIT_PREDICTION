@@ -16,7 +16,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.serotype.runner import call_serotype
+from dna_decode.serotype.runner import (
+    SERO_COVERAGE_THRESHOLD,
+    SERO_IDENTITY_THRESHOLD,
+    call_serotype,
+)
 
 DEFAULT_DB = "data/serotypefinder_db/serotypefinder.fsa"
 _DB_BASE = "https://bitbucket.org/genomicepidemiology/serotypefinder_db/raw/HEAD"
@@ -28,8 +32,8 @@ def main(argv=None) -> int:
     ap.add_argument("fasta", type=Path, help="genome assembly FASTA")
     ap.add_argument("--db", default=DEFAULT_DB, help=f"SerotypeFinder allele .fsa (O+H; default {DEFAULT_DB})")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=85.0, help="min %% identity (SerotypeFinder default 85)")
-    ap.add_argument("--coverage", type=float, default=60.0, help="min %% coverage (default 60)")
+    ap.add_argument("--identity", type=float, default=SERO_IDENTITY_THRESHOLD, help="min %% identity (SerotypeFinder default 85)")
+    ap.add_argument("--coverage", type=float, default=SERO_COVERAGE_THRESHOLD, help="min %% coverage (default 60)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)

@@ -18,7 +18,11 @@ import json
 import sys
 from pathlib import Path
 
-from dna_decode.pneumoserotype.runner import call_pneumo_serotype
+from dna_decode.pneumoserotype.runner import (
+    PNEUMO_COVERAGE_THRESHOLD,
+    PNEUMO_IDENTITY_THRESHOLD,
+    call_pneumo_serotype,
+)
 
 DEFAULT_DB_DIR = "data/pneumoserotype_db"
 
@@ -30,8 +34,8 @@ def main(argv=None) -> int:
     ap.add_argument("--db-dir", default=DEFAULT_DB_DIR,
                     help=f"dir with cps_references.fasta (default {DEFAULT_DB_DIR})")
     ap.add_argument("--sample-id", default=None)
-    ap.add_argument("--identity", type=float, default=90.0, help="min %% identity (default 90)")
-    ap.add_argument("--coverage", type=float, default=70.0, help="min %% coverage (default 70)")
+    ap.add_argument("--identity", type=float, default=PNEUMO_IDENTITY_THRESHOLD, help="min %% identity (default 90)")
+    ap.add_argument("--coverage", type=float, default=PNEUMO_COVERAGE_THRESHOLD, help="min %% coverage (default 70)")
     ap.add_argument("--out", type=Path, default=None, help="write provenance JSON here")
     ap.add_argument("--json-only", action="store_true")
     args = ap.parse_args(argv)
