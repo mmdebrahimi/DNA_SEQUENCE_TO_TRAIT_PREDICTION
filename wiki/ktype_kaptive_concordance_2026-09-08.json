@@ -107,5 +107,18 @@
     "Kaptive rows it does not call typeable are EXCLUDED from the denominator, so the agreement figure describes genomes where a confident reference exists. The excluded count is reported beside it and is part of the result.",
     "Our caller's abstentions are counted separately from disagreements. Abstention is not error, and folding the two together would understate the caller.",
     "The ~94% ceiling is a published property of the wzi method on ITS cohorts, not a constant. Treating it as an exact bar would over-read it; it is an expectation, which is why the verdict has a near-ceiling band rather than a single threshold."
-  ]
+  ],
+  "kl15_lead_resolved": {
+    "date": "2026-09-09",
+    "question": "is the KL15 concentration (10 of 29 genuine misses) an implementation defect or the method's limit?",
+    "finding": "ONE allele, wzi_50, maps to three K loci across the cohort: 10 genomes where Kaptive also says KL15 (correct), 6 where it says KL52, 4 where it says KL51. The same allele is right half the time and wrong half the time.",
+    "verdict": "CONFIRMED_METHOD_LIMIT_NOT_AN_IMPLEMENTATION_DEFECT",
+    "why": "this is exactly the published non-one-to-one behaviour the caller's own docstring cites -- isolates with distinct K types can share a wzi allele (Brisse 2013 JCM). A single-gene method CANNOT separate KL15/KL51/KL52 when they share wzi_50; only full-locus typing can. There is no code change that fixes this, and it directly supports the NEAR_THE_WZI_METHOD_CEILING verdict.",
+    "counts": {
+      "wzi_50_correct_KL15": 10,
+      "wzi_50_to_KL52": 6,
+      "wzi_50_to_KL51": 4
+    },
+    "action": "none -- lead closed; the residual is the method's own ceiling, not a defect"
+  }
 }

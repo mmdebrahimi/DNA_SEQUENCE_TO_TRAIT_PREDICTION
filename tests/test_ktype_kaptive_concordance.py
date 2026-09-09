@@ -108,3 +108,22 @@ def test_the_ceiling_is_not_treated_as_an_exact_bar(art):
     """It is a published property of OTHER cohorts; a single hard threshold would over-read it."""
     joined = " ".join(art["honest_limits"]).lower()
     assert "not a constant" in joined
+
+
+# --- the KL15 lead, resolved ----------------------------------------------------------------------
+
+def test_the_kl15_lead_was_resolved_as_a_method_limit(art):
+    """It was recorded as "lead, not diagnosis". One allele, wzi_50, maps to three K loci -- correct on
+    10, KL52 on 6, KL51 on 4 -- which is the published non-one-to-one behaviour, not a defect."""
+    r = art.get("kl15_lead_resolved")
+    assert r, "the KL15 lead must be resolved or still marked open"
+    assert r["verdict"] == "CONFIRMED_METHOD_LIMIT_NOT_AN_IMPLEMENTATION_DEFECT"
+    c = r["counts"]
+    assert c["wzi_50_correct_KL15"] == 10
+    assert c["wzi_50_to_KL52"] + c["wzi_50_to_KL51"] == 10   # right half the time, wrong half
+    assert r["action"].startswith("none")
+
+
+def test_the_resolution_names_why_no_code_change_helps(art):
+    why = art["kl15_lead_resolved"]["why"].lower()
+    assert "single-gene" in why and "cannot separate" in why

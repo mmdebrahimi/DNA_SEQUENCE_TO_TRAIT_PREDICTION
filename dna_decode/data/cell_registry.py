@@ -455,7 +455,13 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "the disagreements are CONCENTRATED, with KL15 accounting for 10 of the 29 genuine misses "
             "(KL15->KL52 x6, KL15->KL51 x4) -- concentration is the tell that located the serotype "
             "defect, but a single wzi allele legitimately mapping to several K loci is ALSO exactly "
-            "the published non-one-to-one behaviour, so the two readings are not yet separated. "
+            "the published non-one-to-one behaviour. *** THOSE TWO READINGS ARE NOW SEPARATED "
+            "(2026-09-09) AND IT IS THE METHOD'S LIMIT, NOT A DEFECT: *** ONE allele, wzi_50, maps to "
+            "three K loci across this cohort -- 10 genomes where Kaptive also says KL15 (correct), 6 "
+            "where it says KL52, 4 where it says KL51. The same allele is right half the time and wrong "
+            "half the time. A single-gene method CANNOT separate KL15/KL51/KL52 when they share wzi_50; "
+            "only full-locus typing can, so NO code change fixes this and it directly supports the "
+            "near-ceiling verdict. "
             "Genomes are AMR-cohort Klebsiella, ENRICHED for resistance, so the K-type distribution "
             "need not match a population. Re-score if either allele DB or Kaptive changes"),
     ),
