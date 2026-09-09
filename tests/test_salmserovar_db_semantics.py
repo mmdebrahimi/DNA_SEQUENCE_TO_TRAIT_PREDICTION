@@ -20,7 +20,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from dna_decode.salmserovar.runner import parse_axis_antigen  # noqa: E402
+from dna_decode.salmserovar.runner import parse_axis_antigen, parse_ss2_key  # noqa: E402
 
 DB = ROOT / "data" / "salmserovar_db" / "salmonella_antigens.fasta"
 MEMO = ROOT / "wiki" / "salmserovar_db_semantics_2026-09-09.md"
@@ -50,18 +50,26 @@ def _o_lengths() -> dict[str, int]:
             if (parse_axis_antigen(k) or ("", ""))[0] == "O"}
 
 
-def test_our_header_schema_cannot_express_a_qualifier():
-    """`O__<antigen>__<index>` has exactly three fields and none of them carries semantics. This is the
-    root cause, and it is structural rather than a bad value."""
+def test_the_header_schema_now_carries_the_seqsero2_role():
+    """THE FIX, pinned. The schema was `O__<antigen>__<index>` -- three fields, none carrying
+    semantics -- which is why the qualifier was lost and the caller read six special-purpose entries
+    as ordinary positive alleles. Every O header now carries the ORIGINAL SeqSero2 header as a 4th
+    field, and it round-trips exactly (it embeds `__` itself, so it is re-joined, not indexed)."""
     if not DB.exists():
         pytest.skip("antigen DB absent")
+    seen = set()
     for k in _o_lengths():
         parts = k.split("__")
-        assert len(parts) == 3, k
+        assert len(parts) >= 4, f"{k}: no role field -- the DB is a pre-2026-09-09 build"
         assert parts[0] == "O"
-        assert parts[2].isdigit(), f"{k}: third field is an index, not a qualifier"
-        for token in ("not_in", "partial", "wbaV"):
-            assert token not in k, f"{k} unexpectedly carries a qualifier -- schema may have changed"
+        assert parts[2].isdigit(), f"{k}: third field must remain the source index"
+        key = parse_ss2_key(k)
+        assert key and key.startswith(("O-", "O:")), f"{k}: role field is not a SeqSero2 O header"
+        seen.add(key)
+    # Non-vacuity: a schema that merely HAS a 4th field proves nothing. Every one of SeqSero2's six
+    # qualified entries -- the ones whose loss caused the defect -- must be recoverable by name.
+    for qualified in SS2_QUALIFIED:
+        assert any(s.startswith(qualified + "__") for s in seen), f"{qualified} not recoverable"
 
 
 def test_the_two_flagged_alleles_have_the_lengths_of_seqsero2_qualified_entries():
@@ -69,9 +77,9 @@ def test_the_two_flagged_alleles_have_the_lengths_of_seqsero2_qualified_entries(
     If either changes, the DB was rebuilt and the whole diagnosis must be re-derived."""
     if not DB.exists():
         pytest.skip("antigen DB absent")
-    lens = _o_lengths()
-    assert lens.get("O__1,3,19__126") == SS2_QUALIFIED["O-1,3,19_not_in_3,10"] == 130
-    assert lens.get("O__9,46__362") == SS2_QUALIFIED["O-9,46_wzy_partial"] == 216
+    by_key = {parse_ss2_key(k): v for k, v in _o_lengths().items()}
+    assert by_key.get("O-1,3,19_not_in_3,10__130") == SS2_QUALIFIED["O-1,3,19_not_in_3,10"] == 130
+    assert by_key.get("O-9,46_wzy_partial__216") == SS2_QUALIFIED["O-9,46_wzy_partial"] == 216
 
 
 def test_plain_O9_is_absent_from_BOTH_databases():

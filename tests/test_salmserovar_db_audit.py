@@ -51,8 +51,12 @@ def test_the_promiscuous_allele_is_still_the_shortest_and_still_present():
     if not DB.exists():
         pytest.skip("antigen DB absent")
     lens = {k: len(v) for k, v in load_fasta(DB).items() if axis_of(k) == "O"}
-    assert "O__1,3,19__126" in lens
-    assert lens["O__1,3,19__126"] == min(lens.values()) == 130
+    # The header gained a 4th field (the SeqSero2 role) on 2026-09-09, so match on the stable
+    # `<axis>__<antigen>__<index>` prefix rather than the whole id. The AUDIT ARTIFACT this file's
+    # other tests read still carries the pre-role ids -- it is a record of a run, not of the schema.
+    hits = [k for k in lens if k == "O__1,3,19__126" or k.startswith("O__1,3,19__126__")]
+    assert len(hits) == 1, f"expected exactly one 1,3,19 marker entry, got {hits}"
+    assert lens[hits[0]] == min(lens.values()) == 130
 
 
 # --- the audit must not over-flag -----------------------------------------------------------------

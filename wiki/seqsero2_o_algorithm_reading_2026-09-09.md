@@ -1,5 +1,18 @@
 # SeqSero2's O decision procedure, read from source — and what it corrects
 
+> **PARTLY SUPERSEDED THE SAME DAY — read this header before trusting the threshold section below.**
+> This memo is kept VERBATIM as the pre-implementation record (the acceptance bar was frozen against
+> it), so nothing below is edited. But its central threshold-translation argument was then MEASURED,
+> and it **fails in one place**: see `wiki/salmserovar_o_fix_result_2026-09-09.md`.
+>
+> The coverage↔k-mer-score mapping holds for the branch **gates** (`wbaV > 70`, `wzy > 40` — different
+> antigens, where presence-strength is the question) and **breaks for the `tyr` O9-vs-O2 refinement**,
+> where the two references are ~99% identical to each other so both align full length under BLAST.
+> Implementing that comparison on coverage fired `O-2` on 16 isolates for **13 miss / 3 no-call / zero
+> hits**. The refinement is now REFUSED rather than approximated. The "Honest limits" section below
+> already said the mapping was argued and not measured and should be validated first — it has been, and
+> that is the result.
+
 The review's recommended first step was to **read** SeqSero2's O logic rather than infer rules from
 header names, since inferring-from-name had already produced three wrong causal claims here. This is
 that reading, from `SeqSero2_package.py` 1.3.2 (`call_O_and_H_type`, lines 1070–1131; scoring in

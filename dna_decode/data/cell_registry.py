@@ -1389,8 +1389,32 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         # The tier records EVIDENCE CLASS, not performance: this cell HAS now been measured against a
         # free, independent, wet-lab label. The headline carries the (poor) number.
         evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
-        claim_status="measured_vs_wetlab_label_UNDERPERFORMS_the_tool_it_wraps",
+        claim_status="measured_vs_wetlab_label_IMPROVED_by_porting_the_O_procedure_still_trails_the_tool",
         validation_slice=(
+            "*** CURRENT NUMBER (2026-09-09, wiki/salmserovar_o_fix_result_2026-09-09.{md,json}): "
+            "wet-lab accuracy 0.8250 (165 hit / 14 miss / 21 no-call) on the same 200 isolates, vs "
+            "SeqSero2 1.3.2 at 0.8800 -- DELTA -0.0550, improved from -0.1750. *** The O axis was "
+            "the whole gap and the cause was a LOST HEADER QUALIFIER: our antigen DB is SeqSero2's "
+            "re-headered into `O__<antigen>__<index>`, a schema with no field for the semantic "
+            "qualifier SeqSero2 attaches to six O entries, so the caller read a DIFFERENTIAL MARKER "
+            "as a positive allele and flattened the O9-vs-O9,46 discriminator (plain O9 was "
+            "UNEMITTABLE). The header now carries the original SeqSero2 key and the three-branch O "
+            "decision procedure is ported. O agreement 159->183 (differ 33->2); H1 and H2 are "
+            "byte-unchanged BY CONSTRUCTION (their headers were not touched). ZERO regressions: no "
+            "hit->miss and no hit->no_call across all 200. *** SHIPPED AS A RECORDED OVERRIDE: the "
+            "frozen bar (wiki/salmserovar_o_fix_acceptance_bar.json) returned REJECT on 1 clause of "
+            "7 -- a NET no_call ceiling, exceeded by ONE isolate -- while the directional failure "
+            "mode that clause polices is measurably absent (20 miss->hit and 4 no_call->hit against "
+            "5 miss->no_call, and SeqSero2 itself abstains on 4 of those 5). The bar file and the "
+            "artifact's REJECT verdict are BOTH left unedited; the adoption is an override, not a "
+            "pass. *** THE O-AXIS DELTA VS SEQSERO2 IS NOW A COMPATIBILITY MEASURE, NOT INDEPENDENT "
+            "CORROBORATION -- the procedure is a port of SeqSero2's own. Only the WET-LAB accuracy "
+            "is independent, which is why the bar was written on it. *** KNOWN COST: the tyr "
+            "O9-vs-O2 refinement is REFUSED (BLAST cannot carry it -- the two tyr references are "
+            "~99% identical so both align full length; implementing it on coverage fired O-2 on 16 "
+            "isolates for 13 miss / 3 no-call / ZERO hits), so a true O-2 genome (Paratyphi A, "
+            "Nitra, Kiel, Koessen) WILL be called O-9. The cohort contains NO O-2 serovar, so that "
+            "direction is untested here. --- PRIOR EVIDENCE, retained: "
             "N=200 NCBI-PD isolates from reference public-health labs (CDC/PHE/FDA/USDA-FSIS/state "
             "health depts), 74 distinct serovars, 29 BioProjects, largest-source share 0.125 (CLEARS "
             "the project's own 0.60 diversity bar). Scored 2026-09-04 by "
@@ -1442,12 +1466,16 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
         falsifier_ref="scripts/salmserovar_validate.py", incoming_data_gate="n/a",
         demotion_rule=(
-            "ALREADY DEMOTED BY MEASUREMENT relative to its wrapper claim: it is WORSE than naive use "
-            "of the tool it mimics (-0.222) and abstains on ~30%. Do NOT present it as a drop-in "
-            "serovar caller. Residual circularity is bounded not eliminated (per-isolate agglutination "
-            "provenance is unprovable), but both callers are scored on the SAME labels so the DELTA "
-            "survives contamination even where the absolute levels are optimistic. Re-score after any "
-            "H2/O-antigen DB fix; promote the claim only if the delta closes"),
+            "STILL BEHIND the tool it wraps after the 2026-09-09 O-procedure port: 0.8250 vs SeqSero2 "
+            "0.8800 (-0.0550, improved from -0.1750). BETTER, NOT FIXED -- do NOT present it as a "
+            "drop-in serovar caller. Two further constraints on how it may be described: (1) the "
+            "O-axis agreement with SeqSero2 is now a COMPATIBILITY measure (the procedure is a port "
+            "of SeqSero2's), so only the wet-lab accuracy may be quoted as independent evidence; "
+            "(2) it CANNOT emit O-2, so a Paratyphi A / Nitra / Kiel / Koessen genome is called O-9 "
+            "-- never present it as safe for O-2 discrimination. Residual circularity is bounded not "
+            "eliminated (per-isolate agglutination provenance is unprovable), but both callers are "
+            "scored on the SAME labels so the DELTA survives contamination even where the absolute "
+            "levels are optimistic. Promote the claim only if the delta closes"),
     ),
     CellContract(
         cell_id="typing:Escherichia_coli:serotype", track="typing", route="dna-serotype",

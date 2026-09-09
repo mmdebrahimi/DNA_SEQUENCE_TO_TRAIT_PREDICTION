@@ -1,0 +1,142 @@
+{
+  "schema": "salmserovar-o-fix-result-v1",
+  "date": "2026-09-09",
+  "bar": "wiki\\salmserovar_o_fix_acceptance_bar.json",
+  "bar_status": "REGISTERED_BEFORE_IMPLEMENTATION",
+  "change": "ported SeqSero2 1.3.2's three-branch O decision procedure (call_O_and_H_type) and restored the SeqSero2 role to the antigen DB header",
+  "n": 200,
+  "ours_before": {
+    "hit": 141,
+    "miss": 39,
+    "no_call": 20,
+    "n": 200,
+    "accuracy": 0.705
+  },
+  "ours_after": {
+    "hit": 165,
+    "miss": 14,
+    "no_call": 21,
+    "n": 200,
+    "accuracy": 0.825
+  },
+  "seqsero2": {
+    "hit": 176,
+    "miss": 24,
+    "no_call": 0,
+    "n": 200,
+    "accuracy": 0.88
+  },
+  "delta_vs_reference_tool_before": -0.17500000000000004,
+  "delta_vs_reference_tool_after": -0.05500000000000005,
+  "per_axis_vs_seqsero2": {
+    "O": {
+      "after": {
+        "agree": 183,
+        "differ": 2,
+        "ours_unresolved": 15,
+        "n": 200
+      },
+      "before": {
+        "agree": 159,
+        "differ": 33,
+        "ours_unresolved": 8,
+        "n": 200
+      }
+    },
+    "H1": {
+      "after": {
+        "agree": 200,
+        "differ": 0,
+        "ours_unresolved": 0,
+        "n": 200
+      },
+      "before": {
+        "agree": 200,
+        "differ": 0,
+        "ours_unresolved": 0,
+        "n": 200
+      }
+    },
+    "H2": {
+      "after": {
+        "agree": 146,
+        "differ": 0,
+        "ours_unresolved": 54,
+        "n": 200
+      },
+      "before": {
+        "agree": 146,
+        "differ": 0,
+        "ours_unresolved": 54,
+        "n": 200
+      }
+    }
+  },
+  "o_antigen_rule_counts": {
+    "C_argmax": 144,
+    "A_wbaV_default_O9_tyr_not_discriminable_by_blast": 16,
+    "B_not_in_1319_present": 16,
+    "no_o_allele_called": 8,
+    "C_guard_1319_marker_only": 7,
+    "B_not_in_1319_absent": 4,
+    "C_argmax_after_1319_exclusion": 4,
+    "C_guard_wbaV_without_wzy": 1
+  },
+  "transitions": {
+    "hit->hit": 141,
+    "miss->hit": 20,
+    "no_call->no_call": 16,
+    "miss->miss": 14,
+    "miss->no_call": 5,
+    "no_call->hit": 4
+  },
+  "n_regressions": 0,
+  "accuracy_on_called_before": 0.7833333333333333,
+  "accuracy_on_called_after": 0.9217877094972067,
+  "bar_checks": [
+    {
+      "check": "O agreement rises by >= +15 over 159 on the fixed 200 denominator",
+      "pass": true,
+      "detail": "159 -> 183 (+24)"
+    },
+    {
+      "check": "H1 agreement does not fall below baseline",
+      "pass": true,
+      "detail": "200 -> 200"
+    },
+    {
+      "check": "H1 ours_unresolved does not rise above baseline",
+      "pass": true,
+      "detail": "0 -> 0"
+    },
+    {
+      "check": "H2 agreement does not fall below baseline",
+      "pass": true,
+      "detail": "146 -> 146"
+    },
+    {
+      "check": "H2 ours_unresolved does not rise above baseline",
+      "pass": true,
+      "detail": "54 -> 54"
+    },
+    {
+      "check": "overall wet-lab accuracy does not fall below 0.7050",
+      "pass": true,
+      "detail": "0.7050 -> 0.8250"
+    },
+    {
+      "check": "overall no_call does not rise above 20",
+      "pass": false,
+      "detail": "20 -> 21"
+    }
+  ],
+  "verdict": "REJECT",
+  "verdict_is_mechanical": "computed from the frozen bar with no judgment applied. If this cell is shipped despite a REJECT, that is an OVERRIDE and is recorded as such in the memo -- it is never written back here.",
+  "honest_limits": [
+    "The O procedure is now a PORT of SeqSero2's, so agreement with SeqSero2 on the O axis is a COMPATIBILITY measure, not independent corroboration. Only the WET-LAB accuracy is an independent number, which is why the bar is written on it.",
+    "SeqSero2's branch gates are k-mer coverage-of-reference scores; ours are BLAST coverage. The mapping is argued on the shared axis, not measured -- see wiki/seqsero2_o_algorithm_reading_2026-09-09.md.",
+    "Our O_dict membership bar is the caller's coverage threshold (40), STRICTER than SeqSero2's 25. That divergence is deliberately left in place: 40 was itself adopted against a pre-registered bar, and moving two things at once would make neither measurable.",
+    "SeqSero2's column is reused from the 2026-09-08 checkpoint (its binary and DB are untouched by this change); the run refuses unless that cache reproduces the frozen baseline tally exactly.",
+    "Per-serovar cap 12 flattens prevalence, so these are per-isolate accuracies on a deliberately diverse mix, NOT population-weighted rates."
+  ]
+}
