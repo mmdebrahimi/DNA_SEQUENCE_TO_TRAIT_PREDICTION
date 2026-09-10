@@ -359,7 +359,7 @@ def _cell_layer_for(drug: str, organism: str | None, key: str) -> dict | None:
 # happened to `lineage` and `source_concentration`: both rendered on the card for cells whose calls
 # never mentioned them, and the gap was invisible until the layers were enumerated against the CLI.
 DISCLOSURE_LAYERS = ("lineage", "source_concentration", "prospective", "doubt_layer",
-                     "organism_scope")
+                     "organism_scope", "error_rates")
 
 
 def trust_block(drug: str, organism: str | None = None) -> dict:
@@ -395,7 +395,12 @@ def trust_block(drug: str, organism: str | None = None) -> dict:
     # `prospective` is attached WHENEVER it exists, not only when it regresses: the pre-existing
     # `prospective_regression` key surfaces bad news only, so a caller could not distinguish "no
     # post-lock data" from "post-lock data that AGREED". Both keys ship; neither replaces the other.
-    for _layer in ("lineage", "source_concentration", "prospective"):
+    # `error_rates` (VME/ME) rides the same path. It is a REFRAMING of the cell's own committed
+    # counts -- VME = 1-sens exactly -- so it adds no information and changes no metric; what it
+    # adds is that a caller choosing a drug sees the rate at which this cell reports a RESISTANT
+    # isolate as susceptible. For klebsiella x meropenem that is 0.533, which "sens 0.467" says
+    # too quietly. The reachability guard is what required it here rather than card-only.
+    for _layer in ("lineage", "source_concentration", "prospective", "error_rates"):
         _b = _cell_layer_for(drug, organism, _layer)
         if _b:
             badge[_layer] = _b
@@ -470,6 +475,23 @@ def concentration_one_line(badge: dict) -> str | None:
     return (f"source concentration: SINGLE-SOURCE -- {n_bp} BioProject(s), one dominant{share_s}. "
             "The metric above describes that source's isolates; it is a narrow estimate, in either "
             "direction, not necessarily an inflated one")
+
+
+def error_rates_one_line(badge: dict) -> str | None:
+    """VME/ME as one line, or None when the cell has no confusion matrix.
+
+    Leads with VME because that is the direction that can hurt: a resistant isolate reported
+    susceptible leaves an infection untreated. It is the same fact as `1 - sens`, said so a reader
+    choosing a drug does not have to do the subtraction.
+    """
+    e = badge.get("error_rates")
+    if not e or e.get("vme") is None:
+        return None
+    ci = e.get("vme_ci")
+    span = f" [{ci[0]:.3f}-{ci[1]:.3f}]" if ci else ""
+    me = f"; ME {e['me']:.3f} (S called R)" if e.get("me") is not None else ""
+    return (f"clinical error rates: VME {e['vme']:.3f}{span} on {e['vme_n_resistant']} resistant "
+            f"isolates -- that fraction of RESISTANT isolates this cell reports susceptible{me}")
 
 
 def prospective_one_line(badge: dict) -> str | None:

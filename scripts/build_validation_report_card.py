@@ -49,6 +49,7 @@ sys.path.insert(0, str(ROOT))
 # construction; pinned by tests/test_cell_registry.py) so the registry is the single source the card reads.
 from dna_decode.data.cell_registry import surface_index  # noqa: E402
 from dna_decode.data.cell_key import canonical_cell_key  # noqa: E402
+from dna_decode.eval.error_rates import vme_me, worst_vme_first  # noqa: E402
 
 # Reframed tier (lineage-disclosure layer): the headline must say BOTH that this is provenance-disjoint
 # AND that the R classes are clonally dominated, with the lineage-effective N + cluster-weighted metrics
@@ -431,6 +432,14 @@ def main() -> int:
         # Lineage augments (never demotes) the state machine: only SCORED cells carry a lineage block.
         if c["state"] == "SCORED":
             c["lineage"] = build_lineage_block(lineage.get(key))
+            # VME/ME AUGMENTS under its own key, like every other layer. It adds NO information --
+            # VME = 1-sens and ME = 1-spec exactly, from the counts two lines above -- and exists for
+            # FRAMING: an AST reader is choosing a drug, so the headline error should be the rate at
+            # which a resistant isolate is reported susceptible. On this card that moves
+            # klebsiella x meropenem from "sens 0.467" to "VME 0.533": same fact, actionable phrasing.
+            er = vme_me(c.get("tp"), c.get("fp"), c.get("tn"), c.get("fn"))
+            if er is not None:
+                c["error_rates"] = er.as_dict()
         # Prospective likewise AUGMENTS: attached wherever an artifact exists, regardless of state, so a
         # prospective result can never be hidden by the cell's provdisjoint state.
         # Source concentration AUGMENTS too, and only where it was measured. It never demotes: a
@@ -580,6 +589,37 @@ def main() -> int:
                  "the correction. **Honest limit:** this project has exactly ONE independently "
                  "confirmed completeness gap, so recovering it is a single case and **not a rate** — "
                  "it bounds nothing about gaps never confirmed.\n")
+
+    # ---- Clinical error rates (VME / ME) ----
+    # A REFRAMING of the counts above, not a new measurement: VME = 1-sens and ME = 1-spec exactly. It
+    # earns its place because an AST reader is choosing a drug, so the number hardest to miss should be
+    # the rate at which a RESISTANT isolate is reported susceptible. Ordered worst-VME-first for the same
+    # reason: alphabetical order would put a 0.533 wherever the alphabet happened to put it.
+    er_rows = [{"organism": k[0], "drug": k[1], **c["error_rates"]}
+               for k, c in rows if c.get("error_rates")]
+    ranked = worst_vme_first(er_rows)
+    if ranked:
+        L.append("\n## Clinical error rates (VME / ME) - the same cells, in the direction that can hurt\n")
+        L.append("**VME (very major error) = a RESISTANT isolate called susceptible** = `FN/(TP+FN)` - the "
+                 "dangerous direction, because it leaves an infection untreated. **ME (major error) = a "
+                 "SUSCEPTIBLE isolate called resistant** = `FP/(FP+TN)` - costly, not dangerous. This adds "
+                 "NO information: VME = 1-sens and ME = 1-spec exactly, from the counts above. It is here "
+                 "for framing, which is why clinical microbiology reports it this way.\n")
+        L.append("**No acceptance bar is asserted.** Regulatory frameworks publish numeric VME/ME ceilings; "
+                 "the exact thresholds are not verifiable from anything in this repo, and writing a "
+                 "remembered number beside a real measurement is not something this card does.\n")
+        L.append("| organism | drug | **VME** (R->S) | 95% CI | n(R) | ME (S->R) | 95% CI | n(S) |")
+        L.append("|---|---|---|---|---|---|---|---|")
+        for _c in ranked:
+            _vci = ("[%.3f-%.3f]" % tuple(_c["vme_ci"])) if _c["vme_ci"] else "-"
+            _mci = ("[%.3f-%.3f]" % tuple(_c["me_ci"])) if _c["me_ci"] else "-"
+            _me = ("%.3f" % _c["me"]) if _c["me"] is not None else "-"
+            L.append(f"| `{_c['organism']}` | `{_c['drug']}` | **{_c['vme']:.3f}** | {_vci} | "
+                     f"{_c['vme_n_resistant']} | {_me} | {_mci} | {_c['me_n_susceptible']} |")
+        _w = ranked[0]
+        L.append(f"\nWorst VME on the card: **`{_w['organism']}` x `{_w['drug']}` at {_w['vme']:.3f}** on "
+                 f"{_w['vme_n_resistant']} resistant isolates - that fraction of resistant isolates would "
+                 f"be reported susceptible. The same cell's sensitivity reads {1 - _w['vme']:.3f}.\n")
 
     # ---- Prospective-lock disclosure (temporal) ----
     prosp_rows = [(k, c) for k, c in rows if c.get("prospective")]

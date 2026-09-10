@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-09-01
+# Decoder-suite provenance-disjoint validation report card — 2026-09-10
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -111,6 +111,28 @@ Rows are **drug-level** — the screen runs across the whole cached determinant 
 | salmonella | tetracycline | 89 | 0 | 0 | — |
 
 Across 5 screened drugs, **no** determinant families survive the correction. **Honest limit:** this project has exactly ONE independently confirmed completeness gap, so recovering it is a single case and **not a rate** — it bounds nothing about gaps never confirmed.
+
+
+## Clinical error rates (VME / ME) - the same cells, in the direction that can hurt
+
+**VME (very major error) = a RESISTANT isolate called susceptible** = `FN/(TP+FN)` - the dangerous direction, because it leaves an infection untreated. **ME (major error) = a SUSCEPTIBLE isolate called resistant** = `FP/(FP+TN)` - costly, not dangerous. This adds NO information: VME = 1-sens and ME = 1-spec exactly, from the counts above. It is here for framing, which is why clinical microbiology reports it this way.
+
+**No acceptance bar is asserted.** Regulatory frameworks publish numeric VME/ME ceilings; the exact thresholds are not verifiable from anything in this repo, and writing a remembered number beside a real measurement is not something this card does.
+
+| organism | drug | **VME** (R->S) | 95% CI | n(R) | ME (S->R) | 95% CI | n(S) |
+|---|---|---|---|---|---|---|---|
+| `klebsiella` | `meropenem` | **0.533** | [0.361-0.698] | 30 | 0.100 | [0.035-0.256] | 30 |
+| `klebsiella` | `tetracycline` | **0.200** | [0.095-0.373] | 30 | 0.033 | [0.006-0.167] | 30 |
+| `escherichia_coli_shigella` | `gentamicin` | **0.100** | [0.035-0.256] | 30 | 0.000 | [0.000-0.114] | 30 |
+| `escherichia_coli_shigella` | `ciprofloxacin` | **0.067** | [0.018-0.213] | 30 | 0.300 | [0.167-0.479] | 30 |
+| `escherichia_coli_shigella` | `tetracycline` | **0.067** | [0.018-0.213] | 30 | 0.067 | [0.018-0.213] | 30 |
+| `klebsiella` | `gentamicin` | **0.067** | [0.018-0.213] | 30 | 0.067 | [0.018-0.213] | 30 |
+| `escherichia_coli_shigella` | `ceftriaxone` | **0.033** | [0.006-0.167] | 30 | 0.033 | [0.006-0.167] | 30 |
+| `klebsiella` | `ciprofloxacin` | **0.033** | [0.006-0.167] | 30 | 0.033 | [0.006-0.167] | 30 |
+| `campylobacter` | `ciprofloxacin` | **0.000** | [0.000-0.161] | 20 | 0.000 | [0.000-0.161] | 20 |
+| `klebsiella` | `ceftriaxone` | **0.000** | [0.000-0.114] | 30 | 0.100 | [0.035-0.256] | 30 |
+
+Worst VME on the card: **`klebsiella` x `meropenem` at 0.533** on 30 resistant isolates - that fraction of resistant isolates would be reported susceptible. The same cell's sensitivity reads 0.467.
 
 
 ## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)

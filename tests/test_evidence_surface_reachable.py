@@ -83,8 +83,9 @@ def test_every_disclosure_layer_has_a_disable_hook():
     for name in _LAYER_SOURCES:
         assert hasattr(ts, name), f"{name} no longer exists on trust_surface"
     # organism_scope + doubt_layer are attached by their own named functions; lineage /
-    # source_concentration / prospective all route through _cell_layer_for.
-    covered = {"doubt_layer", "organism_scope", "lineage", "source_concentration", "prospective"}
+    # source_concentration / prospective / error_rates all route through _cell_layer_for.
+    covered = {"doubt_layer", "organism_scope", "lineage", "source_concentration", "prospective",
+               "error_rates"}
     assert set(ts.DISCLOSURE_LAYERS) <= covered, (
         f"a disclosure layer has no disable hook: {set(ts.DISCLOSURE_LAYERS) - covered}")
 

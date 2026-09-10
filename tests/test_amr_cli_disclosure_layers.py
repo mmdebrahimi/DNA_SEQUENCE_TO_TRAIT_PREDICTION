@@ -126,7 +126,7 @@ def test_not_accrued_is_silent_and_silence_never_means_validated():
 
 # --- the structural guard -------------------------------------------------------------------------
 
-_RENDERED = {"lineage", "source_concentration", "prospective", "organism_scope"}
+_RENDERED = {"lineage", "source_concentration", "prospective", "organism_scope", "error_rates"}
 
 
 def test_the_known_layer_set_has_not_grown_unnoticed():
@@ -137,6 +137,27 @@ def test_the_known_layer_set_has_not_grown_unnoticed():
     assert set(DISCLOSURE_LAYERS) == _RENDERED | {"doubt_layer"}, (
         "DISCLOSURE_LAYERS changed -- wire a renderer for the new layer into dna_decode/amr/cli.py "
         "and add it to _RENDERED, or justify it here the way doubt_layer is justified.")
+
+
+def test_error_rates_renders_and_leads_with_the_dangerous_direction():
+    """Added 2026-09-10, and this file's tripwire is what required the renderer rather than a card-only
+    block. VME must come FIRST in the line: it is the direction that leaves an infection untreated, and
+    burying it behind ME would reproduce the ordering problem the layer exists to fix."""
+    from dna_decode.data.trust_surface import error_rates_one_line
+    line = error_rates_one_line({"error_rates": {
+        "vme": 0.533, "vme_n_resistant": 30, "vme_ci": [0.361, 0.698],
+        "me": 0.1, "me_n_susceptible": 30, "me_ci": [0.035, 0.256]}})
+    assert line and line.index("VME") < line.index("ME " if "ME " in line else "ME")
+    assert "0.533" in line and "30 resistant" in line
+    assert "reports susceptible" in line, "the line must say what the number MEANS, not just name it"
+
+
+def test_error_rates_is_silent_without_a_confusion_matrix():
+    """A cell with no counts has no rate. Printing a bare label would imply a measurement."""
+    from dna_decode.data.trust_surface import error_rates_one_line
+    assert error_rates_one_line({}) is None
+    assert error_rates_one_line({"error_rates": None}) is None
+    assert error_rates_one_line({"error_rates": {"vme": None, "me": 0.1}}) is None
 
 
 def test_doubt_layer_is_inert_today_and_this_trips_the_moment_it_is_not():

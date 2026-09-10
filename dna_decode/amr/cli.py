@@ -53,8 +53,9 @@ from dna_decode.data.hiv_amr import (
 from dna_decode.data.mic_tiers import supported_drugs
 from dna_decode.data.routable_drugs import all_routable_amr_drugs
 from dna_decode.data.organism_scope import one_line as organism_scope_one_line
-from dna_decode.data.trust_surface import (concentration_one_line, lineage_one_line,
-                                            one_line, prospective_one_line, trust_block)
+from dna_decode.data.trust_surface import (concentration_one_line, error_rates_one_line,
+                                            lineage_one_line, one_line, prospective_one_line,
+                                            trust_block)
 from dna_decode.eval.amr_rules import AMRFINDER_IMAGE_PINNED, call_resistance
 from dna_decode.eval.doubt import doubt_one_line, target_site_doubt
 from dna_decode.amr.uncounted import (disclosure_provenance, measured_gap_misses,
@@ -201,6 +202,7 @@ def _emit_target_site(rec: dict, call, sample_id: str, args) -> int:
         print(f"  {one_line(rec['validation'])}")
         for _extra in (lineage_one_line(rec["validation"]),
                        concentration_one_line(rec["validation"]),
+                       error_rates_one_line(rec["validation"]),
                        prospective_one_line(rec["validation"]),
                        organism_scope_one_line((rec["validation"] or {}).get("organism_scope"))):
             if _extra:
@@ -617,6 +619,7 @@ def main(argv=None) -> int:
         # disclosure". `one_line(None)` is a no-op, so this is silent wherever nothing is measured.
         for _extra in (lineage_one_line(rec["validation"]),
                        concentration_one_line(rec["validation"]),
+                       error_rates_one_line(rec["validation"]),
                        prospective_one_line(rec["validation"]),
                        organism_scope_one_line((rec["validation"] or {}).get("organism_scope"))):
             if _extra:
