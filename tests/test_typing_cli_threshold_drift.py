@@ -162,11 +162,27 @@ def test_the_default_is_not_a_hardcoded_literal(pkg: str):
 # itself become the next stale copy.
 # ---------------------------------------------------------------------------
 
-_THRESHOLD_IN_PROSE = re.compile(r"\b(identity|coverage)\s+(\d+(?:\.\d+)?)\b", re.IGNORECASE)
+# `id 90 / cov 70` is as much a claim as `identity 90 / coverage 70`, and pneumoserotype writes it the
+# short way -- a pattern matching only the long form would silently skip that cell entirely.
+_AXIS_ALIASES = {"identity": "identity", "id": "identity", "coverage": "coverage", "cov": "coverage"}
+_THRESHOLD_IN_PROSE = re.compile(r"\b(identity|coverage|id|cov)\s+(\d+(?:\.\d+)?)\b", re.IGNORECASE)
 
-# Claim surfaces that state this cell's thresholds in prose to a human reader.
+# Claim surfaces that state a cell's thresholds in prose to a human reader. EVERY typing cell whose
+# router entry quotes numbers is listed: only salmserovar had actually drifted (it is the only one
+# whose constant was ever revised), so this is drift PREVENTION for the rest -- the point is to make
+# the property true by construction rather than true by the constants never having moved.
+_ROUTER = "dna_decode/cli.py"
 _PROSE_SURFACES = {
-    "salmserovar": ["dna_decode/cli.py", "wiki/salm_serovar_report_card.md"],
+    "salmserovar": [_ROUTER, "wiki/salm_serovar_report_card.md"],
+    "serotype": [_ROUTER],
+    "pneumoserotype": [_ROUTER, "wiki/pneumo_serotype_report_card.md"],
+    # ktype's report card is deliberately NOT listed: it states no threshold in prose, and the
+    # per-surface non-vacuity assertion correctly refused to let it sit here as a listed-but-empty
+    # surface. Listing a file that carries no claim is how a guard becomes decoration.
+    "ktype": [_ROUTER],
+    "plasmid": [_ROUTER],
+    "resfinder": [_ROUTER],
+    "disinfinder": [_ROUTER],
 }
 
 
@@ -192,7 +208,7 @@ def _cell_scope(path: Path, cell: str) -> str:
 
 
 def _prose_threshold_claims(path: Path, cell: str) -> list[tuple[str, float]]:
-    return [(axis.lower(), float(num))
+    return [(_AXIS_ALIASES[axis.lower()], float(num))
             for axis, num in _THRESHOLD_IN_PROSE.findall(_cell_scope(path, cell))]
 
 
