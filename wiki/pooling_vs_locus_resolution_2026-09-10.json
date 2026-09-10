@@ -1,0 +1,43 @@
+{
+  "schema": "pooling-vs-locus-resolution-v1",
+  "date": "2026-09-10",
+  "claim_under_test": "POOLING-dilution's deployable half: restricting to candidate causal loci before pooling recovers within-lineage signal that whole-genome pooling destroys.",
+  "n_strains": 123,
+  "n_refused": 16,
+  "n_dedup_dropped": 1,
+  "n_R": 60,
+  "n_S": 63,
+  "n_lineages": 71,
+  "cv": "leave-one-MLST-out (lineage-disjoint by construction)",
+  "genes_whole_genome_mean": 4998.869918699187,
+  "auroc_whole_genome_pooled": 0.8029100529100528,
+  "auroc_qrdr_restricted": 0.8386243386243386,
+  "random_4gene_null": {
+    "n_draws": 50,
+    "n_common_single_copy_products_drawn_from": 155,
+    "mean": 0.7479338624338624,
+    "max": 0.901984126984127,
+    "p95": 0.8337169312169312
+  },
+  "verdict": "REFUTED_LOCUS_IDENTITY",
+  "verdict_is_mechanical": "computed by verdict_from_bar from the frozen bar; not authored",
+  "within_lineage_feasibility": {
+    "n_lineages": 71,
+    "n_mixed_label_lineages": 5,
+    "n_strains_in_mixed_lineages": 41,
+    "largest_mixed_lineage": [
+      "MLST.ecoli_achtman_4.131",
+      26,
+      25
+    ]
+  },
+  "reading": "A random draw of 4 arbitrary single-copy genes reached a HIGHER AUROC than the four causal QRDR genes. Under leave-one-lineage-OUT CV in this cohort, an arbitrary 4-gene representation carries as much resistance signal as the causal one -- which is what ancestry-correlated resistance looks like, and it refutes the claim that locus IDENTITY is what recovers signal.",
+  "honest_limits": [
+    "Re-aggregation of embeddings cached in May; no new embedding compute, so this tests the REPRESENTATION choice and nothing about the model.",
+    "One drug, one organism, one cohort. A positive here does not generalise upward.",
+    "The QRDR set is 4 genes chosen from prior knowledge of cipro resistance -- that is the point (locus identity), but it means the arm carries information the whole-genome arm could only find on its own.",
+    "THIS IS NOT THE PROJECT'S WITHIN-LINEAGE TEST. Leave-one-lineage-OUT still lets a held-out ST sit close to a training ST, so ancestry signal survives it. The 0-for-5 record rests on the strictly harder WITHIN-lineage question, and nothing here contradicts it.",
+    "The strict within-lineage test is barely answerable on this cohort: see within_lineage_feasibility -- only a handful of lineages carry both labels and the largest is near-single-class.",
+    "Strains whose QRDR set does not resolve cleanly are REFUSED, not guessed, so the scored set is annotation-source-biased to whatever fraction resolves."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "pooling-vs-locus-acceptance-bar-v1",
+  "registered": "2026-09-10",
+  "status": "FROZEN BEFORE ANY RESULT WAS COMPUTED",
+  "claim_under_test": "POOLING-dilution's deployable half (from wiki/innovate_sweep_2026-09-10.md): restricting the representation to candidate CAUSAL loci before pooling recovers within-lineage signal that whole-genome mean-pooling destroys.",
+
+  "why_this_bar_is_registered_after_a_mechanism_analysis_and_not_before": [
+    "This repo has TWO recorded cases of a bar frozen too early: one used a NET count to police a DIRECTIONAL failure mode, and one froze '+4 hits' from an un-analysed actionable set, making it unachievable by construction. Both share a root cause -- the number was fixed before the analysis that bounds what a correct result can look like.",
+    "So the substrate was measured FIRST and only then was this written: 123 strains resolve cleanly (60R / 63S) across 71 MLST lineages, after dropping 1 duplicate assembly and refusing 16 strains whose QRDR set does not resolve unambiguously.",
+    "Freezing early prevents tuning to the result; it does not excuse freezing a number with no basis."
+  ],
+
+  "substrate_measured_before_freezing": {
+    "n_strains_resolvable": 123,
+    "n_R": 60,
+    "n_S": 63,
+    "n_lineages": 71,
+    "n_refused_unresolvable": 16,
+    "n_duplicate_assemblies_dropped": 1,
+    "cache": "data/processed/embeddings/nt_n147_cipro.h5 (populated May 2026; NO new embedding compute)",
+    "cv": "leave-one-MLST-out, lineage-disjoint by construction"
+  },
+
+  "arms": {
+    "whole_genome_pooled": "mean-pool over ALL ~4,900 cached genes per strain -- the representation shape used by all five de-confounded failures",
+    "qrdr_restricted": "mean-pool over exactly 4 genes (gyrA, gyrB, parC, parE)",
+    "random_4gene_null": "50 draws of 4 genes sampled from the intersection of all strains' cache keys, same strains, same CV"
+  },
+  "dimensionality_is_held_constant": "both arms mean-pool to the same 512 dims, so any difference cannot be a dimensionality artifact",
+
+  "verdict_rule": {
+    "SUPPORTED": "auroc_qrdr > auroc_whole_genome AND auroc_qrdr > max(random_4gene_null). BOTH required.",
+    "REFUTED_LOCUS_IDENTITY": "auroc_qrdr > auroc_whole_genome BUT auroc_qrdr <= max(random_4gene_null) -- narrowing helps, locus IDENTITY does not. This REFUTES the deployable claim while leaving the dilution mechanism partly intact, and it must be reported as a refutation of what was claimed, not as a partial win.",
+    "FALSIFIED": "auroc_qrdr <= auroc_whole_genome -- the prediction fails outright.",
+    "INDETERMINATE": "either arm returns no AUROC (insufficient scored folds)."
+  },
+
+  "why_max_and_not_a_p_value": "The null's MAXIMUM over 50 draws is the conservative reading and is the same standard used for the 2026-09-05 MLST purity result in this repo. Strains within a lineage are clonal, so a per-strain p-value would assume independence the data does not have.",
+
+  "declared_in_advance": [
+    "The QRDR arm carries prior knowledge (which 4 genes matter for ciprofloxacin) that the whole-genome arm would have to discover unaided. That asymmetry IS the hypothesis -- locus resolution -- and is not a confound to be corrected away, but it bounds the claim: this tests whether a CAUSAL-LOCUS representation beats a pooled one, NOT whether a model can find those loci by itself.",
+    "A SUPPORTED verdict would NOT reopen the natural-population zero-shot negative. It would say the representation, not the population design, is what the five failures had in common -- a claim about REPRESENTATION, and one that still needs the constructed-cross test to separate the two axes.",
+    "No threshold is set on the SIZE of any gap. The rule is ordinal on purpose: with 123 strains and 71 lineages there is no basis in this repo for asserting a minimum effect size, and inventing one would repeat the '+4 hits' error."
+  ]
+}

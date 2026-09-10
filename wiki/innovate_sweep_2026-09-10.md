@@ -47,6 +47,15 @@ parameters do not change 1/N weighting.
 **constructed** cross) was built at `scripts/yeast_bloom_fm_prep.py` and never ran — blocked on coordinate
 liftover.
 
+> **DEPLOYABLE HALF EXECUTED AND REFUTED, 2026-09-10** (`wiki/pooling_vs_locus_resolution_2026-09-10.md`).
+> The survivor's actionable prediction — *restricting to candidate causal loci before pooling recovers
+> signal pooling destroys* — was run against a bar frozen beforehand and returned the pre-registered
+> **`REFUTED_LOCUS_IDENTITY`** branch. QRDR-restricted (0.8386) does beat whole-genome pooling (0.8029),
+> but **a random draw of 4 arbitrary single-copy genes reached 0.9020** — higher than the four genes that
+> actually cause the resistance. Narrowing helps; **locus IDENTITY does not**, which is what
+> ancestry-correlated resistance looks like. The PC1 = 0.807 observation stands; the conclusion drawn
+> from it does not. **The random-gene control was the load-bearing arm and it is what killed the claim.**
+
 ### 2. `COUPLING-not-popdesign` — the discriminator may be determinant↔clade coupling, not population design
 HGT is nature's own randomization: a horizontally mobile determinant is decoupled from clade the way
 meiosis decouples a locus in a cross. **Measured on `wiki/provdisjoint_lineage_metrics.json`: acquired-gene
@@ -129,6 +138,11 @@ powering gate requires both classes. Real gap, lowest novelty — wiring, not in
 - **No discrimination controls (H1).** They are supported only for `file-exists` / `project-state-row`;
   every kill-test here is `test-exit-0`, for which controls are deferred in v0 and would be marked
   controlled-attempt-invalid. Stated rather than omitted silently.
+- **Survivor #1's deployable half is now REFUTED BY EXECUTION** (see the inset above), which is the
+  second of six survivors to fall once acted on. Both fell the same way: the kill-test that let them
+  survive was weaker than the claim they were carrying — #3's exercised a function no shipped surface
+  calls, #1's measured a correlation without the control that could contradict it. **A `survived` verdict
+  bounds the test that ran, never the claim.**
 - **Deeper adversaries not yet run.** Per protocol the expensive pass belongs on survivors only:
 
   ```
