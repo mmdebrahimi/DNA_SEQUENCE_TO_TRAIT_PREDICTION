@@ -1,0 +1,5695 @@
+{
+  "schema": "data-inventory-v1",
+  "date": "2026-09-10",
+  "purpose": "Answer 'do we already have this, and has anything already used it?' without a context window that holds the whole tree.",
+  "derived_fields": [
+    "consumed_by",
+    "reported_in",
+    "n_entries",
+    "size_bytes"
+  ],
+  "curated_fields": [
+    "note"
+  ],
+  "counts": {
+    "datasets_present": 248,
+    "documented": 28,
+    "undocumented": 220,
+    "orphans_no_reference_anywhere": 59,
+    "roots_missing": 0
+  },
+  "coverage_note": "`documented` counts datasets with a curated semantic note. The remainder are listed too -- an inventory that hid its own gaps would be the failure it exists to prevent.",
+  "known_limits": [
+    "Matching is by DIRECTORY NAME as a whole token, so a dataset whose name is also an ordinary English or technical word picks up prose mentions as false 'uses' (several such names exist here; naming one in this sentence would itself create the false use). Over-counting a use is the SAFE direction here -- it makes a dataset look more used than it is, never less -- but treat a low count as the reliable signal and a high count on a common-word name as soft.",
+    "Counts are keyed on the basename, so two datasets sharing a name under different roots (cache vs processed) share one count and cannot be told apart.",
+    "A path built dynamically (f-string) rather than written literally is invisible to the index. Spot-checks found the hardcoded-literal form dominant, but this is a real floor: `orphan` means 'no file names this directory', not 'provably unused'."
+  ],
+  "stale_notes": [],
+  "roots_missing": [],
+  "datasets": [
+    {
+      "key": "_dockertest",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\_dockertest",
+      "n_entries": 0,
+      "size_bytes": 0,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "alphafold",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\alphafold",
+      "n_entries": 215,
+      "size_bytes": 53069180,
+      "size_truncated": false,
+      "n_consumed_by": 9,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/forward/deploy.py",
+        "scripts/clinical_am_hybrid_auroc.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/prosst_hybrid_verify.py",
+        "scripts/prosst_lift.py"
+      ],
+      "reported_in": [
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "alphamissense",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\alphamissense",
+      "n_entries": 2,
+      "size_bytes": 1240317439,
+      "size_truncated": false,
+      "n_consumed_by": 14,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/forward/capabilities.py",
+        "dna_decode/forward/variant_effect.py",
+        "scripts/build_forward_report_card.py",
+        "scripts/clinical_am_hybrid_auroc.py",
+        "scripts/dms_conservation_benchmark.py",
+        "scripts/forward_dosage_cell.py",
+        "scripts/forward_dosage_sweep.py",
+        "scripts/forward_router_demo.py",
+        "scripts/kaggle_esm_am_sweep.py",
+        "scripts/pg_native_threeway.py",
+        "scripts/tem1_forward_cell.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/clinical_am_hybrid_auroc_2026-07-22.md",
+        "wiki/clinical_gene_landscape_census_2026-07-22.md",
+        "wiki/dms_conservation_benchmark_scores.json",
+        "wiki/forward_cell_esm_if_seam_2026-07-14.md",
+        "wiki/forward_cell_human_alphamissense_2026-07-14.md",
+        "wiki/forward_dosage_cell_pten_2026-07-15.json",
+        "wiki/forward_dosage_sweep_2026-07-15.json",
+        "wiki/forward_validation_report_card.json",
+        "wiki/forward_validation_report_card.md",
+        "wiki/humsavar_am_vs_esm_mlh1.json",
+        "wiki/pg_native_threeway_scores.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "arabmagic",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\arabmagic",
+      "n_entries": 2,
+      "size_bytes": 1827058,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/arabmagic_gp_arm.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "bakta_out",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\bakta_out",
+      "n_entries": 110,
+      "size_bytes": 508539130,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/genome_map_tool_surface.py",
+        "scripts/pathotype_laptop_pipeline.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "bloom",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\bloom",
+      "n_entries": 6,
+      "size_bytes": 47903118,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/yeast_bloom_fm_prep.py",
+        "scripts/yeast_bloom_gp_arm.py",
+        "scripts/yeast_bloom_model_bench.py",
+        "scripts/yeast_power_curve.py"
+      ],
+      "reported_in": [
+        "wiki/yeast_bloom_gp_arm_2026-07-31.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "bxd",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\bxd",
+      "n_entries": 3,
+      "size_bytes": 8527565,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "caur_fks1_sra",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\caur_fks1_sra",
+      "n_entries": 3,
+      "size_bytes": 21991096919,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/ar_bank_caur_micafungin_finalize.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "caur_sra",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\caur_sra",
+      "n_entries": 3,
+      "size_bytes": 13873162300,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": {
+        "what": "13.2GB of C. auris SRA reads (reads/ + asm/ + assemblies/).",
+        "used_for": "UNVERIFIED -- nothing in the tree references this directory by name.",
+        "status": "unused",
+        "could_support": "Probably the raw inputs behind the fungal G1 cohort, which was built by targeted ERG11 read-mapping. Verify before deleting AND before re-downloading -- it is the single largest orphan on disk.",
+        "gotcha": "13.2GB on a disk-tight host. Its status is a genuine open question, which is exactly why it is recorded rather than assumed dead."
+      }
+    },
+    {
+      "key": "celegans_ben1",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\celegans_ben1",
+      "n_entries": 3,
+      "size_bytes": 187034,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/celegans_ben1_decoder.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "wiki/celegans_ben1_result_2026-07-02.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "clinvar",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\clinvar",
+      "n_entries": 4,
+      "size_bytes": 385214434,
+      "size_truncated": false,
+      "n_consumed_by": 14,
+      "n_reported_in": 17,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/clinvar/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/data/clinvar.py",
+        "dna_decode/decode_router.py",
+        "scripts/capture_clinvar.py",
+        "scripts/chatgpt_catalog_screen.py",
+        "scripts/clinical_variant_effect_validate.py",
+        "scripts/clinvar_pgp_uk_cohort_card.py",
+        "scripts/dataset_hunt_shortlist.py",
+        "tests/test_advertised_commands.py",
+        "tests/test_cell_registry.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/chatgpt_catalog_screen_2026-07-02.md",
+        "wiki/clinical_gene_landscape_census_2026-07-22.md",
+        "wiki/clinical_variant_effect_validation_2026-07-22.md",
+        "wiki/clinvar_pgp_uk_realization_2026-07-06.md",
+        "wiki/data_source_census_tree_of_life_2026-07-13.json",
+        "wiki/dataset_hunt_shortlist_2026-07-02.md",
+        "wiki/free_data_capture_registry_2026-07-04.md",
+        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar.json",
+        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar86.json",
+        "wiki/pgp_uk_clinvar_results/FR07961003_clinvar86.json",
+        "wiki/pgp_uk_clinvar_results/FR07961006_clinvar.json"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "ClinVar variant-classification release.",
+        "used_for": "The clinvar / germline-pathogenicity cell.",
+        "status": "live",
+        "could_support": "Any Mendelian-classification work."
+      }
+    },
+    {
+      "key": "cryptic",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\cryptic",
+      "n_entries": 1,
+      "size_bytes": 997384040,
+      "size_truncated": true,
+      "n_consumed_by": 22,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "dna_decode/metabolic/carbon_catalog.py",
+        "dna_decode/organism_rules/tb_vcf.py",
+        "dna_decode/pgx/cyp3a5_catalog.py",
+        "dna_decode/pgx/functional_evidence.py",
+        "scripts/amr_portal_curated_score.py",
+        "scripts/amr_portal_score_independent.py",
+        "scripts/build_tb_goldset_manifest.py",
+        "scripts/cryptic_feasibility_probe.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "plans/TB_AMR_Decoder_CRyPTIC_Technical_Plan.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/SESSION_HANDOFF_2026-06-16.md",
+        "wiki/SESSION_HANDOFF_2026-06-17_tb_decoder_plan.md",
+        "wiki/cryptic_feasibility_probe_result_2026-06-16.md",
+        "wiki/ebi_amr_portal_finding_2026-06-23.md",
+        "wiki/pgx_functional_evidence_2026-06-25.json",
+        "wiki/pgx_functional_evidence_2026-06-25.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/tb_decoder_idea_anchor_prompt_2026-06-16.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "CRyPTIC M. tuberculosis compendium (12,287 isolates, measured BMD MIC).",
+        "used_for": "The TB RIF/INH in-distribution baseline via the VARIANTS.parquet adapter.",
+        "status": "live",
+        "could_support": "Other TB drugs in the WHO catalogue.",
+        "gotcha": "A CRyPTIC-scored number is IN-DISTRIBUTION (the WHO catalogue was built partly from CRyPTIC) -- never call it independent validation."
+      }
+    },
+    {
+      "key": "darwins_ark",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\darwins_ark",
+      "n_entries": 10,
+      "size_bytes": 24905222874,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/dog_coat_darwins_ark_validate.py",
+        "scripts/dog_morphology_darwins_ark_validate.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "data files donwload",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\data files donwload",
+      "n_entries": 8,
+      "size_bytes": 3535610823,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": {
+        "what": "3.4GB directory, name misspelled (`donwload`), contents unclassified.",
+        "used_for": "Nothing references it.",
+        "status": "unused",
+        "could_support": "Unknown. Recorded because an unexamined multi-GB directory is precisely what gets re-downloaded later."
+      }
+    },
+    {
+      "key": "depmap_pilot",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\depmap_pilot",
+      "n_entries": 9,
+      "size_bytes": 1447332332,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/gdsc_fusion_decoder.py"
+      ],
+      "reported_in": [
+        "wiki/depmap_fusion_methylation_result_2026-07-02.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "dgrp",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\dgrp",
+      "n_entries": 7,
+      "size_bytes": 303236627,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/dgrp_learned_decoder.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "dog_ref",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\dog_ref",
+      "n_entries": 2,
+      "size_bytes": 1323678,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/dog_masked_reconstruct_clean.py",
+        "scripts/dog_masked_reconstruct_smoke.py",
+        "scripts/fetch_dog_reference.py",
+        "scripts/nt_mlm_sanity_probe.py"
+      ],
+      "reported_in": [
+        "wiki/dog_masked_reconstruct_clean_2026-07-31.json",
+        "wiki/dog_masked_reconstruct_smoke_2026-07-31.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ecoli_sero_asm",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ecoli_sero_asm",
+      "n_entries": 153,
+      "size_bytes": 3056679900,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/mlst_serotype_purity.py",
+        "scripts/plasmid_selection_rule_probe.py",
+        "scripts/serotype_heldout_confirm.py",
+        "scripts/serotype_lineage_disjoint.py",
+        "scripts/serotype_oh_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": {
+        "what": "E. coli serotype cohort assemblies + per-isolate results.jsonl.",
+        "used_for": "The O:H validation and the identity-primary selection fix.",
+        "status": "live",
+        "could_support": "Re-scoring offline. NOT sufficient for a resolution stratification: the rows carry only final O_call/H_call, no allele candidates and no second rule variant."
+      }
+    },
+    {
+      "key": "ecoli_sero_heldout",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ecoli_sero_heldout",
+      "n_entries": 251,
+      "size_bytes": 4979934799,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/serotype_heldout_confirm.py",
+        "scripts/serotype_lineage_disjoint.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "embeddings",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\embeddings",
+      "n_entries": 3,
+      "size_bytes": 550545816,
+      "size_truncated": false,
+      "n_consumed_by": 40,
+      "n_reported_in": 103,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_regime.py",
+        "dna_decode/deconfound/scorecard.py",
+        "dna_decode/eval/amr_rules.py",
+        "dna_decode/eval/clade_baseline.py",
+        "dna_decode/eval/loso_kmer.py",
+        "dna_decode/eval/regime.py",
+        "dna_decode/models/cache.py",
+        "dna_decode/models/classical_baselines.py",
+        "dna_decode/models/classifiers.py",
+        "dna_decode/models/foundation.py"
+      ],
+      "reported_in": [
+        "plans/AMR_embedding_niche_decision_2026-06-05.md",
+        "plans/Broaden_Horizon_Dataset_Hunt_Plan_2026-07-02.md",
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_Mechanism_Audit_Plan.md",
+        "plans/Cef_V0_1_Promotion_Slice_Plan.md",
+        "plans/EP6_Carbon_Utilization_Substrate.md",
+        "plans/EP8_Arabidopsis_Embedding_Test.md",
+        "plans/EP8_PathB_PreStage_Manifest.md",
+        "plans/EP_1A_Public_Genome_Selection_Memo.md",
+        "plans/EP_1_5_Architecture_Decision_Packet.md",
+        "plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md",
+        "plans/Ecoli_G2P_Platform_Technical_Plan.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "HDF5 foundation-model embedding caches (NT, mostly cipro cohorts).",
+        "used_for": "Every NT-embedding experiment (gate B, N=40, N=147).",
+        "status": "closed-negative",
+        "could_support": "Nothing on the AMR axis -- 0-for-5 de-confounded. Retained as the reproducibility record, not as live substrate.",
+        "gotcha": "populate(skip_existing=True) skips at GENE level, so a crash leaves a partial strain that mean-pools into a valid-LOOKING embedding. Every consumer must call verify_complete() first."
+      }
+    },
+    {
+      "key": "ena_wgs",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ena_wgs",
+      "n_entries": 18,
+      "size_bytes": 95290300,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/build_pergene_support_cache.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/pathotype_kmer_bakeoff.py",
+        "scripts/pathotype_nt_windowed_bakeoff.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "wiki/HANDOFF_ep4_pathotype_model_2026-05-31.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "epistasis",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\epistasis",
+      "n_entries": 12,
+      "size_bytes": 65946992,
+      "size_truncated": false,
+      "n_consumed_by": 38,
+      "n_reported_in": 24,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/data/hcmv_amr.py",
+        "dna_decode/eval/genomic_prediction.py",
+        "dna_decode/forward/variant_effect.py",
+        "dna_decode/organism_rules/arabidopsis_flowering.py",
+        "dna_decode/pigment/cat_coat.py",
+        "dna_decode/pigment/cat_coat_cli.py",
+        "dna_decode/pigment/chicken_plumage.py",
+        "dna_decode/pigment/chicken_plumage_cli.py",
+        "dna_decode/pigment/coat_cli.py",
+        "dna_decode/pigment/dog_coat.py"
+      ],
+      "reported_in": [
+        "plans/Ecoli_G2P_Platform_Technical_Plan.md",
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "plans/Genome_World_Model_Creative_Data_Reuse_Plan_2026-07-11.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/arabidopsis_flowering_cell_2026-07-16.md",
+        "wiki/arch_vs_power_verdict_2026-08-02.md",
+        "wiki/borrowable_methods_resistance_scoring_2026-08-31.md",
+        "wiki/bxd_generality_verdict_2026-08-02.md",
+        "wiki/datasource_scouting_2026-07-20.md",
+        "wiki/dog_coat_darwins_ark_measured_2026-07-30.md",
+        "wiki/fm_value_regime_map_2026-08-02.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "esm",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\esm",
+      "n_entries": 204,
+      "size_bytes": 18271665,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "essentiality",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\essentiality",
+      "n_entries": 17,
+      "size_bytes": 16009165,
+      "size_truncated": false,
+      "n_consumed_by": 54,
+      "n_reported_in": 71,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_regime.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/essentiality/__init__.py",
+        "dna_decode/essentiality/cli.py",
+        "dna_decode/essentiality/core_decoder.py",
+        "dna_decode/eval/regime.py",
+        "dna_decode/fba/__init__.py",
+        "dna_decode/fba/carbon_growth.py",
+        "dna_decode/fba/cli.py",
+        "dna_decode/fba/compose.py",
+        "dna_decode/fba/conditional_essentiality.py"
+      ],
+      "reported_in": [
+        "plans/New_Phenotype_Direction_Ideation_And_Plan_2026-07-28.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/design_epoch_plan_2026-08-07.md",
+        "wiki/essentiality_decoder_v0_2026-07-28.md",
+        "wiki/essentiality_e3_human_2026-07-28.md",
+        "wiki/essentiality_e3_learned_2026-07-28.md",
+        "wiki/essentiality_e4_transfer_2026-07-28.md",
+        "wiki/essentiality_ecoli_v0_1_auroc_2026-07-28.json",
+        "wiki/essentiality_ecoli_v0_1_auroc_2026-07-28.md",
+        "wiki/essentiality_label_wall_2026-07-28.md",
+        "wiki/fba_2x2_result_2026-08-20.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Keio / Fitness Browser conditional-essentiality data.",
+        "used_for": "The FBA conditional-essentiality line (~25 wiki artifacts).",
+        "status": "live",
+        "could_support": "The condition-SWITCH cell is the one genuinely open regime; the bottleneck is MEASURED (11 of 28 conditions overlap PRECISE-1K).",
+        "gotcha": "An `infeasible` deletion solve is GENUINE essentiality, not a solver bug -- do not 'fix' the NaN-to-essential coding."
+      }
+    },
+    {
+      "key": "finngen",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\finngen",
+      "n_entries": 2,
+      "size_bytes": 810759780,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/capture_summary_stat_indexes.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "wiki/finngen_ingest_result_2026-07-02.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "fitness_browser",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\fitness_browser",
+      "n_entries": 2,
+      "size_bytes": 9657800767,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/fba/fitness_browser.py",
+        "tests/test_fba_cross_organism.py",
+        "tests/test_fba_fitness_browser_t.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/fba_within_gene_ranking_2026-08-29.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "fungal_g1",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\fungal_g1",
+      "n_entries": 10,
+      "size_bytes": 15954794671,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/assemble_sra_cohort.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/fungal_ep7_g1_closeout_2026-06-08.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gdsc",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gdsc",
+      "n_entries": 5,
+      "size_bytes": 74007998,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/gdsc_fusion_decoder.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gemme_work",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gemme_work",
+      "n_entries": 45,
+      "size_bytes": 199573599,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/build_gemme_holdout_tables.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "geuvadis",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\geuvadis",
+      "n_entries": 9,
+      "size_bytes": 19490452548,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/geuvadis_stage1_linear_ceiling.py",
+        "scripts/geuvadis_stage1b_elasticnet_cis.py",
+        "scripts/stage2_prep_kaggle_bundle.py",
+        "tests/test_organism_multimodal.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gmap_cli_smoke",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gmap_cli_smoke",
+      "n_entries": 4,
+      "size_bytes": 11236112,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "gnomad",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gnomad",
+      "n_entries": 20,
+      "size_bytes": 1134643,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/gnomad_benign.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gono_asm",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gono_asm",
+      "n_entries": 156,
+      "size_bytes": 335841835,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/gono_23s_azithro_caller.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gtex",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gtex",
+      "n_entries": 0,
+      "size_bytes": 0,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "gwas_catalog",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\gwas_catalog",
+      "n_entries": 2,
+      "size_bytes": 786679051,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/mine_gwas_single_snp_candidates.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "hirisplex_src",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\hirisplex_src",
+      "n_entries": 36,
+      "size_bytes": 8427562,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/pigment_hirisplex_coefficient_sourcing_2026-07-30.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "kleb",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\kleb",
+      "n_entries": 5,
+      "size_bytes": 657503008,
+      "size_truncated": false,
+      "n_consumed_by": 18,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/kleb/cli.py",
+        "dna_decode/kleb/depolymerase_caller.py",
+        "scripts/fetch_dpotropisearch.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/klebsiella_depolymerase_crossorganism.py",
+        "scripts/klebsiella_topk_ksweep.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md",
+        "wiki/north_star_distance_brainstorm_2026-06-17.md",
+        "wiki/staleness_ab_v2_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ktype_build",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ktype_build",
+      "n_entries": 11,
+      "size_bytes": 538174,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "scripts/ktype_cohort_finisher.sh",
+        "scripts/ktype_cohort_validate.py"
+      ],
+      "reported_in": [
+        "wiki/SESSION_HANDOFF_2026-06-24_productization_ktype_testpypi.md",
+        "wiki/SESSION_HANDOFF_2026-06-24_pypi_published_ktype_running.md",
+        "wiki/SESSION_HANDOFF_2026-06-24_two_new_green_cells.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ktype_kaptive",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ktype_kaptive",
+      "n_entries": 1,
+      "size_bytes": 49502,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/ktype_kaptive_concordance.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": {
+        "what": "Per-isolate ktype-vs-Kaptive concordance rows (307 genomes).",
+        "used_for": "The 2026-09-08 near-ceiling verdict (0.8788 strict).",
+        "status": "live",
+        "could_support": "Little that is new -- the wzi_50 multi-KL composition is ALREADY recorded in the artifact; re-deriving it is packaging."
+      }
+    },
+    {
+      "key": "liftover",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\liftover",
+      "n_entries": 2,
+      "size_bytes": 13452792,
+      "size_truncated": false,
+      "n_consumed_by": 10,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/clinvar/decode.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/pigment/dog_body_size.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/clinvar_pgp_uk_realization_2026-07-06.md",
+        "wiki/dog_body_size_darwins_ark_pinned_2026-07-30.md",
+        "wiki/dog_coat_darwins_ark_measured_2026-07-30.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/yeast_bloom_layer2_verdict_2026-07-31.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "mavedb",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\mavedb",
+      "n_entries": 1,
+      "size_bytes": 55749,
+      "size_truncated": false,
+      "n_consumed_by": 6,
+      "n_reported_in": 32,
+      "consumed_by": [
+        "scripts/clinical_gene_landscape_census.py",
+        "scripts/clinical_variant_effect_validate.py",
+        "scripts/mavedb_cpu_smoke.py",
+        "scripts/pgx_r1r2_synthesis.py",
+        "scripts/proteingym_variant_effect.py",
+        "tests/test_clinical_variant_effect.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/clinical_am_hybrid_auroc_2026-07-22.json",
+        "wiki/clinical_gene_landscape_census_2026-07-22.json",
+        "wiki/clinical_gene_landscape_census_2026-07-22.md",
+        "wiki/clinical_gene_landscape_census_2026-07-23.json",
+        "wiki/clinical_gnomad_benign_census_2026-07-23.json",
+        "wiki/clinical_variant_effect_validation_2026-07-22.json",
+        "wiki/dms_alphamissense_benchmark_scores.json",
+        "wiki/dms_am_big_scores.json",
+        "wiki/dms_benchmark_big_scores.json",
+        "wiki/dms_variant_effect_benchmark_scores.json",
+        "wiki/holdout_hybrid_manifest.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "msa",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\msa",
+      "n_entries": 45,
+      "size_bytes": 61594316,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "name_table_variantA_drop_ambiguous.json",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\name_table_variantA_drop_ambiguous.json",
+      "n_entries": 1,
+      "size_bytes": 4968,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "name_table_variantB.json",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\name_table_variantB.json",
+      "n_entries": 1,
+      "size_bytes": 4945,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "nt-gate-b",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\nt-gate-b",
+      "n_entries": 81,
+      "size_bytes": 3965116147,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": {
+        "what": "3.8GB NT embedding cache for the gate-B cohort.",
+        "used_for": "UNVERIFIED by name -- scripts reference nt_gate_b_cohort_67.h5 (underscores) rather than this directory (hyphens).",
+        "status": "closed-negative",
+        "could_support": "Nothing live -- the NT-embedding track is a closed negative. Strong reclaim candidate if disk is needed."
+      }
+    },
+    {
+      "key": "opensnp",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\opensnp",
+      "n_entries": 1,
+      "size_bytes": 21376203875,
+      "size_truncated": false,
+      "n_consumed_by": 6,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "scripts/abo_opensnp_ingest.py",
+        "scripts/abo_region_extract.py",
+        "scripts/eye_colour_opensnp_ingest.py",
+        "scripts/eye_colour_opensnp_validate.py",
+        "scripts/impute_determinant_abstain.py",
+        "scripts/single_snp_opensnp_validate.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/eye_colour_cell_result_2026-06-28.md",
+        "wiki/j3_abo_embedding_v1_contract.md",
+        "wiki/multimodal_dna_to_appearance_scoping_2026-07-15.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pan_ukbb",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pan_ukbb",
+      "n_entries": 1,
+      "size_bytes": 1420758,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/capture_summary_stat_indexes.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pear",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pear",
+      "n_entries": 4,
+      "size_bytes": 361635464,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "scripts/pear_extract_fitness.R",
+        "scripts/pear_forward_replication.py",
+        "scripts/pear_g6_screen.py",
+        "scripts/screen_candidate_gates.py",
+        "tests/test_pear_forward_replication.py"
+      ],
+      "reported_in": [
+        "project_state/label-acquisition-2026-08-31.md",
+        "wiki/pear_forward_replication_blosum62_2026-09-01.json",
+        "wiki/pear_forward_replication_esm2_2026-09-01.json",
+        "wiki/pear_forward_replication_hybrid_2026-09-02.json",
+        "wiki/pear_forward_replication_prosst_2026-09-02.json",
+        "wiki/pear_g6_screen_2026-09-01.md",
+        "wiki/rejection_gate_screen_2026-09-01.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pgp",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pgp",
+      "n_entries": 66,
+      "size_bytes": 227457633,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "pgp_uk",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pgp_uk",
+      "n_entries": 20,
+      "size_bytes": 453428046,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "scripts/pgx_decode_pgp_uk.py"
+      ],
+      "reported_in": [
+        "wiki/pgp_uk_pgx_results/FR07961000_pgx.json",
+        "wiki/pgp_uk_pgx_results/FR07961003_pgx.json",
+        "wiki/pgp_uk_pgx_results/FR07961006_pgx.json",
+        "wiki/pgp_uk_pgx_results/FR07961007_pgx.json",
+        "wiki/pgp_uk_pgx_results/FR07961009_pgx.json",
+        "wiki/pgx_pgp_uk_realization_2026-07-05.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumo_amrfinder_swap",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pneumo_amrfinder_swap",
+      "n_entries": 3,
+      "size_bytes": 28389,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/pneumo_amrfinder_swap.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumo_asm",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pneumo_asm",
+      "n_entries": 8,
+      "size_bytes": 19920098,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/serotype_cohort_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumo_gps",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pneumo_gps",
+      "n_entries": 9,
+      "size_bytes": 57048312,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/pneumo_amr_validate.py",
+        "scripts/pneumo_amrfinder_swap.py",
+        "scripts/pneumo_betalactam_validate.py",
+        "scripts/pneumo_gps_quellung_validate.py",
+        "scripts/pneumo_selection_rule_probe.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumocat_src",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pneumocat_src",
+      "n_entries": 9,
+      "size_bytes": 678888621,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "pointfinder_concordance",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\pointfinder_concordance",
+      "n_entries": 2,
+      "size_bytes": 166334,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/pointfinder_amrfinder_concordance.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "precise1k",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\precise1k",
+      "n_entries": 2,
+      "size_bytes": 61505228,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 8,
+      "consumed_by": [
+        "scripts/fba_eflux_bridge.py"
+      ],
+      "reported_in": [
+        "wiki/fba_bridge_precise_overlap_2026-08-16.json",
+        "wiki/fba_eflux_bridge_2026-08-16.json",
+        "wiki/fba_eflux_bridge_2026-08-16.md",
+        "wiki/fba_eflux_bridge_2026-08-17.json",
+        "wiki/fba_eflux_bridge_prereg_2026-08-16.md",
+        "wiki/fba_eflux_bridge_repro_2026-08-17.json",
+        "wiki/fba_expression_gated_gpr_prereg_2026-08-22.md",
+        "wiki/genotype_to_phenotype_map_2026-08-13.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "prospective",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\prospective",
+      "n_entries": 2,
+      "size_bytes": 1310,
+      "size_truncated": false,
+      "n_consumed_by": 27,
+      "n_reported_in": 50,
+      "consumed_by": [
+        "dna_decode/amr/uncounted.py",
+        "dna_decode/data/organism_scope.py",
+        "dna_decode/data/trust_surface.py",
+        "dna_decode/eval/amr_rules.py",
+        "dna_decode/eval/prospective_lock.py",
+        "dna_decode/protein_effect/predictor.py",
+        "scripts/build_validation_report_card.py",
+        "scripts/clinical_variant_effect_validate.py",
+        "scripts/evidence_surface_inventory.py",
+        "scripts/fetch_prospective_cohort.py",
+        "scripts/gentamicin_rmt_candidate.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py"
+      ],
+      "reported_in": [
+        "plans/Hybrid_Decoder_Architecture_Plan.md",
+        "plans/Trait_Decoding_Roadmap.md",
+        "project_state/catalog-curation-2026-08-31.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/evidence-surface-2026-08-31.md",
+        "project_state/label-acquisition-2026-08-31.md",
+        "wiki/borrowable_methods_resistance_scoring_2026-08-31.md",
+        "wiki/catalog_curation_procedure.md",
+        "wiki/clinical_am_hybrid_auroc_2026-07-22.md",
+        "wiki/clinical_variant_effect_validation_2026-07-22.md",
+        "wiki/data_hunt_round2_2026-07-23.md",
+        "wiki/decisions-log.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Prospective-lock cohort sweeps + accrual state.",
+        "used_for": "The 2026-08-24 first accrual (E. coli cipro 0.967 / gent 0.532).",
+        "status": "blocked",
+        "could_support": "The project's STRONGEST tier -- leakage-free by construction. Blocked only on post-lock isolates accruing.",
+        "gotcha": "Both E. coli cells are superseded_by_surface_change since the 2026-08-31 gentamicin v2 lock; their prior numbers describe a RETIRED rule and the clock restarted."
+      }
+    },
+    {
+      "key": "prospective_smoke",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\prospective_smoke",
+      "n_entries": 1,
+      "size_bytes": 1196,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "prosst_structures",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\prosst_structures",
+      "n_entries": 4,
+      "size_bytes": 1111022576,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/three_way_lift.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "proteingym",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\proteingym",
+      "n_entries": 32,
+      "size_bytes": 8919543156,
+      "size_truncated": false,
+      "n_consumed_by": 27,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "scripts/blatem_genome_demo.py",
+        "scripts/dms_alphamissense_benchmark.py",
+        "scripts/dms_conservation_benchmark.py",
+        "scripts/dms_learned_model_falsifier.py",
+        "scripts/dms_variant_effect_benchmark.py",
+        "scripts/forward_dosage_cell.py",
+        "scripts/forward_dosage_sweep.py",
+        "scripts/forward_inverse_proteingym_sweep.py",
+        "scripts/forward_inverse_roundtrip.py",
+        "scripts/forward_modality_hybrid_sweep.py",
+        "scripts/forward_router_demo.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/dms_benchmark_definitive_2026-07-03.md",
+        "wiki/dms_variant_effect_benchmark_2026-07-02.md",
+        "wiki/j2_phase2_beat_0.48_plan_2026-07-08.md",
+        "wiki/jepa_dms_learned_signal_result_2026-07-04.md",
+        "wiki/pg_native_threeway_result_2026-07-03.md",
+        "wiki/proteingym_variant_effect_result_2026-07-02.md",
+        "wiki/related_data_sources_registry.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/tem1_forward_cell_2026-07-14.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "ProteinGym DMS substitution benchmark + per-assay reference scores.",
+        "used_for": "The forward variant-effect validation; the ESM2 scale finding.",
+        "status": "live",
+        "could_support": "Any new variant-effect scorer -- this is the benchmark that settled 650M > 3B > 15B.",
+        "gotcha": "The published Average_Spearman is a mean of 5 CATEGORY averages, not a per-assay mean; never compare a per-assay median against it."
+      }
+    },
+    {
+      "key": "refs",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\refs",
+      "n_entries": 5,
+      "size_bytes": 1165529223,
+      "size_truncated": false,
+      "n_consumed_by": 19,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "dna_decode/pgx/compound_caller.py",
+        "dna_decode/pgx/cyp2d6_caller.py",
+        "dna_decode/phage/cli.py",
+        "dna_decode/phage/receptor_caller.py",
+        "dna_decode/pneumoserotype/runner.py",
+        "dna_decode/profile/cli.py",
+        "scripts/build_phage_receptor_report.py",
+        "scripts/esm_zeroshot_dms.py",
+        "scripts/expression_context_validate.py",
+        "scripts/fba_composed_selector.py",
+        "scripts/pointfinder_amrfinder_concordance.py",
+        "scripts/sarscov2_mpro_validate.py"
+      ],
+      "reported_in": [
+        "plans/Evidence_Contract_Registry_MVP_Plan/technical-plan.md",
+        "plans/Two_Machine_Capability_Map_And_Transfer_Minimization_Plan_2026-05-31.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/HANDOFF_ep4_pathotype_model_2026-05-31.md",
+        "wiki/data_source_census_tree_of_life_2026-07-13.json",
+        "wiki/expression_context_acinetobacter_validation_2026-06-10.json",
+        "wiki/j2_phase2_beat_0.48_plan_2026-07-08.md",
+        "wiki/label_acquisition_strategy_2026-06-27.md",
+        "wiki/proteingym_esm2_650m_full_2026-07-09.md",
+        "wiki/sarscov2_mpro_v0.1_independence_infeasible_2026-06-27.md",
+        "wiki/sarscov2_prospective_lock_manifest_2026-06-27.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "refseq",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\refseq",
+      "n_entries": 1129,
+      "size_bytes": 19392176230,
+      "size_truncated": true,
+      "n_consumed_by": 56,
+      "n_reported_in": 33,
+      "consumed_by": [
+        "dna_decode/data/__init__.py",
+        "dna_decode/data/cohort.py",
+        "scripts/ar_bank_caur_validate.py",
+        "scripts/ar_bank_gono_validate.py",
+        "scripts/ar_bank_organism_validate.py",
+        "scripts/build_acinetobacter_indep_cohort.py",
+        "scripts/build_drug_shared_lineage_cohort.py",
+        "scripts/build_external_validation_report.py",
+        "scripts/build_fungal_cohort.py",
+        "scripts/check_n40_cohort_genomes.py",
+        "scripts/cipro_attribution_preflight.py",
+        "scripts/cipro_curated_baseline.py"
+      ],
+      "reported_in": [
+        "plans/Cef_Audit_Aware_Packet_Design.md",
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_Mechanism_Audit_Plan.md",
+        "plans/Cipro_Decision_Bundle_Technical_Plan.md",
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "plans/Stage1_N40_Cipro_Engineering_Screen_Plan.md",
+        "plans/Stage2_Docker_Tools_Install_Plan.md",
+        "plans/Stage2_N150_Prep_Plan.md",
+        "project_state/dna-decode-2026-05-11-scratch.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/GATE_A_REPORT.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "NCBI RefSeq genome cache (FASTA + GFF3 + GBK per accession).",
+        "used_for": "Nearly every genome-mode call in the repo (57 consumers).",
+        "status": "live",
+        "could_support": "Any new organism cell without refetching."
+      }
+    },
+    {
+      "key": "resfinder_collapse",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\resfinder_collapse",
+      "n_entries": 1,
+      "size_bytes": 1972470,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/resfinder_locus_collapse_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "salm_asm",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\salm_asm",
+      "n_entries": 205,
+      "size_bytes": 3774629085,
+      "size_truncated": false,
+      "n_consumed_by": 9,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/plasmid_selection_rule_probe.py",
+        "scripts/salmserovar_db_audit.py",
+        "scripts/salmserovar_nocall_anatomy.py",
+        "scripts/salmserovar_o_antigen_probe.py",
+        "scripts/salmserovar_o_fix_rerun.py",
+        "scripts/salmserovar_seqsero2_validate.py",
+        "scripts/salmserovar_threshold_sweep.py",
+        "scripts/salmserovar_threshold_tradeoff.py",
+        "scripts/salmserovar_validate.py"
+      ],
+      "reported_in": [
+        "wiki/salmserovar_o7_allele_length_probe_2026-09-04.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "salm_test",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\salm_test",
+      "n_entries": 1,
+      "size_bytes": 5034138,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "salmonella_antigens.pre_role.fasta",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\salmonella_antigens.pre_role.fasta",
+      "n_entries": 1,
+      "size_bytes": 532610,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "salmserovar_cov80_probe.json",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\salmserovar_cov80_probe.json",
+      "n_entries": 1,
+      "size_bytes": 3638,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/salmserovar_cli_threshold_drift_2026-09-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "salmserovar_o_fix_result_run1.json",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\salmserovar_o_fix_result_run1.json",
+      "n_entries": 1,
+      "size_bytes": 4014,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "seqsero2_src",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\seqsero2_src",
+      "n_entries": 8,
+      "size_bytes": 55512324,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "serovar_table.pre_rename.tsv",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\serovar_table.pre_rename.tsv",
+      "n_entries": 1,
+      "size_bytes": 56072,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "serovar_table.variantA.tsv",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\serovar_table.variantA.tsv",
+      "n_entries": 1,
+      "size_bytes": 68887,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "spn_pbp_amr",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\spn_pbp_amr",
+      "n_entries": 17,
+      "size_bytes": 464911768,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ss2",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2",
+      "n_entries": 2,
+      "size_bytes": 5001521,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ss2_antigens.fasta",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2_antigens.fasta",
+      "n_entries": 1,
+      "size_bytes": 542213,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/salmserovar_o_fix_result_2026-09-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ss2_checkpoint",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2_checkpoint",
+      "n_entries": 7,
+      "size_bytes": 203365,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "scripts/salmserovar_db_audit.py",
+        "scripts/salmserovar_o_fix_rerun.py",
+        "scripts/salmserovar_resolution_strata.py",
+        "scripts/salmserovar_seqsero2_validate.py"
+      ],
+      "reported_in": [
+        "wiki/salmserovar_cli_threshold_drift_2026-09-09.md",
+        "wiki/salmserovar_name_table_2026-09-09.md",
+        "wiki/salmserovar_o_fix_result_2026-09-09.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Per-isolate SeqSero2 + salmserovar policy-variant checkpoints (200 isolates).",
+        "used_for": "Every salmserovar scoring run; the 2026-09-09 resolution stratification.",
+        "status": "live",
+        "could_support": "Any re-scoring of the salmserovar cohort with NO blastn and NO Docker -- the variants differ only in the name lookup."
+      }
+    },
+    {
+      "key": "ss2_ic_dir",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2_ic_dir",
+      "n_entries": 2,
+      "size_bytes": 249297,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/salmserovar_name_table_2026-09-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ss2_initial_conditions.py",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2_initial_conditions.py",
+      "n_entries": 1,
+      "size_bytes": 164118,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ss2_run",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2_run",
+      "n_entries": 2,
+      "size_bytes": 5209223,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/salmserovar_seqsero2_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ss2_source.py",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\ss2_source.py",
+      "n_entries": 1,
+      "size_bytes": 87492,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/seqsero2_o_algorithm_reading_2026-09-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "stage2_kaggle",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\stage2_kaggle",
+      "n_entries": 4,
+      "size_bytes": 938664,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/stage2_make_kernel.py",
+        "scripts/stage2_prep_kaggle_bundle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "tb_callability",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\tb_callability",
+      "n_entries": 1,
+      "size_bytes": 102053,
+      "size_truncated": false,
+      "n_consumed_by": 7,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/tb_callability_probe.py"
+      ],
+      "reported_in": [
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "tb_indep",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\tb_indep",
+      "n_entries": 9,
+      "size_bytes": 13103355396,
+      "size_truncated": true,
+      "n_consumed_by": 10,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/run_tb_independent_amr_portal.py",
+        "scripts/tb_indep_finisher.sh",
+        "scripts/tb_independent_lineage_collapse.py",
+        "scripts/tb_independent_mash_collapse.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/SESSION_HANDOFF_2026-06-23_independent_validation_breakthrough.md",
+        "wiki/staleness_ab_v2_raw.json",
+        "wiki/staleness_ab_v3_raw.json",
+        "wiki/staleness_corpus_run_2026-08-27_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/staleness_full_corpus_final_raw.json",
+        "wiki/staleness_v3_run_2026-08-27_raw.json",
+        "wiki/tb_independent_lineage_collapsed_result_2026-07-02.md",
+        "wiki/tb_independent_number_2026-06-23.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Per-isolate TB independent-run VCFs + results checkpoint (2,845 isolates).",
+        "used_for": "The lineage-collapsed independent TB headline (RIF 0.444/0.979).",
+        "status": "live",
+        "could_support": "Re-scoring under a revised catalogue with no refetch."
+      }
+    },
+    {
+      "key": "torch",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\torch",
+      "n_entries": 1,
+      "size_bytes": 2604541236,
+      "size_truncated": false,
+      "n_consumed_by": 58,
+      "n_reported_in": 32,
+      "consumed_by": [
+        "dna_decode/forward/__init__.py",
+        "dna_decode/forward/capabilities.py",
+        "dna_decode/forward/cli.py",
+        "dna_decode/forward/esm_scorer.py",
+        "dna_decode/forward/msa_transformer.py",
+        "dna_decode/forward/prosst_scorer.py",
+        "dna_decode/models/foundation.py",
+        "dna_decode/protein_effect/predictor.py",
+        "scripts/esm_catalog_extension_test.py",
+        "scripts/esm_hiv_resistance_test.py",
+        "scripts/esm_supervised_resistance_head.py",
+        "scripts/esm_zeroshot_dms.py"
+      ],
+      "reported_in": [
+        "plans/Ecoli_G2P_Platform_Technical_Plan.md",
+        "plans/GENOME_JEPA_J2_Protein_Representation_Technical_Plan_2026-07-04.md",
+        "plans/Hybrid_Learned_Deterministic_Decoder_Plan.md",
+        "plans/NT_Deferral_Docs_Cleanup_Plan.md",
+        "plans/NT_Deferral_Docs_Cleanup_Ship_Path_Plan.md",
+        "plans/Two_Machine_Capability_Map_And_Transfer_Minimization_Plan_2026-05-31.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/doubt-layer-2026-08-31.md",
+        "wiki/GATE_B_REPORT.md",
+        "wiki/HANDOFF_ep4_2026-06-03.md",
+        "wiki/HANDOFF_ep4_pathotype_model_2026-05-31.md",
+        "wiki/PHASE2_PREFLIGHT.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ecoli_mash_clades.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\ecoli_mash_clades.json",
+      "n_entries": 1,
+      "size_bytes": 8884,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/crossaxis_lineage_deconfound.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "embeddings",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\embeddings",
+      "n_entries": 2,
+      "size_bytes": 2464972472,
+      "size_truncated": false,
+      "n_consumed_by": 40,
+      "n_reported_in": 103,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_regime.py",
+        "dna_decode/deconfound/scorecard.py",
+        "dna_decode/eval/amr_rules.py",
+        "dna_decode/eval/clade_baseline.py",
+        "dna_decode/eval/loso_kmer.py",
+        "dna_decode/eval/regime.py",
+        "dna_decode/models/cache.py",
+        "dna_decode/models/classical_baselines.py",
+        "dna_decode/models/classifiers.py",
+        "dna_decode/models/foundation.py"
+      ],
+      "reported_in": [
+        "plans/AMR_embedding_niche_decision_2026-06-05.md",
+        "plans/Broaden_Horizon_Dataset_Hunt_Plan_2026-07-02.md",
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_Mechanism_Audit_Plan.md",
+        "plans/Cef_V0_1_Promotion_Slice_Plan.md",
+        "plans/EP6_Carbon_Utilization_Substrate.md",
+        "plans/EP8_Arabidopsis_Embedding_Test.md",
+        "plans/EP8_PathB_PreStage_Manifest.md",
+        "plans/EP_1A_Public_Genome_Selection_Memo.md",
+        "plans/EP_1_5_Architecture_Decision_Packet.md",
+        "plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md",
+        "plans/Ecoli_G2P_Platform_Technical_Plan.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "HDF5 foundation-model embedding caches (NT, mostly cipro cohorts).",
+        "used_for": "Every NT-embedding experiment (gate B, N=40, N=147).",
+        "status": "closed-negative",
+        "could_support": "Nothing on the AMR axis -- 0-for-5 de-confounded. Retained as the reproducibility record, not as live substrate.",
+        "gotcha": "populate(skip_existing=True) skips at GENE level, so a crash leaves a partial strain that mean-pools into a valid-LOOKING embedding. Every consumer must call verify_complete() first."
+      }
+    },
+    {
+      "key": "forward_blosum_proteingym.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\forward_blosum_proteingym.jsonl",
+      "n_entries": 1,
+      "size_bytes": 29509,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/forward_blosum_proteingym_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "forward_esm_proteingym.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\forward_esm_proteingym.jsonl",
+      "n_entries": 1,
+      "size_bytes": 28936,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/forward_blosum_proteingym_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_a_cache.h5",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_a_cache.h5",
+      "n_entries": 1,
+      "size_bytes": 3920640,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/GATE_A_REPORT.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_a_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_a_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 7429,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/GATE_A_REPORT.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_b_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_b_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 36171,
+      "size_truncated": false,
+      "n_consumed_by": 11,
+      "n_reported_in": 24,
+      "consumed_by": [
+        "scripts/audit_cohort.py",
+        "scripts/build_mini_cohort.py",
+        "scripts/cef_falsifier.py",
+        "scripts/cef_mic_audit.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/slim_ast_csv_for_bundle.py",
+        "tests/test_amr_rules.py"
+      ],
+      "reported_in": [
+        "plans/Audit_Calibration_NT_AutoModel_Plan.md",
+        "plans/Audit_Calibration_NT_AutoModel_Ship_Path_Plan.md",
+        "plans/Cef_Audit_Aware_Packet_Design.md",
+        "plans/Cef_V0_1_Promotion_Slice_Plan.md",
+        "plans/Sidework_Sequence_Plan.md",
+        "plans/Sidework_Sequence_Ship_Path_Plan.md",
+        "plans/Stage2_N150_Prep_Plan.md",
+        "wiki/HANDOFF_amr_phase2_embedding_frontier_2026-06-04.md",
+        "wiki/ceftriaxone_mechanism_audit_2026-05-26.json",
+        "wiki/ceftriaxone_mechanism_audit_2026-05-26.md",
+        "wiki/ciprofloxacin_mechanism_audit_2026-06-05.json",
+        "wiki/ciprofloxacin_mechanism_audit_2026-06-05.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_b_mini_cef_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_b_mini_cef_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 32181,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "scripts/preflight_runnable.py",
+        "tests/test_preflight_runnable.py",
+        "tests/test_smoke_gate_12strain.py"
+      ],
+      "reported_in": [
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_Mechanism_Audit_Plan.md",
+        "plans/EP2_Cef_Tet_Smoke_Design_Plan.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/EP2_cef_tet_verdict_2026-05-17.md",
+        "wiki/smoke_gate_12strain_ceftriaxone_2026-05-17.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_b_mini_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_b_mini_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 29450,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "scripts/build_mini_cohort.py",
+        "scripts/diagnose_gene_presence_auroc.py",
+        "scripts/plot_nt_embeddings_pca_umap.py",
+        "scripts/smoke_gate_12strain_cipro.py"
+      ],
+      "reported_in": [
+        "plans/Phase2_Decision_Gate_Plan.md",
+        "plans/Sidework_Sequence_Ship_Path_Plan.md",
+        "wiki/GATE_B_REPORT.md",
+        "wiki/smoke_gate_12strain_cipro_2026-05-14.md",
+        "wiki/smoke_gate_12strain_cipro_2026-05-15.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_b_mini_tet_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_b_mini_tet_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 32513,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/preflight_runnable.py",
+        "tests/test_preflight_runnable.py",
+        "tests/test_smoke_gate_12strain.py"
+      ],
+      "reported_in": [
+        "plans/EP2_Cef_Tet_Smoke_Design_Plan.md",
+        "plans/EP_1_5_Architecture_Decision_Packet.md",
+        "wiki/EP2_cef_tet_verdict_2026-05-17.md",
+        "wiki/smoke_gate_12strain_tetracycline_2026-05-17.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gate_b_n40_cipro_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gate_b_n40_cipro_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 34029,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 15,
+      "consumed_by": [
+        "scripts/check_n40_cohort_genomes.py",
+        "scripts/cipro_attribution_preflight.py",
+        "scripts/cipro_curated_baseline.py",
+        "scripts/cipro_mechanism_audit.py",
+        "scripts/cipro_mic_audit.py",
+        "scripts/functional_alphabet_probe.py",
+        "scripts/preflight_runnable.py",
+        "scripts/stage1_n40_cipro.py"
+      ],
+      "reported_in": [
+        "plans/Cipro_Decision_Bundle_Technical_Plan.md",
+        "plans/Sidework_Sequence_Ship_Path_Plan.md",
+        "plans/Stage1_N40_Cipro_Engineering_Screen_Plan.md",
+        "wiki/cipro_attribution_preflight_2026-05-16.per_strain.json",
+        "wiki/cipro_mechanism_audit_2026-05-17.json",
+        "wiki/cipro_mechanism_audit_2026-05-17.md",
+        "wiki/cipro_mechanism_audit_smoke.json",
+        "wiki/cipro_mechanism_audit_smoke.md",
+        "wiki/cipro_mechanism_audit_smoke_st131.json",
+        "wiki/cipro_mechanism_audit_smoke_st131.md",
+        "wiki/cipro_mic_audit_2026-05-17.json",
+        "wiki/functional_alphabet_probe_smoke_2026-06-26.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gene_lookup_cache",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\gene_lookup_cache",
+      "n_entries": 1,
+      "size_bytes": 595,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "dna_decode/protein_effect/gene_lookup.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "hiv_rt_esm650m_masked_marginals.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\hiv_rt_esm650m_masked_marginals.json",
+      "n_entries": 1,
+      "size_bytes": 161421,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/hiv_esm_vs_catalog.py",
+        "scripts/integrated_query_demo.py",
+        "scripts/protein_heatmap.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "mini_cipro_dnabert2_cache.h5",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\mini_cipro_dnabert2_cache.h5",
+      "n_entries": 1,
+      "size_bytes": 6472,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "mini_cipro_mock_cache.h5",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\mini_cipro_mock_cache.h5",
+      "n_entries": 1,
+      "size_bytes": 54553344,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "mini_cipro_nt_cache.h5",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\mini_cipro_nt_cache.h5",
+      "n_entries": 1,
+      "size_bytes": 147306240,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/plot_nt_embeddings_pca_umap.py",
+        "scripts/smoke_gate_12strain_cipro.py"
+      ],
+      "reported_in": [
+        "plans/Phase2_Decision_Gate_Plan.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "models",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\models",
+      "n_entries": 2,
+      "size_bytes": 868505,
+      "size_truncated": false,
+      "n_consumed_by": 59,
+      "n_reported_in": 138,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/fba/cli.py",
+        "dna_decode/fba/model.py",
+        "dna_decode/forward/inverse.py",
+        "dna_decode/forward/variant_effect.py",
+        "dna_decode/metabolic/carbon_catalog.py",
+        "dna_decode/models/classifiers.py",
+        "dna_decode/models/foundation.py",
+        "dna_decode/pigment/cli.py",
+        "dna_decode/pigment/hirisplex_models.py",
+        "dna_decode/pigment/multinomial.py"
+      ],
+      "reported_in": [
+        "plans/Audit_Calibration_NT_AutoModel_Plan.md",
+        "plans/Audit_Calibration_NT_AutoModel_Ship_Path_Plan.md",
+        "plans/Broaden_Horizon_Dataset_Hunt_Plan_2026-07-02.md",
+        "plans/Cef_Audit_Aware_Packet_Design.md",
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_V0_1_Promotion_Slice_Plan.md",
+        "plans/Cipro_Decision_Bundle_Technical_Plan.md",
+        "plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md",
+        "plans/DNA_Decoder_v0_1_Genome_Input_Cipro_Plan.md",
+        "plans/EP6_Carbon_Utilization_Substrate.md",
+        "plans/EP8_PathB_PreStage_Manifest.md",
+        "plans/EP_1_5_Architecture_Decision_Packet.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Trained classifier pickles + their provenance blocks.",
+        "used_for": "pipeline predict; the v0/v0.1 decoder path.",
+        "status": "superseded",
+        "could_support": "Little -- the embedding-classifier track is a closed negative; the shipped product is the deterministic catalog."
+      }
+    },
+    {
+      "key": "msa_eval_scratch",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\msa_eval_scratch",
+      "n_entries": 4,
+      "size_bytes": 1868416,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/msa_evolution_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "msat_lift_checkpoint.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\msat_lift_checkpoint.jsonl",
+      "n_entries": 1,
+      "size_bytes": 18517,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/msa_transformer_lift.py"
+      ],
+      "reported_in": [
+        "wiki/msa_transformer_lift_2026-07-17.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "msat_lift_run20.log",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\msat_lift_run20.log",
+      "n_entries": 1,
+      "size_bytes": 2400,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "pilot_report_phase2_entry_2026-05-13.md",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\pilot_report_phase2_entry_2026-05-13.md",
+      "n_entries": 1,
+      "size_bytes": 533,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "plasmid_axis_cache.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\plasmid_axis_cache.json",
+      "n_entries": 1,
+      "size_bytes": 106091,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/coresistance_multiaxis.py",
+        "scripts/crossaxis_lineage_deconfound.py",
+        "scripts/plasmid_axis_sweep.py",
+        "tests/test_coresistance_multiaxis.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "plasmid_axis_checkpoint.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\plasmid_axis_checkpoint.jsonl",
+      "n_entries": 1,
+      "size_bytes": 88885,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/plasmid_axis_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "prosst_lift_checkpoint.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\prosst_lift_checkpoint.jsonl",
+      "n_entries": 1,
+      "size_bytes": 12156,
+      "size_truncated": false,
+      "n_consumed_by": 7,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_auditor_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/prosst_lift.py"
+      ],
+      "reported_in": [
+        "wiki/prosst_lift_2026-07-18.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "protein_effect_cache",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\protein_effect_cache",
+      "n_entries": 7,
+      "size_bytes": 347991,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/predict_mutation_effect.py",
+        "scripts/protein_effect_facevalidity.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "proteingym_inverse_sweep.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\proteingym_inverse_sweep.jsonl",
+      "n_entries": 1,
+      "size_bytes": 68874,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/forward_inverse_proteingym_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "proteingym_inverse_sweep_esm.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\proteingym_inverse_sweep_esm.jsonl",
+      "n_entries": 1,
+      "size_bytes": 66746,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/forward_inverse_proteingym_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_ceftriaxone_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_ceftriaxone_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 5682,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/functional_alphabet_probe_ceftriaxone_n120_2026-06-27.json",
+        "wiki/functional_alphabet_probe_ceftriaxone_n120_2026-06-27.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_ceftriaxone_dl.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_ceftriaxone_dl.parquet",
+      "n_entries": 1,
+      "size_bytes": 5682,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_gentamicin_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_gentamicin_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 5671,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/functional_alphabet_probe_gentamicin_n120_2026-06-27.json",
+        "wiki/functional_alphabet_probe_gentamicin_n120_2026-06-27.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_gentamicin_dl.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_gentamicin_dl.parquet",
+      "n_entries": 1,
+      "size_bytes": 5671,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_meropenem_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_meropenem_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 5725,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/functional_alphabet_probe_meropenem_n120_2026-06-27.json",
+        "wiki/functional_alphabet_probe_meropenem_n120_2026-06-27.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_meropenem_dl.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_meropenem_dl.parquet",
+      "n_entries": 1,
+      "size_bytes": 5725,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_tetracycline_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_tetracycline_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 5633,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 4,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/dna_llm_offline_resume_2026-06-26.md",
+        "wiki/functional_alphabet_probe_tet_n118_2026-06-26.json",
+        "wiki/functional_alphabet_probe_tet_n118_2026-06-26.md",
+        "wiki/functional_alphabet_probe_tet_partial_2026-06-26.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "shared_lineage_tetracycline_pilot.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\shared_lineage_tetracycline_pilot.parquet",
+      "n_entries": 1,
+      "size_bytes": 3192,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "stage2_n150_cipro_cohort.parquet",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\stage2_n150_cipro_cohort.parquet",
+      "n_entries": 1,
+      "size_bytes": 45158,
+      "size_truncated": false,
+      "n_consumed_by": 15,
+      "n_reported_in": 20,
+      "consumed_by": [
+        "scripts/amr_falsifier.py",
+        "scripts/build_stage2_n150_cohort.py",
+        "scripts/cipro_bounded_falsifier.py",
+        "scripts/functional_alphabet_probe.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/kaggle/staleness_isolate_kernel.py",
+        "scripts/leakage_check_dup_accession.py",
+        "scripts/mash_cluster_n147.py"
+      ],
+      "reported_in": [
+        "plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md",
+        "plans/EP_1A_Public_Genome_Selection_Memo.md",
+        "plans/Phase2_Framing_Brainstorm_Technical_Plan.md",
+        "plans/Stage2_Docker_Tools_Install_Plan.md",
+        "plans/Stage2_N150_Prep_Plan.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/HANDOFF_amr_phase2_embedding_frontier_2026-06-04.md",
+        "wiki/SESSION_HANDOFF_2026-06-17_genome_map_execute.md",
+        "wiki/cipro_bounded_falsifier_coordination_plan_2026-05-22.md",
+        "wiki/cipro_mash_clades_n147_2026-07-09.json",
+        "wiki/cipro_mash_clades_n147_2026-07-10.json",
+        "wiki/cipro_mash_clades_n147_threshold_diagnostic_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "tb_mic_features_cache.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\tb_mic_features_cache.json",
+      "n_entries": 1,
+      "size_bytes": 3428546,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/tb_mic_calibration.py",
+        "tests/test_tb_mic_calibration.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "tb_mic_panel_features_cache.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\tb_mic_panel_features_cache.json",
+      "n_entries": 1,
+      "size_bytes": 11972171,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/tb_mic_calibration.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "tb_rif_rpob_cache.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\tb_rif_rpob_cache.json",
+      "n_entries": 1,
+      "size_bytes": 1251740,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/tb_supervised_vs_catalog.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "three_way_lift_checkpoint.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\three_way_lift_checkpoint.jsonl",
+      "n_entries": 1,
+      "size_bytes": 11772,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/three_way_lift.py"
+      ],
+      "reported_in": [
+        "wiki/three_way_lift_2026-07-18.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "virulence_axis_cache.json",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\virulence_axis_cache.json",
+      "n_entries": 1,
+      "size_bytes": 39483,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/coresistance_multiaxis.py",
+        "scripts/crossaxis_lineage_deconfound.py",
+        "scripts/virulence_axis_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "virulence_axis_checkpoint.jsonl",
+      "root": "processed",
+      "kind": "processed",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\processed\\virulence_axis_checkpoint.jsonl",
+      "n_entries": 1,
+      "size_bytes": 34814,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/virulence_axis_sweep.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "_biosample_cache.json",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\_biosample_cache.json",
+      "n_entries": 1,
+      "size_bytes": 182175,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "dna_decode/eval/biosample_resolver.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "acinetobacter_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\acinetobacter_meropenem",
+      "n_entries": 3,
+      "size_bytes": 460929076,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/build_acinetobacter_indep_cohort.py",
+        "scripts/build_calibrated_registry.py"
+      ],
+      "reported_in": [
+        "wiki/calibrate_organism_validation_2026-06-08.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "acinetobacter_meropenem_indep",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\acinetobacter_meropenem_indep",
+      "n_entries": 3,
+      "size_bytes": 530662710,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/build_acinetobacter_indep_cohort.py",
+        "scripts/expression_context_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "acinetobacter_meropenem_run.log",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\acinetobacter_meropenem_run.log",
+      "n_entries": 1,
+      "size_bytes": 1072,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_caur",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_caur",
+      "n_entries": 7,
+      "size_bytes": 331619191,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/ar_bank_caur_micafungin_finalize.py",
+        "scripts/ar_bank_caur_powered_finalize.py",
+        "scripts/ar_bank_caur_validate.py"
+      ],
+      "reported_in": [
+        "wiki/cohort_manifest_external_arbank_caur_2026-07-20.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_caur_extval_fluconazole",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_caur_extval_fluconazole",
+      "n_entries": 5,
+      "size_bytes": 5913,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/ar_bank_caur_powered_finalize.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_caur_extval_micafungin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_caur_extval_micafungin",
+      "n_entries": 5,
+      "size_bytes": 5389,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/ar_bank_caur_micafungin_finalize.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_caur_extval_voriconazole",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_caur_extval_voriconazole",
+      "n_entries": 3,
+      "size_bytes": 111,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_ecoli_extval_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_ecoli_extval_ceftriaxone",
+      "n_entries": 7,
+      "size_bytes": 263034694,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/ar_isolate_bank_external_validation_2026-07-18.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_ecoli_extval_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_ecoli_extval_ciprofloxacin",
+      "n_entries": 7,
+      "size_bytes": 23227120,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_ecoli_extval_gentamicin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_ecoli_extval_gentamicin",
+      "n_entries": 7,
+      "size_bytes": 43547040,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_efm_kaggle",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_efm_kaggle",
+      "n_entries": 20,
+      "size_bytes": 1051835224,
+      "size_truncated": true,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_enterococcus_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_enterococcus_faecium_extval_doxycycline",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_enterococcus_faecium_extval_doxycycline",
+      "n_entries": 3,
+      "size_bytes": 618,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_enterococcus_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_enterococcus_faecium_extval_levofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_enterococcus_faecium_extval_levofloxacin",
+      "n_entries": 3,
+      "size_bytes": 589,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/ar_bank_organism_validate.py",
+        "scripts/score_enterococcus_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_enterococcus_faecium_extval_teicoplanin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_enterococcus_faecium_extval_teicoplanin",
+      "n_entries": 1,
+      "size_bytes": 255,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_enterococcus_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_enterococcus_faecium_extval_vancomycin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_enterococcus_faecium_extval_vancomycin",
+      "n_entries": 1,
+      "size_bytes": 255,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_enterococcus_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_extval_azithromycin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_extval_azithromycin",
+      "n_entries": 5,
+      "size_bytes": 22875,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_extval_cefixime",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_extval_cefixime",
+      "n_entries": 5,
+      "size_bytes": 28460,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_extval_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_extval_ceftriaxone",
+      "n_entries": 5,
+      "size_bytes": 28789,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_extval_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_extval_ciprofloxacin",
+      "n_entries": 6,
+      "size_bytes": 215806894,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_extval_penicillin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_extval_penicillin",
+      "n_entries": 5,
+      "size_bytes": 23525,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_extval_tetracycline",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_extval_tetracycline",
+      "n_entries": 5,
+      "size_bytes": 24058,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_kaggle",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_kaggle",
+      "n_entries": 23,
+      "size_bytes": 82548565,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_neisseria_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_kaggle_subset.json",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_kaggle_subset.json",
+      "n_entries": 1,
+      "size_bytes": 336,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_gono_smoke",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_gono_smoke",
+      "n_entries": 2,
+      "size_bytes": 8988657,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "tests/test_ar_bank_gono_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_extval_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_extval_ceftriaxone",
+      "n_entries": 7,
+      "size_bytes": 758925895,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_extval_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_extval_ciprofloxacin",
+      "n_entries": 7,
+      "size_bytes": 636699149,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_extval_gentamicin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_extval_gentamicin",
+      "n_entries": 7,
+      "size_bytes": 214495867,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_neisseria_gonorrhoeae_extval_cefixime",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_neisseria_gonorrhoeae_extval_cefixime",
+      "n_entries": 1,
+      "size_bytes": 336,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_neisseria_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_neisseria_gonorrhoeae_extval_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_neisseria_gonorrhoeae_extval_ciprofloxacin",
+      "n_entries": 1,
+      "size_bytes": 336,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/score_neisseria_from_kaggle.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_staphylococcus_aureus_extval_levofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_staphylococcus_aureus_extval_levofloxacin",
+      "n_entries": 6,
+      "size_bytes": 123359357,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_isolate_bank",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_isolate_bank",
+      "n_entries": 11,
+      "size_bytes": 51659046,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "dna_decode/data/ar_isolate_bank.py",
+        "scripts/build_ar_bank_gono_labels.py",
+        "scripts/build_ar_bank_labels.py",
+        "scripts/build_ar_bank_organism_labels.py",
+        "tests/test_ar_isolate_bank.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "campy_ncbipd_extval",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\campy_ncbipd_extval",
+      "n_entries": 3,
+      "size_bytes": 12785,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/score_ncbipd_extval.py"
+      ],
+      "reported_in": [
+        "wiki/campylobacter_ncbipd_extval_2026-07-21.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "campylobacter_cipro_run.log",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\campylobacter_cipro_run.log",
+      "n_entries": 1,
+      "size_bytes": 1080,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "campylobacter_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\campylobacter_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 210588481,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "scripts/build_calibrated_registry.py",
+        "scripts/independent_cohort_validate.py"
+      ],
+      "reported_in": [
+        "wiki/calibrate_organism_validation_2026-06-08.json",
+        "wiki/self_calibration_falsifier_2026-06-08.json",
+        "wiki/self_calibration_falsifier_2026-06-08.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "campylobacter_indep_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\campylobacter_indep_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 212369809,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "tests/test_determinant_cooccurrence.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "campylobacter_provdisjoint_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\campylobacter_provdisjoint_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 285499700,
+      "size_truncated": false,
+      "n_consumed_by": 6,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "carbon_util_bacdive",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\carbon_util_bacdive",
+      "n_entries": 6,
+      "size_bytes": 14269605,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/bacdive_li2023_to_long.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "cryptic",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\cryptic",
+      "n_entries": 2,
+      "size_bytes": 107769410,
+      "size_truncated": false,
+      "n_consumed_by": 22,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "dna_decode/metabolic/carbon_catalog.py",
+        "dna_decode/organism_rules/tb_vcf.py",
+        "dna_decode/pgx/cyp3a5_catalog.py",
+        "dna_decode/pgx/functional_evidence.py",
+        "scripts/amr_portal_curated_score.py",
+        "scripts/amr_portal_score_independent.py",
+        "scripts/build_tb_goldset_manifest.py",
+        "scripts/cryptic_feasibility_probe.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "plans/TB_AMR_Decoder_CRyPTIC_Technical_Plan.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/SESSION_HANDOFF_2026-06-16.md",
+        "wiki/SESSION_HANDOFF_2026-06-17_tb_decoder_plan.md",
+        "wiki/cryptic_feasibility_probe_result_2026-06-16.md",
+        "wiki/ebi_amr_portal_finding_2026-06-23.md",
+        "wiki/pgx_functional_evidence_2026-06-25.json",
+        "wiki/pgx_functional_evidence_2026-06-25.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/tb_decoder_idea_anchor_prompt_2026-06-16.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "CRyPTIC M. tuberculosis compendium (12,287 isolates, measured BMD MIC).",
+        "used_for": "The TB RIF/INH in-distribution baseline via the VARIANTS.parquet adapter.",
+        "status": "live",
+        "could_support": "Other TB drugs in the WHO catalogue.",
+        "gotcha": "A CRyPTIC-scored number is IN-DISTRIBUTION (the WHO catalogue was built partly from CRyPTIC) -- never call it independent validation."
+      }
+    },
+    {
+      "key": "ecoli_conditional_essentiality",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ecoli_conditional_essentiality",
+      "n_entries": 1,
+      "size_bytes": 34071,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/fba/conditional_essentiality.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/fba_conditional_essentiality_2026-08-12.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ecoli_trn",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ecoli_trn",
+      "n_entries": 1,
+      "size_bytes": 148106,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/fba_selector_preflight_2026-08-22.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "enterobacter_cloacae_cef_run.log",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\enterobacter_cloacae_cef_run.log",
+      "n_entries": 1,
+      "size_bytes": 545,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "enterobacter_cloacae_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\enterobacter_cloacae_ceftriaxone",
+      "n_entries": 3,
+      "size_bytes": 220258763,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\escherichia_coli_shigella_provdisjoint_ceftriaxone",
+      "n_entries": 3,
+      "size_bytes": 1080878242,
+      "size_truncated": false,
+      "n_consumed_by": 6,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provenance_disjoint_validation_escherichia_coli_shigella_ceftr_2026-06-12.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\escherichia_coli_shigella_provdisjoint_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 1210852311,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/naive_baseline_provdisjoint.py",
+        "tests/test_compute_lineage_metrics.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "escherichia_coli_shigella_provdisjoint_gentamicin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\escherichia_coli_shigella_provdisjoint_gentamicin",
+      "n_entries": 3,
+      "size_bytes": 1252335993,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/gentamicin_rmt_candidate.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/gentamicin_rmt_candidate.json",
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provenance_disjoint_validation_escherichia_coli_shigella_genta_2026-06-12.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "escherichia_coli_shigella_provdisjoint_tetracycline",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\escherichia_coli_shigella_provdisjoint_tetracycline",
+      "n_entries": 3,
+      "size_bytes": 937189544,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provenance_disjoint_validation_escherichia_coli_shigella_tetra_2026-06-12.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "fungal_ref",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\fungal_ref",
+      "n_entries": 0,
+      "size_bytes": 0,
+      "size_truncated": false,
+      "n_consumed_by": 13,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "scripts/ar_bank_caur_micafungin_finalize.py",
+        "scripts/ar_bank_caur_powered_finalize.py",
+        "scripts/ar_bank_caur_validate.py",
+        "scripts/assemble_sra_cohort.py",
+        "scripts/build_fungal_cohort.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_amr_cli_fungal.py",
+        "tests/test_build_fungal_cohort.py",
+        "tests/test_fungal_erg11_caller.py"
+      ],
+      "reported_in": [
+        "plans/EP7_Fungal_AMR_Substrate.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/ar_bank_caur_micafungin_fks1_2026-07-20.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/fungal_ep7_g1_closeout_2026-06-08.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gono_ncbipd_extval",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\gono_ncbipd_extval",
+      "n_entries": 3,
+      "size_bytes": 39274,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/gono_23s_azithro_caller.py",
+        "scripts/innovate_burden_killtest.py",
+        "scripts/score_gono_ncbipd_extval.py",
+        "scripts/score_ncbipd_extval.py"
+      ],
+      "reported_in": [
+        "wiki/gono_ncbipd_extval_2026-07-21.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "hiv",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\hiv",
+      "n_entries": 9,
+      "size_bytes": 20539809,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "independent_cohort_validate_run.log",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\independent_cohort_validate_run.log",
+      "n_entries": 1,
+      "size_bytes": 3349,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "klebsiella_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_ceftriaxone",
+      "n_entries": 2,
+      "size_bytes": 1602069,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "klebsiella_cipro",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_cipro",
+      "n_entries": 3,
+      "size_bytes": 1584158454,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "scripts/build_calibrated_registry.py",
+        "scripts/gentamicin_rmt_candidate.py",
+        "scripts/independent_cohort_validate.py",
+        "scripts/klebsiella_cipro_transfer.py",
+        "scripts/klebsiella_drug_validate.py",
+        "scripts/klebsiella_meropenem_validate.py",
+        "tests/test_cohort_manifest.py",
+        "tests/test_provenance_disjoint_validate.py"
+      ],
+      "reported_in": [
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/HANDOFF_2026-06-07.md",
+        "wiki/calibrate_organism_validation_2026-06-08.json",
+        "wiki/gentamicin_rmt_candidate_2026-08-28.md",
+        "wiki/self_calibration_falsifier_2026-06-08.json",
+        "wiki/self_calibration_falsifier_2026-06-08.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_ciprofloxacin",
+      "n_entries": 1,
+      "size_bytes": 570,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "klebsiella_gentamicin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_gentamicin",
+      "n_entries": 1,
+      "size_bytes": 570,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/gentamicin_rmt_candidate.py"
+      ],
+      "reported_in": [
+        "wiki/gentamicin_rmt_candidate.json",
+        "wiki/gentamicin_rmt_candidate_2026-08-28.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_indep_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_indep_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 430662786,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "tests/test_compute_lineage_metrics.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_meropenem",
+      "n_entries": 2,
+      "size_bytes": 151689,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/klebsiella_meropenem_validate.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_provdisjoint_ceftriaxone",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_provdisjoint_ceftriaxone",
+      "n_entries": 3,
+      "size_bytes": 1318759403,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/naive_baseline_provdisjoint.py",
+        "tests/test_determinant_cooccurrence.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_provdisjoint_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_provdisjoint_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 1253631167,
+      "size_truncated": false,
+      "n_consumed_by": 10,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/compute_lineage_metrics.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/naive_baseline_provdisjoint.py",
+        "tests/test_cohort_manifest.py",
+        "tests/test_compute_lineage_metrics.py",
+        "tests/test_provenance_disjoint_validate.py"
+      ],
+      "reported_in": [
+        "wiki/decisions-log.md",
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_provdisjoint_gentamicin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_provdisjoint_gentamicin",
+      "n_entries": 3,
+      "size_bytes": 1264879013,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/gentamicin_rmt_candidate.py",
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/gentamicin_rmt_candidate.json",
+        "wiki/provdisjoint_lineage_metrics.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_provdisjoint_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_provdisjoint_meropenem",
+      "n_entries": 3,
+      "size_bytes": 1266480036,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provenance_disjoint_validation_klebsiella_merop_2026-06-10.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_provdisjoint_tetracycline",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_provdisjoint_tetracycline",
+      "n_entries": 3,
+      "size_bytes": 1319786534,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/naive_baseline_provdisjoint.py"
+      ],
+      "reported_in": [
+        "wiki/provdisjoint_lineage_metrics.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "klebsiella_tetracycline",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\klebsiella_tetracycline",
+      "n_entries": 2,
+      "size_bytes": 609108,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "mavedb_full_esm2",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\mavedb_full_esm2",
+      "n_entries": 2,
+      "size_bytes": 1037996,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/mavedb_full_esm2_collect.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ncbi_pathogen_xsource",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ncbi_pathogen_xsource",
+      "n_entries": 3,
+      "size_bytes": 451628415,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/xsource_validation.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "oxford",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\oxford",
+      "n_entries": 2,
+      "size_bytes": 38166650,
+      "size_truncated": false,
+      "n_consumed_by": 9,
+      "n_reported_in": 8,
+      "consumed_by": [
+        "scripts/oxford_naive_baseline.py",
+        "scripts/oxford_rmt_prevalence_probe.py",
+        "scripts/oxford_score.py",
+        "scripts/run_oxford_revalidation.py",
+        "scripts/tmp_smx_external_validate.py",
+        "tests/test_build_external_validation_report.py",
+        "tests/test_external_cohort_preflight.py",
+        "tests/test_external_cohort_revalidate.py",
+        "tests/test_oxford_rmt_prevalence.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/SESSION_HANDOFF_2026-06-16.md",
+        "wiki/decisions-log.md",
+        "wiki/external_validation_oxford_naive_comparator_2026-06-27.md",
+        "wiki/external_validation_oxfordtmpsmx_tmpsmx20260616_2026-06-16.json",
+        "wiki/external_validation_report_card.json",
+        "wiki/external_validation_report_card.md",
+        "wiki/oxford_external_validation_result_2026-06-15.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pear",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\pear",
+      "n_entries": 1,
+      "size_bytes": 3307600,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "scripts/pear_extract_fitness.R",
+        "scripts/pear_forward_replication.py",
+        "scripts/pear_g6_screen.py",
+        "scripts/screen_candidate_gates.py",
+        "tests/test_pear_forward_replication.py"
+      ],
+      "reported_in": [
+        "project_state/label-acquisition-2026-08-31.md",
+        "wiki/pear_forward_replication_blosum62_2026-09-01.json",
+        "wiki/pear_forward_replication_esm2_2026-09-01.json",
+        "wiki/pear_forward_replication_hybrid_2026-09-02.json",
+        "wiki/pear_forward_replication_prosst_2026-09-02.json",
+        "wiki/pear_g6_screen_2026-09-01.md",
+        "wiki/rejection_gate_screen_2026-09-01.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumo_ncbipd_extval",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\pneumo_ncbipd_extval",
+      "n_entries": 3,
+      "size_bytes": 10173,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/score_ncbipd_extval.py"
+      ],
+      "reported_in": [
+        "wiki/pneumo_ncbipd_extval_2026-07-21.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pseudomonas_aeruginosa_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\pseudomonas_aeruginosa_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 745931698,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/self_calibration_falsifier_2026-06-08.json",
+        "wiki/self_calibration_falsifier_2026-06-08.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pseudomonas_aeruginosa_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\pseudomonas_aeruginosa_meropenem",
+      "n_entries": 3,
+      "size_bytes": 175709518,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/build_calibrated_registry.py"
+      ],
+      "reported_in": [
+        "wiki/calibrate_organism_validation_2026-06-08.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pseudomonas_meropenem_run.log",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\pseudomonas_meropenem_run.log",
+      "n_entries": 1,
+      "size_bytes": 1090,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "revalidation_2026-07-11",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\revalidation_2026-07-11",
+      "n_entries": 10,
+      "size_bytes": 5516287509,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 1,
+      "consumed_by": [],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "A 5.3GB revalidation cohort staged 2026-07-11.",
+        "used_for": "UNVERIFIED -- referenced by one artifact and no code.",
+        "status": "unused",
+        "could_support": "Unknown until inspected. Flagged because 5.3GB of staged cohort that nothing consumes is exactly the shape of a forgotten asset."
+      }
+    },
+    {
+      "key": "salmonella_cipro_run.log",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\salmonella_cipro_run.log",
+      "n_entries": 1,
+      "size_bytes": 1078,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "salmonella_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\salmonella_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 571742471,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/build_calibrated_registry.py",
+        "scripts/independent_cohort_validate.py"
+      ],
+      "reported_in": [
+        "wiki/calibrate_organism_validation_2026-06-08.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "salmonella_indep_ciprofloxacin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\salmonella_indep_ciprofloxacin",
+      "n_entries": 3,
+      "size_bytes": 573495310,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "sarscov2",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\sarscov2",
+      "n_entries": 1,
+      "size_bytes": 6573,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "dna_decode/data/sarscov2_amr.py",
+        "dna_decode/data/trust_surface.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_routable_drugs_single_source.py"
+      ],
+      "reported_in": [
+        "plans/SARSCoV2_Mpro_Cell_Build_Spec_2026-06-23.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "sci234",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\sci234",
+      "n_entries": 1,
+      "size_bytes": 1424861,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "scripts/sci234_score.py",
+        "scripts/tmp_smx_external_validate.py",
+        "tests/test_build_external_validation_report.py",
+        "tests/test_tmp_smx_external_validate.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/SESSION_HANDOFF_2026-06-16.md",
+        "wiki/decisions-log.md",
+        "wiki/external_validation_report_card.json",
+        "wiki/external_validation_report_card.md",
+        "wiki/external_validation_sci234_result_2026-06-16.md",
+        "wiki/external_validation_sci234tmpsmx_tmpsmx20260616_2026-06-16.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "staph_ncbipd_extval",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\staph_ncbipd_extval",
+      "n_entries": 3,
+      "size_bytes": 17058,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/score_ncbipd_extval.py"
+      ],
+      "reported_in": [
+        "wiki/staph_ncbipd_extval_2026-07-21.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "staphylococcus_aureus_oxacillin",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\staphylococcus_aureus_oxacillin",
+      "n_entries": 3,
+      "size_bytes": 306851303,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "tb_goldset",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\tb_goldset",
+      "n_entries": 1,
+      "size_bytes": 1803060,
+      "size_truncated": false,
+      "n_consumed_by": 15,
+      "n_reported_in": 14,
+      "consumed_by": [
+        "scripts/amr_portal_feasibility.py",
+        "scripts/amr_portal_tb_cohort.py",
+        "scripts/build_tb_goldset_manifest.py",
+        "scripts/build_tbportals_candidates.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/run_tb_independent_amr_portal.py",
+        "scripts/tb_independence_biosample_check.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/amr_portal_tb_independent_runbook_2026-06-23.md",
+        "wiki/related_data_sources_registry.md",
+        "wiki/staleness_ab_v2_raw.json",
+        "wiki/staleness_ab_v3_raw.json",
+        "wiki/staleness_corpus_run_2026-08-27_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/staleness_full_corpus_final_raw.json",
+        "wiki/staleness_v3_run_2026-08-27_raw.json",
+        "wiki/tb_goldset_howto_2026-06-22.md",
+        "wiki/tb_independent_goldset_acquisition_2026-06-17.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "EBI AMR-Portal provenance-disjoint TB cohort (39,193 isolates w/ DST).",
+        "used_for": "The first genuinely independent TB number (RIF 0.920/0.955 raw).",
+        "status": "live",
+        "could_support": "Additional TB drugs with DST coverage in the same portal."
+      }
+    },
+    {
+      "key": "tb_indep",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\tb_indep",
+      "n_entries": 4,
+      "size_bytes": 295821248,
+      "size_truncated": false,
+      "n_consumed_by": 10,
+      "n_reported_in": 12,
+      "consumed_by": [
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/run_tb_independent_amr_portal.py",
+        "scripts/tb_indep_finisher.sh",
+        "scripts/tb_independent_lineage_collapse.py",
+        "scripts/tb_independent_mash_collapse.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/SESSION_HANDOFF_2026-06-23_independent_validation_breakthrough.md",
+        "wiki/staleness_ab_v2_raw.json",
+        "wiki/staleness_ab_v3_raw.json",
+        "wiki/staleness_corpus_run_2026-08-27_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/staleness_full_corpus_final_raw.json",
+        "wiki/staleness_v3_run_2026-08-27_raw.json",
+        "wiki/tb_independent_lineage_collapsed_result_2026-07-02.md",
+        "wiki/tb_independent_number_2026-06-23.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Per-isolate TB independent-run VCFs + results checkpoint (2,845 isolates).",
+        "used_for": "The lineage-collapsed independent TB headline (RIF 0.444/0.979).",
+        "status": "live",
+        "could_support": "Re-scoring under a revised catalogue with no refetch."
+      }
+    },
+    {
+      "key": "tb_lineage_barcode",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\tb_lineage_barcode",
+      "n_entries": 2,
+      "size_bytes": 78469,
+      "size_truncated": false,
+      "n_consumed_by": 7,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/data/tb_lineage_barcode.py",
+        "scripts/score_tb_cryptic.py",
+        "scripts/score_tb_cryptic_parquet.py",
+        "scripts/tb_independent_lineage_collapse.py",
+        "scripts/tb_supervised_vs_catalog.py",
+        "tests/test_tb_leak_guard.py",
+        "tests/test_tb_lineage.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "who_tb_catalogue",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\who_tb_catalogue",
+      "n_entries": 4,
+      "size_bytes": 46006830,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "dna_decode/data/tb_who_catalogue.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/pre_resistance_predictive_backtest.py",
+        "scripts/tb_coordinate_alignment_probe.py"
+      ],
+      "reported_in": [
+        "plans/TB_AMR_Decoder_CRyPTIC_Technical_Plan.md",
+        "plans/TB_AMR_Decoder_RIF_INH_On_CRyPTIC_Plan/technical-plan.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "amrfinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\amrfinder_db",
+      "n_entries": 2,
+      "size_bytes": 501469826,
+      "size_truncated": false,
+      "n_consumed_by": 19,
+      "n_reported_in": 17,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "dna_decode/profile/cli.py",
+        "scripts/build_drug_shared_lineage_cohort.py",
+        "scripts/cipro_mechanism_audit.py",
+        "scripts/drug_mechanism_audit.py",
+        "scripts/fam_subclass_resolver.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_auditor_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py"
+      ],
+      "reported_in": [
+        "plans/Stage2_Docker_Tools_Install_Plan.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/HANDOFF_amr_phase2_RESULT_2026-06-05.md",
+        "wiki/HANDOFF_session_2026-06-05.md",
+        "wiki/SESSION_HANDOFF_2026-06-17_genome_map_execute.md",
+        "wiki/ceftriaxone_mechanism_audit_2026-05-26.json",
+        "wiki/cipro_mechanism_audit_2026-05-17.json",
+        "wiki/cipro_mechanism_audit_smoke.json",
+        "wiki/cipro_mechanism_audit_smoke_st131.json",
+        "wiki/ciprofloxacin_mechanism_audit_2026-06-05.json",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/dna_llm_cohorts_durability_2026-06-27.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "AMRFinderPlus reference database.",
+        "used_for": "All AMRFinder runs.",
+        "status": "live",
+        "could_support": "n/a -- infrastructure."
+      }
+    },
+    {
+      "key": "amrfinder_runs",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\amrfinder_runs",
+      "n_entries": 730,
+      "size_bytes": 55836206,
+      "size_truncated": false,
+      "n_consumed_by": 42,
+      "n_reported_in": 16,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "dna_decode/cli.py",
+        "dna_decode/concordance/cli.py",
+        "dna_decode/eval/functional_tokens.py",
+        "dna_decode/eval/point_baseline.py",
+        "dna_decode/profile/cli.py",
+        "scripts/amr_falsifier.py",
+        "scripts/ar_bank_gono_validate.py",
+        "scripts/ar_bank_organism_validate.py",
+        "scripts/build_acinetobacter_indep_cohort.py",
+        "scripts/build_calibrated_registry.py",
+        "scripts/build_drug_shared_lineage_cohort.py"
+      ],
+      "reported_in": [
+        "plans/Cef_Audit_Aware_Packet_Design.md",
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_Mechanism_Audit_Plan.md",
+        "plans/calibrate_organism_brainstorm.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/HANDOFF_amr_phase2_RESULT_2026-06-05.md",
+        "wiki/determinant_cooccurrence_result_2026-07-11.json",
+        "wiki/determinant_cooccurrence_result_2026-07-11_dedup.json",
+        "wiki/dna_amr_external_validation_2026-06-05.md",
+        "wiki/dna_amr_multidrug_validation_2026-06-06.md",
+        "wiki/dna_llm_cohorts_durability_2026-06-27.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Cached AMRFinderPlus output (main.tsv + mutations.tsv) per assembly.",
+        "used_for": "Every deterministic AMR call; the resfinder/pointfinder concordance runs.",
+        "status": "live",
+        "could_support": "Free re-scoring of any cached genome at zero marginal AMRFinder cost -- 1,818 genomes are cached and 311 are leakage-disjoint.",
+        "gotcha": "The POINT screen is NOT in main.tsv (zero POINT rows across all 1,818 runs); it is in a separate mutations.tsv in --mutation_all form including [WILDTYPE] rows."
+      }
+    },
+    {
+      "key": "antimalarial_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\antimalarial_ref",
+      "n_entries": 5,
+      "size_bytes": 8012,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "scripts/pf_kelch13_caller.py",
+        "tests/test_amr_cli_antimalarial.py",
+        "tests/test_intron_aware_mapping.py",
+        "tests/test_pf_kelch13.py"
+      ],
+      "reported_in": [
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/antimalarial_k13_g1_2026-06-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "antiviral_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\antiviral_ref",
+      "n_entries": 3,
+      "size_bytes": 4602,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "tests/test_amr_cli_antiviral.py"
+      ],
+      "reported_in": [
+        "wiki/antiviral_na_4th_kingdom_2026-06-10.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "arabidopsis",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\arabidopsis",
+      "n_entries": 4,
+      "size_bytes": 1808964,
+      "size_truncated": false,
+      "n_consumed_by": 13,
+      "n_reported_in": 11,
+      "consumed_by": [
+        "dna_decode/data/cell_registry.py",
+        "scripts/fetch_arabidopsis_pathb.py",
+        "scripts/flowering_flc_route_test.py",
+        "scripts/flowering_fri_caller_compare.py",
+        "scripts/flowering_tables3_score.py",
+        "scripts/g2_dry_manifest.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_arabidopsis_flowering.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/HANDOFF_workhorse_eukaryotic_2026-06-07.md",
+        "wiki/acquisition/ask_flowering_supplement_2026-07-16.md",
+        "wiki/arabidopsis_af002_ft16_bounded_execution_2026-06-21.md",
+        "wiki/flowering_tables3_score_2026-07-16.json",
+        "wiki/flowering_tables3_score_2026-07-16.md",
+        "wiki/staleness_ab_v3_6000_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/staleness_full_corpus_final_raw.json"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Arabidopsis flowering-time (FT10) phenotype + accession data.",
+        "used_for": "The Path B embedding test at Gate G2.",
+        "status": "closed-negative",
+        "could_support": "Nothing on the embedding axis -- H2 was FALSIFIED under de-confounding (embeddings learned population structure).",
+        "gotcha": "Do NOT reopen on a bigger GPU. A negative de-confounded metric is a signal-vs-structure problem, not a compute problem."
+      }
+    },
+    {
+      "key": "clinvar",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\clinvar",
+      "n_entries": 3,
+      "size_bytes": 52551102,
+      "size_truncated": false,
+      "n_consumed_by": 14,
+      "n_reported_in": 17,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/clinvar/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/data/clinvar.py",
+        "dna_decode/decode_router.py",
+        "scripts/capture_clinvar.py",
+        "scripts/chatgpt_catalog_screen.py",
+        "scripts/clinical_variant_effect_validate.py",
+        "scripts/clinvar_pgp_uk_cohort_card.py",
+        "scripts/dataset_hunt_shortlist.py",
+        "tests/test_advertised_commands.py",
+        "tests/test_cell_registry.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/chatgpt_catalog_screen_2026-07-02.md",
+        "wiki/clinical_gene_landscape_census_2026-07-22.md",
+        "wiki/clinical_variant_effect_validation_2026-07-22.md",
+        "wiki/clinvar_pgp_uk_realization_2026-07-06.md",
+        "wiki/data_source_census_tree_of_life_2026-07-13.json",
+        "wiki/dataset_hunt_shortlist_2026-07-02.md",
+        "wiki/free_data_capture_registry_2026-07-04.md",
+        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar.json",
+        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar86.json",
+        "wiki/pgp_uk_clinvar_results/FR07961003_clinvar86.json",
+        "wiki/pgp_uk_clinvar_results/FR07961006_clinvar.json"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "ClinVar variant-classification release.",
+        "used_for": "The clinvar / germline-pathogenicity cell.",
+        "status": "live",
+        "could_support": "Any Mendelian-classification work."
+      }
+    },
+    {
+      "key": "cyp2d6_psv",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\cyp2d6_psv",
+      "n_entries": 1,
+      "size_bytes": 4617,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/cyp2d6_pileup_gen.py",
+        "scripts/cyp2d6_psv_evidence.py"
+      ],
+      "reported_in": [
+        "plans/CYP2D6_Hybrid_Identity_v0.4/technical-plan.md",
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "disinfinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\disinfinder_db",
+      "n_entries": 1,
+      "size_bytes": 24729,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/disinfinder/cli.py",
+        "scripts/disinfinder_locus_collapse_probe.py"
+      ],
+      "reported_in": [
+        "plans/Variety_Decoder_Roadmap.md",
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ena_wgs",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\ena_wgs",
+      "n_entries": 24,
+      "size_bytes": 127527764,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "scripts/build_pergene_support_cache.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/pathotype_kmer_bakeoff.py",
+        "scripts/pathotype_nt_windowed_bakeoff.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "wiki/HANDOFF_ep4_pathotype_model_2026-05-31.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "external",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\external",
+      "n_entries": 2,
+      "size_bytes": 4851971,
+      "size_truncated": false,
+      "n_consumed_by": 87,
+      "n_reported_in": 191,
+      "consumed_by": [
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/eval/prospective_lock.py",
+        "dna_decode/genome_map/browser.py",
+        "dna_decode/genome_map/circular_browser.py",
+        "dna_decode/organism_rules/neisseria_amr.py",
+        "dna_decode/organism_rules/tb_vcf.py",
+        "dna_decode/pathotype/markers.py",
+        "dna_decode/pgx/runner.py",
+        "dna_decode/pigment/plink_io.py",
+        "dna_decode/viz/hub.py",
+        "dna_decode/viz/network_browser.py",
+        "dna_decode/viz/protein_heatmap.py"
+      ],
+      "reported_in": [
+        "plans/BVBRC_Genome_Metadata_Adapter_Plan.md",
+        "plans/Cef_Audit_Aware_Packet_Design.md",
+        "plans/Cef_Cached_Strain_V0_1_Slice_Plan.md",
+        "plans/Cef_Mechanism_Audit_Plan.md",
+        "plans/Cef_V0_1_Promotion_Slice_Plan.md",
+        "plans/EP1_EP2_Cross_Drug_Synthesis_Plan.md",
+        "plans/EP_1B_External_Benchmark_Panel_Memo.md",
+        "plans/Ecoli_G2P_Phase1_Closeout_Plan.md",
+        "plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md",
+        "plans/Ecoli_G2P_Platform_Technical_Plan.md",
+        "plans/Hybrid_Decoder_Architecture_Plan.md",
+        "plans/Hybrid_Learned_Deterministic_Decoder_Plan.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "External-cohort validation inputs + crosswalks (Oxford, PROBAC, AR Bank, Sci234).",
+        "used_for": "The external-cohort re-validation arm; TMP-SMX experimental overlay scoring.",
+        "status": "live",
+        "could_support": "Any new independent-cohort scoring that must stay namespace-separate from the frozen provenance-disjoint arm.",
+        "gotcha": "Results here MUST land in wiki/external_validation_* -- writing the provdisjoint schema would silently overwrite a frozen cell (the shared-key trap)."
+      }
+    },
+    {
+      "key": "fba",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\fba",
+      "n_entries": 2,
+      "size_bytes": 4985920,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "forward_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\forward_ref",
+      "n_entries": 1,
+      "size_bytes": 1004,
+      "size_truncated": false,
+      "n_consumed_by": 11,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "scripts/blatem_genome_demo.py",
+        "scripts/forward_inverse_roundtrip.py",
+        "scripts/forward_inverse_sweep.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_forward_genome_edit.py",
+        "tests/test_forward_inverse_roundtrip.py"
+      ],
+      "reported_in": [
+        "wiki/blatem_genome_demo_2026-07-14.md",
+        "wiki/forward_inverse_deployable_2026-07-17.json",
+        "wiki/forward_inverse_sweep_2026-07-17.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "fungal_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\fungal_ref",
+      "n_entries": 8,
+      "size_bytes": 18948,
+      "size_truncated": false,
+      "n_consumed_by": 13,
+      "n_reported_in": 7,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "scripts/ar_bank_caur_micafungin_finalize.py",
+        "scripts/ar_bank_caur_powered_finalize.py",
+        "scripts/ar_bank_caur_validate.py",
+        "scripts/assemble_sra_cohort.py",
+        "scripts/build_fungal_cohort.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_amr_cli_fungal.py",
+        "tests/test_build_fungal_cohort.py",
+        "tests/test_fungal_erg11_caller.py"
+      ],
+      "reported_in": [
+        "plans/EP7_Fungal_AMR_Substrate.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/ar_bank_caur_micafungin_fks1_2026-07-20.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/fungal_ep7_g1_closeout_2026-06-08.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "gono_catalogue",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\gono_catalogue",
+      "n_entries": 1,
+      "size_bytes": 61971,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "dna_decode/organism_rules/neisseria_amr.py"
+      ],
+      "reported_in": [
+        "wiki/gonorrhoeae_amr_determinant_catalog_2026-07-19.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "hcmv_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\hcmv_ref",
+      "n_entries": 3,
+      "size_bytes": 8763,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/hcmv_caller.py",
+        "tests/test_hcmv_caller.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "hiv_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\hiv_ref",
+      "n_entries": 7,
+      "size_bytes": 43724,
+      "size_truncated": false,
+      "n_consumed_by": 19,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "dna_decode/data/hiv_supervised_complement.py",
+        "scripts/build_hiv_complement_model.py",
+        "scripts/esm_hiv_resistance_test.py",
+        "scripts/esm_supervised_resistance_head.py",
+        "scripts/hiv_esm_vs_catalog.py",
+        "scripts/hiv_rt_caller.py",
+        "scripts/hiv_supervised_targetsite_panel.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/supervised_learned_layer_synthesis_2026-07-12.md"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "Committed HXB2 CDS references (RT / PR / IN / CA).",
+        "used_for": "HIV genome-mode calling for all 5 drug classes.",
+        "status": "live",
+        "could_support": "Any new HIV gene target.",
+        "gotcha": "Reference integrity is self-checked against catalog WT at every DRM position; a frame/coordinate error fails loudly rather than silently mis-calling."
+      }
+    },
+    {
+      "key": "horesh_2021",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\horesh_2021",
+      "n_entries": 1,
+      "size_bytes": 4830827,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 0,
+      "consumed_by": [
+        "scripts/expec_rule_external_validity.py"
+      ],
+      "reported_in": [],
+      "orphan": false,
+      "note": {
+        "what": "Horesh H4 E. coli pathotype cohort (24 genomes).",
+        "used_for": "The ExPEC recall gate (10/12 = 0.833, precision 1.0).",
+        "status": "blocked",
+        "could_support": "Nothing without a new label source -- ExPEC comes from isolation SITE (gate G3, sampling-defined) and cannot be de-confounded by a bigger cohort."
+      }
+    },
+    {
+      "key": "horse",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\horse",
+      "n_entries": 1,
+      "size_bytes": 967,
+      "size_truncated": false,
+      "n_consumed_by": 19,
+      "n_reported_in": 13,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/pigment/cat_coat.py",
+        "dna_decode/pigment/chicken_plumage.py",
+        "dna_decode/pigment/horse_coat.py",
+        "dna_decode/pigment/horse_coat_cli.py",
+        "dna_decode/pigment/mammal_color.py",
+        "dna_decode/pigment/substrate_screen.py",
+        "scripts/horse_coat_validate.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/borrowable_methods_resistance_scoring_2026-08-31.md",
+        "wiki/colour_cell_substrate_screen_2026-08-26.json",
+        "wiki/colour_cell_substrate_screen_2026-08-26.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/data_source_research_human_animal_2026-06-25.md",
+        "wiki/highest_voi_next_step_2026-08-02.md",
+        "wiki/horse_coat_cell_result_2026-07-01.md",
+        "wiki/label_first_scan_2026-07-01.md",
+        "wiki/off_pathogen_track_banked_2026-07-01.md",
+        "wiki/single_snp_traits_breadth_2026-07-03.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "imputation",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\imputation",
+      "n_entries": 2,
+      "size_bytes": 1473,
+      "size_truncated": false,
+      "n_consumed_by": 21,
+      "n_reported_in": 26,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/eye_colour_irisplex.py",
+        "dna_decode/imputation.py",
+        "dna_decode/pigment/dog_body_size.py",
+        "dna_decode/pigment/substrate_screen.py",
+        "dna_decode/viz/network_adapter.py",
+        "scripts/capture_1000g_ld.py",
+        "scripts/coresistance_imputation.py",
+        "scripts/coresistance_multiaxis.py",
+        "scripts/crossaxis_lineage_deconfound.py",
+        "scripts/genome_jepa_prototype.py",
+        "scripts/impute_determinant_abstain.py"
+      ],
+      "reported_in": [
+        "plans/GENOME_JEPA_CLIP_Decoder_Plan_2026-07-04.md",
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "plans/Genome_World_Model_Creative_Data_Reuse_Plan_2026-07-11.md",
+        "plans/Hybrid_Learned_Deterministic_Decoder_Plan.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/colour_cell_substrate_screen_2026-08-26.md",
+        "wiki/coresistance_imputation_result_2026-07-11.md",
+        "wiki/coresistance_imputation_result_2026-07-11_dedup.md",
+        "wiki/cyp2d6_na12156_cram_investigation_2026-07-07.md",
+        "wiki/dog_body_size_darwins_ark_pinned_2026-07-30.md",
+        "wiki/dog_coat_darwins_ark_measured_2026-07-30.md",
+        "wiki/free_data_capture_registry_2026-07-04.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "isaba1_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\isaba1_ref",
+      "n_entries": 2,
+      "size_bytes": 1491,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "scripts/expression_context_validate.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_amr_rules_expression_override.py",
+        "tests/test_expression_context.py"
+      ],
+      "reported_in": [
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/expression_context_acinetobacter_validation_2026-06-10.json",
+        "wiki/expression_frontier_isaba1_falsifier_2026-06-10.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "j3_abo",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\j3_abo",
+      "n_entries": 4,
+      "size_bytes": 814954,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "scripts/abo_full_opensnp_validate.py",
+        "scripts/abo_opensnp_ingest.py",
+        "scripts/abo_region_extract.py"
+      ],
+      "reported_in": [
+        "wiki/abo_full_opensnp_validation_2026-07-07.json",
+        "wiki/abo_full_result_2026-07-07.md",
+        "wiki/j3_abo_embedding_v1_contract.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ktype_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\ktype_db",
+      "n_entries": 2,
+      "size_bytes": 264566,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "dna_decode/ktype/cli.py",
+        "scripts/ktype_cohort_validate.py",
+        "scripts/ktype_kaptive_concordance.py",
+        "scripts/ktype_validate.py"
+      ],
+      "reported_in": [
+        "wiki/SESSION_HANDOFF_2026-06-24_productization_ktype_testpypi.md",
+        "wiki/SESSION_HANDOFF_2026-06-24_pypi_published_ktype_running.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/ktype_report_card.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "mlst_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\mlst_db",
+      "n_entries": 1,
+      "size_bytes": 6744417,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 3,
+      "consumed_by": [
+        "dna_decode/mlst/cli.py",
+        "scripts/serotype_lineage_disjoint.py"
+      ],
+      "reported_in": [
+        "plans/Variety_Decoder_Roadmap.md",
+        "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "nt_windows",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\nt_windows",
+      "n_entries": 24,
+      "size_bytes": 34532352,
+      "size_truncated": false,
+      "n_consumed_by": 1,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/pathotype_nt_windowed_arm.py"
+      ],
+      "reported_in": [
+        "wiki/HANDOFF_ep4_nt_windowed_arm_2026-06-02.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pathotype_cov_cache",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pathotype_cov_cache",
+      "n_entries": 24,
+      "size_bytes": 17122,
+      "size_truncated": false,
+      "n_consumed_by": 9,
+      "n_reported_in": 4,
+      "consumed_by": [
+        "dna_decode/data/cell_registry.py",
+        "scripts/build_pergene_support_cache.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/pathotype_v0_cohort_eval.py",
+        "tests/test_pathotype_expec_recall.py"
+      ],
+      "reported_in": [
+        "wiki/HANDOFF_ep4_v0_resolver_2026-06-03.md",
+        "wiki/MINISTER_MAIDEN_RUN_ep4_v01_expec_2026-06-03.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pathotype_pergene_cache",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pathotype_pergene_cache",
+      "n_entries": 24,
+      "size_bytes": 3991,
+      "size_truncated": false,
+      "n_consumed_by": 9,
+      "n_reported_in": 8,
+      "consumed_by": [
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/pathotype/expec_score.py",
+        "scripts/build_pergene_support_cache.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_pathotype_expec_recall.py"
+      ],
+      "reported_in": [
+        "wiki/staleness_ab_v2_raw.json",
+        "wiki/staleness_ab_v3_6000_raw.json",
+        "wiki/staleness_ab_v3_raw.json",
+        "wiki/staleness_corpus_run_2026-08-27_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/staleness_full_corpus_final_raw.json",
+        "wiki/staleness_v3_run_2026-08-27_raw.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pgx_1000g",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pgx_1000g",
+      "n_entries": 20,
+      "size_bytes": 80360994,
+      "size_truncated": false,
+      "n_consumed_by": 14,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "dna_decode/pgx/cyp2b6_catalog.py",
+        "dna_decode/pgx/tpmt_catalog.py",
+        "scripts/cyp2d6_structural_probe.py",
+        "scripts/fetch_1000g_region.py",
+        "scripts/hla_concordance.py",
+        "scripts/pgx_1000g_population.py",
+        "scripts/pgx_getrm_concordance.py",
+        "scripts/pgx_single_snp_concordance.py",
+        "scripts/pgx_trio_concordance.py",
+        "scripts/pigment_1000g_population_validate.py",
+        "scripts/resolve_1000g_cram.py",
+        "tests/test_pgx_cyp2d6_structural.py"
+      ],
+      "reported_in": [
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pgx_getrm",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pgx_getrm",
+      "n_entries": 4,
+      "size_bytes": 313872,
+      "size_truncated": false,
+      "n_consumed_by": 7,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "scripts/cyp2d6_hybrid_validate.py",
+        "scripts/cyp2d6_structural_probe.py",
+        "scripts/getrm_consolidated_ingest.py",
+        "scripts/pgx_getrm_concordance.py",
+        "scripts/pgx_single_snp_concordance.py",
+        "tests/test_pgx_cyp2d6_structural.py",
+        "tests/test_pgx_getrm.py"
+      ],
+      "reported_in": [
+        "plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/hla_validation_2026-07-06.md",
+        "wiki/pgx_getrm_consolidated_coverage_2026-07-28.md",
+        "wiki/pgx_precision_leak_audit_2026-07-28.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "phage_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\phage_ref",
+      "n_entries": 6,
+      "size_bytes": 27756830,
+      "size_truncated": false,
+      "n_consumed_by": 7,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "dna_decode/phage/cli.py",
+        "dna_decode/phage/rbp_caller.py",
+        "scripts/build_phage_receptor_report.py",
+        "scripts/build_rbp_reference.py",
+        "scripts/fetch_basel_genomes.py",
+        "scripts/lbnl_independent_validate.py",
+        "scripts/phagereceptor_crosslab_validate.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/klebsiella_crossorganism_runbook_2026-07-24.md",
+        "wiki/phage_independence_wall_2026-07-24.md",
+        "wiki/phage_rbp_crosslab_result_2026-07-24.json",
+        "wiki/phage_rbp_crosslab_result_2026-07-24.md",
+        "wiki/phage_receptor_cell_v0_2026-07-24.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "plasmidfinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\plasmidfinder_db",
+      "n_entries": 1,
+      "size_bytes": 80757,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "dna_decode/colocalization/cli.py",
+        "dna_decode/plasmid/cli.py",
+        "dna_decode/profile/cli.py",
+        "scripts/plasmid_axis_sweep.py",
+        "scripts/plasmid_selection_rule_probe.py"
+      ],
+      "reported_in": [
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumo_betalactam_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pneumo_betalactam_db",
+      "n_entries": 1,
+      "size_bytes": 14010,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "scripts/pneumo_betalactam_validate.py",
+        "tests/test_pneumo_betalactam.py"
+      ],
+      "reported_in": [
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pneumoserotype_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pneumoserotype_db",
+      "n_entries": 1,
+      "size_bytes": 1675349,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/pneumoserotype/cli.py",
+        "scripts/build_pneumo_cps_db.py",
+        "scripts/pneumo_gps_quellung_validate.py",
+        "scripts/pneumo_selection_rule_probe.py",
+        "scripts/serotype_cohort_validate.py"
+      ],
+      "reported_in": [
+        "wiki/SESSION_HANDOFF_2026-06-24_two_new_green_cells.md",
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "pointfinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pointfinder_db",
+      "n_entries": 1,
+      "size_bytes": 20299,
+      "size_truncated": false,
+      "n_consumed_by": 3,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "dna_decode/pointfinder/cli.py",
+        "dna_decode/profile/cli.py",
+        "scripts/pointfinder_amrfinder_concordance.py"
+      ],
+      "reported_in": [
+        "plans/Variety_Decoder_Roadmap.md",
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "refseq_cache",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\refseq_cache",
+      "n_entries": 238,
+      "size_bytes": 5742754810,
+      "size_truncated": false,
+      "n_consumed_by": 12,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "scripts/amr_falsifier.py",
+        "scripts/build_fungal_cohort.py",
+        "scripts/cipro_bounded_falsifier.py",
+        "scripts/cipro_mechanism_audit.py",
+        "scripts/drug_mechanism_audit.py",
+        "scripts/functional_alphabet_probe.py",
+        "scripts/genome_map_spike.py",
+        "scripts/pathotype_laptop_pipeline.py",
+        "scripts/preflight_runnable.py",
+        "scripts/prospective_lock_validate.py",
+        "tests/test_populate_cache.py",
+        "tests/test_preflight_runnable.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/ceftriaxone_mechanism_audit_2026-05-26.json",
+        "wiki/cipro_mechanism_audit_2026-05-17.json",
+        "wiki/cipro_mechanism_audit_smoke.json",
+        "wiki/cipro_mechanism_audit_smoke_st131.json",
+        "wiki/ciprofloxacin_mechanism_audit_2026-06-05.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "resfinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\resfinder_db",
+      "n_entries": 2,
+      "size_bytes": 2088792,
+      "size_truncated": false,
+      "n_consumed_by": 6,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "dna_decode/colocalization/cli.py",
+        "dna_decode/concordance/cli.py",
+        "dna_decode/profile/cli.py",
+        "dna_decode/resfinder/cli.py",
+        "scripts/resfinder_locus_collapse_validate.py",
+        "tests/test_colocalization.py"
+      ],
+      "reported_in": [
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "salmserovar_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\salmserovar_db",
+      "n_entries": 2,
+      "size_bytes": 607001,
+      "size_truncated": false,
+      "n_consumed_by": 14,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "dna_decode/salmserovar/cli.py",
+        "scripts/build_salmserovar_db.py",
+        "scripts/salmserovar_db_audit.py",
+        "scripts/salmserovar_nocall_anatomy.py",
+        "scripts/salmserovar_o_antigen_probe.py",
+        "scripts/salmserovar_o_fix_rerun.py",
+        "scripts/salmserovar_resolution_strata.py",
+        "scripts/salmserovar_seqsero2_validate.py",
+        "scripts/salmserovar_threshold_sweep.py",
+        "scripts/salmserovar_threshold_tradeoff.py",
+        "scripts/salmserovar_validate.py",
+        "tests/test_salmserovar_db_audit.py"
+      ],
+      "reported_in": [
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/salm_serovar_report_card.md",
+        "wiki/salmserovar_db_audit_2026-09-09.json",
+        "wiki/salmserovar_name_table_2026-09-09.md",
+        "wiki/salmserovar_o_fix_result_2026-09-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "sarscov2_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\sarscov2_ref",
+      "n_entries": 1,
+      "size_bytes": 1004,
+      "size_truncated": false,
+      "n_consumed_by": 11,
+      "n_reported_in": 6,
+      "consumed_by": [
+        "dna_decode/amr/cli.py",
+        "dna_decode/data/sarscov2_amr.py",
+        "scripts/esm_catalog_extension_test.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/sarscov2_caller.py",
+        "tests/test_esm_catalog_extension.py",
+        "tests/test_sarscov2_caller.py"
+      ],
+      "reported_in": [
+        "plans/SARSCoV2_Mpro_Cell_Build_Spec_2026-06-23.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/staleness_ab_v3_6000_raw.json",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json",
+        "wiki/staleness_full_corpus_final_raw.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "serotypefinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\serotypefinder_db",
+      "n_entries": 3,
+      "size_bytes": 1464106,
+      "size_truncated": false,
+      "n_consumed_by": 5,
+      "n_reported_in": 1,
+      "consumed_by": [
+        "dna_decode/profile/cli.py",
+        "dna_decode/serotype/cli.py",
+        "scripts/serotype_heldout_confirm.py",
+        "scripts/serotype_lineage_disjoint.py",
+        "scripts/serotype_oh_validate.py"
+      ],
+      "reported_in": [
+        "wiki/data_source_master_map_2026-07-09.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "summary_stat_sources",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\summary_stat_sources",
+      "n_entries": 6,
+      "size_bytes": 1636280,
+      "size_truncated": false,
+      "n_consumed_by": 4,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/capture_opengwas_index.py",
+        "scripts/capture_summary_stat_indexes.py",
+        "scripts/mine_gwas_single_snp_candidates.py",
+        "tests/test_summary_stat_captures.py"
+      ],
+      "reported_in": [
+        "project_state/dna-decode-2026-05-11.md",
+        "wiki/free_data_capture_registry_2026-07-04.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "virulencefinder_db",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\virulencefinder_db",
+      "n_entries": 1,
+      "size_bytes": 7753024,
+      "size_truncated": false,
+      "n_consumed_by": 14,
+      "n_reported_in": 9,
+      "consumed_by": [
+        "dna_decode/pathotype/cli.py",
+        "dna_decode/profile/cli.py",
+        "scripts/build_pergene_support_cache.py",
+        "scripts/genome_map_spike.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_kernel.py",
+        "scripts/kaggle/staleness_corpus_rest_kernel.py",
+        "scripts/kaggle/staleness_final2_kernel.py",
+        "scripts/kaggle/staleness_final_kernel.py",
+        "scripts/pathotype_v0_cohort_eval.py",
+        "scripts/pathotype_v0_marker_screen.py"
+      ],
+      "reported_in": [
+        "plans/Two_Machine_Capability_Map_And_Transfer_Minimization_Plan_2026-05-31.md",
+        "project_state/dna-decode-2026-05-11.md",
+        "project_state/ep4-v01-vf-diff/big-idea.md",
+        "wiki/HANDOFF_ep4_v0_resolver_2026-06-03.md",
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/genome_map_usage.md",
+        "wiki/genome_map_virulence_overlay_feasibility_2026-06-19.md",
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
+        "wiki/staleness_eval_snapshot_prerepair.json"
+      ],
+      "orphan": false,
+      "note": {
+        "what": "VirulenceFinder allele DB (E. coli-scoped).",
+        "used_for": "The genome-map virulence overlay + pathotype resolver.",
+        "status": "live",
+        "could_support": "Non-E. coli VF DBs are the named unbuilt extension."
+      }
+    }
+  ]
+}

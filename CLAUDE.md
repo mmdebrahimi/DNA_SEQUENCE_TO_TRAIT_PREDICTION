@@ -9,6 +9,15 @@ Read-only, offline, ~2s. Every figure below is written down and therefore goes s
 the same figures live from `pyproject.toml` + `dna_decode.cli.TRAITS` + `cell_registry.cells()`. When they
 disagree, **the script is right**.
 
+**Run `uv run python scripts/data_inventory.py` before claiming any DATA is missing or expensive to get,
+or proposing work because a dataset "would have to be fetched".** Read-only, ~45s → `wiki/data_inventory.md`
+(read that file for everything below). Data-side sibling of the script above, built after ONE conversation
+produced three rediscoveries — a method called "cheap" while both checkpoints it needed sat on D:, a track
+called "no agent lever" whose script had existed for months, a measurement already done two days earlier.
+**248 datasets** over four roots vs ~1,100 artifacts, past what a context window holds. It derives per
+dataset `consumed_by` + `reported_in` — the question whose wrong answer causes rediscovery — and **59 are
+referenced nowhere** (largest 13.2 GB), which is where forgotten assets live.
+
 **What this is:** a **published** (`v0.13.x`, PyPI) multi-kingdom **deterministic** genotype→phenotype
 decoder CLI — bacteria, viruses (HIV / SARS-CoV-2 / influenza), fungi, TB, plus human clinical
 (pgx / clinvar / hla), molecular typing, metabolic FBA, variant-effect forward/inverse, and genome maps.
