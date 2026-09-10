@@ -326,12 +326,35 @@ def main() -> int:
         rules[rule] = rules.get(rule, 0) + 1
 
 
+    # The schema + change string are DERIVED from the bar, not restated. This script is run once per
+    # change and both were hardcoded to the O-fix wording, so the name-table run emitted an artifact
+    # labelled `salmserovar-o-fix-result-v1` describing the O port -- a result file that misnames its
+    # own subject is unauditable, and the tests pinned its numbers without noticing its identity.
+    _is_name_table = bar["schema"].startswith("salmserovar-name-table")
     out = {
-        "schema": "salmserovar-o-fix-result-v1", "date": _date.today().isoformat(),
+        "schema": ("salmserovar-name-table-result-v1" if _is_name_table
+                   else "salmserovar-o-fix-result-v1"),
+        "date": _date.today().isoformat(),
         "bar": str(Path(a.bar).resolve().relative_to(ROOT)) if str(Path(a.bar).resolve()).startswith(str(ROOT)) else str(a.bar),
         "bar_status": bar["status"],
-        "change": ("ported SeqSero2 1.3.2's three-branch O decision procedure "
-                   "(call_O_and_H_type) and restored the SeqSero2 role to the antigen DB header"),
+        "change": (("rebuilt the formula->serovar name table with SeqSero2's own remove_list, "
+                    "rename_dict, bracket expansion and a subspecies tie-break; ambiguous_policy='first'")
+                   if _is_name_table else
+                   ("ported SeqSero2 1.3.2's three-branch O decision procedure "
+                    "(call_O_and_H_type) and restored the SeqSero2 role to the antigen DB header")),
+        # THREE different baselines coexist in this artifact and diffing the wrong pair gives a wrong
+        # number: `ours_before` is the pre-change caller re-scored under the CURRENT index, the bar's
+        # baseline was measured under the PREVIOUS index, and `index_matched_control` isolates how much
+        # of the movement is the scoring function rather than the caller. Naming them is the difference
+        # between an audit record and a pile of tallies.
+        "baselines": {
+            "ours_before": "the pre-change caller, re-scored under the CURRENT index",
+            "bar_baseline": "the frozen bar's baseline, measured under the index live when it was frozen",
+            "index_matched_control": ("the PREVIOUS run's unchanged serovar names re-scored under the "
+                                      "current index; the gap between this and ours_after is the "
+                                      "caller-attributable change"),
+            "compare_for_this_change": "index_matched_control -> ours_after",
+        },
         "n": len(rows),
         "ours_before": old_tally, "ours_after": ours_tally, "seqsero2": ss2_tally,
         "delta_vs_reference_tool_before": old_tally["accuracy"] - ss2_tally["accuracy"],

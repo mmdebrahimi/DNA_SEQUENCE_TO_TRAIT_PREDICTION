@@ -13,8 +13,17 @@ DB layout (a directory):
   * `serovar_table.tsv` -- `O<tab>H1<tab>H2<tab>Serovar`, the White-Kauffmann-Le Minor formula table.
 
 HONESTY (load-bearing): faithful to the SeqSero2 / Kauffmann-White method (blastn over the antigen DB +
-formula lookup); NOT an independent baseline. Many formulas are shared by >1 serovar / are phase-incomplete
--> the call is the FORMULA + a serovar IFF the formula resolves uniquely (else serovar=None, like O?/H?).
+formula lookup); NOT an independent baseline. The call is the FORMULA + a serovar when the table resolves
+it -- and RESOLUTION IS NOT ALWAYS UNIQUENESS. This docstring said "a serovar IFF the formula resolves
+uniquely" until 2026-09-09; that was FALSE as shipped, because the table is built with
+`ambiguous_policy="first"` (scripts/build_salmserovar_db.py): 195 formulas are carried by >1 KWL serovar
+even after canonical naming, and for those the table records an ARBITRARY winner rather than abstaining
+(measured: `omit` gains 0 hits and costs 3, so the arbitrary winner is kept deliberately). There is also a
+PHASE-INCOMPLETE FALLBACK -- when the exact `(O,H1,H2)` key misses, the caller matches `O+H1` ignoring H2
+and reports a serovar iff that collapses to one name, whose value may itself be such a winner. So a
+returned serovar can be (a) uniquely resolved, (b) an arbitrary winner on a contested formula, or (c)
+fallback-resolved and possibly (b)-contaminated, and v0 DOES NOT YET DISCLOSE WHICH -- that disclosure is
+open work. serovar=None still means the formula did not resolve at all (like O?/H?).
 Salmonella enterica only. Offline-safe via the shared engine (missing blastn/DB -> status 'unavailable').
 """
 from __future__ import annotations

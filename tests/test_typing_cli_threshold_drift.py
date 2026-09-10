@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import re
 import sys
 from pathlib import Path
 
@@ -146,3 +147,68 @@ def test_the_default_is_not_a_hardcoded_literal(pkg: str):
         tail = src.split(marker, 1)[1].lstrip()
         assert not tail[0].isdigit(), (
             f"{pkg}: --{flag} default is a hardcoded literal; reference the runner constant instead")
+
+
+# ---------------------------------------------------------------------------
+# PROSE drift -- the half the guard above is structurally blind to.
+#
+# The tests above resolve shipped DEFAULTS through the real parser. That is exactly why they did not
+# catch the THIRD instance of the same 80-vs-40 drift, found 2026-09-09: `dna_decode/cli.py`'s router
+# entry advertised "identity 90 / coverage 80" in a prose `validation` string, and the report card
+# repeated it. A threshold asserted in prose is a claim to a reader in precisely the way a default is
+# a promise to a caller, and neither a parser nor an equality check on a literal can see it.
+#
+# DERIVED, not restated: the expected number is read from the live runner constant, so this cannot
+# itself become the next stale copy.
+# ---------------------------------------------------------------------------
+
+_THRESHOLD_IN_PROSE = re.compile(r"\b(identity|coverage)\s+(\d+(?:\.\d+)?)\b", re.IGNORECASE)
+
+# Claim surfaces that state this cell's thresholds in prose to a human reader.
+_PROSE_SURFACES = {
+    "salmserovar": ["dna_decode/cli.py", "wiki/salm_serovar_report_card.md"],
+}
+
+
+def _cell_scope(path: Path, cell: str) -> str:
+    """The text of THIS cell's claim, so a threshold on a different line still counts.
+
+    The first version of this filtered a .py surface line-by-line on `cell in line`, which made it
+    VACUOUS on the very file it was written for: the router's trait key `"salmserovar": {` and its
+    `"validation": "..."` string are different lines, so every threshold was skipped. It was caught
+    by re-introducing the defect and watching the test pass -- the same non-vacuity check the rest of
+    this file already insisted on. A .py surface is therefore scoped to the cell's dict ENTRY.
+    """
+    if path.suffix != ".py":
+        return path.read_text(encoding="utf-8")  # a per-cell markdown surface is all about that cell
+    # A .py surface is read as SHIPPED DATA, not as source text. Scanning the raw entry looked right
+    # and was wrong twice over: it swept in source COMMENTS, so the note explaining that this string
+    # used to say "coverage 80" was itself read as a live claim and failed the clean tree. A comment
+    # discussing a superseded value is not a claim asserting it, and nothing lexical separates them.
+    # Reading the actual dict value excludes comments by construction AND checks what really ships.
+    router = importlib.import_module("dna_decode.cli")
+    entry = getattr(router, "TRAITS", {}).get(cell, {})
+    return " ".join(v for v in entry.values() if isinstance(v, str))
+
+
+def _prose_threshold_claims(path: Path, cell: str) -> list[tuple[str, float]]:
+    return [(axis.lower(), float(num))
+            for axis, num in _THRESHOLD_IN_PROSE.findall(_cell_scope(path, cell))]
+
+
+@pytest.mark.parametrize("cell,rel", [(c, r) for c in sorted(_PROSE_SURFACES) for r in _PROSE_SURFACES[c]])
+def test_prose_threshold_claims_match_the_live_constant(cell: str, rel: str):
+    """PER-SURFACE on purpose: an aggregate non-vacuity counter let the report card's claims stand in
+    for the router's, hiding that the router was never scanned at all."""
+    consts = _constants(cell)
+    path = ROOT / rel
+    assert path.exists(), f"{rel} is listed as a {cell} claim surface but does not exist"
+    claims = [(a, v) for a, v in _prose_threshold_claims(path, cell) if a in consts]
+    assert claims, (
+        f"no {cell} identity/coverage claim found in {rel}; if the wording changed, update "
+        f"_PROSE_SURFACES -- a vacuous pass here is how the original drift survived")
+    for axis, claimed in claims:
+        assert claimed == consts[axis], (
+            f"{rel} advertises {cell} {axis} {claimed:g} but the live constant is "
+            f"{consts[axis]:g}. A threshold restated in prose drifts exactly like a restated "
+            f"default did -- correct the prose, or the reader is told a number that does not ship.")

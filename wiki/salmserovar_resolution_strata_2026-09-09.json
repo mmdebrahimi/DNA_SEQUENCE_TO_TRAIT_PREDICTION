@@ -1,0 +1,1669 @@
+{
+  "schema": "salmserovar-resolution-strata-v1",
+  "date": "2026-09-09",
+  "question": "Of the published hits, how many were uniquely resolved vs won by an arbitrary tie-break vs reached through the phase-incomplete fallback?",
+  "n": 200,
+  "headline_reproduced": {
+    "hit": 168,
+    "accuracy": 0.84
+  },
+  "strata": {
+    "exact": {
+      "hit": 165,
+      "miss": 6
+    },
+    "arbitrary_winner": {
+      "miss": 5,
+      "hit": 3
+    },
+    "fallback": {},
+    "unresolved": {
+      "no_call": 21
+    }
+  },
+  "hits_by_route": {
+    "exact": 165,
+    "arbitrary_winner": 3,
+    "fallback": 0
+  },
+  "unique_resolution_accuracy": 0.825,
+  "formula_comparability_gate": {
+    "checked": 200,
+    "mismatched": 0,
+    "passed": true
+  },
+  "arbitrary_winner_trade": {
+    "isolates_whose_call_depends_on_the_winner": 8,
+    "hits_gained_vs_omit": 3,
+    "abstentions_converted_to_wrong_calls": 5,
+    "hit_rate_within_this_stratum": 0.375,
+    "note": "Net +3 on hit count; net +5 on confidently-wrong calls. Which reading governs is an acceptance-bar question, deliberately NOT resolved here."
+  },
+  "fallback_finding": {
+    "hits": 0,
+    "reached_but_unresolved": 6,
+    "note": "The O+H1 phase-incomplete fallback produced ZERO calls on this cohort -- every one of the calls came through an exact key. It is not dead code: it was REACHED on the isolates carrying a complete formula whose exact key missed, and failed to collapse to a single name on each. So disclosure metadata for the fallback route has measured headroom of zero HERE, which is a reason not to build it yet rather than evidence it can never matter."
+  },
+  "largest_no_call_clusters": [
+    {
+      "formula": "O?:r:1,5",
+      "n": 4
+    },
+    {
+      "formula": "4:i:-",
+      "n": 4
+    },
+    {
+      "formula": "O?:f,g:-",
+      "n": 2
+    }
+  ],
+  "per_isolate": [
+    {
+      "asm_acc": "GCA_009152955.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_009474265.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:d:-",
+      "called": "Typhi",
+      "truth": "Typhi"
+    },
+    {
+      "asm_acc": "GCA_006806405.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_008357005.2",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:l,z13:1,5",
+      "called": "Uganda",
+      "truth": "Uganda"
+    },
+    {
+      "asm_acc": "GCA_007706185.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_009401345.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:f,g:-",
+      "called": "Rissen",
+      "truth": "Rissen"
+    },
+    {
+      "asm_acc": "GCA_004165115.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "1,3,19:g,s,t:-",
+      "called": "Senftenberg",
+      "truth": "Senftenberg"
+    },
+    {
+      "asm_acc": "GCA_008485465.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "40:b:e,n,x",
+      "called": "Johannesburg",
+      "truth": "Johannesburg"
+    },
+    {
+      "asm_acc": "GCA_007426985.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_007531025.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,5",
+      "called": "Muenster",
+      "truth": "Muenster"
+    },
+    {
+      "asm_acc": "GCA_007359315.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_009530415.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "1,3,19:g,s,t:-",
+      "called": "Senftenberg",
+      "truth": "Senftenberg"
+    },
+    {
+      "asm_acc": "GCA_008986025.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:r:1,5",
+      "called": null,
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_007610015.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_007615155.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:d:1,2",
+      "called": "Stanley",
+      "truth": "Stanley"
+    },
+    {
+      "asm_acc": "GCA_009543595.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_016359405.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_010164915.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "22-gene3:z:1,6",
+      "called": null,
+      "truth": "Poona"
+    },
+    {
+      "asm_acc": "GCA_009316415.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_016328505.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_014758405.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "16:b:e,n,x",
+      "called": "Hvittingfoss",
+      "truth": "Hvittingfoss"
+    },
+    {
+      "asm_acc": "GCA_007474235.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_011145955.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:r:1,5",
+      "called": null,
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_009144565.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_008112745.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_009250625.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_011108455.1",
+      "route": "exact",
+      "outcome": "miss",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "I 3,10:e,h:-"
+    },
+    {
+      "asm_acc": "GCA_009501275.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_008526195.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "30:y:1,2",
+      "called": "Matopeni",
+      "truth": "Matopeni"
+    },
+    {
+      "asm_acc": "GCA_007433585.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_016369685.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:r:1,5",
+      "called": "Bovismorbificans",
+      "truth": "Bovismorbificans"
+    },
+    {
+      "asm_acc": "GCA_009086365.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_011558055.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_007442385.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:e,h:1,6",
+      "called": null,
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_007383525.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_002044955.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:f,g:-",
+      "called": "Rissen",
+      "truth": "Rissen"
+    },
+    {
+      "asm_acc": "GCA_009123945.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_008063715.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,2",
+      "called": "Virchow",
+      "truth": "Virchow"
+    },
+    {
+      "asm_acc": "GCA_010392825.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "4:i:-",
+      "called": null,
+      "truth": "4,[5],12:i:-"
+    },
+    {
+      "asm_acc": "GCA_005685655.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_009099205.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_007013505.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_011107895.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:l,v:1,2",
+      "called": "Nchanga",
+      "truth": "Nchanga"
+    },
+    {
+      "asm_acc": "GCA_010427865.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:y:1,5",
+      "called": "Orion",
+      "truth": "Orion"
+    },
+    {
+      "asm_acc": "GCA_009032025.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_009324015.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:d:1,2",
+      "called": null,
+      "truth": "Muenchen"
+    },
+    {
+      "asm_acc": "GCA_007273715.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:z10:e,n,z15",
+      "called": "Mbandaka",
+      "truth": "Mbandaka"
+    },
+    {
+      "asm_acc": "GCA_010596085.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:y:e,n,x",
+      "called": "Hartford",
+      "truth": "Hartford"
+    },
+    {
+      "asm_acc": "GCA_009471725.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_009283685.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_007654475.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,m:-",
+      "called": "Enteritidis",
+      "truth": "Enteritidis"
+    },
+    {
+      "asm_acc": "GCA_007253055.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_006931915.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:b:l,w",
+      "called": "Ohio",
+      "truth": "Ohio"
+    },
+    {
+      "asm_acc": "GCA_010555225.1",
+      "route": "arbitrary_winner",
+      "outcome": "miss",
+      "formula": "13:z29:-",
+      "called": "Agoueve",
+      "truth": "Johannesburg"
+    },
+    {
+      "asm_acc": "GCA_007512005.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:y:1,5",
+      "called": "Bareilly",
+      "truth": "Bareilly"
+    },
+    {
+      "asm_acc": "GCA_008882665.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_007768685.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "4:i:-",
+      "called": null,
+      "truth": "Salmonella Typhimurium - monophasic"
+    },
+    {
+      "asm_acc": "GCA_007185615.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_005836985.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_008981725.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:d:1,7",
+      "called": "Schwarzengrund",
+      "truth": "Schwarzengrund"
+    },
+    {
+      "asm_acc": "GCA_007870645.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:r:1,5",
+      "called": null,
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_011558755.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_007472915.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "4:i:-",
+      "called": null,
+      "truth": "I 4,5,12:i:-"
+    },
+    {
+      "asm_acc": "GCA_007853055.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:z:1,5",
+      "called": null,
+      "truth": "Kiambu"
+    },
+    {
+      "asm_acc": "GCA_010384065.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:k:1,5",
+      "called": null,
+      "truth": "Thompson"
+    },
+    {
+      "asm_acc": "GCA_010256415.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_009177405.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_009062065.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_016324325.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_003753145.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_010697305.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:y:1,2",
+      "called": "Richmond",
+      "truth": "Richmond"
+    },
+    {
+      "asm_acc": "GCA_008537895.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:f,g:-",
+      "called": null,
+      "truth": "Derby"
+    },
+    {
+      "asm_acc": "GCA_011409255.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:l,v:1,6",
+      "called": "London",
+      "truth": "London"
+    },
+    {
+      "asm_acc": "GCA_010748795.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:z10:e,n,z15",
+      "called": "Mbandaka",
+      "truth": "Mbandaka"
+    },
+    {
+      "asm_acc": "GCA_003780625.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_008535055.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_011084375.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "1,3,19:g,s,t:-",
+      "called": "Senftenberg",
+      "truth": "Senftenberg"
+    },
+    {
+      "asm_acc": "GCA_006430155.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_006627345.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "30:i:l,w",
+      "called": "Soerenga",
+      "truth": "Soerenga"
+    },
+    {
+      "asm_acc": "GCA_009042325.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_005795705.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:m,t:-",
+      "called": "Oranienburg",
+      "truth": "Oranienburg"
+    },
+    {
+      "asm_acc": "GCA_010452975.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "39:l,v:e,n,x",
+      "called": "Kokomlemle",
+      "truth": "Kokomlemle"
+    },
+    {
+      "asm_acc": "GCA_008193185.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g,s:-",
+      "called": "Agona",
+      "truth": "Agona"
+    },
+    {
+      "asm_acc": "GCA_010530355.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_008928405.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_010468965.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:l,v:1,7",
+      "called": "Bredeney",
+      "truth": "Bredeney"
+    },
+    {
+      "asm_acc": "GCA_004219565.2",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:k:1,5",
+      "called": "Thompson",
+      "truth": "Thompson"
+    },
+    {
+      "asm_acc": "GCA_008946205.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,2",
+      "called": "Virchow",
+      "truth": "Virchow"
+    },
+    {
+      "asm_acc": "GCA_010619045.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "30:k:1,6",
+      "called": "Aqua",
+      "truth": "Aqua"
+    },
+    {
+      "asm_acc": "GCA_009282785.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_001272475.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_005837185.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_007424765.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_009179005.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:r:1,5",
+      "called": "Infantis",
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_009150045.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_011471415.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:d:1,7",
+      "called": null,
+      "truth": "Schwarzengrund"
+    },
+    {
+      "asm_acc": "GCA_011103155.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:i:-",
+      "called": null,
+      "truth": "4,[5],12:i:-"
+    },
+    {
+      "asm_acc": "GCA_007364095.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_010558165.1",
+      "route": "exact",
+      "outcome": "miss",
+      "formula": "7:m,t:-",
+      "called": "Oranienburg",
+      "truth": "Oranienburg var. O 14+ (Thielallee)"
+    },
+    {
+      "asm_acc": "GCA_001241895.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_008455285.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:z10:e,n,x",
+      "called": "Hadar",
+      "truth": "Hadar"
+    },
+    {
+      "asm_acc": "GCA_002046865.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:e,n,x",
+      "called": "Chester",
+      "truth": "Chester"
+    },
+    {
+      "asm_acc": "GCA_008985365.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_003869735.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:y:1,5",
+      "called": "Bareilly",
+      "truth": "Bareilly"
+    },
+    {
+      "asm_acc": "GCA_010719335.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "4:i:-",
+      "called": null,
+      "truth": "4,[5],12:i:-"
+    },
+    {
+      "asm_acc": "GCA_008498645.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:r:1,5",
+      "called": null,
+      "truth": "Infantis"
+    },
+    {
+      "asm_acc": "GCA_004217865.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:l,v:1,5",
+      "called": "Irumu",
+      "truth": "Irumu"
+    },
+    {
+      "asm_acc": "GCA_001271635.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "40:b:e,n,x",
+      "called": "Johannesburg",
+      "truth": "Johannesburg"
+    },
+    {
+      "asm_acc": "GCA_006683425.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g:-",
+      "called": "Derby",
+      "truth": "Derby"
+    },
+    {
+      "asm_acc": "GCA_006837585.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_011438295.1",
+      "route": "arbitrary_winner",
+      "outcome": "miss",
+      "formula": "11:z4,z23:-",
+      "called": "IIIa 11:z4,z23:-",
+      "truth": "I 3,10,15:i:1,2"
+    },
+    {
+      "asm_acc": "GCA_004281915.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:g,m,s:-",
+      "called": null,
+      "truth": "Montevideo"
+    },
+    {
+      "asm_acc": "GCA_010714135.1",
+      "route": "exact",
+      "outcome": "miss",
+      "formula": "35:z4,z23:-",
+      "called": "Alachua",
+      "truth": "Cerro"
+    },
+    {
+      "asm_acc": "GCA_007178335.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:z10:e,n,z15",
+      "called": "Mbandaka",
+      "truth": "Mbandaka"
+    },
+    {
+      "asm_acc": "GCA_014189165.1",
+      "route": "exact",
+      "outcome": "miss",
+      "formula": "16:b:e,n,x",
+      "called": "Hvittingfoss",
+      "truth": "16:b:-"
+    },
+    {
+      "asm_acc": "GCA_007752495.1",
+      "route": "arbitrary_winner",
+      "outcome": "miss",
+      "formula": "13:z29:-",
+      "called": "Agoueve",
+      "truth": "Cubana"
+    },
+    {
+      "asm_acc": "GCA_006813035.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g,s:-",
+      "called": "Agona",
+      "truth": "Agona"
+    },
+    {
+      "asm_acc": "GCA_010634525.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium"
+    },
+    {
+      "asm_acc": "GCA_011311135.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,5",
+      "called": "Reading",
+      "truth": "Reading"
+    },
+    {
+      "asm_acc": "GCA_010795155.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:e,h:e,n,z15",
+      "called": "Braenderup",
+      "truth": "Braenderup"
+    },
+    {
+      "asm_acc": "GCA_002045995.1",
+      "route": "arbitrary_winner",
+      "outcome": "hit",
+      "formula": "13:m,t:-",
+      "called": "Kintambo",
+      "truth": "Kintambo"
+    },
+    {
+      "asm_acc": "GCA_010673905.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_008518785.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_005625875.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_010698685.1",
+      "route": "arbitrary_winner",
+      "outcome": "miss",
+      "formula": "7:c:1,5",
+      "called": "Paratyphi C",
+      "truth": "Typhisuis"
+    },
+    {
+      "asm_acc": "GCA_006754785.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:g,m,s:-",
+      "called": "Montevideo",
+      "truth": "Montevideo"
+    },
+    {
+      "asm_acc": "GCA_010253575.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_010914195.1",
+      "route": "exact",
+      "outcome": "miss",
+      "formula": "3,10:r:z6",
+      "called": "Weltevreden",
+      "truth": "Weltevreden var. O 15+ (Lanka)"
+    },
+    {
+      "asm_acc": "GCA_011078795.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:a:e,n,x",
+      "called": "Lomalinda",
+      "truth": "Lomalinda"
+    },
+    {
+      "asm_acc": "GCA_007179515.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_010553455.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_016563325.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "1,3,19:d:e,n,z15",
+      "called": "Liverpool",
+      "truth": "Liverpool"
+    },
+    {
+      "asm_acc": "GCA_007446145.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_011147715.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:g,m,s:-",
+      "called": "Montevideo",
+      "truth": "Montevideo"
+    },
+    {
+      "asm_acc": "GCA_010769615.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,5",
+      "called": "Reading",
+      "truth": "Reading"
+    },
+    {
+      "asm_acc": "GCA_001716115.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_010585745.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:z4,z23:e,n,z15",
+      "called": "Chailey",
+      "truth": "Chailey"
+    },
+    {
+      "asm_acc": "GCA_010922005.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:z10:1,5",
+      "called": "Lexington",
+      "truth": "Lexington"
+    },
+    {
+      "asm_acc": "GCA_008550935.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:d:1,7",
+      "called": null,
+      "truth": "Schwarzengrund"
+    },
+    {
+      "asm_acc": "GCA_008534155.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "18:z4,z23:-",
+      "called": "Cerro",
+      "truth": "Cerro"
+    },
+    {
+      "asm_acc": "GCA_007757475.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_010769635.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_007446285.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_010922205.1",
+      "route": "exact",
+      "outcome": "miss",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Norwich"
+    },
+    {
+      "asm_acc": "GCA_010495995.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:z10:e,n,z15",
+      "called": "Mbandaka",
+      "truth": "Mbandaka"
+    },
+    {
+      "asm_acc": "GCA_007320715.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g,s:-",
+      "called": "Agona",
+      "truth": "Agona"
+    },
+    {
+      "asm_acc": "GCA_017956155.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g:-",
+      "called": "Derby",
+      "truth": "Derby"
+    },
+    {
+      "asm_acc": "GCA_008427605.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:d:1,7",
+      "called": "Schwarzengrund",
+      "truth": "Schwarzengrund"
+    },
+    {
+      "asm_acc": "GCA_008505465.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:i:z6",
+      "called": "Kentucky",
+      "truth": "Kentucky"
+    },
+    {
+      "asm_acc": "GCA_014433145.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_011079425.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:l,w",
+      "called": "Meleagridis",
+      "truth": "Meleagridis"
+    },
+    {
+      "asm_acc": "GCA_010684725.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "40:b:e,n,x",
+      "called": "Johannesburg",
+      "truth": "Johannesburg"
+    },
+    {
+      "asm_acc": "GCA_007184375.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_007196575.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_004277335.1",
+      "route": "arbitrary_winner",
+      "outcome": "miss",
+      "formula": "13:z29:-",
+      "called": "Agoueve",
+      "truth": "Cubana"
+    },
+    {
+      "asm_acc": "GCA_002046745.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "13:g,m:-",
+      "called": "Agbeni",
+      "truth": "Agbeni"
+    },
+    {
+      "asm_acc": "GCA_008803935.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,6",
+      "called": "Anatum",
+      "truth": "Anatum"
+    },
+    {
+      "asm_acc": "GCA_007360015.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:z29:-",
+      "called": "Tennessee",
+      "truth": "Tennessee"
+    },
+    {
+      "asm_acc": "GCA_001243505.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_011086165.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:g,m,s:-",
+      "called": "Montevideo",
+      "truth": "Montevideo"
+    },
+    {
+      "asm_acc": "GCA_008729935.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g,s:-",
+      "called": "Agona",
+      "truth": "Agona"
+    },
+    {
+      "asm_acc": "GCA_009667855.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:y:1,5",
+      "called": "Bareilly",
+      "truth": "Bareilly"
+    },
+    {
+      "asm_acc": "GCA_008472005.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_008824305.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g:-",
+      "called": "Derby",
+      "truth": "Derby"
+    },
+    {
+      "asm_acc": "GCA_007742315.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,5",
+      "called": "Reading",
+      "truth": "Reading"
+    },
+    {
+      "asm_acc": "GCA_006388155.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_001952485.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_011526835.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_010463585.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_011444735.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,2",
+      "called": "Saintpaul",
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_011551635.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "23-gene2:z:l,w",
+      "called": null,
+      "truth": "Worthington"
+    },
+    {
+      "asm_acc": "GCA_009256925.1",
+      "route": "arbitrary_winner",
+      "outcome": "hit",
+      "formula": "8:r:l,w",
+      "called": "Goldcoast",
+      "truth": "Goldcoast"
+    },
+    {
+      "asm_acc": "GCA_008471865.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:d:1,2",
+      "called": "Muenchen",
+      "truth": "Muenchen"
+    },
+    {
+      "asm_acc": "GCA_010674225.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,5",
+      "called": "Reading",
+      "truth": "Reading"
+    },
+    {
+      "asm_acc": "GCA_006633925.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_008457525.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:l,v:1,6",
+      "called": "London",
+      "truth": "London"
+    },
+    {
+      "asm_acc": "GCA_010656645.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_010573805.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_007752015.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_007907365.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_000430085.2",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_010257835.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:z29:-",
+      "called": "Brancaster",
+      "truth": "Brancaster"
+    },
+    {
+      "asm_acc": "GCA_007860485.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:e,h:1,5",
+      "called": "Reading",
+      "truth": "Reading"
+    },
+    {
+      "asm_acc": "GCA_007774965.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "3,10:e,h:1,5",
+      "called": "Muenster",
+      "truth": "Muenster"
+    },
+    {
+      "asm_acc": "GCA_007756395.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:d:1,7",
+      "called": "Schwarzengrund",
+      "truth": "Schwarzengrund"
+    },
+    {
+      "asm_acc": "GCA_007550115.1",
+      "route": "arbitrary_winner",
+      "outcome": "hit",
+      "formula": "8:z4,z24:-",
+      "called": "Albany",
+      "truth": "Albany"
+    },
+    {
+      "asm_acc": "GCA_010565575.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:z10:e,n,x",
+      "called": "Hadar",
+      "truth": "Hadar"
+    },
+    {
+      "asm_acc": "GCA_007627095.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:i:1,2",
+      "called": "Typhimurium",
+      "truth": "Typhimurium var. 5-"
+    },
+    {
+      "asm_acc": "GCA_006812385.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_011448955.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "7:g,m,s:-",
+      "called": "Montevideo",
+      "truth": "Montevideo"
+    },
+    {
+      "asm_acc": "GCA_008669335.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:f,g:-",
+      "called": "Derby",
+      "truth": "Derby"
+    },
+    {
+      "asm_acc": "GCA_010495835.2",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "30:y:e,n,z15",
+      "called": "Nijmegen",
+      "truth": "Nijmegen"
+    },
+    {
+      "asm_acc": "GCA_008404335.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:f,g,t:-",
+      "called": "Berta",
+      "truth": "Berta"
+    },
+    {
+      "asm_acc": "GCA_011447875.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "8:e,h:1,2",
+      "called": "Newport",
+      "truth": "Newport"
+    },
+    {
+      "asm_acc": "GCA_007757035.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:e,h:1,2",
+      "called": null,
+      "truth": "Saintpaul"
+    },
+    {
+      "asm_acc": "GCA_007190135.1",
+      "route": "unresolved",
+      "outcome": "no_call",
+      "formula": "O?:f,g:-",
+      "called": null,
+      "truth": "Adelaide"
+    },
+    {
+      "asm_acc": "GCA_006769545.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:d:-",
+      "called": "Typhi",
+      "truth": "Typhi"
+    },
+    {
+      "asm_acc": "GCA_007752605.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    },
+    {
+      "asm_acc": "GCA_011158255.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "9:g,p:-",
+      "called": "Dublin",
+      "truth": "Dublin"
+    },
+    {
+      "asm_acc": "GCA_007754955.1",
+      "route": "exact",
+      "outcome": "hit",
+      "formula": "4:r:1,2",
+      "called": "Heidelberg",
+      "truth": "Heidelberg"
+    }
+  ],
+  "honest_limits": [
+    "Measures the COMPOSITION of an already-published number; it cannot change that number.",
+    "The contested set is identified by DIFFING the two ambiguity policies on the same 200 isolates, not by rebuilding the candidate table from Initial_Conditions (Docker down). That captures every isolate whose CALL depends on the winner, which is the decision-relevant set -- but it does NOT count a contested key whose arbitrary winner happens to equal what the fallback would return anyway, so the arbitrary_winner stratum is a LOWER BOUND on contested-key involvement.",
+    "The fallback stratum may itself contain arbitrary winners inherited through the O+H1 candidate set; this split does not separate those.",
+    "Per-serovar cap of 12 flattens prevalence, so every figure here is per-isolate accuracy on a diverse mix, not a population-weighted rate."
+  ]
+}

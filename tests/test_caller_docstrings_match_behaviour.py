@@ -47,11 +47,48 @@ def test_resfinder_describes_the_locus_collapse_not_per_allele_calling():
     assert "a gene is called when its best allele clears thresholds" not in d
 
 
-def test_salmserovar_already_described_its_rule_correctly():
-    """The control: this sibling was updated when it was fixed, which is why it is not in the fix list."""
+def test_salmserovar_selection_rule_docstring_is_correct():
+    """The SELECTION rule was updated when it was fixed, which is why it is not in the fix list above.
+
+    Narrow on purpose: this pins `_best_per_axis` (WHICH allele wins an axis) and says nothing about
+    what the module claims regarding serovar RESOLUTION -- see the next test for why that distinction
+    cost a day.
+    """
     d = _doc(salmserovar_runner._best_per_axis)
     assert "identity" in d
     assert "cross-hybridiz" in d or "wrong antigen" in d
+
+
+def test_salmserovar_module_docstring_does_not_claim_unique_resolution():
+    """The gap this file existed to close and did not (found 2026-09-09).
+
+    The test above was labelled "the control" and passed throughout -- because it inspects
+    `_best_per_axis`, an ENTIRELY DIFFERENT claim. Meanwhile the MODULE docstring, under a heading
+    reading "HONESTY (load-bearing)", asserted a serovar is returned "IFF the formula resolves
+    uniquely". That was false the moment the table shipped with `ambiguous_policy="first"`: 195
+    contested formulas keep an arbitrary winner, plus an O+H1 phase-incomplete fallback resolves keys
+    the exact lookup misses. The right guard file existed and was aimed one docstring away.
+    """
+    d = _doc(salmserovar_runner)
+    assert "iff the formula resolves uniquely" not in d, (
+        "the module docstring claims uniqueness; the table keeps an arbitrary winner on contested "
+        "formulas (ambiguous_policy='first'), so this promise is not kept")
+    assert "arbitrary winner" in d, "the docstring must name the arbitrary-winner behaviour it has"
+    assert "fallback" in d, "the docstring must name the O+H1 phase-incomplete fallback"
+
+
+def test_salmserovar_printed_caveat_does_not_claim_unique_resolution():
+    """The caveat PRINTS on every human-readable run, so a false claim there is a shipped falsehood
+    rather than a stale doc -- the distinction the disclosure-layer work turned on."""
+    import argparse
+
+    from dna_decode.salmserovar import cli as salm_cli
+
+    src = Path(salm_cli.__file__).read_text(encoding="utf-8").lower()
+    assert "reported only when the o:h1:h2" not in src, (
+        "the printed caveat promises uniqueness the caller does not deliver")
+    assert "arbitrary winner" in src
+    assert argparse  # the import is the reachability check, not decoration
 
 
 def test_disinfinder_KEEPS_the_allele_wording_because_it_was_measured_inert():

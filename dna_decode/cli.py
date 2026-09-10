@@ -65,7 +65,12 @@ TRAITS = {
     },
     "salmserovar": {
         "summary": "Salmonella enterica serovar via the Kauffmann-White antigenic formula (O + H1=fliC + H2=fljB; SeqSero2-style antigen DB)",
-        "validation": "deterministic antigen-blastn + formula lookup (identity 90 / coverage 80); faithful-to-tool (SeqSero2/Kauffmann-White); serovar only when formula resolves uniquely; free measured label = traditional serotyping (validate vs wet-lab, not the tool); offline-safe degrade",
+        # TWO defects lived in this one string until 2026-09-09, and BOTH were things fixed elsewhere
+        # the same day: it restated "coverage 80" (the threshold replaced by 40 on 2026-09-04 -- the
+        # exact drift the CLI-default fix chased, surviving here because the drift guard resolves
+        # argparse DEFAULTS and is blind to a threshold asserted in PROSE), and it repeated the
+        # "resolves uniquely" contract that ambiguous_policy="first" had already falsified.
+        "validation": "deterministic antigen-blastn + formula lookup (identity 90 / coverage 40); faithful-to-tool (SeqSero2/Kauffmann-White); a serovar is reported when the formula RESOLVES, which is not the same as uniquely -- 195 formulas keep an arbitrary winner, plus an O+H1 phase-incomplete fallback, and which route produced a call is not yet disclosed; free measured label = traditional serotyping (validate vs wet-lab, not the tool); offline-safe degrade",
     },
     "pneumoserotype": {
         "summary": "S. pneumoniae capsular serotype via the cps-locus reference scheme (PneumoCaT/SeroBA-style)",

@@ -70,10 +70,17 @@ def main(argv=None) -> int:
         "caller": {"name": "dna_decode-salmserovar-blastn-v0", "method": res.get("method"),
                    "source": "SeqSero2 antigen DB + Kauffmann-White-Le Minor scheme",
                    "caller_is_independent_baseline": False},
+        # This string PRINTS on every human-readable run, so a false claim here is a shipped falsehood,
+        # not a stale doc. It said "reported only when the formula resolves uniquely" until 2026-09-09 --
+        # untrue, because the table keeps an arbitrary winner on the 195 contested formulas
+        # (ambiguous_policy="first") and there is an O+H1 phase-incomplete fallback on top.
         "caveat": ("Faithful to the SeqSero2 / Kauffmann-White method (blastn over the antigen allele DB + "
-                   "formula lookup); NOT an independent baseline. Serovar reported only when the O:H1:H2 "
-                   "formula resolves uniquely (else formula-only, like O?/H?). Salmonella enterica only. "
-                   "NOT a clinical tool."),
+                   "formula lookup); NOT an independent baseline. A serovar is reported when the formula "
+                   "RESOLVES -- which is not the same as being unique: 195 formulas are shared by >1 "
+                   "Kauffmann-White serovar and the table records an arbitrary winner for those, and an "
+                   "O+H1 fallback covers phase-incomplete genomes. Which of those produced a given call "
+                   "is NOT yet disclosed. No serovar (formula-only, like O?/H?) means it did not resolve "
+                   "at all. Salmonella enterica only. NOT a clinical tool."),
         "provenance": {"db_dir": str(args.db_dir), "db_name": "seqsero2_antigen", "antigens_sha256_16": db_sha,
                        "identity_threshold": args.identity, "coverage_threshold": args.coverage},
     }
