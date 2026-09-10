@@ -1,0 +1,135 @@
+{
+  "schema": "ar-bank-source-concentration-v1",
+  "date": "2026-09-10",
+  "bar": 0.6,
+  "grouping": "cdc_panel_id",
+  "grouping_is_a_proxy": "Grouped by CDC panel_id, NOT BioProject: the cohorts carry no BioProject field and resolving one per BioSample needs the network. A panel is a curated distribution unit; a BioProject is a submission unit. The 0.60 bar was calibrated on BioProjects, so a verdict here means 'draws on one curated panel', not a like-for-like BioProject number.",
+  "n_biosamples_with_panel": 502,
+  "n_cells": 13,
+  "n_failing_bar": 7,
+  "headline": "CONFINED, not blanket: the gonorrhoeae arm is single-panel (share 1.000) while the Klebsiella and E. coli arms draw on 5-6 panels and PASS the same bar. The hypothesis that every AR Bank cell would fail is refuted by measurement.",
+  "cells": [
+    {
+      "cohort": "ar_bank_ecoli_extval_ceftriaxone",
+      "n_resolved": 21,
+      "n_rows": 21,
+      "n_panels": 6,
+      "largest_panel": 3,
+      "largest_share": 0.2857,
+      "passes_bar": true
+    },
+    {
+      "cohort": "ar_bank_ecoli_extval_ciprofloxacin",
+      "n_resolved": 19,
+      "n_rows": 19,
+      "n_panels": 6,
+      "largest_panel": 7,
+      "largest_share": 0.2632,
+      "passes_bar": true
+    },
+    {
+      "cohort": "ar_bank_ecoli_extval_gentamicin",
+      "n_resolved": 15,
+      "n_rows": 15,
+      "n_panels": 6,
+      "largest_panel": 9,
+      "largest_share": 0.2667,
+      "passes_bar": true
+    },
+    {
+      "cohort": "ar_bank_gono_extval_azithromycin",
+      "n_resolved": 39,
+      "n_rows": 39,
+      "n_panels": 1,
+      "largest_panel": 11,
+      "largest_share": 1.0,
+      "passes_bar": false
+    },
+    {
+      "cohort": "ar_bank_gono_extval_cefixime",
+      "n_resolved": 47,
+      "n_rows": 47,
+      "n_panels": 1,
+      "largest_panel": 11,
+      "largest_share": 1.0,
+      "passes_bar": false
+    },
+    {
+      "cohort": "ar_bank_gono_extval_ceftriaxone",
+      "n_resolved": 49,
+      "n_rows": 49,
+      "n_panels": 1,
+      "largest_panel": 11,
+      "largest_share": 1.0,
+      "passes_bar": false
+    },
+    {
+      "cohort": "ar_bank_gono_extval_ciprofloxacin",
+      "n_resolved": 49,
+      "n_rows": 49,
+      "n_panels": 1,
+      "largest_panel": 11,
+      "largest_share": 1.0,
+      "passes_bar": false
+    },
+    {
+      "cohort": "ar_bank_gono_extval_penicillin",
+      "n_resolved": 43,
+      "n_rows": 43,
+      "n_panels": 1,
+      "largest_panel": 11,
+      "largest_share": 1.0,
+      "passes_bar": false
+    },
+    {
+      "cohort": "ar_bank_gono_extval_tetracycline",
+      "n_resolved": 41,
+      "n_rows": 41,
+      "n_panels": 1,
+      "largest_panel": 11,
+      "largest_share": 1.0,
+      "passes_bar": false
+    },
+    {
+      "cohort": "ar_bank_kleb_extval_ceftriaxone",
+      "n_resolved": 59,
+      "n_rows": 59,
+      "n_panels": 5,
+      "largest_panel": 9,
+      "largest_share": 0.3898,
+      "passes_bar": true
+    },
+    {
+      "cohort": "ar_bank_kleb_extval_ciprofloxacin",
+      "n_resolved": 49,
+      "n_rows": 49,
+      "n_panels": 5,
+      "largest_panel": 8,
+      "largest_share": 0.4082,
+      "passes_bar": true
+    },
+    {
+      "cohort": "ar_bank_kleb_extval_gentamicin",
+      "n_resolved": 18,
+      "n_rows": 18,
+      "n_panels": 5,
+      "largest_panel": 8,
+      "largest_share": 0.3333,
+      "passes_bar": true
+    },
+    {
+      "cohort": "ar_bank_staphylococcus_aureus_extval_levofloxacin",
+      "n_resolved": 13,
+      "n_rows": 13,
+      "n_panels": 2,
+      "largest_panel": 13,
+      "largest_share": 0.6154,
+      "passes_bar": false
+    }
+  ],
+  "honest_limits": [
+    "Panel proxy, not BioProject (see grouping_is_a_proxy).",
+    "n is the SCORED subset (predictions_strict.json), not the labelled cohort -- roughly half of each cohort is excluded upstream for lacking a downloadable assembly.",
+    "Concentration bounds what a cohort COULD have detected; it is not itself a defect, and no metric in any AR Bank artifact is changed by this run."
+  ]
+}

@@ -93,6 +93,14 @@ report 6 of 10 frozen SCORED cells; the AR Bank arm — single curated deposits 
 several 1.00 accuracies — was never screened by it. `[[feedback_apply_your_own_standard_to_your_own_cohort]]`
 with the roles reversed.
 *Kill-test:* any such field present would disprove. **Zero — survived.**
+**MEASURED 2026-09-10 (`scripts/ar_bank_source_concentration.py`) — and the survivor's predicted
+magnitude is REFUTED.** The hypothesis was that the profiler "returns largest_share > 0.60 for every
+cell". It does not: **7 of 13**. The six gonorrhoeae cohorts are **single-panel (share 1.000)** — the arm
+reporting several 1.00 accuracies — while **Klebsiella (5 panels, 0.333–0.408) and E. coli (6 panels,
+0.263–0.286) PASS the same bar**; S. aureus levofloxacin marginally fails at 0.615. The gap is real and
+**CONFINED**, not blanket. Grouped by CDC `panel_id`, a PROXY: the cohorts carry no BioProject field and
+the 0.60 bar was calibrated on BioProjects, so read a failure as "draws on one curated panel", never as a
+like-for-like BioProject number.
 
 ### 5. `ERRORS-isolate-clustered` — error mass may be isolate quality, not catalog gaps
 `SAMN04014846` is mis-called under **both** kleb-ciprofloxacin and kleb-gentamicin — mechanistically
