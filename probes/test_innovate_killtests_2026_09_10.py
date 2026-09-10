@@ -9,8 +9,15 @@ They are pytest functions because the engine's gated runner allowlists `pytest` 
 `python -c` / bare script invocation -- a `test-exit-0` kill-test that is not a pytest node comes back
 `unfalsified` without ever executing, which looks like a considered verdict and is not one.
 
-These are kept in-tree as permanent probes: each one encodes a question about the repo whose answer
-could change, and a silent flip is exactly what nobody would otherwise notice.
+THEY LIVE IN `probes/`, NOT `tests/`, AND THAT IS LOAD-BEARING. `pyproject.toml` sets
+`testpaths = ["tests"]`, so a bare `pytest` run does not collect this file while the engine can still
+execute it by explicit path. Committed under `tests/` for one run, these six inverted-polarity nodes made
+the full suite report `6 failed` BY DESIGN -- and a permanently-red suite trains readers to discount red,
+which is how a genuine new failure gets missed. That harm is recorded in this repo's own CLAUDE.md, from
+a case where a real failure was hand-waved a dozen times. A file whose tests are SUPPOSED to fail must
+never sit in the default collection.
+
+Run them deliberately:  uv run pytest probes/test_innovate_killtests_2026_09_10.py
 """
 from __future__ import annotations
 

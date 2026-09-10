@@ -105,15 +105,27 @@ def catalog_drms_for(cell: str) -> frozenset[str]:
     if cell == "sarscov2-mpro":
         from ..data.sarscov2_amr import MPRO_MAJOR_DRMS
         return frozenset(MPRO_MAJOR_DRMS)
+    if cell == "hiv-cai":
+        # Registered 2026-09-10. CAI is MUTANT-LEVEL by construction: capsid carries benign lineage
+        # polymorphisms (K70R/A105T) that made a position-based rule call 140/140-R, so the class
+        # ships the CAPELLA emergent-substitution set. Position-novelty is therefore meaningful here
+        # -- a substitution outside that set sits at a position the catalog does not carry.
+        from ..data.hiv_amr import _HIV_TARGET_CLASSES
+        cai = next(c for c in _HIV_TARGET_CLASSES if c.label == "CAI")
+        return frozenset(cai.major_drms or ())
     if cell.startswith("fungal-") and cell.endswith("-erg11"):
         drug = cell[len("fungal-"):-len("-erg11")]
         from ..data.fungal_amr import FUNGAL_RESISTANCE_MUTATIONS
         by_gene = FUNGAL_RESISTANCE_MUTATIONS.get(drug, {})
         return frozenset(by_gene.get("ERG11", set()))
-    raise KeyError(f"unknown cell {cell!r}; known: hiv-nnrti-rt / sarscov2-mpro / fungal-<drug>-erg11")
+    raise KeyError(f"unknown cell {cell!r}; known: {' / '.join(KNOWN_CELLS)}")
 
 
-KNOWN_CELLS = ("hiv-nnrti-rt", "sarscov2-mpro", "fungal-fluconazole-erg11", "fungal-voriconazole-erg11")
+# A cell must be registered in BOTH this catalog and doubt._MUTANT_LEVEL_CELLS. Adding it to one only
+# is a live crash, not a soft miss: doubt routed `hiv-cai` here before it was known and the CLI died
+# with a bare KeyError on a real lenacapavir call. tests/test_doubt_cell_registration_parity.py pins it.
+KNOWN_CELLS = ("hiv-nnrti-rt", "sarscov2-mpro", "hiv-cai",
+               "fungal-fluconazole-erg11", "fungal-voriconazole-erg11")
 
 
 def flag_for_cell(observed_substitutions, cell: str) -> PositionNoveltyResult:

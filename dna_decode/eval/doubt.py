@@ -154,11 +154,27 @@ def doubt_one_line(block: dict) -> str | None:
     if tier in (STRONG, WEAK):
         return f"DOUBT [{tier}]: {sig['reason']}"
     if ev.get("applicable") is False:
-        return ("doubt: n/a -- this catalog is position-based, so the completeness flag could never "
-                "fire here (NOT an absence of doubt)")
+        # Says only what is known. This asserted "this catalog is position-based" until 2026-09-10 --
+        # a claim about the cell that the branch cannot verify, and which the CLI printed for
+        # lenacapavir two lines above that call's own "MUTANT-LEVEL v0" caveat.
+        return ("doubt: NOT SCREENED -- this drug is not registered for the target-site doubt screen, "
+                "so neither flag was evaluated (NOT an absence of doubt)")
     if ev.get("assessed") is False:
         return ("doubt: NOT ASSESSED -- this input path does not surface the observed substitutions, "
                 "so the completeness flag could not be evaluated (NOT a clean result)")
+    # NOT-MEASURED is a fourth state and it was rendering as SILENCE (found 2026-09-10). The
+    # completeness signal says "catalog-completeness has NOT been measured for <cell>" in its reason,
+    # but this renderer only knew `applicable` and `assessed`, so every UNMEASURED cell fell through to
+    # the honest-silence return -- nirmatrelvir, fluconazole and voriconazole since 2026-09-02, plus
+    # lenacapavir. That is precisely the failure this function's own docstring exists to prevent: a
+    # block carried in JSON that the human output never shows. Silence must mean "we checked and found
+    # nothing", and for these cells nobody checked.
+    if any((s.get("evidence") or {}).get("measured") is False for s in sigs):
+        cells = sorted({(s.get("evidence") or {}).get("cell") for s in sigs
+                        if (s.get("evidence") or {}).get("measured") is False} - {None})
+        where = f" for {'/'.join(cells)}" if cells else ""
+        return (f"doubt: NOT MEASURED -- catalog-completeness has never been measured{where}, so this "
+                "call carries no completeness screen (an absence of measurement, NOT of doubt)")
     return None                     # assessed, nothing found: the one honest silence
 
 
@@ -220,9 +236,13 @@ _MUTANT_LEVEL_CELLS = {
     "rilpivirine": "hiv-nnrti-rt", "doravirine": "hiv-nnrti-rt",
     "nirmatrelvir": "sarscov2-mpro", "ensitrelvir": "sarscov2-mpro", "lufotrelvir": "sarscov2-mpro",
     "fluconazole": "fungal-fluconazole-erg11", "voriconazole": "fungal-voriconazole-erg11",
+    # lenacapavir added 2026-09-10 -- it was MISSING while being genuinely mutant-level, so the branch
+    # below told it its catalog was position-based. See UNMEASURED_CELLS in target_site_completeness.
+    "lenacapavir": "hiv-cai",
 }
 _CELL_GENE = {"hiv-nnrti-rt": "RT", "sarscov2-mpro": "Mpro",
-              "fungal-fluconazole-erg11": "ERG11", "fungal-voriconazole-erg11": "ERG11"}
+              "fungal-fluconazole-erg11": "ERG11", "fungal-voriconazole-erg11": "ERG11",
+              "hiv-cai": "CA"}
 
 
 def doubt_cell_for(drug: str) -> str | None:
@@ -239,12 +259,19 @@ def target_site_doubt(drug: str, observed_by_gene: dict | None) -> DoubtBlock:
     """
     cell = doubt_cell_for(drug)
     if cell is None:
+        # This branch cannot see the drug's catalog SHAPE, and until 2026-09-10 it asserted one anyway
+        # ("its catalog is position-based or unregistered"). That was a factual claim about the cell,
+        # and for lenacapavir it was FALSE: the CAI catalog is mutant-level, so the shipped CLI printed
+        # "this catalog is position-based" two lines above its own "MUTANT-LEVEL v0" caveat. The reason
+        # now states only what is actually known -- the drug is not registered for this screen -- which
+        # is the not-measured state, distinct from the not-applicable one the docstring promises.
         return DoubtBlock([DoubtSignal(
             kind="position_novelty", tier=NONE,
-            reason=(f"position-novelty does not apply to {drug}: its catalog is position-based or "
-                    "unregistered, so every substitution at a catalogued position is already called "
-                    "and the flag could never fire -- this is NOT an absence of doubt"),
-            evidence={"cell": None, "applicable": False})])
+            reason=(f"{drug} is not registered for the target-site doubt screen, so neither the "
+                    "position-novelty flag nor the catalog-completeness screen was evaluated. It may "
+                    "be a position-based catalog (where the flag could never fire) or simply never "
+                    "assessed -- this branch cannot tell, and it is NOT an absence of doubt"),
+            evidence={"cell": None, "applicable": False, "assessed": False})])
     if observed_by_gene is None:
         return DoubtBlock([DoubtSignal(
             kind="position_novelty", tier=NONE,

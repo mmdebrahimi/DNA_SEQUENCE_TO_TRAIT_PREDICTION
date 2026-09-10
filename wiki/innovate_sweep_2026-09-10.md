@@ -56,13 +56,36 @@ failures and three successes, so the current attribution in `dna_decode/eval/reg
 *Kill-test:* acquired collapsing ≥ chromosomal would disprove. **Split holds — survived.**
 *Limit:* n=10 cells, one drug in the chromosomal arm. Suggestive, not established.
 
-### 3. `DOUBT-bacterial-gap` — a false clean bill on bacterial target-site cells
-`target_site_doubt("ciprofloxacin", {"gyrA": {"D86N"}})` returns **only `position_novelty`**, `any_doubt:
-false`. The L2 completeness screen is never constructed when `doubt_cell_for(drug)` is None, so every
-bacterial target-site cell is a fourth, undeclared state the module's own three-state discipline does not
-admit. The early-return rationale is sound for position-*novelty* and a non-sequitur for *completeness*:
-a position-based catalog can be incomplete at the position level — the V179F shape.
-*Kill-test:* a completeness signal being produced would disprove. **None produced — survived.**
+### 3. `DOUBT-bacterial-gap` — **RETRACTED AS WRITTEN 2026-09-10, and the correction found two real defects**
+
+**What was claimed:** "a false clean bill on bacterial target-site cells."
+**Why that was an over-claim:** the kill-test called `target_site_doubt("ciprofloxacin", …)` **directly**,
+and no shipped surface makes that call. `--observed` is fungal/viral-only (`ERROR: --observed is
+fungal-only; bacterial drugs use --amrfinder-run`), and the bacterial record is built separately, carrying
+`validation: trust_block(...)` — which **does** include a scored `doubt_layer`
+(`arm: determinant_completeness`, verified live for ciprofloxacin and gentamicin). Bacterial cells are
+covered; they are covered by a *different* function. **A function reachable only by direct call is not a
+shipped disclosure gap** — the same "does it reach a call?" discipline recorded on 2026-09-02.
+
+**What the correction found instead — both live on the CLI, both now fixed:**
+
+1. **A genuinely MUTANT-LEVEL cell was told its catalog was position-based.** `lenacapavir` (CAI) ships
+   the CAPELLA emergent-substitution set *precisely because* capsid polymorphisms (K70R/A105T) made a
+   position-based rule call 140/140-R — yet it was absent from `_MUTANT_LEVEL_CELLS`, so the CLI printed
+   `doubt: n/a -- this catalog is position-based` **two lines above its own `MUTANT-LEVEL v0` caveat**.
+   A self-contradicting human-facing disclosure, the same class as the `signals[0]` bug of 2026-09-02.
+2. **NOT-MEASURED rendered as SILENCE on four cells.** `doubt_one_line` knew `applicable is False` and
+   `assessed is False` but not `measured is False`, so every UNMEASURED cell fell through to the
+   honest-silence return — `sarscov2-mpro`, `fungal-fluconazole-erg11`, `fungal-voriconazole-erg11`
+   **since 2026-09-02**, plus `lenacapavir`. The record said "has NOT been measured"; the human output
+   said nothing. That is exactly the failure `doubt_one_line`'s own docstring exists to prevent.
+
+Fixed in `dna_decode/eval/{doubt,position_novelty}.py` + `dna_decode/data/target_site_completeness.py`;
+15 guards in `tests/test_doubt_not_measured_rendering.py`, proven non-vacuous (4 fail when the fix is
+reverted). Registering `hiv-cai` in the doubt map alone **crashed** a real lenacapavir call with a bare
+`KeyError` — a cell must be registered in the position-novelty catalog too, now pinned by a parity test.
+
+**Net: the survivor's headline was wrong and its investigation was worth more than the headline.**
 
 ### 4. `ARBANK-source-conc` — our own standard, never pointed at our own highest numbers
 **0 of 26 AR Bank artifacts carry any source-diversity field.** The 0.60 largest-source bar refused to
@@ -89,6 +112,12 @@ powering gate requires both classes. Real gap, lowest novelty — wiring, not in
   (`AR-unwired`, `DOUBT-bacterial-gap`, `ARBANK-source-conc`, `ERRORS-isolate-clustered`) test whether a
   gap *currently exists* — easy to survive, and surviving establishes the gap, **not** that closing it is
   worth anything. Only #1 and #2 make substantive mechanism claims where the number carries weight.
+- **One survivor's headline was WRONG and a `survived` verdict did not catch it (2026-09-10).**
+  `DOUBT-bacterial-gap` passed an executed, valid, gated kill-test and was still an over-claim, because
+  the kill-test exercised a function the shipped CLI never calls for that drug. **A kill-test inherits the
+  reachability of whatever it invokes** — calling a library function directly proves a property of the
+  function, not of the product. The engine cannot see that distinction; only reading the call path can.
+  Retracted in place above, with the two real defects the retraction uncovered.
 - **No discrimination controls (H1).** They are supported only for `file-exists` / `project-state-row`;
   every kill-test here is `test-exit-0`, for which controls are deferred in v0 and would be marked
   controlled-attempt-invalid. Stated rather than omitted silently.

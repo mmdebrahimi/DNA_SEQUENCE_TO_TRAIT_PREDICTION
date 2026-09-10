@@ -53,6 +53,15 @@ UNMEASURED_CELLS: frozenset[str] = frozenset({
     "sarscov2-mpro",                  # CoV-RDB fold-change exists but is TN-starved (37R/5S)
     "fungal-fluconazole-erg11",       # no free isolate-level phenotype source
     "fungal-voriconazole-erg11",
+    # hiv-cai (lenacapavir) added 2026-09-10. It is MUTANT-LEVEL by construction -- capsid carries
+    # benign lineage polymorphisms (K70R/A105T) that over-called a position-based rule 140/140-R, so
+    # the CAI class ships the CAPELLA emergent-substitution set instead. It was nonetheless absent
+    # from the doubt registry, so the shipped CLI told a lenacapavir call "this catalog is
+    # position-based" two lines above its own caveat reading "MUTANT-LEVEL v0" -- a self-contradicting
+    # disclosure. Declared UNMEASURED rather than measured-and-empty: the screen needs a labelled
+    # negative class and the CAI validation set is resistance-enriched (129R/11S), so "no gap found"
+    # would be a clean bill nobody earned.
+    "hiv-cai",
 })
 
 
