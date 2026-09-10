@@ -23,6 +23,7 @@ from dna_decode.pneumoserotype.runner import (
     PNEUMO_IDENTITY_THRESHOLD,
     call_pneumo_serotype,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB_DIR = "data/pneumoserotype_db"
 
@@ -81,6 +82,12 @@ def main(argv=None) -> int:
                   f"(best ref {res.get('best_reference')}, {res.get('percent_identity')}% id / "
                   f"{res.get('percent_coverage')}% cov)")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-pneumo-serotype")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

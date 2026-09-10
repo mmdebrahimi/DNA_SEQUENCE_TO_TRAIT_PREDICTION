@@ -25,6 +25,7 @@ from dna_decode.ktype.runner import (
     WZI_IDENTITY_THRESHOLD,
     call_ktype,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB_DIR = "data/ktype_db"
 
@@ -81,6 +82,12 @@ def main(argv=None) -> int:
             print(f"CALL: {k or 'K?'}  (wzi allele {res.get('wzi_allele')}, "
                   f"{res.get('percent_identity')}% id / {res.get('percent_coverage')}% cov)")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-ktype")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

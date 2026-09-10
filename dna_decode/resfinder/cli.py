@@ -20,6 +20,7 @@ from dna_decode.resfinder.runner import (
     RES_IDENTITY_THRESHOLD,
     call_resistance_genes,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB_DIR = "data/resfinder_db"
 _DB_BASE = "https://bitbucket.org/genomicepidemiology/resfinder_db/raw/HEAD"
@@ -100,6 +101,12 @@ def main(argv=None) -> int:
             if not all_genes:
                 print("  (no acquired AMR genes detected at threshold)")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-resfinder")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if status == "ok" else 3

@@ -22,6 +22,7 @@ from dna_decode.salmserovar.runner import (
     SEROVAR_IDENTITY_THRESHOLD,
     call_serovar,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB_DIR = "data/salmserovar_db"
 
@@ -109,6 +110,12 @@ def main(argv=None) -> int:
                 print(f"  O call: {res.get('o_antigen') or 'unresolved'}"
                       f"   [rule: {res['o_antigen_rule']}]")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-salmserovar")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

@@ -29,6 +29,7 @@ from dna_decode.pgx.runner import (
     call_tpmt,
     call_ugt1a1,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 # gene -> chromosome, for the per-variant display line (CYP2D6 chr22, DPYD chr1, NUDT15 chr13, UGT1A1 chr2).
 _GENE_CHROM = {"CYP2C19": "10", "CYP2C9": "10", "CYP2C8": "10", "CYP3A5": "7",
@@ -126,6 +127,12 @@ def main(argv=None) -> int:
             if rec["flags"]:
                 print(f"  flags: {', '.join(rec['flags'])}")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-pgx")
+            if _ev:
+                print(f"  {_ev}")
         return 0
 
     # SLCO1B1 is a single-SNP (rs4149056) function readout (statin myopathy) -> its own shape (like VKORC1).

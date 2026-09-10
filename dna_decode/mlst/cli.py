@@ -17,6 +17,7 @@ import urllib.request
 from pathlib import Path
 
 from dna_decode.mlst.runner import call_mlst
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB_DIR = "data/mlst_db/ecoli_achtman"
 LOCI = ["adk", "fumC", "gyrB", "icd", "mdh", "purA", "recA"]
@@ -101,6 +102,12 @@ def main(argv=None) -> int:
             print(f"  {label}" + (f"  [{res['clonal_complex']}]" if res.get("clonal_complex") else ""))
             print("  profile: " + "  ".join(f"{loc}={res['profile'].get(loc)}" for loc in res["scheme_loci"]))
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-mlst")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

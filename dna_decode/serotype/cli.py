@@ -21,6 +21,7 @@ from dna_decode.serotype.runner import (
     SERO_IDENTITY_THRESHOLD,
     call_serotype,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB = "data/serotypefinder_db/serotypefinder.fsa"
 _DB_BASE = "https://bitbucket.org/genomicepidemiology/serotypefinder_db/raw/HEAD"
@@ -77,6 +78,12 @@ def main(argv=None) -> int:
                 print(f"  {a['antigen']:5} via {a['gene']:5} {a['percent_identity']}% id / "
                       f"{a['percent_coverage']}% cov  ({a['best_allele']})")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-serotype")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

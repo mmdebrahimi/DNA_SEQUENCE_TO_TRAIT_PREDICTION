@@ -25,6 +25,7 @@ from dna_decode.plasmid.runner import (
     PLASMID_IDENTITY_THRESHOLD,
     call_replicons,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB = "data/plasmidfinder_db/enterobacteriales.fsa"
 _DB_URL = "https://bitbucket.org/genomicepidemiology/plasmidfinder_db/raw/HEAD/enterobacteriales.fsa"
@@ -85,6 +86,12 @@ def main(argv=None) -> int:
             if not reps:
                 print("  (no plasmid replicons detected at threshold)")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-plasmid")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

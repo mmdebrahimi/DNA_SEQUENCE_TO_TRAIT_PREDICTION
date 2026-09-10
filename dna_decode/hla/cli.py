@@ -22,6 +22,7 @@ from pathlib import Path
 
 from dna_decode.hla import HLA_ALLELES
 from dna_decode.hla.caller import call_hla
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 
 def main(argv=None) -> int:
@@ -59,6 +60,12 @@ def main(argv=None) -> int:
         if rec["flags"]:
             print(f"  flags: {', '.join(rec['flags'])}")
         print(f"  {rec['caveat']}")
+        # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+        # the caveat, never replacing it: a caveat states the method's limits, this states what
+        # was actually measured. Evidence carried only in the registry is not a disclosure.
+        _ev = evidence_one_line("dna-hla")
+        if _ev:
+            print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if rec["status"] in ("ok", "assumed_reference") else 3

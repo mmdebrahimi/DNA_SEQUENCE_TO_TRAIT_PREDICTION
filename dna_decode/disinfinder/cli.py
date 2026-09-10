@@ -21,6 +21,7 @@ from dna_decode.disinfinder.runner import (
     DISIN_IDENTITY_THRESHOLD,
     call_disinfectant_genes,
 )
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB = "data/disinfinder_db/disinfectants.fsa"
 _DB_URL = "https://bitbucket.org/genomicepidemiology/disinfinder_db/raw/HEAD/disinfectants.fsa"
@@ -78,6 +79,12 @@ def main(argv=None) -> int:
             if not res["genes"]:
                 print("  (no acquired biocide-resistance genes detected at threshold)")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-disinfinder")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3

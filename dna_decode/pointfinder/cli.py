@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 
 from dna_decode.pointfinder.runner import call_point_mutations, parse_overview
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB_DIR = "data/pointfinder_db/escherichia_coli"
 DEFAULT_GENES = "gyrA,parC,gyrB,parE"
@@ -90,6 +91,12 @@ def main(argv=None) -> int:
             if not rec["mutations"]:
                 print(f"  (no catalogued point mutations; genes aligned: {', '.join(rec['genes_aligned']) or 'none'})")
             print(f"  {rec['caveat']}")
+            # The cell's MEASURED evidence, from its committed registry contract. Appended beside
+            # the caveat, never replacing it: a caveat states the method's limits, this states what
+            # was actually measured. Evidence carried only in the registry is not a disclosure.
+            _ev = evidence_one_line("dna-pointfinder")
+            if _ev:
+                print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
     return 0 if res["status"] == "ok" else 3
