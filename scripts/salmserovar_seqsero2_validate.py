@@ -47,6 +47,17 @@ IMAGE = "quay.io/biocontainers/seqsero2:1.3.2--pyhdfd78af_0"
 # anonymous volume instead, and the container then sees an empty /data while the command still exits 0.
 STAGE = Path("D:/dna_decode_cache/ss2_run")
 
+# The exact SeqSero2 k-mer-mode result headers this parser depends on. Grounded in the
+# upstream `SeqSero2_package.py` output written to `SeqSero_result.tsv`, and pinned here so a
+# rename in a future image is reported as schema drift rather than absorbed as an abstention.
+_REQUIRED_COLUMNS = (
+    "Predicted serotype",
+    "Predicted antigenic profile",
+    "O antigen prediction",
+    "H1 antigen prediction(fliC)",
+    "H2 antigen prediction(fljB)",
+)
+
 NON_SPECIFIC = {"", "-", "na", "n/a", "none", "unknown", "undetermined", "pending",
                 "not applicable", "not determined", "untypeable", "untypable"}
 
@@ -82,11 +93,26 @@ def run_seqsero2(fasta: Path, stage: Path, image: str, timeout: int = 900) -> di
     if not rows:
         return {"error": "empty_result"}
     r = rows[0]
-    return {"serotype": (r.get("Predicted serotype") or "").strip(),
-            "profile": (r.get("Predicted antigenic profile") or "").strip(),
-            "O": (r.get("O antigen prediction") or "").strip(),
-            "H1": (r.get("H1 antigen prediction(fliC)") or "").strip(),
-            "H2": (r.get("H2 antigen prediction(fljB)") or "").strip()}
+    # HEADER GATE. The checks above catch a crashed container and an empty file; neither catches a
+    # RENAMED column, which is the failure this comparator cannot afford. Every field below is read
+    # with `.get(...) or ""`, so if the image ever renames a header the parse yields five empty
+    # strings on a NON-empty row -- and `score()` maps an empty prediction to `no_call`. A broken
+    # parse would therefore be indistinguishable from SeqSero2 honestly abstaining, silently
+    # deflating the reference tool this cell measures its own delta against.
+    missing = [c for c in _REQUIRED_COLUMNS if c not in r]
+    if missing:
+        return {"error": f"schema_drift(missing={'|'.join(missing)})"}
+    out = {"serotype": (r.get("Predicted serotype") or "").strip(),
+           "profile": (r.get("Predicted antigenic profile") or "").strip(),
+           "O": (r.get("O antigen prediction") or "").strip(),
+           "H1": (r.get("H1 antigen prediction(fliC)") or "").strip(),
+           "H2": (r.get("H2 antigen prediction(fljB)") or "").strip()}
+    # An all-empty parse on a row that HAS the right headers is still suspect -- SeqSero2 fills at
+    # least one of these on any successful run. Reported as its own error rather than as an
+    # abstention, so the distinction survives into the artifact.
+    if not any(out.values()):
+        return {"error": "all_fields_empty"}
+    return out
 
 
 def score(pred: str | None, truth: str, idx) -> str:
