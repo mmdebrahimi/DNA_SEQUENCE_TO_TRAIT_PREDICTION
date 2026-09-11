@@ -81,6 +81,63 @@ def test_a_value_with_full_provenance_is_usable_and_returns():
     assert not EcoffEntry("gentamicin", "Escherichia coli", value=2.0, status=SOURCED).is_usable()
 
 
+def test_drug_lookup_normalizes_case_and_whitespace():
+    """A caller passing a drug straight out of a cohort TSV must reach the same entry as one passing
+    the catalog key. Without normalization a stray space raises `UnknownDrugError` on a drug the
+    catalog DOES have -- a refusal that looks identical to the honest one and would be read as
+    'unsourced' rather than as a lookup bug."""
+    assert entry_for("  Ciprofloxacin ") is ECOFFS["ciprofloxacin"]
+    with pytest.raises(UnsourcedEcoffError):
+        ecoff_for("GENTAMICIN")          # normalized, found, and THEN refused for lack of provenance
+    for empty in ("", "   ", None):
+        with pytest.raises(UnknownDrugError):
+            entry_for(empty)
+
+
+def test_validate_catalog_also_catches_a_sourced_hole_and_a_non_positive_value():
+    """The other two violation shapes, neither of which the live catalog can exercise. `status=SOURCED`
+    with no value is a half-filled entry that `is_usable` would quietly reject rather than report; a
+    value of 0 is what a blank or failed parse becomes, and as an ECOFF it makes EVERY isolate
+    non-wild-type."""
+    bad = dict(ECOFFS)
+    bad["gentamicin"] = EcoffEntry("gentamicin", "Escherichia coli", status=SOURCED)
+    bad["tetracycline"] = EcoffEntry("tetracycline", "Escherichia coli", value=0.0, status=SOURCED,
+                                     source_url="https://example.invalid/", verbatim_quote="blank")
+    import dna_decode.data.ecoff_catalog as mod
+    original = mod.ECOFFS
+    try:
+        mod.ECOFFS = bad
+        problems = mod.validate_catalog()
+        assert any("gentamicin" in p and "no value" in p for p in problems)
+        assert any("tetracycline" in p and "non-positive" in p for p in problems)
+    finally:
+        mod.ECOFFS = original
+    assert validate_catalog() == []
+
+
+def test_a_fully_sourced_entry_is_returned_and_listed_as_sourced():
+    """NON-VACUITY for `sourced_drugs() == []`: an implementation that always returned an empty list,
+    or an `ecoff_for` that raised unconditionally, would pass every refusal test above. The value here
+    is deliberately absurd (1234 mg/L) so it can never be mistaken for a sourced ECOFF."""
+    import dna_decode.data.ecoff_catalog as mod
+    filled = dict(ECOFFS)
+    filled["ciprofloxacin"] = EcoffEntry(
+        "ciprofloxacin", "Escherichia coli", value=1234, status=SOURCED,
+        source_url="https://example.invalid/not-a-real-ecoff",
+        verbatim_quote="synthetic test fixture -- NOT a EUCAST value")
+    original = mod.ECOFFS
+    try:
+        mod.ECOFFS = filled
+        got = mod.ecoff_for("ciprofloxacin")
+        assert got == 1234.0 and isinstance(got, float)
+        assert mod.sourced_drugs() == ["ciprofloxacin"]
+        assert "ciprofloxacin" not in mod.unsourced_drugs()
+        assert mod.validate_catalog() == []
+    finally:
+        mod.ECOFFS = original
+    assert sourced_drugs() == []
+
+
 # --- the wild-type classifier ---------------------------------------------------------------------
 
 def test_at_the_ecoff_is_wild_type_and_one_dilution_above_is_not():
@@ -124,6 +181,42 @@ def test_an_ecoff_below_the_panel_floor_is_flagged_as_unresolvable():
     assert ecoff_is_resolvable_on_grid(0.25, oxford_cipro_grid)
     # gentamicin's grid does leave room
     assert ecoff_is_resolvable_on_grid(2.0, [1.0, 2.0, 4.0, 32.0])
+
+
+def test_valid_mics_survive_alongside_missing_ones():
+    """The all-missing case is pinned above; the MIXED case is the one that can go wrong silently. A
+    filter that dropped the whole list on one `None` would return NO_MIC for a measured isolate, and a
+    filter that kept the `None`s would shift the median."""
+    assert classify_wildtype([None, 4.0, float("nan")], 2.0) == NWT
+    assert classify_wildtype([None, 1.0], 2.0) == WT
+    assert classify_wildtype([None, 1.0, 1.0, 32.0], 2.0) == WT   # median of the VALID three is 1
+    assert classify_wildtype(None, 2.0) == NO_MIC
+
+
+def test_an_even_length_mic_list_interpolates_to_a_value_off_the_dilution_grid():
+    """`statistics.median` averages the middle pair, so two replicates straddling the ECOFF produce a
+    midpoint that is not a real doubling-dilution MIC. Pinned rather than assumed, because it decides
+    the call for every duplicate-tested isolate."""
+    assert classify_wildtype([1.0, 32.0], 2.0) == NWT    # median 16.5
+    assert classify_wildtype([1.0, 2.0], 2.0) == WT      # median 1.5
+
+
+def test_resolvability_fails_closed_on_an_empty_panel_and_ignores_missing_values():
+    """No measured MICs means nothing is known about the grid, so the honest answer is 'not
+    resolvable' -- returning True there would let a degenerate anchor through on an empty cohort."""
+    assert not ecoff_is_resolvable_on_grid(2.0, [])
+    assert not ecoff_is_resolvable_on_grid(2.0, [None, float("nan")])
+    assert ecoff_is_resolvable_on_grid(2.0, [None, 1.0, float("nan"), 4.0])
+
+
+def test_an_ecoff_exactly_at_the_panel_floor_still_discriminates():
+    """BOUNDARY PIN. At the floor, isolates reported at the floor are WT and everything above is NWT,
+    so the anchor still separates; only an ECOFF strictly BELOW the floor makes every isolate NWT.
+    That is `ecoff >= min(vals)`, i.e. the degenerate zone is exclusive of the floor -- note the
+    function's docstring says 'at or below', which reads as inclusive and does not match."""
+    grid = [0.125, 0.25, 8.0]
+    assert ecoff_is_resolvable_on_grid(0.125, grid)
+    assert not ecoff_is_resolvable_on_grid(0.124, grid)
 
 
 def test_wildtype_tiering_does_not_import_the_frozen_module():

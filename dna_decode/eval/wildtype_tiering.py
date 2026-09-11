@@ -58,11 +58,18 @@ def wildtype_counts(per_isolate: dict[str, Iterable[Optional[float]]], ecoff: fl
 
 
 def ecoff_is_resolvable_on_grid(ecoff: float, measured_mics: Iterable[float]) -> bool:
-    """False when the ECOFF sits at or below the lowest MIC the panel can report.
+    """False when the ECOFF sits STRICTLY BELOW the lowest MIC the panel can report.
 
     In that regime EVERY isolate is non-wild-type and the anchor discriminates nothing -- the
     `DEGENERATE_ECOFF_BELOW_PANEL` outcome. This is a live risk rather than a theoretical one: the
     Oxford ciprofloxacin panel bottoms out at 0.125 mg/L.
+
+    STRICTLY below, not "at or below" -- the boundary is one dilution wide and it matters. With the
+    ECOFF exactly AT the floor, isolates reported at the floor are wild-type (median <= ecoff) and
+    everything above is not, so the anchor still separates the cohort; only an ECOFF beneath the floor
+    collapses every isolate into NWT. An earlier version of this docstring said "at or below" while the
+    code said `>=`, which would have mis-declared a usable drug degenerate and silently dropped it from
+    the evaluation.
     """
     vals = [float(m) for m in measured_mics
             if m is not None and not (isinstance(m, float) and isnan(m))]
