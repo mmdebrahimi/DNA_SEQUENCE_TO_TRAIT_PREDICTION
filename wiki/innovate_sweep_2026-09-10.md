@@ -65,6 +65,30 @@ failures and three successes, so the current attribution in `dna_decode/eval/reg
 *Kill-test:* acquired collapsing ≥ chromosomal would disprove. **Split holds — survived.**
 *Limit:* n=10 cells, one drug in the chromosomal arm. Suggestive, not established.
 
+> **MEASURED DIRECTLY AND SUPPORTED, 2026-09-10** (`wiki/determinant_clade_coupling_2026-09-10.md`).
+> **The first survivor of this sweep to survive a *stronger* test rather than fall.** The kill-test
+> INFERRED coupling from a proxy; this measures the named mechanism itself — per-determinant lineage
+> concentration, both arms drawn from the SAME 621 genomes and the SAME lineage partition, against a
+> bar frozen beforehand. **`SUPPORTED` on all four pre-registered bands**, every gap exceeding the
+> **maximum** of 1000 arm-label permutations (headline: point 0.4708 n=24 vs acquired 0.0788 n=92,
+> gap 0.3920 vs perm max 0.1762).
+>
+> **Two defects were found on the way, and the first nearly became the headline.** Raw coupling falls
+> with prevalence in *both* arms, which reads as *the determinants that drive most resistance are
+> near-chance* — a memo saying so was one step from being written. It is a **metric artifact**: the
+> largest lineage holds 53 of 621 genomes, so a 400-carrier determinant cannot exceed 53/400 and has
+> ~0.048 of coupling available in total. Normalized by what was achievable, `gyrA_S83L` sits at
+> **0.895**, not 0.041 — near-saturated, not decoupled — while acquired determinants at the same
+> prevalence sit **below zero** (`blaTEM-1` −0.134). **The arm gap is LARGER under normalization**
+> (0.5227 vs perm max 0.2184). Second defect: the single-residue symbol regex silently discarded 12
+> determinants AMRFinder actually CALLS (indels, frameshifts, nonsense, negative-coordinate promoter
+> positions); corrected, the arm is 30 families rather than 24 and the verdict is unchanged.
+>
+> **Scope:** this establishes the mechanism's PREMISE, which the kill-test assumed. It does **not**
+> establish that coupling *causes* the de-confounded failures — population design and
+> inheritance-coupling remain perfectly correlated across all five failures and three successes, so
+> `dna_decode/eval/regime.py`'s attribution stays under-determined.
+
 ### 3. `DOUBT-bacterial-gap` — **RETRACTED AS WRITTEN 2026-09-10, and the correction found two real defects**
 
 **What was claimed:** "a false clean bill on bacterial target-site cells."
@@ -143,6 +167,13 @@ powering gate requires both classes. Real gap, lowest novelty — wiring, not in
   survive was weaker than the claim they were carrying — #3's exercised a function no shipped surface
   calls, #1's measured a correlation without the control that could contradict it. **A `survived` verdict
   bounds the test that ran, never the claim.**
+- **Three of six survivors have now been acted on: two fell, one held.** #2 `COUPLING-not-popdesign` is
+  the one that held, and it held under a test explicitly built to be *stronger* than the one it
+  survived — direct measurement of the named mechanism in place of a proxy, against a frozen bar, with
+  the arm-label permutation control the original lacked. The same discipline that refuted #1 and #3 is
+  what makes #2's survival worth something: **the rate at which survivors fall is evidence about the
+  kill-tests, not about the candidates.** Four of the six were "does this gap currently exist" tests,
+  which are easy to survive and establish only the gap.
 - **Deeper adversaries not yet run.** Per protocol the expensive pass belongs on survivors only:
 
   ```

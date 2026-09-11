@@ -1,0 +1,47 @@
+{
+  "schema": "determinant-clade-coupling-acceptance-bar-v1",
+  "registered": "2026-09-10",
+  "status": "FROZEN BEFORE ANY COUPLING SCORE WAS COMPUTED",
+  "claim_under_test": "COUPLING-not-popdesign (wiki/innovate_sweep_2026-09-10.md): the discriminator for de-confounded learned decoding is determinant-to-clade COUPLING, not population design -- HGT decouples a mobile determinant from clade the way meiosis decouples a locus in a cross, so horizontally ACQUIRED determinants should be less clade-coupled than CHROMOSOMAL point mutations.",
+
+  "why_this_is_a_stronger_test_than_the_kill_test_that_let_it_survive": [
+    "The surviving kill-test INFERRED coupling from a proxy -- a sensitivity drop under lineage collapse -- across 10 cells with only ONE drug (ciprofloxacin) in the chromosomal arm.",
+    "This measures the named mechanism DIRECTLY: how concentrated each determinant's carriers are across lineages, per determinant family, with both arms drawn from the SAME 621 genomes and the SAME lineage partition.",
+    "A `survived` verdict bounds the test that ran, never the claim. This is the test the claim actually needs."
+  ],
+
+  "substrate_measured_before_freezing": {
+    "n_genomes": 621,
+    "n_lineages": 104,
+    "lineage_source": "MLST, restricted to the single ecoli_achtman_4 scheme -- an ST number means a different lineage under a different scheme, so mixing schemes would invent lineage identity",
+    "n_acquired_families_min5": 92,
+    "n_point_families_min5": 400,
+    "synonymous_point_rows_filtered": 137288,
+    "why_the_synonymous_filter_is_load_bearing": "mutations.tsv is --mutation_all form and lists every SCREENED position including wildtype (baeS_Q163Q, 16S_A523A). Keeping them turns 'screened and found nothing' into a called mutation and would make the POINT arm mostly noise."
+  },
+
+  "metric": {
+    "coupling_score": "observed largest-lineage fraction among a determinant's carriers MINUS the mean of that same statistic under a null that draws the SAME number of carriers at random from the same 621 genomes",
+    "why_a_null_at_matched_N": "a determinant with 5 carriers cannot span more than 5 lineages, so raw concentration is mechanically confounded with carrier count. The null holds N fixed so the score is a deviation from chance, not a restatement of prevalence.",
+    "secondary": "distinct-lineage count divided by its own null expectation, reported alongside"
+  },
+
+  "prevalence_matching_decided_in_advance": {
+    "rule": "primary comparison restricted to families with carrier fraction <= 0.50",
+    "derived_not_asserted": "measured before freezing: the ACQUIRED arm has ZERO families above 0.50 while POINT has 31 (7 above 0.95). A determinant carried by nearly every genome has a coupling score of ~0 BY CONSTRUCTION, so leaving those in would drag the POINT mean toward zero and bias the test AGAINST the claim.",
+    "cost_stated": "the restriction removes 31 POINT families and 0 ACQUIRED families -- it is one-sided, which is why BOTH the restricted and unrestricted results ship and the unrestricted one is never hidden."
+  },
+
+  "verdict_rule": {
+    "SUPPORTED": "mean coupling(POINT) > mean coupling(ACQUIRED) on the prevalence-matched set AND the observed difference exceeds the MAXIMUM of 1000 arm-label permutations.",
+    "WEAK_DIRECTIONAL": "mean coupling(POINT) > mean coupling(ACQUIRED) but the difference falls inside the permutation null -- the direction is right and the evidence does not clear its own control. Must be reported as NOT established, not as a partial win.",
+    "FALSIFIED": "mean coupling(POINT) <= mean coupling(ACQUIRED) -- the predicted ordering fails outright.",
+    "INDETERMINATE": "either arm has fewer than 20 families after filtering."
+  },
+
+  "declared_in_advance": [
+    "A SUPPORTED verdict would NOT establish that coupling CAUSES the de-confounded failures. It would establish the mechanism's premise -- that acquired and chromosomal determinants differ in clade coupling -- which the surviving kill-test assumed rather than measured. The causal step needs the regime comparison itself.",
+    "This is one organism (E. coli) and one lineage definition (7-locus MLST). ST is a coarse lineage unit; a finer phylogeny could change the concentration of every family in both arms.",
+    "AMRFinder's own AMR-vs-POINT Subtype is taken as the acquired-vs-chromosomal proxy. It is a good one (POINT is by definition a chromosomal substitution) but it is the tool's classification, not an independent determination of mobility."
+  ]
+}

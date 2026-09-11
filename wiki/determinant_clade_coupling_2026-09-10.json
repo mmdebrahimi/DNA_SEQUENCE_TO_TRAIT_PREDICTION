@@ -1,0 +1,364 @@
+{
+  "schema": "determinant-clade-coupling-v1",
+  "date": "2026-09-10",
+  "claim_under_test": "COUPLING-not-popdesign: acquired determinants should be LESS clade-coupled than chromosomal point mutations.",
+  "bar": "wiki/determinant_clade_coupling_acceptance_bar.json",
+  "n_genomes": 621,
+  "n_lineages": 104,
+  "n_synonymous_rows_filtered": 156471,
+  "min_carriers": 5,
+  "max_carrier_fraction": 0.5,
+  "headline_verdict": "SUPPORTED",
+  "headline_arm": "CALLED point substitutions only -- the corrected arm. The screened_* bands keep every screened position and are reported so the pollution is visible, never as the headline.",
+  "verdict_is_mechanical": "verdict_from_bar applied to the frozen rule; not authored",
+  "results": {
+    "called_point_prevalence_matched": {
+      "n_point_families": 24,
+      "n_acquired_families": 92,
+      "mean_coupling_point": 0.4708237274246214,
+      "mean_coupling_acquired": 0.07883780983813521,
+      "median_coupling_point": 0.43064393939393936,
+      "median_coupling_acquired": 0.049062499999999995,
+      "permutation": {
+        "observed_gap": 0.3919859175864862,
+        "n_perm": 1000,
+        "perm_mean": 0.0007130442564543387,
+        "perm_max": 0.17615646161173024,
+        "perm_p95": 0.09055556501656417,
+        "exceeds_perm_max": true
+      },
+      "verdict": "SUPPORTED"
+    },
+    "called_point_unrestricted": {
+      "n_point_families": 26,
+      "n_acquired_families": 92,
+      "mean_coupling_point": 0.43831193524614875,
+      "mean_coupling_acquired": 0.07883780983813521,
+      "median_coupling_point": 0.41808441558441556,
+      "median_coupling_acquired": 0.049062499999999995,
+      "permutation": {
+        "observed_gap": 0.35947412540801355,
+        "n_perm": 1000,
+        "perm_mean": -0.0028873144732117174,
+        "perm_max": 0.1626848920710957,
+        "perm_p95": 0.07983327103094277,
+        "exceeds_perm_max": true
+      },
+      "verdict": "SUPPORTED"
+    },
+    "screened_point_prevalence_matched": {
+      "n_point_families": 369,
+      "n_acquired_families": 92,
+      "mean_coupling_point": 0.401858559574587,
+      "mean_coupling_acquired": 0.07883780983813521,
+      "median_coupling_point": 0.3663247863247863,
+      "median_coupling_acquired": 0.049062499999999995,
+      "permutation": {
+        "observed_gap": 0.3230207497364518,
+        "n_perm": 1000,
+        "perm_mean": 0.0005608663434168693,
+        "perm_max": 0.11919903647131291,
+        "perm_p95": 0.05733210720231929,
+        "exceeds_perm_max": true
+      },
+      "verdict": "SUPPORTED"
+    },
+    "screened_point_unrestricted": {
+      "n_point_families": 400,
+      "n_acquired_families": 92,
+      "mean_coupling_point": 0.3719115208533424,
+      "mean_coupling_acquired": 0.07883780983813521,
+      "median_coupling_point": 0.33039560161779574,
+      "median_coupling_acquired": 0.049062499999999995,
+      "permutation": {
+        "observed_gap": 0.2930737110152072,
+        "n_perm": 1000,
+        "perm_mean": 0.0006499845694669575,
+        "perm_max": 0.12961934538898795,
+        "perm_p95": 0.05935282208995493,
+        "exceeds_perm_max": true
+      },
+      "verdict": "SUPPORTED"
+    }
+  },
+  "ceiling_normalized": {
+    "called_point_prevalence_matched": {
+      "n_point_families": 24,
+      "n_acquired_families": 92,
+      "mean_normalized_point": 0.6415424094573154,
+      "mean_normalized_acquired": 0.11880433417546454,
+      "permutation": {
+        "observed_gap": 0.5227380752818509,
+        "n_perm": 1000,
+        "perm_mean": 0.0012158543981578996,
+        "perm_max": 0.2183687991241224,
+        "perm_p95": 0.11518367588283021,
+        "exceeds_perm_max": true
+      },
+      "verdict_if_the_bar_were_applied_here": "SUPPORTED"
+    },
+    "called_point_unrestricted": {
+      "n_point_families": 26,
+      "n_acquired_families": 92,
+      "mean_normalized_point": 0.6554895865298934,
+      "mean_normalized_acquired": 0.11880433417546454,
+      "permutation": {
+        "observed_gap": 0.5366852523544289,
+        "n_perm": 1000,
+        "perm_mean": -0.004115730167843203,
+        "perm_max": 0.23626331190467137,
+        "perm_p95": 0.10987609459099924,
+        "exceeds_perm_max": true
+      },
+      "verdict_if_the_bar_were_applied_here": "SUPPORTED"
+    }
+  },
+  "prevalence_stratified": {
+    "point": {
+      "rare_lt_0.10": {
+        "n_families": 20,
+        "mean_coupling_raw": 0.5366464856902358,
+        "mean_coupling_normalized": 0.6478235190137283,
+        "n_normalizable": 20,
+        "members": [
+          "acrR_T5N",
+          "blaTEMp_C32T",
+          "gyrA_D87Y",
+          "marR_S3N",
+          "nfsA_G126R",
+          "nfsA_H11Y",
+          "ompC_R195L",
+          "parC_A56T"
+        ]
+      },
+      "mid_0.10_to_0.33": {
+        "n_families": 3,
+        "mean_coupling_raw": 0.16896286810701774,
+        "mean_coupling_normalized": 0.5811734561653741,
+        "n_normalizable": 3,
+        "members": [
+          "cyaA_S352T",
+          "parE_S458A",
+          "uhpT_E350Q"
+        ]
+      },
+      "common_ge_0.33": {
+        "n_families": 3,
+        "mean_coupling_raw": 0.052097332758033944,
+        "mean_coupling_normalized": 0.780912833668847,
+        "n_normalizable": 3,
+        "members": [
+          "gyrA_D87N",
+          "gyrA_S83L",
+          "parC_S80I"
+        ]
+      }
+    },
+    "acquired": {
+      "rare_lt_0.10": {
+        "n_families": 66,
+        "mean_coupling_raw": 0.09365481666060081,
+        "mean_coupling_normalized": 0.11811504997444203,
+        "n_normalizable": 66,
+        "members": [
+          "aac(3)-IIe",
+          "aac(3)-IVa",
+          "aac(3)-VIa",
+          "aac(6')-Ib",
+          "aac(6')-Ib3",
+          "aac(6')-Ib4",
+          "aadA16",
+          "aadA22"
+        ]
+      },
+      "mid_0.10_to_0.33": {
+        "n_families": 18,
+        "mean_coupling_raw": 0.05237446167257808,
+        "mean_coupling_normalized": 0.12874557354972363,
+        "n_normalizable": 18,
+        "members": [
+          "aac(3)-IId",
+          "aac(6')-Ib-cr5",
+          "aadA1",
+          "aadA2",
+          "aadA5",
+          "aph(3')-Ia",
+          "blaCTX-M-15",
+          "blaOXA-1"
+        ]
+      },
+      "common_ge_0.33": {
+        "n_families": 8,
+        "mean_coupling_raw": 0.016140036925297495,
+        "mean_coupling_normalized": 0.10212314024181746,
+        "n_normalizable": 8,
+        "members": [
+          "aph(3'')-Ib",
+          "aph(6)-Id",
+          "blaTEM-1",
+          "mph(A)",
+          "mrx(A)",
+          "sul1",
+          "sul2",
+          "tet(A)"
+        ]
+      }
+    }
+  },
+  "why_the_stratification_needed_a_ceiling": "Raw coupling falls with prevalence in BOTH arms, which invites the reading that the determinants driving most resistance are decoupled. That reading is an ARTIFACT of the metric's headroom and was nearly published here. The largest lineage holds 53 of 621 genomes, so a determinant with 400 carriers cannot exceed 53/400 = 0.133 largest-lineage fraction and has only ~0.048 of coupling available to it. Normalized by what was achievable, gyrA_S83L sits at 0.895, parC_S80I at 0.755, gyrA_D87N at 0.698 -- the dominant chromosomal determinants are near-SATURATED, not near-chance -- while the acquired extremes at comparable prevalence sit at or below zero (blaTEM-1 -0.134, sul2 -0.132). The arm gap is LARGER under normalization, not smaller. The null fixes the EXPECTATION at a given carrier count; it does not fix the MAXIMUM, and only the ceiling does.",
+  "n_called_point_symbols": 50,
+  "n_screened_point_symbols": 1516,
+  "top_coupled_point": [
+    {
+      "symbol": "parE_I529L",
+      "n_carriers": 48,
+      "carrier_fraction": 0.07729468599033816,
+      "largest_lineage_fraction": 0.9791666666666666,
+      "null_mean_largest_fraction": 0.10697916666666668,
+      "coupling_score": 0.8721874999999999,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.8930208333333334,
+      "normalized_coupling": 0.9766709436603288,
+      "n_lineages": 2,
+      "expected_n_lineages": 28.325,
+      "lineage_spread_ratio": 0.07060900264783761
+    },
+    {
+      "symbol": "ptsI_V25I",
+      "n_carriers": 55,
+      "carrier_fraction": 0.08856682769726248,
+      "largest_lineage_fraction": 0.9636363636363636,
+      "null_mean_largest_fraction": 0.09863636363636363,
+      "coupling_score": 0.865,
+      "ceiling_largest_fraction": 0.9636363636363636,
+      "achievable_coupling": 0.865,
+      "normalized_coupling": 1.0,
+      "n_lineages": 3,
+      "expected_n_lineages": 30.92,
+      "lineage_spread_ratio": 0.09702457956015523
+    },
+    {
+      "symbol": "soxS_A12S",
+      "n_carriers": 18,
+      "carrier_fraction": 0.028985507246376812,
+      "largest_lineage_fraction": 1.0,
+      "null_mean_largest_fraction": 0.14388888888888893,
+      "coupling_score": 0.856111111111111,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.856111111111111,
+      "normalized_coupling": 1.0,
+      "n_lineages": 1,
+      "expected_n_lineages": 14.395,
+      "lineage_spread_ratio": 0.06946856547412296
+    },
+    {
+      "symbol": "parC_E84V",
+      "n_carriers": 48,
+      "carrier_fraction": 0.07729468599033816,
+      "largest_lineage_fraction": 0.9375,
+      "null_mean_largest_fraction": 0.10739583333333334,
+      "coupling_score": 0.8301041666666666,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.8926041666666666,
+      "normalized_coupling": 0.9299801610456296,
+      "n_lineages": 4,
+      "expected_n_lineages": 28.495,
+      "lineage_spread_ratio": 0.1403755044744692
+    },
+    {
+      "symbol": "acrR_T5N",
+      "n_carriers": 8,
+      "carrier_fraction": 0.01288244766505636,
+      "largest_lineage_fraction": 1.0,
+      "null_mean_largest_fraction": 0.215625,
+      "coupling_score": 0.784375,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.784375,
+      "normalized_coupling": 1.0,
+      "n_lineages": 1,
+      "expected_n_lineages": 7.14,
+      "lineage_spread_ratio": 0.1400560224089636
+    }
+  ],
+  "top_decoupled_acquired": [
+    {
+      "symbol": "blaOXA-10",
+      "n_carriers": 8,
+      "carrier_fraction": 0.01288244766505636,
+      "largest_lineage_fraction": 0.125,
+      "null_mean_largest_fraction": 0.203125,
+      "coupling_score": -0.078125,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.796875,
+      "normalized_coupling": -0.09803921568627451,
+      "n_lineages": 8,
+      "expected_n_lineages": 7.26,
+      "lineage_spread_ratio": 1.1019283746556474
+    },
+    {
+      "symbol": "blaOXA",
+      "n_carriers": 6,
+      "carrier_fraction": 0.00966183574879227,
+      "largest_lineage_fraction": 0.16666666666666666,
+      "null_mean_largest_fraction": 0.2275,
+      "coupling_score": -0.06083333333333335,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.7725,
+      "normalized_coupling": -0.07874865156418558,
+      "n_lineages": 6,
+      "expected_n_lineages": 5.605,
+      "lineage_spread_ratio": 1.070472792149866
+    },
+    {
+      "symbol": "cmlA6",
+      "n_carriers": 5,
+      "carrier_fraction": 0.008051529790660225,
+      "largest_lineage_fraction": 0.2,
+      "null_mean_largest_fraction": 0.252,
+      "coupling_score": -0.05199999999999999,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.748,
+      "normalized_coupling": -0.0695187165775401,
+      "n_lineages": 5,
+      "expected_n_lineages": 4.73,
+      "lineage_spread_ratio": 1.0570824524312896
+    },
+    {
+      "symbol": "aac(6')-Ib",
+      "n_carriers": 5,
+      "carrier_fraction": 0.008051529790660225,
+      "largest_lineage_fraction": 0.2,
+      "null_mean_largest_fraction": 0.25100000000000006,
+      "coupling_score": -0.051000000000000045,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.7489999999999999,
+      "normalized_coupling": -0.06809078771695601,
+      "n_lineages": 5,
+      "expected_n_lineages": 4.73,
+      "lineage_spread_ratio": 1.0570824524312896
+    },
+    {
+      "symbol": "blaCTX-M-3",
+      "n_carriers": 5,
+      "carrier_fraction": 0.008051529790660225,
+      "largest_lineage_fraction": 0.2,
+      "null_mean_largest_fraction": 0.24800000000000005,
+      "coupling_score": -0.04800000000000004,
+      "ceiling_largest_fraction": 1.0,
+      "achievable_coupling": 0.752,
+      "normalized_coupling": -0.0638297872340426,
+      "n_lineages": 5,
+      "expected_n_lineages": 4.73,
+      "lineage_spread_ratio": 1.0570824524312896
+    }
+  ],
+  "honest_limits": [
+    "One organism (E. coli) and one lineage definition (7-locus MLST). ST is a COARSE lineage unit; a finer phylogeny could move every family in both arms.",
+    "AMRFinder's own AMR-vs-POINT Subtype is the acquired-vs-chromosomal proxy. POINT is a chromosomal substitution by definition, but this is the tool's classification, not an independent determination of mobility.",
+    "Establishing the mechanism's PREMISE is not establishing that coupling CAUSES the de-confounded failures; that needs the regime comparison itself.",
+    "Prevalence matching is one-sided (it removes POINT families only), which is why the unrestricted result ships beside it rather than being replaced by it.",
+    "Genomes are AMR-cohort leftovers, enriched for resistance and not a natural population.",
+    "The ceiling normalization divides by a SMALL denominator at high prevalence (~0.048 at n=400), so a normalized score there is far noisier than one for a rare family. It corrects a real bias in the raw score; it does not make the two ends equally precise.",
+    "`ceiling_largest_fraction` assumes carriers could be packed into the biggest lineage arbitrarily. That is the right bound for a metric ceiling but no real determinant is free to distribute itself, so the normalized score is a fraction of a THEORETICAL maximum."
+  ]
+}

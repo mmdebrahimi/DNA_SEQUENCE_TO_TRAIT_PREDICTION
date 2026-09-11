@@ -1,0 +1,46 @@
+{
+  "frozen_single_residue": {
+    "n_filtered_rows": 156471,
+    "n_point_symbols": 50,
+    "raw": {
+      "n_point": 24,
+      "n_acq": 92,
+      "point": 0.4708,
+      "acq": 0.0788,
+      "gap": 0.392,
+      "perm_max": 0.1762,
+      "verdict": "SUPPORTED"
+    },
+    "normalized": {
+      "n_point": 24,
+      "n_acq": 92,
+      "point": 0.6415,
+      "acq": 0.1188,
+      "gap": 0.5227,
+      "perm_max": 0.2184,
+      "verdict": "SUPPORTED"
+    }
+  },
+  "corrected_all_variant_forms": {
+    "n_filtered_rows": 129903,
+    "n_point_symbols": 59,
+    "raw": {
+      "n_point": 30,
+      "n_acq": 92,
+      "point": 0.4794,
+      "acq": 0.0788,
+      "gap": 0.4006,
+      "perm_max": 0.1982,
+      "verdict": "SUPPORTED"
+    },
+    "normalized": {
+      "n_point": 30,
+      "n_acq": 92,
+      "point": 0.6425,
+      "acq": 0.1188,
+      "gap": 0.5237,
+      "perm_max": 0.236,
+      "verdict": "SUPPORTED"
+    }
+  }
+}
