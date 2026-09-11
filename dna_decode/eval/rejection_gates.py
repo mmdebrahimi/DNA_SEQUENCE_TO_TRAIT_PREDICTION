@@ -122,17 +122,57 @@ def g3_sampling_defined_label(ev: dict) -> GateResult:
 # --- the eight MECHANICAL gates -------------------------------------------------------------------
 
 def g2_study_equals_class(ev: dict) -> GateResult:
+    """G2 tests the memo's confound: does the SOURCE predict the CLASS?
+
+    THE CONFLATION THIS FIXES (found by the Oxford screen, the schema's third worked example). The memo
+    defines G2 as *"the label is confounded with the source study -- one BioProject supplies most of one
+    class"*, measured by a *"contingency table of class x BioProject"*. The first implementation instead
+    tested `largest_source_share` of the WHOLE COHORT, which is a different quantity, and the two diverge
+    hardest exactly where it matters: a SINGLE-source cohort scores share 1.00 and tripped -- even though
+    with one source there is no source variation at all, so source cannot explain any label variance and
+    the named confound is STRUCTURALLY IMPOSSIBLE. That rejected the Oxford bacteraemia cohort, whose
+    measured wet-lab MICs this project had already validated against (gentamicin acc 0.990, 2026-06-15),
+    for a confound it cannot have.
+
+    SINGLE-SOURCE IS NOT HARMLESS, AND THIS DOES NOT PRETEND OTHERWISE -- it is a GENERALIZABILITY limit,
+    not a validity one, and it already has its own machinery: the `source_concentration` disclosure layer
+    and `scripts/source_diverse_validate.py`'s 60% refusal. Oxford is the proof that the concern is real
+    (zero `rmt` carriers in 4,979 isolates, so it cannot test a rule keyed on them). Routing it here made
+    G2 unsatisfiable by ANY single-source cohort; the reason string carries the caveat instead.
+    """
     # APPLICABILITY BEFORE MEASUREMENT. Asking for the input first makes an inapplicable gate report
     # `insufficient_data`, which reads as "go measure this" when the honest answer is "this cannot apply".
     if ev.get("variation_is_constructed"):
         return GateResult("G2", NOT_APPLICABLE,
                           "variation is constructed, so there is no source-vs-class confound to have")
+    n_sources = _num(ev, "n_sources")
+    if n_sources is not None and n_sources <= 1:
+        return GateResult("G2", NOT_APPLICABLE,
+                          "a single source cannot be confounded with the class -- there is no source "
+                          "variation for the label to track, so study==class is structurally impossible. "
+                          "This does NOT clear the separate GENERALIZABILITY limit of a single-source "
+                          "cohort (see the source_concentration disclosure layer and "
+                          "source_diverse_validate.py); that limit is not what G2 measures.",
+                          {"n_sources": n_sources})
+    # The memo's own test, when it was actually measured: of the isolates in one class, what share came
+    # from a single source? That is the contingency cell, not the cohort-wide share.
+    contingency = _num(ev, "max_class_share_from_one_source")
+    if contingency is not None:
+        v = TRIP if contingency > DOMINANT_SOURCE_SHARE else PASS
+        return GateResult("G2", v,
+                          f"the most source-concentrated class draws {contingency:.0%} of its members "
+                          f"from one source (bar {DOMINANT_SOURCE_SHARE:.0%})",
+                          {"max_class_share_from_one_source": contingency})
     share = _num(ev, "largest_source_share")
     if share is None:
-        return GateResult("G2", INSUFFICIENT_DATA, "no `largest_source_share` supplied")
+        return GateResult("G2", INSUFFICIENT_DATA,
+                          "no `max_class_share_from_one_source` (preferred -- the memo's class x source "
+                          "contingency) and no `largest_source_share` supplied")
     v = TRIP if share > DOMINANT_SOURCE_SHARE else PASS
     return GateResult("G2", v, f"largest source holds {share:.0%} of the cohort "
-                               f"(bar {DOMINANT_SOURCE_SHARE:.0%})", {"largest_source_share": share})
+                               f"(bar {DOMINANT_SOURCE_SHARE:.0%}); this is the COHORT-WIDE fallback, "
+                               f"weaker than the class x source contingency the memo specifies",
+                      {"largest_source_share": share})
 
 
 def g4_surveillance_domination(ev: dict) -> GateResult:

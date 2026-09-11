@@ -75,7 +75,54 @@ HBV = {
     "expected_verdict": "REJECTED",
 }
 
-CANDIDATES = {"pear": PEAR, "hbv": HBV}
+# THE THIRD WORKED EXAMPLE, and the one that filled the schema's empty diagonal: an L1 candidate that
+# might CLEAR. PEAR is L4/CLEARS, HBV is L1/REJECTED-on-G1, so nothing had ever exercised the L1 gates
+# past G1. Every number below is MEASURED from the committed deposit (data/raw/oxford/), not transcribed
+# from a memo -- MIC = 2**upper per scripts/oxford_score.py, the paper's log2-dilution encoding.
+OXFORD = {
+    "candidate": "Oxford E. coli bacteraemia cohort (PRJNA604975 deposit)",
+    "memo": "wiki/oxford_gate_screen_2026-09-11.md",
+    "intended_layer": L1_AMR_RS,
+    "evidence": {
+        "label_provenance_evidence": "Oxford clinical-microbiology broth-microdilution MIC, measured in "
+                                     "the hospital lab and deposited as per-drug log2 dilution intervals. "
+                                     "No genomic tool produced the label; the cohort's AMRFinder run is a "
+                                     "separate genotype file that never feeds the phenotype.",
+        "label_is_measured": True,
+        "label_semantics_evidence": "an MIC dilution reading, not a description of where or why the "
+                                    "isolate was collected. Ascertainment is on BACTERAEMIA (a clinical "
+                                    "syndrome), which is independent of the resistance phenotype scored.",
+        "label_is_assay_reading": True,
+        # G4: measured per drug; gentamicin is the most constrained of the three (192 R / 2,681 S).
+        "non_ecosystem_min_class_n": 192.0,
+        # G5: 4,979 isolates carry an AMRFinder scan in the deposit; 2,897 carry a MIC row.
+        "n_fetchable_assemblies": 2897.0,
+        # G6 (L1 form): breakpoint censoring. Of 2,873 gentamicin MICs, ZERO fail to resolve R vs S
+        # against the CLSI breakpoints; ceftriaxone leaves 6 of 2,874 unresolved.
+        "censored_fraction": 0.0021,
+        # G2: ONE study. This is the field that exposes the conflation -- see the memo.
+        "largest_source_share": 1.0,
+        "n_sources": 1.0,
+        # G9/G10: the deployed rules already score these drugs on this cohort (gent acc 0.990,
+        # 2026-06-15), so the rule is scoreable against the genotype by demonstration.
+        "loci_without_recorded_variant_fraction": 0.0,
+        "off_panel_variant_fraction": 0.0,
+        # G7 MEASURED, and it TRIPS. The deposit carries `guuid` and nothing else -- no submitter,
+        # centre or collection field on any record -- so a leakage-clean provenance-disjoint split
+        # cannot be built FROM THE DEPOSIT AS SHIPPED. Reported rather than explained away: unlike G2,
+        # this is a capability genuinely ABSENT, not a confound structurally impossible. (The fields may
+        # be fetchable from ENA for PRJNA604975; that has NOT been done, so this scores the deposit.)
+        "provenance_field_populated_fraction": 0.0,
+        # G8 deliberately ABSENT: no MLST or Mash distance ships in the deposit, so effective lineage
+        # count is not measurable from it. Guessing it to make the screen resolve is what this module
+        # refuses to do -- and G7 is decisive on its own, so nothing hinges on it.
+    },
+    "expected": {"G1": PASS, "G2": NOT_APPLICABLE, "G3": PASS, "G4": PASS, "G5": PASS,
+                 "G6": PASS, "G7": TRIP, "G9": PASS, "G10": PASS},
+    "expected_verdict": "REJECTED",
+}
+
+CANDIDATES = {"pear": PEAR, "hbv": HBV, "oxford": OXFORD}
 
 
 def run_one(spec: dict) -> dict:

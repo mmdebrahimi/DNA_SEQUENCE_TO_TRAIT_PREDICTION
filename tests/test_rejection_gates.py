@@ -154,3 +154,63 @@ def test_every_constructed_variation_gate_is_inapplicable_without_any_measuremen
 def test_all_ten_gates_run_every_time():
     res = screen_candidate("x", L1_AMR_RS, CLEAN_L1)
     assert [g.gate for g in res.gates] == list(LABEL_GATES) + list(DECODER_GATES)
+
+
+# --- G2: the conflation the THIRD worked example found (Oxford, 2026-09-11) -----------------------
+
+def test_a_single_source_cohort_cannot_have_the_study_equals_class_confound():
+    """THE FIX. The memo defines G2 as a class x source contingency ("one BioProject supplies most of
+    ONE CLASS"); the first implementation tested the cohort-wide `largest_source_share`. They diverge at
+    one source: share is 1.00, but with no source variation the source cannot explain any label variance,
+    so the named confound is structurally impossible. This rejected the Oxford cohort -- whose wet-lab
+    MICs this project had already validated against -- for a confound it cannot have."""
+    r = g2_study_equals_class({"largest_source_share": 1.0, "n_sources": 1})
+    assert r.verdict == NOT_APPLICABLE, r.reason
+    assert "structurally impossible" in r.reason
+
+
+def test_the_single_source_carve_out_still_names_the_generalizability_limit():
+    """Single-source is a GENERALIZABILITY limit even though it is not a validity one. If the reason
+    stopped at 'not applicable' the screen would read as a clean bill for a cohort that -- measurably,
+    in Oxford's case: 0 rmt carriers in 4,979 isolates -- cannot test whole determinant families."""
+    r = g2_study_equals_class({"largest_source_share": 1.0, "n_sources": 1})
+    assert "source_concentration" in r.reason or "generalizability" in r.reason.lower()
+
+
+def test_the_memos_contingency_is_preferred_over_the_cohort_wide_share():
+    """The memo's own test is the contingency cell. When it is supplied it must decide the gate, even
+    when the cohort-wide share would say the opposite -- otherwise the fallback silently governs."""
+    ev = {"n_sources": 5, "max_class_share_from_one_source": 0.95, "largest_source_share": 0.20}
+    assert g2_study_equals_class(ev).verdict == TRIP
+    ev = {"n_sources": 5, "max_class_share_from_one_source": 0.20, "largest_source_share": 0.95}
+    assert g2_study_equals_class(ev).verdict == PASS
+
+
+def test_a_genuine_multi_source_dominance_still_trips():
+    """NON-VACUITY: the fix must not defang G2 wherever the confound CAN exist."""
+    assert g2_study_equals_class({"largest_source_share": 0.95, "n_sources": 8}).verdict == TRIP
+    assert g2_study_equals_class({"largest_source_share": 0.30, "n_sources": 8}).verdict == PASS
+
+
+def test_g2_without_n_sources_keeps_the_old_cohort_share_behaviour():
+    """Back-compatibility: the two committed screens supply no `n_sources`, so the fallback must be
+    unchanged for them -- and must SAY it is the weaker proxy."""
+    r = g2_study_equals_class({"largest_source_share": 0.95})
+    assert r.verdict == TRIP and "fallback" in r.reason
+
+
+def test_g2_refuses_rather_than_passing_when_nothing_is_supplied():
+    assert g2_study_equals_class({}).verdict == INSUFFICIENT_DATA
+
+
+def test_the_oxford_screen_fails_on_metadata_not_on_label_quality():
+    """The third failure mode: HBV dies because no measured phenotype EXISTS; Oxford's labels are as
+    good as this project has and it dies on THIN METADATA. Pinning the distinction keeps the two from
+    being read as the same rejection."""
+    oxford = _runner().OXFORD
+    res = screen_candidate(oxford["candidate"], oxford["intended_layer"], oxford["evidence"])
+    by = {g.gate: g.verdict for g in res.gates}
+    assert res.verdict == "REJECTED" and by["G7"] == TRIP
+    for label_quality_gate in ("G1", "G3", "G4", "G5", "G6", "G9", "G10"):
+        assert by[label_quality_gate] == PASS, label_quality_gate
+    assert by["G2"] == NOT_APPLICABLE

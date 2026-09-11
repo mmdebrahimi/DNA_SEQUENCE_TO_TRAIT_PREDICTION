@@ -1,0 +1,88 @@
+{
+  "candidate": "Oxford E. coli bacteraemia cohort (PRJNA604975 deposit)",
+  "intended_layer": "L1_AMR_RS",
+  "verdict": "REJECTED",
+  "reason": "gate(s) G7 tripped",
+  "gates": [
+    {
+      "gate": "G1",
+      "verdict": "pass",
+      "reason": "label recorded as a measurement: Oxford clinical-microbiology broth-microdilution MIC, measured in the hospital lab and deposited as per-drug log2 dilution intervals. No genomic tool produced the label; the cohort's AMRFinder run is a separate genotype file that never feeds the phenotype.",
+      "evidence": {
+        "label_provenance_evidence": "Oxford clinical-microbiology broth-microdilution MIC, measured in the hospital lab and deposited as per-drug log2 dilution intervals. No genomic tool produced the label; the cohort's AMRFinder run is a separate genotype file that never feeds the phenotype."
+      }
+    },
+    {
+      "gate": "G2",
+      "verdict": "not_applicable",
+      "reason": "a single source cannot be confounded with the class -- there is no source variation for the label to track, so study==class is structurally impossible. This does NOT clear the separate GENERALIZABILITY limit of a single-source cohort (see the source_concentration disclosure layer and source_diverse_validate.py); that limit is not what G2 measures.",
+      "evidence": {
+        "n_sources": 1.0
+      }
+    },
+    {
+      "gate": "G3",
+      "verdict": "pass",
+      "reason": "label is an assay reading: an MIC dilution reading, not a description of where or why the isolate was collected. Ascertainment is on BACTERAEMIA (a clinical syndrome), which is independent of the resistance phenotype scored.",
+      "evidence": {
+        "label_semantics_evidence": "an MIC dilution reading, not a description of where or why the isolate was collected. Ascertainment is on BACTERAEMIA (a clinical syndrome), which is independent of the resistance phenotype scored."
+      }
+    },
+    {
+      "gate": "G4",
+      "verdict": "pass",
+      "reason": "smallest non-surveillance class n=192.0 (bar 20)",
+      "evidence": {
+        "non_ecosystem_min_class_n": 192.0
+      }
+    },
+    {
+      "gate": "G5",
+      "verdict": "pass",
+      "reason": "2897.0 records have a fetchable assembly (bar 20)",
+      "evidence": {
+        "n_fetchable_assemblies": 2897.0
+      }
+    },
+    {
+      "gate": "G6",
+      "verdict": "pass",
+      "reason": "0% of in-class values are interval-censored (bar 50%)",
+      "evidence": {
+        "censored_fraction": 0.0021
+      }
+    },
+    {
+      "gate": "G7",
+      "verdict": "trip",
+      "reason": "submitter/center/collection populated on 0% of records",
+      "evidence": {
+        "provenance_field_populated_fraction": 0.0
+      }
+    },
+    {
+      "gate": "G8",
+      "verdict": "insufficient_data",
+      "reason": "no `min_effective_lineages` supplied",
+      "evidence": {}
+    },
+    {
+      "gate": "G9",
+      "verdict": "pass",
+      "reason": "0% of loci record no concrete causal variant (bar 50%)",
+      "evidence": {
+        "loci_without_recorded_variant_fraction": 0.0
+      }
+    },
+    {
+      "gate": "G10",
+      "verdict": "pass",
+      "reason": "0% of recorded causal variants are indel/structural (bar 50%)",
+      "evidence": {
+        "off_panel_variant_fraction": 0.0
+      }
+    }
+  ],
+  "contract": "A PASS bounds only whether a usable LABEL exists and whether the rule is scoreable. It is NOT a build recommendation: reachability of the artifact, regime fit (eval/regime.py) and worth-doing are separate questions.",
+  "memo": "wiki/oxford_gate_screen_2026-09-11.md"
+}
