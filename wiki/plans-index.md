@@ -554,3 +554,15 @@
 **Status:** executed (archived to executed_plans/Colour_Cell_Family_Freeze_Plan/)
 
 ---
+
+## [plan_file: ECOFF_Anchored_Tiering_Evaluation_Only_Technical_Plan/] 2026-09-11
+**Summary:** Measure whether an ECOFF (wild-type) anchor agrees with our genotype calls better than the clinical breakpoint, without touching the frozen surface.
+**Key decisions:**
+- Scope is EVALUATION ONLY -- adopting ECOFF anchoring would edit `dna_decode/data/mic_tiers.py`, which is sha256-pinned in the v2 prospective lock, retiring it and restarting the prospective clock; that is a user-authority call and the plan stops at the measurement that informs it.
+- `classify_tier` takes breakpoints as a PARAMETER, so both arms run without editing the frozen module -- the TMP-SMX overlay precedent.
+- ECOFF is binary WT/NWT with no intermediate zone, so Step 4 builds a SEPARATE `classify_wildtype` rather than passing an ECOFF in as `clsi_s`, which would typecheck while silently misleading.
+- ECOFF values must be FETCHED from EUCAST with `source_url` + `verbatim_quote` per entry, never recalled -- a wrong ECOFF would produce a fully self-consistent, entirely wrong evaluation.
+- Feasibility gate (Step 2) precedes the frozen bar (Step 3) deliberately, and names `DEGENERATE_ECOFF_BELOW_PANEL` in advance: Oxford's ciprofloxacin panel bottoms out at 0.125, so a lower ECOFF would make every isolate non-wild-type and the anchor discriminate nothing.
+**Status:** candidate
+
+---
