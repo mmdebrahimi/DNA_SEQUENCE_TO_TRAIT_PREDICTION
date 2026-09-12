@@ -5,9 +5,15 @@ running `dna-ktype` saw a hand-written caveat while that cell's MEASURED evidenc
 full-locus Kaptive on 307 genomes -- sat in the registry and a report card they never open. Same failure
 as the doubt layer's JSON-only block: evidence carried only in a registry is not a disclosure.
 
-This wiring is PARTIAL by design (the measured cells first). The last test makes that partiality a
-number rather than a silence -- a green suite over whichever subset happened to be done would be the
-dishonest version.
+The wiring was PARTIAL (11 of 44) and is now EXHAUSTIVE: 41 routes wired, 3 deliberately excluded
+because each already prints a MORE SPECIFIC disclosure of its own. So the coverage check is no longer a
+counter -- it asserts an EXACT set. The counter form only required that SOME route be missing, which a
+newly-shipped unwired route would have satisfied in silence; the set form fails by name instead.
+
+Two of these tests exist to stop a justification decaying into folklore: one pins that each excluded
+route really does still disclose, and one pins the measured reason `dna-amr` is excluded (its per-drug
+line reads INDEPENDENT_MEASURED while the generic route-level line reports the WEAKEST of 59 cells as
+NOT_CENSUSED -- printing both is a self-contradicting disclosure, the `lenacapavir` defect exactly).
 """
 from __future__ import annotations
 
@@ -178,3 +184,47 @@ def test_the_wired_set_matches_the_registry_and_holds_no_phantoms():
     assertion above (the typo'd route stays in `missing`, the real one looks wired)."""
     for route in WIRED:
         assert cells_for_route(route), f"{route} is in WIRED but has no registered cell"
+
+
+# --- candidate row 3: should the doubt/lineage lines go on non-AMR routes too? MEASURED: no ------
+
+def test_no_non_amr_cell_can_produce_a_disclosure_layer_TRIPWIRE():
+    """The measured answer to "do the doubt/lineage lines belong on `dna-decode` routes too": NO, and
+    this test exists so that answer is revisited the moment it stops being true.
+
+    `trust_block` is keyed on (drug, organism) -- the AMR cell key. A non-AMR cell has no drug, so all
+    six layers are structurally unreachable for it: across 56 non-AMR cells, ZERO produce ANY layer.
+    Wiring a doubt or lineage line into a colour / morphology / motility route would therefore ship a
+    branch that can never fire -- speculative output, which is exactly what the doubt_layer tripwire
+    decision already refused once ("don't render a line that could never apply; make its ABSENCE
+    detectable instead").
+
+    This is a TRIPWIRE, not a coverage test. If a future layer becomes reachable for a non-AMR cell,
+    this fails and the wiring question genuinely reopens.
+    """
+    from dna_decode.data.cell_registry import cells
+    from dna_decode.data.trust_surface import DISCLOSURE_LAYERS, trust_block
+
+    reachable = []
+    for c in cells():
+        if c.route == "dna-amr":
+            continue
+        try:
+            block = trust_block(c.target or "", c.organism or "")
+        except Exception:
+            continue
+        for layer in DISCLOSURE_LAYERS:
+            if block and block.get(layer):
+                reachable.append((c.route, c.cell_id, layer))
+    assert not reachable, (
+        "a non-AMR cell now carries a disclosure layer, so the 'structurally inapplicable' answer to "
+        f"candidate row 3 has expired and the wiring question reopens: {reachable[:5]}")
+
+
+def test_the_tripwire_is_not_vacuous_because_the_amr_route_DOES_carry_layers():
+    """NON-VACUITY: the tripwire above would pass trivially if `trust_block` never returned a layer for
+    anything. dna-amr must still carry them, or the tripwire is measuring nothing."""
+    from dna_decode.data.trust_surface import DISCLOSURE_LAYERS, trust_block
+    block = trust_block("ciprofloxacin", "Escherichia_coli_Shigella")
+    present = [l for l in DISCLOSURE_LAYERS if block and block.get(l)]
+    assert present, "dna-amr carries no disclosure layer -- the tripwire above proves nothing"
