@@ -1,0 +1,72 @@
+{
+  "schema": "ecoff-tiering-result-v1",
+  "date": "2026-09-12",
+  "drug": "gentamicin",
+  "bar": "wiki/ecoff_tiering_acceptance_bar.json",
+  "cohort": "Oxford E. coli bacteraemia deposit",
+  "ecoff_mg_L": 2.0,
+  "ecoff_source_url": "https://mic.eucast.org/search/diagram/652",
+  "ecoff_is_tentative": false,
+  "clsi_susceptible": 4.0,
+  "clsi_resistant": 16.0,
+  "n_joined": 2869,
+  "n_determinant_carriers": 191,
+  "determinant_rule": {
+    "threshold": 1,
+    "subclass_any": [
+      "GENTAMICIN"
+    ],
+    "symbol_rescue": "^(rmt[A-H]\\d*|npmA\\d*)$"
+  },
+  "strata": {
+    "clinically_S_and_NWT": {
+      "n": 25,
+      "carriage_rate": 0.08
+    },
+    "clinically_S_and_WT": {
+      "n": 2652,
+      "carriage_rate": 0.004524886877828055
+    },
+    "clinically_R": {
+      "n": 192,
+      "carriage_rate": 0.921875
+    }
+  },
+  "permutation": {
+    "observed_gap": 0.07547511312217195,
+    "n_perm": 1000,
+    "perm_mean": -0.00039340874811463137,
+    "perm_max": 0.11585218702865761,
+    "perm_p95": 0.03509803921568627,
+    "exceeds_perm_max": false
+  },
+  "error_rates_vs_clinical_anchor": {
+    "tp": 177,
+    "fp": 14,
+    "tn": 2663,
+    "fn": 15,
+    "vme": 0.078125,
+    "vme_n": 192,
+    "me": 0.005229734777736272,
+    "me_n": 2677
+  },
+  "error_rates_vs_ecoff_anchor": {
+    "tp": 179,
+    "fp": 12,
+    "tn": 2640,
+    "fn": 38,
+    "vme": 0.17511520737327188,
+    "vme_n": 217,
+    "me": 0.004524886877828055,
+    "me_n": 2652
+  },
+  "verdict": "WEAK_DIRECTIONAL",
+  "verdict_is_mechanical": "verdict_from_bar applied to the frozen rule; not authored",
+  "honest_limits": [
+    "One organism, one UK region, 2008-2018, one collapsed MIC panel. Oxford is single-source (trips G7, n/a on G2) -- wiki/oxford_gate_screen_2026-09-11.md.",
+    "The discriminating stratum is small. A FALSIFIED or WEAK_DIRECTIONAL verdict at this size is weak evidence against the claim, not a refutation.",
+    "This compares CARRIAGE, not accuracy: which anchor the genotype agrees with better. It does not establish that either anchor predicts clinical outcome.",
+    "A SUPPORTED verdict is NOT grounds to edit mic_tiers.py -- that is sha256-pinned in the v2 prospective lock and changing it restarts the prospective clock. User-authority call.",
+    "The v2 rmt/npmA rescue is INERT on this cohort (zero rmt rows), so it cannot have influenced the result in either direction."
+  ]
+}

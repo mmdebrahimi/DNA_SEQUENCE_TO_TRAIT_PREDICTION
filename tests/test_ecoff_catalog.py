@@ -340,3 +340,87 @@ def test_a_degenerate_drug_really_is_all_non_wildtype():
     for r in degenerate:
         assert r["non_wildtype_fraction"] == 1.0, r["drug"]
         assert r["ecoff_mg_L"] < r["panel_floor"], r["drug"]
+
+
+# --- the evaluation (plan Step 5) ----------------------------------------------------------------
+
+def _eval_mod():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "ecoff_eval", ROOT / "scripts" / "ecoff_tiering_evaluate.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    return m
+
+
+def test_all_four_frozen_verdict_branches():
+    m = _eval_mod()
+    strong, weak = {"exceeds_perm_max": True}, {"exceeds_perm_max": False}
+    assert m.verdict_from_bar(0.30, 0.01, strong, 25) == m.SUPPORTED
+    assert m.verdict_from_bar(0.08, 0.005, weak, 25) == m.WEAK
+    assert m.verdict_from_bar(0.01, 0.05, strong, 25) == m.FALSIFIED
+    assert m.verdict_from_bar(0.30, 0.01, strong, 19) == m.INDETERMINATE
+
+
+def test_an_equal_rate_is_falsified_not_weak():
+    """The predicted ORDERING is strict. Equal carriage means the ECOFF separates nothing, which is a
+    failure of the claim rather than a weak version of it."""
+    m = _eval_mod()
+    assert m.verdict_from_bar(0.05, 0.05, {"exceeds_perm_max": True}, 100) == m.FALSIFIED
+
+
+def test_a_thin_stratum_is_indeterminate_even_with_a_huge_gap():
+    """NON-VACUITY for the floor: an n=3 stratum showing 100%-vs-0% must not read as SUPPORTED."""
+    m = _eval_mod()
+    assert m.verdict_from_bar(1.0, 0.0, {"exceeds_perm_max": True}, 3) == m.INDETERMINATE
+
+
+def test_the_permutation_null_holds_stratum_sizes_fixed():
+    """The control must shuffle the LABEL, not resample -- otherwise it would not be a null for the
+    anchor assignment, which is the only thing under test."""
+    import numpy as np
+    m = _eval_mod()
+    labels = np.concatenate([np.ones(25, int), np.zeros(2652, int)])
+    carries = np.concatenate([np.ones(2, int), np.zeros(23, int),
+                              np.ones(12, int), np.zeros(2640, int)])
+    perm = m.permutation_gap(labels, carries, np.random.default_rng(0), n_perm=200)
+    assert perm["perm_max"] > 0 and perm["n_perm"] == 200
+    # a label with no association must not clear its own null
+    flat = m.permutation_gap(labels, np.zeros(2677, int), np.random.default_rng(0), n_perm=200)
+    assert not flat["exceeds_perm_max"]
+
+
+def test_the_determinant_rule_excludes_streptomycin_determinants():
+    """THE definition that decides this result. 3,298 of the cohort's aminoglycoside rows are Subclass
+    STREPTOMYCIN; counting them would produce a streptomycin co-carriage finding wearing a gentamicin
+    label. Compound subclasses containing GENTAMICIN must still count (substring, as the frozen rule
+    does it)."""
+    import pandas as pd
+    m = _eval_mod()
+    amr = pd.DataFrame({
+        "Name": ["g1", "g2", "g3", "g4"],
+        "Class": ["AMINOGLYCOSIDE"] * 4,
+        "Subclass": ["STREPTOMYCIN", "GENTAMICIN", "GENTAMICIN/KANAMYCIN/TOBRAMYCIN", "KANAMYCIN"],
+        "Gene symbol": ["aph(6)-Id", "aac(3)-IId", "aac(3)-IIe", "aph(3')-Ia"]})
+    got = m.carriers_for_drug(amr, "gentamicin")
+    assert got == {"g2", "g3"}, got
+
+
+@pytest.mark.skipif(not (ROOT / "wiki" / "ecoff_tiering_result_2026-09-12.json").exists(),
+                    reason="evaluation artifact not generated")
+def test_the_committed_verdict_is_re_derivable_from_its_own_numbers():
+    m = _eval_mod()
+    d = json.loads((ROOT / "wiki" / "ecoff_tiering_result_2026-09-12.json").read_text(encoding="utf-8"))
+    s = d["strata"]
+    assert d["verdict"] == m.verdict_from_bar(
+        s["clinically_S_and_NWT"]["carriage_rate"], s["clinically_S_and_WT"]["carriage_rate"],
+        d["permutation"], s["clinically_S_and_NWT"]["n"])
+    assert d["verdict"] == m.WEAK
+
+
+@pytest.mark.skipif(not (ROOT / "wiki" / "ecoff_tiering_result_2026-09-12.json").exists(),
+                    reason="evaluation artifact not generated")
+def test_the_deployed_rule_is_sane_on_the_resistant_stratum():
+    """A control on the MEASUREMENT itself: if the rule did not recover the clinically-resistant
+    isolates, a null result in the susceptible strata would say nothing about the anchor."""
+    d = json.loads((ROOT / "wiki" / "ecoff_tiering_result_2026-09-12.json").read_text(encoding="utf-8"))
+    assert d["strata"]["clinically_R"]["carriage_rate"] > 0.85

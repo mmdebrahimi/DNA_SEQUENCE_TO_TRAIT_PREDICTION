@@ -1,0 +1,45 @@
+{
+  "schema": "ecoff-tiering-acceptance-bar-v1",
+  "registered": "2026-09-12",
+  "status": "FROZEN BEFORE ANY CARRIAGE NUMBER WAS COMPUTED",
+  "plan": "plans/ECOFF_Anchored_Tiering_Evaluation_Only_Technical_Plan/technical-plan.md",
+
+  "claim_under_test": "A determinant-based decoder predicts MECHANISM PRESENCE (wild-type vs non-wild-type), not treatment outcome (S/I/R). If the EUCAST WGS subcommittee's position is right for this decoder, then among isolates the CLINICAL breakpoint calls susceptible, the ones the ECOFF calls NON-WILD-TYPE should carry the decoder's own determinants MORE OFTEN than the ones it calls wild-type.",
+
+  "why_the_mechanism_analysis_came_first": "Two acceptance bars earlier in this project were mis-specified because a threshold was frozen before the analysis that says what a correct result can look like. So the substrate, the determinant definition and the strata were all measured BEFORE this file was written -- only the VERDICT RULE is frozen, and it is frozen on a self-calibrating control rather than on a number I would have had no basis to pick.",
+
+  "substrate_measured_before_freezing": {
+    "cohort": "Oxford E. coli bacteraemia deposit (data/raw/oxford)",
+    "join": "MIC guuid -> AMRFinder Name; 2,893 of 2,897 MIC isolates have an AMRFinder run",
+    "scoreable_drugs": ["gentamicin"],
+    "why_only_one": "ciprofloxacin and ceftriaxone returned DEGENERATE_ECOFF_BELOW_PANEL (ECOFF 0.06 vs panel floor 0.125; 0.125 vs 0.5) so 100% of isolates are non-wild-type and the anchor cannot discriminate; tetracycline has no MIC column in the deposit (wiki/ecoff_tiering_feasibility_2026-09-11.json).",
+    "gentamicin_ecoff_mg_L": 2.0,
+    "gentamicin_clsi_susceptible_breakpoint": 4.0,
+    "discriminating_stratum": "clinically-S AND above the ECOFF = MIC 4 = 25 isolates",
+    "comparison_stratum": "clinically-S AND at/below the ECOFF = MIC 1 or 2 = about 2,656 isolates",
+    "determinant_base_rate": "322 of ~2,893 genomes (about 11%) carry a Subclass-GENTAMICIN determinant"
+  },
+
+  "determinant_definition_is_the_DEPLOYED_rule_not_my_own": {
+    "rule": "dna_decode/eval/amr_rules.py DRUG_RULE['gentamicin']: threshold 1, subclass_any={'GENTAMICIN'}, symbol_rescue='^(rmt[A-H]\\d*|npmA\\d*)$'",
+    "matching": "SUBSTRING on the uppercased Subclass, exactly as `curated_determinants_from_main` does -- so GENTAMICIN/KANAMYCIN/TOBRAMYCIN and APRAMYCIN/GENTAMICIN/TOBRAMYCIN COUNT (343 rows, not the 324 that an equality match would give).",
+    "why_this_matters": "3,298 of the cohort's aminoglycoside rows are Subclass STREPTOMYCIN (aph(3'')-Ib, aph(6)-Id, aadA). Keying on Class=AMINOGLYCOSIDE instead would swamp the signal and turn this into a result about STREPTOMYCIN co-carriage while still looking like a gentamicin finding.",
+    "rescue_is_inert_here": "ZERO rmt/npmA rows exist in this cohort -- independently reconfirming the 2026-09-03 Oxford rmt probe. The v2 rescue therefore cannot affect this result in either direction."
+  },
+
+  "verdict_rule": {
+    "SUPPORTED": "determinant-carriage rate is HIGHER among clinically-S/ECOFF-NWT than among clinically-S/ECOFF-WT, AND the observed difference exceeds the MAXIMUM of 1000 permutations that shuffle the WT/NWT label while holding both stratum sizes fixed.",
+    "WEAK_DIRECTIONAL": "the direction is right but the difference falls inside the permutation null. Must be reported as NOT established -- never as a partial win.",
+    "FALSIFIED": "carriage is equal or LOWER among the ECOFF-NWT stratum -- the predicted ordering fails outright.",
+    "INDETERMINATE": "the discriminating stratum falls below 20 isolates, or no drug is SCOREABLE."
+  },
+
+  "why_a_permutation_null_and_not_an_effect_size": "With 25 isolates against ~2,656, any effect-size threshold I picked would be arbitrary -- exactly the mis-specification that sank the two earlier bars. A permutation null on the anchor label self-calibrates to the stratum sizes actually present, so the bar is a CONTROL rather than a guessed number.",
+
+  "declared_in_advance": [
+    "A SUPPORTED verdict argues the ECOFF is the better anchor FOR THIS DECODER ON THIS COHORT. It is NOT by itself grounds to edit mic_tiers.py -- that is sha256-pinned in the v2 prospective lock, and changing it retires the lock and restarts the prospective clock. That remains a user-authority decision.",
+    "One organism, one UK region, 2008-2018, one collapsed MIC panel. Oxford is single-source: it trips G7 and is n/a on G2 for that reason (wiki/oxford_gate_screen_2026-09-11.md).",
+    "n=25 is small. A FALSIFIED or WEAK_DIRECTIONAL verdict at this size is weak evidence against the claim, and will be reported as such rather than as a refutation.",
+    "The comparison is CARRIAGE, not accuracy. It asks which anchor the genotype agrees with better; it does not establish that either anchor predicts clinical outcome."
+  ]
+}
