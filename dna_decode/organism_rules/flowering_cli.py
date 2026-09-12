@@ -14,6 +14,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 
 def main(argv=None) -> int:
@@ -70,6 +71,12 @@ def main(argv=None) -> int:
         print(f"  note: {n}")
     print(f"  [{d['scope_limit']}]")
     print("  [cannot see: " + d["undetectable_mechanisms"][0] + "]")
+    # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+    # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+    # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+    _ev = evidence_one_line("dna-flowering")
+    if _ev:
+        print(f"  {_ev}")
     return 0
 
 

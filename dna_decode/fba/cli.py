@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 
 def _resolve_gene(model, token: str):
@@ -328,6 +329,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  cell-level trait: {rec['cell_trait']}"
               f"  [{'ESSENTIAL' if rec['essential'] else 'NON-ESSENTIAL'}]")
     print(f"  scope: {rec['scope']}")
+    # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+    # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+    # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+    _ev = evidence_one_line("dna-fba")
+    if _ev:
+        print(f"  {_ev}")
     return 0
 
 

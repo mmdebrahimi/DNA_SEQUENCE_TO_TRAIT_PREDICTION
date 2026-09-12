@@ -24,6 +24,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 _SCOPE = ("scope: receptor-CLASS only (NOT the full phage x strain host-range matrix, which is polygenic); "
           "tier KNOWLEDGE_BASELINE / in-distribution (BASEL, Maffei 2021 PLOS Biology 3001424).")
@@ -144,6 +145,12 @@ def main(argv=None) -> int:
         else:
             print(f"{st}: {res.get('reason') or 'no call'}")
         print(_SCOPE)
+        # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+        # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+        # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+        _ev = evidence_one_line("dna-phage")
+        if _ev:
+            print(f"  {_ev}")
     return 0 if res["status"] in ("CALLED", "INDETERMINATE") else 2
 
 

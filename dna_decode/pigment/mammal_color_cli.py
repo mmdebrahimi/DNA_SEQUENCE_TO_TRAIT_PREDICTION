@@ -16,6 +16,8 @@ import argparse
 import json
 import sys
 
+from dna_decode.data.cell_evidence_line import evidence_one_line
+
 
 def _parse_loci(spec: str) -> dict:
     out = {}
@@ -69,6 +71,13 @@ def _main(organism: str, argv=None) -> int:
         print(f"  note: {n}")
     print(f"  [deterministic curated OMIA loci ({', '.join(cat.loci[s].gene for s in cat.loci)}); biology-checked]")
     print("  [KNOWLEDGE_BASELINE: curated catalog, no free per-individual validation substrate]")
+    # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+    # hand-written caveat above, never replacing it: the caveat states the method's limits, this
+    # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+    # One call covers all 14 mammal routes because the route name is derived, never hand-listed.
+    _ev = evidence_one_line(f"dna-{organism}color")
+    if _ev:
+        print(f"  {_ev}")
     return 0
 
 

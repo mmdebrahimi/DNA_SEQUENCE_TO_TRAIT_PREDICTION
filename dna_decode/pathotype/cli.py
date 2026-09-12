@@ -22,6 +22,7 @@ from dna_decode.pathotype.detect import (
 from dna_decode.pathotype.markers import RULES_VERSION
 from dna_decode.pathotype.resolve import resolve_call
 from dna_decode.pathotype.vf_runner import build_vf_diff, run_canonical_vf
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 DEFAULT_DB = "data/virulencefinder_db/virulence_ecoli.fsa"
 
@@ -123,6 +124,12 @@ def main(argv=None) -> int:
         print(json.dumps(rec, indent=2))
     else:
         print(_summary(rec))
+        # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+        # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+        # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+        _ev = evidence_one_line("dna-pathotype")
+        if _ev:
+            print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance JSON -> {args.out}]")
         else:

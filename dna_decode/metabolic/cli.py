@@ -17,6 +17,7 @@ import gzip
 import json
 import sys
 from pathlib import Path
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 _SCOPE = ("scope: E. coli carbon-catabolism, uptake-gated, presence-based; calls can/cannot DIRECTION not "
           "growth rate; reads gene presence not sequence integrity; validated vs measured K-12 phenotypes. "
@@ -100,6 +101,12 @@ def main(argv=None) -> int:
         for n in c.notes:
             print(f"  - {n}")
         print(_SCOPE)
+        # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+        # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+        # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+        _ev = evidence_one_line("dna-metabolic")
+        if _ev:
+            print(f"  {_ev}")
     return 0
 
 

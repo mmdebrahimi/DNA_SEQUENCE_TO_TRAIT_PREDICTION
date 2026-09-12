@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 # axes the cell does NOT resolve (surfaced as honest abstentions, not silent gaps)
 _ABSTAIN_AXES = [
@@ -124,6 +125,12 @@ def main(argv=None) -> int:
         print(f"  ABSTAIN: {ax}")
     print("  [pinned + Darwin's-Ark-validated catalog: height polygenic r=0.619, ear MSRB3 r=0.543]")
     print("  [RELATIVE rank not absolute inches; benign companion-animal visible-trait genetics]")
+    # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+    # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+    # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+    _ev = evidence_one_line("dna-morphology")
+    if _ev:
+        print(f"  {_ev}")
     return 0
 
 

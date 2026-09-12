@@ -15,6 +15,7 @@ from pathlib import Path
 
 from dna_decode.clinvar.decode import decode_vcf
 from dna_decode.data.clinvar import ClinVarDecoder
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 _HONEST = ("research demonstration; curated ClinVar allele classifications for carried variants, NOT a "
            "clinical diagnosis of the individual. NOT a clinical tool.")
@@ -54,6 +55,12 @@ def main(argv=None) -> int:
             print(f"  PATHOGENIC  {h['gene']} {h['chrom']}:{h['pos']} {h['ref']}>{h['alt']} — "
                   f"{h['significance']} ({h['stars']}★) · {h.get('disease','')}")
         print(f"  {_HONEST}")
+        # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+        # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+        # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+        _ev = evidence_one_line("dna-clinvar")
+        if _ev:
+            print(f"  {_ev}")
         if args.out:
             print(f"\n[provenance -> {args.out}]")
     return 0 if (rep["n_pathogenic"] + rep["n_benign"]) >= 1 else 1

@@ -13,6 +13,7 @@ import gzip
 import json
 import sys
 from pathlib import Path
+from dna_decode.data.cell_evidence_line import evidence_one_line
 
 
 def _feature_table_symbols(path: str) -> set[str]:
@@ -83,6 +84,12 @@ def main(argv=None) -> int:
     print(f"  chemotaxis-competent: {call.chemotaxis_competent}")
     print(f"  note: {call.note}")
     print(f"  scope: {rec['scope']}")
+    # The cell's MEASURED evidence, from its committed registry contract. Appended BESIDE the
+    # scope/caveat line above, never replacing it: a caveat states the method's limits, this
+    # states what was actually measured. Evidence carried only in the registry is not a disclosure.
+    _ev = evidence_one_line("dna-motility")
+    if _ev:
+        print(f"  {_ev}")
     return 0
 
 
