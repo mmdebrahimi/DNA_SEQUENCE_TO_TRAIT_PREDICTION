@@ -1,0 +1,82 @@
+{
+  "schema": "ecoff-tiering-feasibility-v1",
+  "date": "2026-09-11",
+  "cohort": "Oxford E. coli bacteraemia deposit (data/raw/oxford)",
+  "mic_convention": "MIC = 2**upper (log2 dilution indices; scripts/oxford_score.py:14)",
+  "min_stratum": 20,
+  "results": [
+    {
+      "drug": "gentamicin",
+      "ecoff_mg_L": 2.0,
+      "ecoff_is_tentative": false,
+      "ecoff_source_url": "https://mic.eucast.org/search/diagram/652",
+      "clsi_susceptible_breakpoint": 4.0,
+      "n_isolates": 2873,
+      "panel_floor": 1.0,
+      "measured_grid": [
+        1.0,
+        2.0,
+        4.0,
+        32.0
+      ],
+      "n_non_wildtype": 217,
+      "non_wildtype_fraction": 0.0755,
+      "discriminating_stratum_n": 25,
+      "verdict": "SCOREABLE"
+    },
+    {
+      "drug": "ciprofloxacin",
+      "ecoff_mg_L": 0.06,
+      "ecoff_is_tentative": false,
+      "ecoff_source_url": "https://mic.eucast.org/search/diagram/763",
+      "clsi_susceptible_breakpoint": 0.5,
+      "n_isolates": 2841,
+      "panel_floor": 0.125,
+      "measured_grid": [
+        0.125,
+        0.25,
+        0.5,
+        8.0
+      ],
+      "n_non_wildtype": 2841,
+      "non_wildtype_fraction": 1.0,
+      "discriminating_stratum_n": 2471,
+      "verdict": "DEGENERATE_ECOFF_BELOW_PANEL"
+    },
+    {
+      "drug": "ceftriaxone",
+      "ecoff_mg_L": 0.125,
+      "ecoff_is_tentative": true,
+      "ecoff_source_url": "https://mic.eucast.org/search/diagram/4605",
+      "clsi_susceptible_breakpoint": 1.0,
+      "n_isolates": 2874,
+      "panel_floor": 0.5,
+      "measured_grid": [
+        0.5,
+        1.0,
+        2.0,
+        4.0,
+        32.0
+      ],
+      "n_non_wildtype": 2874,
+      "non_wildtype_fraction": 1.0,
+      "discriminating_stratum_n": 2630,
+      "verdict": "DEGENERATE_ECOFF_BELOW_PANEL"
+    },
+    {
+      "drug": "tetracycline",
+      "verdict": "NOT_IN_COHORT",
+      "reason": "the Oxford deposit carries no MIC column for this drug"
+    }
+  ],
+  "scoreable_drugs": [
+    "gentamicin"
+  ],
+  "headline": "2 of 3 measured drugs are DEGENERATE -- the E. coli ECOFF lies strictly below Oxford's panel floor (cipro 0.06 vs 0.125; ceftriaxone 0.125 vs 0.5), so every isolate is non-wild-type and the anchor discriminates nothing. Only gentamicin is SCOREABLE, and its discriminating stratum is 25 isolates -- just over the floor of 20.",
+  "honest_limits": [
+    "This screens the ANCHOR against the PANEL, nothing else. A SCOREABLE verdict says the comparison is possible on this cohort, not that it will find anything.",
+    "Ceftriaxone's ECOFF is a TECOFF -- EUCAST prints it in parentheses, set on 4 data sources / 908 observations. Its degeneracy here does not depend on that (0.125 is below the 0.5 floor either way), but any ceftriaxone conclusion would.",
+    "Tetracycline has no MIC column in the deposit at all, so it is NOT_IN_COHORT rather than degenerate -- a different fact, kept separate.",
+    "Degeneracy is a property of THIS panel, not of the ECOFF. A cohort reporting finer low-end dilutions would make cipro and ceftriaxone scoreable."
+  ]
+}

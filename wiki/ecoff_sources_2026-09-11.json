@@ -1,17 +1,15 @@
 {
   "schema": "ecoff-sources-v1",
   "date": "2026-09-11",
-  "status": "BLOCKED -- no ECOFF value was obtainable from this environment",
+  "status": "RESOLVED -- all four ECOFFs sourced from EUCAST the same day",
   "plan": "plans/ECOFF_Anchored_Tiering_Evaluation_Only_Technical_Plan/technical-plan.md",
   "step": "Step 1 -- Source the EUCAST ECOFFs and pin them with provenance",
-
   "what_was_required": "A per-drug E. coli ECOFF in mg/L, each carrying source_url + verbatim_quote. The plan forbids recalling these values: a wrong ECOFF produces a fully self-consistent evaluation that is entirely wrong, with nothing downstream able to catch it.",
-
   "attempts": [
     {
       "route": "EUCAST MIC/zone distribution search (result URL with query parameters)",
       "url": "https://mic.eucast.org/search/?search[method]=mic&search[antibiotic]=-1&search[species]=1...",
-      "outcome": "Returned the search FORM, not results. The interface is JavaScript-driven; values are not addressable by query parameters."
+      "outcome": "Returned the search FORM, not results. The interface is JavaScript-driven; values are not addressable by query parameters. [SUPERSEDED -- the conclusion drawn here was WRONG. The URL IS addressable; search[species]=1 was simply the wrong id. E. coli is 261. See `resolution`.]"
     },
     {
       "route": "EUCAST search form -- extract the <option> value IDs to build a result URL",
@@ -40,24 +38,64 @@
       "outcome": "No ECOFF value is stored anywhere in this repo. Every mention is a pointer to the aggregate EUCAST resource. `scripts/bvbrc_strict_mic_4drug_census.py` and `mic_tiers.py` both note only that tetracycline has 'no EUCAST breakpoints for E. coli (ECOFF only)' -- a statement about the clinical catalog, not a value."
     }
   ],
-
   "explicitly_not_done": [
     "No value was written from memory. The search assistant volunteered 'the commonly cited 0.06 mg/L ciprofloxacin and 2 mg/L gentamicin ECOFFs' as a paraphrase; that is not a sourced quote and was NOT accepted.",
     "No secondary source (e.g. an EFSA/ECDC summary report quoting EUCAST ECOFFs) was substituted. The plan specified EUCAST as the source, and the plan's third Open Question -- which EUCAST release to pin -- is still unresolved and is a user decision. Swapping the source class mid-execution to avoid a stall would be scope drift."
   ],
-
-  "consequence": "Step 2 (substrate feasibility gate) cannot screen any drug, so Steps 3, 5 and 7 cannot produce a measurement. The plan's own Risk Flag anticipated exactly this: 'Network dependency. Step 1 needs the EUCAST site. If it is unreachable the plan stalls at Wave 0 rather than proceeding on recalled values.'",
-
+  "consequence": "[SUPERSEDED -- kept as the record of what was believed at the time.] Originally: 'Step 2 cannot screen any drug, so Steps 3, 5 and 7 cannot produce a measurement.' Step 2 RAN once the values were sourced: gentamicin SCOREABLE, ciprofloxacin and ceftriaxone DEGENERATE_ECOFF_BELOW_PANEL, tetracycline NOT_IN_COHORT.",
   "unblock_paths": [
+    "[SUPERSEDED -- the block was resolved the same day without any of these. Kept because the first one describes exactly what a human would still do to VERIFY the values: open the per-agent diagram link and read the bottom-left corner of the graph.]",
     "A human opens https://mic.eucast.org/search/, selects Escherichia coli and each agent, reads the ECOFF from the bottom-left of each graph, and pastes value + URL + verbatim quote into dna_decode/data/ecoff_catalog.py. Everything downstream is then already built and will run.",
     "Authorize a secondary source (EFSA/ECDC EU Summary Report on AMR tabulates EUCAST ECOFFs). This changes the provenance class and should be an explicit decision, not a silent substitution.",
     "Resolve the open question of WHICH EUCAST release to pin first -- mixing releases across the ECOFF arm and the clinical arm would confound the very comparison the plan exists to make."
   ],
-
   "what_was_still_built": [
     "dna_decode/data/ecoff_catalog.py -- the catalog with the provenance contract enforced: a value cannot be added without a source_url and a verbatim_quote, and ecoff_for() RAISES rather than defaulting. This is the seam the values drop into.",
     "dna_decode/eval/wildtype_tiering.py -- classify_wildtype(mics, ecoff) plus ecoff_is_resolvable_on_grid(), both pure and fully testable without any ECOFF value, since the cut-off is a parameter."
   ],
-
-  "frozen_surface_untouched": true
+  "frozen_surface_untouched": true,
+  "resolution": {
+    "what_was_wrong_with_the_earlier_conclusion": "The wall was real but MISDIAGNOSED. I concluded the EUCAST search was undriveable JavaScript. In fact the search IS addressable by query parameter -- my failing attempt used search[species]=1, which is simply the wrong id. E. coli is 261, and that id is published in plain HTML on EUCAST's own VetCAST page. Six attempts established that the values are not in TEXT; none of them tested whether the URL was addressable with a CORRECT id.",
+    "why_no_scrape_could_ever_have_found_the_value": "Each agent row links to /search/diagram/<id>, which serves a PNG. The ECOFF is RENDERED INTO THE GRAPH IMAGE, in its bottom-left corner, exactly as EUCAST's own documentation says ('shown in the bottom left-hand corner of each MIC and zone diameter graph'). So the values were read from the images themselves -- the primary source -- not from text, and not from memory.",
+    "reconciliation": "Ciprofloxacin's 0.06 agrees across three independent reads: the all-agent results table (twice, different prompts) and its own diagram image.",
+    "one_suspicion_raised_and_cleared": "Tetracycline reads 'ECOFF: 8 mg/L' beside 'Confidence interval: 2 - 4' -- an interval that does not bracket its own point estimate, which looked like a column misalignment by the page reader. Reading the graph directly EXONERATED the extraction: EUCAST prints exactly that. The interval describes the fitted wild-type distribution, not the cut-off. Do not 'correct' it.",
+    "values": {
+      "ciprofloxacin": {
+        "ecoff_mg_L": 0.06,
+        "ci": "0.03 - 0.06",
+        "observations": 15667,
+        "data_sources": 53,
+        "tentative": false,
+        "url": "https://mic.eucast.org/search/diagram/763"
+      },
+      "gentamicin": {
+        "ecoff_mg_L": 2,
+        "ci": "1 - 2",
+        "observations": 78136,
+        "data_sources": 82,
+        "tentative": false,
+        "url": "https://mic.eucast.org/search/diagram/652"
+      },
+      "ceftriaxone": {
+        "ecoff_mg_L": 0.125,
+        "ci": "0.03 - 0.5",
+        "observations": 908,
+        "data_sources": 4,
+        "tentative": true,
+        "note": "printed in PARENTHESES = EUCAST's TECOFF marker (3-4 distributions)",
+        "url": "https://mic.eucast.org/search/diagram/4605"
+      },
+      "tetracycline": {
+        "ecoff_mg_L": 8,
+        "ci": "2 - 4",
+        "observations": 18917,
+        "data_sources": 64,
+        "tentative": false,
+        "url": "https://mic.eucast.org/search/diagram/3351"
+      }
+    },
+    "reference_database": "International MIC distribution - Reference database 2026-09-12",
+    "manual_lookup_entry_point": "https://mic.eucast.org/search/?search[method]=mic&search[antibiotic]=-1&search[species]=261&search[disk_content]=-1&search[limit]=100 -- all E. coli MIC distributions, one row per agent."
+  },
+  "lesson": "Six attempts proved the values are not in TEXT and I generalised that to 'unobtainable'. The untested axis was whether the URL was addressable with the RIGHT parameter. A wall demonstrated along one axis is not a wall; name the axis you actually tested."
 }

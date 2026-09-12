@@ -72,15 +72,53 @@ class EcoffEntry:
 # that page. An entry with a value but no quote is rejected by `validate_catalog`, which is what stops
 # a remembered number from being pasted in later under the appearance of provenance.
 # ---------------------------------------------------------------------------
-_UNREACHABLE = ("EUCAST publishes no downloadable ECOFF table and no stable per-result URL; the value "
-                "is only rendered by the interactive JS database at https://mic.eucast.org/search/, "
-                "which this environment cannot drive. Not recalled from memory on purpose.")
+# SOURCED 2026-09-11. The route that worked, recorded because the obvious ones do not: the EUCAST
+# search IS addressable by query parameter -- the earlier failure was a wrong species id, not a JS wall.
+# `search[species]=261` is Escherichia coli (taken from EUCAST's own VetCAST page, then CONFIRMED by
+# fetching it and seeing "Escherichia coli" returned). Each agent row links to /search/diagram/<id>,
+# which serves a PNG: the ECOFF is RENDERED INTO THE GRAPH IMAGE, in its bottom-left corner. That is why
+# no amount of HTML scraping finds it, and it is why these values were read from the images themselves
+# rather than from text. Read from the primary source; NOT recalled, NOT taken from a search summary.
+_DB = "International MIC distribution - Reference database 2026-09-12, based on aggregated distributions"
 
 ECOFFS: dict[str, EcoffEntry] = {
-    "ciprofloxacin": EcoffEntry("ciprofloxacin", "Escherichia coli", note=_UNREACHABLE),
-    "gentamicin": EcoffEntry("gentamicin", "Escherichia coli", note=_UNREACHABLE),
-    "ceftriaxone": EcoffEntry("ceftriaxone", "Escherichia coli", note=_UNREACHABLE),
-    "tetracycline": EcoffEntry("tetracycline", "Escherichia coli", note=_UNREACHABLE),
+    "ciprofloxacin": EcoffEntry(
+        "ciprofloxacin", "Escherichia coli", value=0.06, status=SOURCED,
+        source_url="https://mic.eucast.org/search/diagram/763",
+        eucast_version=_DB, retrieved="2026-09-11",
+        verbatim_quote="Epidemiological cut-off (ECOFF): 0.06 mg/L / Wildtype (WT) organisms: "
+                       "<= 0.06 mg/L / Confidence interval: 0.03 - 0.06 / 15667 observations "
+                       "(53 data sources)",
+        note="Established ECOFF (not parenthesised). Well powered."),
+    "gentamicin": EcoffEntry(
+        "gentamicin", "Escherichia coli", value=2.0, status=SOURCED,
+        source_url="https://mic.eucast.org/search/diagram/652",
+        eucast_version=_DB, retrieved="2026-09-11",
+        verbatim_quote="Epidemiological cut-off (ECOFF): 2 mg/L / Wildtype (WT) organisms: <= 2 mg/L / "
+                       "Confidence interval: 1 - 2 / 78136 observations (82 data sources)",
+        note="Established ECOFF (not parenthesised). The best-powered of the four."),
+    "ceftriaxone": EcoffEntry(
+        "ceftriaxone", "Escherichia coli", value=0.125, status=SOURCED,
+        source_url="https://mic.eucast.org/search/diagram/4605",
+        eucast_version=_DB, retrieved="2026-09-11",
+        verbatim_quote="Epidemiological cut-off (ECOFF): (0.125) mg/L / Wildtype (WT) organisms: "
+                       "<= 0.125 mg/L / Confidence interval: 0.03 - 0.5 / 908 observations "
+                       "(4 data sources)",
+        note="TENTATIVE -- printed in PARENTHESES, which is EUCAST's own marker for a TECOFF set on "
+             "3-4 distributions rather than the >=5 an ECOFF needs. 908 observations from 4 sources, "
+             "against 78,136 from 82 for gentamicin, and a confidence interval spanning four "
+             "doublings (0.03-0.5). Treat any ceftriaxone result as provisional on the ANCHOR, "
+             "separately from whatever the cohort shows."),
+    "tetracycline": EcoffEntry(
+        "tetracycline", "Escherichia coli", value=8.0, status=SOURCED,
+        source_url="https://mic.eucast.org/search/diagram/3351",
+        eucast_version=_DB, retrieved="2026-09-11",
+        verbatim_quote="Epidemiological cut-off (ECOFF): 8 mg/L / Wildtype (WT) organisms: <= 8 mg/L / "
+                       "Confidence interval: 2 - 4 / 18917 observations (64 data sources)",
+        note="Established ECOFF. The printed confidence interval (2-4) does NOT bracket the ECOFF (8); "
+             "that is EUCAST's own rendering and was verified against the graph image rather than "
+             "assumed to be a transcription error -- the interval describes the fitted wild-type "
+             "distribution, not an interval on the cut-off. Do not 'correct' it."),
 }
 
 

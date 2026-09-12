@@ -30,10 +30,21 @@ SOURCES = ROOT / "wiki" / "ecoff_sources_2026-09-11.json"
 
 def test_an_unsourced_ecoff_raises_instead_of_returning_a_plausible_default():
     """THE guard. A default here would be indistinguishable from a real value in every downstream
-    number, which is exactly how a fabricated cut-off would survive to publication."""
+    number, which is exactly how a fabricated cut-off would survive to publication.
+
+    All four entries are now sourced, so this iterates an empty set on the live catalog -- the
+    behaviour is pinned on a synthetic unsourced entry below so the guard cannot go vacuous."""
     for drug in unsourced_drugs():
         with pytest.raises(UnsourcedEcoffError):
             ecoff_for(drug)
+    import dna_decode.data.ecoff_catalog as mod
+    original = mod.ECOFFS
+    try:
+        mod.ECOFFS = {**ECOFFS, "ciprofloxacin": EcoffEntry("ciprofloxacin", "Escherichia coli")}
+        with pytest.raises(UnsourcedEcoffError):
+            mod.ecoff_for("ciprofloxacin")
+    finally:
+        mod.ECOFFS = original
 
 
 def test_an_unknown_drug_raises_its_own_error():
@@ -43,14 +54,34 @@ def test_an_unknown_drug_raises_its_own_error():
         entry_for("not-a-drug")
 
 
-def test_every_catalog_entry_is_currently_unsourced_and_says_why():
-    """Pins the 2026-09-11 state honestly: EUCAST exposes no downloadable table and no stable result
-    URL, so nothing could be sourced from this environment. If a value is later added WITH provenance
-    this test is expected to be updated -- deliberately, by a human who did the sourcing."""
-    assert sourced_drugs() == []
-    assert set(unsourced_drugs()) == set(ECOFFS)
+def test_every_catalog_entry_is_now_sourced_with_real_provenance():
+    """SUPERSEDES the earlier 'everything is unsourced' pin, which said in its own docstring that it was
+    expected to be updated once values were sourced. They were: the EUCAST search IS addressable by
+    query parameter (the earlier failure was a wrong species id, not a JS wall), and each agent's ECOFF
+    is rendered INTO a PNG at /search/diagram/<id>, which is why no HTML scrape ever found it.
+
+    Every entry must carry a real EUCAST diagram URL and a verbatim quote naming both the cut-off and
+    the observation count -- provenance a remembered number could not supply.
+    """
+    assert set(sourced_drugs()) == set(ECOFFS)
+    assert unsourced_drugs() == []
     for drug in ECOFFS:
-        assert entry_for(drug).note, f"{drug} gives no reason for being unsourced"
+        e = entry_for(drug)
+        assert e.source_url.startswith("https://mic.eucast.org/search/diagram/"), drug
+        assert "Epidemiological cut-off (ECOFF)" in e.verbatim_quote, drug
+        assert "observations" in e.verbatim_quote, drug
+        assert "2026-09-12" in (e.eucast_version or ""), drug
+
+
+def test_the_ceftriaxone_anchor_is_flagged_tentative_not_silently_equal_to_the_others():
+    """EUCAST prints a TECOFF in PARENTHESES -- set on 3-4 distributions instead of the >=5 an ECOFF
+    needs. Ceftriaxone's rests on 908 observations from 4 sources against gentamicin's 78,136 from 82,
+    with a CI spanning four doublings. Storing it as an equal peer would let a ceftriaxone result be
+    read with the same confidence as a gentamicin one."""
+    e = entry_for("ceftriaxone")
+    assert "(0.125)" in e.verbatim_quote, "the parenthesised TECOFF marker must survive into the quote"
+    assert "TENTATIVE" in e.note and "4 data sources" in (e.note + e.verbatim_quote)
+    assert entry_for("gentamicin").note and "TENTATIVE" not in entry_for("gentamicin").note
 
 
 def test_a_value_without_provenance_is_a_catalog_violation():
@@ -87,8 +118,10 @@ def test_drug_lookup_normalizes_case_and_whitespace():
     catalog DOES have -- a refusal that looks identical to the honest one and would be read as
     'unsourced' rather than as a lookup bug."""
     assert entry_for("  Ciprofloxacin ") is ECOFFS["ciprofloxacin"]
-    with pytest.raises(UnsourcedEcoffError):
-        ecoff_for("GENTAMICIN")          # normalized, found, and THEN refused for lack of provenance
+    # Now that every entry is sourced, normalization is shown by the value coming BACK rather than by
+    # the refusal that followed it while the catalog was empty.
+    assert ecoff_for("GENTAMICIN") == 2.0
+    assert ecoff_for("  Tetracycline  ") == 8.0
     for empty in ("", "   ", None):
         with pytest.raises(UnknownDrugError):
             entry_for(empty)
@@ -115,27 +148,30 @@ def test_validate_catalog_also_catches_a_sourced_hole_and_a_non_positive_value()
     assert validate_catalog() == []
 
 
-def test_a_fully_sourced_entry_is_returned_and_listed_as_sourced():
-    """NON-VACUITY for `sourced_drugs() == []`: an implementation that always returned an empty list,
-    or an `ecoff_for` that raised unconditionally, would pass every refusal test above. The value here
-    is deliberately absurd (1234 mg/L) so it can never be mistaken for a sourced ECOFF."""
+def test_the_sourced_partition_tracks_the_catalog_rather_than_being_hardcoded():
+    """NON-VACUITY for the sourced/unsourced split: an implementation that always reported everything
+    as sourced would pass the live-state test above, and one that always reported nothing would have
+    passed the earlier all-unsourced pin. Both directions are exercised on a patched catalog, with a
+    deliberately absurd value (1234 mg/L) that can never be mistaken for a real ECOFF."""
     import dna_decode.data.ecoff_catalog as mod
-    filled = dict(ECOFFS)
-    filled["ciprofloxacin"] = EcoffEntry(
-        "ciprofloxacin", "Escherichia coli", value=1234, status=SOURCED,
-        source_url="https://example.invalid/not-a-real-ecoff",
-        verbatim_quote="synthetic test fixture -- NOT a EUCAST value")
     original = mod.ECOFFS
     try:
-        mod.ECOFFS = filled
+        # one entry knocked back to unsourced -> it must leave `sourced_drugs`
+        mod.ECOFFS = {**ECOFFS, "ciprofloxacin": EcoffEntry("ciprofloxacin", "Escherichia coli")}
+        assert "ciprofloxacin" in mod.unsourced_drugs()
+        assert "ciprofloxacin" not in mod.sourced_drugs()
+        assert "gentamicin" in mod.sourced_drugs()
+        # and a fully-provenanced synthetic entry must come back
+        mod.ECOFFS = {**ECOFFS, "ciprofloxacin": EcoffEntry(
+            "ciprofloxacin", "Escherichia coli", value=1234, status=SOURCED,
+            source_url="https://example.invalid/not-a-real-ecoff",
+            verbatim_quote="synthetic test fixture -- NOT a EUCAST value")}
         got = mod.ecoff_for("ciprofloxacin")
         assert got == 1234.0 and isinstance(got, float)
-        assert mod.sourced_drugs() == ["ciprofloxacin"]
-        assert "ciprofloxacin" not in mod.unsourced_drugs()
         assert mod.validate_catalog() == []
     finally:
         mod.ECOFFS = original
-    assert sourced_drugs() == []
+    assert ecoff_for("ciprofloxacin") == 0.06, "live catalog must be restored"
 
 
 # --- the wild-type classifier ---------------------------------------------------------------------
@@ -230,10 +266,77 @@ def test_wildtype_tiering_does_not_import_the_frozen_module():
 # --- the blocked-sourcing record ------------------------------------------------------------------
 
 @pytest.mark.skipif(not SOURCES.exists(), reason="sources artifact not present")
-def test_the_sourcing_artifact_records_the_block_and_the_attempts():
+def test_the_sourcing_artifact_records_the_resolution_and_keeps_the_attempt_log():
+    """The artifact began as a BLOCKED record and was RESOLVED the same day. Both halves must survive:
+    the attempt log is the evidence the wall was really probed, and the resolution is what corrects it.
+
+    An artifact still claiming BLOCKED after the values were sourced would assert a wall that no longer
+    exists -- the stale-claim failure this project keeps paying for.
+    """
     d = json.loads(SOURCES.read_text(encoding="utf-8"))
-    assert d["status"].startswith("BLOCKED")
+    assert d["status"].startswith("RESOLVED")
     assert len(d["attempts"]) >= 4, "a one-attempt wall is not a demonstrated wall"
     assert d["frozen_surface_untouched"] is True
     joined = json.dumps(d).lower()
     assert "memory" in joined, "the artifact must state that no value was recalled"
+
+    res = d["resolution"]
+    assert set(res["values"]) == set(ECOFFS)
+    for drug, v in res["values"].items():
+        assert v["url"].startswith("https://mic.eucast.org/search/diagram/")
+        assert v["ecoff_mg_L"] == ecoff_for(drug), f"{drug}: artifact and catalog disagree"
+    assert res["values"]["ceftriaxone"]["tentative"] is True
+    # the superseded fields must SAY they are superseded rather than quietly contradicting the outcome
+    assert d["consequence"].startswith("[SUPERSEDED")
+    assert "SUPERSEDED" in d["attempts"][0]["outcome"]
+
+
+# --- the feasibility gate (plan Step 2) ----------------------------------------------------------
+
+def test_degeneracy_is_checked_before_power():
+    """An anchor that cannot discriminate AT ALL is not merely underpowered. Reporting a degenerate
+    drug as UNDERPOWERED would imply a bigger cohort would fix it; nothing about cohort size moves an
+    ECOFF that sits below the panel floor."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "ecoff_feas", ROOT / "scripts" / "ecoff_tiering_feasibility.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    # below the floor AND a tiny stratum -> degeneracy wins
+    assert m.verdict_for(0.06, [0.125, 0.25, 8.0], stratum_n=0) == m.DEGENERATE
+    assert m.verdict_for(0.06, [0.125, 0.25, 8.0], stratum_n=5000) == m.DEGENERATE
+    # inside the panel, stratum decides
+    assert m.verdict_for(2.0, [1.0, 2.0, 4.0, 32.0], stratum_n=25) == m.SCOREABLE
+    assert m.verdict_for(2.0, [1.0, 2.0, 4.0, 32.0], stratum_n=19) == m.UNDERPOWERED
+    assert m.verdict_for(2.0, [1.0, 2.0, 4.0, 32.0], stratum_n=20) == m.SCOREABLE
+
+
+def test_the_committed_feasibility_artifact_matches_its_own_verdict_rule():
+    """Re-derives every verdict from the artifact's own numbers, so a hand-edited verdict cannot stand."""
+    import importlib.util
+    path = ROOT / "wiki" / "ecoff_tiering_feasibility_2026-09-11.json"
+    if not path.exists():
+        pytest.skip("feasibility artifact not generated")
+    spec = importlib.util.spec_from_file_location(
+        "ecoff_feas", ROOT / "scripts" / "ecoff_tiering_feasibility.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    for r in doc["results"]:
+        if r["verdict"] in ("NOT_IN_COHORT", m.UNSOURCED):
+            continue
+        assert r["verdict"] == m.verdict_for(
+            r["ecoff_mg_L"], r["measured_grid"], r["discriminating_stratum_n"]), r["drug"]
+    assert doc["scoreable_drugs"] == ["gentamicin"]
+
+
+def test_a_degenerate_drug_really_is_all_non_wildtype():
+    """The MEANING of degenerate, pinned: it is not a threshold artefact, it is that every single
+    isolate lands above the anchor so the two classes cannot both exist."""
+    path = ROOT / "wiki" / "ecoff_tiering_feasibility_2026-09-11.json"
+    if not path.exists():
+        pytest.skip("feasibility artifact not generated")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    degenerate = [r for r in doc["results"] if r["verdict"] == "DEGENERATE_ECOFF_BELOW_PANEL"]
+    assert degenerate, "fixture assumption: at least one drug is degenerate on this cohort"
+    for r in degenerate:
+        assert r["non_wildtype_fraction"] == 1.0, r["drug"]
+        assert r["ecoff_mg_L"] < r["panel_floor"], r["drug"]
