@@ -1,0 +1,206 @@
+{
+  "schema": "tb-implied-boundary-v1",
+  "date": "2026-09-21",
+  "bar": "wiki/tb_implied_boundary_acceptance_bar.json",
+  "cohort": "CRyPTIC M. tuberculosis compendium (measured broth-microdilution MIC)",
+  "cutoff_provenance": "RECOVERED from the shipped BINARY_PHENOTYPE as a pure step on the MIC ladder; refused if the step is impure. No breakpoint or ECOFF is recalled from memory anywhere in this arm.",
+  "results": {
+    "rifampicin": {
+      "drug": "rifampicin",
+      "cutoff_log2": -1.0,
+      "cutoff_mg_L": 0.5,
+      "n_joined": 12097,
+      "n_susceptible": 7414,
+      "boundary_n": 188,
+      "lower_n": 7226,
+      "boundary_carriage": 0.3776595744680851,
+      "lower_carriage": 0.028508164959867147,
+      "boundary_is_uncensored": true,
+      "overall_carriage": 0.37620897743242127,
+      "permutation": {
+        "observed_gap": 0.349151409508218,
+        "n_perm": 1000,
+        "perm_mean": -4.916495397824751e-05,
+        "perm_max": 0.04352927666641149,
+        "perm_p95": 0.021699124320568162,
+        "exceeds_perm_max": true
+      },
+      "composition": {
+        "boundary_top": [
+          {
+            "determinant": "rpoB_p.Asp435Tyr",
+            "n": 20
+          },
+          {
+            "determinant": "rpoB_p.Leu452Pro",
+            "n": 20
+          },
+          {
+            "determinant": "rpoB_p.His445Leu",
+            "n": 8
+          },
+          {
+            "determinant": "rpoB_p.Ile491Phe",
+            "n": 8
+          },
+          {
+            "determinant": "rpoB_p.Ser450Leu",
+            "n": 7
+          },
+          {
+            "determinant": "rpoB_p.His445Tyr",
+            "n": 3
+          }
+        ],
+        "high_mic_top": [
+          {
+            "determinant": "rpoB_p.Ser450Leu",
+            "n": 2898
+          },
+          {
+            "determinant": "rpoB_p.Asp435Val",
+            "n": 514
+          },
+          {
+            "determinant": "rpoB_p.His445Asp",
+            "n": 205
+          },
+          {
+            "determinant": "rpoB_p.His445Tyr",
+            "n": 169
+          },
+          {
+            "determinant": "rpoB_p.Asp435Tyr",
+            "n": 111
+          },
+          {
+            "determinant": "rpoB_p.Leu452Pro",
+            "n": 68
+          }
+        ],
+        "boundary_distinct": 10,
+        "high_mic_distinct": 19,
+        "top_determinant_differs": true,
+        "gene_share": {
+          "boundary": {
+            "rpoB": 1.0
+          },
+          "high_mic": {
+            "rpoB": 1.0
+          },
+          "per_gene_shift": {
+            "rpoB": 0.0
+          },
+          "largest_shift": 0.0,
+          "largest_shift_genes": [
+            "rpoB"
+          ],
+          "largest_shift_is_tied": false
+        }
+      }
+    },
+    "isoniazid": {
+      "drug": "isoniazid",
+      "cutoff_log2": -3.321928094887362,
+      "cutoff_mg_L": 0.1,
+      "n_joined": 12068,
+      "n_susceptible": 6161,
+      "boundary_n": 275,
+      "lower_n": 5886,
+      "boundary_carriage": 0.16,
+      "lower_carriage": 0.010873258579680599,
+      "boundary_is_uncensored": true,
+      "overall_carriage": 0.4427411335764004,
+      "permutation": {
+        "observed_gap": 0.1491267414203194,
+        "n_perm": 1000,
+        "perm_mean": 5.844129367065161e-05,
+        "perm_max": 0.02732647576684274,
+        "perm_p95": 0.012101442560158156,
+        "exceeds_perm_max": true
+      },
+      "composition": {
+        "boundary_top": [
+          {
+            "determinant": "katG_p.Ser315Thr",
+            "n": 22
+          },
+          {
+            "determinant": "inhA_c.-777C>T",
+            "n": 16
+          },
+          {
+            "determinant": "inhA_c.-154G>A",
+            "n": 7
+          },
+          {
+            "determinant": "katG_p.Ser315Arg",
+            "n": 2
+          },
+          {
+            "determinant": "katG_p.Ser315Asn",
+            "n": 1
+          }
+        ],
+        "high_mic_top": [
+          {
+            "determinant": "katG_p.Ser315Thr",
+            "n": 4488
+          },
+          {
+            "determinant": "inhA_c.-777C>T",
+            "n": 915
+          },
+          {
+            "determinant": "inhA_c.-154G>A",
+            "n": 138
+          },
+          {
+            "determinant": "katG_p.Ser315Asn",
+            "n": 68
+          },
+          {
+            "determinant": "katG_p.Ser315Arg",
+            "n": 55
+          },
+          {
+            "determinant": "katG_p.Ser315Ile",
+            "n": 7
+          }
+        ],
+        "boundary_distinct": 5,
+        "high_mic_distinct": 9,
+        "top_determinant_differs": false,
+        "gene_share": {
+          "boundary": {
+            "katG": 0.5208,
+            "inhA": 0.4792
+          },
+          "high_mic": {
+            "katG": 0.8147,
+            "inhA": 0.1853
+          },
+          "per_gene_shift": {
+            "inhA": 0.2939,
+            "katG": 0.2939
+          },
+          "largest_shift": 0.2939,
+          "largest_shift_genes": [
+            "inhA",
+            "katG"
+          ],
+          "largest_shift_is_tied": true
+        }
+      }
+    }
+  },
+  "verdict": "SUPPORTED",
+  "verdict_is_mechanical": "verdict_from_bar applied to the frozen rule; not authored",
+  "honest_limits": [
+    "IN-DISTRIBUTION: the WHO catalogue was built partly from CRyPTIC, so the determinant calls and this cohort are not independent. This locates a boundary on the ladder; it is NOT an independent validation of the catalogue.",
+    "One organism, two drugs, one compendium -- and both drugs share the same isolates, so they are not two independent replications.",
+    "A determinant at a clinically-susceptible rung reads two ways and this arm cannot separate them: a genuine low-level-resistance mechanism sitting under the cut-off, or a catalogue false positive. Rung-position dependence argues against random false positives; it does not exclude the second reading.",
+    "This does NOT name a numeric ECOFF and is not a claim that any ECOFF value is correct.",
+    "Frozen surfaces are READ-only; TB rules live in the non-frozen organism_rules package."
+  ]
+}

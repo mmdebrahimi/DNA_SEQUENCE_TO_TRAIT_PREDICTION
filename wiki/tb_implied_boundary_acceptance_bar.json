@@ -1,0 +1,51 @@
+{
+  "schema": "tb-implied-boundary-acceptance-bar-v1",
+  "registered": "2026-09-21",
+  "status": "FROZEN AFTER THE MECHANISM ANALYSIS, BEFORE ANY TEST STATISTIC OR NULL WAS COMPUTED",
+
+  "claim_under_test": "The genotype's implied resistance boundary sits BELOW the clinical cut-off. Concretely: among isolates the clinical phenotype calls SUSCEPTIBLE, the HIGHEST susceptible dilution rung carries the decoder's own determinants at a materially higher rate than the susceptible rungs below it.",
+
+  "why_this_question_and_why_here": [
+    "The 2026-09-12 ECOFF run on the Oxford cohort returned WEAK_DIRECTIONAL: an 18x relative enrichment in the predicted direction that sat inside its own permutation null, on a discriminating stratum of 25 isolates with 2 carriers. Its own memo named the fix: 'a cohort with a full dilution series at the low end ... not a bigger cohort'.",
+    "CRyPTIC is that substrate and it was already on disk: 12,287 M. tuberculosis isolates with measured broth-microdilution MIC on a genuine two-fold ladder (RIF 0.03-8 over 12 levels; INH 0.025-12.8 over 12) versus Oxford's collapsed gentamicin panel {1, 2, 4, 32}.",
+    "This is NOT the closed BV-BRC MIC-continuous negative (G1: 91% of BV-BRC MIC is XGBoost-from-genome). CRyPTIC MIC is a wet-lab BMD measurement, and that distinction is already recorded in scripts/tb_mic_calibration.py, which validated this same substrate for a DIFFERENT question (interval calibration, verdict CALIBRATED_MIC_INTERVALS 2026-07-12)."
+  ],
+
+  "why_no_external_value_is_needed_and_that_is_the_point": {
+    "problem_with_the_oxford_framing": "It compared a sourced ECOFF against a sourced clinical breakpoint. That makes the result hostage to two external values and to a fabrication hazard.",
+    "what_replaces_it": "CRyPTIC ships its own BINARY_PHENOTYPE, and that column is a PURE STEP on the MIC ladder -- measured, not assumed: R-fraction is exactly 0.000 at every rung at or below one value and exactly 1.000 at every rung above it (RIF S<=0.5; INH S<=0.1). So the effective clinical cut-off is RECOVERED from the shipped data, is checkable by re-derivation, and no breakpoint or ECOFF is recalled from memory anywhere in this arm.",
+    "consequence": "The measured quantity is WHERE the genotype's boundary falls on the ladder, not whether one asserted cut-off beats another."
+  },
+
+  "substrate_measured_before_freezing": {
+    "source": "data/raw/cryptic/CRyPTIC_reuse_table_20240917.csv + data/processed/tb_mic_features_cache.json",
+    "determinant_calls": "per-isolate WHO grade-1/2 determinant presence, cached 2026-07-12 by scripts/tb_mic_calibration.py via the FROZEN tb_amr matcher; offline, no 2.9 GB parquet stream",
+    "join": "UNIQUEID; 12,097 of 12,097 RIF and 12,068 INH isolates join to a phenotype",
+    "rifampicin": {"n": 12097, "R": 4683, "S": 7414, "effective_cutoff_mg_L": 0.5,
+                   "top_S_rung_mg_L": 0.5, "top_S_rung_n": 188, "det_pos_overall": 0.376},
+    "isoniazid": {"n": 12068, "R": 5907, "S": 6161, "effective_cutoff_mg_L": 0.1,
+                  "top_S_rung_mg_L": 0.1, "top_S_rung_n": 275, "det_pos_overall": 0.443},
+    "censoring_does_not_touch_the_boundary": "The discriminating rungs (RIF 0.5, INH 0.1) are EXACT values. Censoring is at the ladder ends (left <=0.03/<=0.025, right >4/>1.6), so no boundary isolate is a censored bound."
+  },
+
+  "metric": {
+    "primary": "carriage_at_top_S_rung MINUS pooled carriage across the clinically-susceptible rungs BELOW it",
+    "null": "1000 permutations of determinant status WITHIN the susceptible stratum, holding every rung's size fixed -- so the null asks whether the boundary rung is enriched beyond chance given the same overall S-stratum carriage",
+    "secondary_compositional": "the determinant MIX at the boundary rung versus the high-MIC rungs, reported as measured counts. A shift in composition is evidence the boundary carriers are a different mechanism class, NOT merely fewer of the same one. The literature reading of WHICH mechanisms those are is deliberately NOT asserted -- only the measured shift is claimed."
+  },
+
+  "verdict_rule": {
+    "SUPPORTED": "boundary carriage exceeds pooled lower-S carriage on BOTH drugs AND both observed gaps exceed the MAXIMUM of their 1000-permutation nulls.",
+    "WEAK_DIRECTIONAL": "direction holds on both drugs but at least one gap falls inside its null. Reported as NOT established.",
+    "FALSIFIED": "on either drug the boundary carriage is at or below the pooled lower-S carriage.",
+    "INDETERMINATE": "either boundary rung has fewer than 100 isolates, or the recovered cut-off is not a clean step (any susceptible rung with R-fraction strictly between 0 and 1, which would mean BINARY_PHENOTYPE is not a pure MIC threshold and the whole recovery argument fails)."
+  },
+
+  "declared_in_advance": [
+    "This measures where the genotype's boundary sits relative to the CLINICAL cut-off. It does NOT name a numeric ECOFF, and it is NOT a claim that any particular ECOFF value is correct.",
+    "A SUPPORTED verdict does not license editing mic_tiers.py or any frozen surface. TB rules live in the NON-frozen organism_rules package and this arm is read-only regardless.",
+    "IN-DISTRIBUTION: the WHO catalogue was built partly from CRyPTIC, so determinant calls and this cohort are not independent. This bounds where a boundary sits on the ladder; it is NOT an independent validation of the catalogue.",
+    "One organism, two drugs, one compendium. Both drugs share the same isolates, so they are not two independent replications.",
+    "A determinant at a clinically-susceptible rung has two readings that this arm CANNOT separate: a genuine low-level-resistance mechanism sitting under the cut-off, or a catalogue false positive. The rung-position dependence argues against random false positives but does not exclude the second reading."
+  ]
+}
