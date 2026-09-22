@@ -150,6 +150,25 @@ def build() -> dict:
             "(all DRMcv cutoffs = the prior illustrative 3; DOR postdates DRMcv -> walled); INSTI 0/5 "
             "CUTOFF_UNAVAILABLE (integrase inhibitors postdate DRMcv.R -> external wall, reported not guessed). "
             "wiki/hiv_{nnrti,pi,insti}_absolute_cutoff_2026-07-03.",
+            "THE LABEL IS RIGHT-CENSORED AT 100 AND THE `v0.1 gain` COLUMN IS DOWNSTREAM OF IT "
+            "(measured 2026-09-22, wiki/hiv_fold_censoring_audit_2026-09-22): across all four Stanford "
+            "datasets / 24 fold columns / ~40,000 values there is ONE upper bound, 100.0, and NOTHING "
+            "exceeds it anywhere; 3TC 45.2% and NVP 33.0% of observations sit AT the cap, failing this "
+            "repo's own shipped assay_degeneracy bar (>25% mode-share). WHAT IS AND IS NOT AFFECTED: the "
+            "AUC / catalog-balacc / OLS-balacc columns are NOT -- they are computed at a fold cutoff of "
+            "3, and 100 >> 3, so every censored observation is R under either reading and the R/S labels "
+            "are untouched. The `v0.1 gain` column IS downstream: those catalogs were SELECTED by "
+            "thresholding a multivariate-OLS log10-fold coefficient at >= log10(1.5) fit on the censored "
+            "response, and right-censoring attenuates coefficients toward zero for the STRONGEST effects "
+            "specifically -- the majors such a threshold exists to find. A Tobit refit "
+            "(wiki/hiv_tobit_refit_2026-09-22) moved 19 mutants across that threshold (14 decisive, 5 "
+            "knife-edge), concentrated on the high-censoring drugs -- lamivudine alone gains 3 decisive "
+            "entries incl. K70T going -0.202 -> +1.312. That refit's own frozen verdict is "
+            "IMPLEMENTATION_SUSPECT (its negative control was mis-specified), so the refit is NOT claimed "
+            "and NO number in this card is restated; this caveat exists so a reader is not surprised by "
+            "the `v0.1 gain` column's provenance. Also note the existing in-code censoring guard is "
+            "VACUOUS: two scripts handle operator-prefixed folds ('<'/'>') and there are ZERO such values "
+            "in any column.",
         ],
         "cells": cells,
     }

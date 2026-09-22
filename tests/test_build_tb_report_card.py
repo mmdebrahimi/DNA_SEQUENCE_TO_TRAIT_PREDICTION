@@ -21,3 +21,22 @@ def test_build_has_namespace_separation_and_headline_rule():
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_the_in_distribution_rows_disclose_their_quality_filter():
+    """`n` on the IN-DISTRIBUTION rows is a HIGH-quality SUBSET (rifampicin 8,955 of 12,097 labelled),
+    because score_tb_cryptic_parquet.py filters PHENOTYPE_QUALITY == HIGH. Undisclosed, a reader takes
+    `n` for the compendium. The card's numbers are unchanged -- the filter was always applied; what was
+    missing was saying so."""
+    md = render_md(build())
+    assert "HIGH-QUALITY-ONLY" in md
+    assert "8,955" in md and "12,097" in md
+
+
+def test_the_quality_disclosure_says_the_excluded_tiers_are_not_exchangeable():
+    """The load-bearing half. 'We dropped the noisy ones' implies a random sample; R-prevalence differs
+    sharply by tier (RIF HIGH 0.385 / MEDIUM 0.590 / LOW 0.244), so the discarded isolates are a
+    DIFFERENT population rather than a noisier copy of the same one."""
+    md = render_md(build())
+    assert "not " in md.lower() and "exchangeable" in md
+    assert "0.385" in md and "0.590" in md and "0.244" in md

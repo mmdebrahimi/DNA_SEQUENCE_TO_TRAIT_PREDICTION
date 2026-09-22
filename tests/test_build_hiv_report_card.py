@@ -1,4 +1,5 @@
 """Smoke + structure tests for the HIV report-card roll-up (Rec 3)."""
+import json
 import sys
 from pathlib import Path
 
@@ -46,6 +47,43 @@ def test_insti_v0_1_gain_wired_when_artifact_present():
     assert any(isinstance(g, (int, float)) for g in gains), (
         "INSTI v0.1 gains not wired — check hiv_insti_v0.1_validation_ ingestion in build_hiv_report_card"
     )
+
+
+def test_the_censoring_of_the_underlying_label_is_disclosed():
+    """The PhenoSense fold tables are right-censored at 100 (3TC 45.2% / NVP 33.0% AT the cap, both
+    failing this repo's own assay_degeneracy bar). The `v0.1 gain` column is DOWNSTREAM of that: those
+    catalogs were selected by thresholding an OLS coefficient fit on the censored response. A reader of
+    that column must be able to see its provenance from the card itself."""
+    rc = build()
+    cav = " ".join(rc["honest_caveats"])
+    assert "RIGHT-CENSORED AT 100" in cav
+    assert "v0.1 gain" in cav
+
+
+def test_the_censoring_caveat_says_what_is_NOT_affected():
+    """Over-reading this as 'the HIV numbers are wrong' would be the opposite error. The AUC and both
+    balacc columns are computed at a fold cutoff of 3; the ceiling is 100, so every censored observation
+    is R under either reading and the R/S labels are untouched. The caveat must scope itself."""
+    rc = build()
+    cav = " ".join(rc["honest_caveats"])
+    assert "are NOT" in cav and "cutoff of" in cav
+
+
+def test_the_censoring_caveat_does_not_claim_the_unclaimed_refit():
+    """The Tobit refit's own frozen verdict is IMPLEMENTATION_SUSPECT, so the card may CITE it but must
+    not present it as an established correction, and must restate no number."""
+    rc = build()
+    cav = " ".join(rc["honest_caveats"])
+    assert "IMPLEMENTATION_SUSPECT" in cav and "NOT claimed" in cav
+
+
+def test_the_disclosure_is_augment_only_and_changes_no_cell():
+    """Every disclosure layer in this project AUGMENTS and never restates a measurement. Pinned so a
+    future edit cannot quietly move a published number under cover of adding a caveat."""
+    rc = build()
+    assert len(rc["cells"]) == 25
+    for c in rc["cells"]:
+        assert "censor" not in json.dumps(c).lower(), c.get("drug")
 
 
 if __name__ == "__main__":

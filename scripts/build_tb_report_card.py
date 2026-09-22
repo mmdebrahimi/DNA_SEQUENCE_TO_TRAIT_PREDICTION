@@ -121,6 +121,16 @@ def render_md(card: dict) -> str:
         L += ["", "Source: `wiki/tb_{rif,inh}_cryptic_parquet_baseline_*.json` "
               "(`wiki/tb_cryptic_parquet_baseline_2026-06-22.md`).", ""]
     L += ["## Honesty rails",
+          "- **The IN-DISTRIBUTION rows are HIGH-QUALITY-ONLY, and the excluded tiers are not "
+          "exchangeable (disclosed 2026-09-22).** `score_tb_cryptic_parquet.py:150` filters CRyPTIC's "
+          "per-isolate `PHENOTYPE_QUALITY` to `HIGH`, so `n` above is a SUBSET, not the compendium: "
+          "rifampicin **8,955 scored of 12,097 labelled (3,142 excluded)**, isoniazid **9,518 of 12,068 "
+          "(2,550 excluded)**. The exclusion is defensible but it is NOT a random sample — R-prevalence "
+          "differs sharply by tier (RIF HIGH 0.385 / MEDIUM 0.590 / LOW 0.244; INH 0.469 / 0.638 / "
+          "0.482), so the discarded isolates are a DIFFERENT population rather than a noisier copy of "
+          "the same one. Stated so `n` is not read as the whole cohort. This card's numbers are "
+          "unchanged — the filter was always applied; what was missing was saying so.",]
+    L += [
           "- **Independence is BioSample-resolution-CHECKED (upgraded 2026-06-23, `wiki/tb_independence_"
           "biosample_check.json`).** The ENA-side disjoint isolates (1,364 with an `ERS` accession) are "
           "already BioSample-grade — their `ERS` is string-matched DIRECTLY against CRyPTIC's `ENA_SAMPLE` "
