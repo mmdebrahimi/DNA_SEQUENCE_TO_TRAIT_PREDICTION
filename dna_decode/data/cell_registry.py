@@ -362,12 +362,12 @@ _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="pgx:human:slco1b1", track="pgx", route="dna-pgx", organism="human", target="slco1b1",
         claim="SLCO1B1 c.521T>C (rs4149056, *5) transporter-function genotype -> simvastatin myopathy risk, from a phased VCF",
-        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_validated_vs_getrm_star_truth",
-        validation_slice="GeT-RM Consolidated single-SNP concordance: rs4149056 -> *5-family (521C: *5/*15/*17) dosage 87/87 (1.0) on 1000G-overlap (1 ambiguous skipped); plus-strand 521T>C readout",
-        label_provenance="CPIC simvastatin (Cooper-DeHoff 2022) + GeT-RM Consolidated table star-allele truth via scripts/pgx_single_snp_concordance.py (rs4149056 is the 521C-defining variant of *5/*15/*17)",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="function_axis_definitional_star_label_disagrees_with_reference_on_most_samples",
+        validation_slice="MEASURED vs GeT-RM CDC multi-lab consensus on 88 1000G samples, 0 parse failures (wiki/slco1b1_getrm_concordance_2026-09-22; bar AND predictions frozen beforehand). THREE AXES, deliberately not pooled: (1) FUNCTION axis exactly 1:1 (88/88, zero off-diagonal) -- but this is DEFINITIONAL, since GeT-RM's own star assignment derives from genotypes including 521T>C, so it is a CONTROL bounding plumbing, NOT independent validation; the earlier 87/87 figure was this same axis presented as validation. (2) STAR-NAME axis 35/88 = 0.398 -- the printed label disagrees with the reference on the MAJORITY of real samples. (3) SAFETY axis ZERO misses: no reduced-function carrier (*5/*15/*17) called Normal Function",
+        label_provenance="CPIC simvastatin (Cooper-DeHoff 2022) + GeT-RM CDC Consolidated multi-lab consensus via scripts/slco1b1_getrm_concordance.py. Consensus is caller-derived, NOT wet-lab -- bounds agreement-with-reference, never correctness",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
-        falsifier_ref="scripts/pgx_single_snp_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="single-SNP 521C detector for *5/*15/*17 (87/87 vs GeT-RM); does NOT resolve WHICH of *5/*15/*17 (they share 521C); full star typing needs more variants (v0 scope-limit)"),
+        falsifier_ref="scripts/slco1b1_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="READ THE FUNCTION, NOT THE STAR LABEL. The `*1/*5` string is a function readout wearing a star-shaped label: a true *1/*15 carrier prints as *1/*5. The naming gap has a COMPLETE mechanistic explanation -- star-name agreement is EXACTLY the complement of 'carries an allele this caller cannot see' with ZERO exceptions over all 88 samples, and every non-*1 reference allele scores 0/n on naming (*1B 0/23, *15 0/15, *14 0/8, *1A 0/8, *17 0/4, *21 0/3, *5 0/1). 388A>G and the promoter variants are not genotyped here. The cell's own docstring claim that no independent star-concordance number can exist is HALF WRONG: right about the function axis, wrong about the naming axis, which exists and is 0.398"),
 ]
 
 # --- Typing + determinant-finder whole-tool cells (route dna-<trait>). Faithful-to-tool curated-DB callers. ---

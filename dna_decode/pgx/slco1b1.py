@@ -15,9 +15,33 @@ Genotype -> function -> myopathy risk (CPIC simvastatin):
   C/C (521 CC) -> Poor Function          -> high myopathy risk
 NOT a clinical tool.
 
-HONEST TIER: this is a single-SNP genotype->function READOUT (KNOWLEDGE_BASELINE, like VKORC1), NOT a
-star-diplotype caller needing independent disambiguation. rs4149056 IS the truth for a 521T>C call, so
-"validation" is genotype-readout + trio-Mendelian consistency, never an independent star-concordance number.
+HONEST TIER: this is a single-SNP genotype->function READOUT, NOT a star-diplotype caller.
+
+*** THE "NO STAR-CONCORDANCE NUMBER EXISTS" CLAIM WAS HALF WRONG -- MEASURED 2026-09-22 ***
+This file used to assert that validation "is genotype-readout + trio-Mendelian consistency, never an
+independent star-concordance number." Measured against GeT-RM CDC multi-lab consensus on 88 real 1000G
+samples (wiki/slco1b1_getrm_concordance_2026-09-22.{md,json}; bar + predictions frozen beforehand), the
+two halves separate cleanly:
+
+  * RIGHT about the FUNCTION axis. GeT-RM's own star assignment derives from genotypes INCLUDING 521T>C,
+    so scoring our 521-derived function call against it is close to self-comparison. It is exactly 1:1
+    (88/88, zero off-diagonal) -- which is DEFINITIONAL, a control that bounds plumbing, NOT evidence.
+  * WRONG that no star-concordance number exists. One exists, it is measurable, and it is BAD: exact
+    star-NAME agreement with the reference is 35/88 = 0.398. The printed `*1/*5`-style label disagrees
+    with the reference on the MAJORITY of real samples.
+
+MECHANISM, and it is a COMPLETE explanation rather than a partial one: *1B/*1A/*14/*21 are defined by
+388A>G (and more) and *15/*17 are 388+521 -- none of which this caller genotypes. Star-name agreement is
+EXACTLY the complement of "carries an allele the caller cannot see", with ZERO exceptions across all 88
+samples, and every non-*1 reference allele scores 0/n on naming (*1B 0/23, *15 0/15, *14 0/8, *1A 0/8,
+*17 0/4, *21 0/3, *5 0/1).
+
+SAFETY (the axis that matters clinically): ZERO misses -- no truth reduced-function carrier (*5/*15/*17,
+all 521C-bearing) was called Normal Function. The function call is right even where the NAME is wrong.
+
+CONSUMER RULE: read the FUNCTION, never the star label. The `*1/*5` string is a function readout wearing
+a star-shaped label, not a star call -- a true *1/*15 carrier prints as *1/*5 (same decreased function,
+different allele). Full star typing needs 388A>G + promoter variants this cell does not read.
 """
 from __future__ import annotations
 
@@ -96,8 +120,13 @@ def call_slco1b1(vcf: str | Path, sample: str | None = None) -> dict:
         "myopathy_risk": risk,               # simvastatin-associated myopathy risk band
         "status": "ok" if found else "assumed_reference",
         "flags": flags,
+        "star_label_disagrees_with_reference_rate": 0.602,   # 53/88 vs GeT-RM, measured 2026-09-22
         "caveat": ("Single-SNP rs4149056 (c.521T>C, *5) SLCO1B1 function READOUT -> simvastatin myopathy "
-                   "risk (CPIC Cooper-DeHoff 2022). Plus-strand: genomic T>C == cDNA 521T>C. This is a "
-                   "single-SNP genotype->function call (KNOWLEDGE_BASELINE), NOT an independently-validated "
-                   "star-diplotype number. Full SLCO1B1 star typing needs more variants. NOT a clinical tool."),
+                   "risk (CPIC Cooper-DeHoff 2022). Plus-strand: genomic T>C == cDNA 521T>C. READ THE "
+                   "FUNCTION, NOT THE STAR LABEL: measured vs GeT-RM CDC consensus on 88 real 1000G "
+                   "samples (2026-09-22), the printed star name DISAGREES with the reference on 53/88 "
+                   "(exact agreement 0.398) because *1B/*1A/*14/*21 (388A>G) and *15/*17 (388+521) are "
+                   "invisible to this caller -- a true *1/*15 carrier prints as *1/*5. The FUNCTION call "
+                   "was right on all 88 (0 reduced-function carriers called Normal), so the label is "
+                   "wrong where the clinical call is right. NOT a clinical tool."),
     }

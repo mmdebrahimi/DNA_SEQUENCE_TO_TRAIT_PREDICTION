@@ -1,0 +1,49 @@
+{
+  "schema": "slco1b1-star-acceptance-bar-v1",
+  "frozen": "2026-09-22",
+  "frozen_before_reading_any_result": true,
+  "cell": "pgx:human:slco1b1",
+  "current_tier": "NEAR_INDEPENDENT",
+
+  "why_now": "dna_decode/pgx/slco1b1.py asserts that 'rs4149056 IS the truth for a 521T>C call, so validation is genotype-readout + trio-Mendelian consistency, NEVER an independent star-concordance number.' That is a claim of UNMEASURABILITY, the same shape as the UGT1A1 structural-wall claim measured the same day. It is testable: GeT-RM supplies independent star diplotypes, and our caller cannot see 388A>G, so its printed STAR NAME uses information it does not have.",
+
+  "the_circularity_split_that_makes_this_honest": {
+    "function_axis_is_LARGELY_DEFINITIONAL": "GeT-RM's SLCO1B1 star assignment itself derives from genotypes that include 521T>C, so scoring our 521-derived FUNCTION call against it is close to self-comparison. It is reported as a CONTROL that bounds plumbing, NEVER as independent validation. A near-perfect number here is expected and is NOT a finding.",
+    "star_name_axis_is_GENUINELY_TESTABLE": "*1B / *1A / *14 / *21 are defined by 388A>G (and others) which our caller CANNOT see; *15 and *17 are 388+521. So the printed star name depends on information absent from our input, and its disagreement rate with the reference is a real measurement of the deployed proxy.",
+    "safety_axis_is_THE_CLINICAL_ONE": "Does any truth reduced-function carrier (*5/*15/*17, all 521C-bearing) get called Normal Function? A miss is the dangerous direction for statin myopathy."
+  },
+
+  "truth": {
+    "source": "GeT-RM CDC consolidated multi-lab consensus (data/pgx_getrm/getrm_consolidated_truth.tsv, consolidated table only)",
+    "gene_rows": 137,
+    "overlap_with_1000g_30x_panel": 88,
+    "independence": "Multi-lab CDC consensus, NOT a wet-lab phenotype. Bounds agreement-with-reference only."
+  },
+
+  "reduced_function_alleles": ["*5", "*15", "*17"],
+  "reduced_function_rationale": "All three carry c.521T>C (rs4149056). *15 = *1b(388A>G) + 521C; *17 = *15 + promoter -11187G>A. *1B/*1A/*14/*21 do NOT carry 521C and are not scored as reduced-function.",
+
+  "registered_predictions": {
+    "star_name_agreement": "LOW -- predicted well below 0.60, because 53 of the 88 overlap samples carry at least one allele (*1A/*1B/*14/*15/*17/*21) whose identity needs 388A>G or more",
+    "function_axis_control": "NEAR 1.00 -- and that is definitional, not evidence",
+    "safety_misses": "ZERO expected, because every reduced-function allele in this vocabulary carries 521C"
+  },
+
+  "verdicts": {
+    "star_proxy_not_reference_agreeing": "exact star-name agreement < 0.60 -> the shipped text must stop implying the printed diplotype is a star CALL; it is a function readout with a star-shaped label",
+    "star_proxy_agrees": "exact star-name agreement >= 0.90 -> the proxy naming is defensible as-is",
+    "demote_and_disclose": "ANY truth reduced-function carrier called Normal Function (a safety miss), regardless of the other two axes"
+  },
+
+  "disqualifiers": {
+    "zero_reduced_function_carriers": "if the overlap contains no *5/*15/*17 carrier the safety axis REFUSES a verdict -- it cannot be tested against absent positives",
+    "vacuous_confounders": "if no *1B/*1A/*14/*21 carrier is present the star-name axis is uninformative and must say so rather than report a flattering agreement"
+  },
+
+  "honest_limits_registered_in_advance": [
+    "GeT-RM consensus is caller-derived, not wet-lab -- agreement-with-reference, never correctness",
+    "the FUNCTION axis shares its defining SNP with the reference's own allele assignment and is therefore a control, not validation",
+    "n=88; *5 (1 haplotype), *17 (4) and *21 (3) are individually underpowered and must not carry a per-allele claim",
+    "truth diplotypes that do not parse as two haplotypes are counted and EXCLUDED, never defaulted"
+  ]
+}

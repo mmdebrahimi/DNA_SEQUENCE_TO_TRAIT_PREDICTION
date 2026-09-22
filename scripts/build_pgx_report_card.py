@@ -174,12 +174,22 @@ def main() -> int:
          "tier": "single-SNP genotype->sensitivity (minus-strand encoded); not a star/diplotype system",
          "residual": "—"},
         {"gene": "SLCO1B1", "trait": "statin myopathy (rs4149056 / *5 521T>C)",
-         "getrm": None, "getrm_pct": None, "pharmcat": None,
+         "getrm": "n=88: star-NAME 0.398; function 88/88 (definitional)", "getrm_pct": None,
+         "pharmcat": None,
          "functional_evidence": fe_summ("SLCO1B1"), "trio_mendelian": "—",
-         "tier": ("single-SNP genotype->function readout (plus-strand); KNOWLEDGE_BASELINE like VKORC1. "
-                  "NOT an independent star number (rs4149056 IS the truth for a 521 call). CPIC-aligned "
-                  "(simvastatin function is assigned largely from 521T>C)."),
-         "residual": "single-SNP proxy for *5/*15/*17; full SLCO1B1 star typing needs more variants"},
+         "tier": ("single-SNP genotype->function readout (plus-strand); CPIC-aligned (simvastatin function "
+                  "is assigned largely from 521T>C). MEASURED vs GeT-RM CDC consensus on 88 1000G samples "
+                  "(2026-09-22; bar + predictions frozen first), THREE axes kept separate: FUNCTION exactly "
+                  "1:1 88/88 — but DEFINITIONAL, since GeT-RM's star assignment itself derives from 521T>C, "
+                  "so it is a control bounding plumbing, NOT validation (the earlier 87/87 figure was this "
+                  "same axis presented as validation). STAR-NAME 35/88 = 0.398. SAFETY zero misses."),
+         "residual": ("READ THE FUNCTION, NOT THE STAR LABEL — a true *1/*15 carrier prints as *1/*5. The "
+                      "naming gap is COMPLETELY explained: star-name agreement is EXACTLY the complement of "
+                      "'carries an allele this caller cannot see', zero exceptions over 88 samples, and "
+                      "every non-*1 reference allele scores 0/n (*1B 0/23, *15 0/15, *14 0/8, *1A 0/8, "
+                      "*17 0/4, *21 0/3, *5 0/1). 388A>G + promoter variants are not genotyped here. The "
+                      "cell's own 'no independent star-concordance number exists' claim is HALF WRONG: "
+                      "right about the function axis, wrong about naming, which exists and is 0.398")},
         {"gene": "CYP4F2", "trait": "warfarin dose modifier (rs2108622 / *3 V433M)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("CYP4F2"), "trio_mendelian": "—",
