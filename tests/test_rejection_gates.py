@@ -214,3 +214,55 @@ def test_the_oxford_screen_fails_on_metadata_not_on_label_quality():
     for label_quality_gate in ("G1", "G3", "G4", "G5", "G6", "G9", "G10"):
         assert by[label_quality_gate] == PASS, label_quality_gate
     assert by["G2"] == NOT_APPLICABLE
+
+
+# --- the THIRD hand-worked candidate (2026-09-22) -------------------------------------------------
+
+def test_the_phenosense_candidate_trips_G6_a_path_no_other_candidate_reaches():
+    """PEAR is L4/CLEARS, HBV is L1/REJECTED-on-G1, Oxford is L1/G7 -- so before this one, NOTHING had
+    ever TRIPPED G6, the layer-dispatched assay-degeneracy gate. It was built, unit-tested on synthetic
+    input, and never exercised by a real candidate."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1]))
+    from scripts.screen_candidate_gates import CANDIDATES
+    from dna_decode.eval.rejection_gates import screen_candidate
+    spec = CANDIDATES["phenosense"]
+    res = screen_candidate(spec["candidate"], spec["intended_layer"], spec["evidence"])
+    g6 = [g for g in res.gates if g.gate == "G6"][0]
+    assert g6.verdict == TRIP
+    assert res.verdict == "REJECTED"
+
+
+def test_the_same_dataset_screens_differently_per_drug():
+    """THE limit the third screen exposed: the schema treats a candidate as MONOLITHIC, but a multi-drug
+    substrate is not. Same packet, only the drug column varying -- lamivudine rejects, etravirine does
+    not. Pinned so a future per-arm axis is a deliberate schema change, not a silent one."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1]))
+    from scripts.screen_candidate_gates import CANDIDATES
+    from dna_decode.eval.rejection_gates import screen_candidate
+    base = dict(CANDIDATES["phenosense"]["evidence"])
+
+    def verdict_for(mode_share, n_distinct):
+        ev = dict(base, mode_share=mode_share, n_distinct_values=float(n_distinct))
+        return screen_candidate("x", "L4_forward_continuous", ev).verdict
+
+    assert verdict_for(0.452, 138) == "REJECTED"      # lamivudine
+    assert verdict_for(0.330, 175) == "REJECTED"      # nevirapine
+    assert verdict_for(0.056, 146) != "REJECTED"      # etravirine
+
+
+def test_unsupplied_gates_report_insufficient_data_rather_than_passing():
+    """Filling a field to make the table look complete is fabricating evidence -- the exact failure this
+    screen exists to prevent. The PhenoSense packet asserts only what was measured."""
+    import sys as _s
+    from pathlib import Path as _P
+    _s.path.insert(0, str(_P(__file__).resolve().parents[1]))
+    from scripts.screen_candidate_gates import CANDIDATES
+    from dna_decode.eval.rejection_gates import screen_candidate
+    spec = CANDIDATES["phenosense"]
+    res = screen_candidate(spec["candidate"], spec["intended_layer"], spec["evidence"])
+    unmeasured = {g.gate for g in res.gates if g.verdict == INSUFFICIENT_DATA}
+    assert {"G4", "G5", "G7", "G8"} <= unmeasured

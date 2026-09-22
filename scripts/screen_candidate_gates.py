@@ -1,6 +1,6 @@
 """Run the ten rejection gates over a candidate, and CHECK the screen against the hand-made verdicts.
 
-Two candidates have been screened by hand and committed as memos. They are encoded here as evidence
+Candidates screened by hand and committed as memos are encoded below (four as of 2026-09-22). They are encoded here as evidence
 packets plus the per-gate verdict each memo actually recorded, so `--verify` re-derives them mechanically.
 If the screen and a memo disagree, that is a finding to diagnose -- one of them is wrong -- not a number
 to report as passing.
@@ -25,7 +25,7 @@ from dna_decode.eval.rejection_gates import (  # noqa: E402
     screen_candidate,
 )
 
-# --- the two hand-worked candidates ---------------------------------------------------------------
+# --- the hand-worked candidates (three as of 2026-09-22) ---------------------------------------------------------------
 # Evidence is transcribed from the committed memos. Where a memo did not measure something, the field is
 # ABSENT -- never guessed to make the screen come out clean.
 
@@ -122,7 +122,47 @@ OXFORD = {
     "expected_verdict": "REJECTED",
 }
 
-CANDIDATES = {"pear": PEAR, "hbv": HBV, "oxford": OXFORD}
+# THIRD hand-screened candidate (2026-09-22), added because the schema's own memo names n=2 worked
+# examples as its stated limit. This one is chosen to exercise a path NOTHING had reached: PEAR is
+# L4/CLEARS and HBV is L1/REJECTED-on-G1 and OXFORD is L1/CLEARS, so no candidate had ever TRIPPED G6 --
+# the layer-dispatched assay-degeneracy gate. Every number is MEASURED from the committed deposit by
+# scripts/hiv_fold_censoring_audit.py, not transcribed: lamivudine is the worst of the 24 fold columns.
+PHENOSENSE = {
+    "candidate": "Stanford HIVDB PhenoSense fold-change (NRTI arm, lamivudine)",
+    "memo": "wiki/hiv_fold_censoring_audit_2026-09-22.md",
+    "intended_layer": L4_FORWARD_CONTINUOUS,
+    "evidence": {
+        "label_provenance_evidence": "PhenoSense (Monogram Biosciences) is a recombinant phenotypic "
+                                     "susceptibility assay: patient-derived sequences are cloned into a "
+                                     "resistance-test vector and IC50 is measured in cell culture, "
+                                     "reported as fold-change. No genomic tool produced it -- and "
+                                     "specifically it is NOT HIVDB's own Sierra interpretation, which "
+                                     "the shipped HIV report card already records as this cell's "
+                                     "non-circularity argument.",
+        "label_is_measured": True,
+        "label_semantics_evidence": "an IC50 fold-change is a laboratory reading on the isolate's virus "
+                                    "under drug pressure, not a description of where or from whom the "
+                                    "specimen was collected -- so it cannot be sampling-defined the way "
+                                    "an isolation-site pathotype label is.",
+        "label_is_assay_reading": True,
+        "variation_is_constructed": False,      # clinical isolates: natural variation
+        "genotype_defined_by_construction": False,
+        # G6 (L4 form) MEASURED: lamivudine, 1,839 values, 45.2% at the ceiling of 100 over 138 distinct
+        # levels. The bars (>25% mode-share / <20 levels) are imported from the shipped assay_degeneracy.
+        "mode_share": 0.452,
+        "n_distinct_values": 138.0,
+        # G9/G10: the HIV catalogs are mutation-level and every entry names a concrete substitution.
+        "loci_without_recorded_variant_fraction": 0.0,
+        "off_panel_variant_fraction": 0.0,
+    },
+    # Only the gates whose evidence is actually supplied are asserted. The rest return
+    # `insufficient_data` BY DESIGN -- filling them to make the table look complete would be fabricating
+    # evidence, which is the failure this screen exists to prevent.
+    "expected": {"G1": PASS, "G3": PASS, "G6": TRIP, "G9": PASS, "G10": PASS},
+    "expected_verdict": "REJECTED",
+}
+
+CANDIDATES = {"pear": PEAR, "hbv": HBV, "oxford": OXFORD, "phenosense": PHENOSENSE}
 
 
 def run_one(spec: dict) -> dict:
@@ -179,7 +219,7 @@ def main() -> int:
             print(f"{failed} candidate(s) disagree with their memo. One of the two is wrong -- "
                   "diagnose before trusting either.")
             return 1
-        print("Both hand verdicts re-derived mechanically.")
+        print(f"All {len(CANDIDATES)} hand verdicts re-derived mechanically.")
         return 0
 
     print(json.dumps(res, indent=2))
