@@ -79,6 +79,12 @@ def recover_cutoff(rungs: np.ndarray, pheno: np.ndarray) -> float | None:
     to recover and this must REFUSE rather than pick the nearest rung. That refusal is the whole reason
     no breakpoint has to be recalled from memory anywhere in this arm.
     """
+    # A ladder with NO resistance anywhere has no threshold to recover, and its "purity" is vacuous --
+    # every rung is trivially all-S. Without this the loop sets `out` to the TOP rung, the `above`
+    # slice is then empty so its check is skipped, and an information-free column yields a
+    # confident-looking cut-off. Both classes must be present for a step to mean anything.
+    if not (pheno == "R").any() or not (pheno == "S").any():
+        return None
     out = None
     for rung in sorted(set(rungs.tolist())):
         frac_r = float((pheno[rungs == rung] == "R").mean())
@@ -132,10 +138,60 @@ def verdict_from_bar(per_drug: dict, min_boundary_n: int = MIN_BOUNDARY_N) -> st
     return WEAK
 
 
+def quality_disclosure(df: pd.DataFrame, cutoff: float) -> dict:
+    """How the two COMPARED strata differ in the cohort's OWN per-isolate label-quality flag.
+
+    NAMESPACE-SEPARATE and AUGMENT-ONLY: this never changes `verdict`, which stays a mechanical
+    application of the frozen bar. It exists because the bar did not mention quality while the repo's
+    two other CRyPTIC scorers (`score_tb_cryptic.py`, `score_tb_cryptic_parquet.py`) both hard-filter
+    to HIGH -- so the shipped run is powered partly by isolates this repo elsewhere discards, and a
+    reader must be able to see that without re-deriving it.
+
+    Reports (a) the quality MIX of the boundary rung against the lower-S stratum it is compared with,
+    and (b) the same contrast recomputed on HIGH-only isolates, which is the replication check: if the
+    effect survives there, the pooled result is not a label-quality artifact even though its POWERING
+    depends on the other tiers.
+    """
+    s = df[df["pheno"] == "S"]
+    boundary = np.isclose(s["rung"].to_numpy(), cutoff)
+
+    def mix(sub: pd.DataFrame) -> dict:
+        n = len(sub)
+        if not n:
+            return {}
+        return {q: round(float((sub["quality"] == q).sum()) / n, 4)
+                for q in ("HIGH", "MEDIUM", "LOW")}
+
+    b_mix, l_mix = mix(s[boundary]), mix(s[~boundary])
+    hi = s[s["quality"] == "HIGH"]
+    hi_b = np.isclose(hi["rung"].to_numpy(), cutoff)
+    hi_c = hi["carries"].to_numpy()
+    n_hi_b = int(hi_b.sum())
+    high_only = {
+        "boundary_n": n_hi_b,
+        "clears_frozen_floor": bool(n_hi_b >= MIN_BOUNDARY_N),
+        "boundary_carriage": float(hi_c[hi_b].mean()) if n_hi_b else None,
+        "lower_carriage": float(hi_c[~hi_b].mean()) if (~hi_b).any() else None,
+    }
+    if high_only["boundary_carriage"] is not None and high_only["lower_carriage"] is not None:
+        high_only["gap"] = high_only["boundary_carriage"] - high_only["lower_carriage"]
+    return {
+        "why": ("the frozen bar is silent on PHENOTYPE_QUALITY while two sibling CRyPTIC scorers "
+                "require HIGH; this discloses the difference rather than restating the verdict"),
+        "boundary_quality_mix": b_mix,
+        "lower_s_quality_mix": l_mix,
+        "low_share_ratio": (round(b_mix.get("LOW", 0.0) / l_mix["LOW"], 2)
+                            if l_mix.get("LOW") else None),
+        "high_only": high_only,
+    }
+
+
 def analyse(drug: str, code: str, table: pd.DataFrame, cache: dict, n_perm: int, seed: int) -> dict:
     mics, feats = cache["mics"][drug], cache["features"][drug]
     col = f"{code}_BINARY_PHENOTYPE"
     ph = dict(zip(table["UNIQUEID"], table[col]))
+    qual = {u: str(q).strip().upper()
+            for u, q in zip(table["UNIQUEID"], table[f"{code}_PHENOTYPE_QUALITY"])}
 
     rows = []
     for uid, raw in mics.items():
@@ -143,8 +199,8 @@ def analyse(drug: str, code: str, table: pd.DataFrame, cache: dict, n_perm: int,
         if p not in ("R", "S"):
             continue
         rung, cens = parse_mic(raw)
-        rows.append((uid, rung, cens, p, 1 if feats.get(uid) else 0))
-    df = pd.DataFrame(rows, columns=["uid", "rung", "cens", "pheno", "carries"])
+        rows.append((uid, rung, cens, p, 1 if feats.get(uid) else 0, qual.get(uid, "NA")))
+    df = pd.DataFrame(rows, columns=["uid", "rung", "cens", "pheno", "carries", "quality"])
 
     cutoff = recover_cutoff(df["rung"].to_numpy(), df["pheno"].to_numpy())
     if cutoff is None:
@@ -164,6 +220,7 @@ def analyse(drug: str, code: str, table: pd.DataFrame, cache: dict, n_perm: int,
         "lower_carriage": float(carries[~boundary].mean()) if (~boundary).any() else None,
         "boundary_is_uncensored": bool((s.loc[boundary, "cens"] == "exact").all()) if n_b else None,
         "overall_carriage": float(df["carries"].mean()),
+        "quality_disclosure": quality_disclosure(df, cutoff),
     }
     if n_b >= MIN_BOUNDARY_N and (~boundary).any():
         result["permutation"] = permutation_gap(boundary, carries, np.random.default_rng(seed), n_perm)
@@ -231,6 +288,28 @@ def _gene_share(at_boundary: Counter, at_high: Counter) -> dict:
     }
 
 
+def _quality_gate(per_drug: dict) -> dict:
+    """Would the frozen powering floor still be met using only HIGH-quality labels?
+
+    Reported BESIDE the verdict, never folded into it -- the verdict is the frozen bar applied
+    mechanically, and the bar as frozen says nothing about quality. Rewriting the verdict here would
+    be re-sizing a frozen bar after seeing the result, which this project treats as an authority call.
+    """
+    per = {d: r["quality_disclosure"]["high_only"]
+           for d, r in per_drug.items() if r.get("cutoff_log2") is not None}
+    if not per:
+        return {"status": "not_assessable"}
+    short = sorted(d for d, h in per.items() if not h["clears_frozen_floor"])
+    return {
+        "high_only_clears_frozen_floor": not short,
+        "drugs_below_floor_under_high_only": short,
+        "verdict_under_high_only": SUPPORTED if not short else INDETERMINATE,
+        "effect_replicates_within_high": {d: h.get("gap") for d, h in per.items()},
+        "reading": ("the DIRECTION and MAGNITUDE survive restriction to HIGH; what fails there is the "
+                    "frozen sample-size floor. A powering failure is not a refutation."),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -251,6 +330,13 @@ def main(argv: list[str] | None = None) -> int:
     doc = {
         "schema": "tb-implied-boundary-v1",
         "date": str(_date.today()),
+        "filename_date_is_the_original_measurement": ("the artifact keeps its 2026-09-21 filename; "
+                                                      "`date` is when it was last regenerated. The "
+                                                      "measured numbers are unchanged -- the "
+                                                      "2026-09-22 regeneration only ADDED the quality "
+                                                      "disclosure. A second dated file carrying "
+                                                      "identical headline numbers would be the "
+                                                      "duplicate-artifact trap."),
         "bar": "wiki/tb_implied_boundary_acceptance_bar.json",
         "cohort": "CRyPTIC M. tuberculosis compendium (measured broth-microdilution MIC)",
         "cutoff_provenance": ("RECOVERED from the shipped BINARY_PHENOTYPE as a pure step on the MIC "
@@ -259,7 +345,16 @@ def main(argv: list[str] | None = None) -> int:
         "results": per_drug,
         "verdict": verdict_from_bar(per_drug),
         "verdict_is_mechanical": "verdict_from_bar applied to the frozen rule; not authored",
+        "quality_gate": _quality_gate(per_drug),
         "honest_limits": [
+            "POWERING DEPENDS ON LABEL TIERS THIS REPO ELSEWHERE DISCARDS. The frozen bar is silent on "
+            "PHENOTYPE_QUALITY, but score_tb_cryptic.py and score_tb_cryptic_parquet.py both require "
+            "HIGH. Restricted to HIGH the rifampicin boundary rung falls below the frozen "
+            "MIN_BOUNDARY_N floor, so the run would read INDETERMINATE -- see `quality_gate`. The "
+            "EFFECT still replicates within HIGH alone; it is the POWERING that does not survive, and "
+            "the two are different claims.",
+            "The boundary rung is enriched for LOW-quality labels relative to the lower-S stratum it "
+            "is compared against (see per-drug `quality_disclosure.low_share_ratio`).",
             "IN-DISTRIBUTION: the WHO catalogue was built partly from CRyPTIC, so the determinant calls "
             "and this cohort are not independent. This locates a boundary on the ladder; it is NOT an "
             "independent validation of the catalogue.",

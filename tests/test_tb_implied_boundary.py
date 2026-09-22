@@ -216,3 +216,71 @@ def test_the_in_distribution_limit_survives_into_the_result():
     validation of the catalogue, so the limit ships with the numbers rather than only in the bar."""
     d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
     assert any("IN-DISTRIBUTION" in s for s in d["honest_limits"])
+
+
+# --- a ladder with only ONE class has no threshold to recover (fixed 2026-09-22) -------------------
+
+def test_an_all_susceptible_ladder_refuses_rather_than_returning_a_vacuous_cutoff():
+    """REGRESSION. With no resistance anywhere there is no threshold, and every rung is trivially
+    all-S. The old loop set `out` to the TOP rung; the `above` slice was then empty so its check was
+    SKIPPED, and an information-free column yielded a confident-looking cut-off. Harmless on the
+    committed cohort (both classes present) -- fatal to any generic scanner calling this directly."""
+    m = _mod()
+    assert m.recover_cutoff(np.array([-2.0, -1.0, 0.0]), np.array(["S", "S", "S"])) is None
+
+
+def test_the_all_susceptible_guard_is_not_vacuous():
+    """Proves the guard above is what refuses: the SAME rungs with one R present still recover."""
+    m = _mod()
+    assert m.recover_cutoff(np.array([-2.0, -1.0, 0.0]), np.array(["S", "S", "R"])) == -1.0
+
+
+def test_an_all_resistant_ladder_also_refuses():
+    m = _mod()
+    assert m.recover_cutoff(np.array([-2.0, -1.0, 0.0]), np.array(["R", "R", "R"])) is None
+
+
+# --- the quality disclosure AUGMENTS, never restates, the frozen verdict --------------------------
+
+@pytest.mark.skipif(not ARTIFACT.exists(), reason="run artifact not generated")
+def test_the_quality_gate_never_overwrites_the_frozen_verdict():
+    """THE augment-only invariant. The bar is silent on PHENOTYPE_QUALITY, so `verdict` must stay the
+    mechanical application of the frozen rule; the HIGH-only reading lives in its OWN key. Folding it
+    in would be re-sizing a frozen bar after seeing the result -- an authority call, not an edit."""
+    m = _mod()
+    d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    assert d["verdict"] == m.verdict_from_bar(d["results"]) == m.SUPPORTED
+    assert d["quality_gate"]["verdict_under_high_only"] == m.INDETERMINATE
+    assert d["verdict"] != d["quality_gate"]["verdict_under_high_only"]
+
+
+@pytest.mark.skipif(not ARTIFACT.exists(), reason="run artifact not generated")
+def test_the_powering_fails_under_high_only_but_the_effect_replicates():
+    """The distinction the disclosure exists to make: a POWERING failure is not a refutation. RIF's
+    boundary rung drops below the frozen floor on HIGH-only labels, while the measured gap survives."""
+    d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    g = d["quality_gate"]
+    assert g["high_only_clears_frozen_floor"] is False
+    assert g["drugs_below_floor_under_high_only"] == ["rifampicin"]
+    rif = d["results"]["rifampicin"]
+    hi = rif["quality_disclosure"]["high_only"]
+    assert hi["boundary_n"] < 100 and rif["boundary_n"] >= 100      # 84 vs 188
+    # the gap is retained, not merely positive: within HIGH it is >=90% of the pooled gap
+    assert hi["gap"] > 0.9 * (rif["boundary_carriage"] - rif["lower_carriage"])
+
+
+@pytest.mark.skipif(not ARTIFACT.exists(), reason="run artifact not generated")
+def test_the_two_compared_strata_differ_in_label_quality_and_that_ships():
+    """The boundary rung is LOW-enriched relative to the stratum it is compared against. Undisclosed,
+    a reader would take the two strata for exchangeable."""
+    d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    for drug, r in d["results"].items():
+        q = r["quality_disclosure"]
+        assert q["low_share_ratio"] > 2.0, drug
+        assert q["boundary_quality_mix"]["LOW"] > q["lower_s_quality_mix"]["LOW"], drug
+
+
+@pytest.mark.skipif(not ARTIFACT.exists(), reason="run artifact not generated")
+def test_the_powering_caveat_ships_with_the_numbers():
+    d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    assert any("POWERING DEPENDS ON LABEL TIERS" in s for s in d["honest_limits"])

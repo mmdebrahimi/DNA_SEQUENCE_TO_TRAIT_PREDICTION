@@ -1,6 +1,7 @@
 {
   "schema": "tb-implied-boundary-v1",
-  "date": "2026-09-21",
+  "date": "2026-09-22",
+  "filename_date_is_the_original_measurement": "the artifact keeps its 2026-09-21 filename; `date` is when it was last regenerated. The measured numbers are unchanged -- the 2026-09-22 regeneration only ADDED the quality disclosure. A second dated file carrying identical headline numbers would be the duplicate-artifact trap.",
   "bar": "wiki/tb_implied_boundary_acceptance_bar.json",
   "cohort": "CRyPTIC M. tuberculosis compendium (measured broth-microdilution MIC)",
   "cutoff_provenance": "RECOVERED from the shipped BINARY_PHENOTYPE as a pure step on the MIC ladder; refused if the step is impure. No breakpoint or ECOFF is recalled from memory anywhere in this arm.",
@@ -17,6 +18,27 @@
       "lower_carriage": 0.028508164959867147,
       "boundary_is_uncensored": true,
       "overall_carriage": 0.37620897743242127,
+      "quality_disclosure": {
+        "why": "the frozen bar is silent on PHENOTYPE_QUALITY while two sibling CRyPTIC scorers require HIGH; this discloses the difference rather than restating the verdict",
+        "boundary_quality_mix": {
+          "HIGH": 0.4468,
+          "MEDIUM": 0.117,
+          "LOW": 0.4362
+        },
+        "lower_s_quality_mix": {
+          "HIGH": 0.7505,
+          "MEDIUM": 0.0739,
+          "LOW": 0.1756
+        },
+        "low_share_ratio": 2.48,
+        "high_only": {
+          "boundary_n": 84,
+          "clears_frozen_floor": false,
+          "boundary_carriage": 0.35714285714285715,
+          "lower_carriage": 0.020837174995390007,
+          "gap": 0.33630568214746714
+        }
+      },
       "permutation": {
         "observed_gap": 0.349151409508218,
         "n_perm": 1000,
@@ -111,6 +133,27 @@
       "lower_carriage": 0.010873258579680599,
       "boundary_is_uncensored": true,
       "overall_carriage": 0.4427411335764004,
+      "quality_disclosure": {
+        "why": "the frozen bar is silent on PHENOTYPE_QUALITY while two sibling CRyPTIC scorers require HIGH; this discloses the difference rather than restating the verdict",
+        "boundary_quality_mix": {
+          "HIGH": 0.5273,
+          "MEDIUM": 0.0873,
+          "LOW": 0.3855
+        },
+        "lower_s_quality_mix": {
+          "HIGH": 0.8335,
+          "MEDIUM": 0.079,
+          "LOW": 0.0875
+        },
+        "low_share_ratio": 4.41,
+        "high_only": {
+          "boundary_n": 145,
+          "clears_frozen_floor": true,
+          "boundary_carriage": 0.15172413793103448,
+          "lower_carriage": 0.007134121483897269,
+          "gap": 0.1445900164471372
+        }
+      },
       "permutation": {
         "observed_gap": 0.1491267414203194,
         "n_perm": 1000,
@@ -196,7 +239,21 @@
   },
   "verdict": "SUPPORTED",
   "verdict_is_mechanical": "verdict_from_bar applied to the frozen rule; not authored",
+  "quality_gate": {
+    "high_only_clears_frozen_floor": false,
+    "drugs_below_floor_under_high_only": [
+      "rifampicin"
+    ],
+    "verdict_under_high_only": "INDETERMINATE",
+    "effect_replicates_within_high": {
+      "rifampicin": 0.33630568214746714,
+      "isoniazid": 0.1445900164471372
+    },
+    "reading": "the DIRECTION and MAGNITUDE survive restriction to HIGH; what fails there is the frozen sample-size floor. A powering failure is not a refutation."
+  },
   "honest_limits": [
+    "POWERING DEPENDS ON LABEL TIERS THIS REPO ELSEWHERE DISCARDS. The frozen bar is silent on PHENOTYPE_QUALITY, but score_tb_cryptic.py and score_tb_cryptic_parquet.py both require HIGH. Restricted to HIGH the rifampicin boundary rung falls below the frozen MIN_BOUNDARY_N floor, so the run would read INDETERMINATE -- see `quality_gate`. The EFFECT still replicates within HIGH alone; it is the POWERING that does not survive, and the two are different claims.",
+    "The boundary rung is enriched for LOW-quality labels relative to the lower-S stratum it is compared against (see per-drug `quality_disclosure.low_share_ratio`).",
     "IN-DISTRIBUTION: the WHO catalogue was built partly from CRyPTIC, so the determinant calls and this cohort are not independent. This locates a boundary on the ladder; it is NOT an independent validation of the catalogue.",
     "One organism, two drugs, one compendium -- and both drugs share the same isolates, so they are not two independent replications.",
     "A determinant at a clinically-susceptible rung reads two ways and this arm cannot separate them: a genuine low-level-resistance mechanism sitting under the cut-off, or a catalogue false positive. Rung-position dependence argues against random false positives; it does not exclude the second reading.",

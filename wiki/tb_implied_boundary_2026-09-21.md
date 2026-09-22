@@ -12,6 +12,31 @@ test statistic existed (`wiki/tb_implied_boundary_acceptance_bar.json`). Run:
 Both gaps exceed the **maximum** of 1000 permutations — RIF by 8×, INH by 5.5× — not merely the 95th
 percentile.
 
+> ## Powering caveat added 2026-09-22 — read this before quoting `SUPPORTED`
+>
+> The frozen bar is **silent on `PHENOTYPE_QUALITY`**, but this repo's two other CRyPTIC scorers
+> (`score_tb_cryptic.py:189`, `score_tb_cryptic_parquet.py:150`) both hard-filter to `HIGH`. This run
+> did not. So it is powered partly by label tiers the repo elsewhere discards:
+>
+> | drug | boundary rung n (as run) | HIGH-quality only | frozen floor |
+> |---|---|---|---|
+> | rifampicin | 188 | **84** | 100 |
+> | isoniazid | 275 | 145 | 100 |
+>
+> The bar requires **both** drugs, so **under the repo's own TB quality standard this run reads
+> `INDETERMINATE`, not `SUPPORTED`.** The two compared strata also differ: the boundary rung is
+> **2.5× (RIF) / 4.4× (INH)** enriched for LOW-quality labels relative to the lower-S stratum.
+>
+> **The effect itself is not a label-quality artifact — it replicates within HIGH alone:** RIF gap
+> **0.3363** (vs 0.3492 pooled), INH **0.1446** (vs 0.1491). So the finding holds and the *verdict
+> label* does not. **A powering failure is not a refutation**, and the two must not be collapsed.
+>
+> The verdict field is deliberately **left as the mechanical output of the frozen bar**; the HIGH-only
+> reading ships beside it under `quality_gate`. Re-sizing a frozen bar after seeing the result is an
+> authority call, and this session has already had to override two mis-specified bars — a third
+> silent edit is exactly what that record argues against. Found by the `/innovate` sweep
+> (`wiki/innovate_sweep_2026-09-21.md`, survivor `QS-TBQUAL`).
+
 ## What this is, and why it moved here
 
 The 2026-09-12 ECOFF arm asked whether a wild-type anchor agrees with the genotype better than a
@@ -66,6 +91,16 @@ substantially. Both ship.
 lexically from the determinant string's prefix — a pure string operation on data already in the cache —
 so the claim is only that the mix differs, which is checkable from the counts.
 
+## Three defects found in this script, all mine
+
+**A third, found 2026-09-22: an all-susceptible ladder returned a vacuous cut-off instead of refusing.**
+`recover_cutoff([-2,-1,0], ["S","S","S"]) -> 0.0`. With no resistance anywhere there is no threshold,
+but the loop set `out` to the top rung, the `above` slice was then empty so its check was *skipped*, and
+an information-free column yielded a confident-looking number. Harmless here (both classes present in
+the real data) — but it would have poisoned any generic scanner calling this directly, which is exactly
+what a sibling `/innovate` candidate proposed building before it was killed on other grounds. Now
+refuses when either class is absent; proven non-vacuous by re-injection.
+
 ## Two defects found while building this, both mine
 
 **A real bug in the cut-off recovery.** It verified that every rung *above* the candidate was resistant
@@ -82,6 +117,9 @@ choice.
 
 ## Honest limits
 
+- **POWERING DEPENDS ON LABEL TIERS THIS REPO ELSEWHERE DISCARDS** — see the caveat box above. Under
+  HIGH-only labels the RIF boundary rung is 84 against a frozen floor of 100, so the run reads
+  `INDETERMINATE`. The effect replicates within HIGH; the powering does not.
 - **IN-DISTRIBUTION.** The WHO catalogue was built partly from CRyPTIC, so the determinant calls and this
   cohort are **not independent**. This locates a boundary on the ladder; it is **not** an independent
   validation of the catalogue.
