@@ -1,7 +1,9 @@
 """Fetch the prospective-lock accrual cohort for the frozen AMR decoder (LA-3 accrual step).
 
 Builds the `{biosample, first_public_date, gca, drug, label}` TSV that `scripts/prospective_lock_validate.py`
-consumes — i.e. isolates that became PUBLIC strictly after the prospective-lock date (2026-06-13) and carry a
+consumes -- i.e. isolates that became PUBLIC strictly after the ACTIVE prospective-lock date (derived at run
+time from the manifest that still verifies against the live frozen surface; NOT a literal here, because a
+literal is what went stale when the v2 lock moved the cutoff) and carry a
 MEASURED (non-circular) AST phenotype + a downloadable assembly. Such isolates are leakage-free test cases by
 construction (the frozen decoder could not have been tuned to data that did not yet exist).
 
@@ -37,10 +39,16 @@ REPO = Path(__file__).resolve().parent.parent
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
-from dna_decode.eval.prospective_lock import SCORED_CELLS, is_prospective_eligible  # noqa: E402
+from dna_decode.eval.prospective_lock import (  # noqa: E402
+    SCORED_CELLS, active_lock_date, is_prospective_eligible,
+)
 
 DEFAULT_OUT_DIR = Path("D:/dna_decode_cache/data files donwload")
-LOCK_DATE = "2026-06-13"
+# DERIVED from the manifest that still verifies against the live frozen surface -- NEVER restated.
+# This was hardcoded "2026-06-13" until 2026-09-22, and the v2 gentamicin lock had moved the cutoff to
+# 2026-08-31 three weeks earlier. A sweep run on the stale constant would have collected isolates that
+# are PRE-lock for the deployed rule and labelled them prospective -- the precise leakage the lock
+# exists to prevent. Resolving it fail-closed (NoActiveLock) is the point: there is no safe default.
 BVBRC = "https://www.bv-brc.org/api"
 DATASETS = "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession"
 
@@ -467,7 +475,10 @@ def fetch_live(lock_date: str, per_taxon_limit: int, amr_limit: int,
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--lock-date", default=LOCK_DATE)
+    ap.add_argument("--lock-date", default=None,
+                    help="eligibility cutoff; DEFAULTS to the active lock manifest's "
+                         "lock_date (the manifest that still verifies against the live "
+                         "frozen surface). Override only to reproduce a historical sweep.")
     ap.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     ap.add_argument("--per-taxon-limit", type=int, default=500)
     ap.add_argument("--amr-limit", type=int, default=5000)
@@ -485,7 +496,13 @@ def main(argv=None) -> int:
         scope = sorted(cells_by_taxon())
     else:
         scope = sorted(cells_by_group())
-    print(f"[prospective-cohort] lock_date={args.lock_date}  source={args.source}  scope={scope}  "
+    if args.lock_date is None:
+        # Fail-closed: if nothing verifies, there is no honest cutoff and the sweep must not invent one.
+        args.lock_date = active_lock_date()
+        lock_src = "DERIVED from the active lock manifest"
+    else:
+        lock_src = "OVERRIDDEN on the command line"
+    print(f"[prospective-cohort] lock_date={args.lock_date} ({lock_src})  source={args.source}  scope={scope}  "
           f"out={args.out_dir}")
     if args.offline:
         print("[prospective-cohort] --offline: wiring OK, no fetch performed.")

@@ -24,6 +24,7 @@ filter here (instead of accession / BioSample overlap).
 """
 from __future__ import annotations
 
+import json
 import hashlib
 from dataclasses import dataclass
 from datetime import date
@@ -166,3 +167,51 @@ def is_prospective_eligible(first_public_date: str | None, lock_date: str) -> El
     if earliest > lock:
         return EligibilityVerdict(True, "post_lock")
     return EligibilityVerdict(False, "pre_or_equal_lock")
+
+
+class NoActiveLock(RuntimeError):
+    """No committed manifest describes the LIVE frozen surface."""
+
+
+def resolve_active_lock(repo: Path = _REPO) -> tuple[Path, dict]:
+    """The lock manifest that describes the surface as it is RIGHT NOW -- the single source of truth
+    for the eligibility cutoff.
+
+    WHY THIS EXISTS (found 2026-09-22). `scripts/fetch_prospective_cohort.py` carried
+    `LOCK_DATE = "2026-06-13"` as a hardcoded module constant and used it as the `--lock-date` default.
+    The v2 gentamicin lock moved the cutoff to 2026-08-31 on 2026-08-31, and the constant did not follow,
+    so the sweep would have collected isolates dated after the RETIRED v1 cutoff and labelled them
+    prospective. For the deployed rule those are PRE-lock -- a false prospective claim, which is exactly
+    the leakage the lock exists to prevent. Same class as the salmserovar CLI that ran a threshold
+    replaced five days earlier ("a shipped default is a promise").
+
+    The resolution rule is definitional rather than conventional: a manifest pins sha256 hashes of the
+    frozen surface, so the manifest that still VERIFIES is the one describing the live decoder, and one
+    that no longer verifies describes a retired one. Nothing has to be kept in sync by hand -- retiring a
+    lock is precisely the act of making its manifest stop verifying.
+
+    Raises NoActiveLock when none verifies. That is FAIL-CLOSED on purpose: falling back to the newest
+    file, or to a default, is how a stale cutoff silently becomes a prospective claim.
+    """
+    candidates = sorted((repo / "wiki").glob("prospective_lock_manifest_*.json"))
+    verified: list[tuple[Path, dict]] = []
+    for p in candidates:
+        try:
+            m = json.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if verify_lock(m, repo=repo).ok:
+            verified.append((p, m))
+    if not verified:
+        raise NoActiveLock(
+            "no committed prospective-lock manifest verifies against the live frozen surface "
+            f"(checked {len(candidates)}). The surface has drifted from every recorded lock, so there "
+            "is no honest eligibility cutoff -- re-lock before sweeping for prospective isolates.")
+    # If several pin the same surface they are equally valid; take the LATEST cutoff, which is the
+    # conservative choice (a later cutoff admits strictly fewer isolates).
+    return max(verified, key=lambda pm: str(pm[1].get("lock_date", "")))
+
+
+def active_lock_date(repo: Path = _REPO) -> str:
+    """The eligibility cutoff of the lock that describes the live surface."""
+    return str(resolve_active_lock(repo)[1]["lock_date"])

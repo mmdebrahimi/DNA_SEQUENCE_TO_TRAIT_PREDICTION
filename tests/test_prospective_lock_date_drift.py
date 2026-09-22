@@ -1,0 +1,99 @@
+"""The prospective sweep's eligibility cutoff must DERIVE from the active lock, never restate it.
+
+FOUND 2026-09-22 while pre-flighting the accrual sweep: `scripts/fetch_prospective_cohort.py` carried
+`LOCK_DATE = "2026-06-13"` as a hardcoded module constant and used it as the `--lock-date` default. The
+v2 gentamicin lock had moved the cutoff to 2026-08-31 three weeks earlier and the constant did not
+follow, so a sweep would have collected isolates dated after the RETIRED v1 cutoff and labelled them
+prospective. For the deployed rule those isolates are PRE-lock -- a false prospective claim, which is
+precisely the leakage the lock exists to prevent.
+
+This is the same class as the salmserovar CLI that ran a coverage threshold replaced five days earlier
+("a shipped default is a promise"), and it survived for the same reason: nothing compared the CLI's
+default against the constant it mirrors.
+
+The resolution rule is DEFINITIONAL, not conventional: a manifest pins sha256 hashes of the frozen
+surface, so the manifest that still VERIFIES describes the live decoder and one that no longer verifies
+describes a retired one. Retiring a lock IS the act of making its manifest stop verifying, so nothing
+needs hand-syncing.
+"""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from dna_decode.eval.prospective_lock import (  # noqa: E402
+    NoActiveLock, active_lock_date, resolve_active_lock, verify_lock,
+)
+
+
+def test_exactly_one_committed_manifest_describes_the_live_surface():
+    """The v1 manifest must NOT verify -- the gentamicin rescue changed amr_rules.py, which is what
+    retiring a lock means. If both verified, the cutoff would be ambiguous."""
+    manifests = sorted((ROOT / "wiki").glob("prospective_lock_manifest_*.json"))
+    assert len(manifests) >= 2, "need the retired v1 and the live v2 to make this test meaningful"
+    ok = [p.name for p in manifests
+          if verify_lock(json.loads(p.read_text(encoding="utf-8"))).ok]
+    assert ok == ["prospective_lock_manifest_2026-08-31.json"], ok
+
+
+def test_the_active_lock_date_is_the_v2_cutoff_not_the_retired_one():
+    assert active_lock_date() == "2026-08-31"
+    assert active_lock_date() != "2026-06-13", "this is the retired v1 cutoff"
+
+
+def test_the_sweep_default_is_derived_not_hardcoded():
+    """THE guard. The source must not carry a literal cutoff to drift -- equality today drifts tomorrow,
+    which is exactly what happened."""
+    src = (ROOT / "scripts" / "fetch_prospective_cohort.py").read_text(encoding="utf-8")
+    assert 'LOCK_DATE = "' not in src, "the cutoff is hardcoded again"
+    assert "active_lock_date" in src, "the sweep no longer derives its cutoff"
+    # The DOCSTRING is the --help text, so a stale date asserted there is the same defect one layer up
+    # (it told a reader the cutoff was 2026-06-13 for three weeks after it moved). Scoped to the
+    # docstring rather than the whole file on purpose: banning the string everywhere would also flag
+    # the comment EXPLAINING the history and an unrelated lexicographic-comparison example, and a rule
+    # that fires on correct code gets suppressed.
+    doc = src.split('"""')[1]
+    assert "2026-06-13" not in doc, "the help text asserts the retired v1 cutoff"
+
+
+def test_the_sweep_arg_default_is_none_so_derivation_can_happen():
+    """A non-None argparse default would shadow the derivation silently -- the salmserovar failure mode
+    exactly, where main() passed the CLI default over the validated constant on every call."""
+    import argparse
+    from unittest.mock import patch
+    import scripts.fetch_prospective_cohort as m
+
+    captured = {}
+    real = argparse.ArgumentParser.add_argument
+
+    def spy(self, *a, **kw):
+        if a and a[0] == "--lock-date":
+            captured["default"] = kw.get("default", "MISSING")
+        return real(self, *a, **kw)
+
+    with patch.object(argparse.ArgumentParser, "add_argument", spy):
+        with patch.object(argparse.ArgumentParser, "parse_args", side_effect=SystemExit):
+            with pytest.raises(SystemExit):
+                m.main([])
+    assert captured.get("default") is None, captured
+
+
+def test_resolution_fails_closed_when_nothing_verifies(tmp_path):
+    """Falling back to the newest file, or to any default, is how a stale cutoff silently becomes a
+    prospective claim. With no manifest at all the resolver must REFUSE."""
+    (tmp_path / "wiki").mkdir()
+    with pytest.raises(NoActiveLock):
+        resolve_active_lock(repo=tmp_path)
+
+
+def test_the_resolver_returns_the_manifest_it_used():
+    """The caller must be able to SAY which lock it swept under; a bare date is unauditable."""
+    path, manifest = resolve_active_lock()
+    assert path.name == "prospective_lock_manifest_2026-08-31.json"
+    assert manifest["lock_date"] == "2026-08-31"
