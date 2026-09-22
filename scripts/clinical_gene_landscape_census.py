@@ -1,12 +1,12 @@
 """Clinical-gene landscape census — how many actionable human genes can the R2 decoder be validated on?
 
-The data hunt (2026-07-22): MaveDB has 2,798 score sets → 662 distinct human protein-coding genes → 559 with
+The data hunt (2026-07-22): MaveDB has 2,798 score sets -> 662 distinct human protein-coding genes -> 559 with
 a UniProt id. The join to ClinVar was previously blocked by a numbering OFFSET (MaveDB assays are often
 domain/construct-numbered), but MaveDB SHIPS the offset in the score-set metadata
 (`targetGenes[].externalIdentifiers[] {dbName: UniProt, offset: N}`) — so `UniProt_pos = mavedb_pos + offset`
 is AUTO-derivable, no manual curation. This censuses the clinically-actionable genes: for each, pick the
 best (most-variant) protein_coding assay, apply the offset, join ClinVar path/benign + AlphaMissense, and
-report which genes are AUROC-VIABLE (both classes ≥ MIN_PER_CLASS in the DMS-covered region) = the expandable
+report which genes are AUROC-VIABLE (both classes >= MIN_PER_CLASS in the DMS-covered region) = the expandable
 R2 clinical-decoder substrate beyond TP53/MSH2.
 
 HONEST: the offset unlocks the JOIN; AUROC-viability still depends on per-gene class balance in the

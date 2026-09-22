@@ -1,15 +1,15 @@
 """Single-genome map CLI — point the genome-map at ONE genome.
 
-The product's primary surface ("point the tool at ONE microbial genome → an
+The product's primary surface ("point the tool at ONE microbial genome -> an
 honest, evidence-tiered per-feature map"). The 3-genome spike
 (`scripts/genome_map_spike.py`) validated the pipeline (verdict GO 2026-06-18);
 this is the thin, reusable single-genome front door over the SAME tested core
 (`run_genome_map_for` + the Step-1 runners + the Step-6 gate).
 
 Modes:
-  - Live:    --genome-fasta X.fna [--organism Escherichia]  → Bakta + AMRFinder via Docker.
-  - Hybrid:  --genome-fasta X.fna --gff Y.gff3              → skip Bakta, run AMRFinder.
-  - Offline: --gff Y.gff3 --no-amrfinder                    → tiers from a provided GFF
+  - Live:    --genome-fasta X.fna [--organism Escherichia]  -> Bakta + AMRFinder via Docker.
+  - Hybrid:  --genome-fasta X.fna --gff Y.gff3              -> skip Bakta, run AMRFinder.
+  - Offline: --gff Y.gff3 --no-amrfinder                    -> tiers from a provided GFF
              + the determinant cells; degraded-coverage flag set (AC12). No Docker.
 
 Emits a JSON map + a flat feature table + a readable markdown summary, and prints

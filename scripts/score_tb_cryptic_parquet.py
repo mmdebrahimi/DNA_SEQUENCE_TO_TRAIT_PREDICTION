@@ -13,7 +13,7 @@ CRyPTIC, so this is in-distribution, NOT independent validation. No regeno here 
 unassessed (non-match -> S, never ABSTAIN); flagged in the result. CRyPTIC's per-position decomposition
 means an MNV determinant is matched base-by-base (the documented masked-VCF FN cause is sidestepped).
 
-Reads VARIANTS.parquet in row-batches (it is 59 M rows / 2.9 GB) and keeps ONLY rows at determinant ∪
+Reads VARIANTS.parquet in row-batches (it is 59 M rows / 2.9 GB) and keeps ONLY rows at determinant  UNION 
 barcode positions for major alleles — memory-bounded on a constrained host. Labels = the reuse table's
 `{CODE}_BINARY_PHENOTYPE` (measured), quality HIGH.
 """

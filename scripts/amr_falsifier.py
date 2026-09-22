@@ -62,7 +62,7 @@ def main(argv=None) -> int:
     ap.add_argument("--kmer-k", type=int, default=8)
     ap.add_argument("--kmer-top-n", type=int, default=10_000)
     ap.add_argument("--amrfinder-runs", type=Path, default=None,
-                    help="AMRFinder cache root (data/amrfinder_runs) → adds the QRDR/plasmid POINT "
+                    help="AMRFinder cache root (data/amrfinder_runs) -> adds the QRDR/plasmid POINT "
                          "knowledge baseline (the 'best classical' comparator). Requires all strains cached.")
     ap.add_argument("--output", type=Path, default=None)
     ap.add_argument("--skip-kmer", action="store_true",

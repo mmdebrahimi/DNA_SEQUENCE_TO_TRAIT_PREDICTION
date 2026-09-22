@@ -8,7 +8,7 @@ rather than re-implementing it. The only new pieces are the NA catalog (the data
 
 NA is encoded on a non-spliced influenza segment, so the CDS-vs-genome HSP is colinear and codon-mapping is
 direct (intronless, like K13 / bacterial CDS; unlike intron-containing pfcrt). Numbering is N1 (the shipped
-reference NC_026434.1 has WT His at 275 = the H275Y marker). Offline-safe: absent BLAST+ → INDETERMINATE
+reference NC_026434.1 has WT His at 275 = the H275Y marker). Offline-safe: absent BLAST+ -> INDETERMINATE
 with a reason (same degrade contract as the other callers), so tests stay green without the binaries.
 """
 from __future__ import annotations

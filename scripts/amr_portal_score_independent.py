@@ -5,7 +5,7 @@ The AMR Portal ships a per-isolate GENOTYPE table in AMRFinderPlus format (`amr_
 `subclass`, `element_subtype` AMR/POINT) — the EXACT fields the frozen `amr_rules.call_resistance` consumes
 from an AMRFinder `main.tsv`. So for each provenance-disjoint isolate (BioSample/ERS/GCA not in CRyPTIC or
 our cohorts) that has a MEASURED `resistance_phenotype`, we reconstruct a faithful main.tsv from its
-determinants and call the FROZEN rule unchanged → confusion vs the measured label → sens/spec + Wilson CI.
+determinants and call the FROZEN rule unchanged -> confusion vs the measured label -> sens/spec + Wilson CI.
 
 HONESTY RAILS:
  - INDEPENDENT vs the frozen cells' tuning cohorts: leakage is accession-disjoint (BioSample/ERS/GCA). This
@@ -14,7 +14,7 @@ HONESTY RAILS:
  - The genotype is the AMR PORTAL's own AMRFinder run (a different operator/possibly-different version than
    our pinned image) — that makes it MORE independent (different pipeline), but the AMRFinder version is a
    named caveat (point-mutation calling can differ across versions).
- - The frozen rule is applied UNCHANGED via `call_resistance` (organism=None → the validated DRUG_RULE path,
+ - The frozen rule is applied UNCHANGED via `call_resistance` (organism=None -> the validated DRUG_RULE path,
    exactly as the frozen E. coli cells were validated). FROZEN surface byte-unchanged.
 
 Pure logic (`wilson_ci` / `genotype_to_main_tsv` / `confusion`) unit-tested; the parquet load + frozen-rule

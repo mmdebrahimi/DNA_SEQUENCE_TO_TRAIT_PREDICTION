@@ -10,7 +10,7 @@ Reuses the eye-colour OpenSNP ingest machinery (selective zip streaming — NEVE
 
 ABO locus (chr9q34.2, ABO gene):
   * rs8176719  c.261delG  — the O-allele frameshift DELETION. 23andMe reports D (deletion) / I (insertion).
-      DD = homozygous deletion → blood type O (deterministic).  DI / II → at least one functional allele → non-O.
+      DD = homozygous deletion -> blood type O (deterministic).  DI / II -> at least one functional allele -> non-O.
   * rs8176746  (A/B-distinguishing, p.Leu266Met)  — A vs B tag.
   * rs8176747  (A/B-distinguishing, p.Gly268Ala)  — A vs B tag.
 

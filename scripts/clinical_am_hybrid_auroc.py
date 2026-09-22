@@ -2,7 +2,7 @@
 the BLOSUM62 FLOOR and the DMS-functional CEILING on the same actionable-human-gene ClinVar joins.
 
 Follow-up to `scripts/clinical_variant_effect_validate.py` (the floor+ceiling cell). That cell established,
-on the MaveDB-DMS ⋈ ClinVar path/benign joins: DMS-itself AUROC (fitness-alignment CEILING) TP53 0.996 /
+on the MaveDB-DMS  JOIN  ClinVar path/benign joins: DMS-itself AUROC (fitness-alignment CEILING) TP53 0.996 /
 MSH2 0.955, BLOSUM62 FLOOR 0.707 / 0.832 — a large gap = the headroom a LEARNED decoder should capture. This
 places the deployable learned decoders in that gap, ON THE SAME joined variant set (so every number is
 directly comparable):

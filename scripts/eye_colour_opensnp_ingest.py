@@ -1,4 +1,4 @@
-"""Ingest the OpenSNP archive dump (Internet Archive mirror) → score the rs12913832 eye-colour decoder.
+"""Ingest the OpenSNP archive dump (Internet Archive mirror) -> score the rs12913832 eye-colour decoder.
 
 The flagship off-pathogen validation, user-ratified 2026-06-28 (live OpenSNP was deleted 2025-04; this uses
 the archived dump at archive.org/details/opensnp_data_dumps). Reads DIRECTLY from the 21 GB zip via
@@ -6,11 +6,11 @@ the archived dump at archive.org/details/opensnp_data_dumps). Reads DIRECTLY fro
 NEVER extracts 21 GB). No further network (one download already on D:).
 
 Robust-by-design (the real zip's column/filename conventions are verified at run, not assumed): fuzzy
-eye-colour column match + a genotype-filename → user-id regex; `--inspect` prints the real structure first.
+eye-colour column match + a genotype-filename -> user-id regex; `--inspect` prints the real structure first.
 
 Reuses the SHARED rule (`eye_colour.call_eye_colour`, strand-agnostic) + the binner/scorer math
 (`eye_colour_opensnp_validate`). HONESTY: self-reported label (near-independent, non-circular, noisy);
-ancestry-confounded (rs12913832 European-calibrated) → within-ancestry split is v0.1 (deferred, flagged).
+ancestry-confounded (rs12913832 European-calibrated) -> within-ancestry split is v0.1 (deferred, flagged).
 """
 from __future__ import annotations
 

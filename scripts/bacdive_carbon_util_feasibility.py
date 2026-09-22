@@ -227,7 +227,7 @@ def main(argv=None) -> int:
     ap.add_argument("--export", required=True, type=Path,
                     help="BacDive carbon-utilization export (long-format CSV/TSV)")
     ap.add_argument("--mlst", type=Path, default=None,
-                    help="optional strain_id→MLST sidecar (JSON or 2-col CSV/TSV)")
+                    help="optional strain_id->MLST sidecar (JSON or 2-col CSV/TSV)")
     ap.add_argument("--organism", default="Escherichia coli")
     ap.add_argument("--min-strains", type=int, default=DEFAULT_MIN_STRAINS)
     ap.add_argument("--min-minority-frac", type=float, default=DEFAULT_MIN_MINORITY_FRAC)

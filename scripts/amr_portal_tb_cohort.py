@@ -3,8 +3,8 @@
 The TB cell's rule is the WHO catalogue on RAW per-isolate VCF (`organism_rules/tb_amr`), so — unlike the
 bacterial cells — the AMR Portal's AMRFinder genotype table is NOT a faithful input (it is AMRFinder's
 narrower, catalogue-derived TB POINT calls; scoring our WHO rule on it tests AMRFinder, not the catalogue).
-The independent TB number therefore needs RAW variants: fetch each isolate's assembly → call variants vs
-H37Rv NC_000962.3 → masked VCF → `tb_amr.score_drug`. That fetch+call is the DOCKER-COMPUTE-gated step.
+The independent TB number therefore needs RAW variants: fetch each isolate's assembly -> call variants vs
+H37Rv NC_000962.3 -> masked VCF -> `tb_amr.score_drug`. That fetch+call is the DOCKER-COMPUTE-gated step.
 
 This script does the FREE, code-side part: emit the ready cohort — every provenance-disjoint (not in CRyPTIC,
 not in our cohorts) M. tuberculosis isolate with a MEASURED rifampicin AND/OR isoniazid label, joined to its

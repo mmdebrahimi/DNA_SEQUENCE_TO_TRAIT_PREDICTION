@@ -1,7 +1,7 @@
 """EP-8 Path B — G2 dry-manifest (CPU-only gate; manifest §0.5). MUST pass before any GPU embedding.
 
 Proves the Arabidopsis flowering-time embedding test is runnable BEFORE the workhorse spends GPU:
-  1. accession intersection  (AraPheno FT10 ∩ pseudogenome files ∩ SNP-matrix columns)
+  1. accession intersection  (AraPheno FT10  INTERSECT  pseudogenome files  INTERSECT  SNP-matrix columns)
   2. pseudogenome ID->filename pattern  (resolved EMPIRICALLY, never assumed)
   3. agnostic window/coordinate table  (gene-bodies + flanks, from a GFF; the FROZEN frozen-blind window set
      the FM embeds AND the matched SNP baseline reads — manifest §1a primary)

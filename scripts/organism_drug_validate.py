@@ -8,7 +8,7 @@ the deterministic "count the mechanism, not the broad class bag" approach transf
         --amrfinder-organism Pseudomonas_aeruginosa --drug ciprofloxacin
     ... --eval-only
 
-MVP bar per (organism,drug): acc >= 0.80 AND sens >= 0.80 → VALIDATED; else FAILS_BAR (documents the
+MVP bar per (organism,drug): acc >= 0.80 AND sens >= 0.80 -> VALIDATED; else FAILS_BAR (documents the
 organism-specific failure mode — often an intrinsic-efflux blind spot, per the Klebsiella tet finding).
 Restartable. Labels: NCBI Pathogen Detection AST (independent source). AMRFinder ~95s/strain.
 """

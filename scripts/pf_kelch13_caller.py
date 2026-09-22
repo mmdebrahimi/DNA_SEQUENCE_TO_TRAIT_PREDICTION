@@ -7,7 +7,7 @@ gene-generic BLAST+codon-mapping machinery (`observed_substitutions`, gap-aware,
 than re-implementing it. The only new pieces are the K13 catalog (the data module) + this thin wrapper.
 
 K13 (PF3D7_1343700) is intronless across the propeller domain, so the CDS-vs-genome HSP is colinear and
-codon-mapping is direct. Offline-safe: absent BLAST+ → INDETERMINATE with a reason (same degrade contract
+codon-mapping is direct. Offline-safe: absent BLAST+ -> INDETERMINATE with a reason (same degrade contract
 as the fungal caller), so tests stay green without the binaries.
 
 G0 (machinery) = validated against a planted C580Y (the bundled synthetic test). G0-completion = the real

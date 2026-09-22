@@ -6,16 +6,16 @@ MEASURED (non-circular) AST phenotype + a downloadable assembly. Such isolates a
 construction (the frozen decoder could not have been tuned to data that did not yet exist).
 
 DATA SOURCES (both free, public, no key — verified 2026-06-22):
-  - BV-BRC `genome_amr` API → MEASURED AST: `resistant_phenotype` (Resistant/Susceptible) with
+  - BV-BRC `genome_amr` API -> MEASURED AST: `resistant_phenotype` (Resistant/Susceptible) with
     `laboratory_typing_method != "Computational Prediction"` (excludes the circular ML-predicted rows), per
     organism (taxon_id) × drug; joined to BV-BRC `genome` for `assembly_accession`.
-  - NCBI Datasets v2 `genome/accession/<GCA>/dataset_report` → the AUTHORITATIVE assembly `release_date`
+  - NCBI Datasets v2 `genome/accession/<GCA>/dataset_report` -> the AUTHORITATIVE assembly `release_date`
     (the real "first public" date) + `biosample`. BV-BRC's own `date_inserted` LAGS NCBI, so it is used ONLY
     as a cheap NECESSARY pre-filter (release_date <= date_inserted always), never as the eligibility date.
 
 FUNNEL (efficient + correct): BV-BRC `genome` where taxon + public + has-assembly + `date_inserted > lock`
-(few recent rows) → BV-BRC `genome_amr` measured phenotype for those genomes × the cell's drugs → NCBI
-Datasets release_date per GCA → `prospective_lock.is_prospective_eligible` (strictly-after lock, fail-closed).
+(few recent rows) -> BV-BRC `genome_amr` measured phenotype for those genomes × the cell's drugs -> NCBI
+Datasets release_date per GCA -> `prospective_lock.is_prospective_eligible` (strictly-after lock, fail-closed).
 
 HONEST: the prospective window is small + both NCBI assembly release and BV-BRC ingestion LAG, so the cohort
 ACCRUES over time — `0 eligible` today is the expected, correct state, not a failure. This script is the

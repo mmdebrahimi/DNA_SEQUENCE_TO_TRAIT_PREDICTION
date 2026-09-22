@@ -1,14 +1,14 @@
-"""Fungal ERG11/FKS1 target-site mutation caller (EP-7 step 2 → Gate G0).
+"""Fungal ERG11/FKS1 target-site mutation caller (EP-7 step 2 -> Gate G0).
 
 Calls azole/echinocandin resistance from a fungal genome by BLASTing a target-gene CDS reference against
 the assembly, translating the aligned subject region, and checking catalogued resistance substitutions
-(`dna_decode/data/fungal_amr.py`). The eukaryotic analogue of the AMRFinder→`amr_rules` step — but since
+(`dna_decode/data/fungal_amr.py`). The eukaryotic analogue of the AMRFinder->`amr_rules` step — but since
 there is NO AMRFinder-for-fungi, the reference allele + catalog are supplied here.
 
 Uses `blastn` (CDS-vs-genome). C. auris ERG11 is intronless, so the HSP is colinear and codon-mapping is
 direct (gap-aware: a position interrupted by an indel is reported uncalled, never mis-translated). `tblastn`
 would be cleaner (protein-vs-genome) but is not installed; `blastn` + `makeblastdb` are
-(`C:/Users/Farshad/ncbi-blast/bin`). Offline-safe: absent BLAST → INDETERMINATE with a reason (mirrors the
+(`C:/Users/Farshad/ncbi-blast/bin`). Offline-safe: absent BLAST -> INDETERMINATE with a reason (mirrors the
 pathotype `vf_runner` degrade pattern), so tests stay green without the binaries.
 
 G0 = this machinery is validated against a KNOWN planted mutation (the bundled test). G0-completion (EP-7

@@ -1,7 +1,7 @@
 """Capture a curated ClinVar gene-panel catalog from the full ClinVar VCF (on D:) into a COMMITTED TSV.
 
 ClinVar = the human Mendelian-disease analogue of the AMR determinant catalog: a free, curated
-variant→clinical-significance map. This extracts a bounded, canonical gene panel (P/LP + B/LB variants only —
+variant->clinical-significance map. This extracts a bounded, canonical gene panel (P/LP + B/LB variants only —
 the deployable-claim tier; VUS excluded) into a small committed catalog that `dna_decode/data/clinvar.py`
 loads. The full 192 MB VCF stays on D: (gitignored); only the committed subset ships. Same pattern as the
 other curated catalogs (mic_tiers / hiv_amr / fungal_amr): committed curated data + a deterministic caller.

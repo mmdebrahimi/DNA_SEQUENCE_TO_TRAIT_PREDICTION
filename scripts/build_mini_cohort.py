@@ -84,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
         "--drug", default="ciprofloxacin", help="Drug for R/S balance + selection"
     )
     parser.add_argument(
-        "--per-class", type=int, default=6, help="Strains per R / S class (mini = 6 → 12)"
+        "--per-class", type=int, default=6, help="Strains per R / S class (mini = 6 -> 12)"
     )
     args = parser.parse_args(argv)
 

@@ -3,7 +3,7 @@ LD basis on an INDEPENDENT multi-population panel + quantifies its ancestry limi
 
 1000G is NOT a trait substrate (phenotype = ancestry/sex/family only) — its value here is as the LD /
 ancestry REFERENCE the imputation pre-processor needs. The openSNP-derived imputation maps are
-European-dominated; this queries 1000G r²/D' per super-population for a determinant↔tag pair so the map can
+European-dominated; this queries 1000G r²/D' per super-population for a determinant<->tag pair so the map can
 carry an INDEPENDENT, ancestry-stratified LD annotation (valid where r² >= threshold, abstain-worthy where
 low). Lightweight: Ensembl REST, no bulk VCF download (C: is disk-tight). Free, no auth.
 """

@@ -14,7 +14,7 @@ Two-layer honesty:
     enough post-lock isolates per class (powering gate mirrors MIN_PER_CLASS=10).
 
 The pure parts (partition / conf / artifact) are importable + offline-tested (`tests/test_prospective_lock.py`);
-the LIVE network+Docker fetch (download genome → AMRFinder → call_resistance) is a manual accruing step
+the LIVE network+Docker fetch (download genome -> AMRFinder -> call_resistance) is a manual accruing step
 behind a lazy import, exactly like the external-cohort arm.
 """
 from __future__ import annotations

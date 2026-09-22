@@ -2,7 +2,7 @@
 
 Meropenem is the highest-value Klebsiella drug: carbapenem resistance (KPC/NDM/OXA-48 carbapenemases) is
 the defining K. pneumoniae clinical threat and a mechanism class E. coli AMR never covered. The deterministic
-rule: acquired carbapenemase determinant (AMRFinder Subclass CARBAPENEM) ≥1 → R. Same shape as cef
+rule: acquired carbapenemase determinant (AMRFinder Subclass CARBAPENEM) >=1 -> R. Same shape as cef
 (acquired bla + Subclass refinement); excludes ESBL/AmpC that raise meropenem MIC without hydrolyzing it.
 
 Labels: NCBI Pathogen Detection AST (independent source). Cohort: balanced meropenem R/S, K. pneumoniae,

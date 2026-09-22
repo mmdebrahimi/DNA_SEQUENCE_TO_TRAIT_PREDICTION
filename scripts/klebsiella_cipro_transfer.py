@@ -2,7 +2,7 @@
 
 The key open platform question: does the deterministic mechanism-feature AMR caller — built + validated
 on E. coli — TRANSFER to a different organism with NO re-tuning? Klebsiella is the right first test
-(gram-negative, similar plasmid/QRDR biology → roadmap rates transfer MEDIUM). cipro is the cleanest drug
+(gram-negative, similar plasmid/QRDR biology -> roadmap rates transfer MEDIUM). cipro is the cleanest drug
 (QRDR point-mutations in gyrA/parC; the cipro DRUG_RULE = threshold 2, organism-agnostic QUINOLONE classes).
 
 The ONLY adaptation vs E. coli: AMRFinder runs with `-O Klebsiella_pneumoniae` (QRDR point-mutation

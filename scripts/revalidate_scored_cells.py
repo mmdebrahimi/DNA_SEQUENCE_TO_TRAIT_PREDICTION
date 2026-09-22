@@ -9,7 +9,7 @@ evidence short of external clinical validation; if it drifts, that is a real fin
 acquisition/publication.
 
 SAFETY (load-bearing — this runs UNATTENDED):
-  * Everything is routed into ISOLATED dirs: cohorts → `data/raw/revalidation_<date>/<cell>/`, summary →
+  * Everything is routed into ISOLATED dirs: cohorts -> `data/raw/revalidation_<date>/<cell>/`, summary ->
     `wiki/revalidation_<date>/`. It NEVER writes `data/raw/*_provdisjoint_*/selected.tsv`, the committed
     `wiki/provenance_disjoint_validation_*.json`, or the report card — so a re-run cannot mutate the frozen
     reproducibility surface, and the report-card top-level glob (`wiki/provenance_disjoint_validation_*.json`)

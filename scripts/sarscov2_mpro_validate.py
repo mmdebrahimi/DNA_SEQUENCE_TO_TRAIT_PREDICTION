@@ -2,7 +2,7 @@
 independent-label test for the coronavirus cell).
 
 Joins the frozen Mpro catalog (`dna_decode/data/sarscov2_amr.MPRO_MAJOR_DRMS`) against CoV-RDB's measured
-nirmatrelvir fold-change (`rx_fold` ⋈ `isolate_mutations`, from the committed payload), scores R/S at a stated
+nirmatrelvir fold-change (`rx_fold`  JOIN  `isolate_mutations`, from the committed payload), scores R/S at a stated
 fold threshold, and reports sens/spec + a per-mutation measured-fold table.
 
 HONESTY RAILS (load-bearing, mirror the TB CRyPTIC baseline):
