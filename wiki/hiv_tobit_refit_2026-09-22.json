@@ -1,0 +1,630 @@
+{
+  "schema": "hiv-tobit-refit-v1",
+  "date": "2026-09-22",
+  "bar": "wiki/hiv_tobit_refit_acceptance_bar.json",
+  "question": "does refitting the v0.1 catalog design with a censoring-aware (Tobit) likelihood change WHICH mutants clear RESIST_COEF_MIN?",
+  "censoring_point_log10": 2.0,
+  "selection_threshold": 0.17609125905568124,
+  "constants_imported_not_restated": {
+    "MIN_CARRIERS": 5,
+    "RESIST_COEF_MIN": 0.17609125905568124,
+    "source": "scripts/hiv_nrti_mutant_catalog.py"
+  },
+  "results": [
+    {
+      "drug": "lamivudine",
+      "class": "NRTI",
+      "status": "ok",
+      "n_records": 1839,
+      "n_candidates": 29,
+      "censored_fraction": 0.4519,
+      "n_censored": 831,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.14266,
+      "max_abs_coef_delta": 1.51426,
+      "catalog_ols_n": 12,
+      "catalog_tobit_n": 16,
+      "gained_under_tobit": [
+        "K70R",
+        "K70T",
+        "T215X",
+        "V75L"
+      ],
+      "lost_under_tobit": [],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "K70R",
+          "direction": "gained",
+          "ols_coef": 0.14432,
+          "tobit_coef": 0.19225,
+          "ols_margin_to_threshold": 0.03177,
+          "knife_edge": false
+        },
+        {
+          "mutant": "K70T",
+          "direction": "gained",
+          "ols_coef": -0.20216,
+          "tobit_coef": 1.3121,
+          "ols_margin_to_threshold": 0.37826,
+          "knife_edge": false
+        },
+        {
+          "mutant": "T215X",
+          "direction": "gained",
+          "ols_coef": 0.17127,
+          "tobit_coef": 0.20659,
+          "ols_margin_to_threshold": 0.00482,
+          "knife_edge": true
+        },
+        {
+          "mutant": "V75L",
+          "direction": "gained",
+          "ols_coef": 0.08777,
+          "tobit_coef": 0.32757,
+          "ols_margin_to_threshold": 0.08832,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 1,
+      "n_flips_decisive": 3
+    },
+    {
+      "drug": "abacavir",
+      "class": "NRTI",
+      "status": "ok",
+      "n_records": 1731,
+      "n_candidates": 29,
+      "censored_fraction": 0.0029,
+      "n_censored": 5,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00067,
+      "max_abs_coef_delta": 0.0097,
+      "catalog_ols_n": 8,
+      "catalog_tobit_n": 8,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "zidovudine",
+      "class": "NRTI",
+      "status": "ok",
+      "n_records": 1853,
+      "n_candidates": 29,
+      "censored_fraction": 0.1365,
+      "n_censored": 253,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.01133,
+      "max_abs_coef_delta": 0.11847,
+      "catalog_ols_n": 12,
+      "catalog_tobit_n": 12,
+      "gained_under_tobit": [
+        "T215E"
+      ],
+      "lost_under_tobit": [
+        "T215V"
+      ],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "T215E",
+          "direction": "gained",
+          "ols_coef": 0.10664,
+          "tobit_coef": 0.18834,
+          "ols_margin_to_threshold": 0.06945,
+          "knife_edge": false
+        },
+        {
+          "mutant": "T215V",
+          "direction": "lost",
+          "ols_coef": 0.20546,
+          "tobit_coef": 0.15202,
+          "ols_margin_to_threshold": 0.02936,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 2
+    },
+    {
+      "drug": "stavudine",
+      "class": "NRTI",
+      "status": "ok",
+      "n_records": 1846,
+      "n_candidates": 29,
+      "censored_fraction": 0.0022,
+      "n_censored": 4,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00056,
+      "max_abs_coef_delta": 0.01015,
+      "catalog_ols_n": 8,
+      "catalog_tobit_n": 8,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "didanosine",
+      "class": "NRTI",
+      "status": "ok",
+      "n_records": 1849,
+      "n_candidates": 29,
+      "censored_fraction": 0.0011,
+      "n_censored": 2,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00012,
+      "max_abs_coef_delta": 0.00316,
+      "catalog_ols_n": 4,
+      "catalog_tobit_n": 5,
+      "gained_under_tobit": [
+        "K70N"
+      ],
+      "lost_under_tobit": [],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "K70N",
+          "direction": "gained",
+          "ols_coef": 0.17396,
+          "tobit_coef": 0.17711,
+          "ols_margin_to_threshold": 0.00214,
+          "knife_edge": true
+        }
+      ],
+      "n_flips_knife_edge": 1,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "tenofovir",
+      "class": "NRTI",
+      "status": "ok",
+      "n_records": 1548,
+      "n_candidates": 29,
+      "censored_fraction": 0.0,
+      "n_censored": 0,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": -0.0,
+      "max_abs_coef_delta": 0.0,
+      "catalog_ols_n": 8,
+      "catalog_tobit_n": 8,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "fosamprenavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 2052,
+      "n_candidates": 37,
+      "censored_fraction": 0.0541,
+      "n_censored": 111,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00765,
+      "max_abs_coef_delta": 0.09023,
+      "catalog_ols_n": 25,
+      "catalog_tobit_n": 23,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [
+        "G48M",
+        "L33M"
+      ],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "G48M",
+          "direction": "lost",
+          "ols_coef": 0.19874,
+          "tobit_coef": 0.16228,
+          "ols_margin_to_threshold": 0.02265,
+          "knife_edge": false
+        },
+        {
+          "mutant": "L33M",
+          "direction": "lost",
+          "ols_coef": 0.19569,
+          "tobit_coef": 0.12599,
+          "ols_margin_to_threshold": 0.01959,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 2
+    },
+    {
+      "drug": "atazanavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 1505,
+      "n_candidates": 37,
+      "censored_fraction": 0.1176,
+      "n_censored": 177,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.02593,
+      "max_abs_coef_delta": 0.25513,
+      "catalog_ols_n": 24,
+      "catalog_tobit_n": 23,
+      "gained_under_tobit": [
+        "L33F"
+      ],
+      "lost_under_tobit": [
+        "V82A",
+        "V82C"
+      ],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "L33F",
+          "direction": "gained",
+          "ols_coef": 0.16145,
+          "tobit_coef": 0.1942,
+          "ols_margin_to_threshold": 0.01464,
+          "knife_edge": false
+        },
+        {
+          "mutant": "V82A",
+          "direction": "lost",
+          "ols_coef": 0.18132,
+          "tobit_coef": 0.13941,
+          "ols_margin_to_threshold": 0.00523,
+          "knife_edge": true
+        },
+        {
+          "mutant": "V82C",
+          "direction": "lost",
+          "ols_coef": 0.19715,
+          "tobit_coef": 0.14321,
+          "ols_margin_to_threshold": 0.02106,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 1,
+      "n_flips_decisive": 2
+    },
+    {
+      "drug": "indinavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 2098,
+      "n_candidates": 37,
+      "censored_fraction": 0.0553,
+      "n_censored": 116,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.03471,
+      "max_abs_coef_delta": 0.40705,
+      "catalog_ols_n": 22,
+      "catalog_tobit_n": 23,
+      "gained_under_tobit": [
+        "L33I"
+      ],
+      "lost_under_tobit": [],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "L33I",
+          "direction": "gained",
+          "ols_coef": 0.16563,
+          "tobit_coef": 0.19089,
+          "ols_margin_to_threshold": 0.01046,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 1
+    },
+    {
+      "drug": "lopinavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 1807,
+      "n_candidates": 37,
+      "censored_fraction": 0.1439,
+      "n_censored": 260,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.04584,
+      "max_abs_coef_delta": 0.42641,
+      "catalog_ols_n": 23,
+      "catalog_tobit_n": 24,
+      "gained_under_tobit": [
+        "V32I"
+      ],
+      "lost_under_tobit": [],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "V32I",
+          "direction": "gained",
+          "ols_coef": 0.17252,
+          "tobit_coef": 0.20025,
+          "ols_margin_to_threshold": 0.00357,
+          "knife_edge": true
+        }
+      ],
+      "n_flips_knife_edge": 1,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "nelfinavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 2133,
+      "n_candidates": 37,
+      "censored_fraction": 0.0919,
+      "n_censored": 196,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.04507,
+      "max_abs_coef_delta": 0.64452,
+      "catalog_ols_n": 22,
+      "catalog_tobit_n": 21,
+      "gained_under_tobit": [
+        "N88D"
+      ],
+      "lost_under_tobit": [
+        "G48M",
+        "M46V"
+      ],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "G48M",
+          "direction": "lost",
+          "ols_coef": 0.1857,
+          "tobit_coef": 0.11844,
+          "ols_margin_to_threshold": 0.00961,
+          "knife_edge": true
+        },
+        {
+          "mutant": "M46V",
+          "direction": "lost",
+          "ols_coef": 0.19411,
+          "tobit_coef": 0.12043,
+          "ols_margin_to_threshold": 0.01802,
+          "knife_edge": false
+        },
+        {
+          "mutant": "N88D",
+          "direction": "gained",
+          "ols_coef": 0.14914,
+          "tobit_coef": 0.20687,
+          "ols_margin_to_threshold": 0.02696,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 1,
+      "n_flips_decisive": 2
+    },
+    {
+      "drug": "saquinavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 2084,
+      "n_candidates": 37,
+      "censored_fraction": 0.1176,
+      "n_censored": 245,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.17685,
+      "max_abs_coef_delta": 2.64134,
+      "catalog_ols_n": 18,
+      "catalog_tobit_n": 18,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "tipranavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 1226,
+      "n_candidates": 34,
+      "censored_fraction": 0.0343,
+      "n_censored": 42,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00513,
+      "max_abs_coef_delta": 0.06131,
+      "catalog_ols_n": 15,
+      "catalog_tobit_n": 15,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "darunavir",
+      "class": "PI",
+      "status": "ok",
+      "n_records": 993,
+      "n_candidates": 33,
+      "censored_fraction": 0.0624,
+      "n_censored": 62,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00414,
+      "max_abs_coef_delta": 0.10904,
+      "catalog_ols_n": 17,
+      "catalog_tobit_n": 17,
+      "gained_under_tobit": [
+        "V82I"
+      ],
+      "lost_under_tobit": [
+        "V82C"
+      ],
+      "membership_changed": true,
+      "flips": [
+        {
+          "mutant": "V82C",
+          "direction": "lost",
+          "ols_coef": 0.23963,
+          "tobit_coef": 0.1616,
+          "ols_margin_to_threshold": 0.06354,
+          "knife_edge": false
+        },
+        {
+          "mutant": "V82I",
+          "direction": "gained",
+          "ols_coef": 0.10671,
+          "tobit_coef": 0.18185,
+          "ols_margin_to_threshold": 0.06938,
+          "knife_edge": false
+        }
+      ],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 2
+    },
+    {
+      "drug": "raltegravir",
+      "class": "INSTI",
+      "status": "ok",
+      "n_records": 753,
+      "n_candidates": 21,
+      "censored_fraction": 0.1208,
+      "n_censored": 91,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.05508,
+      "max_abs_coef_delta": 0.1457,
+      "catalog_ols_n": 15,
+      "catalog_tobit_n": 15,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "elvitegravir",
+      "class": "INSTI",
+      "status": "ok",
+      "n_records": 754,
+      "n_candidates": 21,
+      "censored_fraction": 0.1658,
+      "n_censored": 125,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.11551,
+      "max_abs_coef_delta": 0.4318,
+      "catalog_ols_n": 18,
+      "catalog_tobit_n": 18,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "dolutegravir",
+      "class": "INSTI",
+      "status": "ok",
+      "n_records": 370,
+      "n_candidates": 15,
+      "censored_fraction": 0.0081,
+      "n_censored": 3,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: RELATIVE REDUCTION OF F <= FACTR*EPSMCH",
+      "mean_coef_delta": 0.00062,
+      "max_abs_coef_delta": 0.00767,
+      "catalog_ols_n": 12,
+      "catalog_tobit_n": 12,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "bictegravir",
+      "class": "INSTI",
+      "status": "ok",
+      "n_records": 287,
+      "n_candidates": 16,
+      "censored_fraction": 0.0,
+      "n_censored": 0,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "mean_coef_delta": -0.0,
+      "max_abs_coef_delta": 0.0,
+      "catalog_ols_n": 13,
+      "catalog_tobit_n": 13,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    },
+    {
+      "drug": "cabotegravir",
+      "class": "INSTI",
+      "status": "ok",
+      "n_records": 64,
+      "n_candidates": 6,
+      "censored_fraction": 0.0156,
+      "n_censored": 1,
+      "tobit_converged": true,
+      "tobit_message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "mean_coef_delta": -0.00098,
+      "max_abs_coef_delta": 0.02043,
+      "catalog_ols_n": 5,
+      "catalog_tobit_n": 5,
+      "gained_under_tobit": [],
+      "lost_under_tobit": [],
+      "membership_changed": false,
+      "flips": [],
+      "n_flips_knife_edge": 0,
+      "n_flips_decisive": 0
+    }
+  ],
+  "verdict": "IMPLEMENTATION_SUSPECT",
+  "reason": "Tobit must reduce to OLS at ~zero censoring, but ['stavudine', 'cabotegravir'] moved by >= 0.01. The implementation is suspect; interpret nothing.",
+  "control_drugs": [
+    "abacavir",
+    "stavudine",
+    "didanosine",
+    "tenofovir",
+    "dolutegravir",
+    "bictegravir",
+    "cabotegravir"
+  ],
+  "control_failures": [
+    "stavudine",
+    "cabotegravir"
+  ],
+  "verdict_is_mechanical": "verdict() applied to the frozen rule; not authored",
+  "honest_limits": [
+    "Does NOT re-run the 5-fold CV and therefore produces NO new balanced-accuracy gain figures. It asks only whether the SELECTION DECISION moves.",
+    "NOT a decoder change under any verdict: no v0.1 catalog is deployed -- hiv_amr.py routes NRTI/PI/INSTI through POSITION-based classes.",
+    "The censoring point is INFERRED from a pile-up with an empty tail above it, not read off assay documentation.",
+    "Tobit assumes normal homoscedastic latent errors on the log10 scale -- the same assumption OLS already makes here, not extra evidence for it.",
+    "No GPU is used or needed; this is a censored-regression MLE on ~2,000 rows."
+  ]
+}
