@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import json
 import hashlib
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
 
@@ -108,6 +108,10 @@ class LockVerification:
     ok: bool
     drifted: list[str]          # files whose live sha256 != the manifest
     missing: list[str]          # files in the manifest absent on disk
+    # Files the manifest FAILED TO PIN (or pinned that are not part of the frozen surface). Distinct
+    # from `missing`, which means "pinned but absent from disk": this means the manifest never made
+    # the commitment at all, so there is nothing to verify rather than something that failed.
+    incomplete_pin: list[str] = field(default_factory=list)
 
 
 def verify_lock(manifest: dict, repo: Path = _REPO) -> LockVerification:
@@ -116,6 +120,20 @@ def verify_lock(manifest: dict, repo: Path = _REPO) -> LockVerification:
     A prospective score is only honest if the decoder scoring the post-lock data is the SAME decoder that
     was committed at lock time. Any drift / missing file => the lock is broken; the scorer MUST refuse."""
     pinned: dict[str, str] = manifest.get("surface_sha256", {})
+    # A manifest that pins NOTHING must not verify. Iterating an empty dict finds no drift and no
+    # missing file, so the original returned ok=True for `surface_sha256: {}`, for a missing key, and
+    # for a single-file subset -- a lock that checks nothing, reported as a lock that holds. Harmless
+    # while every caller named one trusted manifest; NOT harmless once `resolve_active_lock` globs every
+    # committed manifest and picks a verifying one, because a vacuous manifest would be selected
+    # EXACTLY when the real lock stops verifying -- i.e. it would defeat fail-closed at the only moment
+    # fail-closed matters. Same shape as the vacuous filters this project has caught three times before.
+    if set(pinned) != set(FROZEN_SURFACE_FILES):
+        return LockVerification(
+            ok=False,
+            drifted=[],
+            missing=sorted(set(FROZEN_SURFACE_FILES) - set(pinned)),
+            incomplete_pin=sorted(set(pinned) ^ set(FROZEN_SURFACE_FILES)),
+        )
     drifted, missing = [], []
     for rel, want in pinned.items():
         p = repo / rel

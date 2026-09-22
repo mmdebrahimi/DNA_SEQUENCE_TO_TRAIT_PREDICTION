@@ -319,12 +319,24 @@ def test_naive_value_add_loader_and_section(monkeypatch, tmp_path):
 # --- prospective-lock disclosure layer (2026-08-24) ---
 
 
+def _live_surface_hashes():
+    """The current frozen-surface hashes, so a fixture artifact is one the pipeline could really emit."""
+    from dna_decode.eval.prospective_lock import surface_hashes
+    return surface_hashes()
+
+
 def _prospective_artifact(org="Klebsiella", drug="ciprofloxacin", *, acc=0.60, sens=0.40,
                           spec=0.90, n=50, generated="2026-08-24", verified=True):
     return {
         "artifact": "prospective_lock_validation", "generated": generated,
         "organism": org, "drug": drug, "prospective_lock_verified": verified,
-        "lock_manifest": {"lock_date": "2026-06-13"},
+        # A REAL artifact stamps the manifest's whole `surface_sha256` (see build_artifact in
+        # scripts/prospective_lock_validate.py). The fixture carried no hashes at all, which made it an
+        # input the pipeline cannot produce -- and once the re-verification stopped blessing unpinnable
+        # artifacts (2026-09-22) it correctly withheld these, exercising the wrong property. Stamping
+        # the LIVE surface keeps each test aimed at what it was written for.
+        "lock_manifest": {"lock_date": "2026-06-13",
+                          "surface_sha256": _live_surface_hashes()},
         "confusion": {"n_scored": n, "acc": acc, "sens": sens, "spec": spec, "abstain": 0},
         "powering": {"status": "POWERED", "n_scored": n, "scored_R": 20, "scored_S": 30},
     }
@@ -430,7 +442,8 @@ def test_a_healthy_or_underpowered_prospective_cell_raises_no_flag(monkeypatch, 
     # an UNDERPOWERED prospective cell makes no claim either way, even at a terrible sens
     blk = mod.build_prospective_block({
         "prospective_lock_verified": True, "generated": "2026-08-24",
-        "lock_manifest": {"lock_date": "2026-06-13"},
+        "lock_manifest": {"lock_date": "2026-06-13",
+                          "surface_sha256": _live_surface_hashes()},
         "confusion": {"n_scored": 4, "acc": 0.1, "sens": 0.1, "spec": 0.1, "abstain": 0},
         "powering": {"status": "UNDERPOWERED", "scored_R": 2, "scored_S": 2}})
     assert blk["regression"] is False
@@ -558,3 +571,51 @@ def test_the_strong_family_set_tracks_the_deployed_rule():
         assert fams == set(), f"a NEW strong completeness family appeared -- adjudicate it: {sorted(fams)}"
     else:
         assert fams == {"rmtE1"}, f"the set of STRONG completeness families changed: {sorted(fams)}"
+
+
+# --- the prospective re-verification must not bless what it cannot check (found in review 2026-09-22)
+
+def _stamped(hashes):
+    return {"prospective_lock_verified": True, "generated": "2026-09-01",
+            "lock_manifest": {"lock_date": "2026-08-31", "surface_sha256": hashes},
+            "confusion": {"tp": 10, "fp": 0, "tn": 10, "fn": 0},
+            "powering": {"powered": True}}
+
+
+def test_an_artifact_that_pins_nothing_is_withheld_not_rendered():
+    """REGRESSION. `if stamped:` was falsy for an absent/empty surface_sha256, so the ENTIRE
+    re-verification was skipped and the cell rendered as a LIVE prospective score -- the strongest
+    tier in the project, granted to an artifact that pinned nothing."""
+    from scripts.build_validation_report_card import build_prospective_block
+    assert build_prospective_block(_stamped({}))["status"] == "lock_unverifiable"
+
+
+def test_a_partially_pinned_artifact_whose_hashes_all_match_is_withheld():
+    """A partial stamp was checked only over the files it happened to carry, so the decoder could have
+    changed in any UNPINNED file while the cell still read as verified.
+
+    Scoped to the all-match case on purpose: if a pinned hash MISmatches we have positive proof of a
+    revision, and `superseded_by_surface_change` is the truer, more informative status. Both withhold."""
+    from dna_decode.eval.prospective_lock import FROZEN_SURFACE_FILES, surface_hashes
+    from scripts.build_validation_report_card import build_prospective_block
+    live = surface_hashes()
+    partial = {FROZEN_SURFACE_FILES[0]: live[FROZEN_SURFACE_FILES[0]]}
+    blk = build_prospective_block(_stamped(partial))
+    assert blk["status"] == "lock_unverifiable"
+    assert blk["unpinned_files"], "the reason must be reported, not just the refusal"
+
+
+def test_a_fully_pinned_matching_artifact_still_scores():
+    """NON-VACUITY: the tightening must reject the vacuous forms WITHOUT rejecting a genuine one. A
+    guard that withholds everything is not fail-closed, it is broken."""
+    from dna_decode.eval.prospective_lock import surface_hashes
+    from scripts.build_validation_report_card import build_prospective_block
+    blk = build_prospective_block(_stamped(surface_hashes()))
+    assert blk["status"] not in ("lock_unverifiable", "superseded_by_surface_change")
+
+
+def test_drift_is_still_detected_on_a_complete_pin():
+    from dna_decode.eval.prospective_lock import FROZEN_SURFACE_FILES, surface_hashes
+    from scripts.build_validation_report_card import build_prospective_block
+    h = dict(surface_hashes()); h[FROZEN_SURFACE_FILES[0]] = "0" * 64
+    assert build_prospective_block(_stamped(h))["status"] == "superseded_by_surface_change"

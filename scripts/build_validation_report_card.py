@@ -270,14 +270,40 @@ def build_prospective_block(pcell: dict | None) -> dict:
     # That cost is real and is the honest price of the revision -- it applies to the ciprofloxacin cell
     # too, whose RULE did not change but whose pinned surface did; behavioural sameness is an argument,
     # and hash-pinning exists so evidence never rests on one.
+    # THREE WAYS THIS RE-VERIFICATION USED TO PASS WITHOUT CHECKING ANYTHING (found in review,
+    # 2026-09-22; the same vacuous-guard class as `verify_lock` accepting an empty pin):
+    #   (a) an absent/empty `surface_sha256` made `stamped` falsy, so the ENTIRE block was skipped and
+    #       the cell rendered as a live prospective score;
+    #   (b) a PARTIAL stamp was checked only over the files it happened to carry;
+    #   (c) an import failure set `drifted = []`, i.e. the check failing meant "no drift" -- fail-OPEN
+    #       on a trust surface.
+    # All three now WITHHOLD. "I could not verify" and "I verified and it is fine" must never render
+    # the same, which is the whole argument for the lock.
     stamped = ((pcell.get("lock_manifest") or {}).get("surface_sha256")) or {}
-    if stamped:
-        try:
-            from dna_decode.eval.prospective_lock import surface_hashes
-            live = surface_hashes()
-            drifted = sorted(f for f, h in stamped.items() if live.get(f) != h)
-        except Exception:  # noqa: BLE001 — a read-only roll-up must not break on an import failure
-            drifted = []
+    try:
+        from dna_decode.eval.prospective_lock import FROZEN_SURFACE_FILES, surface_hashes
+        live = surface_hashes()
+    except Exception:  # noqa: BLE001 — a read-only roll-up must not break, but it must not bless either
+        return {"status": "lock_unverifiable",
+                "generated": pcell.get("generated"),
+                "lock_date": (pcell.get("lock_manifest") or {}).get("lock_date"),
+                "note": ("the frozen surface could not be re-hashed, so whether this score describes the "
+                         "live decoder is UNKNOWN; numbers withheld rather than assumed current.")}
+    # ORDER MATTERS, and drift is checked FIRST. Both outcomes withhold the numbers, but they are not
+    # equally informative: a mismatch on ANY pinned file is positive PROOF the decoder was revised, so
+    # `superseded_by_surface_change` is both true and more useful. `lock_unverifiable` is the weaker
+    # "cannot tell" and is reserved for the case where every pinned hash MATCHES but the pin is
+    # incomplete -- there, the unpinned files could have changed and nothing here can rule it out.
+    drifted = sorted(f for f, h in stamped.items() if live.get(f) != h)
+    if not drifted and set(stamped) != set(FROZEN_SURFACE_FILES):
+        return {"status": "lock_unverifiable",
+                "generated": pcell.get("generated"),
+                "lock_date": (pcell.get("lock_manifest") or {}).get("lock_date"),
+                "unpinned_files": sorted(set(FROZEN_SURFACE_FILES) - set(stamped)),
+                "note": ("every hash this artifact pins still matches, but it does not pin the whole "
+                         "frozen surface, so re-verification cannot prove it describes the live "
+                         "decoder; numbers withheld.")}
+    if True:
         if drifted:
             return {"status": "superseded_by_surface_change",
                     "generated": pcell.get("generated"),

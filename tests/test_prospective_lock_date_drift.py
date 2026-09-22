@@ -97,3 +97,44 @@ def test_the_resolver_returns_the_manifest_it_used():
     path, manifest = resolve_active_lock()
     assert path.name == "prospective_lock_manifest_2026-08-31.json"
     assert manifest["lock_date"] == "2026-08-31"
+
+
+# --- a manifest that pins NOTHING must not verify (found in review, 2026-09-22) -------------------
+
+def test_a_manifest_pinning_nothing_does_not_verify():
+    """REGRESSION. `verify_lock` iterated `surface_sha256.items()`; an EMPTY dict finds no drift and no
+    missing file, so it returned ok=True -- a lock that checks nothing, reported as a lock that holds.
+
+    Harmless while every caller named ONE trusted manifest. NOT harmless once `resolve_active_lock`
+    globs every committed manifest and selects a verifying one: a vacuous manifest would be picked
+    EXACTLY when the real lock stops verifying, i.e. it would defeat fail-closed at the only moment
+    fail-closed matters. Same shape as the vacuous filters this project has caught three times."""
+    from dna_decode.eval.prospective_lock import verify_lock
+    assert verify_lock({"lock_date": "2099-01-01", "surface_sha256": {}}).ok is False
+    assert verify_lock({"lock_date": "2099-01-01"}).ok is False
+
+
+def test_a_manifest_pinning_only_a_subset_does_not_verify():
+    """A partial pin is the dangerous middle case: every hash it DOES carry is correct, so the old
+    loop found no drift. The decoder could have changed in any unpinned file."""
+    import hashlib
+    from dna_decode.eval.prospective_lock import FROZEN_SURFACE_FILES, verify_lock
+    one = FROZEN_SURFACE_FILES[2]
+    digest = hashlib.sha256((ROOT / one).read_bytes()).hexdigest()
+    res = verify_lock({"surface_sha256": {one: digest}})
+    assert res.ok is False
+    assert res.incomplete_pin, "the reason must be reported, not just the refusal"
+
+
+def test_incomplete_pin_is_reported_separately_from_missing():
+    """`missing` means 'pinned but absent from disk'; `incomplete_pin` means the commitment was never
+    made. Collapsing them would report a manifest that pins nothing as a manifest whose files vanished."""
+    from dna_decode.eval.prospective_lock import verify_lock
+    res = verify_lock({"surface_sha256": {}})
+    assert res.incomplete_pin and not res.drifted
+
+
+def test_the_real_active_manifest_still_verifies_after_the_tightening():
+    """NON-VACUITY for the tightening itself: it must reject the vacuous forms WITHOUT rejecting the
+    genuine lock. A guard that refuses everything is not fail-closed, it is broken."""
+    assert active_lock_date() == "2026-08-31"

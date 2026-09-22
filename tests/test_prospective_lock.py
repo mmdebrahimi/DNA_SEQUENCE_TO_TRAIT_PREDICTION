@@ -62,9 +62,19 @@ def test_verify_lock_detects_tamper():
     assert not v.ok and FROZEN_SURFACE_FILES[0] in v.drifted
 
 
-def test_verify_lock_detects_missing():
-    v = verify_lock({"surface_sha256": {"dna_decode/data/does_not_exist.json": "x" * 64}})
-    assert not v.ok and "dna_decode/data/does_not_exist.json" in v.missing
+def test_verify_lock_detects_missing(tmp_path):
+    """A COMPLETE pin whose files are absent from the repo under test.
+
+    Rewritten 2026-09-22. The old version pinned ONLY `does_not_exist.json`, which is simultaneously a
+    pinned-but-absent file AND an incomplete pin (it commits to 1 of the 5 frozen files). Once
+    verify_lock started refusing incomplete pins, that input tripped the earlier check and the test
+    asserted the wrong REASON -- while still being refused, correctly, on both grounds. Pinning the full
+    frozen surface against an empty tmp repo isolates the missing-file property with no ambiguity."""
+    v = verify_lock({"surface_sha256": {rel: "x" * 64 for rel in FROZEN_SURFACE_FILES}},
+                    repo=tmp_path)
+    assert not v.ok
+    assert set(v.missing) == set(FROZEN_SURFACE_FILES)
+    assert not v.incomplete_pin, "a complete pin must not be reported as incomplete"
 
 
 def test_surface_hashes_are_64hex():
