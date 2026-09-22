@@ -1,0 +1,515 @@
+{
+  "schema": "hiv-fold-censoring-audit-v1",
+  "date": "2026-09-22",
+  "question": "is the project's one free continuous wet-lab label right-censored, and does it fail the repo's OWN shipped assay-degeneracy bar?",
+  "bars_imported_not_restated": {
+    "max_mode_share": 0.25,
+    "min_distinct_values": 20,
+    "source": "scripts/forward_inverse_roundtrip.py"
+  },
+  "datasets_missing_gitignored": [],
+  "results": {
+    "NNRTI": {
+      "n_rows": 2272,
+      "n_fold_columns": 5,
+      "upper_bound": 100.0,
+      "n_columns_reaching_the_bound": 5,
+      "n_columns_below_the_bound": 0,
+      "columns_below_the_bound": {},
+      "no_column_exceeds_the_bound": true,
+      "min_pileup_share_among_reaching_columns": 0.019,
+      "columns_failing_the_bar": [
+        "NVP"
+      ],
+      "per_column": {
+        "EFV": {
+          "n": 2168,
+          "n_distinct_values": 196,
+          "mode_value": 100.0,
+          "mode_share": 0.1707,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 2168,
+            "max": 100.0,
+            "n_at_max": 370,
+            "share_at_max": 0.1707,
+            "n_strictly_above_max": 0,
+            "n_distinct": 196,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "NVP": {
+          "n": 2052,
+          "n_distinct_values": 174,
+          "mode_value": 100.0,
+          "mode_share": 0.3304,
+          "fails_shipped_degeneracy_bar": true,
+          "censoring": {
+            "n": 2052,
+            "max": 100.0,
+            "n_at_max": 678,
+            "share_at_max": 0.3304,
+            "n_strictly_above_max": 0,
+            "n_distinct": 174,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "ETR": {
+          "n": 998,
+          "n_distinct_values": 145,
+          "mode_value": 0.9,
+          "mode_share": 0.0561,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 998,
+            "max": 100.0,
+            "n_at_max": 19,
+            "share_at_max": 0.019,
+            "n_strictly_above_max": 0,
+            "n_distinct": 145,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "RPV": {
+          "n": 311,
+          "n_distinct_values": 102,
+          "mode_value": 0.6,
+          "mode_share": 0.0514,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 311,
+            "max": 100.0,
+            "n_at_max": 12,
+            "share_at_max": 0.0386,
+            "n_strictly_above_max": 0,
+            "n_distinct": 102,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "DOR": {
+          "n": 130,
+          "n_distinct_values": 60,
+          "mode_value": 100.0,
+          "mode_share": 0.2,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 130,
+            "max": 100.0,
+            "n_at_max": 26,
+            "share_at_max": 0.2,
+            "n_strictly_above_max": 0,
+            "n_distinct": 60,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        }
+      }
+    },
+    "NRTI": {
+      "n_rows": 1867,
+      "n_fold_columns": 6,
+      "upper_bound": 100.0,
+      "n_columns_reaching_the_bound": 5,
+      "n_columns_below_the_bound": 1,
+      "columns_below_the_bound": {
+        "TDF": 51.0
+      },
+      "no_column_exceeds_the_bound": true,
+      "min_pileup_share_among_reaching_columns": 0.0011,
+      "columns_failing_the_bar": [
+        "3TC"
+      ],
+      "per_column": {
+        "3TC": {
+          "n": 1839,
+          "n_distinct_values": 138,
+          "mode_value": 100.0,
+          "mode_share": 0.4519,
+          "fails_shipped_degeneracy_bar": true,
+          "censoring": {
+            "n": 1839,
+            "max": 100.0,
+            "n_at_max": 831,
+            "share_at_max": 0.4519,
+            "n_strictly_above_max": 0,
+            "n_distinct": 138,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "ABC": {
+          "n": 1731,
+          "n_distinct_values": 126,
+          "mode_value": 0.9,
+          "mode_share": 0.0676,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1731,
+            "max": 100.0,
+            "n_at_max": 5,
+            "share_at_max": 0.0029,
+            "n_strictly_above_max": 0,
+            "n_distinct": 126,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "AZT": {
+          "n": 1853,
+          "n_distinct_values": 190,
+          "mode_value": 100.0,
+          "mode_share": 0.1365,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1853,
+            "max": 100.0,
+            "n_at_max": 253,
+            "share_at_max": 0.1365,
+            "n_strictly_above_max": 0,
+            "n_distinct": 190,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "D4T": {
+          "n": 1846,
+          "n_distinct_values": 109,
+          "mode_value": 0.9,
+          "mode_share": 0.0932,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1846,
+            "max": 100.0,
+            "n_at_max": 4,
+            "share_at_max": 0.0022,
+            "n_strictly_above_max": 0,
+            "n_distinct": 109,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "DDI": {
+          "n": 1849,
+          "n_distinct_values": 89,
+          "mode_value": 1.0,
+          "mode_share": 0.0822,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1849,
+            "max": 100.0,
+            "n_at_max": 2,
+            "share_at_max": 0.0011,
+            "n_strictly_above_max": 0,
+            "n_distinct": 89,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "TDF": {
+          "n": 1548,
+          "n_distinct_values": 85,
+          "mode_value": 0.9,
+          "mode_share": 0.104,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1548,
+            "max": 51.0,
+            "n_at_max": 1,
+            "share_at_max": 0.0006,
+            "n_strictly_above_max": 0,
+            "n_distinct": 85,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        }
+      }
+    },
+    "PI": {
+      "n_rows": 2171,
+      "n_fold_columns": 8,
+      "upper_bound": 100.0,
+      "n_columns_reaching_the_bound": 8,
+      "n_columns_below_the_bound": 0,
+      "columns_below_the_bound": {},
+      "no_column_exceeds_the_bound": true,
+      "min_pileup_share_among_reaching_columns": 0.0343,
+      "columns_failing_the_bar": [],
+      "per_column": {
+        "FPV": {
+          "n": 2052,
+          "n_distinct_values": 199,
+          "mode_value": 0.6,
+          "mode_share": 0.0619,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 2052,
+            "max": 100.0,
+            "n_at_max": 111,
+            "share_at_max": 0.0541,
+            "n_strictly_above_max": 0,
+            "n_distinct": 199,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": false
+        },
+        "ATV": {
+          "n": 1505,
+          "n_distinct_values": 184,
+          "mode_value": 100.0,
+          "mode_share": 0.1176,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1505,
+            "max": 100.0,
+            "n_at_max": 177,
+            "share_at_max": 0.1176,
+            "n_strictly_above_max": 0,
+            "n_distinct": 184,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "IDV": {
+          "n": 2098,
+          "n_distinct_values": 234,
+          "mode_value": 100.0,
+          "mode_share": 0.0553,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 2098,
+            "max": 100.0,
+            "n_at_max": 116,
+            "share_at_max": 0.0553,
+            "n_strictly_above_max": 0,
+            "n_distinct": 234,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "LPV": {
+          "n": 1807,
+          "n_distinct_values": 206,
+          "mode_value": 100.0,
+          "mode_share": 0.1439,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1807,
+            "max": 100.0,
+            "n_at_max": 260,
+            "share_at_max": 0.1439,
+            "n_strictly_above_max": 0,
+            "n_distinct": 206,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "NFV": {
+          "n": 2133,
+          "n_distinct_values": 248,
+          "mode_value": 100.0,
+          "mode_share": 0.0919,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 2133,
+            "max": 100.0,
+            "n_at_max": 196,
+            "share_at_max": 0.0919,
+            "n_strictly_above_max": 0,
+            "n_distinct": 248,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "SQV": {
+          "n": 2084,
+          "n_distinct_values": 209,
+          "mode_value": 100.0,
+          "mode_share": 0.1176,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 2084,
+            "max": 100.0,
+            "n_at_max": 245,
+            "share_at_max": 0.1176,
+            "n_strictly_above_max": 0,
+            "n_distinct": 209,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "TPV": {
+          "n": 1226,
+          "n_distinct_values": 119,
+          "mode_value": 0.8,
+          "mode_share": 0.0726,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 1226,
+            "max": 100.0,
+            "n_at_max": 42,
+            "share_at_max": 0.0343,
+            "n_strictly_above_max": 0,
+            "n_distinct": 119,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "DRV": {
+          "n": 993,
+          "n_distinct_values": 134,
+          "mode_value": 0.6,
+          "mode_share": 0.0876,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 993,
+            "max": 100.0,
+            "n_at_max": 62,
+            "share_at_max": 0.0624,
+            "n_strictly_above_max": 0,
+            "n_distinct": 134,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": false
+        }
+      }
+    },
+    "INI": {
+      "n_rows": 861,
+      "n_fold_columns": 5,
+      "upper_bound": 100.0,
+      "n_columns_reaching_the_bound": 4,
+      "n_columns_below_the_bound": 1,
+      "columns_below_the_bound": {
+        "BIC": 66.0
+      },
+      "no_column_exceeds_the_bound": true,
+      "min_pileup_share_among_reaching_columns": 0.0081,
+      "columns_failing_the_bar": [],
+      "per_column": {
+        "RAL": {
+          "n": 753,
+          "n_distinct_values": 151,
+          "mode_value": 100.0,
+          "mode_share": 0.1208,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 753,
+            "max": 100.0,
+            "n_at_max": 91,
+            "share_at_max": 0.1208,
+            "n_strictly_above_max": 0,
+            "n_distinct": 151,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "EVG": {
+          "n": 754,
+          "n_distinct_values": 138,
+          "mode_value": 100.0,
+          "mode_share": 0.1658,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 754,
+            "max": 100.0,
+            "n_at_max": 125,
+            "share_at_max": 0.1658,
+            "n_strictly_above_max": 0,
+            "n_distinct": 138,
+            "looks_right_censored": true
+          },
+          "mode_is_the_ceiling": true
+        },
+        "DTG": {
+          "n": 370,
+          "n_distinct_values": 75,
+          "mode_value": 1.0,
+          "mode_share": 0.0973,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 370,
+            "max": 100.0,
+            "n_at_max": 3,
+            "share_at_max": 0.0081,
+            "n_strictly_above_max": 0,
+            "n_distinct": 75,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "BIC": {
+          "n": 287,
+          "n_distinct_values": 61,
+          "mode_value": 0.9,
+          "mode_share": 0.0767,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 287,
+            "max": 66.0,
+            "n_at_max": 1,
+            "share_at_max": 0.0035,
+            "n_strictly_above_max": 0,
+            "n_distinct": 61,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        },
+        "CAB": {
+          "n": 64,
+          "n_distinct_values": 54,
+          "mode_value": 12.0,
+          "mode_share": 0.0469,
+          "fails_shipped_degeneracy_bar": false,
+          "censoring": {
+            "n": 64,
+            "max": 100.0,
+            "n_at_max": 1,
+            "share_at_max": 0.0156,
+            "n_strictly_above_max": 0,
+            "n_distinct": 54,
+            "looks_right_censored": false
+          },
+          "mode_is_the_ceiling": false
+        }
+      }
+    }
+  },
+  "headline": {
+    "one_upper_bound_across_all_four_datasets": true,
+    "upper_bound": 100.0,
+    "no_value_anywhere_exceeds_it": true,
+    "columns_reaching_it": 22,
+    "columns_below_it": 2,
+    "columns_failing_the_shipped_bar": [
+      "NNRTI:NVP",
+      "NRTI:3TC"
+    ],
+    "reading": "a shared UPPER BOUND that NOTHING exceeds anywhere. Two drugs (TDF 51, BIC 66) never reach it in this cohort -- not evidence against the cap, just drugs whose observed folds stay below it. The pile-up AT the bound varies widely among the columns that do reach it (from 0.1% to 45%), so 'every reaching column piles up' would be FALSE; what is shared is the bound, and the heavy pile-ups are where the degeneracy bar fails."
+  },
+  "existing_guard_is_vacuous": {
+    "guard": "hiv_nnrti_mutant_catalog.py / hiv_epistasis.py state that censored folds ('<'/'>') are kept at their numeric bound",
+    "operator_prefixed_values_found": {
+      "NNRTI": 0,
+      "NRTI": 0,
+      "PI": 0,
+      "INI": 0
+    },
+    "verdict": "VACUOUS -- the guard handles a censoring form that does not occur, while the censoring that does occur (a bare ceiling value) passes through unflagged"
+  },
+  "what_this_does_not_claim": [
+    "NOT a decoder change: no v0.1 mutant catalog is deployed; hiv_amr.py routes NRTI/PI/INSTI through POSITION-based classes.",
+    "Does NOT reopen the declined NNRTI curation: that was scored at a fold cutoff of 3.0 and the ceiling is 100, so every censored observation is R either way -- the R/S labels and the sens/spec behind the verdict are unaffected.",
+    "Does NOT re-explain the OLS dropping Y181C: hiv_amr.py ships Y181C/I/A, and censoring AMPLIFIES rather than replaces the co-occurrence account (a shared ceiling removes the residual variance needed to separate two co-occurring DRMs).",
+    "Does NOT show that any published v0.1 gain figure is wrong. It shows the response those figures were fit on is censored; whether the numbers MOVE under a Tobit refit is a separate decidable question this audit does not answer."
+  ],
+  "why_it_matters": "the NRTI (+0.06..+0.14 on 5/6), PI (+0.056 mean, 8/8) and INSTI (+0.087 mean, 5/5) v0.1 catalogs were each selected by thresholding a multivariate-OLS log10-fold coefficient at >= log10(1.5). Right-censoring attenuates coefficients toward zero for the STRONGEST effects specifically -- the majors such a catalog exists to find -- so a coefficient threshold fit on a censored response can systematically exclude true majors.",
+  "honest_limits": [
+    "The ceiling is INFERRED from a pile-up with an empty tail above it, not read off assay documentation. It is consistent with a reporting cap; the audit does not prove the assay's dynamic range ends there.",
+    "Attenuation is a property of fitting OLS to a censored response; this audit does NOT measure how much any particular coefficient moved.",
+    "The HIV datasets are gitignored, so this cannot run in a clean checkout -- it degrades to exit 2 rather than reporting a vacuous clean result."
+  ]
+}
