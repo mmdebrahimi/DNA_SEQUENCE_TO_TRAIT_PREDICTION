@@ -1,0 +1,241 @@
+{
+  "framings": [
+    {
+      "id": "FR1-witness-independence",
+      "frame": "The scarce resource is INDEPENDENCE, not labels. Validation needs any witness that is blind to our call and could not have consulted our decoder; a wet-lab phenotype label is one special case of that, not the definition. The job is to census and harvest non-consulting witnesses.",
+      "candidates": [
+        {
+          "id": "IND-DERIV",
+          "operator": "G1",
+          "claim": "No cell's evidence record carries a structured field stating whether its comparator's output is a FUNCTION of the same database or inputs our caller uses. The vf_diff arm records same-DB dependence in prose only, so the effective count of independently-evidenced cells is unknown and likely lower than the registry's 31 INDEPENDENT_MEASURED.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -q comparator_independence dna_decode/data/cell_registry.py"
+          },
+          "evidence_tags": [
+            "grounded",
+            "registry",
+            "derivability",
+            "same-db-trap",
+            "positive-control-run: grep -q abstention_vocab on same file returns 0"
+          ]
+        },
+        {
+          "id": "IND-FRAGMENT",
+          "operator": "G1",
+          "claim": "No measurement exists of how decoder calls change under re-fragmentation of the SAME underlying sequence (assembly contiguity/coverage ladder). A call that flips when only assembly quality changes is wrong under at least one input, and this is detectable with zero labels across every genome-taking cell.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -rli fragmentation_invariance wiki scripts"
+          },
+          "evidence_tags": [
+            "inferred",
+            "label-free",
+            "1818-cached-genomes",
+            "positive-control-run: grep -rli lineage wiki scripts returns 0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR2-question-substitution",
+      "frame": "The wins did not find better witnesses; they replaced the blocked question with a weaker one the data on hand can decide, generating the contrast internally instead of importing truth. The failures kept the original question and went shopping for the label it demanded. The productive search is over questions and contrasts, not over datasets.",
+      "candidates": [
+        {
+          "id": "QS-IMPLIED",
+          "operator": "G9",
+          "claim": "Implied-constant recovery -- deriving a threshold from a shipped categorical that is a pure step on a shipped continuous column -- exists only as a hand-aimed one-off inside the TB boundary script. There is no reusable module and no scanner over the committed datasets, so the live ECOFF halt (blocked on a value only a human can read off a web page) has an unexplored label-free route.",
+          "kill_test": {
+            "kind": "file-exists",
+            "arg": "dna_decode/eval/implied_constant.py",
+            "controls": [
+              {
+                "kind": "file-exists",
+                "arg": "dna_decode/eval/doubt.py",
+                "expect": "killed"
+              },
+              {
+                "kind": "file-exists",
+                "arg": "dna_decode/eval/ecoff_scanner.py",
+                "expect": "survived"
+              }
+            ]
+          },
+          "evidence_tags": [
+            "grounded",
+            "generalizes-tb-implied-boundary",
+            "unblocks-ecoff",
+            "no-fabrication-hazard",
+            "must-reuse-assay-degeneracy-bars"
+          ]
+        },
+        {
+          "id": "QS-CONTESTED",
+          "operator": "G9",
+          "claim": "Nothing counts, per deployed rule and per STATED perturbation, how many cached genomes would have their call FLIP -- and how many of those carry a label. So 'could any cohort we hold decide this question' is unmeasured, which is why the Oxford rmt probe had to be run before discovering it held zero carriers and could not test the rescue at all.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -rli contested_case wiki scripts"
+          },
+          "evidence_tags": [
+            "inferred",
+            "inverts-the-label-census",
+            "oxford-zero-carriers",
+            "decidability-not-labels"
+          ]
+        },
+        {
+          "id": "QS-TBQUAL",
+          "operator": "G8",
+          "claim": "CRyPTIC ships a per-isolate PHENOTYPE_QUALITY flag (HIGH 8955 / MEDIUM 1355 / LOW 1789) that two TB scorers use as a hard HIGH-only FILTER and nobody has ever used as a MEASUREMENT. Yesterday's implied-boundary run does not filter on it at all, so the repo is internally inconsistent about which TB labels it trusts, and the label-error share of residual TB error is unmeasured.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -q PHENOTYPE_QUALITY scripts/tb_implied_boundary.py"
+          },
+          "evidence_tags": [
+            "grounded",
+            "dataset-ships-its-own-auditor",
+            "internal-inconsistency",
+            "positive-control-run: grep -q BINARY_PHENOTYPE on same file returns 0",
+            "flat-result-would-close-tb-curation"
+          ]
+        },
+        {
+          "id": "QS-HIVCEIL",
+          "operator": "G8",
+          "claim": "The shipped assay_degeneracy screen has never been pointed at the Stanford PhenoSense fold-change tables. Measured this run: NVP mode-share 0.329 at exactly the value 100, which FAILS the screen's own >25% bar and is an assay ceiling. The NRTI/PI/INSTI v0.1 catalogs were fit by OLS on log10 fold, and a ceiling attenuates coefficients for the strongest DRMs -- an untested alternative explanation for the NNRTI OLS dropping canonical Y181C.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -rli assay_degeneracy scripts/hiv_nnrti_mutant_catalog.py scripts/hiv_nnrti_validate.py"
+          },
+          "evidence_tags": [
+            "grounded",
+            "measured-this-run",
+            "nvp-mode-share-0.329",
+            "ols-attenuation",
+            "cross-arm-blindspot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR3-determinant-unit",
+      "frame": "The isolate is the wrong unit of evidence. The decoder is a composition of per-determinant claims, and the evidence market at the determinant level is thick (SOLO PPV, mutant-level fold-change, recombinant marker transfer, DMS, in-vitro selection) while the isolate market is thin and contaminated. Sampling-defined phenotypes have no per-determinant analogue, so that whole pathology disappears rather than being routed around.",
+      "candidates": [
+        {
+          "id": "DU-DETCARD",
+          "operator": "G1",
+          "claim": "The trust surface is keyed by CELL only. No determinant-by-evidence-class table exists, so determinant-level validation that ALREADY sits in committed artifacts is invisible to the tier system -- the same under-claim that hid the forward cell's DMS validation, but at scale across the catalog.",
+          "kill_test": {
+            "kind": "file-exists",
+            "arg": "wiki/determinant_evidence_card.json",
+            "controls": [
+              {
+                "kind": "file-exists",
+                "arg": "dna_decode/eval/regime.py",
+                "expect": "killed"
+              },
+              {
+                "kind": "file-exists",
+                "arg": "wiki/runtime_coverage_census.json",
+                "expect": "survived"
+              }
+            ]
+          },
+          "evidence_tags": [
+            "inferred",
+            "transpose-the-report-card",
+            "offline-from-committed-artifacts",
+            "second-axis-never-a-tier-modifier"
+          ]
+        },
+        {
+          "id": "DU-SOLOOOD",
+          "operator": "G8",
+          "claim": "SOLO-PPV has never been computed on the TB independent AMR-Portal cohort. WHO graded each rpoB/katG variant SOLO on CRyPTIC, which is its own build set; nobody has asked which grade-1 variants keep their solo PPV on 2845 provenance-disjoint isolates WHO never saw. The method was borrowed FROM TB and pointed at E. coli gentamicin, never back at its home domain.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -rli solo wiki/tb_independent_amr_portal_scores.json wiki/tb_independent_lineage_collapsed_result_2026-07-02.md"
+          },
+          "evidence_tags": [
+            "grounded",
+            "out-of-distribution-solo",
+            "checkpoint-on-D-drive",
+            "naive-solo-on-cryptic-would-be-circular",
+            "positive-control-run: grep -li rif on same artifact returns 0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR4-perishability",
+      "frame": "115 cells is not an asset, it is a carrying cost against roughly fifteen moving upstream databases, and nobody is measuring the decay rate. The two worst defects this project found were LATENCY defects, not accuracy defects. Shelf life needs no phenotype at all to measure, so the label wall is simply irrelevant to it.",
+      "candidates": [
+        {
+          "id": "PER-CHURN",
+          "operator": "G1",
+          "claim": "No measurement exists of how the decoder's calls churn across AMRFinder database versions on the SAME cached genomes. The churn rate is a free quality metric that needs no label, and it prices exactly what the reproducibility freeze is costing -- including whether a routine DB bump would have surfaced the rmt blindness before the 2026-08-24 accrual did.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -rli amrfinder_db_churn wiki scripts"
+          },
+          "evidence_tags": [
+            "inferred",
+            "label-free",
+            "prices-the-freeze",
+            "retrodiction-of-rmt-gap",
+            "positive-control-run: grep -rli lineage wiki scripts returns 0"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR5-refusal-function",
+      "frame": "Stop maximizing validated surface; minimize unqualified output. The sellable property is knowing when not to speak. Every one of the 115 cells has an immediately measurable abstention behaviour, with no label needed -- and abstention quality is itself validatable without labels.",
+      "candidates": [
+        {
+          "id": "REF-COVERAGE",
+          "operator": "G1",
+          "claim": "Runtime abstention -- a cell declining to answer on a given genome -- is registered nowhere. cell_registry's abstention_vocab records only evidence-surface state (why a cell has no score), so the tool's unqualified-output rate across 115 cells, and which cells can emit a confident call with no abstention path at all, are both unknown.",
+          "kill_test": {
+            "kind": "file-exists",
+            "arg": "wiki/runtime_coverage_census.json",
+            "controls": [
+              {
+                "kind": "file-exists",
+                "arg": "dna_decode/data/cell_registry_vocab.py",
+                "expect": "killed"
+              },
+              {
+                "kind": "file-exists",
+                "arg": "dna_decode/eval/implied_constant.py",
+                "expect": "survived"
+              }
+            ]
+          },
+          "evidence_tags": [
+            "grounded",
+            "evidence-surface-vs-runtime-abstention",
+            "salmserovar-coverage-and-accuracy-both-rose",
+            "label-free-at-all-115-cells"
+          ]
+        },
+        {
+          "id": "REF-ENRICH",
+          "operator": "G1",
+          "claim": "No test has been run of whether abstained calls differ from confident ones on any independent axis. If abstentions look exactly like confident calls on every such axis, the refusal functions are decorative rather than informative -- and that is checkable with no labels at all.",
+          "kill_test": {
+            "kind": "test-exit-0",
+            "arg": "grep -rli abstention_enrichment wiki scripts tests"
+          },
+          "evidence_tags": [
+            "speculative",
+            "validates-the-refusal-not-the-call",
+            "label-free",
+            "positive-control-run: grep -rli lineage wiki scripts tests returns 0"
+          ]
+        }
+      ]
+    }
+  ]
+}

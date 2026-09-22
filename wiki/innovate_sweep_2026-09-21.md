@@ -151,6 +151,17 @@ carries **four sourced ECOFFs**, each with `source_url = https://mic.eucast.org/
 verbatim quote. Stable per-result URLs exist. The fabrication rail was never breached — the values
 arrived *through* it, with locator and quote. What was wrong was declaring the fetch impossible.
 
+## Outcome — both survivors were acted on the same day (2026-09-22)
+
+| survivor | shipped as | result |
+|---|---|---|
+| `QS-TBQUAL` | `275d5bd` | the 2026-09-21 TB artifact now carries a namespace-separate `quality_gate`: `SUPPORTED` under the frozen bar, `INDETERMINATE` under HIGH-only labels, with the within-HIGH replication beside it. Plus a third defect in `recover_cutoff` (vacuous cut-off on an all-susceptible ladder). 6 new tests. |
+| `QS-HIVCEIL` | `d6c83b5` | `scripts/hiv_fold_censoring_audit.py` + memo: one upper bound of 100.0 across all four datasets, nothing above it anywhere, 3TC 0.452 / NVP 0.330 failing the repo's own bar, and the existing operator-prefix guard measured **vacuous** (zero such values). 11 tests. |
+
+Both were **retargeted before shipping** — neither shipped in the form the engine marked `survived`.
+That gap between "survived a cheap kill-test" and "survived an attack on its substance" is the whole
+reason the expensive pass is not optional.
+
 ## Honest caveats on this sweep
 
 - **The engine killed nothing: 11 survived, 0 killed.** Every kill-test was a "does this artifact already
