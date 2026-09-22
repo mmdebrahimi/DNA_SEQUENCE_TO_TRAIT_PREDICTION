@@ -216,3 +216,52 @@ def test_an_overridden_cutoff_is_marked_as_not_a_live_prospective_claim():
     src = (ROOT / "scripts" / "fetch_prospective_cohort.py").read_text(encoding="utf-8")
     assert "historical_reproduction" in src
     assert "overridden_on_command_line" in src
+
+
+# --- hash agreement alone does not make a file a LOCK (found in review, 2026-09-22) ---------------
+
+def test_a_manifest_with_correct_hashes_but_no_schema_is_not_selectable(tmp_path):
+    """VERIFIED before fixing: a manifest carrying the right hashes, no schema and
+    `lock_date: "not-a-date"` WAS selected as the active lock -- and that bogus cutoff would have gone
+    straight into the eligibility filter. Verifying asks "does this describe the live decoder";
+    well-formedness asks "is this a commitment at all"."""
+    h = _stage(tmp_path)
+    (tmp_path / "wiki" / "prospective_lock_manifest_bogus.json").write_text(
+        json.dumps({"lock_date": "not-a-date", "surface_sha256": h}), encoding="utf-8")
+    with pytest.raises(NoActiveLock) as e:
+        resolve_active_lock(repo=tmp_path)
+    assert "Malformed" in str(e.value), "the reason must be reported, not silently skipped"
+
+
+def test_malformed_manifests_are_named_not_silently_skipped(tmp_path):
+    """One sitting unnoticed in wiki/ is exactly how a bad cutoff enters later."""
+    from dna_decode.eval.prospective_lock import is_well_formed_manifest
+    problems = is_well_formed_manifest({"lock_date": "not-a-date", "surface_sha256": {}})
+    assert any("schema" in p for p in problems)
+    assert any("lock_date" in p for p in problems)
+
+
+def test_a_non_hex_digest_is_rejected(tmp_path):
+    from dna_decode.eval.prospective_lock import FROZEN_SURFACE_FILES, is_well_formed_manifest
+    bad = {rel: "zz" * 32 for rel in FROZEN_SURFACE_FILES}
+    assert any("64-hex" in p for p in is_well_formed_manifest(
+        {"schema": "prospective-lock-manifest-v1", "lock_date": "2026-08-31", "surface_sha256": bad}))
+
+
+def test_the_real_committed_manifests_are_BOTH_well_formed():
+    """NON-VACUITY, and it protects the retired one too: the v1 manifest must fail on HASH DRIFT (it is
+    retired), never on being malformed -- otherwise the refusal reason would be wrong and a future
+    reader would think the v1 lock was junk rather than superseded."""
+    from dna_decode.eval.prospective_lock import is_well_formed_manifest
+    for p in sorted((ROOT / "wiki").glob("prospective_lock_manifest_*.json")):
+        assert is_well_formed_manifest(json.loads(p.read_text(encoding="utf-8"))) == [], p.name
+
+
+def test_filename_date_need_NOT_match_lock_date():
+    """Pinned because it is a tempting invariant that is FALSE here: the v1 manifest is named
+    ..._2026-06-22.json and legitimately carries lock_date 2026-06-13, because a manifest RECORDS a
+    freeze that already happened rather than creating one. Enforcing agreement would reject the repo's
+    own real manifest."""
+    m = json.loads((ROOT / "wiki" / "prospective_lock_manifest_2026-06-22.json").read_text(
+        encoding="utf-8"))
+    assert m["lock_date"] == "2026-06-13"

@@ -191,6 +191,42 @@ class NoActiveLock(RuntimeError):
     """No committed manifest describes the LIVE frozen surface."""
 
 
+_HEX64 = 64
+
+
+def is_well_formed_manifest(manifest: dict) -> list[str]:
+    """Reasons this is not a valid prospective-lock COMMITMENT. Empty list = well formed.
+
+    Hash agreement alone does not make a file a lock. A manifest carrying the correct hashes but no
+    schema and `lock_date: "not-a-date"` was selectable as the active lock (verified 2026-09-22), and
+    that bogus cutoff would then have flowed straight into the eligibility filter. Verifying answers
+    "does this describe the live decoder"; this answers "is this a commitment at all".
+
+    DELIBERATELY NOT CHECKED: agreement between the filename date and `lock_date`. It is tempting and
+    it is FALSE here -- `prospective_lock_manifest_2026-06-22.json` legitimately carries lock_date
+    2026-06-13, because the manifest RECORDS a freeze that already happened rather than creating one.
+    Enforcing it would reject the repo's own real manifest.
+    """
+    problems: list[str] = []
+    if manifest.get("schema") != LOCK_SCHEMA:
+        problems.append(f"schema is {manifest.get('schema')!r}, expected {LOCK_SCHEMA!r}")
+    raw = manifest.get("lock_date")
+    try:
+        date.fromisoformat(str(raw))
+    except (TypeError, ValueError):
+        problems.append(f"lock_date {raw!r} is not an ISO YYYY-MM-DD date")
+    pinned = manifest.get("surface_sha256")
+    if not isinstance(pinned, dict):
+        problems.append("surface_sha256 is missing or not an object")
+    else:
+        bad = sorted(f for f, h in pinned.items()
+                     if not (isinstance(h, str) and len(h) == _HEX64
+                             and all(c in "0123456789abcdef" for c in h.lower())))
+        if bad:
+            problems.append(f"surface_sha256 entries are not 64-hex digests: {bad}")
+    return problems
+
+
 def resolve_active_lock(repo: Path = _REPO) -> tuple[Path, dict]:
     """The lock manifest that describes the surface as it is RIGHT NOW -- the single source of truth
     for the eligibility cutoff.
@@ -213,15 +249,24 @@ def resolve_active_lock(repo: Path = _REPO) -> tuple[Path, dict]:
     """
     candidates = sorted((repo / "wiki").glob("prospective_lock_manifest_*.json"))
     verified: list[tuple[Path, dict]] = []
+    malformed: list[str] = []
     for p in candidates:
         try:
             m = json.loads(p.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
+        # A file must be a well-formed COMMITMENT before its hashes are allowed to mean anything.
+        # Malformed manifests are collected and reported rather than silently skipped: one sitting
+        # unnoticed in wiki/ is exactly how a bad cutoff would enter later.
+        problems = is_well_formed_manifest(m)
+        if problems:
+            malformed.append(f"{p.name}: {'; '.join(problems)}")
+            continue
         if verify_lock(m, repo=repo).ok:
             verified.append((p, m))
     if not verified:
-        raise NoActiveLock(
+        detail = f" Malformed manifests ignored: {malformed}." if malformed else ""
+        raise NoActiveLock(detail + 
             "no committed prospective-lock manifest verifies against the live frozen surface "
             f"(checked {len(candidates)}). The surface has drifted from every recorded lock, so there "
             "is no honest eligibility cutoff -- re-lock before sweeping for prospective isolates.")
