@@ -108,14 +108,37 @@ def main() -> int:
         print(f"\n    This card covers bacterial AMR cells scored against NCBI-PD. Quoting its row")
         print(f"    count as the project's evidence surface understates it by ~{n_cells / max(card['n_rows'], 1):.1f}x.")
 
-    print(f"\n  THE REGIME MAP (what works, and the variable that decides it):")
-    print(f"    natural population + zero-shot embedding ........ CLOSED NEGATIVE (0-for-5, de-confounded)")
-    print(f"    constructed variation -> molecular phenotype ..... WORKS (TEM-1 genome-edit, rho 0.761)")
-    print(f"    constructed variation -> organism phenotype ...... WORKS (yeast cross 12/12, r 0.46-0.80)")
-    print(f"    constructed variation -> per-condition essentiality WORKS (FBA iML1515 MCC 0.70-0.74)")
-    print(f"    constructed variation -> condition SWITCH ........ OPEN (~null, bottleneck measured)")
-    print(f"    The discriminating variable is POPULATION DESIGN, not organism complexity.")
+    # DERIVED from dna_decode.eval.regime.REGIMES, never restated. This block used to hardcode
+    # "TEM-1 genome-edit, rho 0.761" -- and regime.py's own note for that same regime says, verbatim,
+    # "do not quote 0.761 as the path's general strength" (the PEAR replication on a second
+    # beta-lactamase came in at 0.352, so the honest range is 0.35-0.76). The one script every session
+    # is told to run BEFORE making a scope claim was making the exact claim its data layer forbids.
+    print()
+    print("  THE REGIME MAP (what works, and the variable that decides it):")
+    try:
+        from dna_decode.eval.regime import REGIMES
 
+        label = {"zero_shot": "zero-shot", "supervised": "supervised",
+                 "deterministic_catalog": "catalog"}
+        import textwrap
+
+        for r in REGIMES:
+            lhs = f"{r.population} + {r.endpoint} ({label.get(r.method, r.method)})"
+            print(f"    {lhs:<56} {r.verdict}")
+            # WRAPPED, never truncated. A hard [:150] cut this very block's warning mid-sentence at
+            # "do not quote 0.761 as " -- silently amputating the load-bearing half of a caveat is
+            # the same failure as omitting it.
+            for line in textwrap.wrap(r.evidence, 104):
+                print(f"        {line}")
+            if r.note:
+                for i, line in enumerate(textwrap.wrap(r.note, 98)):
+                    print(f"        {'NOTE: ' if i == 0 else '      '}{line}")
+    except Exception as exc:  # noqa: BLE001 - orientation must not die on an import
+        # REFUSE rather than fall back to a remembered summary: a stale regime map is the specific
+        # failure this script exists to prevent.
+        print(f"    UNAVAILABLE - could not read dna_decode.eval.regime ({exc}).")
+        print(f"    Read wiki/organism_gp_regime_correction_2026-08-29.md; do NOT quote from memory.")
+    print(f"    The discriminating variable is POPULATION DESIGN, not organism complexity.")
     print(f"\n  BEFORE CLAIMING ANYTHING ABOUT SCOPE: re-derive it. Prose in CLAUDE.md and wiki/ was")
     print(f"  true when written; this script is true now.")
     print()
