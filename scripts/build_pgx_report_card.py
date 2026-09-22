@@ -148,17 +148,26 @@ def main() -> int:
                       "GeT-RM NUDT15 concordance = external wall (paper-supplement, like DPYD); validation is "
                       "the *3 EAS-AF match + PGP-UK deployment. NO sentinel layer -> rarer alleles called *1")},
         {"gene": "UGT1A1", "trait": "irinotecan-toxicity phenotype (activity-score) — tag-SNP surface",
-         "getrm": None, "getrm_pct": None, "pharmcat": None,
+         "getrm": "n=65: *28-carrier sens 1.00 / spec 0.939", "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("UGT1A1"), "trio_mendelian": trio_summ("UGT1A1"),
-         "tier": ("NEW — irinotecan toxicity / Gilbert. *STRUCTURAL: the major *28 allele is a promoter "
-                  "TA-REPEAT (STR), NOT a SNP — unresolvable from a short-read SNP VCF. v0 uses rs887829 "
-                  "(*80) as the validated LD-TAG proxy for *28 (EUR r^2 ~0.9+; rs887829 EUR AF ~30% == the "
-                  "*28 frequency, confirming the tag) + *6 (rs4148323, clean SNP). CPIC activity-score "
-                  "(Gammal 2016; AS 2=NM, 1.5=IM, 1.0=PM). Ensembl-GRCh38-verified. v0 deployment: decoded "
-                  "on 5 real PGP-UK humans. Phenotype faithful-to-CPIC. Tag-SNP wrapper (like the HLA cells)."),
-         "residual": ("*28 TA-repeat length UNASSESSED (star28_ta_repeat_unassessed) — rs887829 is an LD-tag "
-                      "PROXY, imperfect off-EUR; *37/*36 repeat alleles not called. GeT-RM UGT1A1 concordance "
-                      "= external wall (paper-supplement). Needs a repeat-aware caller for a direct *28 call")},
+         "tier": ("irinotecan toxicity / Gilbert. The major *28 allele is a promoter TA-REPEAT (STR), not a "
+                  "SNP, so v0 calls it via the rs887829 (*80) LD-TAG proxy + *6 (rs4148323, clean SNP). "
+                  "MEASURED vs GeT-RM CDC multi-lab consensus on 65 1000G samples (32 *28 carriers, 0 parse "
+                  "failures; bar frozen beforehand): *28-carriership sens 1.00 / spec 0.939 / PPV 0.941, "
+                  "zygosity-exact 61/65, and sens 1.00 in EACH of EUR (26) / AFR (21) / EAS (16) — the "
+                  "catalog's named non-EUR LD-breakdown residual did NOT appear at this n. The *6 direct-SNP "
+                  "control is 65/65 exact, validating the plumbing independently. SUPERSEDES the earlier "
+                  "39/39 single-SNP dosage run, which skipped the compound truth rows carrying the finding. "
+                  "CPIC activity-score (Gammal 2016). Consensus truth is caller-derived, not wet-lab — "
+                  "agreement-with-reference, never correctness."),
+         "residual": ("rs887829 tags the reduced-function promoter CLASS — *28 (TA7) AND *37 (TA8) — not *28 "
+                      "specifically: all 3 apparent false positives are *37 haplotypes, and against reduced "
+                      "FUNCTION the tag is 1.00/1.00/1.00 (post-hoc framing). star28_ta_repeat_unassessed "
+                      "stays True because THE DEPLOYED CALLER does not call the repeat. Measured separately: "
+                      "the repeat IS directly callable from the 1000G 30x panel (indels at chr2:233760233), "
+                      "where a direct call strictly dominates the tag (1.00/1.00/1.00, zygosity 64/65) — "
+                      "panel-specific, NOT wired into the deployed path. One unadjudicated discrepancy "
+                      "(NA20509: *28/*28 by GeT-RM vs 1 copy by BOTH independent assays here — IM vs PM)")},
         {"gene": "VKORC1", "trait": "warfarin sensitivity (rs9923231)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("VKORC1"), "trio_mendelian": "—",
@@ -210,7 +219,14 @@ def main() -> int:
          "| gene | trait | GeT-RM core | PharmCAT | func-evidence (A/D/F) | trio Mendelian | residual |",
          "|---|---|---|---|---|---|---|"]
     for c in cells:
-        g = f"{c['getrm']} ({c['getrm_pct']})" if c["getrm"] else "—"
+        # a cell may be GeT-RM-scored on a non-diplotype metric (e.g. UGT1A1's tag sens/spec), in which
+        # case there is no concordance fraction -- render the label alone rather than "(None)"
+        if not c["getrm"]:
+            g = "—"
+        elif c["getrm_pct"] is None:
+            g = str(c["getrm"])
+        else:
+            g = f"{c['getrm']} ({c['getrm_pct']})"
         L.append(f"| {c['gene']} | {c['trait']} | {g} | {c['pharmcat'] or '—'} | "
                  f"{c['functional_evidence']} | {c['trio_mendelian']} | {c['residual']} |")
     L += ["", "## Honest tier per cell", ""]

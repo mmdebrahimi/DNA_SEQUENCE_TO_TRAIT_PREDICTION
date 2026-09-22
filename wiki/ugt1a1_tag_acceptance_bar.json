@@ -1,0 +1,52 @@
+{
+  "schema": "ugt1a1-tag-acceptance-bar-v1",
+  "frozen": "2026-09-22",
+  "frozen_before_reading_any_result": true,
+  "cell": "pgx:human:ugt1a1",
+  "current_tier": "NEAR_INDEPENDENT",
+  "why_now": "The cell ships at NEAR_INDEPENDENT while never having been scored against GeT-RM. Its major allele *28 is a promoter TA-repeat; v0 substitutes rs887829 (*80) as an LD-tag proxy and claims 'EUR r^2 ~0.9+' WITHOUT ever measuring the tag against repeat truth. The repo has a demotion precedent for exactly this pattern (HLA B*58:01 tag: sens 0.61 / PPV 0.18 -> declared unsafe).",
+
+  "truth": {
+    "source": "GeT-RM CDC consolidated multi-lab consensus (getrm_consolidated_pgx_hla.xlsx -> data/pgx_getrm/getrm_consolidated_truth.tsv)",
+    "gene_rows": 197,
+    "overlap_with_1000g_30x_panel": 65,
+    "independence": "Multi-lab CDC consensus, independent of our caller. NOT a wet-lab phenotype -- it is the field's accepted reference diplotype. Tier bound is therefore agreement-with-reference, never correctness.",
+    "vocabulary_note": "Truth speaks in repeat alleles (*28/*36/*37/*60/*27/*6/*7) that the shipped SNP caller structurally cannot emit. Exact-diplotype concordance is therefore NOT a well-posed metric and is deliberately NOT the bar."
+  },
+
+  "primary_metric": {
+    "name": "*28 carrier detection",
+    "definition": "truth *28-carrier (any haplotype containing *28) vs predicted reduced-function carrier",
+    "reported": ["sensitivity", "specificity", "ppv", "npv", "n"]
+  },
+  "secondary_metrics": [
+    "*28 ZYGOSITY exact agreement (0/1/2 copies) -- the CPIC phenotype depends on zygosity, not carriership; a tag that gets carriership right and zygosity wrong still mis-assigns Poor Metabolizer",
+    "*6 concordance (rs4148323 is a direct SNP, so this is a like-for-like control on the non-tag half of the catalog)",
+    "per-superpopulation stratification (the catalog's STRUCTURAL_CAVEAT names non-EUR LD breakdown as a NAMED residual that has never been measured)"
+  ],
+
+  "verdicts": {
+    "tag_confirmed": "overall *28-carrier sens >= 0.90 AND ppv >= 0.90",
+    "tag_demote_and_disclose": "overall sens < 0.80, OR sens < 0.80 in ANY superpopulation with n >= 10",
+    "tag_partial": "anything between -- report numbers, change no tier without ratification"
+  },
+
+  "direct_repeat_arm": {
+    "claim_under_test": "The catalog asserts the TA repeat is 'unresolvable from a short-read SNP VCF'. The 1000G 30x panel represents it at chr2:233760233 as indel alleles (C>CAT = +1 TA = *28; C>CATAT = +2 TA = *37; CAT>C = -1 TA = *36). This arm tests whether that asserted impossibility is TRUE FOR THIS PANEL.",
+    "status_if_untested": "the impossibility claim stays as written; absence of this arm is not evidence for it",
+    "adopt_direct_over_tag": "direct call STRICTLY DOMINATES -- sens >= tag AND ppv >= tag AND zygosity-exact >= tag, with at least one strictly greater",
+    "scope_limit_even_if_it_wins": "A panel-specific result. It shows the repeat is callable FROM THE 1000G 30x PHASED PANEL, NOT that it is callable from an arbitrary short-read SNP VCF. Do NOT generalise to 'the structural wall is false'; the honest correction is 'the wall is panel-dependent and this panel clears it'."
+  },
+
+  "disqualifiers": {
+    "zero_carriers": "if the overlap contains no truth *28 carriers the run REFUSES a verdict -- a tag cannot be tested against absent positives (the Oxford-zero shape)",
+    "vacuous_arm": "if the direct arm resolves 0 samples it is reported as unresolved, never as agreement"
+  },
+
+  "honest_limits_registered_in_advance": [
+    "GeT-RM consensus is caller-derived, not wet-lab -- bounds agreement, never correctness",
+    "n=65 overlap; per-superpopulation strata will be small and several will be underpowered",
+    "*60 is a separate promoter SNP in LD with *28 and is NOT in our catalog; it is not scored as a miss",
+    "truth diplotypes carrying parenthesised/compound haplotypes are parsed per-haplotype; parse failures are counted and excluded, never silently defaulted"
+  ]
+}

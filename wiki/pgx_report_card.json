@@ -1,6 +1,6 @@
 {
   "schema": "pgx-report-card-v0",
-  "analysis_date": "2026-09-05",
+  "analysis_date": "2026-09-22",
   "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
   "cells": [
     {
@@ -105,13 +105,13 @@
     {
       "gene": "UGT1A1",
       "trait": "irinotecan-toxicity phenotype (activity-score) \u2014 tag-SNP surface",
-      "getrm": null,
+      "getrm": "n=65: *28-carrier sens 1.00 / spec 0.939",
       "getrm_pct": null,
       "pharmcat": null,
       "functional_evidence": "\u2014",
       "trio_mendelian": "\u2014",
-      "tier": "NEW \u2014 irinotecan toxicity / Gilbert. *STRUCTURAL: the major *28 allele is a promoter TA-REPEAT (STR), NOT a SNP \u2014 unresolvable from a short-read SNP VCF. v0 uses rs887829 (*80) as the validated LD-TAG proxy for *28 (EUR r^2 ~0.9+; rs887829 EUR AF ~30% == the *28 frequency, confirming the tag) + *6 (rs4148323, clean SNP). CPIC activity-score (Gammal 2016; AS 2=NM, 1.5=IM, 1.0=PM). Ensembl-GRCh38-verified. v0 deployment: decoded on 5 real PGP-UK humans. Phenotype faithful-to-CPIC. Tag-SNP wrapper (like the HLA cells).",
-      "residual": "*28 TA-repeat length UNASSESSED (star28_ta_repeat_unassessed) \u2014 rs887829 is an LD-tag PROXY, imperfect off-EUR; *37/*36 repeat alleles not called. GeT-RM UGT1A1 concordance = external wall (paper-supplement). Needs a repeat-aware caller for a direct *28 call"
+      "tier": "irinotecan toxicity / Gilbert. The major *28 allele is a promoter TA-REPEAT (STR), not a SNP, so v0 calls it via the rs887829 (*80) LD-TAG proxy + *6 (rs4148323, clean SNP). MEASURED vs GeT-RM CDC multi-lab consensus on 65 1000G samples (32 *28 carriers, 0 parse failures; bar frozen beforehand): *28-carriership sens 1.00 / spec 0.939 / PPV 0.941, zygosity-exact 61/65, and sens 1.00 in EACH of EUR (26) / AFR (21) / EAS (16) \u2014 the catalog's named non-EUR LD-breakdown residual did NOT appear at this n. The *6 direct-SNP control is 65/65 exact, validating the plumbing independently. SUPERSEDES the earlier 39/39 single-SNP dosage run, which skipped the compound truth rows carrying the finding. CPIC activity-score (Gammal 2016). Consensus truth is caller-derived, not wet-lab \u2014 agreement-with-reference, never correctness.",
+      "residual": "rs887829 tags the reduced-function promoter CLASS \u2014 *28 (TA7) AND *37 (TA8) \u2014 not *28 specifically: all 3 apparent false positives are *37 haplotypes, and against reduced FUNCTION the tag is 1.00/1.00/1.00 (post-hoc framing). star28_ta_repeat_unassessed stays True because THE DEPLOYED CALLER does not call the repeat. Measured separately: the repeat IS directly callable from the 1000G 30x panel (indels at chr2:233760233), where a direct call strictly dominates the tag (1.00/1.00/1.00, zygosity 64/65) \u2014 panel-specific, NOT wired into the deployed path. One unadjudicated discrepancy (NA20509: *28/*28 by GeT-RM vs 1 copy by BOTH independent assays here \u2014 IM vs PM)"
     },
     {
       "gene": "VKORC1",
