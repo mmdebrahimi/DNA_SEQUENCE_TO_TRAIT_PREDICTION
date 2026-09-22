@@ -138,3 +138,81 @@ def test_the_real_active_manifest_still_verifies_after_the_tightening():
     """NON-VACUITY for the tightening itself: it must reject the vacuous forms WITHOUT rejecting the
     genuine lock. A guard that refuses everything is not fail-closed, it is broken."""
     assert active_lock_date() == "2026-08-31"
+
+
+# --- ambiguity REFUSES rather than silently picking a cutoff (corrected 2026-09-22) ---------------
+
+def _write_manifest(wiki, name, lock_date, hashes):
+    (wiki / name).write_text(json.dumps({"schema": "prospective-lock-manifest-v1",
+                                         "lock_date": lock_date, "surface_sha256": hashes}),
+                             encoding="utf-8")
+
+
+def _stage(tmp_path):
+    """A tmp repo carrying real copies of the frozen surface, so manifests can genuinely verify."""
+    from dna_decode.eval.prospective_lock import FROZEN_SURFACE_FILES, surface_hashes
+    (tmp_path / "wiki").mkdir()
+    for rel in FROZEN_SURFACE_FILES:
+        dst = tmp_path / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes((ROOT / rel).read_bytes())
+    return surface_hashes(tmp_path)
+
+
+def test_two_verifying_manifests_with_DIFFERENT_cutoffs_refuse(tmp_path):
+    """THE corrected rule. Taking max(lock_date) looked conservative -- a later cutoff admits fewer
+    isolates -- but two manifests can only BOTH verify if they pin identical hashes, i.e. they describe
+    the SAME decoder while claiming DIFFERENT cutoffs. That is a protocol contradiction, and silently
+    taking the later one would let an arbitrary cutoff DISCARD already-accrued unfavourable evidence
+    while looking cautious."""
+    h = _stage(tmp_path)
+    _write_manifest(tmp_path / "wiki", "prospective_lock_manifest_2026-01-01.json", "2026-01-01", h)
+    _write_manifest(tmp_path / "wiki", "prospective_lock_manifest_2026-08-31.json", "2026-08-31", h)
+    with pytest.raises(NoActiveLock) as e:
+        resolve_active_lock(repo=tmp_path)
+    assert "AMBIGUOUS" in str(e.value)
+
+
+def test_two_verifying_manifests_with_the_SAME_cutoff_are_not_ambiguous(tmp_path):
+    """Identical cutoffs make the same commitment, so either answers the question. Refusing here would
+    be a false alarm -- and a guard that cries wolf gets suppressed."""
+    h = _stage(tmp_path)
+    _write_manifest(tmp_path / "wiki", "prospective_lock_manifest_a.json", "2026-08-31", h)
+    _write_manifest(tmp_path / "wiki", "prospective_lock_manifest_b.json", "2026-08-31", h)
+    path, m = resolve_active_lock(repo=tmp_path)
+    assert m["lock_date"] == "2026-08-31" and path.name == "prospective_lock_manifest_a.json"
+
+
+def test_a_non_verifying_manifest_never_creates_ambiguity(tmp_path):
+    """A retired lock coexists with the live one by design -- that is what retiring MEANS. It must not
+    trip the ambiguity refusal, or every future lock would break the resolver."""
+    h = _stage(tmp_path)
+    _write_manifest(tmp_path / "wiki", "prospective_lock_manifest_live.json", "2026-08-31", h)
+    _write_manifest(tmp_path / "wiki", "prospective_lock_manifest_retired.json", "2026-01-01",
+                    {**h, sorted(h)[0]: "0" * 64})
+    assert resolve_active_lock(repo=tmp_path)[1]["lock_date"] == "2026-08-31"
+
+
+# --- both CLIs derive their manifest, and an override is marked as not-a-live-claim ---------------
+
+def test_the_validator_default_is_derived_not_hardcoded():
+    src = (ROOT / "scripts" / "prospective_lock_validate.py").read_text(encoding="utf-8")
+    assert "prospective_lock_manifest_2026-08-31.json" not in src, "manifest filename hardcoded again"
+    assert "resolve_active_lock" in src
+
+
+def test_the_fetcher_stamps_manifest_IDENTITY_not_just_the_date():
+    """A cohort recording a cutoff but not WHICH lock produced it can be re-interpreted later under a
+    different manifest claiming the same date -- the same class as the stale-constant bug."""
+    src = (ROOT / "scripts" / "fetch_prospective_cohort.py").read_text(encoding="utf-8")
+    assert "lock_provenance" in src and "resolve_active_lock" in src
+    for field in ("manifest_path", "frozen_commit", "surface_sha256"):
+        assert field in src, field
+
+
+def test_an_overridden_cutoff_is_marked_as_not_a_live_prospective_claim():
+    """An override is not backed by a verified manifest. The console says so, but the console scrolls
+    away; the durable artifact has to carry it."""
+    src = (ROOT / "scripts" / "fetch_prospective_cohort.py").read_text(encoding="utf-8")
+    assert "historical_reproduction" in src
+    assert "overridden_on_command_line" in src

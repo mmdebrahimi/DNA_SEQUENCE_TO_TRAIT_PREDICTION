@@ -40,7 +40,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from dna_decode.eval.prospective_lock import (  # noqa: E402
-    SCORED_CELLS, active_lock_date, is_prospective_eligible,
+    SCORED_CELLS, active_lock_date, is_prospective_eligible, resolve_active_lock,
 )
 
 DEFAULT_OUT_DIR = Path("D:/dna_decode_cache/data files donwload")
@@ -496,12 +496,36 @@ def main(argv=None) -> int:
         scope = sorted(cells_by_taxon())
     else:
         scope = sorted(cells_by_group())
+    # Resolve the MANIFEST, not just its date. A cohort that records a cutoff but not WHICH lock
+    # produced it can be re-interpreted later under a different manifest claiming the same date --
+    # the same class of defect as the stale-constant bug this derivation replaced. Stamping the
+    # manifest identity + its surface hashes makes the hours-long sweep mechanically auditable.
+    lock_provenance: dict = {}
     if args.lock_date is None:
         # Fail-closed: if nothing verifies, there is no honest cutoff and the sweep must not invent one.
-        args.lock_date = active_lock_date()
+        manifest_path, manifest = resolve_active_lock()
+        args.lock_date = str(manifest["lock_date"])
         lock_src = "DERIVED from the active lock manifest"
+        lock_provenance = {
+            "resolution": "derived_from_active_manifest",
+            "manifest_path": manifest_path.name,
+            "manifest_schema": manifest.get("schema"),
+            "frozen_commit": manifest.get("frozen_commit"),
+            "lock_commit": manifest.get("lock_commit"),
+            "surface_sha256": manifest.get("surface_sha256"),
+        }
     else:
         lock_src = "OVERRIDDEN on the command line"
+        # An override is NOT a live prospective claim: no manifest backs the cutoff, so nothing
+        # downstream should read this cohort as provably prospective. Say so IN the artifact, where a
+        # reader will see it, not only on the console where it scrolls away.
+        lock_provenance = {
+            "resolution": "overridden_on_command_line",
+            "manifest_path": None,
+            "claim_mode": "historical_reproduction",
+            "warning": ("--lock-date was supplied, so this cutoff is NOT backed by a verified lock "
+                        "manifest. Do not read the resulting cohort as a live prospective claim."),
+        }
     print(f"[prospective-cohort] lock_date={args.lock_date} ({lock_src})  source={args.source}  scope={scope}  "
           f"out={args.out_dir}")
     if args.offline:
@@ -526,6 +550,7 @@ def main(argv=None) -> int:
     status_path.write_text(json.dumps({
         "_schema": "prospective-cohort-fetch-status-v1",
         "lock_date": args.lock_date,
+        "lock_provenance": lock_provenance,
         "source": args.source,
         "row_cap": args.row_cap,
         "overall_status": status,

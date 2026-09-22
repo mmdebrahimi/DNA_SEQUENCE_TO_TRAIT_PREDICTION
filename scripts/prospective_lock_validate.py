@@ -29,7 +29,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from dna_decode.eval.prospective_lock import (  # noqa: E402
-    LOCK_SCHEMA, is_prospective_eligible, verify_lock,
+    LOCK_SCHEMA, is_prospective_eligible, resolve_active_lock, verify_lock,
 )
 
 MIN_PER_CLASS = 10   # mirrors independent_cohort_validate / external_cohort_revalidate powering gate
@@ -114,8 +114,15 @@ def _load_manifest(path: Path) -> dict:
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--manifest", type=Path,
-                    default=REPO / "wiki" / "prospective_lock_manifest_2026-08-31.json")
+    # DERIVED, not restated. This literal was the last hand-sync point left in the prospective
+    # workflow: a new lock would have left the scorer pointed at the previous manifest. It failed
+    # SAFER than the fetcher's stale constant did (verify_lock hard-fails after a surface change, so it
+    # refuses rather than mis-claims) -- but "refuses until a human notices" is still a promise the
+    # default was making and could not keep. `--manifest` remains, for historical reproduction.
+    ap.add_argument("--manifest", type=Path, default=None,
+                    help="lock manifest to score against; DEFAULTS to the active lock (the manifest "
+                         "that still verifies against the live frozen surface). Pass one explicitly "
+                         "only to reproduce a historical lock.")
     ap.add_argument("--cohort-tsv", type=Path, default=None,
                     help="post-lock cohort TSV: columns biosample, first_public_date, gca, drug, label "
                          "(measured R/S). Omit to run a lock-only verification (no scoring).")
@@ -125,6 +132,13 @@ def main(argv=None) -> int:
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args(argv)
 
+    if args.manifest is None:
+        # Fail-closed via NoActiveLock: no manifest verifies => there is no honest cutoff to score at.
+        args.manifest, _ = resolve_active_lock()
+        print(f"[prospective-lock] manifest DERIVED from the active lock: {args.manifest.name}")
+    else:
+        print(f"[prospective-lock] manifest OVERRIDDEN on the command line: {args.manifest.name} "
+              f"(historical reproduction - not a live prospective claim)")
     if not args.manifest.exists():
         print(f"ERROR: lock manifest not found at {args.manifest}", file=sys.stderr)
         return 2

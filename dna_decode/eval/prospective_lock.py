@@ -225,9 +225,25 @@ def resolve_active_lock(repo: Path = _REPO) -> tuple[Path, dict]:
             "no committed prospective-lock manifest verifies against the live frozen surface "
             f"(checked {len(candidates)}). The surface has drifted from every recorded lock, so there "
             "is no honest eligibility cutoff -- re-lock before sweeping for prospective isolates.")
-    # If several pin the same surface they are equally valid; take the LATEST cutoff, which is the
-    # conservative choice (a later cutoff admits strictly fewer isolates).
-    return max(verified, key=lambda pm: str(pm[1].get("lock_date", "")))
+    # AMBIGUITY REFUSES rather than picking the later cutoff (corrected 2026-09-22).
+    #
+    # The original rule took max(lock_date) and called it conservative because a later cutoff admits
+    # strictly fewer isolates. That reasoning is incomplete: two manifests can only BOTH verify if they
+    # pin identical hashes, i.e. they describe the SAME decoder while claiming DIFFERENT cutoffs. That
+    # is a protocol contradiction, not a tie -- and silently taking the later one would let an arbitrary
+    # cutoff DISCARD already-accrued evidence that happens to be unfavourable, while looking cautious.
+    # "Admits fewer isolates" is not the same as "is honest about which isolates it may admit".
+    #
+    # Identical lock_dates are NOT ambiguous: those manifests make the same commitment, so any of them
+    # answers the question and the earliest path is returned for determinism.
+    cutoffs = {str(m.get("lock_date", "")) for _, m in verified}
+    if len(cutoffs) > 1:
+        raise NoActiveLock(
+            "AMBIGUOUS LOCK: several committed manifests verify against the live frozen surface but "
+            f"claim DIFFERENT cutoffs {sorted(cutoffs)} ({[p.name for p, _ in verified]}). They pin the "
+            "same decoder, so they cannot both be the eligibility rule. Retire one (its manifest must "
+            "stop verifying) or record an explicit supersession before sweeping.")
+    return min(verified, key=lambda pm: pm[0].name)
 
 
 def active_lock_date(repo: Path = _REPO) -> str:
