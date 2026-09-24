@@ -191,14 +191,25 @@ def main() -> int:
                       "cell's own 'no independent star-concordance number exists' claim is HALF WRONG: "
                       "right about the function axis, wrong about naming, which exists and is 0.398")},
         {"gene": "CYP4F2", "trait": "warfarin dose modifier (rs2108622 / *3 V433M)",
-         "getrm": None, "getrm_pct": None, "pharmcat": None,
+         "getrm": "n=64: star-NAME 0.8125; function 64/64 (definitional)", "getrm_pct": None,
+         "pharmcat": None,
          "functional_evidence": fe_summ("CYP4F2"), "trio_mendelian": "—",
-         "tier": ("NEW — completes the WARFARIN TRIAD (VKORC1 + CYP2C9 + CYP4F2). Single-SNP rs2108622 "
+         "tier": ("completes the WARFARIN TRIAD (VKORC1 + CYP2C9 + CYP4F2). Single-SNP rs2108622 "
                   "genotype->function readout (minus-strand cDNA C>T == 433 Val>Met); *3 reduced-function "
-                  "carriers need a HIGHER warfarin dose (CPIC Johnson 2017, ~+0.4 mg/day per *3). "
-                  "KNOWLEDGE_BASELINE; AF-corroborated (*3 ~29% EUR / ~79% EAS). Deployed on 5 PGP-UK humans."),
-         "residual": "single-SNP *3 proxy (rs2108622 IS the *3 truth); a DOSE modifier not a metabolizer "
-                     "phenotype; dose direction is annotation only, NOT a clinical dose"},
+                  "carriers need a HIGHER warfarin dose (CPIC Johnson 2017, ~+0.4 mg/day per *3). MEASURED "
+                  "vs GeT-RM CDC consensus on 64 1000G samples (2026-09-24; bar + predictions frozen "
+                  "first), THREE axes kept separate: FUNCTION 64/64 — but DEFINITIONAL, since GeT-RM's *3 "
+                  "assignment derives from the one SNP read here (this supersedes the earlier 54/54 figure, "
+                  "same axis presented as validation, which skipped 10 ambiguous rows). STAR-NAME 52/64 = "
+                  "0.8125. SAFETY zero misses."),
+         "residual": ("READ THE FUNCTION, NOT THE STAR LABEL — all 12 naming disagreements are EXACTLY the "
+                      "12 *2 carriers (zero exceptions); *2 is defined by a variant this caller never "
+                      "reads, so a *2 carrier prints as *1. *2's functional status is NOT established "
+                      "here, so this is a naming limitation, not a demonstrated safety gap. AF CLAIM "
+                      "CORRECTED: the previously-cited '~79% EAS' was wrong — panel-derived EAS *3 is "
+                      "0.2128 (EUR 0.2773 holds); the 0.79 matched the REFERENCE-allele frequency to 0.3 "
+                      "pp. Standing guard: scripts/pgx_af_panel_audit.py. A DOSE modifier not a "
+                      "metabolizer phenotype; dose direction is annotation only, NOT a clinical dose")},
         {"gene": "ABCG2", "trait": "rosuvastatin transporter (rs2231142 / Q141K)",
          "getrm": None, "getrm_pct": None, "pharmcat": None,
          "functional_evidence": fe_summ("ABCG2"), "trio_mendelian": "—",

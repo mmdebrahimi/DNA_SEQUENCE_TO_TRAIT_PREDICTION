@@ -344,12 +344,12 @@ _PGX_CONTRACTS: list[CellContract] = [
     CellContract(
         cell_id="pgx:human:cyp4f2", track="pgx", route="dna-pgx", organism="human", target="cyp4f2",
         claim="CYP4F2 *3 (rs2108622, V433M) warfarin dose-modifier genotype+function from a phased VCF (3rd warfarin gene with VKORC1+CYP2C9)",
-        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="single_snp_validated_vs_getrm_star_truth",
-        validation_slice="GeT-RM Consolidated single-SNP concordance: rs2108622 -> *3 dosage 54/54 (1.0) on 1000G-overlap (10 ambiguous skipped); plus-strand genomic C>T == cDNA 433 Val>Met; AF-corroborated (*3 ~29% EUR / ~79% EAS)",
-        label_provenance="CPIC warfarin (Johnson 2017) CYP4F2*3 + GeT-RM Consolidated table star-allele truth via scripts/pgx_single_snp_concordance.py",
+        evidence_tier=EvidenceTier.NEAR_INDEPENDENT, claim_status="function_axis_definitional_star_label_disagrees_on_star2_carriers_af_claim_corrected",
+        validation_slice="MEASURED vs GeT-RM CDC multi-lab consensus on 64 1000G samples, 0 parse failures (wiki/cyp4f2_getrm_concordance_2026-09-24; bar AND predictions frozen beforehand). THREE AXES, not pooled: (1) FUNCTION 64/64 exact -- DEFINITIONAL, since GeT-RM's *3 assignment derives from rs2108622, the one SNP read here, so it is a control not validation (this supersedes the earlier 54/54 figure, which was this same axis presented as validation and which SKIPPED 10 ambiguous rows this run parses). (2) STAR-NAME 52/64 = 0.8125. (3) SAFETY zero misses. AF-CORROBORATION CORRECTED: the previously-cited '*3 ~29% EUR / ~79% EAS' was wrong on EAS -- panel-derived truth is EUR 0.2773 (claim holds) and EAS 0.2128 (asserted 0.79 matched the REFERENCE-allele frequency to 0.3 pp); see wiki/pgx_af_panel_audit_2026-09-24",
+        label_provenance="CPIC warfarin (Johnson 2017) CYP4F2*3 + GeT-RM CDC Consolidated multi-lab consensus via scripts/cyp4f2_getrm_concordance.py; population frequencies DERIVED from the local 1000G panel via scripts/pgx_af_panel_audit.py. Consensus is caller-derived, NOT wet-lab -- bounds agreement-with-reference, never correctness",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
-        falsifier_ref="scripts/pgx_single_snp_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="single-SNP *3 (rs2108622 IS the *3-defining variant -> 54/54 vs GeT-RM); a warfarin DOSE modifier, not a metabolizer phenotype; the dose direction is annotation only (NOT a clinical dose)"),
+        falsifier_ref="scripts/cyp4f2_getrm_concordance.py", incoming_data_gate="n/a",
+        demotion_rule="READ THE FUNCTION, NOT THE STAR LABEL. All 12 star-name disagreements are EXACTLY the 12 samples carrying *2 (defined by a variant this caller never reads -- it genotypes one SNP), zero exceptions: *1 0/91-agreeing-where-*2-present, *2 0/12 on naming. A *2 carrier prints as *1. *2's FUNCTIONAL status is NOT established by this run -- CPIC dose-adjusts on *3, so this is a NAMING limitation, not a demonstrated safety gap. A warfarin DOSE modifier, not a metabolizer phenotype; the dose direction is annotation only (NOT a clinical dose)"),
     CellContract(
         cell_id="pgx:human:abcg2", track="pgx", route="dna-pgx", organism="human", target="abcg2",
         claim="ABCG2 Q141K (rs2231142) rosuvastatin transporter-function genotype from a phased VCF (pairs with SLCO1B1 for statins)",

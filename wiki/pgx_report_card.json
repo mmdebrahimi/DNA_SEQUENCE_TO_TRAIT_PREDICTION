@@ -1,6 +1,6 @@
 {
   "schema": "pgx-report-card-v0",
-  "analysis_date": "2026-09-22",
+  "analysis_date": "2026-09-24",
   "note": "Standing PGx trust surface -- a roll-up, NOT a gate (exit 0 always). No aggregate headline; each cell's honest tier stands alone. CALLING is independently validatable vs GeT-RM (free consensus panel); PHENOTYPE is faithful-to-CPIC (assigned, not measured).",
   "cells": [
     {
@@ -138,13 +138,13 @@
     {
       "gene": "CYP4F2",
       "trait": "warfarin dose modifier (rs2108622 / *3 V433M)",
-      "getrm": null,
+      "getrm": "n=64: star-NAME 0.8125; function 64/64 (definitional)",
       "getrm_pct": null,
       "pharmcat": null,
       "functional_evidence": "\u2014",
       "trio_mendelian": "\u2014",
-      "tier": "NEW \u2014 completes the WARFARIN TRIAD (VKORC1 + CYP2C9 + CYP4F2). Single-SNP rs2108622 genotype->function readout (minus-strand cDNA C>T == 433 Val>Met); *3 reduced-function carriers need a HIGHER warfarin dose (CPIC Johnson 2017, ~+0.4 mg/day per *3). KNOWLEDGE_BASELINE; AF-corroborated (*3 ~29% EUR / ~79% EAS). Deployed on 5 PGP-UK humans.",
-      "residual": "single-SNP *3 proxy (rs2108622 IS the *3 truth); a DOSE modifier not a metabolizer phenotype; dose direction is annotation only, NOT a clinical dose"
+      "tier": "completes the WARFARIN TRIAD (VKORC1 + CYP2C9 + CYP4F2). Single-SNP rs2108622 genotype->function readout (minus-strand cDNA C>T == 433 Val>Met); *3 reduced-function carriers need a HIGHER warfarin dose (CPIC Johnson 2017, ~+0.4 mg/day per *3). MEASURED vs GeT-RM CDC consensus on 64 1000G samples (2026-09-24; bar + predictions frozen first), THREE axes kept separate: FUNCTION 64/64 \u2014 but DEFINITIONAL, since GeT-RM's *3 assignment derives from the one SNP read here (this supersedes the earlier 54/54 figure, same axis presented as validation, which skipped 10 ambiguous rows). STAR-NAME 52/64 = 0.8125. SAFETY zero misses.",
+      "residual": "READ THE FUNCTION, NOT THE STAR LABEL \u2014 all 12 naming disagreements are EXACTLY the 12 *2 carriers (zero exceptions); *2 is defined by a variant this caller never reads, so a *2 carrier prints as *1. *2's functional status is NOT established here, so this is a naming limitation, not a demonstrated safety gap. AF CLAIM CORRECTED: the previously-cited '~79% EAS' was wrong \u2014 panel-derived EAS *3 is 0.2128 (EUR 0.2773 holds); the 0.79 matched the REFERENCE-allele frequency to 0.3 pp. Standing guard: scripts/pgx_af_panel_audit.py. A DOSE modifier not a metabolizer phenotype; dose direction is annotation only, NOT a clinical dose"
     },
     {
       "gene": "ABCG2",

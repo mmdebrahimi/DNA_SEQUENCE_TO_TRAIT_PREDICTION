@@ -1,0 +1,165 @@
+{
+  "schema": "pgx-af-panel-audit-v1",
+  "analysis_date": "2026-09-24",
+  "method": "every asserted population frequency DERIVED from the local 1000G panel in data/pgx_1000g/; a claim with no local panel is UNMEASURABLE, never a pass",
+  "tolerance": 0.1,
+  "n_claims": 6,
+  "n_measurable": 4,
+  "n_unmeasurable": 2,
+  "n_out_of_band": 1,
+  "verdict": "CLAIMS_OUT_OF_BAND",
+  "scope": "bounds whether a shipped FREQUENCY claim matches this panel; NOT a phenotype validation",
+  "claims": [
+    {
+      "gene": "CYP4F2",
+      "allele": "*3",
+      "rsid": "rs2108622",
+      "asserted": {
+        "EUR": 0.29,
+        "EAS": 0.79
+      },
+      "asserted_in": "dna_decode/pgx/cyp4f2.py docstring + cell_registry CYP4F2 contract",
+      "note": "warfarin dose-up allele",
+      "status": "CLAIM_OUT_OF_BAND",
+      "measured_all_populations": {
+        "AFR": 0.0784,
+        "AMR": 0.2469,
+        "EAS": 0.2128,
+        "EUR": 0.2773,
+        "SAS": 0.4176,
+        "ALL": 0.2317
+      },
+      "n_samples": 3202,
+      "checks": {
+        "EUR": {
+          "asserted": 0.29,
+          "measured": 0.2773,
+          "delta": -0.0127,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        },
+        "EAS": {
+          "asserted": 0.79,
+          "measured": 0.2128,
+          "delta": -0.5772,
+          "within_tolerance": false,
+          "matches_complement_better": true
+        }
+      }
+    },
+    {
+      "gene": "UGT1A1",
+      "allele": "*80",
+      "rsid": "rs887829",
+      "asserted": {
+        "EUR": 0.3
+      },
+      "asserted_in": "dna_decode/pgx/runner.py UGT1A1 block + pgx_af_corroboration.py",
+      "note": "*28 LD-tag; the claim is that EUR AF == the *28 frequency",
+      "status": "OK",
+      "measured_all_populations": {
+        "AFR": 0.4899,
+        "AMR": 0.3694,
+        "EAS": 0.1282,
+        "EUR": 0.3009,
+        "SAS": 0.4359,
+        "ALL": 0.3579
+      },
+      "n_samples": 3202,
+      "checks": {
+        "EUR": {
+          "asserted": 0.3,
+          "measured": 0.3009,
+          "delta": 0.0009,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        }
+      }
+    },
+    {
+      "gene": "UGT1A1",
+      "allele": "*6",
+      "rsid": "rs4148323",
+      "asserted": {
+        "EAS": 0.14
+      },
+      "asserted_in": "scripts/pgx_af_corroboration.py",
+      "note": "decreased function, EAS-common",
+      "status": "OK",
+      "measured_all_populations": {
+        "AFR": 0.0006,
+        "AMR": 0.0133,
+        "EAS": 0.1368,
+        "EUR": 0.0055,
+        "SAS": 0.0191,
+        "ALL": 0.0319
+      },
+      "n_samples": 3202,
+      "checks": {
+        "EAS": {
+          "asserted": 0.14,
+          "measured": 0.1368,
+          "delta": -0.0032,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        }
+      }
+    },
+    {
+      "gene": "CYP2B6",
+      "allele": "*6-proxy",
+      "rsid": "rs3745274",
+      "asserted": {
+        "ALL": 0.32
+      },
+      "asserted_in": "dna_decode/pgx/cyp2b6_catalog.py PROVENANCE block",
+      "note": "global (not per-superpopulation) claim: '*6+*9 combined global frequency'",
+      "status": "OK",
+      "measured_all_populations": {
+        "AFR": 0.3757,
+        "AMR": 0.3847,
+        "EAS": 0.2128,
+        "EUR": 0.233,
+        "SAS": 0.3785,
+        "ALL": 0.3196
+      },
+      "n_samples": 3202,
+      "checks": {
+        "ALL": {
+          "asserted": 0.32,
+          "measured": 0.3196,
+          "delta": -0.0004,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        }
+      }
+    },
+    {
+      "gene": "ABCG2",
+      "allele": "141K",
+      "rsid": "rs2231142",
+      "asserted": {
+        "EUR": 0.09,
+        "EAS": 0.29
+      },
+      "asserted_in": "dna_decode/pgx/abcg2.py docstring + cell_registry ABCG2 contract",
+      "note": "rosuvastatin; NO local VCF -- fetch the region to measure",
+      "status": "UNMEASURABLE_NO_LOCAL_PANEL",
+      "reason": "abcg2_1000g.vcf absent from data/pgx_1000g/",
+      "checks": {}
+    },
+    {
+      "gene": "NUDT15",
+      "allele": "*3",
+      "rsid": "rs116855232",
+      "asserted": {
+        "EAS": 0.1
+      },
+      "asserted_in": "dna_decode/pgx/nudt15_catalog.py + runner.py NUDT15 block",
+      "note": "thiopurine toxicity; NO local VCF -- fetch the region to measure",
+      "status": "UNMEASURABLE_NO_LOCAL_PANEL",
+      "reason": "nudt15_1000g.vcf absent from data/pgx_1000g/",
+      "checks": {}
+    }
+  ]
+}

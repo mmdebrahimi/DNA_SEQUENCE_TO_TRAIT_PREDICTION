@@ -1,0 +1,48 @@
+{
+  "schema": "cyp4f2-star-acceptance-bar-v1",
+  "frozen": "2026-09-24",
+  "frozen_before_reading_any_result": true,
+  "cell": "pgx:human:cyp4f2",
+  "current_tier": "NEAR_INDEPENDENT",
+
+  "why_now": "dna_decode/pgx/cyp4f2.py carries the SAME unmeasurability claim VERBATIM as slco1b1.py -- that validation is 'genotype-readout + trio-Mendelian consistency + AF-corroboration, never an independent star-concordance number'. SLCO1B1's version of that claim was measured 2026-09-22 and found half wrong. This is the last GeT-RM-scoreable unscored PGx cell.",
+
+  "two_claims_under_test": {
+    "claim_1_no_star_concordance_number": "Same as SLCO1B1: a star-NAME agreement number EXISTS because *2 is defined by a variant this caller does not genotype, so the printed label uses information absent from our input.",
+    "claim_2_af_corroborated": "The docstring asserts the *3 (T) allele is '~29% EUR / ~79% EAS' and the registry contract cites 'AF-corroborated' as part of this cell's validation. That AF has never been checked against the 3202-sample 1000G panel THIS CELL SHIPS BESIDE. If the asserted AF is wrong, a stated validation leg is resting on a wrong number."
+  },
+
+  "truth": {
+    "source": "GeT-RM CDC consolidated multi-lab consensus (data/pgx_getrm/getrm_consolidated_truth.tsv, consolidated table only)",
+    "gene_rows": 96,
+    "overlap_with_1000g_30x_panel": 64,
+    "independence": "Multi-lab CDC consensus, NOT a wet-lab phenotype. Bounds agreement-with-reference only."
+  },
+
+  "registered_predictions": {
+    "star_name_agreement": "~0.81 (52/64) -- PARTIAL band, explicitly NOT the 0.398 LOW band SLCO1B1 landed in. 12 of the 64 overlap samples carry *2; the other 52 are *1//*3 combinations this caller CAN name. A result near 0.40 would falsify this prediction as much as a result near 1.00.",
+    "predicted_disagreement_count": 12,
+    "predicted_mechanism": "star-name agreement is EXACTLY the complement of 'carries *2', zero exceptions -- the same mechanistic identity that held on SLCO1B1",
+    "function_axis_control": "NEAR 1.00 and DEFINITIONAL, since GeT-RM's *3 assignment derives from rs2108622, the one SNP we genotype",
+    "af_eur": "UNPREDICTED -- measured, not guessed. The docstring's ~29% EUR is plausible.",
+    "af_eas": "FLAGGED AS DOUBTFUL: the docstring's ~79% EAS is high for this variant. This is a suspicion, NOT a claim; it is recorded before measurement so the check cannot be retrofitted either way."
+  },
+
+  "verdicts": {
+    "star_proxy_not_reference_agreeing": "exact star-name agreement < 0.60",
+    "star_proxy_partial": "0.60 <= agreement < 0.90 -- the PREDICTED band; the label is right on the common diplotypes and wrong wherever *2 appears",
+    "star_proxy_agrees": "agreement >= 0.90",
+    "demote_and_disclose": "ANY truth *3 carrier called Normal Function (a safety miss), regardless of the other axes",
+    "af_claim_holds": "measured EUR and EAS ALT frequencies both within +/- 10 percentage points of the asserted ~29% / ~79%",
+    "af_claim_wrong": "either outside that band -> the shipped AF-corroboration leg must be corrected, and the registry contract's 'AF-corroborated' wording with it"
+  },
+
+  "scope_limits_registered_in_advance": [
+    "*2's FUNCTIONAL status is NOT settled by this run and must not be asserted from memory. CPIC's warfarin dosing algorithm uses *3; whether *2 carries an independent dose effect is a separate literature question. So a *2 carrier called *1 is a NAMING finding, and is only a SAFETY finding if *2 is reduced-function -- which this measurement does not establish.",
+    "the rsID defining *2 is NOT asserted here; what is load-bearing and verifiable is that this caller genotypes exactly ONE SNP (rs2108622) and *2 is not it",
+    "GeT-RM consensus is caller-derived, not wet-lab -- agreement-with-reference, never correctness",
+    "n=64; *2 appears on 12 samples and *3/*3 on 3 -- per-allele claims below those counts are underpowered",
+    "AF is computed over the FULL 3202-sample panel (not the 64-sample truth overlap), which is the right denominator for a population-frequency claim and a DIFFERENT denominator from every other number here",
+    "truth diplotypes that do not parse as two haplotypes are counted and EXCLUDED, never defaulted"
+  ]
+}

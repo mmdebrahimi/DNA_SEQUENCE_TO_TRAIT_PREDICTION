@@ -30,6 +30,11 @@ PGX_AF = [
      "af": 0.1379, "lo": 0.08, "hi": 0.20, "note": "decreased; EAS-common ~14%"},
     {"gene": "CYP4F2", "allele": "*3", "rsid": "rs2108622", "alt": "T", "pop": "EUR",
      "af": 0.2903, "lo": 0.20, "hi": 0.40, "note": "reduced; EUR ~29% (warfarin dose-up)"},
+    # EAS added 2026-09-24: this table checked EUR ONLY, while cyp4f2.py asserted TWO populations -- and the
+    # unchecked one was WRONG ("~79% EAS"; panel-derived truth is 0.2128, i.e. the asserted figure was the
+    # REFERENCE-allele frequency). A one-population-per-variant table cannot catch that by construction.
+    {"gene": "CYP4F2", "allele": "*3", "rsid": "rs2108622", "alt": "T", "pop": "EAS",
+     "af": 0.2128, "lo": 0.15, "hi": 0.30, "note": "reduced; EAS ~21% (panel-derived 2026-09-24, NOT 79%)"},
     {"gene": "ABCG2", "allele": "141K", "rsid": "rs2231142", "alt": "T", "pop": "EAS",
      "af": 0.2907, "lo": 0.20, "hi": 0.40, "note": "poor-function; EAS ~29% (rosuvastatin)"},
 ]
@@ -61,8 +66,19 @@ def build_report(rows: list[dict]) -> dict:
                    "CPIC/gnomAD-expected band, in the most-informative population; AFs from Ensembl 1000G phase3"),
         "n_variants": len(scored), "n_in_band": n_in,
         "verdict": "AF_CORROBORATED" if n_in == len(scored) else "AF_PARTIAL",
-        "getrm_concordance_status": ("EXTERNAL_WALL for all: GeT-RM truth for NUDT15/UGT1A1/CYP4F2/ABCG2 is "
-                                     "paper-supplement (not in the CYP-only ursaPGx benchmark); manual curation"),
+        "getrm_concordance_status": ("PARTLY SUPERSEDED 2026-09-22/24: the 'EXTERNAL_WALL for all' claim this "
+                                     "field used to make is FALSE for UGT1A1 and CYP4F2 -- both are now scored "
+                                     "against the GeT-RM CDC CONSOLIDATED multi-lab consensus (n=65 and n=64; "
+                                     "wiki/ugt1a1_getrm_concordance_2026-09-22, wiki/cyp4f2_getrm_concordance_"
+                                     "2026-09-24). The wall was the CYP-only ursaPGx benchmark, not GeT-RM as "
+                                     "such. Still EXTERNAL_WALL for NUDT15 (n=12 truth overlap, underpowered) "
+                                     "and ABCG2 (absent from the consolidated table)"),
+        "af_method_caveat": ("this table checks ONE population per variant against a hand-entered band, from "
+                            "AF values fetched once (2026-07-07) -- it derives nothing at run time without "
+                            "--live and cannot catch a wrong claim for an UNCHECKED population, which is "
+                            "exactly how CYP4F2's '~79% EAS' survived. The panel-derived standing guard is "
+                            "scripts/pgx_af_panel_audit.py, which checks EVERY asserted population against "
+                            "the local 1000G panel"),
         "honesty_tier": ("KNOWLEDGE_BASELINE AF-corroboration (like DPYD/VKORC1/SLCO1B1) — confirms each new "
                          "cell's actionable variant is real + correctly-positioned at CPIC-expected population "
                          "frequency; NOT an independent per-sample concordance number. NOT clinical."),

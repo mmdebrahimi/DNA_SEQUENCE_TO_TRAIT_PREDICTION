@@ -16,10 +16,29 @@ def test_classify_af_bands():
 
 
 def test_all_new_cells_corroborate():
+    """Every tabled variant must land in band.
+
+    The variant count is DERIVED from the table, not pinned to a literal: this test used to assert
+    `n_variants == 5` and broke the moment the missing CYP4F2 EAS row was added (2026-09-24), which is
+    the hardcoded-count drift pattern. What matters is that nothing is out of band and nothing was
+    silently dropped, not that the table has a particular size.
+    """
     rep = m.build_report([dict(r) for r in m.PGX_AF])
-    assert rep["n_variants"] == 5
-    assert rep["n_in_band"] == 5
+    assert rep["n_variants"] == len(m.PGX_AF) >= 5
+    assert rep["n_in_band"] == rep["n_variants"]
     assert rep["verdict"] == "AF_CORROBORATED"
+
+
+def test_cyp4f2_is_checked_in_both_asserted_populations():
+    """REGRESSION GUARD for the 2026-09-24 defect: this table checked CYP4F2 in EUR only -- the number
+    that is correct -- while cyp4f2.py asserted TWO populations, and the UNCHECKED one ('~79% EAS') was
+    wrong by 0.58. A one-population-per-variant table cannot catch that by construction, so both must
+    stay present. Panel-derived truth: EUR 0.2773, EAS 0.2128.
+    """
+    pops = {r["pop"] for r in m.PGX_AF if r["gene"] == "CYP4F2"}
+    assert {"EUR", "EAS"} <= pops
+    eas = [r for r in m.PGX_AF if r["gene"] == "CYP4F2" and r["pop"] == "EAS"][0]
+    assert eas["af"] < 0.30, "the EAS *3 frequency is ~0.21; 0.79 was the REFERENCE-allele frequency"
 
 
 def test_covers_the_four_new_genes():
