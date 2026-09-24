@@ -30,6 +30,11 @@ BASE = ("http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_h
 VCF_TMPL = BASE + "/1kGP_high_coverage_Illumina.{chrom}.filtered.SNV_INDEL_SV_phased_panel.vcf.gz"
 
 
+# Adjacent chunk spans closer than this are merged into one request: one slightly-larger GET beats many
+# small ones on a high-latency link, and BGZF decode is indifferent to the extra bytes.
+_SPAN_COALESCE_GAP = 1 << 20      # 1 MB
+
+
 def _http_range(url: str, start: int, end: int | None = None, timeout: int = 90) -> bytes:
     """HTTP Range GET [start, end] inclusive (end=None -> open-ended). Via curl.
 
@@ -134,6 +139,28 @@ def _bgzf_blocks(data: bytes):
         i += block_len
 
 
+def merge_chunk_spans(chunks, coalesce_gap: int = _SPAN_COALESCE_GAP) -> list[list[int]]:
+    """PURE: tabix (cbeg, cend) virtual-offset chunks -> sorted, coalesced byte spans to range-fetch.
+
+    Each span is [compressed_start, compressed_end + 65536); the tail pad includes the BGZF block that
+    cend points into. Spans within `coalesce_gap` of each other are merged, so a dense bin set becomes a
+    few requests rather than hundreds.
+
+    Why this is a separate function and not `min(cbeg) .. max(cend)`: `_reg2bins` returns bins at ALL
+    levels including coarse ones, so a single min->max range can approach the size of the whole file.
+    Measured 2026-09-24 on chr4:88129000-88133000 that span was 471 MB of a 2.08 GB file (and timed out),
+    where the per-span total is ~1.3 MB. Pinned by tests/test_fetch_1000g_region.py.
+    """
+    spans = sorted((_voff_coffset(c[0]), _voff_coffset(c[1]) + 65536) for c in chunks)
+    merged: list[list[int]] = []
+    for s, e in spans:
+        if merged and s <= merged[-1][1] + coalesce_gap:
+            merged[-1][1] = max(merged[-1][1], e)
+        else:
+            merged.append([s, e])
+    return merged
+
+
 def _voff_coffset(voff: int) -> int:
     return voff >> 16
 
@@ -188,13 +215,21 @@ def fetch_region(chrom: str, start: int, end: int, out: Path, *, verbose: bool =
                 chunks.append((cbeg, cend))
     if not chunks:
         raise RuntimeError("no tabix chunks overlap the region (wrong coords/assembly?)")
-    cmin = min(_voff_coffset(c[0]) for c in chunks)
-    cmax = max(_voff_coffset(c[1]) for c in chunks)
-    # +65536 to include the final block that cmax points into
-    region_raw = _http_range(url, cmin, cmax + 65536, timeout=90)
+    # Fetch each chunk SPAN separately.
+    #
+    # This used to be a single range from min(cbeg) to max(cend) across every overlapping bin. That is not
+    # the tabix algorithm and it degenerates badly: _reg2bins returns bins at ALL levels, including coarse
+    # ones, so on a large chromosome the min->max span can approach the whole file. Measured 2026-09-24 on
+    # chr4:88129000-88133000 (ABCG2), that "bounded" range was 471 MB of a 2.08 GB file and timed out --
+    # while the records actually needed are a few hundred KB. Fetching per-span keeps it proportional to
+    # the region. Spans are coalesced when they are adjacent/overlapping so a dense bin set does not turn
+    # into hundreds of tiny requests.
+    merged = merge_chunk_spans(chunks)
+    total = sum(e - s for s, e in merged)
     if verbose:
-        print(f"[fetch] header {len(header_lines)} lines; region bytes {cmin}-{cmax} "
-              f"({len(region_raw)//1024} KB compressed)", flush=True)
+        print(f"[fetch] header {len(header_lines)} lines; {len(chunks)} tabix chunks -> {len(merged)} "
+              f"span(s), {total // 1024} KB compressed", flush=True)
+    region_raw = b"".join(_http_range(url, s, e, timeout=90) for s, e in merged)
 
     # 3) decode region blocks, keep records in [start, end]
     data_lines: list[str] = []

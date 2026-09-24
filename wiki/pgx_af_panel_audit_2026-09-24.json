@@ -4,8 +4,8 @@
   "method": "every asserted population frequency DERIVED from the local 1000G panel in data/pgx_1000g/; a claim with no local panel is UNMEASURABLE, never a pass",
   "tolerance": 0.1,
   "n_claims": 6,
-  "n_measurable": 4,
-  "n_unmeasurable": 2,
+  "n_measurable": 6,
+  "n_unmeasurable": 0,
   "n_out_of_band": 1,
   "verdict": "CLAIMS_OUT_OF_BAND",
   "scope": "bounds whether a shipped FREQUENCY claim matches this panel; NOT a phenotype validation",
@@ -144,9 +144,32 @@
       },
       "asserted_in": "dna_decode/pgx/abcg2.py docstring + cell_registry ABCG2 contract",
       "note": "rosuvastatin; NO local VCF -- fetch the region to measure",
-      "status": "UNMEASURABLE_NO_LOCAL_PANEL",
-      "reason": "abcg2_1000g.vcf absent from data/pgx_1000g/",
-      "checks": {}
+      "status": "OK",
+      "measured_all_populations": {
+        "AFR": 0.0106,
+        "AMR": 0.1418,
+        "EAS": 0.2872,
+        "EUR": 0.0908,
+        "SAS": 0.1023,
+        "ALL": 0.1143
+      },
+      "n_samples": 3202,
+      "checks": {
+        "EUR": {
+          "asserted": 0.09,
+          "measured": 0.0908,
+          "delta": 0.0008,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        },
+        "EAS": {
+          "asserted": 0.29,
+          "measured": 0.2872,
+          "delta": -0.0028,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        }
+      }
     },
     {
       "gene": "NUDT15",
@@ -157,9 +180,25 @@
       },
       "asserted_in": "dna_decode/pgx/nudt15_catalog.py + runner.py NUDT15 block",
       "note": "thiopurine toxicity; NO local VCF -- fetch the region to measure",
-      "status": "UNMEASURABLE_NO_LOCAL_PANEL",
-      "reason": "nudt15_1000g.vcf absent from data/pgx_1000g/",
-      "checks": {}
+      "status": "OK",
+      "measured_all_populations": {
+        "AFR": 0.0006,
+        "AMR": 0.0429,
+        "EAS": 0.0957,
+        "EUR": 0.0016,
+        "SAS": 0.0674,
+        "ALL": 0.0372
+      },
+      "n_samples": 3202,
+      "checks": {
+        "EAS": {
+          "asserted": 0.1,
+          "measured": 0.0957,
+          "delta": -0.0043,
+          "within_tolerance": true,
+          "matches_complement_better": false
+        }
+      }
     }
   ]
 }

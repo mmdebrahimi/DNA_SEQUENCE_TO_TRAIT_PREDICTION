@@ -36,9 +36,13 @@ acceptance bar AND predictions frozen beforehand.)
 
      It survived because scripts/pgx_af_corroboration.py checks ONE population per variant -- for CYP4F2,
      EUR, the number that is correct. The standing guard is now scripts/pgx_af_panel_audit.py, which
-     derives EVERY asserted population frequency from the local panel. On that audit the rest of the PGx
-     surface is accurate (UGT1A1 *80 EUR delta 0.0009, UGT1A1 *6 EAS delta -0.0032, CYP2B6 delta -0.0004),
-     so this was an isolated wrong number, NOT a pattern.
+     derives EVERY asserted population frequency from the local panel. On that audit **7 of the 8 asserted
+     frequencies across the whole PGx surface are accurate to within 0.013** (UGT1A1 *80 EUR +0.0009,
+     UGT1A1 *6 EAS -0.0032, CYP2B6 global -0.0004, ABCG2 141K EUR +0.0008 / EAS -0.0028, NUDT15 *3 EAS
+     -0.0043, CYP4F2 *3 EUR -0.0127), so this is an ISOLATED wrong number, NOT a pattern -- and that
+     near-perfect agreement everywhere else is the control showing the AF computation is sound rather
+     than the "error" being a pipeline artifact. ABCG2 also asserts two populations with only one
+     historically checked, so it was the obvious place for a second instance; measured, it is fine.
 
 FUNCTION-axis note: a GeT-RM *3-dosage concordance number is DEFINITIONAL, not validation -- GeT-RM's own
 *3 assignment derives from rs2108622, the one SNP this caller reads. It is 64/64 and that is expected.

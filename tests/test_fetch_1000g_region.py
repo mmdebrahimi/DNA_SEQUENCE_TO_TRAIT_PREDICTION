@@ -73,3 +73,51 @@ def test_bgzf_blocks_roundtrip():
 if __name__ == "__main__":
     import pytest
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+# --- chunk-span coalescing (added 2026-09-24 with the min->max span fix) --------------------------
+
+def test_merge_chunk_spans_is_proportional_not_min_to_max():
+    """THE REGRESSION THIS EXISTS FOR. The fetcher used to range-fetch min(cbeg)..max(cend) across every
+    overlapping tabix bin. `_reg2bins` returns bins at ALL levels, so one coarse bin whose chunk sits far
+    away in the file inflated that single range to nearly the whole file -- measured 471 MB of a 2.08 GB
+    chr4 file, which timed out, for a region whose records are ~1 MB.
+
+    Two nearby chunks plus one distant chunk must therefore produce SEPARATE spans whose total is small,
+    not one span covering the gap.
+    """
+    from scripts.fetch_1000g_region import _voff_coffset, merge_chunk_spans
+
+    near_a = (0 << 16, 1000 << 16)
+    near_b = (2000 << 16, 3000 << 16)
+    distant = (500_000_000 << 16, 500_001_000 << 16)
+    merged = merge_chunk_spans([near_a, near_b, distant])
+
+    assert len(merged) == 2, "the distant chunk must not be merged with the near ones"
+    total = sum(e - s for s, e in merged)
+    naive = (_voff_coffset(distant[1]) + 65536) - _voff_coffset(near_a[0])
+    assert total < naive / 100, f"per-span total {total} should be a tiny fraction of min->max {naive}"
+
+
+def test_merge_chunk_spans_coalesces_adjacent_and_sorts():
+    from scripts.fetch_1000g_region import merge_chunk_spans
+
+    # given out of order; the two overlap once the 64KB tail pad is applied
+    merged = merge_chunk_spans([(5000 << 16, 6000 << 16), (0 << 16, 1000 << 16)])
+    assert len(merged) == 1
+    assert merged[0][0] == 0
+    assert merged[0][1] >= (6000 << 16 >> 16) + 65536
+
+
+def test_merge_chunk_spans_pads_the_tail_block():
+    """cend points INTO a BGZF block; without the +65536 pad the final record is truncated."""
+    from scripts.fetch_1000g_region import merge_chunk_spans
+
+    merged = merge_chunk_spans([(0, 0)])
+    assert merged == [[0, 65536]]
+
+
+def test_merge_chunk_spans_handles_a_single_chunk():
+    from scripts.fetch_1000g_region import merge_chunk_spans
+
+    assert len(merge_chunk_spans([(100 << 16, 200 << 16)])) == 1

@@ -17,7 +17,21 @@ NOT a clinical tool.
 
 HONEST TIER: single-SNP genotype->function READOUT (KNOWLEDGE_BASELINE, like SLCO1B1). rs2231142 IS the
 truth for a 141K call, so "validation" is genotype-readout + trio-Mendelian consistency + AF-corroboration
-(the 141K T allele ~9% EUR / ~29% EAS), never an independent star-concordance number.
+(the 141K T allele ~9% EUR / ~29% EAS).
+
+AF CLAIM CONFIRMED against the panel 2026-09-24 (wiki/pgx_af_panel_audit_2026-09-24), and worth recording
+because it was a SUSPECT: the sibling CYP4F2 cell asserted two populations with only one historically
+checked, and its unchecked figure turned out to be wrong by 0.58. This cell has the same shape -- two
+asserted populations, and the old one-population-per-variant table checked EAS only, leaving EUR unchecked.
+Measured over the 3202-sample 1000G panel (region fetched 2026-09-24 to data/pgx_1000g/abcg2_1000g.vcf),
+BOTH hold: **EUR 0.0908 vs ~0.09 asserted, EAS 0.2872 vs ~0.29** -- the previously-unchecked EUR figure is
+accurate to 0.0008. Full spectrum: AFR 0.0106 / AMR 0.1418 / EAS 0.2872 / EUR 0.0908 / SAS 0.1023 /
+global 0.1143.
+
+The "never an independent star-concordance number" clause is dropped as unverified: the sibling cells that
+asserted it (slco1b1.py 2026-09-22, cyp4f2.py 2026-09-24) were both measured and both had a number. This
+cell is a genotype READOUT with no star vocabulary to disagree about, so the honest statement is simply
+that there is no star call here to score -- not that no such number could exist.
 """
 from __future__ import annotations
 

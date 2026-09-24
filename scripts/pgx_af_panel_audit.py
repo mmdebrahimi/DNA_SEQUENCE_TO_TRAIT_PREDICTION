@@ -71,7 +71,10 @@ CLAIMS = [
      "asserted": {"EUR": 0.09, "EAS": 0.29},
      "asserted_in": "dna_decode/pgx/abcg2.py docstring + cell_registry ABCG2 contract",
      "note": "rosuvastatin; NO local VCF -- fetch the region to measure"},
-    {"gene": "NUDT15", "allele": "*3", "rsid": "rs116855232", "chrom": "13", "pos": 48037782,
+    # coord READ from dna_decode/pgx/nudt15_catalog.py (chr13:48045719), not inferred -- an earlier draft
+    # of this table carried an inferred 48037782, which would have reported UNMEASURABLE once the VCF
+    # existed: a false "cannot measure" rather than a measurement.
+    {"gene": "NUDT15", "allele": "*3", "rsid": "rs116855232", "chrom": "13", "pos": 48045719,
      "ref": "C", "alt": "T", "vcf": "nudt15_1000g.vcf",
      "asserted": {"EAS": 0.10},
      "asserted_in": "dna_decode/pgx/nudt15_catalog.py + runner.py NUDT15 block",

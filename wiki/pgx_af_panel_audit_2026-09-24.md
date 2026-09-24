@@ -2,7 +2,7 @@
 
 Every asserted population frequency on the PGx surface, **derived from the 1000G panel on disk** rather than compared against a hand-entered value. Tolerance +/-0.1.
 
-**CLAIMS_OUT_OF_BAND** — 4 of 6 claims measurable, 1 out of band, 2 unmeasurable (no local panel).
+**CLAIMS_OUT_OF_BAND** — 6 of 6 claims measurable, 1 out of band, 0 unmeasurable (no local panel).
 
 | gene | allele | pop | asserted | measured | delta | verdict |
 |---|---|---|---|---|---|---|
@@ -11,8 +11,9 @@ Every asserted population frequency on the PGx surface, **derived from the 1000G
 | UGT1A1 | `*80` | EUR | 0.3 | 0.3009 | 0.0009 | ok |
 | UGT1A1 | `*6` | EAS | 0.14 | 0.1368 | -0.0032 | ok |
 | CYP2B6 | `*6-proxy` | ALL | 0.32 | 0.3196 | -0.0004 | ok |
-| ABCG2 | `141K` | — | EUR 0.09, EAS 0.29 | — | — | UNMEASURABLE (abcg2_1000g.vcf absent from data/pgx_1000g/) |
-| NUDT15 | `*3` | — | EAS 0.1 | — | — | UNMEASURABLE (nudt15_1000g.vcf absent from data/pgx_1000g/) |
+| ABCG2 | `141K` | EUR | 0.09 | 0.0908 | 0.0008 | ok |
+| ABCG2 | `141K` | EAS | 0.29 | 0.2872 | -0.0028 | ok |
+| NUDT15 | `*3` | EAS | 0.1 | 0.0957 | -0.0043 | ok |
 
 ## Where each claim is asserted
 

@@ -155,14 +155,41 @@ def test_bar_frozen_with_a_falsifiable_band():
 # --- the AF panel audit: refusal behaviour is the point ------------------------------------------
 
 def test_af_audit_reports_unmeasurable_rather_than_passing():
-    """A claim whose variant has no local panel must be UNMEASURABLE, never OK. Silently passing it is
-    how an unchecked wrong number survives."""
+    """A claim whose variant has no local panel must be UNMEASURABLE, never OK -- silently passing it is
+    how an unchecked wrong number survives.
+
+    Tested on a SYNTHETIC claim rather than on whichever cells happen to lack a panel today. The first
+    version of this test asserted that ABCG2/NUDT15 were unmeasurable, which encoded a transient state:
+    both regions were fetched later the same day and the assertion inverted. Test the BEHAVIOUR.
+    """
+    rep = audit(claims=[{"gene": "FAKE", "allele": "*9", "rsid": "rs0", "chrom": "1", "pos": 1,
+                         "ref": "A", "alt": "G", "vcf": "definitely_not_on_disk.vcf",
+                         "asserted": {"EUR": 0.5}, "asserted_in": "nowhere", "note": "synthetic"}])
+    c = rep["claims"][0]
+    assert c["status"] == "UNMEASURABLE_NO_LOCAL_PANEL"
+    assert c["checks"] == {}              # no verdict may be manufactured
+    assert c["reason"]
+    # an audit where NOTHING was measurable must refuse, not print a clean report over zero checks
+    assert rep["verdict"] == "NO_CLAIM_MEASURABLE"
+
+
+def test_af_audit_refuses_when_the_variant_is_absent_from_a_present_vcf():
+    """A VCF that exists but does not contain the variant is ALSO unmeasurable -- not a pass. This is the
+    case a wrong coordinate produces (an earlier draft of the claims table had NUDT15 at an inferred
+    48037782 instead of the catalog's 48045719)."""
+    rep = audit(claims=[{"gene": "CYP4F2", "allele": "*3", "rsid": "rs2108622", "chrom": "19",
+                         "pos": 1, "ref": "C", "alt": "T", "vcf": "cyp4f2_1000g.vcf",
+                         "asserted": {"EUR": 0.29}, "asserted_in": "synthetic", "note": "bad coord"}])
+    assert rep["claims"][0]["status"] == "UNMEASURABLE_NO_LOCAL_PANEL"
+    assert "not in" in rep["claims"][0]["reason"]
+
+
+def test_af_audit_now_covers_every_claim_with_a_local_panel():
+    """After the 2026-09-24 region fetches, all asserted claims are measurable. Pinned as a floor (>=6)
+    rather than an equality so adding a new claim does not fail this, only leaving one unmeasurable does."""
     rep = audit()
-    unmeasurable = [c for c in rep["claims"] if c["status"] == "UNMEASURABLE_NO_LOCAL_PANEL"]
-    assert unmeasurable, "expected ABCG2/NUDT15 to have no local panel"
-    for c in unmeasurable:
-        assert c["checks"] == {}          # no verdict may be manufactured
-        assert c["reason"]
+    assert rep["n_measurable"] >= 6
+    assert rep["n_unmeasurable"] == 0
 
 
 def test_af_audit_catches_the_cyp4f2_eas_claim():
@@ -183,15 +210,27 @@ def test_af_audit_flags_the_complement_signature():
     assert c4["checks"]["EUR"]["matches_complement_better"] is False
 
 
-def test_af_audit_is_non_vacuous_the_other_claims_are_accurate():
-    """3 of 4 measurable claims land within a hair. This is the CONTROL: if the AF computation were
-    broken, all four would be off, and 'CYP4F2 is wrong' would be a pipeline artifact instead."""
+def test_af_audit_is_non_vacuous_every_other_claim_is_accurate():
+    """Every claim EXCEPT CYP4F2-EAS lands within 0.013. This is the CONTROL: if the AF computation were
+    broken, many would be off and 'CYP4F2 EAS is wrong' would be a pipeline artifact instead. It is also
+    what makes the finding ISOLATED rather than a pattern."""
     rep = audit()
     ok = [c for c in rep["claims"] if c["status"] == "OK"]
-    assert len(ok) >= 3
+    assert len(ok) >= 4
     for c in ok:
         for p, chk in c["checks"].items():
             assert abs(chk["delta"]) < 0.02, f"{c['gene']} {p} delta {chk['delta']}"
+
+
+def test_the_previously_unchecked_abcg2_eur_claim_is_accurate():
+    """ABCG2 asserts TWO populations and the old one-population table checked EAS, leaving EUR unchecked --
+    the same structural blind spot that hid CYP4F2's error. Measured, EUR is accurate, so the blind spot
+    was real but only ONE number actually fell through it. Recorded so the suspicion is not left dangling."""
+    rep = audit()
+    ab = [c for c in rep["claims"] if c["gene"] == "ABCG2"][0]
+    assert ab["status"] == "OK"
+    assert abs(ab["checks"]["EUR"]["delta"]) < 0.01
+    assert abs(ab["checks"]["EAS"]["delta"]) < 0.01
 
 
 def test_af_audit_claim_table_points_at_where_each_claim_lives():
