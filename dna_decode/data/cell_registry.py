@@ -721,7 +721,7 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "0.710 vs its own 0.676 null (+3.4pp; 7/9 ancestry groups beat their null, central_europe "
             "LOSES). Directional: FRI-LoF->early 93.9% (strong) vs FRI-functional->late 65.8% (weak) = "
             "necessary-not-sufficient. (2) FLC ROUTE — the distinctive two-locus claim, VALIDATED "
-            "2026-07-17 (scripts/flowering_flc_route_test.py, wiki/flowering_flc_route_2026-07-17.md) by "
+            "2026-07-17 (scripts/flowering_flc_route_test.py, wiki/flowering_flc_route_2026-07-17.md Per-locus scores + the 93.9/65.8 figures are in wiki/flowering_tables3_score_2026-07-16.md and the 9.8 figure in wiki/deterministic_flowering_scoping_2026-07-16.md (cited 2026-09-24: the numbers were accurate but lived in UNCITED sibling artifacts, so a reader following the citation could not verify them)) by "
             "joining AraPheno phenotype 29 (measured FLC EXPRESSION, Atwell 2010) to S3 on n=106: ALL FOUR "
             "cells of the AND call their majority correctly (functional+strong 85% late; **functional+weak "
             "39% late = the Da(1)-12 class, a 46pp separation a FRI-only rule cannot see**; lof+strong 17% "
@@ -865,7 +865,7 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "the Morrill 2022 MSRB3-vs-HMGA2 confound). Unlike the coat indels/SVs, the body-size + ear causal SNPs "
             "ARE in-panel. RELATIVE size rank + ear axis, NOT calibrated absolute height (Q121 is a covariate-adjusted "
             "z-score); ear erect/drop NAMING is MSRB3-literature-anchored (Boyko 2010), not independently "
-            "label-confirmed -> medium confidence. See wiki/dog_morphology_darwins_ark_validated_2026-07-30.md"),
+            "label-confirmed -> medium confidence. See wiki/dog_morphology_darwins_ark_validated_2026-07-30.md + its .json sidecar wiki/dog_morphology_darwins_ark_validated_2026-07-30.json, which is where this cell's numeric figures actually live -- the .md alone does not carry them (cited 2026-09-24)"),
         label_provenance=("OMIA/literature-curated causal loci + canFam4 gene windows (rule); Darwin's Ark/Dryad "
                           "owner-reported height Q121 + morphology Q125 (measured); coords lifted + .bim-verified"),
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN, native_abstention="ABSTAIN",
@@ -1455,7 +1455,7 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "pinned SeqSero2 run, so the delta CANNOT separate 'worse than the reference method' from "
             "'diverges from an undocumented NCBI pipeline'. "
             "*** THAT AMBIGUITY IS NOW CLOSED, AND IT RESOLVED AGAINST US (2026-09-08, "
-            "wiki/salmserovar_seqsero2_2026-09-08.{md,json}). *** SeqSero2 1.3.2 was installed from a "
+            "wiki/salmserovar_seqsero2_2026-09-08.{md,json} + wiki/salmserovar_nocall_anatomy_2026-09-04.json + wiki/salmserovar_validation_2026-09-04.md (the 35.6 no-call anatomy split and the 29.5 / 27.1 / 13.6 abstention percentages respectively; cited 2026-09-24)). *** SeqSero2 1.3.2 was installed from a "
             "pinned biocontainer and run on the SAME 200 isolates with the SAME labels and the SAME "
             "equivalence function: ours 0.7050 (141/39/20) vs SeqSero2 0.8800 (176/24/0), "
             "DELTA vs the REFERENCE TOOL -0.1750. So reading (a) holds -- the caller genuinely trails "
@@ -1542,7 +1542,7 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "choice predicts. The O axis is very slightly WORSE (-0.0086, 2 isolates); net is 26 H "
             "misses fixed vs 2 O misses introduced. "
             "THE ISOLATE-VS-LINEAGE LIMIT IS NOW CLOSED (2026-09-04, "
-            "wiki/serotype_lineage_disjoint_2026-09-04.{md,json}): the replication above held out by "
+            "wiki/serotype_lineage_disjoint_2026-09-04.{md,json} + wiki/serotype_oh_validation_2026-09-04.json (the 0.962 post-fix O accuracy) + wiki/serotype_heldout_confirm_2026-09-04.json (the 0.8171 held-out H baseline); cited 2026-09-24): the replication above held out by "
             "ISOLATE, which does not prove generalization past near-identical genomes. Re-split by "
             "whole MLST sequence type (Achtman 7-locus), 145 STs, NO ST on both sides -- disjoint BY "
             "CONSTRUCTION since the side is a pure function of the ST. On the 169-isolate / 71-ST test "

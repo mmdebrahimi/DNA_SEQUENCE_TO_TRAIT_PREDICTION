@@ -1,6 +1,6 @@
 {
   "schema": "learned-regime-map-v1",
-  "generated": "2026-09-02",
+  "generated": "2026-09-24",
   "discriminating_variable": "population design (constructed vs natural), NOT organism complexity",
   "scope_warning": "the natural-population negative is ZERO-SHOT-scoped. A supervised complement is the shipped architecture; refusing it would re-commit the over-generalisation this map exists to prevent.",
   "regimes": [
