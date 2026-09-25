@@ -28,8 +28,10 @@ INTEGRITY RAILS (load-bearing):
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 
 from dna_decode.data.cell_key import canonical_cell_key
 from dna_decode.data.cell_registry_vocab import AbstentionVocab
@@ -92,26 +94,134 @@ _AMR_STATUS_MAP: dict[str, tuple[EvidenceTier, AbstentionVocab, str]] = {
 }
 
 
+_UNSCORED_CACHE: dict[tuple[str, str], tuple[str, str]] | None = None
+
+
+def _amr_unscored() -> dict[tuple[str, str], tuple[str, str]]:
+    """(organism, drug) -> (why, native) for ncbi_pd cells the evidence says were NOT actually scored.
+
+    WHY THIS EXISTS (defect found 2026-09-24 by scripts/tier_evidence_audit.py)
+    --------------------------------------------------------------------------
+    `_AMR_STATUS_MAP` maps phenotype_source_status 'ncbi_pd' -> NEAR_INDEPENDENT + SCORED unconditionally.
+    But that status means "a free NCBI-PD label source EXISTS for this cell", NOT "a measurement was
+    obtained". For 10 cells those coincide; for 3 they did not, and those inherited a measured tier they
+    never earned while the standing report card reported no metric for them at all:
+
+        amr:Salmonella:ciprofloxacin          card UNDERPOWERED         (4-5 R vs a floor of 20)
+        amr:Acinetobacter:meropenem           card ABSTAINS_BY_DESIGN   (EXPRESSION_FLOOR)
+        amr:Pseudomonas_aeruginosa:meropenem  card ABSTAINS_BY_DESIGN   (EXPRESSION_FLOOR)
+
+    The schema already ANTICIPATED this -- the projected demotion_rule reads "SCORED -> UNDERPOWERED below
+    the powering floor" and AbstentionVocab already carries UNDERPOWERED and ABSTAIN_BY_DESIGN -- but the
+    projection never applied it. Read from the SAME sources the report card uses, with the same precedence
+    (a real scored artifact wins), so the two cannot disagree:
+
+        abstains    dna_decode/data/calibrated_amr_rules.json  rules[org|drug].verdict == EXPRESSION_FLOOR
+        powering    wiki/provdisjoint_census_results.json      results[].powered is False
+        scored      wiki/provenance_disjoint_validation_*.json exists for that (organism, drug)
+
+    FAIL-SOFT, WITH A TRIPWIRE. If a source cannot be read this returns no demotions, preserving previous
+    behaviour rather than mass-demoting on a missing file. That direction favours the over-claim, so
+    tests/test_amr_tier_demotion.py asserts the three known demotions FIRE -- a missing or moved source
+    breaks the suite loudly instead of silently restoring the over-claim.
+    """
+    global _UNSCORED_CACHE
+    if _UNSCORED_CACHE is not None:
+        return _UNSCORED_CACHE
+
+    repo = Path(__file__).resolve().parent.parent.parent
+    out: dict[tuple[str, str], tuple[str, str]] = {}
+
+    # (1) a real scored artifact wins over any demotion -- mirrors the card's own precedence
+    scored: set[tuple[str, str]] = set()
+    for p in (repo / "wiki").glob("provenance_disjoint_validation_*.json"):
+        try:
+            d = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        org, drug = d.get("registry_organism") or d.get("organism"), d.get("drug")
+        if org and drug:
+            scored.add((str(org), str(drug)))
+
+    # (2) rule-level abstention: the decoder refuses what it cannot decode
+    try:
+        rules = json.loads((repo / "dna_decode" / "data" / "calibrated_amr_rules.json")
+                           .read_text(encoding="utf-8", errors="replace")).get("rules", {})
+    except (OSError, json.JSONDecodeError):
+        rules = {}
+    for key, val in rules.items():
+        if not isinstance(val, dict) or str(val.get("verdict", "")).upper() != "EXPRESSION_FLOOR":
+            continue
+        org, _, drug = str(key).partition("|")
+        if org and drug and (org, drug) not in scored:
+            out[(org, drug)] = ("the deployed rule ABSTAINS BY DESIGN here (calibrated_amr_rules verdict "
+                                "EXPRESSION_FLOOR -- it refuses expression-driven R it cannot decode), so "
+                                "no measurement exists to support a measured tier", "ABSTAINS_BY_DESIGN")
+
+    # (3) powering: the census attempted a measurement and the cohort was too small
+    try:
+        census = json.loads((repo / "wiki" / "provdisjoint_census_results.json")
+                            .read_text(encoding="utf-8", errors="replace")).get("results", [])
+    except (OSError, json.JSONDecodeError):
+        census = []
+    for row in census:
+        if not isinstance(row, dict) or row.get("powered") is not False:
+            continue
+        org, drug = str(row.get("organism", "")), str(row.get("drug", ""))
+        if org and drug and (org, drug) not in scored and (org, drug) not in out:
+            out[(org, drug)] = (
+                f"UNDERPOWERED: the provenance-disjoint census found {row.get('other_R')}R/"
+                f"{row.get('other_S')}S, below the per-class floor, so no metric was computed and a "
+                f"measured tier is not earned", "UNDERPOWERED")
+
+    _UNSCORED_CACHE = out
+    return out
+
+
 def _amr_contracts() -> list[CellContract]:
-    """Project every frozen `shipped_decoder_surface` row to an AMR CellContract (== surface by construction)."""
+    """Project every frozen `shipped_decoder_surface` row to an AMR CellContract (== surface by construction).
+
+    NOTE: the projection is NOT a pure function of the frozen surface any more -- an `ncbi_pd` row whose
+    measurement never materialised is demoted via `_amr_unscored()`. The frozen surface is READ-ONLY here
+    and byte-unchanged; only the tier/vocab this registry derives from it moves.
+    """
     out: list[CellContract] = []
+    unscored = _amr_unscored()
     for r in shipped_decoder_rows():
         org, drug, status = r["organism"], r["drug"], r["phenotype_source_status"]
         tier, vocab, native = _AMR_STATUS_MAP[status]
         scoreable = status == "ncbi_pd"
+        demoted_why = ""
+        if scoreable and (org, drug) in unscored:
+            demoted_why, native = unscored[(org, drug)]
+            # the LABEL SOURCE still exists; what is absent is a measurement -> curated-knowledge tier
+            tier = EvidenceTier.KNOWLEDGE_BASELINE
+            vocab = (AbstentionVocab.ABSTAIN_BY_DESIGN if native == "ABSTAINS_BY_DESIGN"
+                     else AbstentionVocab.UNDERPOWERED)
+            scoreable = False
         out.append(CellContract(
             cell_id=f"amr:{org}:{drug}", track="amr", route="dna-amr", organism=org, target=drug,
             claim=f"{r['engine']} R/S call for {org} x {drug}",
             evidence_tier=tier, claim_status=status,
+            # A DEMOTED cell needs its own strings: it is NOT a "no free source" cell (the NCBI-PD label
+            # source exists and is named) and it is NOT scored. Routing it through either existing branch
+            # would assert something false in the opposite direction from the bug being fixed.
             validation_slice=("NCBI-PD provenance-disjoint stress test (lineage-disclosed)" if scoreable
+                              else f"NOT SCORED -- {demoted_why}" if demoted_why
                               else "label-confounded surrogate (cefoxitin is the CLSI surrogate)"
                               if status == "label_confounded" else "no free isolate-level phenotype source"),
-            label_provenance=("NCBI Pathogen Detection AST_phenotypes" if scoreable else "none (structural non-cell)"),
+            label_provenance=("NCBI Pathogen Detection AST_phenotypes" if scoreable or demoted_why
+                              else "none (structural non-cell)"),
             abstention_vocab=vocab, native_abstention=native,
-            falsifier_ref="scripts/provenance_disjoint_validate.py" if scoreable else "none",
-            incoming_data_gate="G1,G7,G8" if scoreable else "n/a",
+            falsifier_ref=("scripts/provenance_disjoint_validate.py" if scoreable or demoted_why
+                           else "none"),
+            incoming_data_gate="G1,G7,G8" if scoreable or demoted_why else "n/a",
             demotion_rule=("SCORED -> UNDERPOWERED below the powering floor; lineage-collapse can demote the "
-                           "disclosed metric" if scoreable else "n/a (no free label to demote against)"),
+                           "disclosed metric" if scoreable
+                           else "ALREADY DEMOTED from the projected NEAR_INDEPENDENT: a free label source "
+                                "exists but no measurement does. Re-promote ONLY when a real scored "
+                                "provenance_disjoint_validation artifact exists for this cell" if demoted_why
+                           else "n/a (no free label to demote against)"),
             engine=r["engine"], organism_scope=r["organism_scope"], census_group=r["census_group"],
         ))
     return out
@@ -824,6 +934,11 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim="dog coat colour (pigment type + eumelanin colour black/brown/blue/isabella + distribution "
               "solid/sable/agouti/tan-points) from the five classic OMIA loci E/K/A/B/D, resolved in fixed "
               "epistatic order — the first PHYSICAL/visible-trait animal cell",
+        # NOT promoted, though it looks like an under-claim: `coatcolor` is one of the 19 routes in the
+        # FROZEN colour fleet (dna_decode/data/colour_cell_freeze.FROZEN_COLOUR_ROUTES), where tier moves
+        # are a reserved USER decision per the 2026-08-26 freeze screen. It IS measured against an
+        # independent label (Darwin's Ark owner-reported colour, 160/161) but BLACK ONLY -- every other
+        # base colour is unscorable on that substrate. Surfaced for ratification, deliberately not moved.
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
         claim_status="curated_epistatic_catalog_measured_black_only_substrate_limited",
         validation_slice=(
@@ -854,7 +969,11 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim="dog body SIZE (relative rank toy/small..large/giant, additive polygenic score over "
               "IGF1/HMGA2/STC2/GHR) + EAR type (MSRB3 erect/drop) from pinned canFam4 causal SNP dosages — "
               "the quantitative/visible-trait sibling of the coat-colour cell",
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        # PROMOTED 2026-09-24 from KNOWLEDGE_BASELINE (under-claim, found by scripts/tier_evidence_audit.py).
+        # Measured against Darwin's Ark owner-reported height Q121 / morphology Q125 on 3277 dogs
+        # (r=+0.619, R2=0.383) -- an independent label. A modest correlation is still an independent
+        # MEASUREMENT; the tier records evidence class and the headline carries the number.
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
         claim_status="curated_pinned_catalog_measured_relative_height_and_ear",
         validation_slice=(
             "deterministic pinned + FUNCTIONALLY-VALIDATED catalog on the free Darwin's Ark cohort (Dryad "
@@ -1240,7 +1359,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         organism="any", target="essentiality",
         claim="single-gene KO -> essential/non-essential via the deterministic conserved-core FUNCTION "
               "catalogue (translation/replication/transcription/envelope/division); label-independent, offline",
-        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        # PROMOTED 2026-09-24 from KNOWLEDGE_BASELINE (under-claim, found by scripts/tier_evidence_audit.py).
+        # Scored against Goodall 2018 TraDIS -- a genome-wide WET-LAB transposon screen -- plus BAGEL
+        # CEGv2/NEGv1 (AUROC 0.695). A wet-lab screen is the strongest label class this repo has.
+        evidence_tier=EvidenceTier.INDEPENDENT_MEASURED,
         claim_status="conserved_core_validated_vs_gold_standard_in_distribution",
         validation_slice=(
             "E. coli AUROC 0.695 genome-wide vs the Goodall 2018 mBio TraDIS gold-standard (base rate 9.3%, "

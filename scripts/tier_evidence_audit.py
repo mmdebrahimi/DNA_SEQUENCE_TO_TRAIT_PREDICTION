@@ -78,6 +78,12 @@ DENIES_MEASUREMENT = (
     "no free", "validation_data_wall", "external wall", "never been scored", "no measured number",
     "not been measured", "no independent", "no measurement", "no cohort", "no phenotype source",
     "not censused", "nothing to score", "unmeasured", "cannot be tiered up", "no free validation",
+    # An IN-DISTRIBUTION or INFERRED label is not an independent measurement, so a never-measured tier stays
+    # coherent beside a figure. Adjudicated 2026-09-24: arabidopsis:flowering says outright that its
+    # catalogue and its label trace to the same paper, and klebsiella:kleb's KL-types are prophage-host-LCA
+    # INFERRED rather than observed. Both correctly hold KNOWLEDGE_BASELINE.
+    "in-distribution", "in distribution", "lca-inferred", "lca_inferred", "inferred kl-type",
+    "prophage-host-lca",
 )
 
 
@@ -174,6 +180,11 @@ def _card_figures(c) -> list[str]:
 # contract_number_audit, because the alternative -- widening the metric vocabulary until nothing flags --
 # is how a detector becomes vacuous.
 ADJUDICATED_FALSE_POSITIVE: dict[str, str] = {
+    "pgx:human:dpyd":
+        "NOT an under-claim: DPYD is absent from the GeT-RM consolidated table entirely, so no free "
+        "consensus truth exists for it (established 2026-09-22). Its contract reports deployment on 5 "
+        "PGP-UK humans who were all *1/*1 -- a run with no true positives is not a measurement. The "
+        "flagged figure was the fragment 'concordance = v0.1', a version string, not a metric.",
     "pgx:human:cyp2c19":
         "NOT an over-claim: wiki/pgx_report_card.json records getrm '72/72' for this gene. The detector "
         "misses it because that card names its metric fields by DOMAIN (getrm / pharmcat / trio_mendelian) "

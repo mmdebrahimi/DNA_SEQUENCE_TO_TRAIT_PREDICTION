@@ -66,12 +66,40 @@ def test_hit_rate_is_plausible_not_a_detector_failure():
     assert flagged / rep["n_cells"] <= 0.20, f"{flagged}/{rep['n_cells']} is a detector failure"
 
 
-def test_detector_is_not_vacuous_it_still_flags_something():
-    """The opposite failure: widening the vocabulary until nothing flags. A clean zero here would mean
-    the known under-claim candidates stopped being visible."""
+def test_detector_is_not_vacuous_on_a_planted_case():
+    """The opposite failure: widening the vocabulary until nothing flags.
+
+    Tested BEHAVIOURALLY on planted input, not on the live flag count. The first version of this test
+    asserted `n_under_claim_suspect >= 1` against the real registry -- which encoded a transient state and
+    inverted the moment the real under-claims were adjudicated and fixed (2026-09-24). That is the exact
+    mistake made a run earlier with the ABCG2/NUDT15 unmeasurable assertion. A guard against vacuity has to
+    plant the problem itself.
+    """
+    from scripts.tier_evidence_audit import DENIES_MEASUREMENT
+
+    for blob in ("curated catalog; agreement 232/264 on the cohort",
+                 "deterministic rule; accuracy 0.994 vs owner-reported labels",
+                 "polygenic score tracks measured height at r=+0.619"):
+        figs = _measured_figures(blob)
+        denials = [p for p in DENIES_MEASUREMENT if p in blob.lower()]
+        assert figs and not denials, f"a planted under-claim stopped being visible: {blob}"
+
+
+def test_the_live_registry_state_is_the_one_open_frozen_question():
+    """Separate from the vacuity guard on purpose: this may change when the registry changes, whereas the
+    guard above must never stop working.
+
+    Over-claims are ZERO after the 2026-09-24 projection fix. Exactly ONE under-claim remains and it is
+    left flagged DELIBERATELY: typing:dog:coatcolor is measured against an independent label (Darwin's Ark
+    owner-reported colour, 160/161) but BLACK ONLY, and `coatcolor` is one of the 19 routes in the frozen
+    colour fleet where a tier move is a reserved USER decision. It is not silenced into the
+    false-positive table, because it is not a false positive -- the audit is telling the truth and the
+    blocker is scope, not evidence.
+    """
     rep = audit()
-    assert rep["n_under_claim_suspect"] >= 1
-    assert rep["verdict"] == "ADJUDICATION_REQUIRED"
+    assert rep["n_over_claim_suspect"] == 0
+    under = {r["cell_id"] for r in rep["suspects"] if r["status"] == "UNDER_CLAIM_SUSPECT"}
+    assert under == {"typing:dog:coatcolor"}
 
 
 def test_a_planted_under_claim_is_caught():
@@ -115,13 +143,19 @@ def test_projected_cells_resolve_via_the_standing_card():
     assert cipro and cipro[0]["status"] == "CONSISTENT"
 
 
-def test_the_three_declined_cells_are_flagged():
-    """The substantive finding: a tier asserting a measurement where the standing card explicitly
-    declines to report one (UNDERPOWERED / ABSTAINS_BY_DESIGN)."""
+def test_the_three_declined_cells_are_now_demoted_not_flagged():
+    """The finding this audit produced, now FIXED in the registry projection (2026-09-24).
+
+    These three inherited NEAR_INDEPENDENT from _AMR_STATUS_MAP because phenotype_source_status 'ncbi_pd'
+    means a label SOURCE exists, not that a measurement was obtained. They must now hold a non-measured
+    tier and say why. The demotion itself is pinned in tests/test_amr_tier_demotion.py.
+    """
     rep = audit()
-    over = {r["cell_id"] for r in rep["suspects"] if r["status"] == "OVER_CLAIM_SUSPECT"}
-    assert "amr:Salmonella:ciprofloxacin" in over
-    assert "amr:Acinetobacter:meropenem" in over
+    by_id = {r["cell_id"]: r for r in rep["cells"]}
+    for cid in ("amr:Salmonella:ciprofloxacin", "amr:Acinetobacter:meropenem",
+                "amr:Pseudomonas_aeruginosa:meropenem"):
+        assert by_id[cid]["status"] == "CONSISTENT"
+        assert by_id[cid]["tier"] == "KNOWLEDGE_BASELINE"
 
 
 @pytest.mark.skipif(not ARTIFACT.exists(), reason="artifact not built")
