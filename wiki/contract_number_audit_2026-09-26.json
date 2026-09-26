@@ -1,0 +1,224 @@
+{
+  "schema": "contract-number-audit-v1",
+  "analysis_date": "2026-09-26",
+  "posture": "TRIAGE FUNNEL, not an oracle -- a cited number may legitimately be derived, rounded, or describe a superseded run. Every hit needs adjudication; this script edits nothing.",
+  "scope": "cells whose prose names a wiki/ artifact; decimal numbers only",
+  "n_cells_audited": 12,
+  "n_numbers_checked": 128,
+  "n_candidate_drift": 0,
+  "hit_rate": 0.0,
+  "verdict": "NOTHING_TO_ADJUDICATE",
+  "cells": [
+    {
+      "cell_id": "pgx:human:ugt1a1",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/ugt1a1_getrm_concordance_2026-09-22.json",
+        "wiki/ugt1a1_getrm_concordance_2026-09-22.md",
+        "wiki/ugt1a1_tag_acceptance_bar.json"
+      ],
+      "unresolved_citations": [
+        "wiki/ugt1a1_getrm_concordance_2026-09-22"
+      ],
+      "checked": 3,
+      "found": 3,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "pgx:human:cyp4f2",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json",
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.md",
+        "wiki/pgx_af_panel_audit_2026-09-24.json",
+        "wiki/pgx_af_panel_audit_2026-09-24.md"
+      ],
+      "unresolved_citations": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24",
+        "wiki/pgx_af_panel_audit_2026-09-24"
+      ],
+      "checked": 4,
+      "found": 4,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "pgx:human:slco1b1",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/slco1b1_getrm_concordance_2026-09-22.json",
+        "wiki/slco1b1_getrm_concordance_2026-09-22.md"
+      ],
+      "unresolved_citations": [
+        "wiki/slco1b1_getrm_concordance_2026-09-22"
+      ],
+      "checked": 1,
+      "found": 1,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {
+        "0.398": 0.3977
+      },
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "typing:arabidopsis:flowering",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/deterministic_flowering_scoping_2026-07-16.md",
+        "wiki/flowering_flc_route_2026-07-17.md",
+        "wiki/flowering_tables3_score_2026-07-16.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 19,
+      "found": 19,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "finder:any:inverse",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/esm_at_scale_2026-07-17.md",
+        "wiki/forward_inverse_deployable_2026-07-17.md",
+        "wiki/forward_inverse_roundtrip_2026-07-16.md",
+        "wiki/forward_inverse_sweep_2026-07-17.md"
+      ],
+      "unresolved_citations": [
+        "wiki/forward_inverse_deployable_2026-07-16.md",
+        "wiki/forward_inverse_roundtrip_2026-07-17.md",
+        "wiki/forward_inverse_sweep_2026-07-16.md"
+      ],
+      "checked": 11,
+      "found": 11,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "typing:dog:coatcolor",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/dog_coat_darwins_ark_measured_2026-07-30.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 4,
+      "found": 4,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "typing:dog:morphology",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/dog_morphology_darwins_ark_validated_2026-07-30.json",
+        "wiki/dog_morphology_darwins_ark_validated_2026-07-30.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 7,
+      "found": 7,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "typing:bacteriophage:phage",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/phage_rbp_crosslab_result_2026-07-24.json",
+        "wiki/phage_rbp_crosslab_result_2026-07-24.md"
+      ],
+      "unresolved_citations": [
+        "wiki/phage_rbp_crosslab_result_2026-07-24"
+      ],
+      "checked": 4,
+      "found": 4,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "fba:escherichia_coli:growth_essentiality",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/fba_keio_validation_2026-08-03.json",
+        "wiki/fba_keio_validation_2026-08-03.md"
+      ],
+      "unresolved_citations": [
+        "wiki/fba_keio_validation_2026-08-03"
+      ],
+      "checked": 0,
+      "found": 0,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "finder:any:forward",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/blatem_genome_demo_2026-07-14.json",
+        "wiki/esm_at_scale_2026-07-17.md",
+        "wiki/forward_blosum_proteingym_2026-07-17.md",
+        "wiki/forward_dosage_sweep_2026-07-15.md",
+        "wiki/gemme_threeway_holdout_2026-07-23.md",
+        "wiki/mavedb_am_holdout_2026-07-23.json",
+        "wiki/mavedb_full_esm2_2026-07-22.md",
+        "wiki/mavedb_holdout_hybrid_2026-07-23.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 27,
+      "found": 27,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "typing:Salmonella:salmserovar",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/salmserovar_name_table_2026-09-09.md",
+        "wiki/salmserovar_nocall_anatomy_2026-09-04.json",
+        "wiki/salmserovar_o_fix_acceptance_bar.json",
+        "wiki/salmserovar_o_fix_result_2026-09-09.json",
+        "wiki/salmserovar_o_fix_result_2026-09-09.md",
+        "wiki/salmserovar_resolution_strata_2026-09-09.json",
+        "wiki/salmserovar_resolution_strata_2026-09-09.md",
+        "wiki/salmserovar_seqsero2_2026-09-08.json",
+        "wiki/salmserovar_seqsero2_2026-09-08.md",
+        "wiki/salmserovar_validation_2026-09-04.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 30,
+      "found": 30,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": []
+    },
+    {
+      "cell_id": "typing:Escherichia_coli:serotype",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/serotype_heldout_confirm_2026-09-04.json",
+        "wiki/serotype_lineage_disjoint_2026-09-04.json",
+        "wiki/serotype_lineage_disjoint_2026-09-04.md",
+        "wiki/serotype_oh_validation_2026-09-04.json"
+      ],
+      "unresolved_citations": [],
+      "checked": 18,
+      "found": 18,
+      "candidate_drift": [],
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [
+        {
+          "number": "0.60",
+          "why": "not a measurement: the project's own source-diversity BAR, defined in code as scripts/source_diverse_validate.MAX_SOURCE_SHARE. A threshold has no artifact to live in."
+        }
+      ]
+    }
+  ]
+}
