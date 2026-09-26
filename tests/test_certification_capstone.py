@@ -72,3 +72,77 @@ def test_domain_cards_present_or_not_run():
         assert c["status"] in ("present", "NOT_RUN")
         if c["status"] == "present":
             assert "headline" in c
+
+
+# ---------------------------------------------------------------------------
+# The COMMITTED artifact, not a fresh rebuild.
+#
+# Every test above calls _build(), which runs the builder and overwrites the
+# artifact before reading it back. That makes them assert "the builder agrees
+# with the registry" -- true by construction of the builder -- and leaves them
+# STRUCTURALLY unable to notice that the file in git has gone stale. Worse, the
+# rebuild SILENTLY REPAIRS the staleness, so drift never fails and surfaces only
+# as unexplained `git status` noise a developer may well revert.
+#
+# It happened: ca361e1 moved three cells NEAR_INDEPENDENT -> KNOWLEDGE_BASELINE
+# and promoted two to INDEPENDENT_MEASURED without rebuilding, so HEAD shipped a
+# capstone reporting 31/24/38 against a registry returning 33/21/39. Planting
+# total_cells=999 into the committed file left all six tests green.
+#
+# So this reads the artifact AS COMMITTED (`git show HEAD:<path>`) rather than
+# from disk: immune to any rebuild another test performs, and it asserts the
+# claim that actually matters -- what ships agrees with the live registry.
+# ---------------------------------------------------------------------------
+
+
+def _committed_capstone() -> dict | None:
+    """The capstone as committed at HEAD, or None when git can't answer."""
+    import subprocess
+
+    try:
+        out = subprocess.run(
+            ["git", "show", "HEAD:wiki/certification_capstone.json"],
+            cwd=REPO, capture_output=True, timeout=30,
+        )
+    except (FileNotFoundError, OSError, subprocess.TimeoutExpired):
+        return None
+    if out.returncode != 0:
+        return None
+    return json.loads(out.stdout.decode("utf-8"))
+
+
+def test_committed_capstone_census_matches_the_live_registry():
+    """A roll-up that disagrees with the registry it summarises is a false trust surface.
+
+    NOT a rebuild: `_build()` would make this tautological. Reads what is committed.
+    """
+    cap = _committed_capstone()
+    if cap is None:
+        return  # no git / not committed yet — nothing to compare, never a silent pass elsewhere
+    cs = list(cells())
+    census = cap["registry_census"]
+    assert census["total_cells"] == len(cs), (
+        f"committed capstone says total_cells={census['total_cells']} but the registry has "
+        f"{len(cs)} — rebuild it: uv run python scripts/build_certification_capstone.py"
+    )
+    assert census["by_evidence_tier"] == dict(Counter(c.evidence_tier.value for c in cs)), (
+        "committed capstone's tier census has drifted from the registry — rebuild it: "
+        "uv run python scripts/build_certification_capstone.py"
+    )
+    assert census["by_track"] == dict(Counter(c.track for c in cs)), (
+        "committed capstone's per-track census has drifted from the registry — rebuild it"
+    )
+
+
+def test_the_rebuild_shaped_tests_above_cannot_catch_committed_drift():
+    """Pins WHY the guard above exists, so nobody 'simplifies' it into a _build() call.
+
+    Asserts the mechanism directly: the builder is a pure function of the registry, so a
+    freshly-built census ALWAYS matches it. That is exactly why a fresh build cannot be
+    evidence about the committed file.
+    """
+    cap = _build()
+    cs = list(cells())
+    assert cap["registry_census"]["total_cells"] == len(cs)
+    # ... and the committed file is a SEPARATE claim, which is what the guard checks.
+    assert _committed_capstone is not None
