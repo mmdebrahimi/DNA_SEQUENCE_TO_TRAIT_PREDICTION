@@ -16,12 +16,29 @@ import argparse
 import subprocess
 import sys
 import tempfile
+import tomllib
 import zipfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-CARDS = ["amr_portal_independent_report_card.json", "decoder_validation_report_card.json",
-         "hiv_decoder_report_card.json", "tb_report_card.json"]
+def _force_included_cards() -> list[str]:
+    """What the wheel is SUPPOSED to ship -- DERIVED from pyproject, never hand-listed.
+
+    This list used to be four hand-written names while pyproject force-included five, so this
+    script -- the artifact-boundary PROOF the pytest suite defers to -- printed
+    "PASS: all 4 trust cards ship" without ever checking the HCMV card. A proof that omits
+    one of the things it proves is worse than no proof, because it reads as coverage.
+    """
+    d = tomllib.load(open(REPO / "pyproject.toml", "rb"))
+    fi = d["tool"]["hatch"]["build"]["targets"]["wheel"]["force-include"]
+    return sorted(
+        src.split("/", 1)[1]
+        for src, dest in fi.items()
+        if src.startswith("wiki/") and dest.startswith("dna_decode/report_cards/")
+    )
+
+
+CARDS = _force_included_cards()
 
 
 def _latest_wheel() -> Path | None:
@@ -40,13 +57,24 @@ def build_wheel() -> Path:
 def assert_cards_in_wheel(whl: Path) -> list[str]:
     names = zipfile.ZipFile(whl).namelist()
     shipped = sorted(n for n in names if "dna_decode/report_cards/" in n and n.endswith(".json"))
-    missing = [c for c in CARDS if not any(n.endswith(c) for n in shipped)]
+    if not CARDS:
+        raise SystemExit("FAIL: derived no cards from pyproject -- the force-include table moved")
+    shipped_names = {n.rsplit("/", 1)[-1] for n in shipped}
+    missing = [c for c in CARDS if c not in shipped_names]
+    extra = sorted(shipped_names - set(CARDS))
     print(f"wheel: {whl.name}")
     for s in shipped:
         print(f"  ships: {s}")
     if missing:
         raise SystemExit(f"FAIL: wheel is MISSING report cards: {missing}")
-    print(f"PASS: all {len(CARDS)} trust cards ship in the wheel")
+    # Asserted BOTH ways. HONEST SCOPE: this branch is NOT currently reachable and was not proven to
+    # fire -- CARDS is derived FROM force-include, so `extra` needs the backend to ship something
+    # unlisted, and a planted stray json in dna_decode/report_cards/ was MEASURED not to reach the
+    # wheel (hatch ships only the force-included files). Kept as a one-line guard against a build-
+    # backend behaviour change, not presented as an active control.
+    if extra:
+        raise SystemExit(f"FAIL: wheel ships report cards NOT in the force-include table: {extra}")
+    print(f"PASS: all {len(CARDS)} force-included trust cards ship in the wheel (and nothing else)")
     return shipped
 
 
