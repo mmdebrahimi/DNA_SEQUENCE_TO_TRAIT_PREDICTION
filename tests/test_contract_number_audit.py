@@ -608,3 +608,119 @@ def test_the_full_pool_control_reclassified_cells_the_sample_had_flattered():
                     "pgx:human:slco1b1"):
         assert rows[cell_id]["discrimination"] == "LOW", (cell_id, rows[cell_id])
         assert rows[cell_id]["decoy_match_rate"] >= 0.50
+
+
+# --- the grade bands themselves -------------------------------------------------------------------
+# `_grade` is what turns a measured rate into the word a reader acts on, so its two edges are the
+# whole definition. The bands are ASSERTED, not calibrated (the module says so), which is exactly why
+# they need pinning: a silent nudge of either bar re-labels cells without moving any measurement.
+
+def test_the_grade_bars_are_the_stated_conventional_values():
+    import scripts.contract_number_audit as mod
+    assert (mod._HIGH_RATE, mod._LOW_RATE) == (0.05, 0.50)
+
+
+def test_grade_bands_are_half_open_at_exactly_the_stated_bars():
+    """Boundary behaviour, stated rather than inferred: HIGH is rate < 0.05 (so exactly 5% is NOT
+    HIGH) and LOW is rate >= 0.50 (so exactly 50% IS LOW). Written the strict way round on purpose --
+    a citation falsified by exactly 1 in 20 alternatives should not earn the strongest verdict."""
+    import scripts.contract_number_audit as mod
+    nums = ["0.1234"]
+    assert mod._grade(4, 100, nums) == "HIGH"
+    assert mod._grade(5, 100, nums) == "MODERATE", "exactly 5% must not grade HIGH"
+    assert mod._grade(49, 100, nums) == "MODERATE"
+    assert mod._grade(50, 100, nums) == "LOW", "exactly 50% must grade LOW"
+    assert mod._grade(0, 100, nums) == "HIGH"
+    assert mod._grade(100, 100, nums) == "LOW"
+
+
+def test_grade_refuses_rather_than_flattering_when_there_is_nothing_to_grade():
+    """Zero trials or zero numbers is an ABSENT control, not a passed one. If either returned HIGH,
+    a cell the decoys never ran against would read as maximally verified -- the same shape as the
+    vacuity failure the rest of this file exists to prevent."""
+    import scripts.contract_number_audit as mod
+    assert mod._grade(0, 0, ["0.5"]) == "n/a"
+    assert mod._grade(0, 100, []) == "n/a"
+    assert mod._grade(0, 0, []) == "n/a"
+
+
+# --- the artifact cache ---------------------------------------------------------------------------
+# The full-pool scan is affordable only because the ~15 MB corpus is read ONCE. These pin the two
+# properties that make that true, including the easy-to-lose one: a MISS must be cached too.
+
+def test_cached_artifact_returns_the_text_and_its_own_numbers():
+    import scripts.contract_number_audit as mod
+    rel = "wiki/klebsiella_topk_ksweep_2026-07-25.json"
+    cache: dict = {}
+    text, nums = mod._cached_artifact(rel, cache)
+    assert text, "fixture artifact must resolve, else this test proves nothing"
+    assert nums == mod._artifact_numbers(text)
+    assert cache[rel] == (text, nums)
+
+
+def test_cached_artifact_serves_a_memoised_entry_without_re_reading():
+    """Behavioural proof of memoisation: a pre-seeded entry is returned for a path that does not
+    exist on disk, which is only possible if the second read never happens."""
+    import scripts.contract_number_audit as mod
+    rel = "wiki/__no_such_artifact_for_the_cache_test__.json"
+    assert not (REPO / rel).exists()
+    cache = {rel: ("SENTINEL TEXT 42", [42.0])}
+    assert mod._cached_artifact(rel, cache) == ("SENTINEL TEXT 42", [42.0])
+
+
+def test_cached_artifact_caches_a_MISS_so_it_is_not_re_attempted_every_trial():
+    """The lossy direction. An unreadable pool entry is hit once per decoy trial -- hundreds of times
+    per cell -- so failing to store the negative result turns the control's cost back into what the
+    shared cache was introduced to remove."""
+    import scripts.contract_number_audit as mod
+    rel = "wiki/__no_such_artifact_for_the_miss_test__.json"
+    assert not (REPO / rel).exists()
+    cache: dict = {}
+    assert mod._cached_artifact(rel, cache) == (None, [])
+    assert rel in cache, "a miss must be memoised, not retried"
+    assert cache[rel] == (None, [])
+
+
+# --- the fully-typed block ------------------------------------------------------------------------
+# A cell whose every number was NAMED leaves the unverifiable residual. It must not leave the report:
+# a shrinking residual is only trustworthy if the numbers it lost are still visible somewhere.
+
+def test_the_fully_typed_block_is_counted_sorted_and_shaped():
+    rep = _cached_report()
+    block = rep["cells_all_numbers_typed_no_citation"]
+    assert rep["n_cells_all_numbers_typed_no_citation"] == len(block) > 0
+    assert [u["cell_id"] for u in block] == sorted(u["cell_id"] for u in block)
+    for u in block:
+        assert set(u) == {"cell_id", "kinds"}, u
+        assert u["kinds"], u["cell_id"]
+        assert set(u["kinds"].values()) <= set(rep["kind_definitions"]), u
+
+
+def test_a_fully_typed_cell_carries_no_unverifiable_number_by_definition():
+    """The defining property, asserted rather than assumed: if any number here were still
+    unverifiable the cell would belong in `cells_unverifiable`, and the residual count would be
+    understated -- which is precisely the way this block could hide numbers instead of surfacing them."""
+    rep = _cached_report()
+    for u in rep["cells_all_numbers_typed_no_citation"]:
+        assert "unverifiable" not in set(u["kinds"].values()), u
+
+
+def test_the_three_no_citation_populations_partition_the_uncited_cells():
+    """Audited / residual / fully-typed are mutually exclusive. Overlap would double-count a cell in
+    the kind tally reconciliation, which is the invariant the audit raises on."""
+    rep = _cached_report()
+    audited = {r["cell_id"] for r in rep["cells"]}
+    residual = {u["cell_id"] for u in rep["cells_unverifiable"]}
+    typed = {u["cell_id"] for u in rep["cells_all_numbers_typed_no_citation"]}
+    assert not (audited & typed) and not (residual & typed) and not (audited & residual)
+
+
+def test_every_kind_the_report_emits_is_defined_somewhere_a_reader_can_look_it_up():
+    """Covers the per-ROW kinds too, not just the `n_by_kind` tally -- an undefined kind string in a
+    cell row is an unexplained label on a number's provenance."""
+    rep = _cached_report()
+    defined = set(rep["kind_definitions"])
+    for r in rep["cells"]:
+        assert set(r.get("number_kinds", {}).values()) <= defined, r["cell_id"]
+    for u in rep["cells_unverifiable"]:
+        assert set(u["kinds"].values()) <= defined, u["cell_id"]
