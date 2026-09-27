@@ -574,6 +574,6 @@
 - The 34 unverifiable numbers are NOT one class and must not be treated as 34 defects: four kinds (real measurement with artifact / enforced-by-test with no artifact by design / external reference value that no artifact of ours should carry / structural non-measurement the extractor mis-captures -- a Zenodo DOI prefix `10.5281`, kb lengths `5.1` and `4.6`).
 - `ADJUDICATED_BENIGN` cannot absorb the last two kinds -- it holds 1 entry and a test pins `len(...) <= 5`; growing it per-number would repeat the hand-enumerated-exclusion-list trap this repo has hit five times. Fix is a small number of typed patterns plus a per-number provenance kind.
 - Fully sequential by design, not by accident: Steps 1-2 edit the same two files and Step 4 edits the live evidence surface, matching the HIGH-salience prior decision on `[plan_file: Oxford_Cohort_External_Revalidation_Plan/technical-plan.md]` that forced sequential mode for contract-bearing files.
-**Status:** candidate
+**Status:** as-built — all 5 steps ran; 3 deviations forced by measurement (HIGH band 0 -> <5%, essentiality MODERATE not LOW, citation rule admitted/rejected against expectation) plus 2 coverage defects found and deliberately left unfixed. See executed_plans/Contract_Number_Provenance_Sound_Decoy_Control_Typed_Provenance_Kinds_Plan/execution-log.md
 
 ---
