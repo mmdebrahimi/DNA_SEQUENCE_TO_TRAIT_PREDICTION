@@ -186,10 +186,23 @@ def audit() -> dict:
     from dna_decode.data.cell_registry import cells
 
     rows = []
+    # Cells carrying candidate numbers that cite NO artifact. `scope` below has always said the audit
+    # covers "cells whose prose names a wiki/ artifact", so the exclusion is disclosed -- but its SIZE
+    # was not, and that is what tells a reader whether the audited set is near-complete or a fraction of
+    # the surface. It is a fraction: the skipped set is LARGER than the checked one. A cell citing only
+    # its SCRIPT (typing:bacteria:mlst names scripts/mlst_serotype_purity.py, never the wiki artifact
+    # holding the numbers) drops out entirely, so its measured purity figures are unverifiable here.
+    # Reported, never counted as drift -- an uncited number is unchecked, not wrong.
+    unverifiable = []
     for c in cells():
         blob = " ".join(str(getattr(c, f, "") or "") for f in PROSE_FIELDS)
         arts = _cited_artifacts(blob)
         if not arts:
+            bare = [t for t in dict.fromkeys(DECIMAL_RE.findall(blob))
+                    if not NON_MEASUREMENT.match(t) and (c.cell_id, t) not in ADJUDICATED_BENIGN]
+            if bare:
+                unverifiable.append({"cell_id": c.cell_id, "n_numbers": len(bare),
+                                     "numbers": bare, "why": "prose cites no wiki/ artifact"})
             continue
         texts = {a: _load_artifact_text(a) for a in arts}
         resolved = {a: t for a, t in texts.items() if t is not None}
@@ -243,6 +256,11 @@ def audit() -> dict:
         "n_candidate_drift": drift,
         "hit_rate": round(drift / checked, 4) if checked else None,
         "verdict": "NOTHING_TO_ADJUDICATE" if not drift else "ADJUDICATION_REQUIRED",
+        # Coverage, so a clean verdict cannot be read as "every contract number is verified". These do
+        # NOT enter n_numbers_checked / n_candidate_drift / verdict -- unchecked is not drift.
+        "n_cells_with_numbers_but_no_citation": len(unverifiable),
+        "n_numbers_unverifiable": sum(u["n_numbers"] for u in unverifiable),
+        "cells_unverifiable": sorted(unverifiable, key=lambda u: u["cell_id"]),
         "cells": rows,
     }
 
@@ -265,6 +283,13 @@ def main(argv=None) -> int:
                   f"{', '.join(r['candidate_drift'])}")
     print(f"\n{rep['verdict']}  {rep['n_candidate_drift']}/{rep['n_numbers_checked']} numbers need "
           f"adjudication across {rep['n_cells_audited']} cells")
+    if rep["cells_unverifiable"]:
+        print(f"COVERAGE: {rep['n_numbers_unverifiable']} number(s) in "
+              f"{rep['n_cells_with_numbers_but_no_citation']} further cell(s) are UNVERIFIABLE here — "
+              f"they cite no wiki/ artifact, so the clean verdict above does not cover them:")
+        for u in rep["cells_unverifiable"]:
+            print(f"    {u['cell_id']:42} {u['n_numbers']:3} number(s): "
+                  f"{', '.join(u['numbers'][:8])}{' …' if u['n_numbers'] > 8 else ''}")
     return 0
 
 

@@ -532,7 +532,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim_status="measured_vs_full_locus_kaptive_near_the_published_wzi_ceiling",
         validation_slice=(
             "307 Klebsiella genomes from this project's committed AMR cohorts, every one with a cached "
-            "assembly, scored 2026-09-08 by scripts/ktype_kaptive_concordance.py against Kaptive 3.3.2 "
+            "assembly, scored 2026-09-08 by scripts/ktype_kaptive_concordance.py -> "
+            "wiki/ktype_kaptive_concordance_2026-09-08.{md,json}, against Kaptive 3.3.2 "
             "(db kpsc_k). THE COMPARATOR IS GENUINELY INDEPENDENT: our caller types the capsule from "
             "ONE conserved gene (wzi) and maps the allele to a K locus; Kaptive types the FULL K "
             "locus -- different methods over different sequence, the AMRFinder-to-ResFinder "
@@ -683,7 +684,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim_status="cross_tool_concordance_measured_near_perfect_on_catalogued_positions",
         validation_slice=(
             "648 cached assemblies that also carry a committed AMRFinder run, scored 2026-09-05 by "
-            "scripts/pointfinder_amrfinder_concordance.py. LOAD-BEARING BEYOND THIS CELL: the "
+            "scripts/pointfinder_amrfinder_concordance.py -> "
+            "wiki/pointfinder_amrfinder_concordance_2026-09-05.{md,json}. LOAD-BEARING BEYOND THIS CELL: the "
             "catalogued genes are the QRDR and the FROZEN cipro rule (`qrdr_point`) consumes exactly "
             "these determinants from AMRFinder, so this independently re-derives a determinant class "
             "the DEPLOYED surface depends on (read-only; frozen surface untouched). The comparator is "
@@ -731,7 +733,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim_status="coherence_measured_vs_wetlab_serotype_beats_shape_matched_null",
         validation_slice=(
             "398 E. coli genomes from the serotype lineage-disjoint checkpoint that ALSO carry a "
-            "wet-lab O:H serotype label, scored 2026-09-05 by scripts/mlst_serotype_purity.py (offline; "
+            "wet-lab O:H serotype label, scored 2026-09-05 by scripts/mlst_serotype_purity.py -> "
+            "wiki/mlst_serotype_purity_2026-09-05.{md,json} (offline; "
             "no new compute). PREMISE: clonal lineages conserve their O:H antigens, so a working caller "
             "must produce SEROTYPE-PURE sequence types while a broken allele-match or profile lookup "
             "carves the cohort arbitrarily. DELIBERATELY NO CURATED BIOLOGY -- scoring against "
@@ -778,7 +781,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim_status="cross_tool_agreement_measured_and_a_severe_overcall_was_found_and_fixed",
         validation_slice=(
             "648 cached assemblies that also carry a committed AMRFinder run, scored 2026-09-05 by "
-            "scripts/resfinder_locus_collapse_validate.py; both rules from ONE blastn pass per genome so "
+            "scripts/resfinder_locus_collapse_validate.py -> "
+            "wiki/resfinder_locus_collapse_2026-09-05.{md,json}; both rules from ONE blastn pass per genome so "
             "only the grouping differs. THE RUN FOUND A SEVERE LIVE DEFECT. beta-lactamase variants "
             "differ by 1-3 point mutations, so a single blaTEM locus matches ~180 catalog TEM alleles "
             "above the 90% identity bar -- and the caller keyed its output on the ALLELE name, so every "

@@ -145,3 +145,57 @@ def test_committed_artifact_records_its_own_posture():
     d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
     assert "TRIAGE" in d["posture"].upper()
     assert d["n_numbers_checked"] >= 100
+
+
+# --- coverage disclosure -------------------------------------------------------------------------
+# `scope` always said the audit covers "cells whose prose names a wiki/ artifact", so the exclusion
+# was disclosed -- but not its SIZE, which is what says whether the audited set is near-complete or a
+# fraction. It is a fraction, and the skipped set is LARGER than the checked one.
+
+def test_coverage_block_is_present_and_internally_consistent():
+    rep = audit()
+    assert rep["n_numbers_unverifiable"] == sum(u["n_numbers"] for u in rep["cells_unverifiable"])
+    assert rep["n_cells_with_numbers_but_no_citation"] == len(rep["cells_unverifiable"])
+    for u in rep["cells_unverifiable"]:
+        assert u["n_numbers"] == len(u["numbers"]) > 0, "a cell with no numbers is not a coverage gap"
+        assert u["why"]
+
+
+def test_coverage_is_non_trivial_so_the_disclosure_is_not_decoration():
+    """If nothing were excluded the block would be noise; the point is that plenty is."""
+    rep = audit()
+    assert rep["n_cells_with_numbers_but_no_citation"] > 0
+    assert rep["n_numbers_unverifiable"] > 0
+
+
+def test_unverifiable_cells_are_disjoint_from_audited_cells():
+    """A cell is either checked against an artifact or reported as uncheckable — never both."""
+    rep = audit()
+    audited = {r["cell_id"] for r in rep["cells"]}
+    skipped = {u["cell_id"] for u in rep["cells_unverifiable"]}
+    assert not (audited & skipped)
+
+
+def test_coverage_does_not_contaminate_the_drift_verdict():
+    """Unchecked is not wrong. The verdict must key on drift alone, or an uncited number would read
+    as a defect and the audit would stop being a triage funnel."""
+    rep = audit()
+    expected = "NOTHING_TO_ADJUDICATE" if rep["n_candidate_drift"] == 0 else "ADJUDICATION_REQUIRED"
+    assert rep["verdict"] == expected
+    assert rep["n_numbers_checked"] == sum(r["checked"] for r in rep["cells"])
+
+
+def test_an_uncited_cell_whose_only_numbers_are_adjudicated_bars_is_not_flagged():
+    """Non-vacuity in the OTHER direction: a threshold has no artifact to live in, so a cell carrying
+    only adjudicated bars is not a coverage gap. Exercises the real filter on a synthetic cell."""
+    import scripts.contract_number_audit as m
+
+    (cell_id, tok) = next(iter(ADJUDICATED_BENIGN))
+    blob = f"the bar is {tok}"
+    bare = [t for t in dict.fromkeys(m.DECIMAL_RE.findall(blob))
+            if not m.NON_MEASUREMENT.match(t) and (cell_id, t) not in ADJUDICATED_BENIGN]
+    assert bare == [], f"{tok} should be exempt for {cell_id}"
+    # ... while the same number on a DIFFERENT cell is still a coverage gap (the table is keyed by both)
+    bare_other = [t for t in dict.fromkeys(m.DECIMAL_RE.findall(blob))
+                  if not m.NON_MEASUREMENT.match(t) and ("other:cell:x", t) not in ADJUDICATED_BENIGN]
+    assert bare_other == [tok]
