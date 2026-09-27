@@ -402,6 +402,146 @@ def test_step1_leaves_verdict_and_drift_untouched():
     assert rep["n_cells_audited"] == 16
 
 
+# --- Step 2: provenance kinds ---------------------------------------------------------------------
+# "Unverifiable" was doing the work of four statements at once, which made 34 numbers read as 34
+# defects. These tests exist so the typing can never become a silent exemption mechanism.
+
+def test_doi_prefix_is_typed_structural_only_when_it_is_actually_a_doi():
+    import scripts.contract_number_audit as mod
+    real = "wet-lab DpoTropiSearch (Concha-Eloko 2025; Zenodo 10.5281/zenodo.14065540) prophage-LCA"
+    assert mod._structural_kind(real, "10.5281") == mod.KIND_STRUCTURAL
+    # the same token WITHOUT the slash that makes it a DOI is an ordinary number
+    assert mod._structural_kind("a ratio of 10.5281 over the pool", "10.5281") is None
+    # and an ordinary decimal is never a DOI
+    assert mod._structural_kind("top-1 ~0.45 / top-5 ~0.60", "0.45") is None
+
+
+def test_kb_length_is_typed_structural_and_a_ratio_is_not():
+    import scripts.contract_number_audit as mod
+    assert mod._structural_kind("ARHGAP36 5.1-kb intron-1 deletion", "5.1") == mod.KIND_STRUCTURAL
+    assert mod._structural_kind("STX17 4.6-kb dup grey", "4.6") == mod.KIND_STRUCTURAL
+    assert mod._structural_kind("ASIP 11-bp-del black", "11.0") is None
+    assert mod._structural_kind("top-1 ~0.45 over KL-types", "0.45") is None
+
+
+def test_a_measurement_merely_NEAR_the_word_kb_is_not_typed_a_length():
+    """NON-VACUITY IN THE DANGEROUS DIRECTION. An over-broad context match would type a genuine
+    measurement as structural and drop it out of the audit entirely -- a check quietly stopping
+    checking, which is the exact failure this whole script exists to catch."""
+    import scripts.contract_number_audit as mod
+    near = "the 5.1-kb deletion cohort reached sens 0.45 across every kb window we tried"
+    assert mod._structural_kind(near, "0.45") is None, "a real measurement was exempted as a length"
+    assert mod._structural_kind(near, "5.1") == mod.KIND_STRUCTURAL
+
+
+def test_a_token_used_both_structurally_and_as_a_measurement_is_not_exempted():
+    """All-or-nothing on purpose: if one occurrence is a real number, the token stays auditable."""
+    import scripts.contract_number_audit as mod
+    mixed = "a 4.6-kb duplication, and separately a concordance of 4.6 against the panel"
+    assert mod._structural_kind(mixed, "4.6") is None
+
+
+def test_per_kind_counts_sum_to_every_extracted_number():
+    """The invariant that makes a SHRINKING unverifiable count trustworthy -- the residual got smaller
+    because numbers were NAMED, not because a typing bug lost them. audit() raises if this breaks, so
+    this also pins that the guard is reachable."""
+    rep = _cached_report()
+    assert sum(rep["n_by_kind"].values()) == rep["n_numbers_extracted"]
+    assert rep["n_numbers_extracted"] == 191
+    assert set(rep["n_by_kind"]) <= set(rep["kind_definitions"])
+
+
+def test_the_kind_tally_reconciles_with_the_cited_and_uncited_halves():
+    rep = _cached_report()
+    cited = sum(r["checked"] for r in rep["cells"])
+    uncited = sum(len(u["kinds"]) for u in rep["cells_unverifiable"]) \
+        + sum(len(u["kinds"]) for u in rep["cells_all_numbers_typed_no_citation"])
+    assert cited + uncited == rep["n_numbers_extracted"], (cited, uncited)
+    assert cited == rep["n_numbers_checked"] == 157
+
+
+def test_unverifiable_now_means_only_the_residual():
+    """It fell 34 -> 24 because six numbers were named: three structural (a Zenodo DOI prefix and two
+    kb lengths), two enforced by an exact-equality test assert, one external reference value."""
+    rep = _cached_report()
+    assert rep["n_by_kind"]["unverifiable"] == 24
+    assert rep["n_numbers_unverifiable"] == 24
+    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == 24
+    for u in rep["cells_unverifiable"]:
+        assert all(k == "unverifiable" for k in
+                   (u["kinds"][t] for t in u["numbers"])), u["cell_id"]
+
+
+def test_cells_whose_every_number_is_named_leave_the_residual_but_not_the_report():
+    rep = _cached_report()
+    named = {u["cell_id"] for u in rep["cells_all_numbers_typed_no_citation"]}
+    assert {"pgx:human:nudt15", "typing:Escherichia_coli:pathotype",
+            "typing:cat:catcolor", "typing:horse:horsecolor"} <= named
+    assert named.isdisjoint({u["cell_id"] for u in rep["cells_unverifiable"]})
+
+
+def test_the_doi_pattern_generalised_beyond_the_numbers_it_was_written_for():
+    """Why a PATTERN and not a list. It was written for the Zenodo prefix in typing:klebsiella:kleb and
+    it also caught `doi:10.5061/dryad...` in BOTH dog cells, which the hand triage had missed -- those
+    were previously counted as artifact matches by coincidence. A per-number list would have shipped
+    that miss, which is the hand-enumerated-exclusion trap this repo has hit five times."""
+    rep = _cached_report()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    for cell_id in ("typing:dog:coatcolor", "typing:dog:morphology"):
+        assert rows[cell_id]["number_kinds"]["10.5061"] == "structural-non-measurement"
+    assert rep["n_by_kind"]["structural-non-measurement"] == 5
+
+
+def test_every_declared_kind_entry_carries_a_reason_and_the_tables_stay_small():
+    """Same discipline as ADJUDICATED_BENIGN: a declaration without a reason is an unaudited exemption."""
+    import scripts.contract_number_audit as mod
+    for name in ("EXTERNAL_REFERENCE", "ENFORCED_BY_TEST", "SUPERSEDED_VALUE", "DECLARED_THRESHOLD"):
+        table = getattr(mod, name)
+        assert table, name
+        assert len(table) <= 5, f"{name} is growing into a per-number exclusion list ({len(table)})"
+        for key, why in table.items():
+            assert isinstance(key, tuple) and len(key) == 2, key
+            assert isinstance(why, str) and len(why) > 40, (name, key, why)
+
+
+def test_adjudicated_benign_pin_is_untouched_by_the_new_tables():
+    """The new tables are separate precisely so this pre-existing pin does not have to move."""
+    assert len(ADJUDICATED_BENIGN) <= 5
+    import scripts.contract_number_audit as mod
+    for name in ("EXTERNAL_REFERENCE", "ENFORCED_BY_TEST", "SUPERSEDED_VALUE", "DECLARED_THRESHOLD"):
+        assert not (set(getattr(mod, name)) & set(ADJUDICATED_BENIGN)), name
+
+
+def test_a_declared_kind_outranks_an_artifact_match():
+    """Precedence matters: a DOI prefix that happens to appear in some JSON is still not a measurement,
+    and a threshold that appears in an artifact is still a bar."""
+    import scripts.contract_number_audit as mod
+    k = mod._classify_kind("typing:klebsiella:kleb", "Zenodo 10.5281/zenodo.1", "10.5281",
+                           matched_in_artifact=True, cited=True)
+    assert k == mod.KIND_STRUCTURAL
+    k2 = mod._classify_kind("typing:Escherichia_coli:pathotype", "each >=0.80", "0.80",
+                            matched_in_artifact=True, cited=True)
+    assert k2 == mod.KIND_THRESHOLD
+
+
+def test_cited_but_absent_is_candidate_drift_not_unverifiable():
+    """Collapsing the two would hide real drift inside a coverage statistic."""
+    import scripts.contract_number_audit as mod
+    assert mod._classify_kind("some:cell", "sens 0.777 measured", "0.777",
+                              matched_in_artifact=False, cited=True) == mod.KIND_DRIFT
+    assert mod._classify_kind("some:cell", "sens 0.777 measured", "0.777",
+                              matched_in_artifact=False, cited=False) == mod.KIND_UNVERIFIABLE
+
+
+def test_step2_leaves_verdict_and_drift_untouched():
+    """A typing change must never read as drift."""
+    rep = _cached_report()
+    assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
+    assert rep["n_candidate_drift"] == 0
+    assert rep["n_by_kind"].get("candidate-drift", 0) == 0
+    assert rep["n_numbers_checked"] == 157
+
+
 def test_the_full_pool_control_reclassified_cells_the_sample_had_flattered():
     """The point of Step 1, pinned so a silent regression to a weaker control is visible: the sample
     reported 2 LOW cells, the full pool reports 6. Three of them (ktype 51%, pointfinder 59%, slco1b1

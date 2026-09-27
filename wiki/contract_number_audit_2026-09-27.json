@@ -17,8 +17,58 @@
     "typing:Escherichia_coli:serotype",
     "typing:Klebsiella:ktype"
   ],
-  "n_cells_with_numbers_but_no_citation": 10,
-  "n_numbers_unverifiable": 34,
+  "n_numbers_extracted": 191,
+  "n_by_kind": {
+    "artifact": 154,
+    "enforced-by-test": 2,
+    "external-reference": 1,
+    "structural-non-measurement": 5,
+    "superseded-value": 1,
+    "threshold": 4,
+    "unverifiable": 24
+  },
+  "kind_definitions": {
+    "artifact": "present in a wiki/ artifact the prose cites",
+    "structural-non-measurement": "pattern-typed non-measurement: a DOI prefix, or a kb/bp length",
+    "external-reference": "a published external reference value, not our measurement",
+    "enforced-by-test": "pinned by an exact-equality assert in the test suite, not by an artifact",
+    "threshold": "a bar or cut-off, which has no artifact to live in",
+    "superseded-value": "recorded deliberately as the REJECTED value, so it is never quoted",
+    "candidate-drift": "cited but absent from the cited artifact -- the thing this audit looks for",
+    "unverifiable": "no provenance of any kind: an uncited measurement"
+  },
+  "n_cells_all_numbers_typed_no_citation": 4,
+  "cells_all_numbers_typed_no_citation": [
+    {
+      "cell_id": "pgx:human:nudt15",
+      "kinds": {
+        "9.5": "external-reference"
+      }
+    },
+    {
+      "cell_id": "typing:Escherichia_coli:pathotype",
+      "kinds": {
+        "0.833": "enforced-by-test",
+        "1.0": "enforced-by-test",
+        "0.917": "superseded-value",
+        "0.80": "threshold"
+      }
+    },
+    {
+      "cell_id": "typing:cat:catcolor",
+      "kinds": {
+        "5.1": "structural-non-measurement"
+      }
+    },
+    {
+      "cell_id": "typing:horse:horsecolor",
+      "kinds": {
+        "4.6": "structural-non-measurement"
+      }
+    }
+  ],
+  "n_cells_with_numbers_but_no_citation": 6,
+  "n_numbers_unverifiable": 24,
   "cells_unverifiable": [
     {
       "cell_id": "essentiality:any:essentiality",
@@ -32,7 +82,17 @@
         "0.911",
         "0.37"
       ],
-      "why": "prose cites no wiki/ artifact"
+      "why": "prose cites no wiki/ artifact",
+      "kinds": {
+        "0.695": "unverifiable",
+        "9.3": "unverifiable",
+        "0.373": "unverifiable",
+        "0.984": "unverifiable",
+        "0.795": "unverifiable",
+        "0.911": "unverifiable",
+        "0.37": "unverifiable"
+      },
+      "n_typed_not_unverifiable": 0
     },
     {
       "cell_id": "hla:human:b5701",
@@ -44,7 +104,15 @@
         "0.61",
         "0.0"
       ],
-      "why": "prose cites no wiki/ artifact"
+      "why": "prose cites no wiki/ artifact",
+      "kinds": {
+        "0.979": "unverifiable",
+        "0.992": "unverifiable",
+        "0.855": "unverifiable",
+        "0.61": "unverifiable",
+        "0.0": "unverifiable"
+      },
+      "n_typed_not_unverifiable": 0
     },
     {
       "cell_id": "pgx:human:cyp2d6",
@@ -53,26 +121,12 @@
         "0.62",
         "1.0"
       ],
-      "why": "prose cites no wiki/ artifact"
-    },
-    {
-      "cell_id": "pgx:human:nudt15",
-      "n_numbers": 1,
-      "numbers": [
-        "9.5"
-      ],
-      "why": "prose cites no wiki/ artifact"
-    },
-    {
-      "cell_id": "typing:Escherichia_coli:pathotype",
-      "n_numbers": 4,
-      "numbers": [
-        "0.833",
-        "1.0",
-        "0.917",
-        "0.80"
-      ],
-      "why": "prose cites no wiki/ artifact"
+      "why": "prose cites no wiki/ artifact",
+      "kinds": {
+        "0.62": "unverifiable",
+        "1.0": "unverifiable"
+      },
+      "n_typed_not_unverifiable": 0
     },
     {
       "cell_id": "typing:Streptococcus_pneumoniae:pneumoserotype",
@@ -84,23 +138,15 @@
         "0.661",
         "2.1"
       ],
-      "why": "prose cites no wiki/ artifact"
-    },
-    {
-      "cell_id": "typing:cat:catcolor",
-      "n_numbers": 1,
-      "numbers": [
-        "5.1"
-      ],
-      "why": "prose cites no wiki/ artifact"
-    },
-    {
-      "cell_id": "typing:horse:horsecolor",
-      "n_numbers": 1,
-      "numbers": [
-        "4.6"
-      ],
-      "why": "prose cites no wiki/ artifact"
+      "why": "prose cites no wiki/ artifact",
+      "kinds": {
+        "0.939": "unverifiable",
+        "0.952": "unverifiable",
+        "0.690": "unverifiable",
+        "0.661": "unverifiable",
+        "2.1": "unverifiable"
+      },
+      "n_typed_not_unverifiable": 0
     },
     {
       "cell_id": "typing:human:pigment",
@@ -109,20 +155,31 @@
         "0.468",
         "1.0"
       ],
-      "why": "prose cites no wiki/ artifact"
+      "why": "prose cites no wiki/ artifact",
+      "kinds": {
+        "0.468": "unverifiable",
+        "1.0": "unverifiable"
+      },
+      "n_typed_not_unverifiable": 0
     },
     {
       "cell_id": "typing:klebsiella:kleb",
-      "n_numbers": 6,
+      "n_numbers": 3,
       "numbers": [
-        "0.90",
         "0.45",
         "0.60",
-        "0.49",
-        "0.10",
-        "10.5281"
+        "0.49"
       ],
-      "why": "prose cites no wiki/ artifact"
+      "why": "prose cites no wiki/ artifact",
+      "kinds": {
+        "0.90": "threshold",
+        "0.45": "unverifiable",
+        "0.60": "unverifiable",
+        "0.49": "unverifiable",
+        "0.10": "threshold",
+        "10.5281": "structural-non-measurement"
+      },
+      "n_typed_not_unverifiable": 3
     }
   ],
   "cells": [
@@ -140,11 +197,16 @@
       "checked": 3,
       "found": 3,
       "candidate_drift": [],
+      "number_kinds": {
+        "1.00": "artifact",
+        "0.939": "artifact",
+        "0.941": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 246,
-      "n_decoys": 300,
-      "decoy_match_rate": 0.82,
+      "decoy_full_match": 249,
+      "n_decoys": 299,
+      "decoy_match_rate": 0.8328,
       "decoy_group_size": 2,
       "discrimination": "LOW"
     },
@@ -164,11 +226,17 @@
       "checked": 4,
       "found": 4,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.2773": "artifact",
+        "0.2128": "artifact",
+        "0.79": "artifact",
+        "0.3": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 199,
-      "n_decoys": 300,
-      "decoy_match_rate": 0.6633,
+      "decoy_full_match": 204,
+      "n_decoys": 299,
+      "decoy_match_rate": 0.6823,
       "decoy_group_size": 2,
       "discrimination": "LOW"
     },
@@ -185,13 +253,16 @@
       "checked": 1,
       "found": 1,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.398": "artifact"
+      },
       "matched_only_after_rounding": {
         "0.398": 0.3977
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 395,
-      "n_decoys": 602,
-      "decoy_match_rate": 0.6561,
+      "decoy_full_match": 392,
+      "n_decoys": 599,
+      "decoy_match_rate": 0.6544,
       "decoy_group_size": 1,
       "discrimination": "LOW"
     },
@@ -206,11 +277,17 @@
       "checked": 4,
       "found": 4,
       "candidate_drift": [],
+      "number_kinds": {
+        "14.0": "artifact",
+        "0.8788": "artifact",
+        "0.8902": "artifact",
+        "0.94": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 308,
-      "n_decoys": 602,
-      "decoy_match_rate": 0.5116,
+      "decoy_full_match": 307,
+      "n_decoys": 599,
+      "decoy_match_rate": 0.5125,
       "decoy_group_size": 1,
       "discrimination": "LOW"
     },
@@ -225,11 +302,15 @@
       "checked": 2,
       "found": 2,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.9923": "artifact",
+        "0.3": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 355,
-      "n_decoys": 602,
-      "decoy_match_rate": 0.5897,
+      "decoy_full_match": 354,
+      "n_decoys": 599,
+      "decoy_match_rate": 0.591,
       "decoy_group_size": 1,
       "discrimination": "LOW"
     },
@@ -244,10 +325,22 @@
       "checked": 10,
       "found": 10,
       "candidate_drift": [],
+      "number_kinds": {
+        "68.1": "artifact",
+        "0.7860": "artifact",
+        "0.2156": "artifact",
+        "0.2583": "artifact",
+        "0.9188": "artifact",
+        "0.4170": "artifact",
+        "0.8266": "artifact",
+        "0.87": "artifact",
+        "0.14": "artifact",
+        "31.9": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 6,
-      "n_decoys": 602,
+      "n_decoys": 599,
       "decoy_match_rate": 0.01,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -263,10 +356,25 @@
       "checked": 13,
       "found": 13,
       "candidate_drift": [],
+      "number_kinds": {
+        "165.52": "artifact",
+        "1.94": "artifact",
+        "100.0": "artifact",
+        "99.0": "artifact",
+        "99.8": "artifact",
+        "1.59": "artifact",
+        "0.0125": "artifact",
+        "0.7754": "artifact",
+        "9.16": "artifact",
+        "2.44": "artifact",
+        "2.46": "artifact",
+        "0.4126": "artifact",
+        "0.4269": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 1,
-      "n_decoys": 602,
+      "n_decoys": 599,
       "decoy_match_rate": 0.0017,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -283,10 +391,31 @@
       "checked": 19,
       "found": 19,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.733": "artifact",
+        "0.502": "artifact",
+        "0.710": "artifact",
+        "0.676": "artifact",
+        "3.4": "artifact",
+        "93.9": "artifact",
+        "65.8": "artifact",
+        "9.8": "artifact",
+        "0.803": "artifact",
+        "0.767": "artifact",
+        "0.751": "artifact",
+        "4.0": "artifact",
+        "5.2": "artifact",
+        "1.6": "artifact",
+        "0.028": "artifact",
+        "0.066": "artifact",
+        "0.047": "artifact",
+        "0.000": "artifact",
+        "0.085": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 2,
-      "n_decoys": 603,
+      "n_decoys": 600,
       "decoy_match_rate": 0.0033,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -308,10 +437,23 @@
       "checked": 11,
       "found": 11,
       "candidate_drift": [],
+      "number_kinds": {
+        "79.3": "artifact",
+        "53.0": "artifact",
+        "9.00": "artifact",
+        "2.00": "artifact",
+        "3.56": "artifact",
+        "13.5": "artifact",
+        "72.9": "artifact",
+        "0.5185": "artifact",
+        "0.5190": "artifact",
+        "0.454": "artifact",
+        "0.926": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 1,
-      "n_decoys": 603,
+      "n_decoys": 600,
       "decoy_match_rate": 0.0017,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -326,11 +468,17 @@
       "checked": 4,
       "found": 4,
       "candidate_drift": [],
+      "number_kinds": {
+        "10.5061": "structural-non-measurement",
+        "0.70": "artifact",
+        "0.994": "artifact",
+        "0.355": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 8,
-      "n_decoys": 603,
-      "decoy_match_rate": 0.0133,
+      "decoy_full_match": 7,
+      "n_decoys": 600,
+      "decoy_match_rate": 0.0117,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
@@ -345,11 +493,20 @@
       "checked": 7,
       "found": 7,
       "candidate_drift": [],
+      "number_kinds": {
+        "10.5061": "structural-non-measurement",
+        "0.70": "artifact",
+        "0.619": "artifact",
+        "0.383": "artifact",
+        "0.543": "artifact",
+        "0.13": "artifact",
+        "0.21": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 7,
-      "n_decoys": 602,
-      "decoy_match_rate": 0.0116,
+      "decoy_full_match": 6,
+      "n_decoys": 599,
+      "decoy_match_rate": 0.01,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
@@ -366,11 +523,17 @@
       "checked": 4,
       "found": 4,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.862": "artifact",
+        "0.291": "artifact",
+        "0.975": "artifact",
+        "0.364": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 246,
-      "n_decoys": 602,
-      "decoy_match_rate": 0.4086,
+      "decoy_full_match": 245,
+      "n_decoys": 599,
+      "decoy_match_rate": 0.409,
       "decoy_group_size": 1,
       "discrimination": "MODERATE"
     },
@@ -387,6 +550,7 @@
       "checked": 0,
       "found": 0,
       "candidate_drift": [],
+      "number_kinds": {},
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
@@ -412,11 +576,40 @@
       "checked": 27,
       "found": 27,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.3465": "artifact",
+        "0.182": "artifact",
+        "0.20": "artifact",
+        "0.35": "artifact",
+        "0.49": "artifact",
+        "2.5": "artifact",
+        "0.7315": "artifact",
+        "0.518": "artifact",
+        "0.5115": "artifact",
+        "0.539": "artifact",
+        "0.7611": "artifact",
+        "0.478": "artifact",
+        "0.492": "artifact",
+        "0.502": "artifact",
+        "0.596": "artifact",
+        "0.538": "artifact",
+        "0.602": "artifact",
+        "0.063": "artifact",
+        "0.011": "artifact",
+        "0.0009": "artifact",
+        "0.719": "artifact",
+        "0.0005": "artifact",
+        "0.454": "artifact",
+        "0.926": "artifact",
+        "4.0": "artifact",
+        "0.18": "artifact",
+        "0.73": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 75,
-      "n_decoys": 300,
-      "decoy_match_rate": 0.25,
+      "decoy_full_match": 72,
+      "n_decoys": 299,
+      "decoy_match_rate": 0.2408,
       "decoy_group_size": 2,
       "discrimination": "MODERATE"
     },
@@ -439,6 +632,38 @@
       "checked": 30,
       "found": 30,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.8400": "artifact",
+        "0.8800": "artifact",
+        "0.0400": "artifact",
+        "0.1750": "artifact",
+        "98.2": "artifact",
+        "0.125": "artifact",
+        "0.60": "artifact",
+        "0.702": "artifact",
+        "0.925": "artifact",
+        "35.6": "artifact",
+        "29.5": "artifact",
+        "27.1": "artifact",
+        "13.6": "artifact",
+        "0.7050": "artifact",
+        "1.000": "artifact",
+        "0.795": "artifact",
+        "0.960": "artifact",
+        "0.828": "artifact",
+        "0.880": "artifact",
+        "0.95": "artifact",
+        "0.920": "artifact",
+        "0.222": "artifact",
+        "0.783": "artifact",
+        "10.0": "artifact",
+        "0.142": "artifact",
+        "0.705": "artifact",
+        "0.900": "artifact",
+        "22.0": "artifact",
+        "0.8250": "artifact",
+        "0.0550": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 1,
@@ -460,6 +685,26 @@
       "checked": 18,
       "found": 18,
       "candidate_drift": [],
+      "number_kinds": {
+        "0.167": "artifact",
+        "0.60": "threshold",
+        "0.770": "artifact",
+        "0.926": "artifact",
+        "0.931": "artifact",
+        "0.962": "artifact",
+        "0.8171": "artifact",
+        "0.9228": "artifact",
+        "0.106": "artifact",
+        "0.05": "artifact",
+        "0.0000": "artifact",
+        "0.155": "artifact",
+        "0.050": "artifact",
+        "0.0086": "artifact",
+        "0.7844": "artifact",
+        "0.9461": "artifact",
+        "0.1617": "artifact",
+        "0.0068": "artifact"
+      },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [
         {
@@ -468,8 +713,8 @@
         }
       ],
       "decoy_full_match": 131,
-      "n_decoys": 200,
-      "decoy_match_rate": 0.655,
+      "n_decoys": 199,
+      "decoy_match_rate": 0.6583,
       "decoy_group_size": 3,
       "discrimination": "LOW"
     }

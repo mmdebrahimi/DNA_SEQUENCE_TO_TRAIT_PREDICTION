@@ -76,6 +76,131 @@ ADJUDICATED_BENIGN: dict[tuple[str, str], str] = {
 }
 
 
+# --- provenance kinds -------------------------------------------------------------------------------
+# "Unverifiable" was doing the work of four different statements at once, which made 34 numbers read as
+# 34 defects. They are not one class: some are real measurements whose artifact simply was not cited,
+# some are external reference values no artifact of OURS could ever contain, some are pinned by a test
+# rather than by a wiki file, and some are not measurements at all -- a DOI prefix and two kb lengths the
+# decimal extractor cannot tell from a ratio.
+#
+# The two structural families are PATTERN-typed rather than listed, because a per-number list is the
+# hand-enumerated-exclusion trap this repo has hit five times. The two declarative families ARE tables,
+# because "this number is pinned by that test" is a claim about provenance that cannot be derived from
+# the prose and must be named by a human, with a reason, exactly like ADJUDICATED_BENIGN. They are kept
+# SEPARATE from ADJUDICATED_BENIGN so its `<= 5` pin stays untouched and each table stays small.
+KIND_ARTIFACT = "artifact"
+KIND_STRUCTURAL = "structural-non-measurement"
+KIND_EXTERNAL = "external-reference"
+KIND_ENFORCED = "enforced-by-test"
+KIND_THRESHOLD = "threshold"
+KIND_SUPERSEDED = "superseded-value"
+KIND_DRIFT = "candidate-drift"
+KIND_UNVERIFIABLE = "unverifiable"
+
+# A DOI prefix: the registrant half of `10.5281/zenodo.14065540`. Only structural when the very next
+# character is the `/` that makes it a DOI -- `10.5281` alone would be an ordinary number.
+_DOI_TOKEN_RE = re.compile(r"^10\.\d{4,9}$")
+# A physical length: `5.1-kb`, `4.6 kb`, `11-bp`. At most ONE separator, so a real measurement merely in
+# the same sentence as the word "kb" is never swept up -- that over-broad direction would silently
+# exempt a genuine number, which is the failure this whole audit exists to catch.
+_LENGTH_SUFFIX_RE = re.compile(r"^[-\s]?(kb|bp)\b", re.IGNORECASE)
+
+EXTERNAL_REFERENCE: dict[tuple[str, str], str] = {
+    ("pgx:human:nudt15", "9.5"):
+        "not our measurement: the *3 allele frequency in EAS populations, a published population-genetics "
+        "reference value. No artifact of ours can or should contain it; citing one would fabricate "
+        "provenance for a number we did not measure.",
+}
+
+ENFORCED_BY_TEST: dict[tuple[str, str], str] = {
+    ("typing:Escherichia_coli:pathotype", "0.833"):
+        "pinned by an EXACT-equality assert in tests/test_pathotype_expec_recall.py (EXPEC_RECALL_CAP "
+        "== 10/12). Enforced by the suite on every run, which is a STRONGER guarantee than a wiki file; "
+        "the cell has no artifact by design and inventing one would be worse than naming the test.",
+    ("typing:Escherichia_coli:pathotype", "1.0"):
+        "pinned by the same EXACT-equality asserts (confident-supported precision == 1.0 and EPEC "
+        "recall == 1.0) in tests/test_pathotype_expec_recall.py.",
+}
+
+# A number the prose deliberately records as WRONG. Distinguishing this from `unverifiable` matters: the
+# contract carries it precisely so nobody quotes it, so "we cannot verify it" is the wrong description --
+# and filing it as `enforced-by-test` beside the value that SUPERSEDED it would be inaccurate.
+SUPERSEDED_VALUE: dict[tuple[str, str], str] = {
+    ("typing:Escherichia_coli:pathotype", "0.917"):
+        "deliberately recorded as the REJECTED over-rescue figure (the flat-K=1 rule's 11/12), kept in "
+        "the prose so it is never quoted as the cell's recall. Superseded by 0.833 on the committed "
+        "decision 'a clean 0.833 beats an overfit 0.917'.",
+}
+
+# Bars and cut-offs, which have no artifact to live in by definition. Same role as ADJUDICATED_BENIGN,
+# held separately so that table's `<= 5` pin is untouched.
+DECLARED_THRESHOLD: dict[tuple[str, str], str] = {
+    ("typing:Escherichia_coli:pathotype", "0.80"):
+        "a BAR, not a measurement: the per-gene coverage floor each axis must clear in the cross-axis "
+        "support rule (>=1 iron-acquisition AND >=1 capsule/serum gene, each >=0.80).",
+    ("typing:klebsiella:kleb", "0.90"):
+        "a BAR, not a measurement: the greedy-representative clonality-correction threshold "
+        "(greedy-rep @0.90) at which the leave-one-out was run.",
+    ("typing:klebsiella:kleb", "0.10"):
+        "not a measurement of this cell: the PRIOR NULL baseline (a 0.10 prior) that the reported lift "
+        "is measured against.",
+}
+
+
+def _structural_kind(blob: str, tok: str) -> str | None:
+    """Is every occurrence of `tok` in this prose a DOI prefix or a physical length?
+
+    Requires ALL occurrences to be structural. A token used once as `5.1-kb` and once as a real ratio
+    must NOT be exempted -- typing it structural would remove a genuine measurement from the audit
+    entirely, which is a check quietly stopping checking.
+    """
+    spans = [m for m in DECIMAL_RE.finditer(blob) if m.group(1) == tok]
+    if not spans:
+        return None
+    kinds = set()
+    for m in spans:
+        rest = blob[m.end():]
+        if _DOI_TOKEN_RE.match(tok) and rest.startswith("/"):
+            kinds.add(KIND_STRUCTURAL)
+        elif _LENGTH_SUFFIX_RE.match(rest):
+            kinds.add(KIND_STRUCTURAL)
+        else:
+            return None
+    return KIND_STRUCTURAL if kinds else None
+
+
+def _declared_kind(cell_id: str, tok: str) -> str | None:
+    """Kinds a human has NAMED for this exact (cell, number), each with a mandatory reason."""
+    key = (cell_id, tok)
+    if key in ADJUDICATED_BENIGN or key in DECLARED_THRESHOLD:
+        return KIND_THRESHOLD
+    if key in ENFORCED_BY_TEST:
+        return KIND_ENFORCED
+    if key in EXTERNAL_REFERENCE:
+        return KIND_EXTERNAL
+    if key in SUPERSEDED_VALUE:
+        return KIND_SUPERSEDED
+    return None
+
+
+def _classify_kind(cell_id: str, blob: str, tok: str, *, matched_in_artifact: bool,
+                   cited: bool) -> str:
+    """Precedence is deliberate: a pattern-typed non-measurement and a human declaration both outrank
+    an artifact match, because a DOI prefix that happens to appear in some JSON is still not a
+    measurement. `candidate-drift` is kept distinct from `unverifiable` -- cited-and-absent is a finding,
+    uncited is merely unchecked, and collapsing them would hide real drift inside a coverage statistic.
+    """
+    structural = _structural_kind(blob, tok)
+    if structural:
+        return structural
+    declared = _declared_kind(cell_id, tok)
+    if declared:
+        return declared
+    if matched_in_artifact:
+        return KIND_ARTIFACT
+    return KIND_DRIFT if cited else KIND_UNVERIFIABLE
+
+
 def _cited_artifacts(blob: str) -> list[str]:
     out, seen = [], set()
     for raw in ARTIFACT_RE.findall(blob):
@@ -285,6 +410,11 @@ def audit() -> dict:
     # holding the numbers) drops out entirely, so its measured purity figures are unverifiable here.
     # Reported, never counted as drift -- an uncited number is unchecked, not wrong.
     unverifiable = []
+    fully_typed: list[dict] = []
+    # Per-kind tally across EVERY extracted number, cited cells included. Asserted at the end to sum to
+    # n_extracted, so a typing bug cannot silently drop a number out of the audit.
+    kind_counts: dict[str, int] = {}
+    n_extracted = 0
     # The pool EXCLUDES this script's own dated outputs, and that is not tidiness -- it is the difference
     # between a control and a circular one. `main()` writes wiki/contract_number_audit_<date>.json into the
     # very directory the pool is globbed from, and that artifact RECORDS THE NUMBER TOKENS it checked
@@ -303,11 +433,24 @@ def audit() -> dict:
         blob = " ".join(str(getattr(c, f, "") or "") for f in PROSE_FIELDS)
         arts = _cited_artifacts(blob)
         if not arts:
-            bare = [t for t in dict.fromkeys(DECIMAL_RE.findall(blob))
-                    if not NON_MEASUREMENT.match(t) and (c.cell_id, t) not in ADJUDICATED_BENIGN]
+            tokens = [t for t in dict.fromkeys(DECIMAL_RE.findall(blob)) if not NON_MEASUREMENT.match(t)]
+            kinds = {t: _classify_kind(c.cell_id, blob, t, matched_in_artifact=False, cited=False)
+                     for t in tokens}
+            for t, k in kinds.items():
+                kind_counts[k] = kind_counts.get(k, 0) + 1
+            n_extracted += len(tokens)
+            bare = [t for t, k in kinds.items() if k == KIND_UNVERIFIABLE]
+            typed = {t: k for t, k in kinds.items() if k != KIND_UNVERIFIABLE}
             if bare:
                 unverifiable.append({"cell_id": c.cell_id, "n_numbers": len(bare),
-                                     "numbers": bare, "why": "prose cites no wiki/ artifact"})
+                                     "numbers": bare, "why": "prose cites no wiki/ artifact",
+                                     # what the cell's OTHER numbers turned out to be, so a shrinking
+                                     # residual is auditable rather than merely smaller
+                                     "kinds": kinds, "n_typed_not_unverifiable": len(typed)})
+            elif typed:
+                # every number named -> this cell leaves the residual, but it must not leave the REPORT,
+                # or the audit would look like it had fewer numbers rather than better-described ones.
+                fully_typed.append({"cell_id": c.cell_id, "kinds": kinds})
             continue
         texts = {a: _load_artifact_text(a) for a in arts}
         resolved = {a: t for a, t in texts.items() if t is not None}
@@ -339,6 +482,12 @@ def audit() -> dict:
                 in_code.append({"number": tok, "why": ADJUDICATED_BENIGN[key]})
             else:
                 missing.append(tok)
+        found_set = set(found)
+        kinds = {t: _classify_kind(c.cell_id, blob, t,
+                                   matched_in_artifact=t in found_set, cited=True) for t in nums}
+        for k in kinds.values():
+            kind_counts[k] = kind_counts.get(k, 0) + 1
+        n_extracted += len(nums)
         # Group size = how many of THIS cell's resolved citations live in the decoy pool, so the decoy
         # haystack is the same size as the cited one. See _decoy_full_match_count.
         group_size = max(1, sum(1 for a in resolved if a in _pool_set))
@@ -349,6 +498,7 @@ def audit() -> dict:
             "status": "CANDIDATE_DRIFT" if missing else "ALL_CITED_NUMBERS_PRESENT",
             "cited": sorted(resolved), "unresolved_citations": sorted(set(arts) - set(resolved)),
             "checked": len(nums), "found": len(found), "candidate_drift": missing,
+            "number_kinds": kinds,
             "matched_only_after_rounding": rounded,
             "adjudicated_benign": in_code,
             # Does the citation do any work? See _decoy_full_match_count. `n_decoys` now carries the
@@ -362,6 +512,10 @@ def audit() -> dict:
 
     checked = sum(r["checked"] for r in rows)
     drift = sum(len(r["candidate_drift"]) for r in rows)
+    # Nothing may vanish through a typing bug. This is the invariant that makes a SHRINKING unverifiable
+    # count trustworthy: the residual got smaller because numbers were named, not because they were lost.
+    if sum(kind_counts.values()) != n_extracted:
+        raise AssertionError(f"per-kind counts {sum(kind_counts.values())} != extracted {n_extracted}")
     return {
         "schema": "contract-number-audit-v1",
         "analysis_date": datetime.date.today().isoformat(),
@@ -377,6 +531,22 @@ def audit() -> dict:
         # NOT enter n_numbers_checked / n_candidate_drift / verdict -- unchecked is not drift.
         "n_cells_low_discrimination": sum(1 for r in rows if r["discrimination"] == "LOW"),
         "cells_low_discrimination": sorted(r["cell_id"] for r in rows if r["discrimination"] == "LOW"),
+        # Provenance kinds. "Unverifiable" used to mean four things at once, which made 34 numbers read
+        # as 34 defects; it now means ONLY the residual that has no provenance of any kind.
+        "n_numbers_extracted": n_extracted,
+        "n_by_kind": dict(sorted(kind_counts.items())),
+        "kind_definitions": {
+            KIND_ARTIFACT: "present in a wiki/ artifact the prose cites",
+            KIND_STRUCTURAL: "pattern-typed non-measurement: a DOI prefix, or a kb/bp length",
+            KIND_EXTERNAL: "a published external reference value, not our measurement",
+            KIND_ENFORCED: "pinned by an exact-equality assert in the test suite, not by an artifact",
+            KIND_THRESHOLD: "a bar or cut-off, which has no artifact to live in",
+            KIND_SUPERSEDED: "recorded deliberately as the REJECTED value, so it is never quoted",
+            KIND_DRIFT: "cited but absent from the cited artifact -- the thing this audit looks for",
+            KIND_UNVERIFIABLE: "no provenance of any kind: an uncited measurement",
+        },
+        "n_cells_all_numbers_typed_no_citation": len(fully_typed),
+        "cells_all_numbers_typed_no_citation": sorted(fully_typed, key=lambda u: u["cell_id"]),
         "n_cells_with_numbers_but_no_citation": len(unverifiable),
         "n_numbers_unverifiable": sum(u["n_numbers"] for u in unverifiable),
         "cells_unverifiable": sorted(unverifiable, key=lambda u: u["cell_id"]),
@@ -406,6 +576,12 @@ def main(argv=None) -> int:
                   f"{', '.join(r['candidate_drift'])}")
     print(f"\n{rep['verdict']}  {rep['n_candidate_drift']}/{rep['n_numbers_checked']} numbers need "
           f"adjudication across {rep['n_cells_audited']} cells")
+    print(f"\nPROVENANCE KINDS over all {rep['n_numbers_extracted']} extracted numbers:")
+    for k, n in rep["n_by_kind"].items():
+        print(f"    {k:28} {n:4}   {rep['kind_definitions'][k]}")
+    if rep["cells_all_numbers_typed_no_citation"]:
+        print("  every number named (no citation needed): "
+              + ", ".join(u["cell_id"] for u in rep["cells_all_numbers_typed_no_citation"]))
     if rep["cells_unverifiable"]:
         print(f"COVERAGE: {rep['n_numbers_unverifiable']} number(s) in "
               f"{rep['n_cells_with_numbers_but_no_citation']} further cell(s) are UNVERIFIABLE here — "
