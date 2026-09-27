@@ -159,6 +159,33 @@ executor tasks.
   tier needs a substrate that genotypes CBD103/ASIP/TYRP1-bs directly (Embark/VGL panel or WGS), not
   imputed SNVs.
 
+## Contract-number audit — coverage defects + residuals (2026-09-27)
+
+`scripts/contract_number_audit.py` reports `NOTHING_TO_ADJUDICATE 0/176 across 19 cells`
+(`wiki/contract_number_audit_2026-09-27.json`). The first two items are KNOWN defects shipped alongside
+that verdict, so it is weaker than it reads. Triage of all 34 numbers:
+`wiki/contract_number_provenance_triage_2026-09-27.md`.
+
+- [ ] **[OPEN, user call] Boundary-guard the artifact-side matcher.** The prose side uses `DECIMAL_RE`
+  (`(?<![\w.])` / `(?![\d.])`); the artifact side is a raw substring test, so `2.1` matches inside `72.1`.
+  4 of the clean numbers rest on nothing else — phage `0.862` / `0.291` and salmserovar `0.900` are
+  legitimately derived, `finder:any:forward` `0.5115` is genuinely unresolved. Fixing it flips the verdict
+  to `ADJUDICATION_REQUIRED` with 4 candidates, which re-grades the standing trust surface — an authority
+  call, not an executor task.
+- [ ] **[OPEN] `DECIMAL_RE`'s `(?![\d.])` lookahead hides numbers before a sentence-final period.** The
+  lookahead exists to reject version strings like `1.2.3` and also skips 4 real numbers (cyp4f2 `0.8125`,
+  pointfinder `0.9967`, mlst `0.2694`, resfinder `0.7786`), so they are never checked at all. A 5th,
+  essentiality `0.580`, was hidden until a Step 4 citation displaced the period in front of it — which is
+  how this was found — and now checks clean. Narrowing it must be pinned by a test that still rejects a version string.
+- [ ] **[OPEN] 9 numbers in 3 cells remain `unverifiable`** — `pgx:human:cyp2d6`,
+  `typing:Streptococcus_pneumoniae:pneumoserotype`, `typing:human:pigment` cite no `wiki/` artifact. Each
+  needs either a citation whose decoy rate clears the bar, or an explicit kind.
+- [ ] **[OPEN] 6 cells are LOW-discrimination** (`finder:Escherichia_coli:pointfinder`, `pgx:human:cyp4f2`,
+  `pgx:human:slco1b1`, `pgx:human:ugt1a1`, `typing:Escherichia_coli:serotype`, `typing:Klebsiella:ktype`)
+  — their cited artifact's numbers appear in ≥50% of size-matched unrelated artifacts, so the citation
+  records provenance but verifies little. A more specific artifact would fix it; the grade bands
+  (HIGH <5%, LOW ≥50%) are asserted, not derived.
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.
