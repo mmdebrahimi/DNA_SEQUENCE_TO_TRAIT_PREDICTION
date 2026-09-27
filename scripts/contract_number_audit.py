@@ -106,41 +106,95 @@ def _load_artifact_text(rel: str) -> str | None:
     return raw
 
 
-_DECOY_SEED = 11        # fixed so the artifact is reproducible run to run
-_N_DECOYS = 10
+# Discrimination bands, as RATES against the full pool. BOTH are asserted, not derived -- say so rather
+# than implying a calibration that does not exist.
+#
+# The HIGH bar is NOT `rate == 0`, and that is a measured correction rather than a relaxation. Under the
+# old 10-artifact sample, 0-of-10 was the best OBSERVABLE outcome and several cells reached it. Against
+# the full ~600-trial pool, no cell in the registry reaches exactly zero -- not even
+# `typing:Salmonella:salmserovar`, which carries THIRTY measured figures and still has 1 of 119 five-file
+# haystacks containing all of them. A grade no cell can earn is not a grade, and collapsing everything
+# below 50% into MODERATE would file resfinder (1 of 602) beside phage (246 of 602). So HIGH is the
+# conventional 5%: the citation would have been falsified by more than 19 of every 20 alternatives.
+# The per-cell `decoy_match_rate` is reported regardless, so a reader is never limited to the band.
+_HIGH_RATE = 0.05
+_LOW_RATE = 0.50
 
 
-def _decoy_full_match_count(nums: list[str], own: set[str], pool: list[str], cache: dict) -> tuple[int, int]:
-    """How many UNRELATED artifacts also contain every one of this cell's numbers.
+def _grade(decoy_full: int, n_decoys: int, nums: list[str]) -> str:
+    if not n_decoys or not nums:
+        return "n/a"
+    rate = decoy_full / n_decoys
+    if rate < _HIGH_RATE:
+        return "HIGH"
+    if rate >= _LOW_RATE:
+        return "LOW"
+    return "MODERATE"
+
+
+def _cached_artifact(p: str, cache: dict) -> tuple[str | None, list[float]]:
+    if p not in cache:
+        t = _load_artifact_text(p)
+        cache[p] = (t, _artifact_numbers(t) if t else [])
+    return cache[p]
+
+
+def _decoy_full_match_count(nums: list[str], own: set[str], pool: list[str], cache: dict,
+                            group_size: int = 1) -> tuple[int, int]:
+    """How many UNRELATED artifact haystacks also contain every one of this cell's numbers.
 
     A citation only verifies a number if the number could have failed to match. This repo already
     learned that the hard way one level up: the audit once reached a clean 0/130 by tracing numbers to
     the package source, which accepted 12 of 12 RANDOMLY GENERATED numbers. The same vacuity applies to
     a cited artifact -- a cell whose figures are few and round (`0.3`, `0.94`, `14.0`) matches a numeric
     dense JSON about anything. So the decoys are the control: 0 full matches means the citation is
-    doing real work; most decoys matching means the cell is CHECKED but not meaningfully verified.
+    doing real work; a high match rate means the cell is CHECKED but not meaningfully verified.
+
+    DETERMINISTIC FULL-POOL SCAN, and the reason it is not a sample
+    --------------------------------------------------------------
+    This was a 10-artifact random sample with a fixed seed, and the sample was UNDERPOWERED to the point
+    of being wrong in both directions. Measured against the full pool: `typing:Klebsiella:ktype` is 308
+    of 602 (51%) where the sample said 5 of 10, and `essentiality:any:essentiality` matches 46 unrelated
+    artifacts where its sample said 0 of 10 -- which graded it HIGH, the strongest possible verdict, for
+    a set of seven numbers that a yeast benchmark, two TB baselines and a pigment run each fully contain.
+    A grade is the thing that says whether a citation verifies anything, so an underpowered grade is
+    worse than no grade. There is no seed here because there is no sampling: it scans the whole pool.
+
+    SIZE-MATCHED HAYSTACK, and the grouping rule
+    --------------------------------------------
+    The second defect in the sampled version: a cell citing N artifacts was scored against a haystack of
+    N concatenated files while each decoy was a SINGLE file. Bigger haystack, more numbers, easier full
+    match -- so multi-citation cells earned discrimination for free (a 33-file bundle scored 6/6 against
+    single-file decoys). Each decoy trial therefore concatenates `group_size` pool artifacts, taken as
+    CONSECUTIVE NON-OVERLAPPING groups over the sorted pool -- deterministic, no sampling. `group_size`
+    is the count of the cell's cited artifacts that are IN THE POOL (json), because the pool is what the
+    decoys are drawn from; a trailing partial group is dropped so every trial is exactly that size.
+    This grouping is a design choice with no measured optimum -- a different grouping could give a
+    different rate for a multi-citation cell -- so it is reported per cell rather than left implicit.
 
     Reported alongside drift, never folded into it -- low discrimination is weak evidence, not a defect.
     """
-    import random
-
     decoys = [p for p in pool if p not in own]
-    if not decoys or not nums:
+    n = max(1, group_size)
+    if len(decoys) < n or not nums:
         return 0, 0
-    k = min(_N_DECOYS, len(decoys))
-    picked = random.Random(_DECOY_SEED).sample(decoys, k)
-    full = 0
-    for p in picked:
-        if p not in cache:
-            t = _load_artifact_text(p)
-            cache[p] = (t, _artifact_numbers(t) if t else [])
-        t, an = cache[p]
-        if t is None:
+    full, trials = 0, 0
+    for i in range(0, len(decoys) - n + 1, n):
+        texts, art_nums = [], []
+        for p in decoys[i:i + n]:
+            t, a = _cached_artifact(p, cache)
+            if t is None:
+                continue
+            texts.append(t)
+            art_nums.extend(a)
+        if not texts:
             continue
-        if all(any(v in t for v in _number_variants(x)) or _matches_by_rounding(x, an) is not None
+        trials += 1
+        hay = "\n".join(texts)
+        if all(any(v in hay for v in _number_variants(x)) or _matches_by_rounding(x, art_nums) is not None
                for x in nums):
             full += 1
-    return full, k
+    return full, trials
 
 
 def _artifact_numbers(text: str) -> list[float]:
@@ -231,8 +285,19 @@ def audit() -> dict:
     # holding the numbers) drops out entirely, so its measured purity figures are unverifiable here.
     # Reported, never counted as drift -- an uncited number is unchecked, not wrong.
     unverifiable = []
+    # The pool EXCLUDES this script's own dated outputs, and that is not tidiness -- it is the difference
+    # between a control and a circular one. `main()` writes wiki/contract_number_audit_<date>.json into the
+    # very directory the pool is globbed from, and that artifact RECORDS THE NUMBER TOKENS it checked
+    # (`cells_unverifiable[].numbers`, `matched_only_after_rounding`, `candidate_drift`). So every accrued
+    # run is a decoy guaranteed to contain the numbers under test. Caught by measurement, not by reading:
+    # `finder:any:forward` moved 74/300 -> 75/300 between two consecutive runs, the second run having
+    # inherited the first run's artifact. Left in, the grades would also drift downward every run day.
     _decoy_pool = sorted(p.relative_to(REPO).as_posix()
-                         for p in (REPO / "wiki").glob("*.json"))
+                         for p in (REPO / "wiki").glob("*.json")
+                         if not p.name.startswith("contract_number_audit_"))
+    _pool_set = set(_decoy_pool)
+    # One shared cache across every cell: the full-pool scan is dominated by reading the corpus once
+    # (~15 MB of json), not by the per-cell comparison, so sharing it is what makes the control affordable.
     _art_cache: dict = {}
     for c in cells():
         blob = " ".join(str(getattr(c, f, "") or "") for f in PROSE_FIELDS)
@@ -274,7 +339,11 @@ def audit() -> dict:
                 in_code.append({"number": tok, "why": ADJUDICATED_BENIGN[key]})
             else:
                 missing.append(tok)
-        decoy_full, n_decoys = _decoy_full_match_count(nums, set(resolved), _decoy_pool, _art_cache)
+        # Group size = how many of THIS cell's resolved citations live in the decoy pool, so the decoy
+        # haystack is the same size as the cited one. See _decoy_full_match_count.
+        group_size = max(1, sum(1 for a in resolved if a in _pool_set))
+        decoy_full, n_decoys = _decoy_full_match_count(nums, set(resolved), _decoy_pool, _art_cache,
+                                                       group_size=group_size)
         rows.append({
             "cell_id": c.cell_id,
             "status": "CANDIDATE_DRIFT" if missing else "ALL_CITED_NUMBERS_PRESENT",
@@ -282,11 +351,13 @@ def audit() -> dict:
             "checked": len(nums), "found": len(found), "candidate_drift": missing,
             "matched_only_after_rounding": rounded,
             "adjudicated_benign": in_code,
-            # Does the citation do any work? See _decoy_full_match_count.
+            # Does the citation do any work? See _decoy_full_match_count. `n_decoys` now carries the
+            # number of full-pool trials (hundreds), not a sample size of 10; the field names are kept so
+            # existing consumers and the cells_low_discrimination summary keep working.
             "decoy_full_match": decoy_full, "n_decoys": n_decoys,
-            "discrimination": ("n/a" if not n_decoys or not nums else
-                               "HIGH" if decoy_full == 0 else
-                               "LOW" if decoy_full * 2 >= n_decoys else "MODERATE"),
+            "decoy_match_rate": round(decoy_full / n_decoys, 4) if n_decoys else None,
+            "decoy_group_size": group_size,
+            "discrimination": _grade(decoy_full, n_decoys, nums),
         })
 
     checked = sum(r["checked"] for r in rows)
@@ -326,7 +397,8 @@ def main(argv=None) -> int:
         flag = "" if r["status"] == "ALL_CITED_NUMBERS_PRESENT" else f"  <- {r['status']}"
         disc = "" if r["discrimination"] in ("HIGH", "n/a") else \
                f"  [discrimination={r['discrimination']}: {r['decoy_full_match']}/{r['n_decoys']} " \
-               f"unrelated artifacts also match all its numbers]"
+               f"({r['decoy_match_rate'] * 100:.0f}%) unrelated haystacks of " \
+               f"{r['decoy_group_size']} also match all its numbers]"
         print(f"{r['cell_id']:42} checked={r['checked']:3} found={r['found']:3} "
               f"drift={len(r['candidate_drift'])}{flag}{disc}")
         if r["candidate_drift"]:

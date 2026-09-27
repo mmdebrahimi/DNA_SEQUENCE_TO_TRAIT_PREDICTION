@@ -25,6 +25,21 @@ from scripts.contract_number_audit import (
 REPO = Path(__file__).resolve().parent.parent
 ARTIFACT = REPO / "wiki" / "contract_number_audit_2026-09-24.json"
 
+_REPORT_CACHE: dict = {}
+
+
+def _cached_report() -> dict:
+    """One shared report for the read-only assertions.
+
+    Step 1 replaced a 10-artifact sample with a full-pool scan, which costs ~13 s per `audit()` call.
+    Every test calling it independently put this one file at 7m20s. The report is never mutated here, so
+    the tests that merely assert ON it share one. Tests that are ABOUT re-running -- determinism, and the
+    circularity guard -- deliberately call `audit()` directly instead.
+    """
+    if "rep" not in _REPORT_CACHE:
+        _REPORT_CACHE["rep"] = audit()
+    return _REPORT_CACHE["rep"]
+
 
 # --- citation parsing ----------------------------------------------------------------------------
 
@@ -111,7 +126,7 @@ def test_adjudicated_benign_is_small_and_every_entry_has_a_reason():
 
 def test_live_audit_is_clean_and_non_trivial():
     """Clean AND actually checking something -- a zero over zero checks is not a result."""
-    rep = audit()
+    rep = _cached_report()
     assert rep["n_numbers_checked"] >= 100
     assert rep["n_cells_audited"] >= 10
     assert rep["n_candidate_drift"] == 0, rep["verdict"]
@@ -153,7 +168,7 @@ def test_committed_artifact_records_its_own_posture():
 # fraction. It is a fraction, and the skipped set is LARGER than the checked one.
 
 def test_coverage_block_is_present_and_internally_consistent():
-    rep = audit()
+    rep = _cached_report()
     assert rep["n_numbers_unverifiable"] == sum(u["n_numbers"] for u in rep["cells_unverifiable"])
     assert rep["n_cells_with_numbers_but_no_citation"] == len(rep["cells_unverifiable"])
     for u in rep["cells_unverifiable"]:
@@ -163,14 +178,14 @@ def test_coverage_block_is_present_and_internally_consistent():
 
 def test_coverage_is_non_trivial_so_the_disclosure_is_not_decoration():
     """If nothing were excluded the block would be noise; the point is that plenty is."""
-    rep = audit()
+    rep = _cached_report()
     assert rep["n_cells_with_numbers_but_no_citation"] > 0
     assert rep["n_numbers_unverifiable"] > 0
 
 
 def test_unverifiable_cells_are_disjoint_from_audited_cells():
     """A cell is either checked against an artifact or reported as uncheckable — never both."""
-    rep = audit()
+    rep = _cached_report()
     audited = {r["cell_id"] for r in rep["cells"]}
     skipped = {u["cell_id"] for u in rep["cells_unverifiable"]}
     assert not (audited & skipped)
@@ -179,7 +194,7 @@ def test_unverifiable_cells_are_disjoint_from_audited_cells():
 def test_coverage_does_not_contaminate_the_drift_verdict():
     """Unchecked is not wrong. The verdict must key on drift alone, or an uncited number would read
     as a defect and the audit would stop being a triage funnel."""
-    rep = audit()
+    rep = _cached_report()
     expected = "NOTHING_TO_ADJUDICATE" if rep["n_candidate_drift"] == 0 else "ADJUDICATION_REQUIRED"
     assert rep["verdict"] == expected
     assert rep["n_numbers_checked"] == sum(r["checked"] for r in rep["cells"])
@@ -207,7 +222,7 @@ def test_an_uncited_cell_whose_only_numbers_are_adjudicated_bars_is_not_flagged(
 # a numeric-dense JSON about anything, so "found" alone cannot distinguish provenance from luck.
 
 def test_discrimination_is_reported_with_a_legal_value():
-    rep = audit()
+    rep = _cached_report()
     for r in rep["cells"]:
         assert r["discrimination"] in {"HIGH", "MODERATE", "LOW", "n/a"}
         assert 0 <= r["decoy_full_match"] <= r["n_decoys"]
@@ -218,25 +233,35 @@ def test_discrimination_is_reported_with_a_legal_value():
 def test_discrimination_actually_discriminates():
     """Uniformly HIGH would mean the decoys are too weak to ever match; uniformly LOW would mean the
     control is broken. The signal is only useful if it separates cells."""
-    rep = audit()
+    rep = _cached_report()
     seen = {r["discrimination"] for r in rep["cells"] if r["checked"]}
     assert "HIGH" in seen, "no cell resists decoys — the control is not exercised"
     assert len(seen) > 1, f"discrimination is constant at {seen} — it separates nothing"
 
 
 def test_a_cell_with_many_distinctive_numbers_resists_decoys():
-    """Concrete anchor: salmserovar carries 30 measured figures; an unrelated artifact should not
-    contain all of them. If this ever fails, the decoy match has become too permissive."""
-    rep = audit()
+    """Concrete anchor: salmserovar carries 30 measured figures; unrelated artifacts should almost never
+    contain all of them. If this ever fails, the decoy match has become too permissive.
+
+    EDITED when the 10-artifact sample was replaced by the full-pool scan, and the reason is a
+    measurement, not a convenience. This asserted `decoy_full_match == 0`, which was reachable only
+    because 10 draws is too few to find the coincidence: against ~600 trials, salmserovar -- the MOST
+    distinctive cell in the registry -- still has 1 five-file haystack containing all 30 of its numbers.
+    Exactly-zero is therefore not a property any cell has, so the assertion is now on the RATE, which is
+    what the grade is defined on. Kept deliberately tight (1%) so it still fails if matching loosens.
+    """
+    rep = _cached_report()
     rows = {r["cell_id"]: r for r in rep["cells"]}
     r = rows["typing:Salmonella:salmserovar"]
-    assert r["checked"] >= 20 and r["decoy_full_match"] == 0
+    assert r["checked"] >= 20
+    assert r["decoy_match_rate"] < 0.01, r["decoy_match_rate"]
+    assert r["discrimination"] == "HIGH"
 
 
 def test_low_discrimination_does_not_count_as_drift():
     """Weak evidence is not a defect. A cell can be clean AND poorly verified, and the verdict must
     key on drift alone or the audit stops being a triage funnel."""
-    rep = audit()
+    rep = _cached_report()
     assert rep["verdict"] == ("NOTHING_TO_ADJUDICATE" if rep["n_candidate_drift"] == 0
                              else "ADJUDICATION_REQUIRED")
     low = [r for r in rep["cells"] if r["discrimination"] == "LOW"]
@@ -247,7 +272,144 @@ def test_low_discrimination_does_not_count_as_drift():
 
 
 def test_discrimination_is_deterministic():
-    """Fixed decoy seed — a report whose numbers move run to run is not auditable."""
+    """A report whose numbers move run to run is not auditable. Determinism now comes from scanning the
+    WHOLE pool rather than from a fixed seed -- docstring corrected; the assertion is unchanged."""
     a, b = audit(), audit()
     assert [(r["cell_id"], r["decoy_full_match"]) for r in a["cells"]] == \
            [(r["cell_id"], r["decoy_full_match"]) for r in b["cells"]]
+
+
+# --- Step 1: the control is a deterministic, size-matched, FULL-POOL scan -------------------------
+# The 10-artifact sample it replaced was underpowered to the point of being wrong in both directions.
+# These tests exist to make that un-reintroducible.
+
+def test_the_control_has_no_seed_and_no_sample_size():
+    """A seed is only needed by a sampler. Their absence is the structural proof this is a full scan."""
+    import scripts.contract_number_audit as mod
+    assert not hasattr(mod, "_DECOY_SEED")
+    assert not hasattr(mod, "_N_DECOYS")
+    assert "random" not in mod._decoy_full_match_count.__code__.co_names
+
+
+def test_every_graded_cell_is_compared_against_the_whole_pool():
+    """`n_decoys` must be the pool size (hundreds), not 10. A cell graded off 10 trials is the defect."""
+    rep = _cached_report()
+    graded = [r for r in rep["cells"] if r["checked"] and r["n_decoys"]]
+    assert graded
+    for r in graded:
+        # grp N means the pool is consumed in N-sized groups, so trials ~= pool/N
+        assert r["n_decoys"] * r["decoy_group_size"] >= 100, r
+
+
+def test_full_pool_anchors_measured_before_implementation():
+    """Anchors measured BEFORE this control was written, so a mismatch means the code is wrong.
+
+    The planning measurement was 6/602, 1/602, 308/602, 355/602. The denominators are 599 here and two
+    counts are one lower, because the pool now EXCLUDES this script's own accrued outputs -- artifacts
+    that list the very numbers under test. That exclusion is the fix in
+    `test_the_pool_excludes_the_audits_own_output`; the rates are unchanged to three decimals.
+    """
+    rep = _cached_report()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    for cell_id, expect in (("typing:bacteria:mlst", 6),
+                            ("finder:bacteria:resfinder", 1),
+                            ("typing:Klebsiella:ktype", 307),
+                            ("finder:Escherichia_coli:pointfinder", 354)):
+        assert rows[cell_id]["decoy_full_match"] == expect, (cell_id, rows[cell_id])
+        assert rows[cell_id]["n_decoys"] == 599, (cell_id, rows[cell_id])
+
+
+def test_the_pool_excludes_the_audits_own_output():
+    """Circularity guard. `main()` writes wiki/contract_number_audit_<date>.json, and that artifact
+    RECORDS the number tokens it checked -- so an accrued run is a decoy guaranteed to match. Found by
+    measurement: `finder:any:forward` moved 74/300 -> 75/300 between two runs, the second having
+    inherited the first's artifact."""
+    import scripts.contract_number_audit as mod
+    own = sorted(p.name for p in (REPO / "wiki").glob("contract_number_audit_*.json"))
+    assert own, "no accrued audit artifacts — this guard would be vacuous"
+    rep = mod.audit()
+    # every graded cell's trial count must be consistent with a pool that dropped those files
+    pool_all = len(list((REPO / "wiki").glob("*.json")))
+    for r in rep["cells"]:
+        if r["checked"] and r["decoy_group_size"] == 1:
+            assert r["n_decoys"] <= pool_all - len(own), (r["cell_id"], r["n_decoys"], pool_all, len(own))
+
+
+def test_essentiality_does_not_grade_high_the_case_that_exposed_the_underpowering():
+    """THE load-bearing non-vacuity test of Step 1.
+
+    `essentiality:any:essentiality`'s seven numbers matched 0 of 10 sampled artifacts, which graded HIGH
+    -- the strongest verdict available -- while against the full pool 45 of 600 completely unrelated
+    artifacts contain ALL seven (a yeast benchmark, two TB baselines, staleness snapshots, a pigment run).
+    If this ever grades HIGH again, the control has gone back to being underpowered.
+
+    NOTE the plan for this step predicted LOW; measured, it is MODERATE at 7.5%. The substantive claim is
+    "not HIGH", which is what is asserted -- bending the band to make the predicted word come true is the
+    failure mode this repo has recorded twice as a mis-specified bar.
+    """
+    import scripts.contract_number_audit as mod
+    from dna_decode.data.cell_registry import cells
+
+    pool = sorted(p.relative_to(REPO).as_posix() for p in (REPO / "wiki").glob("*.json")
+                  if not p.name.startswith("contract_number_audit_"))
+    cell = next(c for c in cells() if c.cell_id == "essentiality:any:essentiality")
+    blob = " ".join(str(getattr(cell, f, "") or "") for f in mod.PROSE_FIELDS)
+    nums = [t for t in dict.fromkeys(DECIMAL_RE.findall(blob))
+            if not mod.NON_MEASUREMENT.match(t) and (cell.cell_id, t) not in ADJUDICATED_BENIGN]
+    assert len(nums) == 7, nums
+    full, n = mod._decoy_full_match_count(nums, set(), pool, {}, group_size=1)
+    assert n >= 500
+    assert full >= 20, f"only {full} decoys matched — has the pool or the matcher changed?"
+    assert mod._grade(full, n, nums) != "HIGH"
+
+
+def test_size_matching_removes_the_multi_citation_haystack_advantage():
+    """The second defect: a cell citing N artifacts was scored against N concatenated files while each
+    decoy was ONE file, so multi-citation cells earned discrimination for free (a 33-file bundle scored
+    6/6 against single-file decoys). A single round number must not look distinctive just because its
+    own haystack is big."""
+    import scripts.contract_number_audit as mod
+
+    pool = sorted(p.relative_to(REPO).as_posix() for p in (REPO / "wiki").glob("*.json")
+                  if not p.name.startswith("contract_number_audit_"))
+    nums = ["1.0"]
+    f1, n1 = mod._decoy_full_match_count(nums, set(), pool, {}, group_size=1)
+    f8, n8 = mod._decoy_full_match_count(nums, set(), pool, {}, group_size=8)
+    assert n8 < n1, "grouping must consume the pool in N-sized blocks"
+    # a bigger haystack can only ever make a full match EASIER, which is exactly the advantage being
+    # neutralised: the grade for a many-citation cell is computed against equally-big decoys.
+    assert f8 / n8 >= f1 / n1
+    assert mod._grade(f8, n8, nums) != "HIGH", "one round number must not grade HIGH at any group size"
+
+
+def test_grouping_is_non_overlapping_and_drops_a_partial_tail():
+    """Every trial must be exactly group_size files, or the control compares unequal haystacks."""
+    import scripts.contract_number_audit as mod
+    pool = [f"wiki/p{i}.json" for i in range(10)]
+    cache = {p: (f"filler {i}", [float(i)]) for i, p in enumerate(pool)}
+    _, n = mod._decoy_full_match_count(["9.99"], set(), pool, cache, group_size=3)
+    assert n == 3, n          # 10 // 3 == 3 trials; the trailing single file is dropped
+    _, n1 = mod._decoy_full_match_count(["9.99"], set(), pool, cache, group_size=1)
+    assert n1 == 10
+
+
+def test_step1_leaves_verdict_and_drift_untouched():
+    """A grading change must never read as drift. Baseline recorded at bcfcbc2 before any edit."""
+    rep = _cached_report()
+    assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
+    assert rep["n_candidate_drift"] == 0
+    assert rep["n_numbers_checked"] == 157
+    assert rep["n_cells_audited"] == 16
+
+
+def test_the_full_pool_control_reclassified_cells_the_sample_had_flattered():
+    """The point of Step 1, pinned so a silent regression to a weaker control is visible: the sample
+    reported 2 LOW cells, the full pool reports 6. Three of them (ktype 51%, pointfinder 59%, slco1b1
+    65%) were graded MODERATE or better by 10 draws."""
+    rep = _cached_report()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    assert rep["n_cells_low_discrimination"] >= 6
+    for cell_id in ("typing:Klebsiella:ktype", "finder:Escherichia_coli:pointfinder",
+                    "pgx:human:slco1b1"):
+        assert rows[cell_id]["discrimination"] == "LOW", (cell_id, rows[cell_id])
+        assert rows[cell_id]["decoy_match_rate"] >= 0.50

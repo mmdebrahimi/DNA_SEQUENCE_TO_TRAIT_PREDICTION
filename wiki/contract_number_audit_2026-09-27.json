@@ -8,9 +8,13 @@
   "n_candidate_drift": 0,
   "hit_rate": 0.0,
   "verdict": "NOTHING_TO_ADJUDICATE",
-  "n_cells_low_discrimination": 2,
+  "n_cells_low_discrimination": 6,
   "cells_low_discrimination": [
+    "finder:Escherichia_coli:pointfinder",
+    "pgx:human:cyp4f2",
+    "pgx:human:slco1b1",
     "pgx:human:ugt1a1",
+    "typing:Escherichia_coli:serotype",
     "typing:Klebsiella:ktype"
   ],
   "n_cells_with_numbers_but_no_citation": 10,
@@ -138,8 +142,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 8,
-      "n_decoys": 10,
+      "decoy_full_match": 246,
+      "n_decoys": 300,
+      "decoy_match_rate": 0.82,
+      "decoy_group_size": 2,
       "discrimination": "LOW"
     },
     {
@@ -160,9 +166,11 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 1,
-      "n_decoys": 10,
-      "discrimination": "MODERATE"
+      "decoy_full_match": 199,
+      "n_decoys": 300,
+      "decoy_match_rate": 0.6633,
+      "decoy_group_size": 2,
+      "discrimination": "LOW"
     },
     {
       "cell_id": "pgx:human:slco1b1",
@@ -181,9 +189,11 @@
         "0.398": 0.3977
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 3,
-      "n_decoys": 10,
-      "discrimination": "MODERATE"
+      "decoy_full_match": 395,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.6561,
+      "decoy_group_size": 1,
+      "discrimination": "LOW"
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -198,8 +208,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 5,
-      "n_decoys": 10,
+      "decoy_full_match": 308,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.5116,
+      "decoy_group_size": 1,
       "discrimination": "LOW"
     },
     {
@@ -215,9 +227,11 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 3,
-      "n_decoys": 10,
-      "discrimination": "MODERATE"
+      "decoy_full_match": 355,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.5897,
+      "decoy_group_size": 1,
+      "discrimination": "LOW"
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -232,8 +246,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 6,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.01,
+      "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
     {
@@ -249,8 +265,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 1,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.0017,
+      "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
     {
@@ -267,8 +285,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 2,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0033,
+      "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
     {
@@ -290,8 +310,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 1,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0017,
+      "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
     {
@@ -306,8 +328,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 8,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0133,
+      "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
     {
@@ -323,8 +347,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 7,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.0116,
+      "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
     {
@@ -342,8 +368,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 1,
-      "n_decoys": 10,
+      "decoy_full_match": 246,
+      "n_decoys": 602,
+      "decoy_match_rate": 0.4086,
+      "decoy_group_size": 1,
       "discrimination": "MODERATE"
     },
     {
@@ -363,6 +391,8 @@
       "adjudicated_benign": [],
       "decoy_full_match": 0,
       "n_decoys": 0,
+      "decoy_match_rate": null,
+      "decoy_group_size": 1,
       "discrimination": "n/a"
     },
     {
@@ -384,9 +414,11 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
-      "discrimination": "HIGH"
+      "decoy_full_match": 75,
+      "n_decoys": 300,
+      "decoy_match_rate": 0.25,
+      "decoy_group_size": 2,
+      "discrimination": "MODERATE"
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -409,8 +441,10 @@
       "candidate_drift": [],
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 0,
-      "n_decoys": 10,
+      "decoy_full_match": 1,
+      "n_decoys": 119,
+      "decoy_match_rate": 0.0084,
+      "decoy_group_size": 5,
       "discrimination": "HIGH"
     },
     {
@@ -433,9 +467,11 @@
           "why": "not a measurement: the project's own source-diversity BAR, defined in code as scripts/source_diverse_validate.MAX_SOURCE_SHARE. A threshold has no artifact to live in."
         }
       ],
-      "decoy_full_match": 3,
-      "n_decoys": 10,
-      "discrimination": "MODERATE"
+      "decoy_full_match": 131,
+      "n_decoys": 200,
+      "decoy_match_rate": 0.655,
+      "decoy_group_size": 3,
+      "discrimination": "LOW"
     }
   ]
 }
