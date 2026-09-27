@@ -566,3 +566,14 @@
 **Status:** candidate
 
 ---
+## [plan_file: Contract_Number_Provenance_Sound_Decoy_Control_Typed_Provenance_Kinds_Plan/] 2026-09-27
+**Summary:** Make the standing contract-number audit's clean verdict mean something: replace an underpowered random decoy sample with a deterministic full-pool control, then type the 34 unverifiable numbers by provenance kind instead of citing them blind.
+**Key decisions:**
+- The decoy control shipped in `42ffe1f` is UNDERPOWERED and its grades are not trustworthy -- `essentiality:any:essentiality`'s seven numbers match 7/7 against at least six completely unrelated artifacts while the k=10 sample reported 0/10, so a `0/10` grade does not mean "no decoy matches"; an underpowered grade is worse than no grade, which is why Step 1 comes first.
+- Second confound in the same function: a cell citing N artifacts is scored against a haystack of N concatenated files while each decoy is a single file, so multi-citation cells get inflated discrimination for free. Fixed by size-matching the haystack via consecutive non-overlapping N-sized groups over the sorted pool -- deterministic, no sampling.
+- The 34 unverifiable numbers are NOT one class and must not be treated as 34 defects: four kinds (real measurement with artifact / enforced-by-test with no artifact by design / external reference value that no artifact of ours should carry / structural non-measurement the extractor mis-captures -- a Zenodo DOI prefix `10.5281`, kb lengths `5.1` and `4.6`).
+- `ADJUDICATED_BENIGN` cannot absorb the last two kinds -- it holds 1 entry and a test pins `len(...) <= 5`; growing it per-number would repeat the hand-enumerated-exclusion-list trap this repo has hit five times. Fix is a small number of typed patterns plus a per-number provenance kind.
+- Fully sequential by design, not by accident: Steps 1-2 edit the same two files and Step 4 edits the live evidence surface, matching the HIGH-salience prior decision on `[plan_file: Oxford_Cohort_External_Revalidation_Plan/technical-plan.md]` that forced sequential mode for contract-bearing files.
+**Status:** candidate
+
+---
