@@ -356,7 +356,10 @@ def test_essentiality_does_not_grade_high_the_case_that_exposed_the_underpowerin
     blob = " ".join(str(getattr(cell, f, "") or "") for f in mod.PROSE_FIELDS)
     nums = [t for t in dict.fromkeys(DECIMAL_RE.findall(blob))
             if not mod.NON_MEASUREMENT.match(t) and (cell.cell_id, t) not in ADJUDICATED_BENIGN]
-    assert len(nums) == 7, nums
+    # 8, not the 7 of the original measurement: Step 4's citation placement moved a sentence-final
+    # period off `AUROC 0.580`, which DECIMAL_RE's (?![\d.]) lookahead had been hiding. The figure is
+    # 44/600 either way -- adding a number can only make a full match harder, and it barely moved.
+    assert len(nums) == 8, nums
     full, n = mod._decoy_full_match_count(nums, set(), pool, {}, group_size=1)
     assert n >= 500
     assert full >= 20, f"only {full} decoys matched — has the pool or the matcher changed?"
@@ -398,8 +401,8 @@ def test_step1_leaves_verdict_and_drift_untouched():
     rep = _cached_report()
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
-    assert rep["n_numbers_checked"] == 157
-    assert rep["n_cells_audited"] == 16
+    assert rep["n_numbers_checked"] == 176
+    assert rep["n_cells_audited"] == 19
 
 
 # --- Step 2: provenance kinds ---------------------------------------------------------------------
@@ -447,7 +450,7 @@ def test_per_kind_counts_sum_to_every_extracted_number():
     this also pins that the guard is reachable."""
     rep = _cached_report()
     assert sum(rep["n_by_kind"].values()) == rep["n_numbers_extracted"]
-    assert rep["n_numbers_extracted"] == 191
+    assert rep["n_numbers_extracted"] == 192
     assert set(rep["n_by_kind"]) <= set(rep["kind_definitions"])
 
 
@@ -457,16 +460,19 @@ def test_the_kind_tally_reconciles_with_the_cited_and_uncited_halves():
     uncited = sum(len(u["kinds"]) for u in rep["cells_unverifiable"]) \
         + sum(len(u["kinds"]) for u in rep["cells_all_numbers_typed_no_citation"])
     assert cited + uncited == rep["n_numbers_extracted"], (cited, uncited)
-    assert cited == rep["n_numbers_checked"] == 157
+    assert cited == rep["n_numbers_checked"] == 176
 
 
 def test_unverifiable_now_means_only_the_residual():
-    """It fell 34 -> 24 because six numbers were named: three structural (a Zenodo DOI prefix and two
-    kb lengths), two enforced by an exact-equality test assert, one external reference value."""
+    """34 -> 24 in Step 2, because six numbers were NAMED: three structural (a Zenodo DOI prefix and
+    two kb lengths), two enforced by an exact-equality test assert, one external reference value.
+    Then 24 -> 9 in Step 4, because three cells gained the artifact that actually holds their numbers
+    (kleb 3 + essentiality 7 + hla b5701 5 = 15). The nine that remain are the two vacuous-citation
+    cells (cyp2d6, pigment) and pneumoserotype, whose ~2.1% no-call rate is derived."""
     rep = _cached_report()
-    assert rep["n_by_kind"]["unverifiable"] == 24
-    assert rep["n_numbers_unverifiable"] == 24
-    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == 24
+    assert rep["n_by_kind"]["unverifiable"] == 9
+    assert rep["n_numbers_unverifiable"] == 9
+    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == 9
     for u in rep["cells_unverifiable"]:
         assert all(k == "unverifiable" for k in
                    (u["kinds"][t] for t in u["numbers"])), u["cell_id"]
@@ -539,7 +545,56 @@ def test_step2_leaves_verdict_and_drift_untouched():
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
     assert rep["n_by_kind"].get("candidate-drift", 0) == 0
-    assert rep["n_numbers_checked"] == 157
+    assert rep["n_numbers_checked"] == 176
+
+
+# --- Step 4: only the citations the fixed rule admitted --------------------------------------------
+
+def test_the_three_admitted_citations_resolve_and_carry_no_drift():
+    """Step 3's rule: cite only when the artifact resolves AND every number is present AND full-pool
+    discrimination beats LOW. Three cells qualified; each must stay clean."""
+    rep = _cached_report()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    for cell_id, artifact in (
+        ("typing:klebsiella:kleb", "wiki/klebsiella_topk_ksweep_2026-07-25.json"),
+        ("essentiality:any:essentiality", "wiki/essentiality_e3_human_2026-07-28.json"),
+        ("hla:human:b5701", "wiki/hla_validation_2026-07-06.md"),
+    ):
+        r = rows[cell_id]
+        assert artifact in r["cited"], (cell_id, r["cited"])
+        assert r["candidate_drift"] == [], (cell_id, r["candidate_drift"])
+        assert r["unresolved_citations"] == [], (cell_id, r["unresolved_citations"])
+        assert r["discrimination"] != "LOW", (cell_id, r["discrimination"], r["decoy_match_rate"])
+
+
+def test_the_one_strong_citation_is_the_klebsiella_one():
+    """kleb is the only admitted cell whose citation genuinely could have failed: 8 of 599 unrelated
+    haystacks contain its number set. The other two are MODERATE and are recorded as weak."""
+    rep = _cached_report()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    assert rows["typing:klebsiella:kleb"]["discrimination"] == "HIGH"
+    assert rows["typing:klebsiella:kleb"]["decoy_match_rate"] < 0.05
+
+
+def test_the_cells_the_rule_refused_still_have_no_citation():
+    """Refusals are the point. cyp2d6 and pigment are LOW-discrimination by measurement (two numbers,
+    one of them 1.0, which 730+ wiki files contain); pneumoserotype's ~2.1% no-call rate is DERIVED, so
+    citing its cohort artifact would manufacture an adjudication item out of a correct claim."""
+    rep = _cached_report()
+    refused = {u["cell_id"] for u in rep["cells_unverifiable"]}
+    assert refused == {"pgx:human:cyp2d6", "typing:human:pigment",
+                       "typing:Streptococcus_pneumoniae:pneumoserotype"}, refused
+    cited = {r["cell_id"] for r in rep["cells"]}
+    assert not (refused & cited)
+
+
+def test_step4_raised_coverage_without_creating_drift():
+    """The whole point: more numbers verified, nothing newly flagged."""
+    rep = _cached_report()
+    assert rep["n_cells_audited"] == 19          # was 16
+    assert rep["n_numbers_unverifiable"] == 9    # was 24 after Step 2, 34 before Step 2
+    assert rep["n_candidate_drift"] == 0
+    assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
 
 
 def test_the_full_pool_control_reclassified_cells_the_sample_had_flattered():

@@ -1345,7 +1345,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         claim_status="in_distribution_dpotropisearch_prophage_lca_labels",
         validation_slice=(
             "clonality-corrected leave-one-out (greedy-rep @0.90) on DpoTropiSearch depolymerase domains: "
-            "top-1 ~0.45 / top-5 ~0.60 over 147-165 KL-types, lift +0.49 over a 0.10 prior null; the paradigm "
+            "top-1 ~0.45 / top-5 ~0.60 over 147-165 KL-types, lift +0.49 over a 0.10 prior null "
+            "(wiki/klebsiella_topk_ksweep_2026-07-25.{md,json}); the paradigm "
             "GENERALIZES cross-organism on modular depolymerase domains (harder problem than E. coli receptors, "
             "higher number). In-distribution (prophage-LCA labels), NOT independent wet-lab"),
         label_provenance=(
@@ -1372,7 +1373,9 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "E. coli AUROC 0.695 genome-wide vs the Goodall 2018 mBio TraDIS gold-standard (base rate 9.3%, "
             "sens 0.373 / spec 0.984 -- high-precision, conservative-recall); composition matches the known "
             "essentialome (208/4318, translation/envelope/replication-dominated). Cross-organism transfer to "
-            "human (BAGEL CEG2/NEG) AUROC 0.580. The learned E3 complement lifts it (E. coli 0.795 / human 0.911)"),
+            "human (BAGEL CEG2/NEG) AUROC 0.580 (wiki/essentiality_report_card.json). The learned E3 "
+            "complement lifts it (E. coli 0.795 wiki/essentiality_e3_learned_2026-07-28.json / "
+            "human 0.911 wiki/essentiality_e3_human_2026-07-28.json)"),
         label_provenance=(
             "gold-standard essentiality: Goodall 2018 mBio Table S1 (E. coli TraDIS genome-wide, CC-BY) + "
             "BAGEL CEGv2/NEGv1 (human core-essential/non-essential reference, Hart lab). Free, independent screens"),
@@ -1751,7 +1754,10 @@ def _hla_contracts() -> list[CellContract]:
             claim_status="tag_snp_ld_proxy_validated_vs_1000g_hla_truth",
             validation_slice=("sample-level concordance vs the free 1000G HLA truth (20140702_hla_diversity, "
                               "n=1103): sens 0.979 / spec 0.992 / PPV 0.855 — the deployed clinical abacavir "
-                              "screen (rs2395029), independently measured"),
+                              "screen (rs2395029), independently measured "
+                              "(wiki/hla_validation_2026-07-06.md — the roll-up, which also carries the two "
+                              "demoted sibling tags; the per-allele hla_b5701_validation_2026-07-06.json does "
+                              "NOT contain the sibling figures quoted in demotion_rule)"),
             label_provenance="1000G HLA types (20140702_hla_diversity) join rs2395029 tag genotypes; CPIC abacavir guideline",
             abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
             falsifier_ref="scripts/hla_concordance.py", incoming_data_gate="n/a",

@@ -3,8 +3,8 @@
   "analysis_date": "2026-09-27",
   "posture": "TRIAGE FUNNEL, not an oracle -- a cited number may legitimately be derived, rounded, or describe a superseded run. Every hit needs adjudication; this script edits nothing.",
   "scope": "cells whose prose names a wiki/ artifact; decimal numbers only",
-  "n_cells_audited": 16,
-  "n_numbers_checked": 157,
+  "n_cells_audited": 19,
+  "n_numbers_checked": 176,
   "n_candidate_drift": 0,
   "hit_rate": 0.0,
   "verdict": "NOTHING_TO_ADJUDICATE",
@@ -17,15 +17,15 @@
     "typing:Escherichia_coli:serotype",
     "typing:Klebsiella:ktype"
   ],
-  "n_numbers_extracted": 191,
+  "n_numbers_extracted": 192,
   "n_by_kind": {
-    "artifact": 154,
+    "artifact": 170,
     "enforced-by-test": 2,
     "external-reference": 1,
     "structural-non-measurement": 5,
     "superseded-value": 1,
     "threshold": 4,
-    "unverifiable": 24
+    "unverifiable": 9
   },
   "kind_definitions": {
     "artifact": "present in a wiki/ artifact the prose cites",
@@ -67,53 +67,9 @@
       }
     }
   ],
-  "n_cells_with_numbers_but_no_citation": 6,
-  "n_numbers_unverifiable": 24,
+  "n_cells_with_numbers_but_no_citation": 3,
+  "n_numbers_unverifiable": 9,
   "cells_unverifiable": [
-    {
-      "cell_id": "essentiality:any:essentiality",
-      "n_numbers": 7,
-      "numbers": [
-        "0.695",
-        "9.3",
-        "0.373",
-        "0.984",
-        "0.795",
-        "0.911",
-        "0.37"
-      ],
-      "why": "prose cites no wiki/ artifact",
-      "kinds": {
-        "0.695": "unverifiable",
-        "9.3": "unverifiable",
-        "0.373": "unverifiable",
-        "0.984": "unverifiable",
-        "0.795": "unverifiable",
-        "0.911": "unverifiable",
-        "0.37": "unverifiable"
-      },
-      "n_typed_not_unverifiable": 0
-    },
-    {
-      "cell_id": "hla:human:b5701",
-      "n_numbers": 5,
-      "numbers": [
-        "0.979",
-        "0.992",
-        "0.855",
-        "0.61",
-        "0.0"
-      ],
-      "why": "prose cites no wiki/ artifact",
-      "kinds": {
-        "0.979": "unverifiable",
-        "0.992": "unverifiable",
-        "0.855": "unverifiable",
-        "0.61": "unverifiable",
-        "0.0": "unverifiable"
-      },
-      "n_typed_not_unverifiable": 0
-    },
     {
       "cell_id": "pgx:human:cyp2d6",
       "n_numbers": 2,
@@ -161,25 +117,6 @@
         "1.0": "unverifiable"
       },
       "n_typed_not_unverifiable": 0
-    },
-    {
-      "cell_id": "typing:klebsiella:kleb",
-      "n_numbers": 3,
-      "numbers": [
-        "0.45",
-        "0.60",
-        "0.49"
-      ],
-      "why": "prose cites no wiki/ artifact",
-      "kinds": {
-        "0.90": "threshold",
-        "0.45": "unverifiable",
-        "0.60": "unverifiable",
-        "0.49": "unverifiable",
-        "0.10": "threshold",
-        "10.5281": "structural-non-measurement"
-      },
-      "n_typed_not_unverifiable": 3
     }
   ],
   "cells": [
@@ -265,6 +202,31 @@
       "decoy_match_rate": 0.6544,
       "decoy_group_size": 1,
       "discrimination": "LOW"
+    },
+    {
+      "cell_id": "hla:human:b5701",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/hla_validation_2026-07-06.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 5,
+      "found": 5,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.979": "artifact",
+        "0.992": "artifact",
+        "0.855": "artifact",
+        "0.61": "artifact",
+        "0.0": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 264,
+      "n_decoys": 600,
+      "decoy_match_rate": 0.44,
+      "decoy_group_size": 1,
+      "discrimination": "MODERATE"
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -535,6 +497,63 @@
       "n_decoys": 599,
       "decoy_match_rate": 0.409,
       "decoy_group_size": 1,
+      "discrimination": "MODERATE"
+    },
+    {
+      "cell_id": "typing:klebsiella:kleb",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/klebsiella_topk_ksweep_2026-07-25.json",
+        "wiki/klebsiella_topk_ksweep_2026-07-25.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 6,
+      "found": 6,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.90": "threshold",
+        "0.45": "artifact",
+        "0.60": "artifact",
+        "0.49": "artifact",
+        "0.10": "threshold",
+        "10.5281": "structural-non-measurement"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 8,
+      "n_decoys": 599,
+      "decoy_match_rate": 0.0134,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "essentiality:any:essentiality",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/essentiality_e3_human_2026-07-28.json",
+        "wiki/essentiality_e3_learned_2026-07-28.json",
+        "wiki/essentiality_report_card.json"
+      ],
+      "unresolved_citations": [],
+      "checked": 8,
+      "found": 8,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.695": "artifact",
+        "9.3": "artifact",
+        "0.373": "artifact",
+        "0.984": "artifact",
+        "0.580": "artifact",
+        "0.795": "artifact",
+        "0.911": "artifact",
+        "0.37": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 39,
+      "n_decoys": 199,
+      "decoy_match_rate": 0.196,
+      "decoy_group_size": 3,
       "discrimination": "MODERATE"
     },
     {
