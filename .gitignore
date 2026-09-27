@@ -126,3 +126,9 @@ data/raw/pear/
 
 # Transient: the pre-junction copy of data/, pending deletion after verification (2026-09-01)
 /data_OLD_pending_delete/
+
+# Build output: hatch force-includes the trust-surface cards from wiki/ into the wheel
+# (see [tool.hatch.build.targets.wheel.force-include]). build_hcmv_report_card.py also
+# writes this copy in the source tree; it is regenerable and must never diverge from
+# wiki/ (tests/test_trust_surface_packaging.py pins that -- a stale copy SHADOWS wiki/).
+/dna_decode/report_cards/
