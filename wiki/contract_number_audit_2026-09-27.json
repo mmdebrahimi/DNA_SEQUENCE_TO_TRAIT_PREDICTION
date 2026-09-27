@@ -8,6 +8,11 @@
   "n_candidate_drift": 0,
   "hit_rate": 0.0,
   "verdict": "NOTHING_TO_ADJUDICATE",
+  "n_cells_low_discrimination": 2,
+  "cells_low_discrimination": [
+    "pgx:human:ugt1a1",
+    "typing:Klebsiella:ktype"
+  ],
   "n_cells_with_numbers_but_no_citation": 10,
   "n_numbers_unverifiable": 34,
   "cells_unverifiable": [
@@ -132,7 +137,10 @@
       "found": 3,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 8,
+      "n_decoys": 10,
+      "discrimination": "LOW"
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -151,7 +159,10 @@
       "found": 4,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 1,
+      "n_decoys": 10,
+      "discrimination": "MODERATE"
     },
     {
       "cell_id": "pgx:human:slco1b1",
@@ -169,7 +180,10 @@
       "matched_only_after_rounding": {
         "0.398": 0.3977
       },
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 3,
+      "n_decoys": 10,
+      "discrimination": "MODERATE"
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -183,7 +197,10 @@
       "found": 4,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 5,
+      "n_decoys": 10,
+      "discrimination": "LOW"
     },
     {
       "cell_id": "finder:Escherichia_coli:pointfinder",
@@ -197,7 +214,10 @@
       "found": 2,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 3,
+      "n_decoys": 10,
+      "discrimination": "MODERATE"
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -211,7 +231,10 @@
       "found": 10,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -225,7 +248,10 @@
       "found": 13,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -240,7 +266,10 @@
       "found": 19,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "finder:any:inverse",
@@ -260,7 +289,10 @@
       "found": 11,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:dog:coatcolor",
@@ -273,7 +305,10 @@
       "found": 4,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -287,7 +322,10 @@
       "found": 7,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:bacteriophage:phage",
@@ -303,7 +341,10 @@
       "found": 4,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 1,
+      "n_decoys": 10,
+      "discrimination": "MODERATE"
     },
     {
       "cell_id": "fba:escherichia_coli:growth_essentiality",
@@ -319,7 +360,10 @@
       "found": 0,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 0,
+      "discrimination": "n/a"
     },
     {
       "cell_id": "finder:any:forward",
@@ -339,7 +383,10 @@
       "found": 27,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -361,7 +408,10 @@
       "found": 30,
       "candidate_drift": [],
       "matched_only_after_rounding": {},
-      "adjudicated_benign": []
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 10,
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -382,7 +432,10 @@
           "number": "0.60",
           "why": "not a measurement: the project's own source-diversity BAR, defined in code as scripts/source_diverse_validate.MAX_SOURCE_SHARE. A threshold has no artifact to live in."
         }
-      ]
+      ],
+      "decoy_full_match": 3,
+      "n_decoys": 10,
+      "discrimination": "MODERATE"
     }
   ]
 }

@@ -199,3 +199,55 @@ def test_an_uncited_cell_whose_only_numbers_are_adjudicated_bars_is_not_flagged(
     bare_other = [t for t in dict.fromkeys(m.DECIMAL_RE.findall(blob))
                   if not m.NON_MEASUREMENT.match(t) and ("other:cell:x", t) not in ADJUDICATED_BENIGN]
     assert bare_other == [tok]
+
+
+# --- decoy discrimination ------------------------------------------------------------------------
+# A citation only VERIFIES a number if the number could have failed to match. These tests exist
+# because the naive version of this check is vacuous: a cell whose figures are few and round matches
+# a numeric-dense JSON about anything, so "found" alone cannot distinguish provenance from luck.
+
+def test_discrimination_is_reported_with_a_legal_value():
+    rep = audit()
+    for r in rep["cells"]:
+        assert r["discrimination"] in {"HIGH", "MODERATE", "LOW", "n/a"}
+        assert 0 <= r["decoy_full_match"] <= r["n_decoys"]
+        if r["checked"] and r["n_decoys"]:
+            assert r["discrimination"] != "n/a"
+
+
+def test_discrimination_actually_discriminates():
+    """Uniformly HIGH would mean the decoys are too weak to ever match; uniformly LOW would mean the
+    control is broken. The signal is only useful if it separates cells."""
+    rep = audit()
+    seen = {r["discrimination"] for r in rep["cells"] if r["checked"]}
+    assert "HIGH" in seen, "no cell resists decoys — the control is not exercised"
+    assert len(seen) > 1, f"discrimination is constant at {seen} — it separates nothing"
+
+
+def test_a_cell_with_many_distinctive_numbers_resists_decoys():
+    """Concrete anchor: salmserovar carries 30 measured figures; an unrelated artifact should not
+    contain all of them. If this ever fails, the decoy match has become too permissive."""
+    rep = audit()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    r = rows["typing:Salmonella:salmserovar"]
+    assert r["checked"] >= 20 and r["decoy_full_match"] == 0
+
+
+def test_low_discrimination_does_not_count_as_drift():
+    """Weak evidence is not a defect. A cell can be clean AND poorly verified, and the verdict must
+    key on drift alone or the audit stops being a triage funnel."""
+    rep = audit()
+    assert rep["verdict"] == ("NOTHING_TO_ADJUDICATE" if rep["n_candidate_drift"] == 0
+                             else "ADJUDICATION_REQUIRED")
+    low = [r for r in rep["cells"] if r["discrimination"] == "LOW"]
+    for r in low:
+        assert r["candidate_drift"] == [], "a LOW-discrimination cell is unverified, not drifted"
+    assert rep["n_cells_low_discrimination"] == len(low)
+    assert rep["cells_low_discrimination"] == sorted(r["cell_id"] for r in low)
+
+
+def test_discrimination_is_deterministic():
+    """Fixed decoy seed — a report whose numbers move run to run is not auditable."""
+    a, b = audit(), audit()
+    assert [(r["cell_id"], r["decoy_full_match"]) for r in a["cells"]] == \
+           [(r["cell_id"], r["decoy_full_match"]) for r in b["cells"]]

@@ -106,6 +106,43 @@ def _load_artifact_text(rel: str) -> str | None:
     return raw
 
 
+_DECOY_SEED = 11        # fixed so the artifact is reproducible run to run
+_N_DECOYS = 10
+
+
+def _decoy_full_match_count(nums: list[str], own: set[str], pool: list[str], cache: dict) -> tuple[int, int]:
+    """How many UNRELATED artifacts also contain every one of this cell's numbers.
+
+    A citation only verifies a number if the number could have failed to match. This repo already
+    learned that the hard way one level up: the audit once reached a clean 0/130 by tracing numbers to
+    the package source, which accepted 12 of 12 RANDOMLY GENERATED numbers. The same vacuity applies to
+    a cited artifact -- a cell whose figures are few and round (`0.3`, `0.94`, `14.0`) matches a numeric
+    dense JSON about anything. So the decoys are the control: 0 full matches means the citation is
+    doing real work; most decoys matching means the cell is CHECKED but not meaningfully verified.
+
+    Reported alongside drift, never folded into it -- low discrimination is weak evidence, not a defect.
+    """
+    import random
+
+    decoys = [p for p in pool if p not in own]
+    if not decoys or not nums:
+        return 0, 0
+    k = min(_N_DECOYS, len(decoys))
+    picked = random.Random(_DECOY_SEED).sample(decoys, k)
+    full = 0
+    for p in picked:
+        if p not in cache:
+            t = _load_artifact_text(p)
+            cache[p] = (t, _artifact_numbers(t) if t else [])
+        t, an = cache[p]
+        if t is None:
+            continue
+        if all(any(v in t for v in _number_variants(x)) or _matches_by_rounding(x, an) is not None
+               for x in nums):
+            full += 1
+    return full, k
+
+
 def _artifact_numbers(text: str) -> list[float]:
     """Every numeric token in the artifact, as floats, for rounding-aware comparison."""
     out = []
@@ -194,6 +231,9 @@ def audit() -> dict:
     # holding the numbers) drops out entirely, so its measured purity figures are unverifiable here.
     # Reported, never counted as drift -- an uncited number is unchecked, not wrong.
     unverifiable = []
+    _decoy_pool = sorted(p.relative_to(REPO).as_posix()
+                         for p in (REPO / "wiki").glob("*.json"))
+    _art_cache: dict = {}
     for c in cells():
         blob = " ".join(str(getattr(c, f, "") or "") for f in PROSE_FIELDS)
         arts = _cited_artifacts(blob)
@@ -234,6 +274,7 @@ def audit() -> dict:
                 in_code.append({"number": tok, "why": ADJUDICATED_BENIGN[key]})
             else:
                 missing.append(tok)
+        decoy_full, n_decoys = _decoy_full_match_count(nums, set(resolved), _decoy_pool, _art_cache)
         rows.append({
             "cell_id": c.cell_id,
             "status": "CANDIDATE_DRIFT" if missing else "ALL_CITED_NUMBERS_PRESENT",
@@ -241,6 +282,11 @@ def audit() -> dict:
             "checked": len(nums), "found": len(found), "candidate_drift": missing,
             "matched_only_after_rounding": rounded,
             "adjudicated_benign": in_code,
+            # Does the citation do any work? See _decoy_full_match_count.
+            "decoy_full_match": decoy_full, "n_decoys": n_decoys,
+            "discrimination": ("n/a" if not n_decoys or not nums else
+                               "HIGH" if decoy_full == 0 else
+                               "LOW" if decoy_full * 2 >= n_decoys else "MODERATE"),
         })
 
     checked = sum(r["checked"] for r in rows)
@@ -258,6 +304,8 @@ def audit() -> dict:
         "verdict": "NOTHING_TO_ADJUDICATE" if not drift else "ADJUDICATION_REQUIRED",
         # Coverage, so a clean verdict cannot be read as "every contract number is verified". These do
         # NOT enter n_numbers_checked / n_candidate_drift / verdict -- unchecked is not drift.
+        "n_cells_low_discrimination": sum(1 for r in rows if r["discrimination"] == "LOW"),
+        "cells_low_discrimination": sorted(r["cell_id"] for r in rows if r["discrimination"] == "LOW"),
         "n_cells_with_numbers_but_no_citation": len(unverifiable),
         "n_numbers_unverifiable": sum(u["n_numbers"] for u in unverifiable),
         "cells_unverifiable": sorted(unverifiable, key=lambda u: u["cell_id"]),
@@ -276,8 +324,11 @@ def main(argv=None) -> int:
                                                                       encoding="utf-8")
     for r in rep["cells"]:
         flag = "" if r["status"] == "ALL_CITED_NUMBERS_PRESENT" else f"  <- {r['status']}"
+        disc = "" if r["discrimination"] in ("HIGH", "n/a") else \
+               f"  [discrimination={r['discrimination']}: {r['decoy_full_match']}/{r['n_decoys']} " \
+               f"unrelated artifacts also match all its numbers]"
         print(f"{r['cell_id']:42} checked={r['checked']:3} found={r['found']:3} "
-              f"drift={len(r['candidate_drift'])}{flag}")
+              f"drift={len(r['candidate_drift'])}{flag}{disc}")
         if r["candidate_drift"]:
             print(f"    cited but absent from {', '.join(r['cited'])}: "
                   f"{', '.join(r['candidate_drift'])}")
