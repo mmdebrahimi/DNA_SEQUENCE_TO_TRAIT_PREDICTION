@@ -619,3 +619,63 @@ def test_drift_is_still_detected_on_a_complete_pin():
     from scripts.build_validation_report_card import build_prospective_block
     h = dict(surface_hashes()); h[FROZEN_SURFACE_FILES[0]] = "0" * 64
     assert build_prospective_block(_stamped(h))["status"] == "superseded_by_surface_change"
+
+
+# ---------------------------------------------------------------------------
+# The COMMITTED card vs the LIVE registry.
+#
+# Every test above builds through _redirect_io, which points the module's WIKI and ROOT at
+# EMPTY tmp dirs -- so they pin the classifier's logic on synthetic inputs and say nothing
+# about the artifact that actually SHIPS. That is the same structural blind spot that let
+# wiki/certification_capstone.json sit in git reporting independent_measured=31 against a
+# registry returning 33 (fixed in 1ff6020): its tests rebuilt before asserting, so drift was
+# invisible and silently repaired.
+#
+# This card is exposed the same way -- it is one of only two roll-up builders that read
+# cell_registry (via surface_index), so a surface/tier change can stale its committed rows.
+# The guard reads the card AS COMMITTED and asserts the promise the module's own docstring
+# makes: a shipped decoder cannot render invisibly.
+#
+# Deliberately NOT a rebuild-and-diff: _redirect_io cannot be reused (it blanks the INPUTS
+# too, so a temp build is surface-only and not comparable), and rebuilding into the real
+# wiki/ would mutate the working tree from inside a test.
+# ---------------------------------------------------------------------------
+
+
+def _committed_card() -> dict | None:
+    """The report card as committed at HEAD, or None when git can't answer."""
+    import json as _json
+    import subprocess
+
+    try:
+        out = subprocess.run(
+            ["git", "show", "HEAD:wiki/decoder_validation_report_card.json"],
+            cwd=Path(__file__).resolve().parent.parent, capture_output=True, timeout=30,
+        )
+    except (FileNotFoundError, OSError, subprocess.TimeoutExpired):
+        return None
+    if out.returncode != 0:
+        return None
+    return _json.loads(out.stdout.decode("utf-8"))
+
+
+def test_committed_card_renders_every_live_surface_cell():
+    """A shipped decoder must not be invisible in the card that ships.
+
+    Checks the COMMITTED artifact, not a fresh build -- a fresh build agrees with the registry
+    by construction, which is exactly why it cannot detect committed staleness.
+    """
+    from dna_decode.data.cell_registry import surface_index
+
+    card = _committed_card()
+    if card is None:
+        return  # no git / not committed yet — nothing to compare
+    rows = {(c["organism"], c["drug"]) for c in card["cells"]}
+    missing = sorted(set(surface_index()) - rows)
+    assert not missing, (
+        f"these live SHIPPED_DECODER_SURFACE cells are absent from the COMMITTED report card, so they "
+        f"ship with no evidence row: {missing} — rebuild it: "
+        f"uv run python scripts/build_validation_report_card.py"
+    )
+    # The reverse direction is NOT an error: the card is the surface UNION observed cells, so
+    # observed-only rows (2 at the time of writing) legitimately have no surface entry.
