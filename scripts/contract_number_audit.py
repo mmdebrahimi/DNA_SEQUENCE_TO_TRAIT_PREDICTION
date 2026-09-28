@@ -489,7 +489,16 @@ def _number_variants(tok: str) -> list[str]:
     return sorted(x for x in v if x)
 
 
-def audit() -> dict:
+def audit(decoy_pool: list[str] | None = None) -> dict:
+    """`decoy_pool` PINS the decoy corpus to an explicit repo-relative file list.
+
+    Default None keeps the live `wiki/*.json` glob, so `main()` and the reported rates continue to
+    measure discrimination against the CURRENT corpus -- that is where a corpus effect belongs.
+    The override exists for the anchor test, which pins EXACT match counts: against a live glob those
+    counts move whenever any memo is added, and NON-MONOTONICALLY, because the pool is consumed in
+    groups so new files RE-PARTITION it (grouped cells fell, ungrouped rose). A matcher-regression
+    guard that fires on ordinary artifact accrual is measuring the wrong thing.
+    """
     sys.path.insert(0, str(REPO))
     from dna_decode.data.cell_registry import cells
 
@@ -514,9 +523,15 @@ def audit() -> dict:
     # run is a decoy guaranteed to contain the numbers under test. Caught by measurement, not by reading:
     # `finder:any:forward` moved 74/300 -> 75/300 between two consecutive runs, the second run having
     # inherited the first run's artifact. Left in, the grades would also drift downward every run day.
-    _decoy_pool = sorted(p.relative_to(REPO).as_posix()
-                         for p in (REPO / "wiki").glob("*.json")
-                         if not p.name.startswith("contract_number_audit_"))
+    if decoy_pool is None:
+        _decoy_pool = sorted(p.relative_to(REPO).as_posix()
+                             for p in (REPO / "wiki").glob("*.json")
+                             if not p.name.startswith("contract_number_audit_"))
+    else:
+        # A pinned pool must honour the SAME circularity exclusion, or a snapshot taken on a day the
+        # audit had already run would smuggle its own output back in as a guaranteed-matching decoy.
+        _decoy_pool = sorted(f for f in decoy_pool
+                             if not f.rsplit("/", 1)[-1].startswith("contract_number_audit_"))
     _pool_set = set(_decoy_pool)
     # One shared cache across every cell: the full-pool scan is dominated by reading the corpus once
     # (~15 MB of json), not by the per-cell comparison, so sharing it is what makes the control affordable.

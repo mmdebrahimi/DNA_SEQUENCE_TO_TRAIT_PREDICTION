@@ -309,14 +309,34 @@ def test_full_pool_anchors_measured_before_implementation():
     planning figures (6/602, 1/602, 308/602, 355/602) were all measured with a matcher that accepted a
     short token inside a longer number. Under whole-number matching mlst and resfinder reach EXACTLY zero
     and ktype falls 307 -> 29. The loose matcher, not the sample size, was the dominant error.
+
+    The pool is now PINNED to a snapshot, because against the live `wiki/` glob these counts move
+    whenever any memo is added -- and NON-MONOTONICALLY: the pool is consumed in groups, so new files
+    RE-PARTITION it and grouped cells FELL while ungrouped ones ROSE (measured on the Campylobacter
+    prospective accrual: serotype 16->15 and forward 8->7 alongside pointfinder 175->176). A guard whose
+    stated purpose is "a mismatch means the code is wrong" cannot also fire on ordinary artifact accrual.
+    Live-corpus rates are still reported by audit() and asserted by the grade/band tests -- that is
+    where a corpus effect belongs.
     """
-    rep = _cached_report()
+    import scripts.contract_number_audit as mod
+
+    snap = json.loads((REPO / "tests/data/decoy_pool_2026-09-28.json").read_text(encoding="utf-8"))
+    pool = snap["files"]
+    # The snapshot must not rot into a list of paths that no longer exist, or the anchors would pass
+    # against a silently shrinking pool. A missing file is a real signal: an artifact was renamed or
+    # deleted, and the anchors need re-measuring against a fresh snapshot.
+    missing = [f for f in pool if not (REPO / f).exists()]
+    assert not missing, f"pinned decoy pool has {len(missing)} missing file(s): {missing[:5]}"
+    assert len(pool) == snap["n"] == 600, (len(pool), snap["n"])
+
+    rep = mod.audit(decoy_pool=pool)
     rows = {r["cell_id"]: r for r in rep["cells"]}
     for cell_id, expect in (("typing:bacteria:mlst", 0),
                             ("finder:bacteria:resfinder", 0),
                             ("typing:Klebsiella:ktype", 29),
                             ("finder:Escherichia_coli:pointfinder", 175)):
         assert rows[cell_id]["decoy_full_match"] == expect, (cell_id, rows[cell_id])
+        # 599 = the 600-file pool minus this cell's own cited artifact, which is never its own decoy.
         assert rows[cell_id]["n_decoys"] == 599, (cell_id, rows[cell_id])
 
 
