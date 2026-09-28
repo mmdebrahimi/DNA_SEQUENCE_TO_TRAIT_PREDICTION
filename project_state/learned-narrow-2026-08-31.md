@@ -113,8 +113,8 @@ register -- is the remaining build.
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 2 | Score gLM2-650M vs the curated baseline (the cheapest gene-LLM test) | research | med | high | high | days |
-| 3 | Resolve where the constructed/natural line sits for an intermediate design | research | low | high | high | days |
+| 2 | Resolve where the constructed/natural line sits for an intermediate design | research | low | high | high | days |
+| 3 | If the gLM2 question is revisited, it must be the SUPERVISED / constructed-variation framing (retired row 2 closed only the zero-shot one). `screen_proposal` returns REQUIRES_DECONFOUNDING there, not a refusal -- conditions: report WITHIN-GROUP performance against each group's own null | research | low | high | high | days |
 <!-- project-state:end:candidate-actions -->
 ### Retired candidates (record)
 
@@ -126,6 +126,7 @@ five times). Kept verbatim; the verdicts are the record.
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
 | 1 | DONE 2026-09-01 -- C2 shipped as a ROUTE-level tripwire (`dna_decode/data/cell_regime.py`): `regime_for_route` RAISES on an undeclared route. A per-cell field was measured first and rejected as 52 edits of a near-constant column -- but the census proved the column is NOT constant (3 regimes over 44 routes) | edit-local-code | high | med | resolved | -- |
+| 2 | RETIRED 2026-09-28 -- SCREENED, NOT ATTEMPTED. `screen_proposal(population='natural', endpoint='molecular', method='zero_shot')` returns LOSES_TO_CATALOG with the mechanism already measured (resistance is reached via chemically CONSERVATIVE substitutions at averagely-conserved sites, so a plausibility scorer calls them benign: ESM2 0.454 = BELOW CHANCE vs the curated catalog 0.926, and BLOSUM62 -- which has never seen an HIV sequence -- ranks real DRMs 4.0/19). gLM2-650M is another likelihood scorer, so it fails for the SAME reason; running it would re-run a recorded negative. This was caught once already (evidence-surface Action Log row 27, where I had myself named it the highest-VOI unstarted move) and the row survived, so a future `--advance` taking table[0] would have re-picked it. SCOPE, deliberately narrow: this closes the ZERO-SHOT framing ONLY -- a SUPERVISED / constructed-variation gene-LLM proposal screens as REQUIRES_DECONFOUNDING, not a refusal, and over-compressing that scope has hidden a live direction three separate times in this project. Carried forward as ranked row 3. | research | med | high | resolved | -- |
 ### Re-evaluation trigger
 - **Default:** after any action class fires.
 - **Family-specific:** whenever a learned-decoder proposal appears — that is precisely when the boundary is load-bearing.
@@ -146,6 +147,7 @@ Attempt budget: 3.
 | 2 | 2026-08-31 | edit-local-code | dna_decode/eval/regime.py + scripts/regime_map.py | 6 measured regimes; every cited artifact verified to exist |
 | 3 | 2026-08-31 | run-tests | tests/test_regime_boundary.py (13) | all 3 historical compressions now fail loudly |
 | 4 | 2026-09-01 | edit-local-code | C2: dna_decode/data/cell_regime.py -- route-level regime tripwire + 10 tests | 44 routes classified, 3 regimes (40 catalog / 2 constructed-molecular / 2 constructed-organism); an undeclared route RAISES. dna-flowering + dna-pathotype carry a closed-learned-attempt note |
+| 5 | 2026-09-28 | stop | Soraya --advance (spillover): retired ranked row 2 (gLM2-650M vs the curated baseline) as a SCREENED recorded negative rather than running it | screen_proposal(natural x molecular x zero_shot) = LOSES_TO_CATALOG; mechanism already measured (ESM2 0.454 BELOW CHANCE vs catalog 0.926; BLOSUM62, which has never seen an HIV sequence, ranks real DRMs 4.0/19 -- so it is amino-acid exchangeability, not model capacity). gLM2 is another likelihood scorer -> same failure. THE POINT IS THE MECHANISM OF THE NEAR-MISS: this was already caught once (evidence-surface row 27, where I had myself proposed it as highest-VOI) and the ROW SURVIVED, so advance_ranker -- which takes table[0] as next_action unconditionally -- would have handed it back and a future run would have re-run a recorded negative. Retiring the row is what makes the earlier catch durable. SCOPE KEPT NARROW ON PURPOSE: closes the ZERO-SHOT framing only; a SUPERVISED / constructed-variation gene-LLM proposal screens REQUIRES_DECONFOUNDING (not a refusal) and is carried forward as ranked row 3 -- over-compressing that scope has hidden a live direction three times in this project. No code changed; no model run; zero compute spent. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
