@@ -113,11 +113,19 @@ register -- is the remaining build.
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | DONE 2026-09-01 -- C2 shipped as a ROUTE-level tripwire (`dna_decode/data/cell_regime.py`): `regime_for_route` RAISES on an undeclared route. A per-cell field was measured first and rejected as 52 edits of a near-constant column -- but the census proved the column is NOT constant (3 regimes over 44 routes) | edit-local-code | high | med | resolved | -- |
 | 2 | Score gLM2-650M vs the curated baseline (the cheapest gene-LLM test) | research | med | high | high | days |
 | 3 | Resolve where the constructed/natural line sits for an intermediate design | research | low | high | high | days |
 <!-- project-state:end:candidate-actions -->
+### Retired candidates (record)
 
+Moved out of the ranked table 2026-09-28: these were completed/answered but still sat INSIDE
+the marker region, and `advance_ranker` takes row 1 as `next_action` unconditionally -- so a
+post-compaction `--advance` re-picked finished work (measured elsewhere: one candidate redone
+five times). Kept verbatim; the verdicts are the record.
+
+| # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
+|---|---|---|---|---|---|---|
+| 1 | DONE 2026-09-01 -- C2 shipped as a ROUTE-level tripwire (`dna_decode/data/cell_regime.py`): `regime_for_route` RAISES on an undeclared route. A per-cell field was measured first and rejected as 52 edits of a near-constant column -- but the census proved the column is NOT constant (3 regimes over 44 routes) | edit-local-code | high | med | resolved | -- |
 ### Re-evaluation trigger
 - **Default:** after any action class fires.
 - **Family-specific:** whenever a learned-decoder proposal appears — that is precisely when the boundary is load-bearing.

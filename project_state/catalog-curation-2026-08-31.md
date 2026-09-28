@@ -112,15 +112,23 @@ A written, tested curation procedure exists, and each measured gap is either clo
 ### Candidate next actions
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
+| 7 | USER AUTHORITY: restrict the gentamicin rescue to E. coli? Edits the frozen surface + invalidates the v2 lock. L2 warning shipped meanwhile | ask-user | high | med | low | -- |
+| 6 | Investigate WHY a full-length rmtB sits at MIC<=1 in Klebsiella (silencing / expression / plasmid context) | research | med | high | high | days || 5 | Adopt an AMRrules-shaped per-entry schema for ONE catalog as a pilot (PMID + ECO evidence code + grade + limitations); costed against touching the frozen surface | propose | med | high | med | days |
+<!-- project-state:end:candidate-actions -->
+### Retired candidates (record)
+
+Moved out of the ranked table 2026-09-28: these were completed/answered but still sat INSIDE
+the marker region, and `advance_ranker` takes row 1 as `next_action` unconditionally -- so a
+post-compaction `--advance` re-picked finished work (measured elsewhere: one candidate redone
+five times). Kept verbatim; the verdicts are the record.
+
+| # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
+|---|---|---|---|---|---|---|
 | 1 | DONE 2026-09-01 -- wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py (18). Resolves U3: per-ENTRY citation is NOT representable (bare set[str] catalogs); per-MODULE authority IS, and all 8 already pass -> a regression guard, not a migration | edit-local-code | med | med | resolved | -- |
 | 2 | DECLINED 2026-09-01, retired as a candidate 2026-09-26 -- this repo's own Decisions Made records "HIV NNRTI measured and DECLINED (2026-09-01, loses to the free doubt layer)". The measured L2 doubt layer already flags a susceptible call for a V179F-class carrier without competing with L1, so curating catalog entries here buys nothing the free layer does not. Left OPEN by oversight and re-offered by --advance on every run since; retiring it is the documented replay-skip discipline (a candidate that is journaled done but still listed stays "next" forever) | propose | med | med | declined | -- |
 | 3 | DONE 2026-09-02 -- 60 S-labelled carriers FOUND (first ever) over 20,816 labelled isolates; ALL 60 from ONE BioProject and killed by an aac(3) control -> LABEL_ARTIFACT. U1 SHARPENED, not retired | research | high | high | resolved | -- |
 | 4 | DONE 2026-09-03 -- BV-BRC (independent on BOTH axes; 162/169 carriers new). 67 S carriers found; control verdict SPECIFIC_TO_RMT. Klebsiella PPV 0.475, E. coli 12/12 clean | research | high | high | resolved | -- |
 | 5 | DONE 2026-09-03 -- resolved FREE via PD's AMR_genotypes (an AMRFinder call), joined on BIOSAMPLE not accession: CALLERS_AGREE 66/66; the rule would fire on all of them | run-tests | high | high | resolved | -- |
-| 7 | USER AUTHORITY: restrict the gentamicin rescue to E. coli? Edits the frozen surface + invalidates the v2 lock. L2 warning shipped meanwhile | ask-user | high | med | low | -- |
-| 6 | Investigate WHY a full-length rmtB sits at MIC<=1 in Klebsiella (silencing / expression / plasmid context) | research | med | high | high | days || 5 | Adopt an AMRrules-shaped per-entry schema for ONE catalog as a pilot (PMID + ECO evidence code + grade + limitations); costed against touching the frozen surface | propose | med | high | med | days |
-<!-- project-state:end:candidate-actions -->
-
 ### Re-evaluation trigger
 - **Default:** after any action class fires.
 - **Family-specific:** re-evaluate the moment F-A produces a measured baseline — that is what unblocks this family.
@@ -144,6 +152,7 @@ Attempt budget: 3.
 | 5 | 2026-09-01 | edit-local-code | C3: wiki/catalog_curation_procedure.md + tests/test_catalog_provenance.py | 4 conditions from 2 executed instances (gentamicin shipped / NNRTI declined); 1 enforced, 3 review discipline -- split stated explicitly |
 | 6 | 2026-09-02 | run-tests | inverted rmt specificity hunt over PD AMR_genotypes + aac(3) project control | 60 counter-examples found and killed by the control (LABEL_ARTIFACT); PPV outside 146/146; v2 validation verified uncontaminated (0 overlap) |
 | 6 | 2026-09-26 | edit-local-code | Retired candidate 2 ("Draft HIV NNRTI entries with citations") as DECLINED -- direct-Edit to the candidate table (no /project-state op exists for it), mirrored here per AC9 | The ledger's own Decisions Made already recorded "HIV NNRTI measured and DECLINED (2026-09-01, loses to the free doubt layer)", but the candidate row was left OPEN, so --advance re-offered it on every run since. Retiring it is the documented replay-skip discipline; the measured cost of not doing it is a candidate redone five times. catalog-curation now has exactly ONE genuinely open candidate (6: why a full-length rmtB sits at MIC<=1 in Klebsiella) plus one USER AUTHORITY row (7) [done:f27dbd43] |
+| 12 | 2026-09-28 | propose | Drafted a HOLD recommendation on candidate #7 (restrict the gentamicin rmt rescue to E. coli) for user ratification | RECOMMEND HOLD -- the evidence MOVED since that row was written and now argues against acting. NCBI-PD shows Klebsiella rmt carriers 53R/0S across 12 BioProjects (largest share 0.264) which CLEARS the repo's own 0.60 source-diversity bar, while the BV-BRC over-call that motivated the row (PPV 0.475) FAILS that bar at 66% single-source concentration with 98.4% of its susceptible carriers from one study. Restricting would edit the FROZEN surface and invalidate the v2 lock on contradicted evidence. The L2 organism_scope warning already ships and states the contradiction, so the safe direction costs nothing. Remains a USER AUTHORITY call; not acted on | 
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

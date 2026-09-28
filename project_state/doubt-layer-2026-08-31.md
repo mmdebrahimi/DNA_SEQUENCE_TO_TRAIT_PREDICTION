@@ -124,13 +124,21 @@ action, so leaving completed work here made a finished family rank first on the 
 
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | DONE 2026-08-31 -- FP rate measured: family-wise correction drops 4 of 5 raw-signature hits; 1 survivor is the confirmed `rmtE1` gap | run-tests | med | high | resolved | -- |
-| 2 | ANSWERED 2026-09-02 -- ONE vocabulary: the purity signature is well-formed on HIV NNRTI (the best case) and fires (V179F, 15 carriers all R, p=8.8e-06 over 638 units) | run-tests | med | high | resolved | -- |
-| 2b | DONE 2026-09-02 -- `dna_decode/data/target_site_completeness.py` + a 2nd signal in `target_site_doubt`; V179F now surfaces STRONG doubt on the real CLI. Augment-only VERIFIED by diff (6 cases, 8 fields differ, 0 non-doubt, calls identical) | edit-local-code | med | med | resolved | -- |
 | 2c | Measure the screen on the OTHER mutant-level cells (sarscov2-mpro is TN-starved 37R/5S; fungal has no free phenotype source) -- currently declared UNMEASURED, which is honest but incomplete | research | low | med | high | days |
 | 3 | Re-screen when any NEW independent label set lands (both known gaps needed one) | research | low | high | high | ongoing |
 <!-- project-state:end:candidate-actions -->
+### Retired candidates (record)
 
+Moved out of the ranked table 2026-09-28: these were completed/answered but still sat INSIDE
+the marker region, and `advance_ranker` takes row 1 as `next_action` unconditionally -- so a
+post-compaction `--advance` re-picked finished work (measured elsewhere: one candidate redone
+five times). Kept verbatim; the verdicts are the record.
+
+| # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
+|---|---|---|---|---|---|---|
+| 1 | DONE 2026-08-31 -- FP rate measured: family-wise correction drops 4 of 5 raw-signature hits; 1 survivor is the confirmed `rmtE1` gap | run-tests | med | high | resolved | -- |
+| 2 | ANSWERED 2026-09-02 -- ONE vocabulary: the purity signature is well-formed on HIV NNRTI (the best case) and fires (V179F, 15 carriers all R, p=8.8e-06 over 638 units) | run-tests | med | high | resolved | -- |
+| 2b | DONE 2026-09-02 -- `dna_decode/data/target_site_completeness.py` + a 2nd signal in `target_site_doubt`; V179F now surfaces STRONG doubt on the real CLI. Augment-only VERIFIED by diff (6 cases, 8 fields differ, 0 non-doubt, calls identical) | edit-local-code | med | med | resolved | -- |
 ### Re-evaluation trigger
 - **Default:** re-run `/project-state` after any action class fires (auto-append to Action Log triggers stale-state check)
 - **Manual override:** user invokes `/project-state doubt-layer-2026-08-31` at any time

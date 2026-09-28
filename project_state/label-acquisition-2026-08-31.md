@@ -147,13 +147,21 @@ A gate-scored, accession-verified, ranked candidate list exists — so an acquis
 ### Candidate next actions
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
+| 3 | Re-run the prospective accrual sweep | run-tests | med | med | low | hours |
+<!-- project-state:end:candidate-actions -->
+### Retired candidates (record)
+
+Moved out of the ranked table 2026-09-28: these were completed/answered but still sat INSIDE
+the marker region, and `advance_ranker` takes row 1 as `next_action` unconditionally -- so a
+post-compaction `--advance` re-picked finished work (measured elsewhere: one candidate redone
+five times). Kept verbatim; the verdicts are the record.
+
+| # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
+|---|---|---|---|---|---|---|
 | 1 | DONE 2026-09-01 -- G6 screened on real extracted values; PASSES (mode-share 0.0019 / 2,106 levels). Ten-gate verdict CLEARS | research | med | high | resolved | -- |
 | 1b | DONE 2026-09-02 -- ESM2 CTX rho 0.352 (BLOSUM62 0.198) vs the TEM-1 benchmark 0.761; regime DIRECTION holds, MAGNITUDE is protein-specific | run-tests | high | high | resolved | -- |
 | 1c | DONE 2026-09-02 (Kaggle T4) -- ESM2+ProSST hybrid LOSES here (0.204 vs ESM2 0.352) because ProSST alone is at chance (-0.040); orthogonality premise fails on this protein. GEMME (MSA) not run | run-tests | med | high | resolved | -- |
 | 2 | DONE 2026-08-31 -- U1 retired; PRJNA687219 resolves (E. coli K-12 MG1655, 45 SRA experiments) | research | high | high | resolved | -- |
-| 3 | Re-run the prospective accrual sweep | run-tests | med | med | low | hours |
-<!-- project-state:end:candidate-actions -->
-
 ### Re-evaluation trigger
 - **Default:** after any action class fires.
 - **Family-specific:** re-run the accrual sweep periodically — the free path accrues on NCBI-PD ingestion lag, not on anything we control.
@@ -180,6 +188,7 @@ Attempt budget: 3.
 | 7 | 2026-09-22 | edit-local-code | Closed the two provenance gaps on the path to an auditable accrual sweep (candidate 3 prerequisites) | THREE fixes. (a) AMBIGUITY NOW REFUSES: resolve_active_lock took max(lock_date) as conservative, but two manifests can only BOTH verify if they pin identical hashes -- same decoder, different claimed cutoffs = protocol contradiction, and the later one would let an arbitrary cutoff DISCARD already-accrued unfavourable evidence while looking cautious. Identical cutoffs are NOT ambiguous (same commitment); a retired non-verifying manifest never trips it. (b) FETCHER STAMPS MANIFEST IDENTITY: status JSON gains lock_provenance {manifest_path, schema, frozen_commit, lock_commit, surface_sha256} -- verified live, 5 files pinned, frozen_commit edb4c5e. A cohort recording a cutoff but not WHICH lock produced it can be re-interpreted under a different manifest claiming the same date. An --lock-date override now stamps claim_mode=historical_reproduction IN the artifact, not just on the console. (c) VALIDATOR DERIVES its manifest (was the literal 2026-08-31 filename -- the last hand-sync point); --manifest retained for historical reproduction and prints that it is not a live claim. 7 tests; ambiguity guard proven non-vacuous by restoring max(lock_date) (1 fail). 210 pass across lock/scorer/card/CLI suites. Frozen surface unchanged; v2 lock verifies. |
 | 8 | 2026-09-22 | edit-local-code | Closed the last review gap: hash agreement alone does not make a file a LOCK | VERIFIED BEFORE FIXING: a manifest carrying CORRECT hashes but no schema and lock_date=not-a-date WAS selected as the active lock, and that bogus cutoff would have flowed straight into the eligibility filter. New is_well_formed_manifest() checks schema == LOCK_SCHEMA, lock_date parses as ISO YYYY-MM-DD, and every surface_sha256 value is a 64-hex digest; malformed files are NAMED in the NoActiveLock message rather than silently skipped (one sitting unnoticed in wiki/ is how a bad cutoff enters later). DELIBERATELY NOT ENFORCED: filename-date == lock_date, which was suggested and is FALSE here -- prospective_lock_manifest_2026-06-22.json legitimately carries lock_date 2026-06-13 because a manifest RECORDS a freeze rather than creating one; enforcing it would reject the repo own real manifest. Pinned by test in both directions, incl. that BOTH committed manifests are well-formed so the retired v1 fails on HASH DRIFT (correct reason) and not on malformedness. 5 tests; 86 pass across lock/scorer/card suites; v2 lock verifies. |
 | 9 | 2026-09-27 | research | Re-scoped Short-term row 2 (resolve 2-3 PEAR accessions) after checking the route actually taken | MOOT AS WRITTEN: PEAR values came from the repo's own .RData workspaces extracted locally via R, so the G6 screen PASSED (mode-share 0.0019 over 2,106 levels) and the forward replication RAN (ESM2 CTX rho 0.352 vs the TEM-1 benchmark 0.761) without resolving a single accession -- neither PEAR memo mentions one. LIVE REMNANT is narrower and worth keeping: the extraction yielded the authors' AGGREGATED per-variant effects (~2,100/drug), NOT the ~23,000 raw barcoded strains, so accession resolution is needed ONLY if the raw data is wanted. PROCESS NOTE: I read this from the Short-term Goal Hierarchy table twice this run while believing it was the frontier; advance_ranker reads ONLY the marker-anchored Candidate next actions table, whose rows 1/1b/1c/2 are all DONE-marked. The one genuinely pending candidate there is row 3, the prospective accrual sweep, whose worker has now died 5 times on this host without writing an artifact. |
+| 18 | 2026-09-28 | edit-local-code | Moved 4 retired candidate rows out of the ranked table; verified no post-lock accrual artifact exists | The ranker takes table[0] as next_action UNCONDITIONALLY and completed rows were annotated IN PLACE inside the marker region, so --advance re-picked finished work. next_action is now genuinely-open in every family. Also checked the advisory 'already-done' flag on the accrual sweep: it is a LEXICAL FALSE POSITIVE -- the newest prospective artifacts are the pre-v2-lock 2026-08-24 accrual and the 2026-08-31 manifest, so nothing has been swept since the lock restarted the clock. WP3 is genuinely undone | 
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
