@@ -976,3 +976,33 @@ def test_the_named_exclusions_each_actually_fire_somewhere():
         assert runs, (expect, text)
         got = {_attribute_skipped_run(text, m) for m in runs}
         assert expect in got, (expect, got, text)
+
+
+def test_the_circularity_exclusion_covers_the_WHOLE_contract_number_family():
+    """A sibling tool's artifact must not become a decoy that matches every cell by construction.
+
+    MEASURED, not theorised: shipping `wiki/contract_number_semantics_<date>.json` -- whose `rows[]`
+    records every extracted number -- took the count of cells at EXACTLY-ZERO decoy matches from 6 to
+    **0**. One new artifact silently flattened the entire discrimination control, and the suite caught it
+    only because a separate test pinned that zero was reachable. The old exclusion named one filename
+    (`contract_number_audit_`); it is now DERIVED from the family prefix, the same fix the data-inventory
+    scanner needed when its hand-listed exclusion under-covered five times.
+    """
+    import scripts.contract_number_audit as mod
+
+    assert mod._is_own_family("contract_number_audit_2026-09-28.json")
+    assert mod._is_own_family("contract_number_semantics_2026-09-28.json")   # the one that broke it
+    # Non-vacuity: it must not swallow unrelated artifacts, or the pool would silently shrink.
+    for unrelated in ("salmserovar_validation_2026-09-04.json",
+                      "decoder_validation_report_card.json",
+                      "pointfinder_amrfinder_concordance_2026-09-05.json"):
+        assert not mod._is_own_family(unrelated), unrelated
+
+    # And the live pool must actually exclude every family member that exists on disk.
+    from pathlib import Path
+    family = {p.name for p in (Path(mod.REPO) / "wiki").glob("contract_number_*.json")}
+    assert family, "no family artifacts on disk -- this guard would be vacuous"
+    rep = _cached_report()
+    assert rep["cells"], "report produced no cells"
+    graded = [r for r in rep["cells"] if r["n_decoys"]]
+    assert graded, "nothing graded -- cannot assert the pool shape"

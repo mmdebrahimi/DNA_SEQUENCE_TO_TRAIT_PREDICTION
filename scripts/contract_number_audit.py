@@ -303,6 +303,20 @@ def _cached_artifact(p: str, cache: dict) -> tuple[str | None, list[float]]:
     return cache[p]
 
 
+# The circularity exclusion is a FAMILY prefix, not one hand-written filename. Any artifact in the
+# contract-number family RECORDS the number tokens under test (this audit's `cells_unverifiable[].numbers`,
+# the semantics check's `rows[].number`), so it is a decoy guaranteed to match every cell it describes.
+# Measured, not theorised: shipping wiki/contract_number_semantics_<date>.json took the count of cells at
+# EXACTLY-ZERO decoy matches from 6 to 0 -- one new artifact silently flattened the whole control -- because
+# the old exclusion named only `contract_number_audit_`. Same defect class as the data-inventory scanner's
+# hand-listed exclusion, and the same fix: DERIVE the pattern so a sibling tool cannot fall outside it.
+_OWN_FAMILY_PREFIX = "contract_number_"
+
+
+def _is_own_family(name: str) -> bool:
+    return name.startswith(_OWN_FAMILY_PREFIX)
+
+
 def _decoy_full_match_count(nums: list[str], own: set[str], pool: list[str], cache: dict,
                             group_size: int = 1) -> tuple[int, int]:
     """How many UNRELATED artifact haystacks also contain every one of this cell's numbers.
@@ -526,12 +540,12 @@ def audit(decoy_pool: list[str] | None = None) -> dict:
     if decoy_pool is None:
         _decoy_pool = sorted(p.relative_to(REPO).as_posix()
                              for p in (REPO / "wiki").glob("*.json")
-                             if not p.name.startswith("contract_number_audit_"))
+                             if not _is_own_family(p.name))
     else:
         # A pinned pool must honour the SAME circularity exclusion, or a snapshot taken on a day the
         # audit had already run would smuggle its own output back in as a guaranteed-matching decoy.
         _decoy_pool = sorted(f for f in decoy_pool
-                             if not f.rsplit("/", 1)[-1].startswith("contract_number_audit_"))
+                             if not _is_own_family(f.rsplit("/", 1)[-1]))
     _pool_set = set(_decoy_pool)
     # One shared cache across every cell: the full-pool scan is dominated by reading the corpus once
     # (~15 MB of json), not by the per-cell comparison, so sharing it is what makes the control affordable.
