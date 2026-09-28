@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-09-10
+# Decoder-suite provenance-disjoint validation report card — 2026-09-28
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -137,12 +137,13 @@ Worst VME on the card: **`klebsiella` x `meropenem` at 0.533** on 30 resistant i
 
 ## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)
 
-A SEPARATE arm from the provenance-disjoint numbers above, not a replacement for them. Every isolate here became public STRICTLY AFTER the decoder was frozen and sha256-pinned (`wiki/prospective_lock_manifest_2026-06-22.json`), so the decoder cannot have been tuned to it — the leakage argument is temporal, not statistical. `verify_lock` re-hashes the live decoder on every scoring run and hard-fails on drift.
+A SEPARATE arm from the provenance-disjoint numbers above, not a replacement for them. Every isolate here became public STRICTLY AFTER the decoder was frozen and sha256-pinned, so the decoder cannot have been tuned to it — the leakage argument is temporal, not statistical. `verify_lock` re-hashes the live decoder on every scoring run and hard-fails on drift. The ACTIVE lock is `wiki/prospective_lock_manifest_2026-08-31.json`; each row pins the lock it was scored against (see its `lock date`), and a row whose pinned surface has since been revised reports `superseded_by_surface_change` with its numbers WITHHELD.
 
 HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, NOT lineage-independent clinical validation, and these rows are NOT clonality-corrected (the lineage table above applies to the provdisjoint cohorts only).
 
 | organism | drug | lock date | N (R/S) | acc | sens | spec | abstain | powering | as of |
 |---|---|---|---|---|---|---|---|---|---|
+| campylobacter | ciprofloxacin | 2026-08-31 | 426 (149R/277S) | 0.998 | 0.993 | 1.000 | 0 | POWERED | 2026-09-28 |
 | escherichia_coli_shigella | ciprofloxacin | — | — | — | — | — | — | — | superseded_by_surface_change |
 | escherichia_coli_shigella | gentamicin | — | — | — | — | — | — | — | superseded_by_surface_change |
 

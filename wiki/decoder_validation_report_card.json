@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-09-10",
+  "date": "2026-09-28",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -242,6 +242,20 @@
         "strong_families": [],
         "known_gap_recovered": false,
         "note": "families the deployed rule cannot represent whose labelled carriers are uniformly resistant, family-wise corrected. Changes no metric and no cell state."
+      },
+      "prospective": {
+        "status": "scored",
+        "generated": "2026-09-28",
+        "lock_date": "2026-08-31",
+        "n_scored": 426,
+        "R": 149,
+        "S": 277,
+        "acc": 0.998,
+        "sens": 0.993,
+        "spec": 1.0,
+        "abstain": 0,
+        "powering": "POWERED",
+        "regression": false
       }
     },
     {

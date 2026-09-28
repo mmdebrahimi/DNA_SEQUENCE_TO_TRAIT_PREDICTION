@@ -1,0 +1,100 @@
+{
+  "artifact": "prospective_campylobacter_cipro_disclosure",
+  "schema": "prospective-accrual-disclosure-v1",
+  "generated": "2026-09-28",
+  "organism": "Campylobacter",
+  "drug": "ciprofloxacin",
+  "scored_artifact": "wiki/prospective_lock_validation_Campylobacter_ciprofloxacin_2026-09-28.json",
+  "lock": {
+    "manifest": "wiki/prospective_lock_manifest_2026-08-31.json",
+    "lock_date": "2026-08-31",
+    "frozen_commit": "edb4c5e",
+    "verify_lock": "OK",
+    "is_live_v2_surface": true
+  },
+  "metrics": {
+    "n_scored": 426,
+    "scored_R": 149,
+    "scored_S": 277,
+    "tp": 148,
+    "fp": 0,
+    "tn": 277,
+    "fn": 1,
+    "abstain": 0,
+    "acc": 0.998,
+    "sens": 0.993,
+    "spec": 1.0,
+    "powering": "POWERED"
+  },
+  "independent_reproduction": {
+    "method": "recomputed from cached AMRFinder runs via the deployed call_resistance",
+    "n_scored": 426,
+    "fn": 1,
+    "fp": 0,
+    "matches_artifact": true
+  },
+  "false_negative_diagnosis": {
+    "gca": "GCA_060803015.1",
+    "biosample": "SAMN62387178",
+    "n_determinants": 0,
+    "verdict": "DECLARED_BLIND_SPOT_NOT_DRIFT",
+    "undetectable_mechanisms": ["efflux", "porin_loss", "regulatory"],
+    "note": "carries no gyrA_T86I and no other determinant; the rule's own caveat states an S call cannot rule out efflux/porin_loss/regulatory resistance"
+  },
+  "rule_fired": {
+    "rule": "calibrated_organism_v1",
+    "scope": "Campylobacter|ciprofloxacin",
+    "counter": "qrdr_point",
+    "resistance_threshold": 1,
+    "opt_in": true,
+    "calibration": "IN-SAMPLE N=30, LOO bal-acc 1.0",
+    "stated_precondition": "needs an independent cohort before becoming a default",
+    "precondition_discharged_by_this_cohort": true
+  },
+  "source_concentration": {
+    "measured": true,
+    "method": "NCBI Datasets dataset_report on 40 GCAs sampled stratified across the full accession range",
+    "n_sampled": 40,
+    "n_resolved": 40,
+    "distinct_bioprojects": 1,
+    "largest": ["PRJNA563067", 40],
+    "largest_share": 1.0,
+    "bioproject_title": "PulseNet Canada Campylobacter whole genome sequencing",
+    "umbrella_bioproject": "PRJNA563656",
+    "submitter": "Public Health Agency of Canada",
+    "passes_repo_diversity_bar": false,
+    "repo_bar": ">=5 BioProjects AND largest_share <= 0.60",
+    "accession_layout": {
+      "n": 426,
+      "samn_span": 427,
+      "density": 0.995,
+      "clusters_gap_gt_50": 1,
+      "distinct_release_dates": 1,
+      "release_date": "2026-09-03",
+      "reading": "one submission batch"
+    }
+  },
+  "independence_vs_provdisjoint_cohort": {
+    "provdisjoint_bioproject": "PRJNA560409",
+    "provdisjoint_center": "THE UNIVERSITY OF MELBOURNE",
+    "provdisjoint_n": 40,
+    "provdisjoint_sens": 1.0,
+    "provdisjoint_spec": 1.0,
+    "prospective_bioproject": "PRJNA563067",
+    "prospective_center": "Public Health Agency of Canada",
+    "same_source": false,
+    "reading": "two internally-concentrated but MUTUALLY INDEPENDENT sources (different institution and country) agree on near-perfect Campylobacter cipro performance"
+  },
+  "honest_limits": [
+    "SINGLE-SOURCE: 1 BioProject, largest_share 1.000 -- fails this repo's own >=5-project / <=0.60 diversity bar by the maximum margin; cannot reveal a determinant-family blind spot it does not contain",
+    "tests essentially ONE mechanism: cohort determinants are overwhelmingly gyrA_T86I, so near-perfection on a single well-catalogued point mutation is mechanistically expected and is NOT evidence of broad catalog coverage",
+    "NOT clonality-corrected: prospective rows are not lineage-collapsed and a national surveillance network is clonally structured; read 0.998 as isolate-level",
+    "one submission batch on one release date (2026-09-03)",
+    "this tests the opt-in rule out-of-sample; it does not re-derive its in-sample calibration"
+  ],
+  "is_not": [
+    "source-diverse validation",
+    "lineage-independent validation",
+    "clinical validation"
+  ]
+}
