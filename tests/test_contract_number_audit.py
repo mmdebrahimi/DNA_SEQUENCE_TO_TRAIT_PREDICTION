@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from pathlib import Path
 
 import pytest
@@ -862,3 +863,96 @@ def test_every_kind_the_report_emits_is_defined_somewhere_a_reader_can_look_it_u
         assert set(r.get("number_kinds", {}).values()) <= defined, r["cell_id"]
     for u in rep["cells_unverifiable"]:
         assert set(u["kinds"].values()) <= defined, u["cell_id"]
+
+
+# --- the hidden-number CLASS, closed by property test ----------------------------------------------
+# Two extraction defects have been found in this audit, BOTH by accident: 4 numbers matching inside a
+# longer number (a count moved between two runs), and 5 numbers invisible because they sat before a
+# sentence-final period (a count moved by one). That class is 2-for-2 on real occurrences, which is why
+# it gets a property test rather than a comment.
+
+_DECIMAL_SHAPED = re.compile(r"\d{1,4}\.\d{1,4}")
+
+
+def _attribute_skipped_run(blob: str, m) -> str | None:
+    """Why did DECIMAL_RE skip this decimal-shaped run? Returns the named exclusion, or None if the run
+    cannot be attributed -- which is the gap this test exists to surface."""
+    import scripts.contract_number_audit as mod
+    tok = m.group(0)
+    before = blob[m.start() - 1] if m.start() else ""
+    after = blob[m.end():m.end() + 2]
+    if mod.NON_MEASUREMENT.match(tok):
+        return "year-like (NON_MEASUREMENT)"
+    if before and (before.isalnum() or before == "_" or before == "."):
+        return "identifier/accession context (leading word char or dot)"
+    if re.match(r"\.\d", after):
+        return "dotted continuation (version string)"
+    if re.match(r"\d", after):
+        return "longer number (trailing digit)"
+    return None
+
+
+def test_every_prose_decimal_is_either_extracted_or_attributable():
+    """PROPERTY TEST over the live registry. A future widening or narrowing of DECIMAL_RE's guards
+    surfaces here as a NAMED gap instead of as a count that quietly moves."""
+    import scripts.contract_number_audit as mod
+    from dna_decode.data.cell_registry import cells
+
+    unattributable = []
+    n_runs = n_extracted = 0
+    for c in cells():
+        blob = " ".join(str(getattr(c, f, "") or "") for f in mod.PROSE_FIELDS)
+        taken = {m.start() for m in mod.DECIMAL_RE.finditer(blob)
+                 if not mod.NON_MEASUREMENT.match(m.group(1))}
+        for m in _DECIMAL_SHAPED.finditer(blob):
+            n_runs += 1
+            if m.start() in taken:
+                n_extracted += 1
+                continue
+            if _attribute_skipped_run(blob, m) is None:
+                unattributable.append((c.cell_id, m.group(0),
+                                       blob[max(0, m.start() - 40):m.end() + 20]))
+    assert n_runs >= 200, f"only {n_runs} decimal-shaped runs found — did the registry or regex break?"
+    assert n_extracted >= 150, n_extracted
+    assert not unattributable, (
+        f"{len(unattributable)} decimal run(s) are neither extracted nor explained by a named "
+        f"exclusion: {unattributable[:5]}")
+
+
+def test_the_property_test_would_have_caught_the_sentence_final_defect():
+    r"""NON-VACUITY, and it is the whole point: reconstruct the OLD trailing guard `(?![\d.])` in-test
+    and require the property to FAIL on it, naming the numbers it used to hide. If this ever passes, the
+    property test has stopped being able to detect the defect it was written for."""
+    import scripts.contract_number_audit as mod
+    from dna_decode.data.cell_registry import cells
+
+    old = re.compile(r"(?<![\w.])(\d{1,4}\.\d{1,4})(?![\d.])")
+    hidden = []
+    for c in cells():
+        blob = " ".join(str(getattr(c, f, "") or "") for f in mod.PROSE_FIELDS)
+        taken = {m.start() for m in old.finditer(blob)
+                 if not mod.NON_MEASUREMENT.match(m.group(1))}
+        for m in _DECIMAL_SHAPED.finditer(blob):
+            if m.start() not in taken and _attribute_skipped_run(blob, m) is None:
+                hidden.append((c.cell_id, m.group(0)))
+    assert hidden, "the old guard hid nothing — the non-vacuity control is broken"
+    toks = {t for _, t in hidden}
+    assert {"0.8125", "0.9967", "0.2694", "0.7786"} & toks, toks
+
+
+def test_the_named_exclusions_each_actually_fire_somewhere():
+    """An exclusion that never applies is dead weight that makes the property look satisfied for the
+    wrong reason. Each must be exercised by a real construction."""
+    import scripts.contract_number_audit as mod
+    cases = {
+        "year-like (NON_MEASUREMENT)": "guideline 2024.1 revision",
+        "identifier/accession context (leading word char or dot)": "assembly canFam3.1 used",
+        "dotted continuation (version string)": "tool 1.2.3 shipped",
+    }
+    for expect, text in cases.items():
+        runs = [m for m in _DECIMAL_SHAPED.finditer(text)
+                if m.start() not in {x.start() for x in mod.DECIMAL_RE.finditer(text)
+                                     if not mod.NON_MEASUREMENT.match(x.group(1))}]
+        assert runs, (expect, text)
+        got = {_attribute_skipped_run(text, m) for m in runs}
+        assert expect in got, (expect, got, text)
