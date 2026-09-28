@@ -402,6 +402,33 @@ def test_prospective_block_refuses_to_render_an_unverified_lock():
     assert mod.build_prospective_block(None)["status"] == "not_accrued"
 
 
+def test_prospective_prose_names_the_ACTIVE_lock_and_never_a_retired_one(monkeypatch, tmp_path):
+    """A hardcoded manifest filename in the prose goes stale SILENTLY when the surface is revised.
+
+    Retiring a lock IS the act of making its manifest stop verifying, so nothing re-syncs a restated
+    filename. This card named the retired 2026-06-22 v1 manifest while rendering a cell scored against
+    the 2026-08-31 v2 lock -- the standing trust surface citing the wrong pinning authority. The name
+    must be DERIVED from resolve_active_lock(), and no other manifest may appear in the prose.
+    """
+    import re
+
+    from dna_decode.eval.prospective_lock import resolve_active_lock
+
+    active = resolve_active_lock()[0].name
+
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "prospective_lock_validation_Klebsiella_ciprofloxacin_2026-08-24.json").write_text(
+        json.dumps(_prospective_artifact()), encoding="utf-8")
+    assert mod.main() == 0
+    md = (wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
+
+    assert active in md, f"prose must name the active lock {active}"
+    # Non-vacuity: any manifest it mentions must BE the active one, so a future hardcoded
+    # filename fails here instead of quietly co-existing with the derived name.
+    mentioned = set(re.findall(r"prospective_lock_manifest_[0-9-]+\.json", md))
+    assert mentioned == {active}, f"prose mentions non-active manifest(s): {mentioned - {active}}"
+
+
 def test_a_powered_prospective_regression_raises_a_TOP_LEVEL_flag(monkeypatch, tmp_path):
     """A consumer filtering `state == SCORED` must not be able to miss a contradicting prospective result.
 

@@ -651,11 +651,23 @@ def main() -> int:
     prosp_rows = [(k, c) for k, c in rows if c.get("prospective")]
     if prosp_rows:
         L.append("\n## Prospective-lock disclosure (temporal — leakage-free BY CONSTRUCTION)\n")
+        # The active manifest is DERIVED, never restated: retiring a lock IS the act of making its
+        # manifest stop verifying, so a hardcoded filename here goes stale silently the moment the
+        # surface is revised (it named the retired 2026-06-22 v1 manifest for four weeks after the
+        # v2 gentamicin lock superseded it). Rows may legitimately pin DIFFERENT locks — each row's
+        # own lock is in the `lock date` column — so this names the active one and says so.
+        try:
+            from dna_decode.eval.prospective_lock import resolve_active_lock
+            _active = f"`wiki/{resolve_active_lock()[0].name}`"
+        except Exception as exc:  # refuses on ambiguity/malformed; never fabricate a lock name
+            _active = f"unresolvable ({type(exc).__name__})"
         L.append("A SEPARATE arm from the provenance-disjoint numbers above, not a replacement for them. "
-                 "Every isolate here became public STRICTLY AFTER the decoder was frozen and sha256-pinned "
-                 "(`wiki/prospective_lock_manifest_2026-06-22.json`), so the decoder cannot have been tuned "
-                 "to it — the leakage argument is temporal, not statistical. `verify_lock` re-hashes the "
-                 "live decoder on every scoring run and hard-fails on drift.\n")
+                 "Every isolate here became public STRICTLY AFTER the decoder was frozen and sha256-pinned, "
+                 "so the decoder cannot have been tuned to it — the leakage argument is temporal, not "
+                 "statistical. `verify_lock` re-hashes the live decoder on every scoring run and hard-fails "
+                 f"on drift. The ACTIVE lock is {_active}; each row pins the lock it was scored against "
+                 "(see its `lock date`), and a row whose pinned surface has since been revised reports "
+                 "`superseded_by_surface_change` with its numbers WITHHELD.\n")
         L.append("HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, NOT "
                  "lineage-independent clinical validation, and these rows are NOT clonality-corrected "
                  "(the lineage table above applies to the provdisjoint cohorts only).\n")
