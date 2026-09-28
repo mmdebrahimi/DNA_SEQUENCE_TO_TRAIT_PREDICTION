@@ -25,6 +25,7 @@ usually a count whose denominator lives elsewhere, which this cannot check witho
 """
 from __future__ import annotations
 
+import bisect
 import datetime
 import json
 import re
@@ -61,7 +62,11 @@ def _expand_braces(path: str) -> list[str]:
 # A decimal immediately preceded by a letter/underscore is part of an IDENTIFIER, not a measurement --
 # canFam3.1, GCA_000005845.2, v1.2. Capturing those produced a false CANDIDATE_DRIFT on the dog
 # morphology cell's "3.1", which is the assembly name canFam3.1.
-DECIMAL_RE = re.compile(r"(?<![\w.])(\d{1,4}\.\d{1,4})(?![\d.])")
+# The trailing guard rejects a DOTTED CONTINUATION (`1.2.3`, a version string) but NOT a sentence-final
+# period. The original `(?![\d.])` did both, so any number ending a sentence was invisible to the audit --
+# 5 of them, found only because a citation displaced the period in front of `AUROC 0.580` and the extracted
+# count moved by one. `(?!\.\d)` keeps the version-string rejection that guard existed for.
+DECIMAL_RE = re.compile(r"(?<![\w.])(\d{1,4}\.\d{1,4})(?![\d])(?!\.\d)")
 
 # Numbers that are not measurements: dates, tool versions, guideline years, p-value exponents.
 NON_MEASUREMENT = re.compile(r"^(19|20)\d{2}\.")
@@ -94,6 +99,7 @@ KIND_EXTERNAL = "external-reference"
 KIND_ENFORCED = "enforced-by-test"
 KIND_THRESHOLD = "threshold"
 KIND_SUPERSEDED = "superseded-value"
+KIND_DERIVED = "derived"
 KIND_DRIFT = "candidate-drift"
 KIND_UNVERIFIABLE = "unverifiable"
 
@@ -130,6 +136,27 @@ SUPERSEDED_VALUE: dict[tuple[str, str], str] = {
         "deliberately recorded as the REJECTED over-rescue figure (the flat-K=1 rule's 11/12), kept in "
         "the prose so it is never quoted as the cell's recall. Superseded by 0.833 on the committed "
         "decision 'a clean 0.833 beats an overfit 0.917'.",
+}
+
+# A number the prose COMPUTES from counts it also states. This script's own posture has always said a
+# cited number may legitimately be DERIVED -- a ratio, a sum, a percentage of a raw count -- but there was
+# no kind for it, so a derived value could only pass by being coincidentally present, or fail as drift.
+# Boundary-aware matching is what made this necessary: it correctly stopped accepting `0.862` because
+# `0.86` sits inside some artifact's `0.867`, which was never evidence of anything.
+#
+# THE REASON MUST CARRY THE ARITHMETIC. "It's derived" with no numerator and denominator is an unaudited
+# exemption; with them, a reader re-does the division in their head and the claim is checkable without any
+# artifact at all. Each entry below states the fraction AND where its inputs are readable.
+DERIVED_VALUE: dict[tuple[str, str], str] = {
+    ("typing:bacteriophage:phage", "0.862"):
+        "derived, and the prose states the fraction it comes from: '25/29 called = 0.862' "
+        "(25/29 = 0.8621). Both counts are in the same clause, so the quotient is checkable by "
+        "arithmetic; no artifact needs to store it.",
+    ("typing:bacteriophage:phage", "0.291"):
+        "derived, stated in the prose as '25/86=0.291' (25/86 = 0.2907). Same clause carries both counts.",
+    ("typing:Salmonella:salmserovar", "0.900"):
+        "derived coverage: the prose states 200 isolates and 'abstention 10.0%', so covered = 180/200 = "
+        "0.900. Both inputs are in the same passage; the artifact stores the counts, not the rate.",
 }
 
 # Bars and cut-offs, which have no artifact to live in by definition. Same role as ADJUDICATED_BENIGN,
@@ -180,7 +207,19 @@ def _declared_kind(cell_id: str, tok: str) -> str | None:
         return KIND_EXTERNAL
     if key in SUPERSEDED_VALUE:
         return KIND_SUPERSEDED
+    if key in DERIVED_VALUE:
+        return KIND_DERIVED
     return None
+
+
+def _declared_reason(cell_id: str, tok: str) -> str:
+    """The mandatory reason behind a declared kind. A declaration without one is an unaudited exemption."""
+    key = (cell_id, tok)
+    for table in (ADJUDICATED_BENIGN, DECLARED_THRESHOLD, ENFORCED_BY_TEST,
+                  EXTERNAL_REFERENCE, SUPERSEDED_VALUE, DERIVED_VALUE):
+        if key in table:
+            return table[key]
+    return ""
 
 
 def _classify_kind(cell_id: str, blob: str, tok: str, *, matched_in_artifact: bool,
@@ -305,31 +344,41 @@ def _decoy_full_match_count(nums: list[str], own: set[str], pool: list[str], cac
         return 0, 0
     full, trials = 0, 0
     for i in range(0, len(decoys) - n + 1, n):
-        texts, art_nums = [], []
+        # Keep each member's numbers SEPARATE rather than concatenating them. A rounding match against the
+        # union is exactly a match against SOME member, so the union is unnecessary -- and building it
+        # copied the whole cached float list on every one of ~600 trials per cell, which is what kept this
+        # at minutes instead of seconds. Same for the text: only join when the group is actually >1.
+        texts, num_lists = [], []
         for p in decoys[i:i + n]:
             t, a = _cached_artifact(p, cache)
             if t is None:
                 continue
             texts.append(t)
-            art_nums.extend(a)
+            num_lists.append(a)
         if not texts:
             continue
         trials += 1
-        hay = "\n".join(texts)
-        if all(any(v in hay for v in _number_variants(x)) or _matches_by_rounding(x, art_nums) is not None
+        hay = texts[0] if len(texts) == 1 else "\n".join(texts)
+        if all(any(_bounded_in(v, hay) for v in _number_variants(x))
+               or any(_matches_by_rounding(x, an) is not None for an in num_lists)
                for x in nums):
             full += 1
     return full, trials
 
 
 def _artifact_numbers(text: str) -> list[float]:
-    """Every numeric token in the artifact, as floats, for rounding-aware comparison."""
+    """Every numeric token in the artifact, as floats, SORTED, for rounding-aware comparison.
+
+    Sorted so `_matches_by_rounding` can bisect three ranges instead of scanning tens of thousands of
+    tokens per candidate. Nothing depends on document order -- the only consumer is the tolerance check.
+    """
     out = []
     for m in re.findall(r"-?\d+(?:\.\d+)?", text):
         try:
             out.append(float(m))
         except ValueError:
             pass
+    out.sort()
     return out
 
 
@@ -350,10 +399,15 @@ def _matches_by_rounding(tok: str, art_nums: list[float]) -> float | None:
     # so a cited "53.0" would spuriously fail against an artifact's 0.5295. Half a unit at the cited
     # precision is what "rounds to" means, and it is immune to float-repr edge cases.
     tol = 0.5 * (10.0 ** -dec) + 1e-9
-    for a in art_nums:
-        for cand in (a, a * 100.0, a / 100.0):
-            if abs(cand - cited) <= tol:
-                return a
+    # `cand in [cited-tol, cited+tol]` for cand in (a, a*100, a/100) is equivalent to `a` falling in one of
+    # three ranges. On a SORTED art_nums that is three bisects instead of a full scan -- which matters
+    # because whole-number matching sends far more numbers down this fallback than substring matching did
+    # (it took the audit from 14 s to 7m46s before this).
+    lo, hi = cited - tol, cited + tol
+    for a, b in ((lo, hi), (lo / 100.0, hi / 100.0), (lo * 100.0, hi * 100.0)):
+        i = bisect.bisect_left(art_nums, a)
+        if i < len(art_nums) and art_nums[i] <= b:
+            return art_nums[i]
     return None
 
 
@@ -377,6 +431,44 @@ def _package_source_blob() -> str:
 
 def _in_package_source(tok: str) -> bool:
     return any(v in _package_source_blob() for v in _number_variants(tok))
+
+
+def _bounded_in(v: str, hay: str) -> bool:
+    """Is `v` present in `hay` as a WHOLE number rather than a fragment of a longer one?
+
+    THE DEFECT THIS FIXES. The prose side has always been boundary-guarded (`DECIMAL_RE` carries
+    `(?<![\\w.])` and `(?![\\d.])`), but the artifact side was a raw `v in hay` substring test. So a short
+    token matched INSIDE a longer number and the audit accepted it as provenance:
+        `2.1`    matched inside `72.1`   (a coverage metric, in a pneumo artifact)
+        `0.51`   matched inside `0.5189` (a different protein's Spearman, for the forward cell)
+        `0.9`    matched inside `0.9217` (a different accuracy, for salmserovar)
+    Measured exposure when this was found: 4 of 157 then-clean numbers rested on nothing else.
+
+    A comparison that is strict on one side and loose on the other reports agreement it has not earned,
+    so this is applied to BOTH the cited haystack AND the decoy haystacks. Holding a citation to a
+    stricter bar than its own control would make the control measure a different question than the one
+    it exists to control for.
+
+    Implemented with `str.find` rather than the equivalent regex `(?<![\\d.])v(?![\\d])`, and that choice is
+    MEASURED, not stylistic: profiling the decoy scan showed 7 regex searches consuming 0.814 of 1.031
+    seconds -- 0.116 s each -- because a lookbehind forces a full scan of a multi-megabyte artifact. The
+    find loop is C-level and does O(1) work per occurrence.
+    """
+    n = len(v)
+    end = len(hay)
+    start = 0
+    while True:
+        i = hay.find(v, start)
+        if i < 0:
+            return False
+        # no digit or dot immediately before (so `2.1` does not match inside `72.1` or `0.2.1`),
+        # no digit immediately after (so `0.51` does not match inside `0.5189`)
+        before_ok = i == 0 or not (hay[i - 1].isdigit() or hay[i - 1] == ".")
+        j = i + n
+        after_ok = j >= end or not hay[j].isdigit()
+        if before_ok and after_ok:
+            return True
+        start = i + 1
 
 
 def _number_variants(tok: str) -> list[str]:
@@ -463,7 +555,7 @@ def audit() -> dict:
         art_nums = _artifact_numbers(haystack)
         found, missing, rounded, in_code = [], [], {}, []
         for tok in nums:
-            if any(v in haystack for v in _number_variants(tok)):
+            if any(_bounded_in(v, haystack) for v in _number_variants(tok)):
                 found.append(tok)
                 continue
             src = _matches_by_rounding(tok, art_nums)
@@ -476,10 +568,16 @@ def audit() -> dict:
             # NOT by searching the package source, which was tried and is VACUOUS: variant matching of a
             # 2-4 digit token against a multi-megabyte source blob accepted 17/17 tokens including 12
             # randomly-generated ones, turning real signal into a clean-looking zero.
-            key = (c.cell_id, tok)
-            if key in ADJUDICATED_BENIGN:
+            # Any HUMAN-DECLARED kind means this number is legitimately absent from the artifact -- a bar,
+            # an external reference value, a test-pinned figure, a deliberately-recorded rejected value, or
+            # a quotient derived from counts the prose states. Each declaration carries a mandatory reason,
+            # so this is an adjudication ON THE RECORD, not a silent exemption. Only a number with NO
+            # declared kind and no artifact match is candidate drift.
+            declared = _declared_kind(c.cell_id, tok)
+            if declared:
                 found.append(tok)
-                in_code.append({"number": tok, "why": ADJUDICATED_BENIGN[key]})
+                in_code.append({"number": tok, "kind": declared,
+                                "why": _declared_reason(c.cell_id, tok)})
             else:
                 missing.append(tok)
         found_set = set(found)
@@ -542,6 +640,7 @@ def audit() -> dict:
             KIND_ENFORCED: "pinned by an exact-equality assert in the test suite, not by an artifact",
             KIND_THRESHOLD: "a bar or cut-off, which has no artifact to live in",
             KIND_SUPERSEDED: "recorded deliberately as the REJECTED value, so it is never quoted",
+            KIND_DERIVED: "computed from counts the prose itself states; the reason carries the arithmetic",
             KIND_DRIFT: "cited but absent from the cited artifact -- the thing this audit looks for",
             KIND_UNVERIFIABLE: "no provenance of any kind: an uncited measurement",
         },

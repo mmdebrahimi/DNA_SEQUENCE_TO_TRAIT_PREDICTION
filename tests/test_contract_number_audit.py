@@ -304,17 +304,17 @@ def test_every_graded_cell_is_compared_against_the_whole_pool():
 def test_full_pool_anchors_measured_before_implementation():
     """Anchors measured BEFORE this control was written, so a mismatch means the code is wrong.
 
-    The planning measurement was 6/602, 1/602, 308/602, 355/602. The denominators are 599 here and two
-    counts are one lower, because the pool now EXCLUDES this script's own accrued outputs -- artifacts
-    that list the very numbers under test. That exclusion is the fix in
-    `test_the_pool_excludes_the_audits_own_output`; the rates are unchanged to three decimals.
+    RE-MEASURED after the artifact-side matcher was boundary-guarded, and the movement is the POINT: the
+    planning figures (6/602, 1/602, 308/602, 355/602) were all measured with a matcher that accepted a
+    short token inside a longer number. Under whole-number matching mlst and resfinder reach EXACTLY zero
+    and ktype falls 307 -> 29. The loose matcher, not the sample size, was the dominant error.
     """
     rep = _cached_report()
     rows = {r["cell_id"]: r for r in rep["cells"]}
-    for cell_id, expect in (("typing:bacteria:mlst", 6),
-                            ("finder:bacteria:resfinder", 1),
-                            ("typing:Klebsiella:ktype", 307),
-                            ("finder:Escherichia_coli:pointfinder", 354)):
+    for cell_id, expect in (("typing:bacteria:mlst", 0),
+                            ("finder:bacteria:resfinder", 0),
+                            ("typing:Klebsiella:ktype", 29),
+                            ("finder:Escherichia_coli:pointfinder", 175)):
         assert rows[cell_id]["decoy_full_match"] == expect, (cell_id, rows[cell_id])
         assert rows[cell_id]["n_decoys"] == 599, (cell_id, rows[cell_id])
 
@@ -335,17 +335,19 @@ def test_the_pool_excludes_the_audits_own_output():
             assert r["n_decoys"] <= pool_all - len(own), (r["cell_id"], r["n_decoys"], pool_all, len(own))
 
 
-def test_essentiality_does_not_grade_high_the_case_that_exposed_the_underpowering():
-    """THE load-bearing non-vacuity test of Step 1.
+def test_the_sample_vs_full_pool_gap_is_boundary_noise_not_a_wrong_verdict():
+    """CORRECTS THIS FILE'S OWN EARLIER CLAIM, which was measured on a broken matcher.
 
-    `essentiality:any:essentiality`'s seven numbers matched 0 of 10 sampled artifacts, which graded HIGH
-    -- the strongest verdict available -- while against the full pool 45 of 600 completely unrelated
-    artifacts contain ALL seven (a yeast benchmark, two TB baselines, staleness snapshots, a pigment run).
-    If this ever grades HIGH again, the control has gone back to being underpowered.
+    The previous version asserted `essentiality:any:essentiality` must NOT grade HIGH, on the grounds that
+    44 of 600 unrelated artifacts contained all its numbers while its 10-artifact sample saw 0 of 10. Both
+    of those figures came from the LOOSE substring matcher. Under whole-number matching the true count is
+    5 of 600 (0.83%) and the cell correctly grades HIGH -- so the sample's original HIGH verdict was RIGHT,
+    and "the control graded the worst cell best" was an artifact of the matcher, not of the sample size.
 
-    NOTE the plan for this step predicted LOW; measured, it is MODERATE at 7.5%. The substantive claim is
-    "not HIGH", which is what is asserted -- bending the band to make the predicted word come true is the
-    failure mode this repo has recorded twice as a mis-specified bar.
+    Measured apportionment, holding the matcher constant at STRICT: k=10 and the full pool agree on 14 of
+    18 cell grades, and all four disagreements sit near a band boundary. Sampling error is real but modest;
+    the matcher was the dominant defect. This test pins the corrected direction so the mis-apportionment
+    cannot be reintroduced.
     """
     import scripts.contract_number_audit as mod
     from dna_decode.data.cell_registry import cells
@@ -355,15 +357,37 @@ def test_essentiality_does_not_grade_high_the_case_that_exposed_the_underpowerin
     cell = next(c for c in cells() if c.cell_id == "essentiality:any:essentiality")
     blob = " ".join(str(getattr(cell, f, "") or "") for f in mod.PROSE_FIELDS)
     nums = [t for t in dict.fromkeys(DECIMAL_RE.findall(blob))
-            if not mod.NON_MEASUREMENT.match(t) and (cell.cell_id, t) not in ADJUDICATED_BENIGN]
-    # 8, not the 7 of the original measurement: Step 4's citation placement moved a sentence-final
-    # period off `AUROC 0.580`, which DECIMAL_RE's (?![\d.]) lookahead had been hiding. The figure is
-    # 44/600 either way -- adding a number can only make a full match harder, and it barely moved.
-    assert len(nums) == 8, nums
+            if not mod.NON_MEASUREMENT.match(t) and mod._declared_kind(cell.cell_id, t) is None]
     full, n = mod._decoy_full_match_count(nums, set(), pool, {}, group_size=1)
     assert n >= 500
-    assert full >= 20, f"only {full} decoys matched — has the pool or the matcher changed?"
-    assert mod._grade(full, n, nums) != "HIGH"
+    assert full <= 20, f"{full} of {n} matched — has the matcher gone loose again?"
+    assert mod._grade(full, n, nums) == "HIGH"
+
+
+def test_whole_number_matching_removed_every_low_discrimination_cell():
+    """The loose matcher MANUFACTURED the LOW bucket. It reported 6 LOW cells (ktype 51%, pointfinder 59%,
+    slco1b1 65%, serotype 66%, cyp4f2 68%, ugt1a1 83%); under whole-number matching there are ZERO, and
+    those same cells sit at 5%, 29%, 19%, 8%, 7% and 21%. A citation cannot be judged weak on evidence that
+    a number appeared inside a different, longer number."""
+    rep = _cached_report()
+    assert rep["n_cells_low_discrimination"] == 0, rep["cells_low_discrimination"]
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    for cell_id in ("typing:Klebsiella:ktype", "pgx:human:slco1b1", "pgx:human:ugt1a1",
+                    "typing:Escherichia_coli:serotype", "pgx:human:cyp4f2"):
+        assert rows[cell_id]["decoy_match_rate"] < 0.50, (cell_id, rows[cell_id]["decoy_match_rate"])
+
+
+def test_exactly_zero_is_reachable_again_once_matching_is_strict():
+    """Load-bearing for the band justification. The HIGH band was moved off `rate == 0` because no cell
+    reached zero -- a measurement taken with the loose matcher. Under whole-number matching SIX cells reach
+    exactly zero, so that stated reason was wrong. The band stays at <5% on a DIFFERENT and now-measured
+    argument (it separates 0-5% from the 5-50% group; `rate == 0` would file the dog cells at 0.3% beside
+    pointfinder at 29%), and the exact rate ships per cell so nothing is hidden by the band."""
+    rep = _cached_report()
+    zero = [r["cell_id"] for r in rep["cells"] if r["n_decoys"] and r["decoy_full_match"] == 0]
+    assert len(zero) >= 6, zero
+    assert "typing:Salmonella:salmserovar" in zero      # 30 measured figures, zero coincidental haystacks
+    assert "finder:bacteria:resfinder" in zero
 
 
 def test_size_matching_removes_the_multi_citation_haystack_advantage():
@@ -401,7 +425,7 @@ def test_step1_leaves_verdict_and_drift_untouched():
     rep = _cached_report()
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
-    assert rep["n_numbers_checked"] == 176
+    assert rep["n_numbers_checked"] == 180
     assert rep["n_cells_audited"] == 19
 
 
@@ -450,7 +474,7 @@ def test_per_kind_counts_sum_to_every_extracted_number():
     this also pins that the guard is reachable."""
     rep = _cached_report()
     assert sum(rep["n_by_kind"].values()) == rep["n_numbers_extracted"]
-    assert rep["n_numbers_extracted"] == 192
+    assert rep["n_numbers_extracted"] == 196
     assert set(rep["n_by_kind"]) <= set(rep["kind_definitions"])
 
 
@@ -460,7 +484,7 @@ def test_the_kind_tally_reconciles_with_the_cited_and_uncited_halves():
     uncited = sum(len(u["kinds"]) for u in rep["cells_unverifiable"]) \
         + sum(len(u["kinds"]) for u in rep["cells_all_numbers_typed_no_citation"])
     assert cited + uncited == rep["n_numbers_extracted"], (cited, uncited)
-    assert cited == rep["n_numbers_checked"] == 176
+    assert cited == rep["n_numbers_checked"] == 180
 
 
 def test_unverifiable_now_means_only_the_residual():
@@ -545,7 +569,116 @@ def test_step2_leaves_verdict_and_drift_untouched():
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
     assert rep["n_by_kind"].get("candidate-drift", 0) == 0
-    assert rep["n_numbers_checked"] == 176
+    assert rep["n_numbers_checked"] == 180
+
+
+# --- WP1: whole-number matching on BOTH sides ------------------------------------------------------
+# The prose side was always boundary-guarded; the artifact side was a raw substring test. A comparison
+# that is strict on one side and loose on the other reports agreement it has not earned.
+
+def test_bounded_in_rejects_a_number_inside_a_longer_number():
+    """The three real false matches that were shipping, each verbatim from the artifacts."""
+    import scripts.contract_number_audit as mod
+    assert not mod._bounded_in("2.1", 'cov_primary_metrics: [100.0, 72.1]')
+    assert not mod._bounded_in("0.51", '"abs_spearman": 0.5189')
+    assert not mod._bounded_in("0.9", '"accuracy_on_called_after": 0.9217877094972067')
+    # and the whole-number cases still match
+    assert mod._bounded_in("2.1", "no-call rate 2.1% of the cohort")
+    assert mod._bounded_in("0.9", "coverage 0.9 exactly")
+    assert mod._bounded_in("72.1", 'metrics: [100.0, 72.1]')
+
+
+def test_a_leading_digit_or_dot_also_blocks_the_match():
+    import scripts.contract_number_audit as mod
+    assert not mod._bounded_in("2.1", "value 72.1 here")      # digit before
+    assert not mod._bounded_in("5.28", "doi 10.5.28 weird")   # dot before
+    assert mod._bounded_in("2.1", "value (2.1) here")
+
+
+def test_both_match_sites_are_boundary_aware_not_just_the_cited_one():
+    """Structural guard. Tightening only the cited side would hold a citation to a stricter bar than its
+    own decoy control, making the control measure a different question than the one it controls for."""
+    src = (REPO / "scripts" / "contract_number_audit.py").read_text(encoding="utf-8")
+    assert "any(v in haystack for v in _number_variants" not in src
+    assert "any(v in hay for v in _number_variants" not in src
+    assert src.count("_bounded_in(v, ") >= 2
+
+
+def test_the_four_formerly_substring_only_numbers_now_resolve_honestly():
+    """Each of the 4 got the treatment its evidence actually supports -- not a blanket exemption:
+    3 are `derived` (the prose states the fraction), 1 was a citation-coverage gap (real number, uncited
+    sibling artifact) and got the citation."""
+    rep = _cached_report()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    assert rows["typing:bacteriophage:phage"]["number_kinds"]["0.862"] == "derived"
+    assert rows["typing:bacteriophage:phage"]["number_kinds"]["0.291"] == "derived"
+    assert rows["typing:Salmonella:salmserovar"]["number_kinds"]["0.900"] == "derived"
+    assert rows["finder:any:forward"]["number_kinds"]["0.5115"] == "artifact"
+    assert "wiki/forward_inverse_sweep_2026-07-17.json" in rows["finder:any:forward"]["cited"]
+    for cid in ("typing:bacteriophage:phage", "typing:Salmonella:salmserovar", "finder:any:forward"):
+        assert rows[cid]["candidate_drift"] == [], (cid, rows[cid]["candidate_drift"])
+
+
+def test_every_derived_reason_carries_the_arithmetic():
+    """"It's derived" with no numerator and denominator is an unaudited exemption. With them, a reader
+    re-does the division and the claim is checkable without any artifact at all."""
+    import re as _re
+    import scripts.contract_number_audit as mod
+    assert mod.DERIVED_VALUE
+    for (cell_id, tok), why in mod.DERIVED_VALUE.items():
+        assert _re.search(r"\d+\s*/\s*\d+", why), (cell_id, tok, why)
+        quoted = _re.search(r"(\d+)\s*/\s*(\d+)", why)
+        num, den = int(quoted.group(1)), int(quoted.group(2))
+        assert abs(num / den - float(tok)) <= 0.5 * 10 ** -len(tok.split(".")[1]) + 1e-9, \
+            f"{cell_id} {tok}: stated {num}/{den} = {num/den} does not round to the cited value"
+
+
+def test_every_declared_kind_has_a_retrievable_reason():
+    """A declared kind short-circuits the drift decision, so a declaration with no reason would be a
+    silent exemption sitting in the `found` column."""
+    import scripts.contract_number_audit as mod
+    tables = (mod.ADJUDICATED_BENIGN, mod.DECLARED_THRESHOLD, mod.ENFORCED_BY_TEST,
+              mod.EXTERNAL_REFERENCE, mod.SUPERSEDED_VALUE, mod.DERIVED_VALUE)
+    for table in tables:
+        for cell_id, tok in table:
+            assert mod._declared_kind(cell_id, tok) is not None, (cell_id, tok)
+            assert len(mod._declared_reason(cell_id, tok)) > 40, (cell_id, tok)
+
+
+def test_the_lookahead_stops_hiding_sentence_final_numbers_but_still_rejects_versions():
+    """`(?![\\d.])` did two jobs: reject a dotted continuation (`1.2.3`) AND, accidentally, hide any number
+    before a sentence-final period. `(?!\\.\\d)` keeps only the job it existed for."""
+    import scripts.contract_number_audit as mod
+    assert mod.DECIMAL_RE.findall("sens 0.580. The next") == ["0.580"]
+    assert mod.DECIMAL_RE.findall("version v1.2.3 shipped") == []
+    assert mod.DECIMAL_RE.findall("tool 1.2.3 here") == []
+    assert mod.DECIMAL_RE.findall("assembly canFam3.1 used") == []
+    assert mod.DECIMAL_RE.findall("GCA_000005845.2 fetched") == []
+    assert mod.DECIMAL_RE.findall("Zenodo 10.5281/zenodo.140") == ["10.5281"]
+
+
+def test_the_four_previously_hidden_numbers_are_now_checked():
+    """cyp4f2 0.8125, pointfinder 0.9967, mlst 0.2694, resfinder 0.7786 were invisible to the audit
+    entirely. Extracted rises 192 -> 196 and checked 176 -> 180; all four must also MATCH."""
+    rep = _cached_report()
+    assert rep["n_numbers_extracted"] == 196
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    for cell_id, tok in (("pgx:human:cyp4f2", "0.8125"),
+                         ("finder:Escherichia_coli:pointfinder", "0.9967"),
+                         ("typing:bacteria:mlst", "0.2694"),
+                         ("finder:bacteria:resfinder", "0.7786")):
+        assert tok in rows[cell_id]["number_kinds"], (cell_id, tok)
+        assert tok not in rows[cell_id]["candidate_drift"], (cell_id, tok)
+
+
+def test_the_verdict_stays_clean_because_nothing_was_actually_drifted():
+    """The matcher fix was expected to flip the verdict to ADJUDICATION_REQUIRED. It does not -- once the
+    4 numbers are given the provenance they actually have, zero genuine drift remains. A clean verdict
+    earned this way is the point; a clean verdict from loose matching was not."""
+    rep = _cached_report()
+    assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
+    assert rep["n_candidate_drift"] == 0
+    assert rep["n_numbers_checked"] == 180
 
 
 # --- Step 4: only the citations the fixed rule admitted --------------------------------------------
@@ -597,17 +730,22 @@ def test_step4_raised_coverage_without_creating_drift():
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
 
 
-def test_the_full_pool_control_reclassified_cells_the_sample_had_flattered():
-    """The point of Step 1, pinned so a silent regression to a weaker control is visible: the sample
-    reported 2 LOW cells, the full pool reports 6. Three of them (ktype 51%, pointfinder 59%, slco1b1
-    65%) were graded MODERATE or better by 10 draws."""
+def test_the_full_pool_scan_is_still_the_right_control_even_though_it_was_not_the_big_defect():
+    """The seedless full-pool scan earns its keep on DETERMINISM and boundary resolution, not on the
+    dramatic reclassification it appeared to produce (that was the matcher). Pinned: every graded cell is
+    compared against the whole pool, and the four cells where k=10 disagreed with the full pool under the
+    same strict matcher are exactly the ones sitting near a band edge."""
     rep = _cached_report()
+    graded = [r for r in rep["cells"] if r["checked"] and r["n_decoys"]]
+    assert len(graded) >= 15
+    for r in graded:
+        assert r["n_decoys"] * r["decoy_group_size"] >= 100, r["cell_id"]
     rows = {r["cell_id"]: r for r in rep["cells"]}
-    assert rep["n_cells_low_discrimination"] >= 6
-    for cell_id in ("typing:Klebsiella:ktype", "finder:Escherichia_coli:pointfinder",
-                    "pgx:human:slco1b1"):
-        assert rows[cell_id]["discrimination"] == "LOW", (cell_id, rows[cell_id])
-        assert rows[cell_id]["decoy_match_rate"] >= 0.50
+    # the boundary cases: small non-zero rates that 10 draws cannot resolve
+    for cell_id in ("pgx:human:cyp4f2", "hla:human:b5701", "essentiality:any:essentiality",
+                    "finder:any:forward"):
+        assert 0.0 < rows[cell_id]["decoy_match_rate"] < 0.10, (cell_id, rows[cell_id])
+
 
 
 # --- the grade bands themselves -------------------------------------------------------------------
