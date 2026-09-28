@@ -46,6 +46,13 @@ PROMISING = "PROMISING"
 LEAD_ONLY = "LEAD_ONLY"
 REJECTED = "REJECTED"
 UNSCREENABLE = "UNSCREENABLE"
+# The screen RAN, condemned nothing, and is waiting on ONE named measurement. This is deliberately NOT
+# folded into REJECTED, and the distinction is load-bearing in the DISCARDING direction: the first version
+# of this classifier lumped the gate-screen's `INCOMPLETE` in with `REJECTED`, which reported both F2
+# candidates as condemned when each had passed 9 of 10 gates and carried regime_verdict=OPEN (the one
+# genuinely open regime cell). Reporting "rejected" for "needs one more number" throws away live leads.
+# It is also distinct from UNSCREENABLE: there, nothing checkable was supplied at all.
+INCONCLUSIVE = "INCONCLUSIVE"
 
 
 def _locator_state(cand: dict) -> tuple[bool, str]:
@@ -100,9 +107,14 @@ def _classify(o: dict) -> str:
     """PROMISING requires BOTH screens to have actually run and neither to condemn it."""
     if not o["locator_ok"]:
         return UNSCREENABLE
-    if o["label_verdict"] in ("REJECTED", "INCOMPLETE") or o["regime_verdict"] in (
-            "CLOSED_NEGATIVE", "LOSES_TO_CATALOG"):
+    # A recorded-negative regime, or a label screen that actually TRIPPED a gate, is a rejection.
+    if o["label_verdict"] == "REJECTED" or o["regime_verdict"] in ("CLOSED_NEGATIVE",
+                                                                  "LOSES_TO_CATALOG"):
         return REJECTED
+    # `INCOMPLETE` is the gate-screen saying "I need a measurement you did not give me" — it condemns
+    # nothing. Kept separate from REJECTED so a candidate awaiting one number is not discarded.
+    if o["label_verdict"] == "INCOMPLETE":
+        return INCONCLUSIVE
     is_method = (o.get("kind") or "").lower() == "method"
     if o["label_verdict"] is None and not is_method:
         return LEAD_ONLY            # a dataset we could not screen for labels yet
@@ -164,11 +176,18 @@ def main(argv=None) -> int:
     a.out.write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
 
     print(f"screened {rep['n_candidates']} candidates")
-    for k in (PROMISING, LEAD_ONLY, REJECTED, UNSCREENABLE):
+    for k in (PROMISING, INCONCLUSIVE, LEAD_ONLY, REJECTED, UNSCREENABLE):
         if rep["class_counts"].get(k):
             print(f"  {k:12s} {rep['class_counts'][k]}")
     for fam, c in sorted(rep["by_family"].items()):
         print(f"  {fam}: {c}")
+    inc = [s for s in rep["candidates"] if s["screen_class"] == INCONCLUSIVE]
+    if inc:
+        print("\nINCONCLUSIVE — the screen ran and condemned nothing; each needs ONE named measurement:")
+        for s in inc:
+            trips = [g for g, v in s["label_gates"].items() if v == "insufficient_data"]
+            print(f"  [{s.get('family')}] {s['name']}")
+            print(f"      awaiting: {', '.join(trips) or '?'}  (regime={s['regime_verdict']})")
     if rep["class_counts"].get(PROMISING):
         print("\nPROMISING (label-screen cleared or regime-open) — still LEADS, not findings:")
         for s in rep["candidates"]:

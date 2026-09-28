@@ -1,0 +1,132 @@
+{
+  "artifact": "deep_research_candidates",
+  "schema": "deep-research-harvest-v1",
+  "generated": "2026-09-28",
+  "window": "2024-09..2026-09 (stated window; two candidates below predate it and are labelled)",
+  "status": "PARTIAL \u2014 cut off by a session rate limit before any family agent reported. F1 got one first-party search; F2 got two plus TWO direct verifications and one decisive measurement; F3 and F4 were NOT searched at all. Interim record, not a completed harvest.",
+  "coverage": {
+    "F1_label_substrates": "one search (DMS/MaveDB axis only). AMR measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits NOT searched.",
+    "F2_condition_coverage": "two searches + one direct verification. The strongest lead is recorded.",
+    "F3_deconfounded_designs": "NOT SEARCHED \u2014 agent died before reporting.",
+    "F4_dosage_transfer": "NOT SEARCHED \u2014 agent died before reporting."
+  },
+  "candidates": [
+    {
+      "id": "public_k12_precise1k",
+      "family": "F2",
+      "kind": "dataset",
+      "name": "Public K-12 RNA-seq resource (PRECISE-1K + public SRA samples)",
+      "locator": "https://github.com/SBRG/precise1k",
+      "date": "SRA metadata pulled 2022-01-27; PRECISE-1K paper Lamoureux et al., NAR 51:10176-10193 (2023)",
+      "verification": "DIRECTLY FETCHED AND QUOTED from the repository README, not taken from a search summary",
+      "claim": "2,710 samples total = PRECISE-1K (1,035) + 1,675 high-quality publicly available samples. Repo wording: '1,675 high-quality publicly available samples', '2710-sample Public K-12 RNA-seq resource'.",
+      "why_it_could_matter": "M2's measured bottleneck is the INTERSECTION of Keio conditions with PRECISE-1K expression: 11 of 28 carbon conditions, 621 of 1,035 samples on glucose, 6 of 11 usable conditions resting on <=5 samples. PRECISE-1K's documented condition space is only 4 temperatures / 9 media / 39 supplements / 76 knockouts. The 1,675 added samples come from MANY labs via SRA, so they plausibly span a wider condition space than one lab's standardized protocol \u2014 which is precisely the side that binds.",
+      "blocking_unknowns": [
+        "RESOLVED 2026-09-28: the distinct-condition count WAS computable from the repo metadata and it fails the M2 requirement (see campaign_criterion_M2_condition_coverage). The 'key number is not stated' blocker is closed -- by measurement, not by contact.",
+        "STILL OPEN: the expression MATRIX (log_tpm) remains behind the author-contact wall, so per-condition expression depth could not be examined. This no longer matters for the verdict, since the condition annotation already fails.",
+        "Public samples span many labs => batch/protocol heterogeneity, unexamined."
+      ],
+      "code_closable_path": "The underlying samples are PUBLIC SRA data and the repo ships the raw metadata TSV (Escherichia_coli_20220127.tsv). So the compendium could in principle be RE-DERIVED from SRA without contacting the authors, converting an external wall into a code wall. Cost unestimated; not attempted.",
+      "not_new": true,
+      "not_new_note": "2022-era resource, outside the stated 2-year window. It does NOT answer 'what is new'; it may still answer the user's actual question, 'is there anything we can use'.",
+      "label_screen": {
+        "intended_layer": "L4_forward_continuous",
+        "evidence": {
+          "label_provenance_evidence": "RNA-seq expression measurements (wet-lab sequencing), plus Keio-collection growth/essentiality as the separate truth label. Expression is an instrument reading, not a tool-derived call.",
+          "label_is_measured": true,
+          "label_semantics_evidence": "expression level under a stated growth condition is an assay reading, not a description of where or why a sample was collected",
+          "label_is_assay_reading": true,
+          "variation_is_constructed": true,
+          "genotype_defined_by_construction": true,
+          "loci_without_recorded_variant_fraction": 0.0,
+          "off_panel_variant_fraction": 0.0
+        },
+        "evidence_gaps": "mode_share and n_distinct_values (the L4 degeneracy keys for G6) are NOT supplied because the per-condition distribution is exactly the unstated number above. The screen should therefore NOT return a clean pass."
+      },
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "organism_condition_switch",
+        "method": "supervised"
+      },
+      "campaign_criterion_M2_condition_coverage": {
+        "verdict": "FAILS_THE_M2_REQUIREMENT",
+        "measured_by": "direct computation over data/k12_modulome/metadata_qc_with_p1k.csv, fetched from the repo (gh CLI to locate, raw download to read) -- NO author contact needed, because the ACCESS WALL is only on log_tpm (the expression matrix), not on the metadata",
+        "n_curated_samples": 2738,
+        "distinct_carbon_sources": 18,
+        "distinct_carbon_sources_ge5_samples": 10,
+        "distinct_carbon_sources_ge10_samples": 3,
+        "carbon_unannotated_rows": 1151,
+        "carbon_unannotated_fraction": 0.42,
+        "glucose_share_of_annotated": 0.827,
+        "glucose_share_of_all_rows": 0.48,
+        "comparison": "PRECISE-1K alone is 621/1035 = 0.60 glucose over 9 media. Public K-12 is 0.827 glucose among ANNOTATED carbon rows with 42% of rows carrying no carbon annotation at all. The expansion therefore adds mostly MORE GLUCOSE SAMPLES AND UNANNOTATED ROWS -- glucose dominance gets WORSE, not better -- so it does not widen the condition side in the way M2 requires.",
+        "not_apples_to_apples": "PRECISE-1K's published bottleneck was an INTERSECTION with Keio's specific 28 carbon conditions; the figure computed here is distinct carbon sources present in the compendium. The two are related but not identical quantities, so the comparison is directional, not exact. The 42%-unannotated and 82.7%-glucose figures stand on their own regardless.",
+        "incidental": "sucrose appears on 11 samples here, and the sibling Fitness Browser candidate carries a KNOWN bad-sucrose-stock defect on E. coli BW25113 -- any sucrose-based cross-use of the two would inherit it."
+      }
+    },
+    {
+      "id": "fitness_browser_2024",
+      "family": "F2",
+      "kind": "dataset",
+      "name": "Fitness Browser February 2024 release (RB-TnSeq, diverse bacteria + archaea)",
+      "locator": "https://figshare.com/articles/dataset/February_2024_release_of_the_Fitness_Browser_RB-TnSeq_data_for_diverse_bacteria_and_archaea/25236931",
+      "date": "February 2024 (latest archived release found; no 2025/2026 release located)",
+      "verification": "SEARCH-REPORTED, not directly fetched. Counts below are UNVERIFIED against the Figshare record itself.",
+      "claim": "7,552 genome-wide fitness experiments across 46 bacteria + 2 archaea; ships a sqlite3 database (feba.db) + per-organism per-strain fitness tables. Prior Nov-2020 release was 6,570 experiments / 42 organisms.",
+      "why_it_could_matter": "The project already consumes Fitness Browser Keio data (carbon 28 / nitrogen 32 / stress 55) for ONE organism. 48 organisms x 7,552 experiments is a far larger condition-resolved fitness surface, and the plan's F2 question 4 was explicitly whether ANOTHER organism has a better-covered essentiality+expression pair than E. coli.",
+      "blocking_unknowns": [
+        "Widening the FITNESS side alone does not fix M2. The bottleneck is the INTERSECTION with condition-matched EXPRESSION data; more fitness conditions help only where paired expression exists. For a non-E.-coli organism that pairing is unestablished.",
+        "Counts are search-reported and UNVERIFIED.",
+        "KNOWN DATA DEFECT, and it lands on the exact panel this project uses: the authors report problematic sucrose and D-mannitol stock solutions, such that E. coli BW25113 appeared to grow on sucrose in the original media but not with a fresh stock. Any carbon-panel work must account for this."
+      ],
+      "not_new": false,
+      "label_screen": {
+        "intended_layer": "L4_forward_continuous",
+        "evidence": {
+          "label_provenance_evidence": "barcoded-transposon mutant abundance measured by sequencing (BarSeq) \u2014 a wet-lab fitness readout, not a genome-tool prediction",
+          "label_is_measured": true,
+          "label_semantics_evidence": "relative mutant fitness in a defined medium is an assay reading, not a collection context",
+          "label_is_assay_reading": true,
+          "variation_is_constructed": true,
+          "genotype_defined_by_construction": true,
+          "loci_without_recorded_variant_fraction": 0.0,
+          "off_panel_variant_fraction": 0.0
+        },
+        "evidence_gaps": "G6 degeneracy keys not supplied \u2014 the fitness-score distribution per experiment was not examined."
+      },
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "organism_condition_switch",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "ave_mavedb_growth",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "MaveDB / Atlas of Variant Effects Alliance corpus growth (2025 annual report)",
+      "locator": "https://www.varianteffect.org/news/",
+      "date": "2025 annual report",
+      "verification": "SEARCH-REPORTED, not directly fetched. UNVERIFIED.",
+      "claim": "Reported growth to 800+ members / 58 countries, >7 million variant-effect measurements across 700+ genes in human and model organisms; ~2.5M variants coordinate-mapped at 98.61%, disseminated to UCSC and Ensembl VEP.",
+      "why_it_could_matter": "Our forward cell is benchmarked on ProteinGym (217 assays). A 700+ gene corpus is a materially larger benchmark surface if any of it covers pathogen drug targets.",
+      "finding_is_a_NEGATIVE": "No new TEM-1 / CTX-M / KPC / NDM or other beta-lactamase DMS release surfaced for 2025-2026; the only beta-lactamase entry located is the long-standing Stiffler 2015 TEM-1 study already known here. The Alliance's growth is oriented toward HUMAN CLINICAL variants (a Clinical Atlas of Variant Effects), not the pathogen targets this project's forward/inverse cell needs.",
+      "does_not_address_M3": "The Alliance's headline infrastructure win is coordinate MAPPING (variant -> reference position), which does NOT address the cross-assay SCALE problem that blocks inverse dosage. Mapping where a variant is says nothing about putting two assays' effect magnitudes on one axis.",
+      "not_new": false,
+      "label_screen": null,
+      "label_screen_note": "deliberately NOT screened: this is recorded as a negative for the AMR-target axis, and manufacturing an evidence dict for a corpus I have not inspected per-dataset would be exactly the over-claim the screen exists to prevent.",
+      "regime_screen": null
+    }
+  ],
+  "process_findings": [
+    "AGENT-REPORTED, UNVERIFIED \u2014 route around, do not cite: CORE.ac.uk's search page is a JS shell and its API returns 429 without a key; Edinburgh ERA reportedly has a 2024-2025 indexing gap.",
+    "research-leads YouTube search returns no upload_date, so a 2-year window cannot be enforced from search results; it needs a per-video --by-id lookup.",
+    "SCREEN COVERAGE LIMIT found by using it: rejection_gates supports exactly two intended layers (L1_AMR_RS, L4_forward_continuous). A condition-resolved expression or fitness corpus fits NEITHER cleanly; both F2 candidates are filed L4 as the closer fit, and that is a real limitation of the screen for this campaign rather than a property of the candidates.",
+    "SCHEMA GAP, and it is the important one: the 10 rejection gates have NO gate for CONDITION COVERAGE, which is the actual blocker for M2. G6 measures PHENOTYPE-VALUE degeneracy (mode share / distinct values), not how many distinct growth conditions a corpus spans. So the standing screen structurally cannot adjudicate the M2 candidates' real problem, and this candidate is rejected on a CAMPAIGN-SPECIFIC criterion recorded separately rather than by mis-mapping a condition count onto G6. Do not 'fix' this by feeding condition counts into G6 -- that would silently redefine a committed gate."
+  ],
+  "honest_limits": [
+    "PARTIAL HARVEST. 3 candidates from 3 first-party searches + 1 verification. F3 and F4 were never searched. Do not read the small candidate count as 'the literature is empty'.",
+    "Only ONE candidate (public_k12_precise1k) was verified by direct fetch. The other two are search-reported and marked UNVERIFIED.",
+    "Two of the three candidates predate the stated 2-year window, and two of the three are effectively NEGATIVES with useful detail rather than usable substrates."
+  ]
+}

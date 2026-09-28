@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from scripts.deep_research_screen import (
+    INCONCLUSIVE,
     LEAD_ONLY,
     PROMISING,
     REJECTED,
@@ -115,7 +116,7 @@ def test_harvest_is_wellformed_and_every_candidate_is_accounted_for():
     # a summary that does not sum to its own rows is how a dropped candidate hides.
     assert sum(rep["class_counts"].values()) == rep["n_candidates"] == len(cands)
     for s in rep["candidates"]:
-        assert s["screen_class"] in {PROMISING, LEAD_ONLY, REJECTED, UNSCREENABLE}
+        assert s["screen_class"] in {PROMISING, INCONCLUSIVE, LEAD_ONLY, REJECTED, UNSCREENABLE}
 
 
 @pytest.mark.skipif(not HARVEST.exists(), reason="harvest not produced yet")
@@ -128,3 +129,47 @@ def test_no_candidate_is_promising_without_a_screen_that_actually_ran():
         assert s["locator_ok"], s["name"]
         ran = (s["label_verdict"] is not None) or (s["regime_verdict"] is not None)
         assert ran, f"{s['name']} is PROMISING with neither screen having run"
+
+
+def test_an_incomplete_label_screen_is_INCONCLUSIVE_not_REJECTED():
+    """Load-bearing in the DISCARDING direction, and this was a real defect.
+
+    The gate screen returns `INCOMPLETE` when a measurement was not supplied. The first version of this
+    classifier folded that into REJECTED, which reported both F2 candidates as condemned when each had
+    passed 9 of 10 gates and carried regime_verdict=OPEN -- the one genuinely open regime cell in the
+    whole project. "Needs one more number" is not "rejected", and conflating them throws away live leads.
+    """
+    out = screen_one({
+        "name": "a corpus whose per-condition distribution is unknown",
+        "kind": "dataset",
+        "locator": "https://github.com/SBRG/precise1k",
+        "label_screen": {"intended_layer": "L4_forward_continuous", "evidence": {
+            "label_provenance_evidence": "wet-lab RNA-seq expression measurement",
+            "label_is_measured": True,
+            "label_semantics_evidence": "expression under a stated condition is an assay reading",
+            "label_is_assay_reading": True,
+            "variation_is_constructed": True,
+            "genotype_defined_by_construction": True,
+            "loci_without_recorded_variant_fraction": 0.0,
+            "off_panel_variant_fraction": 0.0,
+            # mode_share / n_distinct_values deliberately WITHHELD -> G6 insufficient_data
+        }},
+        "regime_screen": {"population": "constructed", "endpoint": "organism_condition_switch",
+                          "method": "supervised"},
+    })
+    assert out["label_verdict"] == "INCOMPLETE"
+    assert out["label_gates"]["G6"] == "insufficient_data"
+    assert out["regime_verdict"] == "OPEN"          # nothing about the regime condemns it
+    assert out["screen_class"] == INCONCLUSIVE, out["screen_class"]
+    assert out["screen_class"] != REJECTED
+
+
+def test_a_genuinely_tripped_gate_IS_still_rejected():
+    """Non-vacuity for the test above: the INCONCLUSIVE carve-out must not swallow a real trip."""
+    import scripts.screen_candidate_gates as scg
+    out = screen_one({"name": scg.HBV["candidate"], "kind": "dataset",
+                      "locator": "https://hbv.geno2pheno.org/",
+                      "label_screen": {"intended_layer": scg.HBV["intended_layer"],
+                                       "evidence": scg.HBV["evidence"]}})
+    assert out["label_verdict"] == "REJECTED"
+    assert out["screen_class"] == REJECTED
