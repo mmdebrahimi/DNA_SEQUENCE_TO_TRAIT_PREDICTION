@@ -25,10 +25,11 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 CLAUDE_MD = ROOT / "CLAUDE.md"
 
-# Measured 2026-09-29: 36,861 words / 101 bullets / ~68,665 tokens.
+# Measured 2026-09-29: 34,758 words after the first proof-of-format compression (was 36,861 / ~68,665 tok).
+# LOWERED with that gain -- leaving a ceiling sized for the pre-diet file would silently stop guarding.
 # Headroom is deliberately THIN (~2%). A thick allowance is how 41k became 277k.
-WORD_CEILING = 37_600
-MEASURED_AT_WRITE = 36_861
+WORD_CEILING = 35_400
+MEASURED_AT_WRITE = 34_758
 
 
 def _weight_module():

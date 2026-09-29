@@ -120,3 +120,54 @@ under-specified match returns a confident empty/clean answer rather than an erro
   not done — so the row tables remain partly stale by choice, in the safe direction.
 - Nothing here was A/B tested against rework rate; the causal chain (auto-load size → compaction
   frequency → rework) is **argued and measured at the input end only**.
+
+---
+
+## Addendum, same run: the diet is UNBLOCKED, and one bullet proves the format
+
+Two things were measured after the section above was written, and both changed the plan.
+
+**1. "A partial extraction is worse than none" was wrong.** Each bullet is independently either full or
+compressed+pointer, so there is no incoherent half-state for a reader. That reasoning was caution looking
+for a justification.
+
+**2. But a REAL prerequisite existed, and it was not the one I had in mind.** The staleness benchmark reads
+**live `CLAUDE.md`**: its 5 curated positives come from a snapshot
+(`wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json` — the filename itself records the
+*repairing-the-corpus-destroys-the-baseline* lesson), but its **negatives are REGENERATED** by
+`mechanical_screen` with a `>= 3` floor and a test whose message is *"the negative half is eroding"*. So
+compressing bullets could, in principle, erode the benchmark that exists to catch stale claims.
+
+**Measured: 25 hits against a floor of 3 — margin 22. The diet is not blocked.** And it fails loudly
+rather than silently if it ever becomes so. Post-compression the count is **still 25**.
+
+### Proof-of-format: the largest bullet
+
+The gentamicin `rmt` v2-lock bullet — **2,394 words / 16,596 chars**, the single largest and the most
+guardrail-dense — was compressed **2,394 → 291 words, saving ~3,917 tokens from one bullet**.
+
+**Format is `headline + GUARDRAIL VERDICTS + pointer`, and the middle term is the whole point.** A bare
+pointer would preserve the bytes and lose the thing that stops a future session re-proposing a closed
+decision. The five rails were extracted from the bullet's **own imperative sentences**, not summarised from
+memory, and each was grepped back out of the compressed file to prove it survived:
+
+| rail | survived |
+|---|---|
+| the rule must NOT be extended to Klebsiella (a PRECAUTION under contradictory evidence, not a fact) | ✓ |
+| prospective evidence is SPENT for BOTH E. coli cells; the clock restarted | ✓ |
+| the 06-13 freeze + v1 lock are RETIRED, not broken | ✓ |
+| Oxford cannot test specificity (non-vacuous zero); do not re-attempt | ✓ |
+| restricting the rescue to E. coli in L1 is a USER AUTHORITY call | ✓ |
+
+Full text preserved verbatim at `wiki/arcs/gentamicin_rmt_v2_lock.md`. Nothing deleted.
+
+`CLAUDE.md`: **36,861 → 34,758 words.** The growth ceiling was **LOWERED 37,600 → 35,400** to lock the gain
+in — its own companion test (`slack <= 4_000`) is what forces that, so a diet cannot leave a guard sized for
+the pre-diet file.
+
+### Remaining, now mechanical rather than uncertain
+
+38 bullets / ~24,300 words still provably stored elsewhere. At the measured ratio (291 words of rails per
+2,394-word bullet, ~88% compression) the remaining headroom is **~20,000 words ≈ 37,000 tokens per
+session**. The format is validated; the couplings are measured; the safety margin is known. What is left is
+careful reading, one bullet at a time — and the 5 single-copy bullets are never touched.
