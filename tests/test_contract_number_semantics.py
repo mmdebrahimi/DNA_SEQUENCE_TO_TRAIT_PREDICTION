@@ -264,29 +264,45 @@ def test_the_live_registry_bindings_convert_previously_unmeasurable_numbers():
     rep = audit_semantics()
     assert rep["n_bindings_declared"] == 5, rep["n_bindings_declared"]
     assert rep["measurable_by_binding"] == 5, rep["measurable_by_binding"]
-    assert rep["measurable_by_heuristic"] == 17, rep["measurable_by_heuristic"]
-    assert rep["n_measurable"] == 22 > 16
+    # 17 -> 18 and 22 -> 23 when `concordance` was added to LABEL_VOCAB (pneumoserotype's newly-cited
+    # artifacts put `serogroup_concordance` / `exact_concordance` numbers in reach).
+    assert rep["measurable_by_heuristic"] == 18, rep["measurable_by_heuristic"]
+    assert rep["n_measurable"] == 23 > 16
     assert rep["n_binding_defects"] == 0, rep["binding_defects"]
 
 
-def test_a_vocabulary_entry_has_MORE_leverage_than_a_binding():
-    """MEASURED, and it changes which lever to reach for.
+def test_vocabulary_and_bindings_are_COMPLEMENTARY_not_ranked():
+    """RETRACTION, pinned. This test was `test_a_vocabulary_entry_has_MORE_leverage_than_a_binding` and
+    asserted that vocabulary coverage is the cheaper lever for the remaining unlabeled numbers. **That
+    generalised from n=1** -- the single `freq` entry, which happened to unlock 2 bindings AND convert a
+    number via the heuristic unaided.
 
-    A binding converts exactly ONE number (3 bindings -> 3 conversions, then 5 -> 5): linear in authoring
-    effort, no leverage. But adding ONE `LABEL_VOCAB` entry (`freq`, added because `...alt_freq` paths had
-    no quantity) did two things at once: it unlocked 2 bindings AND let the prose-window heuristic label a
-    further number on its own, taking measurable_by_heuristic 16 -> 17 with no binding written for it.
+    Measured across all remaining unlabeled numbers (`scripts/vocab_expansion_probe.py`), the ranking does
+    not hold. What determines which lever applies is the ARTIFACT FIELD NAME:
 
-    So the cheaper lever for the remaining ~141 unlabeled numbers is VOCABULARY COVERAGE, not per-number
-    bindings. Bindings are for numbers whose prose names no quantity at all; vocabulary is for quantities
-    the prose DOES name and the check cannot yet read.
+      * SPECIFIC field name -> vocabulary works (`observed_purity`, `null_mean`, `...alt_freq`,
+        `serogroup_concordance`).
+      * GENERIC field name -> vocabulary manufactures a FALSE LEAD and no entry can fix it
+        (`additional_statistics[0].observed`). That is precisely what a per-number binding is for, because a
+        binding names the path explicitly.
+
+    So they cover DIFFERENT cases and neither scales the residual. `purity` is the concrete proof that
+    vocabulary can be net-negative: a genuine quantity, 1 conversion against 4 false leads.
     """
     from scripts.contract_number_semantics import LABEL_VOCAB, path_is_consistent
 
-    assert "freq" in LABEL_VOCAB, "the freq quantity is what this test is about"
+    # both levers are present and each is verified, never trusted
+    assert "freq" in LABEL_VOCAB and "concordance" in LABEL_VOCAB
     assert path_is_consistent("af_corroboration_axis.measured.EUR.alt_freq", "freq")
+    assert path_is_consistent("aggregate.serogroup_concordance", "concordance")
     assert not path_is_consistent("metrics.sens", "freq"), "must not accept an unrelated path"
+    # `concordance` must NOT be an alias of `acc`: agreement between two callers is not accuracy against a
+    # label, and collapsing them would let a tool-agreement figure verify a claim of accuracy.
+    assert not path_is_consistent("aggregate.serogroup_concordance", "acc")
+    assert not path_is_consistent("metrics.accuracy", "concordance")
     rep = audit_semantics()
-    assert rep["measurable_by_heuristic"] == 17, (
-        "the freq entry converted a number via the HEURISTIC, not only via bindings; if this drops to 16 "
-        "the vocabulary-leverage claim no longer holds")
+    # BOTH kinds carry weight, and they are reported under separate keys so neither can absorb the other
+    assert rep["measurable_by_binding"] == 5 and rep["measurable_by_heuristic"] == 18
+    assert rep["n_measurable"] == rep["measurable_by_binding"] + rep["measurable_by_heuristic"]
+    # and the residual is still large under BOTH levers -- the honest state
+    assert rep["status_counts"]["label_unlabeled"] > 100, rep["status_counts"]["label_unlabeled"]

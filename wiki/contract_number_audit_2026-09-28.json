@@ -3,8 +3,8 @@
   "analysis_date": "2026-09-28",
   "posture": "TRIAGE FUNNEL, not an oracle -- a cited number may legitimately be derived, rounded, or describe a superseded run. Every hit needs adjudication; this script edits nothing.",
   "scope": "cells whose prose names a wiki/ artifact; decimal numbers only",
-  "n_cells_audited": 19,
-  "n_numbers_checked": 180,
+  "n_cells_audited": 20,
+  "n_numbers_checked": 185,
   "n_candidate_drift": 0,
   "hit_rate": 0.0,
   "verdict": "NOTHING_TO_ADJUDICATE",
@@ -12,14 +12,14 @@
   "cells_low_discrimination": [],
   "n_numbers_extracted": 196,
   "n_by_kind": {
-    "artifact": 171,
+    "artifact": 176,
     "derived": 3,
     "enforced-by-test": 2,
     "external-reference": 1,
     "structural-non-measurement": 5,
     "superseded-value": 1,
     "threshold": 4,
-    "unverifiable": 9
+    "unverifiable": 4
   },
   "kind_definitions": {
     "artifact": "present in a wiki/ artifact the prose cites",
@@ -62,8 +62,8 @@
       }
     }
   ],
-  "n_cells_with_numbers_but_no_citation": 3,
-  "n_numbers_unverifiable": 9,
+  "n_cells_with_numbers_but_no_citation": 2,
+  "n_numbers_unverifiable": 4,
   "cells_unverifiable": [
     {
       "cell_id": "pgx:human:cyp2d6",
@@ -76,26 +76,6 @@
       "kinds": {
         "0.62": "unverifiable",
         "1.0": "unverifiable"
-      },
-      "n_typed_not_unverifiable": 0
-    },
-    {
-      "cell_id": "typing:Streptococcus_pneumoniae:pneumoserotype",
-      "n_numbers": 5,
-      "numbers": [
-        "0.939",
-        "0.661",
-        "0.952",
-        "0.690",
-        "2.1"
-      ],
-      "why": "prose cites no wiki/ artifact",
-      "kinds": {
-        "0.939": "unverifiable",
-        "0.661": "unverifiable",
-        "0.952": "unverifiable",
-        "0.690": "unverifiable",
-        "2.1": "unverifiable"
       },
       "n_typed_not_unverifiable": 0
     },
@@ -134,13 +114,16 @@
         "0.939": "artifact",
         "0.941": "artifact"
       },
-      "matched_only_after_rounding": {},
+      "matched_only_after_rounding": {
+        "0.939": 0.9385,
+        "0.941": 0.9412
+      },
       "adjudicated_benign": [],
-      "decoy_full_match": 64,
-      "n_decoys": 299,
-      "decoy_match_rate": 0.214,
+      "decoy_full_match": 11,
+      "n_decoys": 301,
+      "decoy_match_rate": 0.0365,
       "decoy_group_size": 2,
-      "discrimination": "MODERATE"
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -167,11 +150,11 @@
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 20,
-      "n_decoys": 299,
-      "decoy_match_rate": 0.0669,
+      "decoy_full_match": 1,
+      "n_decoys": 301,
+      "decoy_match_rate": 0.0033,
       "decoy_group_size": 2,
-      "discrimination": "MODERATE"
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "pgx:human:slco1b1",
@@ -193,11 +176,11 @@
         "0.398": 0.3977
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 114,
-      "n_decoys": 599,
-      "decoy_match_rate": 0.1903,
+      "decoy_full_match": 10,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0166,
       "decoy_group_size": 1,
-      "discrimination": "MODERATE"
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "hla:human:b5701",
@@ -218,11 +201,11 @@
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 36,
-      "n_decoys": 600,
-      "decoy_match_rate": 0.06,
+      "decoy_full_match": 6,
+      "n_decoys": 604,
+      "decoy_match_rate": 0.0099,
       "decoy_group_size": 1,
-      "discrimination": "MODERATE"
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -243,9 +226,9 @@
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 29,
-      "n_decoys": 599,
-      "decoy_match_rate": 0.0484,
+      "decoy_full_match": 0,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
@@ -267,11 +250,11 @@
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 175,
-      "n_decoys": 599,
-      "decoy_match_rate": 0.2922,
+      "decoy_full_match": 0,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
-      "discrimination": "MODERATE"
+      "discrimination": "HIGH"
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -300,7 +283,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 599,
+      "n_decoys": 603,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -335,7 +318,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 599,
+      "n_decoys": 603,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -376,7 +359,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 600,
+      "n_decoys": 604,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -414,7 +397,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 600,
+      "n_decoys": 604,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -438,7 +421,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 2,
-      "n_decoys": 600,
+      "n_decoys": 604,
       "decoy_match_rate": 0.0033,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -468,9 +451,9 @@
         "0.21": 0.213
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 2,
-      "n_decoys": 599,
-      "decoy_match_rate": 0.0033,
+      "decoy_full_match": 0,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
@@ -506,9 +489,9 @@
           "why": "derived, stated in the prose as '25/86=0.291' (25/86 = 0.2907). Same clause carries both counts."
         }
       ],
-      "decoy_full_match": 22,
-      "n_decoys": 599,
-      "decoy_match_rate": 0.0367,
+      "decoy_full_match": 0,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
@@ -534,7 +517,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 599,
+      "n_decoys": 603,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -571,9 +554,9 @@
         "0.37": 0.3732
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 6,
-      "n_decoys": 199,
-      "decoy_match_rate": 0.0302,
+      "decoy_full_match": 0,
+      "n_decoys": 200,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 3,
       "discrimination": "HIGH"
     },
@@ -610,6 +593,7 @@
         "wiki/forward_inverse_sweep_2026-07-17.json",
         "wiki/forward_inverse_sweep_2026-07-17.md",
         "wiki/gemme_threeway_holdout_2026-07-23.md",
+        "wiki/hiv_esm_vs_catalog_2026-07-09.md",
         "wiki/mavedb_am_holdout_2026-07-23.json",
         "wiki/mavedb_full_esm2_2026-07-22.md",
         "wiki/mavedb_holdout_hybrid_2026-07-23.md"
@@ -648,12 +632,12 @@
         "0.73": "artifact"
       },
       "matched_only_after_rounding": {
-        "2.5": 0.0255
+        "0.719": 0.7191
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 8,
-      "n_decoys": 199,
-      "decoy_match_rate": 0.0402,
+      "decoy_full_match": 0,
+      "n_decoys": 200,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 3,
       "discrimination": "HIGH"
     },
@@ -756,6 +740,7 @@
         "0.0068": "artifact"
       },
       "matched_only_after_rounding": {
+        "0.167": 0.16666666666666666,
         "0.926": 0.9256756756756757,
         "0.931": 0.9313,
         "0.962": 0.9618,
@@ -769,11 +754,37 @@
           "why": "not a measurement: the project's own source-diversity BAR, defined in code as scripts/source_diverse_validate.MAX_SOURCE_SHARE. A threshold has no artifact to live in."
         }
       ],
-      "decoy_full_match": 16,
-      "n_decoys": 199,
-      "decoy_match_rate": 0.0804,
+      "decoy_full_match": 0,
+      "n_decoys": 200,
+      "decoy_match_rate": 0.0,
       "decoy_group_size": 3,
-      "discrimination": "MODERATE"
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:Streptococcus_pneumoniae:pneumoserotype",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/pneumo_serotype_cohort_validation.json",
+        "wiki/pneumo_serotype_report_card.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 5,
+      "found": 5,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.939": "artifact",
+        "0.661": "artifact",
+        "0.952": "artifact",
+        "0.690": "artifact",
+        "2.1": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 603,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
     }
   ]
 }

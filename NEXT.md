@@ -211,17 +211,76 @@ corroboration for it. Not recommended on these numbers; a curation project, not 
    *Measured:* **5 bindings declared → measurability 16 → 22 of 180 (0.0889 → 0.1222)**, `label_unlabeled`
    147 → 141, 0 binding defects. **HONEST LIMIT: a binding is 1:1** — it converts exactly one number, so
    bindings are LINEAR in authoring effort and will not close the remaining ~141.
-   **BUT the follow-on measurement found a better lever:** adding ONE `LABEL_VOCAB` entry (`freq`) both
-   unlocked 2 bindings AND converted a further number via the prose heuristic unaided
-   (`measurable_by_heuristic` 16 → 17). **Vocabulary coverage has leverage; bindings do not.** Reach for
-   a vocabulary entry when the prose DOES name a quantity the check cannot read, and for a binding only
-   when the prose names no quantity at all.
+   **A follow-on measurement then CORRECTED my own conclusion.** Adding one `LABEL_VOCAB` entry (`freq`)
+   did unlock 2 bindings AND convert a number via the heuristic unaided (`measurable_by_heuristic`
+   16 → 17), and I recorded that as *"vocabulary coverage has leverage; bindings do not"*. **That
+   generalised from n=1 and is WRONG.** Measured across all 141 remaining unlabeled numbers
+   (`scripts/vocab_expansion_probe.py`): **ZERO addable entries at the coverage of that moment** --
+   and "exhausted" was itself CORRECTED within the hour (below). Every cleanly-converting word is a
+   domain noun or structural word (`genes`/`lactam`/`beta`/`aminoglycoside`/`star`/`name`/`computed`/
+   `discovery`/`eas`/`ncbi`); every genuinely quantity-shaped word is either a **statistical modifier**
+   that would confirm vacuously (`max`/`mean`/`null` — prose "max 0.21" vs path `max_abs_r` would call a
+   CORRELATION a "max") or **net-negative** (`purity`: 1 conversion vs 4 false leads).
+   **The true structure is COMPLEMENTARITY, not a ranking:** vocabulary works where the artifact field
+   name is SPECIFIC (`observed_purity`, `null_mean`), and manufactures false leads where it is GENERIC
+   (`additional_statistics[0].observed`) — which no entry can fix and which is exactly what a binding
+   is for. **So neither lever scales the remaining ~141, and that is now measured rather than assumed.**
+   **THEN "exhausted" WAS CORRECTED THE SAME DAY, and the correction is the more useful result.** Citing
+   pneumoserotype's two artifacts moved 5 numbers into the cited set and **`concordance` immediately
+   surfaced as a clean candidate** (2 near / 2 would-confirm / 0 would-mismatch) and was added --
+   `measurable_by_heuristic` 17 -> 18, `label_unlabeled` 145 -> 144, **0 new false leads**. So **the
+   vocabulary lever's headroom is a FUNCTION of which cells are cited and re-opens whenever coverage
+   grows**; a measurement over "all remaining numbers" is a measurement over the CITED ones. Say "exhausted
+   at current coverage" and keep the tripwire -- my own probe test was that tripwire and it fired on the next
+   full run. **The probe is also an UPPER BOUND**: it counts a word as converting when it is in the window
+   AND the path matches, but `label_for` applies leading-wins + inter-number clipping so at most ONE word
+   wins per number -- `concordance` was estimated at 2 and delivered **1**. `agreement` was **REFUSED**
+   (2 conversions vs 1 false lead), and `concordance` is deliberately **NOT an alias of `acc`** -- agreement
+   between two callers is not accuracy against a label, and collapsing them would let a tool-agreement
+   figure verify a claim of accuracy, which is the `FAITHFUL_TO_TOOL` vs `INDEPENDENT_MEASURED` distinction
+   the whole tier system rests on. The retracted-ranking test was **rewritten, not re-baselined**:
+   `test_a_vocabulary_entry_has_MORE_leverage_than_a_binding` -> `test_vocabulary_and_bindings_are_
+   COMPLEMENTARY_not_ranked`, carrying the retraction in its docstring.
+   **Then the third lever turned out to be the real one — FIXING THE MATCHER, not widening coverage**
+   (`wiki/contract_number_value_preservation_2026-09-28.md`). `_number_variants` padded **and truncated**
+   (`f"{0.939:.1f}"` = `0.9`) on the **fast** path, so a truncated hit counted as EXACT and never reached
+   `_matches_by_rounding` — leaving `matched_only_after_rounding` at **0** for every affected cell. The
+   deciding case: ugt1a1 cites BOTH `0.939` and `0.941` and the single token **`0.9` matched both**, so the
+   check was not discriminating between the numbers at all. Measured: **7 of 166** verified numbers passed
+   only on a truncation, and the decoy control far worse — pinned-pool **pointfinder 175/599 → 0**, because
+   its cited `0.9923` generated the variant `1.0`. **That retrospectively corrects the 2026-09-27 memo's
+   "pointfinder 59% → 29%" as the fixed state: 29% was still almost entirely artifact.** Direction is the
+   point — the ARTIFACT must round to the CITED value, and the **sibling** `contract_number_semantics.
+   value_matches` was already right, so "older code is the reference" was the wrong prior.
+   *Result:* drift 0 → **0**, disclosed roundings 0 → **19**, `unverifiable` **9 → 4**, uncited cells 3 → 2.
+   *Cost, reported:* the discrimination **GRADE saturated at HIGH** (bands were calibrated against the
+   inflated rates) — the RATE still spans 0 → 0.0365 and still orders cells as intended, so the rate ships
+   and the saturation is recorded rather than re-banded off 20 points. Six pre-registered anchors
+   re-baselined with prior values inline; **two deliberately-NONZERO pinned-pool anchors added** because all
+   four existing ones fell to 0 and four zeros cannot tell a correct matcher from an inert one.
+   *Residual closed too:* pneumoserotype's 5 numbers left the residual — 4 sat at semantic paths in an
+   **uncited** validation JSON, and the `~2.1%` denominator is stated **verbatim** in its report card
+   (*"of the 235"*), so the recorded 5/235-vs-5/240 ambiguity was an artifact of not reading the sibling
+   artifact. **The 4 that remain (`cyp2d6`, `pigment`) are unverifiable BY MEASUREMENT** — 730+ wiki files
+   contain their values, so no citation could discriminate. That is a property of the numbers, **not a
+   to-do**, and the family's value-presence question is now closed. What is NOT closed: matching on the
+   audit side is still **not semantic** (right value, possibly wrong quantity) — that is
+   `contract_number_semantics.py`'s job and it has 1 open lead (`salmserovar :: coverage 0.705`).
    *Also shipped, in the same change because otherwise the field and the hole ship together:* the
    "NO numeric confidence field" guard in `tests/test_cell_registry.py` now **RECURSES** — it previously
    checked only top-level attribute values, so a nested numeric inside a tuple would have passed.
    *Known vocabulary gap, recorded not papered over:* an allele-frequency path (`...alt_freq`) has no
    quantity in `LABEL_VOCAB`, so the cyp4f2 AF numbers cannot be bound yet. The mechanism correctly REFUSES
    rather than accepting a mismatched quantity.
+
+4b. **Small hygiene item, found incidentally 2026-09-28, NOT fixed:** `tests/test_pgx_report_card.py`
+   calls the builder's `main()`, which **writes 8 tracked `wiki/pgx_*` artifacts** with today's date. So
+   running the suite always dirties the working tree with an `analysis_date`-only diff, and `git status` is
+   never clean after a test run. Reverted as incidental churn rather than committed (date churn in history is
+   noise). The real fix is for the test to write to a tmp dir and assert on the returned object; it is
+   deliberately out of scope here because it touches a passing test for no evidentiary gain. Worth doing when
+   something else is already in that file — the failure mode is mild but it trains a reader to ignore a dirty
+   tree, which is how a genuine unintended write gets missed.
 
 5. ~~**Should the rejection-gate family gain a CONDITION-COVERAGE gate?**~~ — **RESOLVED 2026-09-28:
    NO, not yet. Deliberately doing nothing, for two independent reasons either of which suffices.**

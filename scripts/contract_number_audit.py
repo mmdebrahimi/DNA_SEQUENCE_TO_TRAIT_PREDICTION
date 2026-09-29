@@ -486,7 +486,24 @@ def _bounded_in(v: str, hay: str) -> bool:
 
 
 def _number_variants(tok: str) -> list[str]:
-    """A cited 0.83 may live in the artifact as 0.8300, 0.83, or 83.0 (percent). Accept those forms."""
+    """A cited 0.83 may live in the artifact as 0.8300, 0.83, or 83.0 (percent). Accept those forms.
+
+    VALUE-PRESERVING ONLY, and the filter at the end is the whole point. The generators below also emit
+    TRUNCATIONS -- `f"{2.13:.1f}"` is `"2.1"`, `f"{0.939:.1f}"` is `"0.9"` -- and this is the FAST path, so
+    a truncated match was recorded as an exact hit and never reached `_matches_by_rounding`, the branch
+    built to disclose precisely this (`matched_only_after_rounding` stayed empty for every one of them).
+
+    Measured before fixing: 7 of 166 verified numbers passed ONLY on a truncation, and one case settles
+    whether that is acceptable -- the single artifact token `0.9` was "verifying" BOTH ugt1a1's cited 0.939
+    AND its 0.941. One artifact value cannot be evidence for two different claims, so the check was not
+    discriminating between the numbers at all. Others: forward's 0.454 passing on `0.5`, 0.926 on `93`,
+    serotype's 0.167 on `17`.
+
+    The DIRECTION matters and `_matches_by_rounding` already has it right: the ARTIFACT must round to the
+    CITED value at the cited precision (0.9 correctly fails against 0.939). Truncating the cited value down
+    to the artifact's coarser one is that test run backwards. Dropping these here does not lose legitimate
+    rounding -- it routes it to the disclosing path, where a reader can see it happened.
+    """
     v = {tok, tok.rstrip("0").rstrip(".") if "." in tok else tok}
     try:
         f = float(tok)
@@ -500,7 +517,19 @@ def _number_variants(tok: str) -> list[str]:
         v.add(f"{f * 100:g}")
     if f > 1:
         v.add(f"{f / 100:.4f}".rstrip("0"))
-    return sorted(x for x in v if x)
+
+    def _preserves_value(s: str) -> bool:
+        """Same number, possibly re-scaled by 100 (fraction <-> percent). Nothing else."""
+        try:
+            g = float(s)
+        except ValueError:
+            return False
+        eps = 1e-9
+        return (abs(g - f) <= eps * max(1.0, abs(f))
+                or abs(g - f * 100.0) <= eps * max(1.0, abs(f * 100.0))
+                or abs(g * 100.0 - f) <= eps * max(1.0, abs(f)))
+
+    return sorted(x for x in v if x and _preserves_value(x))
 
 
 def audit(decoy_pool: list[str] | None = None) -> dict:

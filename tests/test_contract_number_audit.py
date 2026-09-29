@@ -232,12 +232,36 @@ def test_discrimination_is_reported_with_a_legal_value():
 
 
 def test_discrimination_actually_discriminates():
-    """Uniformly HIGH would mean the decoys are too weak to ever match; uniformly LOW would mean the
-    control is broken. The signal is only useful if it separates cells."""
+    """The control must SEPARATE cells -- but the separation now lives in the RATE, not in the BAND.
+
+    HISTORY, because this assertion changed shape and the reason is the finding. It used to require
+    `len({grades}) > 1`. Once `_number_variants` stopped truncating (see
+    `test_number_variants_are_VALUE_PRESERVING_never_truncations`), every cell moved into the HIGH band and
+    the grade went constant. That is NOT the control breaking -- it is the bands, which the module itself
+    documents as ASSERTED rather than derived, having been calibrated against a matcher that was inflating
+    every rate. Under the pinned pool, pointfinder went 175/599 -> 0 and ktype 29 -> 0, because a cited
+    0.9923 was generating the variant `1.0` and matching any artifact containing it.
+
+    So the honest claim is about the rate: it still spans an order of magnitude and still orders cells the
+    way the control intends -- ugt1a1 (3 round numbers) highest, salmserovar (30 measured figures) at zero.
+    Inventing new bands off 20 cells would be one more asserted threshold, so the RATE is what ships and
+    what is asserted here; the grade's saturation is recorded, not engineered around.
+    """
     rep = _cached_report()
-    seen = {r["discrimination"] for r in rep["cells"] if r["checked"]}
-    assert "HIGH" in seen, "no cell resists decoys — the control is not exercised"
-    assert len(seen) > 1, f"discrimination is constant at {seen} — it separates nothing"
+    graded = [r for r in rep["cells"] if r["checked"] and r["n_decoys"]]
+    assert graded, "nothing graded -- the control is not exercised at all"
+    rates = [r["decoy_match_rate"] for r in graded]
+    # non-vacuity at the POOL level: some cell's numbers DO turn up in unrelated artifacts. Asserting this
+    # per cell (the old `0.0 < rate`) is wrong now -- a 30-number fingerprint appearing in an unrelated
+    # artifact would be extraordinary, so 0.0 is the correct and expected value for most cells.
+    assert max(rates) > 0.0, "no cell has ANY decoy match -- the decoy comparison may be inert"
+    assert min(rates) == 0.0, "no cell fully resists decoys -- matching may be permissive again"
+    assert len(set(rates)) > 1, f"the decoy RATE is constant at {set(rates)} -- it separates nothing"
+    # and the cell with the fewest, roundest numbers must be the least discriminating
+    worst = max(graded, key=lambda r: r["decoy_match_rate"])
+    assert worst["checked"] <= 5, (
+        f"{worst['cell_id']} has the highest decoy rate on {worst['checked']} numbers -- the control is "
+        "supposed to penalise FEW and ROUND figures, so a many-number cell topping it is a red flag")
 
 
 def test_a_cell_with_many_distinctive_numbers_resists_decoys():
@@ -331,13 +355,26 @@ def test_full_pool_anchors_measured_before_implementation():
 
     rep = mod.audit(decoy_pool=pool)
     rows = {r["cell_id"]: r for r in rep["cells"]}
+    # RE-BASELINED 2026-09-28 when `_number_variants` stopped truncating. Previous anchors were ktype 29
+    # and pointfinder 175; both are now 0. The drop is the defect being removed, not the control weakening:
+    # pointfinder cites 0.9923, whose truncating variants included `1.0`, so it matched any artifact
+    # carrying that token. The two already-zero anchors are kept -- they pin that the fix did not move a
+    # cell that was correctly at zero before.
     for cell_id, expect in (("typing:bacteria:mlst", 0),
                             ("finder:bacteria:resfinder", 0),
-                            ("typing:Klebsiella:ktype", 29),
-                            ("finder:Escherichia_coli:pointfinder", 175)):
+                            ("typing:Klebsiella:ktype", 0),
+                            ("finder:Escherichia_coli:pointfinder", 0)):
         assert rows[cell_id]["decoy_full_match"] == expect, (cell_id, rows[cell_id])
         # 599 = the 600-file pool minus this cell's own cited artifact, which is never its own decoy.
         assert rows[cell_id]["n_decoys"] == 599, (cell_id, rows[cell_id])
+    # NON-VACUITY, and it is load-bearing now that all four anchors above are zero: four zeros cannot tell
+    # a correct matcher from an inert one. These two cells have FEW and ROUND figures, so their values DO
+    # turn up in unrelated artifacts and the counts must stay nonzero.
+    for cell_id, expect in (("pgx:human:ugt1a1", 11), ("pgx:human:slco1b1", 10)):
+        assert rows[cell_id]["decoy_full_match"] == expect, (
+            f"{cell_id}: expected {expect} decoy matches, got "
+            f"{rows[cell_id]['decoy_full_match']} -- if this went to 0 the pinned-pool anchors are all "
+            "zero and the test can no longer detect a matcher that matches nothing")
 
 
 def test_the_pool_excludes_the_audits_own_output():
@@ -446,8 +483,8 @@ def test_step1_leaves_verdict_and_drift_untouched():
     rep = _cached_report()
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
-    assert rep["n_numbers_checked"] == 180
-    assert rep["n_cells_audited"] == 19
+    assert rep["n_numbers_checked"] == 185   # was 180 before pneumoserotype gained citations
+    assert rep["n_cells_audited"] == 20      # was 19; pneumoserotype joined the cited cells
 
 
 # --- Step 2: provenance kinds ---------------------------------------------------------------------
@@ -505,7 +542,7 @@ def test_the_kind_tally_reconciles_with_the_cited_and_uncited_halves():
     uncited = sum(len(u["kinds"]) for u in rep["cells_unverifiable"]) \
         + sum(len(u["kinds"]) for u in rep["cells_all_numbers_typed_no_citation"])
     assert cited + uncited == rep["n_numbers_extracted"], (cited, uncited)
-    assert cited == rep["n_numbers_checked"] == 180
+    assert cited == rep["n_numbers_checked"] == 185   # was 180; see pneumoserotype citation note
 
 
 def test_unverifiable_now_means_only_the_residual():
@@ -515,9 +552,12 @@ def test_unverifiable_now_means_only_the_residual():
     (kleb 3 + essentiality 7 + hla b5701 5 = 15). The nine that remain are the two vacuous-citation
     cells (cyp2d6, pigment) and pneumoserotype, whose ~2.1% no-call rate is derived."""
     rep = _cached_report()
-    assert rep["n_by_kind"]["unverifiable"] == 9
-    assert rep["n_numbers_unverifiable"] == 9
-    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == 9
+    # 9 -> 4: pneumoserotype's 5 numbers left the residual once its two artifacts were cited. The
+    # remaining 4 are cyp2d6 + pigment, which are unverifiable BY MEASUREMENT (730+ wiki files
+    # contain their values, so no citation could discriminate).
+    assert rep["n_by_kind"]["unverifiable"] == 4
+    assert rep["n_numbers_unverifiable"] == 4
+    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == 4
     for u in rep["cells_unverifiable"]:
         assert all(k == "unverifiable" for k in
                    (u["kinds"][t] for t in u["numbers"])), u["cell_id"]
@@ -590,7 +630,7 @@ def test_step2_leaves_verdict_and_drift_untouched():
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
     assert rep["n_by_kind"].get("candidate-drift", 0) == 0
-    assert rep["n_numbers_checked"] == 180
+    assert rep["n_numbers_checked"] == 185
 
 
 # --- WP1: whole-number matching on BOTH sides ------------------------------------------------------
@@ -699,7 +739,7 @@ def test_the_verdict_stays_clean_because_nothing_was_actually_drifted():
     rep = _cached_report()
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
-    assert rep["n_numbers_checked"] == 180
+    assert rep["n_numbers_checked"] == 185
 
 
 # --- Step 4: only the citations the fixed rule admitted --------------------------------------------
@@ -736,8 +776,11 @@ def test_the_cells_the_rule_refused_still_have_no_citation():
     citing its cohort artifact would manufacture an adjudication item out of a correct claim."""
     rep = _cached_report()
     refused = {u["cell_id"] for u in rep["cells_unverifiable"]}
-    assert refused == {"pgx:human:cyp2d6", "typing:human:pigment",
-                       "typing:Streptococcus_pneumoniae:pneumoserotype"}, refused
+    # pneumoserotype is NO LONGER refused: its 4 concordance figures sit at semantic paths in
+    # wiki/pneumo_serotype_cohort_validation.json and its ~2.1% no-call rate is stated verbatim in
+    # wiki/pneumo_serotype_report_card.md ("~2.1% no-call rate of the 235"). The earlier refusal
+    # rested on a 5/235-vs-5/240 ambiguity that came from not reading the report card.
+    assert refused == {"pgx:human:cyp2d6", "typing:human:pigment"}, refused
     cited = {r["cell_id"] for r in rep["cells"]}
     assert not (refused & cited)
 
@@ -745,8 +788,8 @@ def test_the_cells_the_rule_refused_still_have_no_citation():
 def test_step4_raised_coverage_without_creating_drift():
     """The whole point: more numbers verified, nothing newly flagged."""
     rep = _cached_report()
-    assert rep["n_cells_audited"] == 19          # was 16
-    assert rep["n_numbers_unverifiable"] == 9    # was 24 after Step 2, 34 before Step 2
+    assert rep["n_cells_audited"] == 20          # was 16, then 19
+    assert rep["n_numbers_unverifiable"] == 4    # 34 -> 24 -> 9 -> 4
     assert rep["n_candidate_drift"] == 0
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
 
@@ -762,10 +805,20 @@ def test_the_full_pool_scan_is_still_the_right_control_even_though_it_was_not_th
     for r in graded:
         assert r["n_decoys"] * r["decoy_group_size"] >= 100, r["cell_id"]
     rows = {r["cell_id"]: r for r in rep["cells"]}
-    # the boundary cases: small non-zero rates that 10 draws cannot resolve
-    for cell_id in ("pgx:human:cyp4f2", "hla:human:b5701", "essentiality:any:essentiality",
-                    "finder:any:forward"):
-        assert 0.0 < rows[cell_id]["decoy_match_rate"] < 0.10, (cell_id, rows[cell_id])
+    # The boundary cases: sub-1% rates that 10 draws CANNOT resolve, which is the whole argument for
+    # scanning the full pool. NARROWED 2026-09-28: `essentiality:any:essentiality` and `finder:any:forward`
+    # used to sit here too and are now exactly 0.0, because `_number_variants` stopped truncating (their
+    # multi-decimal figures no longer match a coarser artifact token). The claim is unchanged -- a rate this
+    # small is only observable with hundreds of draws -- and these two still demonstrate it.
+    for cell_id in ("pgx:human:cyp4f2", "hla:human:b5701"):
+        rate = rows[cell_id]["decoy_match_rate"]
+        assert 0.0 < rate < 0.10, (cell_id, rows[cell_id])
+        # k=10 could not have produced this: fewer than 1 expected hit in 10 draws
+        assert rate * 10 < 1.0, (cell_id, rate)
+    # and the two that moved must be exactly zero, not merely small -- a partial drop would mean the
+    # truncating variants are still firing somewhere
+    for cell_id in ("essentiality:any:essentiality", "finder:any:forward"):
+        assert rows[cell_id]["decoy_match_rate"] == 0.0, (cell_id, rows[cell_id])
 
 
 
@@ -1006,3 +1059,56 @@ def test_the_circularity_exclusion_covers_the_WHOLE_contract_number_family():
     assert rep["cells"], "report produced no cells"
     graded = [r for r in rep["cells"] if r["n_decoys"]]
     assert graded, "nothing graded -- cannot assert the pool shape"
+
+
+def test_number_variants_are_VALUE_PRESERVING_never_truncations():
+    """THE DEFECT, pinned. `_number_variants` generates variants with `f"{f:.{nd}f}"` for nd in 1..4, which
+    PADS for nd above the token's precision and TRUNCATES below it: 0.939 -> "0.9", 2.13 -> "2.1". It feeds
+    the FAST path, so a truncated hit was recorded as an exact match and never reached
+    `_matches_by_rounding` -- leaving `matched_only_after_rounding` empty for every one of them.
+
+    Measured before the fix: 7 of 166 verified numbers passed ONLY on a truncation.
+    """
+    import scripts.contract_number_audit as mod
+    for tok in ("2.13", "0.939", "0.454", "0.167", "0.8171"):
+        f = float(tok)
+        for v in mod._number_variants(tok):
+            g = float(v)
+            assert (abs(g - f) <= 1e-9 * max(1.0, abs(f))
+                    or abs(g - f * 100.0) <= 1e-7 * max(1.0, abs(f * 100.0))
+                    or abs(g * 100.0 - f) <= 1e-9 * max(1.0, abs(f))), \
+                f"{tok}: variant {v} changes the value (truncation, not a re-expression)"
+    # the legitimate re-expressions must survive, or the fix would have broken real matching
+    assert "0.8300" in mod._number_variants("0.83") and "83" in mod._number_variants("0.83")
+    assert "93.9" in mod._number_variants("0.939")      # fraction cited, percent stored
+    assert "0.0213" in mod._number_variants("2.13")     # percent cited, fraction stored
+    # and the specific truncations are gone
+    assert "0.9" not in mod._number_variants("0.939")
+    assert "2.1" not in mod._number_variants("2.13")
+
+
+def test_one_artifact_value_cannot_verify_two_DIFFERENT_cited_numbers():
+    """The case that settled whether truncation is acceptable. ugt1a1 cites BOTH 0.939 and 0.941, and the
+    single artifact token `0.9` was matching both -- so the check was not discriminating between the numbers
+    at all. After the fix they must resolve to two DIFFERENT artifact values via the disclosing path."""
+    import scripts.contract_number_audit as mod
+    rep = mod.audit()
+    rows = {r["cell_id"]: r for r in rep["cells"]}
+    ug = rows["pgx:human:ugt1a1"]
+    rounded = ug.get("matched_only_after_rounding") or {}
+    assert {"0.939", "0.941"} <= set(rounded), (
+        "both numbers must now go through the DISCLOSING path, not the silent fast path: " + repr(rounded))
+    assert rounded["0.939"] != rounded["0.941"], (
+        f"both cited numbers still resolve to the same artifact value {rounded['0.939']} -- "
+        "one value cannot be evidence for two different claims")
+    for tok in ("0.939", "0.941"):
+        assert abs(rounded[tok] - float(tok)) < 0.001, (tok, rounded[tok])
+
+
+def test_the_rounding_disclosure_field_is_NOT_vacuous():
+    """A disclosure field that is always empty is not a disclosure. Before the fix the truncating fast path
+    absorbed these cases and the field was empty for every affected cell; it must now carry them."""
+    import scripts.contract_number_audit as mod
+    rep = mod.audit()
+    n = sum(len(r.get("matched_only_after_rounding") or {}) for r in rep["cells"])
+    assert n >= 10, f"only {n} disclosed roundings -- the fast path may be absorbing them again"

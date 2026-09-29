@@ -1560,7 +1560,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "does NOT narrow its magnitude interval), so a magnitude claim needs the dosage head's own "
             "informative flag, not the Spearman. (2) REGIME B ONLY: this must NEVER be read as a resistance "
             "predictor -- on antagonistically-selected resistance the same class of scorer is BELOW CHANCE "
-            "(ESM2 0.454 vs the curated catalogue's 0.926; BLOSUM62 ranks real DRMs 4.0/19), which is why "
+            "(ESM2 0.454 vs the curated catalogue's 0.926 -- `wiki/hiv_esm_vs_catalog_2026-07-09.md`; "
+            "BLOSUM62 ranks real DRMs 4.0/19), which is why "
             "the router sends determinant hits to Regime A and organism-polygenic edits to ABSTAIN. (3) The "
             "shipped CLI default is blosum62 at 0.35/0.18, NOT the 0.73 headline -- the learned methods need "
             "a precomputed score table and stay in the Python API. Demote if a DMS re-score drops the rank "
@@ -1755,7 +1756,8 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         validation_slice=(
             "GPS Poland cohort, wet-lab phenotypic serotype (Nat Commun 2025 Supplementary Data 1, "
             "`Phenotypic_serotype`), scored on GPS-deposited ENA assemblies -- label AND assembly both "
-            "independent of this caller. 260 total = 230 SCORED + 25 assembly-unavailable + 5 no-call. "
+            "independent of this caller. 260 total = 230 SCORED + 25 assembly-unavailable + 5 no-call "
+            "(`wiki/pneumo_serotype_cohort_validation.json`). "
             "On the 230: SEROGROUP concordance 0.939, EXACT serotype 0.661. Explicit-QUELLUNG-method "
             "subset n=42: serogroup 0.952 / exact 0.690 (consistent). The honest headline is the "
             "SEROGROUP number -- exact-serotype misses are systematically WITHIN-serogroup (9A/9V, "
@@ -1776,7 +1778,12 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "Quote the SEROGROUP number (0.939) as this v0's resolution; exact-serotype 0.661 is the "
             "within-serogroup-limited LOWER bound and must not be presented as the cell's accuracy. "
             "~2.1% no-call rate is excluded from accuracy by construction (a utility fact, not an "
-            "error). Promote only on allele-level within-serogroup typing (a v0.1). The cached GPS "
+            "error). That rate's DENOMINATOR is stated, not inferred: `wiki/pneumo_serotype_report_card.md` "
+            "records '5 no-call ... ~2.1% no-call rate of the 235' -- 235 = the assemblies the caller "
+            "actually attempted (260 total minus 25 unavailable), and 5/235 rounds to it. An earlier note "
+            "here called this ambiguous between 5/235 and 5/240 because both round to ~2.1; that ambiguity was "
+            "an artifact of not reading the report card, and 240 is derivable from no field of either "
+            "artifact. Promote only on allele-level within-serogroup typing (a v0.1). The cached GPS "
             "assemblies on D: are CORRUPT (HTTP 403 pages / truncated gzip) -- re-fetch with "
             "validation, never reuse them"),
     ),

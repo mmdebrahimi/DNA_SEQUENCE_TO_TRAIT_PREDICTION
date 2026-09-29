@@ -83,6 +83,13 @@ LABEL_VOCAB: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     # own field names, because deriving it from them would make every path "consistent" and the mismatch
     # check vacuous.
     "freq":      (("frequency", "freq", "allele frequency"),       ("freq", "frequency", "af")),
+    # Deliberately NOT an alias of `acc`. Concordance is agreement between two CALLERS where neither is
+    # truth; accuracy is measured against a label. That distinction is the whole basis of this repo's
+    # tier system (FAITHFUL_TO_TOOL vs INDEPENDENT_MEASURED), so collapsing them would let a tool-agreement
+    # figure verify a prose claim of accuracy -- the exact right-value/wrong-quantity error this check is for.
+    # `agreement` is a near-synonym and is EXCLUDED: measured at 2 conversions against 1 FALSE LEAD, and a
+    # false lead is strictly worse than an honestly-unlabeled number, so +1 net does not pay for it.
+    "concordance": (("concordance",),                              ("concordance",)),
 }
 
 # How far to look for a label. Asymmetric on purpose: English writes "sens 0.993" and "0.993 recall",
