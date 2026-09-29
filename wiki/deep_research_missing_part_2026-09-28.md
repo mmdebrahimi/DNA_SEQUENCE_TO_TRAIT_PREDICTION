@@ -282,7 +282,10 @@ worth more than a null result usually is:
 ## Next actions, in order
 
 1. **F1's non-DMS axes** — the one family still barely searched: measured-AST collections, AllTheBacteria,
-   EBI AMR Portal, Zenodo/Figshare thesis deposits.
+   EBI AMR Portal, Zenodo/Figshare thesis deposits. **Blocked in this session only:** the web-search
+   budget hit 200/200 exactly here. Not money, not permanent — it clears in a fresh session, or the
+   operator raises `CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION`. Note the earlier 12-agent fan-out spent
+   search budget as well as rate-limit headroom, so that mistake is charged twice.
 2. **Hit DART-Europe / CORE APIs directly** for theses; web search cannot reach them (OATD 403s).
 3. **Verify the 4 UNSCREENABLE locators** — cheap, and it is what converts them.
 4. **Decide whether to test the Fistarol objection ourselves** — we have AMRFinder, per-clade machinery and
