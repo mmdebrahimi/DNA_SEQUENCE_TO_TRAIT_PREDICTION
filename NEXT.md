@@ -6,9 +6,36 @@ learned that isn't durable yet. Durable findings belong in `CLAUDE.md` / `wiki/`
 
 Prune aggressively. A stale entry here is worse than an empty file.
 
-_Last updated: 2026-08-29._
+_Last updated: 2026-09-28._
 
 ---
+
+## IN FLIGHT — deep-research campaign F1-F4 (2026-09-28, ~15% done)
+
+Plan `plans/Deep_Research_Missing_Part_2026-09-28_Plan.md` · harvest
+`wiki/deep_research_candidates_2026-09-28.json` · screen `wiki/deep_research_screen_2026-09-28.json` ·
+memo `wiki/deep_research_missing_part_2026-09-28.md`. User ratified **full breadth** (F1-F4).
+
+**Cut off by a session rate limit.** Four family agents spawned eight of their own and all twelve died
+with **zero final reports**; their notification fragments were pre-verification and were discarded, not
+written up. First-party search worked fine immediately after — the constraint was the **12-way fan-out**,
+not the session. **Relaunch sequentially (or 2 at a time) and forbid sub-agent spawning.**
+
+| family | state |
+|---|---|
+| **F2** condition coverage (the one OPEN regime cell) | **ANSWERED NEGATIVELY.** "Public K-12" (PRECISE-1K 1,035 + 1,675 public = 2,710) **fails** the requirement: glucose share 60% → **82.7%** of annotated, **42%** of rows carry no carbon annotation, only **3** carbon sources reach 10 samples. It adds samples, not condition breadth. Verified by direct fetch + computation from the repo's own metadata — the "contact us" wall covers only `log_tpm`, not the metadata. |
+| **F1** label substrates | **one shallow search.** DMS axis is a clean negative (no new AMR-target/β-lactamase DMS 2025-26; AVE Alliance growth is human-clinical; its coordinate-mapping does not touch the dosage/scale problem). **Not searched:** measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits, ETD aggregators. |
+| **F3** de-confounded population designs | **NEVER SEARCHED.** On the critical path. |
+| **F4** cross-assay dosage transfer | **NEVER SEARCHED.** |
+
+Screening spine is built and green: `scripts/deep_research_screen.py` runs BOTH `rejection_gates` (G1-G10)
+and `regime.screen_proposal` per candidate, refuses to call anything promising until they have run, and
+reproduces all three committed candidate verdicts. 13 tests.
+
+**Process facts:** CORE.ac.uk search is a JS shell + its API 429s without a key (agent-reported,
+UNVERIFIED) · Edinburgh ERA has a reported 2024-25 indexing gap (UNVERIFIED) · `research-leads` YouTube
+search works but returns **no `upload_date`**, so a 2-year window needs a per-video lookup · SBRG/precise1k's
+default branch is `master`, so a `main`-branch GitHub API call 404s.
 
 ## The system design (drafted 2026-08-31, awaiting ratification)
 
@@ -170,7 +197,18 @@ corroboration for it. Not recommended on these numbers; a curation project, not 
    surface. Measure first: `uv run python scripts/claude_md_weight.py`.
    *Two long bullets have NO external store and must stay whole — the tool already protects them.*
 
-4. **The 7 unscreenable colour cells** — no existing evidence tier fits (`NO_FREE_SOURCE` is about labels;
+4. **Typed metric field on `CellContract`?** The semantic contract-number check (2026-09-28) measures
+   whether a cited number matches the right QUANTITY, not merely the right VALUE. Its binding limit is
+   LABEL COVERAGE: **only 16 of 180 numbers (8.9%) are measurable**, because the quantity label is
+   extracted by a prose-window heuristic and 147 numbers carry no quantity word near them. The durable fix
+   is a typed metric field on the contract — a registry schema change across 115 cells. Not taken.
+
+5. **Should the rejection-gate family gain a CONDITION-COVERAGE gate?** The 10 gates have none, and it is
+   exactly what the F2 candidates fail on (G6 measures phenotype-value degeneracy, not condition breadth).
+   Feeding condition counts into G6 would resolve them and make **every previously screened candidate's G6
+   verdict incomparable**, so it was refused and recorded as a campaign-specific criterion instead.
+
+6. **The 7 unscreenable colour cells** — no existing evidence tier fits (`NO_FREE_SOURCE` is about labels;
    `NOT_CENSUSED` means never-scored). And whether curating the 40 unrecorded colour loci is worth doing
    (fabrication hazard unless every locus is OMIA/literature-sourced).
 
@@ -185,6 +223,25 @@ fluency≠function, population-structure confounding, curated-rules-beat-ML) are
 de-confounded benchmarks against the curated-catalog baseline. If a published gene-token model can't beat
 a hand-written determinant catalog on constructed variation, that answers the idea for an inference pass
 — and it is exactly the comparison the critique literature says nobody runs.
+
+> **REGIME PRECISION, added 2026-09-28 — read this before running it, because the two framings have
+> OPPOSITE verdicts and the wording above does not state which one it means.**
+> - `screen_proposal('natural','molecular','zero_shot')` → **`LOSES_TO_CATALOG`**. Measured: HIV NNRTI
+>   curated catalogue AUC 0.926–0.962 vs ESM2 **0.454, below chance**, because resistance is reached via
+>   chemically CONSERVATIVE substitutions at averagely-conserved sites, so any plausibility scorer calls
+>   them benign. gLM2 is another likelihood scorer. **On natural populations this is a recorded negative —
+>   do not run it.**
+> - `screen_proposal('constructed','molecular','zero_shot')` → **`OPEN`**, condition **"measure a
+>   de-confounded baseline first"**. This is the reading the paragraph above intends ("on constructed
+>   variation"), and it is **live work, not foreclosed**.
+>
+> A `learned-narrow` candidate row phrased as "score gLM2-650M vs the curated baseline" was retired
+> 2026-09-28 under the NATURAL reading; the CONSTRUCTED reading is carried forward as that family's ranked
+> row 3. Scoping this wrong in either direction has cost this project real time — over-compressing the
+> zero-shot negative has hidden a live direction **four** times now, the fourth being my own retirement
+> note on 2026-09-28, which cited `REQUIRES_DECONFOUNDING` and a within-group-null condition. Both were
+> wrong: that is the `natural × organism × supervised` cell. **Run `screen_proposal` yourself; do not
+> trust a remembered verdict, including this one.**
 
 **Open user questions:** token level · training objective · natural vs constructed regime (drafted answers
 in the anchor).
