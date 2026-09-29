@@ -1,0 +1,45 @@
+{
+ "schema": "pear-genotype-alphabet-v1",
+ "analysis_date": "2026-09-29",
+ "substrate": "PEAR CTX-M-14 cefotaxime, constructed variation, independent lab",
+ "split": "by PROTEIN POSITION, every 3rd sorted unique position held out",
+ "n_missense": 1513,
+ "n_train": 1017,
+ "n_test": 496,
+ "n_positions_total": 264,
+ "n_positions_test": 88,
+ "consequence_medians": {
+  "silent": 0.0009116932694405409,
+  "missense": -0.0456789372771701,
+  "nonsense": -0.128557143171587
+ },
+ "spearman_heldout": {
+  "A_blosum62_zeroshot": 0.2543032304366591,
+  "B_esm2_zeroshot": 0.31130875422603893,
+  "C_learned_alphabet_pairmeans": 0.2159036365530379,
+  "D_ridge_onehot_wt_mut": 0.24635167829042387,
+  "E_ridge_onehot_PLUS_esm2": 0.35148140714250153
+ },
+ "n_pair_unseen": 4,
+ "pair_unseen_frac": 0.008064516129032258,
+ "prereg": {
+  "frozen_before_any_number_was_seen": true,
+  "B1_learned_alphabet_beats_blosum62": "learned alphabet Spearman > BLOSUM62 Spearman on held-out positions",
+  "B2_supervised_beats_esm2": "best supervised Spearman > ESM2 Spearman on the SAME held-out positions",
+  "B3_decisive": "variant E (supervised head on top of ESM2) > variant B (ESM2 alone)",
+  "invalidator": "if n_pair_unseen / n_test > 0.50 the learned alphabet is mostly its fallback and B1 is void",
+  "not_compared_to": "the published POOLED 0.352 -- different quantity from a held-out-position number"
+ },
+ "verdicts": {
+  "B1_learned_alphabet_beats_blosum62": false,
+  "B2_supervised_beats_esm2": true,
+  "B3_esm2_plus_head_beats_esm2_alone": true,
+  "B1_VOID_fallback_dominates": false
+ },
+ "honest_limits": [
+  "ONE protein, ONE assay, ONE lab -- a position-held-out result on CTX-M-14, not a general law.",
+  "The alphabet variants are POSITION-FREE by construction; that is the hypothesis under test, not a limitation of the implementation.",
+  "ESM2 is zero-shot here and sees no measured fitness; the supervised variants see 2/3 of positions. That asymmetry FAVOURS the supervised side, so a supervised loss is decisive while a supervised win is only suggestive.",
+  "Held out by position, not by structural neighbourhood -- adjacent positions can share local context, so B2/B3 may be optimistic for the supervised side."
+ ]
+}

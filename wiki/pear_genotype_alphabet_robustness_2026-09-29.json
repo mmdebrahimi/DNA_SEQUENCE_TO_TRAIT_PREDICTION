@@ -1,0 +1,75 @@
+{
+ "schema": "pear-genotype-alphabet-robustness-v1",
+ "analysis_date": "2026-09-29",
+ "stride_sweep": [
+  {
+   "stride": 2,
+   "n_test_positions": 132,
+   "n_test": 754,
+   "A_blosum62": 0.226435018116373,
+   "B_esm2": 0.3516521074864762,
+   "C_pairmeans": 0.1843734330662888,
+   "D_ridge_onehot": 0.13298955792813816,
+   "E_ridge_plus_esm2": 0.26180624162748245
+  },
+  {
+   "stride": 3,
+   "n_test_positions": 88,
+   "n_test": 496,
+   "A_blosum62": 0.2543032304366591,
+   "B_esm2": 0.31130875422603893,
+   "C_pairmeans": 0.2159036365530379,
+   "D_ridge_onehot": 0.24635167829042387,
+   "E_ridge_plus_esm2": 0.35148140714250153
+  },
+  {
+   "stride": 4,
+   "n_test_positions": 66,
+   "n_test": 379,
+   "A_blosum62": 0.2541667899769078,
+   "B_esm2": 0.4110944871438055,
+   "C_pairmeans": 0.19653765561836628,
+   "D_ridge_onehot": 0.13452011560798513,
+   "E_ridge_plus_esm2": 0.33854227456705926
+  },
+  {
+   "stride": 5,
+   "n_test_positions": 53,
+   "n_test": 301,
+   "A_blosum62": 0.30753198478922933,
+   "B_esm2": 0.35343868895931096,
+   "C_pairmeans": 0.266535426765688,
+   "D_ridge_onehot": 0.21041355533961423,
+   "E_ridge_plus_esm2": 0.35545493398898165
+  }
+ ],
+ "B1_stable_across_strides": true,
+ "B1_values": [
+  false,
+  false,
+  false,
+  false
+ ],
+ "B3_stable_across_strides": false,
+ "B3_values": [
+  false,
+  true,
+  false,
+  true
+ ],
+ "clustered_bootstrap_E_minus_B": {
+  "n_draws": 2000,
+  "mean_delta": 0.0386961970751465,
+  "ci95": [
+   -0.021773532367700528,
+   0.0991823652443702
+  ],
+  "frac_positive": 0.8915
+ },
+ "bootstrap_unit": "POSITION (not variant) -- ~19 variants share a position and are not independent",
+ "honest_limits": [
+  "Strides are nested partitions of the SAME 264 positions, so the four rows are not four independent experiments -- they test partition-sensitivity, not replication.",
+  "ESM2 sees no measured fitness; the supervised variants see the training positions. That asymmetry favours the supervised side, so E>B is SUGGESTIVE while C/D<A is DECISIVE.",
+  "One protein, one assay, one lab."
+ ]
+}

@@ -74,7 +74,16 @@ REGIMES: tuple[Regime, ...] = (
            "Direction holds in both (ESM2 beats BLOSUM62: 0.352 vs 0.198 on CTX-M-14). Lift comes from "
            "ORTHOGONAL MODALITIES, not scale: ESM2+GEMME+ProSST beats ESM2 on 90.5% of proteins paired, "
            "while 650M > 3B > 15B. A DAMAGE predictor cannot score a GAIN-of-function axis -- CTX-M-14 "
-           "on ceftazidime is 0.078 for exactly that reason."),
+           "on ceftazidime is 0.078 for exactly that reason. **THE CITED EVIDENCE IS ZERO-SHOT** (ESM2 masked-marginal scoring); nothing in it trains on measured phenotype, so do NOT read this row as 'the supervised path is achieved'. Measured 2026-09-29 on PEAR CTX-M-14 with a held-out-POSITION split: a SUPERVISED alphabet head on top of ESM2 gives NO reliable lift (unstable across strides 2/3/4/5, position-clustered bootstrap 95% CI [-0.022,+0.099] spans zero), and a POSITION-FREE learned alphabet LOSES to BLOSUM62 on all four splits (0.13-0.27 vs 0.23-0.31) even trained on that protein's own 1,017 variants. See wiki/pear_genotype_alphabet_2026-09-29.md."),
+    Regime("constructed_molecular_zeroshot", "constructed", "molecular", "zero_shot", WORKS,
+           "the SAME evidence as constructed_molecular, correctly attributed: ESM2-650M "
+           "masked-marginal ZERO-SHOT scoring, TEM-1 0.761 / CTX-M-14 0.352, and 0.31-0.41 "
+           "across four held-out-position splits on CTX-M-14",
+           "wiki/pear_genotype_alphabet_2026-09-29.md",
+           "Declared explicitly because the default verdict for this cell was OPEN with the "
+           "condition 'measure a de-confounded baseline first' -- a condition the 0.761/0.352 "
+           "numbers ALREADY satisfy. A pretrained protein LM scoring variants zero-shot IS the "
+           "working method here, and it BEAT every learned-alphabet variant tested."),
     Regime("constructed_organism_per_condition", "constructed", "organism", "supervised", WORKS,
            "FBA iML1515 conditional essentiality, MCC 0.70-0.74 across four media",
            "wiki/organism_gp_regime_correction_2026-08-29.md",
