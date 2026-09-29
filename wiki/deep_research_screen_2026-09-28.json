@@ -3,10 +3,12 @@
   "schema": "deep-research-screen-v1",
   "generated": "2026-09-28",
   "window": "2024-09..2026-09 (stated window; two candidates below predate it and are labelled)",
-  "n_candidates": 3,
+  "n_candidates": 7,
   "class_counts": {
     "INCONCLUSIVE": 2,
-    "LEAD_ONLY": 1
+    "LEAD_ONLY": 1,
+    "PROMISING": 2,
+    "UNSCREENABLE": 2
   },
   "by_family": {
     "F2": {
@@ -14,6 +16,10 @@
     },
     "F1": {
       "LEAD_ONLY": 1
+    },
+    "F4": {
+      "PROMISING": 2,
+      "UNSCREENABLE": 2
     }
   },
   "candidates": [
@@ -171,6 +177,122 @@
       "regime_verdict": null,
       "regime_note": "no regime triple supplied",
       "screen_class": "LEAD_ONLY"
+    },
+    {
+      "id": "fcs_conformal_fannjiang",
+      "family": "F4",
+      "kind": "method",
+      "name": "Conformal Prediction Under Feedback Covariate Shift for Biomolecular Design (Fannjiang, Bates, Angelopoulos, Listgarten, Jordan)",
+      "locator": "https://doi.org/10.1073/pnas.2204569119  (PNAS 119(43) e2204569119, 2022; arXiv:2202.03613 v5 revised 2025-04-03)",
+      "date": "2022, last revised 2025-04-03",
+      "verification": "DIRECTLY FETCHED from the arXiv abstract page: title, full author list, abstract, revision dates, journal ref and DOI all confirmed verbatim",
+      "claim": "Valid finite-sample confidence sets for ANY regression model under FEEDBACK covariate shift -- the setting where a trained model chooses the test-time input distribution. Abstract, verbatim: 'even when a trained model chooses the test-time input distribution'.",
+      "why_it_could_matter": "This is EXACTLY the inverse cell's loop shape -- propose k edits with a model, assay k, keep the best -- and the standard conformal assumption (train/test independence) is violated by construction there. It is the on-point method for validity in a design loop.",
+      "blocking_unknowns": [
+        "IT MAY NOT SOLVE OUR ACTUAL PROBLEM. Verification found that interval WIDTH / efficiency / informativeness appear NOWHERE in the abstract -- it claims coverage VALIDITY. A search summary asserted the paper reports widths in its empirical sections; that is UNVERIFIED at the paper-body level and is the only thing that would matter to us, since our measured failure is an interval that is valid and VACUOUS (informative on 0 of 6 splits).",
+        "Scope is de novo design / fitness optimisation, not variant-effect SCORING; no work was found conformalizing DMS/ProteinGym-style VEP scores."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "molecular",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1073/pnas.2204569119  (PNAS 119(43) e2204569119, 2022; arXiv:2202.03613 v5 revised 2025-04-03)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "WORKS",
+      "regime_note": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+      "screen_class": "PROMISING"
+    },
+    {
+      "id": "barber_conditional_coverage_impossibility",
+      "family": "F4",
+      "kind": "method",
+      "name": "The limits of distribution-free conditional predictive inference (Barber, Candes, Ramdas, Tibshirani)",
+      "locator": "https://doi.org/10.1093/imaiai/iaaa017  (Information and Inference: A Journal of the IMA 10(2):455-482, 2021; arXiv:1903.04684)",
+      "date": "2021",
+      "verification": "VERIFIED via search against the published record: full author list, journal, volume, pages, year, DOI and arXiv id all resolved consistently across the OUP page, the arXiv listing and the first author's own publication list.",
+      "claim": "Exact conditional coverage is IMPOSSIBLE without assumptions on the underlying distribution. The paper's actual contribution is to map the space between marginal and conditional coverage -- i.e. WHICH RELAXATIONS of conditional coverage remain achievable distribution-free.",
+      "why_it_could_matter": "IT EXPLAINS A RESULT WE ALREADY MEASURED AND REFRAMES THE PATH. Our conformal attempt on the inverse cell was 'informative on 0 of 6 splits -- it brackets while proving nothing, since coverage holds even for a useless model'. That is not an implementation gap: it is the price of the guarantee class. And the paper supplies the constructive half -- the achievable relaxations -- so the next move is to PICK AN ACHIEVABLE RELAXATION (or add explicit assumptions), NOT to hunt for a better conformal method. It also names the failure mode that matters to us directly: marginal coverage can cover 99% of one subgroup while badly under-covering another, which is exactly the per-protein heterogeneity our 0.35-0.76 range describes.",
+      "blocking_unknowns": [
+        "Which specific relaxation fits the inverse cell's decision ('propose k, assay k, keep best') is NOT answered by this paper and is the real design question; the paper gives the menu, not our choice.",
+        "This CLOSES a line of inquiry (better conformal method) more than it opens one. Valuable, but it narrows rather than unlocks -- do not present it as a lever."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "molecular",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1093/imaiai/iaaa017  (Information and Inference: A Journal of the IMA 10(2):455-482, 2021; arXiv:1903.04684)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "WORKS",
+      "regime_note": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+      "screen_class": "PROMISING"
+    },
+    {
+      "id": "null_anchored_bridging_normalisation",
+      "family": "F4",
+      "kind": "method",
+      "name": "Null/WT-anchored normalisation plus overlapping-variant bridging ('test-equating') as the field's practical cross-assay scale",
+      "locator": "UNVERIFIED \u2014 synthesised from search summaries of the 2025 Mol Syst Biol DMS variant-scoring review (https://doi.org/10.1038/s44320-025-00137-x) and MaveDB/AVE harmonisation discussion; no primary source fetched",
+      "date": "2025 review",
+      "verification": "SEARCH-REPORTED, NOT FETCHED, and partly a SYNTHESIS rather than a single source's stated method. Verify before relying on it.",
+      "claim": "Independent corroboration that the scale problem is real and unsolved: 'their scale is highly dependent on experimental methods and selection assays, requiring rescaling and normalisation'. The practical approach is to anchor each assay on shared controls (synonymous/WT and nonsense/null) to a 0-1 range, then rescale across assays via overlapping variants as a bridging set.",
+      "why_it_could_matter": "A null-to-WT-anchored scale would NOT be a physical unit but WOULD be a defensible shared axis ('fraction of the null-to-WT range'), which is more than the inverse cell has now. And it independently confirms our own recorded conclusion that raw calibrators cannot transfer.",
+      "blocking_unknowns": [
+        "ITS FAILURE MODE IN OUR DATA IS ALREADY MEASURED: null-anchoring needs an unsaturated dynamic range, and CcdB is 79.3% tied at its assay ceiling with 8 distinct levels -- the exact degeneracy our own G6 screen excludes it for. So the bridging idea is most likely to fail on the very assay that motivated the problem.",
+        "Requires overlapping variants BETWEEN assays; whether TEM-1 and CTX-M-14 share enough is unmeasured."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "molecular",
+        "method": "supervised"
+      },
+      "locator_ok": false,
+      "locator_note": "locator flagged unverified by the harvester: 'UNVERIFIED \u2014 synthesised from search summaries of the 2025 Mol Syst Biol DMS variant-scoring review (https://doi.org/10.1038/s44320-025-00137-x) and MaveDB/AVE harmonisation discussion; no primary source fetched'",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "WORKS",
+      "regime_note": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+      "screen_class": "UNSCREENABLE"
+    },
+    {
+      "id": "clinical_ps3_bs3_anchor",
+      "family": "F4",
+      "kind": "method",
+      "name": "ACMG/AMP PS3/BS3 likelihood-ratio calibration as the most defensible ABSOLUTE anchor currently available",
+      "locator": "UNVERIFIED \u2014 search-reported; no primary source fetched",
+      "date": "ongoing (ACMG/AMP framework)",
+      "verification": "SEARCH-REPORTED, NOT FETCHED.",
+      "claim": "Clinical calibration via PS3/BS3 likelihood ratios gives the most defensible absolute interpretation of a DMS score that currently exists; rank-only Spearman benchmarking (ProteinGym-style) explicitly does not solve effect-size calibration.",
+      "why_it_could_matter": "It is an existence proof that an absolute, defensible scale for DMS output is achievable at all -- which our 'calibrators cannot transfer' finding might otherwise be read as denying.",
+      "blocking_unknowns": [
+        "HUMAN-CLINICAL ONLY. The anchor is a clinical likelihood ratio for pathogenicity in humans; there is no analogue for a pathogen drug-resistance target, which is what the inverse cell is pointed at. So it does NOT transfer to our use case.",
+        "Converges with the F1 negative: the AVE Alliance's growth is human-clinical, so the infrastructure and the anchors are both going somewhere our cells are not."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "molecular",
+        "method": "supervised"
+      },
+      "locator_ok": false,
+      "locator_note": "locator flagged unverified by the harvester: 'UNVERIFIED \u2014 search-reported; no primary source fetched'",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "WORKS",
+      "regime_note": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+      "screen_class": "UNSCREENABLE"
     }
   ],
   "honest_limits": [

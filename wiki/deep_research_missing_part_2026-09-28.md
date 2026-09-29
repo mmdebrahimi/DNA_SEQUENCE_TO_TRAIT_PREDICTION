@@ -134,6 +134,51 @@ committed gate to mean something it does not mean, and every prior screened cand
 become incomparable. Whether the gate family should GAIN a condition-coverage gate is a schema decision,
 i.e. an authority call, not a patch to make today's candidate resolve.
 
+## F4 — dosage transfer: SEARCHED, and the headline is a THEORETICAL closure
+
+Run first-party after the rate limit reset (2 searches + 2 direct verifications). **2 of 4 candidates have
+verified locators and clear the screen; the other 2 are honestly marked UNVERIFIED and the screen refused to
+promote them** — the locator guard gating my own harvest.
+
+**1. The vacuous interval is a THEOREM, not my bug.**
+[Barber, Candès, Ramdas & Tibshirani, *Information and Inference* 10(2):455–482, 2021,
+DOI `10.1093/imaiai/iaaa017`] — **exact conditional coverage is impossible without distributional
+assumptions**, so vacuous intervals are the *price* of distribution-free conditional guarantees. Our
+recorded result — the inverse cell's conformal interval was "informative on 0 of 6 splits, bracketing while
+proving nothing, since coverage holds even for a useless model" — is therefore **not an implementation gap**.
+
+Two consequences, and the second is the useful one:
+- **Stop looking for a better conformal method.** That search is foreclosed by the theorem.
+- **The paper's actual contribution is the constructive half**: which *relaxations* of conditional coverage
+  remain achievable distribution-free. So the next move is to **pick an achievable relaxation** (or add
+  explicit assumptions) — a design choice we can make, not a method to find.
+- It also names our exact failure mode: marginal coverage can cover 99% of one subgroup while badly
+  under-covering another — which is what our per-protein 0.35–0.76 spread *is*.
+
+**2. The on-point method for our loop shape, with one honest hole.**
+[Fannjiang, Bates, Angelopoulos, Listgarten & Jordan, *PNAS* 119(43) e2204569119, DOI
+`10.1073/pnas.2204569119`, arXiv:2202.03613 v5 revised 2025-04-03] — conformal prediction under **feedback**
+covariate shift, i.e. validity *"even when a trained model chooses the test-time input distribution"*
+(verbatim from the abstract). That is exactly the inverse cell's loop: propose k edits with the model, assay
+k, keep the best — a setting where the standard train/test independence assumption is violated **by
+construction**.
+
+**But verification found the hole, and it is the one that matters.** A search summary asserted the paper
+reports interval *widths*; the abstract claims only coverage **validity** — width, efficiency and
+informativeness appear nowhere in it. Coverage validity without informativeness is precisely what is useless
+to us. Combined with the theorem above, the honest read is: **this gives valid intervals for our loop shape
+and does not, by itself, solve our informativeness problem.**
+
+**3–4. Two UNVERIFIED leads, correctly not promoted.** Null/WT-anchored normalisation plus
+overlapping-variant bridging ("test-equating") is the field's practical cross-assay scale — and it
+independently corroborates our own conclusion that raw calibrators cannot transfer (*"their scale is highly
+dependent on experimental methods and selection assays"*). **Its failure mode in our data is already
+measured:** null-anchoring needs an unsaturated range, and CcdB is **79.3% tied at its ceiling** — the exact
+degeneracy our own G6 screen excludes it for, i.e. it would fail on the very assay that motivated the
+problem. Separately, ACMG/AMP **PS3/BS3 likelihood ratios** are the most defensible *absolute* anchor that
+exists, but they are **human-clinical only** and have no pathogen-target analogue — converging with the F1
+negative that both the infrastructure and the anchors are heading somewhere our cells are not.
+
 ## Where that leaves the four families
 
 - **F2 — answered, negatively, on the strongest lead.** Public K-12 fails the condition-breadth
