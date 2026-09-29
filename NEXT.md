@@ -208,9 +208,14 @@ corroboration for it. Not recommended on these numbers; a curation project, not 
    path must be consistent with the declared quantity, and a binding whose token is absent from prose is
    itself a **defect** (`binding_declared_but_prose_token_absent`) — because otherwise the audit would be
    auditing the declaration instead of the prose.
-   *Measured:* 3 bindings declared → measurability **16 → 19 of 180 (0.0889 → 0.1056)**, `label_unlabeled`
-   147 → 144, 0 binding defects. **HONEST LIMIT: the gain is 1:1 per binding**, so coverage is LINEAR in
-   authoring effort — this is a tool for the numbers you care most about, NOT a fix for the remaining ~144.
+   *Measured:* **5 bindings declared → measurability 16 → 22 of 180 (0.0889 → 0.1222)**, `label_unlabeled`
+   147 → 141, 0 binding defects. **HONEST LIMIT: a binding is 1:1** — it converts exactly one number, so
+   bindings are LINEAR in authoring effort and will not close the remaining ~141.
+   **BUT the follow-on measurement found a better lever:** adding ONE `LABEL_VOCAB` entry (`freq`) both
+   unlocked 2 bindings AND converted a further number via the prose heuristic unaided
+   (`measurable_by_heuristic` 16 → 17). **Vocabulary coverage has leverage; bindings do not.** Reach for
+   a vocabulary entry when the prose DOES name a quantity the check cannot read, and for a binding only
+   when the prose names no quantity at all.
    *Also shipped, in the same change because otherwise the field and the hole ship together:* the
    "NO numeric confidence field" guard in `tests/test_cell_registry.py` now **RECURSES** — it previously
    checked only top-level attribute values, so a nested numeric inside a tuple would have passed.

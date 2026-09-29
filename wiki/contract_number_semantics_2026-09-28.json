@@ -3,18 +3,18 @@
   "schema": "contract-number-semantics-v1",
   "scope": "cells whose prose cites a wiki/ artifact; only numbers whose prose names a quantity are measurable at all",
   "n_numbers": 180,
-  "n_measurable": 19,
-  "measurable_fraction": 0.1056,
-  "measurable_by_binding": 3,
-  "measurable_by_heuristic": 16,
-  "n_bindings_declared": 3,
+  "n_measurable": 22,
+  "measurable_fraction": 0.1222,
+  "measurable_by_binding": 5,
+  "measurable_by_heuristic": 17,
+  "n_bindings_declared": 5,
   "n_binding_defects": 0,
   "binding_defects": [],
   "status_counts": {
-    "field_confirmed": 15,
-    "label_unlabeled": 144,
+    "field_confirmed": 16,
+    "label_unlabeled": 141,
+    "field_confirmed_by_binding": 5,
     "no_numeric_field": 16,
-    "field_confirmed_by_binding": 3,
     "md_only_or_pooled": 1,
     "field_mismatch": 1
   },
@@ -90,20 +90,24 @@
     {
       "cell_id": "pgx:human:cyp4f2",
       "number": "0.2773",
-      "claimed_label": null,
-      "status": "label_unlabeled",
-      "consistent_paths": [],
+      "claimed_label": "freq",
+      "status": "field_confirmed_by_binding",
+      "consistent_paths": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json:af_corroboration_axis.measured.EUR.alt_freq"
+      ],
       "competing_paths": [],
-      "from_binding": false
+      "from_binding": true
     },
     {
       "cell_id": "pgx:human:cyp4f2",
       "number": "0.2128",
-      "claimed_label": null,
-      "status": "label_unlabeled",
-      "consistent_paths": [],
+      "claimed_label": "freq",
+      "status": "field_confirmed_by_binding",
+      "consistent_paths": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json:af_corroboration_axis.measured.EAS.alt_freq"
+      ],
       "competing_paths": [],
-      "from_binding": false
+      "from_binding": true
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -117,10 +121,20 @@
     {
       "cell_id": "pgx:human:cyp4f2",
       "number": "0.3",
-      "claimed_label": null,
-      "status": "label_unlabeled",
-      "consistent_paths": [],
-      "competing_paths": [],
+      "claimed_label": "freq",
+      "status": "field_confirmed",
+      "consistent_paths": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json:af_corroboration_axis.asserted_by_docstring.EUR",
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json:af_corroboration_axis.measured.EUR.alt_freq",
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json:af_corroboration_axis.checks.EUR.asserted",
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json:af_corroboration_axis.checks.EUR.measured"
+      ],
+      "competing_paths": [
+        "wiki/pgx_af_panel_audit_2026-09-24.json:claims[0].asserted.EUR",
+        "wiki/pgx_af_panel_audit_2026-09-24.json:claims[0].measured_all_populations.EUR",
+        "wiki/pgx_af_panel_audit_2026-09-24.json:claims[0].checks.EUR.asserted",
+        "wiki/pgx_af_panel_audit_2026-09-24.json:claims[0].checks.EUR.measured"
+      ],
       "from_binding": false
     },
     {

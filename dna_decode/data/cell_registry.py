@@ -490,7 +490,16 @@ _PGX_CONTRACTS: list[CellContract] = [
         label_provenance="CPIC warfarin (Johnson 2017) CYP4F2*3 + GeT-RM CDC Consolidated multi-lab consensus via scripts/cyp4f2_getrm_concordance.py; population frequencies DERIVED from the local 1000G panel via scripts/pgx_af_panel_audit.py. Consensus is caller-derived, NOT wet-lab -- bounds agreement-with-reference, never correctness",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/cyp4f2_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="READ THE FUNCTION, NOT THE STAR LABEL. All 12 star-name disagreements are EXACTLY the 12 samples carrying *2 (defined by a variant this caller never reads -- it genotypes one SNP), zero exceptions: *1 0/91-agreeing-where-*2-present, *2 0/12 on naming. A *2 carrier prints as *1. *2's FUNCTIONAL status is NOT established by this run -- CPIC dose-adjusts on *3, so this is a NAMING limitation, not a demonstrated safety gap. A warfarin DOSE modifier, not a metabolizer phenotype; the dose direction is annotation only (NOT a clinical dose)"),
+        demotion_rule="READ THE FUNCTION, NOT THE STAR LABEL. All 12 star-name disagreements are EXACTLY the 12 samples carrying *2 (defined by a variant this caller never reads -- it genotypes one SNP), zero exceptions: *1 0/91-agreeing-where-*2-present, *2 0/12 on naming. A *2 carrier prints as *1. *2's FUNCTIONAL status is NOT established by this run -- CPIC dose-adjusts on *3, so this is a NAMING limitation, not a demonstrated safety gap. A warfarin DOSE modifier, not a metabolizer phenotype; the dose direction is annotation only (NOT a clinical dose)",
+        metric_bindings=(
+            ContractNumberBinding("0.2773", "freq",
+                                  "wiki/cyp4f2_getrm_concordance_2026-09-24.json",
+                                  "af_corroboration_axis.measured.EUR.alt_freq"),
+            ContractNumberBinding("0.2128", "freq",
+                                  "wiki/cyp4f2_getrm_concordance_2026-09-24.json",
+                                  "af_corroboration_axis.measured.EAS.alt_freq"),
+        ),
+),
     CellContract(
         cell_id="pgx:human:abcg2", track="pgx", route="dna-pgx", organism="human", target="abcg2",
         claim="ABCG2 Q141K (rs2231142) rosuvastatin transporter-function genotype from a phased VCF (pairs with SLCO1B1 for statins)",

@@ -262,8 +262,31 @@ def test_the_live_registry_bindings_convert_previously_unmeasurable_numbers():
     for the remaining ~144 unlabeled ones.
     """
     rep = audit_semantics()
-    assert rep["n_bindings_declared"] == 3, rep["n_bindings_declared"]
-    assert rep["measurable_by_binding"] == 3, rep["measurable_by_binding"]
-    assert rep["measurable_by_heuristic"] == 16, rep["measurable_by_heuristic"]
-    assert rep["n_measurable"] == 19 > 16
+    assert rep["n_bindings_declared"] == 5, rep["n_bindings_declared"]
+    assert rep["measurable_by_binding"] == 5, rep["measurable_by_binding"]
+    assert rep["measurable_by_heuristic"] == 17, rep["measurable_by_heuristic"]
+    assert rep["n_measurable"] == 22 > 16
     assert rep["n_binding_defects"] == 0, rep["binding_defects"]
+
+
+def test_a_vocabulary_entry_has_MORE_leverage_than_a_binding():
+    """MEASURED, and it changes which lever to reach for.
+
+    A binding converts exactly ONE number (3 bindings -> 3 conversions, then 5 -> 5): linear in authoring
+    effort, no leverage. But adding ONE `LABEL_VOCAB` entry (`freq`, added because `...alt_freq` paths had
+    no quantity) did two things at once: it unlocked 2 bindings AND let the prose-window heuristic label a
+    further number on its own, taking measurable_by_heuristic 16 -> 17 with no binding written for it.
+
+    So the cheaper lever for the remaining ~141 unlabeled numbers is VOCABULARY COVERAGE, not per-number
+    bindings. Bindings are for numbers whose prose names no quantity at all; vocabulary is for quantities
+    the prose DOES name and the check cannot yet read.
+    """
+    from scripts.contract_number_semantics import LABEL_VOCAB, path_is_consistent
+
+    assert "freq" in LABEL_VOCAB, "the freq quantity is what this test is about"
+    assert path_is_consistent("af_corroboration_axis.measured.EUR.alt_freq", "freq")
+    assert not path_is_consistent("metrics.sens", "freq"), "must not accept an unrelated path"
+    rep = audit_semantics()
+    assert rep["measurable_by_heuristic"] == 17, (
+        "the freq entry converted a number via the HEURISTIC, not only via bindings; if this drops to 16 "
+        "the vocabulary-leverage claim no longer holds")

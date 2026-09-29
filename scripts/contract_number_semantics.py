@@ -74,6 +74,15 @@ LABEL_VOCAB: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "vme":       (("vme", "very major error"),                     ("vme",)),
     "identity":  (("identity", "ident"),                           ("identity", "ident", "pct_identity")),
     "coverage":  (("coverage", "cov"),                             ("coverage", "cov")),
+    # Added 2026-09-28, driven by an OBSERVED occurrence rather than anticipation: the cyp4f2 cell quotes
+    # panel-derived allele frequencies (EUR 0.2773 / EAS 0.2128) that live at `...alt_freq` paths, and with
+    # no `freq` quantity `path_is_consistent` refused every binding to them. Note the PROSE side barely
+    # matters here -- that prose says "EUR 0.2773" with no quantity word at all, so only a BINDING can reach
+    # these numbers; the vocabulary entry exists so the binding's declared quantity can be checked against
+    # the path. Grown per observed need on purpose: this vocabulary must stay INDEPENDENT of the artifacts'
+    # own field names, because deriving it from them would make every path "consistent" and the mismatch
+    # check vacuous.
+    "freq":      (("frequency", "freq", "allele frequency"),       ("freq", "frequency", "af")),
 }
 
 # How far to look for a label. Asymmetric on purpose: English writes "sens 0.993" and "0.993 recall",
