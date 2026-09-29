@@ -3,12 +3,12 @@
   "schema": "deep-research-screen-v1",
   "generated": "2026-09-28",
   "window": "2024-09..2026-09 (stated window; two candidates below predate it and are labelled)",
-  "n_candidates": 7,
+  "n_candidates": 14,
   "class_counts": {
     "INCONCLUSIVE": 2,
-    "LEAD_ONLY": 1,
-    "PROMISING": 2,
-    "UNSCREENABLE": 2
+    "LEAD_ONLY": 3,
+    "PROMISING": 5,
+    "UNSCREENABLE": 4
   },
   "by_family": {
     "F2": {
@@ -19,6 +19,11 @@
     },
     "F4": {
       "PROMISING": 2,
+      "UNSCREENABLE": 2
+    },
+    "F3": {
+      "PROMISING": 3,
+      "LEAD_ONLY": 2,
       "UNSCREENABLE": 2
     }
   },
@@ -292,6 +297,205 @@
       "label_gate_reasons": {},
       "regime_verdict": "WORKS",
       "regime_note": "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
+      "screen_class": "UNSCREENABLE"
+    },
+    {
+      "id": "yu_barquist_biased_sampling",
+      "family": "F3",
+      "kind": "method",
+      "name": "Biased sampling driven by bacterial population structure confounds ML prediction of AMR (Yu, Wheeler, Barquist)",
+      "locator": "https://doi.org/10.1371/journal.pbio.3003539  (PLOS Biology 23(12):e3003539, 2025-12-16; preprint bioRxiv 10.1101/2025.01.07.631773; code+results Zenodo 10.5281/zenodo.17399563)",
+      "date": "2025-12-16",
+      "verification": "VERIFIED (article page fetched)",
+      "claim": "Over 24,000 genomes, 5 species, 27 antibiotics, 6,740 LightGBM models, two held-out-CLADE schemes with explicit positive controls. Finding: models key on LINEAGE MARKERS, and increasing training N does NOT rescue it.",
+      "why_it_could_matter": "THE STRONGEST EXTERNAL VALIDATION THIS PROJECT HAS of its own 0-for-5 de-confounded negative -- independent group, 2025, far larger scale, same conclusion, and it reproduces the 'more data does not fix a signal-vs-structure problem' note already attached to eval/regime.py. Their asymmetric precision/recall signature is a reusable DIAGNOSTIC.",
+      "blocking_unknowns": [
+        "CORROBORATION, NOT A LEVER: they CALL FOR lineage-aware algorithms; they do not build one. It strengthens the closed negative rather than opening a path.",
+        "Genome/phenotype accession list not re-verified; code+results deposits are confirmed."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1371/journal.pbio.3003539  (PLOS Biology 23(12):e3003539, 2025-12-16; preprint bioRxiv 10.1101/2025.01.07.631773; code+results Zenodo 10.5281/zenodo.17399563)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "REQUIRES_DECONFOUNDING",
+      "regime_note": "not closed -- the 0-for-5 is ZERO-SHOT-only; a supervised complement is the shipped architecture. Condition: report WITHIN-GROUP performance against each group's own null",
+      "screen_class": "PROMISING"
+    },
+    {
+      "id": "fistarol_gene_copy_number",
+      "family": "F3",
+      "kind": "method",
+      "name": "Gene copy-number features generalize better than SNPs for AMR prediction in S. aureus (Fistarol, Gervasio, Szollosi)",
+      "locator": "https://doi.org/10.1038/s44259-025-00172-6  (npj Antimicrobials and Resistance 3(1):100, 2025; PMID 41402414)",
+      "date": "2025-12",
+      "verification": "VERIFIED (Europe PMC core record). Data-availability accessions UNVERIFIED -- full text not fetchable.",
+      "claim": "4,255 S. aureus isolates, 6 antibiotics. LINEAGE-HELD-OUT (whole clades withheld, two schemes): gene-content F1 0.875/0.904 vs SNP models collapsing to 0.557/0.638. A REPRESENTATION design, not a bigger model.",
+      "why_it_could_matter": "The only in-window candidate that is a population/representation design WITH lineage-held-out evaluation and a large effect in the right direction.",
+      "blocking_unknowns": [
+        "THE ADVERSARIAL OBJECTION IS STRONG AND SPECIFIC: accessory gene content is the single strongest LINEAGE signal in bacteria -- clade membership is nearly recoverable from a pan-genome presence/absence matrix -- so 'gene content generalises' may be a DIFFERENT lineage-tracking artefact rather than de-confounding.",
+        "WORSE FOR OUR PURPOSES: in S. aureus the causal determinants (mecA, blaZ) ARE accessory genes, so a gene-copy-number model may simply be RE-DERIVING A CURATED DETERMINANT CATALOGUE in feature form. The comparator is SNP models, NOT a rule-based determinant caller -- and our own measurement plus Hu et al. 2024 says the rule wins out of distribution. Until re-run with an AMRFinder/ResFinder arm and a per-clade null, it is consistent with 'curated catalogue, laundered through XGBoost'.",
+        "Species hazard: oxacillin in S. aureus is this project's own LABEL_CONFOUNDED cell (mecA is an unreliable surrogate; cefoxitin is the CLSI surrogate)."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1038/s44259-025-00172-6  (npj Antimicrobials and Resistance 3(1):100, 2025; PMID 41402414)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "REQUIRES_DECONFOUNDING",
+      "regime_note": "not closed -- the 0-for-5 is ZERO-SHOT-only; a supervised complement is the shipped architecture. Condition: report WITHIN-GROUP performance against each group's own null",
+      "screen_class": "PROMISING"
+    },
+    {
+      "id": "neto_arabidopsis_magic",
+      "family": "F3",
+      "kind": "dataset",
+      "name": "Cape Verde Arabidopsis thaliana multiparent doubled-haploid intercross population (Neto et al.)",
+      "locator": "https://doi.org/10.1093/genetics/iyaf227  (Genetics 232(2):iyaf227, 2026; PMID 41528880)",
+      "date": "2026",
+      "verification": "VERIFIED (article page). GENOTYPE/PHENOTYPE DEPOSIT NOT FOUND -- the Data Availability section names only code repos.",
+      "claim": "209 doubled-haploid lines from 8 founders (Cape Verde). Traits include FLOWERING TIME (bolting), rosette size, PSII efficiency. Mapped loci FRI K232X, FLC R3X, IRT1 G130X.",
+      "why_it_could_matter": "THE CLEANEST AVAILABLE TEST OF THE PROJECT'S OWN CENTRAL CLAIM: the EXACT trait and organism of the decisive 0-for-5 negative (Arabidopsis flowering time), moved onto CONSTRUCTED variation where ancestry is randomised by design. If a supervised model reaches a real within-group r2 here while the natural-accession panel still fails, 'population design, not organism complexity' stops being an inference and becomes a PAIRED MEASUREMENT.",
+      "blocking_unknowns": [
+        "N=209 from 8 founders -- far below any threshold where a learned model beats a sparse linear or catalogue baseline.",
+        "ARCHITECTURE IS THE WRONG SHAPE for the purpose: the mapped loci are large-effect NONSENSE alleles (FRI K232X, FLC R3X) that a deterministic catalogue decodes trivially, so it would reproduce the existing conclusion rather than advance it.",
+        "Founders from one archipelago -> narrow, possibly bottlenecked allele-frequency spectrum: designed but not diverse.",
+        "NO genotype/phenotype accession found -- substrate may require contacting the authors. Verify the deposit before planning work."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "organism",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1093/genetics/iyaf227  (Genetics 232(2):iyaf227, 2026; PMID 41528880)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "WORKS",
+      "regime_note": "FBA iML1515 conditional essentiality, MCC 0.70-0.74 across four media",
+      "screen_class": "LEAD_ONLY"
+    },
+    {
+      "id": "symclatron_clade_heldout_protocol",
+      "family": "F3",
+      "kind": "method",
+      "name": "symclatron / SymGs -- clade-held-out validation at scale (Villada et al.)",
+      "locator": "https://doi.org/10.1038/s41587-026-03213-1  (Nature Biotechnology, ahead of print Aug 2026; PMID 42675165)",
+      "date": "2026",
+      "verification": "VERIFIED (record). Resource accessions UNVERIFIED.",
+      "claim": "Over 100,000 bacterial/archaeal genomes; withholds ALL genomes of one clade, repeated at every taxonomic rank -- 11,025 clade-specific validations. The most thorough lineage-held-out protocol found in the window.",
+      "why_it_could_matter": "THE PROTOCOL is the transferable asset and is worth copying wholesale for any future lineage-held-out claim here.",
+      "blocking_unknowns": [
+        "THE RESULT almost certainly does not transfer: the label (symbiont vs free-living lifestyle) is CURATION/METADATA-derived -> trips G1, and it is close to SAMPLING-DEFINED -> G3. Take the evaluation design, not the finding."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1038/s41587-026-03213-1  (Nature Biotechnology, ahead of print Aug 2026; PMID 42675165)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "REQUIRES_DECONFOUNDING",
+      "regime_note": "not closed -- the 0-for-5 is ZERO-SHOT-only; a supervised complement is the shipped architecture. Condition: report WITHIN-GROUP performance against each group's own null",
+      "screen_class": "PROMISING"
+    },
+    {
+      "id": "within_family_gwas_portability_null",
+      "family": "F3",
+      "kind": "method",
+      "name": "Within-family GWAS does not ameliorate the decline in prediction accuracy across populations",
+      "locator": "https://doi.org/10.1101/2024.12.12.628188  (bioRxiv, Dec 2024) -- DOI INFERRED from the bioRxiv URL path, UNVERIFIED",
+      "date": "2024-12",
+      "verification": "UNVERIFIED (DOI inferred, not fetched).",
+      "claim": "Human polygenic indices, European-discovery to Latino-American and African-American targets, using within-sibship sumstats. HELD-OUT ANCESTRY as the primary benchmark. Reports a NULL: sibling-based de-confounding of weights does NOT fix cross-ancestry portability.",
+      "why_it_could_matter": "A DIRECTLY RELEVANT WARNING: de-confounding the ESTIMATOR does not by itself buy out-of-group generalisation. That is the exact move one would reach for after the 0-for-5, and it is reported not to work.",
+      "blocking_unknowns": [
+        "UNVERIFIED citation.",
+        "Human/PRS domain; transfer to microbial lineage structure is an assumption, not a result."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      },
+      "locator_ok": false,
+      "locator_note": "locator flagged unverified by the harvester: 'https://doi.org/10.1101/2024.12.12.628188  (bioRxiv, Dec 2024) -- DOI INFERRED from the bioRxiv URL path, UNVERIFIED'",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "REQUIRES_DECONFOUNDING",
+      "regime_note": "not closed -- the 0-for-5 is ZERO-SHOT-only; a supervised complement is the shipped architecture. Condition: report WITHIN-GROUP performance against each group's own null",
+      "screen_class": "UNSCREENABLE"
+    },
+    {
+      "id": "bbqtl_constructed_panels",
+      "family": "F3",
+      "kind": "dataset",
+      "name": "BB-QTL 100,000-segregant yeast panel + the ~200-240k double-barcoded diploid panel",
+      "locator": "https://elifesciences.org/articles/73983 (eLife 73983) and https://doi.org/10.1038/s41467-022-29111-z (Nat Commun 2022)",
+      "date": "2022 -- OUT OF WINDOW, listed as the substrate the in-window work runs on",
+      "verification": "VERIFIED as publications; specific data accessions UNVERIFIED.",
+      "claim": "99,995 F2 segregants / 41,594 polymorphic sites / growth in 18 media; plus ~200k analysed double-barcoded diploids across 7 conditions.",
+      "why_it_could_matter": "The LARGEST public constructed g->p panels in existence, and therefore the natural place to run this project's own within-group-null protocol in the regime it has already measured as WORKING.",
+      "blocking_unknowns": [
+        "Out of the stated 2-year window -- not a recent advance, an existing unused substrate.",
+        "Endpoint is growth/fitness in defined media, so it extends the already-working constructed regime rather than testing the natural-population question."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "organism",
+        "method": "supervised"
+      },
+      "locator_ok": true,
+      "locator_note": "https://elifesciences.org/articles/73983 (eLife 73983) and https://doi.org/10.1038/s41467-022-29111-z (Nat Commun 2022)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": "WORKS",
+      "regime_note": "FBA iML1515 conditional essentiality, MCC 0.70-0.74 across four media",
+      "screen_class": "LEAD_ONLY"
+    },
+    {
+      "id": "tautz_beyond_mendel_position",
+      "family": "F3",
+      "kind": "method",
+      "name": "Beyond Mendel: a call to revisit the genotype-phenotype map through new experimental paradigms (Tautz et al., 24 authors)",
+      "locator": "https://doi.org/10.1093/genetics/iyag024  (Genetics 232(4):iyag024, 2026; PMID 41701356)",
+      "date": "2026",
+      "verification": "VERIFIED (record).",
+      "claim": "A 24-author consensus position paper arguing that the lever is experimental/population DESIGN rather than model capacity.",
+      "why_it_could_matter": "NOT EVIDENCE -- recorded because it is an independent, high-profile statement of this project's own thesis, and because its author list is the set of groups most likely to release the next usable constructed panels (a watch-list, not a result).",
+      "blocking_unknowns": [
+        "A POSITION PAPER. Deliberately given NO regime triple so the screen refuses to promote it: it cannot be a finding."
+      ],
+      "locator_ok": true,
+      "locator_note": "https://doi.org/10.1093/genetics/iyag024  (Genetics 232(4):iyag024, 2026; PMID 41701356)",
+      "label_verdict": null,
+      "label_reason": "no label_screen supplied \u2014 not screened, which is NOT a pass",
+      "label_gates": {},
+      "label_gate_reasons": {},
+      "regime_verdict": null,
+      "regime_note": "no regime triple supplied",
       "screen_class": "UNSCREENABLE"
     }
   ],

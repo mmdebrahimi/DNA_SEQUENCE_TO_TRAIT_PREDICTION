@@ -179,21 +179,111 @@ problem. Separately, ACMG/AMP **PS3/BS3 likelihood ratios** are the most defensi
 exists, but they are **human-clinical only** and have no pathogen-target analogue — converging with the F1
 negative that both the infrastructure and the anchors are heading somewhere our cells are not.
 
+## F3 — de-confounded designs: SEARCHED, and the field has independently confirmed our negative
+
+One agent, sequentially, no sub-agents (~13 queries + 8 verification fetches). 7 of its 15 candidates
+recorded; most carry **verified DOIs**, and its UNVERIFIED flags are preserved rather than cleaned up.
+
+**META-FINDING, and it is the most reassuring thing in this campaign: nothing in the window re-proposes the
+closed zero-shot class.** The 2025–26 bacterial-AMR literature has moved to *diagnosing* the population-
+structure confound rather than scaling sequence models against it. Our recorded negative is where the field
+is, not behind it.
+
+**1. Our 0-for-5 has been independently reproduced at 10× the scale.**
+[Yu, Wheeler & Barquist, *PLOS Biology* 23(12):e3003539, DOI `10.1371/journal.pbio.3003539`, 2025-12-16] —
+**>24,000 genomes, 5 species, 27 antibiotics, 6,740 models**, two held-out-**clade** schemes with explicit
+positive controls. Finding: models key on **lineage markers**, and **increasing training N does not rescue
+it**. Code + results are public (Zenodo `10.5281/zenodo.17399563`).
+
+That is the strongest external validation this project has, and it reproduces even the secondary note
+attached to `eval/regime.py` — that more data does not fix a signal-vs-structure problem. **It is
+corroboration, not a lever:** they *call for* lineage-aware algorithms; they do not build one. Their
+asymmetric precision/recall signature is a reusable diagnostic we could adopt.
+
+**2. The most promising candidate — and the objection that may sink it.**
+[Fistarol, Gervasio & Szöllősi, *npj AMR* 3(1):100, DOI `10.1038/s44259-025-00172-6`] — gene **copy-number**
+features vs SNPs in 4,255 *S. aureus*, **lineage-held-out**: F1 **0.875/0.904** vs SNP models collapsing to
+**0.557/0.638**. A *representation* design, not a bigger model — exactly the shape worth wanting.
+
+**But:** accessory gene content is the single strongest **lineage** signal in bacteria (clade membership is
+nearly recoverable from a pan-genome presence/absence matrix), so "gene content generalises" may be a
+*different* lineage-tracking artefact. Worse for us — in *S. aureus* the causal determinants (**mecA**,
+**blaZ**) **are** accessory genes, so this may simply be **re-deriving a curated determinant catalogue in
+feature form**. The comparator is SNP models, **not a rule-based determinant caller**, and our own
+measurement plus Hu et al. 2024 says the rule wins out of distribution. Until re-run with an
+AMRFinder/ResFinder arm and a per-clade null, it is consistent with *"curated catalogue, laundered through
+XGBoost."* Species hazard too: oxacillin×*S. aureus* is our own `LABEL_CONFOUNDED` cell.
+
+**3. The cleanest available test of our own central claim.**
+[Neto et al., *Genetics* 232(2):iyaf227, DOI `10.1093/genetics/iyaf227`, 2026] — a Cape Verde *A. thaliana*
+multiparent doubled-haploid population, **209 lines from 8 founders**, phenotyped for **flowering time**.
+That is *the exact trait and organism of our decisive negative, moved onto constructed variation* where
+ancestry is randomised by design. If a supervised model reached a real within-group r² there while the
+natural-accession panel still fails, "population design, not organism complexity" would stop being an
+inference and become a **paired measurement**.
+
+**Why it probably still fails:** N=209 is far below where a learned model beats a sparse linear or catalogue
+baseline; the mapped loci are large-effect **nonsense alleles** (*FRI* K232X, *FLC* R3X) that a
+deterministic catalogue decodes trivially — reproducing our conclusion rather than advancing it; founders
+from one archipelago give a narrow allele spectrum; and **no genotype/phenotype deposit was found** (the
+Data Availability section names only code repos).
+
+**4. A protocol worth copying, attached to a result that fails our gates.**
+[Villada et al., *Nature Biotechnology*, DOI `10.1038/s41587-026-03213-1`, 2026] withholds *all* genomes of
+one clade, repeated at every taxonomic rank — **11,025 clade-specific validations**, the most thorough
+lineage-held-out protocol found. **Take the design, reject the finding:** the label (symbiont vs free-living)
+is curation-derived (**G1**) and close to sampling-defined (**G3**).
+
+**5. A null that pre-empts the obvious next move.** Within-family GWAS **does not** fix cross-ancestry
+portability (bioRxiv `10.1101/2024.12.12.628188`, DOI inferred — **UNVERIFIED**), evaluated on **held-out
+ancestry**. De-confounding the *estimator* does not by itself buy out-of-group generalisation — which is
+precisely what one would reach for after a 0-for-5.
+
+**6–7. Context, not evidence.** A 24-author consensus paper argues our exact thesis that the lever is
+experimental **design**, not model capacity ([Tautz et al., *Genetics* 232(4):iyag024]) — recorded as a
+watch-list of the groups likeliest to release the next usable panels, and deliberately given **no regime
+triple** so the screen cannot promote a position paper to a finding. And the **BB-QTL 100,000-segregant**
+and **~200–240k diploid** yeast panels are the largest public constructed g→p substrates in existence —
+out of window, unused here, and the natural place to run our own within-group-null protocol.
+
+**Thesis coverage is a reported GAP, not a finding.** OATD.org returns HTTP 403 in this environment, and two
+targeted searches surfaced **no 2024–26 thesis** on de-confounded genomic prediction — only journal
+articles. The agent's search budget ran out (200/200) before DART-Europe/CORE APIs could be hit **directly**.
+Do not read this as "no such thesis exists"; the unexplored lever is those APIs rather than web search.
+
 ## Where that leaves the four families
 
-- **F2 — answered, negatively, on the strongest lead.** Public K-12 fails the condition-breadth
-  requirement. Fitness Browser Feb-2024 remains unverified and, structurally, widens only the *fitness*
-  side while M2 binds on the *intersection with condition-matched expression*.
-- **F1 — one shallow search.** The DMS axis returns a clean negative (no new AMR-target DMS; the Alliance's
-  growth is human-clinical and its mapping work does not touch M3). The AMR measured-AST axis,
-  AllTheBacteria, the EBI AMR Portal and Zenodo/Figshare thesis deposits were **not searched**.
-- **F3, F4 — not searched at all.**
+| family | state |
+|---|---|
+| **F2** condition coverage | **ANSWERED NEGATIVELY** on the strongest lead (Public K-12 adds glucose, not breadth). Fitness Browser Feb-2024 remains unverified and widens only the *fitness* side. |
+| **F3** de-confounded designs | **SEARCHED.** Our negative independently reproduced at scale; one genuinely promising representation design with a serious catalogue-laundering objection; one clean paired test that is probably too small; one protocol worth copying. **No lever that makes natural-population organism g→p work.** |
+| **F4** dosage transfer | **SEARCHED.** The vacuous interval is a **theorem**, not our bug — so stop hunting a better conformal method and pick an achievable relaxation. |
+| **F1** label substrates | **one shallow search.** DMS axis is a clean negative. Measured-AST collections, AllTheBacteria, EBI AMR Portal and thesis data deposits remain **unsearched**. |
+
+**Screen totals (14 candidates):** 5 PROMISING · 2 INCONCLUSIVE · 3 LEAD_ONLY · 4 UNSCREENABLE. Every
+PROMISING row has a verified locator; every UNSCREENABLE one is there because I marked its locator
+UNVERIFIED and the guard refused to promote it — including my own entries.
+
+## The honest bottom line
+
+**Nothing found in two years of literature builds the missing part.** What the campaign did produce is
+worth more than a null result usually is:
+
+1. **Our central negative is now externally corroborated** at >24,000 genomes by an independent group, and
+   the field has moved to diagnosing the same confound rather than scaling models at it.
+2. **One line of inquiry is closed by a theorem** — the inverse cell's vacuous conformal interval is the
+   price of distribution-free conditional coverage, not a defect, and the constructive path is to choose a
+   weaker, achievable target.
+3. **Two concrete substrates and one protocol** are named, verified, and unused: the BB-QTL panels, the Cape
+   Verde Arabidopsis DH population, and the 11,025-validation clade-held-out design.
+4. **The most promising lead carries a specific, testable objection** — re-run Fistarol with a rule-based
+   determinant arm and a per-clade null, and it either survives or is revealed as a catalogue in feature form.
 
 ## Next actions, in order
 
-1. **F3 and F4 from scratch** — they are wholly unsearched and F3 sits on the project's critical path.
-2. **F1's non-DMS axes** — measured-AST collections, AllTheBacteria, EBI AMR Portal, thesis data deposits.
-3. **Re-verify the Fitness Browser counts** against the Figshare record (currently search-reported only),
-   and, if pursued, check whether any of its 48 organisms has a condition-matched *expression* partner —
-   that pairing, not the fitness breadth, is the thing M2 needs.
-4. **Relaunch sequentially, not 12-way parallel** — that fan-out is what hit the session limit.
+1. **F1's non-DMS axes** — the one family still barely searched: measured-AST collections, AllTheBacteria,
+   EBI AMR Portal, Zenodo/Figshare thesis deposits.
+2. **Hit DART-Europe / CORE APIs directly** for theses; web search cannot reach them (OATD 403s).
+3. **Verify the 4 UNSCREENABLE locators** — cheap, and it is what converts them.
+4. **Decide whether to test the Fistarol objection ourselves** — we have AMRFinder, per-clade machinery and
+   lineage-collapse code already; this is the only candidate where *our* tooling settles the question.

@@ -3,11 +3,11 @@
   "schema": "deep-research-harvest-v1",
   "generated": "2026-09-28",
   "window": "2024-09..2026-09 (stated window; two candidates below predate it and are labelled)",
-  "status": "PARTIAL \u2014 F2 answered negatively; F4 searched first-party (4 candidates); F1 one shallow search; F3 running as a single agent at time of writing. The original 12-agent fan-out died on a session rate limit; this pass is sequential.",
+  "status": "F2 + F3 + F4 SEARCHED; F1 one shallow search only. Resumed sequentially after the 12-agent fan-out died on a rate limit. 14 candidates recorded.",
   "coverage": {
     "F1_label_substrates": "one search (DMS/MaveDB axis only). AMR measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits NOT searched.",
     "F2_condition_coverage": "two searches + one direct verification. The strongest lead is recorded.",
-    "F3_deconfounded_designs": "NOT SEARCHED \u2014 agent died before reporting.",
+    "F3_deconfounded_designs": "SEARCHED by a single agent (~13 queries + 8 verification fetches, 33 tool uses). 7 of its 15 candidates recorded here -- the decision-relevant ones. Most carry VERIFIED DOIs; UNVERIFIED flags preserved. META-FINDING: NO candidate re-proposed the closed zero-shot class -- the 2025-26 bacterial-AMR literature has moved to DIAGNOSING the confound rather than scaling sequence models against it.",
     "F4_dosage_transfer": "4 candidates from 2 first-party searches + 1 direct verification. The headline is a THEORETICAL one: if Barber et al. 2021 holds, our measured vacuous-interval result is the price of distribution-free conditional coverage, not an implementation gap -- so the path is a weaker target or added assumptions, not a better conformal method."
   },
   "candidates": [
@@ -196,13 +196,152 @@
         "endpoint": "molecular",
         "method": "supervised"
       }
+    },
+    {
+      "id": "yu_barquist_biased_sampling",
+      "family": "F3",
+      "kind": "method",
+      "name": "Biased sampling driven by bacterial population structure confounds ML prediction of AMR (Yu, Wheeler, Barquist)",
+      "locator": "https://doi.org/10.1371/journal.pbio.3003539  (PLOS Biology 23(12):e3003539, 2025-12-16; preprint bioRxiv 10.1101/2025.01.07.631773; code+results Zenodo 10.5281/zenodo.17399563)",
+      "date": "2025-12-16",
+      "verification": "VERIFIED (article page fetched)",
+      "claim": "Over 24,000 genomes, 5 species, 27 antibiotics, 6,740 LightGBM models, two held-out-CLADE schemes with explicit positive controls. Finding: models key on LINEAGE MARKERS, and increasing training N does NOT rescue it.",
+      "why_it_could_matter": "THE STRONGEST EXTERNAL VALIDATION THIS PROJECT HAS of its own 0-for-5 de-confounded negative -- independent group, 2025, far larger scale, same conclusion, and it reproduces the 'more data does not fix a signal-vs-structure problem' note already attached to eval/regime.py. Their asymmetric precision/recall signature is a reusable DIAGNOSTIC.",
+      "blocking_unknowns": [
+        "CORROBORATION, NOT A LEVER: they CALL FOR lineage-aware algorithms; they do not build one. It strengthens the closed negative rather than opening a path.",
+        "Genome/phenotype accession list not re-verified; code+results deposits are confirmed."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "fistarol_gene_copy_number",
+      "family": "F3",
+      "kind": "method",
+      "name": "Gene copy-number features generalize better than SNPs for AMR prediction in S. aureus (Fistarol, Gervasio, Szollosi)",
+      "locator": "https://doi.org/10.1038/s44259-025-00172-6  (npj Antimicrobials and Resistance 3(1):100, 2025; PMID 41402414)",
+      "date": "2025-12",
+      "verification": "VERIFIED (Europe PMC core record). Data-availability accessions UNVERIFIED -- full text not fetchable.",
+      "claim": "4,255 S. aureus isolates, 6 antibiotics. LINEAGE-HELD-OUT (whole clades withheld, two schemes): gene-content F1 0.875/0.904 vs SNP models collapsing to 0.557/0.638. A REPRESENTATION design, not a bigger model.",
+      "why_it_could_matter": "The only in-window candidate that is a population/representation design WITH lineage-held-out evaluation and a large effect in the right direction.",
+      "blocking_unknowns": [
+        "THE ADVERSARIAL OBJECTION IS STRONG AND SPECIFIC: accessory gene content is the single strongest LINEAGE signal in bacteria -- clade membership is nearly recoverable from a pan-genome presence/absence matrix -- so 'gene content generalises' may be a DIFFERENT lineage-tracking artefact rather than de-confounding.",
+        "WORSE FOR OUR PURPOSES: in S. aureus the causal determinants (mecA, blaZ) ARE accessory genes, so a gene-copy-number model may simply be RE-DERIVING A CURATED DETERMINANT CATALOGUE in feature form. The comparator is SNP models, NOT a rule-based determinant caller -- and our own measurement plus Hu et al. 2024 says the rule wins out of distribution. Until re-run with an AMRFinder/ResFinder arm and a per-clade null, it is consistent with 'curated catalogue, laundered through XGBoost'.",
+        "Species hazard: oxacillin in S. aureus is this project's own LABEL_CONFOUNDED cell (mecA is an unreliable surrogate; cefoxitin is the CLSI surrogate)."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "neto_arabidopsis_magic",
+      "family": "F3",
+      "kind": "dataset",
+      "name": "Cape Verde Arabidopsis thaliana multiparent doubled-haploid intercross population (Neto et al.)",
+      "locator": "https://doi.org/10.1093/genetics/iyaf227  (Genetics 232(2):iyaf227, 2026; PMID 41528880)",
+      "date": "2026",
+      "verification": "VERIFIED (article page). GENOTYPE/PHENOTYPE DEPOSIT NOT FOUND -- the Data Availability section names only code repos.",
+      "claim": "209 doubled-haploid lines from 8 founders (Cape Verde). Traits include FLOWERING TIME (bolting), rosette size, PSII efficiency. Mapped loci FRI K232X, FLC R3X, IRT1 G130X.",
+      "why_it_could_matter": "THE CLEANEST AVAILABLE TEST OF THE PROJECT'S OWN CENTRAL CLAIM: the EXACT trait and organism of the decisive 0-for-5 negative (Arabidopsis flowering time), moved onto CONSTRUCTED variation where ancestry is randomised by design. If a supervised model reaches a real within-group r2 here while the natural-accession panel still fails, 'population design, not organism complexity' stops being an inference and becomes a PAIRED MEASUREMENT.",
+      "blocking_unknowns": [
+        "N=209 from 8 founders -- far below any threshold where a learned model beats a sparse linear or catalogue baseline.",
+        "ARCHITECTURE IS THE WRONG SHAPE for the purpose: the mapped loci are large-effect NONSENSE alleles (FRI K232X, FLC R3X) that a deterministic catalogue decodes trivially, so it would reproduce the existing conclusion rather than advance it.",
+        "Founders from one archipelago -> narrow, possibly bottlenecked allele-frequency spectrum: designed but not diverse.",
+        "NO genotype/phenotype accession found -- substrate may require contacting the authors. Verify the deposit before planning work."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "organism",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "symclatron_clade_heldout_protocol",
+      "family": "F3",
+      "kind": "method",
+      "name": "symclatron / SymGs -- clade-held-out validation at scale (Villada et al.)",
+      "locator": "https://doi.org/10.1038/s41587-026-03213-1  (Nature Biotechnology, ahead of print Aug 2026; PMID 42675165)",
+      "date": "2026",
+      "verification": "VERIFIED (record). Resource accessions UNVERIFIED.",
+      "claim": "Over 100,000 bacterial/archaeal genomes; withholds ALL genomes of one clade, repeated at every taxonomic rank -- 11,025 clade-specific validations. The most thorough lineage-held-out protocol found in the window.",
+      "why_it_could_matter": "THE PROTOCOL is the transferable asset and is worth copying wholesale for any future lineage-held-out claim here.",
+      "blocking_unknowns": [
+        "THE RESULT almost certainly does not transfer: the label (symbiont vs free-living lifestyle) is CURATION/METADATA-derived -> trips G1, and it is close to SAMPLING-DEFINED -> G3. Take the evaluation design, not the finding."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "within_family_gwas_portability_null",
+      "family": "F3",
+      "kind": "method",
+      "name": "Within-family GWAS does not ameliorate the decline in prediction accuracy across populations",
+      "locator": "https://doi.org/10.1101/2024.12.12.628188  (bioRxiv, Dec 2024) -- DOI INFERRED from the bioRxiv URL path, UNVERIFIED",
+      "date": "2024-12",
+      "verification": "UNVERIFIED (DOI inferred, not fetched).",
+      "claim": "Human polygenic indices, European-discovery to Latino-American and African-American targets, using within-sibship sumstats. HELD-OUT ANCESTRY as the primary benchmark. Reports a NULL: sibling-based de-confounding of weights does NOT fix cross-ancestry portability.",
+      "why_it_could_matter": "A DIRECTLY RELEVANT WARNING: de-confounding the ESTIMATOR does not by itself buy out-of-group generalisation. That is the exact move one would reach for after the 0-for-5, and it is reported not to work.",
+      "blocking_unknowns": [
+        "UNVERIFIED citation.",
+        "Human/PRS domain; transfer to microbial lineage structure is an assumption, not a result."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "bbqtl_constructed_panels",
+      "family": "F3",
+      "kind": "dataset",
+      "name": "BB-QTL 100,000-segregant yeast panel + the ~200-240k double-barcoded diploid panel",
+      "locator": "https://elifesciences.org/articles/73983 (eLife 73983) and https://doi.org/10.1038/s41467-022-29111-z (Nat Commun 2022)",
+      "date": "2022 -- OUT OF WINDOW, listed as the substrate the in-window work runs on",
+      "verification": "VERIFIED as publications; specific data accessions UNVERIFIED.",
+      "claim": "99,995 F2 segregants / 41,594 polymorphic sites / growth in 18 media; plus ~200k analysed double-barcoded diploids across 7 conditions.",
+      "why_it_could_matter": "The LARGEST public constructed g->p panels in existence, and therefore the natural place to run this project's own within-group-null protocol in the regime it has already measured as WORKING.",
+      "blocking_unknowns": [
+        "Out of the stated 2-year window -- not a recent advance, an existing unused substrate.",
+        "Endpoint is growth/fitness in defined media, so it extends the already-working constructed regime rather than testing the natural-population question."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "organism",
+        "method": "supervised"
+      }
+    },
+    {
+      "id": "tautz_beyond_mendel_position",
+      "family": "F3",
+      "kind": "method",
+      "name": "Beyond Mendel: a call to revisit the genotype-phenotype map through new experimental paradigms (Tautz et al., 24 authors)",
+      "locator": "https://doi.org/10.1093/genetics/iyag024  (Genetics 232(4):iyag024, 2026; PMID 41701356)",
+      "date": "2026",
+      "verification": "VERIFIED (record).",
+      "claim": "A 24-author consensus position paper arguing that the lever is experimental/population DESIGN rather than model capacity.",
+      "why_it_could_matter": "NOT EVIDENCE -- recorded because it is an independent, high-profile statement of this project's own thesis, and because its author list is the set of groups most likely to release the next usable constructed panels (a watch-list, not a result).",
+      "blocking_unknowns": [
+        "A POSITION PAPER. Deliberately given NO regime triple so the screen refuses to promote it: it cannot be a finding."
+      ]
     }
   ],
   "process_findings": [
     "AGENT-REPORTED, UNVERIFIED \u2014 route around, do not cite: CORE.ac.uk's search page is a JS shell and its API returns 429 without a key; Edinburgh ERA reportedly has a 2024-2025 indexing gap.",
     "research-leads YouTube search returns no upload_date, so a 2-year window cannot be enforced from search results; it needs a per-video --by-id lookup.",
     "SCREEN COVERAGE LIMIT found by using it: rejection_gates supports exactly two intended layers (L1_AMR_RS, L4_forward_continuous). A condition-resolved expression or fitness corpus fits NEITHER cleanly; both F2 candidates are filed L4 as the closer fit, and that is a real limitation of the screen for this campaign rather than a property of the candidates.",
-    "SCHEMA GAP, and it is the important one: the 10 rejection gates have NO gate for CONDITION COVERAGE, which is the actual blocker for M2. G6 measures PHENOTYPE-VALUE degeneracy (mode share / distinct values), not how many distinct growth conditions a corpus spans. So the standing screen structurally cannot adjudicate the M2 candidates' real problem, and this candidate is rejected on a CAMPAIGN-SPECIFIC criterion recorded separately rather than by mis-mapping a condition count onto G6. Do not 'fix' this by feeding condition counts into G6 -- that would silently redefine a committed gate."
+    "SCHEMA GAP, and it is the important one: the 10 rejection gates have NO gate for CONDITION COVERAGE, which is the actual blocker for M2. G6 measures PHENOTYPE-VALUE degeneracy (mode share / distinct values), not how many distinct growth conditions a corpus spans. So the standing screen structurally cannot adjudicate the M2 candidates' real problem, and this candidate is rejected on a CAMPAIGN-SPECIFIC criterion recorded separately rather than by mis-mapping a condition count onto G6. Do not 'fix' this by feeding condition counts into G6 -- that would silently redefine a committed gate.",
+    "THESIS COVERAGE IS A REPORTED GAP, NOT A FINDING: OATD.org returns HTTP 403 to this environment, and two targeted searches (generic + domain-restricted to Wageningen/ETH/Oxford/Edinburgh/DTU/DiVA/theses.fr/CORE) surfaced NO 2024-2026 thesis on de-confounded genomic prediction -- only journal articles. The agent's search budget (200/200) ran out before DART-Europe/CORE APIs could be tried DIRECTLY. Do NOT read this as 'no such thesis exists'; the unexplored lever is hitting those APIs rather than going through web search.",
+    "NCBI (PubMed/PMC) blocks WebFetch in this environment; bibliographic detail was verified through the Europe PMC REST API and publisher pages instead. Reusable route.",
+    "FLAGGED BUT UNVERIFIED, likely uninformative: AMR-MoEGA (arXiv 2511.12223) and the CAMDA 2025 AMR challenge write-up (bioRxiv 10.1101/2025.09.24.678344) -- community challenges of this shape historically score on pooled/random splits, which tells us nothing on a structured population. Evaluation design unconfirmed."
   ],
   "honest_limits": [
     "PARTIAL HARVEST. 3 candidates from 3 first-party searches + 1 verification. F3 and F4 were never searched. Do not read the small candidate count as 'the literature is empty'.",
