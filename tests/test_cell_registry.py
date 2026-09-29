@@ -119,13 +119,62 @@ def test_amr_claim_status_is_verbatim_from_surface():
 
 # ------------------------- honesty guardrails -------------------------
 
+def _numeric_leaves_in(value, path):
+    """Every numeric/bool leaf reachable from `value`, with the path that reaches it.
+
+    RECURSIVE ON PURPOSE. The original guard checked only TOP-LEVEL attribute values, so any nested
+    container passed trivially: a `tuple[ContractNumberBinding, ...]` is a tuple, and
+    `isinstance(tuple, (float, bool))` is False. Adding `metric_bindings` without this recursion would
+    have shipped the field and a hole in the "NO numeric confidence field" norm in the same commit —
+    numeric metrics could then live one level down and the guard would still report clean.
+    """
+    out = []
+    if isinstance(value, bool) or isinstance(value, float):
+        out.append((path, value))
+    elif isinstance(value, (list, tuple, set, frozenset)):
+        for i, item in enumerate(value):
+            out.extend(_numeric_leaves_in(item, f"{path}[{i}]"))
+    elif isinstance(value, dict):
+        for k, item in value.items():
+            out.extend(_numeric_leaves_in(item, f"{path}[{k!r}]"))
+    elif dataclasses.is_dataclass(value):
+        for f in dataclasses.fields(value):
+            out.extend(_numeric_leaves_in(getattr(value, f.name), f"{path}.{f.name}"))
+    return out
+
+
 def test_no_numeric_confidence_field():
     for f in dataclasses.fields(CellContract):
         assert f.type not in ("float", "int", float, int), f"numeric field on CellContract: {f.name}"
     for c in cells():
         for f in dataclasses.fields(CellContract):
             v = getattr(c, f.name)
-            assert not isinstance(v, (float, bool)), f"{c.cell_id}.{f.name} is numeric/bool: {v!r}"
+            bad = _numeric_leaves_in(v, f"{c.cell_id}.{f.name}")
+            assert not bad, f"numeric/bool leaf on a contract: {bad[:3]}"
+
+
+def test_the_numeric_guard_actually_recurses():
+    """NON-VACUITY for the recursion above. A nested numeric must be CAUGHT, and a nested string must not
+    be flagged — otherwise the guard is either theatre or unusable."""
+    from dna_decode.data.cell_registry import ContractNumberBinding
+
+    assert _numeric_leaves_in((ContractNumberBinding("0.9", "sens", "a.json", "m.sens"),), "x") == []
+    planted = _numeric_leaves_in(({"nested": {"deeper": [0.87]}},), "x")
+    assert planted and planted[0][1] == 0.87, planted
+    assert _numeric_leaves_in((True,), "x"), "a nested bool must be caught too"
+
+
+def test_every_binding_field_is_a_string():
+    """The value in a contract is a QUOTED FIGURE, not a score. Strings state that, and they are what keeps
+    the recursive guard above from having to special-case the binding type."""
+    from dna_decode.data.cell_registry import ContractNumberBinding
+
+    for c in cells():
+        for b in c.metric_bindings:
+            assert isinstance(b, ContractNumberBinding), f"{c.cell_id}: non-binding in metric_bindings"
+            for f in dataclasses.fields(b):
+                v = getattr(b, f.name)
+                assert isinstance(v, str) and v.strip(), f"{c.cell_id}: binding.{f.name} not a non-empty str"
 
 
 def test_tiers_and_vocab_are_categorical_enums_no_scale():

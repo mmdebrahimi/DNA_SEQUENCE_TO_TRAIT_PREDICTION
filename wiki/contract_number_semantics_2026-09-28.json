@@ -3,12 +3,18 @@
   "schema": "contract-number-semantics-v1",
   "scope": "cells whose prose cites a wiki/ artifact; only numbers whose prose names a quantity are measurable at all",
   "n_numbers": 180,
-  "n_measurable": 16,
-  "measurable_fraction": 0.0889,
+  "n_measurable": 19,
+  "measurable_fraction": 0.1056,
+  "measurable_by_binding": 3,
+  "measurable_by_heuristic": 16,
+  "n_bindings_declared": 3,
+  "n_binding_defects": 0,
+  "binding_defects": [],
   "status_counts": {
     "field_confirmed": 15,
-    "label_unlabeled": 147,
+    "label_unlabeled": 144,
     "no_numeric_field": 16,
+    "field_confirmed_by_binding": 3,
     "md_only_or_pooled": 1,
     "field_mismatch": 1
   },
@@ -24,7 +30,8 @@
         "wiki/salmserovar_o_fix_result_2026-09-09.json:ours_before.accuracy",
         "wiki/salmserovar_o_fix_acceptance_bar.json:baseline_2026-09-08.ours_overall.accuracy",
         "wiki/salmserovar_seqsero2_2026-09-08.json:ours.accuracy"
-      ]
+      ],
+      "from_binding": false
     }
   ],
   "rows": [
@@ -44,7 +51,8 @@
         "wiki/ugt1a1_getrm_concordance_2026-09-22.json:direct_repeat_arm.specificity",
         "wiki/ugt1a1_getrm_concordance_2026-09-22.json:direct_repeat_arm.ppv",
         "wiki/ugt1a1_getrm_concordance_2026-09-22.json:direct_repeat_arm.npv"
-      ]
+      ],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:ugt1a1",
@@ -56,7 +64,8 @@
       ],
       "competing_paths": [
         "wiki/ugt1a1_getrm_concordance_2026-09-22.json:tag_arm.zygosity_exact_frac"
-      ]
+      ],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:ugt1a1",
@@ -66,7 +75,8 @@
       "consistent_paths": [
         "wiki/ugt1a1_getrm_concordance_2026-09-22.json:tag_arm.ppv"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -74,7 +84,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -82,7 +93,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -90,7 +102,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -98,7 +111,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:cyp4f2",
@@ -106,7 +120,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "pgx:human:slco1b1",
@@ -114,7 +129,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "hla:human:b5701",
@@ -122,7 +138,8 @@
       "claimed_label": "sens",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "hla:human:b5701",
@@ -130,7 +147,8 @@
       "claimed_label": "spec",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "hla:human:b5701",
@@ -138,7 +156,8 @@
       "claimed_label": "prec",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "hla:human:b5701",
@@ -146,7 +165,8 @@
       "claimed_label": "sens",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "hla:human:b5701",
@@ -154,7 +174,8 @@
       "claimed_label": "sens",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -162,7 +183,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -170,7 +192,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -178,7 +201,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Klebsiella:ktype",
@@ -186,15 +210,19 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:Escherichia_coli:pointfinder",
       "number": "0.9923",
-      "claimed_label": null,
-      "status": "label_unlabeled",
-      "consistent_paths": [],
-      "competing_paths": []
+      "claimed_label": "rate",
+      "status": "field_confirmed_by_binding",
+      "consistent_paths": [
+        "wiki/pointfinder_amrfinder_concordance_2026-09-05.json:exact_set_match_rate"
+      ],
+      "competing_paths": [],
+      "from_binding": true
     },
     {
       "cell_id": "finder:Escherichia_coli:pointfinder",
@@ -204,7 +232,8 @@
       "consistent_paths": [
         "wiki/pointfinder_amrfinder_concordance_2026-09-05.json:mean_per_genome_jaccard"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:Escherichia_coli:pointfinder",
@@ -212,7 +241,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -220,7 +250,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -228,7 +259,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -236,7 +268,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -244,7 +277,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -252,7 +286,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -260,7 +295,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -268,7 +304,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -276,15 +313,19 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
       "number": "0.87",
-      "claimed_label": null,
-      "status": "label_unlabeled",
-      "consistent_paths": [],
-      "competing_paths": []
+      "claimed_label": "share",
+      "status": "field_confirmed_by_binding",
+      "consistent_paths": [
+        "wiki/mlst_serotype_purity_2026-09-05.json:top_sts[2].modal_fraction"
+      ],
+      "competing_paths": [],
+      "from_binding": true
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -292,7 +333,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteria:mlst",
@@ -300,7 +342,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -308,7 +351,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -316,7 +360,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -324,7 +369,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -332,7 +378,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -340,7 +387,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -348,7 +396,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -358,15 +407,19 @@
       "consistent_paths": [
         "wiki/resfinder_locus_collapse_2026-09-05.json:summary.beta-lactam.jaccard_vs_amrfinder_normalized_old"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
       "number": "0.7754",
-      "claimed_label": null,
-      "status": "label_unlabeled",
-      "consistent_paths": [],
-      "competing_paths": []
+      "claimed_label": "jaccard",
+      "status": "field_confirmed_by_binding",
+      "consistent_paths": [
+        "wiki/resfinder_locus_collapse_2026-09-05.json:summary.beta-lactam.jaccard_vs_amrfinder_normalized_new"
+      ],
+      "competing_paths": [],
+      "from_binding": true
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -374,7 +427,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -382,7 +436,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -390,7 +445,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -401,7 +457,8 @@
         "wiki/resfinder_locus_collapse_2026-09-05.json:summary.aminoglycoside.jaccard_vs_amrfinder_exact_old",
         "wiki/resfinder_locus_collapse_2026-09-05.json:summary.aminoglycoside.jaccard_vs_amrfinder_normalized_old"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -409,7 +466,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:bacteria:resfinder",
@@ -417,7 +475,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -425,7 +484,8 @@
       "claimed_label": "acc",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -433,7 +493,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -441,7 +502,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -449,7 +511,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -457,7 +520,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -465,7 +529,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -473,7 +538,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -481,7 +547,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -489,7 +556,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -497,7 +565,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -505,7 +574,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -513,7 +583,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -521,7 +592,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -529,7 +601,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -537,7 +610,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -545,7 +619,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -553,7 +628,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -561,7 +637,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:arabidopsis:flowering",
@@ -569,7 +646,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -577,7 +655,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -585,7 +664,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -593,7 +673,8 @@
       "claimed_label": "share",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -601,7 +682,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -609,7 +691,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -617,7 +700,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -625,7 +709,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -633,7 +718,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -641,7 +727,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -649,7 +736,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:inverse",
@@ -657,7 +745,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:coatcolor",
@@ -665,7 +754,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:coatcolor",
@@ -673,7 +763,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:coatcolor",
@@ -681,7 +772,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:coatcolor",
@@ -689,7 +781,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -697,7 +790,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -705,7 +799,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -713,7 +808,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -721,7 +817,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -729,7 +826,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -737,7 +835,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:dog:morphology",
@@ -745,7 +844,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteriophage:phage",
@@ -753,7 +853,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteriophage:phage",
@@ -761,7 +862,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteriophage:phage",
@@ -769,7 +871,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:bacteriophage:phage",
@@ -777,7 +880,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:klebsiella:kleb",
@@ -785,7 +889,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:klebsiella:kleb",
@@ -793,7 +898,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:klebsiella:kleb",
@@ -801,7 +907,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:klebsiella:kleb",
@@ -809,7 +916,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:klebsiella:kleb",
@@ -817,7 +925,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:klebsiella:kleb",
@@ -825,7 +934,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -833,7 +943,8 @@
       "claimed_label": "auc",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -841,7 +952,8 @@
       "claimed_label": "rate",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -849,7 +961,8 @@
       "claimed_label": "sens",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -857,7 +970,8 @@
       "claimed_label": "spec",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -865,7 +979,8 @@
       "claimed_label": "auc",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -873,7 +988,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -881,7 +997,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "essentiality:any:essentiality",
@@ -889,7 +1006,8 @@
       "claimed_label": "prec",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -897,7 +1015,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -905,7 +1024,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -913,7 +1033,8 @@
       "claimed_label": "corr",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -921,7 +1042,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -933,7 +1055,8 @@
         "wiki/forward_inverse_sweep_2026-07-17.json:assays[2].blosum62_best_of_k.max",
         "wiki/forward_inverse_sweep_2026-07-17.json:assays[2].margin_vs_null",
         "wiki/mavedb_am_holdout_2026-07-23.json:comparator_esm2.median_human"
-      ]
+      ],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -941,7 +1064,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -949,7 +1073,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -957,7 +1082,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -965,7 +1091,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -973,7 +1100,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -983,7 +1111,8 @@
       "consistent_paths": [
         "wiki/blatem_genome_demo_2026-07-14.json:spearman_esm_vs_measured_dms_on_single_nt_accessible_set"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -993,7 +1122,8 @@
       "consistent_paths": [
         "wiki/mavedb_am_holdout_2026-07-23.json:comparator_esm2.median_abs_spearman"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1001,7 +1131,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1009,7 +1140,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1017,7 +1149,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1025,7 +1158,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1033,7 +1167,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1041,7 +1176,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1049,7 +1185,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1057,7 +1194,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1065,7 +1203,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1073,7 +1212,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1081,7 +1221,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1089,7 +1230,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1097,7 +1239,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1105,7 +1248,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "finder:any:forward",
@@ -1113,7 +1257,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1123,7 +1268,8 @@
       "consistent_paths": [
         "wiki/salmserovar_resolution_strata_2026-09-09.json:headline_reproduced.accuracy"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1131,7 +1277,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1139,7 +1286,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1147,7 +1295,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1155,7 +1304,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1166,7 +1316,8 @@
         "wiki/salmserovar_resolution_strata_2026-09-09.json:unique_resolution_accuracy",
         "wiki/salmserovar_o_fix_result_2026-09-09.json:ours_after.accuracy"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1174,7 +1325,8 @@
       "claimed_label": "share",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1182,7 +1334,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1190,7 +1343,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1198,7 +1352,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1206,7 +1361,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1214,7 +1370,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1222,7 +1379,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1230,7 +1388,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1238,7 +1397,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1246,7 +1406,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1254,7 +1415,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1262,7 +1424,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1270,7 +1433,8 @@
       "claimed_label": "acc",
       "status": "no_numeric_field",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1278,7 +1442,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1286,7 +1451,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1294,7 +1460,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1302,7 +1469,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1313,7 +1481,8 @@
         "wiki/salmserovar_o_fix_result_2026-09-09.json:accuracy_on_called_before",
         "wiki/salmserovar_seqsero2_2026-09-08.json:ours.accuracy_on_called"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1321,7 +1490,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1329,7 +1499,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1341,7 +1512,8 @@
         "wiki/salmserovar_o_fix_result_2026-09-09.json:ours_before.accuracy",
         "wiki/salmserovar_o_fix_acceptance_bar.json:baseline_2026-09-08.ours_overall.accuracy",
         "wiki/salmserovar_seqsero2_2026-09-08.json:ours.accuracy"
-      ]
+      ],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1349,7 +1521,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1357,7 +1530,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Salmonella:salmserovar",
@@ -1365,7 +1539,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1375,7 +1550,8 @@
       "consistent_paths": [
         "wiki/serotype_oh_validation_2026-09-04.json:cohort.largest_source_share"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1383,7 +1559,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1395,7 +1572,8 @@
       ],
       "competing_paths": [
         "wiki/serotype_heldout_confirm_2026-09-04.json:discovery.H_before"
-      ]
+      ],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1403,7 +1581,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1413,7 +1592,8 @@
       "consistent_paths": [
         "wiki/serotype_oh_validation_2026-09-04.json:selection_rule_fix.before.O_accuracy"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1421,7 +1601,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1431,7 +1612,8 @@
       "consistent_paths": [
         "wiki/serotype_heldout_confirm_2026-09-04.json:H_accuracy_coverage_primary"
       ],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1439,7 +1621,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1447,7 +1630,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1455,7 +1639,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1463,7 +1648,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1471,7 +1657,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1479,7 +1666,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1487,7 +1675,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1495,7 +1684,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1503,7 +1693,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1511,7 +1702,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     },
     {
       "cell_id": "typing:Escherichia_coli:serotype",
@@ -1519,7 +1711,8 @@
       "claimed_label": null,
       "status": "label_unlabeled",
       "consistent_paths": [],
-      "competing_paths": []
+      "competing_paths": [],
+      "from_binding": false
     }
   ],
   "honest_limits": [

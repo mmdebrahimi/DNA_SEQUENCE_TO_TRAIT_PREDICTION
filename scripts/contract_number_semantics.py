@@ -89,6 +89,18 @@ ST_ABSENT = "absent_from_artifact"
 # The value is present but only in a markdown-cited artifact (or reached via artifact pooling), so
 # this check cannot adjudicate its FIELD. Not measurable -- deliberately NOT counted as a mismatch.
 ST_MD_ONLY = "md_only_or_pooled"
+# --- binding states (added 2026-09-28) -----------------------------------------------------------
+# A DECLARED binding resolved: the prose token is present, the cited artifact carries that value at the
+# declared field path, and the path is consistent with the declared quantity. This is the only state that
+# does NOT rest on the prose-window heuristic.
+ST_BOUND = "field_confirmed_by_binding"
+# A binding was declared but its token does not appear in ANY prose field of that cell. This is a DEFECT,
+# not a pass: it means the declaration has drifted from the prose it is supposed to make checkable, and it
+# is exactly how a binding could quietly become a second truth surface.
+ST_BOUND_NO_PROSE = "binding_declared_but_prose_token_absent"
+# A binding was declared but the cited artifact does not carry that value at the declared path.
+ST_BOUND_UNRESOLVED = "binding_declared_but_path_unresolved"
+MEASURABLE_BY_BINDING = (ST_BOUND,)
 
 MEASURABLE = (ST_CONFIRMED, ST_MISMATCH)
 
@@ -224,6 +236,11 @@ def audit_semantics() -> dict:
         if not resolved:
             continue
 
+        # Index this cell's DECLARED bindings by their prose token. Empty for every cell that declares
+        # none, which is the default -- the heuristic path below is unchanged for them.
+        bindings = {b.number_token: b for b in getattr(c, "metric_bindings", ())}
+        bound_tokens_seen: set[str] = set()
+
         seen: set[str] = set()
         ms = list(DECIMAL_RE.finditer(blob))
         for idx, m in enumerate(ms):
@@ -235,7 +252,27 @@ def audit_semantics() -> dict:
             next_start = ms[idx + 1].start(1) if idx + 1 < len(ms) else None
             canon = label_for(blob, m.start(1), m.end(1), prev_end, next_start)
             hits = [(a, p, v) for (a, p, v) in leaves if value_matches(tok, v)]
-            if canon is None:
+            # A DECLARED binding takes precedence over the prose-window heuristic, because it is the one
+            # path that does not have to GUESS the quantity. It is still VERIFIED, never trusted: the
+            # artifact must actually carry this value at the declared path, and the path must be consistent
+            # with the declared quantity. A binding that fails either check is a defect, not a pass.
+            bound = bindings.get(tok)
+            if bound is not None:
+                canon = bound.quantity
+                at_path = [(a, p, v) for (a, p, v) in leaves
+                           if p == bound.field_path and a == bound.artifact and value_matches(tok, v)]
+                if not at_path:
+                    status, consistent, competing = ST_BOUND_UNRESOLVED, [], [
+                        f"declared {bound.artifact}:{bound.field_path}"]
+                elif not path_is_consistent(bound.field_path, bound.quantity):
+                    status, consistent, competing = ST_MISMATCH, [], [
+                        f"{bound.artifact}:{bound.field_path} (declared quantity {bound.quantity!r} "
+                        f"is not consistent with that path)"]
+                else:
+                    status = ST_BOUND
+                    consistent = [f"{bound.artifact}:{bound.field_path}"]
+                    competing = []
+            elif canon is None:
                 status, consistent, competing = ST_UNLABELED, [], []
             elif not hits:
                 status, consistent, competing = ST_NO_FIELD, [], []
@@ -261,11 +298,36 @@ def audit_semantics() -> dict:
                 "status": status,
                 "consistent_paths": consistent[:4],
                 "competing_paths": competing[:4],
+                "from_binding": bound is not None,
+            })
+            if bound is not None:
+                bound_tokens_seen.add(tok)
+
+        # A binding whose token never turned up in this cell's prose is a DEFECT. Without this check a
+        # binding could sit in the registry describing a number no reader will ever see -- the audit would
+        # then be auditing the declaration instead of the prose, which is the failure the binding design
+        # exists to avoid.
+        for tok, b in bindings.items():
+            if tok in bound_tokens_seen:
+                continue
+            counts[ST_BOUND_NO_PROSE] = counts.get(ST_BOUND_NO_PROSE, 0) + 1
+            rows.append({
+                "cell_id": getattr(c, "cell_id", "?"),
+                "number": tok,
+                "claimed_label": b.quantity,
+                "status": ST_BOUND_NO_PROSE,
+                "consistent_paths": [],
+                "competing_paths": [f"declared {b.artifact}:{b.field_path}"],
+                "from_binding": True,
             })
 
     n_total = len(rows)
-    n_measurable = sum(counts.get(s, 0) for s in MEASURABLE)
+    n_by_binding = sum(counts.get(s, 0) for s in MEASURABLE_BY_BINDING)
+    n_by_heuristic = sum(counts.get(s, 0) for s in MEASURABLE)
+    n_measurable = n_by_binding + n_by_heuristic
     mismatches = [r for r in rows if r["status"] == ST_MISMATCH]
+    binding_defects = [r for r in rows
+                       if r["status"] in (ST_BOUND_NO_PROSE, ST_BOUND_UNRESOLVED)]
     return {
         "artifact": "contract_number_semantics",
         "schema": "contract-number-semantics-v1",
@@ -274,6 +336,15 @@ def audit_semantics() -> dict:
         "n_numbers": n_total,
         "n_measurable": n_measurable,
         "measurable_fraction": round(n_measurable / n_total, 4) if n_total else None,
+        # THE SPLIT IS LOAD-BEARING, not cosmetic. Without it the headline measurability fraction
+        # conflates two different things -- "the prose-window heuristic could not infer the quantity" and
+        # "no author declared a binding" -- so the number would move with AUTHORING COVERAGE rather than
+        # with audit power, and a rising figure could mean either. Report the denominators apart.
+        "measurable_by_binding": n_by_binding,
+        "measurable_by_heuristic": n_by_heuristic,
+        "n_bindings_declared": sum(len(getattr(c, "metric_bindings", ())) for c in cells()),
+        "n_binding_defects": len(binding_defects),
+        "binding_defects": binding_defects,
         "status_counts": counts,
         "n_mismatch": len(mismatches),
         "mismatches": mismatches,

@@ -163,3 +163,107 @@ def test_live_run_is_measurable_and_self_consistent():
     for r in rep["mismatches"]:
         assert r["claimed_label"] in LABEL_VOCAB
         assert r["competing_paths"], "a mismatch must name where the value actually sits"
+
+
+# --- metric bindings: the provenance-pointer path (added 2026-09-28) -----------------------------
+
+def _cell(**kw):
+    """A throwaway contract-like object carrying only what audit_semantics reads."""
+    class C:
+        cell_id = kw.get("cell_id", "planted:cell")
+        claim = kw.get("claim", "")
+        validation_slice = label_provenance = demotion_rule = claim_status = ""
+        metric_bindings = kw.get("metric_bindings", ())
+    return C()
+
+
+def _run_with(monkeypatch, tmp_path, cell, artifact_obj, artifact_name="planted_2026-09-28.json"):
+    import scripts.contract_number_semantics as mod
+    art = tmp_path / "wiki" / artifact_name
+    art.parent.mkdir(parents=True, exist_ok=True)
+    art.write_text(json.dumps(artifact_obj), encoding="utf-8")
+    monkeypatch.setattr(mod, "REPO", tmp_path)
+    monkeypatch.setattr(mod, "_load_artifact_text", lambda a: art.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mod, "_cited_artifacts", lambda blob: [f"wiki/{artifact_name}"])
+    import dna_decode.data.cell_registry as reg
+    monkeypatch.setattr(reg, "cells", lambda: [cell])
+    return mod.audit_semantics()
+
+
+def test_a_binding_pointing_at_the_WRONG_quantity_is_caught(monkeypatch, tmp_path):
+    """THE cheapest test that this design is not ceremony: a declaration must not be able to launder a
+    number into the wrong quantity. A binding claiming `sens` while pointing at a `spec` path must FAIL,
+    otherwise the binding becomes a second truth surface and the audit stops auditing."""
+    from dna_decode.data.cell_registry import ContractNumberBinding
+    from scripts.contract_number_semantics import ST_MISMATCH
+
+    cell = _cell(claim="sens 0.993 (wiki/planted_2026-09-28.json)",
+                 metric_bindings=(ContractNumberBinding(
+                     "0.993", "sens", "wiki/planted_2026-09-28.json", "metrics.spec"),))
+    rep = _run_with(monkeypatch, tmp_path, cell, {"metrics": {"spec": 0.993}})
+    row = next(r for r in rep["rows"] if r["number"] == "0.993")
+    assert row["status"] == ST_MISMATCH, row
+    assert row["from_binding"] is True
+    assert any("not consistent" in p for p in row["competing_paths"]), row["competing_paths"]
+
+
+def test_a_binding_whose_token_is_absent_from_prose_is_a_DEFECT(monkeypatch, tmp_path):
+    """A binding could otherwise describe a number no reader ever sees — auditing the declaration
+    instead of the prose, which is exactly the inversion this design exists to prevent."""
+    from dna_decode.data.cell_registry import ContractNumberBinding
+    from scripts.contract_number_semantics import ST_BOUND_NO_PROSE
+
+    cell = _cell(claim="the prose mentions no decimal at all here",
+                 metric_bindings=(ContractNumberBinding(
+                     "0.993", "sens", "wiki/planted_2026-09-28.json", "metrics.sens"),))
+    rep = _run_with(monkeypatch, tmp_path, cell, {"metrics": {"sens": 0.993}})
+    row = next(r for r in rep["rows"] if r["number"] == "0.993")
+    assert row["status"] == ST_BOUND_NO_PROSE, row
+    assert rep["n_binding_defects"] == 1
+
+
+def test_a_binding_whose_path_does_not_resolve_is_a_DEFECT(monkeypatch, tmp_path):
+    from dna_decode.data.cell_registry import ContractNumberBinding
+    from scripts.contract_number_semantics import ST_BOUND_UNRESOLVED
+
+    cell = _cell(claim="sens 0.993 (wiki/planted_2026-09-28.json)",
+                 metric_bindings=(ContractNumberBinding(
+                     "0.993", "sens", "wiki/planted_2026-09-28.json", "metrics.nonexistent"),))
+    rep = _run_with(monkeypatch, tmp_path, cell, {"metrics": {"sens": 0.993}})
+    row = next(r for r in rep["rows"] if r["number"] == "0.993")
+    assert row["status"] == ST_BOUND_UNRESOLVED, row
+    assert rep["n_binding_defects"] == 1
+
+
+def test_a_correct_binding_confirms_and_is_reported_SEPARATELY_from_the_heuristic(monkeypatch, tmp_path):
+    """The split is load-bearing: a rising measurability figure must not be readable as either 'the audit
+    got stronger' or 'an author declared more' indifferently."""
+    from dna_decode.data.cell_registry import ContractNumberBinding
+    from scripts.contract_number_semantics import ST_BOUND
+
+    cell = _cell(claim="the value 0.993 with no quantity word nearby",
+                 metric_bindings=(ContractNumberBinding(
+                     "0.993", "sens", "wiki/planted_2026-09-28.json", "metrics.sens"),))
+    rep = _run_with(monkeypatch, tmp_path, cell, {"metrics": {"sens": 0.993}})
+    row = next(r for r in rep["rows"] if r["number"] == "0.993")
+    assert row["status"] == ST_BOUND
+    assert rep["measurable_by_binding"] == 1
+    assert rep["measurable_by_heuristic"] == 0, "this number is unlabeled to the heuristic"
+
+
+def test_the_live_registry_bindings_convert_previously_unmeasurable_numbers():
+    """Non-vacuity on real data, and the REVERT CRITERION for this whole schema change: the three declared
+    bindings must actually raise measurability. Baseline before bindings was 16 measurable of 180 (0.0889),
+    all by heuristic, with 147 label_unlabeled. If a future change drops these conversions to zero the
+    field is ceremony and should be removed.
+
+    HONEST LIMIT, visible in these numbers: the gain is 1:1 per binding (3 declared -> 3 converted), so
+    coverage is LINEAR in authoring effort. This is a tool for the numbers you care most about, NOT a fix
+    for the remaining ~144 unlabeled ones.
+    """
+    rep = audit_semantics()
+    assert rep["n_bindings_declared"] == 3, rep["n_bindings_declared"]
+    assert rep["measurable_by_binding"] == 3, rep["measurable_by_binding"]
+    assert rep["measurable_by_heuristic"] == 16, rep["measurable_by_heuristic"]
+    assert rep["n_measurable"] == 19 > 16
+    assert rep["n_binding_defects"] == 0, rep["binding_defects"]

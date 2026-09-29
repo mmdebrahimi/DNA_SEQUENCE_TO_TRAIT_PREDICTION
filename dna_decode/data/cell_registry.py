@@ -57,6 +57,32 @@ TRACKS = ("amr", "viral", "pgx", "hla", "mendelian", "typing", "finder")
 
 
 @dataclass(frozen=True)
+class ContractNumberBinding:
+    """Where ONE number quoted in a contract's prose actually lives in the artifact it cites.
+
+    This is a PROVENANCE POINTER, not a metric. The distinction is the whole design:
+
+      * A "metric field" would become a SECOND TRUTH SURFACE — the contract-number audit would stop
+        checking what the prose says and start trusting a declaration, which is the exact drift class the
+        audit exists to catch.
+      * A binding instead makes the PROSE checkable: it says "the token `0.993` in my prose is a
+        sensitivity, and you will find it at `metrics.sens` in artifact X". The audit then verifies that
+        claim against BOTH the prose and the artifact, and a binding whose token is absent from prose is
+        itself a defect.
+
+    EVERY FIELD IS A STRING, deliberately. The value in a contract is a QUOTED FIGURE (provenance), never
+    a computed score — storing it as a string states that, keeps `CellContract`'s "NO numeric confidence
+    field" norm intact (see the module docstring), and keeps the recursive numeric guard in
+    `tests/test_cell_registry.py` trivial.
+    """
+
+    number_token: str   # the decimal EXACTLY as it appears in prose, e.g. "0.993"
+    quantity: str       # what it IS, from contract_number_semantics.LABEL_VOCAB, e.g. "sens"
+    artifact: str       # repo-relative path of the cited artifact, e.g. "wiki/foo_2026-09-28.json"
+    field_path: str     # dotted path within that artifact, e.g. "metrics.sens" or "results[3].acc"
+
+
+@dataclass(frozen=True)
 class CellContract:
     """One shipped decoder cell's evidence contract. Frozen; NO numeric confidence field by design."""
 
@@ -84,6 +110,11 @@ class CellContract:
     engine: str | None = None
     organism_scope: str | None = None
     census_group: str | None = None
+    # OPTIONAL provenance pointers for numbers quoted in this cell's prose. Default empty so none of the
+    # 62 construction sites breaks and no cell is obliged to declare anything. Populating one makes that
+    # number's QUANTITY machine-checkable instead of inferred from a prose window; leaving it empty keeps
+    # the heuristic fallback. See ContractNumberBinding for why this is a pointer and not a metric.
+    metric_bindings: tuple[ContractNumberBinding, ...] = ()
 
 
 # --- AMR phenotype_source_status -> (evidence_tier, abstention_vocab, native) ---
@@ -724,7 +755,12 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "agreement on a position BOTH catalogue does not validate either CATALOGUE; epistasis "
             "(Required_mut) is recorded but NOT enforced; genomes are AMR-cohort leftovers, ENRICHED "
             "for resistance. Re-score if either catalogue changes"),
-    ),
+            metric_bindings=(
+            ContractNumberBinding("0.9923", "rate",
+                                  "wiki/pointfinder_amrfinder_concordance_2026-09-05.json",
+                                  "exact_set_match_rate"),
+        ),
+),
     CellContract(
         cell_id="typing:bacteria:mlst", track="typing", route="dna-mlst",
         organism="bacteria", target="mlst",
@@ -772,7 +808,12 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "14 genomes at purity 0.14 -- the generalist commensal lineage, where LOW purity is the "
             "CORRECT answer and a pure ST10 would be more suspicious. One organism, one scheme, one "
             "cohort; 31.9% of the cohort sits below the size-3 floor and is unmeasured"),
-    ),
+            metric_bindings=(
+            ContractNumberBinding("0.87", "share",
+                                  "wiki/mlst_serotype_purity_2026-09-05.json",
+                                  "top_sts[2].modal_fraction"),
+        ),
+),
     CellContract(
         cell_id="finder:bacteria:resfinder", track="finder", route="dna-resfinder",
         organism="bacteria", target="resfinder",
@@ -820,7 +861,12 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "LITERALLY (it imports resfinder.gene_of) and was MEASURED before being touched: 16 alleles "
             "in its DB, 40 genomes, old == new (34 loci), 0 multi-reported -- inert, left UNCHANGED, "
             "re-measure if that DB grows. Re-score if either allele DB changes"),
-    ),
+            metric_bindings=(
+            ContractNumberBinding("0.7754", "jaccard",
+                                  "wiki/resfinder_locus_collapse_2026-09-05.json",
+                                  "summary.beta-lactam.jaccard_vs_amrfinder_normalized_new"),
+        ),
+),
     CellContract(
         cell_id="typing:arabidopsis:flowering", track="typing", route="dna-flowering",
         organism="Arabidopsis_thaliana", target="flowering",

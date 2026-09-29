@@ -197,16 +197,50 @@ corroboration for it. Not recommended on these numbers; a curation project, not 
    surface. Measure first: `uv run python scripts/claude_md_weight.py`.
    *Two long bullets have NO external store and must stay whole — the tool already protects them.*
 
-4. **Typed metric field on `CellContract`?** The semantic contract-number check (2026-09-28) measures
-   whether a cited number matches the right QUANTITY, not merely the right VALUE. Its binding limit is
-   LABEL COVERAGE: **only 16 of 180 numbers (8.9%) are measurable**, because the quantity label is
-   extracted by a prose-window heuristic and 147 numbers carry no quantity word near them. The durable fix
-   is a typed metric field on the contract — a registry schema change across 115 cells. Not taken.
+4. ~~**Typed metric field on `CellContract`?**~~ — **RESOLVED AND SHIPPED 2026-09-28, in a reduced form
+   that is NOT the field originally proposed.** A review changed its shape decisively: a generic "metric
+   field" would have become a **second truth surface** — the audit would stop checking what the prose says
+   and start trusting a declaration, which is the exact drift class it exists to catch. What shipped instead
+   is `ContractNumberBinding` = a **provenance POINTER** (`number_token` / `quantity` / `artifact` /
+   `field_path`, **all strings**), optional on `CellContract` with default `()` so none of the 62
+   construction sites breaks.
+   **The binding is VERIFIED, never trusted:** the artifact must carry that value at the declared path, the
+   path must be consistent with the declared quantity, and a binding whose token is absent from prose is
+   itself a **defect** (`binding_declared_but_prose_token_absent`) — because otherwise the audit would be
+   auditing the declaration instead of the prose.
+   *Measured:* 3 bindings declared → measurability **16 → 19 of 180 (0.0889 → 0.1056)**, `label_unlabeled`
+   147 → 144, 0 binding defects. **HONEST LIMIT: the gain is 1:1 per binding**, so coverage is LINEAR in
+   authoring effort — this is a tool for the numbers you care most about, NOT a fix for the remaining ~144.
+   *Also shipped, in the same change because otherwise the field and the hole ship together:* the
+   "NO numeric confidence field" guard in `tests/test_cell_registry.py` now **RECURSES** — it previously
+   checked only top-level attribute values, so a nested numeric inside a tuple would have passed.
+   *Known vocabulary gap, recorded not papered over:* an allele-frequency path (`...alt_freq`) has no
+   quantity in `LABEL_VOCAB`, so the cyp4f2 AF numbers cannot be bound yet. The mechanism correctly REFUSES
+   rather than accepting a mismatched quantity.
 
-5. **Should the rejection-gate family gain a CONDITION-COVERAGE gate?** The 10 gates have none, and it is
-   exactly what the F2 candidates fail on (G6 measures phenotype-value degeneracy, not condition breadth).
-   Feeding condition counts into G6 would resolve them and make **every previously screened candidate's G6
-   verdict incomparable**, so it was refused and recorded as a campaign-specific criterion instead.
+5. ~~**Should the rejection-gate family gain a CONDITION-COVERAGE gate?**~~ — **RESOLVED 2026-09-28:
+   NO, not yet. Deliberately doing nothing, for two independent reasons either of which suffices.**
+   (a) **Mechanical, verified:** `dna_decode/eval/rejection_gates.py:319-322` — any gate whose measurement
+   is absent returns `INSUFFICIENT_DATA`, which makes the WHOLE screen `INCOMPLETE`. `screen_candidate`
+   always runs `LABEL_GATES + DECODER_GATES`, so appending G11 without a precise applicability rule flips
+   **all four committed packets** (pear/hbv/oxford/phenosense) to INCOMPLETE and breaks
+   `scripts/screen_candidate_gates.py --verify`. That is exactly how both F2 candidates already read
+   INCOMPLETE from an unsupplied G6.
+   (b) **Epistemic:** the threshold would have to be **ASSERTED from n=1** (Public K-12 — 42% unannotated,
+   82.7% glucose, 3 sources at >=10 samples). This repo has mis-specified two frozen acceptance bars in one
+   month by exactly that route, so an asserted threshold defers it on its own.
+   **PRE-DECLARED PROMOTION CONDITION** (so this is a decision, not an indefinite park): promote to G11 only
+   when an applicability rule can **reject at least one NON-F2 packet** and mark the existing packets
+   `not_applicable` for a stated reason. If promoted, it belongs in a THIRD grouping (`SUBSTRATE_GATES`) —
+   it is neither a label-existence question (G1-G8) nor a rule-scoreability one (G9-G10) — but one member
+   does not earn a new grouping. A gate that is `not_applicable` on every committed packet would be this
+   project's own forbidden "control that rejects nothing".
+   *Correction to the earlier cost estimate:* `test_rejection_gates.py:154 test_all_ten_gates_run_every_time`
+   does NOT pin the count — it asserts against `list(LABEL_GATES) + list(DECODER_GATES)`, i.e. DERIVED, so
+   it would pass automatically. Only its NAME says "ten". The one genuine hard text coupling is
+   `tests/test_colour_cell_substrate_screen.py:159`, which asserts the literal `"screen it against G1–G10"`.
+   If machine-readability is wanted sooner, a separate `campaign_criteria` schema beside the gate output
+   gets it without touching `LABEL_GATES`.
 
 6. **The 7 unscreenable colour cells** — no existing evidence tier fits (`NO_FREE_SOURCE` is about labels;
    `NOT_CENSUSED` means never-scored). And whether curating the 40 unrecorded colour loci is worth doing
