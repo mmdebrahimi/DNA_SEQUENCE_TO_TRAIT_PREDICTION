@@ -1,5 +1,14 @@
 # E. coli Pathotype Prediction CLI
 <!-- project-schema: 0.1 -->
+<!-- ledger-status: terminal -->
+
+> ## ⛔ TERMINAL — DO NOT TAKE WORK FROM THIS LEDGER
+> Bannered 2026-09-29. This ledger is **absent from the umbrella's `## Project Families` table** (`dna-decode-2026-05-11.md`), so `advance_ranker` — which keeps only families listed `ACCEPTED` there — never considers it. Its `### Candidate next actions` rows are **historical** and every one of them reads as "next" to a human or a post-compaction session; that is the trap this banner closes.
+> 
+> **Why terminal:** Its own Current state reads "v0 pathotype resolver SHIPPED + FROZEN + PACKAGED" (ledger v7, 2026-06-04). The deterministic pathotype cell is label-blocked by gates G1+G3 (Salipante isolation site = sampling-defined; DECA curation = tool-derived) -- a CLOSED LABEL question, not pending work.
+> 
+> Kept, not deleted — it is the execution record for that arc. Read it as history.
+
 
 > Initialized 2026-05-26. Project ID: ecoli-pathotype-prediction-cli-2026-05-26. Originating goal (verbatim user input): "E. coli pathotype prediction from a user-supplied genome assembly: an open-source CLI tool that takes FASTA + optional GFF3 and emits a multiclass pathotype call (EPEC / EHEC / ETEC / UPEC / EAEC / commensal) with audit-grade provenance, including which acquired virulence-gene clusters drove the call (stx for EHEC; LEE for EPEC; afa/papC for UPEC; ETEC enterotoxins) and a side-by-side comparison against CGE VirulenceFinder gene-call output."
 

@@ -273,14 +273,18 @@ corroboration for it. Not recommended on these numbers; a curation project, not 
    quantity in `LABEL_VOCAB`, so the cyp4f2 AF numbers cannot be bound yet. The mechanism correctly REFUSES
    rather than accepting a mismatched quantity.
 
-4b. **Small hygiene item, found incidentally 2026-09-28, NOT fixed:** `tests/test_pgx_report_card.py`
+4b. **Small hygiene item — now a PATTERN, 2 instances, still NOT fixed:** `tests/test_pgx_report_card.py`
    calls the builder's `main()`, which **writes 8 tracked `wiki/pgx_*` artifacts** with today's date. So
    running the suite always dirties the working tree with an `analysis_date`-only diff, and `git status` is
    never clean after a test run. Reverted as incidental churn rather than committed (date churn in history is
    noise). The real fix is for the test to write to a tmp dir and assert on the returned object; it is
    deliberately out of scope here because it touches a passing test for no evidentiary gain. Worth doing when
    something else is already in that file — the failure mode is mild but it trains a reader to ignore a dirty
-   tree, which is how a genuine unintended write gets missed.
+   tree, which is how a genuine unintended write gets missed. **Second instance found 2026-09-29:**
+   `wiki/certification_capstone.{json,md}` also get rewritten with today's `analysis_date` by a suite
+   run, so **10 tracked files** now churn on every `pytest tests/`. Two independent tests doing this
+   makes it a shape worth fixing once (builders write to a tmp dir; tests assert on the returned
+   object), not two one-offs.
 
 5. ~~**Should the rejection-gate family gain a CONDITION-COVERAGE gate?**~~ — **RESOLVED 2026-09-28:
    NO, not yet. Deliberately doing nothing, for two independent reasons either of which suffices.**

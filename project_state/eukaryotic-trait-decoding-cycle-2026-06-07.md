@@ -1,5 +1,14 @@
 # Eukaryotic Trait-Decoding Cycle
 <!-- project-schema: 0.1 -->
+<!-- ledger-status: terminal -->
+
+> ## ⛔ TERMINAL — DO NOT TAKE WORK FROM THIS LEDGER
+> Bannered 2026-09-29. This ledger is **absent from the umbrella's `## Project Families` table** (`dna-decode-2026-05-11.md`), so `advance_ranker` — which keeps only families listed `ACCEPTED` there — never considers it. Its `### Candidate next actions` rows are **historical** and every one of them reads as "next" to a human or a post-compaction session; that is the trap this banner closes.
+> 
+> **Why terminal:** Its own Current state reads "CYCLE COMPLETE -- both gates resolved 2026-06-12". G1 reached (C. auris fluconazole); G2 is a CLOSED NEGATIVE (Arabidopsis embedding learned population structure, H2 falsified) -- do NOT reopen.
+> 
+> Kept, not deleted — it is the execution record for that arc. Read it as history.
+
 
 > Initialized 2026-06-07. Project ID: eukaryotic-trait-decoding-cycle-2026-06-07. Originating goal (verbatim user input): "Eukaryotic trait-decoding cycle for dna_decode — extend the validated deterministic genome→phenotype decoder beyond bacterial AMR into the eukaryotic kingdom via two parallel substrates across two machines with phase gates. Path A (laptop, no GPU): fungal AMR — Candida auris azole resistance ... Path B (workhorse GPU): Arabidopsis thaliana flowering-time embedding test ... phase gates G0/G1/G2 ... money gate on paid compute; do not route personal code through the Bombardier/DLP machine."
 
