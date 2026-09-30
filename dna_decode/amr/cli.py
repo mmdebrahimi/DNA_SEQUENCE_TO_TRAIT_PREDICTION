@@ -126,7 +126,7 @@ def _target_site_record(call, sample_id: str, drug: str, organism: str, provenan
     return {
         # DISCLOSURE, never a call. `doubt` may qualify the prediction and explain itself; it can
         # never contain one — `DoubtBlock.as_dict` raises rather than emit anything call-shaped.
-        "doubt": target_site_doubt(drug, observed).as_dict(),
+        "doubt": target_site_doubt(drug, observed, call=call.prediction).as_dict(),
         "sample_id": sample_id, "drug": drug,
         "analysis_date": datetime.date.today().isoformat(), "schema": "amr-mechanism-call-v1",
         "prediction": call.prediction,

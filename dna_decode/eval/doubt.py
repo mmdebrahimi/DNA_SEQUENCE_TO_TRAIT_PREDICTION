@@ -250,7 +250,7 @@ def doubt_cell_for(drug: str) -> str | None:
     return _MUTANT_LEVEL_CELLS.get(str(drug).strip().lower())
 
 
-def target_site_doubt(drug: str, observed_by_gene: dict | None) -> DoubtBlock:
+def target_site_doubt(drug: str, observed_by_gene: dict | None, call: str | None = None) -> DoubtBlock:
     """The doubt block for a target-site call. Distinguishes THREE states, never collapsing them.
 
     not-applicable (position-based catalog) / not-assessable (this path did not surface the observed
@@ -280,12 +280,45 @@ def target_site_doubt(drug: str, observed_by_gene: dict | None) -> DoubtBlock:
                     "-- not assessable, NOT clean"),
             evidence={"cell": cell, "applicable": True, "assessed": False})])
     subs = observed_by_gene.get(_CELL_GENE.get(cell, ""), set()) or set()
+    resolved_call = call or _deployed_call(drug, observed_by_gene)
     sig = position_novelty_signal(sorted(subs), cell)
     # SECOND, COMPLEMENTARY signal (2026-09-02). position-novelty fires only at CATALOGUED positions,
     # so it is silent on a gap at a position the catalog does not carry -- verified: V179F returns
     # position_novel=False. Appended, never merged: the two answer different questions and collapsing
     # them would hide whichever fired.
-    return DoubtBlock([sig, target_site_completeness_signal(sorted(subs), cell)])
+    # THIRD, also complementary (2026-09-30). The two deterministic signals above are both SILENT on a
+    # novel substitution at an un-catalogued position with too few carriers to screen -- measured: V179F
+    # returns position_novel=False, and the purity screen needs carriers. The SHIPPED supervised complement
+    # (leave-one-study-out blind-spot AUROC 0.81 NNRTI / 0.89 PI / 0.89 INSTI) answers exactly that case and
+    # was reachable from NOWHERE before this wiring: imported only by its own builder, 0 mentions in
+    # cell_registry, no CLI route. Appended, never merged -- the three answer different questions and the
+    # complement is the only one of them that is IN-DISTRIBUTION rather than deterministic, so collapsing
+    # them would hide which kind of evidence fired.
+    return DoubtBlock([sig,
+                       target_site_completeness_signal(sorted(subs), cell),
+                       supervised_complement_signal(sorted(subs), drug, call=resolved_call)])
+
+
+def _deployed_call(drug: str, observed_by_gene: dict) -> str | None:
+    """The DEPLOYED catalog's own R/S call for this genotype, or None if it cannot be resolved.
+
+    WHY THIS EXISTS. The supervised complement scores the risk that a SUSCEPTIBLE call is wrong, so it needs
+    to know the call. The CLI supplies one; a library caller need not, and defaulting an unsupplied call to
+    "susceptible" made the same genotype render two different ways depending on the caller (it fired a STRONG
+    blind-spot doubt on K103N, which the catalog calls RESISTANT). Resolving it from the same deployed catalog
+    the call came from removes the divergence at the source.
+
+    This READS the deployed call to decide whether its own question applies; it does NOT make one, and the
+    value never enters the doubt evidence -- `assert_no_call` checks VALUES, and a disclosure that echoes the
+    call becomes call-shaped. Returns None on any failure so the signal reports NOT-ASSESSABLE rather than
+    guessing; an unresolvable call is not evidence of susceptibility.
+    """
+    try:
+        from ..data.hiv_amr import call_hiv_observed
+        pred = call_hiv_observed(drug, {k: set(v) for k, v in (observed_by_gene or {}).items()}).prediction
+    except Exception:
+        return None
+    return pred if pred in ("R", "S") else None            # INDETERMINATE resolves nothing
 
 
 def target_site_completeness_signal(observed_substitutions, cell: str) -> DoubtSignal:
@@ -349,3 +382,154 @@ def position_novelty_signal(observed_substitutions, cell: str) -> DoubtSignal:
                  f"{cell} positions"
     return DoubtSignal(kind="position_novelty", tier=tier, reason=reason,
                        evidence={"cell": cell, **res.as_dict()})
+
+
+def _hiv_complement_class(drug: str) -> str | None:
+    """Drug -> complement drug_class, DERIVED from the shipped maps rather than hand-listed.
+
+    Two sources because the catalog stores them in two places: `_CLASS_BY_DRUG` carries PI / INSTI / CAI as
+    HIVTargetClass objects, while NNRTI lives in `HIV_DRUG_CLASS`. A hand-written third copy here is exactly
+    the drift this repo has hit five times, so both are read live.
+    """
+    try:
+        from ..data import hiv_amr as _ha
+    except Exception:
+        return None
+    d = (drug or "").strip().lower()
+    by_drug = getattr(_ha, "_CLASS_BY_DRUG", None)
+    cls = by_drug.get(d) if isinstance(by_drug, dict) else None
+    label = getattr(cls, "label", None)
+    if label:
+        return str(label)
+    plain = getattr(_ha, "HIV_DRUG_CLASS", None)
+    got = plain.get(d) if isinstance(plain, dict) else None
+    return str(got) if got else None
+
+
+def _complement_token(sub: str) -> str:
+    """`K103N` (WT+pos+mut, what the CLI surfaces) -> `103N` (pos+mut, what the complement keys on).
+
+    NOT load-bearing, and the first version of this docstring said it was -- corrected by measurement.
+    The worry was real in shape: the two surfaces disagree on format, and passing an unknown token would
+    score the no-mutation baseline, making this signal look permanently QUIET rather than BROKEN. But the
+    complement NORMALISES INTERNALLY: measured, `blind_spot_risk({"K103N"})` and `blind_spot_risk({"103N"})`
+    both return 0.9585 against a 0.1416 no-mutation baseline. So this is defensive redundancy, kept because
+    it makes the boundary contract explicit and costs nothing -- and pinned by a test that asserts the two
+    forms still agree, so if the complement ever stops normalising, this becomes load-bearing and we learn
+    that from a failure rather than from a silent quiet signal.
+    """
+    s = (sub or "").strip()
+    return s[1:] if s and s[0].isalpha() and any(c.isdigit() for c in s) else s
+
+
+def supervised_complement_signal(observed_substitutions, drug: str, call: str | None = None) -> DoubtSignal:
+    """Doubt from the SHIPPED supervised blind-spot complement (`data/hiv_supervised_complement.py`).
+
+    WHY A THIRD SIGNAL. position-novelty fires only at CATALOGUED positions; the completeness screen fires
+    only on units whose purity was MEASURED. Both are deterministic and both are silent on a novel
+    substitution at an un-catalogued position with too few carriers to screen. The supervised complement
+    answers exactly that case -- trained on the free Stanford PhenoSense fold-change, with deployability
+    measured per class (leave-one-STUDY-out blind-spot AUROC, read LIVE from the shipped model metadata
+    rather than restated here so it cannot drift).
+
+    THREE STATES, never collapsed: not-measured (class outside SUPPORTED_CLASSES) / not-assessable (no
+    observed substitutions on this path) / assessed.
+
+    HONESTY, and all of it ships inside the signal: it is a RANKING complement and NOT a rule -- folding it
+    into the catalog as a binary rule was tested and REJECTED at -0.006 balanced accuracy, so the value is
+    the continuous weighting. It is IN-DISTRIBUTION to the Stanford knowledge base, not independent
+    validation. And a LOW risk is NOT reassurance: measured near baseline on 179F, the one CONFIRMED gap,
+    which the purity screen flags decisively -- the two fail on different cases, so neither supersedes.
+    """
+    kind = "supervised_complement"
+    klass = _hiv_complement_class(drug)
+    try:
+        from ..data import hiv_supervised_complement as _C
+    except Exception as exc:                                   # pragma: no cover - import guard
+        return DoubtSignal(kind=kind, tier=NONE,
+                           reason=("the supervised blind-spot complement could not be loaded, so it was "
+                                   "NOT evaluated -- not assessed, NOT an absence of doubt"),
+                           evidence={"assessed": False, "error": type(exc).__name__})
+    if klass is None or klass not in _C.SUPPORTED_CLASSES:
+        return DoubtSignal(
+            kind=kind, tier=NONE,
+            reason=("no supervised blind-spot complement is measured for " + str(drug)
+                    + ((" (class " + klass + ")") if klass else "")
+                    + "; the complement covers " + ", ".join(_C.SUPPORTED_CLASSES) + " only. NOT measured "
+                      "for this class -- distinct from measured-and-quiet"),
+            evidence={"assessed": False, "applicable": False, "drug_class": klass,
+                      "supported_classes": list(_C.SUPPORTED_CLASSES)})
+    subs = [s for s in (observed_substitutions or []) if s]
+    if not subs:
+        return DoubtSignal(kind=kind, tier=NONE,
+                           reason=("observed substitutions were not surfaced on this path, so the "
+                                   "supervised blind-spot complement could not be evaluated -- not "
+                                   "assessable, NOT clean"),
+                           evidence={"assessed": False, "applicable": True, "drug_class": klass})
+    if not call:
+        # MY OWN BUG, pinned by `test_the_only_honest_silence_is_assessed_and_quiet`. This used to treat an
+        # unsupplied call as "assume susceptible" and FIRE -- so `target_site_doubt("efavirenz", K103N)`
+        # raised a STRONG doubt on a genotype the catalog itself calls RESISTANT, purely because that caller
+        # passes no `call`. The CLI passes one and stayed correctly quiet, so the SAME genotype rendered two
+        # different ways depending on the caller. This signal asks whether a SUSCEPTIBLE call is wrong; with
+        # no call it has no question to ask, which is the NOT-ASSESSABLE state -- not a doubt, and not clean.
+        # `target_site_doubt` resolves the call from the deployed catalog before ever reaching here.
+        return DoubtSignal(kind=kind, tier=NONE,
+                           reason=("the deployed call could not be resolved on this path, so the "
+                                   "blind-spot question (is a SUSCEPTIBLE call wrong?) cannot be posed -- "
+                                   "not assessable, NOT an absence of doubt"),
+                           evidence={"assessed": False, "applicable": True, "drug_class": klass,
+                                     "call_was_supplied": False})
+    tokens = sorted({_complement_token(s) for s in subs})
+    try:
+        risk = float(_C.blind_spot_risk(set(tokens), drug_class=klass))
+        flagged = bool(_C.is_flagged(set(tokens), drug_class=klass))
+        meta = _C.model_info(klass)
+    except Exception as exc:
+        return DoubtSignal(kind=kind, tier=NONE,
+                           reason=("the supervised complement for " + klass + " raised "
+                                   + type(exc).__name__ + ", so it was NOT evaluated -- not assessed"),
+                           evidence={"assessed": False, "drug_class": klass,
+                                     "error": type(exc).__name__})
+    ev = {
+        "assessed": True, "applicable": True, "drug_class": klass,
+        "blind_spot_risk": round(risk, 4), "threshold": _C.DEFAULT_THRESHOLD, "flagged": flagged,
+        "tokens_scored": tokens,
+        "leave_study_out_blindspot_auroc": (meta.get("deployability") or {}).get(
+            "leave_study_out_blindspot_auroc"),
+        "trained_on_drug": meta.get("drug_trained"), "n_train": meta.get("n_train"),
+        "in_distribution": True, "independent_validation": False, "is_a_rule": False,
+        "catalog_foldin_tested_and_rejected_balacc_delta": -0.006,
+        "low_risk_is_not_reassurance": True,
+        # NOT the call value. `assert_no_call` checks VALUES, not just keys, and refused an echoed "R"
+        # here -- correctly: echoing the call into its own disclosure makes the disclosure call-shaped.
+        # Record only WHETHER a call was available and whether the blind-spot question applies.
+        "call_was_supplied": bool(call),
+        "blind_spot_question_applies": not (call and str(call).strip().upper().startswith("R")),
+    }
+    if call and str(call).strip().upper().startswith("R"):
+        return DoubtSignal(
+            kind=kind, tier=NONE,
+            reason=("this genotype is already called resistant, so the blind-spot question (catalog says "
+                    "susceptible yet the genotype is resistant) does not arise; the complement scored "
+                    + format(risk, ".3f") + " and is reported for audit only"),
+            evidence=ev)
+    if flagged:
+        return DoubtSignal(
+            kind=kind, tier=STRONG,
+            reason=("the shipped supervised blind-spot complement scores this genotype "
+                    + format(risk, ".3f") + " (at or above its " + str(_C.DEFAULT_THRESHOLD)
+                    + " threshold for " + klass + "), i.e. it ranks the isolate as likely resistant even "
+                    "where the deployed catalog does not -- a measured catalog-completeness risk. It is a "
+                    "RANKING complement, NOT a rule (the binary fold-in was tested and rejected at -0.006 "
+                    "balanced accuracy), and it is IN-DISTRIBUTION to the Stanford knowledge base rather "
+                    "than independent validation"),
+            evidence=ev)
+    return DoubtSignal(
+        kind=kind, tier=NONE,
+        reason=("the supervised blind-spot complement scored this genotype " + format(risk, ".3f")
+                + ", below its " + str(_C.DEFAULT_THRESHOLD) + " threshold for " + klass
+                + " -- measured and quiet. This is NOT reassurance: the same complement scores near "
+                  "baseline on 179F, the one CONFIRMED gap, which the purity screen flags decisively. "
+                  "The two fail on different cases"),
+        evidence=ev)
