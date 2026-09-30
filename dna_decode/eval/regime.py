@@ -100,7 +100,24 @@ REGIMES: tuple[Regime, ...] = (
            "wiki/hiv_esm_vs_catalog_2026-07-09.md",
            "Antagonistic endpoints INVERT a plausibility scorer: resistance is reached via chemically "
            "CONSERVATIVE substitutions at averagely-conserved sites, so likelihood calls them benign."),
+    # Added 2026-09-30. The cell above was the ZERO-SHOT half of (natural, molecular); the SUPERVISED half
+    # was never measured, and the map's own warning -- that a zero-shot negative says nothing about
+    # supervised -- applied to the map itself. Measured on the IDENTICAL isolate set with the IDENTICAL
+    # pre-registered bar the zero-shot arm failed.
+    Regime("natural_molecular_supervised_blindspot", "natural", "molecular", "supervised", WORKS,
+           "HIV NNRTI catalog blind spot: supervised genotype-token model 0.8142 leave-one-STUDY-out "
+           "(PASS) vs the SAME bar zero-shot ESM2 failed at 0.4485 -- delta +0.339",
+           "wiki/glm_alphabet_headroom_2026-09-30.md",
+           "SCOPED TO THE BLIND SPOT, not to replacing the catalog: the subset is catalog-NEGATIVE by "
+           "construction, so the model cannot be rediscovering the catalog, and it still does NOT beat "
+           "the catalog's 0.926 full-cohort AUC. A LINEAR model over one-hot substitution tokens is the "
+           "weakest member of the supervised family, so this is a FLOOR on that family and says nothing "
+           "about whether attention/context adds anything."),
 )
+
+# Where a learned layer is pointed. The catalog-beats-learning result is about REPLACING a catalog; it was
+# being applied to every learned proposal, which over-refused the one shape that is now measured to work.
+TARGETS = ("replace", "blind_spot_complement")
 
 _BY_KEY = {r.key: r for r in REGIMES}
 
@@ -134,7 +151,8 @@ def classify_regime(population: str, endpoint: str, method: str) -> Regime | Non
 
 
 def screen_proposal(population: str, endpoint: str, method: str,
-                    curated_catalog_exists: bool = False) -> ScreenResult:
+                    curated_catalog_exists: bool = False,
+                    target: str = "replace") -> ScreenResult:
     """Screen a learned-decoder proposal against the measured regime map.
 
     A CLOSED_NEGATIVE verdict is a refusal: that exact regime has been tested and failed under
@@ -149,9 +167,17 @@ def screen_proposal(population: str, endpoint: str, method: str,
     if m not in METHODS:
         return ScreenResult(None, "UNKNOWN", f"method must be one of {METHODS}; got {m!r}")
 
+    if target not in TARGETS:
+        return ScreenResult(None, "UNKNOWN", f"target must be one of {TARGETS}; got {target!r}")
+
     # A curated catalog beats a learned scorer wherever one exists -- checked BEFORE the regime match,
     # because it is the strongest measured result and it inverts (ESM 0.454, below chance).
-    if curated_catalog_exists and m != "deterministic_catalog":
+    #
+    # SCOPED 2026-09-30: this applies to REPLACING the catalog. Applying it to a blind-spot COMPLEMENT
+    # over-refused the one shape now measured to work (supervised tokens, 0.8142 leave-study-out on the
+    # catalog-negative subset) -- the same over-compression this module exists to prevent, committed by
+    # this module. A complement proposal falls through to the regime match instead of being refused here.
+    if curated_catalog_exists and m != "deterministic_catalog" and target == "replace":
         r = _BY_KEY["curated_catalog_exists"]
         return ScreenResult(r.key, LOSES_TO_CATALOG,
                             "a curated catalog exists for this endpoint, and a learned scorer has been "

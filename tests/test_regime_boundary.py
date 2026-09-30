@@ -112,3 +112,47 @@ def test_bad_axis_values_are_refused_not_guessed():
 def test_classify_regime_is_exact_not_fuzzy():
     assert classify_regime("NATURAL", "Organism", "ZERO_SHOT").key == "natural_organism_zeroshot"
     assert classify_regime("natural", "organism", "deterministic_catalog") is None
+
+
+def test_the_catalog_result_is_about_REPLACING_a_catalog_not_complementing_it():
+    """MY OWN OVER-COMPRESSION, inside the module that exists to prevent it (fixed 2026-09-30).
+
+    `screen_proposal` short-circuited to LOSES_TO_CATALOG for ANY learned method whenever a catalog
+    existed. That is the measured truth about REPLACING a catalog (ESM 0.454 vs catalog 0.926) -- but it
+    was also being returned for a blind-spot COMPLEMENT, which is the one shape now measured to WORK
+    (supervised genotype tokens, 0.8142 leave-one-study-out on the catalog-NEGATIVE subset).
+    """
+    replace = screen_proposal("natural", "molecular", "supervised",
+                              curated_catalog_exists=True, target="replace")
+    assert replace.verdict == LOSES_TO_CATALOG, "replacing a catalog is still measured to lose"
+
+    complement = screen_proposal("natural", "molecular", "supervised",
+                                 curated_catalog_exists=True, target="blind_spot_complement")
+    assert complement.verdict == WORKS
+    assert complement.regime == "natural_molecular_supervised_blindspot"
+    assert "blind" in complement.evidence.lower() or "blind" in complement.reason.lower()
+
+
+def test_a_ZERO_SHOT_complement_still_loses_because_that_is_what_was_measured():
+    """The scoping must not become a blanket exemption for anything labelled 'complement'. Zero-shot ESM2
+    was measured ON the blind spot and FAILED there (0.4485 against a >=0.65 bar), so it must still lose
+    -- reached via the regime match rather than the short-circuit, but the verdict is the same."""
+    r = screen_proposal("natural", "molecular", "zero_shot",
+                        curated_catalog_exists=True, target="blind_spot_complement")
+    assert r.verdict == LOSES_TO_CATALOG
+
+
+def test_an_unknown_target_is_refused_rather_than_silently_treated_as_replace():
+    """A typo'd target must not quietly inherit the refusing default."""
+    r = screen_proposal("natural", "molecular", "supervised",
+                        curated_catalog_exists=True, target="complement")   # not the real token
+    assert r.verdict == "UNKNOWN" and "target" in r.reason
+
+
+def test_the_supervised_blindspot_row_cites_an_artifact_that_exists():
+    """Same rule the map already enforces elsewhere: a regime cannot certify itself from prose."""
+    from pathlib import Path
+    r = classify_regime("natural", "molecular", "supervised")
+    assert r is not None
+    assert (Path(__file__).resolve().parent.parent / r.artifact).exists(), \
+        f"cited artifact missing: {r.artifact}"

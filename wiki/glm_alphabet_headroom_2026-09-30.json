@@ -1,0 +1,190 @@
+{
+  "schema": "glm-alphabet-headroom-v1",
+  "date": "2026-09-30",
+  "question": "does a SUPERVISED model over position-resolved genotype tokens clear the SAME pre-registered bar that ZERO-SHOT ESM2-650M failed, on the SAME catalog blind spot?",
+  "preregistered_bar": {
+    "source": "wiki/hiv_esm_vs_catalog_2026-07-09.json :: pass_bar",
+    "rule_verbatim": "esm>=0.65 AND esm>burden AND null<0.55",
+    "rule_as_applied": "score>=0.65 AND score>burden AND null<0.55",
+    "generalisation": "subject widened from 'esm' to any scoring method; NO threshold altered",
+    "min_auroc": 0.65,
+    "must_beat_burden": true,
+    "max_null_auroc": 0.55,
+    "zero_shot_result_being_compared": {
+      "esm_mean_damage_auroc": 0.4485,
+      "n": 1111,
+      "n_resistant": 53,
+      "passed": false
+    }
+  },
+  "pipeline_anchor": "ESM2 on the non-Full catalog-negative subset = 0.4485 vs committed 0.4485 (REPRODUCES, tol 0.02)",
+  "honest_scope": "A linear model over one-hot substitution tokens is the WEAKEST member of the supervised family, so a pass is a FLOOR on that family, not a ceiling, and says nothing about whether context/attention helps. In-distribution to the Stanford knowledge base. One drug (EFV), one gene (RT), one label cutoff.",
+  "cells": [
+    {
+      "dataset": "validation",
+      "n_blind_spot": 1111,
+      "n_resistant": 53,
+      "n_susceptible": 1058,
+      "n_features": 491,
+      "base_rate": 0.0477,
+      "cutoff_fold": 3.0,
+      "zero_shot_esm2_650m_auroc": 0.4485,
+      "mutation_burden_auroc": 0.4655,
+      "shuffled_null_auroc": 0.5101,
+      "supervised_genotype_tokens_auroc": {
+        "ungrouped_stratified_5fold_OPTIMISTIC": 0.8446
+      },
+      "strictest_supervised_auroc": 0.8446,
+      "strictest_split": "ungrouped_stratified_5fold_OPTIMISTIC",
+      "verdict_supervised": "PASS",
+      "verdict_zero_shot": "FAIL_BELOW_MIN_AUROC",
+      "delta_supervised_minus_zero_shot": 0.3961,
+      "top_resistance_features_full_fit": [
+        {
+          "token": "179D",
+          "coef": 2.466,
+          "n_carriers": 20
+        },
+        {
+          "token": "103S",
+          "coef": 2.146,
+          "n_carriers": 7
+        },
+        {
+          "token": "98G",
+          "coef": 1.888,
+          "n_carriers": 41
+        },
+        {
+          "token": "101E",
+          "coef": 1.611,
+          "n_carriers": 25
+        },
+        {
+          "token": "294T",
+          "coef": 1.324,
+          "n_carriers": 29
+        },
+        {
+          "token": "221Y",
+          "coef": 1.167,
+          "n_carriers": 19
+        },
+        {
+          "token": "190C",
+          "coef": 1.157,
+          "n_carriers": 2
+        },
+        {
+          "token": "245T",
+          "coef": 1.154,
+          "n_carriers": 19
+        },
+        {
+          "token": "74V",
+          "coef": 1.117,
+          "n_carriers": 32
+        },
+        {
+          "token": "177N",
+          "coef": 1.109,
+          "n_carriers": 9
+        },
+        {
+          "token": "219E",
+          "coef": 0.996,
+          "n_carriers": 56
+        },
+        {
+          "token": "181V",
+          "coef": 0.941,
+          "n_carriers": 10
+        }
+      ]
+    },
+    {
+      "dataset": "full",
+      "n_blind_spot": 1883,
+      "n_resistant": 201,
+      "n_susceptible": 1682,
+      "n_features": 706,
+      "base_rate": 0.1067,
+      "cutoff_fold": 3.0,
+      "zero_shot_esm2_650m_auroc": 0.475,
+      "mutation_burden_auroc": 0.3946,
+      "shuffled_null_auroc": 0.4695,
+      "supervised_genotype_tokens_auroc": {
+        "leave_one_study_out": 0.8142,
+        "patient_grouped": 0.8223
+      },
+      "strictest_supervised_auroc": 0.8142,
+      "strictest_split": "leave_one_study_out",
+      "verdict_supervised": "PASS",
+      "verdict_zero_shot": "FAIL_BELOW_MIN_AUROC",
+      "delta_supervised_minus_zero_shot": 0.3392,
+      "top_resistance_features_full_fit": [
+        {
+          "token": "103S",
+          "coef": 2.693,
+          "n_carriers": 13
+        },
+        {
+          "token": "179D",
+          "coef": 2.078,
+          "n_carriers": 32
+        },
+        {
+          "token": "101E",
+          "coef": 1.948,
+          "n_carriers": 54
+        },
+        {
+          "token": "98G",
+          "coef": 1.79,
+          "n_carriers": 84
+        },
+        {
+          "token": "230I",
+          "coef": 1.788,
+          "n_carriers": 5
+        },
+        {
+          "token": "190C",
+          "coef": 1.767,
+          "n_carriers": 7
+        },
+        {
+          "token": "101Q",
+          "coef": 1.407,
+          "n_carriers": 43
+        },
+        {
+          "token": "138Q",
+          "coef": 1.379,
+          "n_carriers": 8
+        },
+        {
+          "token": "179E",
+          "coef": 1.32,
+          "n_carriers": 19
+        },
+        {
+          "token": "103H",
+          "coef": 1.262,
+          "n_carriers": 2
+        },
+        {
+          "token": "234I",
+          "coef": 1.223,
+          "n_carriers": 7
+        },
+        {
+          "token": "334H",
+          "coef": 1.22,
+          "n_carriers": 22
+        }
+      ]
+    }
+  ],
+  "refused": []
+}
