@@ -77,8 +77,8 @@ _AA3TO1 = {"Ala": "A", "Arg": "R", "Asn": "N", "Asp": "D", "Cys": "C", "Gln": "Q
            "His": "H", "Ile": "I", "Leu": "L", "Lys": "K", "Met": "M", "Phe": "F", "Pro": "P", "Ser": "S",
            "Thr": "T", "Trp": "W", "Tyr": "Y", "Val": "V"}
 _BASES = "TCAG"
-_CODON = dict(zip([a + b + c for a in _BASES for b in _BASES for c in _BASES],
-                  "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"))
+# Canonical, clade-aware genetic code (was derived from a compressed AAs string here).
+from dna_decode.constraints.codon_tables import STANDARD as _CODON
 
 
 def _translate(dna: str) -> str:
