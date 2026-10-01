@@ -105,14 +105,20 @@ REGIMES: tuple[Regime, ...] = (
     # supervised -- applied to the map itself. Measured on the IDENTICAL isolate set with the IDENTICAL
     # pre-registered bar the zero-shot arm failed.
     Regime("natural_molecular_supervised_blindspot", "natural", "molecular", "supervised", WORKS,
-           "HIV NNRTI catalog blind spot: supervised genotype-token model 0.8142 leave-one-STUDY-out "
-           "(PASS) vs the SAME bar zero-shot ESM2 failed at 0.4485 -- delta +0.339",
+           "HIV catalog blind spot, now on THREE genes: supervised genotype-token model 0.8102 (RT/EFV) "
+           "and 0.8923 (integrase/RAL) leave-one-STUDY-out, both PASSING the bar zero-shot ESM2 failed "
+           "at 0.4485; generalizes across 7 of 8 RT drugs. Protease is UNSCOREABLE -- its own catalog "
+           "calls 74.2% positive, leaving 3 R of 910 in its blind spot",
            "wiki/glm_alphabet_headroom_2026-09-30.md",
            "SCOPED TO THE BLIND SPOT, not to replacing the catalog: the subset is catalog-NEGATIVE by "
            "construction, so the model cannot be rediscovering the catalog, and it still does NOT beat "
-           "the catalog's 0.926 full-cohort AUC. A LINEAR model over one-hot substitution tokens is the "
-           "weakest member of the supervised family, so this is a FLOOR on that family and says nothing "
-           "about whether attention/context adds anything."),
+           "the catalog's 0.926 full-cohort AUC. The LINEAR one-hot model was called a FLOOR on the "
+           "supervised family until 2026-09-30; it is now MEASURED to be the CEILING for this feature "
+           "space -- pairwise interactions and a non-linear learner both LOSE on both genes (4 of 4 "
+           "negative, 2 with a CI entirely below zero; wiki/hiv_context_vs_linear_floor_2026-09-30.md), "
+           "corroborating the independent 2026-07-11 epistasis negative. That is NOT 'resistance is "
+           "additive' (capacity may be unaffordable at this sample size) and does NOT test attention "
+           "over RAW SEQUENCE, which remains unmeasured. All three genes are ONE virus."),
 )
 
 # Where a learned layer is pointed. The catalog-beats-learning result is about REPLACING a catalog; it was

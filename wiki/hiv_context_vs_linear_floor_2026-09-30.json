@@ -1,0 +1,149 @@
+{
+  "schema": "hiv-context-vs-linear-floor-v1",
+  "date": "2026-09-30",
+  "question": "The shipped supervised blind-spot complement is logistic regression over one-hot substitution tokens -- an ADDITIVE model, the weakest member of the supervised family. Its leave-one-STUDY-out blind-spot AUROC (RT 0.8102, IN 0.8923) is therefore a FLOOR, not a ceiling. Does a CONTEXT-aware estimator beat it on the same data, same split, same subset, same bar?",
+  "frozen_bar": "wiki/hiv_context_vs_linear_floor_acceptance_bar.json",
+  "floor_artifact": "wiki/hiv_deployability_per_gene_2026-09-30.json",
+  "anchor": {
+    "NNRTI": {
+      "floor_measured": 0.8102,
+      "floor_reproduced_here": 0.8102,
+      "delta": 0.0,
+      "reproduces": true
+    },
+    "INSTI": {
+      "floor_measured": 0.8923,
+      "floor_reproduced_here": 0.8923,
+      "delta": 0.0,
+      "reproduces": true
+    }
+  },
+  "verdict": "LINEAR_FLOOR_IS_THE_CEILING",
+  "min_gain": 0.02,
+  "winning_estimators_per_gene": {
+    "NNRTI": [],
+    "INSTI": []
+  },
+  "rule": "no context estimator clears +0.02 with a CI-positive delta on either gene",
+  "prior_evidence": {
+    "artifact": "wiki/hiv_epistasis_result_2026-07-11.json",
+    "verdict": "FAIL_ADDITIVE_SUFFICES",
+    "fraction_ci_positive": 0.083
+  },
+  "honest_scope": [
+    "IN-DISTRIBUTION to the Stanford knowledge base; ~96% subtype B.",
+    "Leave-one-study-out is the out-of-distribution split, NOT an independent cohort.",
+    "The fold labels are right-censored at 100.0 (wiki/hiv_fold_censoring_audit_2026-09-22). The binary label is a threshold at fold >= 3, far below the ceiling, and EVERY estimator sees the identical labels, so censoring cannot favour one arm.",
+    "Two genes of ONE virus. A negative here does not generalise to other pathogens.",
+    "'Context' here means interactions among substitution tokens. It does NOT test a sequence model over raw residues, which is a different and more expensive question.",
+    "The claim is scoped to THIS FEATURE SPACE at THIS SAMPLE SIZE under THIS split. With ~1063 (RT) / 405 (IN) one-hot features and 1883 / 844 blind-spot isolates, added capacity may simply be unaffordable out-of-distribution -- that is a different statement from 'HIV resistance is additive', which this does NOT establish.",
+    "It does NOT test a sequence model over raw residues. 'Context' here means interactions among substitution tokens; attention over the raw sequence is a different, costlier question this cannot answer."
+  ],
+  "named_limitations": [
+    "PAIR SELECTION IS BY PREVALENCE, which handicaps the pairwise arm. `build_pairs` ranks candidate pairs by co-occurrence among the top-40 most PREVALENT tokens; in an NNRTI cohort of treatment-experienced patients those are dominated by NRTI thymidine-analogue mutations (41L/210W/215Y) and M184V -- real epistatic biology, but NOT efavirenz drivers. So the pairwise delta is a statement about prevalent-token pairs, not about the most PREDICTIVE pairs. The general claim therefore rests on the NON-LINEAR arm, which sees every feature and can form any interaction, and which also lost on both genes.",
+    "That the top pairs ARE canonical biology is what makes the negative strong rather than weak: the construction found genuine interactions and they still did not help.",
+    "A cheap unexplored follow-up, if anyone wants to push: select pairs by univariate association with the label rather than by prevalence. Not run here."
+  ],
+  "what_a_negative_licenses": "shipping the linear complement as-is, with the floor documented as the measured ceiling for this feature space -- which closes candidate row 5 rather than leaving it open indefinitely. It would NOT license a claim about attention over raw SEQUENCE, which these token features cannot test.",
+  "cells": {
+    "NNRTI": {
+      "class": "NNRTI",
+      "gene": "RT",
+      "n": 4222,
+      "blind_spot_n": 1883,
+      "blind_spot_R": 201,
+      "blind_spot_S": 1682,
+      "n_features_linear": 1063,
+      "n_studies": 84,
+      "n_pairs_kept": 400,
+      "top_pairs_by_cooccurrence": [
+        "(41, 'L'):(215, 'Y')",
+        "(184, 'V'):(41, 'L')",
+        "(41, 'L'):(210, 'W')",
+        "(211, 'K'):(41, 'L')",
+        "(215, 'Y'):(210, 'W')",
+        "(184, 'V'):(211, 'K')",
+        "(184, 'V'):(215, 'Y')",
+        "(41, 'L'):(67, 'N')"
+      ],
+      "n_features_pairwise": 1463,
+      "blind_spot_auroc": {
+        "linear_floor": 0.8102,
+        "pairwise": 0.7796,
+        "nonlinear": 0.8034
+      },
+      "overall_auroc": {
+        "linear_floor": 0.9545,
+        "pairwise": 0.9407,
+        "nonlinear": 0.9398
+      },
+      "delta_vs_floor": {
+        "pairwise": {
+          "delta": -0.0305,
+          "ci_lo": -0.0502,
+          "ci_hi": -0.0113,
+          "n_boot": 2000,
+          "ci_positive": false
+        },
+        "nonlinear": {
+          "delta": -0.0068,
+          "ci_lo": -0.0274,
+          "ci_hi": 0.0124,
+          "n_boot": 2000,
+          "ci_positive": false
+        }
+      },
+      "status": "SCORED"
+    },
+    "INSTI": {
+      "class": "INSTI",
+      "gene": "IN",
+      "n": 1690,
+      "blind_spot_n": 844,
+      "blind_spot_R": 59,
+      "blind_spot_S": 785,
+      "n_features_linear": 405,
+      "n_studies": 69,
+      "n_pairs_kept": 400,
+      "top_pairs_by_cooccurrence": [
+        "(101, 'I'):(201, 'I')",
+        "(113, 'V'):(234, 'V')",
+        "(101, 'I'):(31, 'I')",
+        "(201, 'I'):(125, 'A')",
+        "(101, 'I'):(125, 'A')",
+        "(201, 'I'):(31, 'I')",
+        "(101, 'I'):(17, 'N')",
+        "(101, 'I'):(11, 'D')"
+      ],
+      "n_features_pairwise": 805,
+      "blind_spot_auroc": {
+        "linear_floor": 0.8923,
+        "pairwise": 0.879,
+        "nonlinear": 0.8362
+      },
+      "overall_auroc": {
+        "linear_floor": 0.9668,
+        "pairwise": 0.9611,
+        "nonlinear": 0.9335
+      },
+      "delta_vs_floor": {
+        "pairwise": {
+          "delta": -0.0133,
+          "ci_lo": -0.0429,
+          "ci_hi": 0.0105,
+          "n_boot": 2000,
+          "ci_positive": false
+        },
+        "nonlinear": {
+          "delta": -0.0562,
+          "ci_lo": -0.0972,
+          "ci_hi": -0.0125,
+          "n_boot": 2000,
+          "ci_positive": false
+        }
+      },
+      "status": "SCORED"
+    }
+  },
+  "refused": {}
+}
