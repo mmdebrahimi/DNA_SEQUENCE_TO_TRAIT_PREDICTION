@@ -1,0 +1,50 @@
+{
+  "schema": "hiv-context-vs-floor-bar-v1",
+  "frozen": "2026-09-30",
+  "frozen_before_any_number_was_seen": true,
+  "question": "The shipped supervised blind-spot complement is logistic regression over one-hot substitution tokens -- an ADDITIVE model, the weakest member of the supervised family. Its leave-one-STUDY-out blind-spot AUROC (RT 0.8102, IN 0.8923) is therefore a FLOOR, not a ceiling. Does a CONTEXT-aware estimator beat it on the same data, same split, same subset, same bar?",
+
+  "prior_evidence_stated_up_front": {
+    "artifact": "wiki/hiv_epistasis_result_2026-07-11.json",
+    "verdict": "FAIL_ADDITIVE_SUFFICES",
+    "detail": "constrained pairwise-interaction vs additive on Stanford fold-change: 2 of 24 powered drug-cells CI-positive (8.3%)",
+    "why_this_run_is_not_a_duplicate": "that run scored the CONTINUOUS log10 fold-change on the FULL cohort under plain KFold. This run scores the BLIND-SPOT subset (catalog-negative isolates) as CLASSIFICATION under leave-one-STUDY-out -- the framing the shipped deployability number actually uses. The blind spot is where the catalog is silent, so it is enriched for non-canonical and accessory patterns, which is precisely where interactions could matter and where the earlier run never looked. It also adds a NON-LINEAR learner, not only explicit pairs.",
+    "expectation": "the prior makes a large win UNLIKELY. This bar is written so that a negative is a publishable closure of the question rather than a shrug, and so a small positive cannot be inflated."
+  },
+
+  "design": {
+    "genes": ["RT (EFV)", "IN (RAL)"],
+    "pi_excluded_and_why": "PI's blind spot holds 3 R of 910 -- unscoreable (wiki/hiv_deployability_per_gene_2026-09-30.json)",
+    "split": "GroupKFold by RefID (leave-one-STUDY-out), IDENTICAL to the deployability harness",
+    "metric": "blind-spot AUROC on the catalog-negative subset -- the deployable number, not the overall AUROC",
+    "fairness": "every estimator sees the SAME rows, the SAME folds and the SAME blind-spot mask; only the estimator differs",
+    "estimators": {
+      "linear_floor": "LogisticRegression on one-hot substitution tokens (the shipped model)",
+      "pairwise": "one-hot + co-occurrence-floored pairwise interactions (reusing hiv_epistasis.build_pairs/augment), same LogisticRegression",
+      "nonlinear": "HistGradientBoostingClassifier on the same one-hot -- captures higher-order structure automatically rather than only explicit pairs"
+    }
+  },
+
+  "anchor": {
+    "rule": "the linear_floor arm must reproduce the measured deployability AUROC per gene within 0.02 (RT 0.8102, IN 0.8923)",
+    "on_miss": "REFUSE the whole comparison (exit 3). A context-vs-floor delta measured against a floor that does not reproduce is not a comparison."
+  },
+
+  "verdict_rule": {
+    "CONTEXT_BEATS_FLOOR": "the best context estimator improves blind-spot AUROC by >= +0.02 AND its paired-bootstrap 95% CI lower bound on the delta is > 0, on BOTH genes",
+    "CONTEXT_HELPS_ONE_GENE_ONLY": "the above holds on exactly one gene",
+    "LINEAR_FLOOR_IS_THE_CEILING": "no context estimator clears +0.02 with a CI-positive delta on either gene",
+    "UNDERPOWERED": "a gene's blind spot has fewer than 10 of either class, or no estimator arm completed",
+    "note": "the +0.02 threshold is the same tolerance the anchor uses, so a 'win' must exceed the noise band within which the floor itself is considered reproduced. Deltas are reported per gene regardless of verdict."
+  },
+
+  "what_a_negative_would_license": "shipping the linear complement as-is, with the floor documented as the measured ceiling for this feature space -- which closes candidate row 5 rather than leaving it open indefinitely. It would NOT license a claim about attention over raw SEQUENCE, which these token features cannot test.",
+
+  "honest_scope": [
+    "IN-DISTRIBUTION to the Stanford knowledge base; ~96% subtype B.",
+    "Leave-one-study-out is the out-of-distribution split, NOT an independent cohort.",
+    "The fold labels are right-censored at 100.0 (wiki/hiv_fold_censoring_audit_2026-09-22). The binary label is a threshold at fold >= 3, far below the ceiling, and EVERY estimator sees the identical labels, so censoring cannot favour one arm.",
+    "Two genes of ONE virus. A negative here does not generalise to other pathogens.",
+    "'Context' here means interactions among substitution tokens. It does NOT test a sequence model over raw residues, which is a different and more expensive question."
+  ]
+}
