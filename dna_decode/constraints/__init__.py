@@ -25,22 +25,24 @@ from __future__ import annotations
 
 from dna_decode.constraints.codon_tables import (
     STANDARD,
-    STOPS,
+    STANDARD_STOPS,
     TABLE_IDS,
     TABLES,
     UnknownCladeError,
     UnverifiedTableError,
+    stops_for,
     table_for,
     table_meta,
 )
 
 __all__ = [
     "STANDARD",
-    "STOPS",
+    "STANDARD_STOPS",
     "TABLE_IDS",
     "TABLES",
     "UnknownCladeError",
     "UnverifiedTableError",
+    "stops_for",
     "table_for",
     "table_meta",
 ]

@@ -33,6 +33,7 @@ from dna_decode.constraints.registry import (
     SATISFIED,
     SOURCED,
     Constraint,
+    ConstraintConflictError,
     ConstraintVerdict,
     register,
 )
@@ -90,8 +91,10 @@ def register_specializations() -> tuple[Constraint, ...]:
     for c in genetic_code_specializations():
         try:
             out.append(register(c))
-        except Exception:
+        except ConstraintConflictError:          # already registered -> keep the existing one
             out.append(c)
+        # NOT `except Exception`: that swallowed UnsourcedConstraintError and made the provenance
+        # gate's own helper fail OPEN on a constraint it had actually refused.
     return tuple(out)
 
 

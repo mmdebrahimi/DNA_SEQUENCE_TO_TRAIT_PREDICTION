@@ -14,7 +14,11 @@ PRE_CHANGE_AGA = "R"
 
 def test_standard_is_64_codons_with_the_three_canonical_stops():
     assert len(T.STANDARD) == 64
-    assert sorted(T.STOPS) == ["TAA", "TAG", "TGA"]
+    assert sorted(T.STANDARD_STOPS) == ["TAA", "TAG", "TGA"]
+    # clade-aware accessor: table 4 loses TGA, table 2 gains AGA/AGG
+    assert "TGA" not in T.stops_for("bacteria.mycoplasma")
+    assert {"AGA", "AGG"} <= T.stops_for("mitochondrion.vertebrate")
+    assert sorted(T.stops_for("standard")) == ["TAA", "TAG", "TGA"]
 
 
 def test_standard_matches_the_pre_change_literals():

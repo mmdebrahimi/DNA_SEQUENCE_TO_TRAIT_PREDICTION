@@ -170,8 +170,15 @@ def main(argv=None) -> int:
         "no_internal_stop_codon":
             "curated references carry no internal stop under their own code",
     }
+    # NO GENERIC DEFAULT. A `.get(key, "inert on curated reference input")` fallback auto-acknowledged
+    # any NEW inert law, which made `assert_no_silent_inert()` structurally unable to raise inside this
+    # probe -- the exact shape of the two guards this repo already retracted, reproduced by the very
+    # script written to prevent it. Measured: with the default in place, injecting an inert law printed
+    # "every inert law carries an explicit reason" and returned 0. Now an unlisted inert law falls
+    # through to the assertion and fails the probe.
     for key in report.inert_keys():
-        report.acknowledge_inert(key, acknowledgements.get(key, "inert on curated reference input"))
+        if key in acknowledgements:
+            report.acknowledge_inert(key, acknowledgements[key])
 
     # ----- print -----
     print(f"\n{'constraint':36s} {'eval':>6s} {'refuted':>8s} {'satisf':>7s} {'inappl':>7s}  status")

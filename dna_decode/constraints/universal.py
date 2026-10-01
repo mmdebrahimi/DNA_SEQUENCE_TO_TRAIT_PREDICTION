@@ -31,6 +31,7 @@ from dna_decode.constraints.registry import (
     SATISFIED,
     UNIVERSAL,
     Constraint,
+    ConstraintConflictError,
     ConstraintVerdict,
     register,
 )
@@ -186,8 +187,11 @@ def register_universal() -> tuple[Constraint, ...]:
     for c in UNIVERSAL_CONSTRAINTS:
         try:
             out.append(register(c))
-        except Exception:                        # already registered -> keep the existing one
+        except ConstraintConflictError:          # already registered -> keep the existing one
             out.append(c)
+        # NOTE: deliberately NOT `except Exception`. A bare catch here also swallowed
+        # UnsourcedConstraintError, so the provenance gate's own helper could not distinguish
+        # "already registered" from "REFUSED for missing provenance" -- it failed OPEN.
     return tuple(out)
 
 

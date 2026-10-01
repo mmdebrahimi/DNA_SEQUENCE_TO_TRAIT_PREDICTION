@@ -157,4 +157,13 @@ MYCOPLASMA_SPIROPLASMA: dict[str, str] = _decode(TABLES[4])
 CILIATE_NUCLEAR: dict[str, str] = _decode(TABLES[6])
 BACTERIAL_PLASTID: dict[str, str] = _decode(TABLES[11])
 
-STOPS: frozenset[str] = frozenset(c for c, aa in STANDARD.items() if aa == "*")
+#: Stop codons UNDER THE STANDARD CODE ONLY. The name carries the scope deliberately: an unqualified
+#: `STOPS` was the clade-blind trap this module exists to remove, surviving in its one derived constant --
+#: `TGA` is in it but is TRYPTOPHAN under table 4, and `AGA`/`AGG` are absent from it but ARE stops under
+#: table 2. Use `stops_for(clade)` whenever a clade is known.
+STANDARD_STOPS: frozenset[str] = frozenset(c for c, aa in STANDARD.items() if aa == "*")
+
+
+def stops_for(clade: str) -> frozenset[str]:
+    """The stop codons for `clade`'s genetic code. Refuses an unknown clade, like `table_for`."""
+    return frozenset(c for c, aa in table_for(clade).items() if aa == "*")
