@@ -39,16 +39,8 @@ HIV_RAW = REPO / "data" / "raw" / "hiv"
 HIV_REF = REPO / "data" / "hiv_ref"
 
 # Standard genetic code (DNA codons -> 1-letter aa; '*' = stop).
-CODON = {
-    "TTT": "F", "TTC": "F", "TTA": "L", "TTG": "L", "CTT": "L", "CTC": "L", "CTA": "L", "CTG": "L",
-    "ATT": "I", "ATC": "I", "ATA": "I", "ATG": "M", "GTT": "V", "GTC": "V", "GTA": "V", "GTG": "V",
-    "TCT": "S", "TCC": "S", "TCA": "S", "TCG": "S", "CCT": "P", "CCC": "P", "CCA": "P", "CCG": "P",
-    "ACT": "T", "ACC": "T", "ACA": "T", "ACG": "T", "GCT": "A", "GCC": "A", "GCA": "A", "GCG": "A",
-    "TAT": "Y", "TAC": "Y", "TAA": "*", "TAG": "*", "CAT": "H", "CAC": "H", "CAA": "Q", "CAG": "Q",
-    "AAT": "N", "AAC": "N", "AAA": "K", "AAG": "K", "GAT": "D", "GAC": "D", "GAA": "E", "GAG": "E",
-    "TGT": "C", "TGC": "C", "TGA": "*", "TGG": "W", "CGT": "R", "CGC": "R", "CGA": "R", "CGG": "R",
-    "AGT": "S", "AGC": "S", "AGA": "R", "AGG": "R", "GGT": "G", "GGC": "G", "GGA": "G", "GGG": "G",
-}
+# Canonical genetic code (was a literal copy of NCBI table 1 here); alias preserved.
+from dna_decode.constraints.codon_tables import STANDARD as CODON
 AAS = sorted(set(CODON.values()) - {"*"})
 CODONS_FOR = {aa: [c for c, a in CODON.items() if a == aa] for aa in set(CODON.values())}
 
