@@ -145,19 +145,33 @@ def test_the_builder_REFUSES_when_the_anchor_did_not_bind(tmp_path, monkeypatch)
         B.deployability_block("INSTI")
 
 
+# The commit immediately BEFORE this correction. Pinned deliberately: the first version of the guard below
+# compared against `HEAD`, which passed while the work was uncommitted and then FAILED the moment it was
+# committed -- HEAD had become the corrected state, so "only deployability changed" became "nothing
+# changed". A guard that asserts a diff needs a FIXED baseline, not a moving one.
+PRE_CORRECTION_COMMIT = "b67ee2f"
+
+
 def test_the_scorer_weights_are_untouched_by_the_correction():
     """This changed a DISCLOSURE, not a model: every complement must score exactly as before."""
     import subprocess
+    checked = 0
     for cls, path in MODELS.items():
         rel = str(path.relative_to(REPO)).replace("\\", "/")
-        old = subprocess.run(["git", "show", f"HEAD:{rel}"], capture_output=True, text=True, cwd=REPO)
+        old = subprocess.run(["git", "show", f"{PRE_CORRECTION_COMMIT}:{rel}"],
+                             capture_output=True, text=True, cwd=REPO)
         if old.returncode != 0:
-            pytest.skip(f"{rel} not in HEAD")
+            pytest.skip(f"{PRE_CORRECTION_COMMIT} unreachable (shallow clone?)")
         o, n = json.loads(old.stdout), _model(cls)
         assert o["weights"] == n["weights"], f"{cls}: weights changed"
         assert o["intercept"] == n["intercept"], f"{cls}: intercept changed"
         changed = {k for k in set(o) | set(n) if o.get(k) != n.get(k)}
         assert changed == {"deployability"}, f"{cls}: unexpected fields changed: {changed}"
+        # Non-vacuity: the baseline must actually be the PRE-correction state, or this proves nothing.
+        assert o["deployability"] == {"leave_study_out_blindspot_auroc": pytest.approx(
+            G.SUPERSEDED_LITERALS[cls])}, f"{cls}: {PRE_CORRECTION_COMMIT} is not the pre-correction state"
+        checked += 1
+    assert checked == 3, "all three complements must be compared"
 
 
 def test_no_memo_or_module_restates_an_unsourced_089_for_pi():
