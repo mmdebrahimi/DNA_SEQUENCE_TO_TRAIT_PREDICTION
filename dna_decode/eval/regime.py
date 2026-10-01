@@ -118,7 +118,7 @@ REGIMES: tuple[Regime, ...] = (
            "negative, 2 with a CI entirely below zero; wiki/hiv_context_vs_linear_floor_2026-09-30.md), "
            "corroborating the independent 2026-07-11 epistasis negative. That is NOT 'resistance is "
            "additive' (capacity may be unaffordable at this sample size) and does NOT test attention "
-           "over RAW SEQUENCE, which remains unmeasured. All three genes are ONE virus."),
+           "over RAW SEQUENCE, which remains unmeasured. All three genes are ONE virus. ALSO CLOSED 2026-10-01: the ORTHOGONAL-MODALITY lever has no room either -- one-hot's blindness to zero-training-signal columns is real (coefficients measured at exactly 0.0) but ABSORBED by per-isolate redundancy (median 1 blind column of 12), so the model scores slightly BETTER where it is blind (0.8229 vs 0.8163); see wiki/hiv_onehot_unseen_headroom_2026-10-01.md. A modality adds where the incumbent representation is STARVED of signal, not where it is merely blind in principle -- which is why the forward cell's single-variant modality lift does not transfer here."),
 )
 
 # Where a learned layer is pointed. The catalog-beats-learning result is about REPLACING a catalog; it was

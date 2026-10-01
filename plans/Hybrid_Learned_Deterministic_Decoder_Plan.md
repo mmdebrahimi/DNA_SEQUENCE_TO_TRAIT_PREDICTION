@@ -150,5 +150,18 @@ frozen AMR surface byte-unchanged. The imputation value-add is now a deployable,
 **Remaining (user's call):**
 - **Phase 5 (genotype world-model)** — stays DEFERRED; a full generative genotype model is unnecessary — the
   simple per-tag LD imputer already clears the bar, and a learned phenotype predictor is closed.
+  **STRENGTHENED 2026-09-30 → 2026-10-01: every technical lever is now measured and none pays.** The
+  September work extended the learned SCORER from "novel-variant fallback only" to a shipped 3-gene
+  blind-spot complement (RT 0.8102 / integrase 0.8923; protease unscoreable, its catalog over-calls to
+  3 R of 910) — so the fallback is stronger than this table records. But Phase 5's own trigger ("a specific
+  gap remains that a GENOTYPE-level model uniquely fills") is measurably NOT met:
+  **capacity** loses (pairwise + non-linear, 4/4 negative, 2 with CI below zero —
+  `wiki/hiv_context_vs_linear_floor_2026-09-30.md`), **scale** regresses (650M→3B→15B), **zero-shot
+  likelihood** fails and a 1992 substitution matrix matches it, **pretrained embeddings + head** is PARTIAL
+  (loses to the catalog), and **orthogonal modality** has NO ROOM — one-hot's blindness is real (zero-signal
+  coefficients measured at exactly 0.0) but absorbed by per-isolate redundancy, median 1 blind column of 12,
+  so the model scores slightly BETTER where it is blind
+  (`wiki/hiv_onehot_unseen_headroom_2026-10-01.md`). The binding lever is **labels/arm selection**, which is
+  a user decision, not an executor task. Do not re-propose an estimator swap or a feature channel.
 - **Bank** — the hybrid question is fully answered with evidence: imputation is the deployable value-add;
   learned scoring is a bounded fallback; the deterministic decoder is the terminal product.

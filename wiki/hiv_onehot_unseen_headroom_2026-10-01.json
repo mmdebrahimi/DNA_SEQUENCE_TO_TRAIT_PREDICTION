@@ -1,0 +1,137 @@
+{
+  "schema": "hiv-onehot-unseen-headroom-v1",
+  "date": "2026-10-01",
+  "question": "one-hot treats every (position, amino-acid) pair as an INDEPENDENT column, so a substitution with no training signal gets ~zero weight. Does that blindness actually bite on the blind spot -- i.e. is there room for an orthogonal position-level prior (structure/conservation) to add anything?",
+  "frozen_rule": {
+    "frozen": "2026-10-01",
+    "frozen_before_any_number_was_seen": true,
+    "HEADROOM_EXISTS": "at least MIN_EXPOSED_FRAC of blind-spot isolates carry >=1 substitution with NO training signal in their own fold, AND the model's AUROC on that exposed stratum is at least AUROC_GAP below its AUROC on the unexposed stratum",
+    "NO_HEADROOM_ONEHOT_ALREADY_COVERS_IT": "exposure is below MIN_EXPOSED_FRAC, or the exposed stratum scores as well as the unexposed one -- a position-level prior has nothing to add and the channel should NOT be built",
+    "UNDERPOWERED": "either stratum holds fewer than MIN_STRATUM of either class",
+    "MIN_EXPOSED_FRAC": 0.2,
+    "AUROC_GAP": 0.05
+  },
+  "anchor": {
+    "NNRTI": {
+      "committed": 0.8102,
+      "here": 0.8102,
+      "reproduces": true
+    },
+    "INSTI": {
+      "committed": 0.8923,
+      "here": 0.8923,
+      "reproduces": true
+    }
+  },
+  "floor_artifact": "wiki/hiv_deployability_per_gene_2026-09-30.json",
+  "honest_scope": [
+    "IN-DISTRIBUTION to the Stanford knowledge base; ~96% subtype B.",
+    "The one-hot FEATURE SET is built globally, so a zero-training-signal column still EXISTS; what is absent is training signal, and the reported max |coef| over those columns measures the resulting blindness directly rather than assuming it.",
+    "Exposure is measured per FOLD against that fold's own training rows, which is the only honest denominator -- a globally-rare substitution may be well-covered in some folds.",
+    "This bounds the room for a position-level prior. It does NOT say such a prior would capture the room, only whether any room exists to capture."
+  ],
+  "cells": {
+    "NNRTI": {
+      "class": "NNRTI",
+      "gene": "RT",
+      "drug": "efavirenz",
+      "n": 4222,
+      "n_features": 1063,
+      "n_studies": 84,
+      "floor_blindspot_auroc": 0.8102,
+      "blind_spot_n": 1883,
+      "blind_spot_R": 201,
+      "zero_training_weight_absmax": 0.0,
+      "exposure": {
+        "frac_blindspot_with_unseen": 0.0754,
+        "mean_unseen_blindspot": 0.166,
+        "mean_unseen_R": 0.488,
+        "mean_unseen_S": 0.128,
+        "frac_R_with_unseen": 0.1244,
+        "frac_S_with_unseen": 0.0696
+      },
+      "redundancy": {
+        "mean_active_columns_per_isolate": 12.44,
+        "median_active_columns_per_isolate": 12.0,
+        "among_exposed_mean_blind_fraction": 0.1184,
+        "among_exposed_median_blind_fraction": 0.0833,
+        "among_exposed_MAX_blind_fraction": 1.0,
+        "n_isolates_majority_blind": 1,
+        "reading": "if MAX_blind_fraction is small and n_isolates_majority_blind is 0, then no isolate's signal is mostly unseen, so the surviving seen substitutions outvote the blind ones -- redundancy ABSORBS the blindness. That also predicts the blindness WOULD bite on SINGLE-mutant prediction, which is a different task."
+      },
+      "strata": {
+        "exposed": {
+          "n": 142,
+          "n_R": 25,
+          "n_S": 117,
+          "auroc": 0.8229
+        },
+        "unexposed": {
+          "n": 1741,
+          "n_R": 176,
+          "n_S": 1565,
+          "auroc": 0.8163
+        }
+      },
+      "auroc_gap_unexposed_minus_exposed": -0.0066,
+      "verdict_block": {
+        "verdict": "NO_HEADROOM_ONEHOT_ALREADY_COVERS_IT",
+        "exposed_frac": 0.0754,
+        "auroc_gap": -0.0066,
+        "needed_exposed_frac": 0.2,
+        "needed_gap": 0.05,
+        "rule": "exposure is below MIN_EXPOSED_FRAC, or the exposed stratum scores as well as the unexposed one -- a position-level prior has nothing to add and the channel should NOT be built"
+      }
+    },
+    "INSTI": {
+      "class": "INSTI",
+      "gene": "IN",
+      "drug": "raltegravir",
+      "n": 1690,
+      "n_features": 405,
+      "n_studies": 69,
+      "floor_blindspot_auroc": 0.8923,
+      "blind_spot_n": 844,
+      "blind_spot_R": 59,
+      "zero_training_weight_absmax": 0.0,
+      "exposure": {
+        "frac_blindspot_with_unseen": 0.1505,
+        "mean_unseen_blindspot": 0.187,
+        "mean_unseen_R": 0.186,
+        "mean_unseen_S": 0.187,
+        "frac_R_with_unseen": 0.1356,
+        "frac_S_with_unseen": 0.1516
+      },
+      "redundancy": {
+        "mean_active_columns_per_isolate": 7.32,
+        "median_active_columns_per_isolate": 7.0,
+        "among_exposed_mean_blind_fraction": 0.1291,
+        "among_exposed_median_blind_fraction": 0.1111,
+        "among_exposed_MAX_blind_fraction": 0.3333,
+        "n_isolates_majority_blind": 0,
+        "reading": "if MAX_blind_fraction is small and n_isolates_majority_blind is 0, then no isolate's signal is mostly unseen, so the surviving seen substitutions outvote the blind ones -- redundancy ABSORBS the blindness. That also predicts the blindness WOULD bite on SINGLE-mutant prediction, which is a different task."
+      },
+      "strata": {
+        "exposed": {
+          "n": 127,
+          "n_R": 8,
+          "n_S": 119,
+          "auroc": null,
+          "refused": "8 R / 119 S -- fewer than 10 of a class cannot support an AUROC, so NO number is reported"
+        },
+        "unexposed": {
+          "n": 717,
+          "n_R": 51,
+          "n_S": 666,
+          "auroc": 0.9168
+        }
+      },
+      "auroc_gap_unexposed_minus_exposed": null,
+      "verdict_block": {
+        "verdict": "UNDERPOWERED",
+        "why": "a stratum could not be scored; see strata[*].refused"
+      }
+    }
+  },
+  "refused": {}
+}
