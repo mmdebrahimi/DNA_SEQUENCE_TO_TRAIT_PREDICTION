@@ -50,9 +50,11 @@ def test_a_terminal_stop_is_allowed_but_an_internal_one_is_not():
     (U.ref_base_matches_cds, {"cds": "ATGAAA", "nt_pos": 2, "ref_base": "T"}, SATISFIED),
     (U.ref_base_matches_cds, {"cds": "ATGAAA"}, INAPPLICABLE),
     (U.ref_base_matches_cds, {"cds": "ATGAAA", "nt_pos": 99, "ref_base": "T"}, REFUTED),
-    (U.start_codon_present, {"cds": CDS_CLEAN}, SATISFIED),
-    (U.start_codon_present, {"cds": "AAACCCTAA"}, REFUTED),
+    (U.start_codon_present, {"cds": CDS_CLEAN, "cds_is_complete_gene": True}, SATISFIED),
+    (U.start_codon_present, {"cds": "AAACCCTAA", "cds_is_complete_gene": True}, REFUTED),
     (U.start_codon_present, {}, INAPPLICABLE),
+    # without the completeness assertion it ABSTAINS -- see the dedicated test below
+    (U.start_codon_present, {"cds": "AAACCCTAA"}, INAPPLICABLE),
     (U.substitution_reachable_by_single_nt, {"codon": "TCG", "mut_aa": "L"}, SATISFIED),
     (U.substitution_reachable_by_single_nt, {"codon": "TGG", "mut_aa": "D"}, REFUTED),
     (U.substitution_reachable_by_single_nt, {}, INAPPLICABLE),
@@ -113,3 +115,26 @@ def test_registration_is_safe_to_call_twice():
     U.register_universal()
     again = U.register_universal()
     assert len(again) == len(U.UNIVERSAL_CONSTRAINTS)
+
+
+def test_start_codon_abstains_unless_the_caller_asserts_a_COMPLETE_gene():
+    """MEASURED CORRECTION (2026-10-01). Run over eight committed reference CDS this law refuted five,
+    and all five were CORRECT sequences: HIV RT/PR/IN/CA are in-frame extracts from the HXB2 gag/pol
+    polyprotein (beginning CCC/CCT) and SARS-CoV-2 Mpro is nsp5 cleaved from ORF1ab (beginning AGT --
+    Ser really is its mature N-terminus). A law cannot tell a truncated extract from a broken start
+    codon by looking at the sequence, and a FALSE refutation is the failure mode that would make a
+    constraint filter delete valid predictions. So the completeness claim belongs to the caller."""
+    polyprotein_extract = "CCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGAT"
+    assert U.start_codon_present({"cds": polyprotein_extract}).verdict == INAPPLICABLE
+    # the caller may still take responsibility, and then it fires
+    v = U.start_codon_present({"cds": polyprotein_extract, "cds_is_complete_gene": True})
+    assert v.verdict == REFUTED
+    # and a real complete gene passes under the same assertion
+    assert U.start_codon_present(
+        {"cds": CDS_CLEAN, "cds_is_complete_gene": True}).verdict == SATISFIED
+
+
+def test_the_abstain_reason_explains_itself_to_a_caller():
+    v = U.start_codon_present({"cds": "CCCAAATAA"})
+    assert "cds_is_complete_gene" in v.detail
+    assert "polyprotein" in v.detail

@@ -136,15 +136,27 @@ def substitution_reachable_by_single_nt(ctx: dict[str, Any]) -> ConstraintVerdic
 
 
 def start_codon_present(ctx: dict[str, Any]) -> ConstraintVerdict:
-    """The first codon must encode methionine under the clade's code.
+    """The first codon must encode methionine — but ONLY when the caller asserts a complete gene.
 
-    Scoped deliberately narrow: NCBI's tables differ in PERMITTED ALTERNATIVE starts (that is the only
-    way table 11 differs from table 1), which this layer does not model, so this checks the canonical
-    start only and abstains rather than refuting when a clade declares alternatives.
+    REQUIRES `cds_is_complete_gene=True`. Absent or False -> `inapplicable`, never refuted.
+
+    WHY, measured 2026-10-01: run over eight committed reference CDS this law refuted five of them, and
+    all five were correct sequences — HIV RT/PR/IN/CA are in-frame extracts from the HXB2 gag/pol
+    POLYPROTEIN (RT begins CCC, PR begins CCT) and SARS-CoV-2 Mpro is nsp5 cleaved from ORF1ab (begins
+    AGT; Ser really is its mature N-terminus). Only the three complete C. auris ERG11 genes began ATG.
+    A law cannot distinguish a legitimately truncated extract from a broken start codon by looking at
+    the sequence, and a FALSE refutation is the one failure mode that makes a constraint filter
+    dangerous: it would delete valid predictions. So the completeness claim belongs to the caller.
+
+    Also scoped narrow for a second reason: NCBI's tables differ in PERMITTED ALTERNATIVE starts (that
+    is the only way table 11 differs from table 1), which this layer does not model.
     """
     cds = ctx.get("cds")
     if not cds or len(cds) < 3:
         return _na("no cds supplied, or shorter than one codon")
+    if not ctx.get("cds_is_complete_gene"):
+        return _na("caller did not assert cds_is_complete_gene; a truncated or polyprotein-derived "
+                   "extract legitimately lacks a start codon, so this abstains rather than refuting")
     tab = _table(ctx)
     first = cds[:3].upper()
     if tab.get(first) == "M":

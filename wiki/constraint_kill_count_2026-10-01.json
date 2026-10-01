@@ -1,0 +1,159 @@
+{
+  "schema": "constraint-kill-count-v1",
+  "date": "2026-10-01",
+  "question": "do the universal constraints actually refute anything on real reference CDS, and is an inert constraint reported as inert rather than as protection?",
+  "pre_stated_expectation": "Over curated reference CDS most laws are predicted INERT: a committed reference already satisfies the reading frame, its own reference bases and codon accessibility. Inert is the honest outcome here and is reported as such -- the constraints are NOT to be tuned until something fails. The one law expected to be ACTIVE is no_internal_stop_codon, and only on the Mycoplasma CDS when it is scored under the WRONG (standard) code.",
+  "first_run_correction": "start_codon_present refuted 5 of 8 reference CDS on the first run, against a pre-stated expectation of inert. All five refutations were on correct sequences (polyprotein-derived extracts beginning CCC/CCT/AGT), so the EXPECTATION was wrong and the law was over-firing. It now abstains unless the caller asserts cds_is_complete_gene.",
+  "complete_genes_declared": [
+    "cauris_erg11_k143r",
+    "cauris_erg11_wt",
+    "cauris_erg11_y132f"
+  ],
+  "reference_cds_scored": [
+    "cauris_erg11_k143r",
+    "cauris_erg11_wt",
+    "cauris_erg11_y132f",
+    "hiv1_ca_hxb2",
+    "hiv1_in_hxb2",
+    "hiv1_pr_hxb2",
+    "hiv1_rt_hxb2",
+    "sarscov2_mpro"
+  ],
+  "missing_references": [],
+  "per_cds_verdicts": {
+    "hiv1_rt_hxb2": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "inapplicable"
+    },
+    "hiv1_pr_hxb2": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "inapplicable"
+    },
+    "hiv1_in_hxb2": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "inapplicable"
+    },
+    "hiv1_ca_hxb2": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "inapplicable"
+    },
+    "sarscov2_mpro": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "inapplicable"
+    },
+    "cauris_erg11_wt": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "satisfied"
+    },
+    "cauris_erg11_y132f": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "satisfied"
+    },
+    "cauris_erg11_k143r": {
+      "cds_length_multiple_of_three": "satisfied",
+      "no_internal_stop_codon": "satisfied",
+      "ref_base_matches_cds": "satisfied",
+      "substitution_reachable_by_single_nt": "inapplicable",
+      "start_codon_present": "satisfied"
+    }
+  },
+  "kill_counts": {
+    "constraints": {
+      "cds_length_multiple_of_three": {
+        "n_evaluated": 8,
+        "n_refuted": 0,
+        "n_satisfied": 8,
+        "n_inapplicable": 0,
+        "status": "inert",
+        "acknowledged_reason": "every committed reference CDS is in frame by construction; this law exists for user-supplied sequence, not for curated references"
+      },
+      "no_internal_stop_codon": {
+        "n_evaluated": 10,
+        "n_refuted": 1,
+        "n_satisfied": 9,
+        "n_inapplicable": 0,
+        "status": "active",
+        "acknowledged_reason": null
+      },
+      "ref_base_matches_cds": {
+        "n_evaluated": 8,
+        "n_refuted": 0,
+        "n_satisfied": 8,
+        "n_inapplicable": 0,
+        "status": "inert",
+        "acknowledged_reason": "the probe supplies each CDS's own first base as ref_base, so agreement is tautological here; the law earns its keep on externally supplied coordinates"
+      },
+      "start_codon_present": {
+        "n_evaluated": 3,
+        "n_refuted": 0,
+        "n_satisfied": 3,
+        "n_inapplicable": 5,
+        "status": "inert",
+        "acknowledged_reason": "evaluated only on the three COMPLETE genes (C. auris ERG11), which all begin ATG; the five polyprotein-derived extracts abstain rather than being falsely refuted"
+      },
+      "substitution_reachable_by_single_nt": {
+        "n_evaluated": 0,
+        "n_refuted": 0,
+        "n_satisfied": 0,
+        "n_inapplicable": 8,
+        "status": "not_evaluated",
+        "acknowledged_reason": null
+      }
+    },
+    "summary": {
+      "n_active": 1,
+      "n_inert": 3,
+      "n_not_evaluated": 1
+    },
+    "reading": "`inert` means the constraint ran and removed nothing -- it is NOT evidence of protection. `not_evaluated` means it never ran. The two are reported separately on purpose."
+  },
+  "clade_demo": {
+    "source": "real",
+    "label": "real_organism_cds",
+    "fixture": "data/mycoplasma_ref/Mgenitalium_G37_MG_382_udk_cds.fna",
+    "organism": "Mycoplasma genitalium G37",
+    "gene": "MG_382 udk (uridine kinase)",
+    "provenance": "NCBI nuccore L43967.2, rettype=fasta_cds_na, transl_table=4",
+    "n_internal_stops_under_table1": 5,
+    "verdict_under_standard_table": "refuted",
+    "verdict_under_clade_table": "satisfied",
+    "detail_standard": "internal stop TGA at codon 68 of 214 (clade=standard)",
+    "detail_clade": "no internal stop across 214 codons (clade=bacteria.mycoplasma)",
+    "protein_prefix_under_table4": "MDEKGILVAISGGSCSGKTTVAEMIYQLLSKKLKVAIICQ",
+    "biology_sanity_check": "the table-4 translation opens MDEKGILVAISGGSCSGKTT..., whose SGGSCSGKTT is a canonical P-loop nucleotide-binding motif, which is independent evidence the clade reading is the correct one",
+    "census": {
+      "n_false_nonsense_under_table1": 341,
+      "n_clean_cds": 476,
+      "fraction": 0.716
+    },
+    "census_reading": "341 of 476 clean real G37 CDS (71.6%) are false-nonsense under table 1 and clean under table 4, so this is not a cherry-picked gene",
+    "reproduce_census": "curl -s 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=L43967.2&rettype=fasta_cds_na&retmode=text'"
+  },
+  "honest_scope": [
+    "Inert does NOT mean protective. A law that a curated reference already satisfies removed nothing on this input; each is acknowledged with the reason it was inert here.",
+    "`inapplicable` is counted separately from `satisfied`: the probe scores whole CDS and supplies no substitution, so the reachability law could not be evaluated at all.",
+    "The clade demo is a REAL organism CDS, labelled `real`. Had the fetch failed, a synthetic sequence would have been used and labelled `synthetic`.",
+    "The census is over one organism's CDS set (M. genitalium G37); it bounds how often the table-1 assumption would misfire THERE, not across all Mycoplasma or all life."
+  ]
+}
