@@ -13,7 +13,15 @@
  "intercept": -1.85418,
  "feature_key": "<pos><aa> of a NON-WT residue (e.g. '103N'); risk = sigmoid(intercept + sum coef)",
  "deployability": {
-  "leave_study_out_blindspot_auroc": 0.89
+  "leave_study_out_blindspot_auroc": 0.8923,
+  "measured": true,
+  "artifact": "wiki/hiv_deployability_per_gene_2026-09-30.json",
+  "blind_spot_n": 844,
+  "blind_spot_R": 59,
+  "n_studies": 69,
+  "pass_rule": "imported verbatim from hiv_supervised_deployability._blindspot_metrics: AUROC >= 0.65 AND > mutation-burden AND shuffled null < 0.55",
+  "passes": true,
+  "superseded_literal": "this field shipped the literal 0.89 until 2026-09-30; measurement CONFIRMS it"
  },
  "honest_scope": "Blind-spot RANKING complement for INSTI (trained on RAL). NOT a hard R/S rule; complements \u2014 does not replace \u2014 the deployed catalog. In-distribution to Stanford; supervised (needs the free label to have been trained).",
  "weights": {

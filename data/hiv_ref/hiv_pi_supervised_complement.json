@@ -13,7 +13,17 @@
  "intercept": -3.75074,
  "feature_key": "<pos><aa> of a NON-WT residue (e.g. '103N'); risk = sigmoid(intercept + sum coef)",
  "deployability": {
-  "leave_study_out_blindspot_auroc": 0.89
+  "leave_study_out_blindspot_auroc": null,
+  "measured": false,
+  "artifact": "wiki/hiv_deployability_per_gene_2026-09-30.json",
+  "blind_spot_n": 910,
+  "blind_spot_R": 3,
+  "n_studies": 49,
+  "blind_spot_status": "UNSCOREABLE",
+  "blind_spot_S": 907,
+  "catalog_called_positive_fraction": 0.7424,
+  "reason": "the catalog-negative subset holds 3 R and 907 S; fewer than 10 of a class cannot support an AUROC, so NO number is reported (an over-calling catalog empties its own blind spot -- this is a property of the incumbent, not a failure of the complement)",
+  "superseded_literal": "this field shipped an unsourced literal 0.89 until 2026-09-30; it is NOT measurable on this substrate (see `reason`), so no number replaces it"
  },
  "honest_scope": "Blind-spot RANKING complement for PI (trained on LPV). NOT a hard R/S rule; complements \u2014 does not replace \u2014 the deployed catalog. In-distribution to Stanford; supervised (needs the free label to have been trained).",
  "weights": {

@@ -9,7 +9,7 @@ them produced confident wrong conclusions I had to retract mid-run.
 
 | | |
 |---|---|
-| leave-one-**study**-out blind-spot AUROC | **NNRTI 0.81 · PI 0.89 (LPV) · INSTI 0.89 (RAL)** |
+| leave-one-**study**-out blind-spot AUROC | **NNRTI 0.8102 (EFV) · INSTI 0.8923 (RAL) · PI no number (LPV)** — measured per gene 2026-09-30 (`wiki/hiv_deployability_per_gene_2026-09-30.json`). This row read "0.81 · PI 0.89 · INSTI 0.89"; only NNRTI was measured, PI/INSTI were unsourced literals. INSTI's is CONFIRMED; PI's blind spot holds 3 R of 910 (its catalog calls 74.2% positive) and cannot support an AUROC. |
 | `hiv_supervised_vs_catalog` | `SUPERVISED_RESCUES_BLINDSPOT` |
 | `hiv_supervised_panel` | `GENERAL_RESCUE` — 8 of 11 drugs pass a pre-registered bar |
 | `hiv_supervised_deployability` | `DEPLOYABLE_HOLDS_OOD` — train subtype B, holds on 291 non-B |

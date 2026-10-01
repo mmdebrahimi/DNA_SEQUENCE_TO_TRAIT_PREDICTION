@@ -65,8 +65,16 @@ specificity**, which is precisely what the shipped PI v0.1 work was about (`hiv_
 ## Honest limits
 
 - **Every number here is IN-DISTRIBUTION** to the Stanford knowledge base — the training rows literally so.
-  The deployable claim remains the shipped leave-one-**study**-out blind-spot AUROC (0.81 / 0.89 / 0.89);
-  the in-sample AUROCs in this run (0.94–0.99) are not it and must not be quoted as performance.
+  The deployable claim remains the shipped leave-one-**study**-out blind-spot AUROC — **corrected
+  2026-09-30 to NNRTI 0.8102 · INSTI 0.8923 · PI no number**. This line read "(0.81 / 0.89 / 0.89)", but
+  only the first was ever measured: `hiv_supervised_deployability.py` hardcodes `DRUG="EFV"` and the NNRTI
+  dataset, so the PI and INSTI figures were unsourced literals in a config dict.
+  `scripts/hiv_deployability_per_gene.py` measures every gene
+  (`wiki/hiv_deployability_per_gene_2026-09-30.json`); INSTI's 0.89 turns out **accurate** (0.8923), while
+  **PI is not measurable on this substrate** — its own catalog calls 74.2% of isolates resistant, leaving
+  3 R of 910 in its blind spot, which is the same fact this table reports as `THRESHOLD_NEVER_FIRES`.
+  The in-sample AUROCs in this run (0.94–0.99) are not the deployable claim and must not be quoted as
+  performance.
 - R/S here is a **threshold on continuous fold-change** at fold ≥ 3, not categorical AST. PI in particular
   has no per-drug clinical cutoff sourced in-repo (the `ILLUSTRATIVE_FOLD_CUTOFF` caveat), so "2 truly
   resistant" is cutoff-dependent — though the blind spot stays tiny under any nearby choice, because the

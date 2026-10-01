@@ -289,7 +289,10 @@ def target_site_doubt(drug: str, observed_by_gene: dict | None, call: str | None
     # THIRD, also complementary (2026-09-30). The two deterministic signals above are both SILENT on a
     # novel substitution at an un-catalogued position with too few carriers to screen -- measured: V179F
     # returns position_novel=False, and the purity screen needs carriers. The SHIPPED supervised complement
-    # (leave-one-study-out blind-spot AUROC 0.81 NNRTI / 0.89 PI / 0.89 INSTI) answers exactly that case and
+    # (leave-one-study-out blind-spot AUROC: MEASURED 0.8102 NNRTI / 0.8923 INSTI, and NO number for PI --
+    # its own catalog over-calls, leaving 3 R of 910 in its blind spot. This line restated an unsourced
+    # "0.89 PI / 0.89 INSTI" until 2026-09-30; each model now carries its own measured `deployability`
+    # block, so read that rather than a number restated here.) It answers exactly that case and
     # was reachable from NOWHERE before this wiring: imported only by its own builder, 0 mentions in
     # cell_registry, no CLI route. Appended, never merged -- the three answer different questions and the
     # complement is the only one of them that is IN-DISTRIBUTION rather than deterministic, so collapsing
