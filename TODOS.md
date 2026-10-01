@@ -186,6 +186,12 @@ that verdict, so it is weaker than it reads. Triage of all 34 numbers:
   records provenance but verifies little. A more specific artifact would fix it; the grade bands
   (HIGH <5%, LOW ≥50%) are asserted, not derived.
 
+## Constraint layer — deferred clade properties + follow-ups (2026-10-01)
+
+- [ ] **Four clade properties REFUSED by the provenance gate** — `splicing_applies` (eukaryote), `operon_polycistronic` (bacteria/archaea), `hgt_acquisition_possible` (bacteria), `ploidy` (eukaryote diploid+). Declared with the evidence each needs in `dna_decode/constraints/specializations.py::DEFERRED_CLADE_PROPERTIES`. Unblock = a citable per-clade statement supplying `source_url` + `verbatim_quote`; `register()` refuses a `sourced` constraint without both. **Do NOT fill these from recall** — that is the fabrication hazard the gate exists to stop (same refusal that rejected a volunteered ECOFF value).
+- [ ] **Retire the ad-hoc frozen-surface `git diff --quiet` check, or make it assert path existence first.** It was pointed at `dna_decode/data/amr_rules.py`, which does not exist (real path `dna_decode/eval/amr_rules.py`), so it exited 0 regardless. `dna_decode/eval/prospective_lock.py` sha256-pins the correct five files and is the real authority; the manual command should either be dropped or check the path resolves before claiming it is unchanged.
+- [ ] **Add a further NCBI translation table only when an organism needs it.** `constraints/codon_tables.TABLES` holds tables 1/2/4/6/11 as the verbatim NCBI `AAs`/`Base1-3` strings and DERIVES the 64-codon map, so adding one is a fetch-and-paste from `https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi` rather than hand-typing 64 entries. No shipped cell needs one today (all use standard assignments); the trigger is a non-standard-code organism entering a cell — measured impact at `wiki/constraint_kill_count_2026-10-01.json` (341 of 476 clean real *M. genitalium* G37 CDS are false-nonsense under table 1).
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.

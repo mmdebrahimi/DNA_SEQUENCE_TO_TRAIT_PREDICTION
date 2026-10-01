@@ -5,6 +5,26 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Added — a constraint layer, and the genetic code is no longer assumed universal (2026-10-01)
+
+- **NEW non-frozen package `dna_decode/constraints/`.** Two kinds of rule: `axiomatic` universal laws
+  (reading frame, mass balance, single-nt codon reachability, reference-base agreement) that transfer to an
+  uncharacterised organism by construction, and `sourced` clade facts that are **refused registration**
+  without `source_url` + `verbatim_quote`. Leaf layer — imports only `eval/regime.py`; the frozen decoder
+  surface is byte-unchanged and the prospective lock still verifies.
+- **Clade-aware genetic code.** Eleven separate copies of NCBI table 1 existed across the repo; all now
+  resolve to one object. Tables 1/2/4/6/11 are stored as the verbatim NCBI `AAs`/`Base1`/`Base2`/`Base3`
+  strings and the 64-codon map is derived, so no assignment is hand-typed. Measured impact: **341 of 476
+  (71.6%) clean real *M. genitalium* G37 CDS are false-nonsense under table 1 and clean under table 4**
+  (committed fixture under `data/mycoplasma_ref/`). Not a live defect — every shipped cell uses standard
+  assignments — but a latent assumption as the organism set widens.
+- **Kill-count reporting.** Every constraint reports what it actually refuted (`active` / `inert` /
+  `not_evaluated`), and `assert_no_silent_inert()` forces an inert filter to be acknowledged rather than
+  read as protection. Artifact: `wiki/constraint_kill_count_2026-10-01.json`.
+- Four further clade properties (splicing, operons, HGT, ploidy) are deliberately **not** shipped — the
+  provenance gate refused them — and are declared in `DEFERRED_CLADE_PROPERTIES`.
+
+
 ## [0.13.1] — the frozen decoder now says where it is MEASURED to under-call (2026-08-24)
 
 The first prospective-lock cohort exposed E. coli x gentamicin at **sens 0.429**, traced to 16S rRNA

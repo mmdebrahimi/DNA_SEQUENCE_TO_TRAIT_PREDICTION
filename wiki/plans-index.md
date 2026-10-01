@@ -577,3 +577,15 @@
 **Status:** as-built — all 5 steps ran; 3 deviations forced by measurement (HIGH band 0 -> <5%, essentiality MODERATE not LOW, citation rule admitted/rejected against expectation) plus 2 coverage defects found and deliberately left unfixed. See executed_plans/Contract_Number_Provenance_Sound_Decoy_Control_Typed_Provenance_Kinds_Plan/execution-log.md
 
 ---
+
+## [plan_file: Constraint_Hierarchy_Type_A_Laws_Clade_Specialization_And_Kill_Count_Reporting_Plan/] 2026-10-01
+**Status:** executed — archived to executed_plans/Constraint_Hierarchy_Type_A_Laws_Clade_Specialization_And_Kill_Count_Reporting_Plan/
+**Summary:** A non-frozen `constraints/` package: universal biological laws, two-axis (taxonomic x regime) specialization with explicit precedence, kill-count reporting so an inert filter can never pose as a control, and consolidation of five duplicated codon tables onto one clade-aware source.
+**Key decisions:**
+- Canonical codon table lives in a new non-frozen `dna_decode/constraints/` package (the `experimental_drug_rules.py` additive-overlay precedent); `table_for` REFUSES an unknown clade rather than defaulting to standard, because a wrong table is worse than a declared unknown.
+- NCBI translation tables 2/4/6 are `[unverified]` and gated behind `UnverifiedTableError` until each ships with `source_url` + `verbatim_quote`; only tables 1 and 11 (identical codon assignments) are usable at v1.
+- The regime axis is IMPORTED from `dna_decode/eval/regime.py` and never re-declared, so the two bucket axes cannot become a second source of truth for regime.
+- Kill-count reporting derives three states (`active` / `inert` / `not_evaluated`) and `assert_no_silent_inert()` forces acknowledgement, encoding the two historical retractions where a zero-removal filter was presented as a control.
+
+---
+
