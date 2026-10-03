@@ -13,9 +13,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+import pytest  # noqa: E402
+
 from dna_decode.eval.regime import (CLOSED_NEGATIVE, LOSES_TO_CATALOG, OPEN,  # noqa: E402
-                                    REGIMES, REQUIRES_DECONFOUNDING, WORKS, classify_regime,
-                                    screen_proposal)
+                                    ORGANISM_TRANSFER_LEVELS, ORGANISM_TRANSFER_UNMEASURED, REGIMES,
+                                    REQUIRES_DECONFOUNDING, SPLIT_UNITS, WORKS, Regime,
+                                    _transfer_rank, classify_regime,
+                                    organism_transfer_is_unmeasured, screen_proposal,
+                                    split_units_for)
 
 
 # --- the three compressions that have actually happened ---
@@ -156,3 +161,116 @@ def test_the_supervised_blindspot_row_cites_an_artifact_that_exists():
     assert r is not None
     assert (Path(__file__).resolve().parent.parent / r.artifact).exists(), \
         f"cited artifact missing: {r.artifact}"
+
+
+# --- the transfer axis (F1 Step 1): WHICH SPLIT produced each number -----------------------------
+
+def test_every_regime_declares_a_split_unit_and_it_is_REQUIRED():
+    """A row that could omit its split would ship silently unmeasured -- the failure the axis exists
+    to prevent. `split_unit` is keyword-only AND has no default, so omitting it is a TypeError."""
+    for r in REGIMES:
+        assert r.split_unit <= SPLIT_UNITS, f"{r.key} declares a split unit outside the vocabulary"
+        assert r.split_unit, f"{r.key} declares an EMPTY split_unit; use {{'none'}} to say so explicitly"
+
+    with pytest.raises(TypeError):
+        Regime("x", "natural", "organism", "zero_shot", OPEN, "ev", "wiki/x.md")   # no split_unit
+
+
+def test_organism_transfer_defaults_to_unmeasured_which_is_both_failclosed_and_true():
+    r = Regime("x", "natural", "organism", "zero_shot", OPEN, "ev", "wiki/x.md",
+               split_unit=frozenset({"none"}))
+    assert r.organism_transfer == ORGANISM_TRANSFER_UNMEASURED
+    for row in REGIMES:
+        assert row.organism_transfer in ORGANISM_TRANSFER_LEVELS
+
+
+def test_split_units_are_UNORDERED_so_the_single_ladder_cannot_reappear():
+    """THE DESIGN POINT. The first draft ranked position < study < protein < organism < clade on one
+    scale, which would let this module announce that a cross-protein split beats a leave-one-study
+    split -- a relation nobody measured. Ranking is defined ONLY over the narrow organism-transfer
+    field, so asking it to rank a split unit must fail."""
+    assert _transfer_rank("unmeasured") < _transfer_rank("held_out_organism") < \
+        _transfer_rank("held_out_clade")
+    for incomparable in ("position", "study", "protein", "condition", "none"):
+        assert incomparable in SPLIT_UNITS
+        with pytest.raises(ValueError):
+            _transfer_rank(incomparable)
+
+
+def test_organism_transfer_is_unmeasured_is_a_TRIPWIRE_not_a_frozen_count():
+    """Today every row is unmeasured. The event worth noticing is that SHRINKING, so this asserts the
+    relation (all rows) rather than the literal 8 -- a new regime must not silently satisfy it."""
+    unmeasured = organism_transfer_is_unmeasured()
+    assert set(unmeasured) == {r.key for r in REGIMES}, (
+        "a regime has acquired held-out-ORGANISM evidence -- that is the headline F1 was built to "
+        "surface. Update the plan's claim and this test deliberately, together.")
+    assert split_units_for("natural_molecular_supervised_blindspot") == frozenset({"study"})
+    with pytest.raises(KeyError):
+        split_units_for("no_such_regime")
+
+
+def test_the_transfer_claim_is_AUGMENT_ONLY_verified_by_diff():
+    """Proved, not promised: across every regime x target x catalog state, claiming organism transfer
+    may only APPEND conditions. Non-vacuous -- at least one case must actually gain one."""
+    gained = 0
+    for r in REGIMES:
+        for target in ("replace", "blind_spot_complement"):
+            for cat in (False, True):
+                base = screen_proposal(r.population, r.endpoint, r.method,
+                                       curated_catalog_exists=cat, target=target).as_dict()
+                claimed = screen_proposal(r.population, r.endpoint, r.method,
+                                          curated_catalog_exists=cat, target=target,
+                                          claims_organism_transfer="held_out_clade").as_dict()
+                for k in base:
+                    if k == "conditions":
+                        if base[k] != claimed[k]:
+                            gained += 1
+                            assert claimed[k][:len(base[k])] == base[k], \
+                                "conditions must be APPENDED, never replaced"
+                        continue
+                    assert base[k] == claimed[k], f"{k} changed for {r.key} -- not augment-only"
+    assert gained > 0, "no case gained a condition; the guard would pass vacuously"
+
+
+def test_a_supported_transfer_claim_adds_nothing():
+    """The condition fires on an UNSUPPORTED claim only. Claiming `unmeasured` matches every row
+    today, so it must be silent -- otherwise the layer would nag on a truthful claim."""
+    r = REGIMES[0]
+    a = screen_proposal(r.population, r.endpoint, r.method).as_dict()
+    b = screen_proposal(r.population, r.endpoint, r.method,
+                        claims_organism_transfer=ORGANISM_TRANSFER_UNMEASURED).as_dict()
+    assert a == b
+
+
+def test_a_bad_organism_transfer_claim_is_refused_not_guessed():
+    res = screen_proposal("natural", "organism", "zero_shot",
+                          claims_organism_transfer="held_out_planet")
+    assert res.verdict == "UNKNOWN" and "claims_organism_transfer" in res.reason
+
+
+def test_as_dict_carries_both_new_fields_json_serialisably():
+    """scripts/regime_map.py json.dumps() this; a raw frozenset would raise at write time."""
+    import json
+    d = REGIMES[0].as_dict()
+    assert isinstance(d["split_unit"], list) and d["organism_transfer"] in ORGANISM_TRANSFER_LEVELS
+    json.dumps(d)
+
+
+def test_the_map_script_RENDERS_the_new_fields_and_the_headline(monkeypatch, tmp_path, capsys):
+    """A field carried only into learned_regime_map.json is NOT a disclosure -- this repo has already
+    paid for that twice. WIKI is redirected to tmp_path so the test cannot dirty the tracked artifact
+    (the date-stamped-rewrite trap recorded against the pgx report-card test)."""
+    import scripts.regime_map as rm
+
+    monkeypatch.setattr(rm, "WIKI", tmp_path)
+    # main() parses sys.argv, which under pytest carries pytest's own flags -> argparse SystemExit(2).
+    monkeypatch.setattr(sys, "argv", ["regime_map.py"])
+    rc = rm.main()
+    out = capsys.readouterr().out
+
+    assert rc == 0, "all-unmeasured is a truthful state, not a tool failure"
+    assert "split unit" in out and "org transfer" in out
+    assert f"{len(organism_transfer_is_unmeasured())} of {len(REGIMES)} regimes carry NO " \
+        "held-out-ORGANISM transfer evidence." in out
+    assert "UNORDERED" in out
+    assert (tmp_path / "learned_regime_map.json").exists()

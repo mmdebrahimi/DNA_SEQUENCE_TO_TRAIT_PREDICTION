@@ -4,6 +4,13 @@ Read-only report; exit 0 when every regime's cited artifact resolves, 1 when one
 whose evidence file is missing is not a regime -- it is a memory, which is the failure this module
 exists to prevent).
 
+EXIT 0 WHEN EVERY ROW READS organism_transfer=unmeasured, DELIBERATELY. A non-zero exit means *the
+tool failed*; all-unmeasured is a correct description of the world, and the only non-zero exit here is
+reserved for a genuine integrity break (a cited artifact that does not resolve). Conflating "the
+evidence is absent" with "the map is broken" would make a truthful map look broken on every run, and
+this repo has the cost on record: a permanently-red suite trains readers to discount red, which is how
+a genuine new failure gets missed. The headline line in stdout carries the loudness instead.
+
     uv run python scripts/regime_map.py
     uv run python scripts/regime_map.py --screen natural organism zero_shot
     uv run python scripts/regime_map.py --screen constructed molecular supervised --catalog-exists
@@ -25,7 +32,7 @@ WIKI = ROOT / "wiki"
 
 
 def main() -> int:
-    from dna_decode.eval.regime import REGIMES, screen_proposal
+    from dna_decode.eval.regime import REGIMES, organism_transfer_is_unmeasured, screen_proposal
 
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--screen", nargs=3, metavar=("POPULATION", "ENDPOINT", "METHOD"),
@@ -48,10 +55,22 @@ def main() -> int:
         rows.append({**r.as_dict(), "artifact_exists": exists})
 
     print(f"\n{len(rows)} measured regimes\n")
-    print(f"  {'population':12} {'endpoint':28} {'method':22} verdict")
+    print(f"  {'population':12} {'endpoint':24} {'method':22} {'split unit':12} "
+          f"{'org transfer':18} verdict")
     for r in rows:
         flag = "" if r["artifact_exists"] else "   [ARTIFACT MISSING]"
-        print(f"  {r['population']:12} {r['endpoint']:28} {r['method']:22} {r['verdict']}{flag}")
+        print(f"  {r['population']:12} {r['endpoint']:24} {r['method']:22} "
+              f"{','.join(r['split_unit']):12} {r['organism_transfer']:18} {r['verdict']}{flag}")
+
+    # THE HEADLINE. A field carried only into learned_regime_map.json is not a disclosure -- this repo
+    # has already paid for that twice (two of five report-card layers rendered nowhere a human reads).
+    unmeasured = organism_transfer_is_unmeasured()
+    print(f"\n{len(unmeasured)} of {len(rows)} regimes carry NO held-out-ORGANISM transfer evidence.")
+    if len(unmeasured) == len(rows):
+        print("  That is every row: the project has never measured a cross-organism number.")
+    print("  `split unit` is an UNORDERED fact -- a cross-protein split and a leave-one-study split")
+    print("  are different questions, not stronger/weaker versions of one.")
+
     print("\nThe discriminating variable is POPULATION DESIGN, not organism complexity.")
     print("The natural-population negative is ZERO-SHOT-scoped; a supervised proposal gets conditions,")
     print("not a refusal -- compressing that scope has hidden a live direction three separate times.")

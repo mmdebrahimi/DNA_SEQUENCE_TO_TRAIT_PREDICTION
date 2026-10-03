@@ -28,6 +28,22 @@ POPULATIONS = ("constructed", "natural")
 ENDPOINTS = ("molecular", "organism", "organism_condition_switch")
 METHODS = ("zero_shot", "supervised", "deterministic_catalog")
 
+# --- WHICH SPLIT produced each number: an UNORDERED fact, plus ONE narrow ordered field -----------
+#
+# WHY TWO FIELDS AND NOT ONE LADDER. The first draft put every held-out unit on a single
+# weakest-to-strongest scale (position < study < protein < organism < clade) so that "stronger than"
+# was computable. That is wrong: a cross-PROTEIN molecular split and a leave-one-STUDY viral split are
+# not weaker or stronger than each other, they answer DIFFERENT questions. Ranking them would let this
+# module announce that one piece of evidence beats another when no such relation was measured --
+# manufacturing exactly the confident-but-unmeasured claim it exists to prevent.
+#
+# So `split_unit` is an unordered SET and nothing compares its members. Only `organism_transfer` is
+# ordered, and it answers one question: does this row carry held-out-ORGANISM evidence?
+SPLIT_UNITS = frozenset({"position", "study", "protein", "organism", "clade", "condition", "none"})
+
+ORGANISM_TRANSFER_UNMEASURED = "unmeasured"
+ORGANISM_TRANSFER_LEVELS = (ORGANISM_TRANSFER_UNMEASURED, "held_out_organism", "held_out_clade")
+
 CLOSED_NEGATIVE = "CLOSED_NEGATIVE"
 WORKS = "WORKS"
 OPEN = "OPEN"
@@ -45,11 +61,22 @@ class Regime:
     evidence: str
     artifact: str
     note: str = ""
+    # KEYWORD-ONLY and REQUIRED. `note` already carries a default, so a plain required field appended
+    # after it is a TypeError; kw_only sidesteps that AND forces every row to name its split rather
+    # than inheriting one by position. An empty frozenset is a real statement -- "no split was
+    # performed" -- which is why there is no default to fall back on.
+    split_unit: frozenset[str] = field(kw_only=True)
+    # DEFAULTED, deliberately: `unmeasured` is simultaneously the fail-closed value and the true value
+    # for every row today, so a default costs nothing and breaks no constructor.
+    organism_transfer: str = field(kw_only=True, default=ORGANISM_TRANSFER_UNMEASURED)
 
     def as_dict(self) -> dict:
         return {"key": self.key, "population": self.population, "endpoint": self.endpoint,
                 "method": self.method, "verdict": self.verdict, "evidence": self.evidence,
-                "artifact": self.artifact, "note": self.note}
+                "artifact": self.artifact, "note": self.note,
+                # sorted list, not the frozenset: this dict is json.dumps'd by scripts/regime_map.py
+                "split_unit": sorted(self.split_unit),
+                "organism_transfer": self.organism_transfer}
 
 
 REGIMES: tuple[Regime, ...] = (
@@ -58,13 +85,19 @@ REGIMES: tuple[Regime, ...] = (
            "structure-only spearman 0.48 -- the embedding learned POPULATION STRUCTURE",
            "wiki/organism_gp_regime_correction_2026-08-29.md",
            "Do NOT scale this on a bigger GPU. A negative de-confounded metric is a signal-vs-structure "
-           "problem, not a window-budget one."),
+           "problem, not a window-budget one.",
+           # `none`, not `clade`: the within-group r2 GROUPS by kinship/PC to de-confound, but the
+           # held-out unit inside each group is an INDIVIDUAL. A de-confounding group is not a
+           # held-out split, and recording it as one would be a category error.
+           split_unit=frozenset({"none"})),
     Regime("natural_organism_supervised", "natural", "organism", "supervised", REQUIRES_DECONFOUNDING,
            "not closed -- the 0-for-5 is ZERO-SHOT-only; a supervised complement is the shipped "
            "architecture. Condition: report WITHIN-GROUP performance against each group's own null",
            "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md",
            "Pooled accuracy is dominated by any grouping variable the genotype tracks (clone, ancestry, "
-           "submitter). Pooled numbers here are uninformative, not encouraging."),
+           "submitter). Pooled numbers here are uninformative, not encouraging.",
+           # no number at all on this row -- it carries conditions, not a measurement
+           split_unit=frozenset({"none"})),
     Regime("constructed_molecular", "constructed", "molecular", "supervised", WORKS,
            "TEM-1 genome-edit path, Spearman 0.761 vs measured ampicillin fitness; externally "
            "replicated on a SECOND beta-lactamase (CTX-M-14/cefotaxime, independent lab) at 0.352",
@@ -74,7 +107,10 @@ REGIMES: tuple[Regime, ...] = (
            "Direction holds in both (ESM2 beats BLOSUM62: 0.352 vs 0.198 on CTX-M-14). Lift comes from "
            "ORTHOGONAL MODALITIES, not scale: ESM2+GEMME+ProSST beats ESM2 on 90.5% of proteins paired, "
            "while 650M > 3B > 15B. A DAMAGE predictor cannot score a GAIN-of-function axis -- CTX-M-14 "
-           "on ceftazidime is 0.078 for exactly that reason. **THE CITED EVIDENCE IS ZERO-SHOT** (ESM2 masked-marginal scoring); nothing in it trains on measured phenotype, so do NOT read this row as 'the supervised path is achieved'. Measured 2026-09-29 on PEAR CTX-M-14 with a held-out-POSITION split: a SUPERVISED alphabet head on top of ESM2 gives NO reliable lift (unstable across strides 2/3/4/5, position-clustered bootstrap 95% CI [-0.022,+0.099] spans zero), and a POSITION-FREE learned alphabet LOSES to BLOSUM62 on all four splits (0.13-0.27 vs 0.23-0.31) even trained on that protein's own 1,017 variants. See wiki/pear_genotype_alphabet_2026-09-29.md."),
+           "on ceftazidime is 0.078 for exactly that reason. **THE CITED EVIDENCE IS ZERO-SHOT** (ESM2 masked-marginal scoring); nothing in it trains on measured phenotype, so do NOT read this row as 'the supervised path is achieved'. Measured 2026-09-29 on PEAR CTX-M-14 with a held-out-POSITION split: a SUPERVISED alphabet head on top of ESM2 gives NO reliable lift (unstable across strides 2/3/4/5, position-clustered bootstrap 95% CI [-0.022,+0.099] spans zero), and a POSITION-FREE learned alphabet LOSES to BLOSUM62 on all four splits (0.13-0.27 vs 0.23-0.31) even trained on that protein's own 1,017 variants. See wiki/pear_genotype_alphabet_2026-09-29.md.",
+           # TEM-1 -> CTX-M-14, independent lab: a cross-PROTEIN split. NOT comparable to a
+           # leave-one-study split -- that incomparability is why SPLIT_UNITS is unordered.
+           split_unit=frozenset({"protein"})),
     Regime("constructed_molecular_zeroshot", "constructed", "molecular", "zero_shot", WORKS,
            "the SAME evidence as constructed_molecular, correctly attributed: ESM2-650M "
            "masked-marginal ZERO-SHOT scoring, TEM-1 0.761 / CTX-M-14 0.352, and 0.31-0.41 "
@@ -83,23 +119,30 @@ REGIMES: tuple[Regime, ...] = (
            "Declared explicitly because the default verdict for this cell was OPEN with the "
            "condition 'measure a de-confounded baseline first' -- a condition the 0.761/0.352 "
            "numbers ALREADY satisfy. A pretrained protein LM scoring variants zero-shot IS the "
-           "working method here, and it BEAT every learned-alphabet variant tested."),
+           "working method here, and it BEAT every learned-alphabet variant tested.",
+           split_unit=frozenset({"position"})),
     Regime("constructed_organism_per_condition", "constructed", "organism", "supervised", WORKS,
            "FBA iML1515 conditional essentiality, MCC 0.70-0.74 across four media",
            "wiki/organism_gp_regime_correction_2026-08-29.md",
-           "Mechanistic, not learned. The organism-level positive that the 'too complex' reading misses."),
+           "Mechanistic, not learned. The organism-level positive that the 'too complex' reading misses.",
+           # one organism (iML1515), four media. Nothing organism-level was held out.
+           split_unit=frozenset({"none"})),
     Regime("constructed_organism_condition_switch", "constructed", "organism_condition_switch",
            "supervised", OPEN,
            "within-gene AUROC 0.73/0.81/0.71 on three axes (all p<=0.001), but the model emits ONE "
            "identical ratio for 61-76% of genes -- silent, not wrong",
            "wiki/fba_within_gene_ranking_2026-08-29.md",
            "The one genuinely OPEN cell. The readout lever is closed (+1.8pp oracle ceiling on the "
-           "best-measured axis); the measured bottleneck is condition coverage in the expression data."),
+           "best-measured axis); the measured bottleneck is condition coverage in the expression data.",
+           # `condition` is a SPLIT_UNITS member precisely so this row needs no ladder position --
+           # it was the open question the single-ladder draft could not place.
+           split_unit=frozenset({"condition"})),
     Regime("curated_catalog_exists", "natural", "molecular", "zero_shot", LOSES_TO_CATALOG,
            "HIV NNRTI: curated catalog AUC 0.926-0.962 vs ESM2 0.454 -- BELOW CHANCE",
            "wiki/hiv_esm_vs_catalog_2026-07-09.md",
            "Antagonistic endpoints INVERT a plausibility scorer: resistance is reached via chemically "
-           "CONSERVATIVE substitutions at averagely-conserved sites, so likelihood calls them benign."),
+           "CONSERVATIVE substitutions at averagely-conserved sites, so likelihood calls them benign.",
+           split_unit=frozenset({"none"})),
     # Added 2026-09-30. The cell above was the ZERO-SHOT half of (natural, molecular); the SUPERVISED half
     # was never measured, and the map's own warning -- that a zero-shot negative says nothing about
     # supervised -- applied to the map itself. Measured on the IDENTICAL isolate set with the IDENTICAL
@@ -118,7 +161,10 @@ REGIMES: tuple[Regime, ...] = (
            "negative, 2 with a CI entirely below zero; wiki/hiv_context_vs_linear_floor_2026-09-30.md), "
            "corroborating the independent 2026-07-11 epistasis negative. That is NOT 'resistance is "
            "additive' (capacity may be unaffordable at this sample size) and does NOT test attention "
-           "over RAW SEQUENCE, which remains unmeasured. All three genes are ONE virus. ALSO CLOSED 2026-10-01: the ORTHOGONAL-MODALITY lever has no room either -- one-hot's blindness to zero-training-signal columns is real (coefficients measured at exactly 0.0) but ABSORBED by per-isolate redundancy (median 1 blind column of 12), so the model scores slightly BETTER where it is blind (0.8229 vs 0.8163); see wiki/hiv_onehot_unseen_headroom_2026-10-01.md. A modality adds where the incumbent representation is STARVED of signal, not where it is merely blind in principle -- which is why the forward cell's single-variant modality lift does not transfer here."),
+           "over RAW SEQUENCE, which remains unmeasured. All three genes are ONE virus. ALSO CLOSED 2026-10-01: the ORTHOGONAL-MODALITY lever has no room either -- one-hot's blindness to zero-training-signal columns is real (coefficients measured at exactly 0.0) but ABSORBED by per-isolate redundancy (median 1 blind column of 12), so the model scores slightly BETTER where it is blind (0.8229 vs 0.8163); see wiki/hiv_onehot_unseen_headroom_2026-10-01.md. A modality adds where the incumbent representation is STARVED of signal, not where it is merely blind in principle -- which is why the forward cell's single-variant modality lift does not transfer here.",
+           # leave-one-STUDY-out across three genes of ONE virus. The one-virus limit this row's own
+           # note already states in prose is now machine-readable: organism_transfer stays `unmeasured`.
+           split_unit=frozenset({"study"})),
 )
 
 # Where a learned layer is pointed. The catalog-beats-learning result is about REPLACING a catalog; it was
@@ -126,6 +172,42 @@ REGIMES: tuple[Regime, ...] = (
 TARGETS = ("replace", "blind_spot_complement")
 
 _BY_KEY = {r.key: r for r in REGIMES}
+
+
+def split_units_for(key: str) -> frozenset[str]:
+    """Which unit(s) this regime's number held out. UNORDERED -- nothing compares the members."""
+    if key not in _BY_KEY:
+        raise KeyError(f"unknown regime {key!r}; known: {sorted(_BY_KEY)}")
+    return _BY_KEY[key].split_unit
+
+
+def organism_transfer_is_unmeasured() -> tuple[str, ...]:
+    """The regimes carrying NO held-out-organism evidence.
+
+    Today this is every row, and that is the headline F1 exists to make machine-readable: the project
+    has never measured a cross-organism number. Callers should treat a SHRINKING return value as the
+    event worth noticing, not the current length.
+    """
+    return tuple(r.key for r in REGIMES
+                 if r.organism_transfer == ORGANISM_TRANSFER_UNMEASURED)
+
+
+def _transfer_rank(level: str) -> int:
+    """Position within ORGANISM_TRANSFER_LEVELS. Defined ONLY for that narrow field -- there is
+    deliberately no equivalent for SPLIT_UNITS, because its members are incomparable."""
+    return ORGANISM_TRANSFER_LEVELS.index(level)
+
+
+def _transfer_gap_conditions(regime: "Regime", claim: str | None) -> list[str]:
+    """AUGMENT-ONLY: a condition when the caller claims more organism-transfer evidence than the
+    matched regime carries. Returns [] when there is no claim or the claim is already supported."""
+    if claim is None or _transfer_rank(claim) <= _transfer_rank(regime.organism_transfer):
+        return []
+    return [f"this proposal claims {claim!r} but regime {regime.key!r} carries "
+            f"organism_transfer={regime.organism_transfer!r} (split unit(s): "
+            f"{sorted(regime.split_unit)}) -- the claim is NOT supported by the cited evidence",
+            "measure a held-out-ORGANISM number before claiming organism transfer; "
+            "no regime in this map carries one today"]
 
 
 @dataclass
@@ -158,12 +240,19 @@ def classify_regime(population: str, endpoint: str, method: str) -> Regime | Non
 
 def screen_proposal(population: str, endpoint: str, method: str,
                     curated_catalog_exists: bool = False,
-                    target: str = "replace") -> ScreenResult:
+                    target: str = "replace",
+                    claims_organism_transfer: str | None = None) -> ScreenResult:
     """Screen a learned-decoder proposal against the measured regime map.
 
     A CLOSED_NEGATIVE verdict is a refusal: that exact regime has been tested and failed under
     de-confounding, and more scale does not address it. Every other verdict names conditions rather
     than blocking -- the boundary exists to stop the ONE repeated mistake, not to forbid learning.
+
+    `claims_organism_transfer` is AUGMENT-ONLY. When a caller claims more organism-transfer evidence
+    than the matched regime actually carries, a CONDITION is appended naming the gap. It never changes
+    `verdict`, `reason`, `evidence` or `artifact` on any path -- the same discipline every other
+    disclosure layer in this repo follows, and it is proved by a with/without diff rather than
+    promised.
     """
     p, e, m = (str(x).strip().lower() for x in (population, endpoint, method))
     if p not in POPULATIONS:
@@ -175,6 +264,12 @@ def screen_proposal(population: str, endpoint: str, method: str,
 
     if target not in TARGETS:
         return ScreenResult(None, "UNKNOWN", f"target must be one of {TARGETS}; got {target!r}")
+
+    # Validated BEFORE the catalog short-circuit so a bad value cannot slip through on either path.
+    if claims_organism_transfer is not None and claims_organism_transfer not in ORGANISM_TRANSFER_LEVELS:
+        return ScreenResult(None, "UNKNOWN",
+                            f"claims_organism_transfer must be one of {ORGANISM_TRANSFER_LEVELS}; "
+                            f"got {claims_organism_transfer!r}")
 
     # A curated catalog beats a learned scorer wherever one exists -- checked BEFORE the regime match,
     # because it is the strongest measured result and it inverts (ESM 0.454, below chance).
@@ -190,7 +285,8 @@ def screen_proposal(population: str, endpoint: str, method: str,
                             "measured to LOSE to it here",
                             r.evidence, r.artifact,
                             ["beat the curated catalog on held-out data before proposing to replace it",
-                             "if the endpoint is antagonistic (drug resistance), expect BELOW-chance"])
+                             "if the endpoint is antagonistic (drug resistance), expect BELOW-chance"]
+                            + _transfer_gap_conditions(r, claims_organism_transfer))
 
     r = classify_regime(p, e, m)
     if r is None:
@@ -205,4 +301,5 @@ def screen_proposal(population: str, endpoint: str, method: str,
     elif r.verdict == CLOSED_NEGATIVE:
         conds = ["do NOT re-run this at larger scale — the failure is signal-vs-structure",
                  "changing population DESIGN (constructed variation) moves it to a different regime"]
+    conds = conds + _transfer_gap_conditions(r, claims_organism_transfer)
     return ScreenResult(r.key, r.verdict, r.note or r.evidence, r.evidence, r.artifact, conds)
