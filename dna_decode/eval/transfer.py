@@ -248,6 +248,103 @@ def k_shot_curve(X, y, ids: Sequence[str], group_of: Mapping[str, str], *,
     return curve
 
 
+@dataclass(frozen=True)
+class LeakageAudit:
+    """Whether the held-out side is provably absent from the training side.
+
+    `incomplete=True` is a possible FALSE-INDEPENDENCE CLAIM, not a harmless offline fallback -- the
+    posture `provenance_disjoint_validate.py` already takes. A consumer must refuse to emit a transfer
+    number on an incomplete audit unless explicitly overridden, and the override has to be visible in
+    the record.
+    """
+    overlap: tuple[str, ...]
+    unresolved: tuple[str, ...]
+    incomplete: bool
+    reason: str
+
+    @property
+    def ok(self) -> bool:
+        return not self.overlap and not self.incomplete
+
+    def as_dict(self) -> dict:
+        return {"ok": self.ok, "overlap": list(self.overlap), "n_overlap": len(self.overlap),
+                "unresolved": list(self.unresolved), "incomplete": self.incomplete,
+                "reason": self.reason}
+
+
+class LeakageAuditRefused(RuntimeError):
+    """Raised when a consumer is handed a non-clean audit without an explicit override."""
+
+
+def leakage_audit(train_ids: Sequence[str], test_ids: Sequence[str], *,
+                  resolver=None) -> LeakageAudit:
+    """Exact-id overlap, plus an optional alias-collapsing `resolver`.
+
+    The accession-string check is blind to two identifiers naming the SAME isolate (a GCA assembly vs
+    an ERR run), which is why `resolver` exists -- the role `eval/biosample_resolver.py` plays in the
+    external-cohort arm. ANY resolver failure sets `incomplete=True`: a membership question we could
+    not answer is not the same as a negative answer.
+
+    Imports nothing from the FROZEN `eval/cohort_manifest.py` and never writes to it. A caller that
+    wants manifest-level exclusion passes its own `resolver`.
+    """
+    tr, te = [str(i) for i in train_ids], [str(i) for i in test_ids]
+    exact = tuple(sorted(set(tr) & set(te)))
+    if exact:
+        return LeakageAudit(exact, (), False,
+                            f"{len(exact)} id(s) appear on BOTH sides (e.g. {exact[:3]}) -- the "
+                            f"held-out set is not held out")
+    if resolver is None:
+        return LeakageAudit((), (), False,
+                            "exact-id disjoint; no resolver supplied, so aliasing (two ids naming one "
+                            "isolate) was NOT checked")
+
+    resolved: dict[str, str] = {}
+    unresolved: list[str] = []
+    for i in tr + te:
+        try:
+            r = resolver(i)
+        except Exception as exc:                       # noqa: BLE001 - any failure is a gap
+            unresolved.append(i)
+            resolved[i] = i
+            _ = exc
+            continue
+        if r is None or str(r).strip() == "":
+            unresolved.append(i)
+            resolved[i] = i
+        else:
+            resolved[i] = str(r)
+
+    canon_overlap = tuple(sorted({resolved[i] for i in tr} & {resolved[i] for i in te}))
+    if unresolved:
+        return LeakageAudit(canon_overlap, tuple(sorted(set(unresolved))), True,
+                            f"{len(set(unresolved))} id(s) could not be resolved to a canonical "
+                            f"identity, so disjointness is UNPROVEN (possible false-independence "
+                            f"claim), and {len(canon_overlap)} canonical overlap(s) were found among "
+                            f"those that did resolve")
+    return LeakageAudit(canon_overlap, (), False,
+                        "exact-id disjoint and canonical-identity disjoint"
+                        if not canon_overlap else
+                        f"{len(canon_overlap)} id pair(s) resolve to the SAME canonical identity "
+                        f"across the split")
+
+
+def require_clean_audit(audit: LeakageAudit, *, allow_incomplete: bool = False) -> dict:
+    """Gate a transfer number on the audit. Returns the stamp to embed in the artifact.
+
+    Refuses by default. The override does not make the audit clean -- it records that a human accepted
+    an unproven one, which is why `leakage_audit_degraded` lands in the record.
+    """
+    if audit.overlap:
+        raise LeakageAuditRefused(f"leakage: {audit.reason}")
+    if audit.incomplete and not allow_incomplete:
+        raise LeakageAuditRefused(
+            f"INCOMPLETE leakage audit, refusing to emit a transfer number: {audit.reason}. "
+            f"Pass allow_incomplete=True to proceed; the record will be stamped degraded.")
+    return {"leakage_audit": audit.as_dict(),
+            "leakage_audit_degraded": bool(audit.incomplete and allow_incomplete)}
+
+
 def power_check(curve_a: KShotCurve, curve_b: KShotCurve) -> str:
     """Did the two methods ever actually produce different predictions?
 

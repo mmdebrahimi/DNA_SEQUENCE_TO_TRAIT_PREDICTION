@@ -15,8 +15,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from dna_decode.eval.transfer import (  # noqa: E402
-    MIN_SCORED, POWERED, UNDERPOWERED, WITHIN_GROUP_MIN_N, KShotGridError, UnassignedMemberError,
-    derive_k_grid, fold_report, held_out_group_folds, k_shot_curve, power_check, skipped_groups,
+    MIN_SCORED, POWERED, UNDERPOWERED, WITHIN_GROUP_MIN_N, KShotGridError, LeakageAuditRefused,
+    UnassignedMemberError, derive_k_grid, fold_report, held_out_group_folds, k_shot_curve,
+    leakage_audit, power_check, require_clean_audit, skipped_groups,
 )
 
 
@@ -201,3 +202,107 @@ def test_two_genuinely_different_methods_are_reported_POWERED():
     a = k_shot_curve(X, y, ids, group_of, fit_predict=ridge)
     b = k_shot_curve(X, y, ids, group_of, fit_predict=constant_mean)
     assert power_check(a, b) == POWERED
+
+
+# --- the leakage audit fails CLOSED (Step 4) --------------------------------------------------------
+
+def test_exact_id_overlap_is_an_immediate_failure():
+    a = leakage_audit(["x", "y", "z"], ["z", "w"])
+    assert a.overlap == ("z",) and not a.ok and not a.incomplete
+    with pytest.raises(LeakageAuditRefused):
+        require_clean_audit(a)
+
+
+def test_disjoint_without_a_resolver_passes_but_SAYS_aliasing_was_unchecked():
+    """The accession-string check cannot see a GCA assembly and an ERR run naming one isolate. Passing
+    is correct; silently implying aliasing was ruled out would not be."""
+    a = leakage_audit(["x", "y"], ["w"])
+    assert a.ok and not a.incomplete
+    assert "NOT checked" in a.reason
+    assert require_clean_audit(a)["leakage_audit_degraded"] is False
+
+
+def test_a_resolver_that_raises_makes_the_audit_INCOMPLETE_not_clean():
+    """A membership question we could not answer is not a negative answer."""
+    def boom(i):
+        raise RuntimeError("entrez down")
+
+    a = leakage_audit(["x", "y"], ["w"], resolver=boom)
+    assert a.incomplete and not a.ok
+    assert set(a.unresolved) == {"x", "y", "w"}
+    assert "UNPROVEN" in a.reason
+
+
+def test_a_resolver_returning_blank_also_counts_as_unresolved():
+    a = leakage_audit(["x"], ["w"], resolver=lambda i: "" if i == "w" else "S1")
+    assert a.incomplete and a.unresolved == ("w",)
+
+
+def test_a_resolver_collapses_aliases_and_catches_a_hidden_overlap():
+    """The case the exact-id check is blind to: two different ids, one isolate."""
+    alias = {"GCA_1": "SAMN1", "ERR_1": "SAMN1", "GCA_2": "SAMN2"}
+    a = leakage_audit(["GCA_1", "GCA_2"], ["ERR_1"], resolver=alias.get)
+    assert a.overlap == ("SAMN1",) and not a.ok
+    with pytest.raises(LeakageAuditRefused):
+        require_clean_audit(a)
+
+
+def test_a_clean_resolved_audit_passes_and_is_not_degraded():
+    alias = {"GCA_1": "SAMN1", "GCA_2": "SAMN2", "ERR_3": "SAMN3"}
+    a = leakage_audit(["GCA_1", "GCA_2"], ["ERR_3"], resolver=alias.get)
+    assert a.ok and not a.incomplete and a.overlap == ()
+    assert require_clean_audit(a)["leakage_audit_degraded"] is False
+
+
+def test_the_override_is_VISIBLE_in_the_record_rather_than_making_it_clean():
+    def boom(i):
+        raise RuntimeError("down")
+
+    a = leakage_audit(["x"], ["w"], resolver=boom)
+    with pytest.raises(LeakageAuditRefused):
+        require_clean_audit(a)                               # refuses by default
+    stamp = require_clean_audit(a, allow_incomplete=True)
+    assert stamp["leakage_audit_degraded"] is True
+    assert stamp["leakage_audit"]["incomplete"] is True, "the override must not rewrite the audit"
+
+
+def test_the_override_cannot_wave_through_a_REAL_overlap():
+    """`allow_incomplete` is about an unproven audit, not a failed one."""
+    a = leakage_audit(["z"], ["z"])
+    with pytest.raises(LeakageAuditRefused):
+        require_clean_audit(a, allow_incomplete=True)
+
+
+def _imported_names(path: Path) -> set[str]:
+    """Every module name this file imports, at ANY scope (module level or inside a function)."""
+    import ast
+    names: set[str] = set()
+    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        if isinstance(node, ast.Import):
+            names.update(a.name for a in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            names.add(node.module)
+    return names
+
+
+def test_the_frozen_cohort_manifest_is_never_IMPORTED_by_this_module():
+    """cohort_manifest.py is one of the five sha256-pinned frozen files. The concern is IMPORTING it,
+    not mentioning it, so this walks the AST rather than grepping -- a substring scan would both
+    false-positive on the docstring and miss nothing a rephrase could hide. Non-vacuous: the same
+    scan must SEE the imports this module really has."""
+    imported = _imported_names(ROOT / "dna_decode" / "eval" / "transfer.py")
+    assert not any("cohort_manifest" in m for m in imported), imported
+    assert "numpy" in imported and "dna_decode.deconfound" in imported, \
+        f"the scanner found nothing recognisable; it is not actually reading imports: {imported}"
+
+
+def test_the_harness_imports_deconfound_LAZILY_not_at_module_scope():
+    """The import-posture guard above proves no heavy module is pulled; this proves WHY -- the
+    deconfound import sits inside a function body, not at module level."""
+    import ast
+    tree = ast.parse((ROOT / "dna_decode" / "eval" / "transfer.py").read_text(encoding="utf-8"))
+    top_level = {a.name if isinstance(n, ast.Import) else n.module
+                 for n in tree.body if isinstance(n, (ast.Import, ast.ImportFrom))
+                 for a in (n.names if isinstance(n, ast.Import) else [None]) if True}
+    assert not any(m and "deconfound" in m for m in top_level), \
+        f"deconfound imported at module scope: {top_level}"
