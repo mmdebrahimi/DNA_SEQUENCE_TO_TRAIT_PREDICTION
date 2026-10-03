@@ -1,0 +1,42 @@
+{
+  "schema": "g2-arabidopsis-replay-fixture-v1",
+  "purpose": "Machine-readable replay inputs for the F1 transfer-benchmark falsifier's Arm C. The per-seed numbers existed ONLY inside a markdown table, so Arm C would otherwise have had to hard-code twelve literals -- an assertion that can silently drift from its source. These values are HAND-TRANSCRIBED and then VERIFIED against the markdown by tests/test_g2_replay_fixture.py, which re-parses the table. Verified, never trusted.",
+  "source": "wiki/phase2_arabidopsis_result_2026-06-12.md",
+  "source_section": "## Results (3 seeds, all `window_budget=64`)",
+  "seeds": [42, 7, 99],
+  "arms": {
+    "embedding": "PlantCaduceus_l32 embedding, window_budget=64, 3 seeds",
+    "structure_only": "population-structure-only baseline (kinship/PC features, no sequence)"
+  },
+  "metrics": {
+    "global_r2": {
+      "embedding": [-0.046, -0.036, -0.031],
+      "structure_only": -0.449,
+      "winner": "embedding",
+      "note": "the ONLY metric the embedding wins, and the one most polluted by population structure. Arm C turns on this: the verdict must still come out NEGATIVE despite a win here."
+    },
+    "spearman": {
+      "embedding": [0.213, 0.221, 0.226],
+      "structure_only": 0.484,
+      "winner": "structure_only"
+    },
+    "within_group_r2": {
+      "embedding": [-0.173, -0.110, -0.128],
+      "structure_only": 0.038,
+      "winner": "structure_only",
+      "note": "the de-confounded metric. Negative across all three seeds -- the signature of the recorded failure: the embedding learned population structure, not the flowering-time signal."
+    }
+  },
+  "verbatim_table_rows": [
+    "| metric | embedding (s42/s7/s99) | structure-only | winner |",
+    "|---|---|---|---|",
+    "| global r² | −0.046 / −0.036 / −0.031 | −0.449 | embedding (less-bad) |",
+    "| spearman | 0.213 / 0.221 / 0.226 | 0.484 | **structure-only** |",
+    "| **within-group r²** (de-confounded) | **−0.173 / −0.110 / −0.128** | **+0.038** | **structure-only** |"
+  ],
+  "parsing_notes": [
+    "The markdown minus signs are U+2212 MINUS SIGN (bytes E2 88 92), NOT ASCII hyphen-minus. float('−0.173') raises ValueError; any parser must normalise first.",
+    "Row labels carry r² as U+00B2 SUPERSCRIPT TWO, and the within-group row is wrapped in markdown bold with a ' (de-confounded)' suffix.",
+    "The structure-only within-group cell is written '+0.038' with an explicit leading plus."
+  ]
+}
