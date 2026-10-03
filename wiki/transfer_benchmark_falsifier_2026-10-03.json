@@ -1,0 +1,159 @@
+{
+  "schema": "transfer-benchmark-falsifier-v1",
+  "generated": "2026-10-03",
+  "preregistered": {
+    "pass_requires": [
+      "A1_positive",
+      "B_negative"
+    ],
+    "A1_positive": "cv_ridge_gp predictive r beats its own label-permutation null p95",
+    "B_negative": "gauntlet verdict is NOT BEATS_ALL_CONTROLS on a zero-within-group-signal input",
+    "C_counts_toward_pass": false,
+    "C_requirement": "every replayed seed must be NON-positive DESPITE the embedding winning global r2",
+    "transfer_positive": "TRANSFER_POSITIVE_UNMEASURED unless a live held-out-organism substrate is supplied",
+    "frozen_at": "plan v3, before any arm was run"
+  },
+  "status": "DISCRIMINATED_BOTH_DIRECTIONS",
+  "exit_code": 0,
+  "transfer_positive": "TRANSFER_POSITIVE_UNMEASURED",
+  "transfer_positive_reason": "every genotype-phenotype panel on disk is a single constructed population, so a held-out-organism fold has nothing to hold out. This is a measured absence, not an omission.",
+  "arms": {
+    "A1": {
+      "arm": "A1_scoring_core_control",
+      "is_transfer_evidence": false,
+      "positive": true,
+      "trait": "Maltose",
+      "marker_stride": 32,
+      "n_aligned": 1008,
+      "genotype_integrity": {
+        "path": "D:\\dna_decode_cache\\bloom\\geno_v2.txt",
+        "n_cols": 1009,
+        "n_rows": 11623,
+        "size_bytes": 23729508,
+        "intact": true
+      },
+      "result": {
+        "trait": "Maltose",
+        "n": 1005,
+        "n_markers": 364,
+        "predictive_r": 0.6646,
+        "predictive_r2": 0.4416,
+        "r2_score": 0.4339,
+        "best_alpha": 100.0,
+        "null_r_mean": -0.005,
+        "null_r_p95": 0.0649,
+        "beats_null": true
+      },
+      "note": "a single-cross panel holds out NO organism; this proves the scoring core, not that transfer is measurable"
+    },
+    "B": {
+      "arm": "B_synthetic_structure_negative",
+      "machinery_exercised": true,
+      "negative": true,
+      "verdict": "WITHIN_NOISE",
+      "n_folds": 4,
+      "n_leakage_audits_clean": 4,
+      "report": {
+        "controls": {
+          "shuffled_label_null": 0.07901401171622258,
+          "structure_only_baseline": -0.7764545427850065,
+          "nearest_neighbour_sequence": -1.943164488225865,
+          "pca_only_baseline": -0.781306490224762,
+          "held_out_clade": -0.002592568341443613
+        },
+        "n_controls_run": 5,
+        "matrix": {
+          "zero_shot_group_r2": -0.781306490224762,
+          "kshot_pooled_r2": -0.781306490224762,
+          "kshot_within_group_r2": -0.020093416891390437,
+          "kshot_group_offset_baseline": 0.0,
+          "n_groups_used_within": 4
+        },
+        "skipped_groups": [],
+        "basis": {
+          "group_vector_hash": "982fab9eb839eab9",
+          "scored_ids_hash": "5e3328eff3c7fcc4",
+          "residualization": "group_centered_train_mean,min_n=30",
+          "shot_ids_hash": "e3b0c44298fc1c14",
+          "per_control": {
+            "shuffled_label_null": {
+              "group_vector_hash": "982fab9eb839eab9",
+              "scored_ids_hash": "5e3328eff3c7fcc4",
+              "residualization": "group_centered_train_mean,min_n=30",
+              "shot_ids_hash": "e3b0c44298fc1c14"
+            },
+            "structure_only_baseline": {
+              "group_vector_hash": "982fab9eb839eab9",
+              "scored_ids_hash": "5e3328eff3c7fcc4",
+              "residualization": "group_centered_train_mean,min_n=30",
+              "shot_ids_hash": "e3b0c44298fc1c14"
+            },
+            "nearest_neighbour_sequence": {
+              "group_vector_hash": "982fab9eb839eab9",
+              "scored_ids_hash": "5e3328eff3c7fcc4",
+              "residualization": "group_centered_train_mean,min_n=30",
+              "shot_ids_hash": "e3b0c44298fc1c14"
+            },
+            "pca_only_baseline": {
+              "group_vector_hash": "982fab9eb839eab9",
+              "scored_ids_hash": "5e3328eff3c7fcc4",
+              "residualization": "group_centered_train_mean,min_n=30",
+              "shot_ids_hash": "e3b0c44298fc1c14"
+            },
+            "held_out_clade": {
+              "group_vector_hash": "982fab9eb839eab9",
+              "scored_ids_hash": "5e3328eff3c7fcc4",
+              "residualization": "group_centered_train_mean,min_n=30",
+              "shot_ids_hash": "e3b0c44298fc1c14"
+            }
+          }
+        },
+        "primitive_provenance": {
+          "deconfound_module_sha256": "5307c94ed4b92e385dca581d6d9f7a1e48ed969692f2b2cad260d340843b367f",
+          "qualnames": [
+            "dna_decode.deconfound.deconfound.cluster_from_distance",
+            "dna_decode.deconfound.deconfound.cv_r2",
+            "dna_decode.deconfound.deconfound.group_centered_spearman",
+            "dna_decode.deconfound.deconfound.permutation_null",
+            "dna_decode.deconfound.deconfound.r2",
+            "dna_decode.deconfound.deconfound.within_group_r2"
+          ],
+          "within_group_min_n_passed_explicitly": 30
+        }
+      }
+    },
+    "C": {
+      "arm": "C_verdict_replay_regression",
+      "mode": "verdict_replay",
+      "machinery_exercised": false,
+      "counts_toward_pass": false,
+      "all_seeds_non_positive": true,
+      "won_global_r2_on_every_seed": true,
+      "per_seed": [
+        {
+          "seed": 42,
+          "verdict": "GROUP_OFFSET_LEARNED",
+          "non_positive": true,
+          "within_group_r2": -0.173,
+          "won_global_r2": true
+        },
+        {
+          "seed": 7,
+          "verdict": "GROUP_OFFSET_LEARNED",
+          "non_positive": true,
+          "within_group_r2": -0.11,
+          "won_global_r2": true
+        },
+        {
+          "seed": 99,
+          "verdict": "GROUP_OFFSET_LEARNED",
+          "non_positive": true,
+          "within_group_r2": -0.128,
+          "won_global_r2": true
+        }
+      ],
+      "source": "wiki/phase2_arabidopsis_result_2026-06-12.md"
+    }
+  },
+  "refusals": []
+}
