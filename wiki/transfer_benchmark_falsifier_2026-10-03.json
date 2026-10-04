@@ -23,7 +23,7 @@
       "is_transfer_evidence": false,
       "positive": true,
       "trait": "Maltose",
-      "marker_stride": 32,
+      "marker_stride": 16,
       "n_aligned": 1008,
       "genotype_integrity": {
         "path": "D:\\dna_decode_cache\\bloom\\geno_v2.txt",
@@ -35,13 +35,13 @@
       "result": {
         "trait": "Maltose",
         "n": 1005,
-        "n_markers": 364,
-        "predictive_r": 0.6646,
-        "predictive_r2": 0.4416,
-        "r2_score": 0.4339,
+        "n_markers": 727,
+        "predictive_r": 0.7076,
+        "predictive_r2": 0.5007,
+        "r2_score": 0.4887,
         "best_alpha": 100.0,
-        "null_r_mean": -0.005,
-        "null_r_p95": 0.0649,
+        "null_r_mean": -0.0077,
+        "null_r_p95": 0.0654,
         "beats_null": true
       },
       "note": "a single-cross panel holds out NO organism; this proves the scoring core, not that transfer is measurable"
@@ -55,7 +55,7 @@
       "n_leakage_audits_clean": 4,
       "report": {
         "controls": {
-          "shuffled_label_null": 0.07901401171622258,
+          "shuffled_label_null": 0.010188104373211018,
           "structure_only_baseline": -0.7764545427850065,
           "nearest_neighbour_sequence": -1.943164488225865,
           "pca_only_baseline": -0.781306490224762,
