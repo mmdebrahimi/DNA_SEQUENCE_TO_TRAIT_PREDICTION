@@ -70,22 +70,45 @@ class OrganismEntry:
         AMRFinder has no entry for this organism at all.
     registry_labels: what `cell_registry` calls this organism. DESCRIPTIVE ONLY -- not a routing key.
         A tuple with >1 element records a real inconsistency in the registry, not an error here.
+    genus_match: genus tokens for which ANY species routes to this entry.
+
+    GRANULARITY FOLLOWS AMRFINDER'S OWN LIST, which deliberately mixes the two levels: `Escherichia`,
+    `Campylobacter` and `Salmonella` are GENUS-level `-O` values, while `Klebsiella_pneumoniae` and
+    `Klebsiella_oxytoca` are SEPARATE species-level values. So a genus-level entry declares
+    `genus_match` and accepts any species in it; a species-level entry leaves it empty and requires an
+    exact match.
+
+    This is not cosmetic -- it was MEASURED. Scanning 1,865 labelled local genomes, a species-strict
+    reading lost 160 real in-set genomes (Campylobacter_jejuni 66, Salmonella_enterica 60,
+    Campylobacter_coli 34) while correctly excluding 49 genuinely different species (Klebsiella
+    aerogenes/variicola/michiganensis, Gemmata). An over-broad genus rule for Klebsiella would have
+    swept K. aerogenes into K. pneumoniae's reference, which is the opposite error.
     """
 
     canonical: str
     amrfinder_organism: str | None
     registry_labels: tuple[str, ...] = field(default_factory=tuple)
+    genus_match: tuple[str, ...] = field(default_factory=tuple)
 
 
 # Every `amrfinder_organism` below is asserted a member of the live `amrfinder -l` output by
 # tests/test_organism_vocab.py. Do NOT add a value here without that test passing against the image.
 _ENTRIES: tuple[OrganismEntry, ...] = (
+    # GENUS-level: AMRFinder's `-O Escherichia` covers E. coli AND Shigella, which is also why the
+    # frozen registry token is spelled `Escherichia_coli_Shigella`.
     OrganismEntry("escherichia_coli", "Escherichia",
-                  ("Escherichia_coli_Shigella", "Escherichia_coli", "escherichia_coli")),
+                  ("Escherichia_coli_Shigella", "Escherichia_coli", "escherichia_coli"),
+                  genus_match=("escherichia", "shigella")),
+    # GENUS-level in AMRFinder's list, and the local corpus is Campylobacter jejuni + coli.
+    OrganismEntry("campylobacter", "Campylobacter", ("Campylobacter",),
+                  genus_match=("campylobacter",)),
+    # GENUS-level; the local corpus is Salmonella enterica.
+    OrganismEntry("salmonella", "Salmonella", ("Salmonella",), genus_match=("salmonella",)),
+    # SPECIES-level, and deliberately so: AMRFinder lists K. pneumoniae and K. oxytoca SEPARATELY, and
+    # the local corpus also holds K. aerogenes / variicola / michiganensis which must NOT be swept in.
     OrganismEntry("klebsiella_pneumoniae", "Klebsiella_pneumoniae",
                   ("Klebsiella", "Klebsiella_pneumoniae")),
-    OrganismEntry("campylobacter", "Campylobacter", ("Campylobacter",)),
-    OrganismEntry("salmonella", "Salmonella", ("Salmonella",)),
+    OrganismEntry("klebsiella_oxytoca", "Klebsiella_oxytoca", ()),
     OrganismEntry("pseudomonas_aeruginosa", "Pseudomonas_aeruginosa", ("Pseudomonas_aeruginosa",)),
     OrganismEntry("staphylococcus_aureus", "Staphylococcus_aureus", ("Staphylococcus_aureus",)),
     OrganismEntry("acinetobacter_baumannii", "Acinetobacter_baumannii", ("Acinetobacter",)),
@@ -128,20 +151,51 @@ def _alias_index() -> dict[str, str]:
 _ALIASES: dict[str, str] = _alias_index()
 
 
+def _genus_index() -> dict[str, str]:
+    """genus token -> canonical, for GENUS-level entries only.
+
+    Refuses a genus claimed by two entries: that would mean one genus routes two ways, which is a
+    specification error, not something to resolve by dict order.
+    """
+    idx: dict[str, str] = {}
+    for e in _ENTRIES:
+        for g in e.genus_match:
+            prev = idx.get(g.lower())
+            if prev is not None and prev != e.canonical:
+                raise ValueError(f"genus {g!r} claimed by both {prev!r} and {e.canonical!r}")
+            idx[g.lower()] = e.canonical
+    return idx
+
+
+_GENERA: dict[str, str] = _genus_index()
+
+
 def canonical(token: str) -> str:
     """Normalize any known organism spelling to its canonical key.
 
-    Case-insensitive. Accepts a canonical key, an AMRFinder `-O` value, or any registry label.
+    Resolution order, and the order matters:
+      1. case-insensitive EXACT alias (canonical key, AMRFinder `-O` value, or registry label)
+      2. GENUS fallback, but ONLY for entries that declare `genus_match`
+
+    Exact must win, or `Klebsiella_oxytoca` could be captured by a Klebsiella genus rule. Species in a
+    genus that declares no `genus_match` stay UNKNOWN by design -- that is how K. aerogenes remains
+    out-of-set rather than being silently answered as K. pneumoniae.
+
     RAISES `UnknownOrganism` on anything else -- never defaults.
     """
     if not isinstance(token, str) or not token.strip():
         raise UnknownOrganism(f"empty organism token: {token!r}")
-    got = _ALIASES.get(token.strip().lower())
-    if got is None:
-        raise UnknownOrganism(
-            f"{token!r} is not a supported organism. Supported canonical keys: "
-            f"{sorted(BY_CANONICAL)}")
-    return got
+    t = token.strip().lower()
+    got = _ALIASES.get(t)
+    if got is not None:
+        return got
+    genus = t.replace(" ", "_").split("_")[0]
+    got = _GENERA.get(genus)
+    if got is not None:
+        return got
+    raise UnknownOrganism(
+        f"{token!r} is not a supported organism. Supported canonical keys: "
+        f"{sorted(BY_CANONICAL)}")
 
 
 def routing_token(token: str) -> str | None:

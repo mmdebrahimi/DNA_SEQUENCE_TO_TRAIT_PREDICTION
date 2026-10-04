@@ -43,12 +43,68 @@ def test_both_observed_klebsiella_spellings_collapse_to_one_canonical(spelling):
     assert canonical(spelling) == "klebsiella_pneumoniae"
 
 
-@pytest.mark.parametrize("bad", ["", "   ", "Homo_sapiens", "not_an_organism", "Escherichia_colii"])
+# ------------------------------------------------- genus-level vs species-level (MEASURED behaviour)
+
+@pytest.mark.parametrize("name,expect", [
+    ("Campylobacter_jejuni", "campylobacter"),      # 66 local genomes
+    ("Campylobacter_coli", "campylobacter"),        # 34 local genomes
+    ("Salmonella_enterica", "salmonella"),          # 60 local genomes
+    ("Shigella_flexneri", "escherichia_coli"),      # -O Escherichia covers Shigella
+    ("Escherichia coli", "escherichia_coli"),       # space form, as GenBank ORGANISM writes it
+])
+def test_a_species_in_a_GENUS_level_entry_resolves(name, expect):
+    """AMRFinder's `-O Escherichia`/`Campylobacter`/`Salmonella` are GENUS-level values, so any species
+    in them routes there. A species-strict reading silently lost 160 real in-set genomes."""
+    assert canonical(name) == expect
+
+
+@pytest.mark.parametrize("other", ["Klebsiella_aerogenes", "Klebsiella_variicola",
+                                   "Klebsiella_michiganensis", "Gemmata_obscuriglobus"])
+def test_a_different_species_in_a_SPECIES_level_genus_stays_OUT_OF_SET(other):
+    """THE DIRECTION THAT MATTERS. AMRFinder lists K. pneumoniae and K. oxytoca separately and has no
+    value for aerogenes/variicola/michiganensis, so a Klebsiella genus rule would be WRONG: it would
+    answer 'K. pneumoniae' for a different organism and route it to the wrong rule. These 49 local
+    genomes are the legitimate out-of-set control for Step 6."""
+    with pytest.raises(UnknownOrganism):
+        canonical(other)
+
+
+def test_EXACT_match_beats_the_genus_fallback():
+    """Order is load-bearing: K. oxytoca has its own AMRFinder value and must not be captured by any
+    broader rule."""
+    assert canonical("Klebsiella_oxytoca") == "klebsiella_oxytoca"
+    assert routing_token("Klebsiella_oxytoca") == "Klebsiella_oxytoca"
+    assert canonical("Klebsiella_pneumoniae") == "klebsiella_pneumoniae"
+
+
+@pytest.mark.parametrize("bad", ["", "   ", "Homo_sapiens", "not_an_organism",
+                                 "Escherchia_coli", "Klebsiella_pneumoniaa"])
 def test_an_unsupported_token_RAISES_and_never_defaults(bad):
     """A silent default is how a WRONG organism reaches a rule, and the organism argument selects
-    which rule runs. `Escherichia_colii` is a deliberate typo: near-misses must not fuzzy-match."""
+    which rule runs.
+
+    Two typo shapes are covered on purpose: `Escherchia_coli` misspells the GENUS (so even the genus
+    fallback cannot catch it) and `Klebsiella_pneumoniaa` misspells the species of a SPECIES-level
+    entry (whose genus declares no `genus_match`, so there is nothing to fall back to).
+    """
     with pytest.raises(UnknownOrganism):
         canonical(bad)
+
+
+def test_a_typo_in_the_SPECIES_half_of_a_genus_level_entry_DOES_resolve():
+    """Recorded as a deliberate consequence, not fuzzy matching.
+
+    This test was originally written the other way round, asserting that `Escherichia_colii` must
+    raise. That premise belonged to species-strict matching; once the genus level is honoured --
+    because AMRFinder's `-O Escherichia` IS genus-level -- anything in genus Escherichia routes there,
+    including a misspelt or novel species. Rewritten rather than deleted so the behaviour is pinned
+    and the reversal is visible.
+
+    The cost is bounded and worth naming: an unrecognised Escherichia species resolves to the E. coli
+    entry, which is exactly what `-O Escherichia` would do anyway.
+    """
+    assert canonical("Escherichia_colii") == "escherichia_coli"
+    assert canonical("Escherichia_albertii") == "escherichia_coli"
 
 
 @pytest.mark.parametrize("bad", [None, 42, [], {}])
