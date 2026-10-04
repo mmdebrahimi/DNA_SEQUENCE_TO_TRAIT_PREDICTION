@@ -672,6 +672,7 @@
         "wiki/salmserovar_resolution_strata_2026-09-09.md",
         "wiki/salmserovar_seqsero2_2026-09-08.json",
         "wiki/salmserovar_seqsero2_2026-09-08.md",
+        "wiki/salmserovar_threshold_tradeoff_2026-09-04.json",
         "wiki/salmserovar_validation_2026-09-04.md"
       ],
       "unresolved_citations": [],
@@ -711,17 +712,11 @@
         "0.0550": "artifact"
       },
       "matched_only_after_rounding": {},
-      "adjudicated_benign": [
-        {
-          "number": "0.900",
-          "kind": "derived",
-          "why": "derived coverage: the prose states 200 isolates and 'abstention 10.0%', so covered = 180/200 = 0.900. Both inputs are in the same passage; the artifact stores the counts, not the rate."
-        }
-      ],
+      "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 122,
+      "n_decoys": 101,
       "decoy_match_rate": 0.0,
-      "decoy_group_size": 5,
+      "decoy_group_size": 6,
       "discrimination": "HIGH"
     },
     {

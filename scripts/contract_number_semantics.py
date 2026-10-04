@@ -37,6 +37,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -389,7 +390,12 @@ def main(argv=None) -> int:
               f"(artifacts not parsing, or labels not extracting), not a clean result.",
               file=sys.stderr)
         return 3
-    out = REPO / "wiki" / "contract_number_semantics_2026-09-28.json"
+    # DATE-STAMPED, as its sibling contract_number_audit.py already is. The name was pinned to
+    # 2026-09-28, so every later run OVERWROTE an artifact whose filename asserted a date it no
+    # longer held -- and worse, silently replaced the evidence that the evidence-surface ledger
+    # row 35 cites for the 09-28 findings (committed: 185 numbers / 1 mismatch / 5 bindings).
+    # Measured, not hypothetical: a run on 2026-10-03 rewrote that file to 190 / 0 / 6.
+    out = REPO / "wiki" / f"contract_number_semantics_{date.today().isoformat()}.json"
     out.write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
     print(f"numbers {rep['n_numbers']} | measurable {rep['n_measurable']} "
           f"({rep['measurable_fraction']}) | MISMATCH {rep['n_mismatch']}")

@@ -1667,7 +1667,11 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "vs the wet-lab label is now 0.783 (was 0.702), abstention 10.0% (was 29.5%), delta -0.142 "
             "(was -0.222). Coverage 0.705->0.900 AND accuracy-on-covered 0.702->0.783 BOTH rose, which "
             "is why the change is safe rather than merely favourable -- STILL BEHIND the incumbent "
-            "field. Abstention causes, partitioned by the FIRST axis "
+            "field (wiki/salmserovar_threshold_tradeoff_2026-09-04.json holds this whole paragraph at "
+            "selective_classification.{deployed,relaxed}; NOTE that block carries 0.705 TWICE as two "
+            "different quantities -- deployed.coverage and relaxed.accuracy_forced_call -- because 141 "
+            "of 200 GOT A CALL before the fix and 141 of 200 were CORRECT after it). "
+            "Abstention causes, partitioned by the FIRST axis "
             "that failed (scripts/salmserovar_nocall_anatomy.py -- CORRECTING an earlier reading that "
             "counted trailing '-' and wrongly named phase-2 the dominant defect): O antigen unresolved "
             "21/59 (35.6%, the largest), H1 phase-1 flagellin unresolved 16 (27.1%), O:H1 valid so only "
@@ -1693,6 +1697,19 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "eliminated (per-isolate agglutination provenance is unprovable), but both callers are "
             "scored on the SAME labels so the DELTA survives contamination even where the absolute "
             "levels are optimistic. Promote the claim only if the delta closes"),
+        # 0.705 is this cell's one genuine right-value/wrong-quantity collision, and the artifact holds
+        # BOTH readings in ONE block: selective_classification.deployed.coverage = 0.705 (99 called
+        # correctly + 42 called wrongly = 141 of 200 GOT A CALL) and relaxed.accuracy_forced_call = 0.705
+        # (141 of 200 were CORRECT, post-threshold-fix). Same fraction, different numerator meaning. The
+        # prose says "Coverage 0.705->0.900", so the coverage field is the one that makes that claim
+        # checkable -- without this binding the contract-number audit reported 0.705 as verified against
+        # `ours.accuracy`, which is a different quantity entirely. `0.7050` is a SEPARATE token in the
+        # same prose ("ours 0.7050 (141/39/20)") and is correctly an accuracy; the two must not be merged.
+        metric_bindings=(
+            ContractNumberBinding("0.705", "coverage",
+                                  "wiki/salmserovar_threshold_tradeoff_2026-09-04.json",
+                                  "selective_classification.deployed.coverage"),
+        ),
     ),
     CellContract(
         cell_id="typing:Escherichia_coli:serotype", track="typing", route="dna-serotype",

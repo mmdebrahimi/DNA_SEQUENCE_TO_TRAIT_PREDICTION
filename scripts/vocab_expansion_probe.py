@@ -87,9 +87,13 @@ before below between during into through out up down off""".split())
 def probe() -> dict:
     from dna_decode.data.cell_registry import cells
 
-    art = REPO / "wiki" / "contract_number_semantics_2026-09-28.json"
-    if not art.exists():
-        return {"error": f"run scripts/contract_number_semantics.py first (missing {art.name})"}
+    # Resolve the NEWEST artifact. A fixed filename broke the moment the writer started date-stamping,
+    # and pinning a date here would reintroduce exactly the staleness that change removed.
+    found = sorted((REPO / "wiki").glob("contract_number_semantics_*.json"))
+    if not found:
+        return {"error": "run scripts/contract_number_semantics.py first "
+                         "(no wiki/contract_number_semantics_*.json)"}
+    art = found[-1]
     rep = json.loads(art.read_text(encoding="utf-8"))
     unlabeled = [r for r in rep["rows"] if r["status"] == "label_unlabeled"]
 

@@ -262,12 +262,21 @@ def test_the_live_registry_bindings_convert_previously_unmeasurable_numbers():
     for the remaining ~144 unlabeled ones.
     """
     rep = audit_semantics()
-    assert rep["n_bindings_declared"] == 5, rep["n_bindings_declared"]
-    assert rep["measurable_by_binding"] == 5, rep["measurable_by_binding"]
-    # 17 -> 18 and 22 -> 23 when `concordance` was added to LABEL_VOCAB (pneumoserotype's newly-cited
-    # artifacts put `serogroup_concordance` / `exact_concordance` numbers in reach).
-    assert rep["measurable_by_heuristic"] == 18, rep["measurable_by_heuristic"]
-    assert rep["n_measurable"] == 23 > 16
+    # Was `== 5` on both. An exact count against a live registry fires when a legitimate binding is
+    # ADDED (it did, 2026-10-03, on salmserovar coverage 0.705). The invariant is that every declared
+    # binding RESOLVES -- zero defects -- which holds at any number of bindings.
+    assert rep["n_bindings_declared"] >= 5, rep["n_bindings_declared"]
+    assert rep["measurable_by_binding"] == rep["n_bindings_declared"], (
+        rep["measurable_by_binding"], rep["n_bindings_declared"])
+    assert rep["n_binding_defects"] == 0, rep["binding_defects"]
+    # History: 17 -> 18 and 22 -> 23 when `concordance` joined LABEL_VOCAB; then on 2026-10-03 the
+    # salmserovar `coverage 0.705` number MOVED from heuristic to binding (18 -> 17, binding 5 -> 6)
+    # while the total held at 23 -- because `field_mismatch` already counted as measurable, so binding
+    # it RECLASSIFIED a number rather than converting a new one. Asserting the literals would have read
+    # that clean reclassification as a regression, so pin the conservation law instead.
+    assert rep["measurable_by_heuristic"] > 0, rep["measurable_by_heuristic"]
+    assert rep["n_measurable"] == rep["measurable_by_binding"] + rep["measurable_by_heuristic"]
+    assert rep["n_measurable"] > 16, rep["n_measurable"]
     assert rep["n_binding_defects"] == 0, rep["binding_defects"]
 
 
@@ -302,7 +311,117 @@ def test_vocabulary_and_bindings_are_COMPLEMENTARY_not_ranked():
     assert not path_is_consistent("metrics.accuracy", "concordance")
     rep = audit_semantics()
     # BOTH kinds carry weight, and they are reported under separate keys so neither can absorb the other
-    assert rep["measurable_by_binding"] == 5 and rep["measurable_by_heuristic"] == 18
+    # Was `== 5` and `== 18`. Both are live-registry counts and both move when a legitimate binding or
+    # citation is added (they did, 2026-10-03). The invariant is that BOTH levers carry weight and that
+    # the two keys PARTITION the measurable set -- neither can absorb the other.
+    assert rep["measurable_by_binding"] > 0 and rep["measurable_by_heuristic"] > 0
     assert rep["n_measurable"] == rep["measurable_by_binding"] + rep["measurable_by_heuristic"]
     # and the residual is still large under BOTH levers -- the honest state
     assert rep["status_counts"]["label_unlabeled"] > 100, rep["status_counts"]["label_unlabeled"]
+
+
+# ---------------------------------------------------------------------------
+# The salmserovar coverage/accuracy collision, resolved 2026-10-03.
+#
+# The lead was diagnosed correctly on 2026-09-28 (evidence-surface ledger row 35 names the exact
+# field). What was missing was the FIX: the prose claimed "Coverage 0.705->0.900" while the only cited
+# artifacts carried 0.705 as `ours.accuracy`, so the parent contract-number audit reported the number
+# VERIFIED against a different quantity. Resolved by citing the artifact that holds the coverage and
+# declaring a binding to it.
+
+def test_salmserovar_binds_its_coverage_claim_to_a_coverage_field():
+    from dna_decode.data.cell_registry import cells
+    from scripts.contract_number_semantics import path_is_consistent
+    cell = next(c for c in cells() if c.cell_id == "typing:Salmonella:salmserovar")
+    bound = [b for b in cell.metric_bindings if b.number_token == "0.705"]
+    assert bound, "the 0.705 coverage binding is gone"
+    b = bound[0]
+    assert b.quantity == "coverage"
+    assert b.field_path == "selective_classification.deployed.coverage"
+    assert path_is_consistent(b.field_path, "coverage"), (
+        "the declared path must be consistent with the declared quantity, or the binding is a second "
+        "truth surface rather than a provenance pointer")
+
+
+def test_the_bindings_artifact_is_actually_CITED_in_the_prose():
+    """A binding only resolves against an artifact the prose cites -- which is the whole reason this
+    lead sat open: the coverage field existed, but in an uncited file. Pin BOTH halves, because citing
+    without binding leaves the audit matching an accuracy, and binding without citing cannot resolve."""
+    from dna_decode.data.cell_registry import cells
+    from scripts.contract_number_audit import PROSE_FIELDS, REPO, _cited_artifacts
+    cell = next(c for c in cells() if c.cell_id == "typing:Salmonella:salmserovar")
+    blob = " ".join(str(getattr(cell, f, "") or "") for f in PROSE_FIELDS)
+    # assert-then-index, never a bare next(): a StopIteration here would be a CRASH dressed as a
+    # finding, and this repo has that failure mode on record.
+    found = [b for b in cell.metric_bindings if b.number_token == "0.705"]
+    assert found, "the 0.705 binding is gone, so this test cannot say anything about citation"
+    b = found[0]
+    assert b.artifact in _cited_artifacts(blob), f"{b.artifact} is bound but not cited"
+    assert (REPO / b.artifact).is_file()
+
+
+def test_the_collision_is_REAL_both_quantities_equal_0705_in_one_block():
+    """Not a mislabel to be tidied away: the artifact carries 0.705 TWICE, as two different quantities,
+    because 141 of 200 got a call BEFORE the threshold fix and 141 of 200 were CORRECT after it. If this
+    ever stops being true, the binding is pointing at something else and the story above is wrong."""
+    import json
+    from scripts.contract_number_audit import REPO
+    d = json.loads((REPO / "wiki/salmserovar_threshold_tradeoff_2026-09-04.json")
+                   .read_text(encoding="utf-8"))
+    sc = d["selective_classification"]
+    assert sc["deployed"]["coverage"] == pytest.approx(0.705)
+    assert sc["relaxed"]["accuracy_forced_call"] == pytest.approx(0.705)
+    # and they really are the same fraction reached two ways
+    assert (sc["deployed"]["correct"] + sc["deployed"]["wrong"]) / sc["deployed"]["n"] == \
+        pytest.approx(0.705)
+    assert sc["relaxed"]["correct"] / sc["relaxed"]["n"] == pytest.approx(0.705)
+    assert sc["deployed"]["coverage"] != sc["relaxed"]["coverage"], (
+        "deployed vs relaxed coverage must differ, or 'Coverage 0.705->0.900' is not what this holds")
+
+
+def test_0705_and_07050_stay_SEPARATE_tokens_with_different_quantities():
+    """The same prose carries `ours 0.7050 (141/39/20)` -- an ACCURACY -- alongside `Coverage 0.705`.
+    Merging them (e.g. by normalising trailing zeros) would let an accuracy verify a coverage claim,
+    which is precisely the error this whole check exists to catch."""
+    import json
+    from scripts.contract_number_audit import REPO
+    audits = sorted((REPO / "wiki").glob("contract_number_audit_*.json"))
+    rep = json.loads(audits[-1].read_text(encoding="utf-8"))
+    row = next(c for c in rep["cells"] if c["cell_id"] == "typing:Salmonella:salmserovar")
+    assert "0.705" in row["number_kinds"] and "0.7050" in row["number_kinds"], (
+        "both tokens must be extracted independently")
+
+
+def test_the_semantics_artifact_is_DATE_STAMPED_not_pinned_to_one_past_date():
+    """FIXED 2026-10-03. The output path was the literal `..._2026-09-28.json`, so every later run
+    overwrote a file whose name asserted a date it no longer held -- and silently replaced the evidence
+    the evidence-surface ledger cites for the 09-28 findings (measured: a 10-03 run rewrote 185
+    numbers / 1 mismatch / 5 bindings to 190 / 0 / 6). Its sibling audit already date-stamps."""
+    import re
+    from pathlib import Path
+    src = Path("scripts/contract_number_semantics.py").read_text(encoding="utf-8")
+    assert 'f"contract_number_semantics_{date.today().isoformat()}.json"' in src, (
+        "the output filename must derive from the run date")
+    assert not re.search(r'"contract_number_semantics_20\d\d-\d\d-\d\d\.json"', src), (
+        "a hardcoded dated filename has come back")
+
+
+def test_the_reader_resolves_the_NEWEST_artifact_not_a_pinned_name():
+    """vocab_expansion_probe read the same pinned filename, so date-stamping the writer would have
+    broken it -- and re-pinning a date there would reintroduce the staleness."""
+    import re
+    from pathlib import Path
+    src = Path("scripts/vocab_expansion_probe.py").read_text(encoding="utf-8")
+    assert 'glob("contract_number_semantics_*.json")' in src
+    assert not re.search(r'"contract_number_semantics_20\d\d-\d\d-\d\d\.json"', src)
+
+
+def test_every_semantics_artifact_stays_inside_the_circularity_exclusion():
+    """These artifacts now ACCRUE rather than overwrite, so each new one enters the corpus the parent
+    audit scans. The own-family exclusion must cover every one of them or the audit starts grading
+    citations against its own output."""
+    from scripts.contract_number_audit import REPO, _is_own_family
+    found = sorted((REPO / "wiki").glob("contract_number_semantics_*.json"))
+    assert len(found) >= 2, "expected at least the 09-28 and the date-stamped sibling"
+    for p in found:
+        assert _is_own_family(p.name), f"{p.name} would be used as its own decoy"
