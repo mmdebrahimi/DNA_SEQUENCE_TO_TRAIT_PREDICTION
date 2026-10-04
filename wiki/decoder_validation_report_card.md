@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-09-28
+# Decoder-suite provenance-disjoint validation report card — 2026-10-03
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -146,6 +146,7 @@ HONEST SCOPE: N is small and ACCRUES over time; this is a temporal stress test, 
 | campylobacter | ciprofloxacin | 2026-08-31 | 426 (149R/277S) | 0.998 | 0.993 | 1.000 | 0 | POWERED | 2026-09-28 |
 | escherichia_coli_shigella | ciprofloxacin | — | — | — | — | — | — | — | superseded_by_surface_change |
 | escherichia_coli_shigella | gentamicin | — | — | — | — | — | — | — | superseded_by_surface_change |
+| klebsiella | meropenem | 2026-08-31 | 16 (7R/9S) | 0.438 | 1.000 | 0.000 | 0 | UNDERPOWERED | 2026-10-03 |
 
 A LOW prospective sens with HIGH spec means the rule under-calls — it is missing determinants, not mislabelling. Diagnose the false negatives' features before reading it as decay; see `wiki/prospective_lock_first_accrual_2026-08-24.md`, where exactly that diagnosis located a real catalog gap rather than drift.
 
