@@ -2,16 +2,28 @@
   "drug": "meropenem",
   "organism": "Klebsiella",
   "label_source": "ar_bank_CDC_INT_call (MIC-derived S/I/R; INTERMEDIATE excluded)",
-  "n_total": 143,
-  "n_R": 104,
-  "n_S": 39,
+  "n_total": 129,
+  "n_R": 98,
+  "n_S": 31,
   "n_panels": 14,
-  "largest_panel_share": 0.1538,
+  "largest_panel_share": 0.155,
   "strict_disjoint_floor": {
     "n": 9,
     "n_R": 5,
     "n_S": 4,
     "note": "biosamples absent from every prior selected*.tsv. The other 134 appear in SIBLING AR Bank cohorts (ceftriaxone/cipro/gentamicin) -- same isolates, DIFFERENT drugs; the meropenem label was never used and the frozen meropenem rule was never fit on them."
   },
-  "overlap_disclosure": "cohort_manifest is accession-based and DRUG-BLIND, so a strict application cuts this cohort to the floor above. Primary = full set with overlap disclosed."
+  "overlap_disclosure": "cohort_manifest is accession-based and DRUG-BLIND, so a strict application cuts this cohort to the floor above. Primary = full set with overlap disclosed.",
+  "species_restriction": {
+    "kept": "Klebsiella pneumoniae",
+    "n_kept": 129,
+    "n_excluded": 14,
+    "excluded_by_species": {
+      "Klebsiella aerogenes": 4,
+      "Klebsiella oxytoca": 7,
+      "Klebsiella variicola": 1,
+      "Klebsiella ozaenae": 2
+    },
+    "why": "the FROZEN Klebsiella meropenem cell used amrfinder_organism=Klebsiella_pneumoniae. AMRFinder's -O drives species-specific point-mutation screening and curation, so scoring oxytoca/aerogenes/variicola under a pneumoniae organism flag would be a silent methodological error. ozaenae (n=2) is arguably K. pneumoniae subsp. ozaenae and is a JUDGEMENT CALL -- excluded here for an exact-species match, and named so it can be reversed deliberately."
+  }
 }

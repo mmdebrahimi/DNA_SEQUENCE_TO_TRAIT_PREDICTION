@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Callable
 
 ENA_PORTAL = "https://www.ebi.ac.uk/ena/portal/api/filereport"
+NCBI_DATASETS = "https://api.ncbi.nlm.nih.gov/datasets/v2alpha"
 ENTREZ = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 
 Fetch = Callable[[str], str]
@@ -217,10 +218,52 @@ class BioSampleResolver:
                f"&result=assembly&fields=assembly_accession,sample_accession&format=tsv")
         return parse_ena_assembly(self.fetch(url))
 
+    def canonicalize_accession(self, acc: str) -> str | None:
+        """An UNVERSIONED `GCA_123456789` -> its canonical `GCA_123456789.N`, or None.
+
+        WHY (measured 2026-10-04, on the real surface): ENA's `assembly_accession` field is
+        UNVERSIONED, NCBI's `assemblyaccession` is versioned, and the downloader needs the version --
+        NCBI Datasets answers an unversioned accession with an HTML error page, which arrives as a
+        "not a valid ZIP" failure. That is what made a 143-isolate run burn two hours producing zero
+        genomes and zero diagnostics: every ENA-resolved accession failed download and retried.
+
+        The version is RESOLVED, never guessed. Appending ".1" would be wrong for any re-versioned
+        assembly, and this module's whole purpose is identity. Unresolvable -> None, so the caller
+        drops it to ASSEMBLY-REQUIRED (fail-closed) instead of handing a broken accession downstream.
+        """
+        acc = (acc or "").strip()
+        if not acc:
+            return None
+        if "." in acc:  # already versioned -- the Entrez path's normal output
+            return acc
+        try:
+            raw = self.fetch(f"{NCBI_DATASETS}/genome/accession/{urllib.parse.quote(acc)}"
+                             f"/dataset_report")
+            reports = (json.loads(raw) or {}).get("reports") or []
+        except Exception:  # noqa: BLE001 -- unresolvable is a VALID outcome, not an error to raise
+            return None
+        for r in reports:
+            got = (r.get("accession") or "").strip()
+            # guard the identity: the resolved accession must be the SAME accession, just versioned
+            if got.split(".")[0] == acc:
+                return got
+        return None
+
     def biosample_to_assemblies(self, biosample: str) -> list[str]:
         cache = self._cache.setdefault("biosample_to_assemblies", {})
         if biosample in cache:
-            return list(cache[biosample]["value"])
+            # Canonicalize on READ as well as on write. A cache written before accession
+            # canonicalization existed holds UNVERSIONED ENA accessions, and returning those
+            # silently bypassed the fix -- measured 2026-10-04: the smoke still failed with
+            # `GCA_003073675` after the write-path fix, because the poisoned cache short-circuited
+            # it. Already-versioned entries cost nothing here (early return, no network).
+            cached = list(cache[biosample]["value"])
+            if any("." not in a for a in cached):
+                fixed = [c for c in (self.canonicalize_accession(a) for a in cached) if c]
+                cache[biosample] = {"value": sorted(set(fixed)),
+                                    "source": f"{cache[biosample].get('source','?')}+recanonicalized"}
+                return list(cache[biosample]["value"])
+            return cached
         try:
             gcas = self._entrez_assemblies_for_biosample(biosample)
             source = "entrez"
@@ -232,7 +275,16 @@ class BioSampleResolver:
                 source = "ena" if gcas else source
             except Exception:  # noqa: BLE001
                 pass
-        cache[biosample] = {"value": sorted(set(gcas)), "source": source}
+        # Canonicalize BEFORE caching: the ENA path yields unversioned accessions that the
+        # downloader cannot use (see canonicalize_accession). Unresolvable ones are DROPPED, which
+        # surfaces as ASSEMBLY-REQUIRED rather than as a download failure 40 isolates later.
+        canon, dropped = [], []
+        for a in sorted(set(gcas)):
+            c = self.canonicalize_accession(a)
+            (canon if c else dropped).append(c or a)
+        if dropped:
+            source = f"{source}+unversioned_unresolved:{len(dropped)}"
+        cache[biosample] = {"value": sorted(set(canon)), "source": source}
         return list(cache[biosample]["value"])
 
     # -- assembly -> biosample (Entrez primary, ENA fallback; disagree->None) #
