@@ -590,7 +590,7 @@
 ---
 
 ## [plan_file: Transfer_Benchmark_And_Regime_Transfer_Axis_F1_Phase_0_Plan/] 2026-10-01 (body rewritten to v3 2026-10-03)
-**Status:** candidate
+**Status:** as-built — executed 2026-10-03, archived to `executed_plans/`. Four recorded deviations in `execution-log.md`: the plan's pinned genotype file is TRUNCATED (`geno_v2.txt` shipped instead, and the plan's "511 markers" was read off the truncated file); the cross-panel transfer control was DROPPED not deferred (representation-incompatibility, knowable without running); `structure_only_baseline` was DEMOTED from verdict rival to diagnostic on a measurement; `WITHIN_GROUP_UNSCORABLE` became a required verdict once `min_n=30` proved the binding floor.
 **Summary:** Every learned number in this repo was measured with the held-out unit being a position, a study, or a protein -- never an organism, and `eval/regime.py` cannot express that; this builds the verdict SHAPE (unordered `split_unit` + narrow `organism_transfer`, held-out-group k-shot harness, fail-closed leakage audit, five-control gauntlet) as thin orchestration over the existing `dna_decode/deconfound` package, and ships `TRANSFER_POSITIVE_UNMEASURED` as a first-class verdict because no cross-organism substrate exists on disk.
 **Key decisions:**
 - Rewritten IN PLACE across v1 -> v2 -> v3 per the save-once rule (a post-review rewrite is an in-place edit, not a new plan folder). v1's scope was measured unachievable: every on-disk panel (Bloom yeast 1008 individuals, BXD mouse 198, Arabidopsis MAGIC 703) is a single constructed population, so a held-out-organism fold has nothing to hold out.
