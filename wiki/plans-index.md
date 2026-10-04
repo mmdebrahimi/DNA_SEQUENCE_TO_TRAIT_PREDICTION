@@ -601,7 +601,7 @@
 ---
 
 ## [plan_file: Closed_Set_Organism_Identification_Router_V0_Plan/] 2026-10-04
-**Status:** candidate — saved, not executed.
+**Status:** executed 2026-10-04 (as-built, 6 deviations) — archived to executed_plans/; see execution-log.md. dna-identify ships: LOO 211/211, out-of-set abstention 44/48=0.9167, two measured limits in the contract.
 **Summary:** Step 1 of the project's north star does not exist — given a DNA sequence, identify what organism it is — because all 44 CLI traits REQUIRE the caller to name the organism, so the pipeline's first step is currently a human typing the answer in; this builds a closed-set Mash router over the organisms the tool actually supports, with abstention, emitting both downstream consumer tokens.
 **Key decisions:**
 - CLOSED-SET router with abstention over the organisms enumerable from `cell_registry` (41 organism tokens / 115 cells), explicitly NOT open-world taxonomy: open-world would need a ~1 GB RefSeq sketch and would answer a question no consumer asks, and abstention is the safe failure for a router whose output selects a downstream rule.
