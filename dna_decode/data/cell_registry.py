@@ -446,7 +446,7 @@ _PGX_CONTRACTS: list[CellContract] = [
         label_provenance="GeT-RM consensus (Astrolabe+Stargazer+Aldy; Gaedigk 2022) CYP2D6_getrm_cons join 1000G",
         abstention_vocab=AbstentionVocab.SCORED, native_abstention="SCORED",
         falsifier_ref="scripts/pgx_getrm_concordance.py", incoming_data_gate="n/a",
-        demotion_rule="SNP surface: structural alleles NOT withheld (may be SILENTLY mis-called). Structural surface off a BAM/CRAM resolves COPY NUMBER (*5/*xN, 26/26), HYBRID PRESENCE (CYP2D7 depth, sens 0.62/spec 1.0), and HYBRID IDENTITY via read-level PSV D6-fraction (cyp2d6_hybrid_identity; Cyrius 117-PSV method; full-N GO, spec 1.0, *68 4/4 / *36 6/8); subtle *36 conversions + *13 (n=1 unpowered) abstain; non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"),
+        demotion_rule="SNP surface: structural alleles NOT withheld (may be SILENTLY mis-called). Structural surface off a BAM/CRAM resolves COPY NUMBER (*5/*xN, 26/26), HYBRID PRESENCE (CYP2D7 depth, sens 0.62/spec 1.0 — stated verbatim in wiki/cyp2d6_hybrid_identity_2026-07-06.md; note the 0.62 in wiki/cyp2d6_structural_2026-07-06.md is a per-sample READ-DEPTH ratio, a different quantity that happens to share the value), and HYBRID IDENTITY via read-level PSV D6-fraction (same artifact; Cyrius 117-PSV method; full-N GO, spec 1.0, *68 4/4 / *36 6/8); subtle *36 conversions + *13 (n=1 unpowered) abstain; non-core SNP alleles (*14/*15/*21/*40/*46) mis-called (no sentinel v0)"),
     CellContract(
         cell_id="pgx:human:dpyd", track="pgx", route="dna-pgx", organism="human", target="dpyd",
         claim="DPYD fluoropyrimidine-toxicity phenotype: CPIC activity-score over the 4 actionable DPD-deficiency haplotypes (*2A/*13 no-function, c.2846A>T/HapB3 decreased) from a phased VCF",
@@ -969,7 +969,9 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "EYE = the published IrisPlex model (coefficients in irisplex.py; reference anchors rs12913832 "
             "GG->blue / AA->brown via reference_integrity_ok()), POPULATION-VALIDATED on real 1000G (N=3202, "
             "Ensembl-pinned + strand-harmonized, 2026-07-29): known eye geography reproduced (EUR P(blue)=0.468, "
-            "AFR/EAS/SAS brown ~1.0). HAIR (4-cat) + SKIN (5-cat) = the HIrisPlex-S deployed multinomial models "
+            "AFR/EAS/SAS brown ~1.0) -- wiki/pigment_1000g_population_2026-07-29.md, whose table carries EUR "
+            "P(blue) 0.4676 (the 0.468 here is that value ROUNDED) and EAS P(brown) exactly 1.0. "
+            "HAIR (4-cat) + SKIN (5-cat) = the HIrisPlex-S deployed multinomial models "
             "RECOVERED from the erasmusmc webtool (2026-07-30) -- the papers publish the betas but NOT the "
             "intercepts (webtool-only), so the models were extracted by a designed-genotype-basis query + LS-fit "
             "and VALIDATED on 20 random held-out genotypes: max |ΔP| eye 6e-15 / hair 6e-16 / skin 9e-3, i.e. the "

@@ -1,0 +1,808 @@
+{
+  "schema": "contract-number-audit-v1",
+  "analysis_date": "2026-10-03",
+  "posture": "TRIAGE FUNNEL, not an oracle -- a cited number may legitimately be derived, rounded, or describe a superseded run. Every hit needs adjudication; this script edits nothing.",
+  "scope": "cells whose prose names a wiki/ artifact; decimal numbers only",
+  "n_cells_audited": 22,
+  "n_numbers_checked": 190,
+  "n_candidate_drift": 0,
+  "hit_rate": 0.0,
+  "verdict": "NOTHING_TO_ADJUDICATE",
+  "n_cells_low_discrimination": 0,
+  "cells_low_discrimination": [],
+  "n_numbers_extracted": 197,
+  "n_by_kind": {
+    "artifact": 181,
+    "derived": 3,
+    "enforced-by-test": 2,
+    "external-reference": 1,
+    "structural-non-measurement": 5,
+    "superseded-value": 1,
+    "threshold": 4
+  },
+  "kind_definitions": {
+    "artifact": "present in a wiki/ artifact the prose cites",
+    "structural-non-measurement": "pattern-typed non-measurement: a DOI prefix, or a kb/bp length",
+    "external-reference": "a published external reference value, not our measurement",
+    "enforced-by-test": "pinned by an exact-equality assert in the test suite, not by an artifact",
+    "threshold": "a bar or cut-off, which has no artifact to live in",
+    "superseded-value": "recorded deliberately as the REJECTED value, so it is never quoted",
+    "derived": "computed from counts the prose itself states; the reason carries the arithmetic",
+    "candidate-drift": "cited but absent from the cited artifact -- the thing this audit looks for",
+    "unverifiable": "no provenance of any kind: an uncited measurement"
+  },
+  "n_cells_all_numbers_typed_no_citation": 4,
+  "cells_all_numbers_typed_no_citation": [
+    {
+      "cell_id": "pgx:human:nudt15",
+      "kinds": {
+        "9.5": "external-reference"
+      }
+    },
+    {
+      "cell_id": "typing:Escherichia_coli:pathotype",
+      "kinds": {
+        "0.833": "enforced-by-test",
+        "1.0": "enforced-by-test",
+        "0.917": "superseded-value",
+        "0.80": "threshold"
+      }
+    },
+    {
+      "cell_id": "typing:cat:catcolor",
+      "kinds": {
+        "5.1": "structural-non-measurement"
+      }
+    },
+    {
+      "cell_id": "typing:horse:horsecolor",
+      "kinds": {
+        "4.6": "structural-non-measurement"
+      }
+    }
+  ],
+  "n_cells_with_numbers_but_no_citation": 0,
+  "n_numbers_unverifiable": 0,
+  "cells_unverifiable": [],
+  "cells": [
+    {
+      "cell_id": "pgx:human:cyp2d6",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/cyp2d6_hybrid_identity_2026-07-06.md",
+        "wiki/cyp2d6_structural_2026-07-06.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 2,
+      "found": 2,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.62": "artifact",
+        "1.0": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 163,
+      "n_decoys": 617,
+      "decoy_match_rate": 0.2642,
+      "decoy_group_size": 1,
+      "discrimination": "MODERATE"
+    },
+    {
+      "cell_id": "pgx:human:ugt1a1",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/ugt1a1_getrm_concordance_2026-09-22.json",
+        "wiki/ugt1a1_getrm_concordance_2026-09-22.md",
+        "wiki/ugt1a1_tag_acceptance_bar.json"
+      ],
+      "unresolved_citations": [
+        "wiki/ugt1a1_getrm_concordance_2026-09-22"
+      ],
+      "checked": 3,
+      "found": 3,
+      "candidate_drift": [],
+      "number_kinds": {
+        "1.00": "artifact",
+        "0.939": "artifact",
+        "0.941": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.939": 0.9385,
+        "0.941": 0.9412
+      },
+      "adjudicated_benign": [],
+      "decoy_full_match": 12,
+      "n_decoys": 307,
+      "decoy_match_rate": 0.0391,
+      "decoy_group_size": 2,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "pgx:human:cyp4f2",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json",
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.md",
+        "wiki/pgx_af_panel_audit_2026-09-24.json",
+        "wiki/pgx_af_panel_audit_2026-09-24.md"
+      ],
+      "unresolved_citations": [
+        "wiki/cyp4f2_getrm_concordance_2026-09-24",
+        "wiki/pgx_af_panel_audit_2026-09-24"
+      ],
+      "checked": 5,
+      "found": 5,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.8125": "artifact",
+        "0.2773": "artifact",
+        "0.2128": "artifact",
+        "0.79": "artifact",
+        "0.3": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 1,
+      "n_decoys": 307,
+      "decoy_match_rate": 0.0033,
+      "decoy_group_size": 2,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "pgx:human:slco1b1",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/slco1b1_getrm_concordance_2026-09-22.json",
+        "wiki/slco1b1_getrm_concordance_2026-09-22.md"
+      ],
+      "unresolved_citations": [
+        "wiki/slco1b1_getrm_concordance_2026-09-22"
+      ],
+      "checked": 1,
+      "found": 1,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.398": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.398": 0.3977
+      },
+      "adjudicated_benign": [],
+      "decoy_full_match": 10,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0162,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "hla:human:b5701",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/hla_validation_2026-07-06.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 5,
+      "found": 5,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.979": "artifact",
+        "0.992": "artifact",
+        "0.855": "artifact",
+        "0.61": "artifact",
+        "0.0": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 6,
+      "n_decoys": 617,
+      "decoy_match_rate": 0.0097,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:Klebsiella:ktype",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/ktype_kaptive_concordance_2026-09-08.json",
+        "wiki/ktype_kaptive_concordance_2026-09-08.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 4,
+      "found": 4,
+      "candidate_drift": [],
+      "number_kinds": {
+        "14.0": "artifact",
+        "0.8788": "artifact",
+        "0.8902": "artifact",
+        "0.94": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "finder:Escherichia_coli:pointfinder",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/pointfinder_amrfinder_concordance_2026-09-05.json",
+        "wiki/pointfinder_amrfinder_concordance_2026-09-05.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 3,
+      "found": 3,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.9923": "artifact",
+        "0.9967": "artifact",
+        "0.3": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:bacteria:mlst",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/mlst_serotype_purity_2026-09-05.json",
+        "wiki/mlst_serotype_purity_2026-09-05.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 11,
+      "found": 11,
+      "candidate_drift": [],
+      "number_kinds": {
+        "68.1": "artifact",
+        "0.7860": "artifact",
+        "0.2156": "artifact",
+        "0.2583": "artifact",
+        "0.9188": "artifact",
+        "0.4170": "artifact",
+        "0.8266": "artifact",
+        "0.2694": "artifact",
+        "0.87": "artifact",
+        "0.14": "artifact",
+        "31.9": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "finder:bacteria:resfinder",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/resfinder_locus_collapse_2026-09-05.json",
+        "wiki/resfinder_locus_collapse_2026-09-05.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 14,
+      "found": 14,
+      "candidate_drift": [],
+      "number_kinds": {
+        "165.52": "artifact",
+        "1.94": "artifact",
+        "100.0": "artifact",
+        "99.0": "artifact",
+        "99.8": "artifact",
+        "1.59": "artifact",
+        "0.0125": "artifact",
+        "0.7754": "artifact",
+        "9.16": "artifact",
+        "2.44": "artifact",
+        "2.46": "artifact",
+        "0.4126": "artifact",
+        "0.7786": "artifact",
+        "0.4269": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:arabidopsis:flowering",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/deterministic_flowering_scoping_2026-07-16.md",
+        "wiki/flowering_flc_route_2026-07-17.md",
+        "wiki/flowering_tables3_score_2026-07-16.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 19,
+      "found": 19,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.733": "artifact",
+        "0.502": "artifact",
+        "0.710": "artifact",
+        "0.676": "artifact",
+        "3.4": "artifact",
+        "93.9": "artifact",
+        "65.8": "artifact",
+        "9.8": "artifact",
+        "0.803": "artifact",
+        "0.767": "artifact",
+        "0.751": "artifact",
+        "4.0": "artifact",
+        "5.2": "artifact",
+        "1.6": "artifact",
+        "0.028": "artifact",
+        "0.066": "artifact",
+        "0.047": "artifact",
+        "0.000": "artifact",
+        "0.085": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 617,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "finder:any:inverse",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/esm_at_scale_2026-07-17.md",
+        "wiki/forward_inverse_deployable_2026-07-17.md",
+        "wiki/forward_inverse_roundtrip_2026-07-16.md",
+        "wiki/forward_inverse_sweep_2026-07-17.md"
+      ],
+      "unresolved_citations": [
+        "wiki/forward_inverse_deployable_2026-07-16.md",
+        "wiki/forward_inverse_roundtrip_2026-07-17.md",
+        "wiki/forward_inverse_sweep_2026-07-16.md"
+      ],
+      "checked": 11,
+      "found": 11,
+      "candidate_drift": [],
+      "number_kinds": {
+        "79.3": "artifact",
+        "53.0": "artifact",
+        "9.00": "artifact",
+        "2.00": "artifact",
+        "3.56": "artifact",
+        "13.5": "artifact",
+        "72.9": "artifact",
+        "0.5185": "artifact",
+        "0.5190": "artifact",
+        "0.454": "artifact",
+        "0.926": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 617,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:human:pigment",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/pigment_1000g_population_2026-07-29.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 3,
+      "found": 3,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.468": "artifact",
+        "1.0": "artifact",
+        "0.4676": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.468": 0.4676
+      },
+      "adjudicated_benign": [],
+      "decoy_full_match": 3,
+      "n_decoys": 617,
+      "decoy_match_rate": 0.0049,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:dog:coatcolor",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/dog_coat_darwins_ark_measured_2026-07-30.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 4,
+      "found": 4,
+      "candidate_drift": [],
+      "number_kinds": {
+        "10.5061": "structural-non-measurement",
+        "0.70": "artifact",
+        "0.994": "artifact",
+        "0.355": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 2,
+      "n_decoys": 617,
+      "decoy_match_rate": 0.0032,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:dog:morphology",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/dog_morphology_darwins_ark_validated_2026-07-30.json",
+        "wiki/dog_morphology_darwins_ark_validated_2026-07-30.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 7,
+      "found": 7,
+      "candidate_drift": [],
+      "number_kinds": {
+        "10.5061": "structural-non-measurement",
+        "0.70": "artifact",
+        "0.619": "artifact",
+        "0.383": "artifact",
+        "0.543": "artifact",
+        "0.13": "artifact",
+        "0.21": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.13": 0.127,
+        "0.21": 0.213
+      },
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:bacteriophage:phage",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/phage_rbp_crosslab_result_2026-07-24.json",
+        "wiki/phage_rbp_crosslab_result_2026-07-24.md"
+      ],
+      "unresolved_citations": [
+        "wiki/phage_rbp_crosslab_result_2026-07-24"
+      ],
+      "checked": 4,
+      "found": 4,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.862": "derived",
+        "0.291": "derived",
+        "0.975": "artifact",
+        "0.364": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [
+        {
+          "number": "0.862",
+          "kind": "derived",
+          "why": "derived, and the prose states the fraction it comes from: '25/29 called = 0.862' (25/29 = 0.8621). Both counts are in the same clause, so the quotient is checkable by arithmetic; no artifact needs to store it."
+        },
+        {
+          "number": "0.291",
+          "kind": "derived",
+          "why": "derived, stated in the prose as '25/86=0.291' (25/86 = 0.2907). Same clause carries both counts."
+        }
+      ],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:klebsiella:kleb",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/klebsiella_topk_ksweep_2026-07-25.json",
+        "wiki/klebsiella_topk_ksweep_2026-07-25.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 6,
+      "found": 6,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.90": "threshold",
+        "0.45": "artifact",
+        "0.60": "artifact",
+        "0.49": "artifact",
+        "0.10": "threshold",
+        "10.5281": "structural-non-measurement"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "essentiality:any:essentiality",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/essentiality_e3_human_2026-07-28.json",
+        "wiki/essentiality_e3_learned_2026-07-28.json",
+        "wiki/essentiality_report_card.json"
+      ],
+      "unresolved_citations": [],
+      "checked": 8,
+      "found": 8,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.695": "artifact",
+        "9.3": "artifact",
+        "0.373": "artifact",
+        "0.984": "artifact",
+        "0.580": "artifact",
+        "0.795": "artifact",
+        "0.911": "artifact",
+        "0.37": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.695": 0.6952,
+        "9.3": 0.0928,
+        "0.373": 0.3732,
+        "0.580": 0.5805,
+        "0.795": 0.7947,
+        "0.911": 0.9107,
+        "0.37": 0.3732
+      },
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 204,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 3,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "fba:escherichia_coli:growth_essentiality",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/fba_keio_validation_2026-08-03.json",
+        "wiki/fba_keio_validation_2026-08-03.md"
+      ],
+      "unresolved_citations": [
+        "wiki/fba_keio_validation_2026-08-03"
+      ],
+      "checked": 0,
+      "found": 0,
+      "candidate_drift": [],
+      "number_kinds": {},
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 0,
+      "decoy_match_rate": null,
+      "decoy_group_size": 1,
+      "discrimination": "n/a"
+    },
+    {
+      "cell_id": "finder:any:forward",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/blatem_genome_demo_2026-07-14.json",
+        "wiki/esm_at_scale_2026-07-17.md",
+        "wiki/forward_blosum_proteingym_2026-07-17.md",
+        "wiki/forward_dosage_sweep_2026-07-15.md",
+        "wiki/forward_inverse_sweep_2026-07-17.json",
+        "wiki/forward_inverse_sweep_2026-07-17.md",
+        "wiki/gemme_threeway_holdout_2026-07-23.md",
+        "wiki/hiv_esm_vs_catalog_2026-07-09.md",
+        "wiki/mavedb_am_holdout_2026-07-23.json",
+        "wiki/mavedb_full_esm2_2026-07-22.md",
+        "wiki/mavedb_holdout_hybrid_2026-07-23.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 27,
+      "found": 27,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.3465": "artifact",
+        "0.182": "artifact",
+        "0.20": "artifact",
+        "0.35": "artifact",
+        "0.49": "artifact",
+        "2.5": "artifact",
+        "0.7315": "artifact",
+        "0.518": "artifact",
+        "0.5115": "artifact",
+        "0.539": "artifact",
+        "0.7611": "artifact",
+        "0.478": "artifact",
+        "0.492": "artifact",
+        "0.502": "artifact",
+        "0.596": "artifact",
+        "0.538": "artifact",
+        "0.602": "artifact",
+        "0.063": "artifact",
+        "0.011": "artifact",
+        "0.0009": "artifact",
+        "0.719": "artifact",
+        "0.0005": "artifact",
+        "0.454": "artifact",
+        "0.926": "artifact",
+        "4.0": "artifact",
+        "0.18": "artifact",
+        "0.73": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.719": 0.7191
+      },
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 204,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 3,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:Salmonella:salmserovar",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/salmserovar_name_table_2026-09-09.md",
+        "wiki/salmserovar_nocall_anatomy_2026-09-04.json",
+        "wiki/salmserovar_o_fix_acceptance_bar.json",
+        "wiki/salmserovar_o_fix_result_2026-09-09.json",
+        "wiki/salmserovar_o_fix_result_2026-09-09.md",
+        "wiki/salmserovar_resolution_strata_2026-09-09.json",
+        "wiki/salmserovar_resolution_strata_2026-09-09.md",
+        "wiki/salmserovar_seqsero2_2026-09-08.json",
+        "wiki/salmserovar_seqsero2_2026-09-08.md",
+        "wiki/salmserovar_validation_2026-09-04.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 30,
+      "found": 30,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.8400": "artifact",
+        "0.8800": "artifact",
+        "0.0400": "artifact",
+        "0.1750": "artifact",
+        "98.2": "artifact",
+        "0.8250": "artifact",
+        "0.125": "artifact",
+        "0.60": "artifact",
+        "0.702": "artifact",
+        "0.925": "artifact",
+        "35.6": "artifact",
+        "29.5": "artifact",
+        "27.1": "artifact",
+        "13.6": "artifact",
+        "0.7050": "artifact",
+        "1.000": "artifact",
+        "0.795": "artifact",
+        "0.960": "artifact",
+        "0.828": "artifact",
+        "0.880": "artifact",
+        "0.95": "artifact",
+        "0.920": "artifact",
+        "0.222": "artifact",
+        "0.783": "artifact",
+        "10.0": "artifact",
+        "0.142": "artifact",
+        "0.705": "artifact",
+        "0.900": "derived",
+        "22.0": "artifact",
+        "0.0550": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [
+        {
+          "number": "0.900",
+          "kind": "derived",
+          "why": "derived coverage: the prose states 200 isolates and 'abstention 10.0%', so covered = 180/200 = 0.900. Both inputs are in the same passage; the artifact stores the counts, not the rate."
+        }
+      ],
+      "decoy_full_match": 0,
+      "n_decoys": 122,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 5,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:Escherichia_coli:serotype",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/serotype_heldout_confirm_2026-09-04.json",
+        "wiki/serotype_lineage_disjoint_2026-09-04.json",
+        "wiki/serotype_lineage_disjoint_2026-09-04.md",
+        "wiki/serotype_oh_validation_2026-09-04.json"
+      ],
+      "unresolved_citations": [],
+      "checked": 18,
+      "found": 18,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.167": "artifact",
+        "0.60": "threshold",
+        "0.770": "artifact",
+        "0.926": "artifact",
+        "0.931": "artifact",
+        "0.962": "artifact",
+        "0.8171": "artifact",
+        "0.9228": "artifact",
+        "0.106": "artifact",
+        "0.05": "artifact",
+        "0.0000": "artifact",
+        "0.155": "artifact",
+        "0.050": "artifact",
+        "0.0086": "artifact",
+        "0.7844": "artifact",
+        "0.9461": "artifact",
+        "0.1617": "artifact",
+        "0.0068": "artifact"
+      },
+      "matched_only_after_rounding": {
+        "0.167": 0.16666666666666666,
+        "0.926": 0.9256756756756757,
+        "0.931": 0.9313,
+        "0.962": 0.9618,
+        "0.8171": 0.8170731707317073,
+        "0.9228": 0.9227642276422764
+      },
+      "adjudicated_benign": [
+        {
+          "number": "0.60",
+          "kind": "threshold",
+          "why": "not a measurement: the project's own source-diversity BAR, defined in code as scripts/source_diverse_validate.MAX_SOURCE_SHARE. A threshold has no artifact to live in."
+        }
+      ],
+      "decoy_full_match": 0,
+      "n_decoys": 204,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 3,
+      "discrimination": "HIGH"
+    },
+    {
+      "cell_id": "typing:Streptococcus_pneumoniae:pneumoserotype",
+      "status": "ALL_CITED_NUMBERS_PRESENT",
+      "cited": [
+        "wiki/pneumo_serotype_cohort_validation.json",
+        "wiki/pneumo_serotype_report_card.md"
+      ],
+      "unresolved_citations": [],
+      "checked": 5,
+      "found": 5,
+      "candidate_drift": [],
+      "number_kinds": {
+        "0.939": "artifact",
+        "0.661": "artifact",
+        "0.952": "artifact",
+        "0.690": "artifact",
+        "2.1": "artifact"
+      },
+      "matched_only_after_rounding": {},
+      "adjudicated_benign": [],
+      "decoy_full_match": 0,
+      "n_decoys": 616,
+      "decoy_match_rate": 0.0,
+      "decoy_group_size": 1,
+      "discrimination": "HIGH"
+    }
+  ]
+}

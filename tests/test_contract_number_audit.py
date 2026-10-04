@@ -177,11 +177,24 @@ def test_coverage_block_is_present_and_internally_consistent():
         assert u["why"]
 
 
-def test_coverage_is_non_trivial_so_the_disclosure_is_not_decoration():
-    """If nothing were excluded the block would be noise; the point is that plenty is."""
+def test_the_disclosure_block_is_a_TRIPWIRE_now_that_the_residual_is_empty():
+    """Was `n_numbers_unverifiable > 0` ("if nothing were excluded the block would be noise"). The
+    residual reached ZERO on 2026-10-03, so that assertion now fails BY ACHIEVEMENT -- and flipping it
+    to `== 0` would pass forever without ever exercising the block again.
+
+    So this is the tripwire shape instead: an empty residual must be reported CONSISTENTLY (no stale
+    rows, no stale kind), and the moment any cell re-enters the residual it must appear in both places.
+    That keeps the disclosure load-bearing when it next matters rather than asserting it is decoration."""
     rep = _cached_report()
-    assert rep["n_cells_with_numbers_but_no_citation"] > 0
-    assert rep["n_numbers_unverifiable"] > 0
+    residual = rep["cells_unverifiable"]
+    assert rep["n_numbers_unverifiable"] == sum(u["n_numbers"] for u in residual)
+    if not residual:
+        assert rep["n_numbers_unverifiable"] == 0
+        assert rep["n_by_kind"].get("unverifiable", 0) == 0, (
+            "no cell is in the residual, so no number may carry the unverifiable kind")
+    else:
+        assert rep["n_by_kind"]["unverifiable"] == rep["n_numbers_unverifiable"], (
+            "a cell is in the residual but its numbers are not typed unverifiable")
 
 
 def test_unverifiable_cells_are_disjoint_from_audited_cells():
@@ -483,8 +496,11 @@ def test_step1_leaves_verdict_and_drift_untouched():
     rep = _cached_report()
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
-    assert rep["n_numbers_checked"] == 185   # was 180 before pneumoserotype gained citations
-    assert rep["n_cells_audited"] == 20      # was 19; pneumoserotype joined the cited cells
+    # Counts were pinned literally here (185 checked / 20 cells) and fired on every legitimate
+    # citation added afterwards -- an exact anchor against a live corpus. The invariant is that the
+    # reported totals RECONCILE with the per-cell rows, which holds at any corpus size.
+    assert rep["n_numbers_checked"] == sum(r["checked"] for r in rep["cells"])
+    assert rep["n_cells_audited"] == len(rep["cells"])
 
 
 # --- Step 2: provenance kinds ---------------------------------------------------------------------
@@ -532,7 +548,9 @@ def test_per_kind_counts_sum_to_every_extracted_number():
     this also pins that the guard is reachable."""
     rep = _cached_report()
     assert sum(rep["n_by_kind"].values()) == rep["n_numbers_extracted"]
-    assert rep["n_numbers_extracted"] == 196
+    # The literal `== 196` that sat here is not part of the invariant: the sum-reconciles assertion
+    # above is what makes a shrinking residual trustworthy, at any extracted count.
+    assert rep["n_numbers_extracted"] > 0
     assert set(rep["n_by_kind"]) <= set(rep["kind_definitions"])
 
 
@@ -542,7 +560,7 @@ def test_the_kind_tally_reconciles_with_the_cited_and_uncited_halves():
     uncited = sum(len(u["kinds"]) for u in rep["cells_unverifiable"]) \
         + sum(len(u["kinds"]) for u in rep["cells_all_numbers_typed_no_citation"])
     assert cited + uncited == rep["n_numbers_extracted"], (cited, uncited)
-    assert cited == rep["n_numbers_checked"] == 185   # was 180; see pneumoserotype citation note
+    assert cited == rep["n_numbers_checked"]
 
 
 def test_unverifiable_now_means_only_the_residual():
@@ -552,12 +570,12 @@ def test_unverifiable_now_means_only_the_residual():
     (kleb 3 + essentiality 7 + hla b5701 5 = 15). The nine that remain are the two vacuous-citation
     cells (cyp2d6, pigment) and pneumoserotype, whose ~2.1% no-call rate is derived."""
     rep = _cached_report()
-    # 9 -> 4: pneumoserotype's 5 numbers left the residual once its two artifacts were cited. The
-    # remaining 4 are cyp2d6 + pigment, which are unverifiable BY MEASUREMENT (730+ wiki files
-    # contain their values, so no citation could discriminate).
-    assert rep["n_by_kind"]["unverifiable"] == 4
-    assert rep["n_numbers_unverifiable"] == 4
-    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == 4
+    # 4 -> 0 on 2026-10-03. The "unverifiable BY MEASUREMENT (730+ wiki files contain their values)"
+    # reason recorded here was measured with the LOOSE substring matcher retired 2026-09-28; under
+    # whole-number matching the real figures are 13 and 4 of 1,293, so both cells were merely UNCITED
+    # and both now cite the artifact that holds their numbers.
+    assert rep["n_by_kind"].get("unverifiable", 0) == rep["n_numbers_unverifiable"]
+    assert sum(u["n_numbers"] for u in rep["cells_unverifiable"]) == rep["n_numbers_unverifiable"]
     for u in rep["cells_unverifiable"]:
         assert all(k == "unverifiable" for k in
                    (u["kinds"][t] for t in u["numbers"])), u["cell_id"]
@@ -630,7 +648,7 @@ def test_step2_leaves_verdict_and_drift_untouched():
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
     assert rep["n_by_kind"].get("candidate-drift", 0) == 0
-    assert rep["n_numbers_checked"] == 185
+    assert rep["n_numbers_checked"] == sum(r["checked"] for r in rep["cells"])
 
 
 # --- WP1: whole-number matching on BOTH sides ------------------------------------------------------
@@ -720,9 +738,9 @@ def test_the_lookahead_stops_hiding_sentence_final_numbers_but_still_rejects_ver
 
 def test_the_four_previously_hidden_numbers_are_now_checked():
     """cyp4f2 0.8125, pointfinder 0.9967, mlst 0.2694, resfinder 0.7786 were invisible to the audit
-    entirely. Extracted rises 192 -> 196 and checked 176 -> 180; all four must also MATCH."""
+    entirely. Extracted rose 192 -> 196 and checked 176 -> 180 at the time; those totals are history,
+    not the test -- the content is that each of the four is CHECKED and carries no drift."""
     rep = _cached_report()
-    assert rep["n_numbers_extracted"] == 196
     rows = {r["cell_id"]: r for r in rep["cells"]}
     for cell_id, tok in (("pgx:human:cyp4f2", "0.8125"),
                          ("finder:Escherichia_coli:pointfinder", "0.9967"),
@@ -739,7 +757,7 @@ def test_the_verdict_stays_clean_because_nothing_was_actually_drifted():
     rep = _cached_report()
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
     assert rep["n_candidate_drift"] == 0
-    assert rep["n_numbers_checked"] == 185
+    assert rep["n_numbers_checked"] == sum(r["checked"] for r in rep["cells"])
 
 
 # --- Step 4: only the citations the fixed rule admitted --------------------------------------------
@@ -770,26 +788,38 @@ def test_the_one_strong_citation_is_the_klebsiella_one():
     assert rows["typing:klebsiella:kleb"]["decoy_match_rate"] < 0.05
 
 
-def test_the_cells_the_rule_refused_still_have_no_citation():
-    """Refusals are the point. cyp2d6 and pigment are LOW-discrimination by measurement (two numbers,
-    one of them 1.0, which 730+ wiki files contain); pneumoserotype's ~2.1% no-call rate is DERIVED, so
-    citing its cohort artifact would manufacture an adjudication item out of a correct claim."""
+def test_no_cell_is_refused_any_more_and_the_refusal_reason_was_RETRACTED():
+    """RETRACTED 2026-10-03 -- this test asserted `refused == {cyp2d6, pigment}` on the reason that they
+    are "LOW-discrimination by measurement (two numbers, one of them 1.0, which 730+ wiki files
+    contain)". That 730+ figure came from the LOOSE substring matcher retired 2026-09-28, where `1.0`
+    matched inside `1.04` and `21.0`. Re-measured under whole-number matching: 13 of 1,293 (cyp2d6) and
+    4 of 1,293 (pigment). The cells were never unverifiable-by-measurement, only uncited.
+
+    Renamed rather than number-bumped: leaving a GREEN test named `..._still_have_no_citation` would
+    assert a claim this repo has retracted. pneumoserotype's own refusal was lifted earlier, for the
+    separate (and correct) reason recorded below."""
     rep = _cached_report()
     refused = {u["cell_id"] for u in rep["cells_unverifiable"]}
     # pneumoserotype is NO LONGER refused: its 4 concordance figures sit at semantic paths in
     # wiki/pneumo_serotype_cohort_validation.json and its ~2.1% no-call rate is stated verbatim in
     # wiki/pneumo_serotype_report_card.md ("~2.1% no-call rate of the 235"). The earlier refusal
     # rested on a 5/235-vs-5/240 ambiguity that came from not reading the report card.
-    assert refused == {"pgx:human:cyp2d6", "typing:human:pigment"}, refused
+    assert refused == set(), refused
     cited = {r["cell_id"] for r in rep["cells"]}
+    assert {"pgx:human:cyp2d6", "typing:human:pigment"} <= cited, (
+        "both formerly-refused cells must now be in the CITED half, not merely absent from the residual")
     assert not (refused & cited)
 
 
 def test_step4_raised_coverage_without_creating_drift():
     """The whole point: more numbers verified, nothing newly flagged."""
     rep = _cached_report()
-    assert rep["n_cells_audited"] == 20          # was 16, then 19
-    assert rep["n_numbers_unverifiable"] == 4    # 34 -> 24 -> 9 -> 4
+    # Was `n_cells_audited == 20` / `n_numbers_unverifiable == 4` (the 34 -> 24 -> 9 -> 4 sequence).
+    # Coverage is now total, so the durable form is MONOTONE: every cell with numbers is either cited
+    # or in the residual, and nothing is drifted.
+    assert rep["n_cells_audited"] == len(rep["cells"]) > 0
+    assert rep["n_numbers_unverifiable"] == 0, (
+        "the residual reached 0 on 2026-10-03; a non-zero value means a cell LOST its citation")
     assert rep["n_candidate_drift"] == 0
     assert rep["verdict"] == "NOTHING_TO_ADJUDICATE"
 
@@ -1112,3 +1142,113 @@ def test_the_rounding_disclosure_field_is_NOT_vacuous():
     rep = mod.audit()
     n = sum(len(r.get("matched_only_after_rounding") or {}) for r in rep["cells"])
     assert n >= 10, f"only {n} disclosed roundings -- the fast path may be absorbing them again"
+
+
+# ---------------------------------------------------------------------------
+# The last two uncited cells (cyp2d6, pigment), closed 2026-10-03.
+#
+# Both were filed `unverifiable` on a premise that died with the matcher fix: the claim was that a
+# citation would be TRUE and VACUOUS because "730 and 737 of ~1,200 wiki files contain them". Those
+# counts came from the LOOSE substring matcher retired 2026-09-28 (`1.0` matching inside `1.04`,
+# `21.0`); re-measured under whole-number matching they are 13 and 4 of 1,293. So the numbers were
+# never unverifiable-by-measurement -- they were uncited.
+#
+# These tests pin the STRUCTURE (the cited artifact resolves and carries each number), NOT a count off
+# the live wiki/ corpus -- a golden number fed by a directory scan fires on ordinary content accrual
+# rather than on the regression it exists to catch.
+
+_CLOSED_CITATIONS = {
+    "pgx:human:cyp2d6": ("wiki/cyp2d6_hybrid_identity_2026-07-06.md", ["0.62", "1.0"]),
+    "typing:human:pigment": ("wiki/pigment_1000g_population_2026-07-29.md", ["0.468", "1.0"]),
+}
+
+
+def _contract(cell_id):
+    from dna_decode.data.cell_registry import cells
+    for c in cells():
+        if c.cell_id == cell_id:
+            return c
+    raise AssertionError(f"{cell_id} is not in the registry")
+
+
+@pytest.mark.parametrize("cell_id", sorted(_CLOSED_CITATIONS))
+def test_the_two_formerly_uncited_cells_now_cite_a_resolving_artifact(cell_id):
+    from scripts.contract_number_audit import PROSE_FIELDS, REPO
+    want, _ = _CLOSED_CITATIONS[cell_id]
+    c = _contract(cell_id)
+    blob = " ".join(str(getattr(c, f, "") or "") for f in PROSE_FIELDS)
+    assert want in _cited_artifacts(blob), f"{cell_id} no longer cites {want}"
+    assert (REPO / want).is_file(), f"{cell_id} cites {want}, which does not resolve"
+
+
+@pytest.mark.parametrize("cell_id", sorted(_CLOSED_CITATIONS))
+def test_each_cited_number_is_present_in_that_artifact_exactly_or_by_rounding(cell_id):
+    from scripts.contract_number_audit import REPO, _artifact_numbers, _bounded_in
+    want, nums = _CLOSED_CITATIONS[cell_id]
+    text = (REPO / want).read_text(encoding="utf-8", errors="replace")
+    art = _artifact_numbers(text)
+    for n in nums:
+        assert _bounded_in(n, text) or _matches_by_rounding(n, art) is not None, (
+            f"{cell_id}: {n} is in neither the text nor its rounded values -- the citation is empty")
+
+
+def test_pigment_0468_is_the_artifacts_04676_ROUNDED_and_the_contract_says_so():
+    """The one number here that does NOT appear verbatim. The contract must DISCLOSE the rounding, so a
+    reader is never told a value is 'in the artifact' when what is there is 0.4676."""
+    from scripts.contract_number_audit import PROSE_FIELDS, REPO, _artifact_numbers, _bounded_in
+    want, _ = _CLOSED_CITATIONS["typing:human:pigment"]
+    text = (REPO / want).read_text(encoding="utf-8", errors="replace")
+    assert not _bounded_in("0.468", text), "0.468 now appears verbatim; this test's premise is stale"
+    assert _matches_by_rounding("0.468", _artifact_numbers(text)) == pytest.approx(0.4676)
+    c = _contract("typing:human:pigment")
+    blob = " ".join(str(getattr(c, f, "") or "") for f in PROSE_FIELDS)
+    assert "0.4676" in blob and "ROUNDED" in blob, (
+        "the contract must state the artifact's real value and that 0.468 is it rounded")
+
+
+def test_the_closure_is_SEMANTIC_not_just_a_value_match():
+    """Whole-number matching is not semantic: a cited number can match the right VALUE in the wrong
+    QUANTITY. These two citations were verified by reading the artifact, so pin the strings that carry
+    the meaning -- if either artifact is rewritten so the quantity moves, this fails rather than
+    silently continuing to 'verify' a coincidence."""
+    from scripts.contract_number_audit import REPO
+    cyp = (REPO / _CLOSED_CITATIONS["pgx:human:cyp2d6"][0]).read_text(encoding="utf-8")
+    assert "hybrid-presence sens 0.62/spec 1.0" in cyp, (
+        "cyp2d6's 0.62/1.0 are hybrid-presence sens/spec; that phrasing is the semantic anchor")
+    pig = (REPO / _CLOSED_CITATIONS["typing:human:pigment"][0]).read_text(encoding="utf-8")
+    assert "| EUR | 633 | 0.4676 |" in pig, "0.468 is EUR P(blue); its row is the semantic anchor"
+    assert "| EAS | 585 | 0.0 | 0.0 | 1.0 |" in pig, "the 1.0 is EAS P(brown), not an incidental 1.0"
+
+
+def test_the_vacuity_premise_that_filed_these_unverifiable_is_measurably_FALSE():
+    """The non-vacuity guard for this closure. If a citation here really were vacuous, almost any
+    artifact would contain the numbers. Measured on a bounded sample so the test stays fast and does
+    not depend on the corpus size: well under the 730-of-1200 the retired premise claimed."""
+    from scripts.contract_number_audit import REPO, _bounded_in
+    pool = sorted(p for p in (REPO / "wiki").rglob("*.md")
+                  if "contract_number" not in p.name)[:300]
+    assert len(pool) > 100, "sample too small to say anything"
+    hits = 0
+    for p in pool:
+        t = p.read_text(encoding="utf-8", errors="replace")
+        if _bounded_in("0.468", t) and _bounded_in("1.0", t):
+            hits += 1
+    assert hits / len(pool) < 0.25, (
+        f"pigment's numbers co-occur in {hits}/{len(pool)} artifacts; if this ever approaches the "
+        "retired 'vacuous' premise, the citation stops being evidence")
+
+
+def test_the_cyp2d6_near_miss_is_recorded_a_value_match_in_the_WRONG_quantity():
+    """The audit's own stated open limitation, caught live on 2026-10-03: this closure first cited
+    wiki/cyp2d6_structural_2026-07-06.md, where `0.62` is a per-sample READ-DEPTH ratio for NA18855 and
+    NA18992 -- the right VALUE in the wrong QUANTITY. Whole-number matching cannot tell those apart, so
+    the citation would have passed the audit while pointing at the wrong measurement. Pin both halves:
+    the decoy artifact really does carry 0.62, and it really does NOT carry the sens/spec claim."""
+    from scripts.contract_number_audit import REPO, _bounded_in
+    wrong = (REPO / "wiki/cyp2d6_structural_2026-07-06.md").read_text(encoding="utf-8",
+                                                                      errors="replace")
+    assert _bounded_in("0.62", wrong), "premise stale: the near-miss artifact no longer carries 0.62"
+    assert "hybrid-presence sens 0.62/spec 1.0" not in wrong, (
+        "premise stale: the structural artifact now states the sens/spec claim too")
+    assert "| NA18855 |" in wrong and "| NA18992 |" in wrong, (
+        "the 0.62 rows are read-depth ratios per sample; those rows are what makes it a different quantity")
