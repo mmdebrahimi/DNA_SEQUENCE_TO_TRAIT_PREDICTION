@@ -4,15 +4,15 @@
   "posture": "TRIAGE FUNNEL, not an oracle -- a cited number may legitimately be derived, rounded, or describe a superseded run. Every hit needs adjudication; this script edits nothing.",
   "scope": "cells whose prose names a wiki/ artifact; decimal numbers only",
   "n_cells_audited": 23,
-  "n_numbers_checked": 196,
+  "n_numbers_checked": 201,
   "n_candidate_drift": 0,
   "hit_rate": 0.0,
   "verdict": "NOTHING_TO_ADJUDICATE",
   "n_cells_low_discrimination": 0,
   "cells_low_discrimination": [],
-  "n_numbers_extracted": 203,
+  "n_numbers_extracted": 208,
   "n_by_kind": {
-    "artifact": 187,
+    "artifact": 192,
     "derived": 3,
     "enforced-by-test": 2,
     "external-reference": 1,
@@ -83,8 +83,8 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 163,
-      "n_decoys": 628,
-      "decoy_match_rate": 0.2596,
+      "n_decoys": 629,
+      "decoy_match_rate": 0.2591,
       "decoy_group_size": 1,
       "discrimination": "MODERATE"
     },
@@ -170,7 +170,7 @@
       },
       "adjudicated_benign": [],
       "decoy_full_match": 10,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0159,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -195,8 +195,8 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 6,
-      "n_decoys": 628,
-      "decoy_match_rate": 0.0096,
+      "n_decoys": 629,
+      "decoy_match_rate": 0.0095,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
     },
@@ -220,7 +220,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -244,7 +244,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -254,27 +254,33 @@
       "status": "ALL_CITED_NUMBERS_PRESENT",
       "cited": [
         "wiki/identify_distance_distribution_2026-10-04.json",
+        "wiki/identify_lineage_disjoint_2026-10-04.json",
         "wiki/identify_outofset_probe_2026-10-04.json",
         "wiki/identify_validation_2026-10-04.json"
       ],
       "unresolved_citations": [],
-      "checked": 6,
-      "found": 6,
+      "checked": 11,
+      "found": 11,
       "candidate_drift": [],
       "number_kinds": {
         "0.9167": "artifact",
         "69.2": "artifact",
         "99.5": "artifact",
-        "1.0": "artifact",
+        "1.000": "artifact",
+        "0.001": "artifact",
+        "0.005": "artifact",
+        "0.01": "artifact",
+        "0.02": "artifact",
         "0.1036": "artifact",
+        "1.0": "artifact",
         "0.015": "artifact"
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 208,
+      "n_decoys": 156,
       "decoy_match_rate": 0.0,
-      "decoy_group_size": 3,
+      "decoy_group_size": 4,
       "discrimination": "HIGH"
     },
     {
@@ -304,7 +310,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -339,7 +345,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -380,7 +386,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 628,
+      "n_decoys": 629,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -418,7 +424,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 628,
+      "n_decoys": 629,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -443,7 +449,7 @@
       },
       "adjudicated_benign": [],
       "decoy_full_match": 3,
-      "n_decoys": 628,
+      "n_decoys": 629,
       "decoy_match_rate": 0.0048,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -467,7 +473,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 2,
-      "n_decoys": 628,
+      "n_decoys": 629,
       "decoy_match_rate": 0.0032,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -498,7 +504,7 @@
       },
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -536,7 +542,7 @@
         }
       ],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -563,7 +569,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -822,7 +828,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 627,
+      "n_decoys": 628,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"

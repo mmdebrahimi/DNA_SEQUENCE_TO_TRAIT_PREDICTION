@@ -784,11 +784,17 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "(no genome is scored against itself): 211 scored, 211 hit, 0 miss, 0 abstain. "
             "OUT-OF-SET CONTROL, 48 genomes whose organism is not in the supported set: 44 abstained "
             "= 0.9167. "
-            "TWO LIMITS, BOTH MEASURED AND NEITHER FIXABLE BY TUNING. (1) The in-set 211/211 is "
-            "OPTIMISTIC: held out by GENOME, not by lineage, and 146 of 211 (69.2%) have a "
-            "~99.5%-ANI-or-closer twin still in the reference (median nearest same-organism distance "
-            "0.00165), so for most folds a near-clone stands in for the held-out genome. A "
-            "lineage-disjoint split is the stronger test and was NOT run. (2) The 4 out-of-set FALSE "
+            "LINEAGE-DISJOINT FALSIFIER RUN AND PASSED (wiki/identify_lineage_disjoint_2026-10-04.json): "
+            "146 of 211 genomes (69.2%) have a ~99.5%-ANI twin in the reference, so the 211/211 "
+            "looked twin-carried. Holding out each genome's WHOLE greedy-representative lineage "
+            "cluster instead of just itself keeps accuracy-on-called at 1.000 with ZERO misses and "
+            "ZERO abstentions at every threshold tried (0.001/0.005/0.01/0.02). So the result is NOT "
+            "twin-carried: between-organism distance (min 0.13098) sits far above max_distance "
+            "0.1036, so a different lineage of the same organism is still much closer than any other "
+            "organism. ITS COST, NAMED: coarser clustering empties more organisms, so the scorable "
+            "set shrinks (211 -> 186 -> 186 -> 111) and the strictest rung covers only 53% of the "
+            "reference; emptied-organism genomes are reported UNSCORABLE, never as misses. "
+            "THE REMAINING LIMIT, measured and NOT fixable by tuning: the 4 out-of-set FALSE "
             "CALLS are Klebsiella CONGENERS -- K. variicola x3 at distance 0.05095 called "
             "klebsiella_pneumoniae, K. michiganensis x1 at 0.06746 called klebsiella_oxytoca -- which "
             "sit BELOW the measured in-set ceiling (0.09880), so NO threshold rejects them without "
@@ -814,9 +820,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN,
         native_abstention="ABSTAIN",
         demotion_rule=(
-            "Do NOT quote the in-set 211/211 as a generalization claim: it is held out by GENOME, "
-            "NOT by LINEAGE, and 69.2% of reference genomes have a ~99.5%-ANI twin, so a lineage-"
-            "disjoint hold-out is the untested stronger test. "
+            "The in-set 211/211 SURVIVES a lineage-disjoint hold-out (accuracy 1.000, 0 misses, at "
+            "4 clustering thresholds), so it is not twin-carried -- but quote it with the coverage "
+            "cost: the strictest rung scores only 111 of 211 genomes because coarse clustering "
+            "empties organisms. "
             "Do NOT present this as taxonomic identification. It is a CLOSED-SET ROUTER over 10 "
             "organisms that happen to have a local reference; anything else abstains and is never "
             "identified. Do not quote 211/211 without the 69.2%-near-twin figure beside it. Do not "
@@ -829,7 +836,9 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "out-of-set group (exit 3) and FAILS the run at 0% out-of-set abstention (exit 1) "
             "-- a router that never abstains is unusable however good its in-set accuracy "
             "looks. The control is CONGENER-dominated (43 of 48 are K. aerogenes), so it is "
-            "the hard near-neighbour case. STILL OPEN: a lineage-disjoint hold-out."
+            "the hard near-neighbour case. The lineage-disjoint hold-out "
+            "(scripts/identify_lineage_disjoint.py) has now been RUN and PASSED; what stays open is "
+            "a wet-lab-identified cohort, which is what INDEPENDENT_MEASURED would require."
         ),
         engine="mash_sketch_distance_closed_set_v0",
         falsifier_ref="scripts/identify_validate.py",

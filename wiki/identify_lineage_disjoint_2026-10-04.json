@@ -1,0 +1,194 @@
+{
+  "schema": "identify-lineage-disjoint-v1",
+  "date": "2026-10-04",
+  "manifest": "identify_reference_manifest_2026-10-04.json",
+  "thresholds": {
+    "max_distance": 0.1036,
+    "ambiguity_margin": 0.015
+  },
+  "method": "whole-CLUSTER hold-out using the frozen chaining-resistant greedy-representative clustering; every member of a genome's own lineage is removed from the reference before identifying it",
+  "baseline_genome_level_loo": {
+    "n_scored": 211,
+    "hit": 211,
+    "accuracy_on_called": 1.0,
+    "source": "wiki/identify_validation_2026-10-04.json"
+  },
+  "sweep": {
+    "0.001": {
+      "n_scored": 211,
+      "hit": 211,
+      "miss": 0,
+      "abstain": 0,
+      "accuracy_on_called": 1.0,
+      "abstention_rate": 0.0,
+      "per_organism": {
+        "acinetobacter_baumannii": {
+          "hit": 25
+        },
+        "campylobacter": {
+          "hit": 25
+        },
+        "enterobacter_cloacae": {
+          "hit": 11
+        },
+        "escherichia_coli": {
+          "hit": 25
+        },
+        "klebsiella_oxytoca": {
+          "unscorable_organism_emptied": 1
+        },
+        "klebsiella_pneumoniae": {
+          "hit": 25
+        },
+        "neisseria_gonorrhoeae": {
+          "hit": 25
+        },
+        "pseudomonas_aeruginosa": {
+          "hit": 25
+        },
+        "salmonella": {
+          "hit": 25
+        },
+        "staphylococcus_aureus": {
+          "hit": 25
+        }
+      },
+      "confusions": {},
+      "n_unscorable_organism_emptied": 1,
+      "n_clusters": 150,
+      "largest_cluster_fraction": 0.1038
+    },
+    "0.005": {
+      "n_scored": 186,
+      "hit": 186,
+      "miss": 0,
+      "abstain": 0,
+      "accuracy_on_called": 1.0,
+      "abstention_rate": 0.0,
+      "per_organism": {
+        "acinetobacter_baumannii": {
+          "hit": 25
+        },
+        "campylobacter": {
+          "hit": 25
+        },
+        "enterobacter_cloacae": {
+          "hit": 11
+        },
+        "escherichia_coli": {
+          "hit": 25
+        },
+        "klebsiella_oxytoca": {
+          "unscorable_organism_emptied": 1
+        },
+        "klebsiella_pneumoniae": {
+          "hit": 25
+        },
+        "neisseria_gonorrhoeae": {
+          "unscorable_organism_emptied": 25
+        },
+        "pseudomonas_aeruginosa": {
+          "hit": 25
+        },
+        "salmonella": {
+          "hit": 25
+        },
+        "staphylococcus_aureus": {
+          "hit": 25
+        }
+      },
+      "confusions": {},
+      "n_unscorable_organism_emptied": 26,
+      "n_clusters": 103,
+      "largest_cluster_fraction": 0.1179
+    },
+    "0.01": {
+      "n_scored": 186,
+      "hit": 186,
+      "miss": 0,
+      "abstain": 0,
+      "accuracy_on_called": 1.0,
+      "abstention_rate": 0.0,
+      "per_organism": {
+        "acinetobacter_baumannii": {
+          "hit": 25
+        },
+        "campylobacter": {
+          "hit": 25
+        },
+        "enterobacter_cloacae": {
+          "hit": 11
+        },
+        "escherichia_coli": {
+          "hit": 25
+        },
+        "klebsiella_oxytoca": {
+          "unscorable_organism_emptied": 1
+        },
+        "klebsiella_pneumoniae": {
+          "hit": 25
+        },
+        "neisseria_gonorrhoeae": {
+          "unscorable_organism_emptied": 25
+        },
+        "pseudomonas_aeruginosa": {
+          "hit": 25
+        },
+        "salmonella": {
+          "hit": 25
+        },
+        "staphylococcus_aureus": {
+          "hit": 25
+        }
+      },
+      "confusions": {},
+      "n_unscorable_organism_emptied": 26,
+      "n_clusters": 68,
+      "largest_cluster_fraction": 0.1179
+    },
+    "0.02": {
+      "n_scored": 111,
+      "hit": 111,
+      "miss": 0,
+      "abstain": 0,
+      "accuracy_on_called": 1.0,
+      "abstention_rate": 0.0,
+      "per_organism": {
+        "acinetobacter_baumannii": {
+          "hit": 25
+        },
+        "campylobacter": {
+          "hit": 25
+        },
+        "enterobacter_cloacae": {
+          "hit": 11
+        },
+        "escherichia_coli": {
+          "hit": 25
+        },
+        "klebsiella_oxytoca": {
+          "unscorable_organism_emptied": 1
+        },
+        "klebsiella_pneumoniae": {
+          "unscorable_organism_emptied": 25
+        },
+        "neisseria_gonorrhoeae": {
+          "unscorable_organism_emptied": 25
+        },
+        "pseudomonas_aeruginosa": {
+          "unscorable_organism_emptied": 25
+        },
+        "salmonella": {
+          "unscorable_organism_emptied": 25
+        },
+        "staphylococcus_aureus": {
+          "hit": 25
+        }
+      },
+      "confusions": {},
+      "n_unscorable_organism_emptied": 101,
+      "n_clusters": 20,
+      "largest_cluster_fraction": 0.1179
+    }
+  }
+}
