@@ -599,3 +599,15 @@
 - The falsifier has two live arms plus one regression arm: A1 Bloom scoring-core control (`is_transfer_evidence=False`), B synthetic pure-structure negative (the only arm exercising live machinery on a known negative), C Arabidopsis verdict replay barred from PASS and required to return NEGATIVE despite the candidate winning global r2. The v2 cross-panel control is DROPPED -- its result is knowable without running it, since the three panels use mutually unmappable identifier schemes.
 
 ---
+
+## [plan_file: Closed_Set_Organism_Identification_Router_V0_Plan/] 2026-10-04
+**Status:** candidate — saved, not executed.
+**Summary:** Step 1 of the project's north star does not exist — given a DNA sequence, identify what organism it is — because all 44 CLI traits REQUIRE the caller to name the organism, so the pipeline's first step is currently a human typing the answer in; this builds a closed-set Mash router over the organisms the tool actually supports, with abstention, emitting both downstream consumer tokens.
+**Key decisions:**
+- CLOSED-SET router with abstention over the organisms enumerable from `cell_registry` (41 organism tokens / 115 cells), explicitly NOT open-world taxonomy: open-world would need a ~1 GB RefSeq sketch and would answer a question no consumer asks, and abstention is the safe failure for a router whose output selects a downstream rule.
+- The router emits BOTH consumer tokens (`amrfinder_organism`, `registry_organism`) because the two vocabularies disagree BY CONSTRUCTION — verified live, `amrfinder -l` accepts its own 32-value list (`Escherichia`, `Klebsiella_pneumoniae`) while the registry takes different tokens (`Escherichia_coli_Shigella`, `Klebsiella`), and `external_cohort_revalidate.py` already carries them as two parameters. A single emitted string satisfies neither. Separately, `cell_registry` holds three spellings of E. coli, so a canonical vocabulary is a prerequisite (additive translation layer, no cell renamed).
+- `mash dist` against a reference sketch built from LOCAL cached genomes (1,129 on D:, ~13 taxa across 80 cohort dirs) so v0 needs ZERO download; `mash screen` is deliberately unused because its verified surface documents it for read/contig MIXTURES, and FASTQ input is a named non-goal.
+- Thresholds are PARAMETERS in Step 3 and frozen only in Step 4 AFTER the distance-distribution analysis, per the two recorded cases in this repo where the pre-registered bar was itself the error (a NET ceiling policing a DIRECTIONAL failure; a `+4 hits` bar unachievable by construction). The lesson applied is "do the mechanism analysis, THEN freeze" — not "do not freeze".
+- Tier fixed at `FAITHFUL_TO_TOOL` in advance because cohort-directory labels are PROVENANCE, not wet-lab identification; per-organism reporting is mandatory (the reference set is E. coli/Klebsiella-dominated, so a pooled accuracy would measure cohort composition) and an out-of-set abstention control FAILS the run at 0% abstention.
+
+---

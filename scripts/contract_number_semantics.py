@@ -211,7 +211,13 @@ def path_is_consistent(path: str, canon: str) -> bool:
     and would have manufactured confirmations for every accuracy figure in the repo.
     """
     tokens = re.split(r"[^a-z0-9]+", path.lower())
-    fields = LABEL_VOCAB[canon][1]
+    entry = LABEL_VOCAB.get(canon)
+    if entry is None:
+        # A quantity this vocabulary cannot express (a raw COUNT, a DISTANCE). Report it as
+        # inconsistent rather than raising: `LABEL_VOCAB[canon]` used to KeyError, so ONE cell
+        # binding a novel quantity broke the entire semantics audit instead of being flagged.
+        return False
+    fields = entry[1]
     return any(t == f or t.startswith(f + "_") or t.endswith("_" + f) for t in tokens for f in fields)
 
 

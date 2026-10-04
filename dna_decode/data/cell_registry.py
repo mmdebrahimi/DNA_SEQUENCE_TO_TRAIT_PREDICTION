@@ -771,6 +771,85 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         ),
 ),
     CellContract(
+        cell_id="typing:bacteria:identify", track="typing", route="dna-identify",
+        organism="bacteria", target="identify",
+        claim="WHICH of 10 supported organisms this genome is, or ABSTAIN (closed-set Mash router)",
+        evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+        claim_status="loo_211of211_in_set_but_69pct_have_a_near_twin; out_of_set_abstention_44of48",
+        validation_slice=(
+            "Balanced 212-genome / 10-organism local reference (25 per organism where available; "
+            "Enterobacter cloacae 11, K. oxytoca 1), Mash k=21 s=1000, scored 2026-10-04 by "
+            "scripts/identify_validate.py -> wiki/identify_validation_2026-10-04.json. "
+            "LEAVE-ONE-OUT by excluding each genome's OWN row from one cached all-pairs mash matrix "
+            "(no genome is scored against itself): 211 scored, 211 hit, 0 miss, 0 abstain. "
+            "OUT-OF-SET CONTROL, 48 genomes whose organism is not in the supported set: 44 abstained "
+            "= 0.9167. "
+            "TWO LIMITS, BOTH MEASURED AND NEITHER FIXABLE BY TUNING. (1) The in-set 211/211 is "
+            "OPTIMISTIC: held out by GENOME, not by lineage, and 146 of 211 (69.2%) have a "
+            "~99.5%-ANI-or-closer twin still in the reference (median nearest same-organism distance "
+            "0.00165), so for most folds a near-clone stands in for the held-out genome. A "
+            "lineage-disjoint split is the stronger test and was NOT run. (2) The 4 out-of-set FALSE "
+            "CALLS are Klebsiella CONGENERS -- K. variicola x3 at distance 0.05095 called "
+            "klebsiella_pneumoniae, K. michiganensis x1 at 0.06746 called klebsiella_oxytoca -- which "
+            "sit BELOW the measured in-set ceiling (0.09880), so NO threshold rejects them without "
+            "also rejecting legitimate in-set genomes. Mash sketch distance cannot separate a "
+            "congener from a conspecific at this granularity. The 43 K. aerogenes (0.10849+) and "
+            "Gemmata (1.0) ARE rejected. "
+            "Thresholds max_distance=0.1036 / ambiguity_margin=0.015 were DERIVED after the "
+            "distribution analysis, not before: the midpoint of the measured window between the "
+            "in-set ceiling 0.09880 and the excludable out-of-set floor 0.10849 "
+            "(wiki/identify_distance_distribution_2026-10-04.json, "
+            "wiki/identify_outofset_probe_2026-10-04.json)."
+        ),
+        label_provenance=(
+            "each assembly's OWN NCBI GenBank `  ORGANISM` header field -- per-genome metadata, NOT "
+            "the cohort directory name and NOT wet-lab identification. PARTLY CIRCULAR and the tier "
+            "reflects it: a submitter may have assigned that organism BY sequence comparison, which "
+            "is the same evidence class this router uses (the project's own G1 circular-label gate). "
+            "So the measurement is IN-DISTRIBUTION, not independent -- the same shape as the TB cell "
+            "scored on the compendium its own catalogue was partly built from. This is a "
+            "KNOWLEDGE_BASELINE; a wet-lab-identified cohort is what INDEPENDENT_MEASURED would "
+            "require."
+        ),
+        abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN,
+        native_abstention="ABSTAIN",
+        demotion_rule=(
+            "Do NOT quote the in-set 211/211 as a generalization claim: it is held out by GENOME, "
+            "NOT by LINEAGE, and 69.2% of reference genomes have a ~99.5%-ANI twin, so a lineage-"
+            "disjoint hold-out is the untested stronger test. "
+            "Do NOT present this as taxonomic identification. It is a CLOSED-SET ROUTER over 10 "
+            "organisms that happen to have a local reference; anything else abstains and is never "
+            "identified. Do not quote 211/211 without the 69.2%-near-twin figure beside it. Do not "
+            "quote 0.9167 out-of-set abstention as if the residual were noise -- the 4 failures are a "
+            "NAMED congener class. Species-level only, assembled genomes only (no reads, no "
+            "mixtures). A DIVERGENT member of a supported organism ABSTAINS rather than being "
+            "misidentified (within-organism pairs reach 0.11991, above the 0.1036 threshold) -- the "
+            "safe failure direction, and a real coverage limit. "
+            "FALSIFIER (scripts/identify_validate.py): it REFUSES a verdict on an empty "
+            "out-of-set group (exit 3) and FAILS the run at 0% out-of-set abstention (exit 1) "
+            "-- a router that never abstains is unusable however good its in-set accuracy "
+            "looks. The control is CONGENER-dominated (43 of 48 are K. aerogenes), so it is "
+            "the hard near-neighbour case. STILL OPEN: a lineage-disjoint hold-out."
+        ),
+        engine="mash_sketch_distance_closed_set_v0",
+        falsifier_ref="scripts/identify_validate.py",
+        # G1 = circular label. The NCBI GenBank ORGANISM field may itself have been assigned
+        # BY sequence comparison, the same evidence class this router uses, which is exactly
+        # why the tier is KNOWLEDGE_BASELINE rather than independent.
+        incoming_data_gate="G1",
+        # ONLY the out-of-set rate is bound. `LABEL_VOCAB` has no concept of a raw COUNT (211
+        # hits) or a DISTANCE (0.00165), and inventing vocabulary entries to make two more
+        # bindings typecheck would assert a semantic identity the checker cannot actually
+        # verify. Both numbers are still verified PRESENT in the cited artifact by
+        # scripts/contract_number_audit.py (6/6, 0 decoy matches of 208) -- just not
+        # semantically typed, which is the honest scope.
+        metric_bindings=(
+            ContractNumberBinding("0.9167", "rate",
+                                  "wiki/identify_validation_2026-10-04.json",
+                                  "out_of_set_control.abstention_rate"),
+        ),
+    ),
+    CellContract(
         cell_id="typing:bacteria:mlst", track="typing", route="dna-mlst",
         organism="bacteria", target="mlst",
         claim="multi-locus sequence type (PubMLST allele->profile->ST)",

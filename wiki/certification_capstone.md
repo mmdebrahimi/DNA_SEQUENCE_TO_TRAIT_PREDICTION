@@ -1,4 +1,4 @@
-# Decoder certification capstone (2026-10-01)
+# Decoder certification capstone (2026-10-04)
 
 > _A thin presentation layer over existing milestone evidence — NOT a clinical tool, NOT a new gate, NOT an aggregate verdict. Each cell + card keeps its own honest tier._
 
@@ -6,9 +6,9 @@
 
 ## Registry census (the per-cell spine)
 
-- **Total cells:** 115
-- **By track:** amr=25, finder=6, hla=1, mendelian=1, pgx=14, typing=34, viral=34
-- **By honest evidence tier:** faithful_to_tool=10, independent_measured=33, knowledge_baseline=39, near_independent=21, no_free_source=11, not_censused=1
+- **Total cells:** 116
+- **By track:** amr=25, finder=6, hla=1, mendelian=1, pgx=14, typing=35, viral=34
+- **By honest evidence tier:** faithful_to_tool=10, independent_measured=33, knowledge_baseline=40, near_independent=21, no_free_source=11, not_censused=1
 - **Routable-but-NOT_CENSUSED (1):** viral:HIV-1:delavirdine
 
 ## Per-domain validated headlines (verbatim — NOT averaged)

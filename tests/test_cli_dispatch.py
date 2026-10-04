@@ -86,7 +86,13 @@ def test_traits_registry_matches_console_entries():
                                # contracts but NO TRAITS row, so they were unreachable via `dna-decode`
                                # and invisible to `dna-decode list` -- while their sibling `pgx` (same
                                # human/VCF shape) was routable. Routing parity, not a new decoder.
-                               "clinvar", "hla"}
+                               "clinvar", "hla",
+                               # identify (2026-10-04): the closed-set organism router -- STEP 1
+                               # of the pipeline. Every other trait REQUIRES --organism, so until
+                               # this existed a human supplied step 1 by hand. This pin is
+                               # hand-maintained BY DESIGN -- adding a trait must be a deliberate
+                               # edit here, and that is exactly what caught this one.
+                               "identify"}
     # "decode" (added 2026-07-23) is the input-aware ROUTER analysis -- handled inline in cli.py (no
     # delegate module), so it is an ANALYSES entry but not a console script. Conscious addition.
     assert set(uni.ANALYSES) == {"decode", "concordance", "profile", "coloc"}

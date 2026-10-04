@@ -45,9 +45,16 @@ ROUTE_REGIME: dict[str, str] = {
     "dna-essentiality": CONSTRUCTED_ORGANISM,
 }
 
+# `dna-identify` is a curated-catalog route: the reference sketch + the organism vocabulary ARE the
+# catalog, and the decision is a deterministic distance threshold -- no learned model anywhere.
+# (ROUTE_REGIME above is for the LEARNED regimes only; see the curated list below.)
+
 # The curated-catalog routes as of 2026-09-01. A route absent from BOTH maps raises.
 CATALOG_ROUTES: frozenset[str] = frozenset({
     "dna-amr", "dna-clinvar", "dna-hla", "dna-pgx", "dna-pathotype", "dna-phage",
+    # dna-identify: the reference sketch + organism vocabulary ARE the catalog, and the
+    # decision is a deterministic distance threshold -- no learned model anywhere.
+    "dna-identify",
     "dna-plasmid", "dna-serotype", "dna-mlst", "dna-ktype", "dna-salmserovar",
     # CORRECTED 2026-09-04: this read "dna-pneumoserotype", which is not a console script. The old
     # registry shorthand derived the route as dna-<trait> and produced the same wrong name, so two

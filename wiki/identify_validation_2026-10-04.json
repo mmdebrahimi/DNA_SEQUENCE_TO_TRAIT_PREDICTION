@@ -1,0 +1,133 @@
+{
+  "schema": "identify-validation-v1",
+  "date": "2026-10-04",
+  "manifest": "identify_reference_manifest_2026-10-04.json",
+  "thresholds": {
+    "max_distance": 0.1036,
+    "ambiguity_margin": 0.015
+  },
+  "leave_one_out": {
+    "per_organism": {
+      "acinetobacter_baumannii": {
+        "hit": 25
+      },
+      "campylobacter": {
+        "hit": 25
+      },
+      "enterobacter_cloacae": {
+        "hit": 11
+      },
+      "escherichia_coli": {
+        "hit": 25
+      },
+      "klebsiella_oxytoca": {
+        "unscorable": 1
+      },
+      "klebsiella_pneumoniae": {
+        "hit": 25
+      },
+      "neisseria_gonorrhoeae": {
+        "hit": 25
+      },
+      "pseudomonas_aeruginosa": {
+        "hit": 25
+      },
+      "salmonella": {
+        "hit": 25
+      },
+      "staphylococcus_aureus": {
+        "hit": 25
+      }
+    },
+    "pooled": {
+      "n_scored": 211,
+      "hit": 211,
+      "miss": 0,
+      "abstain": 0,
+      "accuracy_on_called": 1.0,
+      "accuracy_over_all": 1.0
+    },
+    "pooled_caveat": "read ONLY beside per_organism -- a pooled rate over unequal groups is a property of the composition, not of the router",
+    "confusions": {},
+    "structurally_unscorable": [
+      "GCF_003073975.1"
+    ]
+  },
+  "reference_clonality": {
+    "n": 211,
+    "median_nearest_same_organism": 0.00165,
+    "max_nearest_same_organism": 0.0988,
+    "n_with_near_identical_twin_lt_0.0005": 75,
+    "n_with_twin_lt_0.005": 146,
+    "fraction_with_twin_lt_0.005": 0.6919,
+    "per_organism_median": {
+      "acinetobacter_baumannii": 2e-05,
+      "campylobacter": 0.00266,
+      "enterobacter_cloacae": 0.0139,
+      "escherichia_coli": 0.00594,
+      "klebsiella_pneumoniae": 0.0026,
+      "neisseria_gonorrhoeae": 0.0001,
+      "pseudomonas_aeruginosa": 0.00581,
+      "salmonella": 0.00029,
+      "staphylococcus_aureus": 0.00083
+    },
+    "interpretation": "leave-one-out is OPTIMISTIC in proportion to this: for the 69.2% of genomes with a ~99.5%-ANI-or-closer twin still in the reference, holding one out leaves a near-clone to stand in for it. A lineage-disjoint split is the stronger test and was NOT run.",
+    "failure_direction": "within-organism pairs reach 0.11991, ABOVE max_distance 0.1036, so a DIVERGENT member of a supported organism ABSTAINS rather than being misidentified -- the safe failure direction, and a real coverage limit."
+  },
+  "out_of_set_control": {
+    "status": "OK",
+    "n_genomes": 48,
+    "n_abstained": 44,
+    "abstention_rate": 0.9167,
+    "per_species": {
+      "Gemmata_obscuriglobus": {
+        "abstain": 1,
+        "abstain_above_max_distance": 1
+      },
+      "Klebsiella_aerogenes": {
+        "abstain": 43,
+        "abstain_above_max_distance": 43
+      },
+      "Klebsiella_michiganensis": {
+        "false_call": 1,
+        "called_klebsiella_oxytoca": 1
+      },
+      "Klebsiella_variicola": {
+        "false_call": 3,
+        "called_klebsiella_pneumoniae": 3
+      }
+    },
+    "nearest_in_set_distance": {
+      "Gemmata_obscuriglobus": {
+        "min": 1.0,
+        "max": 1.0,
+        "nearest_in_set": "escherichia_coli"
+      },
+      "Klebsiella_aerogenes": {
+        "min": 0.10849,
+        "max": 0.13386,
+        "nearest_in_set": "klebsiella_pneumoniae"
+      },
+      "Klebsiella_michiganensis": {
+        "min": 0.06746,
+        "max": 0.06746,
+        "nearest_in_set": "klebsiella_oxytoca"
+      },
+      "Klebsiella_variicola": {
+        "min": 0.05095,
+        "max": 0.05095,
+        "nearest_in_set": "klebsiella_pneumoniae"
+      }
+    },
+    "control_strength": "dominated by CONGENERS of in-set species (K. aerogenes vs K. pneumoniae), so this is the HARD near-neighbour case rather than a trivially distant one"
+  },
+  "method": "leave-one-out by excluding each genome's OWN row from the cached all-pairs mash matrix; no genome is ever scored against itself",
+  "honest_limits": [
+    "labels are each assembly's NCBI GenBank ORGANISM field -- metadata, not wet-lab identification",
+    "closed-set: an organism outside the supported set must abstain, and is never identified",
+    "species-level only; no strain or subspecies claim",
+    "assembled genomes only (no reads, no mixtures)",
+    "held out by GENOME, not by lineage -- near-identical reference genomes make this optimistic relative to a lineage-disjoint split"
+  ],
+  "verdict": "SCORED"
+}

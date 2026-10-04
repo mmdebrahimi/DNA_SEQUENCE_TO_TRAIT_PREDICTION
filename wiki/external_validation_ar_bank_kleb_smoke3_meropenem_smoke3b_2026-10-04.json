@@ -1,0 +1,74 @@
+{
+  "_schema": "external-validation-v1",
+  "date": "2026-10-04",
+  "run_id": "smoke3b",
+  "cohort": "ar_bank_kleb_smoke3",
+  "organism": "Klebsiella",
+  "amrfinder_organism": "Klebsiella_pneumoniae",
+  "registry_organism": "Klebsiella",
+  "drug": "meropenem",
+  "evidence_tier": "external_clinical",
+  "independence_tier": "external clinical cohort \u2014 different country / lab / AST method than the decoder's US-NCBI-PD tuning provenance; clonality/lineage disclosed in the roll-up. NOT the same as methodology-independent: comparability rests on the same AMRFinder -O + DRUG_RULE.",
+  "strict": {
+    "n_scored": 0,
+    "tp": 0,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": null,
+    "sens": null,
+    "spec": null,
+    "n_excluded_no_assembly": 1
+  },
+  "relaxed": {
+    "n_scored": 0,
+    "tp": 0,
+    "fp": 0,
+    "tn": 0,
+    "fn": 0,
+    "abstain": 0,
+    "acc": null,
+    "sens": null,
+    "spec": null,
+    "n_excluded_no_assembly": 0
+  },
+  "buckets": {
+    "drug": "meropenem",
+    "organism": "Klebsiella",
+    "label_source": "ar_bank_CDC_INT_call (MIC-derived S/I/R; INTERMEDIATE excluded)",
+    "n_total": 143,
+    "n_R": 104,
+    "n_S": 39,
+    "n_panels": 14,
+    "largest_panel_share": 0.1538,
+    "strict_disjoint_floor": {
+      "n": 9,
+      "n_R": 5,
+      "n_S": 4,
+      "note": "biosamples absent from every prior selected*.tsv. The other 134 appear in SIBLING AR Bank cohorts (ceftriaxone/cipro/gentamicin) -- same isolates, DIFFERENT drugs; the meropenem label was never used and the frozen meropenem rule was never fit on them."
+    },
+    "overlap_disclosure": "cohort_manifest is accession-based and DRUG-BLIND, so a strict application cuts this cohort to the floor above. Primary = full set with overlap disclosed."
+  },
+  "leakage_control": "BioSample-level preflight: DEGRADED; 1 reads-only BioSamples excluded (ASSEMBLY-REQUIRED)",
+  "independence_degraded": true,
+  "powering": {
+    "hard_fail": true,
+    "degraded": true,
+    "reasons": [
+      "n_scored == 0 (no FREE strain produced an R/S call \u2014 likely broken Docker/NCBI)",
+      "strict scored R 0 < min_per_class 1 (underpowered)",
+      "strict scored S 0 < min_per_class 1 (underpowered)",
+      "indeterminate fraction 1.0 > 0.2 (of 2 attempted-FREE)"
+    ],
+    "n_attempted_free": 2,
+    "n_indeterminate": 2,
+    "indeterminate_fraction": 1.0,
+    "scored_R": 0,
+    "scored_S": 0,
+    "min_per_class": 1,
+    "max_indeterminate_fraction": 0.2
+  },
+  "run_degraded": true,
+  "primary_metric": "strict"
+}

@@ -27,6 +27,20 @@ import sys
 # orthogonal by design — do NOT "unify" TRAITS to be generated from the cell registry; they answer
 # different questions (subcommand dispatch table vs console-script->cell manifest).
 TRAITS = {
+    "identify": {
+        "summary": "WHICH SUPPORTED ORGANISM is this genome? - closed-set Mash-sketch router over the "
+                   "10 organisms with a local reference (E.coli/Klebsiella pneumoniae+oxytoca/"
+                   "Campylobacter/Salmonella/Acinetobacter baumannii/S.aureus/P.aeruginosa/"
+                   "N.gonorrhoeae/Enterobacter cloacae); emits the AMRFinder -O value the other traits "
+                   "need, or ABSTAINS. Step 1 of the pipeline - every other trait requires --organism",
+        "validation": "leave-one-out 211/211 on a BALANCED 212-genome/10-organism reference (hold-out "
+                      "excludes the genome's own row); out-of-set abstention 44/48 = 0.9167 on a "
+                      "CONGENER-dominated control. TWO limits, both measured: 69.2% of reference "
+                      "genomes have a ~99.5%-ANI twin so LOO is optimistic (held out by genome, NOT "
+                      "lineage); and K. variicola/michiganensis sit BELOW the in-set ceiling so no "
+                      "threshold rejects them - they mis-call as K. pneumoniae/oxytoca. "
+                      "wiki/identify_validation_2026-10-04.json",
+    },
     "amr": {
         "summary": "antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem; E.coli/Klebsiella/Pseudomonas/S.aureus) + M. tuberculosis (rif/inh) + FUNGAL azole/echinocandin (fluconazole/voriconazole/caspofungin/micafungin; C. auris) + VIRAL target-site (HIV NNRTI/NRTI/PI/INSTI/CAI, SARS-CoV-2 Mpro, influenza NA, HCMV herpesvirus ganciclovir/cidofovir/foscarnet/letermovir via --observed) via --drug",
         "validation": "bacterial: cipro 0.925 (held-out 0.862, cross-source 1.0) | cef 0.933 | gent 0.945 | tet 0.833 | mero 0.867; cross-organism (capstone). fungal C. auris fluconazole G1: sens 1.0 across clades, label-limited spec (wiki/fungal_ep7_g1_closeout_2026-06-08)",
@@ -220,6 +234,9 @@ def _version() -> str:
 
 
 def _delegate(trait: str, rest: list[str]) -> int:
+    if trait == "identify":
+        from dna_decode.identify.cli import main as identify_main
+        return identify_main(rest)
     if trait == "amr":
         from dna_decode.amr.cli import main as amr_main
         return amr_main(rest)

@@ -1,0 +1,53 @@
+{
+  "schema": "identify-outofset-probe-v1",
+  "date": "2026-10-04",
+  "thresholds": {
+    "max_distance": 0.1036,
+    "ambiguity_margin": 0.015
+  },
+  "status": "OK",
+  "n_genomes": 48,
+  "n_abstained": 44,
+  "abstention_rate": 0.9167,
+  "per_species": {
+    "Gemmata_obscuriglobus": {
+      "abstain": 1,
+      "abstain_above_max_distance": 1
+    },
+    "Klebsiella_aerogenes": {
+      "abstain": 43,
+      "abstain_above_max_distance": 43
+    },
+    "Klebsiella_michiganensis": {
+      "false_call": 1,
+      "called_klebsiella_oxytoca": 1
+    },
+    "Klebsiella_variicola": {
+      "false_call": 3,
+      "called_klebsiella_pneumoniae": 3
+    }
+  },
+  "nearest_in_set_distance": {
+    "Gemmata_obscuriglobus": {
+      "min": 1.0,
+      "max": 1.0,
+      "nearest_in_set": "escherichia_coli"
+    },
+    "Klebsiella_aerogenes": {
+      "min": 0.10849,
+      "max": 0.13386,
+      "nearest_in_set": "klebsiella_pneumoniae"
+    },
+    "Klebsiella_michiganensis": {
+      "min": 0.06746,
+      "max": 0.06746,
+      "nearest_in_set": "klebsiella_oxytoca"
+    },
+    "Klebsiella_variicola": {
+      "min": 0.05095,
+      "max": 0.05095,
+      "nearest_in_set": "klebsiella_pneumoniae"
+    }
+  },
+  "control_strength": "dominated by CONGENERS of in-set species (K. aerogenes vs K. pneumoniae), so this is the HARD near-neighbour case rather than a trivially distant one"
+}
