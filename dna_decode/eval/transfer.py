@@ -22,6 +22,7 @@ binding floor -- which is why `derive_k_grid` uses `max()` of the two rather tha
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+import hashlib
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -34,6 +35,10 @@ MIN_SCORED = 10
 WITHIN_GROUP_MIN_N = 30
 
 UNDERPOWERED = "UNDERPOWERED_METHODS_NEVER_DIFFERED"
+#: Distinct from UNDERPOWERED: no (group, k) cell was comparable at all, which is a plumbing
+#: signature rather than a measured zero difference. A checker built to stop an unpowered run
+#: reading as a refutation must not itself conflate "found nothing" with "found no difference".
+NOTHING_COMPARED = "NOTHING_COMPARED_PLUMBING"
 POWERED = "POWERED_METHODS_DIFFER"
 
 
@@ -132,8 +137,10 @@ def fold_report(folds: Sequence[TransferFold]) -> dict:
     partition is dominated by one member. Largest-group and singleton fractions can.
     """
     if not folds:
+        # SAME KEYS as the populated branch. Omitting min/max made the empty case a different
+        # shape than the contract a caller reads off the normal path (found by verification).
         return {"n_folds": 0, "n_members": 0, "largest_group_fraction": None,
-                "singleton_fraction": None}
+                "singleton_fraction": None, "min_group_size": None, "max_group_size": None}
     sizes = [f.n_test for f in folds]
     total = sum(sizes)
     return {
@@ -191,10 +198,19 @@ def derive_k_grid(min_group_size: int, *, min_scored: int = MIN_SCORED,
 def _shot_ids(test_ids: Sequence[str], k: int, seed: int) -> tuple[str, ...]:
     """Deterministic k-of-n draw. Keyed on (seed, group) only -- NOT on the method -- so every method
     compared sees the identical shots and the comparison is PAIRED. A difference of medians over
-    different items is not a lift."""
+    different items is not a lift.
+
+    CROSS-PROCESS REPRODUCIBILITY FIXED (found by verification, 2026-10-03). This used
+    `hash((seed, tuple(test_ids)))`, and Python's `hash` of a string is PYTHONHASHSEED-salted per
+    interpreter -- four fresh processes produced four different draws. PAIRING still held (that is
+    what the property's validity rests on), but "re-derivable from the recorded seed" did not, which
+    is the half an artifact's `seed` field actually promises a later reader. sha256 of the same key
+    is stable across processes and machines.
+    """
     if k == 0:
         return ()
-    rng = np.random.default_rng(abs(hash((seed, tuple(test_ids)))) % (2 ** 32))
+    key = f"{seed}|" + "|".join(str(i) for i in test_ids)
+    rng = np.random.default_rng(int.from_bytes(hashlib.sha256(key.encode()).digest()[:8], "big"))
     idx = rng.permutation(len(test_ids))[:k]
     return tuple(sorted(str(test_ids[i]) for i in idx))
 
@@ -352,12 +368,16 @@ def power_check(curve_a: KShotCurve, curve_b: KShotCurve) -> str:
     zero gain, so testing the gain first would publish an unpowered run as a refutation -- the exact
     trap the serotype lineage-disjoint run had to guard against.
     """
+    compared = 0
     for a in curve_a.cells:
         b = curve_b.cell(a.held_out_group, a.k)
         if b is None:
             continue
+        compared += 1
         if a.status != b.status:
             return POWERED
         if a.status == "scored" and a.predictions != b.predictions:
             return POWERED
+    if compared == 0:
+        return NOTHING_COMPARED
     return UNDERPOWERED

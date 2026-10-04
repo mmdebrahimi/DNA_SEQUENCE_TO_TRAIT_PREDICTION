@@ -5,6 +5,45 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Added — the regime axis now records WHICH SPLIT produced each number (2026-10-03)
+
+F1 Phase 0. Every regime row in `dna_decode/eval/regime.py` already carried a verdict; none said what kind
+of hold-out the verdict rested on. Evaluation-layer only — no decoder, no CLI surface, no new console entry
+point. Frozen AMR surface byte-unchanged; the 2026-08-31 prospective lock re-verifies.
+
+- **Two fields, deliberately NOT one ladder.** `split_unit` is an **unordered** `frozenset` over
+  `{position, study, protein, organism, clade, condition, none}`; `organism_transfer` is the **only** ordered
+  field (`unmeasured` < `held_out_organism` < `held_out_clade`). A single weakest-to-strongest ladder was
+  rejected because a cross-**PROTEIN** split and a leave-one-**STUDY** split are different questions, not
+  weaker and stronger versions of one — ranking them would let the module announce a relation nobody
+  measured. `_transfer_rank` **raises** when handed a split unit.
+- **Headline, now machine-readable and rendered by `scripts/regime_map.py`: 8 of 8 regimes carry no
+  held-out-ORGANISM transfer evidence.** `screen_proposal(..., claims_organism_transfer=)` is augment-only,
+  proved by diff (0 non-`conditions` fields changed; 32 cases gained a condition).
+- **The G2 replay inputs are a verified sidecar** — `wiki/phase2_arabidopsis_result_2026-06-12.json`,
+  hand-transcribed and checked by a markdown re-parse test (proved non-vacuous: a one-digit corruption fails
+  it). It records three real parsing traps in the source markdown: the minus signs are **U+2212** (not an
+  ASCII hyphen, so `float()` raises), `r²` is **U+00B2**, and the structure-only cell carries a leading `+`.
+- **NEW `dna_decode/eval/transfer.py`** — held-out-group folds that are disjoint *by construction*, a
+  `fold_report` surfacing largest-group and singleton **fractions** rather than just a count,
+  `skipped_groups` naming what `cv_r2` silently drops, a **derived** k grid, paired shot draws, a
+  `power_check`, and a fail-closed leakage audit.
+- **NEW `dna_decode/eval/transfer_gauntlet.py`** — five continuous controls plus a four-cell verdict matrix,
+  with **no statistics of its own**: an AST guard forbids `sklearn`/`scipy` imports *and* any `.fit(` call,
+  so all de-confounding maths stays in `dna_decode/deconfound/`.
+- **NEW `scripts/transfer_benchmark_falsifier.py`** — three arms against a bar frozen before any arm ran.
+  Real run exit 0, `DISCRIMINATED_BOTH_DIRECTIONS`, with `transfer_positive` =
+  **`TRANSFER_POSITIVE_UNMEASURED`**: every genotype-phenotype panel on disk is a single constructed
+  population, so a held-out-organism fold has nothing to hold out. That is a **measured absence, not an
+  omission**. Artifact `wiki/transfer_benchmark_falsifier_2026-10-03.{md,json}`.
+- `WITHIN_GROUP_UNSCORABLE` is a **required** verdict, not a courtesy: `within_group_r2`'s `min_n=30` is the
+  binding floor (not `MIN_SCORED=10`). Measured at 6 groups × 20 members it returns `(nan, 0 groups used)`
+  while `cv_r2` returns a confident-looking **−0.4230** on the identical data — and the de-confounded cell
+  is what a PASS verdict reads, so the pooled-cell fallback is closed by test.
+- Tests 5,424 → **5,497** at plan close (+73 across 4 new files), 12 skipped, 0 failed, zero regressions.
+  `/test-epilogue` has since added more on top — **re-derive with `uv run pytest tests/ -q` rather than
+  quoting this line**; a written-down test count has a decay rate (see `LESSONS_LEARNED.md` 2026-10-03).
+
 ### Added — a constraint layer, and the genetic code is no longer assumed universal (2026-10-01)
 
 - **NEW non-frozen package `dna_decode/constraints/`.** Two kinds of rule: `axiomatic` universal laws

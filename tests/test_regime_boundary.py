@@ -248,6 +248,38 @@ def test_a_bad_organism_transfer_claim_is_refused_not_guessed():
     assert res.verdict == "UNKNOWN" and "claims_organism_transfer" in res.reason
 
 
+def test_a_bad_transfer_claim_is_refused_on_the_CATALOG_path_TOO_not_just_the_regime_path():
+    """The ordering the source comments on ('validated BEFORE the catalog short-circuit so a bad value
+    cannot slip through on either path') but which the test above cannot reach -- it screens with no
+    catalog, so it only ever exercises the regime-match path.
+
+    The catalog branch returns early WITH a conditions list built from the same claim, so if the
+    validation ever moved below it a typo'd level would reach `_transfer_rank` and raise ValueError, or
+    worse be rank-compared as if it were a real level. Non-vacuous: the good value on the identical
+    call is NOT refused, so this is testing the validation and not the branch.
+    """
+    bad = screen_proposal("natural", "molecular", "supervised", curated_catalog_exists=True,
+                          target="replace", claims_organism_transfer="held_out_planet")
+    assert bad.verdict == "UNKNOWN" and "claims_organism_transfer" in bad.reason
+    assert bad.regime is None, "a refused input must not be attributed to a regime"
+
+    good = screen_proposal("natural", "molecular", "supervised", curated_catalog_exists=True,
+                           target="replace", claims_organism_transfer="held_out_clade")
+    assert good.verdict == LOSES_TO_CATALOG
+    assert any("NOT supported by the cited evidence" in c for c in good.conditions)
+
+
+def test_an_UNSCREENED_combination_gains_no_transfer_condition_because_there_is_nothing_to_compare():
+    """Scope pin. `_transfer_gap_conditions` needs a matched regime to compare the claim against, so
+    the OPEN fall-through (no regime at all) appends nothing -- a reader must not assume the layer
+    always speaks up. The absence is correct here: nothing was claimed ABOUT anything."""
+    res = screen_proposal("constructed", "organism_condition_switch", "zero_shot",
+                          claims_organism_transfer="held_out_clade")
+    assert res.verdict == OPEN and res.regime is None
+    assert not any("organism_transfer" in c for c in res.conditions), res.conditions
+    assert res.conditions == ["measure a de-confounded baseline first"]
+
+
 def test_as_dict_carries_both_new_fields_json_serialisably():
     """scripts/regime_map.py json.dumps() this; a raw frozenset would raise at write time."""
     import json
@@ -274,3 +306,86 @@ def test_the_map_script_RENDERS_the_new_fields_and_the_headline(monkeypatch, tmp
         "held-out-ORGANISM transfer evidence." in out
     assert "UNORDERED" in out
     assert (tmp_path / "learned_regime_map.json").exists()
+
+
+def _run_map(monkeypatch, tmp_path, argv):
+    """Drive `scripts/regime_map.py` through its real argparse. WIKI is redirected so no tracked
+    artifact can be rewritten, and sys.argv is replaced because main() parses it directly (under
+    pytest it otherwise carries pytest's own flags -> SystemExit(2))."""
+    import scripts.regime_map as rm
+    monkeypatch.setattr(rm, "WIKI", tmp_path)
+    monkeypatch.setattr(sys, "argv", ["regime_map.py", *argv])
+    return rm.main()
+
+
+def test_the_screen_subcommand_exits_1_on_a_refusal_and_0_on_a_live_regime(monkeypatch, tmp_path,
+                                                                          capsys):
+    """The whole `--screen` branch was unexercised: it is the invocation a human actually types, it
+    returns a DIFFERENT exit code from the map path, and it writes no artifact."""
+    import json
+
+    rc = _run_map(monkeypatch, tmp_path, ["--screen", "natural", "organism", "zero_shot"])
+    out = capsys.readouterr().out
+    assert rc == 1, "the one measured dead regime must exit non-zero when screened"
+    assert "REFUSED" in out and CLOSED_NEGATIVE in out
+    payload = json.loads(out.split("\n\n")[0])
+    assert payload["regime"] == "natural_organism_zeroshot" and payload["refused"] is True
+    assert not list(tmp_path.iterdir()), "--screen must not write the map artifact"
+
+    rc_ok = _run_map(monkeypatch, tmp_path, ["--screen", "constructed", "molecular", "supervised"])
+    assert rc_ok == 0 and "not refused" in capsys.readouterr().out
+
+
+def test_screening_a_TYPO_exits_2_distinctly_from_a_clean_pass_and_a_refusal(monkeypatch, tmp_path,
+                                                                             capsys):
+    """FIXED 2026-10-03 (this test previously recorded the gap). `--screen` returned
+    `1 if res.refused else 0`, and refused is true only for CLOSED_NEGATIVE -- so an invalid axis
+    yielded UNKNOWN and exit 0, the same code as a successfully screened WORKS regime, and
+    `regime_map.py --screen ... && proceed` proceeded on a typo. UNKNOWN now exits 2, leaving all
+    three outcomes distinguishable."""
+    rc = _run_map(monkeypatch, tmp_path, ["--screen", "natural", "organism", "finetuned"])
+    out = capsys.readouterr().out
+    assert rc == 2, "an invalid axis must not share an exit code with a clean screen"
+    assert '"verdict": "UNKNOWN"' in out
+
+    assert _run_map(monkeypatch, tmp_path, ["--screen", "constructed", "molecular",
+                                            "supervised"]) == 0
+    capsys.readouterr()
+    assert _run_map(monkeypatch, tmp_path, ["--screen", "natural", "organism", "zero_shot"]) == 1
+    capsys.readouterr()
+
+
+def test_the_map_REFUSES_to_certify_itself_when_a_cited_artifact_is_missing(monkeypatch, tmp_path,
+                                                                           capsys):
+    """The script's ONLY legitimate non-zero exit on the map path, and it was untested. A regime whose
+    evidence file does not resolve is a memory, not a regime -- the failure mode the module exists to
+    prevent -- so it must break the exit code even though the json is still written."""
+    import json
+
+    import dna_decode.eval.regime as reg
+
+    phantom = Regime("phantom", "natural", "organism", "supervised", OPEN, "ev",
+                     "wiki/this_artifact_does_not_exist.md", split_unit=frozenset({"none"}))
+    monkeypatch.setattr(reg, "REGIMES", REGIMES + (phantom,))
+    rc = _run_map(monkeypatch, tmp_path, [])
+    out = capsys.readouterr().out
+
+    assert rc == 1, "a missing cited artifact must not exit 0"
+    assert "ARTIFACT MISSING" in out and "REFUSING to certify" in out
+    written = json.loads((tmp_path / "learned_regime_map.json").read_text(encoding="utf-8"))
+    assert written["artifacts_missing"] == ["phantom"], \
+        "the artifact must RECORD the break, not merely exit on it"
+
+
+def test_the_missing_artifact_guard_is_non_vacuous_on_the_real_map(monkeypatch, tmp_path, capsys):
+    """Non-vacuity for the test above: with the real REGIMES every artifact resolves, so the same code
+    path reports nothing missing and exits 0. If this ever fails, a regime's evidence has gone."""
+    import json
+
+    rc = _run_map(monkeypatch, tmp_path, [])
+    assert rc == 0
+    assert "ARTIFACT MISSING" not in capsys.readouterr().out
+    written = json.loads((tmp_path / "learned_regime_map.json").read_text(encoding="utf-8"))
+    assert written["artifacts_missing"] == []
+    assert len(written["regimes"]) == len(REGIMES)
+    assert all(r["artifact_exists"] for r in written["regimes"])

@@ -589,3 +589,13 @@
 
 ---
 
+## [plan_file: Transfer_Benchmark_And_Regime_Transfer_Axis_F1_Phase_0_Plan/] 2026-10-01 (body rewritten to v3 2026-10-03)
+**Status:** candidate
+**Summary:** Every learned number in this repo was measured with the held-out unit being a position, a study, or a protein -- never an organism, and `eval/regime.py` cannot express that; this builds the verdict SHAPE (unordered `split_unit` + narrow `organism_transfer`, held-out-group k-shot harness, fail-closed leakage audit, five-control gauntlet) as thin orchestration over the existing `dna_decode/deconfound` package, and ships `TRANSFER_POSITIVE_UNMEASURED` as a first-class verdict because no cross-organism substrate exists on disk.
+**Key decisions:**
+- Rewritten IN PLACE across v1 -> v2 -> v3 per the save-once rule (a post-review rewrite is an in-place edit, not a new plan folder). v1's scope was measured unachievable: every on-disk panel (Bloom yeast 1008 individuals, BXD mouse 198, Arabidopsis MAGIC 703) is a single constructed population, so a held-out-organism fold has nothing to hold out.
+- No new de-confounding mathematics anywhere: `cv_r2`, `within_group_r2`, `group_centered_association`, `permutation_null`, `cluster_from_distance` and `r2` are imported lazily from `dna_decode/deconfound`, and an AST scan asserts `eval/transfer*` imports no `sklearn.*`/`scipy.*` symbol. The gauntlet lives in `eval/` rather than `deconfound/` because that package imports its whole export surface eagerly, so the alternative would place transfer code in the import path of all 8 existing consumers.
+- `within_group_r2`'s `min_n=30` is the BINDING group-size floor, not `MIN_SCORED=10`: measured at 6 groups x 20 the within-group cell returns `(nan, 0 groups used)` while the pooled cell returns a confident `-0.4230` on identical data. So the k grid is DERIVED as `min_group_size - max(MIN_SCORED, WITHIN_GROUP_MIN_N)` (raising when the cap drops below 1), and `WITHIN_GROUP_UNSCORABLE` is a required verdict whose pooled-cell fallback is closed by test.
+- The falsifier has two live arms plus one regression arm: A1 Bloom scoring-core control (`is_transfer_evidence=False`), B synthetic pure-structure negative (the only arm exercising live machinery on a known negative), C Arabidopsis verdict replay barred from PASS and required to return NEGATIVE despite the candidate winning global r2. The v2 cross-panel control is DROPPED -- its result is knowable without running it, since the three panels use mutually unmappable identifier schemes.
+
+---

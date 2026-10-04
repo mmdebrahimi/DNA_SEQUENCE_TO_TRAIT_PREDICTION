@@ -15,9 +15,9 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from dna_decode.eval.transfer import (  # noqa: E402
-    MIN_SCORED, POWERED, UNDERPOWERED, WITHIN_GROUP_MIN_N, KShotGridError, LeakageAuditRefused,
-    UnassignedMemberError, derive_k_grid, fold_report, held_out_group_folds, k_shot_curve,
-    leakage_audit, power_check, require_clean_audit, skipped_groups,
+    MIN_SCORED, NOTHING_COMPARED, POWERED, UNDERPOWERED, WITHIN_GROUP_MIN_N, KShotCell, KShotCurve, KShotGridError,
+    LeakageAuditRefused, UnassignedMemberError, derive_k_grid, fold_report, held_out_group_folds,
+    k_shot_curve, leakage_audit, power_check, require_clean_audit, skipped_groups,
 )
 
 
@@ -75,6 +75,19 @@ def test_an_unassigned_id_raises_by_default_and_buckets_only_when_asked():
         held_out_group_folds(group_of)
     folds = held_out_group_folds(group_of, allow_unassigned=True)
     assert "__unassigned__" in {f.held_out_group for f in folds}
+
+
+def test_fold_report_returns_the_SAME_SHAPE_for_an_empty_and_a_populated_partition():
+    """FIXED 2026-10-03 (this test previously recorded the gap). The empty branch returned four keys
+    while the populated branch returned six, so a consumer indexing `min_group_size` got a KeyError
+    on an empty partition instead of the None its siblings return. Both branches now carry six."""
+    empty = fold_report([])
+    populated = fold_report(held_out_group_folds({"a": "g0", "b": "g1"}))
+    assert set(empty) == set(populated), f"shape gap returned: {set(populated) ^ set(empty)}"
+    assert empty["n_folds"] == 0 and empty["n_members"] == 0
+    for k in ("largest_group_fraction", "singleton_fraction", "min_group_size", "max_group_size"):
+        assert empty[k] is None, f"{k} should be None on an empty partition, got {empty[k]!r}"
+    assert populated["min_group_size"] == 1 and populated["max_group_size"] == 1
 
 
 def test_fold_report_surfaces_STRUCTURE_not_just_a_count():
@@ -185,6 +198,34 @@ def test_the_shot_draw_is_PAIRED_across_methods_and_deterministic():
                for ca in a.cells if ca.k > 0), "a different seed must move the draw"
 
 
+def test_the_shot_draw_is_reproducible_ACROSS_processes_from_the_recorded_seed():
+    """FIXED 2026-10-03 (this test previously recorded the gap). `_shot_ids` keyed its RNG on
+    `abs(hash((seed, tuple(test_ids))))`, and hash() over strings is PYTHONHASHSEED-salted, so four
+    fresh interpreters drew four different shot sets. PAIRING always held -- that is what the
+    comparison's validity rests on -- but re-derivable-from-the-recorded-seed did not, which is the
+    half an artifact's `seed` field promises a later reader. Now keyed on sha256 of the same inputs.
+
+    Deliberately run in SUBPROCESSES with PYTHONHASHSEED unset: an in-process check cannot see the
+    salt at all, which is why the defect survived the original same-process determinism test."""
+    import os
+    import subprocess
+    code = ("import sys; sys.path.insert(0, '.');"
+            "from dna_decode.eval.transfer import _shot_ids;"
+            "print(_shot_ids(['a','b','c','d','e','f','g','h'], 3, 0))")
+
+    def draw():
+        env = dict(os.environ)
+        env.pop("PYTHONHASHSEED", None)
+        out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True,
+                             cwd=str(ROOT), env=env)
+        assert out.returncode == 0, out.stderr
+        return out.stdout.strip()
+
+    draws = {draw() for _ in range(4)}
+    assert len(draws) == 1, f"shot draw is not reproducible across processes: {draws}"
+    assert draws != {"()"}, "non-vacuity: the draw must be non-empty at k=3"
+
+
 # --- the power check comes FIRST --------------------------------------------------------------------
 
 def test_two_identical_methods_are_reported_UNDERPOWERED():
@@ -202,6 +243,53 @@ def test_two_genuinely_different_methods_are_reported_POWERED():
     a = k_shot_curve(X, y, ids, group_of, fit_predict=ridge)
     b = k_shot_curve(X, y, ids, group_of, fit_predict=constant_mean)
     assert power_check(a, b) == POWERED
+
+
+def test_a_cell_SCORED_on_one_side_and_UNSCORABLE_on_the_other_is_POWERED():
+    """The third branch, unreached by the two runs above: statuses differing is itself a difference,
+    because one method produced a number where the other produced none.
+
+    ISOLATION MATTERS HERE, and the first version of this test did not have it. With the SCORED cell
+    as `curve_a` the prediction comparison fires too ((1.0, 2.0) != ()), so deleting the status branch
+    entirely left the test green -- it was passing through the wrong branch. Verified by injecting
+    exactly that deletion. Driving it from the UNSCORABLE side skips the `a.status == "scored"` guard,
+    so the status check is the only thing that can return POWERED.
+    """
+    scored = KShotCurve(ks=(0,), cells=[
+        KShotCell("g0", 0, 0.5, 40, "scored", (), (), (1.0, 2.0))])
+    unscorable = KShotCurve(ks=(0,), cells=[
+        KShotCell("g0", 0, None, 3, "unscorable", (), (), ())])
+    assert power_check(unscorable, scored) == POWERED, \
+        "the status-differs branch is the only path to POWERED from the unscorable side"
+    assert power_check(scored, unscorable) == POWERED, "and it must be symmetric"
+
+
+def test_power_check_separates_NOTHING_COMPARED_from_methods_that_never_differed():
+    """FIXED 2026-10-03 (this test previously recorded the gap). Two curves whose (group, k) cells
+    never line up compared nothing and fell out of the loop as UNDERPOWERED -- the identical token a
+    genuine zero-difference result gets. A checker built so an unpowered run is not published as a
+    refutation must not itself conflate a plumbing failure with a measured zero."""
+    a = KShotCurve(ks=(0,), cells=[KShotCell("g0", 0, 0.5, 40, "scored", (), (), (1.0, 2.0))])
+    disjoint = KShotCurve(ks=(0,), cells=[KShotCell("g9", 0, 0.9, 40, "scored", (), (), (9.0, 9.0))])
+    assert power_check(a, disjoint) == NOTHING_COMPARED
+    assert power_check(KShotCurve(ks=()), KShotCurve(ks=())) == NOTHING_COMPARED
+
+    # non-vacuity: a real comparison still yields the measured tokens, so the new branch has not
+    # swallowed the ones it sits beside.
+    same = KShotCurve(ks=(0,), cells=[KShotCell("g0", 0, 0.5, 40, "scored", (), (), (1.0, 2.0))])
+    assert power_check(a, same) == UNDERPOWERED
+    differ = KShotCurve(ks=(0,), cells=[KShotCell("g0", 0, 0.9, 40, "scored", (), (), (3.0, 4.0))])
+    assert power_check(a, differ) == POWERED
+
+
+def test_mismatched_ids_X_y_lengths_raise_rather_than_scoring_a_misaligned_panel():
+    """`ids[i]` NAMES row i; a length mismatch silently re-labels rows, so a group vector would point
+    at the wrong genotypes while every downstream number still looked well-formed."""
+    X, y, ids, group_of = _panel(n_groups=2, per_group=45)
+    with pytest.raises(ValueError, match="length mismatch"):
+        k_shot_curve(X, y[:-1], ids, group_of, fit_predict=ridge, ks=(0,))
+    with pytest.raises(ValueError, match="length mismatch"):
+        k_shot_curve(X, y, ids[:-1], group_of, fit_predict=ridge, ks=(0,))
 
 
 # --- the leakage audit fails CLOSED (Step 4) --------------------------------------------------------

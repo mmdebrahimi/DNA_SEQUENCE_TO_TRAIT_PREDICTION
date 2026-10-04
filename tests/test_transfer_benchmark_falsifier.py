@@ -112,6 +112,91 @@ def test_a_missing_arm_C_fixture_does_NOT_block_a_pass(monkeypatch):
     assert res["status"] == F.DISCRIMINATED and res["exit_code"] == 0
 
 
+def _fake_a1(positive: bool):
+    return lambda *a, **k: {"arm": "A1_scoring_core_control", "positive": positive,
+                            "is_transfer_evidence": False}
+
+
+def test_an_A1_that_RAN_and_came_out_NEGATIVE_is_BAR_NOT_MET_not_indeterminate(monkeypatch):
+    """The third outcome, and it must not collapse into either of the other two. A1 failing to RUN is
+    INDETERMINATE (the arm is absent); A1 running and finding no signal is a FAILED BAR -- the scoring
+    core did not recover a positive on a panel where one is expected. Same 'cannot run' vs 'ran and
+    broke' asymmetry the Arm C tests pin, on the arm that IS load-bearing for the pass."""
+    monkeypatch.setattr(F, "arm_a1_scoring_core", _fake_a1(False))
+    res = F.run()
+    assert "A1" in res["arms"] and res["arms"]["A1"]["positive"] is False
+    assert res["status"] == F.BAR_NOT_MET and res["exit_code"] == 1
+    assert res["status"] != F.INDETERMINATE, "a negative A1 is a failed bar, not a missing arm"
+
+
+def test_a_non_negative_arm_B_blocks_the_pass_even_with_A1_positive(monkeypatch):
+    """The benchmark's other half: if the synthetic structure-only input ever came out POSITIVE, the
+    machinery would be endorsing pure population structure and no amount of A1 should rescue it."""
+    monkeypatch.setattr(F, "arm_a1_scoring_core", _fake_a1(True))
+    monkeypatch.setattr(F, "arm_b_synthetic_negative",
+                        lambda *a, **k: {"arm": "B_synthetic_structure_negative", "negative": False,
+                                         "machinery_exercised": True,
+                                         "verdict": "BEATS_ALL_CONTROLS"})
+    res = F.run()
+    assert res["status"] == F.BAR_NOT_MET and res["exit_code"] == 1
+
+
+def test_main_propagates_the_PASS_exit_code_and_not_only_the_refusal_one(monkeypatch, tmp_path):
+    """`main()` was only ever driven down the exit-3 path, so exit 0 round-tripping through argparse,
+    the artifact write and the return was unverified. --out-dir keeps it off the tracked wiki/."""
+    monkeypatch.setattr(F, "arm_a1_scoring_core", _fake_a1(True))
+    rc = F.main(["--out-dir", str(tmp_path)])
+    assert rc == 0
+    d = json.loads(next(tmp_path.glob("*.json")).read_text(encoding="utf-8"))
+    assert d["status"] == F.DISCRIMINATED and d["exit_code"] == 0
+    assert d["arms"]["A1"]["positive"] is True and d["arms"]["B"]["negative"] is True
+    assert d["transfer_positive"] == F.TRANSFER_POSITIVE_UNMEASURED, \
+        "a PASS must still not claim a transfer positive -- that is the point of the whole run"
+
+
+def test_the_trait_and_stride_flags_reach_arm_A1_rather_than_being_decorative(monkeypatch, tmp_path):
+    """Both flags are advertised on the CLI; an advertised flag that never reaches its callee is a
+    promise the tool does not keep."""
+    seen = {}
+
+    def spy(trait="Maltose", marker_stride=16):
+        seen.update(trait=trait, marker_stride=marker_stride)
+        return {"arm": "A1_scoring_core_control", "positive": True, "is_transfer_evidence": False}
+
+    monkeypatch.setattr(F, "arm_a1_scoring_core", spy)
+    F.main(["--trait", "Galactose", "--marker-stride", "4", "--out-dir", str(tmp_path)])
+    assert seen == {"trait": "Galactose", "marker_stride": 4}
+
+
+def test_arm_A1_refuses_a_missing_PHENOTYPE_file_AFTER_the_genotype_integrity_gate(monkeypatch,
+                                                                                  tmp_path):
+    """Ordering, and it is the useful ordering: the integrity gate runs first, so a ragged genotype is
+    named as TRUNCATED rather than being masked by whichever file happens to be absent. Lets the
+    phenotype-missing refusal be reached offline, with no D: and no loader import."""
+    geno = tmp_path / "geno_v2.txt"
+    geno.write_text("m\ta\tb\n1\tB\tR\n2\tR\tB\n", encoding="utf-8")
+    monkeypatch.setattr(F, "BLOOM_GENO", geno)
+    monkeypatch.setattr(F, "BLOOM_PHENO", tmp_path / "absent_pheno.txt")
+    with pytest.raises(F.ArmRefused, match="phenotype file missing"):
+        F.arm_a1_scoring_core()
+
+    ragged = tmp_path / "ragged.txt"
+    ragged.write_text("m\ta\tb\n1\tB\tR\n2\tR\n", encoding="utf-8")
+    monkeypatch.setattr(F, "BLOOM_GENO", ragged)
+    with pytest.raises(F.ArmRefused, match="TRUNCATED"):
+        F.arm_a1_scoring_core()
+
+
+def test_a_HEADER_ONLY_genotype_file_is_refused_rather_than_read_as_zero_intact_rows(tmp_path):
+    """The raggedness check compares the LAST row against the header, and a file with no data rows has
+    no last row -- so this must refuse rather than return `intact: True, n_rows: 0`. A zero-row panel
+    reaching Arm A1 would fail much later and much less legibly."""
+    header_only = tmp_path / "header_only.txt"
+    header_only.write_text("marker\tsegA\tsegB\n", encoding="utf-8")
+    with pytest.raises(F.ArmRefused):
+        F.assert_genotype_file_intact(header_only)
+
+
 def test_a_REGRESSED_arm_C_blocks_the_pass(monkeypatch):
     """Non-vacuity for the asymmetry above: the other branch must actually bite."""
     monkeypatch.setattr(F, "arm_a1_scoring_core",

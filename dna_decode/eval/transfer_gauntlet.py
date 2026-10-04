@@ -81,7 +81,14 @@ class GauntletReport:
 
     @property
     def n_controls_run(self) -> int:
-        return sum(1 for v in self.controls.values() if v is not None)
+        """A nan control is NOT run.
+
+        FAIL-OPEN FIXED (found by verification, 2026-10-03). This tested only `is not None`, and
+        `nan is not None` is True -- so an uncomputable control counted as run and the report read
+        clean, directly contradicting the fail-closed behaviour its own docstring promised.
+        """
+        return sum(1 for v in self.controls.values()
+                   if v is not None and not (isinstance(v, float) and np.isnan(v)))
 
     def as_dict(self) -> dict:
         return {"controls": dict(self.controls), "n_controls_run": self.n_controls_run,
@@ -91,7 +98,10 @@ class GauntletReport:
 
     def assert_all_controls_ran(self) -> None:
         """WEAK by design -- see the module docstring. Five labels is necessary, not sufficient."""
-        missing = [n for n in CONTROL_NAMES if self.controls.get(n) is None]
+        def _unrun(v) -> bool:
+            return v is None or (isinstance(v, float) and np.isnan(v))
+
+        missing = [n for n in CONTROL_NAMES if _unrun(self.controls.get(n))]
         if missing:
             raise GauntletIncomplete(
                 f"{len(missing)} control(s) did not run: {missing}. A gauntlet that ran nothing is "
@@ -149,33 +159,48 @@ def _hash_ids(ids: Sequence) -> str:
 
 # --- the five controls -----------------------------------------------------------------------------
 
-def shuffled_label_null(X, y, groups, *, n_draws: int = 200) -> float:
-    """p95 of the WITHIN-GROUP label-permutation null, built entirely from deconfound primitives.
+def shuffled_label_null(X, y, groups, *, n_draws: int = 200,
+                        within_group_min_n: int = WITHIN_GROUP_MIN_N) -> float:
+    """p95 of a WITHIN-GROUP label-permutation null, ON THE SAME SCALE as the cell it gates.
 
-    `permutation_null` shuffles y INSIDE each group, which is the correct null for a within-group
-    estimand -- a group-blind shuffle would also destroy the group structure and so give an easy null
-    to beat. It wants a univariate residualized FEATURE, so the feature is chosen by
-    `deconfound.univariate_top` and residualized by `group_centered_spearman`.
+    UNIT MISMATCH FIXED (found by verification, 2026-10-03). The first version returned
+    `deconfound.permutation_null`'s output, which is a SPEARMAN RHO, and the verdict compared it
+    against `kshot_within_group_r2`, an R-SQUARED. Measured on one fixture: rho p95 0.0614 vs r2
+    0.7237 -- incommensurable quantities. That is the same class as the AUROC-vs-continuous trap this
+    module's own `refuse_auroc_shaped_gate` exists to stop, committed inside the module that warns
+    about it. (A second defect hid behind it: the branch doing the comparison was unreachable, so the
+    control gated nothing at all -- a control that constrains nothing is not a control.)
 
-    NOT a model's out-of-fold predictions: deconfound exposes SCORES, not predictions, so producing a
-    prediction vector here would mean fitting a model in this module -- which the AST guard exists to
-    forbid and which an import routed through deconfound's namespace would have hidden.
+    So the null is now built on the metric itself: shuffle y INSIDE each group -- which destroys the
+    within-group association while leaving every group mean intact, the correct null for this
+    estimand -- and re-run `within_group_r2`. The STATISTIC is still deconfound's; only the
+    permutation bookkeeping is here. That duplicates the shuffle loop `permutation_null` performs
+    internally, which is a cost (see the plan's duplicated-knowledge risk flag) and is accepted
+    because the alternative is comparing a rho to an r-squared.
 
-    Returns nan when no binary feature qualifies (`univariate_top` needs >=5 units per arm), which
-    leaves the control unrun and makes `assert_all_controls_ran` raise. Fail-closed on purpose.
+    Returns nan when the null is not computable, which leaves the control UNRUN (see
+    `GauntletReport.n_controls_run`, which treats nan as not-run) and makes
+    `assert_all_controls_ran` raise. Fail-closed on purpose.
     """
-    from dna_decode.deconfound import group_centered_spearman, permutation_null, univariate_top
+    from dna_decode.deconfound import within_group_r2
     X = np.asarray(X, dtype=float)
     y = np.asarray(y, dtype=float)
-    names = list(range(X.shape[1]))
-    top = univariate_top(y, X, names, n=1)
-    if not top or abs(top[0][1]) == 0.0:
-        return float("nan")
-    j = int(top[0][0])
-    _, _, x_resid = group_centered_spearman(y.copy(), X[:, j].copy(), groups)
-    nulls = permutation_null(y, x_resid, groups, n=n_draws)
-    nulls = nulls[~np.isnan(nulls)]
-    return float(np.percentile(nulls, 95)) if nulls.size else float("nan")
+    groups = np.asarray(groups)
+    uniq = np.unique(groups)
+
+    draws = []
+    for s in range(int(n_draws)):
+        rng = np.random.default_rng(s)
+        yp = y.copy()
+        for g in uniq:                       # shuffle WITHIN each group: group means survive
+            idx = np.where(groups == g)[0]
+            v = yp[idx].copy()
+            rng.shuffle(v)
+            yp[idx] = v
+        r, used = within_group_r2(X, yp, groups, min_n=within_group_min_n)
+        if used > 0 and not np.isnan(r):
+            draws.append(float(r))
+    return float(np.percentile(draws, 95)) if draws else float("nan")
 
 
 def structure_only_baseline(y, groups) -> float:
@@ -324,13 +349,26 @@ def verdict(matrix: MetricMatrix, report: GauntletReport, *, candidate: float | 
             return GROUP_OFFSET_LEARNED
         return WITHIN_NOISE
 
+    score = candidate if candidate is not None else w
+
+    # THE NULL NOW GATES, on matched units. Previously this sat below a `w <= 0` condition that the
+    # branch above had already returned on, so it was unreachable and the control constrained
+    # nothing; and it compared a Spearman rho to an r-squared. Both fixed -- `shuffled_label_null`
+    # returns a within-group r2 null, so `score` and `null_p95` are the same quantity.
     null_p95 = report.controls.get("shuffled_label_null")
-    if null_p95 is not None and not np.isnan(null_p95) and w <= 0 and null_p95 > 0:
+    if null_p95 is not None and not np.isnan(null_p95) and score <= null_p95:
         return WITHIN_NOISE
 
-    score = candidate if candidate is not None else w
-    for name in ("structure_only_baseline", "nearest_neighbour_sequence", "pca_only_baseline",
-                 "held_out_clade"):
+    # RIVALS. `structure_only_baseline` is deliberately NOT one, and the reason is measured rather
+    # than stylistic: under leave-one-group-out the held-out group's one-hot column is all-zero in
+    # every training row, so the model cannot represent that group's offset at all. It therefore
+    # scores WORSE the more structure explains (-0.777 where group explains ~everything vs -0.001
+    # where it explains nothing) -- presenting its easiest bar exactly where it was added to bite.
+    # The Arabidopsis comparison that motivated it ("the control that BEAT the embedding") was on
+    # POOLED metrics, which is not the frame the verdict reads. In the WITHIN-GROUP frame any purely
+    # structural predictor is identically 0 by construction, so it is also redundant with the offset
+    # baseline already handled above. It stays in the report as a POOLED DIAGNOSTIC.
+    for name in ("nearest_neighbour_sequence", "pca_only_baseline", "held_out_clade"):
         rival = report.controls.get(name)
         if rival is not None and not np.isnan(rival) and score <= rival:
             return f"LOSES_TO_{name}"

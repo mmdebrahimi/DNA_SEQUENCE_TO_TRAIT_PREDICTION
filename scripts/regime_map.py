@@ -45,6 +45,11 @@ def main() -> int:
         res = screen_proposal(*args.screen, curated_catalog_exists=args.catalog_exists)
         print(json.dumps(res.as_dict(), indent=2))
         print(f"\n{'REFUSED' if res.refused else 'not refused'}: {res.verdict}")
+        # Exit 2 on UNKNOWN: a typo'd axis value is a USAGE error, not a clean screen. It previously
+        # exited 0, identically to a WORKS verdict, so `--screen a b typo && proceed` proceeded
+        # (found by verification, 2026-10-03). 1 stays the refusal code so the two stay distinct.
+        if res.verdict == "UNKNOWN":
+            return 2
         return 1 if res.refused else 0
 
     rows, missing = [], []
