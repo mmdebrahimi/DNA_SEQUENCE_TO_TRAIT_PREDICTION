@@ -359,7 +359,7 @@ def _cell_layer_for(drug: str, organism: str | None, key: str) -> dict | None:
 # happened to `lineage` and `source_concentration`: both rendered on the card for cells whose calls
 # never mentioned them, and the gap was invisible until the layers were enumerated against the CLI.
 DISCLOSURE_LAYERS = ("lineage", "source_concentration", "prospective", "doubt_layer",
-                     "organism_scope", "error_rates")
+                     "organism_scope", "error_rates", "species_composition")
 
 
 def trust_block(drug: str, organism: str | None = None) -> dict:
@@ -400,7 +400,15 @@ def trust_block(drug: str, organism: str | None = None) -> dict:
     # adds is that a caller choosing a drug sees the rate at which this cell reports a RESISTANT
     # isolate as susceptible. For klebsiella x meropenem that is 0.533, which "sens 0.467" says
     # too quietly. The reachability guard is what required it here rather than card-only.
-    for _layer in ("lineage", "source_concentration", "prospective", "error_rates"):
+    # `species_composition` joins the same generic path (2026-10-05). The plan that added it to the card
+    # left "should this reach a CALL too?" as an open question -- and the reachability guard had ALREADY
+    # answered it: *a layer nobody can see from the tool is not a disclosure*. It is decision-relevant at
+    # call time for the same reason as source_concentration: the `validation:` line quotes this cell's
+    # metric, and for klebsiella x meropenem that metric is substantially a measurement of cohort
+    # COMPOSITION -- 38% K. aerogenes scored as K. pneumoniae, with all 16 false negatives off-species and
+    # zero misses on the scored species. A caller reading sens 0.467 could not otherwise see that.
+    for _layer in ("lineage", "source_concentration", "prospective", "error_rates",
+                   "species_composition"):
         _b = _cell_layer_for(drug, organism, _layer)
         if _b:
             badge[_layer] = _b
@@ -475,6 +483,43 @@ def concentration_one_line(badge: dict) -> str | None:
     return (f"source concentration: SINGLE-SOURCE -- {n_bp} BioProject(s), one dominant{share_s}. "
             "The metric above describes that source's isolates; it is a narrow estimate, in either "
             "direction, not necessarily an inflated one")
+
+
+def species_composition_one_line(badge: dict) -> str | None:
+    """The cohort-composition caveat, when it is decision-relevant. None otherwise.
+
+    Printed only where the cohort is NOT the species it was scored as, because that is where the headline
+    metric stops being about the rule at all. The measured case: `klebsiella x meropenem` reports sens
+    0.467 from a cohort that is 38% *K. aerogenes* scored with `-O Klebsiella_pneumoniae`, and ALL 16 of
+    its false negatives are those off-species isolates -- on *K. pneumoniae* there are zero misses
+    (12/12). So that 0.467 is substantially a measurement of cohort composition.
+
+    Says the estimate is MIS-ADDRESSED, never that the published number should be replaced: the
+    provenance-disjoint artifacts are frozen units of the reproducibility freeze, so re-scoring is a user
+    authority call. The on-scored-species figure ships as a measurement with that stated.
+    """
+    s = badge.get("species_composition")
+    if not isinstance(s, dict):
+        return None
+    if s.get("status") == "insufficient_resolution":
+        return ("species composition: UNRESOLVED -- too few of this cohort's assemblies name a species "
+                f"to judge it ({s.get('reason')}); treat the composition as unknown, not as clean")
+    if s.get("status") != "measured":
+        return None
+    frac = s.get("off_species_fraction")
+    frac_s = "" if frac is None else f" ({frac:.0%})"
+    present = ", ".join(f"{n}x {sp}" for sp, n in
+                       sorted((s.get("species_counts") or {}).items(), key=lambda kv: -kv[1]))
+    out = (f"species composition: MIXED -- {s.get('n_off_species')}{frac_s} of {s.get('n_total')} "
+           f"cohort isolates are NOT `{s.get('scored_as')}` [{present}]. The metric above describes that "
+           f"mixture, not the scored species alone")
+    o = s.get("on_scored_species_only")
+    if o and o.get("sens") is not None:
+        out += (f"; on `{s.get('scored_as')}` only it is sens {o['sens']} (N={o['n']}, fn={o['fn']}) -- a "
+                f"MEASUREMENT, not a replacement (re-scoring a frozen artifact is a user authority call)")
+    elif s.get("outcome_attribution_withheld"):
+        out += "; per-species outcomes WITHHELD -- this cohort's cached determinant runs are incomplete"
+    return out
 
 
 def error_rates_one_line(badge: dict) -> str | None:

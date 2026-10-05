@@ -150,7 +150,13 @@ def test_not_accrued_is_silent_and_silence_never_means_validated():
 
 # --- the structural guard -------------------------------------------------------------------------
 
-_RENDERED = {"lineage", "source_concentration", "prospective", "organism_scope", "error_rates"}
+_RENDERED = {"lineage", "source_concentration", "prospective", "organism_scope", "error_rates",
+             # species_composition added 2026-10-05. It has a renderer
+             # (`species_composition_one_line`) because the reachability guard in
+             # test_evidence_surface_reachable.py required one: the plan that added it to the
+             # report card left "should it reach a CALL?" open, and that guard had already
+             # answered it -- a layer nobody can see from the tool is not a disclosure.
+             "species_composition"}
 
 
 def test_the_known_layer_set_has_not_grown_unnoticed():
@@ -205,3 +211,35 @@ def test_doubt_layer_is_inert_today_and_this_trips_the_moment_it_is_not():
     assert not offenders, (
         f"doubt_layer now carries a strong completeness signal {offenders} but has NO renderer, so it "
         "reaches the JSON and never a human. Write a doubt_layer one-liner and wire it into the CLI.")
+
+
+def test_EVERY_render_loop_in_the_cli_renders_EVERY_rendered_layer():
+    """TWO render loops exist -- the target-site (viral) path and the bacterial path -- and wiring only
+    one leaves the layer invisible on the other. That is exactly what happened when
+    `species_composition` was added 2026-10-05: the viral loop got it, the bacterial loop did not, and
+    the reachability guards all passed because `trust_block` carried the block. Only running the real
+    bacterial CLI showed nothing printed.
+
+    Same class as the documented salmserovar defect where fixing one of two allele-selection points left
+    the bug live. Counting the loops and asserting each is complete is what makes it not recur.
+    """
+    import re
+    from pathlib import Path
+    src = (Path(__file__).resolve().parent.parent / "dna_decode" / "amr" / "cli.py").read_text(
+        encoding="utf-8")
+    loops = re.findall(r"for _extra in \((.*?)\):", src, re.S)
+    assert len(loops) >= 2, f"expected >=2 render loops, found {len(loops)} -- has the CLI been restructured?"
+    # Renderer names do NOT uniformly derive from layer names (`source_concentration` ->
+    # `concentration_one_line`), so the mapping is explicit rather than computed -- a derived name made
+    # this guard fail on a correctly-wired layer the first time it ran.
+    renderer = {"lineage": "lineage_one_line",
+                "source_concentration": "concentration_one_line",
+                "prospective": "prospective_one_line",
+                "error_rates": "error_rates_one_line",
+                "organism_scope": "organism_scope_one_line",
+                "species_composition": "species_composition_one_line"}
+    assert set(renderer) == _RENDERED, "renderer map drifted from _RENDERED"
+    for i, body in enumerate(loops):
+        for layer in sorted(_RENDERED):
+            fn = renderer[layer]
+            assert fn in body, f"render loop #{i} does not call {fn} -- layer {layer!r} is invisible there"
