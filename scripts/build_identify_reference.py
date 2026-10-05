@@ -38,6 +38,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from dna_decode.data.genbank_organism import organism_from_genbank as _organism_from_genbank
 from dna_decode.data.organism_vocab import UnknownOrganism, canonical
 
 REPO = Path(__file__).resolve().parent.parent
@@ -60,24 +61,13 @@ class ReferenceBuildError(RuntimeError):
     """Raised instead of writing a reference that cannot do its job."""
 
 
-def organism_from_genbank(gbk: Path, max_header_lines: int = 60) -> str | None:
-    """The assembly's own `  ORGANISM` value, or None.
-
-    Reads only the header. Returns None rather than raising on a missing/short/unreadable file, so one
-    bad genome cannot abort a 2,000-genome enumeration -- but the caller MUST count the Nones, because
-    a silently-shrinking corpus is the failure mode here.
-    """
-    try:
-        with gbk.open(encoding="utf-8", errors="replace") as fh:
-            for i, line in enumerate(fh):
-                if line.startswith("  ORGANISM"):
-                    got = line.split("ORGANISM", 1)[1].strip()
-                    return got or None
-                if i > max_header_lines:
-                    return None
-    except OSError:
-        return None
-    return None
+# RE-EXPORT, not a second implementation (2026-10-05). The body moved to
+# `dna_decode.data.genbank_organism` so a PACKAGE module could use it without importing from `scripts/`
+# (which would invert the layering). It is re-exported here because five assertion sites in
+# `tests/test_build_identify_reference.py` and one import in `scripts/identify_validate.py` reference it
+# from this module; aliasing keeps them working with no edit. Behaviour is byte-identical -- pinned by
+# `tests/test_genbank_organism.py` against real cached assemblies.
+organism_from_genbank = _organism_from_genbank
 
 
 def genus_species(organism_name: str) -> str:
