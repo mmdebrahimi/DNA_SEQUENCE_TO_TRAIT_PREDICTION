@@ -1,0 +1,282 @@
+{
+  "false_negatives": [
+    {
+      "acc": "GCA_000692195.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.112887,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003950575.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003950595.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951115.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951125.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951195.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951235.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.112887,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951245.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.11197,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951535.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951575.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951615.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951635.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003952055.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003952035.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003952105.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003952145.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.113823,
+      "nearest": null
+    }
+  ],
+  "true_positive_controls": [
+    {
+      "acc": "GCA_000567045.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00900687,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_000567225.2",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00597612,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_000567505.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00199971,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_000694475.2",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00375609,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_002918585.2",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00483188,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003194325.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00334352,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951185.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.112887,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_003951605.1",
+      "rc": 0,
+      "organism": null,
+      "abstained": true,
+      "reason": "above_max_distance",
+      "dist": 0.133864,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_013180445.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00420918,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_013180465.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00387578,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_013180515.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00387578,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_018314145.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00528099,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_019927265.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.0011089,
+      "nearest": null
+    },
+    {
+      "acc": "GCA_019927685.1",
+      "rc": 0,
+      "organism": "klebsiella_pneumoniae",
+      "abstained": false,
+      "reason": null,
+      "dist": 0.00877107,
+      "nearest": null
+    }
+  ],
+  "verdict": "CORROBORATED_FN_ALL_ABSTAIN_CONTROLS_CALLED",
+  "note": "every FN is outside the 14-organism supported set while the controls are called -- a second, method-independent signal that the FN are not the scored species",
+  "prediction_registered_before_run": "FN abstain (K. aerogenes is outside the supported 14 and sits above MAX_DISTANCE); K. pneumoniae controls are called. A FN called klebsiella_pneumoniae kills the claim.",
+  "schema": "meropenem-fn-identify-crosscheck-v1",
+  "date": "2026-10-05",
+  "honest_scope": "dna-identify is a CLOSED-SET router over 14 organisms: it establishes NOT-pneumoniae, not aerogenes specifically. It is also sequence-comparison, so it is a second signal of the same broad evidence class as a submitter sequence-derived label -- independent of the ANNOTATION, not of the class."
+}

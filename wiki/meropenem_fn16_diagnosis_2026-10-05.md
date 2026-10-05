@@ -118,3 +118,60 @@ still reported for them because it needs only the assemblies, which are complete
 uv run python scripts/provdisjoint_species_audit.py                # all 10, read-only, offline, exit 0
 uv run python scripts/provdisjoint_species_audit.py --cohort klebsiella_provdisjoint_meropenem
 ```
+
+---
+
+## Follow-up the same day: an independent cross-check, and the 2 unexplained true positives
+
+Both items this memo left open are now closed. Docker was unavailable when the memo was written and is
+up now, which is the only reason these were deferred.
+
+### 1. `dna-identify` corroborates, by a genuinely unrelated route
+
+The memo's species evidence (GenBank `ORGANISM` + the `ampC-Kaer` fingerprint) shares one annotation
+provenance. `dna-identify` is different: Mash sketch k-mer distance against a 14-organism closed-set
+reference that **does not contain *K. aerogenes***, whose `thresholds.py` records K. aerogenes landing at
+**0.10849–0.13386**, above `MAX_DISTANCE = 0.1036`.
+
+Prediction registered before running: the FN should ABSTAIN; the *K. pneumoniae* true positives should be
+called. **A false negative returning `klebsiella_pneumoniae` would have killed the claim.**
+
+| group | n | called `klebsiella_pneumoniae` | abstained | distance |
+|---|---|---|---|---|
+| false negatives | 16 | **0** | **16** | 0.1129–0.1339 |
+| true positives | 14 | 12 | 2 | called: 0.0011–0.0090 |
+
+**Partition agreement with the GenBank labels: 30/30, zero disagreements.** Every isolate the GenBank
+line calls non-*pneumoniae* is exactly an isolate the router abstains on, and the abstaining distances sit
+inside the band `thresholds.py` records for K. aerogenes — an order of magnitude further than the called
+controls (0.11–0.13 vs 0.001–0.009).
+
+**HONEST SCOPE, and it matters:** `dna-identify` is a CLOSED-SET router over 14 organisms. It can only
+say `klebsiella_pneumoniae` or ABSTAIN, so what it independently establishes is **not-*pneumoniae***, not
+*aerogenes* specifically. The distances falling in the recorded aerogenes band are suggestive, not a
+species call. It is also a *sequence-comparison* method, so it is a second signal of the same broad kind
+as a submitter's sequence-derived label — independent of the annotation, not of the evidence class.
+
+### 2. The 2 *K. aerogenes* true positives are explained — and they are NOT one class
+
+| isolate | sole counted carbapenem determinant | reading |
+|---|---|---|
+| `GCA_003951185.1` | `ompK35_G41TfsTer32` (porin truncation, `Subclass=CARBAPENEM`) | a **lone-porin call that is CORRECT** |
+| `GCA_003951605.1` | `blaNMC-A` (class-A carbapenemase) | a legitimate acquired-carbapenemase call |
+
+Both also carry `ampC-Kaer`/`ampC_Kaer-1` at `Subclass=CEPHALOSPORIN`, which the rule does not count —
+the same fingerprint as all 16 false negatives. So within the 23 *K. aerogenes* isolates the rule fires
+only where a CARBAPENEM-subclass determinant happens to be called, and the AmpC that actually drives
+carbapenem resistance in this species is invisible to it.
+
+**This bears on the open lone-porin authority fork, and it points the other way.** CLAUDE.md records all
+3 false positives on the separate AR Bank cohort as porin-only, which argues for requiring a carbapenemase
+rather than counting a lone porin truncation. `GCA_003951185.1` is the counter-case: a lone-porin call
+that is **right**. Dropping lone-porin counting would convert it from a true positive into a false
+negative. **n=1 against n=3 — this does not settle the question and is not offered as settling it**; it
+means the fix has a measurable cost on the same arm, so the decision should be made against both numbers
+rather than the FP count alone.
+
+**Reproduce:** `scratchpad/identify_crosscheck.py` (Docker Mash; registers its prediction before reading
+output and reports `INDETERMINATE_CONTROLS_FAILED` if the controls do not resolve, so a uniformly
+abstaining router cannot pass by accident).
