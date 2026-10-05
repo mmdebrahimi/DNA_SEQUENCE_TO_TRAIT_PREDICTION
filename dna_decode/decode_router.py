@@ -198,6 +198,13 @@ def run_decode_plan(path: str | Path, *, runner=None, sample_id: str | None = No
         rc = runner("profile", [str(p), "--sample-id", sample_id]) or rc
         print("\n  note: sections needing blastn / a DB / Docker show 'unavailable' offline -- install the "
               "tool/DB or run the per-decoder command from `dna-decode decode` to enable them.")
+        # The auto-run above stays OFFLINE-SAFE, so it does not identify the organism -- the AMR
+        # section therefore runs on the DISCLOSED E. coli assumption (stamped organism_assumed=true).
+        # Say so, and name the command that replaces that assumption with a MEASUREMENT.
+        print("\n  note: the amr section above ASSUMED E. coli (organism_assumed=true). "
+              "To MEASURE the organism instead (needs Docker + the identify reference sketch):")
+        print(f"  run: dna-profile {p.name} --identify-organism")
+        print(f"       or identify alone: dna-identify --genome-fasta {p.name}")
         print("\n=== forward (edit -> effect): NOT auto-run -- needs a specific edit + an annotation ===")
         print(f"  run: dna-decode forward --genomic-pos <n> --ref <B> --alt <B> --genome-fasta {p.name} "
               f"--annotations <gff3>")

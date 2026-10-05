@@ -102,6 +102,84 @@ def _amr(main_tsv, drugs, organism, threshold):
     return {"status": "ok", "organism": organism, "calls": calls}
 
 
+def _resolve_amr_organism(fasta, explicit, do_identify: bool) -> dict:
+    """Decide which organism the AMR section routes on, and record HOW it was decided.
+
+    THREE sources, never collapsed -- a reader must be able to tell a MEASUREMENT from an ASSUMPTION
+    from an infrastructure FAULT:
+      * `explicit`           -- the user passed --amr-organism. ALWAYS WINS over identification:
+                                user authority outranks inference, and an explicit value is also the
+                                escape hatch when the router abstains.
+      * `identified`         -- `dna-identify` named a supported organism. `organism_assumed` becomes
+                                FALSE, because it no longer is one.
+      * `assumed_*`          -- the E. coli assumption STANDS, with the reason it stands. An
+                                abstention and an unavailable reference are recorded SEPARATELY: the
+                                first is a correct biological answer ("not a supported organism"), the
+                                second is a fault, and conflating them would let a wedged Docker mount
+                                read as a finding.
+
+    Identification is OPT-IN because it needs Docker, and `profile`'s auto-run path (used by
+    `dna-decode decode`) is offline-safe. Making it automatic would break that guarantee.
+    """
+    out = {"organism_requested": explicit, "organism_identify": None}
+    if explicit:
+        out.update(organism_used=explicit, organism_assumed=False, organism_source="explicit")
+        return out
+    if not do_identify:
+        out.update(organism_used="Escherichia", organism_assumed=True, organism_source="assumed_default")
+        return out
+    try:
+        from dna_decode.data.organism_vocab import routing_token
+        from dna_decode.identify.core import decide
+        from dna_decode.identify.runner import ReferenceUnavailable, query
+        from dna_decode.identify.thresholds import frozen
+        import json as _json
+        repo = Path(__file__).resolve().parent.parent.parent
+        mans = sorted((repo / "wiki").glob("identify_reference_manifest_*.json"))
+        if not mans:
+            raise ReferenceUnavailable(
+                "no identify reference manifest in wiki/; build one with "
+                "`uv run python scripts/build_identify_reference.py`")
+        labels = {a: o for o, accs in
+                  _json.loads(mans[-1].read_text(encoding="utf-8"))["accessions_by_organism"].items()
+                  for a in accs}
+        res = query(Path(fasta))
+        call = decide(res.hits, frozen(), lambda a: labels.get(a), routing_token)
+    except ReferenceUnavailable as exc:
+        out.update(organism_used="Escherichia", organism_assumed=True,
+                   organism_source="assumed_identify_unavailable",
+                   organism_identify={"status": "reference_unavailable", "detail": str(exc)[:300]})
+        return out
+    except Exception as exc:  # any other fault: still a FAULT, never a biological abstention
+        out.update(organism_used="Escherichia", organism_assumed=True,
+                   organism_source="assumed_identify_failed",
+                   organism_identify={"status": "failed",
+                                      "detail": f"{type(exc).__name__}: {exc}"[:300]})
+        return out
+
+    if call.abstained:
+        out.update(organism_used="Escherichia", organism_assumed=True,
+                   organism_source="assumed_identify_abstained",
+                   organism_identify={"status": "abstained", "reason": call.reason.value,
+                                      "nearest_distance": call.nearest_distance})
+        return out
+    if not call.routing_token:
+        # a supported organism with NO AMRFinder -O value (fungal / TB): it routes to its own engine,
+        # so the AMR section must NOT pretend an -O value exists
+        out.update(organism_used="Escherichia", organism_assumed=True,
+                   organism_source="assumed_identified_but_not_amrfinder_routable",
+                   organism_identify={"status": "identified", "organism": call.organism,
+                                      "routing_token": None,
+                                      "note": "AMRFinder has no -O value for this organism"})
+        return out
+    out.update(organism_used=call.routing_token, organism_assumed=False,
+               organism_source="identified",
+               organism_identify={"status": "identified", "organism": call.organism,
+                                  "routing_token": call.routing_token,
+                                  "nearest_distance": call.nearest_distance})
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="dna-profile",
                                  description="Unified genome profile — run all assembly-FASTA decoders")
@@ -121,6 +199,10 @@ def main(argv=None) -> int:
                     help="organism for AMR routing + the trust badge. If omitted, E. coli is ASSUMED and the "
                          "output is stamped organism_assumed=true (routing + badge are E. coli-oriented -- "
                          "pass this explicitly for a non-E. coli genome)")
+    ap.add_argument("--identify-organism", action="store_true",
+                    help="resolve the organism from the genome with `dna-identify` instead of ASSUMING "
+                         "E. coli (needs Docker + the reference sketch). --amr-organism still wins; an "
+                         "abstention keeps the disclosed assumption and records why")
     ap.add_argument("--amr-drugs", default="ciprofloxacin,ceftriaxone,tetracycline,gentamicin",
                     help="comma-separated drugs for the AMR section")
     ap.add_argument("--amr-threshold", type=int, default=None)
@@ -136,8 +218,11 @@ def main(argv=None) -> int:
 
     # Organism SELF-DISCLOSURE: an omitted --amr-organism means E. coli is ASSUMED. Both the routing AND the
     # trust badge are E. coli-oriented, so the output must NOT look identical to an explicit user choice.
-    amr_assumed = args.amr_organism is None
-    amr_org = args.amr_organism or "Escherichia"
+    # With --identify-organism the assumption can be REPLACED by a measurement (`dna-identify`), which is
+    # step 1 of the pipeline feeding step 2 instead of a human supplying it.
+    org_res = _resolve_amr_organism(args.fasta, args.amr_organism, args.identify_organism)
+    amr_org = org_res["organism_used"]
+    amr_assumed = org_res["organism_assumed"]
 
     # Resolve an AMRFinder main.tsv source for the AMR section (cached run > Docker run > none/offline-safe).
     amr_main_tsv = None
@@ -158,6 +243,8 @@ def main(argv=None) -> int:
     amr_section["organism_requested"] = args.amr_organism   # null when omitted
     amr_section["organism_used"] = amr_org
     amr_section["organism_assumed"] = amr_assumed
+    amr_section["organism_source"] = org_res["organism_source"]
+    amr_section["organism_identify"] = org_res["organism_identify"]
     decoders = {
         "pathotype": _pathotype(args.fasta, args.pathotype_db),
         "serotype": _serotype(args.fasta, args.serotype_db),
