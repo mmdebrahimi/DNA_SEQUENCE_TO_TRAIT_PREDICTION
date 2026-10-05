@@ -96,7 +96,7 @@ def test_reconcile_FAILURE_withholds_the_crosstab_and_says_why(tmp_path, monkeyp
     assert row["outcome_crosstab"] is None
     assert "RECONCILE FAILED" in row["crosstab_withheld_reason"]
     # composition is unaffected -- it does not depend on predictions
-    assert row["composition"]["verdict"] in ("SINGLE_SPECIES_AS_EXPECTED", "MIXED_SPECIES")
+    assert row["composition"]["verdict"] in ("MATCHES_SCORED_ORGANISM", "MIXED_SPECIES")
 
 
 def test_partial_cached_runs_report_composition_and_NO_crosstab(tmp_path, monkeypatch):
@@ -181,6 +181,62 @@ def test_an_unknown_cohort_name_exits_2(tmp_path, monkeypatch):
 
 
 # --------------------------------------------------------------------------- real data
+
+def _committed() -> dict | None:
+    got = sorted((REPO / "wiki").glob("provdisjoint_species_audit_*.json"))
+    return json.loads(got[-1].read_text(encoding="utf-8")) if got else None
+
+
+def test_the_committed_artifact_is_parseable_and_well_shaped():
+    """A hand-unreadable or malformed artifact is cited as evidence and nobody notices -- this repo has
+    shipped an invalid-JSON artifact before."""
+    d = _committed()
+    if d is None:
+        pytest.skip("no committed species-audit artifact yet")
+    assert d["schema"] == aud.SCHEMA
+    assert isinstance(d["cells"], list) and d["cells"]
+    for c in d["cells"]:
+        for k in ("cohort_dir", "organism", "drug", "amrfinder_organism", "composition",
+                  "cached_amrfinder_runs", "reconciled"):
+            assert k in c, f"{c.get('cohort_dir')}: missing {k}"
+        comp = c["composition"]
+        assert comp["verdict"] in ("MATCHES_SCORED_ORGANISM", "MIXED_SPECIES",
+                                   "INSUFFICIENT_RESOLUTION")
+        if comp["verdict"] != "INSUFFICIENT_RESOLUTION":
+            # the four buckets must PARTITION -- a denominator that does not sum is the failure mode
+            assert (comp["n_matches_expected"] + comp["n_same_genus_other_species"]
+                    + comp["n_other_genus"] + comp["n_unresolved"]) == comp["n_total"]
+        if not c["reconciled"]:
+            assert c["outcome_crosstab"] is None
+            assert c.get("crosstab_withheld_reason"), "a withheld cross-tab must say why"
+
+
+def test_the_committed_artifact_records_the_meropenem_finding():
+    """Guards the headline the memo quotes: 16/16 FN off-species, and zero FN on the scored species."""
+    d = _committed()
+    if d is None:
+        pytest.skip("no committed species-audit artifact yet")
+    m = [c for c in d["cells"] if c["drug"] == "meropenem" and c["organism"] == "Klebsiella"]
+    if not m:
+        pytest.skip("meropenem cohort not in the committed artifact")
+    c = m[0]
+    assert c["composition"]["verdict"] == "MIXED_SPECIES"
+    assert c["false_negative_anatomy"] == {
+        "n_false_negatives": 16, "n_fn_off_species": 16, "n_fn_expected_species": 0,
+        "fn_species_counts": {"Klebsiella aerogenes": 16}}
+    assert c["outcome_crosstab"]["by_species"]["Klebsiella pneumoniae"]["fn"] == 0
+
+
+def test_every_cohort_resolved_its_species_so_the_bar_never_bound():
+    """The memo states all 580 assemblies resolved an ORGANISM line. If that stops holding, the
+    MAX_UNRESOLVED_FRACTION bar starts mattering and the memo's claim needs re-deriving."""
+    d = _committed()
+    if d is None:
+        pytest.skip("no committed species-audit artifact yet")
+    total = sum(c["composition"]["n_total"] for c in d["cells"])
+    unresolved = sum(c["composition"].get("n_unresolved", 0) for c in d["cells"])
+    assert unresolved == 0, f"{unresolved} of {total} assemblies no longer resolve a species"
+
 
 def test_the_real_meropenem_cohort_reconciles_to_14_3_27_16():
     """THE anchor. If this stops reproducing, the audit's attribution is void and must be re-derived

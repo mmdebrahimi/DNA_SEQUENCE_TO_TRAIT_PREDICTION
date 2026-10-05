@@ -42,7 +42,12 @@ OTHER_GENUS = "other_genus"
 UNRESOLVED = "unresolved"
 
 INSUFFICIENT_RESOLUTION = "INSUFFICIENT_RESOLUTION"
-COMPOSITION_CLEAN = "SINGLE_SPECIES_AS_EXPECTED"
+#: NAMED FOR GRANULARITY-NEUTRALITY, after a first draft called this `SINGLE_SPECIES_AS_EXPECTED` and the
+#: real data proved that false: the Campylobacter cohort holds 31 *C. jejuni* + 9 *C. coli* and is scored
+#: with the GENUS-level `-O Campylobacter`, so it legitimately matches what it was scored as while being
+#: two species. The verdict asserts agreement with the scoring organism at whatever granularity that
+#: organism has -- never that the cohort is monomorphic.
+COMPOSITION_CLEAN = "MATCHES_SCORED_ORGANISM"
 COMPOSITION_MIXED = "MIXED_SPECIES"
 
 

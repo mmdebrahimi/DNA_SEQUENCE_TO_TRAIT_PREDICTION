@@ -1,0 +1,713 @@
+{
+  "schema": "provdisjoint-species-audit-v1",
+  "date": "2026-10-05",
+  "n_cohorts": 10,
+  "scope": "read-only species-composition disclosure for the provenance-disjoint arm; does NOT re-score any cell and does NOT modify any frozen artifact",
+  "label_provenance": "each assembly's own GenBank ORGANISM line -- the submitter's assertion, not a wet-lab identification (the project's own G1 circular-label class)",
+  "cells": [
+    {
+      "cohort_dir": "campylobacter_provdisjoint_ciprofloxacin",
+      "artifact": "provenance_disjoint_validation_campylobacter_cipro_2026-06-10.json",
+      "organism": "Campylobacter",
+      "registry_organism": "Campylobacter",
+      "amrfinder_organism": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "committed_metrics": {
+        "n_scored": 40,
+        "tp": 20,
+        "fp": 0,
+        "tn": 20,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 1.0,
+        "sens": 1.0,
+        "spec": 1.0
+      },
+      "composition": {
+        "verdict": "MATCHES_SCORED_ORGANISM",
+        "expected_species": null,
+        "n_total": 40,
+        "n_matches_expected": 40,
+        "n_same_genus_other_species": 0,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Campylobacter jejuni": 31,
+          "Campylobacter coli": 9
+        },
+        "off_species_accessions": []
+      },
+      "species_vocabulary_status": {
+        "Campylobacter coli": "in_organism_vocab",
+        "Campylobacter jejuni": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 40,
+        "total": 40
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 20,
+        "fp": 0,
+        "tn": 20,
+        "fn": 0,
+        "n_scored": 40
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Campylobacter jejuni": {
+            "tp": 15,
+            "fp": 0,
+            "tn": 16,
+            "fn": 0,
+            "abstain": 0
+          },
+          "Campylobacter coli": {
+            "tp": 5,
+            "fp": 0,
+            "tn": 4,
+            "fn": 0,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "tp": 20,
+          "tn": 20
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 0,
+        "n_fn_off_species": 0,
+        "n_fn_expected_species": 0,
+        "fn_species_counts": {}
+      }
+    },
+    {
+      "cohort_dir": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
+      "artifact": "provenance_disjoint_validation_escherichia_coli_shigella_ceftr_2026-06-12.json",
+      "organism": "Escherichia_coli_Shigella",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "amrfinder_organism": "Escherichia",
+      "drug": "ceftriaxone",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 29,
+        "fp": 1,
+        "tn": 29,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.967,
+        "sens": 0.967,
+        "spec": 0.967
+      },
+      "composition": {
+        "verdict": "MATCHES_SCORED_ORGANISM",
+        "expected_species": null,
+        "n_total": 60,
+        "n_matches_expected": 60,
+        "n_same_genus_other_species": 0,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Escherichia coli": 60
+        },
+        "off_species_accessions": []
+      },
+      "species_vocabulary_status": {
+        "Escherichia coli": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 60,
+        "total": 60
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 29,
+        "fp": 1,
+        "tn": 29,
+        "fn": 1,
+        "n_scored": 60
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Escherichia coli": {
+            "tp": 29,
+            "fp": 1,
+            "tn": 29,
+            "fn": 1,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "tn": 29,
+          "fp": 1,
+          "fn": 1,
+          "tp": 29
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 1,
+        "n_fn_off_species": 0,
+        "n_fn_expected_species": 1,
+        "fn_species_counts": {
+          "Escherichia coli": 1
+        }
+      }
+    },
+    {
+      "cohort_dir": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
+      "artifact": "provenance_disjoint_validation_escherichia_coli_shigella_cipro_2026-06-10.json",
+      "organism": "Escherichia_coli_Shigella",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "amrfinder_organism": "Escherichia",
+      "drug": "ciprofloxacin",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 28,
+        "fp": 9,
+        "tn": 21,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.817,
+        "sens": 0.933,
+        "spec": 0.7
+      },
+      "composition": {
+        "verdict": "MATCHES_SCORED_ORGANISM",
+        "expected_species": null,
+        "n_total": 60,
+        "n_matches_expected": 60,
+        "n_same_genus_other_species": 0,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Escherichia coli": 60
+        },
+        "off_species_accessions": []
+      },
+      "species_vocabulary_status": {
+        "Escherichia coli": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 60,
+        "total": 60
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 28,
+        "fp": 9,
+        "tn": 21,
+        "fn": 2,
+        "n_scored": 60
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Escherichia coli": {
+            "tp": 28,
+            "fp": 9,
+            "tn": 21,
+            "fn": 2,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "tp": 28,
+          "tn": 21,
+          "fp": 9,
+          "fn": 2
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 2,
+        "n_fn_off_species": 0,
+        "n_fn_expected_species": 2,
+        "fn_species_counts": {
+          "Escherichia coli": 2
+        }
+      }
+    },
+    {
+      "cohort_dir": "escherichia_coli_shigella_provdisjoint_gentamicin",
+      "artifact": "provenance_disjoint_validation_escherichia_coli_shigella_genta_2026-06-12.json",
+      "organism": "Escherichia_coli_Shigella",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "amrfinder_organism": "Escherichia",
+      "drug": "gentamicin",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 27,
+        "fp": 0,
+        "tn": 30,
+        "fn": 3,
+        "abstain": 0,
+        "acc": 0.95,
+        "sens": 0.9,
+        "spec": 1.0
+      },
+      "composition": {
+        "verdict": "MATCHES_SCORED_ORGANISM",
+        "expected_species": null,
+        "n_total": 60,
+        "n_matches_expected": 60,
+        "n_same_genus_other_species": 0,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Escherichia coli": 60
+        },
+        "off_species_accessions": []
+      },
+      "species_vocabulary_status": {
+        "Escherichia coli": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 60,
+        "total": 60
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 27,
+        "fp": 0,
+        "tn": 30,
+        "fn": 3,
+        "n_scored": 60
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Escherichia coli": {
+            "tp": 27,
+            "fp": 0,
+            "tn": 30,
+            "fn": 3,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "fn": 3,
+          "tn": 30,
+          "tp": 27
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 3,
+        "n_fn_off_species": 0,
+        "n_fn_expected_species": 3,
+        "fn_species_counts": {
+          "Escherichia coli": 3
+        }
+      }
+    },
+    {
+      "cohort_dir": "escherichia_coli_shigella_provdisjoint_tetracycline",
+      "artifact": "provenance_disjoint_validation_escherichia_coli_shigella_tetra_2026-06-12.json",
+      "organism": "Escherichia_coli_Shigella",
+      "registry_organism": "Escherichia_coli_Shigella",
+      "amrfinder_organism": "Escherichia",
+      "drug": "tetracycline",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 28,
+        "fp": 2,
+        "tn": 28,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.933,
+        "sens": 0.933,
+        "spec": 0.933
+      },
+      "composition": {
+        "verdict": "MATCHES_SCORED_ORGANISM",
+        "expected_species": null,
+        "n_total": 60,
+        "n_matches_expected": 60,
+        "n_same_genus_other_species": 0,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Escherichia coli": 60
+        },
+        "off_species_accessions": []
+      },
+      "species_vocabulary_status": {
+        "Escherichia coli": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 60,
+        "total": 60
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 28,
+        "fp": 2,
+        "tn": 28,
+        "fn": 2,
+        "n_scored": 60
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Escherichia coli": {
+            "tp": 28,
+            "fp": 2,
+            "tn": 28,
+            "fn": 2,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "tp": 28,
+          "tn": 28,
+          "fn": 2,
+          "fp": 2
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 2,
+        "n_fn_off_species": 0,
+        "n_fn_expected_species": 2,
+        "fn_species_counts": {
+          "Escherichia coli": 2
+        }
+      }
+    },
+    {
+      "cohort_dir": "klebsiella_provdisjoint_ceftriaxone",
+      "artifact": "provenance_disjoint_validation_klebsiella_ceftr_2026-06-10.json",
+      "organism": "Klebsiella",
+      "registry_organism": "Klebsiella",
+      "amrfinder_organism": "Klebsiella_pneumoniae",
+      "drug": "ceftriaxone",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 30,
+        "fp": 3,
+        "tn": 27,
+        "fn": 0,
+        "abstain": 0,
+        "acc": 0.95,
+        "sens": 1.0,
+        "spec": 0.9
+      },
+      "composition": {
+        "verdict": "MIXED_SPECIES",
+        "expected_species": "Klebsiella pneumoniae",
+        "n_total": 60,
+        "n_matches_expected": 58,
+        "n_same_genus_other_species": 2,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Klebsiella pneumoniae": 58,
+          "Klebsiella aerogenes": 2
+        },
+        "off_species_accessions": [
+          "GCA_022299695.1",
+          "GCA_022299815.1"
+        ]
+      },
+      "species_vocabulary_status": {
+        "Klebsiella aerogenes": "not_in_organism_vocab",
+        "Klebsiella pneumoniae": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 54,
+        "total": 60
+      },
+      "reconciled": false,
+      "outcome_crosstab": null,
+      "crosstab_withheld_reason": "cached AMRFinder runs incomplete (54/60); attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Composition above is unaffected -- it needs only the assemblies, which are complete."
+    },
+    {
+      "cohort_dir": "klebsiella_provdisjoint_ciprofloxacin",
+      "artifact": "provenance_disjoint_validation_klebsiella_cipro_2026-06-10.json",
+      "organism": "Klebsiella",
+      "registry_organism": "Klebsiella",
+      "amrfinder_organism": "Klebsiella_pneumoniae",
+      "drug": "ciprofloxacin",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 29,
+        "fp": 1,
+        "tn": 29,
+        "fn": 1,
+        "abstain": 0,
+        "acc": 0.967,
+        "sens": 0.967,
+        "spec": 0.967
+      },
+      "composition": {
+        "verdict": "MIXED_SPECIES",
+        "expected_species": "Klebsiella pneumoniae",
+        "n_total": 60,
+        "n_matches_expected": 58,
+        "n_same_genus_other_species": 2,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Klebsiella pneumoniae": 58,
+          "Klebsiella aerogenes": 2
+        },
+        "off_species_accessions": [
+          "GCA_022182405.1",
+          "GCA_022299815.1"
+        ]
+      },
+      "species_vocabulary_status": {
+        "Klebsiella aerogenes": "not_in_organism_vocab",
+        "Klebsiella pneumoniae": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 60,
+        "total": 60
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 29,
+        "fp": 1,
+        "tn": 29,
+        "fn": 1,
+        "n_scored": 60
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Klebsiella pneumoniae": {
+            "tp": 29,
+            "fp": 1,
+            "tn": 27,
+            "fn": 1,
+            "abstain": 0
+          },
+          "Klebsiella aerogenes": {
+            "tp": 0,
+            "fp": 0,
+            "tn": 2,
+            "fn": 0,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "tp": 29,
+          "fn": 1,
+          "tn": 29,
+          "fp": 1
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 1,
+        "n_fn_off_species": 0,
+        "n_fn_expected_species": 1,
+        "fn_species_counts": {
+          "Klebsiella pneumoniae": 1
+        }
+      }
+    },
+    {
+      "cohort_dir": "klebsiella_provdisjoint_gentamicin",
+      "artifact": "provenance_disjoint_validation_klebsiella_genta_2026-06-10.json",
+      "organism": "Klebsiella",
+      "registry_organism": "Klebsiella",
+      "amrfinder_organism": "Klebsiella_pneumoniae",
+      "drug": "gentamicin",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 28,
+        "fp": 2,
+        "tn": 28,
+        "fn": 2,
+        "abstain": 0,
+        "acc": 0.933,
+        "sens": 0.933,
+        "spec": 0.933
+      },
+      "composition": {
+        "verdict": "MIXED_SPECIES",
+        "expected_species": "Klebsiella pneumoniae",
+        "n_total": 60,
+        "n_matches_expected": 59,
+        "n_same_genus_other_species": 1,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Klebsiella pneumoniae": 59,
+          "Klebsiella aerogenes": 1
+        },
+        "off_species_accessions": [
+          "GCA_022299815.1"
+        ]
+      },
+      "species_vocabulary_status": {
+        "Klebsiella aerogenes": "not_in_organism_vocab",
+        "Klebsiella pneumoniae": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 3,
+        "total": 60
+      },
+      "reconciled": false,
+      "outcome_crosstab": null,
+      "crosstab_withheld_reason": "cached AMRFinder runs incomplete (3/60); attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Composition above is unaffected -- it needs only the assemblies, which are complete."
+    },
+    {
+      "cohort_dir": "klebsiella_provdisjoint_meropenem",
+      "artifact": "provenance_disjoint_validation_klebsiella_merop_2026-06-10.json",
+      "organism": "Klebsiella",
+      "registry_organism": "Klebsiella",
+      "amrfinder_organism": "Klebsiella_pneumoniae",
+      "drug": "meropenem",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 14,
+        "fp": 3,
+        "tn": 27,
+        "fn": 16,
+        "abstain": 0,
+        "acc": 0.683,
+        "sens": 0.467,
+        "spec": 0.9
+      },
+      "composition": {
+        "verdict": "MIXED_SPECIES",
+        "expected_species": "Klebsiella pneumoniae",
+        "n_total": 60,
+        "n_matches_expected": 37,
+        "n_same_genus_other_species": 23,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Klebsiella pneumoniae": 37,
+          "Klebsiella aerogenes": 23
+        },
+        "off_species_accessions": [
+          "GCA_000692195.1",
+          "GCA_003950535.1",
+          "GCA_003950575.1",
+          "GCA_003950595.1",
+          "GCA_003950635.1",
+          "GCA_003951115.1",
+          "GCA_003951125.1",
+          "GCA_003951175.1",
+          "GCA_003951185.1",
+          "GCA_003951195.1",
+          "GCA_003951235.1",
+          "GCA_003951245.1",
+          "GCA_003951535.1",
+          "GCA_003951575.1",
+          "GCA_003951605.1",
+          "GCA_003951615.1",
+          "GCA_003951635.1",
+          "GCA_003952035.1",
+          "GCA_003952045.1",
+          "GCA_003952055.1",
+          "GCA_003952105.1",
+          "GCA_003952145.1",
+          "GCA_003952915.1"
+        ]
+      },
+      "species_vocabulary_status": {
+        "Klebsiella aerogenes": "not_in_organism_vocab",
+        "Klebsiella pneumoniae": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 60,
+        "total": 60
+      },
+      "reconciled": true,
+      "reconciled_confusion": {
+        "tp": 14,
+        "fp": 3,
+        "tn": 27,
+        "fn": 16,
+        "n_scored": 60
+      },
+      "outcome_crosstab": {
+        "by_species": {
+          "Klebsiella pneumoniae": {
+            "tp": 12,
+            "fp": 3,
+            "tn": 22,
+            "fn": 0,
+            "abstain": 0
+          },
+          "Klebsiella aerogenes": {
+            "tp": 2,
+            "fp": 0,
+            "tn": 5,
+            "fn": 16,
+            "abstain": 0
+          }
+        },
+        "totals": {
+          "tp": 14,
+          "fp": 3,
+          "fn": 16,
+          "tn": 27
+        }
+      },
+      "false_negative_anatomy": {
+        "n_false_negatives": 16,
+        "n_fn_off_species": 16,
+        "n_fn_expected_species": 0,
+        "fn_species_counts": {
+          "Klebsiella aerogenes": 16
+        }
+      }
+    },
+    {
+      "cohort_dir": "klebsiella_provdisjoint_tetracycline",
+      "artifact": "provenance_disjoint_validation_klebsiella_tetra_2026-06-10.json",
+      "organism": "Klebsiella",
+      "registry_organism": "Klebsiella",
+      "amrfinder_organism": "Klebsiella_pneumoniae",
+      "drug": "tetracycline",
+      "committed_metrics": {
+        "n_scored": 60,
+        "tp": 24,
+        "fp": 1,
+        "tn": 29,
+        "fn": 6,
+        "abstain": 0,
+        "acc": 0.883,
+        "sens": 0.8,
+        "spec": 0.967
+      },
+      "composition": {
+        "verdict": "MIXED_SPECIES",
+        "expected_species": "Klebsiella pneumoniae",
+        "n_total": 60,
+        "n_matches_expected": 58,
+        "n_same_genus_other_species": 2,
+        "n_other_genus": 0,
+        "n_unresolved": 0,
+        "species_counts": {
+          "Klebsiella pneumoniae": 58,
+          "Klebsiella aerogenes": 2
+        },
+        "off_species_accessions": [
+          "GCA_022299695.1",
+          "GCA_022299815.1"
+        ]
+      },
+      "species_vocabulary_status": {
+        "Klebsiella aerogenes": "not_in_organism_vocab",
+        "Klebsiella pneumoniae": "in_organism_vocab"
+      },
+      "max_unresolved_fraction": 0.1,
+      "cached_amrfinder_runs": {
+        "have": 33,
+        "total": 60
+      },
+      "reconciled": false,
+      "outcome_crosstab": null,
+      "crosstab_withheld_reason": "cached AMRFinder runs incomplete (33/60); attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Composition above is unaffected -- it needs only the assemblies, which are complete."
+    }
+  ],
+  "complete": true
+}
