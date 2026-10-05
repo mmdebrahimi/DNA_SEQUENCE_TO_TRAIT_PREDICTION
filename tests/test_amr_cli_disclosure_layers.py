@@ -25,7 +25,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from dna_decode.amr.cli import main as amr_main  # noqa: E402
 from dna_decode.data.trust_surface import (DISCLOSURE_LAYERS, prospective_one_line,  # noqa: E402
-                                           trust_block)
+                                           species_composition_one_line, trust_block)
 
 _HEADER = ("Protein id\tContig id\tStart\tStop\tStrand\tElement symbol\tElement name\tScope\tType\t"
            "Subtype\tClass\tSubclass\tMethod\tTarget length\tReference sequence length\t"
@@ -243,3 +243,120 @@ def test_EVERY_render_loop_in_the_cli_renders_EVERY_rendered_layer():
         for layer in sorted(_RENDERED):
             fn = renderer[layer]
             assert fn in body, f"render loop #{i} does not call {fn} -- layer {layer!r} is invisible there"
+
+
+# --- species_composition: the real surface, and the renderer's states ------------------------------
+#
+# Added by /test-epilogue 2026-10-05. The layer shipped with a STRUCTURAL guard only -- the test above
+# asserts `species_composition_one_line` is *named* in both render loops. That cannot see whether the
+# function produces the right string, or any string at all: a renderer that returned None for every
+# input would satisfy it. The sibling layers (`prospective_one_line`, `concentration_one_line`) each
+# have both a real-CLI test and per-state renderer tests; this one had neither.
+
+
+def _card_species_block(organism: str, drug: str) -> dict | None:
+    """The committed card's species block for one cell, or None. Fixture DERIVED, never hardcoded."""
+    import json
+    p = Path(__file__).resolve().parent.parent / "wiki" / "decoder_validation_report_card.json"
+    if not p.exists():
+        return None
+    for c in json.loads(p.read_text(encoding="utf-8")).get("cells", []):
+        if (c.get("organism"), c.get("drug")) == (organism, drug):
+            return c.get("species_composition")
+    return None
+
+
+def _species_line(out: str) -> str | None:
+    return next((ln for ln in out.splitlines() if "species composition:" in ln), None)
+
+
+def test_species_composition_reaches_the_printed_output():
+    """THE anchor for this layer. `klebsiella x meropenem` is the cell the whole audit exists for: its
+    published sens 0.467 comes from a cohort that is 38% K. aerogenes scored as K. pneumoniae.
+
+    If this ever stops printing, the caller reading 0.467 is back to not being able to see that -- and
+    the structural guard will still pass, because the renderer is still *named* in the loop.
+    """
+    if not _card_species_block("klebsiella", "meropenem"):
+        pytest.skip("the meropenem cell carries no species block (card not built?)")
+    with tempfile.TemporaryDirectory() as td:
+        rd = _run_dir(Path(td), [("blaKPC-2", "BETA-LACTAM", "CARBAPENEM", "EXACTX")])
+        rc, out = _invoke(["--drug", "meropenem", "--amrfinder-run", str(rd),
+                           "--organism", "Klebsiella_pneumoniae"])
+    assert rc == 0
+    line = _species_line(out)
+    assert line is not None, f"species layer never printed:\n{out}"
+    assert "MIXED" in line
+    assert "Klebsiella aerogenes" in line, "the line must name WHAT the cohort actually is"
+    # the on-scored-species figure must ship WITH its disclaimer, never as a replacement metric
+    assert "user authority call" in line
+
+
+def test_a_cohort_with_incomplete_cached_runs_prints_composition_but_NO_outcome_FIGURE():
+    """NON-VACUITY for the withheld branch, on real data. Three Klebsiella cohorts have partial cached
+    determinant runs, so their per-species outcomes are withheld -- and the danger is a line that still
+    quotes an outcome number for them. Attributing outcomes on a partial run set is a rate over a
+    silently-shrunken denominator, which is the failure the withholding exists to prevent.
+    """
+    blk = _card_species_block("klebsiella", "ceftriaxone")
+    if not blk or "outcome_attribution_withheld" not in blk:
+        pytest.skip("no cohort with a withheld cross-tab on the committed card")
+    with tempfile.TemporaryDirectory() as td:
+        rd = _run_dir(Path(td), [("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN", "EXACTX")])
+        rc, out = _invoke(["--drug", "ceftriaxone", "--amrfinder-run", str(rd),
+                           "--organism", "Klebsiella_pneumoniae"])
+    assert rc == 0
+    line = _species_line(out)
+    assert line is not None, f"species layer never printed:\n{out}"
+    assert "WITHHELD" in line
+    assert "sens" not in line, f"a withheld cohort must not quote an outcome figure: {line}"
+
+
+def test_species_composition_is_SILENT_for_a_cohort_that_matches_its_scored_organism():
+    """Pairs with the two tests above: without this, a renderer that printed on every call would pass
+    them both. A reassuring line for a clean cohort is noise, and invites reading the presence of a
+    species line as meaningful when it is unconditional.
+    """
+    if _card_species_block("escherichia_coli_shigella", "ciprofloxacin") is not None:
+        pytest.skip("the E. coli cipro cohort now carries a species block -- pick a clean cell instead")
+    with tempfile.TemporaryDirectory() as td:
+        rd = _run_dir(Path(td), [("gyrA_S83L", "QUINOLONE", "FLUOROQUINOLONE", "POINTX")])
+        rc, out = _invoke(["--drug", "ciprofloxacin", "--amrfinder-run", str(rd),
+                           "--organism", "Escherichia_coli_Shigella"])
+    assert rc == 0
+    assert _species_line(out) is None, f"a cohort matching its scored organism printed a block:\n{out}"
+
+
+def test_an_unresolved_composition_says_UNKNOWN_rather_than_reading_as_clean():
+    """The refusal state. A cohort too thin on resolved species to judge must not be silent -- silence
+    is what a CLEAN cohort produces, so reusing it here would make "we could not tell" and "we checked
+    and it is fine" indistinguishable at the only surface a human reads.
+    """
+    line = species_composition_one_line({"species_composition": {
+        "status": "insufficient_resolution", "reason": "40/60 assemblies had no readable ORGANISM line"}})
+    assert line is not None
+    assert "UNRESOLVED" in line and "not as clean" in line
+    assert "40/60" in line, "the refusal must carry its own reason"
+    # and it must not invent composition figures it does not have
+    assert "MIXED" not in line and "%" not in line
+
+
+def test_the_renderer_is_silent_on_every_state_it_has_nothing_to_say_about():
+    assert species_composition_one_line({}) is None
+    assert species_composition_one_line({"species_composition": None}) is None
+    assert species_composition_one_line({"species_composition": {"status": "matches"}}) is None
+    # a future status this renderer does not know must be silent, never half-rendered
+    assert species_composition_one_line({"species_composition": {"status": "something_new"}}) is None
+
+
+def test_an_undefined_on_species_sensitivity_is_omitted_not_printed_as_None():
+    """`sens` is None when the scored species' subset has no resistant isolates at all (tp+fn == 0).
+    Printing `sens None` to a human reads as a measured value of nothing; the clause must be dropped.
+    """
+    line = species_composition_one_line({"species_composition": {
+        "status": "measured", "scored_as": "Klebsiella_pneumoniae", "n_total": 60, "n_off_species": 23,
+        "off_species_fraction": 0.3833, "species_counts": {"Klebsiella pneumoniae": 37},
+        "on_scored_species_only": {"n": 37, "fn": 0, "sens": None}}})
+    assert line is not None and "MIXED" in line
+    assert "None" not in line, f"an undefined sensitivity leaked into the human line: {line}"
+    assert "sens" not in line

@@ -820,3 +820,62 @@ def test_the_committed_card_attaches_species_blocks_ONLY_to_mixed_cohorts():
     assert merop["species_composition"]["false_negatives_off_species"] == 16
     # ...and the published metrics are untouched beside it
     assert merop["sens"] == 0.467 and merop["fn"] == 16
+
+
+def _species_audit(*, complete=True, n_off=23, cells=None):
+    """A species-audit sidecar payload, shaped as `provdisjoint_species_audit.main` writes it."""
+    if cells is None:
+        cells = [{"cohort_dir": "klebsiella_provdisjoint_meropenem", "organism": "Klebsiella",
+                  "drug": "meropenem", "amrfinder_organism": "Klebsiella_pneumoniae",
+                  "reconciled": False, "crosstab_withheld_reason": "incomplete",
+                  "composition": {"verdict": "MIXED_SPECIES", "n_total": 60,
+                                  "n_same_genus_other_species": n_off, "n_other_genus": 0,
+                                  "species_counts": {"Klebsiella pneumoniae": 60 - n_off,
+                                                     "Klebsiella aerogenes": n_off}}}]
+    return {"schema": "provdisjoint-species-audit-v1", "complete": complete, "cells": cells}
+
+
+def test_load_species_composition_keeps_the_NEWEST_audit(monkeypatch, tmp_path):
+    """The audit is re-run as cohorts change, so several dated sidecars coexist. Reading an older one
+    would attach a stale composition beside a current metric with nothing to flag the mismatch."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    for stamp, n_off in (("2026-09-01", 2), ("2026-10-05", 23), ("2026-08-01", 99)):
+        (wiki / f"provdisjoint_species_audit_{stamp}.json").write_text(
+            json.dumps(_species_audit(n_off=n_off)), encoding="utf-8")
+    got = mod.load_species_composition()
+    assert len(got) == 1
+    cell = next(iter(got.values()))
+    assert cell["composition"]["n_same_genus_other_species"] == 23, "newest wins, not last-globbed"
+
+
+def test_load_species_composition_does_NOT_gate_on_the_audit_complete_FLAG(monkeypatch, tmp_path):
+    """DELIBERATE divergence from `load_source_concentration`, which drops its whole payload when the
+    sweep is incomplete. Here the refusal is already per-cohort -- a cohort that could not resolve its
+    species carries INSUFFICIENT_RESOLUTION and no numbers -- so dropping the layer because ONE cohort
+    refused would hide the nine that measured cleanly. A copy-paste of the sibling's gate is the
+    plausible defect, and it fails silently: the section simply stops rendering.
+    """
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "provdisjoint_species_audit_2026-10-05.json").write_text(
+        json.dumps(_species_audit(complete=False)), encoding="utf-8")
+    assert mod.load_species_composition(), "an incomplete audit must still surface its measured cohorts"
+
+
+def test_a_malformed_species_audit_is_IGNORED_not_fatal(monkeypatch, tmp_path):
+    """The loader claims a malformed sidecar cannot break the read-only roll-up. This repo has shipped
+    an invalid-JSON wiki artifact before, so the claim is worth holding to."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "provdisjoint_species_audit_2026-10-05.json").write_text("{not json", encoding="utf-8")
+    assert mod.load_species_composition() == {}
+    assert mod.main() == 0, "the roll-up must still build"
+    assert "## Species-composition disclosure" not in (
+        wiki / "decoder_validation_report_card.md").read_text(encoding="utf-8")
+
+
+def test_a_cell_with_no_organism_is_dropped_rather_than_keyed_on_None(monkeypatch, tmp_path):
+    """A row missing `organism` cannot be joined to a card cell; keying it on None would create a
+    phantom entry that silently matches nothing."""
+    wiki = _redirect_io(monkeypatch, tmp_path)
+    (wiki / "provdisjoint_species_audit_2026-10-05.json").write_text(json.dumps(_species_audit(
+        cells=[{"drug": "meropenem", "composition": {"verdict": "MIXED_SPECIES"}}])), encoding="utf-8")
+    assert mod.load_species_composition() == {}

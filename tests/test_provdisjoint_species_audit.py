@@ -265,3 +265,68 @@ def test_the_real_meropenem_cohort_is_MIXED_and_every_FN_is_off_species():
     # and on the species the rule was validated on, there are NO misses at all
     by_sp = row["outcome_crosstab"]["by_species"]
     assert by_sp["Klebsiella pneumoniae"]["fn"] == 0
+
+
+# --------------------------------------------------------------------------- gaps (/test-epilogue)
+
+def test_discovery_requires_BOTH_labels_AND_assemblies_not_EITHER(tmp_path):
+    """NON-VACUITY for the `and` in `provdisjoint_cohorts`.
+
+    The discovery test above builds a directory with NEITHER file, so it passes unchanged if the `and`
+    becomes an `or`. A half-fetched cohort admitted that way would resolve no species at all and report
+    INSUFFICIENT_RESOLUTION as though that were a finding about the cohort rather than about the fetch.
+    """
+    raw = tmp_path / "data" / "raw"
+
+    labels_only = raw / "a_provdisjoint_meropenem"
+    labels_only.mkdir(parents=True)
+    (labels_only / "selected.tsv").write_text("A\tR\n", encoding="utf-8")
+
+    assemblies_only = raw / "b_provdisjoint_meropenem"
+    (assemblies_only / "refseq").mkdir(parents=True)
+
+    # `refseq` present as a FILE, not a directory -- `.is_dir()` is what rejects this
+    refseq_is_a_file = raw / "c_provdisjoint_meropenem"
+    refseq_is_a_file.mkdir()
+    (refseq_is_a_file / "selected.tsv").write_text("A\tR\n", encoding="utf-8")
+    (refseq_is_a_file / "refseq").write_text("", encoding="utf-8")
+
+    # a FILE whose name matches the glob
+    (raw / "d_provdisjoint_meropenem").write_text("", encoding="utf-8")
+
+    assert aud.provdisjoint_cohorts(raw) == []
+
+
+def test_a_refused_composition_still_RENDERS_and_marks_the_payload_incomplete(tmp_path, monkeypatch):
+    """The INSUFFICIENT_RESOLUTION path through `render_md` is unreached on today's real data (all 580
+    assemblies resolve) and was therefore never exercised. It is the path that runs on the day an
+    assembly set arrives without GenBank headers, and a KeyError there would abort the whole audit --
+    `render_md` reaches into `comp` for per-bucket counts a refused verdict deliberately omits.
+
+    Also pins `payload["complete"]`, which an `any`-for-`all` slip would invert.
+    """
+    monkeypatch.chdir(tmp_path)
+    d = tmp_path / "data" / "raw" / "klebsiella_provdisjoint_meropenem"
+    (d / "refseq").mkdir(parents=True)
+    (d / "amrfinder_runs").mkdir(parents=True)
+    for acc in ("A", "B"):
+        g = d / "refseq" / acc
+        g.mkdir()
+        (g / "annotations.gbk").write_text("LOCUS x\nDEFINITION y\n", encoding="utf-8")  # no ORGANISM
+    (d / "selected.tsv").write_text("A\tR\nB\tS\n", encoding="utf-8")
+    w = _artifact(tmp_path, "klebsiella", "merop", {"n_scored": 2, "tp": 1, "fp": 0, "tn": 1, "fn": 0})
+
+    rc = aud.main(["--raw", str(tmp_path / "data" / "raw"), "--wiki", str(w), "--out-date", "T"])
+    assert rc == 0
+
+    j = json.loads((w / "provdisjoint_species_audit_T.json").read_text(encoding="utf-8"))
+    assert j["complete"] is False, "a refused cohort must mark the payload incomplete"
+    comp = j["cells"][0]["composition"]
+    assert comp["verdict"] == "INSUFFICIENT_RESOLUTION"
+    for leaked in ("n_matches_expected", "species_counts", "off_species_accessions"):
+        assert leaked not in comp
+
+    md = (w / "provdisjoint_species_audit_T.md").read_text(encoding="utf-8")
+    assert "INSUFFICIENT_RESOLUTION" in md
+    assert "refused:" in md, "the rendered section must say WHY, not just omit the counts"
+    assert "| n/a |" in md, "the summary table's off-species cell must read n/a, not 0"

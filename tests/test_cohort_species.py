@@ -155,3 +155,38 @@ def test_aerogenes_is_reported_as_outside_the_vocabulary_rather_than_crashing():
     assert vocabulary_status("Klebsiella aerogenes") == "not_in_organism_vocab"
     assert vocabulary_status("Klebsiella pneumoniae") == "in_organism_vocab"
     assert vocabulary_status(None) == "unresolved"
+
+
+# --------------------------------------------------------------------------- the cross-module join
+
+def test_the_crosstab_KEY_and_the_expected_species_key_are_the_SAME_string():
+    """A SILENT coupling, and the card's headline figure depends on it.
+
+    `build_species_block` emits `on_scored_species_only` only when `composition["expected_species"]` is
+    a KEY of the cross-tab's `by_species`. Those two strings are produced by different routes: one from
+    the AMRFinder `-O` flag (`Klebsiella_pneumoniae` -> underscore swap -> first two tokens), the other
+    from a GenBank ORGANISM line that carries a strain suffix (`Klebsiella pneumoniae BIDMC 53`). Change
+    either normalisation -- keep the strain suffix, stop collapsing whitespace -- and the lookup simply
+    misses: no exception anywhere, and the `sens 12/12 on K. pneumoniae` figure disappears from the card
+    and from the CLI line. That is the failure this pins.
+    """
+    from dna_decode.eval.cohort_species import _expected_species_from_amrfinder_organism
+
+    expected = _expected_species_from_amrfinder_organism("Klebsiella_pneumoniae")
+    assert expected == "Klebsiella pneumoniae"
+
+    # a real-shaped ORGANISM value, strain suffix and all
+    by_sp = compose({"a": "Klebsiella pneumoniae BIDMC 53"}, {"a": "R"}, {"a": 1})["by_species"]
+    assert expected in by_sp, (expected, list(by_sp))
+
+    # ...and still when the header line has irregular internal whitespace or a subspecies
+    odd = compose({"a": "Klebsiella   pneumoniae  subsp. pneumoniae"}, {"a": "R"}, {"a": 1})["by_species"]
+    assert expected in odd, (expected, list(odd))
+
+
+def test_a_genus_only_ORGANISM_line_does_not_become_a_None_crosstab_key():
+    """`species_of('Klebsiella')` is None by design. Without the second fallback the cross-tab would key
+    a row on None, which JSON writes as `null` and no consumer can join."""
+    by_sp = compose({"a": "Klebsiella"}, {"a": "S"}, {"a": 1})["by_species"]
+    assert None not in by_sp
+    assert by_sp["(unresolved)"]["fn"] == 1
