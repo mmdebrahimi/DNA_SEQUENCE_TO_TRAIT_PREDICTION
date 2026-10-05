@@ -180,6 +180,49 @@ def _resolve_amr_organism(fasta, explicit, do_identify: bool) -> dict:
     return out
 
 
+#: Profile sections whose DEFAULT database is ORGANISM-SPECIFIC, and what they are specific TO.
+#: Read off the argparse defaults, not from memory: pathotype -> virulence_ecoli.fsa,
+#: pointfinder -> pointfinder_db/escherichia_coli, serotype -> SerotypeFinder (E. coli O:H).
+#: `plasmid` is family-level (enterobacteriales) and `resfinder` is organism-agnostic, so neither is listed.
+_ECOLI_SPECIFIC_SECTIONS = ("pathotype", "serotype", "pointfinder")
+
+#: A better-suited decoder that profile does NOT run, per canonical organism. Only entries that are
+#: actually CLI-routable belong here -- an advertised command is a promise.
+_BETTER_SUITED = {
+    "klebsiella_pneumoniae": ("dna-ktype", "Klebsiella capsule (wzi) type -- profile has no ktype section"),
+    "klebsiella_oxytoca": ("dna-ktype", "Klebsiella capsule (wzi) type -- profile has no ktype section"),
+    "salmonella": ("dna-salmserovar", "Salmonella serovar (antigenic formula), not E. coli O:H"),
+    "streptococcus_pneumoniae": ("dna-pneumo-serotype", "pneumococcal capsule serotype"),
+}
+
+
+def _organism_appropriateness(org_res: dict) -> dict | None:
+    """Which profile sections used an E. coli-specific DEFAULT on a genome that is NOT E. coli.
+
+    Only emitted when the organism was actually IDENTIFIED -- on an assumption there is nothing to
+    compare against, and guessing appropriateness from an assumption is how a disclosure becomes a
+    second assumption. Returns None otherwise.
+
+    These sections mostly return EMPTY rather than wrong on an off-target genome, so this is a
+    DISCLOSURE (the user is told the defaults did not fit), not a defect report.
+    """
+    if org_res.get("organism_source") != "identified":
+        return None
+    canon = (org_res.get("organism_identify") or {}).get("organism")
+    if not canon or canon == "escherichia_coli":
+        return None
+    better = _BETTER_SUITED.get(canon)
+    return {
+        "identified_organism": canon,
+        "sections_using_ecoli_specific_defaults": list(_ECOLI_SPECIFIC_SECTIONS),
+        "meaning": "these sections ran with an E. coli-specific default database on a non-E. coli "
+                   "genome; they typically return NO hits rather than wrong ones, but a negative "
+                   "from them is NOT evidence of absence for this organism",
+        "override_with": "--pathotype-db / --serotype-db / --pointfinder-db-dir",
+        "better_suited_decoder": ({"command": better[0], "why": better[1]} if better else None),
+    }
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="dna-profile",
                                  description="Unified genome profile — run all assembly-FASTA decoders")
@@ -245,6 +288,9 @@ def main(argv=None) -> int:
     amr_section["organism_assumed"] = amr_assumed
     amr_section["organism_source"] = org_res["organism_source"]
     amr_section["organism_identify"] = org_res["organism_identify"]
+    _appr = _organism_appropriateness(org_res)
+    if _appr is not None:
+        amr_section["organism_appropriateness"] = _appr
     decoders = {
         "pathotype": _pathotype(args.fasta, args.pathotype_db),
         "serotype": _serotype(args.fasta, args.serotype_db),

@@ -179,3 +179,66 @@ def test_every_source_value_is_distinguishable():
     seen.add(pcli._resolve_amr_organism("g.fna", None, False)["organism_source"])
     seen.add(pcli._resolve_amr_organism("g.fna", None, True)["organism_source"])
     assert len(seen) == 3, seen
+
+
+# --------------------------------------------------------------------------- appropriateness disclosure
+
+def test_appropriateness_is_emitted_ONLY_on_a_real_identification():
+    """On an ASSUMPTION there is nothing to compare against. Deriving appropriateness from an
+    assumption would turn a disclosure into a second assumption."""
+    for src in ("assumed_default", "assumed_identify_abstained", "assumed_identify_unavailable",
+                "explicit"):
+        r = {"organism_source": src, "organism_identify": {"organism": "klebsiella_pneumoniae"}}
+        assert pcli._organism_appropriateness(r) is None, src
+
+
+def test_no_disclosure_for_an_identified_E_coli():
+    """The defaults ARE E. coli, so there is nothing to disclose -- emitting a note anyway would be
+    noise that trains readers to skip it."""
+    r = {"organism_source": "identified", "organism_identify": {"organism": "escherichia_coli"}}
+    assert pcli._organism_appropriateness(r) is None
+
+
+def test_a_non_ecoli_identification_names_the_sections_and_the_better_decoder():
+    r = {"organism_source": "identified", "organism_identify": {"organism": "klebsiella_pneumoniae"}}
+    a = pcli._organism_appropriateness(r)
+    assert a["identified_organism"] == "klebsiella_pneumoniae"
+    assert set(a["sections_using_ecoli_specific_defaults"]) == {"pathotype", "serotype", "pointfinder"}
+    assert a["better_suited_decoder"]["command"] == "dna-ktype"
+    # the disclosure must say what a negative from those sections does NOT mean
+    assert "not evidence of absence" in a["meaning"].lower()
+
+
+def test_an_identified_organism_with_no_better_decoder_still_discloses_the_defaults():
+    """The E. coli-specific-default disclosure is the load-bearing half; a better-suited command is a
+    bonus. An organism without one must still be told its defaults did not fit."""
+    r = {"organism_source": "identified", "organism_identify": {"organism": "campylobacter"}}
+    a = pcli._organism_appropriateness(r)
+    assert a is not None and a["better_suited_decoder"] is None
+    assert a["sections_using_ecoli_specific_defaults"]
+
+
+def test_every_better_suited_command_is_a_REAL_console_script():
+    """An advertised command is a promise. A disclosure that names a non-existent command is worse
+    than no disclosure."""
+    import tomllib
+    from pathlib import Path
+    scripts = tomllib.loads(
+        (Path(__file__).resolve().parent.parent / "pyproject.toml").read_text(encoding="utf-8")
+    )["project"]["scripts"]
+    for canon, (cmd, _why) in pcli._BETTER_SUITED.items():
+        assert cmd in scripts, f"{canon} points at {cmd}, which is not a console script"
+
+
+def test_the_section_list_matches_the_ACTUAL_argparse_defaults():
+    """ANTI-DRIFT. The section list is hand-written, so pin it against the real defaults: if someone
+    makes a default organism-agnostic (or adds a new E. coli-specific one) the disclosure must not
+    keep asserting the old shape."""
+    import inspect
+    src = inspect.getsource(pcli.main)
+    assert 'virulence_ecoli.fsa' in src, "pathotype default is no longer E. coli-specific"
+    assert 'pointfinder_db/escherichia_coli' in src, "pointfinder default is no longer E. coli"
+    assert 'serotypefinder' in src, "serotype default changed"
+    # plasmid is family-level and resfinder organism-agnostic -- they must NOT be listed
+    assert "plasmid" not in pcli._ECOLI_SPECIFIC_SECTIONS
+    assert "resfinder" not in pcli._ECOLI_SPECIFIC_SECTIONS
