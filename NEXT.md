@@ -57,7 +57,8 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
    trust surface. Current answer is **disclose** (`species_composition` layer, augment-only).
    `wiki/meropenem_fn16_diagnosis_2026-10-05.md`.
 
-2. **Drop lone-porin counting from the meropenem rule?**
+2. **Drop lone-porin counting from the meropenem rule?** *(evidence added 2026-10-05, pointing the
+   other way — see the closed lever below)*
    All 3 false positives on the AR Bank cohort are porin-only, and the rule's `threshold=1` on a lone
    `ompK35`/`ompK36` truncation over-calls. But it edits sha256-pinned `amr_rules.py` → retires the
    active 2026-08-31 v2 lock and restarts the prospective clock for every cell, motivated by **3
@@ -73,12 +74,26 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
 
 ## Cheap untried levers (executor work, no authority needed)
 
-- **`dna-identify` cross-check on the 16 meropenem FN.** *K. aerogenes* is outside its 14 supported
-  organisms and sits above `MAX_DISTANCE`, so it should **ABSTAIN** — a second signal that those isolates
-  are out of the scored organism's set. Needs Docker for Mash; **not run**, and the memo says so.
-- **Re-run AMRFinder under the correct `-O` for the 23 off-species isolates.** `-O Klebsiella_pneumoniae`
-  on a *K. aerogenes* genome drives species-specific point-mutation screening, so their determinant calls
-  may be wrong beyond this one rule. Needs Docker.
+- ~~**`dna-identify` cross-check on the 16 meropenem FN.**~~ **DONE 2026-10-05** — ran it, and it
+  CORROBORATES: 16/16 FN abstain (`above_max_distance`, 0.1129–0.1339, inside the 0.10849–0.13386 band
+  `thresholds.py` records for K. aerogenes), 0 called `klebsiella_pneumoniae`, controls 12/14 called at
+  0.0011–0.0090. **Partition agreement with the GenBank labels: 30/30, zero disagreements.** Scope: a
+  CLOSED-SET router establishes NOT-pneumoniae, not *aerogenes* specifically.
+  `wiki/meropenem_fn_identify_crosscheck_2026-10-05.json`.
+- ~~**Re-run AMRFinder under the correct `-O` for the 23 off-species isolates.**~~ **ILL-POSED — CLOSED
+  2026-10-05 without running it.** Measured from the pinned image (`amrfinder -l`): the organism list
+  offers `Enterobacter_asburiae` / `Enterobacter_cloacae` / `Klebsiella_oxytoca` /
+  `Klebsiella_pneumoniae` and **no `Klebsiella_aerogenes`**. So there is no "correct flag" to re-run
+  under, and the species contamination in that cohort is **not remediable by re-running** — a structural
+  limit of the tool's supported set, not a to-do. (The nearest available options sit under *Enterobacter*,
+  which is where this organism's former name sits; choosing one would be a judgement about an unsupported
+  species, not a correction.) This is also why the 23 isolates cannot simply be re-scored "properly".
+- ~~**The 2 *K. aerogenes* true positives are unexplained.**~~ **DONE 2026-10-05, and they are NOT one
+  class.** `GCA_003951185.1` is called R by `ompK35_G41TfsTer32` — a **lone porin truncation**, its only
+  counted carbapenem determinant. `GCA_003951605.1` is called R by `blaNMC-A`, a real class-A
+  carbapenemase. **This bears on authority fork 2 and points the other way:** a lone-porin call that is
+  RIGHT, so dropping lone-porin counting converts a true positive into a false negative. n=1 against the
+  3 AR Bank FPs — not settling, but the fix now has a measured cost on the same arm.
 - **The 3 Klebsiella cohorts with incomplete cached AMRFinder runs** (gentamicin 3/60, tetracycline 33/60,
   ceftriaxone 54/60) have their species cross-tab withheld for that reason. Completing them needs Docker.
 - **The two *K. aerogenes* true positives are unexplained** — they were called R, so they carry some
