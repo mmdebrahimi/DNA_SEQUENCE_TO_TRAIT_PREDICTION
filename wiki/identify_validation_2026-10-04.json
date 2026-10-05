@@ -20,6 +20,9 @@
       "enterobacter_cloacae": {
         "hit": 11
       },
+      "enterococcus_faecium": {
+        "hit": 25
+      },
       "escherichia_coli": {
         "hit": 25
       },
@@ -43,11 +46,14 @@
       },
       "staphylococcus_aureus": {
         "hit": 25
+      },
+      "streptococcus_pneumoniae": {
+        "hit": 25
       }
     },
     "pooled": {
-      "n_scored": 244,
-      "hit": 244,
+      "n_scored": 294,
+      "hit": 294,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -60,26 +66,28 @@
     ]
   },
   "reference_clonality": {
-    "n": 244,
-    "median_nearest_same_organism": 0.00116,
+    "n": 294,
+    "median_nearest_same_organism": 0.002,
     "max_nearest_same_organism": 0.0988,
-    "n_with_near_identical_twin_lt_0.0005": 101,
-    "n_with_twin_lt_0.005": 178,
-    "fraction_with_twin_lt_0.005": 0.7295,
+    "n_with_near_identical_twin_lt_0.0005": 106,
+    "n_with_twin_lt_0.005": 200,
+    "fraction_with_twin_lt_0.005": 0.6803,
     "per_organism_median": {
       "acinetobacter_baumannii": 2e-05,
       "campylobacter": 0.00266,
       "candida_auris": 0.00072,
       "enterobacter_cloacae": 0.0139,
+      "enterococcus_faecium": 0.0043,
       "escherichia_coli": 0.00594,
       "klebsiella_pneumoniae": 0.0026,
       "mycobacterium_tuberculosis": 0.00014,
       "neisseria_gonorrhoeae": 0.0001,
       "pseudomonas_aeruginosa": 0.00581,
       "salmonella": 0.00029,
-      "staphylococcus_aureus": 0.00083
+      "staphylococcus_aureus": 0.00083,
+      "streptococcus_pneumoniae": 0.00953
     },
-    "interpretation": "leave-one-out is OPTIMISTIC in proportion to this: for the 73.0% of genomes with a ~99.5%-ANI-or-closer twin still in the reference, holding one out leaves a near-clone to stand in for it. A lineage-disjoint split is the stronger test and was NOT run.",
+    "interpretation": "leave-one-out is OPTIMISTIC in proportion to this: for the 68.0% of genomes with a ~99.5%-ANI-or-closer twin still in the reference, holding one out leaves a near-clone to stand in for it. A lineage-disjoint split is the stronger test and was NOT run.",
     "failure_direction": "within-organism pairs reach 0.11991, ABOVE max_distance 0.1036, so a DIVERGENT member of a supported organism ABSTAINS rather than being misidentified -- the safe failure direction, and a real coverage limit."
   },
   "out_of_set_control": {

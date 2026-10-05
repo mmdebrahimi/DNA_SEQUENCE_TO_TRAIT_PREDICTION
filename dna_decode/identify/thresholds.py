@@ -61,6 +61,20 @@ were re-measured:
                                                              identical at 44/48, so the floor that
                                                              bounds max_distance did not move)
 
+RE-CHECKED A SECOND TIME, 2026-10-04, after growing to 295 genomes / 14 organisms (adding
+Streptococcus pneumoniae 25 + Enterococcus faecium 25). This was the case the note below warns about
+-- a DIVERSE bacterial addition -- and the window still held:
+
+    in-set ceiling     0.09880 -> 0.0987984   (the same genome pair still sets it)
+    cross-organism min 0.13098 -> 0.130979
+    out-of-set abstention identical at 44/48, so the excludable floor did not move
+
+BUT NAME THE SELECTION EFFECT rather than claiming Firmicutes are tight: the two species were fetched
+with NCBI `assembly_level=complete_genome`, which selects reference-quality isolates. Measured,
+within-organism p95 FELL from 0.09685 to 0.05814 -- the new members are tighter than the existing
+average, which is a property of how they were SAMPLED, not of the taxa. A draft-quality or
+clinically-diverse sample of the same species could still widen the ceiling. Re-run the analysis.
+
 WHY it held, rather than luck: the two organisms added are the two LEAST likely to widen the in-set
 ceiling. M. tuberculosis is monomorphic (pairwise median ~6.3e-4 on record in this repo), so its
 genomes crowd the low end; C. auris is a FUNGUS and sits at distance ~1.0 from every bacterium, so it

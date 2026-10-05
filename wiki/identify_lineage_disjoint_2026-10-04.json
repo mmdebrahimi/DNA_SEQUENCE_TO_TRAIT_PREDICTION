@@ -15,6 +15,62 @@
   },
   "sweep": {
     "0.001": {
+      "n_scored": 294,
+      "hit": 294,
+      "miss": 0,
+      "abstain": 0,
+      "accuracy_on_called": 1.0,
+      "abstention_rate": 0.0,
+      "per_organism": {
+        "acinetobacter_baumannii": {
+          "hit": 25
+        },
+        "campylobacter": {
+          "hit": 25
+        },
+        "candida_auris": {
+          "hit": 8
+        },
+        "enterobacter_cloacae": {
+          "hit": 11
+        },
+        "enterococcus_faecium": {
+          "hit": 25
+        },
+        "escherichia_coli": {
+          "hit": 25
+        },
+        "klebsiella_oxytoca": {
+          "unscorable_organism_emptied": 1
+        },
+        "klebsiella_pneumoniae": {
+          "hit": 25
+        },
+        "mycobacterium_tuberculosis": {
+          "hit": 25
+        },
+        "neisseria_gonorrhoeae": {
+          "hit": 25
+        },
+        "pseudomonas_aeruginosa": {
+          "hit": 25
+        },
+        "salmonella": {
+          "hit": 25
+        },
+        "staphylococcus_aureus": {
+          "hit": 25
+        },
+        "streptococcus_pneumoniae": {
+          "hit": 25
+        }
+      },
+      "confusions": {},
+      "n_unscorable_organism_emptied": 1,
+      "n_clusters": 203,
+      "largest_cluster_fraction": 0.0814
+    },
+    "0.005": {
       "n_scored": 244,
       "hit": 244,
       "miss": 0,
@@ -34,55 +90,8 @@
         "enterobacter_cloacae": {
           "hit": 11
         },
-        "escherichia_coli": {
+        "enterococcus_faecium": {
           "hit": 25
-        },
-        "klebsiella_oxytoca": {
-          "unscorable_organism_emptied": 1
-        },
-        "klebsiella_pneumoniae": {
-          "hit": 25
-        },
-        "mycobacterium_tuberculosis": {
-          "hit": 25
-        },
-        "neisseria_gonorrhoeae": {
-          "hit": 25
-        },
-        "pseudomonas_aeruginosa": {
-          "hit": 25
-        },
-        "salmonella": {
-          "hit": 25
-        },
-        "staphylococcus_aureus": {
-          "hit": 25
-        }
-      },
-      "confusions": {},
-      "n_unscorable_organism_emptied": 1,
-      "n_clusters": 157,
-      "largest_cluster_fraction": 0.098
-    },
-    "0.005": {
-      "n_scored": 194,
-      "hit": 194,
-      "miss": 0,
-      "abstain": 0,
-      "accuracy_on_called": 1.0,
-      "abstention_rate": 0.0,
-      "per_organism": {
-        "acinetobacter_baumannii": {
-          "hit": 25
-        },
-        "campylobacter": {
-          "hit": 25
-        },
-        "candida_auris": {
-          "hit": 8
-        },
-        "enterobacter_cloacae": {
-          "hit": 11
         },
         "escherichia_coli": {
           "hit": 25
@@ -106,17 +115,20 @@
           "hit": 25
         },
         "staphylococcus_aureus": {
+          "hit": 25
+        },
+        "streptococcus_pneumoniae": {
           "hit": 25
         }
       },
       "confusions": {},
       "n_unscorable_organism_emptied": 51,
-      "n_clusters": 108,
-      "largest_cluster_fraction": 0.102
+      "n_clusters": 146,
+      "largest_cluster_fraction": 0.0847
     },
     "0.01": {
-      "n_scored": 194,
-      "hit": 194,
+      "n_scored": 244,
+      "hit": 244,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -133,6 +145,9 @@
         },
         "enterobacter_cloacae": {
           "hit": 11
+        },
+        "enterococcus_faecium": {
+          "hit": 25
         },
         "escherichia_coli": {
           "hit": 25
@@ -156,17 +171,20 @@
           "hit": 25
         },
         "staphylococcus_aureus": {
+          "hit": 25
+        },
+        "streptococcus_pneumoniae": {
           "hit": 25
         }
       },
       "confusions": {},
       "n_unscorable_organism_emptied": 51,
-      "n_clusters": 72,
-      "largest_cluster_fraction": 0.102
+      "n_clusters": 93,
+      "largest_cluster_fraction": 0.0847
     },
     "0.02": {
-      "n_scored": 119,
-      "hit": 119,
+      "n_scored": 144,
+      "hit": 144,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -183,6 +201,9 @@
         },
         "enterobacter_cloacae": {
           "hit": 11
+        },
+        "enterococcus_faecium": {
+          "hit": 25
         },
         "escherichia_coli": {
           "hit": 25
@@ -207,12 +228,15 @@
         },
         "staphylococcus_aureus": {
           "hit": 25
+        },
+        "streptococcus_pneumoniae": {
+          "unscorable_organism_emptied": 25
         }
       },
       "confusions": {},
-      "n_unscorable_organism_emptied": 126,
-      "n_clusters": 23,
-      "largest_cluster_fraction": 0.102
+      "n_unscorable_organism_emptied": 151,
+      "n_clusters": 26,
+      "largest_cluster_fraction": 0.0847
     }
   }
 }
