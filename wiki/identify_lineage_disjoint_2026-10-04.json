@@ -15,8 +15,8 @@
   },
   "sweep": {
     "0.001": {
-      "n_scored": 211,
-      "hit": 211,
+      "n_scored": 244,
+      "hit": 244,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -28,6 +28,9 @@
         "campylobacter": {
           "hit": 25
         },
+        "candida_auris": {
+          "hit": 8
+        },
         "enterobacter_cloacae": {
           "hit": 11
         },
@@ -38,6 +41,9 @@
           "unscorable_organism_emptied": 1
         },
         "klebsiella_pneumoniae": {
+          "hit": 25
+        },
+        "mycobacterium_tuberculosis": {
           "hit": 25
         },
         "neisseria_gonorrhoeae": {
@@ -55,12 +61,12 @@
       },
       "confusions": {},
       "n_unscorable_organism_emptied": 1,
-      "n_clusters": 150,
-      "largest_cluster_fraction": 0.1038
+      "n_clusters": 157,
+      "largest_cluster_fraction": 0.098
     },
     "0.005": {
-      "n_scored": 186,
-      "hit": 186,
+      "n_scored": 194,
+      "hit": 194,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -71,6 +77,9 @@
         },
         "campylobacter": {
           "hit": 25
+        },
+        "candida_auris": {
+          "hit": 8
         },
         "enterobacter_cloacae": {
           "hit": 11
@@ -83,6 +92,9 @@
         },
         "klebsiella_pneumoniae": {
           "hit": 25
+        },
+        "mycobacterium_tuberculosis": {
+          "unscorable_organism_emptied": 25
         },
         "neisseria_gonorrhoeae": {
           "unscorable_organism_emptied": 25
@@ -98,13 +110,13 @@
         }
       },
       "confusions": {},
-      "n_unscorable_organism_emptied": 26,
-      "n_clusters": 103,
-      "largest_cluster_fraction": 0.1179
+      "n_unscorable_organism_emptied": 51,
+      "n_clusters": 108,
+      "largest_cluster_fraction": 0.102
     },
     "0.01": {
-      "n_scored": 186,
-      "hit": 186,
+      "n_scored": 194,
+      "hit": 194,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -115,6 +127,9 @@
         },
         "campylobacter": {
           "hit": 25
+        },
+        "candida_auris": {
+          "hit": 8
         },
         "enterobacter_cloacae": {
           "hit": 11
@@ -127,6 +142,9 @@
         },
         "klebsiella_pneumoniae": {
           "hit": 25
+        },
+        "mycobacterium_tuberculosis": {
+          "unscorable_organism_emptied": 25
         },
         "neisseria_gonorrhoeae": {
           "unscorable_organism_emptied": 25
@@ -142,13 +160,13 @@
         }
       },
       "confusions": {},
-      "n_unscorable_organism_emptied": 26,
-      "n_clusters": 68,
-      "largest_cluster_fraction": 0.1179
+      "n_unscorable_organism_emptied": 51,
+      "n_clusters": 72,
+      "largest_cluster_fraction": 0.102
     },
     "0.02": {
-      "n_scored": 111,
-      "hit": 111,
+      "n_scored": 119,
+      "hit": 119,
       "miss": 0,
       "abstain": 0,
       "accuracy_on_called": 1.0,
@@ -160,6 +178,9 @@
         "campylobacter": {
           "hit": 25
         },
+        "candida_auris": {
+          "hit": 8
+        },
         "enterobacter_cloacae": {
           "hit": 11
         },
@@ -170,6 +191,9 @@
           "unscorable_organism_emptied": 1
         },
         "klebsiella_pneumoniae": {
+          "unscorable_organism_emptied": 25
+        },
+        "mycobacterium_tuberculosis": {
           "unscorable_organism_emptied": 25
         },
         "neisseria_gonorrhoeae": {
@@ -186,9 +210,9 @@
         }
       },
       "confusions": {},
-      "n_unscorable_organism_emptied": 101,
-      "n_clusters": 20,
-      "largest_cluster_fraction": 0.1179
+      "n_unscorable_organism_emptied": 126,
+      "n_clusters": 23,
+      "largest_cluster_fraction": 0.102
     }
   }
 }

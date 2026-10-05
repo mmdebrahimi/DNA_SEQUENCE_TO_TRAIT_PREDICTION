@@ -45,10 +45,27 @@ DERIVATION OF `AMBIGUITY_MARGIN`
     0.015 is under half of it -- meaningful, with headroom for a corpus whose extremes are drawn from
     two different genomes.
 
-SCOPE. These are calibrated on THIS reference (balanced 25/organism, 10 organisms, k=21/s=1000).
+SCOPE. These are calibrated on THIS reference (balanced 25/organism, k=21/s=1000).
 Rebuilding the reference at a different composition, k, or sketch size invalidates them; the analysis
 must be re-run, which is why the artifacts above are cited by name and the sketch parameters are
 stamped into the manifest.
+
+RE-CHECKED 2026-10-04 AFTER A COMPOSITION CHANGE, and the values HELD -- verified, not assumed. The
+reference grew from 212 genomes / 10 organisms to 245 / 12 (adding Candida auris 8 and Mycobacterium
+tuberculosis 25). Per the warning above that invalidates the calibration, so BOTH derivation inputs
+were re-measured:
+
+    in-set ceiling (max nearest-same-organism)   0.09880  -> 0.09880   UNCHANGED
+    closest cross-organism approach              0.13098  -> 0.13098   UNCHANGED
+    excludable out-of-set floor (K. aerogenes)   0.10849  -> unchanged (out-of-set abstention
+                                                             identical at 44/48, so the floor that
+                                                             bounds max_distance did not move)
+
+WHY it held, rather than luck: the two organisms added are the two LEAST likely to widen the in-set
+ceiling. M. tuberculosis is monomorphic (pairwise median ~6.3e-4 on record in this repo), so its
+genomes crowd the low end; C. auris is a FUNGUS and sits at distance ~1.0 from every bacterium, so it
+cannot pull the cross-organism floor down. A composition change that added a DIVERSE bacterial species
+could still close the window -- re-run the analysis, do not inherit this result.
 """
 from __future__ import annotations
 

@@ -135,7 +135,11 @@ def test_the_trait_is_reachable_and_contracted():
         "unlabelled_reference"}
 
     # the two measured limits must travel with the cell
-    assert "69.2%" in c.validation_slice and "congener" in c.validation_slice.lower()
+    # RE-BASELINED 2026-10-04: the reference grew 212/10 -> 245/12 organisms, so the clonality
+    # figure genuinely moved 69.2% -> 73.0% (M. tuberculosis is monomorphic and ADDS near-twins).
+    # The OLD value was not a defect -- it described the old reference -- so this is a real
+    # re-baseline, not a guard bumped to go green.
+    assert "73.0%" in c.validation_slice and "congener" in c.validation_slice.lower()
     assert "lineage" in c.demotion_rule.lower()
     assert "lineage-disjoint" in c.demotion_rule.lower(), "the open falsifier must be named"
 

@@ -1,39 +1,39 @@
 {
   "within_organism": {
-    "n": 4910,
+    "n": 5566,
     "min": 0.0,
-    "p05": 0.000239895,
-    "median": 0.0120757,
-    "p95": 0.0987984,
+    "p05": 0.000191626,
+    "median": 0.0113529,
+    "p95": 0.0968463,
     "max": 0.119909
   },
   "between_organism": {
-    "n": 39822,
+    "n": 54214,
     "min": 0.130979,
-    "p05": 0.191731,
+    "p05": 0.197292,
     "median": 1.0,
     "p95": 1.0,
     "max": 1.0
   },
   "nearest_same_organism_neighbour": {
-    "n": 211,
+    "n": 244,
     "min": 0.0,
     "p05": 0.0,
-    "median": 0.00165343,
-    "p95": 0.0136991,
+    "median": 0.001160015,
+    "p95": 0.0136002,
     "max": 0.0987984
   },
   "nearest_different_organism_neighbour": {
-    "n": 212,
+    "n": 245,
     "min": 0.130979,
-    "p05": 0.151946,
-    "median": 0.263022,
+    "p05": 0.154223,
+    "median": 0.295981,
     "p95": 1.0,
     "max": 1.0
   },
   "separation": {
-    "within_p95": 0.0987984,
-    "between_p05": 0.191731,
+    "within_p95": 0.0968463,
+    "between_p05": 0.197292,
     "overlaps": false,
     "worst_case_nearest_within": 0.0987984,
     "closest_cross_organism_pair": 0.130979
@@ -41,6 +41,6 @@
   "schema": "identify-distance-distribution-v1",
   "date": "2026-10-04",
   "manifest": "identify_reference_manifest_2026-10-04.json",
-  "n_labelled_accessions": 212,
+  "n_labelled_accessions": 245,
   "matrix_cache": "D:\\dna_decode_cache\\identify\\allpairs.tsv"
 }

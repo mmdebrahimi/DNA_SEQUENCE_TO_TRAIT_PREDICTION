@@ -8,11 +8,12 @@
   "mash_image": "quay.io/biocontainers/mash:2.3--hb105d93_10",
   "label_source": "assembly's own GenBank `  ORGANISM` header field (NCBI metadata), NOT the cohort directory name",
   "label_is_wet_lab": false,
-  "n_genomes": 212,
-  "n_organisms": 10,
+  "n_genomes": 245,
+  "n_organisms": 12,
   "per_organism": {
     "escherichia_coli": 25,
     "klebsiella_pneumoniae": 25,
+    "mycobacterium_tuberculosis": 25,
     "acinetobacter_baumannii": 25,
     "neisseria_gonorrhoeae": 25,
     "staphylococcus_aureus": 25,
@@ -20,9 +21,10 @@
     "pseudomonas_aeruginosa": 25,
     "salmonella": 25,
     "enterobacter_cloacae": 11,
+    "candida_auris": 8,
     "klebsiella_oxytoca": 1
   },
-  "largest_organism_share": 0.1179,
+  "largest_organism_share": 0.102,
   "unscorable_under_leave_one_out": [
     "klebsiella_oxytoca"
   ],
@@ -90,6 +92,16 @@
       "GCA_005282605.1",
       "GCA_005282645.1",
       "GCA_005282865.1"
+    ],
+    "candida_auris": [
+      "GCA_003014415.1",
+      "GCA_008275145.1",
+      "GCA_016495665.1",
+      "GCA_016772135.1",
+      "GCA_016809505.1",
+      "GCF_002759435.1",
+      "GCF_002775015.1",
+      "GCF_003013715.1"
     ],
     "enterobacter_cloacae": [
       "GCA_014840875.1",
@@ -160,6 +172,33 @@
       "GCF_003069525.1",
       "GCF_003073335.1",
       "GCF_900093145.1"
+    ],
+    "mycobacterium_tuberculosis": [
+      "GCA_000649355.1",
+      "GCA_000649995.1",
+      "GCA_000652275.1",
+      "GCA_000657975.1",
+      "GCA_000658655.1",
+      "GCA_000659005.1",
+      "GCA_000659405.1",
+      "GCA_000661735.1",
+      "GCA_000663045.1",
+      "GCA_000666525.1",
+      "GCA_000671195.1",
+      "GCA_000675955.1",
+      "GCA_001321665.1",
+      "GCA_001323465.1",
+      "GCA_001325825.1",
+      "GCA_001345215.1",
+      "GCA_001377295.1",
+      "GCA_001381355.1",
+      "GCA_001382935.1",
+      "GCA_001384835.1",
+      "GCA_001386395.1",
+      "GCA_001387495.1",
+      "GCA_001388535.1",
+      "GCA_001392075.1",
+      "GCA_001393855.1"
     ],
     "neisseria_gonorrhoeae": [
       "GCA_042023255.1",
@@ -271,8 +310,8 @@
     ]
   },
   "enumeration_stats": {
-    "n_dirs_scanned": 2473,
-    "n_no_fasta": 229,
+    "n_dirs_scanned": 2508,
+    "n_no_fasta": 231,
     "n_no_organism": 9,
     "n_duplicate_accession": 161
   },
