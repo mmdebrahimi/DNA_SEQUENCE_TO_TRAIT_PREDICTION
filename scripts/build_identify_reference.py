@@ -99,7 +99,14 @@ def refseq_roots(repo: Path = REPO, shared: Path = SHARED_CACHE) -> list[Path]:
     so a shared-cache-only reference would cover 2 organisms and trip MIN_ORGANISMS.
     """
     roots = [shared] if shared.is_dir() else []
-    roots += sorted(p for p in (repo / "data" / "raw").glob("*/refseq") if p.is_dir())
+    # TWO on-disk layouts exist and the second was MISSED until 2026-10-04: a cohort may cache its
+    # genomes under `refseq/` OR under `genomes/`. Measured repo-wide at the time of the fix:
+    # 1,124 genomes under `data/raw/*/refseq/*/` and 8 under `data/raw/*/genomes/*/` -- the latter
+    # being the ONLY local Candida auris genomes, so globbing one layout silently cost a whole
+    # organism. The glob is enumerated from the filesystem rather than assumed, so a third layout
+    # would show up as a count mismatch rather than vanishing.
+    for layout in ("refseq", "genomes"):
+        roots += sorted(p for p in (repo / "data" / "raw").glob(f"*/{layout}") if p.is_dir())
     return roots
 
 

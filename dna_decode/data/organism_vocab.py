@@ -118,7 +118,18 @@ _ENTRIES: tuple[OrganismEntry, ...] = (
     OrganismEntry("enterobacter_cloacae", "Enterobacter_cloacae", ()),
     # AMRFinder is bacterial: there is no AMRFinder-for-fungi, so C. auris routes to the BLAST
     # ERG11/FKS1 target-site engine instead (dna_decode/data/fungal_amr.py).
-    OrganismEntry("candida_auris", None, ("Candida_auris",)),
+    #
+    # THREE NAMES, and the extra two are not pedantry -- they are why this organism silently fell OUT
+    # of the closed set until 2026-10-04. The genus was RECLASSIFIED, so NCBI's own `ORGANISM` field on
+    # the project's own C. auris assemblies reads `Candidozyma auris` (7 of 8 local genomes) and, on one
+    # older record, `[Candida] auris` -- NCBI's bracket notation for a provisional genus placement.
+    # The project registry still says `Candida_auris` (the fungal_amr cell), so all three must resolve.
+    # SOURCED, not remembered: the strings were read off `annotations.gbk` in
+    # data/raw/ar_bank_caur/genomes/ (GCA_003014415.1 -> "Candidozyma auris",
+    # GCF_002759435.1 -> "Candidozyma auris B8441"). The bracketed form is listed LITERALLY rather than
+    # stripped by a clever bracket-normalizer, which would over-match other provisional names.
+    OrganismEntry("candida_auris", None,
+                  ("Candida_auris", "Candidozyma_auris", "[Candida]_auris")),
     # M. tuberculosis is absent from the `-O` allow-list; TB routes through organism_rules/tb_amr.
     OrganismEntry("mycobacterium_tuberculosis", None, ()),
 )
@@ -185,8 +196,12 @@ def canonical(token: str) -> str:
     """
     if not isinstance(token, str) or not token.strip():
         raise UnknownOrganism(f"empty organism token: {token!r}")
-    t = token.strip().lower()
-    got = _ALIASES.get(t)
+    # Whitespace is normalized to "_" BEFORE the alias lookup. Without this, `canonical` answered the
+    # same question two ways: "Escherichia coli" resolved (via the genus fallback, which already split
+    # on whitespace) while "Candidozyma auris" raised, because its entry declares no genus_match. The
+    # caller's spelling should not decide whether an alias is findable.
+    t = " ".join(token.split()).strip().lower()
+    got = _ALIASES.get(t) or _ALIASES.get(t.replace(" ", "_"))
     if got is not None:
         return got
     genus = t.replace(" ", "_").split("_")[0]
