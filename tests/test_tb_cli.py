@@ -129,6 +129,34 @@ def test_an_absent_catalogue_REFUSES_and_never_returns_a_call(tmp_path, capsys):
     assert "S" not in cap.out
 
 
+def test_a_TAMPERED_catalogue_refuses_too_not_just_an_absent_one(tmp_path, capsys):
+    """An absent catalogue and a DRIFTED one are different failures and both must refuse.
+
+    Verified against a real tamper: copying the catalogue and appending ONE byte to the pinned
+    coordinates file is caught, named by filename with both hashes, exit 3. A pin that is only checked
+    for existence would pass a catalogue whose contents no longer match what the published numbers were
+    measured against.
+    """
+    if not _catalogue_ready():
+        pytest.skip("gitignored WHO catalogue absent")
+    import shutil
+    dst = tmp_path / "cat"
+    shutil.copytree(CAT, dst)
+    victim = next(p for p in sorted(dst.iterdir())
+                  if p.is_file() and "checksum" not in p.name.lower())
+    with victim.open("ab") as fh:
+        fh.write(b"x")
+    v = tmp_path / "g.vcf"
+    v.write_text("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tsample\n"
+                 "NC_000962.3\t761155\t.\tC\tT\t60\tPASS\t.\tGT\t1/1\n", encoding="utf-8")
+    rc = tb_cli.main(["--vcf", str(v), "--drug", "rifampicin", "--catalogue-dir", str(dst)])
+    cap = capsys.readouterr()
+    assert rc == 3
+    assert "CATALOGUE UNUSABLE" in cap.err
+    assert victim.name in cap.err, "the refusal must name WHICH file drifted"
+    assert "PREDICTION" not in cap.out
+
+
 def test_the_refusal_fires_BEFORE_any_scoring(tmp_path, monkeypatch):
     """Order matters: scoring first and refusing after would still have loaded a determinant set."""
     import dna_decode.organism_rules.tb_amr as tb_amr
