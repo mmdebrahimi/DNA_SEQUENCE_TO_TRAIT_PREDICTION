@@ -35,3 +35,23 @@ def all_routable_amr_drugs() -> set[str]:
             | set(all_supported_hiv_drugs())
             | set(all_supported_sarscov2_drugs())
             | set(all_supported_hcmv_drugs()))
+
+
+def all_routable_tb_drugs() -> set[str]:
+    """Every drug `dna-tb --drug` routes: the WHO catalogue's own long drug names.
+
+    SEPARATE from `all_routable_amr_drugs` because TB is a SEPARATE console script (`dna-tb`) on a
+    separate route -- it lives in the NON-frozen `organism_rules` package and takes a VCF against H37Rv
+    rather than a genome FASTA or `--observed`. Folding it into the `dna-amr` union would claim those
+    drugs are reachable through a command that rejects them.
+
+    The catalogue's `DRUG_CATALOGUE_NAME` carries BOTH long names and short aliases (`inh`, `rif`), so
+    the long form is selected by length. Short aliases stay accepted at the CLI but are not separate
+    cells -- `inh` and `isoniazid` are one decoder, and registering both would double-count the surface.
+
+    Reading the CATALOGUE rather than the contracts is deliberate: it is what the CLI validates against,
+    so the registry's coverage test compares two independent sets and can actually fail.
+    """
+    from dna_decode.data.tb_who_catalogue import DRUG_CATALOGUE_NAME
+
+    return {d for d in DRUG_CATALOGUE_NAME if len(d) > 4}

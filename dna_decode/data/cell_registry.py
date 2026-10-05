@@ -53,7 +53,14 @@ HIV_UNDERPOWERED_N = 50  # report-card n below this -> measured-but-UNDERPOWERED
 
 
 # Tracks (v0.1). amr/viral both route through `dna-amr`; route ≠ track (brainstorm C2 split).
-TRACKS = ("amr", "viral", "pgx", "hla", "mendelian", "typing", "finder")
+#: `tb` is its own track for a STRUCTURAL reason, not a taxonomic one (2026-10-04). The `amr` track is
+#: PROJECTED verbatim from the frozen `shipped_decoder_surface`, and
+#: `test_amr_projection_equals_frozen_surface_via_canonical_key` asserts the two sets are equal -- so an
+#: `amr`-track cell that is not in the frozen surface breaks that guard. TB deliberately is not in it: it
+#: lives in the NON-frozen `organism_rules` package, and adding it to the frozen surface would edit a
+#: sha256-pinned file and retire the active prospective lock. Same resolution as HIV/SARS-CoV-2, which
+#: are bacterial-AMR-shaped decoders on their own `viral` track for exactly this reason.
+TRACKS = ("amr", "viral", "tb", "pgx", "hla", "mendelian", "typing", "finder")
 
 
 @dataclass(frozen=True)
@@ -775,7 +782,11 @@ _TRAIT_CONTRACTS: list[CellContract] = [
         organism="bacteria", target="identify",
         claim="WHICH of 10 supported organisms this genome is, or ABSTAIN (closed-set Mash router)",
         evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
-        claim_status="loo_211of211_in_set_but_69pct_have_a_near_twin; out_of_set_abstention_44of48",
+        # RE-BASELINED 2026-10-04 (was `loo_211of211 ... 69pct`). The reference grew 212 -> 295 genomes
+        # and the validation_slice below was updated to 294/294 and 68.0% -- but this field was NOT, and
+        # it is the one `cell_evidence_line.evidence_one_line` RENDERS TO A USER. A stale claim_status is
+        # therefore a user-facing falsehood even while the slice beside it is correct.
+        claim_status="loo_294of294_in_set_but_68pct_have_a_near_twin; out_of_set_abstention_44of48",
         validation_slice=(
             "Balanced 295-genome / 14-organism local reference (25 per organism where available; "
             "Enterobacter cloacae 11, C. auris 8, K. oxytoca 1), Mash k=21 s=1000, scored 2026-10-04 by "
@@ -1953,9 +1964,143 @@ def _typing_finder_contracts() -> list[CellContract]:
     return out
 
 
+#: The TWO TB drugs with an INDEPENDENT (provenance-disjoint) number, and that number LINEAGE-COLLAPSED.
+#: Read from wiki/tb_independent_amr_portal_lineage_collapsed.json, NOT from memory.
+_TB_INDEPENDENT = {
+    "rifampicin": ("rpoB", 0.444, 0.979, 0.920, 0.955),
+    "isoniazid": ("katG + inhA", 0.321, 0.972, 0.879, 0.962),
+}
+
+#: The other ten catalogue drugs: CRyPTIC in-distribution baseline only, no independent cohort.
+_TB_IN_DISTRIBUTION_ONLY = (
+    "amikacin", "bedaquiline", "clofazimine", "delamanid", "ethambutol",
+    "ethionamide", "kanamycin", "levofloxacin", "linezolid", "moxifloxacin",
+)
+
+
+def _tb_contracts() -> list[CellContract]:
+    """M. tuberculosis AMR cells, one per WHO-catalogue drug reachable through `dna-tb`.
+
+    TWO TIERS, DELIBERATELY NOT COLLAPSED. RIF + INH were scored on the EBI AMR-Portal cohort, which is
+    provenance-disjoint from the CRyPTIC set the WHO catalogue was partly built from, with a measured
+    wet-lab DST phenotype -- the same evidence shape as the 10 NCBI-PD bacterial cells, hence
+    NEAR_INDEPENDENT. The other ten have only a CRyPTIC-scored number, and the catalogue was built partly
+    from CRyPTIC, so that is a KNOWLEDGE_BASELINE. Giving all twelve one tier would over-claim ten of
+    them; giving all twelve the lower tier would under-claim two, and under-claiming is as much a
+    trust-surface falsehood as over-claiming.
+
+    THE QUOTED NUMBER IS THE LINEAGE-COLLAPSED ONE. TB is monomorphic and heavily clonal, so the raw
+    per-isolate figure counts one vote per isolate across ~2,845 isolates that collapse to only ~67
+    barcode lineages: RIF raw sens 0.920 is clonality-INFLATED against a lineage-collapsed 0.444.
+    """
+    out: list[CellContract] = []
+    for drug, (genes, lsens, lspec, rsens, rspec) in sorted(_TB_INDEPENDENT.items()):
+        out.append(CellContract(
+            cell_id=f"amr:Mycobacterium_tuberculosis:{drug}", track="tb", route="dna-tb",
+            organism="Mycobacterium_tuberculosis", target=drug,
+            claim=f"{drug} R/S from a VCF against H37Rv via WHO-catalogue grade-1/2 {genes} determinants",
+            evidence_tier=EvidenceTier.NEAR_INDEPENDENT,
+            claim_status="independent_provenance_disjoint_lineage_collapsed",
+            validation_slice=(
+                f"EBI AMR-Portal provenance-disjoint cohort, N=2,845 isolates with measured DST and a "
+                f"downloadable GCA assembly, scored by scripts/run_tb_independent_amr_portal.py -> "
+                f"wiki/tb_independent_amr_portal_lineage_collapsed.json (lineage collapse 2026-07-02 via "
+                f"the pinned Napier barcode read off each isolate's own VCF, reusing the frozen "
+                f"clonality.cluster_weighted_confusion). "
+                f"HEADLINE (lineage-collapsed, ~67 barcode lineages): sens {lsens} / spec {lspec}. "
+                f"The RAW per-isolate figure is sens {rsens} / spec {rspec} and is CLONALITY-INFLATED -- "
+                f"do not quote it as the cell's performance. "
+                f"Leakage checked at the accession level (leaked=0 vs the CRyPTIC leakset) and at the "
+                f"BioSample level (wiki/tb_independence_biosample_check.json, 0/30 cross-archive overlap). "
+                f"The IN-DISTRIBUTION CRyPTIC number agrees closely at the lineage level (RIF 0.41 / INH "
+                f"0.349, wiki/tb_cryptic_parquet_baseline_2026-06-22.md), so the rule does NOT degrade "
+                f"out-of-distribution. "
+                f"STATUS IS TB_SUBSET_PLUMBING, NOT A CLEAN COHORT: the 2,845 are the ASSEMBLY-AVAILABLE "
+                f"subset of 26,941 not-leaked phenotyped isolates (89% attrition, the project's own G5 "
+                f"assembly-attrition gate), so it is NOT prevalence-preserving. "
+                f"Also a CONSERVATIVE LOWER BOUND -- the minimap2 asm5 VCF route misses some "
+                f"determinants, and 43-44 mixed-label lineage clusters are EXCLUDED as discordant rather "
+                f"than majority-voted."
+            ),
+            label_provenance=(
+                "measured drug-susceptibility testing (wet-lab phenotype) as published by the EBI AMR "
+                "Portal -- NOT a tool-derived or catalogue-derived label, and NOT the CRyPTIC set the WHO "
+                "catalogue was partly built from. That disjointness is what makes this near-independent "
+                "rather than a knowledge baseline. It is NOT lineage-independent external validation: "
+                "see the clonality figures above."
+            ),
+            abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN,
+            native_abstention="ABSTAIN",
+            falsifier_ref="scripts/run_tb_independent_amr_portal.py",
+            # G5 = assembly attrition. 26,941 phenotyped isolates -> 2,845 with a fetchable assembly.
+            incoming_data_gate="G5",
+            demotion_rule=(
+                f"QUOTE {lsens}/{lspec} (lineage-collapsed), NEVER the raw {rsens}/{rspec}. "
+                "Sensitivity is LOW at the lineage level -- this rule misses more than half of resistant "
+                "lineages -- while specificity is high and robust (~0.97) in both the independent and "
+                "in-distribution arms. Not a clinical decision tool. An S call does NOT rule out "
+                "resistance by a mechanism outside the WHO grade-1/2 catalogue, so absence of a "
+                "catalogued determinant is not absence of resistance. The cohort is the assembly-"
+                "available subset, so it is not prevalence-preserving. A finer Mash-based lineage "
+                "collapse is a CLOSED NEGATIVE (wiki/tb_independent_mash_lineage_2026-07-09.json): "
+                "M. tuberculosis is monomorphic and has no lineage-scale gap at Mash resolution, so the "
+                "pinned Napier barcode is the correct partition and these numbers stand."
+            ),
+            engine="who_catalogue_v2_determinant_match_v0",
+            metric_bindings=(
+                ContractNumberBinding(str(lsens), "sens",
+                                      "wiki/tb_independent_amr_portal_lineage_collapsed.json",
+                                      f"drugs.{drug}.lineage_collapsed.sens"),
+                ContractNumberBinding(str(lspec), "spec",
+                                      "wiki/tb_independent_amr_portal_lineage_collapsed.json",
+                                      f"drugs.{drug}.lineage_collapsed.spec"),
+            ),
+        ))
+    for drug in _TB_IN_DISTRIBUTION_ONLY:
+        out.append(CellContract(
+            cell_id=f"amr:Mycobacterium_tuberculosis:{drug}", track="tb", route="dna-tb",
+            organism="Mycobacterium_tuberculosis", target=drug,
+            claim=f"{drug} R/S from a VCF against H37Rv via WHO-catalogue grade-1/2 determinants",
+            evidence_tier=EvidenceTier.KNOWLEDGE_BASELINE,
+            claim_status="cryptic_in_distribution_no_independent_cohort",
+            validation_slice=(
+                "NO INDEPENDENT COHORT. The WHO mutation catalogue v2 (2023) was built PARTLY FROM "
+                "CRyPTIC, so any CRyPTIC-scored number for this drug is IN-DISTRIBUTION and is a "
+                "knowledge baseline, not validation -- the same honesty shape as the SARS-CoV-2 Mpro cell "
+                "scored on the CoV-RDB catalogue it came from. "
+                "Only rifampicin and isoniazid have been scored on the provenance-disjoint EBI AMR-Portal "
+                "cohort; this drug has NOT, so no sens/spec is quoted here rather than borrowing theirs. "
+                "The determinant rule itself is the SAME frozen tb_amr.score_drug path the two "
+                "independently-scored drugs use, with the catalogue pinned at commit 0bb39143 and three "
+                "sha256 pins verified at call time."
+            ),
+            label_provenance=(
+                "WHO mutation catalogue v2 (2023) grade-1/2 determinant assignment -- a literature/"
+                "catalogue label. Any CRyPTIC phenotype scored against it is in-distribution because the "
+                "catalogue was built partly from CRyPTIC."
+            ),
+            abstention_vocab=AbstentionVocab.ABSTAIN_BY_DESIGN,
+            native_abstention="ABSTAIN",
+            falsifier_ref="scripts/run_tb_independent_amr_portal.py",
+            # G1 = circular label: the catalogue and the available phenotype share a provenance.
+            incoming_data_gate="G1",
+            demotion_rule=(
+                "Do NOT quote the rifampicin or isoniazid numbers for this drug -- they were measured on "
+                "a cohort this drug was never scored on. Report it as a catalogue lookup with no "
+                "independent number. An S call does NOT rule out resistance by an uncatalogued "
+                "mechanism. Not a clinical decision tool. Scoring this drug independently needs a "
+                "provenance-disjoint cohort carrying measured DST for it, which the AMR-Portal cohort "
+                "does not supply."
+            ),
+            engine="who_catalogue_v2_determinant_match_v0",
+        ))
+    return out
+
+
 def cells() -> list[CellContract]:
-    """Every v0.1 cell contract (AMR projection + viral + PGx + HLA + Mendelian + typing/finder + traits)."""
-    return (_amr_contracts() + _viral_contracts() + list(_PGX_CONTRACTS) + _hla_contracts()
+    """Every v0.1 cell contract (AMR projection + viral + TB + PGx + HLA + Mendelian + typing/finder + traits)."""
+    return (_amr_contracts() + _viral_contracts() + _tb_contracts() + list(_PGX_CONTRACTS)
+            + _hla_contracts()
             + list(_MENDELIAN_CONTRACTS) + _typing_finder_contracts() + list(_TRAIT_CONTRACTS))
 
 
@@ -2004,7 +2149,7 @@ def cli_routable_manifest() -> dict[str, set[str]]:
     from dna_decode.cli import TRAITS
     from dna_decode.hla import HLA_ALLELES
     from dna_decode.pgx import PGX_GENES
-    from dna_decode.data.routable_drugs import all_routable_amr_drugs
+    from dna_decode.data.routable_drugs import all_routable_amr_drugs, all_routable_tb_drugs
     # SHARED with the CLI's argparse choices (2026-09-01). This union used to be spelled out here as
     # well, and it drifted: HCMV's five drugs were added to the CLI and missed here, so they never
     # entered the routable set and the coverage test below could not notice they had no contracts.
@@ -2014,6 +2159,12 @@ def cli_routable_manifest() -> dict[str, set[str]]:
         "dna-pgx": set(PGX_GENES),
         "dna-clinvar": {"germline_pathogenicity"},  # the Mendelian (ClinVar) single-decoder route
         "dna-hla": set(HLA_ALLELES),                 # HLA drug-hypersensitivity tag-SNP cells
+        # M. tuberculosis is DRUG-routed like dna-amr, not a whole-tool trait, so it enumerates its own
+        # targets here. Read from the CATALOGUE -- the same source `dna-tb --drug` validates against --
+        # and deliberately NOT from _tb_contracts(): deriving the routable set from the contracts would
+        # make the coverage test compare a set to itself and pass vacuously, which is the whole failure
+        # mode that let HCMV ship with no contracts.
+        "dna-tb": set(all_routable_tb_drugs()),
     }
     # "traits" = the WHOLE-TOOL (typing/finder) traits: every routable trait that does NOT already have a
     # per-target route key above. DERIVED from `per_target`, never hand-listed -- it used to read

@@ -194,6 +194,10 @@ TRAITS = {
         "summary": "PLANT trait — Arabidopsis thaliana flowering HABIT (--fri/--flc allele calls): summer-annual-early vs winter-annual-late (vernalization-requiring), from the curated FRI/FLC causal loci. The deterministic counterpart to the CLOSED-NEGATIVE flowering EMBEDDING test (which learned lineage, not mechanism)",
         "validation": "deterministic curated-causal-allele rule (late iff functional FRI AND strong FLC; FLC is downstream so a weak/null FLC calls early regardless of FRI). Literature-anchored (Johanson 2000 FRI / Michaels 2003 PNAS weak-FLC / Werner 2005 FRI-independent); reference-integrity biology-checked incl. the Da(1)-12 anchor a naive FRI-only rule mis-calls. PARTIAL: FRI/FLC ~40-70% of long-day variation -> HABIT/direction only, NOT days-to-flower; FRI-route confidence capped by the Lz-0 counterexample. v0 = allele-call input; genome-mode = v0.1",
     },
+    "tb": {
+        "summary": "M. TUBERCULOSIS drug resistance from a VCF against H37Rv (--vcf X.vcf --drug rifampicin): 12 drugs via the sha256-PINNED WHO mutation catalogue v2 (2023) grade-1/2 determinants. The kingdom-extension of the deterministic AMR decoder, in the NON-frozen organism_rules package",
+        "validation": "deterministic pinned-catalogue determinant rule (WHO v2 commit 0bb39143, 3 sha256 pins verified at call time; REFUSES rather than scoring if absent or drifted -- a missing catalogue must never surface as a susceptible call). RIF+INH have an INDEPENDENT provenance-disjoint number (EBI AMR-Portal N=2,845, biosample-checked): headline LINEAGE-COLLAPSED (Napier barcode) RIF sens 0.444/spec 0.979, INH 0.321/0.972 -- the raw per-isolate RIF 0.920/INH 0.879 is CLONALITY-INFLATED (2,845 isolates -> ~67 lineages). The other 10 drugs have a CRyPTIC IN-DISTRIBUTION baseline ONLY (the catalogue was built partly from CRyPTIC), which is a knowledge baseline, NOT validation. ABSTAINS on uncallable determinant windows (fail-only regeno rule); an S call does NOT rule out an uncatalogued mechanism",
+    },
     "pigment": {
         "summary": "HUMAN visible-trait pigmentation (--trait eye/hair/skin --genotypes rsID=GT,...): eye colour (IrisPlex 6-SNP -> blue/intermediate/brown), hair colour (blond/brown/red/black), skin colour (very-pale..dark-black) -- the deterministic multinomial-logistic form of 'DNA->appearance'. Benign visible-trait genetics, NOT a forensic tool",
         "validation": "EYE = Walsh-2011 IrisPlex coefficients (irisplex.py), reference-integrity biology-checked (HERC2 GG->blue/AA->brown) + POPULATION-VALIDATED on real 1000G (EUR blue 0.468; AFR/EAS/SAS brown ~1.0). HAIR+SKIN = HIrisPlex-S deployed models RECOVERED from the erasmusmc webtool (papers publish betas but NOT the intercepts -> webtool-only) via a designed-genotype-basis query + LS-fit, VALIDATED on 20 held-out genotypes: max |dP| eye 6e-15 / hair 6e-16 / skin 9e-3 (reproduces the deployed webtool). Population geography also confirmed on 1000G. Population-level, NOT per-individual (openSNP deleted 2025-04-30)",
@@ -318,6 +322,9 @@ def _delegate(trait: str, rest: list[str]) -> int:
     if trait == "flowering":
         from dna_decode.organism_rules.flowering_cli import main as flowering_main
         return flowering_main(rest)
+    if trait == "tb":
+        from dna_decode.organism_rules.tb_cli import main as tb_main
+        return tb_main(rest)
     if trait == "phage":
         from dna_decode.phage.cli import main as phage_main
         return phage_main(rest)

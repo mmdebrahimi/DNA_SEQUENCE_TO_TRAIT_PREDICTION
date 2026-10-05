@@ -92,7 +92,13 @@ def test_traits_registry_matches_console_entries():
                                # this existed a human supplied step 1 by hand. This pin is
                                # hand-maintained BY DESIGN -- adding a trait must be a deliberate
                                # edit here, and that is exactly what caught this one.
-                               "identify"}
+                               "identify",
+                               # tb (2026-10-04): the M. tuberculosis AMR decoder had working library
+                               # code (organism_rules/tb_amr.py), a sha256-pinned WHO catalogue and
+                               # validated artifacts for 12 drugs -- but NO console script and ZERO
+                               # cell_registry cells, so the arm was unrunnable AND invisible to the
+                               # trust surface. Worse than the HCMV gap, which was at least routable.
+                               "tb"}
     # "decode" (added 2026-07-23) is the input-aware ROUTER analysis -- handled inline in cli.py (no
     # delegate module), so it is an ANALYSES entry but not a console script. Conscious addition.
     assert set(uni.ANALYSES) == {"decode", "concordance", "profile", "coloc"}

@@ -78,6 +78,7 @@ dna-camelcolor = "dna_decode.pigment.mammal_color_cli:camel_main"    # dromedary
 dna-minkcolor = "dna_decode.pigment.mammal_color_cli:mink_main"      # American mink TYR/TYRP1/MLPH (albino/Palomino/Silverblue)
 dna-roedeercolor = "dna_decode.pigment.mammal_color_cli:roedeer_main"  # roe deer ASIP chestnut/black
 dna-flowering = "dna_decode.organism_rules.flowering_cli:main"   # Arabidopsis flowering habit (FRI/FLC)
+dna-tb = "dna_decode.organism_rules.tb_cli:main"                 # M. tuberculosis AMR from a VCF (pinned WHO catalogue)
 dna-phage = "dna_decode.phage.cli:main"        # bacteriophage genome/lineage -> host-receptor class (first non-AMR cell)
 dna-kleb = "dna_decode.kleb.cli:main"          # Klebsiella phage depolymerase -> capsule KL-type (cross-organism, fetch-only)
 dna-essentiality = "dna_decode.essentiality.cli:main"  # single-gene KO -> essential/non-essential (conserved-core decoder)

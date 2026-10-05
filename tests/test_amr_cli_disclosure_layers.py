@@ -78,11 +78,35 @@ def test_the_superseded_line_says_the_numbers_are_withheld_and_the_clock_restart
 
 
 def test_it_is_silent_for_a_cell_with_no_prospective_evidence():
+    """FIXTURE DERIVED, not hardcoded (fixed 2026-10-04).
+
+    This test named Klebsiella x meropenem because that cell had no prospective artifact when it was
+    written -- then one was committed on 2026-10-03 (`prospective_lock_validation_Klebsiella_meropenem_
+    2026-10-03.json`, 16 post-lock isolates) and the test began failing, asserting silence about a cell
+    that had since acquired exactly the evidence it was checking for the absence of. A hardcoded
+    negative fixture goes stale the moment the project does the work.
+
+    So the cell is now SELECTED by checking which cells actually lack an artifact. If a future accrual
+    covers this one too, the fixture moves by itself; if every cell gains one, the test SKIPS rather
+    than passing vacuously -- silence with nothing to be silent about proves nothing.
+    """
+    import glob
+    covered = {Path(p).name.split("prospective_lock_validation_")[1].rsplit("_", 1)[0]
+               for p in glob.glob("wiki/prospective_lock_validation_*.json")}
+    candidates = [("meropenem", "Klebsiella_pneumoniae", "Klebsiella_meropenem",
+                   ("blaKPC-2", "BETA-LACTAM", "CARBAPENEM", "EXACTX")),
+                  ("tetracycline", "Klebsiella_pneumoniae", "Klebsiella_tetracycline",
+                   ("tet(A)", "TETRACYCLINE", "TETRACYCLINE", "EXACTX")),
+                  ("ceftriaxone", "Klebsiella_pneumoniae", "Klebsiella_ceftriaxone",
+                   ("blaCTX-M-15", "BETA-LACTAM", "CEPHALOSPORIN", "EXACTX"))]
+    pick = next((c for c in candidates if c[2] not in covered), None)
+    if pick is None:
+        pytest.skip("every candidate cell now has a prospective artifact -- nothing to assert silence on")
+    drug, organism, _key, row = pick
     with tempfile.TemporaryDirectory() as td:
-        rd = _run_dir(Path(td), [("blaKPC-2", "BETA-LACTAM", "CARBAPENEM", "EXACTX")])
-        _rc, out = _invoke(["--drug", "meropenem", "--amrfinder-run", str(rd),
-                            "--organism", "Klebsiella_pneumoniae"])
-    assert "prospective-lock" not in out
+        rd = _run_dir(Path(td), [row])
+        _rc, out = _invoke(["--drug", drug, "--amrfinder-run", str(rd), "--organism", organism])
+    assert "prospective-lock" not in out, f"{organism} x {drug} has no artifact yet printed a block"
 
 
 def test_the_call_is_unchanged_by_the_disclosure():

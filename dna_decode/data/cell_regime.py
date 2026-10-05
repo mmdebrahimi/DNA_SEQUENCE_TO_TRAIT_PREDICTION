@@ -62,6 +62,9 @@ CATALOG_ROUTES: frozenset[str] = frozenset({
     "dna-pneumo-serotype", "dna-resfinder", "dna-pointfinder", "dna-disinfinder",
     "dna-kleb", "dna-motility", "dna-metabolic", "dna-morphology", "dna-pigment",
     "dna-flowering",
+    # dna-tb: the sha256-pinned WHO mutation catalogue IS the catalog; the call is a deterministic
+    # determinant match against it, with no learned component anywhere.
+    "dna-tb",
     # the frozen 19-cell colour/plumage family
     "dna-alpacacolor", "dna-buffalocolor", "dna-camelcolor", "dna-catcolor", "dna-cattlecolor",
     "dna-coatcolor", "dna-donkeycolor", "dna-foxcolor", "dna-goatcolor", "dna-guineapigcolor",

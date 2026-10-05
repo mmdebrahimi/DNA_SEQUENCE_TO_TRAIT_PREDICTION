@@ -44,6 +44,10 @@ WIRED = (
     "dna-catcolor", "dna-coatcolor", "dna-horsecolor", "dna-pigeoncolor", "dna-plumage",
     "dna-pigment", "dna-morphology", "dna-clinvar", "dna-pathotype", "dna-phage",
     "dna-essentiality", "dna-fba", "dna-metabolic", "dna-motility", "dna-kleb", "dna-flowering",
+    # dna-identify: shipped 2026-10-04 and was UNWIRED for its first few hours. Its generic line is
+    # accurate and contradicts nothing it prints (unlike dna-amr / dna-tb), so the fix was to wire it
+    # rather than exclude it. This guard is what surfaced the gap.
+    "dna-identify",
 )
 
 # DELIBERATELY NOT WIRED, and this is the interesting half. Each of these already prints a MORE
@@ -61,8 +65,17 @@ WIRED = (
 #   dna-decode-inverse  prints its own "evidence: ESM (learned) beats a no-oracle null on ..." line.
 #                       Both are `dna-decode` SUBCOMMANDS, not console scripts, so they also have no
 #                       standalone CLI module of the wired shape.
+#   dna-tb              prints a PER-DRUG `cohort ev.:` line -- rifampicin/isoniazid say
+#                       "INDEPENDENT (AMR-Portal) ... LINEAGE-COLLAPSED sens 0.444 / spec 0.979" while
+#                       the other ten say "CRyPTIC IN-DISTRIBUTION only". MEASURED, not assumed: the
+#                       generic line for this route is "KNOWLEDGE_BASELINE (12 cells, weakest shown) --
+#                       NEVER MEASURED against a phenotype", so on a rifampicin call it would print
+#                       "NEVER MEASURED" two lines under a measured sens/spec. Same self-contradiction
+#                       as dna-amr, and the same reason for excluding it.
 EXCLUDED_ALREADY_DISCLOSE_BETTER = {
     "dna-amr": "per-drug trust_block line + 4 disclosure layers; generic line would contradict it",
+    "dna-tb": "per-drug cohort-evidence line; the generic weakest-shown line would print NEVER "
+              "MEASURED beneath rifampicin's measured sens/spec",
     "dna-decode-forward": "prints method-specific measured evidence; a dna-decode subcommand",
     "dna-decode-inverse": "prints its own evidence line; a dna-decode subcommand",
 }

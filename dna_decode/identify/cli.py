@@ -26,6 +26,7 @@ import json
 import sys
 from pathlib import Path
 
+from dna_decode.data.cell_evidence_line import evidence_one_line
 from dna_decode.data.organism_vocab import BY_CANONICAL, routing_token, supported_canonicals
 from dna_decode.identify import core
 from dna_decode.identify.runner import DEFAULT_REFERENCE, ReferenceUnavailable, query
@@ -146,6 +147,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"runner-up: {call.runner_up_organism} ({call.runner_up_distance:.5f})")
     print("scope    : closed-set, species-level, assembled genomes only; a Klebsiella congener "
           "(variicola/michiganensis) is a KNOWN mis-call class")
+    # The cell's evidence tier, from its committed registry contract. BESIDE the scope line, not
+    # replacing it: a caveat states the method's limits, this states what was measured. Evidence
+    # carried only in the registry is not a disclosure. Wired 2026-10-04 -- this route shipped
+    # earlier the same day WITHOUT it, and the exhaustive-wiring guard is what surfaced that.
+    _ev = evidence_one_line("dna-identify")
+    if _ev:
+        print(f"  {_ev}")
     return 0
 
 
