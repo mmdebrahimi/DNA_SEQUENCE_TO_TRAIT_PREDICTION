@@ -6,423 +6,97 @@ learned that isn't durable yet. Durable findings belong in `CLAUDE.md` / `wiki/`
 
 Prune aggressively. A stale entry here is worse than an empty file.
 
-_Last updated: 2026-09-28._
+_Last updated: 2026-10-05._
+
+> **Pruned 2026-10-05.** This file had sat at 2026-09-28 / 428 lines, and its own "known-stale" section
+> had itself gone stale in the opposite direction (it warned that 46 traits was really 44; the live count
+> is **46** again after `dna-identify` and `dna-tb` shipped). Everything removed was already durable in
+> `CLAUDE.md` (gentamicin v2 lock, HCMV contracting, the declined NNRTI curation, PEAR's reclassification,
+> the doubt-layer firing rate) or in `project_state/` (the five project families, F-C/F-D). Checked before
+> deleting, not assumed.
 
 ---
 
-## IN FLIGHT — deep-research campaign F1-F4 (2026-09-28, ~15% done)
+## IN FLIGHT — deep-research campaign F1 / F3 / F4
 
-Plan `plans/Deep_Research_Missing_Part_2026-09-28_Plan.md` · harvest
-`wiki/deep_research_candidates_2026-09-28.json` · screen `wiki/deep_research_screen_2026-09-28.json` ·
-memo `wiki/deep_research_missing_part_2026-09-28.md`. User ratified **full breadth** (F1-F4).
-
-**Cut off by a session rate limit.** Four family agents spawned eight of their own and all twelve died
-with **zero final reports**; their notification fragments were pre-verification and were discarded, not
-written up. First-party search worked fine immediately after — the constraint was the **12-way fan-out**,
-not the session. **Relaunch sequentially (or 2 at a time) and forbid sub-agent spawning.**
+Plan `plans/Deep_Research_Missing_Part_2026-09-28_Plan.md`. User ratified full breadth (F1–F4).
+Screening spine is built and green (`scripts/deep_research_screen.py`, 13 tests; runs both
+`rejection_gates` G1–G10 and `regime.screen_proposal`, and refuses to call anything promising until they
+have run).
 
 | family | state |
 |---|---|
-| **F2** condition coverage (the one OPEN regime cell) | **ANSWERED NEGATIVELY.** "Public K-12" (PRECISE-1K 1,035 + 1,675 public = 2,710) **fails** the requirement: glucose share 60% → **82.7%** of annotated, **42%** of rows carry no carbon annotation, only **3** carbon sources reach 10 samples. It adds samples, not condition breadth. Verified by direct fetch + computation from the repo's own metadata — the "contact us" wall covers only `log_tpm`, not the metadata. |
-| **F1** label substrates | **one shallow search.** DMS axis is a clean negative (no new AMR-target/β-lactamase DMS 2025-26; AVE Alliance growth is human-clinical; its coordinate-mapping does not touch the dosage/scale problem). **Not searched:** measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits, ETD aggregators. |
-| **F3** de-confounded population designs | **NEVER SEARCHED.** On the critical path. |
+| **F2** condition coverage | **ANSWERED NEGATIVELY.** "Public K-12" adds samples, not condition breadth — glucose share 60% → **82.7%** of annotated rows, **42%** carry no carbon annotation, only **3** carbon sources reach 10 samples. Computed from the repo's own metadata; the "contact us" wall covers only `log_tpm`. |
+| **F1** label substrates | one shallow search. DMS axis is a clean negative. **Not searched:** measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits. |
+| **F3** de-confounded population designs | **NEVER SEARCHED. On the critical path** — population DESIGN, not organism complexity, is the measured barrier to the north star's step 4. |
 | **F4** cross-assay dosage transfer | **NEVER SEARCHED.** |
 
-Screening spine is built and green: `scripts/deep_research_screen.py` runs BOTH `rejection_gates` (G1-G10)
-and `regime.screen_proposal` per candidate, refuses to call anything promising until they have run, and
-reproduces all three committed candidate verdicts. 13 tests.
+**Relaunch SEQUENTIALLY (or 2 at a time) and forbid sub-agent spawning.** The first attempt spawned 12
+concurrent agents; all died on a session rate limit with **zero** final reports. First-party search worked
+fine immediately after — the fan-out was the constraint, not the session.
 
-**Process facts:** CORE.ac.uk search is a JS shell + its API 429s without a key (agent-reported,
-UNVERIFIED) · Edinburgh ERA has a reported 2024-25 indexing gap (UNVERIFIED) · `research-leads` YouTube
-search works but returns **no `upload_date`**, so a 2-year window needs a per-video lookup · SBRG/precise1k's
-default branch is `master`, so a `main`-branch GitHub API call 404s.
+## The system design — drafted, awaiting ratification
 
-## The system design (drafted 2026-08-31, awaiting ratification)
-
-`plans/Hybrid_Decoder_Architecture_Plan.md`. **The hybrid is NOT "catalog + ML predictor"** — that framing
-scored 0 survivors in the framing sweep. Measured shape: **CALL / DOUBT / EVIDENCE**.
+`plans/Hybrid_Decoder_Architecture_Plan.md`. The hybrid is **not** "catalog + ML predictor" (that framing
+scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
 
 | layer | status |
 |---|---|
-| **L1 CALL** — deterministic curated rules | shipped, 110 cells |
-| **L2 DOUBT** — "this call may be incomplete, and why"; **never a competing call** | **mostly missing**, one unwired prototype |
-| **L3 EVIDENCE** — de-confounding, nulls, denominators, leakage, provenance | built, under-exposed |
+| **L1 CALL** — deterministic curated rules | shipped, 128 cells |
+| **L2 DOUBT** — "this call may be incomplete, and why"; never a competing call | **shipped and firing** (`dna_decode/eval/doubt.py`); nobody in the field ships this |
+| **L3 EVIDENCE** — de-confounding, nulls, denominators, leakage, provenance | built; **four** cohort-evidence layers now render (lineage, source-concentration, prospective, species-composition) |
 | **L4 LEARNED** — forward/inverse, orthogonal modalities; molecular + constructed ONLY | shipped, bounded |
 
-**L2 is the innovation and it is cheap.** The catalog's failure mode is COMPLETENESS, not accuracy — found
-twice the same way (gentamicin `rmt`, HIV NNRTI), both invisible until independent labels arrived. Nobody
-in the field ships "my catalog might be wrong here."
+## Waiting on the user — authority calls, not executor tasks
 
-**Critical path F-A → F-B. F-A IS COMPLETE 2026-08-31** — all four steps.
-`wiki/doubt_layer_2026-08-31.md` is the memo; `dna_decode/eval/doubt.py` + `scripts/doubt_layer_per_cell.py`
-+ 30 tests are the artifact. Headline: across 1,818 genomes / 1,279 uncounted determinant families /
-six drugs, **exactly one family survives the family-wise correction — `rmtE1`, p = 4.11e-12 — and it is
-the confirmed gap.** The raw signature flagged 5; the correction drops 4 and keeps the true one.
+1. **Re-score `Klebsiella × meropenem` on *K. pneumoniae* only?** (new 2026-10-05)
+   Measured: the cohort is **38% *K. aerogenes*** and **all 16 false negatives are those off-species
+   isolates** — on *K. pneumoniae* there are zero misses (sens 12/12). The pneumoniae-only matrix is
+   **sens 1.000 / spec 0.880 / acc 0.919, N=37** against the published 0.467 / 0.900 / 0.683.
+   Publishing it edits a **frozen unit** of the reproducibility freeze and changes a SCORED number on the
+   trust surface. Current answer is **disclose** (`species_composition` layer, augment-only).
+   `wiki/meropenem_fn16_diagnosis_2026-10-05.md`.
 
-**Two things it is easy to get wrong here, both measured:**
-- **Enrichment is the WRONG null.** A lower-tail binomial on the observed S count calls `aph(6)-Id`
-  (62R/28S) STRONG at p≈5e-5 — and that is a CORRECT exclusion (a streptomycin gene travelling with
-  gentamicin resistance by linkage). Every co-occurring determinant is R-enriched. The signature is
-  **purity**; one S carrier ENDS the signal. Pinned by test.
-- **A position-BASED catalog can never fire the position-novelty flag** (every substitution at a
-  catalogued position is already called), so those cells report `not-applicable`, never "no doubt".
+2. **Drop lone-porin counting from the meropenem rule?**
+   All 3 false positives on the AR Bank cohort are porin-only, and the rule's `threshold=1` on a lone
+   `ompK35`/`ompK36` truncation over-calls. But it edits sha256-pinned `amr_rules.py` → retires the
+   active 2026-08-31 v2 lock and restarts the prospective clock for every cell, motivated by **3
+   isolates** on a cohort whose own powering gate HARD-FAILED (n=5 susceptibles).
 
-Registered augment-only on **both** trust surfaces — the inline badge and the standing report card
-(a 4th disclosure layer beside lineage / source-concentration / prospective). Augment-only was
-**verified by diff**: 27 cells before and after, zero non-doubt fields changed, all state counts
-identical. Card rows are **drug-level**, which is why `rmtE1` renders against three organisms — it is
-a property of the rule, not of those cohorts.
+3. **Whether a single-source cell warrants more than disclosure.** 3 of 10 SCORED AMR cells rest on one
+   BioProject. Current answer is *disclose*, namespace-separate. Demoting them is a scope decision.
 
-**Now unblocked: F-B (curation) has its measured baseline** — but both of its terminal moves are user
-authority calls (below).
-
-## The five project families exist now (seeded 2026-08-31, user-authorized)
-
-Ledgers at `project_state/{doubt-layer,catalog-curation,evidence-surface,learned-narrow,label-acquisition}-2026-08-31.md`;
-the frontier lives in `project_state/dna-decode-2026-05-11.md` under `## Project Families` +
-`## Requirements Flow-down` and is **machine-readable** — `advance_ranker.rank()` parses it, ranks F-A
-first, and correctly reports F-B blocked on F-A. Three families (F-C evidence-surface, F-D
-learned-narrow, F-E label-acquisition) are eligible and untouched. Self-init account 6 / ceiling 25.
-
-**F-D is a RESTRAINT family** — its deliverable is a boundary that stays enforced, not a build. Its
-ledger records the corrected regime map (population design, not organism complexity) so the compression
-error that has bitten three times has somewhere durable to live.
-
-## F-C and F-D advanced 2026-08-31 (same run)
-
-**F-C (evidence surface).** Four disclosure layers rendered on the report card; only **two** reached a
-decoder call. `lineage` + `source_concentration` were card-only; `prospective` surfaced only when it
-CONTRADICTED. All four now reach the record **and** print. The case that matters: e.coli x gentamicin
-reports sens 0.893 from a cohort 95% one BioProject with zero `rmt` carriers (source-diverse: 0.523),
-and that caveat is now on the call. Memo `wiki/evidence_surface_reachability_2026-08-31.md`.
-*Not audited:* the HIV / TB / pgx cards — named follow-on.
-
-**F-D (learned-narrow, the RESTRAINT family).** The regime boundary is now a function, not prose:
-`dna_decode/eval/regime.py::screen_proposal(population, endpoint, method)`. **Exactly one regime
-refuses** (natural x organism x ZERO-SHOT); a SUPERVISED natural-population proposal returns
-`REQUIRES_DECONFOUNDING` **with conditions, never a refusal** — compressing that scope IS the error,
-made three times. `uv run python scripts/regime_map.py` refuses to certify a regime whose cited
-artifact is missing. Screen before proposing a learned decoder.
-
-## PEAR is reclassified — F-E's premise was wrong (2026-08-31)
-
-`wiki/pear_substrate_screen_2026-08-31.md`. Screened after a review flagged the ranking. Two corrections:
-
-- **Not an L1 label source.** ~200k constructed MG1655 strains, single-copy `blaCTX-M-14` at a fixed
-  chromosomal site, **relative growth** for ~23k under cefotaxime/ceftazidime, >90% of single mutations.
-  That is `constructed_molecular` → regime **`WORKS`** (TEM-1 path, Spearman 0.761). **It cannot address
-  the AMR label wall**, which lives in the natural×organism regime.
-- **Not an acquisition.** Public and free — SRA + GitHub, no DUA, no money. The authority gate was a
-  consequence of the misclassification.
-
-**What it is:** the natural external replication of the one working learned regime — same shape as TEM-1,
-different β-lactamase, different drugs. It **clears every applicable rejection gate**.
-
-**The blocker is ARTIFACT FORMAT, not availability.** `PRJNA687219` resolves correctly but is 478 Gbases
-of raw reads; the GitHub repo has no CSV/TSV at all — its two `.RData` files are serialized **ggplot2
-plot objects** (`Figure.2A`), which is why `pyreadr` and `rdata` both fail. Needs R (not installed;
-**C: at 99%**). **Cheapest untried route: the journal supplementary tables** (unread — PMC cookie-gated).
-**Run `assay_degeneracy()` before believing any PEAR score** — a selection-growth assay has a floor, and
-CcdB (79.3% tied at ceiling) posted the sweep's best number for exactly that reason.
-
-## Doubt-layer firing rate measured (2026-08-31)
-
-**0 STRONG across 747 candidate families on 4 drugs with no confirmed gap**, against **1 STRONG across
-131 families** on the one drug that has one. The raw signature fired 4 times on those same 747; the
-family-wise correction removed all 4. **Deliberately NOT a false-positive rate** — a hit on an
-unconfirmed drug is ambiguous between a false positive and an undiscovered gap. Categories are
-predeclared `confirmed` / `unconfirmed` / `unassessable`, never "clean".
-
-## HCMV contracted + HBV screened NO-BUILD (2026-09-01)
-
-**HCMV had 5 CLI-routable drugs and ZERO evidence contracts** since 2026-07-23 —
-`wiki/hcmv_registry_gap_2026-09-01.md`. The coverage guard was correct; its INPUT was hand-maintained
-and omitted HCMV's catalog, so it compared a set that already excluded them. `routable_drugs.py` is now
-the single definition shared by the CLI parser and the registry. Registry **110 → 115 cells**, viral
-**29 → 34**. Touches no frozen file; the v2 lock and the AMR card are unchanged.
-
-**HBV screened as a 6th viral cell → NO-BUILD** (`wiki/hbv_cell_gate_screen_2026-09-01.md`). The engine
-fits and the catalog is curatable, but every free HBV resource is an *interpretation rule*
-(geno2pheno/HIV-GRADE) or a *prevalence table* (Stanford HBVrtDB, dormant since 2012) — **G1 circular
-label**. The field's own reason: no simple cell-culture system, so the genotype–phenotype dataset is
-thin. My prediction that it would resemble HCMV was **wrong in the informative direction** — HCMV at
-least has measured per-mutation fold-changes; HBV's free tier has none. Building it would repeat the
-colour-cell pattern the freeze exists to stop. *Bounded screen: two searches were safeguard-blocked.*
-
-## F-B answered: the HIV NNRTI curation is DECLINED on measurement (2026-09-01)
-
-`wiki/hiv_nnrti_curation_verdict_2026-09-01.md`. This is the payoff of F-B being **blocked_by F-A** —
-curation had to be measured against a baseline, and the baseline won.
-
-NNRTI was the only HIV class without a deconfounded mutant catalog, so
-`scripts/hiv_nnrti_mutant_catalog.py` builds one (whole-RT candidates from `CompMutList`; multivariate
-OLS; 5-fold CV; scored at the REAL Stanford DRMcv.R clinical cutoffs — DOR reported
-`CUTOFF_UNAVAILABLE`, never guessed). Measured three ways, all negative:
-
-| variant | result |
-|---|---|
-| inherited 1.5x threshold | EFV spec **0.904 → 0.579** — catastrophic over-call |
-| swept 3x threshold | +0.006 balacc, but **drops canonical Y181C/A/I**; blind-spot 0.415 |
-| additive-only, no drops, biologically anchored | mean **−0.003** balacc, in-sample-optimistic; blind-spot 0.29–0.50 |
-
-**Every blind-spot recovery (0.000–0.500) is below the free position-novelty flag's 0.604.** `hiv_amr.py`
-is **unmodified**. A defect in my own parser (self-to-self `L234L`/`K238K` entries admitted as mutations)
-would have flattered the headline; fixing it moved the result the *unflattering* way.
-
-**Still open, and NOT foreclosed:** a *literature-anchored* curation (each entry sourced per-mutation to a
-named authority rather than to an OLS coefficient). `V179D` surviving deconfounding independently is
-corroboration for it. Not recommended on these numbers; a curation project, not a decoder change.
-
-## Waiting on the user (authority calls — not executor tasks)
-
-1. ~~**v2 gentamicin lock**~~ — **DECIDED AND SHIPPED 2026-08-31** (user-authorized).
-   `wiki/gentamicin_v2_lock_2026-08-31.md`. Rule is now `subclass_any={GENTAMICIN}` +
-   `symbol_rescue=^(rmt[A-H]\d*|npmA\d*)$`; needed an ENGINE change (the first WIDENING refinement)
-   because both prior refinements narrow and compose as AND. **E. coli N=131: sens 0.523 -> 0.892
-   (+0.369), spec 0.985 unchanged.** Freeze + lock RETIRED, not broken —
-   `prospective_lock_manifest_2026-08-31.json` supersedes; v1 manifest preserved.
-   *Cost, now enforced in code:* the prospective evidence is SPENT for both E. coli cells; the card
-   returns `superseded_by_surface_change` with numbers withheld and the clock restarts at 2026-08-31.
-   *Honest limit, unchanged:* zero S-labelled `rmt` carriers anywhere, so the unchanged specificity is
-   an absence, not a bound.
-
-2. **Whether a single-source cell warrants more than disclosure.** 3 of 10 SCORED AMR cells rest on one
-   BioProject (`wiki/provdisjoint_source_concentration_2026-08-28.md`). Current answer is *disclose*, in a
-   namespace-separate layer. Demoting them is a scope decision.
-
-3. **Whether to compress the other 17 long CLAUDE.md bullets (~9,100 words).** The file costs ~36,800
-   tokens EVERY session; 18 bullets are long AND cite a resolvable memo, so their derivations could become
-   pointers without losing anything. I compressed only my own (1,022 → 309). The rest is other sessions'
-   institutional memory and rewriting it wholesale is a call about what belongs in the always-loaded
-   surface. Measure first: `uv run python scripts/claude_md_weight.py`.
-   *Two long bullets have NO external store and must stay whole — the tool already protects them.*
-
-4. ~~**Typed metric field on `CellContract`?**~~ — **RESOLVED AND SHIPPED 2026-09-28, in a reduced form
-   that is NOT the field originally proposed.** A review changed its shape decisively: a generic "metric
-   field" would have become a **second truth surface** — the audit would stop checking what the prose says
-   and start trusting a declaration, which is the exact drift class it exists to catch. What shipped instead
-   is `ContractNumberBinding` = a **provenance POINTER** (`number_token` / `quantity` / `artifact` /
-   `field_path`, **all strings**), optional on `CellContract` with default `()` so none of the 62
-   construction sites breaks.
-   **The binding is VERIFIED, never trusted:** the artifact must carry that value at the declared path, the
-   path must be consistent with the declared quantity, and a binding whose token is absent from prose is
-   itself a **defect** (`binding_declared_but_prose_token_absent`) — because otherwise the audit would be
-   auditing the declaration instead of the prose.
-   *Measured:* **5 bindings declared → measurability 16 → 22 of 180 (0.0889 → 0.1222)**, `label_unlabeled`
-   147 → 141, 0 binding defects. **HONEST LIMIT: a binding is 1:1** — it converts exactly one number, so
-   bindings are LINEAR in authoring effort and will not close the remaining ~141.
-   **A follow-on measurement then CORRECTED my own conclusion.** Adding one `LABEL_VOCAB` entry (`freq`)
-   did unlock 2 bindings AND convert a number via the heuristic unaided (`measurable_by_heuristic`
-   16 → 17), and I recorded that as *"vocabulary coverage has leverage; bindings do not"*. **That
-   generalised from n=1 and is WRONG.** Measured across all 141 remaining unlabeled numbers
-   (`scripts/vocab_expansion_probe.py`): **ZERO addable entries at the coverage of that moment** --
-   and "exhausted" was itself CORRECTED within the hour (below). Every cleanly-converting word is a
-   domain noun or structural word (`genes`/`lactam`/`beta`/`aminoglycoside`/`star`/`name`/`computed`/
-   `discovery`/`eas`/`ncbi`); every genuinely quantity-shaped word is either a **statistical modifier**
-   that would confirm vacuously (`max`/`mean`/`null` — prose "max 0.21" vs path `max_abs_r` would call a
-   CORRELATION a "max") or **net-negative** (`purity`: 1 conversion vs 4 false leads).
-   **The true structure is COMPLEMENTARITY, not a ranking:** vocabulary works where the artifact field
-   name is SPECIFIC (`observed_purity`, `null_mean`), and manufactures false leads where it is GENERIC
-   (`additional_statistics[0].observed`) — which no entry can fix and which is exactly what a binding
-   is for. **So neither lever scales the remaining ~141, and that is now measured rather than assumed.**
-   **THEN "exhausted" WAS CORRECTED THE SAME DAY, and the correction is the more useful result.** Citing
-   pneumoserotype's two artifacts moved 5 numbers into the cited set and **`concordance` immediately
-   surfaced as a clean candidate** (2 near / 2 would-confirm / 0 would-mismatch) and was added --
-   `measurable_by_heuristic` 17 -> 18, `label_unlabeled` 145 -> 144, **0 new false leads**. So **the
-   vocabulary lever's headroom is a FUNCTION of which cells are cited and re-opens whenever coverage
-   grows**; a measurement over "all remaining numbers" is a measurement over the CITED ones. Say "exhausted
-   at current coverage" and keep the tripwire -- my own probe test was that tripwire and it fired on the next
-   full run. **The probe is also an UPPER BOUND**: it counts a word as converting when it is in the window
-   AND the path matches, but `label_for` applies leading-wins + inter-number clipping so at most ONE word
-   wins per number -- `concordance` was estimated at 2 and delivered **1**. `agreement` was **REFUSED**
-   (2 conversions vs 1 false lead), and `concordance` is deliberately **NOT an alias of `acc`** -- agreement
-   between two callers is not accuracy against a label, and collapsing them would let a tool-agreement
-   figure verify a claim of accuracy, which is the `FAITHFUL_TO_TOOL` vs `INDEPENDENT_MEASURED` distinction
-   the whole tier system rests on. The retracted-ranking test was **rewritten, not re-baselined**:
-   `test_a_vocabulary_entry_has_MORE_leverage_than_a_binding` -> `test_vocabulary_and_bindings_are_
-   COMPLEMENTARY_not_ranked`, carrying the retraction in its docstring.
-   **Then the third lever turned out to be the real one — FIXING THE MATCHER, not widening coverage**
-   (`wiki/contract_number_value_preservation_2026-09-28.md`). `_number_variants` padded **and truncated**
-   (`f"{0.939:.1f}"` = `0.9`) on the **fast** path, so a truncated hit counted as EXACT and never reached
-   `_matches_by_rounding` — leaving `matched_only_after_rounding` at **0** for every affected cell. The
-   deciding case: ugt1a1 cites BOTH `0.939` and `0.941` and the single token **`0.9` matched both**, so the
-   check was not discriminating between the numbers at all. Measured: **7 of 166** verified numbers passed
-   only on a truncation, and the decoy control far worse — pinned-pool **pointfinder 175/599 → 0**, because
-   its cited `0.9923` generated the variant `1.0`. **That retrospectively corrects the 2026-09-27 memo's
-   "pointfinder 59% → 29%" as the fixed state: 29% was still almost entirely artifact.** Direction is the
-   point — the ARTIFACT must round to the CITED value, and the **sibling** `contract_number_semantics.
-   value_matches` was already right, so "older code is the reference" was the wrong prior.
-   *Result:* drift 0 → **0**, disclosed roundings 0 → **19**, `unverifiable` **9 → 4**, uncited cells 3 → 2.
-   *Cost, reported:* the discrimination **GRADE saturated at HIGH** (bands were calibrated against the
-   inflated rates) — the RATE still spans 0 → 0.0365 and still orders cells as intended, so the rate ships
-   and the saturation is recorded rather than re-banded off 20 points. Six pre-registered anchors
-   re-baselined with prior values inline; **two deliberately-NONZERO pinned-pool anchors added** because all
-   four existing ones fell to 0 and four zeros cannot tell a correct matcher from an inert one.
-   *Residual closed too:* pneumoserotype's 5 numbers left the residual — 4 sat at semantic paths in an
-   **uncited** validation JSON, and the `~2.1%` denominator is stated **verbatim** in its report card
-   (*"of the 235"*), so the recorded 5/235-vs-5/240 ambiguity was an artifact of not reading the sibling
-   artifact. **The 4 that remain (`cyp2d6`, `pigment`) are unverifiable BY MEASUREMENT** — 730+ wiki files
-   contain their values, so no citation could discriminate. That is a property of the numbers, **not a
-   to-do**, and the family's value-presence question is now closed. What is NOT closed: matching on the
-   audit side is still **not semantic** (right value, possibly wrong quantity) — that is
-   `contract_number_semantics.py`'s job and it has 1 open lead (`salmserovar :: coverage 0.705`).
-   *Also shipped, in the same change because otherwise the field and the hole ship together:* the
-   "NO numeric confidence field" guard in `tests/test_cell_registry.py` now **RECURSES** — it previously
-   checked only top-level attribute values, so a nested numeric inside a tuple would have passed.
-   *Known vocabulary gap, recorded not papered over:* an allele-frequency path (`...alt_freq`) has no
-   quantity in `LABEL_VOCAB`, so the cyp4f2 AF numbers cannot be bound yet. The mechanism correctly REFUSES
-   rather than accepting a mismatched quantity.
-
-4b. **Small hygiene item — now a PATTERN, 2 instances, still NOT fixed:** `tests/test_pgx_report_card.py`
-   calls the builder's `main()`, which **writes 8 tracked `wiki/pgx_*` artifacts** with today's date. So
-   running the suite always dirties the working tree with an `analysis_date`-only diff, and `git status` is
-   never clean after a test run. Reverted as incidental churn rather than committed (date churn in history is
-   noise). The real fix is for the test to write to a tmp dir and assert on the returned object; it is
-   deliberately out of scope here because it touches a passing test for no evidentiary gain. Worth doing when
-   something else is already in that file — the failure mode is mild but it trains a reader to ignore a dirty
-   tree, which is how a genuine unintended write gets missed. **Second instance found 2026-09-29:**
-   `wiki/certification_capstone.{json,md}` also get rewritten with today's `analysis_date` by a suite
-   run, so **10 tracked files** now churn on every `pytest tests/`. Two independent tests doing this
-   makes it a shape worth fixing once (builders write to a tmp dir; tests assert on the returned
-   object), not two one-offs.
-
-5. ~~**Should the rejection-gate family gain a CONDITION-COVERAGE gate?**~~ — **RESOLVED 2026-09-28:
-   NO, not yet. Deliberately doing nothing, for two independent reasons either of which suffices.**
-   (a) **Mechanical, verified:** `dna_decode/eval/rejection_gates.py:319-322` — any gate whose measurement
-   is absent returns `INSUFFICIENT_DATA`, which makes the WHOLE screen `INCOMPLETE`. `screen_candidate`
-   always runs `LABEL_GATES + DECODER_GATES`, so appending G11 without a precise applicability rule flips
-   **all four committed packets** (pear/hbv/oxford/phenosense) to INCOMPLETE and breaks
-   `scripts/screen_candidate_gates.py --verify`. That is exactly how both F2 candidates already read
-   INCOMPLETE from an unsupplied G6.
-   (b) **Epistemic:** the threshold would have to be **ASSERTED from n=1** (Public K-12 — 42% unannotated,
-   82.7% glucose, 3 sources at >=10 samples). This repo has mis-specified two frozen acceptance bars in one
-   month by exactly that route, so an asserted threshold defers it on its own.
-   **PRE-DECLARED PROMOTION CONDITION** (so this is a decision, not an indefinite park): promote to G11 only
-   when an applicability rule can **reject at least one NON-F2 packet** and mark the existing packets
-   `not_applicable` for a stated reason. If promoted, it belongs in a THIRD grouping (`SUBSTRATE_GATES`) —
-   it is neither a label-existence question (G1-G8) nor a rule-scoreability one (G9-G10) — but one member
-   does not earn a new grouping. A gate that is `not_applicable` on every committed packet would be this
-   project's own forbidden "control that rejects nothing".
-   *Correction to the earlier cost estimate:* `test_rejection_gates.py:154 test_all_ten_gates_run_every_time`
-   does NOT pin the count — it asserts against `list(LABEL_GATES) + list(DECODER_GATES)`, i.e. DERIVED, so
-   it would pass automatically. Only its NAME says "ten". The one genuine hard text coupling is
-   `tests/test_colour_cell_substrate_screen.py:159`, which asserts the literal `"screen it against G1–G10"`.
-   If machine-readability is wanted sooner, a separate `campaign_criteria` schema beside the gate output
-   gets it without touching `LABEL_GATES`.
-
-6. **The 7 unscreenable colour cells** — no existing evidence tier fits (`NO_FREE_SOURCE` is about labels;
-   `NOT_CENSUSED` means never-scored). And whether curating the 40 unrecorded colour loci is worth doing
-   (fabrication hazard unless every locus is OMIA/literature-sourced).
-
-## The gene-LLM idea (raised 2026-08-30, prior-art-checked 2026-08-31)
-
-Draft anchor `wiki/idea_anchor_genomic_language_model_2026-08-30.md` (**NOT ANCHORED** — user-confirmed
-skill). Prior-art check `wiki/prior_art_genomic_language_models_2026-08-31.md`: **the field is crowded.**
-gLM / gLM2 / GenSyntax already build gene-token models, and four of this repo's findings (650M peak,
-fluency≠function, population-structure confounding, curated-rules-beat-ML) are already published.
-
-**Cheapest decisive experiment, no training run:** score off-the-shelf `tattabio/gLM2_650M` on our
-de-confounded benchmarks against the curated-catalog baseline. If a published gene-token model can't beat
-a hand-written determinant catalog on constructed variation, that answers the idea for an inference pass
-— and it is exactly the comparison the critique literature says nobody runs.
-
-> **REGIME PRECISION, added 2026-09-28 — read this before running it, because the two framings have
-> OPPOSITE verdicts and the wording above does not state which one it means.**
-> - `screen_proposal('natural','molecular','zero_shot')` → **`LOSES_TO_CATALOG`**. Measured: HIV NNRTI
->   curated catalogue AUC 0.926–0.962 vs ESM2 **0.454, below chance**, because resistance is reached via
->   chemically CONSERVATIVE substitutions at averagely-conserved sites, so any plausibility scorer calls
->   them benign. gLM2 is another likelihood scorer. **On natural populations this is a recorded negative —
->   do not run it.**
-> - `screen_proposal('constructed','molecular','zero_shot')` → **`OPEN`**, condition **"measure a
->   de-confounded baseline first"**. This is the reading the paragraph above intends ("on constructed
->   variation"), and it is **live work, not foreclosed**.
->
-> A `learned-narrow` candidate row phrased as "score gLM2-650M vs the curated baseline" was retired
-> 2026-09-28 under the NATURAL reading; the CONSTRUCTED reading is carried forward as that family's ranked
-> row 3. Scoping this wrong in either direction has cost this project real time — over-compressing the
-> zero-shot negative has hidden a live direction **four** times now, the fourth being my own retirement
-> note on 2026-09-28, which cited `REQUIRES_DECONFOUNDING` and a within-group-null condition. Both were
-> wrong: that is the `natural × organism × supervised` cell. **Run `screen_proposal` yourself; do not
-> trust a remembered verdict, including this one.**
-
-**Open user questions:** token level · training objective · natural vs constructed regime (drafted answers
-in the anchor).
-
-## Borrowable methods for the resistance blind spot (searched 2026-08-31, none tested)
-
-`wiki/borrowable_methods_resistance_scoring_2026-08-31.md`. The mechanism (conservative substitutions at
-average-conservation sites) says we need a signal that is NOT sequence plausibility. Ranked candidates:
-**ΔΔG of BINDING** (Rosetta `flex_ddG` / FoldX — physics, maximally orthogonal, RMSE 1.2 kcal/mol
-published, and it scores variants with no catalog entry) · **positive-selection scans** (HyPhy
-`MEME`/`FUBAR`, free, no GPU — but codon scans MISS HGT-mediated resistance, so target-site cells only) ·
-**drug-conditioned** ConPLex (PNAS 2023, code public) · Potts/DCA (fixes independence, not the
-plausibility framing) · inverse folding (a *stability* specialist; resistance is *binding*).
-
-~~**Proposed first move — score ΔΔG_bind on the catalog-negative subset**~~ — **KILLED 2026-08-31 by an
-executed kill-test** (`wiki/innovate_blindspot_framing_sweep_2026-08-31.md`). A **zero-tool deterministic
-position-novelty flag already recovers 60.4%** of the EFV blind spot (lift 4.69). ΔΔG's *premise* is sound
-— the blind spot IS pocket-mediated, 3.05× burden-adjusted enrichment, `VERDICT: GO` — but it is **not the
-cheapest move**, and the comparator is the free flag's **0.604**, not the catalog's 0.962.
-
-**WINNING framing instead: the blind spot is a CURATION gap.** The drivers are named and counted
-(V179D ×12, A98G ×10, H221Y ×7, F227C ×5, V108I ×4, V179E ×3) and sit at positions **absent from** the
-deployed 8-position `NNRTI_RT_MAJOR_DRMS`. And `hiv_amr.py` is **NOT** pinned by the prospective lock, so
-curating it does **not** invalidate the lock or the freeze — unlike the gentamicin `rmt` fix. **Whether to
-edit a shipped catalog is a scope decision → user call.**
-
-**Second, independent move (F3):** the position-novelty flag lives in `dna_decode/eval/` and is **never
-surfaced** in `hiv_amr.py` or `cli.py`; `AbstentionVocab` already exists to carry it. Wiring only.
-
-**Sixth family added after re-running a safeguard-blocked search (2026-08-31):** temporal /
-frequency-trajectory selection inference (Wright-Fisher HMM, `WFABC`, Beta-with-Spikes; multinomial-logistic
-clade models). **Regime split: fits our VIRAL cells** (direct precedent — applied to influenza drug
-resistance) **and inherits our known-fatal confound on BACTERIAL cells** (a frequency rise in clonal
-bacteria conflates "fitter variant" with "clone spread"). Only RELATIVE growth is ever identifiable.
-Most plausible payoff: the prospective-lock arm (NCBI-PD carries collection dates). Also `Phylowave`
-(*Nature* 2024) finds fitness-increased lineages **without predefined clades** — relevant to our reliance
-on Mash/MLST/Napier as hand-chosen partitions.
-
-**Acquisition target found:** PEAR — ~23,000 E. coli strains, each a unique single-copy `blaCTX-M-14`
-variant, growth measured under cefotaxime/ceftazidime, with prospective/retrospective model split.
-Constructed variation at scale on an AMR target with measured phenotype — the regime this repo says works.
+4. **Whether to compress the other long CLAUDE.md bullets.** The file loads every session; several long
+   bullets cite a resolvable memo, so their derivations could become pointers. Measure first:
+   `uv run python scripts/claude_md_weight.py`. Two long bullets have no external store and must stay
+   whole — the tool already protects them.
 
 ## Cheap untried levers (executor work, no authority needed)
 
-- ~~FBA conditional switch — continuous ratio as a ranking~~ **DONE 2026-08-29, bounded PASS.**
-  Within-gene AUROC 0.7308 (non-flat, n=26, p=0.001); all-genes 0.5896 because 61% are flat. Oracle
-  ceiling 11/67 exact-set vs deployed 3/67, and it ranks rather than calls. The failure is silence, not
-  error. **REPLICATED on the 25-source Keio carbon axis: AUROC 0.8133 (n=69, p=0.0005), flatness 68.2%.**
-  `wiki/fba_within_gene_ranking_2026-08-29.md`. **The follow-on is now CLOSED, not open:** on carbon the
-  deployed rule already gets 23/217 and the oracle ceiling is 27/217 (+4 genes, +1.8pp), so estimating k
-  would buy almost nothing. The 4-media "3->11" was a small-axis artifact. Do not build it.
-- ~~FBA axis choice is a free lever~~ **SPENT + QUANTIFIED 2026-08-29.** All three axes measured; the
-  lever is now a rule: **pick an axis whose WILDTYPE growth spreads** (distinct-growth fraction / CV,
-  42 LP solves, seconds — `scripts/fba_axis_dynamic_range.py`). Flatness 61.2/68.2/75.5% tracks it
-  monotonically on both summaries. Nitrogen was the worst available choice. n=3, so a direction that
-  survived a common yardstick, not an established relationship.
-- ~~Abstaining conditional-essentiality CLI~~ — checked 2026-08-30: there is **no shipped surface** to fix
-  (`dna-fba`'s `conditional` is the variant-LOF-uncertain case; `carbon` is utilization). Shipping it would
-  be a NEW phenotype-claiming surface on a published package = authority, listed above.
-- **Staleness auditor** — one clean 110/110 corpus run at `TOTAL_TOKEN_BUDGET=5500` to verify the OOM
-  mitigation. Still labelled unverified in `scripts/kaggle/staleness_corpus_kernel.py`.
+- **`dna-identify` cross-check on the 16 meropenem FN.** *K. aerogenes* is outside its 14 supported
+  organisms and sits above `MAX_DISTANCE`, so it should **ABSTAIN** — a second signal that those isolates
+  are out of the scored organism's set. Needs Docker for Mash; **not run**, and the memo says so.
+- **Re-run AMRFinder under the correct `-O` for the 23 off-species isolates.** `-O Klebsiella_pneumoniae`
+  on a *K. aerogenes* genome drives species-specific point-mutation screening, so their determinant calls
+  may be wrong beyond this one rule. Needs Docker.
+- **The 3 Klebsiella cohorts with incomplete cached AMRFinder runs** (gentamicin 3/60, tetracycline 33/60,
+  ceftriaxone 54/60) have their species cross-tab withheld for that reason. Completing them needs Docker.
+- **The two *K. aerogenes* true positives are unexplained** — they were called R, so they carry some
+  CARBAPENEM-subclass determinant. Offline, cheap, not chased.
 
-## The FBA switch cell, as it now stands (2026-08-29)
+## The FBA switch cell, as it now stands
 
-Open, and its terms are now separated. **Direction is fine** — where the model varies it points the right
-way (AUROC 0.71–0.81 on three substrates, all p≤0.001). **Accuracy when it commits is fine too** — 23/33
-= 70% exact-set on carbon against a chance expectation of 0.78, ~30× chance. **Coverage is the whole
-problem** — the model's call is constant for 85–94% of genes, so it is silent rather than wrong, and that
-silence is structural (flat stoichiometry), unreachable by any readout change, and predicted in seconds by
-the axis's own dynamic range. The readout lever is closed (+1.8 pp on the best-measured axis).
-
-**Do not quote "10.6% exact-set" for this cell** — that scores the model against a target it cannot hit
-for most genes. Quote the anatomy. The remaining bottleneck is the one already measured: the conditioning
-signal is not measured in the conditions the phenotype data uses (PRECISE-1K ∩ Keio carbon = 11 of 28,
-621 of 1,035 samples glucose).
+Direction is fine, **silence** is the problem: 61–76% of genes emit one identical ratio for every
+condition. Do **not** build the relative ranking rule (oracle ceiling +4 genes, and a deployable version
+must infer k = the original problem restated). **Do not quote a raw exact-set rate** — a conditionally
+essential gene is two-sided by construction, so a constant call can never match one. The measured
+bottleneck is fixed in both datasets: PRECISE-1K ∩ Keio carbon = **11 of 28**, 621 of 1,035 samples
+glucose.
 
 ## Known-stale / do not trust without re-deriving
 
-- Any **cell count or trait count written in prose**. `scripts/project_status.py` is the authority — it
-  caught two of my own figures wrong within an hour of writing them (46 traits → **44**; "~3x" → **4.1x**).
-- `wiki/project_distillation_2026-08-29.md` says **46 CLI traits**. It is **44**. Left uncorrected as a
-  worked example of exactly the drift this file exists to route around.
+- Any **cell count or trait count written in prose**, including in this file.
+  `uv run python scripts/project_status.py` is the authority — it is derived, never written.
+- `wiki/project_distillation_2026-08-29.md` says 46 CLI traits. That was wrong when written (it was 44)
+  and is now right again by coincidence, which is the cleanest possible illustration of why a written
+  count is not evidence.
