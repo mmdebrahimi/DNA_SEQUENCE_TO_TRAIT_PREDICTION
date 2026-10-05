@@ -10,10 +10,16 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 > independent, measured* phenotype label (everything else risks circularity — scoring a rule against
 > another tool's predictions). It is now broken across **bacteria** (EBI AMR Portal measured AST:
 > E. coli / Salmonella / Klebsiella / Shigella, acc 0.83–0.995), **M. tuberculosis** (WHO-2023-catalogue
-> rule on N≈2,845 measured-AST isolates: rifampicin acc **0.937**, isoniazid **0.914**), and **HIV-1**
+> rule on N≈2,845 measured-AST isolates — see the clonality caveat below), and **HIV-1**
 > (Stanford HIVDB PhenoSense wet-lab fold-change). One legible view across every validation surface —
 > each surface's distinct independence tier preserved, never averaged into a misleading aggregate:
 > [`wiki/cross_kingdom_validation_summary.md`](wiki/cross_kingdom_validation_summary.md).
+>
+> **Read the TB number as lineage-collapsed, not raw.** *M. tuberculosis* is monomorphic and heavily
+> clonal: those 2,845 isolates collapse to roughly **67** barcode lineages, so a per-isolate metric is
+> carried by over-sampled clones. Raw rifampicin accuracy is 0.937 and the honest headline is
+> **lineage-collapsed sens 0.444 / spec 0.979** (isoniazid 0.321 / 0.972). Sensitivity is genuinely low
+> at the lineage level; specificity is high and robust in both the independent and in-distribution arms.
 
 > **Using a coding agent?** See [`AGENTS.md`](AGENTS.md) for setup/test/run commands + the scientific
 > guardrails, and run `dna-decode list` for the authoritative supported-trait + validation surface.
@@ -21,7 +27,7 @@ blind spots + provenance. Mechanism-feature based, not an embedding black-box. *
 
 ## Start here — point at your file, get told what you can decode
 
-Have a file and don't know which of the **44** decoders apply? Ask the router:
+Have a file and don't know which of the **46** decoders apply? Ask the router:
 
 ```
 dna-decode decode my_genome.fna         # -> the applicable decoders + the exact command for each
@@ -36,7 +42,7 @@ auto-runnable decoders in one report (genome -> the `profile` suite; protein -> 
 ones that need a specific parameter (`--mutation` / `--gene`) instead of guessing. `dna-decode list` is the
 full per-trait validation surface.
 
-## What it decodes (v0.9.0)
+## What it decodes (v0.13.1)
 
 > **Fastest way to see it work — zero setup, no Docker/BLAST/downloads, seconds on a bare `pip install`:**
 > `dna-decode amr --drug efavirenz --observed RT:K103N` (HIV R/S) · `dna-decode forward --mutation S2L
@@ -49,7 +55,7 @@ full per-trait validation surface.
 |---|---|---|
 | `dna-decode amr` (bacterial) | antibiotic R/S — **cipro / cef / tet / gent / meropenem** across **E. coli, K. pneumoniae, P. aeruginosa, S. aureus** | 6 drugs × 4 organisms, in-cohort + held-out + cross-source (NCBI) + cross-organism; every per-drug rule beats naive AMRFinder. Capstone: `wiki/amr_multiorganism_capstone_2026-06-07.md` |
 | `dna-decode amr` (**fungal**, v0.5.0) | azole / echinocandin R/S — **fluconazole / voriconazole / caspofungin / micafungin** for **Candida auris** (BLAST-ERG11/FKS1 target-site engine) | **kingdom-jump** — same determinant-scan method, validated on a de-confounded C. auris WGS+MIC cohort (Gate G1): sens 1.0 across clades (ERG11 Y132F/F126L), label-limited specificity. `wiki/fungal_ep7_g1_closeout_2026-06-08.md` |
-| `dna-decode pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) compatibility + abstention | VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit |
+| `dna-decode pathotype` | E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/…) compatibility + abstention | VirulenceFinder-marker resolver; ExPEC recall **0.833 (10/12, an ENFORCED cap)** at precision 1.0, EPEC recall 1.0; a flat-K=1 rule reached 0.917 but over-rescued on a single axis and was deliberately given back (*a clean 0.833 beats an overfit 0.917*); in-sample on N=24 |
 | `dna-decode plasmid` (**v0.5.0**) | plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/…) — *is the resistance plasmid-borne?* | deterministic PlasmidFinder-blastn caller (identity 95 / coverage 60); faithful-to-tool (not an independent baseline); offline-safe degrade |
 | `dna-decode serotype` (**new**) | E. coli **O:H serotype** (wzx/wzy/wzm/wzt O-antigen + fliC H-antigen) | deterministic SerotypeFinder-blastn caller (identity 85 / coverage 60); `O?/H?` when a locus is unresolved; offline-safe |
 | `dna-decode resfinder` (**new**) | acquired **AMR genes** (ResFinder DB) — an **independent** cross-tool check vs `amr` | deterministic ResFinder-blastn caller (identity 90 / coverage 60); `caller_is_independent_baseline: true` (acquired genes only — no point-mutations/efflux); offline-safe |
@@ -58,13 +64,16 @@ full per-trait validation surface.
 | `dna-decode mlst` (**new**) | **MLST sequence type** (PubMLST; v0 E. coli Achtman 7-gene) — exact-allele → profile → ST | deterministic blastn 100/100 + PubMLST profile lookup; **validated: K-12 MG1655 → ST10**; `dna-mlst --fetch-db` installs the scheme; novel/incomplete → ST not guessed; offline-safe |
 | `dna-decode ktype` (**new**) | **Klebsiella K-antigen (capsule) type** via the wzi allele scheme (BIGSdb Pasteur, Kleborate-bundled) — the `serotype` sibling | deterministic wzi-blastn caller (identity 90 / coverage 80); **self-consistency 15/15** across the DB; faithful-to-tool (wzi→K ~94%, NOT one-to-one); a **free measured serological label exists** (KlebNET-GSP 731-isolate set) → validatable, full caller-vs-serology run scoped (`wiki/ktype_report_card.md`); offline-safe |
 
-3,800+ tests green. **9 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
+| `dna-identify` (**2026-10-04**) | **which organism is this?** — a closed-set Mash-sketch router over **14** supported organisms, emitting the AMRFinder `-O` routing token every other decoder needs, or **ABSTAIN** | leave-one-out **294/294** in-set; **out-of-set abstention 44/48 = 0.9167**; survives a **lineage-disjoint** hold-out (accuracy 1.000 at 4 clustering thresholds). Honest limits: **68.0%** of the reference has a ~99.5%-ANI twin, and **4 Klebsiella congeners (K. variicola / K. michiganensis) are an UNREJECTABLE mis-call class** — they sit below the in-set distance ceiling, so no threshold excludes them without also excluding real in-set genomes. A closed-set router, **not** open-world taxonomy |
+| `dna-tb` (**2026-10-04**) | *M. tuberculosis* drug resistance from a **VCF against H37Rv** — 12 drugs via the sha256-pinned **WHO mutation catalogue v2 (2023)** grade-1/2 determinants | RIF/INH near-independent (see the kingdom table); the other 10 in-distribution only. **Refuses rather than guesses**: an absent or pin-drifted catalogue exits 3 *before any scoring*, and a VCF with data rows that parses to **zero** calls exits 4 — because a parse failure and a clean genome otherwise print the same word |
+
+**5,690+ tests green.** **11 decoders** (shared curated-DB blastn engine `dna_decode/typing/blast_caller.py`
 + codon-mapping `dna_decode/typing/codon_map.py`) **+ 3 cross-decoder analyses** that compose them:
 
 | Analysis | What | |
 |---|---|---|
 | `dna-decode concordance` | AMR cross-tool check — **AMRFinder (`amr`) vs ResFinder (`resfinder`)** acquired-gene calls, gene-family level + Jaccard agreement | the independent second-opinion `resfinder` was built for |
-| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder+pointfinder) **+ AMR R/S calls with inline trust badges** on one genome → one unified honest report | the "tell me everything, honestly" UX; each section degrades independently. AMR R/S needs a cached (`--amrfinder-run`) or Docker (`--run-amrfinder`) AMRFinder source; each call carries its validation tier (e.g. `INDEPENDENT_MEASURED acc 0.95`) |
+| `dna-decode profile` | **run-all** — every assembly-FASTA decoder (pathotype+serotype+plasmid+resfinder+pointfinder) **+ AMR R/S calls with inline trust badges** on one genome → one unified honest report. **`--identify-organism`** makes step 1 feed step 2: it routes the AMR organism from `identify` instead of silently defaulting to E. coli | the "tell me everything, honestly" UX; each section degrades independently. AMR R/S needs a cached (`--amrfinder-run`) or Docker (`--run-amrfinder`) AMRFinder source; each call carries its validation tier (e.g. `INDEPENDENT_MEASURED acc 0.95`). The organism's **provenance is always stated** — `explicit` / `identified` / `assumed_default` — and a section that does not fit the detected organism (the E. coli-specific pathotype / serotype / pointfinder) says so rather than reporting a confident call |
 | `dna-decode coloc` | **AMR×plasmid co-localization** — is *this* acquired resistance gene on the same contig as a plasmid replicon (likely plasmid-borne)? | turns "both present" into "the gene sits on the plasmid"; same-contig is suggestive, not proof | The deterministic rules live in `dna_decode/eval/amr_rules.py::DRUG_RULE` (per-drug
 threshold + AMRFinder-Subclass / QRDR-point / gene-prefix refinement). Engineering principle that held
 across every organism: **count the drug's specific resistance determinants, not the broad drug-class bag.**
@@ -79,7 +88,7 @@ each kingdom keeps a **namespace-separate** standing report card so the tiers ca
 | Kingdom | Cell | Independent validation | Tier |
 |---|---|---|---|
 | **Bacteria** | cipro / cef / tet / gent / meropenem × E. coli · Klebsiella · Salmonella · Shigella | EBI AMR Portal **measured AST** (free; BioSample/GCA-disjoint), acc **0.83–0.995** | provenance-disjoint, measured — non-circular (`wiki/amr_portal_independent_report_card.md`) |
-| **M. tuberculosis** | rifampicin (`rpoB`) + isoniazid (`katG`/`inhA`) — WHO-2023 catalogue rule | EBI AMR Portal measured AST, **N≈2,845**: RIF acc **0.937**, INH **0.914** | independent, measured (`wiki/tb_report_card.md`) |
+| **M. tuberculosis** (`dna-tb`, **12 drugs**) | rifampicin (`rpoB`) + isoniazid (`katG`/`inhA`) **scored**; amikacin / bedaquiline / clofazimine / delamanid / ethambutol / ethionamide / kanamycin / levofloxacin / linezolid / moxifloxacin routable but **unscored** — WHO-2023 catalogue rule, sha256-pinned | EBI AMR Portal measured AST, **N≈2,845**, provenance-disjoint from CRyPTIC. **Lineage-collapsed** (the honest headline): RIF sens **0.444** / spec **0.979**, INH **0.321** / **0.972**. Raw per-isolate RIF acc 0.937 is **clonality-inflated** (~67 lineages) | RIF+INH **near-independent, measured**; the other 10 are **in-distribution only** — the catalogue was built partly from CRyPTIC, so no number is quoted for them (`wiki/tb_registry_gap_2026-10-04.md`) |
 | **Virus — HIV-1** | NNRTI / NRTI / PI / INSTI / CAI (RT · protease · integrase · capsid) | Stanford HIVDB **PhenoSense** wet-lab fold-change (NNRTI EFV AUC **0.962**) | free, independent, isolate-level wet-lab label (`wiki/hiv_decoder_report_card.md`) |
 | **Virus — SARS-CoV-2** | nirmatrelvir / ensitrelvir (Mpro / 3CLpro) | Stanford CoV-RDB fold-change — **in-distribution, underpowered** (37R/5S) | knowledge baseline, honestly labelled (`wiki/sarscov2_mpro_validation_result_2026-06-23.md`) |
 | **Virus — HCMV** (herpesvirus, **new**) | ganciclovir / valganciclovir / cidofovir / foscarnet / letermovir (UL97 / UL54 / UL56); wheel-`--observed` **or `--genome-fasta`** (Merlin NC_006273.2, integrity-gated) | Chou recombinant-phenotyping fold-change — **IN_DISTRIBUTION** (catalog curated from it; standing card) | first herpesvirus cell; independent number is a **CLOSED** negative — no free held-out per-isolate phenotype exists (`wiki/hcmv_decoder_report_card.md`) |
@@ -102,7 +111,7 @@ fabricated).
 
 ### Animal colour / plumage — 19 cells, deliberately FROZEN
 
-**19 of the 44 traits** are curated animal coat-colour / plumage decoders (`dna-decode coatcolor`,
+**19 of the 46 traits** are curated animal coat-colour / plumage decoders (`dna-decode coatcolor`,
 `catcolor`, `horsecolor`, `plumage`, …) — deterministic OMIA/literature epistasis rules that take observed
 genotypes at the pigmentation loci and return the predicted colour. All 19 ship as `KNOWLEDGE_BASELINE`,
 and the family is **frozen at 19** (`dna_decode/data/colour_cell_freeze.py`; adding a 20th trips
@@ -170,13 +179,15 @@ that run end-to-end, each verified by `scripts/verify_quickstart.py`.
 ## Quickstart (verified output)
 
 ```text
-$ uv run dna-decode list          # 98 lines; first 2 of 44 traits shown
+$ uv run dna-decode list          # 102 lines; first 3 of 46 traits shown
 dna-decode 0.13.1 - deterministic genotype->phenotype decoders
 
+  identify    WHICH SUPPORTED ORGANISM is this genome? - closed-set Mash-sketch router over the 14 organisms with a local reference (E.coli/Klebsiella pneumoniae+oxytoca/Campylobacter/Salmonella/Acinetobacter baumannii/S.aureus/P.aeruginosa/N.gonorrhoeae/Enterobacter cloacae/M.tuberculosis/S.pneumoniae/E.faecium/C.auris); emits the AMRFinder -O value the other traits need, or ABSTAINS. Step 1 of the pipeline - every other trait requires --organism
+              validation: leave-one-out 294/294 on a BALANCED 295-genome/14-organism reference (hold-out excludes the genome's own row); out-of-set abstention 44/48 = 0.9167 on a CONGENER-dominated control. 68.0% of reference genomes have a ~99.5%-ANI twin, but the LINEAGE-DISJOINT hold-out RAN and PASSED (accuracy 1.000 at 4 thresholds), so the result is not twin-carried. THE REMAINING LIMIT, measured and NOT fixable by tuning: K. variicola/michiganensis sit BELOW the in-set ceiling so no threshold rejects them - they mis-call as K. pneumoniae/oxytoca. wiki/identify_validation_2026-10-04.json
   amr         antibiotic resistance R/S - bacterial (cipro/cef/tet/gent/meropenem; E.coli/Klebsiella/Pseudomonas/S.aureus) + M. tuberculosis (rif/inh) + FUNGAL azole/echinocandin (fluconazole/voriconazole/caspofungin/micafungin; C. auris) + VIRAL target-site (HIV NNRTI/NRTI/PI/INSTI/CAI, SARS-CoV-2 Mpro, influenza NA, HCMV herpesvirus ganciclovir/cidofovir/foscarnet/letermovir via --observed) via --drug
               validation: bacterial: cipro 0.925 (held-out 0.862, cross-source 1.0) | cef 0.933 | gent 0.945 | tet 0.833 | mero 0.867; cross-organism (capstone). fungal C. auris fluconazole G1: sens 1.0 across clades, label-limited spec (wiki/fungal_ep7_g1_closeout_2026-06-08)
   pathotype   E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention
-              validation: VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit
+              validation: VirulenceFinder-marker resolver; ExPEC recall 0.833 (10/12, an ENFORCED cap) at precision 1.0, EPEC recall 1.0, in-sample on N=24. A flat-K=1 rule reached 0.917 but over-rescued on a single axis and was deliberately given back - a clean 0.833 beats an overfit 0.917. Label-blocked for a higher tier (gates G1+G3): ExPEC comes from isolation SITE, a sampling-defined confound no cohort fixes
 
 $ uv run dna-decode amr --drug ceftriaxone --amrfinder-run data/amrfinder_runs/GCA_008727135.1
 sample: GCA_008727135.1  drug: ceftriaxone  organism: Escherichia
@@ -198,6 +209,18 @@ fungal cell. The block above is **regenerated from real runs** (2026-08-23); the
 abridgement and is marked as such.
 
 ```bash
+# STEP 1 of the pipeline — which organism IS this? Emits the AMRFinder -O value every other
+# trait needs, so you no longer have to supply --organism by hand. Needs Docker (Mash) + the
+# reference sketch; ABSTAINS rather than guessing when the genome is outside the supported 14.
+uv run dna-decode identify --genome-fasta path/to/assembly.fna
+uv run dna-decode identify --list-organisms      # which 14 are IDENTIFIABLE vs merely declared
+
+# M. tuberculosis resistance from a VCF called against H37Rv (NOT a genome FASTA — TB is VCF-shaped):
+uv run dna-decode tb --vcf isolate.vcf --drug rifampicin
+uv run dna-decode tb --list-drugs                # 12 drugs, and WHICH have an independent number
+# Refuses rather than guessing: a missing or pin-drifted WHO catalogue exits 3 before any scoring,
+# and a VCF with data rows that parses to zero calls exits 4 instead of reporting a confident S.
+
 # Plasmid replicon typing on a genome assembly (blastn + PlasmidFinder DB; composes with amr):
 uv run dna-decode plasmid path/to/assembly.fna --sample-id MY_STRAIN
 # (downloads the DB once: curl -sSL https://bitbucket.org/genomicepidemiology/plasmidfinder_db/raw/HEAD/enterobacteriales.fsa -o data/plasmidfinder_db/enterobacteriales.fsa)
@@ -246,10 +269,13 @@ Full capability table + validation provenance: **[Shipped decoders](#shipped-dec
 
 ## Project history — Phase 1 → v0.4.0 (how we got here)
 
-> The sections below are the chronological research record (embedding-thesis exploration, Evidence
-> Packets, the deterministic pivot). For *using the tool*, the section above is all you need.
+> **Everything below is HISTORICAL and none of it is current status.** It is the chronological research
+> record: the embedding-thesis exploration, the Evidence Packets, and the deterministic pivot that came
+> out of them. The shipped tool is **v0.13.1** and the sections *above* describe it. The `Phase 1/2/3`
+> labels are retrospective-only — they are kept because the negative results they record are load-bearing
+> (they are why the decoder is deterministic rather than learned), not because any phase is in flight.
 
-## Status: Phase 1 — CLOSED 2026-05-17 (infrastructure + cross-drug architectural finding)
+### Phase 1 (historical) — CLOSED 2026-05-17: infrastructure + the cross-drug architectural finding
 
 Phase 1 evidence collection closed 2026-05-17. Cross-drug architectural finding synthesis at `wiki/ep1_ep2_cross_drug_architectural_finding_2026-05-17.md`:
 
@@ -314,9 +340,33 @@ Module map: `dna_decode/data/` (ingestion) + `dna_decode/models/` (foundation wr
 | Horizon | 3 months Phase 1; 12 months Phase 1+2+3 |
 | Compute | Local GTX 860M (4 GiB Maxwell, NT v2 only — verified 2026-05-13) + Databricks burst for larger cohorts. 4-bit Evo unavailable (bitsandbytes requires CC ≥ 7.0). Original target was RTX 4090 + 4-bit Evo; never materialized. |
 
-## Long-term vision
+## Long-term vision — the goal is GENERATIVE
 
-Multimodal genotype-phenotype platform — start with bacterial AMR (Phase 1), expand toward eukaryotes + image-paired phenotype data in later phases. NOT a direct stepping stone to "DNA → animal image" prediction; that would require a parallel multimodal track.
+**Name a trait, get the genome edits.** Everything shipped so far is the *reading* half of that; the
+destination is the writing half. Four steps:
+
+1. **Identify the organism** from raw sequence — *shipped* as `dna-identify` (closed-set, 14 organisms).
+2. **Read the genotype and work out which sections jointly produce a phenotype** — this is where the
+   decoder suite lives today, and where it is strongest when a curated catalogue exists.
+3. **Act in bacteria** — make a minor edit so an organism produces a protein we want. `dna-decode
+   inverse` is the first real step (effect → edit), and it **ranks, it does not dose**: it proposes
+   candidate edits, it cannot tell you the magnitude.
+4. **Climb to higher organisms** — eventually animal traits.
+
+**AMR was substrate #1, not the subject.** It was chosen because it is the one place a free, independent,
+measured phenotype label exists at scale; the method generalises, the labels are the bottleneck.
+
+**What the project has actually learned about step 4, and it is not what you'd guess:** organism
+complexity is *not* the barrier. The discriminating variable is **population design**. Zero-shot
+embeddings on *natural* populations have failed 0-for-5 under de-confounding (they learn population
+structure, not mechanism), while *constructed* variation works — a yeast segregant cross decoded 12/12
+traits at r 0.46–0.80. So the route to animal traits runs through designed crosses and constructed
+variation, not through pointing a bigger model at wild-type diversity. See
+[`wiki/organism_gp_regime_correction_2026-08-29.md`](wiki/organism_gp_regime_correction_2026-08-29.md),
+and `dna_decode/eval/regime.py` encodes the boundary as code that **refuses** to certify a regime with a
+recorded negative.
+
+This is a long shot and is held as one. Nothing above is a promise about step 4.
 
 ## Setup
 
@@ -394,7 +444,7 @@ uv run python scripts/quantize_fidelity_check.py \
   --drug ciprofloxacin
 ```
 
-## Decoder v0 quickstart (Phase 2 in-flight)
+## Decoder v0 quickstart (historical — Phase 2 era)
 
 The v0 AI DNA decoder operates on **cached strains** — a strain whose NT embeddings already live in the HDF5 cache (built by `pipeline ingest` + the Databricks N=147 cipro populate). UX + success criteria locked in `wiki/decoder_v0_ux_and_success_criterion.md`.
 
@@ -418,7 +468,7 @@ Writes `result.json` + `result.md` (markdown sidecar) per the v0 schema:
 
 **Not a clinical decision support tool.** Audit verdict + provenance must accompany any downstream interpretation. See `wiki/decoder_v0_ux_and_success_criterion.md` for full v0 schema + success criteria.
 
-## Shipped decoders (v0.4.0) — two interpretable E. coli genome→trait tools
+## Shipped decoders — the first two interpretable E. coli genome→trait tools (historical, as of v0.4.0)
 
 The project's delivered value is **two deterministic, interpretable decoders** (installable console
 commands after `uv sync` / `pip install -e .`). Both take a genome assembly and emit a call + the exact

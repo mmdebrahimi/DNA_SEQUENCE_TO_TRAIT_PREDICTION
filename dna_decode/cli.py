@@ -29,16 +29,18 @@ import sys
 TRAITS = {
     "identify": {
         "summary": "WHICH SUPPORTED ORGANISM is this genome? - closed-set Mash-sketch router over the "
-                   "10 organisms with a local reference (E.coli/Klebsiella pneumoniae+oxytoca/"
+                   "14 organisms with a local reference (E.coli/Klebsiella pneumoniae+oxytoca/"
                    "Campylobacter/Salmonella/Acinetobacter baumannii/S.aureus/P.aeruginosa/"
-                   "N.gonorrhoeae/Enterobacter cloacae); emits the AMRFinder -O value the other traits "
+                   "N.gonorrhoeae/Enterobacter cloacae/M.tuberculosis/S.pneumoniae/E.faecium/"
+                   "C.auris); emits the AMRFinder -O value the other traits "
                    "need, or ABSTAINS. Step 1 of the pipeline - every other trait requires --organism",
-        "validation": "leave-one-out 211/211 on a BALANCED 212-genome/10-organism reference (hold-out "
+        "validation": "leave-one-out 294/294 on a BALANCED 295-genome/14-organism reference (hold-out "
                       "excludes the genome's own row); out-of-set abstention 44/48 = 0.9167 on a "
-                      "CONGENER-dominated control. TWO limits, both measured: 69.2% of reference "
-                      "genomes have a ~99.5%-ANI twin so LOO is optimistic (held out by genome, NOT "
-                      "lineage); and K. variicola/michiganensis sit BELOW the in-set ceiling so no "
-                      "threshold rejects them - they mis-call as K. pneumoniae/oxytoca. "
+                      "CONGENER-dominated control. 68.0% of reference genomes have a ~99.5%-ANI twin, "
+                      "but the LINEAGE-DISJOINT hold-out RAN and PASSED (accuracy 1.000 at 4 "
+                      "thresholds), so the result is not twin-carried. THE REMAINING LIMIT, measured "
+                      "and NOT fixable by tuning: K. variicola/michiganensis sit BELOW the in-set "
+                      "ceiling so no threshold rejects them - they mis-call as K. pneumoniae/oxytoca. "
                       "wiki/identify_validation_2026-10-04.json",
     },
     "amr": {
@@ -47,7 +49,11 @@ TRAITS = {
     },
     "pathotype": {
         "summary": "E. coli pathotype (EPEC/EHEC/ETEC/UPEC/EAEC/...) compatibility call + abstention",
-        "validation": "VirulenceFinder-marker resolver; ExPEC recall 0.917; rest documented scope-limit",
+        "validation": "VirulenceFinder-marker resolver; ExPEC recall 0.833 (10/12, an ENFORCED cap) at "
+                      "precision 1.0, EPEC recall 1.0, in-sample on N=24. A flat-K=1 rule reached 0.917 "
+                      "but over-rescued on a single axis and was deliberately given back - a clean "
+                      "0.833 beats an overfit 0.917. Label-blocked for a higher tier (gates G1+G3): "
+                      "ExPEC comes from isolation SITE, a sampling-defined confound no cohort fixes",
     },
     "plasmid": {
         "summary": "plasmid Inc-replicon typing (IncF/IncH/IncI/IncX/IncN/... via PlasmidFinder allele DB) - composes with amr (is the resistance plasmid-borne?)",
