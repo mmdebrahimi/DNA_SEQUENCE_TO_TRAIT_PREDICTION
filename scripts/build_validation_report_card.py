@@ -153,6 +153,88 @@ def load_source_concentration() -> dict:
     return {_key(c["organism"], c["drug"]): c for c in d.get("cells", []) if c.get("organism")}
 
 
+def load_species_composition() -> dict:
+    """Read the species-composition audit -> {canonical_key: cell}. Empty if absent.
+
+    NAMESPACE-SEPARATE for the same reason as `load_source_concentration` and `load_prospective`: this
+    shares its (organism, drug) key with a provenance-disjoint cell, so merging it would silently
+    overwrite a published metric with a composition field -- the shared-key trap. It AUGMENTS a cell; it
+    never replaces a metric and never changes a state.
+
+    WHAT IT ADDS, and why it is not redundant with the other two cohort layers. Lineage discloses clonal
+    domination WITHIN a cohort; source-concentration discloses how many independent SOURCES it draws on.
+    This asks a prior question: is the cohort even the SPECIES it was scored as? Measured case
+    (`wiki/meropenem_fn16_diagnosis_2026-10-05.md`): `Klebsiella x meropenem` is 38% K. aerogenes scored
+    with `-O Klebsiella_pneumoniae`, and ALL 16 of its false negatives are those off-species isolates --
+    zero are K. pneumoniae, on which sensitivity is 12/12. Its published sens 0.467 is substantially a
+    measurement of cohort composition.
+
+    Unlike the source-concentration loader this does NOT gate on a `complete` flag, because the audit's
+    per-cohort refusal is already finer-grained: a cohort that could not resolve enough species carries
+    `INSUFFICIENT_RESOLUTION` with no numbers, and a cohort whose cross-tab was withheld says so. Dropping
+    the whole layer because one cohort refused would hide nine good measurements.
+    """
+    got = sorted(WIKI.glob("provdisjoint_species_audit_*.json"))
+    if not got:
+        return {}
+    try:
+        d = json.loads(got[-1].read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 — a malformed sidecar must not break the read-only roll-up
+        return {}
+    return {_key(c["organism"], c["drug"]): c for c in d.get("cells", []) if c.get("organism")}
+
+
+def build_species_block(cell: dict | None) -> dict | None:
+    """The per-cell `species_composition` block, or None when there is nothing to disclose.
+
+    Returns None for a cohort that MATCHES what it was scored as -- rendering a reassuring line for a
+    clean cohort would add noise and invite reading absence-of-disclosure as a guarantee. Only a genuine
+    mismatch, or a refusal, produces a block.
+    """
+    if not cell:
+        return None
+    comp = cell.get("composition") or {}
+    verdict = comp.get("verdict")
+    if verdict == "INSUFFICIENT_RESOLUTION":
+        return {"status": "insufficient_resolution", "reason": comp.get("reason"),
+                "scope": "cohort composition, not the rule"}
+    if verdict != "MIXED_SPECIES":
+        return None
+    n_total = comp.get("n_total")
+    off = comp.get("n_same_genus_other_species", 0) + comp.get("n_other_genus", 0)
+    block = {
+        "status": "measured",
+        "scored_as": cell.get("amrfinder_organism"),
+        "n_total": n_total,
+        "n_off_species": off,
+        "off_species_fraction": round(off / n_total, 4) if n_total else None,
+        "species_counts": comp.get("species_counts"),
+        "reconciled": cell.get("reconciled"),
+        "scope": ("describes the COHORT the number was measured on, not the rule; species are the "
+                  "submitter's GenBank ORGANISM assertion, not a wet-lab identification"),
+    }
+    if not cell.get("reconciled"):
+        block["outcome_attribution_withheld"] = cell.get("crosstab_withheld_reason")
+        return block
+    fna = cell.get("false_negative_anatomy") or {}
+    block["false_negatives"] = fna.get("n_false_negatives")
+    block["false_negatives_off_species"] = fna.get("n_fn_off_species")
+    by_sp = (cell.get("outcome_crosstab") or {}).get("by_species") or {}
+    exp = comp.get("expected_species")
+    if exp and exp in by_sp:
+        c = by_sp[exp]
+        denom = c["tp"] + c["fn"]
+        block["on_scored_species_only"] = {
+            "n": sum(c[k] for k in ("tp", "fp", "tn", "fn")),
+            "tp": c["tp"], "fp": c["fp"], "tn": c["tn"], "fn": c["fn"],
+            "sens": round(c["tp"] / denom, 3) if denom else None,
+            "note": ("a MEASUREMENT of what the cohort's own expected-species subset gives, NOT a "
+                     "replacement for the published metric -- re-scoring a frozen artifact is a user "
+                     "authority call"),
+        }
+    return block
+
+
 def load_doubt_layer() -> dict:
     """Read the L2 doubt-layer measurement -> {drug: cell}. Empty if absent.
 
@@ -449,6 +531,7 @@ def main() -> int:
     lineage = load_lineage_metrics()
     prospective = load_prospective()
     source_conc = load_source_concentration()
+    species = load_species_composition()
     doubt = load_doubt_layer()
     surface = surface_index()
 
@@ -472,6 +555,13 @@ def main() -> int:
         # single-source cell keeps its state and its published metrics.
         if key in source_conc:
             c["source_concentration"] = build_source_block(source_conc.get(key))
+        # SPECIES COMPOSITION augments under its OWN key, and asks a question PRIOR to the two layers
+        # above: is the cohort even the species it was scored as? A clean cohort gets NO block -- a
+        # reassuring line would be noise and would invite reading absence as a guarantee.
+        if key in species:
+            sb = build_species_block(species.get(key))
+            if sb is not None:
+                c["species_composition"] = sb
         # L2 DOUBT augments too, under its OWN key. Keyed by DRUG (the screen is index-wide, not
         # per-cohort), and attached only where the drug was actually screened -- an unmeasured drug
         # gets no block rather than one reading as a clean bill.
@@ -578,6 +668,56 @@ def main() -> int:
         n_single = sum(1 for _, c in src_rows if c["source_concentration"].get("single_source"))
         L.append(f"\n**{n_single} of {len(src_rows)}** cells rest on ONE BioProject holding "
                  f"≥{int(SINGLE_SOURCE_SHARE * 100)}% of the cohort.\n")
+
+    # ---- Species-composition disclosure (is the cohort even the species it was scored as?) ----
+    sp_rows = [(k, c) for k, c in rows if c.get("species_composition")]
+    if sp_rows:
+        L.append("\n## Species-composition disclosure (is the cohort the SPECIES it was scored as?)\n")
+        L.append("The tables above ask how good the evidence for a number is. This asks a question PRIOR "
+                 "to all of them: **is the cohort even the species the cell was scored as?** A cohort "
+                 "directory named `klebsiella_*` scored with `-O Klebsiella_pneumoniae` is consistent at "
+                 "the GENUS level and can be silently wrong at the SPECIES level, and nothing checked "
+                 "that until 2026-10-05.\n")
+        L.append("WHY IT MATTERS, measured (`wiki/meropenem_fn16_diagnosis_2026-10-05.md`): "
+                 "`klebsiella x meropenem` is **38% K. aerogenes** (23 of 60) scored as K. pneumoniae, "
+                 "and **all 16 of its false negatives are those off-species isolates** - zero are "
+                 "K. pneumoniae, on which sensitivity is 12/12. Its published sens 0.467 is "
+                 "substantially a measurement of cohort composition. The cell's previously recorded "
+                 "explanation - that the rule is blind to porin loss - is false: the rule counts porin "
+                 "truncations, and these isolates have none.\n")
+        L.append("**These rows change no metric and no cell state.** An `on scored species only` figure "
+                 "is a MEASUREMENT of the expected-species subset, not a replacement - the provdisjoint "
+                 "artifacts are frozen units of the reproducibility freeze, so re-scoring is a user "
+                 "authority call. A cohort that matches what it was scored as gets NO row here rather "
+                 "than a reassuring one. Species are each assembly's own GenBank `ORGANISM` value - the "
+                 "**submitter's** assertion, not a wet-lab identification.\n")
+        L.append("| organism | drug | scored as | N | off-species | species present | FN off-species | "
+                 "on scored species only |\n|---|---|---|---|---|---|---|---|")
+        for k, c in sp_rows:
+            org, drug = k
+            sp = c["species_composition"]
+            if sp.get("status") == "insufficient_resolution":
+                L.append(f"| {org} | {drug} | — | — | — | *refused: {sp.get('reason')}* | — | — |")
+                continue
+            frac = sp.get("off_species_fraction")
+            off_s = f"{sp.get('n_off_species')} ({frac:.0%})" if frac is not None else "—"
+            present = ", ".join(f"{n}x *{s}*" for s, n in
+                               sorted((sp.get("species_counts") or {}).items(), key=lambda kv: -kv[1]))
+            if sp.get("reconciled"):
+                fn_s = f"**{sp.get('false_negatives_off_species')}/{sp.get('false_negatives')}**"
+                o = sp.get("on_scored_species_only")
+                on_s = f"N={o['n']}, sens {o['sens']}" if o and o.get("sens") is not None else "—"
+            else:
+                fn_s = "*withheld*"
+                on_s = "*withheld*"
+            L.append(f"| {org} | {drug} | `{sp.get('scored_as')}` | {sp.get('n_total')} | {off_s} "
+                     f"| {present} | {fn_s} | {on_s} |")
+        withheld = sum(1 for _, c in sp_rows if c["species_composition"].get("reconciled") is False)
+        if withheld:
+            L.append(f"\n**{withheld}** cohort(s) have their outcome attribution WITHHELD because their "
+                     f"cached AMRFinder runs are incomplete - attributing outcomes on a partial run set "
+                     f"would compute a rate over a silently-shrunken denominator. Their composition is "
+                     f"unaffected: it needs only the assemblies, which are complete.\n")
 
     # ---- L2 doubt disclosure (does the RULE fail to represent a determinant family?) ----
     doubt_rows = [(k, c) for k, c in rows if c.get("doubt_layer", {}).get("status") == "measured"]

@@ -1,6 +1,6 @@
 {
   "_schema": "decoder-validation-report-card-v0",
-  "date": "2026-10-03",
+  "date": "2026-10-05",
   "honest_tier": "isolate-level provenance-disjoint stress test (different submitter/lab/country); R classes clonally dominated \u2014 lineage-effective N + cluster-weighted metrics (with Wilson CI) disclosed in the lineage table; NOT methodology-independent (most submitters use CLSI broth microdilution) and NOT lineage-independent external clinical validation",
   "no_aggregate_headline": true,
   "state_counts": {
@@ -797,6 +797,20 @@
         "distinct_centers": 2,
         "single_source": false
       },
+      "species_composition": {
+        "status": "measured",
+        "scored_as": "Klebsiella_pneumoniae",
+        "n_total": 60,
+        "n_off_species": 2,
+        "off_species_fraction": 0.0333,
+        "species_counts": {
+          "Klebsiella pneumoniae": 58,
+          "Klebsiella aerogenes": 2
+        },
+        "reconciled": false,
+        "scope": "describes the COHORT the number was measured on, not the rule; species are the submitter's GenBank ORGANISM assertion, not a wet-lab identification",
+        "outcome_attribution_withheld": "cached AMRFinder runs incomplete (54/60); attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Composition above is unaffected -- it needs only the assemblies, which are complete."
+      },
       "doubt_layer": {
         "status": "measured",
         "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
@@ -894,6 +908,30 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "species_composition": {
+        "status": "measured",
+        "scored_as": "Klebsiella_pneumoniae",
+        "n_total": 60,
+        "n_off_species": 2,
+        "off_species_fraction": 0.0333,
+        "species_counts": {
+          "Klebsiella pneumoniae": 58,
+          "Klebsiella aerogenes": 2
+        },
+        "reconciled": true,
+        "scope": "describes the COHORT the number was measured on, not the rule; species are the submitter's GenBank ORGANISM assertion, not a wet-lab identification",
+        "false_negatives": 1,
+        "false_negatives_off_species": 0,
+        "on_scored_species_only": {
+          "n": 58,
+          "tp": 29,
+          "fp": 1,
+          "tn": 27,
+          "fn": 1,
+          "sens": 0.967,
+          "note": "a MEASUREMENT of what the cohort's own expected-species subset gives, NOT a replacement for the published metric -- re-scoring a frozen artifact is a user authority call"
+        }
       },
       "doubt_layer": {
         "status": "measured",
@@ -993,6 +1031,20 @@
         "distinct_centers": 3,
         "single_source": false
       },
+      "species_composition": {
+        "status": "measured",
+        "scored_as": "Klebsiella_pneumoniae",
+        "n_total": 60,
+        "n_off_species": 1,
+        "off_species_fraction": 0.0167,
+        "species_counts": {
+          "Klebsiella pneumoniae": 59,
+          "Klebsiella aerogenes": 1
+        },
+        "reconciled": false,
+        "scope": "describes the COHORT the number was measured on, not the rule; species are the submitter's GenBank ORGANISM assertion, not a wet-lab identification",
+        "outcome_attribution_withheld": "cached AMRFinder runs incomplete (3/60); attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Composition above is unaffected -- it needs only the assemblies, which are complete."
+      },
       "doubt_layer": {
         "status": "measured",
         "scope": "drug-level across the whole cached determinant index \u2014 NOT this cell's cohort",
@@ -1090,6 +1142,30 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 1,
         "single_source": false
+      },
+      "species_composition": {
+        "status": "measured",
+        "scored_as": "Klebsiella_pneumoniae",
+        "n_total": 60,
+        "n_off_species": 23,
+        "off_species_fraction": 0.3833,
+        "species_counts": {
+          "Klebsiella pneumoniae": 37,
+          "Klebsiella aerogenes": 23
+        },
+        "reconciled": true,
+        "scope": "describes the COHORT the number was measured on, not the rule; species are the submitter's GenBank ORGANISM assertion, not a wet-lab identification",
+        "false_negatives": 16,
+        "false_negatives_off_species": 16,
+        "on_scored_species_only": {
+          "n": 37,
+          "tp": 12,
+          "fp": 3,
+          "tn": 22,
+          "fn": 0,
+          "sens": 1.0,
+          "note": "a MEASUREMENT of what the cohort's own expected-species subset gives, NOT a replacement for the published metric -- re-scoring a frozen artifact is a user authority call"
+        }
       },
       "doubt_layer": {
         "status": "measured",
@@ -1202,6 +1278,20 @@
         "n_unknown_provenance": 0,
         "distinct_centers": 3,
         "single_source": false
+      },
+      "species_composition": {
+        "status": "measured",
+        "scored_as": "Klebsiella_pneumoniae",
+        "n_total": 60,
+        "n_off_species": 2,
+        "off_species_fraction": 0.0333,
+        "species_counts": {
+          "Klebsiella pneumoniae": 58,
+          "Klebsiella aerogenes": 2
+        },
+        "reconciled": false,
+        "scope": "describes the COHORT the number was measured on, not the rule; species are the submitter's GenBank ORGANISM assertion, not a wet-lab identification",
+        "outcome_attribution_withheld": "cached AMRFinder runs incomplete (33/60); attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Composition above is unaffected -- it needs only the assemblies, which are complete."
       },
       "doubt_layer": {
         "status": "measured",

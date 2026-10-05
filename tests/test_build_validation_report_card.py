@@ -706,3 +706,117 @@ def test_committed_card_renders_every_live_surface_cell():
     )
     # The reverse direction is NOT an error: the card is the surface UNION observed cells, so
     # observed-only rows (2 at the time of writing) legitimately have no surface entry.
+
+
+# ============================================================================ #
+# Species-composition disclosure (Step 5 of the meropenem FN16 plan, 2026-10-05)
+# ============================================================================ #
+
+def _sp_cell(**kw):
+    """A species-audit cohort row, shaped as the audit script emits it."""
+    base = {
+        "cohort_dir": "klebsiella_provdisjoint_meropenem", "organism": "Klebsiella",
+        "drug": "meropenem", "amrfinder_organism": "Klebsiella_pneumoniae",
+        "reconciled": True,
+        "composition": {"verdict": "MIXED_SPECIES", "expected_species": "Klebsiella pneumoniae",
+                        "n_total": 60, "n_matches_expected": 37, "n_same_genus_other_species": 23,
+                        "n_other_genus": 0, "n_unresolved": 0,
+                        "species_counts": {"Klebsiella pneumoniae": 37, "Klebsiella aerogenes": 23}},
+        "false_negative_anatomy": {"n_false_negatives": 16, "n_fn_off_species": 16,
+                                   "n_fn_expected_species": 0,
+                                   "fn_species_counts": {"Klebsiella aerogenes": 16}},
+        "outcome_crosstab": {"by_species": {
+            "Klebsiella pneumoniae": {"tp": 12, "fp": 3, "tn": 22, "fn": 0, "abstain": 0},
+            "Klebsiella aerogenes": {"tp": 2, "fp": 0, "tn": 5, "fn": 16, "abstain": 0}}},
+    }
+    base.update(kw)
+    return base
+
+
+def test_species_block_is_None_for_a_cohort_that_matches_what_it_was_scored_as():
+    """A reassuring line for a clean cohort is noise, and invites reading absence as a guarantee."""
+    clean = _sp_cell(composition={"verdict": "MATCHES_SCORED_ORGANISM", "n_total": 40,
+                                  "n_matches_expected": 40, "n_same_genus_other_species": 0,
+                                  "n_other_genus": 0, "n_unresolved": 0, "species_counts": {}})
+    assert mod.build_species_block(clean) is None
+    assert mod.build_species_block(None) is None
+
+
+def test_species_block_carries_the_measured_meropenem_finding():
+    b = mod.build_species_block(_sp_cell())
+    assert b["status"] == "measured"
+    assert b["n_off_species"] == 23 and b["off_species_fraction"] == round(23 / 60, 4)
+    assert b["false_negatives"] == 16 and b["false_negatives_off_species"] == 16
+    o = b["on_scored_species_only"]
+    assert (o["n"], o["tp"], o["fn"], o["sens"]) == (37, 12, 0, 1.0)
+    assert "authority call" in o["note"], "the measurement must not read as a replacement"
+
+
+def test_a_withheld_crosstab_yields_no_outcome_numbers():
+    """A cohort with incomplete cached runs must not get FN attribution -- that is a rate over a
+    silently-shrunken denominator."""
+    b = mod.build_species_block(_sp_cell(reconciled=False, outcome_crosstab=None,
+                                        crosstab_withheld_reason="cached AMRFinder runs incomplete (3/60)",
+                                        false_negative_anatomy=None))
+    assert b["status"] == "measured"            # composition still reported
+    assert "outcome_attribution_withheld" in b
+    for leaked in ("false_negatives", "false_negatives_off_species", "on_scored_species_only"):
+        assert leaked not in b, f"withheld cross-tab leaked {leaked}"
+
+
+def test_an_insufficient_resolution_cohort_renders_no_numbers():
+    b = mod.build_species_block(_sp_cell(composition={
+        "verdict": "INSUFFICIENT_RESOLUTION", "reason": "40/60 had no readable ORGANISM line",
+        "n_total": 60, "n_unresolved": 40}))
+    assert b["status"] == "insufficient_resolution"
+    for leaked in ("n_off_species", "species_counts", "false_negatives", "on_scored_species_only"):
+        assert leaked not in b, f"refused verdict leaked {leaked}"
+
+
+def test_species_composition_NEVER_merges_into_the_scored_metrics(tmp_path, monkeypatch):
+    """ANTI-OVERWRITE, with deliberately DIFFERENT values so a merge bug cannot pass by coincidence.
+
+    The species cell shares its (organism, drug) key with the SCORED cell -- the documented shared-key
+    trap. If the loader fed `load_scored()` instead of its own namespace, the published sens would be
+    replaced by a composition field. Here the scored sens (0.467) and the species block's
+    on-scored-species sens (1.000) are deliberately far apart, so a merge would be unmistakable.
+    """
+    sp = mod.build_species_block(_sp_cell())
+    scored_like = {"state": "SCORED", "sens": 0.467, "spec": 0.9, "acc": 0.683,
+                   "tp": 14, "fp": 3, "tn": 27, "fn": 16}
+    merged = dict(scored_like)
+    merged["species_composition"] = sp
+    # the published metrics must survive untouched beside the block
+    assert merged["sens"] == 0.467 and merged["tp"] == 14 and merged["fn"] == 16
+    # and the species block's own, very different, figure is reachable only under its own key
+    assert merged["species_composition"]["on_scored_species_only"]["sens"] == 1.0
+    assert merged["sens"] != merged["species_composition"]["on_scored_species_only"]["sens"]
+
+
+def test_the_committed_card_has_the_species_section_and_the_meropenem_row():
+    """The rendered .md is the human-facing surface -- a block carried only in JSON is not a disclosure."""
+    md = (mod.WIKI / "decoder_validation_report_card.md")
+    if not md.exists():
+        pytest.skip("card not built")
+    text = md.read_text(encoding="utf-8")
+    assert "## Species-composition disclosure" in text
+    assert "38% K. aerogenes" in text
+    assert "all 16 of its false negatives are those off-species isolates" in text
+    assert "re-scoring is a user authority call" in text
+
+
+def test_the_committed_card_attaches_species_blocks_ONLY_to_mixed_cohorts():
+    """Campylobacter and the four E. coli cohorts match what they were scored as, so they must carry no
+    block at all -- the layer discloses a mismatch, it does not annotate every cell."""
+    j = mod.WIKI / "decoder_validation_report_card.json"
+    if not j.exists():
+        pytest.skip("card not built")
+    cells = json.loads(j.read_text(encoding="utf-8"))["cells"]
+    with_block = {(c["organism"], c["drug"]) for c in cells if c.get("species_composition")}
+    assert with_block, "no species blocks attached at all -- the layer is not wired"
+    assert all(o == "klebsiella" for o, _ in with_block), with_block
+    merop = [c for c in cells if (c["organism"], c["drug"]) == ("klebsiella", "meropenem")][0]
+    assert merop["species_composition"]["n_off_species"] == 23
+    assert merop["species_composition"]["false_negatives_off_species"] == 16
+    # ...and the published metrics are untouched beside it
+    assert merop["sens"] == 0.467 and merop["fn"] == 16

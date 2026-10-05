@@ -1,4 +1,4 @@
-# Decoder-suite provenance-disjoint validation report card — 2026-10-03
+# Decoder-suite provenance-disjoint validation report card — 2026-10-05
 
 Standing trust surface for the shipped deterministic AMR decoders (Anchor-4). Rows are the DEPLOYED-CLAIM surface (`dna_decode/data/shipped_decoder_surface.py`) unioned with observed scored/census cells. Each cell is the DEPLOYED `call_resistance(organism, drug)` rule scored on a FRESH, leakage-checked, **provenance-disjoint** NCBI-PD cohort (submitters OUTSIDE NARMS/CDC/FDA/GenomeTrakr/PulseNet/USDA).
 
@@ -82,6 +82,25 @@ The error is NOT directional: a 97%-single-source cipro cell reads PESSIMISTIC (
 | klebsiella | tetracycline | 60 | 2 | 50% | PRJNA278886 | 0 |
 
 **3 of 10** cells rest on ONE BioProject holding ≥80% of the cohort.
+
+
+## Species-composition disclosure (is the cohort the SPECIES it was scored as?)
+
+The tables above ask how good the evidence for a number is. This asks a question PRIOR to all of them: **is the cohort even the species the cell was scored as?** A cohort directory named `klebsiella_*` scored with `-O Klebsiella_pneumoniae` is consistent at the GENUS level and can be silently wrong at the SPECIES level, and nothing checked that until 2026-10-05.
+
+WHY IT MATTERS, measured (`wiki/meropenem_fn16_diagnosis_2026-10-05.md`): `klebsiella x meropenem` is **38% K. aerogenes** (23 of 60) scored as K. pneumoniae, and **all 16 of its false negatives are those off-species isolates** - zero are K. pneumoniae, on which sensitivity is 12/12. Its published sens 0.467 is substantially a measurement of cohort composition. The cell's previously recorded explanation - that the rule is blind to porin loss - is false: the rule counts porin truncations, and these isolates have none.
+
+**These rows change no metric and no cell state.** An `on scored species only` figure is a MEASUREMENT of the expected-species subset, not a replacement - the provdisjoint artifacts are frozen units of the reproducibility freeze, so re-scoring is a user authority call. A cohort that matches what it was scored as gets NO row here rather than a reassuring one. Species are each assembly's own GenBank `ORGANISM` value - the **submitter's** assertion, not a wet-lab identification.
+
+| organism | drug | scored as | N | off-species | species present | FN off-species | on scored species only |
+|---|---|---|---|---|---|---|---|
+| klebsiella | ceftriaxone | `Klebsiella_pneumoniae` | 60 | 2 (3%) | 58x *Klebsiella pneumoniae*, 2x *Klebsiella aerogenes* | *withheld* | *withheld* |
+| klebsiella | ciprofloxacin | `Klebsiella_pneumoniae` | 60 | 2 (3%) | 58x *Klebsiella pneumoniae*, 2x *Klebsiella aerogenes* | **0/1** | N=58, sens 0.967 |
+| klebsiella | gentamicin | `Klebsiella_pneumoniae` | 60 | 1 (2%) | 59x *Klebsiella pneumoniae*, 1x *Klebsiella aerogenes* | *withheld* | *withheld* |
+| klebsiella | meropenem | `Klebsiella_pneumoniae` | 60 | 23 (38%) | 37x *Klebsiella pneumoniae*, 23x *Klebsiella aerogenes* | **16/16** | N=37, sens 1.0 |
+| klebsiella | tetracycline | `Klebsiella_pneumoniae` | 60 | 2 (3%) | 58x *Klebsiella pneumoniae*, 2x *Klebsiella aerogenes* | *withheld* | *withheld* |
+
+**3** cohort(s) have their outcome attribution WITHHELD because their cached AMRFinder runs are incomplete - attributing outcomes on a partial run set would compute a rate over a silently-shrunken denominator. Their composition is unaffected: it needs only the assemblies, which are complete.
 
 
 ## Catalog-completeness disclosure (L2 doubt — can the RULE even represent it?)
