@@ -184,9 +184,23 @@ def split_units_for(key: str) -> frozenset[str]:
 def organism_transfer_is_unmeasured() -> tuple[str, ...]:
     """The regimes carrying NO held-out-organism evidence.
 
-    Today this is every row, and that is the headline F1 exists to make machine-readable: the project
-    has never measured a cross-organism number. Callers should treat a SHRINKING return value as the
-    event worth noticing, not the current length.
+    Today this is every row of THIS TABLE, which is the headline F1 exists to make machine-readable.
+    Callers should treat a SHRINKING return value as the event worth noticing, not the current length.
+
+    SCOPE CORRECTION 2026-10-05 -- the earlier wording here said "the project has never measured a
+    cross-organism number", and that is FALSE as a project-level claim. One genuine cross-kingdom
+    transfer measurement exists and predates this table: `wiki/essentiality_e4_transfer_2026-07-28.json`
+    applies the E. coli-tuned conserved-core essentiality decoder UNCHANGED to human (BAGEL CEGv2 vs
+    NEGv1, 681 essential / 899 non) and reports AUROC 0.5805 against a 0.5 null, with spec 0.998 and
+    sens 0.157 -- high-precision, very-low-recall. Its mechanism is measured, not guessed: the UNIVERSAL
+    core (ribosome / tRNA-synthetase / translation / polymerase) transfers cross-kingdom, while the
+    human-specific core is missed entirely (proteasome 0/53, spliceosome 0/49).
+
+    So the honest claim is "no regime IN THIS TABLE carries held-out-organism evidence", NOT "the project
+    has never measured one". The essentiality cell's transfer number is simply not represented as a
+    regime row. DO NOT read a 0.911 human AUROC anywhere as transfer -- that figure
+    (`essentiality_e3_human_2026-07-28.json`) is a WITHIN-human 5-fold CV on human labels, trained and
+    tested on human, and misreading it as cross-organism transfer is a live trap.
     """
     return tuple(r.key for r in REGIMES
                  if r.organism_transfer == ORGANISM_TRANSFER_UNMEASURED)

@@ -72,7 +72,11 @@ def main() -> int:
     unmeasured = organism_transfer_is_unmeasured()
     print(f"\n{len(unmeasured)} of {len(rows)} regimes carry NO held-out-ORGANISM transfer evidence.")
     if len(unmeasured) == len(rows):
-        print("  That is every row: the project has never measured a cross-organism number.")
+        print("  That is every row OF THIS TABLE. NOT a project-level claim: one genuine")
+        print("  cross-kingdom number exists outside it -- the E. coli conserved-core essentiality")
+        print("  decoder applied UNCHANGED to human scores AUROC 0.5805 (spec 0.998 / sens 0.157),")
+        print("  universal core transfers, human-specific core missed (proteasome 0/53,")
+        print("  spliceosome 0/49) -- wiki/essentiality_e4_transfer_2026-07-28.json.")
     print("  `split unit` is an UNORDERED fact -- a cross-protein split and a leave-one-study split")
     print("  are different questions, not stronger/weaker versions of one.")
 
