@@ -20,7 +20,17 @@ from __future__ import annotations
 
 import argparse
 import re
+import sys
 from pathlib import Path
+
+# This script PRINTS bullet heads verbatim, and CLAUDE.md carries 22 distinct non-latin1 characters
+# (beta, em-dashes, arrows). Windows' default stdout is cp1252, so without this the run dies with
+# UnicodeEncodeError *partway through printing* -- having already emitted some rows, which is the
+# dangerous shape: truncated output reads as the complete answer. Measured 2026-10-05: it crashed on
+# the 3rd row and only `PYTHONIOENCODING=utf-8` got a full report, which a reader has to know to set.
+# errors="replace" is deliberate -- a mangled glyph in a head is a cosmetic loss, a dead report is not.
+if hasattr(sys.stdout, "reconfigure"):          # py3.7+; guard keeps a redirected stream safe
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parent.parent
 CLAUDE_MD = ROOT / "CLAUDE.md"
