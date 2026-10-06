@@ -176,6 +176,126 @@ def test_cli_imports_the_shared_reader_rather_than_defining_its_own():
     assert "header.index(\"symbol\")" not in src, "the CLI must no longer parse the table itself"
 
 
+# --------------------------------------------------------------------------------------------------
+# the reader paths the real rungs actually use — exercised OFFLINE, since every real-data test above is
+# skipped on a host without D: and these branches would then be wholly uncovered
+# --------------------------------------------------------------------------------------------------
+def test_a_GZIPPED_feature_table_reads_the_same_as_a_plain_one(tmp_path):
+    """The committed E. coli annotation is `ecoli_k12_feature_table.txt.gz`, so the gzip branch is the
+    one the published 0.3125 was produced through -- and without this it is only covered by a D:-gated
+    test."""
+    body = ("# feature\tsymbol\tname\n"
+            "CDS\tgyrA\tDNA gyrase subunit A\n"
+            "CDS\tparC\ttopoisomerase IV subunit A\n")
+    plain = tmp_path / "ft.txt"
+    plain.write_text(body, encoding="utf-8")
+    gz = tmp_path / "ft.txt.gz"
+    gz.write_bytes(gzip.compress(body.encode("utf-8")))
+    assert aj.load_annotation(str(gz), "ncbi_feature_table") == \
+        aj.load_annotation(str(plain), "ncbi_feature_table")
+    assert aj.load_annotation(str(gz), "ncbi_feature_table")["gyrA"] == "DNA gyrase subunit A"
+
+
+def test_gene_info_keeps_protein_coding_only_and_keys_by_GeneID(tmp_path):
+    """The human rung's annotation shape. Only the missing-column REFUSAL was pinned; this pins what the
+    reader actually returns -- keyed by GeneID (not Symbol, which is what the ENTREZ_ID join depends on)
+    and with the description appended to the symbol so the decoder reads both."""
+    p = tmp_path / "gi.tsv"
+    p.write_text("#tax_id\tGeneID\tSymbol\tdescription\ttype_of_gene\n"
+                 "9606\t6122\tRPL3\tribosomal protein L3\tprotein-coding\n"
+                 "9606\t999\tMIR1\tmicroRNA 1\tncRNA\n", encoding="utf-8")
+    ann = aj.load_annotation(str(p), "ncbi_gene_info")
+    assert list(ann) == ["6122"], "keyed by GeneID; the ncRNA row must be dropped"
+    assert ann["6122"] == "RPL3 ribosomal protein L3"
+
+
+def test_a_feature_table_whose_header_LACKS_a_column_raises_rather_than_yielding_partial_rows(tmp_path):
+    """`iter_feature_table` returns silently when `symbol`/`name` are absent -- a reader that parsed
+    NOTHING is indistinguishable from one that found nothing, which is the recorded trap. The empty-dict
+    refusal is what converts it into an error."""
+    p = tmp_path / "ft.txt"
+    p.write_text("# feature\tsymbol\tproduct\nCDS\tgyrA\tDNA gyrase subunit A\n", encoding="utf-8")
+    assert list(aj.iter_feature_table(str(p))) == [], "no `name` column -> the reader yields nothing"
+    with pytest.raises(aj.AnnotationError, match="ZERO entries"):
+        aj.load_annotation(str(p), "ncbi_feature_table")
+
+
+# --------------------------------------------------------------------------------------------------
+# normalisation — the remaining key spaces and the degenerate inputs
+# --------------------------------------------------------------------------------------------------
+def test_entrez_ids_lose_leading_zeros_but_an_all_zero_id_is_never_emptied():
+    assert aj.normalise_key("00123", "entrez_gene_id") == "123"
+    assert aj.normalise_key("123", "entrez_gene_id") == "123"
+    # `lstrip("0")` alone would turn these into "", which joins to nothing and reads as a missing label
+    assert aj.normalise_key("0", "entrez_gene_id") == "0"
+    assert aj.normalise_key("000", "entrez_gene_id") == "000"
+
+
+def test_locus_tag_padding_only_touches_a_NUMERIC_tail():
+    """Zero-padding a non-numeric tail would invent an id. Dashes are folded to underscores because both
+    spellings occur in the wild; everything else is uppercased and left alone."""
+    assert aj.normalise_key("PA14_abc", "pa14_locus_tag") == "PA14_ABC"
+    assert aj.normalise_key("pa14abc", "pa14_locus_tag") == "PA14ABC", "no separator -> no padding"
+    assert aj.normalise_key("sausa300-12", "sausa300_locus_tag") == "SAUSA300_0012"
+
+
+def test_a_blank_identifier_normalises_to_empty_in_EVERY_key_space_and_joins_to_nothing():
+    """A blank id must not become a join key. The blank check runs before the key-space dispatch, so it
+    is the one input that is handled identically everywhere -- including for a space with no rule."""
+    for space in ("gene_symbol", "systematic_orf", "entrez_gene_id", "pa14_locus_tag",
+                  "sausa300_locus_tag", "a_key_space_with_no_rule"):
+        assert aj.normalise_key("   ", space) == "", space
+    r = aj.join_labels(_ann(3), ["g0", "g1"], ["", "  "], key_space="gene_symbol",
+                       min_join_rate=0.0)
+    assert r.n_joined == 2 and r.n_unjoined == 2, "the two blank ids must count as UNJOINED"
+
+
+# --------------------------------------------------------------------------------------------------
+# join_labels — the remaining refusals, the override, and an asymmetry worth knowing about
+# --------------------------------------------------------------------------------------------------
+def test_no_labels_at_all_refuses():
+    """Sibling of the empty-annotation and zero-id refusals: 0/0 is not a join rate."""
+    with pytest.raises(aj.AnnotationError, match="empty label set"):
+        aj.join_labels(_ann(2), [], [], key_space="gene_symbol")
+
+
+def test_an_explicit_min_join_rate_is_HONOURED_in_both_directions():
+    """The floor is a parameter, so a caller can tighten or loosen it -- and a parameter that was
+    silently ignored would leave the documented default as the only real bar."""
+    ann = _ann(8)
+    ess = [f"g{i}" for i in range(8)]
+    non = ["absent1", "absent2"]                      # 8/10 = 0.80, which clears the 0.70 default
+    assert aj.join_labels(ann, ess, non, key_space="gene_symbol").wall is None
+    strict = aj.join_labels(ann, ess, non, key_space="gene_symbol", min_join_rate=0.95)
+    assert strict.wall == aj.WALL_JOIN_RATE_BELOW_FLOOR and strict.rows == []
+    loose = aj.join_labels(_ann(1), ["g0"], ["x1", "x2", "x3"], key_space="gene_symbol",
+                           min_join_rate=0.0)
+    assert loose.join_rate == 0.25 and loose.wall is None and len(loose.rows) == 1
+
+
+def test_an_annotation_side_normalisation_COLLISION_is_FIRST_wins():
+    """Worth pinning because it is the OPPOSITE of `load_annotation`'s documented last-wins duplicate
+    rule: there the later ROW of a duplicated symbol wins, here the first annotation entry that
+    normalises to a given key wins (`setdefault`). Two ids that differ only in zero-padding collapse to
+    one entry, and which product text survives decides the score."""
+    ann = {"SAUSA300_1": "first text", "SAUSA300_0001": "second text"}
+    r = aj.join_labels(ann, ["SAUSA300_0001"], ["SAUSA300_9999"],
+                       key_space="sausa300_locus_tag", min_join_rate=0.0)
+    assert r.rows == [("SAUSA300_0001", "first text", True)]
+
+
+def test_composition_is_reported_even_when_NOTHING_joined():
+    """Mirror of the nothing-unjoined case. A rung that joined zero labels still reports the makeup of
+    what it failed to join -- that is the only diagnostic available on a total-miss rung."""
+    r = aj.join_labels(_ann(1), ["x1"], ["x2"], key_space="gene_symbol")
+    assert r.wall == aj.WALL_JOIN_RATE_BELOW_FLOOR
+    c = r.composition
+    assert c["joined_n"] == 0 and c["unjoined_n"] == 2
+    assert c["joined_essential_fraction"] is None
+    assert c["unjoined_essential_fraction"] == 0.5
+    assert c["essential_enrichment_in_joined"] is None, "no comparison is possible, so no number"
+
+
 @pytest.mark.skipif(not _HAVE_ECOLI, reason="D: essentiality cache absent")
 def test_promoted_reader_matches_the_old_cli_helper_on_the_REAL_table():
     """Byte-identical output on real data, not just on a fixture."""

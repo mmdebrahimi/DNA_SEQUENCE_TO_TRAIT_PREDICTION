@@ -147,6 +147,104 @@ def test_self_check_passes_offline():
     assert w0._self_check() == 0
 
 
+# --------------------------------------------------------------------------------------------------
+# the remaining refusals in `verify` and `detect_header_row`
+# --------------------------------------------------------------------------------------------------
+def test_a_table_with_no_KEY_column_candidate_is_unverified():
+    """The sibling of the no-label-column refusal, and the one that applies to tsv sources too: a table
+    whose header names nothing gene-ish cannot be joined to an annotation, so no parser may be written
+    against it. Without this the branch is unreachable in tests, because every other fixture here happens
+    to carry a `GENE` column."""
+    s = w0.summarize_table([["Score", "Value"], ["1", "2"]])
+    assert s["key_column_candidates"] == [] and s["key_column_chosen"] is None
+    assert s["n_keys"] == 0, "no key column -> no keys extracted, rather than column 0 by default"
+    ok, why = w0.verify(s, {"kind": "tsv"})
+    assert not ok and "no key-column candidate" in why
+
+
+def test_header_detection_skips_None_rows_and_honours_its_window_and_min_cols():
+    """`openpyxl` in read_only mode yields None for an entirely empty row, which is the real shape this
+    has to survive. And the scan window is a bound, not a search: a header below it is reported as
+    'cannot tell' rather than found, which is the honest failure for a sheet with a long preamble."""
+    assert w0.detect_header_row([None, ["Gene", "Call"], ["a", "b"]]) == 1
+    buried = [[None, None]] * 11 + [["Gene", "Call"], ["a", "b"]]
+    assert w0.detect_header_row(buried) is None, "past the 10-row scan window -> cannot tell"
+    assert w0.detect_header_row(buried, scan=20) == 11, "...and the window is a parameter"
+    # min_cols is what separates a title from a header, so raising it must be able to reject a real one
+    assert w0.detect_header_row([["Gene", "Call"], ["a", "b"]], min_cols=3) is None
+
+
+# --------------------------------------------------------------------------------------------------
+# IO + the sweep's promise never to abort
+# --------------------------------------------------------------------------------------------------
+def test_an_UNREADABLE_file_is_reported_as_read_failed_and_carries_no_schema(tmp_path, monkeypatch):
+    """"report, never abort the sweep" -- an on-disk file that cannot be parsed must not take down the
+    other five sources, and it must not leave a schema block behind that a parser could be written
+    against. A present-but-broken file is a different state from an absent one and is named differently."""
+    monkeypatch.setattr(w0, "CACHE", tmp_path)
+    (tmp_path / "broken.xlsx").write_text("this is not a workbook", encoding="utf-8")
+    rec = w0.probe_source("broken", {"local": "broken.xlsx", "kind": "xlsx", "organism": "O",
+                                     "strain": "s", "key_space": "k",
+                                     "technology": "transposon_insertion", "url": None,
+                                     "recorded_in": "r"})
+    assert rec["fetch_outcome"] == "read_failed"
+    assert rec["w0_verified"] is False
+    assert "BadZipFile" in rec["reason"] or "zip" in rec["reason"].lower()
+    assert "schema" not in rec, "a file that could not be read has no pinned schema"
+
+
+def test_read_rows_handles_a_GZIPPED_tsv(tmp_path):
+    """`Homo_sapiens.gene_info.gz` is the real gzipped source in this set."""
+    import gzip as _gz
+
+    p = tmp_path / "t.tsv.gz"
+    p.write_bytes(_gz.compress(b"GENE\tID\nRPL3\t6122\n"))
+    rows, sheets = w0.read_rows(p, "tsv")
+    assert rows == [["GENE", "ID"], ["RPL3", "6122"]]
+    assert sheets == [], "sheet names are an xlsx-only concept"
+
+
+# --------------------------------------------------------------------------------------------------
+# the CLI exit contract — stated in the module docstring, previously unexercised
+# --------------------------------------------------------------------------------------------------
+def _one_absent_source(monkeypatch, tmp_path, url=None):
+    monkeypatch.setattr(w0, "CACHE", tmp_path / "nonexistent_cache")
+    monkeypatch.setattr(w0, "SOURCES", {
+        "only": {"local": "absent.tsv", "kind": "tsv", "organism": "O", "strain": "s",
+                 "key_space": "k", "technology": "crispr_ko", "url": url, "recorded_in": "r"}})
+
+
+def test_the_probe_exits_ZERO_on_an_unverified_source_because_it_is_a_REPORT(tmp_path, monkeypatch):
+    """Exit 0 always for the local pass. A report that failed the build on an unfetched file would make
+    'absent_locally' look like an error, when it means 'not fetched yet'."""
+    _one_absent_source(monkeypatch, tmp_path)
+    assert w0.main(["--no-emit"]) == 0
+
+
+def test_require_all_is_the_GATE_and_exits_one(tmp_path, monkeypatch):
+    """The same run, opted into gate semantics. Both halves are needed: an exit code that never varies
+    cannot gate anything, and one that always fails cannot be a report."""
+    _one_absent_source(monkeypatch, tmp_path)
+    assert w0.main(["--no-emit", "--require-all"]) == 1
+
+
+def test_fetch_remote_records_that_it_did_NOT_fetch_and_never_invents_one(tmp_path, monkeypatch):
+    """The flag exists so a reader can see the route was considered; it must not imply a fetch happened.
+    Asserted on the EMITTED artifact, which also covers the emit path and the artifact's own honesty
+    fields on a host where the committed artifact may be absent."""
+    _one_absent_source(monkeypatch, tmp_path, url="http://example.invalid/labels.tsv")
+    monkeypatch.setattr(w0, "WIKI", tmp_path)
+    monkeypatch.setattr(w0, "ROOT", tmp_path)     # main prints the artifact path relative to ROOT
+    assert w0.main(["--fetch-remote"]) == 0
+    art = json.loads(next(tmp_path.glob("essentiality_ladder_w0_probe_*.json"))
+                     .read_text(encoding="utf-8"))
+    assert art["record"] == "essentiality-ladder-w0-probe-v1"
+    assert art["n_verified"] == 0 and art["n_sources"] == 1
+    assert "NOT IMPLEMENTED" in art["sources"][0]["remote_attempt"]
+    assert "never invents one" in art["sources"][0]["remote_attempt"]
+    assert any("HYPOTHESIS" in x for x in art["honest_limits"])
+
+
 def test_every_declared_source_names_where_it_is_recorded():
     """A source with no in-repo provenance pointer is a remembered claim."""
     for sid, d in w0.SOURCES.items():

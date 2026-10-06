@@ -117,6 +117,32 @@ def test_the_detail_states_that_this_is_a_floor_not_an_estimate():
     assert "0.25" in detail["floor_is_a_FLOOR_not_an_estimate"]
 
 
+def test_a_rung_that_MISSES_NOTHING_gets_no_adjustment_and_reports_no_fraction():
+    """The degenerate end of the subtraction, and the one that divides by zero if unguarded: with no
+    missed essentials there is no gap to attribute, so the floor is empty, the adjusted lift must EQUAL
+    the raw one, and the fraction-of-missed must be None rather than 0.0 (which would read as a measured
+    'none of the miss is phrasing' on a rung that had no miss to apportion)."""
+    ess = [("E1", "DNA polymerase delta 1"), ("E2", "DNA helicase")]
+    non = [("N1", "olfactory receptor")]
+
+    raw, adj, detail = pf.coverage_lift_adjusted(ess, non, lambda g, _t: 1.0 if g.startswith("E") else 0.0)
+    assert raw == 1.0 and adj == raw, "nothing was removed, so nothing may move"
+    assert detail["n_essential_missed"] == 0
+    assert detail["n_phrasing_floor"] == 0
+    assert detail["phrasing_floor_fraction_of_missed"] is None
+
+
+def test_the_floor_is_None_SAFE_on_a_missing_description():
+    """Real annotations carry empty and missing product text; a floor pass that raised on one would take
+    down the whole rung rather than simply not matching."""
+    assert pf.content_words(None) == set()
+    assert pf.is_phrasing_floor(None) is False
+    assert pf.is_phrasing_floor("") is False
+    # a gene whose description is missing simply does not match -- and the gene symbol is searched too,
+    # which is why the pair is joined before matching rather than the description alone
+    assert pf.phrasing_floor_genes([("POLD1", None), ("MCM2", "DNA helicase")]) == {"MCM2"}
+
+
 # --------------------------------------------------------------------------------------------------
 # the promotion is real, and the published number reproduces
 # --------------------------------------------------------------------------------------------------

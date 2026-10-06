@@ -185,3 +185,71 @@ def test_preregistered_records_why_auroc_was_demoted_and_the_eukaryote_tie():
     assert "base-rate robust" in tl.PREREGISTERED["primary_metric"]
     assert "tie-mass" in tl.PREREGISTERED["secondary_metric"]
     assert "equal lineage depth" in tl.PREREGISTERED["eukaryote_tie"]
+
+
+# --------------------------------------------------------------------------------------------------
+# when a CLIFF must be REFUSED — the guards on the strongest claim the ladder can make
+#
+# DOMAIN_CLIFF is the verdict that would answer the project's north-star question, so the cases where
+# it must NOT fire matter at least as much as the one where it does. Each of the three below reaches
+# SMOOTH_DECAY, and each for a different structural reason.
+# --------------------------------------------------------------------------------------------------
+def test_a_cliff_needs_TWO_bacterial_rungs_to_show_they_sit_together():
+    """With one bacterial rung there is no 'the bacteria hold' observation to make -- a single point
+    cannot be a plateau, so a eukaryote drop away from it is decay, not a boundary effect. This is
+    exactly the shape the committed two-rung state would have if min_rungs were lowered."""
+    rows = [_r("ecoli", 8, 0.31), _r("scerevisiae", 1, 0.15), _r("human", 1, 0.16)]
+    v = tl.classify_ladder(rows, cliff_drop=0.10, plateau_tol=0.05, min_rungs=3)
+    assert v.verdict == tl.SMOOTH_DECAY_WITH_DISTANCE
+    assert "bacterial_spread" not in v.detail, "no plateau was established, so none may be reported"
+
+
+def test_an_all_bacterial_ladder_can_decay_without_any_eukaryote_class():
+    """The PRIMARY test's own path: `bacterial_subladder_verdict` passes only the three bacterial rungs,
+    so the eukaryote list is EMPTY and the cliff branch must be skipped rather than divided by nothing."""
+    rows = [_r("ecoli", 8, 0.31), _r("paeruginosa", 5, 0.22), _r("saureus", 2, 0.12)]
+    v = tl.classify_ladder(rows, cliff_drop=0.10, plateau_tol=0.05, min_rungs=3)
+    assert v.verdict == tl.SMOOTH_DECAY_WITH_DISTANCE
+    assert v.detail["lifts_by_depth"] == [0.31, 0.22, 0.12], "ordered nearest-first"
+
+
+def test_a_eukaryote_drop_SMALLER_than_cliff_drop_is_scatter_not_a_cliff():
+    """What `cliff_drop` is for: the bacterial rungs DO sit together here and the eukaryote IS lower, but
+    by 0.07 against a 0.10 bar -- under twice the noise floor, so it is graded decay, not a boundary."""
+    rows = [_r("ecoli", 8, 0.31), _r("paeruginosa", 5, 0.30), _r("saureus", 2, 0.29),
+            _r("human", 1, 0.22)]
+    v = tl.classify_ladder(rows, cliff_drop=0.10, plateau_tol=0.05, min_rungs=3)
+    assert v.verdict == tl.SMOOTH_DECAY_WITH_DISTANCE
+    # and raising the bar's sensitivity to that same drop DOES make it a cliff -- so the refusal above is
+    # about the threshold, not about an unreachable branch
+    assert tl.classify_ladder(rows, cliff_drop=0.06, plateau_tol=0.05,
+                              min_rungs=3).verdict == tl.DOMAIN_CLIFF
+
+
+def test_bar_sensitivity_does_NOT_fire_when_both_lifts_land_in_the_SAME_band():
+    """The other half of the bar-sensitivity contract, and the one that keeps it usable: a refusal that
+    fired whenever an adjusted lift merely DIFFERED would make every ladder INDETERMINATE, since the
+    adjustment always moves the number. Only a BAND change may block a verdict -- here both the raw and
+    the adjusted human lift sit in the middle band, so the run proceeds."""
+    rows = [_r("ecoli", 8, 0.31, adj=0.32), _r("paeruginosa", 5, 0.30, adj=0.305),
+            _r("human", 1, 0.24, adj=0.245)]
+    v = tl.classify_ladder(rows, cliff_drop=0.10, plateau_tol=0.05, min_rungs=3)
+    assert v.verdict != tl.INDETERMINATE_BAR_SENSITIVE
+    assert "bar_sensitive" not in v.detail
+
+
+# --------------------------------------------------------------------------------------------------
+# re-rooting the ladder
+# --------------------------------------------------------------------------------------------------
+def test_depth_from_reference_honours_an_EXPLICIT_reference_organism():
+    """The default reference is the tuning organism, but the parameter exists so the same derivation can
+    be re-rooted (e.g. to ask how far the ladder's rungs are from each other). A parameter that was
+    silently ignored would report E. coli depths under another organism's name."""
+    sa = tl.RUNGS_BY_KEY["saureus"]
+    pa = tl.RUNGS_BY_KEY["paeruginosa"]
+    # rooted at E. coli (default) P. aeruginosa is the NEAR rung at 5; rooted at S. aureus it is 2,
+    # because they share only 'cellular organisms; Bacteria'
+    assert tl.depth_from_reference(pa) == 5
+    assert tl.depth_from_reference(pa, sa) == 2
+    # the reference's own depth is its rank count under whichever root is passed
+    assert tl.depth_from_reference(sa, sa) == len(sa.ranks())

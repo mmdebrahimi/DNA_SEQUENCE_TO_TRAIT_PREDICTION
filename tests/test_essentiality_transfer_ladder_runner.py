@@ -163,6 +163,75 @@ def test_the_duplicate_symbol_rule_is_what_reproduces_the_published_numbers():
     assert lift("first") == 0.3122, "and the alternative must measurably differ, else the rule is moot"
 
 
+# --------------------------------------------------------------------------------------------------
+# score_rung, exercised OFFLINE on a synthetic annotation
+#
+# Every test above that runs the per-rung pipeline is D:-gated, so on a host without the cache the
+# scoring function itself — the thing that produces every published number — had no coverage at all.
+# A synthetic annotation plus the REAL decoder needs neither the cache nor the network.
+# --------------------------------------------------------------------------------------------------
+_ESS = {"gyrA": "DNA gyrase subunit A",
+        "dnaE": "DNA polymerase III subunit alpha",
+        "rpoB": "DNA-directed RNA polymerase subunit beta"}
+_NON = {"lacZ": "beta-galactosidase", "xylA": "xylose isomerase", "melA": "alpha-galactosidase"}
+
+
+def test_score_rung_emits_the_full_documented_record_on_a_scorable_rung():
+    rec = run.score_rung(tl.RUNGS_BY_KEY["ecoli"], {**_ESS, **_NON},
+                         list(_ESS), list(_NON), "gene_symbol")
+    assert rec["scored"] is True and "wall" not in rec
+    # the fields the artifact, the memo table and the report card all read
+    for k in ("depth", "class_sourcing_mode", "join", "n_essential", "n_nonessential", "base_rate",
+              "coverage_essential", "coverage_nonessential", "coverage_lift",
+              "coverage_lift_adjusted", "precision_where_fires", "phrasing_floor",
+              "null_mean", "null_p95", "null_max",
+              "auroc_SECONDARY_not_cross_rung_comparable"):
+        assert k in rec, k
+    assert "auroc" not in rec, "the bare key must never appear on a per-rung record"
+    assert rec["base_rate"] == 0.5
+    assert rec["coverage_essential"] == 1.0 and rec["coverage_nonessential"] == 0.0
+    assert rec["coverage_lift"] == 1.0, "the real decoder fires on all three, on none of the others"
+
+
+def test_score_rung_on_a_SUB_FLOOR_join_returns_a_wall_and_no_metric_at_all():
+    """The early return inside `score_rung`, as distinct from `walled_record` (which is the path for a
+    rung whose labels never arrived). Here labels DID arrive and failed to join -- the costlier case,
+    because every number downstream would have looked computed."""
+    rec = run.score_rung(tl.RUNGS_BY_KEY["saureus"], {"gyrA": "DNA gyrase subunit A"},
+                         ["gyrA"], ["absent1", "absent2", "absent3"], "gene_symbol")
+    assert rec["scored"] is False
+    assert rec["wall"] == "WALL_JOIN_RATE_BELOW_FLOOR"
+    assert rec["join"]["join_rate"] == 0.25
+    for forbidden in ("coverage_lift", "coverage_essential", "coverage_lift_adjusted", "null_max",
+                      "precision_where_fires", "auroc_SECONDARY_not_cross_rung_comparable"):
+        assert forbidden not in rec, forbidden
+
+
+def test_precision_where_fires_is_None_when_the_decoder_never_fires_at_all():
+    """0/0 is not a precision. A rung the catalogue is entirely silent on must report an absent number
+    beside a real 0.0 coverage_lift -- not a 0.0 precision, which would read as 'it fired and was always
+    wrong'."""
+    rec = run.score_rung(tl.RUNGS_BY_KEY["ecoli"], _NON, list(_NON)[:2], list(_NON)[2:],
+                         "gene_symbol")
+    assert rec["scored"] is True
+    assert rec["coverage_essential"] == 0.0 and rec["coverage_lift"] == 0.0
+    assert rec["precision_where_fires"] is None
+
+
+# --------------------------------------------------------------------------------------------------
+# the SHARED auroc definition
+# --------------------------------------------------------------------------------------------------
+def test_the_shared_auroc_puts_ties_at_one_half_and_a_full_inversion_at_zero():
+    """The docstring's tie rule, which matters here more than usual: 83.1% of human essentials score
+    EXACTLY zero, so the tie mass is most of what this statistic sees -- and the report card imports this
+    same function, so a drift in tie handling would move a published number in two places at once."""
+    assert run.auroc([1.0, 1.0], [1.0, 1.0]) == 0.5, "all ties -> 0.5, not 0.0 or 1.0"
+    assert run.auroc([0.0, 0.0], [1.0, 1.0]) == 0.0, "fully inverted -> 0.0"
+    assert run.auroc([1.0, 1.0], [0.0, 0.0]) == 1.0
+    # half the positives tied with the negatives, half above -> 0.75
+    assert run.auroc([0.0, 1.0], [0.0, 0.0]) == 0.75
+
+
 def test_an_invalid_duplicate_rule_raises():
     from dna_decode.essentiality import annotation_join as aj
     with pytest.raises(aj.AnnotationError, match="on_duplicate"):

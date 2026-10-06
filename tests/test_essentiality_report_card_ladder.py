@@ -45,6 +45,43 @@ def test_no_ladder_artifact_yields_no_rows():
     assert card.ladder_rows(None) == []
 
 
+def test_no_ladder_artifact_in_the_wiki_dir_yields_no_rows(tmp_path, monkeypatch):
+    """`ladder_rows(None)` is pinned above; this pins the LOOKUP that produces that None. The card is
+    read-only and never triggers a ladder run, so on a host that has never run the ladder it must append
+    nothing rather than fail -- and `load_ladder` is the only thing standing between those two outcomes."""
+    monkeypatch.setattr(card, "W", tmp_path)
+    (tmp_path / "essentiality_report_card.json").write_text("{}", encoding="utf-8")
+    assert card.load_ladder() is None
+    assert card.ladder_rows(card.load_ladder()) == []
+
+
+def test_the_NEWEST_ladder_artifact_is_the_one_the_card_reports(tmp_path, monkeypatch):
+    """Ladder artifacts are date-stamped and accrue, so a re-run must supersede rather than coexist. If
+    the oldest won, the card would keep reporting a verdict the current decoder no longer produces."""
+    monkeypatch.setattr(card, "W", tmp_path)
+    old = _ladder_art()
+    old["rungs"] = [dict(old["rungs"][0], coverage_lift=0.9999)]
+    (tmp_path / "essentiality_transfer_ladder_2026-10-05.json").write_text(
+        json.dumps(old), encoding="utf-8")
+    (tmp_path / "essentiality_transfer_ladder_2026-10-06.json").write_text(
+        json.dumps(_ladder_art()), encoding="utf-8")
+    rows = card.ladder_rows(card.load_ladder())
+    assert len(rows) == 3, "the newer artifact's three rungs, not the older one's single rung"
+    assert "0.9999" not in rows[0]["metric"]
+    assert "0.3125" in rows[0]["metric"]
+
+
+def test_a_walled_rung_with_no_recorded_route_says_so_rather_than_rendering_blank():
+    """`route_tried` is the only diagnostic a walled row carries, so its absence must be visible as an
+    absence. An empty string here would read as 'nothing was tried'."""
+    art = _ladder_art()
+    art["rungs"] = [r for r in art["rungs"] if not r.get("scored")]
+    art["rungs"][0].pop("route_tried")
+    row = card.ladder_rows(art)[0]
+    assert row["validation"] == "route tried: (not recorded)"
+    assert row["tier"] == "WALL_SCHEMA_UNVERIFIED"
+
+
 def test_each_rung_gets_its_own_honest_tier():
     rows = card.ladder_rows(_ladder_art())
     tiers = {r["organism"]: r["tier"] for r in rows}
@@ -157,3 +194,24 @@ def test_the_md_section_states_the_sampling_frame_refusal_and_the_lock():
 
 def test_the_card_still_exits_zero_it_is_a_report_not_a_gate():
     assert card.main() == 0
+
+
+def test_the_wiki_path_is_ANCHORED_to_the_repo_not_the_callers_cwd():
+    """A silent zero, found by the test-epilogue pass and fixed.
+
+    `W` was a relative `Path("wiki")`. That was only a LOUD failure (FileNotFoundError on the write)
+    until load_ladder() was added: a glob over a nonexistent directory returns [], so from the wrong cwd
+    the card would append ZERO ladder rows and, because the extension is augment-only, nothing would
+    complain. The card would look like a clean 2-row card rather than a broken 7-row one.
+    """
+    assert card.W.is_absolute(), card.W
+    assert card.W.name == "wiki"
+    assert (card.W / "essentiality_report_card.json").parent == card.W
+    # and load_ladder must not depend on where it is called from
+    import os
+    cwd = os.getcwd()
+    try:
+        os.chdir(card.W.parent.parent if card.W.parent.parent.exists() else "/")
+        assert card.load_ladder() is not None, "load_ladder became cwd-dependent again"
+    finally:
+        os.chdir(cwd)

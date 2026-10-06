@@ -174,6 +174,80 @@ def test_module_is_namespace_separate_from_the_fba_registry():
     assert "MODEL-GENE-KEYED" in src
 
 
+# --------------------------------------------------------------------------------------------------
+# the two UNPINNED parsers — their shape is a guess, which is exactly why their BEHAVIOUR should be
+# known. Until now only their docstrings were asserted, so neither had been run at all.
+# --------------------------------------------------------------------------------------------------
+NTML_TEXT = ("locus_tag\tcall\n"
+             "SAUSA300_0001\tessential\n"
+             "\n"
+             "   \n"
+             "SAUSA300_0002\tessential\n"
+             "SAUSA300_0001\tduplicate row\n")
+
+
+def test_parse_ntml_skips_the_header_and_blank_lines_and_dedups():
+    assert ls.parse_ntml(NTML_TEXT) == {"SAUSA300_0001", "SAUSA300_0002"}
+    # the column is a parameter, so a record that pins the key elsewhere is honoured rather than ignored
+    assert ls.parse_ntml(NTML_TEXT, 1) == {"essential", "duplicate row"}
+    # a key-column index past the end of every row yields nothing -- which `parse_or_refuse` turns into a
+    # LabelParseError rather than an empty label set
+    assert ls.parse_ntml(NTML_TEXT, 9) == set()
+
+
+def test_parse_plos_gold_tolerates_real_xlsx_row_shapes():
+    """An openpyxl `iter_rows(values_only=True)` sweep yields None for an empty ROW and None for an empty
+    CELL, and numeric cells arrive as ints -- so a locus tag that happens to be numeric must be coerced,
+    not dropped or left as an int that can never match a string key."""
+    rows = [("header", "x"), None, ("PA14_00010", 5), ("", "blank key"), (None, "none cell"),
+            (12345, "an int cell")]
+    assert ls.parse_plos_gold(rows) == {"PA14_00010", "12345"}
+    # a row shorter than the declared key column is skipped, not padded
+    assert ls.parse_plos_gold([("h",), ("a",)], 1) == set()
+
+
+def test_parse_bagel_tolerates_ragged_and_trailing_blank_lines():
+    """Every real tsv ends with a newline and some carry short rows; a ragged row must be skipped rather
+    than contribute an index error or a stray id."""
+    assert ls.parse_bagel("GENE\tHGNC\tENTREZ\nAARS\tHGNC:20\t16\nshort\n\n") == {"16"}
+
+
+# --------------------------------------------------------------------------------------------------
+# which W0 record gates everything
+# --------------------------------------------------------------------------------------------------
+def test_latest_w0_record_is_None_on_a_directory_with_no_probe_artifact(tmp_path):
+    """None is the input that makes `w0_status` refuse, so this is the path that keeps an unprobed host
+    fail-closed rather than falling back to some other json in wiki/."""
+    (tmp_path / "unrelated_other_artifact.json").write_text("{}", encoding="utf-8")
+    assert ls.latest_w0_record(tmp_path) is None
+
+
+def test_the_NEWEST_w0_record_wins_when_several_exist(tmp_path):
+    """Probe artifacts are date-stamped and accrue, so the one that decides whether a parser may run is
+    the last by name. A test on this is what makes 'rerun the probe to unblock a rung' true."""
+    (tmp_path / "essentiality_ladder_w0_probe_2026-10-05.json").write_text(
+        json.dumps({"sources": [{"source_id": "ntml_nebraska", "w0_verified": False,
+                                 "reason": "older"}]}), encoding="utf-8")
+    (tmp_path / "essentiality_ladder_w0_probe_2026-10-06.json").write_text(
+        json.dumps({"sources": [{"source_id": "ntml_nebraska", "w0_verified": True,
+                                 "reason": "newer"}]}), encoding="utf-8")
+    rec = ls.latest_w0_record(tmp_path)
+    ok, why = ls.w0_status("ntml_nebraska", rec)
+    assert ok and why == "newer"
+
+
+def test_a_record_with_NO_schema_block_still_parses_and_that_is_deliberate():
+    """The key-column consistency check is skipped when the record lists no candidates -- it corroborates
+    a declared index, it cannot manufacture one. Pinned because it is the one fail-OPEN path in an
+    otherwise fail-closed gate: `w0_verified` is still required, so the record must have been verified by
+    the probe; what is not required is that it enumerated key columns."""
+    bare = {"sources": [{"source_id": "bagel_ceg", "w0_verified": True, "reason": "verified"}]}
+    assert ls.parse_or_refuse("bagel_ceg", BAGEL_TEXT, record=bare) == {"16", "6122"}
+    explicit_none = {"sources": [{"source_id": "bagel_ceg", "w0_verified": True, "reason": "r",
+                                  "schema": {"key_column_candidates": None}}]}
+    assert ls.parse_or_refuse("bagel_ceg", BAGEL_TEXT, record=explicit_none) == {"16", "6122"}
+
+
 def test_real_w0_record_lets_bagel_through_if_present(tmp_path):
     """End-to-end against the committed record rather than a fixture, when one exists."""
     rec = ls.latest_w0_record()

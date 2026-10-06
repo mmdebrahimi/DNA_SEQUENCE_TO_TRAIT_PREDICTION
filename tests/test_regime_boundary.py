@@ -470,6 +470,25 @@ def test_the_fallback_sentence_still_exists_for_an_empty_table():
         "the empty-table branch must still be reachable in source"
 
 
+def test_the_empty_table_fallback_is_EXECUTED_not_merely_present_in_source(monkeypatch):
+    """The test above greps the source; this one runs the branch. A string that exists in a file proves
+    nothing about whether that path is reachable or assembles a sentence correctly -- and this branch
+    cannot fire against the live table, so it would otherwise never be executed at all. It becomes the
+    ONLY message the moment the one carrier row is removed, which is exactly when a reader needs it."""
+    from dna_decode.eval import regime as rg
+
+    unmeasured_only = tuple(r for r in rg.REGIMES if r.organism_transfer == "unmeasured")
+    assert unmeasured_only, "fixture sanity: the table must still hold unmeasured rows"
+    monkeypatch.setattr(rg, "REGIMES", unmeasured_only)
+
+    conds = rg._transfer_gap_conditions(unmeasured_only[0], "held_out_organism")
+    joined = " ".join(conds)
+    assert "no regime in this map carries one today" in joined
+    assert "measure a held-out-ORGANISM number" in joined
+    assert "curated_catalog_cross_organism" not in joined, \
+        "with no carrier in the table nothing may be named as one"
+
+
 def test_a_claim_of_held_out_CLADE_still_gets_a_gap_condition_against_the_new_row():
     """The ladder gives held_out_ORGANISM, which is strictly below held_out_CLADE -- the ordering must
     still bite rather than being satisfied by the new row."""

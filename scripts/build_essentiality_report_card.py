@@ -12,7 +12,12 @@ import numpy as np
 from dna_decode.essentiality.core_decoder import score_gene
 
 TGT = Path("D:/dna_decode_cache/essentiality")
-W = Path("wiki")
+# ANCHORED to the repo, not to the caller's cwd. This was a relative `Path("wiki")` and that was only a
+# loud failure (FileNotFoundError on the write) until `load_ladder()` was added -- a glob over a
+# nonexistent directory returns [], so from the wrong cwd the card would append ZERO ladder rows and,
+# because the extension is augment-only, nothing would complain. A silent zero is exactly the shape this
+# arm's reconcile gate and wall-naming exist to prevent, so the path is pinned.
+W = Path(__file__).resolve().parent.parent / "wiki"
 
 
 def human_transfer_auroc():
