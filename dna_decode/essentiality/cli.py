@@ -30,17 +30,14 @@ _SCOPE = ("scope: conserved-core deterministic prior; high-precision, conservati
 
 
 def _iter_feature_table(path: str):
-    op = gzip.open if str(path).endswith(".gz") else open
-    with op(path, "rt", encoding="utf-8", errors="replace") as fh:
-        header = fh.readline().rstrip("\n").split("\t")
-        try:
-            isym = header.index("symbol"); ina = header.index("name")
-        except ValueError:
-            return
-        for line in fh:
-            p = line.rstrip("\n").split("\t")
-            if len(p) > max(isym, ina) and p[0] == "CDS" and p[isym]:
-                yield p[isym], p[ina]
+    """Thin alias — the single definition now lives in `annotation_join.iter_feature_table`.
+
+    Promoted so the transfer-ladder arm and this CLI cannot drift to two readers of the same file
+    format. Kept as a module-level name because it is referenced below and in tests.
+    """
+    from dna_decode.essentiality.annotation_join import iter_feature_table
+
+    yield from iter_feature_table(path)
 
 
 def main(argv=None) -> int:
