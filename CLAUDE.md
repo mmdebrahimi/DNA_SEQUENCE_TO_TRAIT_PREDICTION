@@ -24,7 +24,19 @@ decoder CLI — bacteria, viruses (HIV / SARS-CoV-2 / influenza), fungi, TB, plu
 ~50 console entry points across 8 tracks. Not a research repo, and **not an E. coli AMR project** — AMR is
 one track of eight.
 
-**The three orientation errors this file has actually caused** (all 2026-08-29, all in one session):
+**The orientation errors this file has actually caused** (1-3 all 2026-08-29, one session; **0 recurs on
+EVERY cold read, is the most expensive, and is numbered 0 because it mis-frames the whole project**):
+
+0. **THE CATALOG-VS-GLM CATEGORY ERROR. The GLM is the PRODUCT; the deterministic catalog was a BRIDGE,
+   built only so there was any number to compare against.** Do NOT benchmark generation against it and do
+   NOT re-derive "the GLM is a component, the catalog is the engine" — the user has corrected this in four
+   separate sessions (emphatic 2026-10-06: *"just build it"*). A lookup table **cannot generate**, so a
+   head-to-head AUROC measures the wrong quantity; 0.926 is irrelevant to "what edit should I make". Every
+   negative below is about **discriminative zero-shot scoring on natural populations** — that is NOT
+   evidence about generation, and **the label wall blocks supervised g→p on natural populations, NOT
+   design-scored-by-a-validated-oracle** (`forward` DMS + `fba` Keio 0.954 are oracles already in hand).
+   Design: `wiki/glm_architecture_design_2026-10-06.md`; lesson:
+   `memory/feedback_glm_is_the_product_not_the_catalog.md`.
 
 1. **Scope collapse.** `wiki/decoder_validation_report_card.json` is the **AMR provenance-disjoint arm
    only** — **27 rows / 10 SCORED**. The tool's evidence surface is `cell_registry` — **128 cells, 33 `INDEPENDENT_MEASURED`**. Quoting the card as the whole understates it ~4x. Any count you cite must
@@ -38,7 +50,7 @@ one track of eight.
 
 **In-flight work + user-authority calls live in `NEXT.md`** (transient; prune it, don't grow it).
 
-**The rule those three share:** a claim asserted from memory or from prose sounds right and is wrong. This
+**The rule they share:** a claim asserted from memory or from prose sounds right and is wrong. This
 file and `wiki/` were true when written. **Re-derive from the artifact before publishing a claim** —
 `scripts/project_status.py` for scope, the named script under each bullet below for anything else.
 
