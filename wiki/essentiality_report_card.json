@@ -16,6 +16,41 @@
       "tier": "TRANSFER_SCORED",
       "metric": "AUROC 0.5805 vs null 0.50 (BAGEL CEG2 n=681 / NEG n=899); sens 0.1571 spec 0.9978",
       "validation": "universal core (ribosome/tRNA-synth/translation/polymerase) transfers cross-kingdom at high precision; human-specific core (proteasome 0/53, spliceosome 0/49) MISSED -> per-organism catalogue extension is the follow-on"
+    },
+    {
+      "organism": "Escherichia coli",
+      "cell": "transfer ladder rung (depth 8 from E. coli)",
+      "tier": "COVERAGE_SCORED",
+      "metric": "coverage_lift 0.3125 (null p95 0.0298 / MAX 0.0518); coverage(ess) 0.3789, coverage(non) 0.0664; phrasing-adjusted 0.3213; AUROC 0.6952 is SECONDARY and NOT cross-rung comparable",
+      "validation": "decoder applied UNCHANGED; coverage_lift is class-conditioned so it is base-rate robust and cross-rung comparable, which AUROC is not. Label technology transposon_insertion; class sourcing one_file_two_columns"
+    },
+    {
+      "organism": "Pseudomonas aeruginosa",
+      "cell": "transfer ladder rung (depth 5 from E. coli)",
+      "tier": "WALL_SCHEMA_UNVERIFIED",
+      "metric": "none -- a walled rung carries no coverage number by construction",
+      "validation": "route tried: W0 record says unverified: not in D:\\dna_decode_cache\\essentiality; remote is NOT RECORDED -- reachability is a HYPOTHESIS until fetched"
+    },
+    {
+      "organism": "Staphylococcus aureus",
+      "cell": "transfer ladder rung (depth 2 from E. coli)",
+      "tier": "WALL_SCHEMA_UNVERIFIED",
+      "metric": "none -- a walled rung carries no coverage number by construction",
+      "validation": "route tried: W0 record says unverified: not in D:\\dna_decode_cache\\essentiality; remote is NOT RECORDED -- reachability is a HYPOTHESIS until fetched"
+    },
+    {
+      "organism": "Saccharomyces cerevisiae",
+      "cell": "transfer ladder rung (depth 1 from E. coli)",
+      "tier": "WALL_SCHEMA_UNVERIFIED",
+      "metric": "none -- a walled rung carries no coverage number by construction",
+      "validation": "route tried: W0 record says unverified: not in D:\\dna_decode_cache\\essentiality; remote is http://sgd-archive.yeastgenome.org/curation/literature/phenotype_data.tab"
+    },
+    {
+      "organism": "Homo sapiens",
+      "cell": "transfer ladder rung (depth 1 from E. coli)",
+      "tier": "COVERAGE_SCORED",
+      "metric": "coverage_lift 0.1633 (null p95 0.0214 / MAX 0.0446); coverage(ess) 0.1689, coverage(non) 0.0056; phrasing-adjusted 0.1787; AUROC 0.5805 is SECONDARY and NOT cross-rung comparable",
+      "validation": "decoder applied UNCHANGED; coverage_lift is class-conditioned so it is base-rate robust and cross-rung comparable, which AUROC is not. Label technology crispr_ko; class sourcing two_files"
     }
   ]
 }

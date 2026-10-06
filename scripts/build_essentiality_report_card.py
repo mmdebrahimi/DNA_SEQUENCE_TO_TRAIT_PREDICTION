@@ -32,11 +32,64 @@ def human_transfer_auroc():
     ceg, neg = load("CEGv2.txt"), load("NEGv1.txt")
     se = np.array([score_gene(g, d).core_score for g, d in ceg])
     sn = np.array([score_gene(g, d).core_score for g, d in neg])
-    # AUROC = P(score_ess > score_non)
-    from scipy.stats import mannwhitneyu
-    auroc = mannwhitneyu(se, sn, alternative="greater").statistic / (len(se)*len(sn))
+    # SHARED AUROC definition, imported from the ladder runner, so the card and the ladder cannot report
+    # two different AUROCs for the same rung. Previously computed inline here with mannwhitneyu.
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from essentiality_transfer_ladder import auroc as shared_auroc
+    auroc = shared_auroc(se, sn)
     return {"n_essential": len(ceg), "n_nonessential": len(neg), "auroc": round(float(auroc), 4),
             "sens": round(float((se >= 2).mean()), 4), "spec": round(float((sn < 2).mean()), 4)}
+
+
+LADDER_GLOB = "essentiality_transfer_ladder_*.json"
+
+
+def load_ladder():
+    """Newest transfer-ladder artifact, or None. Read-only; the card never triggers a ladder run."""
+    hits = sorted(W.glob(LADDER_GLOB))
+    if not hits:
+        return None
+    return json.loads(hits[-1].read_text(encoding="utf-8"))
+
+
+def ladder_rows(art):
+    """Ladder rungs as card rows. AUGMENT-ONLY: these are APPENDED; no existing row is touched.
+
+    Each rung carries its OWN honest tier -- COVERAGE_SCORED for a rung that scored, WALL_<reason> for
+    one that could not -- so a walled rung renders as a wall rather than vanishing from the table. There
+    is deliberately no aggregate over them: the card's standing invariant is per-organism tiers only.
+    """
+    if not art:
+        return []
+    rows = []
+    for r in sorted(art["rungs"], key=lambda x: -x["depth"]):
+        if r.get("scored"):
+            rows.append({
+                "organism": r["organism"],
+                "cell": "transfer ladder rung (depth %d from E. coli)" % r["depth"],
+                "tier": "COVERAGE_SCORED",
+                "metric": ("coverage_lift %.4f (null p95 %.4f / MAX %.4f); coverage(ess) %.4f, "
+                           "coverage(non) %.4f; phrasing-adjusted %.4f; AUROC %.4f is SECONDARY and "
+                           "NOT cross-rung comparable"
+                           % (r["coverage_lift"], r["null_p95"], r["null_max"],
+                              r["coverage_essential"], r["coverage_nonessential"],
+                              r["coverage_lift_adjusted"],
+                              r["auroc_SECONDARY_not_cross_rung_comparable"])),
+                "validation": ("decoder applied UNCHANGED; coverage_lift is class-conditioned so it is "
+                               "base-rate robust and cross-rung comparable, which AUROC is not. Label "
+                               "technology %s; class sourcing %s"
+                               % (r["technology"], r["class_sourcing_mode"])),
+            })
+        else:
+            rows.append({
+                "organism": r["organism"],
+                "cell": "transfer ladder rung (depth %d from E. coli)" % r["depth"],
+                "tier": r["wall"],
+                "metric": "none -- a walled rung carries no coverage number by construction",
+                "validation": "route tried: %s" % r.get("route_tried", "(not recorded)"),
+            })
+    return rows
 
 
 def main():
@@ -67,6 +120,10 @@ def main():
                        "high precision; human-specific core (proteasome 0/53, spliceosome 0/49) MISSED -> "
                        "per-organism catalogue extension is the follow-on" if ht else "-"},
     ]
+    ladder = load_ladder()
+    lrows = ladder_rows(ladder)
+    rows = rows + lrows          # APPEND only -- the two pre-existing rows above are untouched
+
     card = {"schema": "essentiality-report-card-v1", "generated": "2026-07-28",
             "note": "single-gene KO -> essential/non-essential; conserved-core R1 decoder; per-organism honest "
                     "tier, NO aggregate headline; E. coli composition-validated, human transfer-AUROC (BAGEL)",
@@ -79,6 +136,25 @@ def main():
           "| organism | cell | tier | metric | validation |", "|---|---|---|---|---|"]
     for r in rows:
         md.append(f"| {r['organism']} | {r['cell']} | {r['tier']} | {r['metric']} | {r['validation']} |")
+    if lrows:
+        v = ladder["verdict"]
+        md += ["", "## Cross-organism transfer ladder", "",
+               "Primary metric is **`coverage_lift`** = coverage(essential) - coverage(non-essential),",
+               "which is class-conditioned and therefore base-rate robust and cross-rung comparable.",
+               "AUROC is a SECONDARY and is **not** compared across rungs (different sampling frames:",
+               "BAGEL is two curated extremes at base rate 0.431 vs a genome-wide 0.0928).", "",
+               "Verdict: **`%s`** - %s" % (v["verdict"], v["reason"]),
+               "Scored %d / walled %d. Frozen bar %s - a DESCRIPTIVE-CONSISTENCY LOCK, not a"
+               % (ladder["n_scored"], ladder["n_walled"], json.dumps(ladder["frozen_thresholds"])),
+               "frozen-before-the-numbers endpoint test (it is derived from the two rungs that",
+               "motivated the question). Full detail + the five honest limits:",
+               "`wiki/essentiality_transfer_ladder_%s.md`." % ladder["date"], "",
+               "| organism | rung | tier | coverage_lift |", "|---|---|---|---|"]
+        for r in ladder["rungs"]:
+            md.append("| %s | depth %d | %s | %s |"
+                      % (r["organism"], r["depth"],
+                         "COVERAGE_SCORED" if r.get("scored") else r["wall"],
+                         ("%.4f" % r["coverage_lift"]) if r.get("scored") else "-"))
     md += ["", "## Honest scope",
            "- The conserved-core decoder is the R1 PRIOR: high-precision, conservative-recall; captures the",
            "  UNIVERSAL essential core, misses lineage-specific core (the R2/per-organism-catalogue target).",
