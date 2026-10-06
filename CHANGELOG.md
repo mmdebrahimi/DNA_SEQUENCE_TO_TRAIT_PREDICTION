@@ -5,6 +5,55 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Added — a cross-organism essentiality transfer ladder, and its verdict is INDETERMINATE (2026-10-06)
+
+Extends the F1 Phase 0 entry below: that work made "which split produced this number" machine-readable and
+reported **8 of 8** regimes with no held-out-organism evidence. This builds the instrument that produces one,
+and the instrument shipped while **the verdict did not**. Evaluation-layer only — no decoder change, no new
+console entry point. `core_decoder.py` is byte-unchanged (a retuned decoder would void the transfer
+condition, so a test pins its sha256); frozen AMR surface byte-unchanged and the 2026-08-31 prospective lock
+re-verifies.
+
+- **`coverage_lift` replaces AUROC as the primary metric, for two measured reasons rather than a preference.**
+  `coverage_lift` = coverage(essential) − coverage(non-essential). (i) The decay is **silence, not error**:
+  83.1% of human essentials score *exactly* zero and 11 of 13 core patterns have
+  `P(hit | non-essential) = 0.0000`, so AUROC over that distribution is largely a tie-mass statistic.
+  (ii) Its two components move in **opposite directions** across the two rungs that already had numbers —
+  coverage 0.3789 → 0.1689 while precision-where-it-fires 0.3684 → **0.9583** — so a single AUROC hides both.
+  Both `coverage_lift` terms are class-conditioned, hence base-rate robust and genuinely cross-rung
+  comparable, which AUROC is not here (BAGEL is two curated extremes at base rate 0.431 against a
+  genome-wide 0.0928). Measured: E. coli **0.3125**, human **0.1633**, each ≳4× its own permutation-null MAX.
+- **Verdict `INDETERMINATE_INSUFFICIENT_RUNGS`, which was PRE-COMMITTED for this case.** Only 2 of 5 rungs
+  scored; `paeruginosa` / `saureus` / `scerevisiae` emit `WALL_SCHEMA_UNVERIFIED` because no label file for
+  any of them is on this host — and neither NTML nor the PLOS GOLD set has a resolvable URL recorded anywhere
+  in-repo, so their reachability was a **hypothesis**, never established. Every rung is reported with its
+  wall and the route tried; none is dropped.
+- **Rung ordering is DERIVED from fetched, name-verified NCBI Taxonomy lineages, and the derivation changed
+  the design.** *S. cerevisiae* and *H. sapiens* share **equal** depth with E. coli (1 rank each), so the
+  ladder has **four** distance classes, not five — the eukaryote pair is a consistency check, not two rungs.
+  *P. aeruginosa* (5 shared ranks) is the **nearer** rung than *S. aureus* (2), which familiarity reverses.
+- **The reconcile gate caught a real divergence on its first run.** It refused at 0.3122 against the
+  committed 0.3125. Cause: 9 duplicate gene symbols in the E. coli feature table, 7 with differing product
+  text, exactly **one** (`mrcB`) whose score differs — first occurrence `"peptidoglycan glycosyltransferase"`
+  scores 2.0, last `"PBP-1Bgamma"` scores 0.0; `mrcB` is label 0, so the choice moves coverage(non-essential)
+  by exactly 1/3432 = 0.0003. Both rules were **measured** against the committed targets rather than chosen:
+  `load_annotation(..., on_duplicate=)` now defaults to `"last"` because that reproduces 0.3125 / 0.6952.
+  **Open authority call:** `"first"` is arguably the better rule (a function-matching decoder can only lose
+  by reading `"PBP-1Bgamma"`) and switching it would change two published numbers.
+- **A W0 schema probe gates every parser.** `parse_or_refuse` raises `SchemaUnverified` unless a pinned
+  record verifies the source, because two prose-written parsers had already failed *silently* on this work
+  (a wrong-shape source; a header that is not row 0, which mis-joined 3936/372 against the true 351/3432).
+  First sweep: 3 of 6 verified.
+- **~10% of the human miss is a catalogue PHRASING gap, not phylogeny** — floor 57/566 = 0.1007 against
+  host-specific 141/566 = 0.2491, so `coverage_lift_adjusted` ships beside the raw lift and deliberately
+  **under-corrects**. The floor's vocabulary is provenance-gated at import against the decoder's own
+  patterns.
+- **`dna_decode/eval/regime.py` gained its first `held_out_organism` row** (`organism_transfer_is_unmeasured`
+  8/8 → 8/9, verdict `OPEN`), and the restated string "no regime in this map carries one today" — which that
+  row made false — is now **derived from the live table**. Report card 2 → 7 rows, augment-only verified by
+  diff. Artifacts: `wiki/essentiality_transfer_ladder_2026-10-06.{md,json}`,
+  `wiki/essentiality_ladder_w0_probe_2026-10-06.json`. Suite 5773 → 5912 passed, 0 failed.
+
 ### Added — the regime axis now records WHICH SPLIT produced each number (2026-10-03)
 
 F1 Phase 0. Every regime row in `dna_decode/eval/regime.py` already carried a verdict; none said what kind
@@ -18,7 +67,10 @@ point. Frozen AMR surface byte-unchanged; the 2026-08-31 prospective lock re-ver
   weaker and stronger versions of one — ranking them would let the module announce a relation nobody
   measured. `_transfer_rank` **raises** when handed a split unit.
 - **Headline, now machine-readable and rendered by `scripts/regime_map.py`: 8 of 8 regimes carry no
-  held-out-ORGANISM transfer evidence.** `screen_proposal(..., claims_organism_transfer=)` is augment-only,
+  held-out-ORGANISM transfer evidence.** (As of 2026-10-06 the live table renders **8 of 9** — the
+  essentiality transfer ladder added the first `held_out_organism` row. The 8-of-8 figure is correct for
+  this dated entry; re-derive with `scripts/regime_map.py` rather than quoting either number from prose.)
+  `screen_proposal(..., claims_organism_transfer=)` is augment-only,
   proved by diff (0 non-`conditions` fields changed; 32 cases gained a condition).
 - **The G2 replay inputs are a verified sidecar** — `wiki/phase2_arabidopsis_result_2026-06-12.json`,
   hand-transcribed and checked by a markdown re-parse test (proved non-vacuous: a one-digit corruption fails
