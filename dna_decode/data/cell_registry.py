@@ -1529,8 +1529,10 @@ _TRAIT_CONTRACTS: list[CellContract] = [
             "E. coli AUROC 0.695 genome-wide vs the Goodall 2018 mBio TraDIS gold-standard (base rate 9.3%, "
             "sens 0.373 / spec 0.984 -- high-precision, conservative-recall); composition matches the known "
             "essentialome (208/4318, translation/envelope/replication-dominated). Cross-organism transfer to "
-            "human (BAGEL CEG2/NEG) AUROC 0.580 (wiki/essentiality_report_card.json). The learned E3 "
-            "complement lifts it (E. coli 0.795 wiki/essentiality_e3_learned_2026-07-28.json / "
+            "human (BAGEL CEG2/NEG) AUROC 0.580 (wiki/essentiality_report_card.json), decoder applied "
+            "UNCHANGED. The learned E3 complement is a SEPARATE WITHIN-organism 5-fold CV, each scored "
+            "against its OWN within-organism baseline, and does NOT lift that cross-organism transfer "
+            "number (E. coli 0.795 wiki/essentiality_e3_learned_2026-07-28.json / "
             "human 0.911 wiki/essentiality_e3_human_2026-07-28.json)"),
         label_provenance=(
             "gold-standard essentiality: Goodall 2018 mBio Table S1 (E. coli TraDIS genome-wide, CC-BY) + "

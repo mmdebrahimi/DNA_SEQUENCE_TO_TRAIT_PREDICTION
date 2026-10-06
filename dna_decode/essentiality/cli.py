@@ -10,7 +10,9 @@ division). Label-INDEPENDENT (reads function, not a label). Offline, no deps.
 Tier: KNOWLEDGE_BASELINE. Validated vs gold-standard: E. coli AUROC 0.695 (Goodall 2018 TraDIS, genome-wide);
 composition matches the known essentialome (208/4318, translation/envelope/replication-dominated). The
 conserved-core is HIGH-PRECISION, conservative-recall (captures the universal core, misses the lineage-specific
-tail — the learned E3 complement lifts that: E. coli 0.795 / human 0.911). NOT a clinical tool. See
+tail). The learned E3 complement is a SEPARATE WITHIN-organism 5-fold CV — E. coli 0.795 and human 0.911, each
+against its OWN within-organism baseline — and does NOT lift the 0.580 CROSS-ORGANISM transfer number; reading
+it as transfer evidence is a documented trap. NOT a clinical tool. See
 wiki/essentiality_{decoder_v0,ecoli_v0_1_auroc,e4_transfer,e3_learned,e3_human}_2026-07-28.
 """
 from __future__ import annotations

@@ -73,7 +73,18 @@ def test_the_live_corpus_yields_no_QUANTITY_worth_adding():
                       # citations. `quellung` is a serotyping method, `subset` names a slice of a cohort;
                       # neither is a quantity. The same event surfaced `concordance`, which IS one, and it
                       # was added to LABEL_VOCAB -- so it no longer appears here.
-                      "quellung", "subset", "method", "slice", "explicit"}
+                      "quellung", "subset", "method", "slice", "explicit",
+                      # surfaced when the `dna-identify` contract landed (2026-10-04); each measures
+                      # near=1 / would_confirm=1 / would_mismatch=0 -- ONE clean conversion apiece, which
+                      # is exactly the "domain noun, not a quantity" case the verdict text warns about.
+                      # `gemmata` is an ORGANISM name (Gemmata obscuriglobus, the out-of-set rejection
+                      # control). `ambiguity` + `margin` are NOT two candidates: they are the two halves of
+                      # ONE snake_case THRESHOLD identifier, `ambiguity_margin=0.015`, split by the
+                      # tokenizer -- and a threshold's NAME is not a measured quantity (the parent audit
+                      # already carries `threshold` as its own provenance kind). `margin` was considered
+                      # for MODIFIERS instead and does NOT qualify: that set is for words sitting near
+                      # numbers CONSTANTLY (max/mean/null/delta/gain); this one occurs exactly once.
+                      "gemmata", "ambiguity", "margin"}
     surprises = [w for w in clean if w not in non_quantities]
     assert not surprises, (
         f"a cleanly-converting word that is NOT in the known non-quantity set appeared: {surprises}. "
