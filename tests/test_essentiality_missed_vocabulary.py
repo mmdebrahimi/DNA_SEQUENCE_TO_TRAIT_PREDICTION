@@ -36,14 +36,15 @@ def test_no_curated_biology_is_written_into_the_probe():
     that fails would make this test error rather than check. The non-emptiness assert matters as much as
     the membership one -- an empty set would satisfy a bare `for` loop and pass vacuously forever.
     """
-    import re
-
     from dna_decode.essentiality.core_decoder import _CORE
+    from dna_decode.essentiality.phrasing_floor import ROBUST_II
 
-    m = re.search(r"ROBUST_II\s*=\s*\{([^}]*)\}", SRC)
-    assert m, "ROBUST_II literal not found -- the floor must stay auditable in source"
-    words = {w.strip().strip("\"'") for w in m.group(1).split(",") if w.strip()}
+    # PROMOTED 2026-10-06: the floor moved to dna_decode/essentiality/phrasing_floor.py, where an
+    # IMPORT-TIME gate raises if any word is absent from _CORE. This test still checks the property
+    # directly rather than trusting that gate -- a gate and its check should not be the same code.
+    words = set(ROBUST_II)
     assert len(words) >= 4, f"floor suspiciously small ({words}) -- would pass vacuously"
+    assert "ROBUST_II" in SRC, "the script must still reference the floor it reports"
 
     pattern_text = " ".join(p.pattern.lower() for _w, p in _CORE)
     for w in words:
@@ -52,11 +53,18 @@ def test_no_curated_biology_is_written_into_the_probe():
 
 def test_robust_floors_do_not_depend_on_the_reach_definition():
     """An ABSENT word is absent under any reach definition, and the (ii) floor words are unambiguous.
-    If a future edit made a floor depend on `eco_caught_words`, the floor stops being robust."""
-    seg = SRC[SRC.index("ROBUST_II"):SRC.index("n_missed = len(missed)") + 400] \
-        if "n_missed = len(missed)" in SRC[SRC.index("ROBUST_II"):] else SRC[SRC.index("ROBUST_II"):]
-    assert "eco_caught_words" not in seg.split("robust_iii")[0], \
+    If a future edit made the floor depend on `eco_caught_words`, the floor stops being robust.
+
+    REPOINTED 2026-10-06: the floor moved to dna_decode/essentiality/phrasing_floor.py (transfer-ladder
+    Step 4). The old version sliced THIS script's source from the first `ROBUST_II` occurrence, which is
+    now the import line at the top, so the slice swallowed the whole file including the loose-reach
+    computation. Asserting against the module that actually computes the floor is both the correct scope
+    and a stronger check than a source slice.
+    """
+    floor_src = (ROOT / "dna_decode" / "essentiality" / "phrasing_floor.py").read_text(encoding="utf-8")
+    assert "eco_caught_words" not in floor_src, \
         "the mechanism-(ii) floor must not be computed from the loose reach set"
+    assert "ROBUST_II" in floor_src and "def phrasing_floor_genes" in floor_src
 
 
 def test_the_artifact_records_the_self_correction_and_is_parseable():

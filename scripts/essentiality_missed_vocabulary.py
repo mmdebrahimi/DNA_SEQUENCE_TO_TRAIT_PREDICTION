@@ -76,14 +76,15 @@ WIKI = ROOT / "wiki"
 # ENGLISH function words + annotation boilerplate. Deliberately contains no biology: removing
 # "protein" or "domain" changes which words surface, so they are listed as boilerplate, not as a
 # judgement about what is or is not a function.
-STOP = {
-    "a", "an", "the", "of", "and", "or", "in", "to", "for", "with", "by", "on", "at", "from", "as",
-    "is", "are", "be", "that", "this", "it", "its", "has", "have", "not", "no",
-    "protein", "proteins", "domain", "containing", "family", "member", "like", "type", "subunit",
-    "putative", "probable", "uncharacterized", "hypothetical", "homolog", "associated", "related",
-    "component", "complex", "factor", "chain", "unit", "group", "part", "form",
-}
-WORD = re.compile(r"[a-z][a-z-]{2,}")
+# PROMOTED to the package (2026-10-06, transfer-ladder Step 4) so the ladder does not import a scripts/
+# module and there is exactly ONE definition of this vocabulary. Re-exported here because this script's
+# own tests and callers reference the module-level names.
+from dna_decode.essentiality.phrasing_floor import (  # noqa: E402
+    ROBUST_II,
+    STOP,
+    WORD,
+    content_words,
+)
 
 
 def _need(*names):
@@ -128,10 +129,6 @@ def ecoli_rows():
             if len(p) > max(i, n) and p[0] == "CDS" and p[i]:
                 out.append((p[i], p[n]))
     return out
-
-
-def content_words(text):
-    return {w for w in WORD.findall(text.lower()) if w not in STOP}
 
 
 def classify_word(word, ecoli_caught_words, ecoli_all_words):
@@ -244,7 +241,8 @@ def main(argv=None):
     # What survives EVERY bar, because it does not depend on the reach definition at all:
     #   * a word absent from the E. coli corpus is absent under any definition of reach
     #   * a word that is BOTH in the regex vocabulary AND unambiguously functional is in reach always
-    ROBUST_II = {"polymerase", "helicase", "replication", "division", "topoisomerase", "primase"}
+    # ROBUST_II now lives in dna_decode/essentiality/phrasing_floor.py, where an IMPORT-TIME gate
+    # asserts every word already appears in the decoder's own _CORE patterns.
     robust_ii = sum(1 for _g, d in missed if content_words(d) & ROBUST_II)
     robust_iii = per_gene["iii_ABSENT_FROM_ECOLI"]
 
