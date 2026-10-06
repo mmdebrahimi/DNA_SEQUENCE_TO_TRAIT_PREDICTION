@@ -165,6 +165,32 @@ REGIMES: tuple[Regime, ...] = (
            # leave-one-STUDY-out across three genes of ONE virus. The one-virus limit this row's own
            # note already states in prose is now machine-readable: organism_transfer stays `unmeasured`.
            split_unit=frozenset({"study"})),
+    # THE FIRST ROW IN THIS TABLE TO CARRY HELD-OUT-ORGANISM EVIDENCE (added 2026-10-06). Verdict is set
+    # FROM the measurement, not chosen: the cross-organism number EXISTS and clears its own null by ~4x,
+    # so this is not CLOSED_NEGATIVE; but the ladder built to decide decay-with-distance vs
+    # eukaryote-cliff returned INDETERMINATE_INSUFFICIENT_RUNGS (2 scored of 5), so it is not WORKS
+    # either. OPEN with a named condition is the honest cell.
+    Regime("curated_catalog_cross_organism", "constructed", "organism", "curated_catalog", OPEN,
+           "the E. coli-tuned conserved-core essentiality decoder applied UNCHANGED to human: "
+           "coverage_lift 0.1633 vs its own label-permutation null MAX 0.0446 (~4x), against 0.3125 "
+           "on the tuning organism -- so function-catalogue transfer across the bacteria/eukaryote "
+           "boundary is REAL but roughly halves. The 5-rung ladder meant to separate smooth decay from "
+           "a domain cliff returned INDETERMINATE_INSUFFICIENT_RUNGS: only 2 rungs scored, the other 3 "
+           "are WALL_SCHEMA_UNVERIFIED (no label file on this host)",
+           "wiki/essentiality_transfer_ladder_2026-10-06.md",
+           "READ coverage_lift, NOT AUROC. The decay is SILENCE, not error: 83.1% of human essentials "
+           "score EXACTLY zero and 11 of 13 core patterns have P(hit|non-essential)=0.0000, so AUROC is "
+           "largely a tie-mass statistic and its two components move in OPPOSITE directions across the "
+           "two rungs (coverage 0.3789->0.1689 while precision-where-it-fires 0.3684->0.9583). Cross-rung "
+           "AUROC is ALSO a different sampling frame (BAGEL two curated extremes at base rate 0.431 vs "
+           "genome-wide 0.0928) and is refused. ~10% of the human miss is a catalogue PHRASING gap, not "
+           "phylogeny (floor 57/566 vs host-specific 141/566; wiki/essentiality_missed_vocabulary_"
+           "2026-10-05.md), so the phrasing-adjusted lift ships beside the raw one. CONDITION to close "
+           "this cell: score a third rung -- and note S. cerevisiae and H. sapiens are EQUIDISTANT from "
+           "E. coli by shared lineage depth, so they are one distance class, not two rungs.",
+           # held out the ORGANISM: tuned on E. coli, applied unchanged to human with nothing re-fit.
+           split_unit=frozenset({"organism"}),
+           organism_transfer="held_out_organism"),
 )
 
 # Where a learned layer is pointed. The catalog-beats-learning result is about REPLACING a catalog; it was
@@ -217,11 +243,22 @@ def _transfer_gap_conditions(regime: "Regime", claim: str | None) -> list[str]:
     matched regime carries. Returns [] when there is no claim or the claim is already supported."""
     if claim is None or _transfer_rank(claim) <= _transfer_rank(regime.organism_transfer):
         return []
+    # DERIVED, never restated. This used to end with the literal "no regime in this map carries one
+    # today", which became FALSE the moment `curated_catalog_cross_organism` landed (2026-10-06). A
+    # restated fact goes stale silently -- the same failure mode as the retired-lock filename this repo
+    # already records -- so the sentence is computed from the live table instead.
+    carriers = sorted(r.key for r in REGIMES
+                      if _transfer_rank(r.organism_transfer) >= _transfer_rank("held_out_organism"))
+    if carriers:
+        where = ("regime(s) that DO carry held-out-organism evidence: %s -- cite one of those, or "
+                 "measure a held-out-ORGANISM number for this one" % ", ".join(carriers))
+    else:
+        where = ("measure a held-out-ORGANISM number before claiming organism transfer; no regime in "
+                 "this map carries one today")
     return [f"this proposal claims {claim!r} but regime {regime.key!r} carries "
             f"organism_transfer={regime.organism_transfer!r} (split unit(s): "
             f"{sorted(regime.split_unit)}) -- the claim is NOT supported by the cited evidence",
-            "measure a held-out-ORGANISM number before claiming organism transfer; "
-            "no regime in this map carries one today"]
+            where]
 
 
 @dataclass

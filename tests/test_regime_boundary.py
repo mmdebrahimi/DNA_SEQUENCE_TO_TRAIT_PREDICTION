@@ -198,12 +198,21 @@ def test_split_units_are_UNORDERED_so_the_single_ladder_cannot_reappear():
 
 
 def test_organism_transfer_is_unmeasured_is_a_TRIPWIRE_not_a_frozen_count():
-    """Today every row is unmeasured. The event worth noticing is that SHRINKING, so this asserts the
-    relation (all rows) rather than the literal 8 -- a new regime must not silently satisfy it."""
+    """UPDATED DELIBERATELY 2026-10-06, which is what this tripwire asked for.
+
+    It previously asserted that EVERY row was unmeasured, and it FIRED when
+    `curated_catalog_cross_organism` landed with held-out-organism evidence from the transfer ladder --
+    the event its own message named as "the headline F1 was built to surface". The relation is now
+    "exactly the rows that are measured are measured": the carrier set is named explicitly, so the NEXT
+    regime to acquire this evidence still trips the wire rather than slipping in.
+    """
     unmeasured = organism_transfer_is_unmeasured()
-    assert set(unmeasured) == {r.key for r in REGIMES}, (
-        "a regime has acquired held-out-ORGANISM evidence -- that is the headline F1 was built to "
-        "surface. Update the plan's claim and this test deliberately, together.")
+    carriers = {r.key for r in REGIMES if r.organism_transfer != "unmeasured"}
+    assert carriers == {"curated_catalog_cross_organism"}, (
+        "the set of regimes carrying held-out-ORGANISM evidence changed: %s. That is the headline F1 was "
+        "built to surface -- update the plan's claim and this test deliberately, together." % carriers)
+    assert set(unmeasured) == {r.key for r in REGIMES} - carriers
+    assert len(unmeasured) == 8
     assert split_units_for("natural_molecular_supervised_blindspot") == frozenset({"study"})
     with pytest.raises(KeyError):
         split_units_for("no_such_regime")
@@ -389,3 +398,96 @@ def test_the_missing_artifact_guard_is_non_vacuous_on_the_real_map(monkeypatch, 
     assert written["artifacts_missing"] == []
     assert len(written["regimes"]) == len(REGIMES)
     assert all(r["artifact_exists"] for r in written["regimes"])
+
+
+# ===================================================================================================
+# Transfer-ladder Step 9 (2026-10-06): the first row to carry held-out-ORGANISM evidence, and the
+# retirement of a restated fact that became false the moment it landed.
+# ===================================================================================================
+def test_the_unmeasured_set_SHRANK_by_exactly_one_and_is_not_empty():
+    """The event `organism_transfer_is_unmeasured`'s own docstring names as the one worth noticing.
+
+    Asserting 'dropped by one' rather than 'is empty' matters: the other 8 regimes are GENUINELY
+    unmeasured and an empty return would be the over-claim this field exists to prevent.
+    """
+    from dna_decode.eval.regime import REGIMES, organism_transfer_is_unmeasured
+
+    unmeasured = organism_transfer_is_unmeasured()
+    assert len(REGIMES) == 9
+    assert len(unmeasured) == 8, unmeasured
+    assert "curated_catalog_cross_organism" not in unmeasured
+
+
+def test_the_cross_organism_row_is_shaped_as_held_out_organism():
+    from dna_decode.eval.regime import REGIMES
+
+    r = next(x for x in REGIMES if x.key == "curated_catalog_cross_organism")
+    assert r.organism_transfer == "held_out_organism"
+    assert r.split_unit == frozenset({"organism"})
+    assert r.population == "constructed" and r.endpoint == "organism"
+
+
+def test_the_new_rows_verdict_is_OPEN_because_the_LADDER_was_indeterminate():
+    """Set FROM the measurement, not chosen: the cross-organism number exists and clears its null ~4x
+    (so not CLOSED_NEGATIVE), but the ladder returned INDETERMINATE_INSUFFICIENT_RUNGS (so not WORKS)."""
+    from dna_decode.eval.regime import OPEN, REGIMES
+
+    r = next(x for x in REGIMES if x.key == "curated_catalog_cross_organism")
+    assert r.verdict == OPEN
+    assert "INDETERMINATE_INSUFFICIENT_RUNGS" in r.evidence
+    assert "0.1633" in r.evidence and "0.0446" in r.evidence
+    assert "coverage_lift, NOT AUROC" in r.note, "the note must steer a reader off AUROC"
+
+
+def test_the_new_row_warns_against_reading_auroc_and_names_the_phrasing_gap():
+    from dna_decode.eval.regime import REGIMES
+
+    r = next(x for x in REGIMES if x.key == "curated_catalog_cross_organism")
+    assert "tie-mass" in r.note
+    assert "PHRASING gap" in r.note
+    assert "EQUIDISTANT" in r.note, "the eukaryote tie must travel with the row"
+
+
+def test_the_gap_condition_is_DERIVED_and_names_the_carrier():
+    """It used to end with the literal 'no regime in this map carries one today', which became FALSE the
+    moment a row carried that evidence. A restated fact goes stale silently."""
+    from dna_decode.eval import regime as rg
+
+    conds = rg._transfer_gap_conditions(rg.REGIMES[0], "held_out_organism")
+    joined = " ".join(conds)
+    assert "no regime in this map carries one today" not in joined
+    assert "curated_catalog_cross_organism" in joined
+    assert "regime(s) that DO carry held-out-organism evidence" in joined
+
+
+def test_the_fallback_sentence_still_exists_for_an_empty_table():
+    """The honest wording must survive for the case where nothing carries the evidence -- otherwise the
+    derivation would simply have replaced one unconditional claim with another."""
+    from dna_decode.eval import regime as rg
+
+    src = (rg.__file__ and open(rg.__file__, encoding="utf-8").read()) or ""
+    assert "no regime in\n" in src or "no regime in " in src, \
+        "the empty-table branch must still be reachable in source"
+
+
+def test_a_claim_of_held_out_CLADE_still_gets_a_gap_condition_against_the_new_row():
+    """The ladder gives held_out_ORGANISM, which is strictly below held_out_CLADE -- the ordering must
+    still bite rather than being satisfied by the new row."""
+    from dna_decode.eval import regime as rg
+
+    r = next(x for x in rg.REGIMES if x.key == "curated_catalog_cross_organism")
+    conds = rg._transfer_gap_conditions(r, "held_out_clade")
+    assert conds, "a clade claim against an organism-level row must still be flagged"
+    assert "held_out_organism" in " ".join(conds)
+    # and a claim it DOES support produces nothing
+    assert rg._transfer_gap_conditions(r, "held_out_organism") == []
+
+
+def test_the_cited_artifact_exists_so_regime_map_can_certify_it():
+    from pathlib import Path
+
+    from dna_decode.eval.regime import REGIMES
+
+    root = Path(__file__).resolve().parents[1]
+    r = next(x for x in REGIMES if x.key == "curated_catalog_cross_organism")
+    assert (root / r.artifact).exists(), r.artifact
