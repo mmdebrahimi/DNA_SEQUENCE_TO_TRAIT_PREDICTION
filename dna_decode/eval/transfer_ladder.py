@@ -134,7 +134,11 @@ RUNGS: tuple[Rung, ...] = (
          "cellular organisms; Eukaryota; Opisthokonta; Fungi; Dikarya; Ascomycota; saccharomyceta; "
          "Saccharomycotina; Saccharomycetes; Saccharomycetales; Saccharomycetaceae; Saccharomyces",
          _u(4932), "sgd_features", "systematic_orf"),
-    Rung("human", 9606, "Homo sapiens", "bagel_ceg_neg", "crispr_ko",
+    # label_source_id names the ESSENTIAL-class source; the human rung's negative class comes from a
+    # SECOND file (NEGv1). The full per-rung plan lives in
+    # dna_decode/essentiality/label_sources.py::RUNG_LABEL_PLAN, because the rungs genuinely differ
+    # (one-file-two-columns / two-files / essential-plus-complement) and one id cannot express that.
+    Rung("human", 9606, "Homo sapiens", "bagel_ceg", "crispr_ko",
          "cellular organisms; Eukaryota; Opisthokonta; Metazoa; Eumetazoa; Bilateria; Deuterostomia; "
          "Chordata; Craniata; Vertebrata; Gnathostomata; Teleostomi; Euteleostomi; Sarcopterygii; "
          "Dipnotetrapodomorpha; Tetrapoda; Amniota; Mammalia; Theria; Eutheria; Boreoeutheria; "
