@@ -35,6 +35,31 @@ have run).
 concurrent agents; all died on a session rate limit with **zero** final reports. First-party search worked
 fine immediately after — the fan-out was the constraint, not the session.
 
+## IN FLIGHT — the cross-organism transfer ladder (drafted 2026-10-05, NOT saved)
+
+A 9-step plan to turn the project's **single** step-4 data point (E. coli-tuned essentiality decoder applied
+UNCHANGED to human, AUROC 0.5805) into a 5-rung ladder, to separate **(A)** decay-with-distance from
+**(B)** a eukaryote-boundary cliff. Drafted + adversarially reviewed in conversation; **never written to
+`plans/`** — deliberately, because the review mutated it (the save-once rule).
+
+**Three findings that change it, all measured, none in the plan as drafted:**
+
+1. **AUROC is the WRONG primary metric — it is tie-dominated.** 83.1% of human essentials score EXACTLY 0
+   (E. coli 62.1%), and 11 of 13 patterns have P(hit|non-essential)=0.0000 — the decoder is **silent**, not
+   wrong. Coverage and precision-where-it-fires move in OPPOSITE directions across the two rungs
+   (coverage 0.3789→0.1689; precision 0.3684→**0.9583**) and AUROC blends them. **Use coverage.**
+2. **The miss is ~2.5× host-specific vs phrasing, and the ladder survives** —
+   `wiki/essentiality_missed_vocabulary_2026-10-05.md`. Mechanism (iii) floor 141/566 (24.9%) vs
+   mechanism (ii) floor 57/566 (10.1%). So a cheap pre-test does **not** pre-empt the ladder, but ~10% is a
+   catalogue PHRASING gap unrelated to phylogeny and must be separated out before any rung is scored.
+3. **The FBA walls do not apply.** `fba/essentiality_labels.py` marks S. aureus `LABEL_WALLED` and
+   P. aeruginosa `MODEL_WALLED`, but both are **model-gene-join** walls; this decoder joins to a genome
+   annotation, so two "blocked" rungs are reachable. Reachability is still a HYPOTHESIS until fetched.
+
+**Open AUTHORITY forks:** re-run `/technical-plan` around coverage, or `/save-plan` as-is? (The review also
+wants a W0 schema probe before any parser, and the functional-class step demoted to a provenance-gated
+audit — it is otherwise a second adjudication system.)
+
 ## The system design — drafted, awaiting ratification
 
 `plans/Hybrid_Decoder_Architecture_Plan.md`. The hybrid is **not** "catalog + ML predictor" (that framing

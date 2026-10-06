@@ -1,0 +1,118 @@
+{
+  "record": "essentiality-missed-vocabulary-v1",
+  "date": "2026-10-05",
+  "question": "is the conserved-core decoder's human miss a catalogue PHRASING gap (mechanism ii) or genuinely host-specific function (mechanism iii)?",
+  "method": "corpus comparison only -- no curated biology. Content words of MISSED human BAGEL essentials are located in the E. coli CDS corpus: inside the catalogue's reach, present-but-uncaught, or absent entirely.",
+  "n_human_essential": 681,
+  "n_caught": 115,
+  "n_missed": 566,
+  "human_coverage": 0.1689,
+  "n_ecoli_cds": 4318,
+  "n_ecoli_caught": 444,
+  "gene_level_attribution": {
+    "ii_IN_CATALOGUE_REACH": 314,
+    "iii_ABSENT_FROM_ECOLI": 141,
+    "i_or_ii_ECOLI_BUT_UNCAUGHT": 111
+  },
+  "frac_mechanism_ii_strict": 0.258,
+  "bar_sensitivity": {
+    "loose_any_shared_word": 0.5548,
+    "strict_regex_vocabulary": 0.258,
+    "strict_minus_regex_fragments": 0.2509
+  },
+  "bar_sensitivity_bands": {
+    "loose_any_shared_word": "dominates",
+    "strict_regex_vocabulary": "material",
+    "strict_minus_regex_fragments": "material"
+  },
+  "verdict": "INDETERMINATE_BAR_SENSITIVE_VOCABULARY_CANNOT_ADJUDICATE",
+  "verdict_rule": ">=0.50 phrasing dominates; 0.20-0.50 material; <0.20 host-specific; bands disagreeing across bars -> INDETERMINATE",
+  "robust_floors": {
+    "mechanism_ii_floor_n": 57,
+    "mechanism_ii_floor_frac": 0.1007,
+    "mechanism_iii_floor_n": 141,
+    "mechanism_iii_floor_frac": 0.2491,
+    "why_robust": "an absent word is absent under ANY reach definition; the (ii) floor words are both in the regex vocabulary and unambiguously functional, so they are in reach under any definition. The MIDDLE is what the bars disagree about."
+  },
+  "self_correction": "the first version of this probe used only the loose bar, reported 0.5548 and a verdict of PHRASING_GAP_DOMINATES_LADDER_IS_WRONG_INSTRUMENT. That was inflated >2x by generic modifiers (binding/small/beta/alpha/cell/repeat) and the strict bar gives a different band. The verdict was retracted before publication, not after.",
+  "top_words": [
+    {
+      "word": "rna",
+      "n_missed_essentials": 44,
+      "share_of_missed": 0.0777,
+      "bucket": "IN_CATALOGUE_REACH"
+    },
+    {
+      "word": "nuclear",
+      "n_missed_essentials": 34,
+      "share_of_missed": 0.0601,
+      "bucket": "ABSENT_FROM_ECOLI"
+    },
+    {
+      "word": "small",
+      "n_missed_essentials": 27,
+      "share_of_missed": 0.0477,
+      "bucket": "ECOLI_BUT_UNCAUGHT"
+    },
+    {
+      "word": "binding",
+      "n_missed_essentials": 25,
+      "share_of_missed": 0.0442,
+      "bucket": "IN_CATALOGUE_REACH"
+    },
+    {
+      "word": "kinase",
+      "n_missed_essentials": 24,
+      "share_of_missed": 0.0424,
+      "bucket": "IN_CATALOGUE_REACH"
+    },
+    {
+      "word": "proteasome",
+      "n_missed_essentials": 24,
+      "share_of_missed": 0.0424,
+      "bucket": "ABSENT_FROM_ECOLI"
+    },
+    {
+      "word": "polymerase",
+      "n_missed_essentials": 21,
+      "share_of_missed": 0.0371,
+      "bucket": "IN_CATALOGUE_REACH"
+    },
+    {
+      "word": "helicase",
+      "n_missed_essentials": 20,
+      "share_of_missed": 0.0353,
+      "bucket": "IN_CATALOGUE_REACH"
+    },
+    {
+      "word": "splicing",
+      "n_missed_essentials": 19,
+      "share_of_missed": 0.0336,
+      "bucket": "ABSENT_FROM_ECOLI"
+    },
+    {
+      "word": "ribonucleoprotein",
+      "n_missed_essentials": 19,
+      "share_of_missed": 0.0336,
+      "bucket": "ABSENT_FROM_ECOLI"
+    },
+    {
+      "word": "beta",
+      "n_missed_essentials": 17,
+      "share_of_missed": 0.03,
+      "bucket": "IN_CATALOGUE_REACH"
+    },
+    {
+      "word": "repeat",
+      "n_missed_essentials": 16,
+      "share_of_missed": 0.0283,
+      "bucket": "ECOLI_BUT_UNCAUGHT"
+    }
+  ],
+  "honest_limits": [
+    "a WORD is not a function: shared vocabulary does not prove the same complex. This measures vocabulary overlap, which is what mechanism (ii) IS, and nothing more.",
+    "human labels are BAGEL CEGv2/NEGv1, two curated extremes, so base rate 0.431 is a construction artifact and not comparable to E. coli's genome-wide 0.0928.",
+    "ECOLI_BUT_UNCAUGHT cannot be split into (i) bacteria-only vs (ii) phrasing without asserting biology, so it is reported as the joint bucket.",
+    "stopwords are hand-written but are English function words plus annotation boilerplate, not biological judgements."
+  ]
+}
