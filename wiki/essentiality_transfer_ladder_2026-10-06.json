@@ -1,0 +1,237 @@
+{
+  "record": "essentiality-transfer-ladder-v1",
+  "date": "2026-10-06",
+  "question": "is the conserved-core decoder's cross-organism decay (A) continuous with phylogenetic distance or (B) a cliff at the eukaryote boundary?",
+  "primary_metric": "coverage_lift = coverage(essential) - coverage(non-essential); class-conditioned so base-rate robust and cross-rung comparable",
+  "primary_test": "bacterial_technology_matched_subladder",
+  "preregistered": {
+    "question": "is the conserved-core decoder's cross-organism decay (A) continuous with phylogenetic distance or (B) a cliff at the eukaryote boundary?",
+    "primary_metric": "coverage_lift = coverage(essential) - coverage(non-essential); class-conditioned so base-rate robust and cross-rung comparable",
+    "secondary_metric": "AUROC -- reported but NOT compared across rungs (different sampling frames; 83% tie mass in human makes it a tie-mass statistic)",
+    "primary_test": "bacterial_technology_matched_subladder",
+    "primary_test_reason": "the three bacterial rungs are all transposon-insertion screens, so distance varies while label TECHNOLOGY is held constant",
+    "secondary_test": "full 5-rung ladder -- technology-confounded AND sampling-frame-confounded",
+    "verdicts": [
+      "SMOOTH_DECAY_WITH_DISTANCE",
+      "DOMAIN_CLIFF",
+      "NO_DECAY_DISTANCE_INSENSITIVE",
+      "INDETERMINATE_INSUFFICIENT_RUNGS",
+      "INDETERMINATE_NULL_NOT_CLEARED",
+      "INDETERMINATE_BAR_SENSITIVE"
+    ],
+    "falsified_if": "coverage_lift does not clear its own label-permutation null on the rungs that score",
+    "eukaryote_tie": "S. cerevisiae and H. sapiens share equal lineage depth with E. coli (1), so they are one distance class; their SPREAD is a consistency check, not a rung ordering",
+    "decoder_must_be_unchanged": "a per-organism synonym layer would destroy the transfer condition; sha256(core_decoder.py) is pinned by test",
+    "frozen_at": "plan v2 Step 1, before any new rung was fetched"
+  },
+  "frozen_thresholds": {
+    "plateau_tol": 0.06,
+    "cliff_drop": 0.12,
+    "min_rungs": 3
+  },
+  "threshold_derivation": {
+    "measured_nulls": {
+      "ecoli": {
+        "null_p95": 0.0298,
+        "null_max": 0.0581
+      },
+      "human": {
+        "null_p95": 0.0239,
+        "null_max": 0.0446
+      }
+    },
+    "plateau_tol": "ceil(max null_MAX across the two existing rungs) = ceil(0.0581) -> 0.06; the null MAX rather than p95, matching this repo's practice of clearing the maximum",
+    "cliff_drop": "2 x plateau_tol -> 0.12; a drop must be twice the noise floor to be a cliff",
+    "min_rungs": "3; two rungs are the motivating observation, not a shape",
+    "observed_two_rung_spread": 0.1492,
+    "non_vacuity": "0.1492 > cliff_drop 0.12 (a cliff is reachable) and > plateau_tol 0.06 (a plateau is not trivially satisfied)",
+    "HONEST_LABEL": "DESCRIPTIVE-CONSISTENCY LOCK, not a frozen-before-the-numbers endpoint test: these are derived from the two rungs that motivated the question, so a bar built from them cannot also test them."
+  },
+  "reconciled": {
+    "ecoli": {
+      "coverage_lift": 0.3125,
+      "auroc": 0.6952
+    },
+    "human": {
+      "coverage_lift": 0.1633,
+      "auroc": 0.5805
+    }
+  },
+  "distance_classes": [
+    {
+      "depth": 8,
+      "rungs": [
+        "ecoli"
+      ]
+    },
+    {
+      "depth": 5,
+      "rungs": [
+        "paeruginosa"
+      ]
+    },
+    {
+      "depth": 2,
+      "rungs": [
+        "saureus"
+      ]
+    },
+    {
+      "depth": 1,
+      "rungs": [
+        "human",
+        "scerevisiae"
+      ]
+    }
+  ],
+  "rungs": [
+    {
+      "key": "ecoli",
+      "organism": "Escherichia coli",
+      "taxid": 562,
+      "depth": 8,
+      "technology": "transposon_insertion",
+      "label_source_id": "goodall_tradis",
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id=562&retmode=xml",
+      "class_sourcing_mode": "one_file_two_columns",
+      "scored": true,
+      "join": {
+        "n_labels": 4107,
+        "n_joined": 3783,
+        "join_rate": 0.9211,
+        "n_unjoined": 324,
+        "unjoined_sample": [
+          "cohE",
+          "yciS",
+          "ttcC",
+          "yedN",
+          "ygeF",
+          "ygeN",
+          "yrfF",
+          "insA"
+        ],
+        "joined_vs_unjoined_composition": {
+          "joined_n": 3783,
+          "unjoined_n": 324,
+          "joined_essential_fraction": 0.0928,
+          "unjoined_essential_fraction": 0.0216,
+          "essential_enrichment_in_joined": 0.0712
+        },
+        "min_join_rate_asserted": 0.7
+      },
+      "n_essential": 351,
+      "n_nonessential": 3432,
+      "base_rate": 0.0928,
+      "coverage_essential": 0.3789,
+      "coverage_nonessential": 0.0664,
+      "coverage_lift": 0.3125,
+      "precision_where_fires": 0.3684,
+      "draws": 400,
+      "seed": 20261006,
+      "null_mean": 0.0001,
+      "null_p95": 0.0298,
+      "null_max": 0.0518,
+      "coverage_lift_adjusted": 0.3213,
+      "phrasing_floor": {
+        "n_phrasing_floor": 8,
+        "phrasing_floor_fraction_of_missed": 0.0367,
+        "coverage_essential_adjusted": 0.3878,
+        "floor_is_a_FLOOR_not_an_estimate": "this is a FLOOR, not an estimate: 57 genes survived an adversarial bar on the human rung, the true mechanism-(ii) share sits between ~0.10 and ~0.25, and vocabulary overlap cannot narrow it -- so the adjustment deliberately UNDER-corrects"
+      },
+      "auroc_SECONDARY_not_cross_rung_comparable": 0.6952
+    },
+    {
+      "key": "paeruginosa",
+      "organism": "Pseudomonas aeruginosa",
+      "taxid": 287,
+      "depth": 5,
+      "technology": "transposon_insertion",
+      "label_source_id": "plos_gold_pa14",
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id=287&retmode=xml",
+      "class_sourcing_mode": "essential_plus_complement",
+      "scored": false,
+      "wall": "WALL_SCHEMA_UNVERIFIED",
+      "route_tried": "W0 record says unverified: not in D:\\dna_decode_cache\\essentiality; remote is NOT RECORDED -- reachability is a HYPOTHESIS until fetched"
+    },
+    {
+      "key": "saureus",
+      "organism": "Staphylococcus aureus",
+      "taxid": 1280,
+      "depth": 2,
+      "technology": "transposon_insertion",
+      "label_source_id": "ntml_nebraska",
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id=1280&retmode=xml",
+      "class_sourcing_mode": "essential_plus_complement",
+      "scored": false,
+      "wall": "WALL_SCHEMA_UNVERIFIED",
+      "route_tried": "W0 record says unverified: not in D:\\dna_decode_cache\\essentiality; remote is NOT RECORDED -- reachability is a HYPOTHESIS until fetched"
+    },
+    {
+      "key": "scerevisiae",
+      "organism": "Saccharomyces cerevisiae",
+      "taxid": 4932,
+      "depth": 1,
+      "technology": "deletion_collection",
+      "label_source_id": "sgd_phenotype",
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id=4932&retmode=xml",
+      "class_sourcing_mode": "essential_plus_complement",
+      "scored": false,
+      "wall": "WALL_SCHEMA_UNVERIFIED",
+      "route_tried": "W0 record says unverified: not in D:\\dna_decode_cache\\essentiality; remote is http://sgd-archive.yeastgenome.org/curation/literature/phenotype_data.tab"
+    },
+    {
+      "key": "human",
+      "organism": "Homo sapiens",
+      "taxid": 9606,
+      "depth": 1,
+      "technology": "crispr_ko",
+      "label_source_id": "bagel_ceg",
+      "source_url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id=9606&retmode=xml",
+      "class_sourcing_mode": "two_files",
+      "scored": true,
+      "join": {
+        "n_labels": 1580,
+        "n_joined": 1580,
+        "join_rate": 1.0,
+        "n_unjoined": 0,
+        "unjoined_sample": [],
+        "joined_vs_unjoined_composition": {
+          "joined_n": 1580,
+          "unjoined_n": 0,
+          "joined_essential_fraction": 0.431,
+          "unjoined_essential_fraction": null,
+          "essential_enrichment_in_joined": null
+        },
+        "min_join_rate_asserted": 0.7
+      },
+      "n_essential": 681,
+      "n_nonessential": 899,
+      "base_rate": 0.431,
+      "coverage_essential": 0.1689,
+      "coverage_nonessential": 0.0056,
+      "coverage_lift": 0.1633,
+      "precision_where_fires": 0.9583,
+      "draws": 400,
+      "seed": 20261006,
+      "null_mean": 0.0009,
+      "null_p95": 0.0214,
+      "null_max": 0.0446,
+      "coverage_lift_adjusted": 0.1787,
+      "phrasing_floor": {
+        "n_phrasing_floor": 57,
+        "phrasing_floor_fraction_of_missed": 0.1007,
+        "coverage_essential_adjusted": 0.1843,
+        "floor_is_a_FLOOR_not_an_estimate": "this is a FLOOR, not an estimate: 57 genes survived an adversarial bar on the human rung, the true mechanism-(ii) share sits between ~0.10 and ~0.25, and vocabulary overlap cannot narrow it -- so the adjustment deliberately UNDER-corrects"
+      },
+      "auroc_SECONDARY_not_cross_rung_comparable": 0.5805
+    }
+  ],
+  "verdict": {
+    "verdict": "INDETERMINATE_INSUFFICIENT_RUNGS",
+    "reason": "2 scored rung(s) < min_rungs=3",
+    "n_scored": 2,
+    "detail": {}
+  },
+  "n_scored": 2,
+  "n_walled": 3
+}

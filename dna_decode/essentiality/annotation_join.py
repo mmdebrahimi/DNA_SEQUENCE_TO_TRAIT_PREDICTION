@@ -92,16 +92,45 @@ def _iter_sgd_features(path):
                 yield orf, "%s %s" % (p[4].strip(), p[15].strip())
 
 
-def load_annotation(path, kind: str) -> dict[str, str]:
-    """identifier -> product/description text. Raises rather than returning an empty dict silently."""
+DUPLICATE_RULES = ("last", "first")
+
+# THE DEFAULT IS "last" FOR A RECONCILIATION REASON, NOT A BIOLOGICAL ONE -- measured 2026-10-06.
+#
+# Real RefSeq carries alternative products of one locus, so a symbol can appear twice with different
+# product text. In the E. coli K-12 feature table there are 9 duplicated symbols, 7 with differing text,
+# and exactly ONE whose decoder SCORE differs: `mrcB`.
+#     first occurrence: "peptidoglycan glycosyltransferase/..."  -> core_score 2.0
+#     last  occurrence: "PBP-1Bgamma"                            -> core_score 0.0
+# mrcB is label 0 (non-essential), so the choice moves coverage(non-essential) by 1/3432 = 0.0003:
+#     last-wins  -> coverage_lift 0.3125, AUROC 0.6952   == the COMMITTED published values
+#     first-wins -> coverage_lift 0.3122, AUROC 0.6951
+#
+# So "last" is what the published surface was produced under, and the default must reproduce it -- tuning
+# the reconcile TARGET to match new code is the anti-pattern this repo's reconcile gate exists to stop.
+#
+# HONESTLY: "first" is arguably the BETTER rule, because it keeps the more informative product string and
+# a function-matching decoder can only lose by reading "PBP-1Bgamma". Switching the default would change
+# TWO published numbers, which is a USER AUTHORITY call, not an implementation detail. Surfaced here
+# rather than silently adopted.
+def load_annotation(path, kind: str, *, on_duplicate: str = "last") -> dict[str, str]:
+    """identifier -> product/description text. Raises rather than returning an empty dict silently.
+
+    `on_duplicate` selects which row wins when one identifier appears more than once. See the block
+    above: the default reproduces the committed numbers; "first" is arguably better and would change them.
+    """
     if kind not in ANNOTATION_KINDS:
         raise AnnotationError("unknown annotation kind %r (known: %s)" % (kind, ANNOTATION_KINDS))
+    if on_duplicate not in DUPLICATE_RULES:
+        raise AnnotationError("on_duplicate must be one of %s (got %r)" % (DUPLICATE_RULES, on_duplicate))
     it = {"ncbi_feature_table": iter_feature_table,
           "ncbi_gene_info": _iter_gene_info,
           "sgd_features": _iter_sgd_features}[kind]
     out: dict[str, str] = {}
     for key, text in it(path):
-        out.setdefault(key, text)
+        if on_duplicate == "last":
+            out[key] = text
+        else:
+            out.setdefault(key, text)
     if not out:
         raise AnnotationError(
             "annotation %s (%s) yielded ZERO entries -- an empty annotation joins nothing and would "
