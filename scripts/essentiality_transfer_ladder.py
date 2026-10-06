@@ -282,6 +282,66 @@ def _self_check() -> int:
     return 0
 
 
+# ---------------------------------------------------------------------------------------------------
+# Step 7 — verdict rendering. The five honest limits live IN the template file, not here, so a render
+# cannot omit them; a test asserts all five headings are present in the template and in every output.
+# ---------------------------------------------------------------------------------------------------
+MEMO_TEMPLATE = WIKI / "essentiality_transfer_ladder_memo_template.md"
+
+HONEST_LIMIT_HEADINGS = (
+    "### Label technology is confounded with distance across the full ladder",
+    "### Cross-rung AUROC is a DIFFERENT SAMPLING FRAME and is refused here",
+    "### Roughly 10% of the human miss is a catalogue PHRASING gap, not phylogeny",
+    "### A rung is ONE organism",
+    "### The bar is an asserted, derived consistency lock — not an endpoint test",
+)
+
+
+def bacterial_subladder_verdict(records, **thresholds):
+    """The PRIMARY test: only the technology-matched bacterial rungs."""
+    bact = [r for r in records if r["key"] in tl.BACTERIAL_RUNGS]
+    return tl.classify_ladder(bact, **thresholds)
+
+
+def _rung_table(records) -> str:
+    head = ("| rung | organism | depth | tech | cov(ess) | cov(non) | **coverage_lift** | adjusted | "
+            "null p95 / MAX | state |\n|---|---|---|---|---|---|---|---|---|---|")
+    lines = [head]
+    for r in sorted(records, key=lambda x: -x["depth"]):
+        if r.get("scored"):
+            lines.append("| `%s` | *%s* | %d | %s | %.4f | %.4f | **%.4f** | %.4f | %.4f / %.4f | scored |"
+                         % (r["key"], r["organism"], r["depth"], r["technology"],
+                            r["coverage_essential"], r["coverage_nonessential"], r["coverage_lift"],
+                            r["coverage_lift_adjusted"], r["null_p95"], r["null_max"]))
+        else:
+            lines.append("| `%s` | *%s* | %d | %s | — | — | — | — | — | **%s** |"
+                         % (r["key"], r["organism"], r["depth"], r["technology"], r["wall"]))
+    return "\n".join(lines)
+
+
+def render_memo(art: dict) -> str:
+    """Fill the template. Post-hoc readings never replace the mechanical verdict (separate key)."""
+    tpl = MEMO_TEMPLATE.read_text(encoding="utf-8")
+    recs = art["rungs"]
+    prim = bacterial_subladder_verdict(recs, **art["frozen_thresholds"])
+    classes = "\n".join("- depth **%d**: %s%s" % (
+        c["depth"], ", ".join("`%s`" % k for k in c["rungs"]),
+        "  ← TIED: one distance class, so their spread is a consistency check, not a rung ordering"
+        if len(c["rungs"]) > 1 else "") for c in art["distance_classes"])
+    rec = "\n".join("- `%s`: coverage_lift **%.4f**, AUROC %.4f (both reproduced)" %
+                    (k, v["coverage_lift"], v["auroc"]) for k, v in art["reconciled"].items())
+    deriv = "\n".join("- **%s:** %s" % (k, v) for k, v in art["threshold_derivation"].items()
+                      if isinstance(v, (str, int, float)))
+    return tpl.format(
+        date=art["date"], primary_test=art["primary_test"],
+        primary_verdict=prim.verdict, primary_reason=prim.reason,
+        secondary_verdict=art["verdict"]["verdict"],
+        n_scored=art["n_scored"], n_walled=art["n_walled"],
+        frozen=json.dumps(art["frozen_thresholds"]),
+        rung_table=_rung_table(recs), distance_classes=classes,
+        reconciled=rec, threshold_derivation=deriv)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--self-check", action="store_true")
@@ -341,7 +401,6 @@ def main(argv=None) -> int:
         p.write_text(json.dumps(art, indent=2), encoding="utf-8")
         print("[-> %s]" % p.relative_to(ROOT))
     if a.emit_memo:
-        from essentiality_transfer_ladder_memo import render_memo
         m = WIKI / ("essentiality_transfer_ladder_%s.md" % date.today())
         m.write_text(render_memo(art), encoding="utf-8")
         print("[-> %s]" % m.relative_to(ROOT))
