@@ -4,24 +4,27 @@
   "reference": "GCF_000005845.2 (E. coli K-12 MG1655), committed locally",
   "window_length_bp": 150,
   "kmer_k": 4,
-  "feature_modes": "kmer,both",
+  "feature_modes": "both",
   "positional_bins": 6,
   "markov_order": 3,
-  "n_generated_per_candidate": 500,
-  "natural_corpus": {
-    "n_cds_total": 4340,
-    "n_windows": 4340,
-    "n_skipped_edge": 0,
-    "n_skipped_ambiguous": 0,
-    "n_overlapping_cds": 2708,
-    "strand_counts": {
-      "+": 2118,
-      "-": 2222
+  "n_generated_per_candidate": 120,
+  "natural_sets": {
+    "promoter": {
+      "n_cds_total": 4340,
+      "n_windows": 4340,
+      "n_skipped_edge": 0,
+      "n_skipped_ambiguous": 0,
+      "n_overlapping_cds": 2708,
+      "strand_counts": {
+        "+": 2118,
+        "-": 2222
+      }
     }
   },
+  "natural_set_arg": "promoter",
   "fit_eval_split": {
-    "n_fit": 1200,
-    "n_eval": 1200,
+    "n_fit": 600,
+    "n_eval": 600,
     "note": "Markov null fitted on FIT only; all discrimination on EVAL only, so no generator is scored against sequences it was trained on"
   },
   "device": {
@@ -36,126 +39,70 @@
       "CC 5.0 < 7.0: fp16 is NOT fast here (consumer Pascal runs it at ~1/64 of fp32; Maxwell has no fp16 units). Using fp32. bitsandbytes and bf16 are also unavailable."
     ]
   },
+  "conditional": false,
+  "context_bp": null,
   "results": [
     {
       "record": "glm-falsifier-v1",
       "candidate": "markov-k3",
-      "n_natural": 1200,
-      "n_candidate": 500,
+      "n_natural": 600,
+      "n_candidate": 120,
       "kmer_k": 4,
-      "feature_mode": "kmer",
-      "positional_bins": null,
-      "distinguishability_auroc_LOWER_IS_BETTER": 0.5714,
+      "feature_mode": "both",
+      "positional_bins": 6,
+      "distinguishability_auroc_LOWER_IS_BETTER": 0.6679,
       "markov_null_distinguishability": null,
-      "control_self_natural_vs_natural_max": 0.506,
+      "control_self_natural_vs_natural_max": 0.5865,
       "control_self_values": [
+        0.5348,
+        0.5455,
+        0.4548,
         0.5053,
-        0.4909,
-        0.5048,
-        0.506,
-        0.5004
+        0.5865
       ],
-      "control_uniform_vs_natural": 0.9578,
-      "gc_natural": 0.4528,
-      "gc_candidate": 0.4521,
+      "control_uniform_vs_natural": 0.9641,
+      "gc_natural": 0.4552,
+      "gc_candidate": 0.4509,
       "checks": {
-        "n": 500,
+        "n": 120,
         "alphabet_valid_rate": 1.0,
         "exact_length_rate": 1.0,
         "constraint_scope": "dna_decode/constraints is CDS-shaped (frame / internal stop / codon reachability) and is INAPPLICABLE to non-coding regulatory sequence, so it is not run here and no vacuous 100%-pass is reported. Alphabet + exact length are the checks that do apply."
       },
       "verdict": "NO_BETTER_THAN_MARKOV_NULL",
-      "reason": "no Markov null supplied for comparison; candidate distinguishability 0.5714 against a derived noise ceiling of 0.506"
+      "reason": "no Markov null supplied for comparison; candidate distinguishability 0.6679 against a derived noise ceiling of 0.5865",
+      "natural_set": "promoter"
     },
     {
       "record": "glm-falsifier-v1",
       "candidate": "uniform",
-      "n_natural": 1200,
-      "n_candidate": 500,
+      "n_natural": 600,
+      "n_candidate": 120,
       "kmer_k": 4,
-      "feature_mode": "kmer",
-      "positional_bins": null,
-      "distinguishability_auroc_LOWER_IS_BETTER": 0.9578,
-      "markov_null_distinguishability": 0.5714,
-      "control_self_natural_vs_natural_max": 0.506,
+      "feature_mode": "both",
+      "positional_bins": 6,
+      "distinguishability_auroc_LOWER_IS_BETTER": 0.9641,
+      "markov_null_distinguishability": 0.6679,
+      "control_self_natural_vs_natural_max": 0.5865,
       "control_self_values": [
+        0.5348,
+        0.5455,
+        0.4548,
         0.5053,
-        0.4909,
-        0.5048,
-        0.506,
-        0.5004
+        0.5865
       ],
-      "control_uniform_vs_natural": 0.9578,
-      "gc_natural": 0.4528,
-      "gc_candidate": 0.5008,
+      "control_uniform_vs_natural": 0.9641,
+      "gc_natural": 0.4552,
+      "gc_candidate": 0.5066,
       "checks": {
-        "n": 500,
+        "n": 120,
         "alphabet_valid_rate": 1.0,
         "exact_length_rate": 1.0,
         "constraint_scope": "dna_decode/constraints is CDS-shaped (frame / internal stop / codon reachability) and is INAPPLICABLE to non-coding regulatory sequence, so it is not run here and no vacuous 100%-pass is reported. Alphabet + exact length are the checks that do apply."
       },
       "verdict": "WORSE_THAN_MARKOV_NULL",
-      "reason": "candidate 0.9578 vs Markov null 0.5714; tolerance 0.006 derived from the self-control ceiling 0.506. LOWER distinguishability is better."
-    },
-    {
-      "record": "glm-falsifier-v1",
-      "candidate": "markov-k3",
-      "n_natural": 1200,
-      "n_candidate": 500,
-      "kmer_k": 4,
-      "feature_mode": "both",
-      "positional_bins": 6,
-      "distinguishability_auroc_LOWER_IS_BETTER": 0.6737,
-      "markov_null_distinguishability": null,
-      "control_self_natural_vs_natural_max": 0.5442,
-      "control_self_values": [
-        0.5442,
-        0.4786,
-        0.4942,
-        0.5027,
-        0.4723
-      ],
-      "control_uniform_vs_natural": 0.9694,
-      "gc_natural": 0.4528,
-      "gc_candidate": 0.4521,
-      "checks": {
-        "n": 500,
-        "alphabet_valid_rate": 1.0,
-        "exact_length_rate": 1.0,
-        "constraint_scope": "dna_decode/constraints is CDS-shaped (frame / internal stop / codon reachability) and is INAPPLICABLE to non-coding regulatory sequence, so it is not run here and no vacuous 100%-pass is reported. Alphabet + exact length are the checks that do apply."
-      },
-      "verdict": "NO_BETTER_THAN_MARKOV_NULL",
-      "reason": "no Markov null supplied for comparison; candidate distinguishability 0.6737 against a derived noise ceiling of 0.5442"
-    },
-    {
-      "record": "glm-falsifier-v1",
-      "candidate": "uniform",
-      "n_natural": 1200,
-      "n_candidate": 500,
-      "kmer_k": 4,
-      "feature_mode": "both",
-      "positional_bins": 6,
-      "distinguishability_auroc_LOWER_IS_BETTER": 0.9694,
-      "markov_null_distinguishability": 0.6737,
-      "control_self_natural_vs_natural_max": 0.5442,
-      "control_self_values": [
-        0.5442,
-        0.4786,
-        0.4942,
-        0.5027,
-        0.4723
-      ],
-      "control_uniform_vs_natural": 0.9694,
-      "gc_natural": 0.4528,
-      "gc_candidate": 0.5008,
-      "checks": {
-        "n": 500,
-        "alphabet_valid_rate": 1.0,
-        "exact_length_rate": 1.0,
-        "constraint_scope": "dna_decode/constraints is CDS-shaped (frame / internal stop / codon reachability) and is INAPPLICABLE to non-coding regulatory sequence, so it is not run here and no vacuous 100%-pass is reported. Alphabet + exact length are the checks that do apply."
-      },
-      "verdict": "WORSE_THAN_MARKOV_NULL",
-      "reason": "candidate 0.9694 vs Markov null 0.6737; tolerance 0.0442 derived from the self-control ceiling 0.5442. LOWER distinguishability is better."
+      "reason": "candidate 0.9641 vs Markov null 0.6679; tolerance 0.0865 derived from the self-control ceiling 0.5865. LOWER distinguishability is better.",
+      "natural_set": "promoter"
     }
   ],
   "honest_limits": [
