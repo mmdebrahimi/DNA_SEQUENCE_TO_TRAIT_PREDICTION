@@ -285,12 +285,18 @@ def spearman(a: list[float], b: list[float]) -> float:
 
 
 def fit_predict_ridge(train: list[Pair], test: list[Pair], *, feature: str = "onehot",
-                      alpha: float = 1.0, log_target: bool = True) -> dict:
+                      alpha: float = 1.0, log_target: bool = True,
+                      return_pred: bool = False) -> dict:
     """Ridge regression on `feature`. The TRIVIAL HEAD half of AlphaGenome's design principle.
 
     `log_target` is on by default and is not cosmetic: expression spans 615x, so a linear model on the raw
     scale is dominated by the few brightest promoters. Spearman is rank-based and therefore invariant to
     the monotone transform, but the FIT is not.
+
+    `return_pred` adds `pred` + `measured` to the result. OFF by default on purpose: callers that dump this
+    dict straight into a JSON artifact would otherwise bloat it with thousands of floats. Downstream
+    consumers (the selection measurement) need the predictions and must come through THIS function rather
+    than re-fitting, so the two cannot drift apart.
     """
     import numpy as np
     from sklearn.linear_model import Ridge
@@ -308,7 +314,7 @@ def fit_predict_ridge(train: list[Pair], test: list[Pair], *, feature: str = "on
     sc = StandardScaler().fit(Xtr)
     model = Ridge(alpha=alpha).fit(sc.transform(Xtr), ytr)
     pred = model.predict(sc.transform(Xte))
-    return {
+    out = {
         "feature": feature,
         "n_features": int(Xtr.shape[1]),
         "n_train": len(train),
@@ -317,3 +323,7 @@ def fit_predict_ridge(train: list[Pair], test: list[Pair], *, feature: str = "on
         "alpha": alpha,
         "log_target": log_target,
     }
+    if return_pred:
+        out["pred"] = [float(v) for v in pred]
+        out["measured"] = [float(v) for v in yte]
+    return out

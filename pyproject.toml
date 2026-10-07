@@ -145,6 +145,16 @@ design = [
 # track (5.x). Install ONE, not both. ProSST's STRUCTURE quantizer additionally needs torch_geometric +
 # torch_scatter + the AI4Protein/ProSST repo (heavy, platform-specific) — install those manually for
 # `--method prosst/hybrid`; esm2 needs only this extra. GEMME = Docker; AlphaMissense = a precomputed table.
+#
+# **[forward] IS ALSO THE GLM GENERATOR EXTRA** (added 2026-10-07 after a cross-machine handoff lost an hour
+# to this). `dna_decode/glm/generate.py` + `scripts/glm_generator_falsifier.py` need torch + transformers and
+# there is NO extra named for them; the name says "forward" but the 5.x pin is what the generator wants too.
+# GENERator-v2-prokaryote declares `"model_type": "llama"`, so transformers resolves the MODEL natively --
+# but the HF repo ships a custom `tokenizer.py`, so `trust_remote_code=True` IS load-bearing for the
+# TOKENIZER. That is the version-drift risk surface here (the same shape as the NT remote `modeling_esm.py`
+# breaking on a transformers major bump), not the model class. Verified working on torch 2.7.1+cu118 /
+# transformers 5.14.1. Do NOT use [ml] for the generator: its `transformers<5` pin is for the closed-negative
+# NT/DNABERT-2 track, and the two extras are declared mutually exclusive in [tool.uv].conflicts.
 forward = [
     "torch>=2.2",
     "transformers>=5",

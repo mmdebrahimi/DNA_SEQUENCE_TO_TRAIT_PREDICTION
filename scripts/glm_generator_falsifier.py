@@ -8,8 +8,19 @@ Markov null is fitted on FIT only and every discrimination is against EVAL only,
 compared against sequences it was trained on. Without that, the null would have memorised its own
 comparison set and its distinguishability would be flattered.
 
-Needs nothing but the committed MG1655 reference: `data/cache/refseq/GCF_000005845.2/{genome.fna,
-annotations.gff3}`. No network, no GPU, no labels.
+Needs nothing but a LOCALLY CACHED MG1655 reference at `data/cache/refseq/GCF_000005845.2/{genome.fna,
+annotations.gff3}`. No network, no GPU, no labels, once it is there.
+
+**That reference is NOT tracked in git** (`data/` is gitignored; `git ls-files data/cache/refseq/` is
+empty), so a fresh clone does not have it and this script REFUSES rather than running on nothing. Fetch it
+with the repo's own downloader -- the argument is the PARENT directory, which appends the accession folder:
+
+    from dna_decode.data.refseq import download_genome
+    download_genome("GCF_000005845.2", "data/cache/refseq")
+
+This docstring said "the committed MG1655 reference" until 2026-10-07, which is the `--help`-over-claim
+pattern: it cost a cross-machine handoff a round trip, because a reader on a fresh clone has every reason
+to believe a doc that says the input is already there.
 """
 from __future__ import annotations
 
@@ -170,7 +181,7 @@ def main(argv=None) -> int:
     art = {
         "record": "glm-generator-falsifier-v1",
         "date": today,
-        "reference": "GCF_000005845.2 (E. coli K-12 MG1655), committed locally",
+        "reference": "GCF_000005845.2 (E. coli K-12 MG1655), locally cached (NOT tracked in git)",
         "window_length_bp": a.length,
         "kmer_k": a.k,
         "feature_modes": a.modes,

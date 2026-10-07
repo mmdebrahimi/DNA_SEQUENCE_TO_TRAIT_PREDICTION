@@ -61,8 +61,16 @@ and two such oracles already ship (`forward` DMS ρ 0.35–0.76; `fba` Keio 0.95
 **Measured pro-GLM evidence** (Johnston 2024 *PNAS*, 160k-variant TrpB): the most-fit variants carry a
 substitution *"nearly absent in natural sequences — a result that conservation-based predictions would not
 capture"*, and epistasis *"prevent[s] simulated directed evolution from efficiently reaching the global
-optimum"*. **Conservation-keyed methods are structurally blind to the best variants**; informed-training MLDE
-on GB1 beats greedy DE 92% vs 1.2% (77x). Scoring and designing are different tasks.
+optimum"*. **Conservation-keyed methods are structurally blind to the best variants**; MLDE on GB1 beats
+greedy DE 92% vs 1.2%. Scoring and designing are different tasks.
+
+**AlphaGenome: the ARCHITECTURE does NOT transfer** (1 Mb context / U-Net / contact maps exist for
+enhancer–promoter interaction; a bacterial promoter is 100–300 bp) — **the TRAINING METHOD does.** Measured
+2026-10-07: the oracle converts ρ 0.59 into **79% of achievable SELECTION value at k=10** (GC 13%), so the
+scoring half is adequate and the **GENERATOR is the bottleneck**; self-distillation is **DEGENERATE on a
+linear oracle** (student–teacher agreement **1.0000**) → **forbidden until a learned representation lands**,
+then only with its real-data validation half. `wiki/alphagenome_lessons_actionable_2026-10-07.md` +
+`glm_oracle_selection_result_2026-10-07.md`.
 
 Design `wiki/glm_architecture_design_2026-10-06.md` · decomposition `wiki/glm_decomposition_2026-10-06.md` ·
 prior art + the 4 forced design changes `wiki/glm_prior_art_synthesis_2026-10-06.md`. Keystone shipped:

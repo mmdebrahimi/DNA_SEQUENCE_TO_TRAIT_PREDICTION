@@ -1,0 +1,98 @@
+{
+  "schema": "glm-selfdistill-probe-v1",
+  "date": "2026-10-07",
+  "claim_under_test": "self-distillation is DEGENERATE on a linear oracle with a fixed feature basis, so it must wait for a learned representation",
+  "method_source": "AlphaGenome phase 2: perturb the input, train on the pre-trained model's own outputs as labels (technical talk, 2026)",
+  "axis": "Minus10",
+  "held_out_values": [
+    "12T->G",
+    "12T->G/7T->C"
+  ],
+  "n_train": 8173,
+  "n_test": 2725,
+  "teacher_rho_vs_measured": 0.5963,
+  "thresholds": {
+    "agreement_floor": 0.99,
+    "delta_rho_tol": 0.01,
+    "beat_margin": 0.02,
+    "control_must_drop_by": 0.2
+  },
+  "outcomes_defined_before_running": {
+    "DEGENERATE_DISTILLATION_BLOCKED_UNTIL_LEARNED_REPRESENTATION": "the linear student reproduces the teacher (agreement >= 0.99 and |d rho| <= 0.01) AND the MLP student does not exceed it -- so distillation buys nothing on a linear oracle and must wait",
+    "DISTILLATION_HELPS_BUILD_IT_NOW": "some student BEATS the teacher on held-out measured expression by > 0.02 rho",
+    "PROBE_VACUOUS_CONTROL_DID_NOT_COLLAPSE": "the GC-only student did NOT collapse, so the probe cannot distinguish a real match from a degenerate one and no conclusion is licensed"
+  },
+  "rows": [
+    {
+      "mutation_rate": 0.02,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.5963,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": -0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.5968,
+          "agreement_with_teacher": 0.9994,
+          "delta_rho_vs_teacher": 0.0005
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.2315,
+          "delta_rho_vs_teacher": -0.4226
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.05,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.5963,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": -0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.5992,
+          "agreement_with_teacher": 0.9994,
+          "delta_rho_vs_teacher": 0.0029
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.2315,
+          "delta_rho_vs_teacher": -0.4226
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.1,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.5963,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": -0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.5933,
+          "agreement_with_teacher": 0.9991,
+          "delta_rho_vs_teacher": -0.003
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.2315,
+          "delta_rho_vs_teacher": -0.4226
+        }
+      }
+    }
+  ],
+  "verdict": "DEGENERATE_DISTILLATION_BLOCKED_UNTIL_LEARNED_REPRESENTATION",
+  "verdict_detail": "linear student reproduces the teacher at every rate (rate, agreement, d_rho) = [(0.02, 1.0, -0.0), (0.05, 1.0, -0.0), (0.1, 1.0, -0.0)]; control collapsed as required",
+  "honest_limits": [
+    "ONE element axis and one teacher family; this bounds the LINEAR case, which is the case that matters because it is what currently ships.",
+    "A negative here does NOT say distillation is useless -- it says it is useless on THIS oracle. The whole point is that it becomes testable once a learned representation exists.",
+    "Perturbation is uniform random point substitution; a generator's candidates are not uniform, so this does not simulate the real off-distribution gap, only the method's mechanics.",
+    "The MLP arm is a capacity probe, not a tuned model -- it is not evidence about what a well-trained CNN could do on REAL labels."
+  ]
+}
