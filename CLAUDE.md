@@ -11,36 +11,26 @@ disagree, **the script is right**.
 
 **Run `uv run python scripts/data_inventory.py` before claiming any DATA is missing or expensive to get,
 or proposing work because a dataset "would have to be fetched".** Read-only, ~45s → `wiki/data_inventory.md`
-(read that file for everything below). Data-side sibling of the script above, built after ONE conversation
-produced three rediscoveries — a method called "cheap" while both checkpoints it needed sat on D:, a track
-called "no agent lever" whose script had existed for months, a measurement already done two days earlier.
-**248 datasets** over four roots vs ~1,100 artifacts, past what a context window holds. It derives per
-dataset `consumed_by` + `reported_in` — the question whose wrong answer causes rediscovery — and **59 are
-referenced nowhere** (largest 13.2 GB), which is where forgotten assets live.
+(read that file). Built after ONE conversation produced three rediscoveries (a method called "cheap" while
+both its checkpoints sat on D:; a track called "no agent lever" whose script was months old). **248
+datasets** over four roots, and **59 are referenced nowhere** (largest 13.2 GB) — where forgotten assets live.
 
 **What this is:** a **published** (`v0.13.x`, PyPI) multi-kingdom **deterministic** genotype→phenotype
-decoder CLI — bacteria, viruses (HIV / SARS-CoV-2 / influenza), fungi, TB, plus human clinical
-(pgx / clinvar / hla), molecular typing, metabolic FBA, variant-effect forward/inverse, and genome maps.
-~50 console entry points across 8 tracks. Not a research repo, and **not an E. coli AMR project** — AMR is
-one track of eight.
+decoder CLI — bacteria, viruses (HIV / SARS-CoV-2 / influenza), fungi, TB, human clinical (pgx / clinvar /
+hla), molecular typing, metabolic FBA, variant-effect forward/inverse, genome maps. ~50 console entry points
+across 8 tracks. Not a research repo, and **not an E. coli AMR project** — AMR is one track of eight.
 
 **The orientation errors this file has actually caused** (1-3 all 2026-08-29, one session; **0 recurs on
 EVERY cold read, is the most expensive, and is numbered 0 because it mis-frames the whole project**):
 
-0. **THE CATALOG-VS-GLM CATEGORY ERROR. The GLM is the PRODUCT; the deterministic catalog was a BRIDGE,
-   built only so there was any number to compare against.** Do NOT benchmark generation against it and do
-   NOT re-derive "the GLM is a component, the catalog is the engine" — the user has corrected this in four
-   separate sessions (emphatic 2026-10-06: *"just build it"*). A lookup table **cannot generate**, so a
-   head-to-head AUROC measures the wrong quantity; 0.926 is irrelevant to "what edit should I make". Every
-   negative below is about **discriminative zero-shot scoring on natural populations** — that is NOT
-   evidence about generation, and **the label wall blocks supervised g→p on natural populations, NOT
-   design-scored-by-a-validated-oracle** (`forward` DMS + `fba` Keio 0.954 are oracles already in hand).
-   Design: `wiki/glm_architecture_design_2026-10-06.md`; lesson:
-   `memory/feedback_glm_is_the_product_not_the_catalog.md`.
+0. **CATALOG-VS-GLM CATEGORY ERROR — the GLM is the PRODUCT, the catalog was a BRIDGE.** Never benchmark
+   generation against it; a lookup table cannot generate, so that comparison measures the wrong quantity.
+   Every negative below is about DISCRIMINATIVE zero-shot scoring and is NOT evidence about generation.
+   Full entry in the body (`## The GLM`); lesson `memory/feedback_glm_is_the_product_not_the_catalog.md`.
 
-1. **Scope collapse.** `wiki/decoder_validation_report_card.json` is the **AMR provenance-disjoint arm
-   only** — **27 rows / 10 SCORED**. The tool's evidence surface is `cell_registry` — **128 cells, 33 `INDEPENDENT_MEASURED`**. Quoting the card as the whole understates it ~4x. Any count you cite must
-   name the arm it covers.
+1. **Scope collapse.** `wiki/decoder_validation_report_card.json` is the **AMR provenance-disjoint arm only**
+   (**27 rows / 10 SCORED**); the tool's surface is `cell_registry` (**128 cells, 33 `INDEPENDENT_MEASURED`**).
+   Quoting the card as the whole understates it ~4x. Any count you cite must name the arm it covers.
 2. **Over-compression of a scoped negative.** Organism-level g→p is **not** a closed negative. What is
    closed is *zero-shot embeddings on natural populations* (0-for-5, de-confounded). Constructed-variation
    designs work — yeast segregant cross **12/12 traits at r 0.46–0.80**. The discriminating variable is
@@ -50,14 +40,36 @@ EVERY cold read, is the most expensive, and is numbered 0 because it mis-frames 
 
 **In-flight work + user-authority calls live in `NEXT.md`** (transient; prune it, don't grow it).
 
-**The rule they share:** a claim asserted from memory or from prose sounds right and is wrong. This
-file and `wiki/` were true when written. **Re-derive from the artifact before publishing a claim** —
-`scripts/project_status.py` for scope, the named script under each bullet below for anything else.
+**The rule they share:** a claim asserted from memory or prose sounds right and is wrong; this file and
+`wiki/` were true when written. **Re-derive from the artifact before publishing a claim.**
 
-**THE GOAL IS GENERATIVE — name a trait, get the genome edits (user, 2026-10-04).** (1) identify the
-organism — *SHIPPED as `dna-identify`* -> (2) which sections jointly make a phenotype -> (3) act in
-bacteria -> (4) climb to animals. **AMR was substrate #1, NOT the subject**; `inverse` *"ranks, does not
-dose"*. Decomposition + per-step status: `memory/project_dna_decode_north_star.md`.
+**THE GOAL IS GENERATIVE — name a trait, get the genome edits (user, 2026-10-04).** (1) identify the organism
+— *SHIPPED as `dna-identify`* -> (2) which sections jointly make a phenotype -> (3) act in bacteria -> (4)
+climb to animals. **AMR was substrate #1, NOT the subject.** Status: `memory/project_dna_decode_north_star.md`.
+
+## The GLM — the product (orientation error 0 in full)
+
+**The GLM is the deliverable; the deterministic catalog was a BRIDGE, built only so there was any number to
+compare against** (user, emphatic 2026-10-06: *"just build it... I don't care if it is not getting good
+results"*; corrected across four sessions). A lookup table **cannot generate**, so a head-to-head AUROC
+ranks nothing — 0.926 is irrelevant to *"what edit should I make"*. **Every negative in this file is about
+DISCRIMINATIVE zero-shot scoring on natural populations; that is NOT evidence about GENERATION.** The label
+wall blocks supervised g→p on natural populations — it does **not** block design-scored-by-a-validated-oracle,
+and two such oracles already ship (`forward` DMS ρ 0.35–0.76; `fba` Keio 0.954 / MCC 0.70–0.74) plus
+`constraints/`, correct by construction. Comparators are other GENERATIVE methods or a random-proposal null.
+
+**Measured pro-GLM evidence** (Johnston 2024 *PNAS*, 160k-variant TrpB): the most-fit variants carry a
+substitution *"nearly absent in natural sequences — a result that conservation-based predictions would not
+capture"*, and epistasis *"prevent[s] simulated directed evolution from efficiently reaching the global
+optimum"*. **Conservation-keyed methods are structurally blind to the best variants**; informed-training MLDE
+on GB1 beats greedy DE 92% vs 1.2% (77x). Scoring and designing are different tasks.
+
+Design `wiki/glm_architecture_design_2026-10-06.md` · decomposition `wiki/glm_decomposition_2026-10-06.md` ·
+prior art + the 4 forced design changes `wiki/glm_prior_art_synthesis_2026-10-06.md`. Keystone shipped:
+`dna_decode/glm/edit.py` (`GenomeEdit`/`EditSet`, one span-replacement primitive, 46 tests). **Mandatory
+baseline panel for ANY GLM number** — mutation-count, BLOSUM62, one-hot ridge, site-independent, shuffled
+null, biologically-motivated splits only (random splits inflate ~3x). Model: **GENERator-1.2B-prokaryote**
+(MIT, fits a T4); Evo 2 is hosted-API-only here (FP8/Hopper + FlashAttention-vs-Turing).
 
 ## Architecture (one level of depth that matters)
 
