@@ -98,6 +98,31 @@ class HFGenerator:
         self.top_k = top_k
         self._tok = None
         self._model = None
+        #: Set by `load()` when the GPU was too small and CPU was used instead. Reported, never silent.
+        self.fallback_reason: str | None = None
+
+    def _estimated_vram_gib(self, auto_config) -> float | None:
+        """Parameter bytes implied by the model config, from its `num_parameters` or dims.
+
+        Returns None when the config does not expose enough to estimate — in which case the guard does
+        NOT fire, because refusing a load on a number we could not compute would be worse than trying.
+        """
+        bytes_per = 2 if self.dtype in ("float16", "bfloat16") else 4
+        try:
+            cfg = auto_config.from_pretrained(self.model_id, cache_dir=self.cache_dir,
+                                              trust_remote_code=True)
+        except Exception:  # noqa: BLE001 - an un-inspectable config must not block the load
+            return None
+        n = getattr(cfg, "num_parameters", None)
+        if not n:
+            h = getattr(cfg, "hidden_size", None)
+            layers = getattr(cfg, "num_hidden_layers", None)
+            vocab = getattr(cfg, "vocab_size", None)
+            if not (h and layers):
+                return None
+            # transformer block ~12*h^2 params, plus embeddings
+            n = 12 * layers * h * h + (vocab or 0) * h
+        return n * bytes_per / 2**30
 
     @property
     def name(self) -> str:
@@ -108,10 +133,23 @@ class HFGenerator:
         if self._model is not None:
             return self
         import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
+        from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
         dev = self.device
         if dev == "auto":
             dev = "cuda" if torch.cuda.is_available() else "cpu"
+            # GUARD BEFORE THE HEAVY LOAD -- measured, not assumed. `device_report()` already knows this
+            # GPU's VRAM, so OOMing is avoidable: a 1.2B model at fp32 needs ~4.8 GB and the local 860M
+            # has 4.0 GiB, which failed with "tried to allocate 44.00 MiB ... 0 bytes free" AFTER paying
+            # for the full download and load. Falling back to CPU is slow; crashing is useless.
+            if dev == "cuda":
+                need = self._estimated_vram_gib(AutoConfig)
+                have = torch.cuda.get_device_properties(0).total_memory / 2**30
+                if need is not None and need > have * 0.85:   # 15% headroom for activations + KV cache
+                    self.fallback_reason = (
+                        f"model needs ~{need:.1f} GiB at {self.dtype} but this GPU has {have:.1f} GiB; "
+                        "fell back to CPU rather than OOM after loading"
+                    )
+                    dev = "cpu"
         td = getattr(torch, self.dtype)
         self._tok = AutoTokenizer.from_pretrained(self.model_id, cache_dir=self.cache_dir,
                                                   trust_remote_code=True)

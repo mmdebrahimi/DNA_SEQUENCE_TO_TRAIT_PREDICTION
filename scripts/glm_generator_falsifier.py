@@ -51,6 +51,7 @@ def main(argv=None) -> int:
     p.add_argument("--bins", type=int, default=10, help="positional bins")
     p.add_argument("--model", default=None,
                    help="HF model id, or 'auto' for the default GENERator prokaryote checkpoint")
+    p.add_argument("--device", default="auto", help="auto | cpu | cuda")
     p.add_argument("--cache-dir", default="D:/hf_cache", help="weights cache (keep off C:)")
     p.add_argument("--out", default=None)
     a = p.parse_args(argv)
@@ -88,10 +89,13 @@ def main(argv=None) -> int:
     if a.model:
         model_id = None if a.model == "auto" else a.model
         from dna_decode.glm.generate import DEFAULT_MODEL, HFGenerator
-        gen = HFGenerator(model_id or DEFAULT_MODEL, cache_dir=a.cache_dir, seed=a.seed)
+        gen = HFGenerator(model_id or DEFAULT_MODEL, cache_dir=a.cache_dir, seed=a.seed,
+                          device=a.device)
         try:
             print(f"loading {gen.model_id} (dtype {gen.dtype}) ...")
             seqs = gen.generate(a.n, a.length)
+            if gen.fallback_reason:
+                print(f"  NOTE: {gen.fallback_reason}")
             candidates.append((gen.name, seqs))
         except Exception as e:  # noqa: BLE001 - a load/HW failure must not void the baseline result
             print(f"HF generator UNAVAILABLE ({type(e).__name__}: {str(e)[:160]})")

@@ -82,6 +82,58 @@ def test_an_explicit_dtype_overrides_the_recommendation():
     assert g.dtype == "float16", "an operator may override; the default must not be silently forced"
 
 
+def test_the_vram_guard_estimates_from_the_config_and_scales_with_dtype():
+    """Guard-before-the-heavy-load, and it was earned: the 1.2B checkpoint OOMed on the local 4 GiB card
+    with "tried to allocate 44.00 MiB ... 0 bytes free" AFTER paying for the full 4.4 GB download and
+    load. device_report() already knew the VRAM, so the crash was avoidable.
+    """
+    class _Cfg:
+        hidden_size = 2048
+        num_hidden_layers = 24
+        vocab_size = 4096
+        num_parameters = 1_200_000_000
+
+    class _Auto:
+        @staticmethod
+        def from_pretrained(*a, **k):
+            return _Cfg()
+
+    g32 = HFGenerator("m", device="cpu", dtype="float32")
+    g16 = HFGenerator("m", device="cpu", dtype="float16")
+    n32 = g32._estimated_vram_gib(_Auto)
+    n16 = g16._estimated_vram_gib(_Auto)
+    assert n32 is not None and abs(n32 - 1.2e9 * 4 / 2**30) < 0.01
+    assert abs(n32 / n16 - 2.0) < 1e-6, "fp32 must estimate exactly twice fp16"
+
+
+def test_the_vram_guard_falls_back_rather_than_refusing_when_it_CANNOT_estimate():
+    """An un-inspectable config must not block a load — refusing on a number we could not compute would
+    be worse than trying. None means 'do not fire the guard'."""
+    class _Bad:
+        @staticmethod
+        def from_pretrained(*a, **k):
+            raise RuntimeError("no config")
+
+    assert HFGenerator("m", device="cpu")._estimated_vram_gib(_Bad) is None
+
+    class _Sparse:
+        @staticmethod
+        def from_pretrained(*a, **k):
+            return type("C", (), {})()          # no num_parameters, no dims
+
+    assert HFGenerator("m", device="cpu")._estimated_vram_gib(_Sparse) is None
+
+
+def test_an_explicit_device_is_never_overridden_by_the_guard():
+    """The guard only runs under device='auto'. An operator asking for cuda gets cuda (and its OOM)."""
+    g = HFGenerator("m", device="cpu")
+    assert g.device == "cpu" and g.fallback_reason is None
+
+
+def test_a_fresh_generator_has_no_fallback_reason_so_the_field_cannot_read_as_stale():
+    assert HFGenerator("m").fallback_reason is None
+
+
 def test_generate_before_load_raises_rather_than_returning_empty():
     """An empty list would read as 'the generator produced nothing', not 'torch is missing'."""
     g = HFGenerator("definitely/not-a-real-model-xyz", device="cpu")
