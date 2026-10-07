@@ -1,0 +1,367 @@
+{
+  "record": "glm-expression-oracle-v1",
+  "date": "2026-10-07",
+  "substrate": {
+    "accession": "GSE108535",
+    "citation": "Urtecho G, Tripp AD, Insigne KD, Kim H, Kosuri S. Biochemistry 2019;58(11):1539-1551. DOI 10.1021/acs.biochem.7b01069",
+    "assay": "genomically-integrated MPRA, RNA/DNA barcode ratio, fully-crossed sigma70 grid",
+    "n_expression_rows": 10898,
+    "n_sequences_available": 12327,
+    "n_joined": 10898,
+    "join_rate": 1.0,
+    "n_wrong_length_dropped": 0,
+    "n_non_acgt_dropped": 0,
+    "naive_join_would_have_given": 3821,
+    "note": "naive_join is what a join without hyphen/underscore normalisation returns; the gap is the silent 65% data loss this loader exists to prevent"
+  },
+  "alpha": 1.0,
+  "results": [
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.1812,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "random",
+      "split_axis": null
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.701,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "random",
+      "split_axis": null
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.6986,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "random",
+      "split_axis": null
+    },
+    {
+      "feature": "onehot",
+      "n_features": 600,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.6953,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "random",
+      "split_axis": null
+    },
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 7304,
+      "n_test": 3594,
+      "spearman": 0.0387,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "UP_element",
+      "held_out_values": [
+        "gourse-136fold-up"
+      ]
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 7304,
+      "n_test": 3594,
+      "spearman": 0.6759,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "UP_element",
+      "held_out_values": [
+        "gourse-136fold-up"
+      ]
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 7304,
+      "n_test": 3594,
+      "spearman": 0.7044,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "UP_element",
+      "held_out_values": [
+        "gourse-136fold-up"
+      ]
+    },
+    {
+      "feature": "onehot",
+      "n_features": 600,
+      "n_train": 7304,
+      "n_test": 3594,
+      "spearman": 0.6843,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "UP_element",
+      "held_out_values": [
+        "gourse-136fold-up"
+      ]
+    },
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 8147,
+      "n_test": 2751,
+      "spearman": 0.1514,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus35",
+      "held_out_values": [
+        "33G->A/31C->G",
+        "35T->A/33G->T"
+      ]
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 8147,
+      "n_test": 2751,
+      "spearman": 0.3773,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus35",
+      "held_out_values": [
+        "33G->A/31C->G",
+        "35T->A/33G->T"
+      ]
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 8147,
+      "n_test": 2751,
+      "spearman": 0.3882,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus35",
+      "held_out_values": [
+        "33G->A/31C->G",
+        "35T->A/33G->T"
+      ]
+    },
+    {
+      "feature": "onehot",
+      "n_features": 600,
+      "n_train": 8147,
+      "n_test": 2751,
+      "spearman": 0.3919,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus35",
+      "held_out_values": [
+        "33G->A/31C->G",
+        "35T->A/33G->T"
+      ]
+    },
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 8260,
+      "n_test": 2638,
+      "spearman": 0.1352,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Spacer",
+      "held_out_values": [
+        "ECK125137104",
+        "ECK125137640"
+      ]
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 8260,
+      "n_test": 2638,
+      "spearman": 0.5179,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Spacer",
+      "held_out_values": [
+        "ECK125137104",
+        "ECK125137640"
+      ]
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 8260,
+      "n_test": 2638,
+      "spearman": 0.6095,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Spacer",
+      "held_out_values": [
+        "ECK125137104",
+        "ECK125137640"
+      ]
+    },
+    {
+      "feature": "onehot",
+      "n_features": 600,
+      "n_train": 8260,
+      "n_test": 2638,
+      "spearman": 0.6213,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Spacer",
+      "held_out_values": [
+        "ECK125137104",
+        "ECK125137640"
+      ]
+    },
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.1736,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus10",
+      "held_out_values": [
+        "12T->G",
+        "12T->G/7T->C"
+      ]
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.2978,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus10",
+      "held_out_values": [
+        "12T->G",
+        "12T->G/7T->C"
+      ]
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.5884,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus10",
+      "held_out_values": [
+        "12T->G",
+        "12T->G/7T->C"
+      ]
+    },
+    {
+      "feature": "onehot",
+      "n_features": 600,
+      "n_train": 8173,
+      "n_test": 2725,
+      "spearman": 0.5963,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Minus10",
+      "held_out_values": [
+        "12T->G",
+        "12T->G/7T->C"
+      ]
+    },
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 7827,
+      "n_test": 3071,
+      "spearman": 0.208,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Background",
+      "held_out_values": [
+        "bg3514590:3514740",
+        "bg4471352:4471502"
+      ]
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 7827,
+      "n_test": 3071,
+      "spearman": 0.1994,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Background",
+      "held_out_values": [
+        "bg3514590:3514740",
+        "bg4471352:4471502"
+      ]
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 7827,
+      "n_test": 3071,
+      "spearman": 0.6457,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Background",
+      "held_out_values": [
+        "bg3514590:3514740",
+        "bg4471352:4471502"
+      ]
+    },
+    {
+      "feature": "onehot",
+      "n_features": 600,
+      "n_train": 7827,
+      "n_test": 3071,
+      "spearman": 0.6632,
+      "alpha": 1.0,
+      "log_target": true,
+      "split": "leave_element_out",
+      "split_axis": "Background",
+      "held_out_values": [
+        "bg3514590:3514740",
+        "bg4471352:4471502"
+      ]
+    }
+  ],
+  "honest_limits": [
+    "ONE organism (E. coli), ONE assay, ONE designed grid. A designed grid is not a natural promoter distribution, so this bounds grid generalisation, not genome-wide performance.",
+    "Random-split numbers are reported ONLY for comparison. This repo has measured ~3x inflation from random splits three separate times; the leave-element-out numbers are the headline.",
+    "Ridge on fixed features is deliberately the TRIVIAL HEAD half of AlphaGenome's design principle. No learned representation is trained here, so these are a FLOOR, not a ceiling.",
+    "Spearman is rank-based and so invariant to the log transform; the FIT is not, which is why log_target defaults on (expression spans 615x).",
+    "No confidence intervals on the Spearman differences."
+  ]
+}
