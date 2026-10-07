@@ -221,3 +221,99 @@ modifications, chromatin contact maps. **A bacterium has no spliceosome and no n
 **Net: AlphaGenome is unusable as a direct tool for the bacterial GLM, and its licence additionally forbids
 using its outputs to train ours. The LOGIC in §3 is the whole of what transfers — and §3(e), the
 generator-proposes / scorer-scores split, is the part DeepMind itself frames the same way.**
+
+---
+
+## 8. A SECOND primary source: the technical talk (`rdBtxtcS4nM`, 52,417 chars, read in full)
+
+A DeepMind research scientist (Claire — PhD statistical genetics, Oxford; ex-Genomics PLC) presenting to a
+largely Australian audience. Far more technical than the Kohli interview, and it contains **the single most
+transferable idea in the whole AlphaGenome programme — which neither the circulated architecture summary nor
+my own verification agent surfaced.**
+
+### 8.1 THE TRAINING METHOD: two phases, pre-training then SELF-DISTILLATION
+
+Verbatim, compressed: *"there are two phases of training… the first is we call pre-training and the second we
+call distillation."*
+
+**Phase 1 — pre-training.** Ordinary supervised learning: input a DNA sequence, output the experimental
+tracks, **hold out some proportion of the genome**, loss on the held-out pieces. Crucially: *"in this case we
+always assume that the genome sequence in the inputs is the REFERENCE sequence."*
+
+**Phase 2 — distillation, and this is the clever part.** *"What we really want the model to do is say
+something about DIFFERENCES between that reference sequence and other sequences observed in humans. And so
+that's where the distillation process comes in. So we take the pre-trained model… and we produce some more
+predictions but we CHANGE the sequence. So we randomly PERTURB the input sequence… and we use the OUTPUTS OF
+THE PRE-TRAINED MODEL as the labels in this distillation process."*
+
+And the consequence they call out: *"because we're no longer training on real data, we're training on
+PREDICTED data, we can train across the WHOLE genome for the distillation process"* — the held-out
+restriction lifts, because the labels are synthetic.
+
+**The problem it solves is EXACTLY the problem this project has.** Real measured data exists only for the
+reference sequence, so there is no direct training signal for *variant effect*. They manufacture that signal
+by perturbing inputs and distilling the teacher's own predictions onto the perturbations.
+
+**THE HONEST CAVEAT, which must travel with the idea.** Self-distillation **cannot create information the
+teacher does not already have.** It propagates the teacher's inductive bias smoothly onto off-reference
+sequences — it buys *self-consistency under perturbation*, not *correctness*. At DeepMind its value is
+established downstream, on the real measured variant-effect benchmarks (the 25-of-26). So the structure is
+**distil for smoothness, then validate on real variant data** — and anyone adopting it without that second
+half has built something circular.
+
+### 8.2 The author's own advice for a NON-HUMAN organism — asked by a plant researcher
+
+The most directly relevant exchange in either video. A PhD student working on **plants** asks whether he
+could use AlphaGenome as a **feature extractor** and wrap his own reweighting on top. Her answer:
+
+- *"I don't think it's a silly idea… plants have genes, plants have promoters, plants have proteins. So it's
+  not like these models are useless for plants."*
+- *"BUT it's very hard to know and we haven't done this explicit evaluation and the model was not trained on
+  plant data. So there will certainly be plant-specific regulatory processes… that our model would be very
+  bad at predicting."*
+- **Her recommendation:** *"it should be possible for you to use the model to FINE-TUNE on your own data…
+  you might have to actually look at the model weights which have been open sourced. That would probably be
+  the BETTER approach than taking the predictions as they are."* And: *"very important to inject your own
+  data."*
+
+**Scope this carefully for us.** Plants are **eukaryotes** — they have splicing, nucleosomes, chromatin. A
+bacterium does not, so the plant case is *far* more favourable than ours and her encouragement does not
+extend to prokaryotes. What does transfer is the *principle*: **fine-tune on your own data; do not consume
+the predictions as-is.** (And for us the licence forbids the latter anyway.)
+
+### 8.3 An even sharper statement of the molecular→organism boundary
+
+Blunter than Kohli's: *"it would be very handy if we could predict 'this genetic difference is going to cause
+you disease' or 'this is likely to cause you to be very tall or very short'… but **AlphaGenome is not
+designed to do that and it doesn't do that.** What it IS designed to do is predict the fundamental biological
+processes at the level of the cell — and even more specifically at the level of the **NUCLEUS of the cell** —
+which we know would be a **prerequisite** for a genetic change having any effect at all."*
+
+"Prerequisite" is the precise word: molecular prediction is **necessary, not sufficient**, for organism-level
+phenotype. That is the boundary `eval/regime.py` encodes, stated by the authors about their own model.
+
+### 8.4 Three smaller facts worth having
+
+- **DNA methylation is NOT one of the 11 outputs.** Asked why: it *"wasn't widely available in the form that
+  was required at the time"*, and is *"probably a natural next step"*.
+- **AlphaGenome does not beat Enformer on everything.** Asked why it underperforms Enformer on CAGE at 128 bp,
+  she answers that it is *"probably within statistical noise"* — an honest non-claim, and a useful corrective
+  to the 25-of-26 headline.
+- **DNA-only input is a deliberate philosophy, not an omission.** Asked about multimodal inputs (pairing DNA
+  with RNA-seq or network topology): *"DNA is the starting point… it's not necessarily going to generate a
+  model that is foundational… the inputs are kind of simple to collect."* So feeding expression data *in* is
+  something they rejected on generality grounds.
+
+### 8.5 What this changes for our build — one concrete item
+
+**The circulated architecture description is accurate but describes the half that does not transfer.** The
+1 Mb context, the U-Net compress/expand, the transformer tower and the 2D contact branch all exist to solve
+long-range enhancer–promoter interaction across hundreds of kb. **A bacterial promoter is 100–300 bp and an
+operon a few kb** — we get that regime for free, which §3(c) already noted.
+
+**The distillation trick, by contrast, addresses a gap we actually have.** The expression oracle
+(`glm/expression.py`, ρ ≈ 0.59 held-out) is trained on 10,898 *measured* promoters — but the generative loop
+will feed it *generated* sequences off that distribution, which is precisely the reference-vs-perturbed gap
+distillation was invented for. Adopting it is a named, testable next step **conditional on keeping the second
+half**: any distilled oracle must still be validated against real measured promoters on a held-out element
+split, or the smoothness it buys is indistinguishable from circularity.
