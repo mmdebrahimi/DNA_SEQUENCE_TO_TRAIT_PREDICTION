@@ -1,0 +1,210 @@
+{
+  "schema": "glm-genomewide-oracle-v1",
+  "date": "2026-10-07",
+  "substrate": "GEO GSE144621, sheared E. coli MG1655 genomic fragments, LB + M9",
+  "load_stats": {
+    "LB": {
+      "path": "D:\\dna_decode_cache\\mpra\\GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz",
+      "delimiter": "whitespace",
+      "n_header_columns": 13,
+      "n_lines": 321123,
+      "n_parsed": 321123,
+      "n_field_count_mismatch": 0,
+      "n_non_acgt": 0,
+      "n_unparseable_value": 0,
+      "length_min": 48,
+      "length_median": 244,
+      "length_max": 499,
+      "n_distinct_lengths": 359
+    },
+    "M9": {
+      "path": "D:\\dna_decode_cache\\mpra\\GSE144621_U00096.2_frag-rLP5_M9_expression.txt.gz",
+      "delimiter": "whitespace",
+      "n_header_columns": 13,
+      "n_lines": 318457,
+      "n_parsed": 318457,
+      "n_field_count_mismatch": 0,
+      "n_non_acgt": 0,
+      "n_unparseable_value": 0,
+      "length_min": 48,
+      "length_median": 244,
+      "length_max": 499,
+      "n_distinct_lengths": 361
+    }
+  },
+  "noise_ceiling": {
+    "LB": {
+      "n": 321123,
+      "single_replicate_agreement": 0.4583,
+      "reliability_of_2rep_mean_spearman_brown": 0.6285,
+      "ceiling_for_a_sequence_model": 0.7928,
+      "note": "read every model number against the ceiling, never against 1.0; GSE108535 offered no ceiling because its two published tables correlate at exactly 1.0 (one monotone transform of the other, not replicates)"
+    },
+    "M9": {
+      "n": 318457,
+      "single_replicate_agreement": 0.4731,
+      "reliability_of_2rep_mean_spearman_brown": 0.6423,
+      "ceiling_for_a_sequence_model": 0.8014,
+      "note": "read every model number against the ceiling, never against 1.0; GSE108535 offered no ceiling because its two published tables correlate at exactly 1.0 (one monotone transform of the other, not replicates)"
+    }
+  },
+  "condition_effect": {
+    "n_shared": 297599,
+    "within_condition_single_vs_single": {
+      "a": 0.4578,
+      "b": 0.4774,
+      "mean": 0.4676
+    },
+    "cross_condition_single_vs_single": {
+      "pairs": [
+        0.4063,
+        0.4239,
+        0.385,
+        0.4097
+      ],
+      "mean": 0.4062
+    },
+    "noise_matched_gap": -0.0614,
+    "unmatched_ave_vs_ave": 0.5025,
+    "ceiling_if_condition_were_irrelevant": 0.6371,
+    "disattenuated_true_cross_condition": 0.7887,
+    "verdict": "CONDITION_CARRIES_SIGNAL"
+  },
+  "preregistered": {
+    "q1_question": "does a learned sequence feature set predict expression on REAL GENOMIC fragments, under a position-blocked split, and how much of the DERIVED noise ceiling does it reach?",
+    "q1_bars": {
+      "beats_crude_baseline_by": 0.05,
+      "fraction_of_ceiling_for_GENERALISES": 0.5
+    },
+    "q1_verdicts": {
+      "GENERALISES_OFF_THE_DESIGNED_GRID": "learned beats GC by >= 0.05 AND reaches >= 50% of the ceiling",
+      "WEAK_BUT_REAL": "learned beats GC by >= 0.05 but reaches < 50% of the ceiling",
+      "DOES_NOT_GENERALISE": "learned does not beat GC by 0.05"
+    },
+    "q2_question": "does growth condition carry signal beyond measurement noise?",
+    "q2_rule": "the comparison MUST be noise-matched (single-replicate vs single-replicate both within and across media). The unmatched average-vs-average form INVERTS the answer and is reported alongside only to show that it does.",
+    "thresholds_are": "ASSERTED; the noise ceiling that normalises them is DERIVED from the assay's own replicates.",
+    "designed_grid_comparator": {
+      "gc": 0.1414,
+      "kmer4": 0.4137,
+      "kmer6": 0.5872,
+      "onehot": 0.5914,
+      "caveat": "leave-ELEMENT-out on a designed grid; NOT ceiling-normalisable (no replicates), so not directly comparable to a ceiling-relative number here"
+    }
+  },
+  "split": {
+    "kind": "position_blocked",
+    "n_blocks": 10,
+    "held_blocks": [
+      7,
+      8
+    ],
+    "n_train": 24006,
+    "n_test": 5994,
+    "subsample": 30000,
+    "why": "91.5% of consecutive fragments OVERLAP, so a random split puts near-duplicates on both sides; measured, not assumed"
+  },
+  "model_arms_random_fragments": [
+    {
+      "feature": "gc",
+      "n_features": 1,
+      "n_train": 24006,
+      "n_test": 5994,
+      "spearman": 0.1023,
+      "fraction_of_ceiling": 0.129
+    },
+    {
+      "feature": "kmer4",
+      "n_features": 256,
+      "n_train": 24006,
+      "n_test": 5994,
+      "spearman": 0.1313,
+      "fraction_of_ceiling": 0.1656
+    },
+    {
+      "feature": "kmer6",
+      "n_features": 4096,
+      "n_train": 24006,
+      "n_test": 5994,
+      "spearman": 0.0919,
+      "fraction_of_ceiling": 0.1159
+    }
+  ],
+  "q1_verdict": "DOES_NOT_GENERALISE",
+  "q1_detail": "best learned = kmer4 rho +0.1313 (16.6% of the 0.7928 ceiling); GC +0.1023; margin +0.0290",
+  "peak_tiles": {
+    "load_stats": {
+      "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz",
+      "delimiter": "tab",
+      "n_header_columns": 28,
+      "n_lines": 46713,
+      "n_parsed": 46713,
+      "n_field_count_mismatch": 0,
+      "n_non_acgt": 0,
+      "n_unparseable_value": 0,
+      "length_min": 48,
+      "length_median": 150,
+      "length_max": 150,
+      "n_distinct_lengths": 96
+    },
+    "n_peaks_held": 608,
+    "noise_ceiling": {
+      "n": 44106,
+      "single_replicate_agreement": 0.7945,
+      "reliability_of_2rep_mean_spearman_brown": 0.8855,
+      "ceiling_for_a_sequence_model": 0.941,
+      "note": "read every model number against the ceiling, never against 1.0; GSE108535 offered no ceiling because its two published tables correlate at exactly 1.0 (one monotone transform of the other, not replicates)"
+    },
+    "n_designed_controls_dropped": 1512,
+    "n_non_150bp_dropped": 1095,
+    "n_kept": 44106,
+    "n_train": 32908,
+    "n_test": 11198,
+    "split": "leave_peak_out -- tiles within a peak overlap heavily",
+    "arms": [
+      {
+        "feature": "gc",
+        "n_features": 1,
+        "n_train": 32908,
+        "n_test": 11198,
+        "spearman": 0.3,
+        "fraction_of_ceiling": 0.3188
+      },
+      {
+        "feature": "kmer4",
+        "n_features": 256,
+        "n_train": 32908,
+        "n_test": 11198,
+        "spearman": 0.2769,
+        "fraction_of_ceiling": 0.2943
+      },
+      {
+        "feature": "kmer6",
+        "n_features": 4096,
+        "n_train": 32908,
+        "n_test": 11198,
+        "spearman": 0.2022,
+        "fraction_of_ceiling": 0.2149
+      },
+      {
+        "feature": "onehot",
+        "n_features": 600,
+        "n_train": 32908,
+        "n_test": 11198,
+        "spearman": 0.2691,
+        "fraction_of_ceiling": 0.286
+      }
+    ],
+    "verdict": "DOES_NOT_GENERALISE",
+    "detail": "best learned = kmer4 rho +0.2769 (29.4% of the 0.941 ceiling); GC +0.3000; margin -0.0231",
+    "why_this_is_the_like_for_like_arm": "fixed 150 bp like the designed grid (so positional-onehot applies) AND selected from called peaks, so it asks the grid's question -- how strong is this promoter -- rather than the frag library's rare-event detection question"
+  },
+  "honest_limits": [
+    "The model arms run on a SUBSAMPLE (6-mers are 4096 features); the ceiling and the condition effect use the FULL data.",
+    "Fragments are 48-475 bp with 280 distinct lengths, so the designed grid's winning positional-onehot feature is NOT applicable without an anchor, and no anchor is obviously right. Only length-invariant k-mer features are used -- the comparison to the grid's 0.5914 one-hot number is therefore NOT like-for-like.",
+    "The designed-grid numbers cannot be ceiling-normalised (GSE108535 has no replicates), so 'fraction of ceiling' exists only on this substrate. Do not compare the two fractions.",
+    "A fragment straddling a held-block boundary is assigned by midpoint, so a little sequence can cross the seam; with 10 blocks that is 2 seams over ~4.64 Mb.",
+    "Expression is RNA_exp_ave, which is ALREADY DNA-normalised (measured: spearman with DNA_ave = -0.039). It is NOT divided by DNA_ave again.",
+    "97% of fragments carry a single integrated barcode, which is why the replicate-derived ceiling is low (~0.79) and why it must be quoted with every model number."
+  ]
+}
