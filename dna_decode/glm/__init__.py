@@ -26,6 +26,12 @@ anchoring them: `wiki/glm_architecture_design_2026-10-06.md`, `wiki/glm_decompos
 """
 from __future__ import annotations
 
+from dna_decode.glm.corpus import (
+    extract_upstream_windows,
+    gc_fraction,
+    load_fasta,
+    revcomp,
+)
 from dna_decode.glm.edit import (
     DEL,
     EDIT_INTENTS,
@@ -42,6 +48,10 @@ from dna_decode.glm.edit import (
 )
 
 __all__ = [
+    "extract_upstream_windows",
+    "gc_fraction",
+    "load_fasta",
+    "revcomp",
     "DEL",
     "EDIT_INTENTS",
     "EDIT_KINDS",
