@@ -24,18 +24,29 @@ REFSEQ = ROOT / "data" / "cache" / "refseq" / "GCF_000005845.2"
 WIKI = ROOT / "wiki"
 
 
-def build_natural(length: int, limit: int | None, seed: int):
-    from dna_decode.data.annotations import parse_gff3
-    from dna_decode.glm.corpus import extract_upstream_windows, load_fasta
+def build_natural(length: int, limit: int | None, seed: int, kind: str = "promoter"):
+    """Build a natural reference set. `kind` MATTERS -- see random_genomic_windows' docstring.
+
+    promoter = upstream-of-CDS windows (the reference for a CONDITIONAL promoter generator)
+    genomic  = uniform windows from anywhere (the reference for an UNCONDITIONAL generator, because an
+               unprompted genome-LM sample is drawn from the whole-genome prior, which is mostly coding)
+    """
+    from dna_decode.glm.corpus import load_fasta, random_genomic_windows
 
     genome = load_fasta(REFSEQ / "genome.fna")
-    rows = parse_gff3(REFSEQ / "annotations.gff3")   # a pandas DataFrame; as_rows normalises it
-    wins, stats = extract_upstream_windows(genome, rows, length=length)
-    seqs = [w.seq for w in wins]
-    random.Random(seed).shuffle(seqs)
+    if kind == "genomic":
+        wins, stats = random_genomic_windows(genome, length=length, n=limit or 2000, seed=seed)
+    elif kind == "promoter":
+        from dna_decode.data.annotations import parse_gff3
+        from dna_decode.glm.corpus import extract_upstream_windows
+        rows = parse_gff3(REFSEQ / "annotations.gff3")   # a pandas DataFrame; as_rows normalises it
+        wins, stats = extract_upstream_windows(genome, rows, length=length)
+    else:
+        raise ValueError(f"natural-set must be 'promoter' or 'genomic', got {kind!r}")
+    random.Random(seed).shuffle(wins)
     if limit:
-        seqs = seqs[:limit]
-    return seqs, stats
+        wins = wins[:limit]
+    return wins, stats
 
 
 def main(argv=None) -> int:
@@ -49,9 +60,15 @@ def main(argv=None) -> int:
     p.add_argument("--modes", default="kmer,positional",
                    help="comma-separated feature modes: kmer | positional | both")
     p.add_argument("--bins", type=int, default=10, help="positional bins")
+    p.add_argument("--natural-set", default="promoter",
+                   help="promoter | genomic | both -- which natural reference to score against")
     p.add_argument("--model", default=None,
                    help="HF model id, or 'auto' for the default GENERator prokaryote checkpoint")
     p.add_argument("--device", default="auto", help="auto | cpu | cuda")
+    p.add_argument("--conditional", action="store_true",
+                   help="prompt with real upstream context and score ONLY the continuation; required "
+                        "for a meaningful comparison against the ALIGNED promoter set")
+    p.add_argument("--context", type=int, default=300, help="prompt length (bp) for --conditional")
     p.add_argument("--cache-dir", default="D:/hf_cache", help="weights cache (keep off C:)")
     p.add_argument("--out", default=None)
     a = p.parse_args(argv)
@@ -64,28 +81,28 @@ def main(argv=None) -> int:
         print(f"REFUSE: reference not found at {REFSEQ}")
         return 2
 
-    natural, cstats = build_natural(a.length, a.limit_natural, a.seed)
-    print(f"natural corpus: {len(natural)} windows of {a.length} bp  "
-          f"(from {cstats.n_cds_total} CDS; {cstats.n_overlapping_cds} overlap another CDS, "
-          f"{cstats.n_skipped_edge} skipped at contig edge)")
-    if len(natural) < 200:
-        print("REFUSE: natural corpus too small to split into fit/eval halves")
-        return 2
-
-    half = len(natural) // 2
-    fit_set, eval_set = natural[:half], natural[half:]
-    print(f"fit half: {len(fit_set)}   eval half (all discrimination happens here): {len(eval_set)}")
+    kinds = ["promoter", "genomic"] if a.natural_set == "both" else [a.natural_set]
+    naturals = {}
+    for kind in kinds:
+        wins, st = build_natural(a.length, a.limit_natural, a.seed, kind=kind)
+        if len(wins) < 200:
+            print(f"REFUSE: {kind} corpus too small ({len(wins)}) to split into fit/eval halves")
+            return 2
+        h = len(wins) // 2
+        seqs = [w.seq for w in wins]
+        naturals[kind] = {"fit": seqs[:h], "eval": seqs[h:], "stats": st,
+                          "eval_windows": wins[h:]}
+        print(f"natural[{kind}]: {len(seqs)} windows of {a.length}bp -> fit {h} / eval {len(seqs)-h}"
+              + (f"  ({st.n_cds_total} CDS, {st.n_overlapping_cds} overlapping)"
+                 if kind == "promoter" else ""))
 
     dev = device_report()
     print(f"device: {dev['device_name'] or 'cpu'}  dtype={dev['recommended_dtype']}"
           + (f"  [{dev['notes'][0]}]" if dev["notes"] else ""))
 
     uni = UniformGenerator(seed=a.seed).generate(a.n, a.length)
-    markov = MarkovGenerator(order=a.markov_order, seed=a.seed).fit(fit_set)
-    null_seqs = markov.generate(a.n, a.length)
 
-    candidates = [(markov.name, null_seqs), ("uniform", uni)]
-
+    hf_entry = None
     if a.model:
         model_id = None if a.model == "auto" else a.model
         from dna_decode.glm.generate import DEFAULT_MODEL, HFGenerator
@@ -93,19 +110,44 @@ def main(argv=None) -> int:
                           device=a.device)
         try:
             print(f"loading {gen.model_id} (dtype {gen.dtype}) ...")
-            seqs = gen.generate(a.n, a.length)
+            if a.conditional:
+                # Prompts come from the EVAL windows, so the generated sequence sits at the SAME aligned
+                # offsets as the reference it is scored against. Only the continuation is scored.
+                from dna_decode.glm.corpus import load_fasta as _lf, window_context
+                _g = _lf(REFSEQ / "genome.fna")
+                prompts = []
+                for w in naturals[kinds[0]]["eval_windows"]:
+                    c = window_context(_g, w, a.context)
+                    if c:
+                        prompts.append(c)
+                    if len(prompts) >= a.n:
+                        break
+                print(f"conditional: {len(prompts)} real prompts of {a.context} bp "
+                      f"(continuation ONLY is scored; no prompt leakage)")
+                seqs = gen.generate_conditional(prompts, a.length)
+            else:
+                seqs = gen.generate(a.n, a.length)
             if gen.fallback_reason:
                 print(f"  NOTE: {gen.fallback_reason}")
-            candidates.append((gen.name, seqs))
+            hf_entry = (gen.name, seqs)
         except Exception as e:  # noqa: BLE001 - a load/HW failure must not void the baseline result
             print(f"HF generator UNAVAILABLE ({type(e).__name__}: {str(e)[:160]})")
             print("  -> baselines still scored; the artifact records the generator as unavailable")
-            candidates.append((f"hf:{(model_id or DEFAULT_MODEL).split('/')[-1]}", []))
+            hf_entry = (f"hf:{(model_id or DEFAULT_MODEL).split('/')[-1]}", [])
 
     results = []
-    for mode in a.modes.split(","):
+    for kind in kinds:
+      fit_set, eval_set = naturals[kind]["fit"], naturals[kind]["eval"]
+      # The null is re-fitted PER NATURAL SET: a Markov chain fitted on promoters is not the right null
+      # for genomic windows (their GC alone differs 0.4528 vs 0.5086).
+      markov = MarkovGenerator(order=a.markov_order, seed=a.seed).fit(fit_set)
+      null_seqs = markov.generate(a.n, a.length)
+      candidates = [(markov.name, null_seqs), ("uniform", uni)]
+      if hf_entry:
+          candidates.append(hf_entry)
+      for mode in a.modes.split(","):
         mode = mode.strip()
-        print(f"\n{'=' * 78}\nFEATURE MODE: {mode}"
+        print(f"\n{'=' * 78}\nNATURAL={kind}   FEATURE MODE: {mode}"
               + (f" (bins={a.bins})" if mode in ("positional", "both") else "")
               + f"\n{'=' * 78}")
         for name, seqs in candidates:
@@ -115,7 +157,7 @@ def main(argv=None) -> int:
                 uniform_sequences=uni, k=a.k, length=a.length, seed=a.seed,
                 mode=mode, bins=a.bins,
             )
-            results.append(r.as_dict())
+            d = r.as_dict(); d["natural_set"] = kind; results.append(d)
             print(f"\n[{name}]  verdict={r.verdict}")
             print(f"   distinguishability (lower=better): {r.distinguishability}"
                   f"   null: {r.null_distinguishability}")
@@ -135,11 +177,15 @@ def main(argv=None) -> int:
         "positional_bins": a.bins,
         "markov_order": a.markov_order,
         "n_generated_per_candidate": a.n,
-        "natural_corpus": cstats.as_dict(),
-        "fit_eval_split": {"n_fit": len(fit_set), "n_eval": len(eval_set),
+        "natural_sets": {k: naturals[k]["stats"].as_dict() for k in kinds},
+        "natural_set_arg": a.natural_set,
+        "fit_eval_split": {"n_fit": len(naturals[kinds[0]]["fit"]),
+                           "n_eval": len(naturals[kinds[0]]["eval"]),
                            "note": "Markov null fitted on FIT only; all discrimination on EVAL only, so "
                                    "no generator is scored against sequences it was trained on"},
         "device": dev,
+        "conditional": bool(a.conditional),
+        "context_bp": a.context if a.conditional else None,
         "results": results,
         "honest_limits": [
             "An upstream window is a PROXY for a promoter, not a mapped transcription start site.",

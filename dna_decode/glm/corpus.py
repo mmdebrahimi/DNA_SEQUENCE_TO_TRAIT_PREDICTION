@@ -164,6 +164,87 @@ def extract_upstream_windows(
     return out, stats
 
 
+def window_context(genome: dict[str, str], w: UpstreamWindow, ctx: int) -> str | None:
+    """The `ctx` bases immediately PRECEDING `w` in the window's own orientation — a generation prompt.
+
+    This is what makes a CONDITIONAL comparison possible, and that turned out to be necessary rather than
+    optional. Measured: against unaligned random genomic windows an order-3 Markov null scores 0.5086
+    against a 0.5255 ceiling — i.e. BELOW its own noise floor, so that reference has no discriminating
+    power at all. Only the ALIGNED promoter set separates (0.6560 vs 0.5292), because its positional
+    structure is anchored to the CDS start. An unconditional sample cannot be scored against an aligned
+    set fairly, so the meaningful task is *given the genomic context, continue into the promoter*.
+
+    Returns None when the context would run off the contig — skipped, never truncated, so prompt length
+    stays constant across the set.
+    """
+    contig = genome.get(w.seqid)
+    if contig is None or ctx <= 0:
+        return None
+    if w.strand == "+":
+        s = w.start - ctx
+        if s < 0:
+            return None
+        out = contig[s:w.start]
+    else:
+        # the window was reverse-complemented, so its 5-prime neighbour is to the RIGHT and also flips
+        e = w.end + ctx
+        if e > len(contig):
+            return None
+        out = revcomp(contig[w.end:e])
+    out = out.upper()
+    return None if set(out) - _DNA else out
+
+
+def random_genomic_windows(
+    genome: dict[str, str],
+    *,
+    length: int = 150,
+    n: int = 2000,
+    seed: int = 0,
+    require_unambiguous: bool = True,
+) -> tuple[list[UpstreamWindow], CorpusStats]:
+    """Uniformly-sampled windows from anywhere in the genome — the reference for an UNCONDITIONAL generator.
+
+    **Why this exists, and it is a correctness issue, not a nicety.** An unprompted sample from a genome
+    language model is drawn from the model's whole-genome prior, and a prokaryotic genome is mostly CODING
+    (the first real GENERator sample began `ATGCTGCAA…` — a start codon). Scoring such a sample against a
+    PROMOTER set would therefore largely measure "coding vs non-coding", not whether the generator produces
+    realistic DNA. The matching reference for unconditional generation is the genome's own distribution.
+
+    The promoter set (`extract_upstream_windows`) stays the right reference for a *conditional* promoter
+    generator; these two are not interchangeable and the artifact records which was used.
+    """
+    import random as _random
+    if length <= 0:
+        raise ValueError("length must be positive")
+    rng = _random.Random(seed)
+    stats = CorpusStats()
+    names = [c for c, s in genome.items() if len(s) > length]
+    if not names:
+        return [], stats
+    weights = [len(genome[c]) for c in names]
+    out: list[UpstreamWindow] = []
+    attempts = 0
+    while len(out) < n and attempts < n * 20:
+        attempts += 1
+        c = rng.choices(names, weights=weights, k=1)[0]
+        contig = genome[c]
+        s = rng.randrange(0, len(contig) - length)
+        seq = contig[s:s + length].upper()
+        if require_unambiguous and set(seq) - _DNA:
+            stats.n_skipped_ambiguous += 1
+            continue
+        strand = rng.choice("+-")
+        if strand == "-":
+            seq = revcomp(seq)
+        stats.strand_counts[strand] = stats.strand_counts.get(strand, 0) + 1
+        out.append(UpstreamWindow(gene_id=f"{c}:{s}", seqid=c, strand=strand,
+                                  start=s, end=s + length, seq=seq))
+    stats.n_windows = len(out)
+    stats.n_cds_total = 0
+    return out, stats
+
+
 def load_fasta(path) -> dict[str, str]:
     """Minimal FASTA reader -> {first_token_of_header: sequence}. No biopython needed."""
     from pathlib import Path

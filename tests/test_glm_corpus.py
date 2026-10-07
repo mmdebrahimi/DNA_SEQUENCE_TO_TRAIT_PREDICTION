@@ -171,6 +171,79 @@ def test_extraction_on_the_REAL_mg1655_reference():
     assert 0.35 < gc < 0.50, f"promoter GC {gc:.3f} is implausible for E. coli upstream regions"
 
 
+# ---------------------------------------------------------------------------------------------------
+# the genomic reference set + conditional prompts
+# ---------------------------------------------------------------------------------------------------
+def test_random_genomic_windows_are_exact_length_both_strands_and_acgt():
+    from dna_decode.glm.corpus import random_genomic_windows
+    g = {"c1": "ACGT" * 500}
+    w, s = random_genomic_windows(g, length=60, n=50, seed=3)
+    assert s.n_windows == 50 and all(len(x.seq) == 60 for x in w)
+    assert all(not (set(x.seq) - set("ACGT")) for x in w)
+    assert set(s.strand_counts) == {"+", "-"}, "both orientations must be sampled"
+
+
+def test_random_genomic_windows_are_deterministic_under_a_seed():
+    from dna_decode.glm.corpus import random_genomic_windows
+    g = {"c1": "ACGTTGCA" * 300}
+    a, _ = random_genomic_windows(g, length=40, n=20, seed=11)
+    b, _ = random_genomic_windows(g, length=40, n=20, seed=11)
+    assert [x.seq for x in a] == [x.seq for x in b]
+
+
+def test_random_genomic_windows_skip_ambiguous_rather_than_emit_N():
+    from dna_decode.glm.corpus import random_genomic_windows
+    g = {"c1": "N" * 1000}
+    w, s = random_genomic_windows(g, length=50, n=10, seed=1)
+    assert w == [] and s.n_skipped_ambiguous > 0
+
+
+def test_the_genomic_set_matches_the_REAL_genome_gc_and_differs_from_promoters():
+    """The correctness check that matters, and it is the reason this set exists: the genomic set must
+    reproduce E. coli's ~0.508 GC while promoters are AT-richer. If the two sets had the same
+    composition, choosing between them would not matter -- and it does."""
+    if not (REFSEQ / "genome.fna").exists():
+        pytest.skip("MG1655 reference not on this host")
+    from dna_decode.data.annotations import parse_gff3
+    from dna_decode.glm.corpus import random_genomic_windows
+    genome = load_fasta(REFSEQ / "genome.fna")
+    gw, _ = random_genomic_windows(genome, length=150, n=400, seed=0)
+    gc_gen = sum(gc_fraction(x.seq) for x in gw) / len(gw)
+    assert 0.49 < gc_gen < 0.53, f"genomic GC {gc_gen:.4f} should be ~0.508"
+    pw, _ = extract_upstream_windows(genome, parse_gff3(REFSEQ / "annotations.gff3"), length=150)
+    gc_prom = sum(gc_fraction(x.seq) for x in pw) / len(pw)
+    assert gc_prom < gc_gen - 0.03, (
+        f"promoters ({gc_prom:.4f}) must be measurably AT-richer than the genome ({gc_gen:.4f}); "
+        "if not, the two reference sets are interchangeable and the distinction is pointless"
+    )
+
+
+def test_window_context_is_strand_aware_and_is_the_bases_PRECEDING_the_window():
+    """A prompt from the wrong side, or un-complemented, would make the model continue the wrong strand."""
+    from dna_decode.glm.corpus import window_context
+    # plus strand: window [10,20) -> context [5,10) is the tail of the A block
+    w_plus = extract_upstream_windows(GEN, [_row(21, 30, "+")], length=10)[0][0]
+    assert window_context(GEN, w_plus, 5) == "AAAAA"
+    # minus strand: window forward-coords [20,30); its 5' neighbour is [30,35) revcomp'd
+    w_minus = extract_upstream_windows(GEN, [_row(11, 20, "-")], length=10)[0][0]
+    assert window_context(GEN, w_minus, 5) == revcomp(GEN["c1"][30:35]) == "AAAAA"
+
+
+def test_window_context_returns_None_rather_than_a_short_prompt_at_a_contig_edge():
+    """A truncated prompt would vary prompt length across the set, which the model conditions on."""
+    from dna_decode.glm.corpus import window_context
+    w = extract_upstream_windows(GEN, [_row(21, 30, "+")], length=10)[0][0]
+    assert window_context(GEN, w, 50) is None      # would run off the start
+    assert window_context(GEN, w, 0) is None       # degenerate request
+
+
+def test_window_context_refuses_ambiguous_context():
+    from dna_decode.glm.corpus import window_context
+    g = {"c1": "NNNNN" + "AAAAA" + "CCCCCCCCCC" + "GGGGGGGGGG"}
+    w = extract_upstream_windows(g, [_row(21, 30, "+")], length=10)[0][0]
+    assert window_context(g, w, 10) is None, "an N-containing prompt must be skipped, not passed in"
+
+
 def test_corpus_stats_round_trip():
     s = CorpusStats(n_cds_total=5, n_windows=3)
     assert s.as_dict()["n_cds_total"] == 5 and s.as_dict()["n_windows"] == 3

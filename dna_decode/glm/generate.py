@@ -159,23 +159,74 @@ class HFGenerator:
         self._dev = dev
         return self
 
-    def generate(self, n: int, length: int) -> list[str]:
+    def generate_conditional(self, prompts: list[str], length: int, *,
+                             progress_every: int = 5) -> list[str]:
+        """Continue each real genomic prompt for `length` bases. ONE output per prompt.
+
+        **Only the CONTINUATION is returned** — the prompt is stripped — so the scored region contains no
+        real sequence and there is no leakage into the discriminator. This is the meaningful task, because
+        the only reference set with discriminating power is the ALIGNED promoter set (see
+        `corpus.window_context`), and an unconditional sample cannot be fairly scored against it.
+        """
+        import sys
+        import time
+
+        import torch
+        self.load()
+        torch.manual_seed(self.seed)
+        t0 = time.time()
+        max_new = max(4, length // 6 + 4)
+        out: list[str] = []
+        with torch.no_grad():
+            for i, pr in enumerate(prompts):
+                ids = self._tok(pr, return_tensors="pt").input_ids.to(self._dev)
+                n_prompt_tok = ids.shape[1]
+                g = self._model.generate(
+                    ids, max_new_tokens=max_new, do_sample=True,
+                    temperature=self.temperature,
+                    top_k=self.top_k if self.top_k else None,
+                    pad_token_id=self._tok.pad_token_id or self._tok.eos_token_id or 0,
+                )
+                # decode ONLY the newly generated tokens -- never the prompt
+                new_ids = g[0][n_prompt_tok:]
+                txt = self._tok.decode(new_ids, skip_special_tokens=True)
+                s = "".join(c for c in txt.upper() if c in "ACGT")
+                out.append(s[:length])
+                if progress_every and ((i + 1) % progress_every == 0 or i == 0):
+                    el = time.time() - t0
+                    rate = el / (i + 1)
+                    print(f"    cond-gen {i + 1}/{len(prompts)}  {rate:.1f}s/seq  "
+                          f"elapsed {el / 60:.1f}m  ETA {(len(prompts) - i - 1) * rate / 60:.1f}m",
+                          flush=True)
+                    sys.stdout.flush()
+        return out
+
+    def generate(self, n: int, length: int, *, progress_every: int = 5) -> list[str]:
         """Sample `n` sequences of about `length` bases.
 
         GENERator tokenizes as 6-mers, so the emitted length is a multiple of 6 and is TRIMMED to exactly
         `length`. Trimming rather than padding keeps the length distribution exact, which matters because
         the discriminator's features are length-sensitive.
+
+        **Progress is PRINTED, and that was earned.** A silent version of this loop burned 52 CPU-minutes
+        on a 1.2B fp32 CPU run with no way to tell sequence 5 from sequence 115, so it had to be killed
+        blind. A long job that reports only its verdict forces every failure to be re-created by hand;
+        `progress_every` emits a rate and an ETA so a run can be sized, or abandoned, on evidence.
         """
+        import sys
+        import time
+
         import torch
         self.load()
         torch.manual_seed(self.seed)
+        t0 = time.time()
         # 6-mer tokenizer -> ~length/6 new tokens, plus slack for the prompt and any special tokens.
         max_new = max(4, length // 6 + 4)
         ids = self._tok(self.prompt, return_tensors="pt").input_ids.to(self._dev) if self.prompt \
             else torch.full((1, 1), self._tok.bos_token_id or 0, device=self._dev, dtype=torch.long)
         out: list[str] = []
         with torch.no_grad():
-            for _ in range(n):
+            for i in range(n):
                 g = self._model.generate(
                     ids, max_new_tokens=max_new, do_sample=True,
                     temperature=self.temperature,
@@ -185,4 +236,10 @@ class HFGenerator:
                 txt = self._tok.decode(g[0], skip_special_tokens=True)
                 s = "".join(c for c in txt.upper() if c in "ACGT")
                 out.append(s[:length])
+                if progress_every and ((i + 1) % progress_every == 0 or i == 0):
+                    el = time.time() - t0
+                    rate = el / (i + 1)
+                    print(f"    gen {i + 1}/{n}  {rate:.1f}s/seq  elapsed {el / 60:.1f}m  "
+                          f"ETA {(n - i - 1) * rate / 60:.1f}m", flush=True)
+                    sys.stdout.flush()
         return out
