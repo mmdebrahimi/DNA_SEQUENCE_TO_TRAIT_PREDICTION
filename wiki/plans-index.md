@@ -643,3 +643,13 @@
 - Portfolio falsifier named in advance: if G-A and G-D both close negative, the live question routes to the existing F-E label-acquisition family rather than to a sixth GLM family.
 
 ---
+
+## [plan_file: GLM_G_A_And_G_C_V2_Build_Plan/] 2026-10-08
+**Summary:** Build G-A (learned representation) and G-C (condition conditioning) — the two GLM families cleared to start — with the revisions forced by an adversarial review and three now-settled authority decisions.
+**Key decisions:**
+- G-C's primary arm must carry `sequence × medium` interactions: a medium indicator on a linear ridge learns only a global per-medium offset, so the two-model comparator was strictly more expressive and the v1 design was rigged against itself.
+- G-A freezes its training protocol in a frozen dataclass and goes multi-seed (≥10 leave-peak-out seeds, verdict on the median), with the GC baseline re-derived over the SAME seed list rather than reusing the seed-0 0.3000.
+- Both MVP bars gain two validity predicates (`null_clean`, `registered_protocol_used`) because the original four were all satisfied by a broken run writing a null-result artifact.
+- The grid arm is demoted to a consistency check only: the designed grid separates from genomic sequence at AUROC 1.0000 via element-vocabulary recombination (median 13bp shared block, no constant scaffold), so grid performance is not evidence of transferable grammar.
+
+---
