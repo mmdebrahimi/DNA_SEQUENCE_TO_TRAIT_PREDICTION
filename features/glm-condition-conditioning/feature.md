@@ -56,3 +56,23 @@ Ratify or redirect the drafted idea-anchor, then:
 ```
 /probe glm-condition-conditioning
 ```
+
+### Captured by: brainstorm @ 2026-10-07
+
+Files read: plans/GLM_Portfolio_Decompose_2026-10-07.md, project_state/glm-umbrella-2026-10-07.md, project_state/glm-learned-representation-2026-10-07.md, project_state/glm-condition-conditioning-2026-10-07.md, features/glm-learned-representation/technical-plan.md, features/glm-condition-conditioning/technical-plan.md, dna_decode/glm/genomewide.py, dna_decode/glm/expression.py, dna_decode/glm/selection.py, dna_decode/glm/generate.py, scripts/glm_genomewide_oracle.py, tests/test_glm_genomewide.py, tests/test_glm_expression.py, tests/test_glm_generate.py, pyproject.toml, wiki/glm_genomewide_oracle_2026-10-07.json, wiki/glm_genomewide_oracle_result_2026-10-07.md, wiki/glm_expression_oracle_result_2026-10-07.md
+
+Key claims:
+- [grounded] The planned primary arm `features = [sequence features ‖ medium indicator]`
+  (technical-plan.md:74) **cannot represent sequence×medium interaction** with a linear ridge head — an
+  indicator contributes only a global per-medium offset. The two-model comparator fits separate weight
+  vectors per medium and is therefore STRICTLY MORE EXPRESSIVE on the axis conditioning is meant to exploit,
+  so with the data-matched arm controlling the 2x-rows advantage the design can essentially only return
+  `GAIN_IS_DATA_VOLUME` or `NO_GAIN`. A negative would be uninformative about conditioning.
+- [grounded] `condition_effect` in dna_decode/glm/genomewide.py keys shared fragments by `seq` alone. Measured
+  on the real files: 340 LB and 302 M9 sequences appear more than once, and ALL of them map to >1 distinct
+  coordinate triple (e.g. one 232-bp sequence at both 211303 and 2604594). Published gap is UNAFFECTED
+  (-0.0614 under both keys; delta -0.00002, n 297,599 -> 297,868), but a collapsed repeated element can be
+  block-assigned by whichever coordinate survived, which is a split-integrity risk for the planned
+  position-blocked work.
+- [grounded] Per-medium noise ceilings (LB 0.7928 / M9 0.8014, never shared) and the mandatory
+  medium-shuffled + data-matched control arms survived review unchanged.

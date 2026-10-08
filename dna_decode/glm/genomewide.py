@@ -221,7 +221,8 @@ def noise_ceiling(frags: list[Fragment]) -> dict:
     }
 
 
-def condition_effect(a: list[Fragment], b: list[Fragment]) -> dict:
+def condition_effect(a: list[Fragment], b: list[Fragment], *,
+                     coordinate_key: bool = True) -> dict:
     """Does GROWTH CONDITION carry signal beyond noise? The bacterial analogue of cell-state conditioning.
 
     **The comparison must be NOISE-MATCHED, and getting that wrong inverts the answer.** Comparing
@@ -233,8 +234,30 @@ def condition_effect(a: list[Fragment], b: list[Fragment]) -> dict:
     So this reports BOTH: the single-vs-single cross-condition mean (matched to within-condition) and the
     disattenuated true correlation.
     """
-    ka = {f.seq: f for f in a}
-    kb = {f.seq: f for f in b}
+    # KEY ON COORDINATES, not sequence alone. Measured on the real files: 340 LB and 302 M9 sequences appear
+    # more than once, and EVERY one of them maps to more than one distinct coordinate triple (e.g. a 232-bp
+    # sequence at both 211303 and 2604594 -- a genuine repeated genomic element). A sequence-only key
+    # collapses those to one arbitrary record.
+    #
+    # HONEST MAGNITUDE: this does NOT move the published condition numbers. Re-derived under both keys, the
+    # noise-matched gap is -0.0614 either way (delta -0.00002; n 297,599 -> 297,868). The reason to fix it is
+    # PROSPECTIVE: a collapsed repeated element is block-assigned by whichever coordinate survived, so the two
+    # loci can land on opposite sides of a position-blocked split. That is a split-integrity bug waiting to
+    # happen, which is a better argument for the key than the published-number one.
+    key = (lambda f: (f.start, f.end, f.strand, f.seq)) if coordinate_key else (lambda f: f.seq)
+    ka: dict = {}
+    kb: dict = {}
+    collisions_a = collisions_b = 0
+    for f in a:
+        k = key(f)
+        if k in ka:
+            collisions_a += 1
+        ka[k] = f
+    for f in b:
+        k = key(f)
+        if k in kb:
+            collisions_b += 1
+        kb[k] = f
     shared = sorted(set(ka) & set(kb))
     if len(shared) < 100:
         return {"status": "insufficient_shared_fragments", "n_shared": len(shared)}
@@ -253,6 +276,8 @@ def condition_effect(a: list[Fragment], b: list[Fragment]) -> dict:
     irrelevant_ceiling = math.sqrt(rel_a * rel_b) if rel_a > 0 and rel_b > 0 else 0.0
     return {
         "n_shared": len(shared),
+        "key": "coordinate" if coordinate_key else "sequence_only",
+        "n_key_collisions_dropped": {"a": collisions_a, "b": collisions_b},
         "within_condition_single_vs_single": {"a": round(within_a, 4), "b": round(within_b, 4),
                                               "mean": round(within_mean, 4)},
         "cross_condition_single_vs_single": {"pairs": [round(c, 4) for c in cross],

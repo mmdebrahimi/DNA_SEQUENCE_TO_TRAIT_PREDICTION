@@ -1,0 +1,296 @@
+{
+  "schema": "glm-reference-geometry-v1",
+  "date": "2026-10-07",
+  "preregistered": {
+    "question": "are the designed grid and real genomic promoter sequence meaningfully different distributions, and where does the falsifier's natural reference sit relative to both?",
+    "primary_pair": "grid_vs_tile",
+    "bands": {
+      "DISTINCT": ">= 0.80 -- the two substrates are different distributions; G-A's distribution-shift framing HOLDS and the oracle's transfer failure is expected",
+      "PARTIAL": "0.65 - 0.80 -- overlapping but separable; the framing survives with a caveat",
+      "NOT_MEANINGFULLY_DIFFERENT": "< 0.65 -- G-A's framing is WRONG; the transfer failure needs a different explanation (task difference, label noise, tail shape) and G-A should be re-read before implementation"
+    },
+    "validity_gate": "every set must be INDISTINGUISHABLE FROM ITSELF (self-control AUROC <= 0.60). A set separable from its own halves means the instrument fabricates signal and NOTHING is graded.",
+    "class_balance": "both sides subsampled to the same n, so AUROC cannot come from prevalence",
+    "seeds": "multi-seed, verdict on the MEDIAN, dispersion reported -- compute spent on rigour, not search"
+  },
+  "set_sizes": {
+    "grid": 10898,
+    "tile": 44106,
+    "natural": 4340
+  },
+  "per_side_n": 2500,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "modes": [
+    "kmer",
+    "both"
+  ],
+  "sequence_diversity": {
+    "grid": {
+      "n_sampled": 4000,
+      "mean_per_position_entropy_bits": 1.5128,
+      "n_invariant_positions": 3,
+      "longest_common_prefix_bp": 0,
+      "longest_common_suffix_bp": 0,
+      "median_longest_shared_block_bp": 13.0,
+      "note": "a long median shared block with a ZERO common prefix/suffix is the signature of combinatorial recombination from a small element vocabulary, NOT of a fixed scaffold"
+    },
+    "tile": {
+      "n_sampled": 4000,
+      "mean_per_position_entropy_bits": 1.9866,
+      "n_invariant_positions": 0,
+      "longest_common_prefix_bp": 0,
+      "longest_common_suffix_bp": 0,
+      "median_longest_shared_block_bp": 3.0,
+      "note": "a long median shared block with a ZERO common prefix/suffix is the signature of combinatorial recombination from a small element vocabulary, NOT of a fixed scaffold"
+    },
+    "natural": {
+      "n_sampled": 4000,
+      "mean_per_position_entropy_bits": 1.9794,
+      "n_invariant_positions": 0,
+      "longest_common_prefix_bp": 0,
+      "longest_common_suffix_bp": 0,
+      "median_longest_shared_block_bp": 3.0,
+      "note": "a long median shared block with a ZERO common prefix/suffix is the signature of combinatorial recombination from a small element vocabulary, NOT of a fixed scaffold"
+    }
+  },
+  "self_control": {
+    "grid": {
+      "kmer": {
+        "max": 0.5088106795135535,
+        "median": 0.49704892736888395,
+        "values": [
+          0.4897,
+          0.5082,
+          0.4956,
+          0.494,
+          0.4914,
+          0.5088,
+          0.504,
+          0.5073,
+          0.4889,
+          0.4985
+        ]
+      },
+      "both": {
+        "max": 0.5083988408702365,
+        "median": 0.4963449897467461,
+        "values": [
+          0.4907,
+          0.5079,
+          0.4949,
+          0.4923,
+          0.4904,
+          0.5084,
+          0.5038,
+          0.5065,
+          0.4895,
+          0.4978
+        ]
+      }
+    },
+    "tile": {
+      "kmer": {
+        "max": 0.5048431561058014,
+        "median": 0.5006216176830092,
+        "values": [
+          0.5018,
+          0.5038,
+          0.4964,
+          0.5003,
+          0.501,
+          0.5025,
+          0.4954,
+          0.495,
+          0.5048,
+          0.4996
+        ]
+      },
+      "both": {
+        "max": 0.5039646705868748,
+        "median": 0.5018435607224465,
+        "values": [
+          0.504,
+          0.5036,
+          0.4951,
+          0.4971,
+          0.5028,
+          0.5033,
+          0.502,
+          0.4948,
+          0.5016,
+          0.4979
+        ]
+      }
+    },
+    "natural": {
+      "kmer": {
+        "max": 0.5043101943355625,
+        "median": 0.49400238318976963,
+        "values": [
+          0.499,
+          0.4958,
+          0.4869,
+          0.4888,
+          0.5041,
+          0.4921,
+          0.4922,
+          0.5043,
+          0.4538,
+          0.5037
+        ]
+      },
+      "both": {
+        "max": 0.5162993726523428,
+        "median": 0.4965105919702551,
+        "values": [
+          0.5024,
+          0.4801,
+          0.4804,
+          0.5001,
+          0.51,
+          0.4796,
+          0.493,
+          0.5163,
+          0.4587,
+          0.5017
+        ]
+      }
+    }
+  },
+  "validity_gate_passed": true,
+  "pairwise": {
+    "grid_vs_tile": {
+      "kmer": {
+        "median": 1.0,
+        "stdev": 0.0,
+        "n_per_side": 2500,
+        "n_seeds": 10,
+        "values": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "both": {
+        "median": 1.0,
+        "stdev": 0.0,
+        "n_per_side": 2500,
+        "n_seeds": 10,
+        "values": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "grid_vs_natural": {
+      "kmer": {
+        "median": 1.0,
+        "stdev": 0.0,
+        "n_per_side": 2500,
+        "n_seeds": 10,
+        "values": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "both": {
+        "median": 1.0,
+        "stdev": 0.0,
+        "n_per_side": 2500,
+        "n_seeds": 10,
+        "values": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    },
+    "tile_vs_natural": {
+      "kmer": {
+        "median": 0.666406776865174,
+        "stdev": 0.0134,
+        "n_per_side": 2500,
+        "n_seeds": 10,
+        "values": [
+          0.6565,
+          0.6362,
+          0.6702,
+          0.6861,
+          0.6504,
+          0.6667,
+          0.6661,
+          0.6692,
+          0.6696,
+          0.6595
+        ]
+      },
+      "both": {
+        "median": 0.8338045500985098,
+        "stdev": 0.0098,
+        "n_per_side": 2500,
+        "n_seeds": 10,
+        "values": [
+          0.8381,
+          0.8166,
+          0.8408,
+          0.8417,
+          0.8295,
+          0.828,
+          0.8288,
+          0.8403,
+          0.8385,
+          0.8151
+        ]
+      }
+    }
+  },
+  "verdict": "DISTINCT",
+  "verdict_detail": "grid_vs_tile median AUROC 1.0000 under mode=kmer (all modes {'kmer': 1.0, 'both': 1.0}); other pairs: grid_vs_natural 1.0000; tile_vs_natural 0.6664",
+  "honest_limits": [
+    "A k-mer / positional discriminator measures LOCAL composition and coarse positional structure. Two sets indistinguishable to it could still differ in long-range organisation.",
+    "The natural set is upstream-of-CDS windows, a PROXY for promoters rather than mapped transcription start sites.",
+    "Peak tiles are selected from called expression peaks, so 'tile' is genomic-but-selected, not a uniform sample of the genome.",
+    "Band thresholds (0.80 / 0.65) are ASSERTED; the self-control ceiling that validates the instrument is DERIVED from the data."
+  ]
+}
