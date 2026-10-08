@@ -1,0 +1,150 @@
+{
+  "schema": "glm-tile-headroom-v1",
+  "date": "2026-10-08",
+  "substrate": "GEO GSE144621 peak tiles, category=tile, len=150, leave-peak-out",
+  "n_tiles": 44106,
+  "load_stats": {
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "delimiter": "tab",
+    "n_header_columns": 28,
+    "n_lines": 46713,
+    "n_parsed": 46713,
+    "n_field_count_mismatch": 0,
+    "n_non_acgt": 0,
+    "n_unparseable_value": 0,
+    "length_min": 48,
+    "length_median": 150,
+    "length_max": 150,
+    "n_distinct_lengths": 96
+  },
+  "noise_ceiling": 0.941,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "preregistered": {
+    "question": "does adding POSITION to composition improve prediction of genomic promoter-tile expression, i.e. does a conv encoder's core advantage exist on this substrate at all?",
+    "min_position_gain": 0.02,
+    "meaning": "if (best position-aware arm) - (best composition-only arm) < 0.02, position buys nothing measurable here, GA-H3 is supported, and building a conv encoder is a predicted-negative",
+    "reconcile_anchor": {
+      "arm": "gc",
+      "seed": 0,
+      "expected": 0.3,
+      "tolerance": 0.01,
+      "source": "wiki/glm_genomewide_oracle_2026-10-07.json"
+    },
+    "composition_only_arms": [
+      "gc",
+      "gc_dinuc"
+    ],
+    "position_aware_arms": [
+      "gc_posgc",
+      "dinuc_posgc"
+    ],
+    "verdicts": {
+      "POSITION_HAS_HEADROOM": "position adds >= 0.02 -- the encoder's lever is real, proceed to build it",
+      "NO_POSITIONAL_HEADROOM": "position adds < 0.02 -- GA-H3 supported, encoder is a predicted-negative, recommend user ratification before spending the build",
+      "INDETERMINATE_RECONCILE_FAILED": "the gc arm did not reproduce the committed 0.3000 on seed 0, so this script is not reading the same data as the published number and NOTHING is interpretable"
+    },
+    "thresholds_are": "ASSERTED; the 0.9410 ceiling that contextualises them is DERIVED from the tiles' own replicates"
+  },
+  "arms": {
+    "gc": {
+      "n_features": 1,
+      "median": 0.3112,
+      "stdev": 0.0166,
+      "min": 0.2747,
+      "max": 0.3347,
+      "fraction_of_ceiling": 0.3307,
+      "per_seed": [
+        0.3,
+        0.3151,
+        0.3073,
+        0.2917,
+        0.3191,
+        0.3347,
+        0.3091,
+        0.3191,
+        0.3133,
+        0.2747
+      ]
+    },
+    "gc_dinuc": {
+      "n_features": 17,
+      "median": 0.2785,
+      "stdev": 0.0182,
+      "min": 0.2629,
+      "max": 0.3122,
+      "fraction_of_ceiling": 0.296,
+      "per_seed": [
+        0.303,
+        0.3122,
+        0.2785,
+        0.2689,
+        0.2955,
+        0.3111,
+        0.2629,
+        0.2785,
+        0.2772,
+        0.2698
+      ]
+    },
+    "gc_posgc": {
+      "n_features": 11,
+      "median": 0.3044,
+      "stdev": 0.0122,
+      "min": 0.2826,
+      "max": 0.3259,
+      "fraction_of_ceiling": 0.3235,
+      "per_seed": [
+        0.3025,
+        0.3184,
+        0.3064,
+        0.2955,
+        0.3128,
+        0.3259,
+        0.3009,
+        0.2991,
+        0.3078,
+        0.2826
+      ]
+    },
+    "dinuc_posgc": {
+      "n_features": 26,
+      "median": 0.2797,
+      "stdev": 0.0193,
+      "min": 0.2568,
+      "max": 0.3138,
+      "fraction_of_ceiling": 0.2972,
+      "per_seed": [
+        0.3045,
+        0.3138,
+        0.281,
+        0.274,
+        0.293,
+        0.3082,
+        0.2568,
+        0.2647,
+        0.2734,
+        0.2783
+      ]
+    }
+  },
+  "verdict": "NO_POSITIONAL_HEADROOM",
+  "verdict_detail": "best composition-only = gc +0.3112; best position-aware = gc_posgc +0.3044; POSITION GAIN -0.0068 against a bar of 0.02; reconcile OK (gc seed0 0.3000)",
+  "recommend_user_ratification_before_cnn": true,
+  "honest_limits": [
+    "Positional GC in 10 bins is the MINIMAL positional feature. A conv encoder could in principle find positional structure this cannot see -- a motif at a precise offset rather than a bulk shift in one bin. So a null here makes the encoder a predicted-negative, it does not PROVE the encoder must fail.",
+    "Ridge is linear in these features; an interaction between composition and position is not representable here and is one thing a conv encoder could add.",
+    "The 2/3-inactive composition of the tile set applies to every arm equally, so it cannot explain a DIFFERENCE between arms -- but it does bound all of them.",
+    "min_position_gain = 0.02 is ASSERTED, not derived."
+  ]
+}
