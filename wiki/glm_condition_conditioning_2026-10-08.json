@@ -1,0 +1,634 @@
+{
+  "schema": "glm-condition-conditioning-v1",
+  "date": "2026-10-08",
+  "stage": "step5-all-arms",
+  "arms": {
+    "two_model": {
+      "per_medium_mean": 0.2032,
+      "pooled": 0.3086
+    },
+    "interaction": {
+      "per_medium_mean": 0.2032,
+      "pooled": 0.3086,
+      "n_features": 129,
+      "n_train_rows": 477376,
+      "per_seed_pmm": [
+        0.2013,
+        0.1916,
+        0.1969,
+        0.2052,
+        0.206,
+        0.2161,
+        0.198,
+        0.2116,
+        0.206,
+        0.1971
+      ]
+    },
+    "indicator": {
+      "per_medium_mean": 0.2029,
+      "pooled": 0.2932,
+      "n_features": 65,
+      "n_train_rows": 477376,
+      "per_seed_pmm": [
+        0.2009,
+        0.1906,
+        0.1964,
+        0.2048,
+        0.2054,
+        0.2159,
+        0.1972,
+        0.2108,
+        0.2054,
+        0.1963
+      ]
+    },
+    "shuffled": {
+      "per_medium_mean": 0.2026,
+      "pooled": 0.2027,
+      "n_features": 129,
+      "n_train_rows": 477376,
+      "per_seed_pmm": [
+        0.2007,
+        0.1905,
+        0.1962,
+        0.2046,
+        0.2054,
+        0.2157,
+        0.1967,
+        0.2106,
+        0.2052,
+        0.1963
+      ]
+    },
+    "partial_pooling": {
+      "per_medium_mean": 0.2033,
+      "pooled": 0.3085,
+      "n_features": 129,
+      "n_train_rows": 477376,
+      "per_seed_pmm": [
+        0.2013,
+        0.1917,
+        0.197,
+        0.2053,
+        0.2061,
+        0.2161,
+        0.198,
+        0.2116,
+        0.2061,
+        0.1972
+      ]
+    },
+    "partial_pooling_shuffled": {
+      "per_medium_mean": 0.2026,
+      "pooled": 0.2027,
+      "n_features": 129,
+      "n_train_rows": 477376,
+      "per_seed_pmm": [
+        0.2007,
+        0.1905,
+        0.1962,
+        0.2046,
+        0.2054,
+        0.2157,
+        0.1968,
+        0.2106,
+        0.2052,
+        0.1963
+      ]
+    },
+    "data_matched": {
+      "per_medium_mean": 0.2035,
+      "pooled": 0.3077,
+      "n_features": 129,
+      "n_train_rows": 238688,
+      "per_seed_pmm": [
+        0.2016,
+        0.1916,
+        0.1968,
+        0.2053,
+        0.2058,
+        0.2161,
+        0.1979,
+        0.2115,
+        0.2063,
+        0.1967
+      ]
+    }
+  },
+  "verdict": "NO_GAIN",
+  "verdict_detail": "per_medium_mean: two_model +0.2032 | partial_pooling +0.2033 (gain +0.0001) | full_interaction +0.2032 [DEGENERATE: equals two_model by construction] | indicator +0.2029 | shuffled +0.2026 (gain -0.0006) | data_matched +0.2035 (gain +0.0003); bar 0.02",
+  "null_clean": true,
+  "registered_protocol_used": true,
+  "substrate": "GEO GSE144621 LB + M9 sheared fragments, coordinate-keyed intersection",
+  "n_shared": 297868,
+  "load_stats": {
+    "LB": {
+      "path": "D:\\dna_decode_cache\\mpra\\GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz",
+      "delimiter": "whitespace",
+      "n_header_columns": 13,
+      "n_lines": 321123,
+      "n_parsed": 321123,
+      "n_field_count_mismatch": 0,
+      "n_non_acgt": 0,
+      "n_unparseable_value": 0,
+      "length_min": 48,
+      "length_median": 244,
+      "length_max": 499,
+      "n_distinct_lengths": 359
+    },
+    "M9": {
+      "path": "D:\\dna_decode_cache\\mpra\\GSE144621_U00096.2_frag-rLP5_M9_expression.txt.gz",
+      "delimiter": "whitespace",
+      "n_header_columns": 13,
+      "n_lines": 318457,
+      "n_parsed": 318457,
+      "n_field_count_mismatch": 0,
+      "n_non_acgt": 0,
+      "n_unparseable_value": 0,
+      "length_min": 48,
+      "length_median": 244,
+      "length_max": 499,
+      "n_distinct_lengths": 361
+    }
+  },
+  "per_medium_ceilings": {
+    "LB": {
+      "n": 297868,
+      "single_replicate_agreement": 0.4578,
+      "reliability_of_2rep_mean_spearman_brown": 0.6281,
+      "ceiling_for_a_sequence_model": 0.7925,
+      "note": "read every model number against the ceiling, never against 1.0; GSE108535 offered no ceiling because its two published tables correlate at exactly 1.0 (one monotone transform of the other, not replicates)"
+    },
+    "M9": {
+      "n": 297868,
+      "single_replicate_agreement": 0.4775,
+      "reliability_of_2rep_mean_spearman_brown": 0.6464,
+      "ceiling_for_a_sequence_model": 0.804,
+      "note": "read every model number against the ceiling, never against 1.0; GSE108535 offered no ceiling because its two published tables correlate at exactly 1.0 (one monotone transform of the other, not replicates)"
+    }
+  },
+  "condition_effect": {
+    "n_shared": 297868,
+    "key": "coordinate",
+    "n_key_collisions_dropped": {
+      "a": 0,
+      "b": 0
+    },
+    "within_condition_single_vs_single": {
+      "a": 0.4578,
+      "b": 0.4775,
+      "mean": 0.4677
+    },
+    "cross_condition_single_vs_single": {
+      "pairs": [
+        0.4064,
+        0.424,
+        0.3851,
+        0.4097
+      ],
+      "mean": 0.4063
+    },
+    "noise_matched_gap": -0.0614,
+    "unmatched_ave_vs_ave": 0.5026,
+    "ceiling_if_condition_were_irrelevant": 0.6372,
+    "disattenuated_true_cross_condition": 0.7887,
+    "verdict": "CONDITION_CARRIES_SIGNAL"
+  },
+  "preregistered": {
+    "question": "does one model taking (sequence, medium) beat two independent per-medium models on held-out position-blocked data?",
+    "primary_arm": "partial_pooling",
+    "comparator": "two_model",
+    "primary_metric": "per_medium_mean",
+    "secondary_metric": "pooled",
+    "min_gain": 0.02,
+    "validity": {
+      "shuffled_max_gain": 0.02,
+      "data_matched_must_also_clear": true
+    },
+    "verdicts": {
+      "CONDITIONING_HELPS": "interaction beats two_model by >= 0.02 AND shuffled shows no gain AND data_matched also clears -- conditioning, not data volume",
+      "GAIN_IS_DATA_VOLUME": "interaction beats two_model but data_matched does NOT clear -- the gain is attributable to seeing ~2x the rows",
+      "NO_GAIN": "interaction does not beat two_model by the margin",
+      "INDETERMINATE_NULL_NOT_CLEAN": "the medium-shuffled arm itself gains >= 0.02, so the pipeline fabricates signal and NOTHING is graded"
+    },
+    "min_shared_fragments": 100000,
+    "measured_degeneracy": "a FULL interaction [seq, m, seq*m] spans the same hypothesis space as two independent per-medium models (verified: corr 0.9999998 on synthetic truth with medium-specific coefficients; identical to 4dp on two real seeds). It is retained as a demonstration, NOT as a candidate. The primary arm is partial_pooling, which sits strictly between full pooling and no pooling.",
+    "pooling_strength": "SELECTED on an inner position-blocked split of the TRAINING data from the frozen grid (1.0, 0.5, 0.3, 0.1, 0.03); the test split never informs the choice, and the whole inner-validation curve is reported so a flat curve stays visible. This SUPERSEDES an asserted 0.3, which had never been exercised: it was applied before StandardScaler, which divides a constant column factor straight back out, so all three conditioned arms were silently the same model. The pooling penalty is now applied AFTER standardisation (scale c => the interaction block is penalised by alpha/c^2).",
+    "scale_selection_is_refined_not_relaxed": "the VERDICT BAR is untouched (min_gain 0.02, validity first). What changed is the arm's own definition, so that the primary arm is non-degenerate -- which is what it was always specified to be.",
+    "sequence_features": "kmer3 (64) -- chosen because Step 3 measured that MORE features hurt on this project's substrate, and because 4-mers would force a subsample (decision D2 says use the full data)",
+    "thresholds_are": "ASSERTED; the per-medium ceilings that contextualise them are DERIVED"
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "two_model_baseline": {
+    "arm": "two_model",
+    "per_medium_mean_median": 0.2032,
+    "pooled_median": 0.3086,
+    "per_seed": [
+      {
+        "per_medium": {
+          "LB": 0.1317,
+          "M9": 0.2708
+        },
+        "per_medium_mean": 0.2013,
+        "pooled": 0.3139,
+        "held_blocks": [
+          7,
+          8
+        ],
+        "n_train": 238688,
+        "n_test": 59180
+      },
+      {
+        "per_medium": {
+          "LB": 0.1213,
+          "M9": 0.2618
+        },
+        "per_medium_mean": 0.1916,
+        "pooled": 0.3063,
+        "held_blocks": [
+          6,
+          8
+        ],
+        "n_train": 238797,
+        "n_test": 59071
+      },
+      {
+        "per_medium": {
+          "LB": 0.1241,
+          "M9": 0.2696
+        },
+        "per_medium_mean": 0.1969,
+        "pooled": 0.3038,
+        "held_blocks": [
+          5,
+          9
+        ],
+        "n_train": 239157,
+        "n_test": 58711
+      },
+      {
+        "per_medium": {
+          "LB": 0.1337,
+          "M9": 0.2768
+        },
+        "per_medium_mean": 0.2052,
+        "pooled": 0.3141,
+        "held_blocks": [
+          1,
+          5
+        ],
+        "n_train": 239471,
+        "n_test": 58397
+      },
+      {
+        "per_medium": {
+          "LB": 0.1345,
+          "M9": 0.2776
+        },
+        "per_medium_mean": 0.206,
+        "pooled": 0.3086,
+        "held_blocks": [
+          2,
+          8
+        ],
+        "n_train": 238215,
+        "n_test": 59653
+      },
+      {
+        "per_medium": {
+          "LB": 0.1425,
+          "M9": 0.2897
+        },
+        "per_medium_mean": 0.2161,
+        "pooled": 0.3053,
+        "held_blocks": [
+          2,
+          3
+        ],
+        "n_train": 236815,
+        "n_test": 61053
+      },
+      {
+        "per_medium": {
+          "LB": 0.1274,
+          "M9": 0.2685
+        },
+        "per_medium_mean": 0.198,
+        "pooled": 0.31,
+        "held_blocks": [
+          5,
+          8
+        ],
+        "n_train": 239000,
+        "n_test": 58868
+      },
+      {
+        "per_medium": {
+          "LB": 0.136,
+          "M9": 0.2871
+        },
+        "per_medium_mean": 0.2116,
+        "pooled": 0.3093,
+        "held_blocks": [
+          3,
+          8
+        ],
+        "n_train": 237610,
+        "n_test": 60258
+      },
+      {
+        "per_medium": {
+          "LB": 0.1345,
+          "M9": 0.2776
+        },
+        "per_medium_mean": 0.206,
+        "pooled": 0.3086,
+        "held_blocks": [
+          2,
+          8
+        ],
+        "n_train": 238215,
+        "n_test": 59653
+      },
+      {
+        "per_medium": {
+          "LB": 0.123,
+          "M9": 0.2712
+        },
+        "per_medium_mean": 0.1971,
+        "pooled": 0.3055,
+        "held_blocks": [
+          8,
+          9
+        ],
+        "n_train": 239167,
+        "n_test": 58701
+      }
+    ]
+  },
+  "pooling_scale_selection": {
+    "grid": [
+      1.0,
+      0.5,
+      0.3,
+      0.1,
+      0.03
+    ],
+    "selected_on": "inner position-blocked split of the TRAINING rows only",
+    "per_seed": [
+      {
+        "seed": 0,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.2122,
+          "0.5": 0.2122,
+          "0.3": 0.2122,
+          "0.1": 0.2122,
+          "0.03": 0.2123
+        },
+        "inner_held_blocks": [
+          1,
+          2
+        ],
+        "selected_scale_shuffled": 0.03,
+        "inner_curve_shuffled": {
+          "1.0": 0.2121,
+          "0.5": 0.2121,
+          "0.3": 0.2121,
+          "0.1": 0.2121,
+          "0.03": 0.2122
+        }
+      },
+      {
+        "seed": 1,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.2124,
+          "0.5": 0.2124,
+          "0.3": 0.2124,
+          "0.1": 0.2124,
+          "0.03": 0.2125
+        },
+        "inner_held_blocks": [
+          1,
+          2
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.2124,
+          "0.5": 0.2124,
+          "0.3": 0.2124,
+          "0.1": 0.2124,
+          "0.03": 0.2124
+        }
+      },
+      {
+        "seed": 2,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.2038,
+          "0.5": 0.2038,
+          "0.3": 0.2038,
+          "0.1": 0.2038,
+          "0.03": 0.2039
+        },
+        "inner_held_blocks": [
+          2,
+          7
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.2031,
+          "0.5": 0.2031,
+          "0.3": 0.2031,
+          "0.1": 0.2031,
+          "0.03": 0.2031
+        }
+      },
+      {
+        "seed": 3,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.2149,
+          "0.5": 0.2149,
+          "0.3": 0.2149,
+          "0.1": 0.2149,
+          "0.03": 0.215
+        },
+        "inner_held_blocks": [
+          0,
+          1
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.2142,
+          "0.5": 0.2142,
+          "0.3": 0.2142,
+          "0.1": 0.2142,
+          "0.03": 0.2142
+        }
+      },
+      {
+        "seed": 4,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.2147,
+          "0.5": 0.2147,
+          "0.3": 0.2147,
+          "0.1": 0.2147,
+          "0.03": 0.2148
+        },
+        "inner_held_blocks": [
+          0,
+          2
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.2142,
+          "0.5": 0.2142,
+          "0.3": 0.2142,
+          "0.1": 0.2142,
+          "0.03": 0.2142
+        }
+      },
+      {
+        "seed": 5,
+        "selected_scale": 1.0,
+        "inner_curve": {
+          "1.0": 0.2123,
+          "0.5": 0.2123,
+          "0.3": 0.2123,
+          "0.1": 0.2122,
+          "0.03": 0.2122
+        },
+        "inner_held_blocks": [
+          4,
+          7
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.2122,
+          "0.5": 0.2122,
+          "0.3": 0.2122,
+          "0.1": 0.2122,
+          "0.03": 0.2122
+        }
+      },
+      {
+        "seed": 6,
+        "selected_scale": 0.1,
+        "inner_curve": {
+          "1.0": 0.2149,
+          "0.5": 0.2149,
+          "0.3": 0.2149,
+          "0.1": 0.215,
+          "0.03": 0.215
+        },
+        "inner_held_blocks": [
+          0,
+          8
+        ],
+        "selected_scale_shuffled": 0.1,
+        "inner_curve_shuffled": {
+          "1.0": 0.214,
+          "0.5": 0.214,
+          "0.3": 0.214,
+          "0.1": 0.2141,
+          "0.03": 0.2141
+        }
+      },
+      {
+        "seed": 7,
+        "selected_scale": 0.1,
+        "inner_curve": {
+          "1.0": 0.2001,
+          "0.5": 0.2001,
+          "0.3": 0.2001,
+          "0.1": 0.2002,
+          "0.03": 0.2002
+        },
+        "inner_held_blocks": [
+          7,
+          9
+        ],
+        "selected_scale_shuffled": 0.03,
+        "inner_curve_shuffled": {
+          "1.0": 0.1994,
+          "0.5": 0.1994,
+          "0.3": 0.1994,
+          "0.1": 0.1994,
+          "0.03": 0.1995
+        }
+      },
+      {
+        "seed": 8,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.1939,
+          "0.5": 0.1939,
+          "0.3": 0.1939,
+          "0.1": 0.1939,
+          "0.03": 0.194
+        },
+        "inner_held_blocks": [
+          6,
+          7
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.1933,
+          "0.5": 0.1933,
+          "0.3": 0.1933,
+          "0.1": 0.1933,
+          "0.03": 0.1933
+        }
+      },
+      {
+        "seed": 9,
+        "selected_scale": 0.03,
+        "inner_curve": {
+          "1.0": 0.1997,
+          "0.5": 0.1997,
+          "0.3": 0.1997,
+          "0.1": 0.1997,
+          "0.03": 0.1998
+        },
+        "inner_held_blocks": [
+          1,
+          7
+        ],
+        "selected_scale_shuffled": 1.0,
+        "inner_curve_shuffled": {
+          "1.0": 0.1991,
+          "0.5": 0.1991,
+          "0.3": 0.1991,
+          "0.1": 0.1991,
+          "0.03": 0.1991
+        }
+      }
+    ],
+    "superseded_asserted_value": 0.3
+  },
+  "honest_limits": [
+    "TWO conditions only. A null result is weak evidence against conditioning in general; it rules out conditioning as tested, on two growth media.",
+    "Conditioning is tested as sequence x medium INTERACTIONS over 3-mer features, which is not the same as a model whose REPRESENTATION is modulated by condition.",
+    "The fragment substrate has a low ceiling (LB 0.7925 / M9 0.8040) because 97% of fragments carry a single barcode, so absolute numbers are small by construction and must be read against those per-medium ceilings.",
+    "per_medium_mean is the primary metric. The pooled metric is inflated by the between-media level difference (measured: pooled 0.310 vs per-medium mean 0.197 for the baseline), which a global offset can capture without any condition-specific sequence response.",
+    "Only length-invariant features apply (fragments are 48-499bp with 359 distinct lengths), so this arm is not comparable to the designed grid's positional-one-hot number.",
+    "THE DESIGN IS RANK-DEFICIENT BY CONSTRUCTION and sklearn says so (LinAlgWarning, rcond ~1e-8). The 64 3-mer FREQUENCIES sum to 1.0 for every row -- an affine constraint, so the raw block is full rank 64 -- but StandardScaler CENTRES each column, which turns it into an exact linear dependency: measured rank 63 of 64, condition number 9.3e14. Ridge alpha=1.0 is therefore doing load-bearing work on every arm, which is a partial mechanistic account of the FLAT pooling curve: an extra per-block penalty has little room to change a fit that is already heavily regularised on a near-collinear basis.",
+    "THE POOLING CURVE IS FLAT and the selected scale is therefore NOISE. Inner-validation scores differ by <= 0.0001 across the whole grid, and the argmax moves between 0.03, 0.1 and 1.0 across seeds. Read this as 'pooling strength is not a lever on this substrate', NOT as '0.03 is the right amount of pooling'.",
+    "min_gain = 0.02 is ASSERTED, not derived."
+  ]
+}

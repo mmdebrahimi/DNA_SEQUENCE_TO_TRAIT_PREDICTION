@@ -62,7 +62,7 @@ Attempt budget: 3 per criterion. **MVP = an answered question**, not a won bet.
 | # | Criterion | Kind | Predicate |
 |---|---|---|---|
 | 1 | The comparison script exists | file-exists | `scripts/glm_condition_conditioning.py` |
-| 2 | Its tests pass | test-exit-0 | `uv run pytest tests/test_glm_condition.py -q` |
+| 2 | Its tests pass | test-exit-0 | `uv run pytest tests/test_glm_condition_conditioning.py -q` |
 | 3 | A verdict artifact exists | file-exists | `wiki/glm_condition_conditioning_2026-10-08.json` |
 | 4 | The verdict is recorded here | project-state-row | Action Log row whose outcome names the verdict |
 | 5 | The pre-registered control arm came out FLAT (validity) | project-state-row | Action Log row recording `null_clean=true` from the gate artifact |
@@ -74,6 +74,14 @@ null-result artifact. So the bar as first written made a *fake* negative reachab
 "require a win" (which would make a genuine recorded negative unreachable) or "accept any artifact". The
 adopted rule is: **require the experiment to be provably VALID, then accept either outcome.** Both predicates
 read a machine-readable field the gate script stamps into its own artifact — not a human claim.
+
+**Path correction (2026-10-08).** Criterion 2 named `tests/test_glm_condition.py`; the test file written for
+this family is `tests/test_glm_condition_conditioning.py` (the project's `test_<script>` convention, as with
+`test_glm_tile_headroom.py`). As written the predicate was permanently unsatisfiable — **the second such
+mis-specified path in this family's bar**, after criterion 3's `_2026-10-07.json`. It did fail CLOSED
+(pytest exits 4 on a missing file, verified, so it would have blocked the MVP rather than passing vacuously),
+which is the safe direction but still a bar that could never be met. Corrected to the real path; the
+criterion itself ("its tests pass") is unchanged and the bar is not relaxed.
 
 ## State Snapshot
 ### Assumptions
@@ -153,6 +161,7 @@ A committed artifact stating whether one (sequence, medium) model beats two sepa
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
 | 1 | 2026-10-07 | propose | project-init protocol executed by hand for GLM family G-C | ledger created; 3a PASS (all figures verified against the committed artifact), 3b PASS project, 3c PASS |
+| 2 | 2026-10-08 | run-tests | G-C 10-seed sweep executed: partial_pooling (PRIMARY) vs two_model on 297,868 coordinate-keyed LB/M9 fragments, position-blocked splits, pooling strength selected on an inner TRAIN-only split | **VERDICT NO_GAIN** — partial_pooling +0.2033 vs two_model +0.2032, gain **+0.0001 against a bar of 0.02** (two orders of magnitude short, not marginal). `null_clean=true` (shuffled gain −0.0006) and `registered_protocol_used=true`, both stamped by the script into `wiki/glm_condition_conditioning_2026-10-08.json`, so D1's two validity predicates hold on a machine-readable field rather than a human claim. Memo: `wiki/glm_condition_conditioning_result_2026-10-08.md`. THREE defects found en route, two of them mine: (a) the full-interaction arm is DEGENERATE with the comparator by construction (corr 0.9999998 on synthetic truth with medium-specific coefficients; equal to 4dp on real data at the median); (b) the pooling scale was a silent NO-OP — applied BEFORE StandardScaler, which divides out a constant column factor, so all three conditioned arms were secretly ONE model (r=0.9999970, same to 7dp); fixed by moving the penalty AFTER standardisation (block penalised by alpha/c²) and pinned by a test that asserts a pre-scaler scale is inert and a post-scaler one is not; (c) MVP criterion 2 named a test file that could never exist — failed closed (pytest exit 4), the second mis-specified path in this bar. The pooling curve is FLAT (0.0001 spread; argmax wanders 0.03/0.1/1.0 across seeds) so the selected scale is NOISE — pooling strength is not a lever here. Partial mechanistic account: CENTERING the unit-sum 3-mer block makes the design exactly rank 63 of 64 (cond 9.3e14), so ridge alpha is already load-bearing. Also measured: the pooled metric's excess over per-medium-mean IS the medium offset (shuffling collapses pooled 0.3085 → 0.2027 ≈ its own pmm 0.2026), upgrading an asserted caveat to a demonstrated one. Engineering: features were 97% of cost (181s vs 4s ridge); caching one pass per medium cut the sweep ~3.5h → ~35min, bit-faithful (two_model +0.2013/+0.1916 on seeds 0/1, reproduced on 3 separate runs) |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User
