@@ -146,29 +146,49 @@ def validate_widths(widths, length: int) -> tuple[int, ...]:
     return w
 
 
-def peak_blocked_val_split(peaks: list[str], *, val_fraction: float, seed: int):
-    """Carve an inner validation set out of TRAIN by WHOLE PEAK, for early stopping.
+def peak_blocked_val_split(groups: list[str], *, val_fraction: float, seed: int):
+    """Carve an inner validation set out of TRAIN by WHOLE GROUP, for early stopping.
 
-    Peak-blocked for the same measured reason the outer split is: tiles inside one peak are offset by tens
-    of bp and overlap heavily, so a random inner split would early-stop against near-duplicates of its own
-    training rows and would systematically over-train. Membership is a pure function of the peak id, so
+    Group-blocked for the same measured reason every outer split in this project is: on tiles the group is
+    the PEAK (tiles inside one peak are offset by tens of bp and overlap heavily), and on the designed grid
+    it is the ELEMENT identity. A random inner split would early-stop against near-duplicates of its own
+    training rows and systematically over-train. Membership is a pure function of the group label, so
     disjointness is BY CONSTRUCTION.
 
-    Returns `(train_positions, val_positions)` as index lists into `peaks`.
+    The blocking variable is supplied by the caller (`fit_encoder(group_key=...)`) rather than hardcoded,
+    so a new substrate must NAME its leakage unit instead of silently inheriting one that does not apply.
+
+    Returns `(train_positions, val_positions)` as index lists into `groups`.
     """
     import random as _r
-    uniq = sorted(set(peaks))
+    uniq = sorted(set(groups))
     if len(uniq) < 2:
-        raise EncoderDataError(f"need >= 2 training peaks to carve a validation split, got {len(uniq)}")
+        raise EncoderDataError(f"need >= 2 training groups to carve a validation split, got {len(uniq)}")
     ps = list(uniq)
     _r.Random(10_000 + seed).shuffle(ps)
     k = max(1, min(len(ps) - 1, int(round(len(ps) * val_fraction))))
     held = set(ps[:k])
-    tr = [i for i, p in enumerate(peaks) if p not in held]
-    va = [i for i, p in enumerate(peaks) if p in held]
+    tr = [i for i, p in enumerate(groups) if p not in held]
+    va = [i for i, p in enumerate(groups) if p in held]
     if not tr or not va:
         raise EncoderDataError("degenerate inner split")
     return tr, va
+
+
+def tile_peak_key(t) -> str:
+    """Default grouping: a peak tile's peak id. REFUSES an object with no peak rather than defaulting.
+
+    A silent `""` default would collapse every row into one group, and `peak_blocked_val_split` would then
+    refuse with a confusing "need >= 2 groups" — or worse, a future edit adding a fallback would produce a
+    RANDOM inner split on a substrate that needs a blocked one. Naming the failure here keeps it legible.
+    """
+    p = getattr(t, "peak", None)
+    if not p:
+        raise EncoderDataError(
+            "this record has no non-empty `peak`, so the default tile grouping does not apply; pass an "
+            "explicit group_key naming this substrate's leakage unit (e.g. the element identity on the "
+            "designed grid)")
+    return str(p)
 
 
 def count_parameters(widths=DEFAULT_WIDTHS, *, channels: int = 32) -> int:
@@ -263,7 +283,8 @@ def resolve_device(device: str) -> str:
 
 
 def fit_encoder(train, test, *, widths=DEFAULT_WIDTHS, protocol: TrainingProtocol = REGISTERED_PROTOCOL,
-                seed: int = 0, device: str = "cpu", shuffle_labels: bool = False) -> dict:
+                seed: int = 0, device: str = "cpu", shuffle_labels: bool = False,
+                group_key=tile_peak_key) -> dict:
     """Train the encoder on `train`, score Spearman on `test`. Mirrors `_fit`'s role in the gate scripts.
 
     `shuffle_labels` permutes the TRAINING targets only — the validity null. If a model with its labels
@@ -293,8 +314,8 @@ def fit_encoder(train, test, *, widths=DEFAULT_WIDTHS, protocol: TrainingProtoco
         raise EncoderDataError("train and test sequence lengths differ; refusing to pad or truncate")
     w = validate_widths(widths, L)
 
-    peaks = [getattr(t, "peak", "") for t in train]
-    tr_pos, va_pos = peak_blocked_val_split(peaks, val_fraction=protocol.val_fraction, seed=seed)
+    groups = [group_key(t) for t in train]
+    tr_pos, va_pos = peak_blocked_val_split(groups, val_fraction=protocol.val_fraction, seed=seed)
 
     X_all = one_hot(seqs_tr)
     y_all = np.log1p(np.asarray([t.expression for t in train], dtype=np.float64))
@@ -356,6 +377,10 @@ def fit_encoder(train, test, *, widths=DEFAULT_WIDTHS, protocol: TrainingProtoco
 
     return {
         "spearman": spearman(pred, yte_raw),
+        # the raw test predictions, so a caller can compute a SECOND framing (e.g. AUROC on an
+        # active/inactive column) without retraining. Callers must drop this before serialising -- it is
+        # one float per test row.
+        "predictions": pred,
         "n_train": len(tr_pos),
         "n_inner_val": len(va_pos),
         "n_test": len(test),
@@ -368,4 +393,5 @@ def fit_encoder(train, test, *, widths=DEFAULT_WIDTHS, protocol: TrainingProtoco
         "shuffle_labels": shuffle_labels,
         "protocol": protocol.as_dict(),
         "determinism_reference": dev == "cpu",
+        "n_train_groups": len(set(groups)),
     }

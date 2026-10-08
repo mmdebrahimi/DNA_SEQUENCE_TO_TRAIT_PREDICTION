@@ -172,6 +172,44 @@ def test_a_single_peak_cannot_be_split_and_says_so():
         peak_blocked_val_split(["p0"] * 50, val_fraction=0.2, seed=0)
 
 
+def test_a_record_with_no_peak_is_REFUSED_rather_than_silently_grouped_together():
+    """The grouping variable must be NAMED per substrate. A silent `""` fallback would put every row in
+    one group, and a later 'convenience' fallback to a random inner split would leak on a substrate that
+    needs a blocked one -- which is exactly the bug class this whole project keeps finding."""
+    from dna_decode.glm.encoder import tile_peak_key
+
+    class _NoPeak:
+        seq, expression = "ACGT", 1.0
+
+    with pytest.raises(EncoderDataError) as e:
+        tile_peak_key(_NoPeak())
+    assert "group_key" in str(e.value)
+    assert tile_peak_key(_T("ACGT", 1.0, "p3")) == "p3"
+
+
+def test_the_grid_can_block_on_ELEMENT_identity_instead_of_peak():
+    """The designed grid has no peaks; its leakage unit is the element identity. The group_key seam is
+    what lets one encoder serve both substrates without either inheriting the other's split."""
+    pytest.importorskip("torch")
+    from dna_decode.glm.encoder import fit_encoder
+
+    class _P:
+        def __init__(self, seq, expression, elem):
+            self.seq, self.expression, self.elements = seq, expression, {"e": elem}
+
+    r = random.Random(0)
+    data = [_P("".join(r.choice(BASES) for _ in range(60)), r.random(), f"e{i // 8}")
+            for i in range(240)]
+    tr = [p for p in data if int(p.elements["e"][1:]) < 24]
+    te = [p for p in data if int(p.elements["e"][1:]) >= 24]
+    out = fit_encoder(tr, te, widths=(6,), seed=0, protocol=TrainingProtocol(max_epochs=2),
+                      group_key=lambda p: p.elements["e"])
+    assert out["n_train_groups"] > 1
+    # and the default grouping must REFUSE this substrate rather than guess
+    with pytest.raises(EncoderDataError):
+        fit_encoder(tr, te, widths=(6,), seed=0, protocol=TrainingProtocol(max_epochs=2))
+
+
 def test_the_inner_split_never_consumes_every_peak():
     """val_fraction=1.0 would leave no training rows; it must clamp rather than produce a degenerate fit."""
     tr, va = peak_blocked_val_split([f"p{i}" for i in range(5)], val_fraction=1.0, seed=0)
