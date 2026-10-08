@@ -63,8 +63,17 @@ Attempt budget: 3 per criterion. **MVP = an answered question**, not a won bet.
 |---|---|---|---|
 | 1 | The comparison script exists | file-exists | `scripts/glm_condition_conditioning.py` |
 | 2 | Its tests pass | test-exit-0 | `uv run pytest tests/test_glm_condition.py -q` |
-| 3 | A verdict artifact exists | file-exists | `wiki/glm_condition_conditioning_2026-10-07.json` |
+| 3 | A verdict artifact exists | file-exists | `wiki/glm_condition_conditioning_2026-10-08.json` |
 | 4 | The verdict is recorded here | project-state-row | Action Log row whose outcome names the verdict |
+| 5 | The pre-registered control arm came out FLAT (validity) | project-state-row | Action Log row recording `null_clean=true` from the gate artifact |
+| 6 | The frozen seed list + training protocol were used (validity) | project-state-row | Action Log row recording `registered_protocol_used=true` from the gate artifact |
+
+**D1 (2026-10-07) — the two validity predicates above are LOAD-BEARING, not ceremony.** The original four
+(module exists / tests exit 0 / artifact exists / ledger row) are ALL satisfied by a BROKEN RUN that writes a
+null-result artifact. So the bar as first written made a *fake* negative reachable, which is worse than either
+"require a win" (which would make a genuine recorded negative unreachable) or "accept any artifact". The
+adopted rule is: **require the experiment to be provably VALID, then accept either outcome.** Both predicates
+read a machine-readable field the gate script stamps into its own artifact — not a human claim.
 
 ## State Snapshot
 ### Assumptions
@@ -103,6 +112,7 @@ Attempt budget: 3 per criterion. **MVP = an answered question**, not a won bet.
 | Each arm is scored against its OWN replicate-derived ceiling | 2026-10-07 | LB 0.7928 and M9 0.8014 differ; a shared normaliser rescales one arm |
 | A medium-SHUFFLED null is mandatory, not optional | 2026-10-07 | GC-H3 is the live confound: the shared model sees 2x the data, so a gain is ambiguous without it |
 | All comparisons are noise-matched | 2026-10-07 | The unmatched form inverted this family's own founding measurement |
+| D1: MVP = an answered question, but ONLY behind validity predicates (`null_clean`, `registered_protocol_used`) | 2026-10-07 | The original four predicates are all satisfied by a broken run writing a null-result artifact; see wiki/glm_authority_decisions_2026-10-07.md |
 <!-- project-state:end:decisions-made -->
 
 ### Pending Decisions

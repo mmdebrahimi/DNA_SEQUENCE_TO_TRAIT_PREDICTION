@@ -68,8 +68,17 @@ falsifier honoured. A bar that only a success could clear would make the recorde
 |---|---|---|---|
 | 1 | The encoder module exists | file-exists | `dna_decode/glm/encoder.py` |
 | 2 | Its tests pass | test-exit-0 | `uv run pytest tests/test_glm_encoder.py -q` |
-| 3 | The gate ran and produced a verdict artifact | file-exists | `wiki/glm_learned_representation_2026-10-07.json` |
+| 3 | The gate ran and produced a verdict artifact | file-exists | `wiki/glm_learned_representation_2026-10-08.json` |
 | 4 | The verdict is recorded in this ledger | project-state-row | Action Log row whose outcome names the verdict |
+| 5 | The pre-registered control arm came out FLAT (validity) | project-state-row | Action Log row recording `null_clean=true` from the gate artifact |
+| 6 | The frozen seed list + training protocol were used (validity) | project-state-row | Action Log row recording `registered_protocol_used=true` from the gate artifact |
+
+**D1 (2026-10-07) — the two validity predicates above are LOAD-BEARING, not ceremony.** The original four
+(module exists / tests exit 0 / artifact exists / ledger row) are ALL satisfied by a BROKEN RUN that writes a
+null-result artifact. So the bar as first written made a *fake* negative reachable, which is worse than either
+"require a win" (which would make a genuine recorded negative unreachable) or "accept any artifact". The
+adopted rule is: **require the experiment to be provably VALID, then accept either outcome.** Both predicates
+read a machine-readable field the gate script stamps into its own artifact — not a human claim.
 
 ## State Snapshot
 ### Assumptions
@@ -112,6 +121,7 @@ falsifier honoured. A bar that only a success could clear would make the recorde
 | Multi-resolution is a PARAMETERISATION of this family, not a separate family | 2026-10-07 | AlphaGenome item 1 at bacterial scale is kernel widths, not a 10 kb pyramid |
 | MVP = an answered question, not a won bet | 2026-10-07 | Otherwise a recorded negative could never reach the bar |
 | The tile arm is normalised by the TILE ceiling (0.9410), never the fragment ceiling (0.7928) | 2026-10-07 | The shared-normaliser error was caught and is pinned by this decision |
+| D1: MVP = an answered question, but ONLY behind validity predicates (`null_clean`, `registered_protocol_used`) | 2026-10-07 | The original four predicates are all satisfied by a broken run writing a null-result artifact; see wiki/glm_authority_decisions_2026-10-07.md |
 <!-- project-state:end:decisions-made -->
 
 ### Pending Decisions
