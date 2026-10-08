@@ -6,7 +6,7 @@ learned that isn't durable yet. Durable findings belong in `CLAUDE.md` / `wiki/`
 
 Prune aggressively. A stale entry here is worse than an empty file.
 
-_Last updated: 2026-10-05._
+_Last updated: 2026-10-08._
 
 > **Pruned 2026-10-05.** This file had sat at 2026-09-28 / 428 lines, and its own "known-stale" section
 > had itself gone stale in the opposite direction (it warned that 46 traits was really 44; the live count
@@ -60,6 +60,37 @@ UNCHANGED to human, AUROC 0.5805) into a 5-rung ladder, to separate **(A)** deca
 wants a W0 schema probe before any parser, and the functional-class step demoted to a provenance-gated
 audit — it is otherwise a second adjudication system.)
 
+## IN FLIGHT — GLM G-A + G-C v2 build plan (executing 2026-10-08; 6 of 9 steps done)
+
+`plans/GLM_G_A_And_G_C_V2_Build_Plan/technical-plan.md`, state in
+`.claude/execute-plan-state/`. Steps 1–5 + 8 complete; **6, 7, 9 are parked on ONE authority call**
+(fork 4 below). Commits `e2aaf54` → `86b5ef2`.
+
+| step | outcome |
+|---|---|
+| 3 — G-A stop gate | **`NO_POSITIONAL_HEADROOM`.** Position gain **−0.0068** against a bar of +0.02 — negative, not merely short. One GC feature (0.3112) beat the 11-, 17- and 26-feature arms. Trustworthy because the reconcile anchor landed on **0.3000 exactly**, proving the script reads the same split as the published baseline. `wiki/glm_tile_headroom_2026-10-08.json`. |
+| 8 — G-C verdict | **`NO_GAIN`.** partial_pooling +0.2033 vs two_model +0.2032 = **+0.0001** against a bar of 0.02. Null CLEAN, protocol used, so D1's validity predicates hold. `wiki/glm_condition_conditioning_result_2026-10-08.md`. |
+
+**Two of the G-C arms were degenerate and the tests, not the run, caught it.** A full `seq × medium`
+interaction over a BINARY medium spans the same hypothesis space as two per-medium models (corr
+0.9999998), and the partial-pooling scale that was supposed to fix that was a **silent no-op** — applied
+before `StandardScaler`, which divides out a constant column factor (r 0.9999970, same to 7 decimals).
+All three conditioned arms were secretly one model. Fixed by applying the penalty AFTER standardisation
+(`alpha/c²`); pinned by a test asserting a pre-scaler scale is inert and a post-scaler one is not.
+**Reusable:** a per-feature weight placed before a standardiser does nothing, and the failure is
+invisible — every arm still runs and returns a plausible number.
+
+**Do not re-propose "just scale the interaction block" or a wider pooling grid.** The pooling curve is
+FLAT (0.0001 spread; argmax wanders 0.03/0.1/1.0 across seeds), so the selected scale is NOISE. Partial
+mechanistic account, measured: CENTERING the unit-sum 3-mer block makes the design exactly **rank 63 of
+64** (cond 9.3e14), so ridge alpha is already load-bearing and a per-block penalty has little room.
+
+**Cheap and already banked:** 3-mer extraction was **97% of the sweep's cost** (181 s/arm vs 4 s for the
+ridge fit) and the features are a pure function of the sequence — identical across arms and seeds. One
+cached pass per medium took the 10-seed × 7-arm sweep from ~3.5 h to ~35 min, bit-faithfully
+(`two_model` +0.2013/+0.1916 on seeds 0/1, reproduced on 3 runs). Any future arm on this substrate should
+reuse `feature_matrix`, not recompute.
+
 ## The system design — drafted, awaiting ratification
 
 `plans/Hybrid_Decoder_Architecture_Plan.md`. The hybrid is **not** "catalog + ML predictor" (that framing
@@ -92,7 +123,23 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
 3. **Whether a single-source cell warrants more than disclosure.** 3 of 10 SCORED AMR cells rest on one
    BioProject. Current answer is *disclose*, namespace-separate. Demoting them is a scope decision.
 
-4. **Whether to compress the other long CLAUDE.md bullets.** The file loads every session; several long
+4. **Ratify the G-A stop gate, or build the conv encoder anyway?** (new 2026-10-08 — **this is what
+   blocks plan steps 6, 7 and 9**)
+   The gate fired `NO_POSITIONAL_HEADROOM`: adding POSITION to composition on real genomic promoter tiles
+   buys **−0.0068** against a +0.02 bar, so a conv encoder's core advantage does not measurably exist on
+   this substrate and building it is a **predicted-negative**. The honest scope limit is in the artifact:
+   positional GC in 10 bins is the MINIMAL positional feature and ridge cannot represent a
+   composition×position interaction, so this makes the encoder a predicted-negative — it does **not prove**
+   it must fail. Hence a gate that *recommends ratification* rather than closing G-A unilaterally.
+   **Executor default if ratified:** stop G-A, leave steps 6/7/9 unbuilt, and the G-A ledger records a
+   measured stop rather than an abandonment.
+
+5. **Does a NO_GAIN at n=2 media close G-C, or defer it?** (new 2026-10-08)
+   Already flagged in that ledger's own Open Questions as an acceptance-bar call. The null is valid, but it
+   rules out conditioning *as tested on two growth media with 3-mer interactions* — not conditioning in
+   general, and specifically not a model whose **representation** is modulated by condition.
+
+6. **Whether to compress the other long CLAUDE.md bullets.** The file loads every session; several long
    bullets cite a resolvable memo, so their derivations could become pointers. Measure first:
    `uv run python scripts/claude_md_weight.py`. Two long bullets have no external store and must stay
    whole — the tool already protects them.
@@ -121,8 +168,6 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
   3 AR Bank FPs — not settling, but the fix now has a measured cost on the same arm.
 - **The 3 Klebsiella cohorts with incomplete cached AMRFinder runs** (gentamicin 3/60, tetracycline 33/60,
   ceftriaxone 54/60) have their species cross-tab withheld for that reason. Completing them needs Docker.
-- **The two *K. aerogenes* true positives are unexplained** — they were called R, so they carry some
-  CARBAPENEM-subclass determinant. Offline, cheap, not chased.
 
 ## The FBA switch cell, as it now stands
 

@@ -9,7 +9,7 @@ and the disattenuated true cross-condition correlation is **0.7887** — so roug
 is condition-specific. Something is there to capture. The question is whether a shared model captures it.
 
 **THE REVIEW FINDING THAT RESHAPED THIS SCRIPT.** The first design made the primary arm
-`[sequence ‖ medium indicator]`. With a linear head that learns only a GLOBAL per-medium offset — it cannot
+`[sequence || medium indicator]`. With a linear head that learns only a GLOBAL per-medium offset — it cannot
 make sequence effects differ by medium. Meanwhile the two-model comparator fits *separate weight vectors per
 medium*, so it is **strictly more expressive on exactly the axis conditioning is supposed to exploit**. The
 design was rigged against itself: with the data-matched arm removing the one remaining advantage (the shared
@@ -23,8 +23,8 @@ deliberately as a diagnostic — to show that an indicator alone cannot win.
 | arm | features | role |
 |---|---|---|
 | `two_model` | per-medium weights | the comparator to beat |
-| `interaction` | `[seq ‖ medium ‖ seq×medium]` | **PRIMARY** — can represent condition-specific response |
-| `indicator` | `[seq ‖ medium]` | diagnostic; expected to fail, and that failure is the point |
+| `interaction` | `[seq || medium || seq×medium]` | **PRIMARY** — can represent condition-specific response |
+| `indicator` | `[seq || medium]` | diagnostic; expected to fail, and that failure is the point |
 | `shuffled` | interaction, medium label permuted | **validity** — must show no gain |
 | `data_matched` | interaction, row-count matched | **validity** — isolates conditioning from data volume |
 
