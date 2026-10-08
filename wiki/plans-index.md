@@ -632,3 +632,14 @@
 - Scope is DIAGNOSE the regime, never retune the decoder: `sha256(core_decoder.py)` is pinned by test because a per-organism synonym layer would destroy the transfer condition; extending `_CORE` with the phrasing vocabulary is the named follow-on and ends the experiment, so it is a separate plan.
 
 ---
+
+## [plan_file: GLM_Portfolio_Decompose_2026-10-07.md] 2026-10-07
+**Status:** candidate
+**Summary:** Decomposes the GLM north star ("name a trait, get the genome edits") into five bounded families G-A..G-E, each with its own ledger, drafted idea-anchor, feature record and falsifier.
+**Key decisions:**
+- Namespace `G-*` and a SEPARATE umbrella, because `F-A`..`F-E` / `F1`..`F4` are taken by live work and the existing umbrella's terminal condition explicitly excludes a learned predictor.
+- Two families start in parallel (G-A learned representation, G-C condition conditioning); G-D is hardware-blocked; G-B and G-E are downstream, though G-E holds an unblocked family-closing measurement.
+- Each family's MVP is an ANSWERED QUESTION, not a won bet — a measured negative reaches the bar.
+- Portfolio falsifier named in advance: if G-A and G-D both close negative, the live question routes to the existing F-E label-acquisition family rather than to a sixth GLM family.
+
+---

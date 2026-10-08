@@ -198,10 +198,14 @@ def main() -> int:
         "honest_limits": [
             "The model arms run on a SUBSAMPLE (6-mers are 4096 features); the ceiling and the condition "
             "effect use the FULL data.",
-            "Fragments are 48-475 bp with 280 distinct lengths, so the designed grid's winning "
-            "positional-onehot feature is NOT applicable without an anchor, and no anchor is obviously "
-            "right. Only length-invariant k-mer features are used -- the comparison to the grid's 0.5914 "
-            "one-hot number is therefore NOT like-for-like.",
+            # DERIVED from load_stats, not hardcoded: the hardcoded string said "48-475 bp with 280
+            # distinct lengths", which was a 40,000-row SAMPLE figure contradicting this artifact's own
+            # full-file load_stats (48-499 / 359). Surfaced by the G-A project-init empirical gate.
+            f"Fragments are {st_lb.length_min}-{st_lb.length_max} bp with "
+            f"{st_lb.n_distinct_lengths} distinct lengths (derived from load_stats, not restated), so the "
+            "designed grid's winning positional-onehot feature is NOT applicable without an anchor, and no "
+            "anchor is obviously right. Only length-invariant k-mer features are used for the fragment arm "
+            "-- the comparison to the grid's 0.5914 one-hot number is therefore NOT like-for-like.",
             "The designed-grid numbers cannot be ceiling-normalised (GSE108535 has no replicates), so "
             "'fraction of ceiling' exists only on this substrate. Do not compare the two fractions.",
             "A fragment straddling a held-block boundary is assigned by midpoint, so a little sequence can "

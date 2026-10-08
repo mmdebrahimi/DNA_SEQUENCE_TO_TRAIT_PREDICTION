@@ -6,7 +6,13 @@
     "catalog-curation-2026-08-31",
     "evidence-surface-2026-08-31",
     "learned-narrow-2026-08-31",
-    "label-acquisition-2026-08-31"
+    "label-acquisition-2026-08-31",
+    "glm-umbrella-2026-10-07",
+    "glm-learned-representation-2026-10-07",
+    "glm-self-distillation-2026-10-07",
+    "glm-condition-conditioning-2026-10-07",
+    "glm-generator-finetune-2026-10-07",
+    "glm-distribution-alignment-2026-10-07"
   ],
-  "spent": 6
+  "spent": 12
 }
