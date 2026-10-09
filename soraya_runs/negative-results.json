@@ -20,7 +20,8 @@
       "provenance": "hand-entered",
       "evidence": "wiki/glm_generator_falsifier_REAL_2026-10-07.json",
       "claim_corrected_from": "Self-supervised DNA pretraining followed by functional supervision improves a bacterial promoter generator (AlphaGenome-discussion proposal #12)",
-      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping"
+      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-5ad65fa5",
@@ -42,7 +43,8 @@
       "provenance": "hand-entered",
       "evidence": "wiki/glm_learned_representation_2026-10-08.json",
       "claim_corrected_from": "A learned multi-resolution sequence encoder beats fixed features on genomic promoter sequence (AlphaGenome-discussion proposal #1)",
-      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping"
+      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-421662d4",
@@ -65,7 +67,8 @@
       "evidence": "wiki/glm_alphabet_headroom_2026-09-30.md",
       "claim_corrected_from": "Modelling variant COMBINATIONS (epistasis) beats an additive model (AlphaGenome-discussion proposal #11)",
       "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping",
-      "scope_correction_reason": "2026-10-09 peer review: 'leave-one-study-out' had been enumerated among the limitations. A held-out protocol is rigour, not a proxy."
+      "scope_correction_reason": "2026-10-09 peer review: 'leave-one-study-out' had been enumerated among the limitations. A held-out protocol is rigour, not a proxy.",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-62a4d4a0",
@@ -87,7 +90,8 @@
       "provenance": "hand-entered",
       "evidence": "wiki/prior_art_conservative_resistance_blosum_2026-08-31.md",
       "claim_corrected_from": "BLOSUM62 and ESM2-650M likelihood both rank the resistant residue as benign at catalogued target sites in HIV-1 RT, SARS-CoV-2 Mpro and fungal ERG11/FKS1",
-      "claim_correction_reason": "2026-10-09 the WIDENED peer detector caught this one: scope said ONLY, claim did not carry it"
+      "claim_correction_reason": "2026-10-09 the WIDENED peer detector caught this one: scope said ONLY, claim did not carry it",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-04fac5ce",
@@ -107,7 +111,8 @@
       "scope": "One eukaryote, one trait (FT10), 3 seeds, n=1003 NATURAL accessions -- a natural population, which is the regime this project has measured as closed FOR EVERY ORGANISM. Within-group r-squared was NEGATIVE (-0.13 avg) and spearman 0.22 against a structure-only 0.48, i.e. the embedding learned POPULATION STRUCTURE rather than the causal signal. This is NOT evidence that eukaryotes are harder: the only clean organism-level positive in this project is also a eukaryote (yeast segregant cross, 12/12 traits at r 0.46-0.80) on a CONSTRUCTED panel.",
       "revival_condition": "a learned representation is tested on a CONSTRUCTED eukaryotic panel (a segregant cross, a MAGIC/NAM population, or a mutagenesis library) where ancestry is randomised by design rather than on natural accessions",
       "provenance": "hand-entered",
-      "evidence": "wiki/phase2_arabidopsis_result_2026-06-12.md + wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md"
+      "evidence": "wiki/phase2_arabidopsis_result_2026-06-12.md + wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-a5daddbc",
@@ -127,7 +132,8 @@
       "scope": "The losing arm was a FIXED top-N-most-frequent k-mer vocabulary used as the stand-in for a learned representation; the probe TRAINED NOTHING ('neural #3' appears once in the closeout, as the thing not done). The same document explains WHY that arm lost: the top-N k-mer vocab IS the core genome, so it misses signal WITHIN a lineage -- a VOCABULARY-CONSTRUCTION failure, not a learning failure. Headroom was also measured only on mechanisms the catalog already covers, while the project's own doubt layer later located the catalog's real gap as COMPLETENESS (V179F: 15/15 carriers resistant, rule says S) -- exactly where a learned model would earn its keep, and exactly where this probe never looked.",
       "revival_condition": "a learned representation is ACTUALLY TRAINED on raw sequence and compared to the curated alphabet, scored on the catalog's COMPLETENESS gap rather than on mechanisms the catalog already covers",
       "provenance": "hand-entered",
-      "evidence": "wiki/functional_alphabet_probe_closeout_2026-06-26.md + wiki/functional_alphabet_5drug_synthesis_2026-06-27.md"
+      "evidence": "wiki/functional_alphabet_probe_closeout_2026-06-26.md + wiki/functional_alphabet_5drug_synthesis_2026-06-27.md",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-48c02f43",
@@ -147,7 +153,8 @@
       "scope": "FIVE instantiations, all sharing the SAME four qualifiers: frozen weights, zero-shot, used as fixed features, and scored on NATURAL populations with a de-confounding control (within-lineage or within-group). Instances span bacteria (cipro within-lineage), pathotype, Arabidopsis flowering time, and dog/Drosophila panels. NONE of the five fine-tuned anything, and NONE used a constructed panel. This was originally filed as 'a MODEL ceiling' -- a claim about the whole class -- and that wording cost ~4 months.",
       "revival_condition": "any of the four shared qualifiers is broken: a FINE-TUNED representation, or a CONSTRUCTED panel where ancestry is randomised by design (the yeast segregant cross is the measured positive in this class), or a learned head rather than fixed features",
       "provenance": "hand-entered",
-      "evidence": "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md + wiki/negative_results_map_2026-06-13.md"
+      "evidence": "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md + wiki/negative_results_map_2026-06-13.md",
+      "foreclosure_kind": "measured"
     },
     {
       "token": "neg-0a5a6746",
@@ -167,7 +174,8 @@
       "scope": "One organism, and the reason is a property of THAT organism: M. tuberculosis is MONOMORPHIC and has no lineage-scale gap at Mash resolution (pairwise median 6.3e-4, p75 8.4e-4), so greedy collapse has only two regimes -- fine rungs barely merge (the clonality-INFLATED raw view) and coarse rungs blob (one cluster holds 77% of the cohort and 97% of labelled isolates fall into excluded mixed-label clusters). The pinned Napier BARCODE partition works fine on the same cohort and its numbers stand. This says nothing about Mash collapse on any non-monomorphic organism, where this project uses it routinely.",
       "revival_condition": "a lineage-collapse partition is needed for an organism WITH a lineage-scale gap at Mash resolution, or a marker-based barcode is unavailable for a monomorphic organism and a distance-based partition is the only option",
       "provenance": "hand-entered",
-      "evidence": "wiki/tb_independent_mash_lineage_2026-07-09.md"
+      "evidence": "wiki/tb_independent_mash_lineage_2026-07-09.md",
+      "foreclosure_kind": "mechanism"
     },
     {
       "token": "neg-6ab2e831",
@@ -188,7 +196,10 @@
       "revival_condition": "an axis with greater dynamic range than carbon (measured CV 0.574 media4 / 0.473 carbon / 0.308 nitrogen) is available, OR a way to infer k that does not restate the original problem",
       "provenance": "hand-entered",
       "evidence": "wiki/fba_within_gene_ranking_2026-08-29.md",
-      "scope_correction_reason": "2026-10-09 peer observation prompted separating the three reasons by scope. Reason (2) is axis-independent and needs no revival; reasons (1) and (3) are axis-measured, so the revival condition is retained."
+      "scope_correction_reason": "2026-10-09 peer observation prompted separating the three reasons by scope. Reason (2) is axis-independent and needs no revival; reasons (1) and (3) are axis-measured, so the revival condition is retained.",
+      "foreclosure_kind": "structural",
+      "structural_reason": "A DEPLOYABLE ranking rule must infer k (how many conditions a gene is essential in), which IS the original problem restated. That holds on any axis and any substrate -- it is a property of the method's own formulation, not of the surface measured. The record's other two reasons (oracle ceiling; binary-not-graded signal) are AXIS-MEASURED on carbon and are retained as support only.",
+      "revival_kept_despite_exemption": "The STRUCTURAL exemption permits omitting a revival condition; it does not require it, and one is kept here on purpose. A structural obstacle can still be REVIVED -- not by changing the surface measured, but by SOLVING the obstacle: 'a way to infer k that does not restate the original problem' is exactly that. So the two revival clauses do different jobs -- the axis clause serves the measured reasons, and the infer-k clause serves the structural one."
     }
   ]
 }
