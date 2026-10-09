@@ -184,10 +184,11 @@
       "project": "dna_decode",
       "candidate_id": "hand-50833bcbb07dfb1e",
       "claim_hash": "50833bcbb07dfb1e",
-      "scope": "The best-measured axis (25 carbon sources), scored as an ORACLE ceiling, i.e. the most any such rule could achieve even given the answer. Two reasons it is not worth building, both measured: the ceiling itself is +4 genes / +1.8pp, and a DEPLOYABLE version must infer k (how many conditions a gene is essential in) -- which IS the original problem restated. The model's conditional signal is also essentially all HARD FEASIBILITY BREAKS, making it BINARY rather than graded, which independently argues against a ranking rule.",
+      "scope": "The best-measured axis (25 CARBON sources), scored as an ORACLE ceiling -- the most any such rule could achieve even given the answer. Three reasons, and they have DIFFERENT scopes, which is why the revival condition below is kept rather than dropped: (1) MEASURED, axis-specific -- the oracle ceiling is +4 genes / +1.8pp on carbon. (2) STRUCTURAL, axis-independent -- a deployable version must infer k (how many conditions a gene is essential in), which IS the original problem restated. This one needs no revival. (3) MECHANISM, but AXIS-MEASURED not axis-independent -- the conditional signal is essentially all HARD FEASIBILITY BREAKS, making it binary rather than graded, so a ranking rule has little to rank. A peer read this as foreclosing by mechanism and therefore needing no revival; that over-reads it. The 23/23 infeasibility finding is from `fba_conditional_carbon_2026-08-13.json` -- the CARBON axis -- and this project's own measurement is that FLATNESS TRACKS THE AXIS'S OWN DYNAMIC RANGE (CV 0.574 media4 / 0.473 carbon / 0.308 nitrogen, monotonic against flatness). So the binary-ness is plausibly a CONSEQUENCE of low dynamic range, and a higher-range axis could yield a graded signal.",
       "revival_condition": "an axis with greater dynamic range than carbon (measured CV 0.574 media4 / 0.473 carbon / 0.308 nitrogen) is available, OR a way to infer k that does not restate the original problem",
       "provenance": "hand-entered",
-      "evidence": "wiki/fba_within_gene_ranking_2026-08-29.md"
+      "evidence": "wiki/fba_within_gene_ranking_2026-08-29.md",
+      "scope_correction_reason": "2026-10-09 peer observation prompted separating the three reasons by scope. Reason (2) is axis-independent and needs no revival; reasons (1) and (3) are axis-measured, so the revival condition is retained."
     }
   ]
 }
