@@ -184,6 +184,71 @@ def test_fit_encoder_returns_predictions_so_the_gate_can_compute_a_second_framin
 
 
 # ---------------------------------------------------------------------------------------------------
+# the paired analysis -- the instrument the frozen median rule is NOT
+# ---------------------------------------------------------------------------------------------------
+def _ps(gc, other):
+    return {"gc": {"per_seed": gc, "median": 0.0},
+            "encoder-multi": {"per_seed": other, "median": 0.0}}
+
+
+def test_a_positive_median_with_sign_flipping_margins_is_flagged_as_including_zero():
+    """THE case the first real run produced: median margin +0.0122, but 6/10 wins with margins flipping
+    sign, so the paired CI spans zero. Reporting the median alone would overstate it."""
+    eg = _mod()
+    gc = [0.3000, 0.3151, 0.3073, 0.2917, 0.3191, 0.3347, 0.3091, 0.3191, 0.3133, 0.2747]
+    enc = [0.3235, 0.3526, 0.3293, 0.3233, 0.2872, 0.3126, 0.2896, 0.2995, 0.3312, 0.3600]
+    pa = eg.paired_margins(_ps(gc, enc))["encoder-multi"]
+    assert pa["wins"] == 6 and pa["n_seeds"] == 10
+    assert pa["sign_test_p_two_sided"] > 0.5
+    assert pa["ci95_includes_zero"] is True
+    assert pa["mean_margin"] > 0, "the mean IS positive -- that is exactly why the CI matters"
+
+
+def test_a_CONSISTENT_win_on_every_seed_does_NOT_include_zero():
+    """Non-vacuity: the flag must be able to come out False, or it says nothing."""
+    eg = _mod()
+    gc = [0.30] * 10
+    enc = [0.40, 0.41, 0.39, 0.42, 0.40, 0.38, 0.41, 0.40, 0.39, 0.41]
+    pa = eg.paired_margins(_ps(gc, enc))["encoder-multi"]
+    assert pa["wins"] == 10
+    assert pa["sign_test_p_two_sided"] < 0.01
+    assert pa["ci95_includes_zero"] is False
+
+
+def test_the_margins_are_PAIRED_not_a_difference_of_aggregates():
+    """If it subtracted medians instead of pairing per seed, two arms with identical medians but opposite
+    per-seed ordering would look identical. They must not."""
+    eg = _mod()
+    a = eg.paired_margins(_ps([0.1, 0.2], [0.2, 0.1]))["encoder-multi"]
+    b = eg.paired_margins(_ps([0.1, 0.2], [0.1, 0.2]))["encoder-multi"]
+    assert a["per_seed_margin"] == [0.1, -0.1]
+    assert b["per_seed_margin"] == [0.0, 0.0]
+    assert a["sd_margin"] > b["sd_margin"]
+
+
+def test_an_exact_tie_counts_as_a_NON_win_which_is_the_conservative_direction():
+    eg = _mod()
+    pa = eg.paired_margins(_ps([0.3] * 4, [0.3, 0.3, 0.4, 0.4]))["encoder-multi"]
+    assert pa["wins"] == 2, "ties must not be credited as wins"
+
+
+def test_the_comparator_is_excluded_from_its_own_paired_table():
+    eg = _mod()
+    assert "gc" not in eg.paired_margins(_ps([0.3] * 3, [0.3] * 3))
+
+
+def test_the_paired_block_is_namespace_separate_from_the_verdict():
+    """It must QUALIFY the frozen verdict, never silently alter it -- re-sizing a pre-registered bar after
+    seeing the result is an authority call."""
+    eg = _mod()
+    src = SCRIPT.read_text(encoding="utf-8")
+    assert '"paired_analysis": paired_margins(arms)' in src
+    # the verdict function must not consult the paired analysis
+    import inspect
+    assert "paired" not in inspect.getsource(eg.verdict)
+
+
+# ---------------------------------------------------------------------------------------------------
 # pre-registration hygiene
 # ---------------------------------------------------------------------------------------------------
 def test_the_registered_seed_list_is_at_least_ten_seeds():

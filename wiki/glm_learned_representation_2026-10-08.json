@@ -1,0 +1,317 @@
+{
+  "schema": "glm-encoder-gate-v1",
+  "date": "2026-10-08",
+  "substrate": "GEO GSE144621 peak tiles, category=tile, len=150, leave-peak-out",
+  "n_tiles": 44106,
+  "n_active": 14913,
+  "noise_ceiling": 0.941,
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "device": "cpu",
+  "preregistered": {
+    "question": "does a learned convolutional encoder beat a single GC number on real genomic promoter tiles, under leave-peak-out, over a registered seed list?",
+    "primary_metric": "spearman",
+    "secondary_metric": "auroc_active",
+    "comparator": "gc",
+    "candidate_arms": [
+      "encoder-w20",
+      "encoder-multi"
+    ],
+    "null_arm": "encoder-shuffled",
+    "generalises_margin": 0.05,
+    "null_max_abs": 0.05,
+    "registered_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "reconcile_anchor": {
+      "arm": "gc",
+      "seed": 0,
+      "expected": 0.3,
+      "tolerance": 0.01,
+      "source": "wiki/glm_genomewide_oracle_2026-10-07.json"
+    },
+    "verdicts": {
+      "GENERALISES": "best encoder arm beats gc by >= 0.05 at the median -- the learned representation earns its keep and G-A is a positive",
+      "WEAK": "best encoder arm beats gc by > 0 but < 0.05 -- a real but small edge; not enough to carry a learned representation on its own",
+      "DOES_NOT_GENERALISE": "best encoder arm does NOT beat gc at the median -- GA-H3 confirmed and Step 3's predicted-negative becomes a measured one",
+      "INDETERMINATE_NULL_NOT_CLEAN": "the shuffled-label arm itself scores, so the pipeline fabricates signal and NOTHING is graded",
+      "INDETERMINATE_RECONCILE_FAILED": "the gc arm did not reproduce the committed 0.3000 on seed 0, so this script is not reading the same data as the published number and nothing is interpretable",
+      "INDETERMINATE_PROTOCOL_DRIFT": "an arm ran under a protocol other than the registered one"
+    },
+    "thresholds_are": "ASSERTED; the 0.941 tile ceiling that contextualises them is DERIVED from the tiles' own replicates"
+  },
+  "registered_protocol": {
+    "optimizer": "adam",
+    "lr": 0.001,
+    "weight_decay": 0.0,
+    "batch_size": 256,
+    "max_epochs": 40,
+    "early_stop_patience": 5,
+    "channels": 32,
+    "val_fraction": 0.2
+  },
+  "arms": {
+    "gc": {
+      "median": 0.3112,
+      "stdev": 0.0166,
+      "min": 0.2747,
+      "max": 0.3347,
+      "per_seed": [
+        0.3,
+        0.3151,
+        0.3073,
+        0.2917,
+        0.3191,
+        0.3347,
+        0.3091,
+        0.3191,
+        0.3133,
+        0.2747
+      ],
+      "auroc_active_median": 0.6672,
+      "protocol": null
+    },
+    "encoder-w20": {
+      "median": 0.3163,
+      "stdev": 0.0229,
+      "min": 0.2622,
+      "max": 0.3396,
+      "per_seed": [
+        0.2926,
+        0.3223,
+        0.3228,
+        0.3301,
+        0.2984,
+        0.3109,
+        0.2938,
+        0.2622,
+        0.3216,
+        0.3396
+      ],
+      "auroc_active_median": 0.6739,
+      "protocol": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "batch_size": 256,
+        "max_epochs": 40,
+        "early_stop_patience": 5,
+        "channels": 32,
+        "val_fraction": 0.2
+      },
+      "n_parameters": 2657,
+      "epochs_ran_per_seed": [
+        15,
+        13,
+        11,
+        13,
+        14,
+        11,
+        12,
+        15,
+        16,
+        10
+      ],
+      "device": "cpu"
+    },
+    "encoder-multi": {
+      "median": 0.3234,
+      "stdev": 0.0244,
+      "min": 0.2872,
+      "max": 0.36,
+      "per_seed": [
+        0.3235,
+        0.3526,
+        0.3293,
+        0.3233,
+        0.2872,
+        0.3126,
+        0.2896,
+        0.2995,
+        0.3312,
+        0.36
+      ],
+      "auroc_active_median": 0.6774,
+      "protocol": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "batch_size": 256,
+        "max_epochs": 40,
+        "early_stop_patience": 5,
+        "channels": 32,
+        "val_fraction": 0.2
+      },
+      "n_parameters": 13217,
+      "epochs_ran_per_seed": [
+        11,
+        10,
+        10,
+        9,
+        10,
+        9,
+        9,
+        11,
+        11,
+        8
+      ],
+      "device": "cpu"
+    },
+    "encoder-shuffled": {
+      "median": -0.024,
+      "stdev": 0.0492,
+      "min": -0.0918,
+      "max": 0.0562,
+      "per_seed": [
+        -0.0273,
+        0.0559,
+        -0.0206,
+        -0.0918,
+        -0.0148,
+        -0.0293,
+        -0.0306,
+        -0.0889,
+        0.0562,
+        -0.0131
+      ],
+      "auroc_active_median": 0.4892,
+      "protocol": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "weight_decay": 0.0,
+        "batch_size": 256,
+        "max_epochs": 40,
+        "early_stop_patience": 5,
+        "channels": 32,
+        "val_fraction": 0.2
+      },
+      "n_parameters": 13217,
+      "epochs_ran_per_seed": [
+        6,
+        6,
+        6,
+        7,
+        8,
+        7,
+        7,
+        6,
+        6,
+        7
+      ],
+      "device": "cpu"
+    }
+  },
+  "verdict": "WEAK",
+  "verdict_detail": "gc +0.3112 (re-derived over the registered seeds; committed seed0 = 0.3) | best encoder = encoder-multi +0.3234 | MARGIN +0.0122 against 0.05 | null -0.0240; reconcile OK (gc seed0 0.3000)",
+  "paired_analysis": {
+    "encoder-w20": {
+      "per_seed_margin": [
+        -0.0074,
+        0.0072,
+        0.0155,
+        0.0384,
+        -0.0207,
+        -0.0238,
+        -0.0153,
+        -0.0569,
+        0.0083,
+        0.0649
+      ],
+      "wins": 5,
+      "n_seeds": 10,
+      "sign_test_p_two_sided": 1.0,
+      "mean_margin": 0.001,
+      "sd_margin": 0.0343,
+      "ci95_margin": [
+        -0.0202,
+        0.0222
+      ],
+      "ci95_includes_zero": true
+    },
+    "encoder-multi": {
+      "per_seed_margin": [
+        0.0235,
+        0.0375,
+        0.022,
+        0.0316,
+        -0.0319,
+        -0.0221,
+        -0.0195,
+        -0.0196,
+        0.0179,
+        0.0853
+      ],
+      "wins": 6,
+      "n_seeds": 10,
+      "sign_test_p_two_sided": 0.7539,
+      "mean_margin": 0.0125,
+      "sd_margin": 0.0361,
+      "ci95_margin": [
+        -0.0099,
+        0.0349
+      ],
+      "ci95_includes_zero": true
+    },
+    "encoder-shuffled": {
+      "per_seed_margin": [
+        -0.3273,
+        -0.2592,
+        -0.3279,
+        -0.3835,
+        -0.3339,
+        -0.364,
+        -0.3397,
+        -0.408,
+        -0.2571,
+        -0.2878
+      ],
+      "wins": 0,
+      "n_seeds": 10,
+      "sign_test_p_two_sided": 0.002,
+      "mean_margin": -0.3288,
+      "sd_margin": 0.0498,
+      "ci95_margin": [
+        -0.3597,
+        -0.298
+      ],
+      "ci95_includes_zero": false
+    }
+  },
+  "paired_analysis_note": "the frozen verdict is a difference of MEDIANS; these are PAIRED per-seed margins on identical splits. A verdict of WEAK whose paired CI includes zero is not distinguishable from DOES_NOT_GENERALISE, and must not be reported as the encoder beating the baseline.",
+  "registered_protocol_used": true,
+  "null_clean": true,
+  "reconcile_ok": true,
+  "built_against_a_predicted_negative": {
+    "gate": "wiki/glm_tile_headroom_2026-10-08.json",
+    "gate_verdict": "NO_POSITIONAL_HEADROOM",
+    "gate_position_gain": -0.0068,
+    "user_decision": "build the conv encoder anyway (2026-10-08)",
+    "why_that_is_informative": "the gate's proxy was positional GC in 10 bins under a LINEAR ridge; an encoder escapes both limits, so its result upgrades a predicted-negative to a measured one either way"
+  },
+  "honest_limits": [
+    "A negative here is about THIS encoder at THIS size (32 channels/branch, ~13k parameters) on THIS substrate. It is strong evidence against the conv-encoder lever on genomic promoter tiles and is NOT a statement about learned representations in general.",
+    "The encoder is deliberately small because capacity has already HURT on this substrate (6-mers, 4,096 features, scored worst of every arm at 0.2022). A larger encoder is a different experiment, and the shuffled-label null is what would detect it over-fitting.",
+    "Spearman over all tiles may be substantially ranking noise among the 29,193 inactive tiles; AUROC on the active column is reported as the second framing for exactly that reason.",
+    "CPU is the determinism reference. A --device cuda run is faster but CUDA convolutions are documented as potentially nondeterministic, and the device used is recorded per arm.",
+    "The margin thresholds (0.05 generalises, 0.05 null bar) are ASSERTED, not derived."
+  ]
+}

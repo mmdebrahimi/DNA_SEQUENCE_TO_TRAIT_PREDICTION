@@ -80,6 +80,23 @@ null-result artifact. So the bar as first written made a *fake* negative reachab
 adopted rule is: **require the experiment to be provably VALID, then accept either outcome.** Both predicates
 read a machine-readable field the gate script stamps into its own artifact — not a human claim.
 
+**Hypothesis resolutions (2026-10-08), with the reasoning that is not obvious from the status word:**
+
+- **GA-H1 FALSIFIED.** Margin +0.0122 against its own >=0.05 clause, and the paired CI includes zero, so it
+  fails on both the frozen bar and the stronger instrument.
+- **GA-H2 stays UNDER-INVESTIGATION rather than confirmed, because two instruments disagree.** Paired
+  multi-vs-w20: 7/10 wins, mean +0.0114, normal-approx CI **[+0.0007, +0.0222]** which *barely* excludes
+  zero — while the distribution-free sign test is **p=0.344**. A lower bound of +0.0007 on 10 paired
+  observations with sign-flipping values is inside the fragility this project has already been bitten by
+  (tie-handling and sort order silently shifting a median). Suggestive, underpowered, not established.
+- **GA-H3 CONFIRMED**, and this is the load-bearing one: a conv encoder escapes both limits Step 3's proxy
+  had (a precise-offset motif; a composition x position interaction) and still cannot reliably beat one GC
+  number, so 0.3000 really does sit near a composition-only ceiling on this substrate.
+- **GA-H4 stays OPEN.** The run shows the conclusion is framing-ROBUST (AUROC gives the same ordering and
+  the same small edge), which is not the same as showing classification is the *better* framing. Spearman
+  and AUROC are different scales and this run was not designed to rank them; asserting GA-H4 either way
+  off it would be reading a question the design did not ask.
+
 ## State Snapshot
 ### Assumptions
 - A conv encoder has capacity a ridge-on-fixed-features model lacks — **high** confidence (architectural, not empirical).
@@ -109,10 +126,10 @@ read a machine-readable field the gate script stamps into its own artifact — n
 ### Hypotheses (Active)
 | ID | Statement | Status (open/under-investigation/falsified/confirmed) | Last-tested |
 |---|---|---|---|
-| GA-H1 | A learned encoder beats GC's 0.3000 by >=0.05 on genomic tiles under leave-peak-out | open | never |
-| GA-H2 | Multi-resolution kernels beat a single resolution at 150 bp | open | never |
-| GA-H3 | 0.3000 is near a composition-only ceiling, so GA-H1 fails | open | never |
-| GA-H4 | The tile task is better framed as active/inactive classification than as strength regression | open | never |
+| GA-H1 | A learned encoder beats GC's 0.3000 by >=0.05 on genomic tiles under leave-peak-out | falsified | 2026-10-08 |
+| GA-H2 | Multi-resolution kernels beat a single resolution at 150 bp | under-investigation | 2026-10-08 |
+| GA-H3 | 0.3000 is near a composition-only ceiling, so GA-H1 fails | confirmed | 2026-10-08 |
+| GA-H4 | The tile task is better framed as active/inactive classification than as strength regression | open | 2026-10-08 |
 <!-- project-state:end:hypotheses -->
 
 ### Decisions Made
@@ -170,6 +187,7 @@ A committed artifact stating whether a learned multi-resolution encoder beats GC
 | # | Date | Action class | Description | Outcome |
 |---|---|---|---|---|
 | 1 | 2026-10-07 | propose | /project-init protocol executed for GLM family G-A | ledger created; 3a PASS (numbers verified against committed artifacts, one artifact self-contradiction found), 3b PASS project, 3c PASS |
+| 2 | 2026-10-08 | run-tests | G-A encoder gate ran on the registered 10-seed list: gc / encoder-w20 / encoder-multi (6,20,75) / encoder-shuffled, on 44,106 peak tiles under leave-peak-out, CPU (the determinism reference) | **VERDICT WEAK by the frozen median rule, and the PAIRED analysis says that WEAK is NOT distinguishable from DOES_NOT_GENERALISE.** gc +0.3112 / encoder-multi +0.3234 = median margin **+0.0122** against a 0.05 bar; paired on identical splits, encoder-multi wins **6/10 seeds**, mean +0.0125, sign-test **p=0.754**, 95% CI **[−0.0099, +0.0349] INCLUDES ZERO**; encoder-w20 is a coin flip (5/10, p=1.000). The per-seed margins flip sign (+.024 +.038 +.022 +.032 −.032 −.022 −.020 −.020 +.018 +.085), so the positive median is carried by seed variation, not a reliable edge. `null_clean=true` (shuffled arm −0.0240, loses 10/10, its own CI **excludes** zero at p=0.002 — so the paired test CAN resolve a real difference on 10 seeds and simply does not resolve one here), `registered_protocol_used=true`, `reconcile_ok=true` with the anchor landing on **0.3000 exactly**. BOTH framings agree: AUROC on the active column 0.6774 vs 0.6672, the same small unreliable edge — so this is not an artifact of framing regression over 29,193 inactive tiles. Artifact `wiki/glm_learned_representation_2026-10-08.json`, memo `wiki/glm_encoder_gate_result_2026-10-08.md`. **Built on the user's explicit decision AGAINST Step 3's predicted-negative, and that was the right call**: Step 3's proxy was positional GC in 10 bins under a LINEAR ridge, so it could neither see a motif at a precise offset nor represent a composition×position interaction; an encoder escapes both limits and STILL does not win, which upgrades a predicted-negative into a measured one. The encoder is not broken — it learns a planted fixed-offset motif to Spearman 0.84 against a computed ceiling of 1.0, its null collapses, and it tracks the incumbent closely rather than failing to train. Honest scope: THIS encoder at THIS size (32 ch/branch, 13,217 params) on THIS substrate; capacity has already hurt here (6-mers scored worst at 0.2022), so a larger encoder is a different experiment. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

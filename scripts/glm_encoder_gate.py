@@ -196,6 +196,44 @@ def verdict(arms: dict, *, seeds_used: list[int]) -> tuple[str, str, dict]:
     return "DOES_NOT_GENERALISE", d, flags
 
 
+def paired_margins(arms: dict, *, comparator: str = "gc") -> dict:
+    """PAIRED per-seed margins against the comparator — the discriminating instrument.
+
+    **A difference of medians is not a paired comparison**, and the frozen verdict rule uses one. Every
+    seed here is the SAME leave-peak-out split for every arm, so the margins are genuinely paired and the
+    sign test is available for free. This matters because a median can read positive while the arm loses
+    on nearly half the seeds with sign-flipping margins — which is exactly what the first real run did.
+
+    Reported BESIDE the frozen verdict under its own key, never folded into it: re-sizing a pre-registered
+    bar after seeing the result is an authority call, not an analysis choice.
+    """
+    import math
+    base = arms[comparator]["per_seed"]
+    out = {}
+    for name, a in arms.items():
+        if name == comparator:
+            continue
+        m = [x - g for x, g in zip(a["per_seed"], base)]
+        n = len(m)
+        pos = sum(1 for x in m if x > 0)
+        # exact two-sided sign test; ties count as non-wins, which is the conservative direction
+        p = sum(math.comb(n, k) for k in range(n + 1)
+                if abs(k - n / 2) >= abs(pos - n / 2)) / 2 ** n
+        mean = sum(m) / n
+        sd = (sum((x - mean) ** 2 for x in m) / (n - 1)) ** 0.5 if n > 1 else 0.0
+        half = 1.96 * sd / math.sqrt(n) if n > 1 else 0.0
+        out[name] = {
+            "per_seed_margin": [round(x, 4) for x in m],
+            "wins": pos, "n_seeds": n,
+            "sign_test_p_two_sided": round(p, 4),
+            "mean_margin": round(mean, 4),
+            "sd_margin": round(sd, 4),
+            "ci95_margin": [round(mean - half, 4), round(mean + half, 4)],
+            "ci95_includes_zero": (mean - half) < 0 < (mean + half),
+        }
+    return out
+
+
 def _agg(runs: list[dict], key: str = "spearman") -> dict:
     vals = [r[key] for r in runs]
     out = {
@@ -275,6 +313,14 @@ def main() -> int:
         "arms": arms,
         "verdict": v,
         "verdict_detail": detail,
+        # NAMESPACE-SEPARATE on purpose. The frozen rule compares MEDIANS; this compares the same seeds
+        # PAIRWISE and is the instrument that decides whether a positive median means anything. It
+        # qualifies the verdict and never replaces it.
+        "paired_analysis": paired_margins(arms),
+        "paired_analysis_note": "the frozen verdict is a difference of MEDIANS; these are PAIRED per-seed "
+                                "margins on identical splits. A verdict of WEAK whose paired CI includes "
+                                "zero is not distinguishable from DOES_NOT_GENERALISE, and must not be "
+                                "reported as the encoder beating the baseline.",
         "registered_protocol_used": flags["registered_protocol_used"],
         "null_clean": flags["null_clean"],
         "reconcile_ok": flags["reconcile_ok"],
@@ -301,10 +347,16 @@ def main() -> int:
             "The margin thresholds (0.05 generalises, 0.05 null bar) are ASSERTED, not derived.",
         ],
     }
-    out = Path(args.out) if args.out else Path(f"wiki/glm_encoder_gate_{date.today()}.json")
+    out = Path(args.out) if args.out else Path(f"wiki/glm_learned_representation_{date.today()}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(artifact, indent=2), encoding="utf-8")
 
+    print("\nPAIRED (same splits, per seed) -- the instrument that decides if a positive median means "
+          "anything:")
+    for name, pa in artifact["paired_analysis"].items():
+        print(f"  {name:18s} wins {pa['wins']}/{pa['n_seeds']}  mean {pa['mean_margin']:+.4f}  "
+              f"sign-p {pa['sign_test_p_two_sided']:.3f}  CI95 {pa['ci95_margin']}"
+              f"{'  <- INCLUDES ZERO' if pa['ci95_includes_zero'] else ''}")
     print(f"\nVERDICT: {v}\n  {detail}")
     print(f"registered_protocol_used={flags['registered_protocol_used']} "
           f"null_clean={flags['null_clean']} reconcile_ok={flags['reconcile_ok']}")
