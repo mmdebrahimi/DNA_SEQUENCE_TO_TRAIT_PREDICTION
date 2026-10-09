@@ -148,6 +148,46 @@
       "revival_condition": "any of the four shared qualifiers is broken: a FINE-TUNED representation, or a CONSTRUCTED panel where ancestry is randomised by design (the yeast segregant cross is the measured positive in this class), or a learned head rather than fixed features",
       "provenance": "hand-entered",
       "evidence": "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md + wiki/negative_results_map_2026-06-13.md"
+    },
+    {
+      "token": "neg-0a5a6746",
+      "claim": "GREEDY-REPRESENTATIVE Mash clustering produces a usable lineage partition for M. TUBERCULOSIS ONLY -- 0 of 8 threshold rungs usable",
+      "operator": "hand-entered",
+      "kill_test_kind": "",
+      "kill_test_arg": "",
+      "reason": "",
+      "executed": false,
+      "valid": false,
+      "discriminating": null,
+      "verdict_raw": "killed-historical",
+      "recorded_at": "2026-10-09",
+      "project": "dna_decode",
+      "candidate_id": "hand-ff3b6ae0d5c4d3d5",
+      "claim_hash": "ff3b6ae0d5c4d3d5",
+      "scope": "One organism, and the reason is a property of THAT organism: M. tuberculosis is MONOMORPHIC and has no lineage-scale gap at Mash resolution (pairwise median 6.3e-4, p75 8.4e-4), so greedy collapse has only two regimes -- fine rungs barely merge (the clonality-INFLATED raw view) and coarse rungs blob (one cluster holds 77% of the cohort and 97% of labelled isolates fall into excluded mixed-label clusters). The pinned Napier BARCODE partition works fine on the same cohort and its numbers stand. This says nothing about Mash collapse on any non-monomorphic organism, where this project uses it routinely.",
+      "revival_condition": "a lineage-collapse partition is needed for an organism WITH a lineage-scale gap at Mash resolution, or a marker-based barcode is unavailable for a monomorphic organism and a distance-based partition is the only option",
+      "provenance": "hand-entered",
+      "evidence": "wiki/tb_independent_mash_lineage_2026-07-09.md"
+    },
+    {
+      "token": "neg-6ab2e831",
+      "claim": "A RELATIVE RANKING rule over FBA conditional-essentiality ratios is worth building on the 25-source CARBON axis -- oracle ceiling +4 genes (+1.8pp)",
+      "operator": "hand-entered",
+      "kill_test_kind": "",
+      "kill_test_arg": "",
+      "reason": "",
+      "executed": false,
+      "valid": false,
+      "discriminating": null,
+      "verdict_raw": "killed-historical",
+      "recorded_at": "2026-10-09",
+      "project": "dna_decode",
+      "candidate_id": "hand-50833bcbb07dfb1e",
+      "claim_hash": "50833bcbb07dfb1e",
+      "scope": "The best-measured axis (25 carbon sources), scored as an ORACLE ceiling, i.e. the most any such rule could achieve even given the answer. Two reasons it is not worth building, both measured: the ceiling itself is +4 genes / +1.8pp, and a DEPLOYABLE version must infer k (how many conditions a gene is essential in) -- which IS the original problem restated. The model's conditional signal is also essentially all HARD FEASIBILITY BREAKS, making it BINARY rather than graded, which independently argues against a ranking rule.",
+      "revival_condition": "an axis with greater dynamic range than carbon (measured CV 0.574 media4 / 0.473 carbon / 0.308 nitrogen) is available, OR a way to infer k that does not restate the original problem",
+      "provenance": "hand-entered",
+      "evidence": "wiki/fba_within_gene_ranking_2026-08-29.md"
     }
   ]
 }
