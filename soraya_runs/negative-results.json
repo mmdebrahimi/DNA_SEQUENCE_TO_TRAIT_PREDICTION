@@ -59,16 +59,17 @@
       "project": "dna_decode",
       "candidate_id": "hand-fda51ca9a889dfb8",
       "claim_hash": "fda51ca9a889dfb8",
-      "scope": "HIV-1 RT ONLY, Stanford PhenoSense fold-change labels, 4 drugs, leave-one-study-out, pairwise + non-linear estimators vs a linear one-hot model. One virus, one protein family, one label type, clinical-isolate CO-OCCURRENCE rather than constructed combinations.",
+      "scope": "HIV-1 RT ONLY, Stanford PhenoSense fold-change labels, 4 drugs, pairwise + non-linear estimators vs a linear one-hot model. The LIMITATIONS are: one virus, one protein family, one label type, and clinical-isolate CO-OCCURRENCE rather than constructed combinations. (The leave-one-STUDY-out protocol is methodological STRENGTH, not a limitation -- it is recorded here so it is not misread as one.)",
       "revival_condition": "an epistasis model tested on a CONSTRUCTED multi-variant panel (combinatorial mutagenesis) rather than on co-occurrence in natural isolates",
       "provenance": "hand-entered",
       "evidence": "wiki/glm_alphabet_headroom_2026-09-30.md",
       "claim_corrected_from": "Modelling variant COMBINATIONS (epistasis) beats an additive model (AlphaGenome-discussion proposal #11)",
-      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping"
+      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping",
+      "scope_correction_reason": "2026-10-09 peer review: 'leave-one-study-out' had been enumerated among the limitations. A held-out protocol is rigour, not a proxy."
     },
     {
       "token": "neg-62a4d4a0",
-      "claim": "BLOSUM62 and ESM2-650M likelihood both rank the resistant residue as benign at catalogued target sites in HIV-1 RT, SARS-CoV-2 Mpro and fungal ERG11/FKS1",
+      "claim": "BLOSUM62 and ESM2-650M likelihood both rank the resistant residue as benign at catalogued PATHOGEN TARGET-SITE positions ONLY -- HIV-1 RT, SARS-CoV-2 Mpro and fungal ERG11/FKS1",
       "operator": "hand-entered",
       "kill_test_kind": "",
       "kill_test_arg": "",
@@ -79,12 +80,34 @@
       "verdict_raw": "killed-historical",
       "recorded_at": "2026-10-09",
       "project": "dna_decode",
-      "candidate_id": "hand-e5b58170f9296504",
-      "claim_hash": "e5b58170f9296504",
+      "candidate_id": "hand-712c499c44e531eb",
+      "claim_hash": "712c499c44e531eb",
       "scope": "PATHOGEN TARGET-SITE resistance systems ONLY -- three pathogens, catalogued resistance positions, scored by mid-rank of the resistant residue among the 19 alternatives (pooled 4.5 of 19 vs a null of 10.0, n=139). DRM sites sit at ESM entropy percentile 0.494, i.e. exactly average, which REFUTES the usual 'the site is poorly conserved' account. Friedman 2013 (PLOS ONE 8:e82059) supplies a COUNTEREXAMPLE CLASS: EGFR and ALK resistance mutations tend to be RADICAL, so this must not be stated as a general law.",
       "revival_condition": "a conservation- or likelihood-keyed scorer is tested on a resistance system OUTSIDE pathogen target sites (e.g. kinase-inhibitor resistance), where the published counterexample class lives",
       "provenance": "hand-entered",
-      "evidence": "wiki/prior_art_conservative_resistance_blosum_2026-08-31.md"
+      "evidence": "wiki/prior_art_conservative_resistance_blosum_2026-08-31.md",
+      "claim_corrected_from": "BLOSUM62 and ESM2-650M likelihood both rank the resistant residue as benign at catalogued target sites in HIV-1 RT, SARS-CoV-2 Mpro and fungal ERG11/FKS1",
+      "claim_correction_reason": "2026-10-09 the WIDENED peer detector caught this one: scope said ONLY, claim did not carry it"
+    },
+    {
+      "token": "neg-04fac5ce",
+      "claim": "FROZEN PlantCaduceus_l32 embeddings, used ZERO-SHOT as fixed features on 1,003 NATURAL Arabidopsis accessions, predict flowering time ONLY at or below a population-structure baseline",
+      "operator": "hand-entered",
+      "kill_test_kind": "",
+      "kill_test_arg": "",
+      "reason": "",
+      "executed": false,
+      "valid": false,
+      "discriminating": null,
+      "verdict_raw": "killed-historical",
+      "recorded_at": "2026-10-09",
+      "project": "dna_decode",
+      "candidate_id": "hand-ae5e739625fdb418",
+      "claim_hash": "ae5e739625fdb418",
+      "scope": "One eukaryote, one trait (FT10), 3 seeds, n=1003 NATURAL accessions -- a natural population, which is the regime this project has measured as closed FOR EVERY ORGANISM. Within-group r-squared was NEGATIVE (-0.13 avg) and spearman 0.22 against a structure-only 0.48, i.e. the embedding learned POPULATION STRUCTURE rather than the causal signal. This is NOT evidence that eukaryotes are harder: the only clean organism-level positive in this project is also a eukaryote (yeast segregant cross, 12/12 traits at r 0.46-0.80) on a CONSTRUCTED panel.",
+      "revival_condition": "a learned representation is tested on a CONSTRUCTED eukaryotic panel (a segregant cross, a MAGIC/NAM population, or a mutagenesis library) where ancestry is randomised by design rather than on natural accessions",
+      "provenance": "hand-entered",
+      "evidence": "wiki/phase2_arabidopsis_result_2026-06-12.md + wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md"
     }
   ]
 }
