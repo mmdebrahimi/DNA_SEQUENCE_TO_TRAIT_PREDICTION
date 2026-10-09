@@ -10,6 +10,46 @@ sibling summary already contained two factually wrong citations — so every ite
 
 ---
 
+## 0. SCOPE CORRECTION (user, 2026-10-09) — bacteria is the STARTING SUBSTRATE, not the domain
+
+**The first version of this screen was wrong, and wrong in the direction that destroys the goal.** It
+discarded ~6 of the 16 proposals as "structurally inapplicable to bacteria". The user's correction:
+*"who told you we are just concentrating on bacteria? I said that is what we should start with if it is
+easier."*
+
+**The record already said this, in three places, and the screen contradicted all three:**
+
+- **The north star is four steps and step 4 is `climb to animals`** — bacteria is **step 3**, a staging
+  post. CLAUDE.md states it on the same line as the already-recorded sibling correction: ***"AMR was
+  substrate #1, NOT the subject."*** The identical compression, caught once before, and I reproduced it.
+- **The human track is LIVE NOW, not hypothetical** — 16 shipped cells (pgx 14, hla 1, mendelian 1). So
+  diploid haplotypes, cell-state conditioning and CTCF/enhancer structure are not "someday"; they are
+  applicable to code that already ships.
+- **Our own measurement says organism complexity is NOT the barrier:** *"The discriminating variable is
+  **population design, not organism complexity**."* And the sharpest fact — **the project's one clean
+  organism-level g→p positive is in a EUKARYOTE**, the yeast segregant cross, **12/12 traits at
+  r 0.46–0.80**, which is better than anything achieved in bacteria.
+
+**So "bacteria is easier" deserves examination rather than inheritance.** The Arabidopsis eukaryotic
+negative is often read as "eukaryotes are harder", but it was *zero-shot embeddings on a natural
+population* and the model **learned population structure rather than the causal signal** — that is the
+regime the map closes **for every organism**, not evidence about eukaryotes. Conversely the yeast positive
+is a *constructed* panel. If population design is the discriminating variable, the right question is not
+"which organism is simplest" but **"which organism has the best CONSTRUCTED panel available"** — and on
+that criterion yeast segregants and human DMS/MPRA libraries compete with, or beat, bacteria.
+
+**Why this error matters beyond bookkeeping.** Screening an architecture out because the *starting*
+substrate lacks the mechanism is a textbook **scope cut outliving its constraint** — the failure mode this
+project documents as having already cost it its most ambitious goal once (a May-2026 pivot made on a 4 GiB
+GPU that was never re-opened when 16 GB became free). Had this screen stood, it would have discarded
+exactly the architecture that step 4 requires, on grounds that expire the moment the substrate changes.
+
+**Reclassified below:** the "structurally inapplicable" class is replaced by **`DEFERRED — applies at
+step 4, and several apply to the human track TODAY`**, each with the staging reason named. Nothing is
+screened out on organism grounds.
+
+---
+
 ## 1. The discussion IS the plan's origin — confirmed from the ledgers, verbatim
 
 | ChatGPT priority | Became | Originating goal (verbatim from the ledger) |
@@ -51,22 +91,28 @@ question is whether the **substrate** is the binding constraint, not the archite
 Five verdict classes. The two that matter most are **ALREADY SHIPPED** (we are further along than the
 proposal assumes) and **MEASURED NEGATIVE** (do not re-propose without new information).
 
-### STRUCTURALLY INAPPLICABLE to bacteria — ~6 of 16
+### DEFERRED — absent in the step-3 substrate, REQUIRED at step 4, and several are live on the human track TODAY — ~6 of 16
 
-Not "hard", **absent**. A bacterium has no spliceosome, no nucleosomes, no TADs, no CTCF, one chromosome
-copy, and no cell types in the eukaryotic sense.
+**Not screened out.** A bacterium genuinely lacks a spliceosome, nucleosomes, TADs, CTCF, a second
+chromosome copy and eukaryotic cell types — so these cannot be *tested* on an *E. coli* promoter. That is a
+statement about the **current substrate**, not about the proposal's value, and the north star's step 4 is
+exactly where each becomes necessary. The `apply NOW?` column is the one that matters: **four of the six
+are applicable to code this repo already ships.**
 
-| # | Proposal | Why it cannot apply |
-|---|---|---|
-| 3 | hierarchical attention through **TAD / chromatin domain** levels | no TADs; the L4–L5 levels do not exist |
-| 4 | sparse **distal** attention over 1–10 Mb | bacterial cis-regulation is overwhelmingly promoter-**proximal**; a 300 kb enhancer–promoter bridge is not a bacterial mechanism |
-| 5 | regulatory graph with **enhancer / CTCF** nodes | no enhancers in that sense, no CTCF |
-| 6 | 3D structure as latent variable | nucleoid supercoiling is real and does affect transcription, but there is no Hi-C-scale TAD analogue to bottleneck through |
-| 10 | diploid haplotypes | bacteria are **haploid**. Relevant only to this repo's **human clinical track** (pgx / clinvar / hla) |
-| 16 | mixture-of-experts over splicing / neuronal / developmental experts | those domains do not exist here; and at 13k parameters MoE is premature by orders of magnitude |
+| # | Proposal | Absent in bacteria because | Apply NOW? |
+|---|---|---|---|
+| 3 | hierarchical attention through **TAD / chromatin-domain** levels | no TADs — the L4–L5 levels do not exist | step 4. Human Hi-C/TAD data is public and abundant |
+| 4 | sparse **distal** attention over 1–10 Mb | bacterial cis-regulation is overwhelmingly promoter-**proximal**; a 300 kb enhancer–promoter bridge is not a bacterial mechanism | step 4 — and it is the *defining* human regulatory mechanism, so it is unavoidable there |
+| 5 | regulatory graph with **enhancer / CTCF** nodes | no enhancers in that sense, no CTCF | step 4. **Bacterial analogue exists and is untried:** the regulon / σ-factor / TF→operon network is a real graph, just *trans* rather than 3D-cis |
+| 6 | 3D structure as a latent variable | no Hi-C-scale TAD analogue to bottleneck through (nucleoid supercoiling is real but not that) | step 4 |
+| 10 | diploid haplotypes | bacteria are **haploid** | **YES, TODAY** — the human clinical track is 16 shipped cells (pgx 14, hla 1, mendelian 1), and phase / compound-het / allele-specific effects are exactly what pgx and ClinVar interpretation turn on |
+| 16 | mixture-of-experts over splicing / neuronal / developmental experts | those domains do not exist here; and at 13k parameters MoE is premature by orders of magnitude | step 4. The *scale* objection stands independently of organism |
 
-**Reusable:** roughly a third of a eukaryote-derived architecture proposal is inapplicable to a prokaryote
-*by biology*, not by effort. Screening first is how you avoid spending a month on an absent mechanism.
+**Reusable, and it is the opposite of what the first version of this screen said:** when a proposal does
+not fit the substrate you happen to have started on, the honest label is **DEFERRED with the staging
+reason**, never *inapplicable*. "Inapplicable" silently converts a temporary substrate choice into a
+permanent architectural exclusion — and if the starting substrate was chosen for *convenience*, that
+exclusion has no expiry and will quietly delete the capability the real goal needs.
 
 ### ALREADY SHIPPED here — 3 of 16, and this is the strongest convergence
 
@@ -137,14 +183,31 @@ rail from the outside, which is the best possible corroboration of it.
 4. **Nothing here unblocks G-B.** Self-distillation is blocked on a learned representation existing, and
    proposal #9's "train on ref+alt Δ" is already shipped by a different route.
 5. **New candidate worth a plan: learned biological tokens** (proposal #2) in the bacterial vocabulary —
-   the one structurally-applicable, never-tried item in the top of the list.
+   a never-tried item that needs no new substrate.
+6. **ADDED after the §0 scope correction — the two moves that only become visible once bacteria is read as
+   step 3 rather than the domain:**
+   - **Substrate choice is now an open strategic question, not a settled one.** Point 2 says G-A must
+     change substrate rather than parameter count, and §0 says organism complexity is not the measured
+     barrier — so the candidate substrates are a **constructed eukaryotic panel** (the yeast cross is the
+     only clean organism-level positive here) and the **human DMS/MPRA libraries** that the forward cell
+     already scores well on, not just a bigger bacterial tile set.
+   - **The human track can absorb the DEFERRED proposals today.** Diploid/phase reasoning (#10) is
+     immediately relevant to 16 shipped pgx/hla/mendelian cells, and cell-state conditioning (#7) is the
+     *same* question G-C asked, in the organism where the proposal was actually designed for it. Testing
+     conditioning on a human cell-type substrate is not a step-4 deferral — it is a different, available
+     substrate for a question we have already built the harness for.
 
 ## 6. Honest limits on this screen
 
 - The source is a **model's proposal**, not a paper. Its sibling summary had two wrong citations. Nothing
   above treats its claims about AlphaGenome's internals as verified — only the *ideas* are screened.
-- The "structurally inapplicable" verdicts rest on standard prokaryotic biology, not on a measurement in
-  this repo. They are high-confidence but they are **asserted**, not derived here.
+- The **DEFERRED** verdicts rest on standard prokaryotic biology, not on a measurement in this repo. They
+  are high-confidence but **asserted**, not derived here — and per §0 they are statements about the
+  *current substrate's* reach, never about the proposal's value or about eukaryotes being harder.
+- **The "start with bacteria because it is easier" premise is itself unexamined**, and §0 gives the reason
+  to doubt it: the only clean organism-level g→p positive here is a *eukaryote* (yeast, 12/12 traits), the
+  eukaryotic negative (Arabidopsis) is explained by *population design* rather than by organism, and 16
+  human cells already ship. Nothing in this screen tests the premise — it just stops inheriting it.
 - The epistasis negative (#11) is scoped to **HIV RT**; it is not a general claim about epistasis.
 - The conservation negative (#13) is scoped to **pathogen target-site resistance** — Friedman 2013
   supplies a counterexample class (EGFR/ALK resistance mutations tend to be *radical*), so it must not be
