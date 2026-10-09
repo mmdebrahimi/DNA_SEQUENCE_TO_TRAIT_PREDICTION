@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "criteria": {
+    "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling": {
+      "gc-single-feature": {
+        "name": "gc-single-feature",
+        "cost_tier": "trivial",
+        "status": "measured",
+        "metric": 0.3112,
+        "evidence": "wiki/glm_learned_representation_2026-10-08.json",
+        "declared_at": "2026-10-09T14:42:29Z",
+        "resolved_at": "2026-10-09T14:42:29Z"
+      },
+      "conv-3width-13k-params-150bp": {
+        "name": "conv-3width-13k-params-150bp",
+        "cost_tier": "cheap",
+        "status": "measured",
+        "metric": 0.3234,
+        "evidence": "wiki/glm_learned_representation_2026-10-08.json (WEAK; paired CI includes zero)",
+        "declared_at": "2026-10-09T14:42:29Z",
+        "resolved_at": "2026-10-09T14:42:29Z"
+      },
+      "multiresolution-pyramid-4-decades-UNRUN": {
+        "name": "multiresolution-pyramid-4-decades-UNRUN",
+        "cost_tier": "expensive",
+        "status": "planned",
+        "metric": null,
+        "evidence": "",
+        "declared_at": "2026-10-09T14:42:29Z",
+        "resolved_at": ""
+      },
+      "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN": {
+        "name": "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
+        "cost_tier": "expensive",
+        "status": "planned",
+        "metric": null,
+        "evidence": "",
+        "declared_at": "2026-10-09T14:42:29Z",
+        "resolved_at": ""
+      }
+    }
+  }
+}

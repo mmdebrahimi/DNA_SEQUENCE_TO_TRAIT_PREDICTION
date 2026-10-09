@@ -138,4 +138,17 @@ data/raw/pear/
 # writes this copy in the source tree; it is regenerable and must never diverge from
 # wiki/ (tests/test_trust_surface_packaging.py pins that -- a stale copy SHADOWS wiki/).
 /dna_decode/report_cards/
-soraya_runs/
+# NOTE the trailing `/*` rather than `/`: git CANNOT re-include a file whose parent DIRECTORY is
+# excluded, so `soraya_runs/` would make the negations below silently dead rules.
+soraya_runs/*
+# ...the STATE SIDECARS under it are durable project memory, not transient run output, and must
+# survive a fresh clone and cross-machine sync. They are small single files, unlike the dozens of dated
+# run directories this rule exists to exclude. Added 2026-10-09 after deploying the innovation rails and
+# finding their state was ignored -- which would have reproduced, one level down, the exact
+# "built, proven, not persisted" failure those rails were deployed to fix.
+#   standing-positions.json -- counts of the user's repeatedly-raised positions (the COUNT is the signal)
+#   negative-results.json   -- killed candidates with scope + revival_condition (what RE-OPENS each)
+#   arms-ledger.json        -- declared-but-unrun arms that must BLOCK a ceiling criterion
+!soraya_runs/standing-positions.json
+!soraya_runs/negative-results.json
+!soraya_runs/arms-ledger.json

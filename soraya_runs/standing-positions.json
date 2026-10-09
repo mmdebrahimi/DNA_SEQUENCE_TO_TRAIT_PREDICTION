@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "positions": {
+    "learned-model-is-the-product": {
+      "pid": "learned-model-is-the-product",
+      "claim": "The GLM (a learned, generative model) is the product; the deterministic catalog was a bridge built only so there was a number to compare against",
+      "raised_by": "user",
+      "first_raised": "2026-10-09T14:43:08Z",
+      "times_raised": 2,
+      "quotes": [
+        "just build it... I don't care if it is not getting good results",
+        "I don't want you to compare it with the lookup table, that was just built as a bridge"
+      ],
+      "status": "open",
+      "resolved_by": "",
+      "tested_exactly": "",
+      "resolved_at": "",
+      "count_corrections": [
+        {
+          "from": 2,
+          "to": 2,
+          "reason": "replayed registration script double-counted on first deploy (2026-10-09); true evidence is 2 known restatements each",
+          "at": "2026-10-09T14:51:15Z"
+        }
+      ]
+    },
+    "substrate-is-not-the-subject": {
+      "pid": "substrate-is-not-the-subject",
+      "claim": "A substrate chosen because it is EASIER is a staging post, not the domain. The north star has four steps and step 4 is 'climb to animals'.",
+      "raised_by": "user",
+      "first_raised": "2026-10-09T14:43:08Z",
+      "times_raised": 2,
+      "quotes": [
+        "AMR was substrate #1, NOT the subject",
+        "who told you we are just concentrating on bacteria? I said that is what we should start with if it is easier"
+      ],
+      "status": "open",
+      "resolved_by": "",
+      "tested_exactly": "",
+      "resolved_at": "",
+      "count_corrections": [
+        {
+          "from": 2,
+          "to": 2,
+          "reason": "replayed registration script double-counted on first deploy (2026-10-09); true evidence is 2 known restatements each",
+          "at": "2026-10-09T14:51:15Z"
+        }
+      ]
+    }
+  }
+}
