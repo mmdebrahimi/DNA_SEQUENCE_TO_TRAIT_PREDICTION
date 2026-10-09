@@ -2,7 +2,7 @@
   "negatives": [
     {
       "token": "neg-33c315aa",
-      "claim": "Self-supervised DNA pretraining followed by functional supervision improves a bacterial promoter generator (AlphaGenome-discussion proposal #12)",
+      "claim": "GENERator-1.2B-prokaryote used ZERO-SHOT at default sampling, with no fine-tuning, is more detectable than a 3-mer Markov baseline on the distinguishability falsifier",
       "operator": "hand-entered",
       "kill_test_kind": "",
       "kill_test_arg": "",
@@ -13,16 +13,18 @@
       "verdict_raw": "killed-historical",
       "recorded_at": "2026-10-09",
       "project": "dna_decode",
-      "candidate_id": "hand-1f4c825a469cb482",
-      "claim_hash": "1f4c825a469cb482",
+      "candidate_id": "hand-1ed5ac9a411cd064",
+      "claim_hash": "1ed5ac9a411cd064",
       "scope": "GENERator-1.2B-prokaryote ONLY, at DEFAULT sampling, ZERO-SHOT with NO fine-tuning, scored by distinguishability against a 3-mer Markov chain on E. coli promoter windows. This is STAGE 1 of a 3-stage recipe used ALONE; stages 2-3 (functional + perturbational supervision) were never run.",
       "revival_condition": "any fine-tuned checkpoint of a prokaryote DNA LM scored on the same distinguishability falsifier -- which IS family G-D, already planned",
       "provenance": "hand-entered",
-      "evidence": "wiki/glm_generator_falsifier_REAL_2026-10-07.json"
+      "evidence": "wiki/glm_generator_falsifier_REAL_2026-10-07.json",
+      "claim_corrected_from": "Self-supervised DNA pretraining followed by functional supervision improves a bacterial promoter generator (AlphaGenome-discussion proposal #12)",
+      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping"
     },
     {
       "token": "neg-5ad65fa5",
-      "claim": "A learned multi-resolution sequence encoder beats fixed features on genomic promoter sequence (AlphaGenome-discussion proposal #1)",
+      "claim": "A 13,217-parameter 3-width (6/20/75) conv encoder over 150 bp peak tiles beats a single GC feature on genomic promoter-tile activity",
       "operator": "hand-entered",
       "kill_test_kind": "",
       "kill_test_arg": "",
@@ -33,16 +35,18 @@
       "verdict_raw": "killed-historical",
       "recorded_at": "2026-10-09",
       "project": "dna_decode",
-      "candidate_id": "hand-2448461a3f2a5abe",
-      "claim_hash": "2448461a3f2a5abe",
+      "candidate_id": "hand-a32a2fb6be2d0363",
+      "claim_hash": "a32a2fb6be2d0363",
       "scope": "A 13,217-parameter conv at THREE kernel widths (6/20/75) over 150 bp peak tiles -- ~1 decade of range. The proposal specifies 1 bp/16 bp/128 bp/1 kb/10 kb over 1 Mb (FOUR decades), which a 150 bp tile cannot host at all, so the proposed arm is UNRUNNABLE on this substrate rather than merely unrun.",
       "revival_condition": "the 4-decade pyramid is run on a substrate with >=3 decades of available range (a longer genomic window, or a constructed eukaryotic/human panel)",
       "provenance": "hand-entered",
-      "evidence": "wiki/glm_learned_representation_2026-10-08.json"
+      "evidence": "wiki/glm_learned_representation_2026-10-08.json",
+      "claim_corrected_from": "A learned multi-resolution sequence encoder beats fixed features on genomic promoter sequence (AlphaGenome-discussion proposal #1)",
+      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping"
     },
     {
       "token": "neg-421662d4",
-      "claim": "Modelling variant COMBINATIONS (epistasis) beats an additive model (AlphaGenome-discussion proposal #11)",
+      "claim": "Pairwise and non-linear estimators beat a linear one-hot model on HIV-1 RT, scored against Stanford PhenoSense fold-change over 4 drugs",
       "operator": "hand-entered",
       "kill_test_kind": "",
       "kill_test_arg": "",
@@ -53,12 +57,34 @@
       "verdict_raw": "killed-historical",
       "recorded_at": "2026-10-09",
       "project": "dna_decode",
-      "candidate_id": "hand-4990b25e0756dde8",
-      "claim_hash": "4990b25e0756dde8",
+      "candidate_id": "hand-fda51ca9a889dfb8",
+      "claim_hash": "fda51ca9a889dfb8",
       "scope": "HIV-1 RT ONLY, Stanford PhenoSense fold-change labels, 4 drugs, leave-one-study-out, pairwise + non-linear estimators vs a linear one-hot model. One virus, one protein family, one label type, clinical-isolate CO-OCCURRENCE rather than constructed combinations.",
       "revival_condition": "an epistasis model tested on a CONSTRUCTED multi-variant panel (combinatorial mutagenesis) rather than on co-occurrence in natural isolates",
       "provenance": "hand-entered",
-      "evidence": "wiki/glm_alphabet_headroom_2026-09-30.md"
+      "evidence": "wiki/glm_alphabet_headroom_2026-09-30.md",
+      "claim_corrected_from": "Modelling variant COMBINATIONS (epistasis) beats an additive model (AlphaGenome-discussion proposal #11)",
+      "claim_correction_reason": "2026-10-09 peer review: the SCOPE was narrow but the CLAIM named the whole class, and the claim is what a future search matches against, so the over-broad foreclosure survived the original re-scoping"
+    },
+    {
+      "token": "neg-62a4d4a0",
+      "claim": "BLOSUM62 and ESM2-650M likelihood both rank the resistant residue as benign at catalogued target sites in HIV-1 RT, SARS-CoV-2 Mpro and fungal ERG11/FKS1",
+      "operator": "hand-entered",
+      "kill_test_kind": "",
+      "kill_test_arg": "",
+      "reason": "",
+      "executed": false,
+      "valid": false,
+      "discriminating": null,
+      "verdict_raw": "killed-historical",
+      "recorded_at": "2026-10-09",
+      "project": "dna_decode",
+      "candidate_id": "hand-e5b58170f9296504",
+      "claim_hash": "e5b58170f9296504",
+      "scope": "PATHOGEN TARGET-SITE resistance systems ONLY -- three pathogens, catalogued resistance positions, scored by mid-rank of the resistant residue among the 19 alternatives (pooled 4.5 of 19 vs a null of 10.0, n=139). DRM sites sit at ESM entropy percentile 0.494, i.e. exactly average, which REFUTES the usual 'the site is poorly conserved' account. Friedman 2013 (PLOS ONE 8:e82059) supplies a COUNTEREXAMPLE CLASS: EGFR and ALK resistance mutations tend to be RADICAL, so this must not be stated as a general law.",
+      "revival_condition": "a conservation- or likelihood-keyed scorer is tested on a resistance system OUTSIDE pathogen target sites (e.g. kinase-inhibitor resistance), where the published counterexample class lives",
+      "provenance": "hand-entered",
+      "evidence": "wiki/prior_art_conservative_resistance_blosum_2026-08-31.md"
     }
   ]
 }
