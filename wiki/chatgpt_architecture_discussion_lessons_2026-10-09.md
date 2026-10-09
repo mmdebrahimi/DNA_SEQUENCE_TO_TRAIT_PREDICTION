@@ -73,16 +73,37 @@ negatives **and** the reason not to simply re-run them bigger.
 | **#1** | a pyramid **1 bp → 16 bp → 128 bp → 1 kb → 10 kb** with information travelling between levels, over a **1 Mb** context | a **13,217-parameter** conv at 3 kernel widths (6/20/75) over a **150 bp** tile | our substrate spans **~1 decade**; the proposal spans **four**. There is no 1 kb or 10 kb level to build on a 150 bp sequence. |
 | **#3** | a **cell-state embedding modulating a learned representation** | a **linear interaction term** (`seq × medium`) over 3-mer frequencies | the artifact's own honest limit says it: *"not the same as a model whose **representation** is modulated by condition. A null here does not foreclose that."* |
 
-**But the substrate bounds how much any of this can buy, and that is also measured.** On the same tiles, a
-**single GC number** reaches **0.3112** against a replicate-derived ceiling of **0.941** — i.e. **33% of
-achievable** — and the best learned arm reached **34%**. Capacity has already *hurt* here: 6-mers (4,096
-features) scored **worst of every arm at 0.2022**
-(`wiki/glm_genomewide_oracle_2026-10-07.json`).
+### CORRECTION (peer review, Skill_Development session, 2026-10-09) — one leg of this was CIRCULAR
 
-**So the synthesis is not "re-run it bigger":** most of ChatGPT's architecture proposals are about
-**extending range** and **adding hierarchy**, and our substrate is 150 bp with very little hierarchy to
-find. Re-running a larger multi-resolution encoder on *this* substrate has a small ceiling. The honest open
-question is whether the **substrate** is the binding constraint, not the architecture.
+The first version of this section argued: *"a single GC number takes 33% of the 0.941 ceiling, **and the
+best learned arm reached 34%** … so the honest consequence is change the substrate, not re-run it bigger."*
+
+**The peer caught a real circularity, and I verified it before conceding.** The "best learned arm at 34%"
+**IS** the 13,217-parameter conv — `encoder-multi`, median 0.3234, 0.3234/0.941 = **34.4%**,
+`n_parameters` 13217, read from `wiki/glm_learned_representation_2026-10-08.json`. So §2 declared that arm
+too weak to be a test, and the conclusion was then computed **from that same arm**. Split into the two
+claims it was smuggling together:
+
+| claim | status |
+|---|---|
+| A trivial feature (GC) captures **33% of the ceiling** (0.3112/0.941), so the substrate may carry little learnable structure | **SUPPORTED** — independent of any learned arm |
+| The best learned arm reached only 34%, **so more capacity will not help** | **NOT SUPPORTED** — that arm was the proxy. **Struck.** |
+
+**The 4-decade pyramid is UNRUN, not refuted.** It is now a `planned` arm in
+`soraya_runs/arms-ledger.json`, so that ceiling criterion reports **`blocked:untried-arm`** and the weak
+arm structurally cannot close it.
+
+**But the conclusion "change the substrate" survives on a third leg that depends on NO arm at all — and
+this is the part the peer's framing missed.** It is **dimensional, not inferential**: the proposal
+specifies levels at **1 kb and 10 kb**, and a **150 bp** tile cannot host either — not because a bigger
+model would fail, but because those levels *do not exist* in a 150 bp sequence. So the honest statement is
+stronger than "run it or label it unrun": **on this substrate the proposed arm is not merely unrun, it is
+UNRUNNABLE.** Running it *requires* a substrate with ≥3 decades of range, which makes substrate change a
+**precondition of the experiment**, not a competing alternative to it.
+
+(The remaining capacity-hurts data point — 6-mers, 4,096 features, **worst of every arm at 0.2022**,
+`wiki/glm_genomewide_oracle_2026-10-07.json` — concerns a *fixed* feature set rather than a learned
+representation with more capacity, so it is weak evidence here and is no longer load-bearing.)
 
 ---
 
@@ -126,15 +147,15 @@ exclusion has no expiry and will quietly delete the capability the real goal nee
 built and validated.** That is real external corroboration of the architecture choices — worth more than
 any of the untried suggestions.
 
-### ALREADY MEASURED NEGATIVE here — 4 of 16
+### MEASURED NEGATIVE here — 3 of 16 (was 4; #12 moved out on peer review, see its row)
 
 Do not re-propose these without new information; each has a committed artifact.
 
 | # | Proposal | What we measured |
 |---|---|---|
-| **12** | self-supervised DNA pretraining, **then** functional supervision | The pretrained half is **measured worse than trivial at zero-shot generation**: GENERator-1.2B-prokaryote scores distinguishability **0.7706** against a 3-mer Markov chain's **0.6679** (lower is better; `wiki/glm_generator_falsifier_REAL_2026-10-07.json` — note the `_REAL_` suffix, a different artifact from the same-named non-REAL one). A 1.2B model more detectable than a Markov chain. **The "then functional supervision" half is exactly G-D and is the un-pulled lever** — so this proposal is half-refuted, half-untested. |
+| **12** | self-supervised DNA pretraining, **then** functional supervision | **RE-SCOPED 2026-10-09 (peer review) — this was a CLASS-level kill from ONE checkpoint and it belongs in the NOT-REFUTED column.** What was measured: **GENERator-1.2B-prokaryote ONLY, at default sampling, ZERO-SHOT with NO fine-tuning** — distinguishability **0.7706** vs a 3-mer Markov chain's **0.6679** (lower is better; `wiki/glm_generator_falsifier_REAL_2026-10-07.json`, note the `_REAL_` suffix). That is **stage 1 of a 3-stage recipe, used alone**; stages 2–3 (functional + perturbational supervision) were never run. **Revival condition: any fine-tuned checkpoint scored on the same falsifier — which IS family G-D.** So this negative **argues FOR G-D**, it does not argue against pretraining. Structurally the same error as the June "0-for-4 frozen embeddings → *a MODEL ceiling*" filing, which this repo records as its most expensive scope error. |
 | **13** | feed **evolutionary conservation** explicitly | **Measured structurally blind for our phenotype.** Resistance-mutation sites sit at ESM entropy percentile **0.494 — exactly average**, refuting the textbook "the site is poorly conserved" account; and **BLOSUM62, which has never seen an HIV sequence, ranks the same DRMs as well as ESM2** (4.0 vs 4.5 of 19). Johnston 2024 (*PNAS*, TrpB) independently: the most-fit variants carry a substitution *"nearly absent in natural sequences — a result that conservation-based predictions would not capture."* **Conservation-keyed methods are blind to the best variants.** |
-| **11** | model variant **combinations** (epistasis) | **Measured to lose.** On HIV RT, pairwise and non-linear models both lost to a linear one-hot model **4/4, two with CI below zero** — the linear model is the measured **ceiling, not a floor**. Corroborated by an independent 2026-07-11 epistasis negative. *Scope: one virus, one protein family.* |
+| **11** | model variant **combinations** (epistasis) | **Measured to lose, on a DIFFERENT substrate — and the peer's objection to this one does not hold.** On **HIV-1 RT**, pairwise and non-linear estimators both lost to a linear one-hot model **4/4, two with CI below zero** — the linear model is the measured **ceiling, not a floor**. Corroborated by an independent 2026-07-11 epistasis negative. The peer argued this kill is confounded because *"the substrate is ceiling-bound near 34%"* — but that 34%/0.941 figure is the **MPRA peak-tile** substrate, whereas this result is **Stanford PhenoSense fold-change on HIV RT** (`data/raw/hiv/*_DataSet.txt`). Two unrelated substrates; the tile ceiling does not apply. **Scope (narrowed anyway): one virus, one protein family, one label type, clinical-isolate co-occurrence. Revival condition: an epistasis model tested on a CONSTRUCTED multi-variant panel (combinatorial mutagenesis) rather than on co-occurrence in natural isolates.** |
 | **1** | multi-resolution tokens | **Tested as G-A → `WEAK`, not distinguishable from zero** (6/10 seeds, p=0.754, CI [−0.0099, +0.0349]). But see §2 — this tested a 1-decade version of a 4-decade proposal. |
 
 ### GENUINELY OPEN and worth the conversation — 3 of 16
